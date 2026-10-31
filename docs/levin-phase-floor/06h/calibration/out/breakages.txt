@@ -1,0 +1,66 @@
+# levin-phase-floor 06h: breakages (i)-(iii), each applied to LiouvilleGreen/three_bessel_integrals.py, LiouvilleGreen.tests.test_group_phase_rounding run, then reverted
+# written 2026-10-31T22:25:25+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script breakages.py sha256 bcb91deae7f59f743b2c4e1ecdabfb0e197b4fb64fb8000ecc580d4156e9966d
+# prov.py sha256 503b712deeb6e55b839ae21a1474a9ba4399837cf001465351df93f5b6aed1b0
+# AdaptiveLevin/levin_quadrature.py sha256 8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c
+# input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+# input LiouvilleGreen/tests/test_group_phase_rounding.py sha256 1626d726f9196633e3ee6b815a732597412da08ec962f6f5abdf69d6f0506f36
+# HEAD 2c325f56641666b45df483adb8c1202575721c42
+# tree dirty: yes; git status --short:
+#      M LiouvilleGreen/bessel_phase.py
+#      M LiouvilleGreen/tests/test_three_bessel.py
+#      M LiouvilleGreen/three_bessel_integrals.py
+#     ?? LiouvilleGreen/tests/test_group_phase_rounding.py
+#     ?? docs/levin-phase-floor/06h/
+# uptime at start: 22:25  up 1 day, 46 mins, 1 user, load averages: 86.77 29.32 15.58
+# clean module sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+== (i) p_lo dropped from the small angle
+   Ran 8 tests in 24.395s
+   FAILED (failures=6)
+   failing tests and subtests: 6
+     FAIL: test_1_the_product_rounding_is_gone (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_1_the_product_rounding_is_gone) (cell='GROUP_CASES generic')
+     FAIL: test_1_the_product_rounding_is_gone (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_1_the_product_rounding_is_gone) (cell='fl(K) != K')
+     FAIL: test_1_the_product_rounding_is_gone (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_1_the_product_rounding_is_gone) (cell='three non-zero residuals')
+     FAIL: test_1_the_product_rounding_is_gone (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_1_the_product_rounding_is_gone) (cell='QSI generic')
+     FAIL: test_1_the_product_rounding_is_gone (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_1_the_product_rounding_is_gone) (cell='06f g-1e-7-0-12689 #19 (J4)')
+     FAIL: test_2_the_rounding_of_K_is_gone (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_2_the_rounding_of_K_is_gone)
+       AssertionError: 6.420381032738555e-06 not less than or equal to np.float64(8.024069119540943e-15) : GROUP_CASES generic: sin_cos pair error -6.420381e-06 at u = 27.631021115928547 (K x = 1.000000e+11) exceeds the constituents' 2.664535e-15 plus phi_eval 5.359534e-15
+       AssertionError: 8.838408029805075e-06 not less than or equal to np.float64(8.024226275451049e-15) : fl(K) != K: sin_cos pair error 8.838408e-06 at u = 27.631021115928547 (K x = 1.600000e+12) exceeds the constituents' 2.664535e-15 plus phi_eval 5.359691e-15
+       AssertionError: 2.980232246802724e-08 not less than or equal to np.float64(6.977702477204025e-15) : three non-zero residuals: sin_cos pair error 2.980232e-08 at u = 19.617358928339524 (K x = -8.272766e+08) exceeds the constituents' 2.664535e-15 plus phi_eval 4.313167e-15
+       AssertionError: 4.408378797671378e-10 not less than or equal to np.float64(9.070423532130263e-15) : QSI generic: sin_cos pair error -4.408379e-10 at u = 11.512925464970229 (K x = -2.701706e+08) exceeds the constituents' 2.664535e-15 plus phi_eval 6.405888e-15
+       AssertionError: 1.4638992937535517e-13 not less than or equal to np.float64(9.070621074673158e-15) : 06f g-1e-7-0-12689 #19 (J4): sin_cos pair error 1.463899e-13 at u = -1.7870021169598915 (K x = -8.130894e+03) exceeds the constituents' 2.664579e-15 plus phi_eval 6.406042e-15
+       AssertionError: 8.838408029805075e-06 not less than or equal to np.float64(8.024226275451049e-15)
+== (ii) the abscissa term dropped from the declaration
+   Ran 8 tests in 23.245s
+   FAILED (failures=6)
+   failing tests and subtests: 6
+     FAIL: test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u) (cell='GROUP_CASES K/max ~ 1e-6')
+     FAIL: test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u) (cell='GROUP_CASES generic')
+     FAIL: test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u) (cell='fl(K) != K')
+     FAIL: test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u) (cell='three non-zero residuals')
+     FAIL: test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u) (cell='QSI generic')
+     FAIL: test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u) (cell='06f g-1e-7-0-12689 #19 (J4)')
+       AssertionError: 2.7424245881833423e-11 not less than or equal to 8.024062956623894e-15 : GROUP_CASES K/max ~ 1e-6: |theta_mod_2pi(u) - theta(e^u)| = 2.742425e-11 at u = 27.631021115928547 (x = 1.000000e+12, K x = 9.536743e+05) exceeds theta_abserr 8.024063e-15 = constituents 2.664535e-15 + abscissa 0.000000e+00 + phi_eval 5.359528e-15
+       AssertionError: 2.875628926358406e-06 not less than or equal to 8.024069119540943e-15 : GROUP_CASES generic: |theta_mod_2pi(u) - theta(e^u)| = 2.875629e-06 at u = 27.631021115928547 (x = 1.000000e+12, K x = 1.000000e+11) exceeds theta_abserr 8.024069e-15 = constituents 2.664535e-15 + abscissa 0.000000e+00 + phi_eval 5.359534e-15
+       AssertionError: 4.601006281369684e-05 not less than or equal to 8.024226275451049e-15 : fl(K) != K: |theta_mod_2pi(u) - theta(e^u)| = 4.601006e-05 at u = 27.631021115928547 (x = 1.000000e+12, K x = 1.600000e+12) exceeds theta_abserr 8.024226e-15 = constituents 2.664535e-15 + abscissa 0.000000e+00 + phi_eval 5.359691e-15
+       AssertionError: 7.189072314504405e-05 not less than or equal to 6.977856481557728e-15 : three non-zero residuals: |theta_mod_2pi(u) - theta(e^u)| = 7.189072e-05 at u = 27.631021115928547 (x = 1.000000e+12, K x = -2.500000e+12) exceeds theta_abserr 6.977856e-15 = constituents 2.664535e-15 + abscissa 0.000000e+00 + phi_eval 4.313321e-15
+       AssertionError: 1.396256095331675e-08 not less than or equal to 9.070423532130263e-15 : QSI generic: |theta_mod_2pi(u) - theta(e^u)| = 1.396256e-08 at u = 11.512925464970229 (x = 1.000000e+05, K x = -2.701706e+08) exceeds theta_abserr 9.070424e-15 = constituents 2.664535e-15 + abscissa 0.000000e+00 + phi_eval 6.405888e-15
+       AssertionError: 5.938237133032418e-13 not less than or equal to 9.070621074673158e-15 : 06f g-1e-7-0-12689 #19 (J4): |theta_mod_2pi(u) - theta(e^u)| = 5.938237e-13 at u = -1.7870021169598915 (x = 1.674614e-01, K x = -8.130894e+03) exceeds theta_abserr 9.070621e-15 = constituents 2.664579e-15 + abscissa 0.000000e+00 + phi_eval 6.406042e-15
+== (iii) the array path's p_lo set to zero
+   Ran 8 tests in 22.267s
+   FAILED (failures=6)
+   failing tests and subtests: 6
+     FAIL: test_6_scalar_and_array_agree_bit_for_bit (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_6_scalar_and_array_agree_bit_for_bit) (cell='GROUP_CASES generic')
+     FAIL: test_6_scalar_and_array_agree_bit_for_bit (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_6_scalar_and_array_agree_bit_for_bit) (cell='fl(K) != K')
+     FAIL: test_6_scalar_and_array_agree_bit_for_bit (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_6_scalar_and_array_agree_bit_for_bit) (cell='three non-zero residuals')
+     FAIL: test_6_scalar_and_array_agree_bit_for_bit (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_6_scalar_and_array_agree_bit_for_bit) (cell='QSI generic')
+     FAIL: test_6_scalar_and_array_agree_bit_for_bit (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_6_scalar_and_array_agree_bit_for_bit) (cell='06f g-1e-7-0-12689 #19 (J4)')
+     FAIL: test_6_scalar_and_array_agree_bit_for_bit (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_6_scalar_and_array_agree_bit_for_bit) (cell='06f g-1e-7-3-1054 #20 (Y4)')
+       AssertionError: False is not true : GROUP_CASES generic: sin array and scalar results differ
+       AssertionError: False is not true : fl(K) != K: sin array and scalar results differ
+       AssertionError: False is not true : three non-zero residuals: sin array and scalar results differ
+       AssertionError: False is not true : QSI generic: sin array and scalar results differ
+       AssertionError: False is not true : 06f g-1e-7-0-12689 #19 (J4): sin array and scalar results differ
+       AssertionError: False is not true : 06f g-1e-7-3-1054 #20 (Y4): sin array and scalar results differ
+# module sha256 at the end fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e (clean: fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e)

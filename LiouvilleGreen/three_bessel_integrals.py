@@ -36,6 +36,13 @@ class BesselIntegralResult(NamedTuple):
     can *rise* when the declaration is supplied: the declaration is a statement about what is
     achievable, not a reduction of the error.
 
+    Since prompts/levin-phase-floor/06h the declaration covers the group's own arithmetic too, not
+    only its constituents' representations: the rounding of the abscissa x = fl(exp(u)) at which
+    the group is evaluated, as eps_exp |dtheta/du|, and the evaluation of the group phase itself
+    (its small angle's sum, angle addition, atan2 and the arguments m_i x). The rounding of the
+    product K x and of K, which before 06h reached 148 times the declaration and was not declared,
+    is no longer made: BesselPhaseGroup.sin_cos carries both exactly.
+
     **What it still does not include.** (i) The fit error of the *modulus*: adaptive_levin_sincos()
     has no analogue of theta_abserr for the f-vector, and bessel_phase's declared
     "amplitude_relerr" is not passed anywhere. (ii) The truncation of the integral at max_x -- the
@@ -86,6 +93,146 @@ _PHASE_GROUP_SIGNS = [(1.0, 1.0), (1.0, -1.0), (-1.0, 1.0), (-1.0, -1.0)]
 # Note the SVD-failure recovery in adaptive_levin_sincos() steps the order down in twos to a floor of 8,
 # so 12 leaves it two steps of headroom.
 DEFAULT_3BESSEL_CHEBYSHEV_ORDER = 12
+
+# ----------------------------------------------------------------------------------------------
+# The group phase's own rounding (prompts/levin-phase-floor/06h-group-phase-rounding.md).
+#
+# BesselPhaseGroup.sin_cos carries the roundings of fl(K x) and of K itself exactly in its small
+# angle, and BesselPhaseGroup.theta_abserr declares what remains: the rounding of the abscissa
+# x = fl(exp(u)) and the group's own evaluation (phi_eval). The constants below are those terms'
+# bounds, each with its derivation. u = 2^-53 throughout.
+# ----------------------------------------------------------------------------------------------
+
+#: The unit roundoff of a double, 2^-53.
+_UNIT_ROUNDOFF = 2.0**-53
+
+#: Dekker's splitting constant 2^27 + 1, for the array form of TwoProduct (_two_product_error).
+_TWO_PRODUCT_SPLITTER = 2.0**27 + 1.0
+
+#: The multiple of the worst measured relative error of ``np.exp`` that :data:`EXP_RELERR` takes.
+EXP_RELERR_MULTIPLE = 2.0
+
+#: The worst relative error ``|fl(exp(u)) - e^u| / e^u`` of ``np.exp`` measured on 06h's sample:
+#: 10^6 seeded points in each of u in [-30, 5] (the analytic block's log(eta); 06f's calls span
+#: [-17.38, -1.79]) and u in [-2, log 1e12] (the LiouvilleGreen range), on a 0-d argument and on an
+#: array, against mpmath at 30 digits. 1.1146e-16 = 1.004 u, attained at u = 0.696347627688485 on
+#: both paths, which are bit-identical to each other and to math.exp at every point
+#: (docs/levin-phase-floor/06h/calibration/scripts/measure_exp_relerr.py, out/exp_relerr.txt).
+#: Re-measured on the same sample by
+#: LiouvilleGreen/tests/test_group_phase_rounding.py's test of eps_exp's basis.
+EXP_RELERR_MEASURED_WORST = 1.1146192306576078e-16
+
+#: eps_exp: the bound on the relative error of the ``exp`` that turns the integration variable u
+#: into the abscissa x = fl(exp(u)), so x = e^u (1 + delta_e) with |delta_e| <= eps_exp.
+#:
+#: **Measured, not derived.** The platform library documents no accuracy for exp (macOS's exp(3)
+#: states none, and numpy 2.2.4 on aarch64 calls the platform's exp for float64). So it is taken
+#: at EXP_RELERR_MULTIPLE = 2 times the worst measured (:data:`EXP_RELERR_MEASURED_WORST`), rounded
+#: up: 2.23e-16 = 2.009 u. That is at least the bound 2u of any faithfully rounded exp (an error
+#: below one ulp of the result, relative 2u at the bottom of a binade), which the measured worst
+#: in ulps, 0.512, is comfortably inside.
+EXP_RELERR = 2.23e-16
+
+#: The allowance applied to ``sum_i |dr_i/d log y|`` wherever it enters a bound, for the error of
+#: that sum's own evaluation: in the near region dr/d log y is the derivative of an interpolant,
+#: whose relative error is not declared anywhere, so it is taken at 100 %, i.e. the magnitude is
+#: doubled. In the tail it is a closed-form series and the factor is pure margin.
+_LOG_DERIV_ALLOWANCE = 2.0
+
+#: The number of roundings in the small angle of BesselPhaseGroup.sin_cos, as evaluated: C_red,
+#: e_1 r_1, e_2 r_2, e_3 r_3, p_lo and K_lo x added left to right (each e_i r_i is exact, e_i being
+#: +-1, and fl(K_lo x) is declared separately). Six summands and five additions, so by the
+#: standard bound for recursive summation the computed sum is within gamma_5 = 5u/(1 - 5u) times
+#: the sum of the six magnitudes (Higham, "Accuracy and Stability of Numerical Algorithms", 2nd
+#: ed., sec. 4.2).
+_SMALL_ANGLE_ADDITIONS = 5
+
+#: gamma_n for the small angle's sum.
+_SMALL_ANGLE_GAMMA = (
+    _SMALL_ANGLE_ADDITIONS
+    * _UNIT_ROUNDOFF
+    / (1.0 - _SMALL_ANGLE_ADDITIONS * _UNIT_ROUNDOFF)
+)
+
+#: The angle addition of BesselPhaseGroup.sin_cos as an equivalent phase error, in radians.
+#:
+#: s = sin(B) cos(S) + cos(B) sin(S) and c = cos(B) cos(S) - sin(B) sin(S) are formed from four
+#: library values, each in error by at most eps_t, with two products and one sum per component.
+#: To first order
+#:     |delta s| <= eps_t (|cos S| + |sin S| + |sin B| + |cos B|) + u (|sin B cos S| + |cos B sin S|)
+#:                  + u |s|  <=  2 sqrt(2) eps_t + 2u,
+#: since |cos S| + |sin S| <= sqrt(2), likewise for B, and the products' magnitudes sum to at most 1
+#: (Cauchy-Schwarz); the same for |delta c|. The phase the pair represents, atan2(s, c), moves by
+#: the tangential component, at most |(delta s, delta c)| / |(s, c)| <= sqrt(2) (2 sqrt(2) eps_t +
+#: 2u) = 4 eps_t + 2 sqrt(2) u. The library's sin and cos are taken at **two ulps**, eps_t = 2u
+#: (two ulps of a value below 1 in magnitude): they are not documented, and 06h's measurement
+#: (out/exp_relerr.txt) finds them faithful but not correctly rounded, worst 0.85 ulp on 10^5
+#: seeded large and small arguments, so one ulp would leave a margin of 1.2 only. That gives
+#: 8u + 2.83u = 10.83u, taken at 12u for the second-order terms and the normalisation |(s, c)| =
+#: 1 + O(u).
+#:
+#: **Counted against the constituents' EVALUATION_FLOOR, and not credited to it.** That floor
+#: (LiouvilleGreen.bessel_phase.EVALUATION_FLOOR) is each constituent's allowance for its *own*
+#: angle addition in BesselPhaseFunction.sin_cos_theta, and for the rounding of its c_nu_reduced.
+#: The group never calls sin_cos_theta: it inherits the three c_nu_reduced roundings, which stay
+#: declared by the constituents and are not declared again here, and performs one angle addition
+#: of its own on different arguments, which no constituent declares and which is therefore declared
+#: here rather than omitted.
+_ANGLE_ADDITION_PHASE_ERR = 12.0 * _UNIT_ROUNDOFF
+
+#: The rounding of atan2 in BesselPhaseGroup.theta_mod_2pi, in radians: its result lies in
+#: (-pi, pi], where an ulp is at most 2^-51 = 4u, and the library's atan2, like its sin and cos,
+#: is taken at two ulps (measured worst 0.72 ulp, out/exp_relerr.txt): 8u. The driver integrates
+#: this value, not the pair, so it is part of the phase it is given.
+_ATAN2_PHASE_ERR = 8.0 * _UNIT_ROUNDOFF
+
+
+def _ordered_sum(terms):
+    """
+    ``terms`` added left to right, one rounding per addition, for scalars and arrays alike.
+
+    Not the builtin sum(): since Python 3.12 it compensates (Neumaier) a sum whose items are
+    exact Python floats, but not one of arrays or of np.float64, so a scalar call and an array
+    call of the same expression can differ in the last bit -- which
+    AdaptiveLevin.levin_quadrature._detect_vectorized() does not allow of a callable it samples
+    on an array, and which BesselPhaseGroup.theta_abserr must not do (prompts/levin-phase-floor/
+    06h). The rounding of this sum is a few u of its terms, inside every bound it enters.
+    """
+    total = 0.0
+    for term in terms:
+        total = total + term
+    return total
+
+
+def _two_product_split(value):
+    """Dekker's split of ``value`` into a high part of 26 bits and an exact remainder."""
+    scaled = _TWO_PRODUCT_SPLITTER * value
+    high = scaled - (scaled - value)
+    return high, value - high
+
+
+def _two_product_error(a: float, b, product):
+    """
+    The rounding error of a product, ``a b - fl(a b)``, **exactly**, given ``product = fl(a b)``
+    (TwoProduct). ``a`` is a scalar; ``b`` and ``product`` are a scalar or an array of one shape.
+
+    On a scalar it is ``math.fma(a, b, -product)``: the fused multiply-add rounds once, and
+    ``a b - product`` is exactly representable, so the result is exact. On an array it is Dekker's
+    algorithm with Veltkamp's split (T. J. Dekker, Numer. Math. 18 (1971) 224; "TwoProduct" in
+    Ogita, Rump and Oishi, SIAM J. Sci. Comput. 26 (2005) 1955), which is exact in the same
+    conditions. Both are exact barring overflow and underflow -- here |a| is a wavenumber sum and
+    |b| = x <= 1e16, far from either -- so the two give the same double: the array result is
+    bit-identical to the scalar one at every point, as
+    AdaptiveLevin.levin_quadrature._detect_vectorized() requires of a phase callable.
+    """
+    if np.ndim(product) == 0:
+        return math.fma(a, float(b), -float(product))
+    b = np.asarray(b, dtype=float)
+    a_high, a_low = _two_product_split(a)
+    b_high, b_low = _two_product_split(b)
+    return (
+        (a_high * b_high - product) + a_high * b_low + a_low * b_high
+    ) + a_low * b_low
 
 
 def quad_JJJ(
@@ -198,12 +345,16 @@ def _coefficient_sum(terms: Sequence[float]) -> float:
     and every evaluation then multiplies that error by x. It is called three times per group, at
     construction.
 
-    The per-point sums deliberately do **not** use it: `theta`, `theta_deriv` and `theta_abserr`
-    add three terms in the ordinary way. Two reasons, in order of weight. (i) The dominant error
-    there is the rounding of the product K*x and the interpolation error of the residuals, both of
-    which are larger than the ~eps*max|term| of an ordinary three-term sum, so compensated
-    summation would buy nothing measurable -- DRAFT-PLAN.md Sec 8.2 asks for "appropriately
-    accurate" summation, and for three smooth terms this is it. (ii) fsum() does not accept
+    The per-point sums deliberately do **not** use it: `theta`, `theta_deriv`, `theta_abserr` and
+    `sin_cos`'s small angle add their terms in the ordinary way. Two reasons, in order of weight.
+    (i) An ordinary sum of a few smooth terms errs by ~eps*max|term|, which is below the
+    interpolation error of the residuals the terms carry, so compensated summation would buy
+    nothing measurable -- DRAFT-PLAN.md Sec 8.2 asks for "appropriately accurate" summation, and
+    for these terms this is it. This note used to name the rounding of the product K*x as the
+    dominant error as well; since prompts/levin-phase-floor/06h, `sin_cos` carries that rounding
+    exactly (TwoProduct) rather than summing it away, and `theta_abserr` declares the small sum's
+    own rounding (gamma_5 times its terms' magnitudes). `theta` and `theta_deriv` still round
+    K*x, and neither is a value the driver integrates as a phase. (ii) fsum() does not accept
     arrays, and adaptive_levin_sincos() samples theta' over the whole Chebyshev grid in one array
     call only if the callable's array result is *bit-identical* to its scalar results
     (levin_quadrature._detect_vectorized()); a scalar path that used fsum and an array path that
@@ -256,17 +407,23 @@ class BesselPhaseGroup:
     is printed by test_three_bessel.TestPhaseGroups, which re-measures both routes rather than
     trusting this paragraph.
 
-    What is left is one product and one sum of doubles, so the group phase is accurate to
+    **The product floor, and what replaced it.** Until prompts/levin-phase-floor's prompt 06h what
+    was left was one product and one sum of doubles, so the group phase was accurate to
     ~eps*(|K| x + |C + R|): K itself is exact whenever k + e_nu q + e_sigma s is representable
-    (which is the interesting case, since a resonance is usually engineered from exactly
-    representable coefficients) and is a single rounding otherwise, but the *product* K*x is
-    rounded whatever K is. For a group that is not near resonance that floor is a genuine limit --
-    1.5e-5 rad at K = 0.1, x = 1e12, which is exactly one ulp of K x and is what *both* routes
-    measure there, so there is no improvement in that case at all -- and it is the same
-    eps*|theta| limit any single
-    double carrying a phase of that size has. It is not removed by this restructure; it is only
-    made proportional to the *group's* phase rather than to the largest constituent's. See
-    prompts/transfer-remedial/IMPLEMENTATION_STATE.md [07-generic-K-product-rounding].
+    and is a single rounding otherwise, but the *product* K*x was rounded whatever K was. This
+    docstring called that floor "a genuine limit" -- 1.5e-5 rad at K = 0.1, x = 1e12, one ulp of
+    K x, and what both routes measured there (prompts/transfer-remedial/IMPLEMENTATION_STATE.md
+    [07-generic-K-product-rounding]) -- and theta_abserr did not declare it, so the driver was
+    never told: 06f measured it at up to 148 times the declaration on production's tail Levin
+    leaves ([06f-theta-abserr-omits-the-product-rounding]). It is not a limit of the
+    representation, only of rounding into one double. :meth:`sin_cos` now carries the product's
+    rounding (TwoProduct, exact) and K's (``K_lo``, from fsum) in its small angle, so the phase it
+    represents is ``K x + C + R(x)`` at the evaluated x to a few u of the small angle, whatever
+    ``|K| x`` is. What remains, and is declared by :meth:`theta_abserr`, is the rounding of the
+    abscissa ``x = fl(exp(u))`` -- ``eps_exp |dtheta/du|``, which is of the size the product floor
+    was, but is a displacement of the point rather than an error in the phase there -- and the
+    group's own evaluation. :meth:`theta` (the raw value) still rounds K x into one double, and is
+    not what the driver evaluates.
 
     Input coefficient uncertainty is a separate matter and is not addressed here at all: if k, q, s
     are themselves uncertain, x delta K is a physical uncertainty of the group phase and no
@@ -286,9 +443,15 @@ class BesselPhaseGroup:
 
         # K and C are formed here, once, from the supplied coefficients -- before any
         # multiplication by x. This is the whole point of the class; see the class docstring.
-        self.K = _coefficient_sum(
-            [sign * value for sign, value in zip(self.signs, self.coefficients)]
-        )
+        signed_coefficients = [
+            sign * value for sign, value in zip(self.signs, self.coefficients)
+        ]
+        self.K = _coefficient_sum(signed_coefficients)
+        # K's own rounding, K_lo = K - fl(K), carried into sin_cos's small angle as K_lo x
+        # (prompts/levin-phase-floor/06h). Each term is a float times +-1, so exact, and fsum of
+        # them and -fl(K) is K - fl(K) correctly rounded: in error by at most u |K_lo|, which
+        # theta_abserr declares. Zero whenever k + e_nu q + e_sigma s is representable.
+        self.K_lo = math.fsum(signed_coefficients + [-self.K])
         self.C = _coefficient_sum(
             [sign * phase.c_nu for sign, phase in zip(self.signs, self.phases)]
         )
@@ -332,25 +495,48 @@ class BesselPhaseGroup:
 
     def sin_cos(self, log_x):
         """
-        ``(sin theta_group, cos theta_group)`` by angle addition on ``(K x)`` and ``(C + R)``.
+        ``(sin theta_group, cos theta_group)`` by angle addition on a big angle ``fl(K x)`` and a
+        small one, ``C_red + R(x) + p_lo + K_lo x``.
 
-        ``K x`` is handed to sin/cos **unreduced**: a quality libm reduces it against a
-        multi-hundred-bit pi (Payne-Hanek) and is correctly rounded out to 1e16, while any
-        reduction performed here would use a 53-bit 2 pi and be strictly worse. This is the
-        argument LiouvilleGreen/range_reduce_mod_2pi.py's module docstring makes, and prompt 05's
-        BesselPhaseFunction.sin_cos_theta makes for the single-factor case.
+        **The big angle** ``fl(fl(K) x)`` is handed to sin/cos **unreduced**: the library reduces
+        it against a multi-hundred-bit pi (Payne-Hanek), while any reduction performed here would
+        use a 53-bit 2 pi and be strictly worse. This is the argument
+        LiouvilleGreen/range_reduce_mod_2pi.py's module docstring makes, and prompt 05's
+        BesselPhaseFunction.sin_cos_theta makes for the single-factor case. (Its result is
+        faithful, not correctly rounded: 06h measured up to 0.85 ulp; theta_abserr declares it.)
+
+        **The small angle carries what the big one loses** (prompts/levin-phase-floor/06h). The
+        product's rounding ``p_lo = fl(K) x - fl(fl(K) x)`` is computed exactly by TwoProduct
+        (_two_product_error: math.fma on a scalar, Dekker's split on an array, bit-identical), and
+        K's own rounding ``K_lo = K - fl(K)``, held from construction, enters as ``K_lo x``. So
+        big + small is ``K x + C + R(x)`` at the evaluated ``x``, modulo 2 pi, to the rounding of
+        the small sum alone -- a few u of ``|C_red| + sum |r_i| + |p_lo| + |K_lo x|`` -- and no
+        longer to ``u |K x|``. Before 06h the product's rounding was left in the big angle; it
+        reached 3.9e-13 rad on 06f's call g-1e-7-0-12689 #19, 148 times that call's declared
+        theta_abserr ([06f-theta-abserr-omits-the-product-rounding]).
+
+        What remains is declared by :meth:`theta_abserr`: the small sum, the angle addition below,
+        the rounding of each argument m_i x, and the rounding of x = exp(u) itself.
 
         The alternative -- summing the three constituents' bounded angles -- is not the bounded
         angle of the sum: each constituent's angle carries the eps*(m x) rounding of its own
         argument, and those enter the sum additively rather than cancelling with the group's
-        signs. Measured on the same triples as the class docstring, the worst |sin| / |cos| pair
-        error against 60-digit mpmath was 3.05e-5 for the summed-angle route at K = 0 and 1.39e-13
-        here; at a generic K = 0.1 the two are 1.42e-5 and 1.24e-5, i.e. both at the product floor
-        above.
+        signs. Measured on the same triples as the class docstring, before 06h, the worst |sin| /
+        |cos| pair error against 60-digit mpmath was 3.05e-5 for the summed-angle route at K = 0
+        and 1.39e-13 here; at a generic K = 0.1 the two were 1.42e-5 and 1.24e-5, i.e. both at the
+        product floor 06h removes from this route.
         """
         x = np.exp(log_x)
         big = self.K * x
-        small = self.C_reduced + self.residual(x)
+        # six summands, five additions, left to right (the gamma_5 that theta_abserr declares).
+        # Not self.residual(x): that adds the three residuals with sum(), which since Python 3.12
+        # compensates a sum of exact floats but not of arrays (or of np.float64), so its scalar
+        # result can differ from its array result in the last bit (_ordered_sum's comment).
+        small = self.C_reduced
+        for sign, phase, argument in zip(self.signs, self.phases, self.arguments(x)):
+            small = small + sign * phase.residual(argument)
+        small = small + _two_product_error(self.K, x, big)
+        small = small + self.K_lo * x
 
         if np.isscalar(big) or np.ndim(big) == 0:
             sin_big, cos_big = math.sin(big), math.cos(big)
@@ -409,24 +595,104 @@ class BesselPhaseGroup:
 
     def theta_abserr(self, log_x):
         """
-        The declared absolute phase error of the group at ``x``, in radians: the sum of the three
-        constituents' declared errors at their own arguments.
+        The declared absolute error, in radians, of the phase :meth:`theta_mod_2pi` returns at
+        ``u = log_x``, **as a function of u**: against ``theta_group(e^u)`` at the exact ``e^u``,
+        which is the phase the Levin driver integrates in u. Three parts, combined linearly
+        (prompts/levin-phase-floor/06h):
+
+            theta_abserr(u) = sum_i theta_abserr_at_i(m_i x)  +  eps_exp |dtheta/du|  +  phi_eval(u),
+
+        with ``x = fl(exp(u))``.
+
+        * **The constituents' declarations** at their own arguments, as before 06h: each
+          factor's representation error at the floating-point argument it is given, with its
+          EVALUATION_FLOOR and the rounding of its c_nu_reduced.
+        * **The abscissa.** The group is evaluated at ``x = e^u (1 + delta_e)``, not at ``e^u``,
+          which moves the phase by ``(dtheta/du) delta_e`` to first order (the second-order term,
+          ``(d^2 theta/du^2) delta_e^2 / 2 ~ |K x| u^2``, is below a ulp of anything here).
+          ``bessel_phase`` defines a single factor's evaluation to be at the computed exp(u),
+          which is right for its representation; but the function of u the driver integrates is
+          this one, and an error in its value belongs here (levin_quadrature.py, "What it does not
+          carry"). ``|delta_e| <= eps_exp`` (:data:`EXP_RELERR`, measured), and ``|dtheta/du|`` is
+          bounded by ``(|fl(K)| + |K_lo|) x + 2 sum_i |dr_i/d log y|`` at ``m_i x`` -- data the class
+          holds, **not** :meth:`theta_deriv`, whose signed sum can cancel; the factor 2 is
+          :data:`_LOG_DERIV_ALLOWANCE`, for the evaluation of dr/d log y itself.
+        * **phi_eval, the group's own evaluation**, term by term:
+          - the small angle's sum, gamma_5 times the six summands' magnitudes, ``|C_red| +
+            sum_i |r_i| + |p_lo| + |K_lo x|``, with ``|p_lo| <= u |fl(K)| x``
+            (:data:`_SMALL_ANGLE_GAMMA`), plus ``u |C_red|``, the rounding of C_red's own fsum;
+          - K_lo's: ``2 u |K_lo| x``, one u for the fsum that forms K_lo and one for the product;
+          - the arguments: ``fl(m_i x)`` is in error by a relative u, which moves ``r_i`` by at
+            most ``u |dr_i/d log y|``, with the same allowance of 2;
+          - the angle addition of :meth:`sin_cos`, :data:`_ANGLE_ADDITION_PHASE_ERR` (12u), which
+            no constituent declares (the constituents' EVALUATION_FLOOR covers their *own* angle
+            additions, which the group never performs);
+          - the atan2 of :meth:`theta_mod_2pi`, :data:`_ATAN2_PHASE_ERR` (8u).
+          The roundings of fl(K x) and of K are *not* declared: :meth:`sin_cos` carries both
+          exactly. The rounding of each c_nu_reduced is not declared twice: it is the
+          constituents'.
 
         Combined **linearly**, not in quadrature, for the reason BesselIntegralResult's docstring
         gives for the group values: the three phases share a construction, so a systematically
-        inaccurate phase produces a common drift rather than independent noise. The three terms are
-        also of very different sizes -- a factor lying in its closed-form tail declares ~1e-15
-        while one in its sampled near region declares ~5e-12 -- so a quadrature sum would be
-        dominated by the largest anyway.
+        inaccurate phase produces a common drift rather than independent noise. The terms are also
+        of very different sizes -- a factor lying in its closed-form tail declares ~1e-15 while one
+        in its sampled near region declares ~5e-12, and the abscissa term is ~eps_exp |K| x -- so a
+        quadrature sum would be dominated by the largest anyway.
+
+        A scalar ``log_x`` gives a float, an array an array, bit-identical point by point.
 
         This is what adaptive_levin_sincos()'s "theta_abserr" key wants (levin_quadrature.py:962,
         :2360). Supplying it makes the reported abserr *larger*, not smaller: it is the statement
         that the phase construction, not the Levin rule, is the limit. See BesselIntegralResult.
         """
-        return sum(
+        constituents, abscissa, phi_eval = self._declared_error_parts(log_x)
+        total = constituents + abscissa + phi_eval
+        if np.ndim(total) == 0:
+            return float(total)
+        return total
+
+    def _declared_error_parts(self, log_x):
+        """
+        The three parts of :meth:`theta_abserr` at ``u = log_x``, separately: ``(constituents,
+        abscissa, phi_eval)``, the sum of the constituents' declarations, ``eps_exp`` times the
+        bound on ``|dtheta/du|``, and the group's own evaluation. See :meth:`theta_abserr` for
+        each, and the module's constants for their derivations.
+        """
+        x = np.exp(log_x)
+        arguments = self.arguments(x)
+        u = _UNIT_ROUNDOFF
+
+        constituents = _ordered_sum(
             phase.theta_abserr_at(argument)
-            for phase, argument in zip(self.phases, self.arguments(np.exp(log_x)))
+            for phase, argument in zip(self.phases, arguments)
         )
+        residual_magnitude = _ordered_sum(
+            np.abs(phase.residual(argument))
+            for phase, argument in zip(self.phases, arguments)
+        )
+        log_deriv_magnitude = _LOG_DERIV_ALLOWANCE * _ordered_sum(
+            np.abs(phase.residual_log_deriv(argument))
+            for phase, argument in zip(self.phases, arguments)
+        )
+        K_hat_x = abs(self.K) * x
+        K_lo_x = abs(self.K_lo) * x
+
+        # the abscissa: eps_exp times a bound on |dtheta/du|
+        abscissa = EXP_RELERR * ((K_hat_x + K_lo_x) + log_deriv_magnitude)
+
+        # phi_eval, term by term (see the docstring and the constants' comments)
+        small_angle = _SMALL_ANGLE_GAMMA * (
+            abs(self.C_reduced) + residual_magnitude + u * K_hat_x + K_lo_x
+        ) + u * abs(self.C_reduced)
+        K_lo_rounding = 2.0 * u * K_lo_x
+        argument_rounding = u * log_deriv_magnitude
+        phi_eval = (
+            small_angle
+            + K_lo_rounding
+            + argument_rounding
+            + (_ANGLE_ADDITION_PHASE_ERR + _ATAN2_PHASE_ERR)
+        )
+        return constituents, abscissa, phi_eval
 
     def levin_theta(self) -> dict:
         """

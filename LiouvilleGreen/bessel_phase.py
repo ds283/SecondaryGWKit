@@ -86,7 +86,11 @@ cannot undo a lossy ``exp(log(x))`` round trip: when only ``u = log x`` is suppl
 is *defined* to be at the computed ``exp(u)``, and that is the argument any reference must use. At
 very large ``x`` an input-coordinate error can exceed the residual interpolation error by many
 orders of magnitude (``DRAFT-PLAN.md`` §7.5). Where raw ``x`` is supplied it is preserved for the
-leading oscillation, and ``log x`` is used only to query the correction interpolants.
+leading oscillation, and ``log x`` is used only to query the correction interpolants. A caller
+that integrates in ``u`` integrates a function of ``u``, so the rounding of ``exp(u)`` is an error
+in that caller's phase and is declared there: for the three-Bessel phase groups by
+:meth:`LiouvilleGreen.three_bessel_integrals.BesselPhaseGroup.theta_abserr`, as
+``eps_exp |d theta/du|`` (``prompts/levin-phase-floor/06h-group-phase-rounding.md``).
 
 Supported domain
 ----------------

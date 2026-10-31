@@ -651,12 +651,48 @@ class TestPhaseGroups(unittest.TestCase):
 
         group = _PhaseGroup(phases, coefficients, GROUP_SIGNS)
         log_x = math.log(0.5 * max_x)
+        x = math.exp(log_x)
+        arguments = [coefficient * x for coefficient in coefficients]
         constituents = [
-            phase.theta_abserr_at(coefficient * math.exp(log_x))
-            for phase, coefficient in zip(phases, coefficients)
+            phase.theta_abserr_at(argument)
+            for phase, argument in zip(phases, arguments)
         ]
+        # Since prompts/levin-phase-floor/06h the declaration is the constituents' sum plus the
+        # abscissa term and phi_eval, each built here term by term from the module's constants
+        # (until 06h it was the constituents' sum alone, 2.66e-15 here; it is now 2.79e-10, the
+        # abscissa term eps_exp |K| x with |K| x = 1.25e6).
+        u = 2.0**-53
+        gamma_5 = 5 * u / (1 - 5 * u)
+        tb = three_bessel_module
+        residuals = math.fsum(
+            abs(phase.residual(argument)) for phase, argument in zip(phases, arguments)
+        )
+        log_derivs = tb._LOG_DERIV_ALLOWANCE * math.fsum(
+            abs(phase.residual_log_deriv(argument))
+            for phase, argument in zip(phases, arguments)
+        )
+        K_x, K_lo_x = abs(group.K) * x, abs(group.K_lo) * x
+        expected = {
+            "constituents": math.fsum(constituents),
+            "abscissa": tb.EXP_RELERR * (K_x + K_lo_x + log_derivs),
+            "phi_eval": math.fsum(
+                [
+                    gamma_5 * (abs(group.C_reduced) + residuals + u * K_x + K_lo_x),
+                    u * abs(group.C_reduced),
+                    2 * u * K_lo_x,
+                    u * log_derivs,
+                    12 * u,
+                    8 * u,
+                ]
+            ),
+        }
+        parts = dict(zip(expected, group._declared_error_parts(log_x)))
+        for name, value in expected.items():
+            self.assertAlmostEqual(parts[name], value, delta=1.0e-14 * value)
         self.assertAlmostEqual(
-            group.theta_abserr(log_x), sum(constituents), delta=1.0e-18
+            group.theta_abserr(log_x),
+            math.fsum(expected.values()),
+            delta=1.0e-14 * math.fsum(expected.values()),
         )
         # linear, not in quadrature: the two differ, and the linear one is larger
         quadrature = math.sqrt(sum(value * value for value in constituents))
