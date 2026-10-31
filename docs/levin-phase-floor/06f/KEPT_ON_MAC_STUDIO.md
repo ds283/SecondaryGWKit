@@ -1,10 +1,17 @@
 # Files of prompt 06f kept outside this directory
 
-These stay in the Mac Studio's main checkout, under
+These were kept in the Mac Studio's main checkout, under
 `/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/` (paths below are relative
-to it). They were left out of this directory as 06e's were: every pickle and every file over 2 MB.
+to it), where the rest of 06f's records also stay. They were left out of this directory as 06e's were: every pickle and every file over 2 MB.
 
-**Kept on the Mac Studio only, never copied to the laptop:** the 90 files that
+> **Removed 2026-10-31, on the user's word** (*"Are they needed? If not, they can be removed."*).
+> The 90 files below were checked against their SHA-256 (all 90 equal) and deleted. The worktree
+> was removed at the same time. They can all be recreated: Z2's
+> call reproduces in about 105 s, and every sampled call's capture and replay reproduced 06e's census
+> bit for bit (F0) from the scratch copy and 06e's checkpoint, both still kept. The run directory
+> is kept: it is the registry's record of the run.
+
+**Kept on the Mac Studio only, never copied to the laptop, until 2026-10-31:** the 90 files that
 [`KEPT_ON_MAC_STUDIO.txt`](KEPT_ON_MAC_STUDIO.txt) lists with SHA-256 and size, 34.9 MB in all.
 The Mac Studio review re-checked every hash and size against the files, with 0 mismatches
 (`review/checks/kept.txt`). They are:
@@ -41,4 +48,4 @@ bit to the census checkpoint's `cc_floor.sums_all_cc_leaves.abs_E` for `g-1e-8-0
 and $|\sum E| =$ `0x1.028b75b5aee8cp-115`, a ratio of 53.975.
 
 **The worktree** `/Users/ds283/Documents/Code/SecondaryGWKit-lpf06f-f4770d1` (detached at
-`f4770d13`) is kept until the user says to remove it.
+`f4770d13`, clean) was removed on 2026-10-31 with `git worktree remove`, on the user's word.

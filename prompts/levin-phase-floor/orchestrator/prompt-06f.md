@@ -125,3 +125,10 @@ the SHA-256 its outputs recorded. Two re-checks:
 - the 90 kept files and the run directory, kept on the Mac Studio.
 
 06g is written only after the user has read these results; 07 resumes after it.
+
+**After the records commit (`37bf52e`, pushed on the user's word).** The user put both remedies
+before 07, with placement open (the board's Decisions, **06f results**). The user also allowed the
+Mac Studio files to be removed if not needed. The laptop removed the worktree
+`SecondaryGWKit-lpf06f-f4770d1` (clean). It removed the 90 kept files after checking each against
+its SHA-256; all are reproducible from the scratch copy and 06e's checkpoint. It kept the 44 KB run
+directory, the registry's record of the run (`06f/KEPT_ON_MAC_STUDIO.md`).
