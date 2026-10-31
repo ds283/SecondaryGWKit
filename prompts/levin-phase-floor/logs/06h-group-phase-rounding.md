@@ -15,7 +15,8 @@
 - No Ray was started, no run was registered, no store was opened, and nothing was written under
   `var/`.
 
-**Commit:** the code commit of this log (one commit, not pushed).
+**Commit:** the code commit `7172a8f`, and the follow-up `ac1c6f4` on the user's ruling on
+deviation 10; both reviewed by the orchestrator and pushed 2026-10-31.
 
 **Result:** `BesselPhaseGroup.sin_cos` carries the rounding of the product $\hat K\hat x$
 (TwoProduct) and of $K$ itself ($K_{\rm lo}$) exactly in its small angle, and `theta_abserr`
@@ -24,8 +25,9 @@ evaluation $\phi_{\rm eval}$. Tests 1–7 hold on ten cells; 06h's worst error i
 its declaration on every cell, where the parent's reached $4.4\times10^{10}$ of its own. The three
 breakages are caught. The 20 seeded LiouvilleGreen draws pass under both codes, with no Levin call's
 convergence changed and none at depth 20. One existing assertion changed (the definition test). The
-two product-floor bounds were **not** tightened, though the prompt allows it: they measure the raw
-`theta`, which the declaration does not cover (deviation 10). Two issues opened.
+two product-floor bounds measure the raw `theta`, which the declaration does not cover; on the
+user's ruling (deviation 10) they keep that check with its product term, and `ac1c6f4` adds the
+declaration's own check on `theta_mod_2pi` beside it. Two issues opened.
 
 ## What shipped
 
@@ -427,7 +429,7 @@ both OK and unchanged; no test method was added.
 ## Observations not acted on
 
 1. **The product-floor tests measure the raw `theta`** (deviation 10): a tightened bound passes at
-   0.91–0.97 by coincidence of sizes. Left for the orchestrator.
+   0.91–0.97 by coincidence of sizes. Acted on, on the user's ruling, in `ac1c6f4` (deviation 10).
 2. **The platform's sin and cos are not correctly rounded.** `bessel_phase.py` says, in its
    `MAX_SUPPORTED_X` comment and in `sin_cos_theta`'s docstring, that they "were verified correctly
    rounded to 1e16"; on this laptop (macOS, numpy 2.2.4) they reach 0.85 ulp, atan2 0.72 ulp.
