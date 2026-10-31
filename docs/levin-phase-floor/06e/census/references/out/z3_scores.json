@@ -1,0 +1,467 @@
+{
+ "verdict": "fails",
+ "rows": [
+  {
+   "n": 1,
+   "unit": "g-1e-7-2-1444",
+   "index": 4,
+   "block": "G+q-r",
+   "counts": false,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true
+   },
+   "scatter_over_min": 0.961002959661079,
+   "orch_reading": 0.5830197517911915,
+   "g_ratio": 0.6258801143647004,
+   "c_ratio": 0.12229514322082952,
+   "viol": false,
+   "ref": "0x1.c427c1ba5931bp-89",
+   "S96_P128": "0x1.c427c1c37660cp-89",
+   "S96_P64": "0x1.c427c1ac4a60ap-89",
+   "S128_P64": "0x1.c427c1ba5931bp-89",
+   "S64_P128": "0x1.c427c1881123cp-89",
+   "abserr_g": "0x1.81cb7dded8c1ap-117",
+   "abserr_06c": "0x1.e75e77abcc7b6p-115",
+   "value_g": "0x1.c427c1ab41d00p-89",
+   "value_06c": "0x1.c427c1ab729c6p-89",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/orchestrator_check/02-ref-s01.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/orchestrator_check/04-ref-s01-P64.txt"
+   ],
+   "file_sha256": [
+    "6f3bc2d38c0b7cf115921b1151c0220ba13f67beb724a2b4c0791d5cba3c9731",
+    "39d5553f7cf26ee911c0f3921d23c4f41ea90e4b4a541986a65bfad66f992189"
+   ]
+  },
+  {
+   "n": 2,
+   "unit": "g-1e-7-2-1627",
+   "index": 3,
+   "block": "G-q+r",
+   "counts": true,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 4.976180170855453e-06,
+   "orch_reading": 4.976180170855453e-06,
+   "g_ratio": 0.9984765175414408,
+   "c_ratio": 0.9984755908214404,
+   "viol": false,
+   "ref": "-0x1.82749f74c8bdcp-95",
+   "S96_P128": "-0x1.82749f74d2eb2p-95",
+   "S96_P64": "-0x1.82749f74cc70ep-95",
+   "S128_P64": "-0x1.82749f74c8bdcp-95",
+   "S64_P128": "-0x1.82749f74cc61dp-95",
+   "abserr_g": "0x1.f35087217bd59p-115",
+   "abserr_06c": "0x1.f350a57b8ff13p-115",
+   "value_g": "-0x1.8274be9da55f4p-95",
+   "value_06c": "-0x1.8274be9da55efp-95",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s02-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s02-P64.txt"
+   ],
+   "file_sha256": [
+    "79b7e00fd8347868fdbb125f6c4d5c4fe82ffe1119df5842344bcfafc60da4a5",
+    "7287e22ab7aeed6d809c2ff8c807330b05787afd375ae7ec5fa0d796631b9717"
+   ]
+  },
+  {
+   "n": 3,
+   "unit": "g-1e-7-3-34370",
+   "index": 4,
+   "block": "G-q-r",
+   "counts": true,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 0.008327493972950533,
+   "orch_reading": 0.008327493972950533,
+   "g_ratio": 1.2450461706672034,
+   "c_ratio": 1.1970566752389278,
+   "viol": true,
+   "ref": "0x1.2549f00caea6ep-88",
+   "S96_P128": "0x1.2549f0108200ap-88",
+   "S96_P64": "0x1.2549f00d6ab8ap-88",
+   "S128_P64": "0x1.2549f00caea6ep-88",
+   "S64_P128": "0x1.2549f00929c9ap-88",
+   "abserr_g": "0x1.cb647a7f43ea2p-112",
+   "abserr_06c": "0x1.ddc88087c8490p-112",
+   "value_g": "0x1.2549f248a5a85p-88",
+   "value_06c": "0x1.2549f2489da62p-88",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s03-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s03-P64.txt"
+   ],
+   "file_sha256": [
+    "ae168022a9523f616b0787c645c7c6946bd3a0b850076d3d923b2cfec04fa15e",
+    "0b0f08129aaa68935028697efee7b911adeeca3781555802fccbdfa64c25ce61"
+   ]
+  },
+  {
+   "n": 8,
+   "unit": "g-1e-7-3-37319",
+   "index": 6,
+   "block": "Y1",
+   "counts": true,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 0.0007994000329419954,
+   "orch_reading": 0.0007994000329419954,
+   "g_ratio": 0.9995179345682139,
+   "c_ratio": 0.9993435300476502,
+   "viol": false,
+   "ref": "-0x1.5957d22e23d99p-30",
+   "S96_P128": "-0x1.5957d22e09b8ep-30",
+   "S96_P64": "-0x1.5957d22e229dap-30",
+   "S128_P64": "-0x1.5957d22e23d99p-30",
+   "S64_P128": "-0x1.5957d22e489a3p-30",
+   "abserr_g": "0x1.feb0798665f4ep-56",
+   "abserr_06c": "0x1.fec7202556ba5p-56",
+   "value_g": "-0x1.5957d1ae877cbp-30",
+   "value_06c": "-0x1.5957d1ae87874p-30",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s08-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s08-P64.txt"
+   ],
+   "file_sha256": [
+    "9ed145f3c458fcd2d4ecbef37d7b941588c21845c44e0c83f1d32f958d3d7420",
+    "c5a4c09d343d9a1dd0e7ea4b509b00ace8fb89400ba49b62ddaf15fab9993261"
+   ]
+  },
+  {
+   "n": 9,
+   "unit": "g-1e-7-1-35340",
+   "index": 18,
+   "block": "Y2",
+   "counts": true,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true
+   },
+   "scatter_over_min": 0.006664012521508678,
+   "orch_reading": 0.004516330858732693,
+   "g_ratio": 0.9978586899089871,
+   "c_ratio": 0.9910278153253507,
+   "viol": false,
+   "ref": "0x1.9e838ef296e66p-33",
+   "S96_P128": "0x1.9e838ef2960bbp-33",
+   "S96_P64": "0x1.9e838ef298b24p-33",
+   "S128_P64": "0x1.9e838ef296e66p-33",
+   "S64_P128": "0x1.9e838ef29aa25p-33",
+   "abserr_g": "0x1.8dc0e9e93e321p-65",
+   "abserr_06c": "0x1.90820b21d2a6ep-65",
+   "value_g": "0x1.9e838ef109ff8p-33",
+   "value_06c": "0x1.9e838ef109fc4p-33",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/orchestrator_check/02-ref-s09.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/orchestrator_check/04-ref-s09-P64.txt"
+   ],
+   "file_sha256": [
+    "9004f1e9cbcc56aa7720c312cb257080c4d2f16870b0582e072fe593ca512a37",
+    "2b1608489a8f0f8ab5e36cdfeec3cdde74ee1a998a8237aa309300551b49ba55"
+   ]
+  },
+  {
+   "n": 10,
+   "unit": "g-1e-7-1-35332",
+   "index": 10,
+   "block": "Y3",
+   "counts": false,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 0.02338806625039429,
+   "orch_reading": 0.018984999416857298,
+   "g_ratio": 0.9850614536300909,
+   "c_ratio": 0.9503631096634548,
+   "viol": false,
+   "ref": "0x1.53f0185fa507ap-44",
+   "S96_P128": "0x1.53f0185fa5979p-44",
+   "S96_P64": "0x1.53f0185fa29b0p-44",
+   "S128_P64": "0x1.53f0185fa507ap-44",
+   "S64_P128": "0x1.53f0185fa7ba3p-44",
+   "abserr_g": "0x1.fec92197c6400p-78",
+   "abserr_06c": "0x1.0892b0dd35d3ap-77",
+   "value_g": "0x1.53f0186022d19p-44",
+   "value_06c": "0x1.53f0186022c00p-44",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s10-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s10-P64.txt"
+   ],
+   "file_sha256": [
+    "5424a3e092a15b948ef143c03874eb502f490ca9c594d558daa97afb05cdd485",
+    "07dfeb1f69d4316314748900523edda0f54a674235aaffe5c21eb3fb6622945c"
+   ]
+  },
+  {
+   "n": 13,
+   "unit": "g-1e-8-3-34220",
+   "index": 4,
+   "block": "G+q-r",
+   "counts": false,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 17.6189154126138,
+   "orch_reading": 10.54900368619889,
+   "g_ratio": 10.376152448802324,
+   "c_ratio": 0.0677368643463825,
+   "viol": true,
+   "ref": "0x1.f022b88e640adp-94",
+   "S96_P128": "0x1.f022b84477c01p-94",
+   "S96_P64": "0x1.f022b8fcb0f28p-94",
+   "S128_P64": "0x1.f022b88e640adp-94",
+   "S64_P128": "0x1.f022b7f1ac565p-94",
+   "abserr_g": "0x1.4e9792d3061f5p-123",
+   "abserr_06c": "0x1.8e28ba0bdd213p-116",
+   "value_g": "0x1.f022b8fae2452p-94",
+   "value_06c": "0x1.f022b8fa455f2p-94",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s13-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s13-P64.txt"
+   ],
+   "file_sha256": [
+    "38198a59008061b37046d7683a8597270ed21a3eeab3f42ee598683c1002b107",
+    "5743a027beb3370c8fe42f15915bbe30756f4362529e3295852b46a17290e5c4"
+   ]
+  },
+  {
+   "n": 14,
+   "unit": "g-1e-8-2-1627",
+   "index": 3,
+   "block": "G-q+r",
+   "counts": true,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 4.9761802565960396e-06,
+   "orch_reading": 4.9761802565960396e-06,
+   "g_ratio": 0.9984765314029501,
+   "c_ratio": 0.9984757324540605,
+   "viol": false,
+   "ref": "-0x1.82749f74c8bdcp-95",
+   "S96_P128": "-0x1.82749f74d2eb2p-95",
+   "S96_P64": "-0x1.82749f74cc70ep-95",
+   "S128_P64": "-0x1.82749f74c8bdcp-95",
+   "S64_P128": "-0x1.82749f74cc61dp-95",
+   "abserr_g": "0x1.f350869124fbdp-115",
+   "abserr_06c": "0x1.f350a0c941ba3p-115",
+   "value_g": "-0x1.8274be9da55d8p-95",
+   "value_06c": "-0x1.8274be9da55e1p-95",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s14-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s14-P64.txt"
+   ],
+   "file_sha256": [
+    "fec3ac1bb851859ea606a419ddf6006d7b05a28992b9192c1af15b4848be0b78",
+    "240d856d15dc489e5debed8f15539413c5904fcfb3162500906d90aa9fc6e5e2"
+   ]
+  },
+  {
+   "n": 15,
+   "unit": "g-1e-8-2-1549",
+   "index": 4,
+   "block": "G-q-r",
+   "counts": true,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 0.008901264668449534,
+   "orch_reading": 0.008901264668449534,
+   "g_ratio": 0.7811309654895031,
+   "c_ratio": 0.7803762546050305,
+   "viol": false,
+   "ref": "-0x1.38011e3b4d40ap-91",
+   "S96_P128": "-0x1.38011e396c296p-91",
+   "S96_P64": "-0x1.38011e3ab17c1p-91",
+   "S128_P64": "-0x1.38011e3b4d40ap-91",
+   "S64_P128": "-0x1.38011e39b010fp-91",
+   "abserr_g": "0x1.a63eefc9a64b1p-116",
+   "abserr_06c": "0x1.a6a5ba739c9cbp-116",
+   "value_g": "-0x1.38011d966319fp-91",
+   "value_06c": "-0x1.38011d9663c89p-91",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s15-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s15-P64.txt"
+   ],
+   "file_sha256": [
+    "ad641acccfcfa60021241337791a929a27ffaa003820bff4d94242a101fbb526",
+    "89b68d40185b334a128551a920d668baea6a3a95affc73ffcd6aa45561bb9657"
+   ]
+  },
+  {
+   "n": 22,
+   "unit": "g-1e-8-2-21874",
+   "index": 12,
+   "block": "Y3",
+   "counts": false,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 0.988727825841362,
+   "orch_reading": 0.988727825841362,
+   "g_ratio": 0.21563069967993972,
+   "c_ratio": 0.028885054215645436,
+   "viol": false,
+   "ref": "-0x1.35f74745a7127p-46",
+   "S96_P128": "-0x1.35f7474579d00p-46",
+   "S96_P64": "-0x1.35f747459fd37p-46",
+   "S128_P64": "-0x1.35f74745a7127p-46",
+   "S64_P128": "-0x1.35f747456df55p-46",
+   "abserr_g": "0x1.6e343f1eb5419p-81",
+   "abserr_06c": "0x1.343feabeaf356p-78",
+   "value_g": "-0x1.35f747459d339p-46",
+   "value_06c": "-0x1.35f747459e2b1p-46",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s22-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s22-P64.txt"
+   ],
+   "file_sha256": [
+    "3cbc205182946e9ab86d79a2e10e8a64047f8d59af8e582bb35c4a3d10aaf4f3",
+    "b81db218ce787d4d563cc0fc4510b0d7ab991c046de25ab5a1706d7d73994bcf"
+   ]
+  },
+  {
+   "n": 23,
+   "unit": "g-1e-8-2-1402",
+   "index": 12,
+   "block": "Y4",
+   "counts": false,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 0.06728925634037139,
+   "orch_reading": 0.035092720047829234,
+   "g_ratio": 0.9690179491878077,
+   "c_ratio": 0.947743504324438,
+   "viol": false,
+   "ref": "-0x1.1202ddb9df72fp-42",
+   "S96_P128": "-0x1.1202ddb9dfa87p-42",
+   "S96_P64": "-0x1.1202ddb9df38ap-42",
+   "S128_P64": "-0x1.1202ddb9df72fp-42",
+   "S64_P128": "-0x1.1202ddb9de710p-42",
+   "abserr_g": "0x1.9f6ad7e2b35e7p-80",
+   "abserr_06c": "0x1.a8cef17512fefp-80",
+   "value_g": "-0x1.1202ddb9e5bd2p-42",
+   "value_06c": "-0x1.1202ddb9e5bd6p-42",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s23-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s23-P64.txt"
+   ],
+   "file_sha256": [
+    "6a7da863150d76db3059c5dcb9bb3a5c363ac2fe1048e47a7bc8120a86aea37c",
+    "5f8250a531a9ec5e72076b54690f257c81d023b6899167f5f0ecf0b089011d2c"
+   ]
+  },
+  {
+   "n": 25,
+   "unit": "g-1e-8-0-33962",
+   "index": 12,
+   "block": "Y4",
+   "counts": false,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true
+   },
+   "scatter_over_min": 65.71652213325632,
+   "orch_reading": 65.71652213325632,
+   "g_ratio": 9.193491931902587,
+   "c_ratio": 4.883094485380269e-05,
+   "viol": true,
+   "ref": "-0x1.856da4f4fa48bp-52",
+   "S96_P128": "-0x1.856da4f8b0655p-52",
+   "S96_P64": "-0x1.856da50fd2e34p-52",
+   "S128_P64": "-0x1.856da4f4fa48bp-52",
+   "S64_P128": "-0x1.856da52a40dbbp-52",
+   "abserr_g": "0x1.a2517359ee192p-86",
+   "abserr_06c": "0x1.0c4b38939c8e0p-70",
+   "value_g": "-0x1.856da4f8bbbc3p-52",
+   "value_06c": "-0x1.856da4f5d0ee7p-52",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/orchestrator_check/02-ref-s25.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling/orchestrator_check/04-ref-s25-P64.txt"
+   ],
+   "file_sha256": [
+    "7796e1dc81603adc382096761b37fd94726a6ac3299f296c1ec27d6a9e80717a",
+    "2e8ba090d0a2e38c1e229d762b75bcdc898a736cd4721b663b8a8426f838c833"
+   ]
+  },
+  {
+   "n": 27,
+   "unit": "g-1e-8-3-34419",
+   "index": 21,
+   "block": "J4",
+   "counts": false,
+   "checks": {
+    "label_and_span_g": true,
+    "06c_checkpoint_equals_capture_record": true,
+    "pickle_sha256_both_runs": true,
+    "replay_equals_g_call": true,
+    "tree_g": true
+   },
+   "scatter_over_min": 0.7661777688694408,
+   "orch_reading": 0.7661777688694408,
+   "g_ratio": 2.028020902179078,
+   "c_ratio": 1.3816089521971913,
+   "viol": true,
+   "ref": "0x1.b5ae33790d84ap-42",
+   "S96_P128": "0x1.b5ae3378067fep-42",
+   "S96_P64": "0x1.b5ae3378617d9p-42",
+   "S128_P64": "0x1.b5ae33790d84ap-42",
+   "S64_P128": "0x1.b5ae337c56bd5p-42",
+   "abserr_g": "0x1.57495e0df31f8p-74",
+   "abserr_06c": "0x1.faa615e5ea6fcp-74",
+   "value_g": "0x1.b5ae337655536p-42",
+   "value_06c": "0x1.b5ae337651871p-42",
+   "files": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s27-P128.txt",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s27-P64.txt"
+   ],
+   "file_sha256": [
+    "fa0f7668054b7c497830605a78961a7824779f08d087bcde94aafc774843ce8e",
+    "cb8b0bbc7371e9721c1f4832d595ce0dc6bacd4384217e33a755a7a29ec2837f"
+   ]
+  }
+ ]
+}

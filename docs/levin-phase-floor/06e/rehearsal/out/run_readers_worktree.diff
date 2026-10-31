@@ -1,0 +1,13 @@
+20c20,23
+< cd "$(dirname "$0")/../../.."
+---
+> # levin-phase-floor 06 §5.5 (rehearsal log, deviation): run in a worktree that has no venv, with the
+> # main checkout's venv python by absolute path and no bytecode written. Only these lines differ.
+> PY="${READERS_PYTHON:?set READERS_PYTHON to the venv python}"
+> cd "${READERS_TREE:?set READERS_TREE to the worktree whose readers run}"
+48,49c51,52
+<   echo "=== $label: $(date '+%Y-%m-%d %H:%M:%S %z'): PYTHONPATH=. ./venv/bin/python $program --database $DB --ray-address local $* --output $OUT/$label/"
+<   PYTHONPATH=. ./venv/bin/python "$program" --database "$DB" --ray-address local "$@" --output "$OUT/$label/" > "$OUT/$label.log" 2>&1
+---
+>   echo "=== $label: $(date '+%Y-%m-%d %H:%M:%S %z'): (cwd $PWD) PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. $PY $program --database $DB --ray-address local $* --output $OUT/$label/"
+>   PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. "$PY" "$program" --database "$DB" --ray-address local "$@" --output "$OUT/$label/" > "$OUT/$label.log" 2>&1

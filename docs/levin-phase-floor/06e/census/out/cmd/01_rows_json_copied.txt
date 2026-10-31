@@ -1,0 +1,11 @@
+$ /bin/bash -c cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json\ state/rows.json\ \&\&\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json\ state/rows.json\ \&\&\ echo\ \"expected\ aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417\ \(prov.ROWS06A_SHA256\)\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T07:47:17Z
+# ----
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  state/rows.json
+expected aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417 (prov.ROWS06A_SHA256)
+# ----
+# end 2026-10-30T07:47:17Z
+# exit 0

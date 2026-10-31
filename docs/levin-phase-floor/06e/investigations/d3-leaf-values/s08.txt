@@ -1,0 +1,12 @@
+# host mps026088 utc 2026-10-31T15:03:31Z tree 6d81fad4 status lines 0
+# pickle sha256 861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80  reference S128(P64) -0x1.5957d22e23d99p-30
+scale None
+value -0x1.5957d1ae877cbp-30 abserr 2.768453e-17 regions 3 converged True
+|v-ref|/abserr 0.999518  v-ref +2.767118e-17
+  [-11.656767,-2.945378] d1 Levin  abserr 2.768e-17 trusted True r 0.0001665086141031638 declared 2.7683919794654934e-17
+      VP-H +2.767931e-17  H-Q +4.608844e-21  VP-Q +2.768392e-17  delta1 2.7679310183536984e-17  delta2 4.608843577992332e-21
+  [-2.945378,1.410316] d2 Levin  abserr 1.515e-28 trusted True r 0.3333333333333333 declared 2.2719194070365136e-28
+      VP-H +1.514613e-28  H-Q -5.048710e-29  VP-Q +1.009742e-28  delta1 1.5146129380243427e-28  delta2 5.048709793414476e-29
+  [1.410316,5.766010] d2 Levin  abserr 7.435e-24 trusted True r 3.182853670212224e-07 declared 7.435413984187737e-24
+      VP-H +7.435412e-24  H-Q -2.366583e-30  VP-Q +7.435409e-24  delta1 7.435411617604268e-24  delta2 2.3665827156630354e-30
+value with checked leaves -> quarters: |v'-ref|/abserr 0.000460

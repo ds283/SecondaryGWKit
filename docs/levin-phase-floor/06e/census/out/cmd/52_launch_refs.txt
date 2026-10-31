@@ -1,0 +1,14 @@
+$ /bin/bash -c cd\ references\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ launch_refs.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T19:27:30Z
+# ----
+run id      levin-phase-floor-06e-references-20261030T192730
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/run_refs.py
+sh pid      87997
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/run_refs.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730; exit $?
+launcher    pid 87993, exiting without waiting
+# ----
+# end 2026-10-30T19:27:30Z
+# exit 0

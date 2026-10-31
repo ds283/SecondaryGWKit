@@ -1,0 +1,21 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/checks_after_06e.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:00:51Z
+# ----
+record keys seen: ['data', 'git_dirty', 'git_head', 'recorded', 'script_sha256', 'unit']
+cc errors: 0
+cc leaves: 278863
+cc reproduced: 278863
+deep(cap) lines: 29
+deep06e errors: 0
+deep06e lines: 200
+deep06e not reproducing: 0
+records: 18560
+script_sha a6d9bac4: 18560
+status done: 18560
+units with wall_s > 300 s: 0 []
+records failing tree/scripts/modules checks: 0 []
+# ----
+# end 2026-10-30T10:00:57Z
+# exit 0

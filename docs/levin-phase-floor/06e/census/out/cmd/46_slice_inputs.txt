@@ -1,0 +1,24 @@
+$ /bin/bash -c cd\ references\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ slice_inputs.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:26Z
+# ----
+script slice_inputs.py sha256 32045d92a0b3135905f18d29835d695f02692b79d44662fd08b3e84f3bd0eb5b
+captured.json sha256 4f29bf95bc95986aab2b05de76e92be18f59a1b887200553f45f27c9b690722d
+s01 g-1e-7-2-1444 #4 G+q-r: 1318261 bytes sha256 7f162791c9b19f1cf15ef0b02ccd35910d0da83c8681aba7558642dfefbf8bb0 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s02 g-1e-7-2-1627 #3 G-q+r: 1353643 bytes sha256 0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s03 g-1e-7-3-34370 #4 G-q-r: 1342891 bytes sha256 81cff8d83b285ca9f1851e5d56e964e5fdb05293b07202b0d3eb9799b1cf4892 EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s08 g-1e-7-3-37319 #6 Y1: 3566 bytes sha256 861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s09 g-1e-7-1-35340 #18 Y2: 22397 bytes sha256 cbe9cb72607d7c19ae7d65a4b50726e9b0a0915998b5a3ca8f715e4a6d8285d3 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s10 g-1e-7-1-35332 #10 Y3: 3565 bytes sha256 08f40073cbfe11d70d1f4fec19ee6ebc1876c95145375eb0823533bfe0bbd5af EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s13 g-1e-8-3-34220 #4 G+q-r: 1322154 bytes sha256 54bd746d5ac6a1fd51f31822e374a2fe60a1143fc04579a7f80cbbc4ddf96b56 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s14 g-1e-8-2-1627 #3 G-q+r: 1353787 bytes sha256 9570b1794986758ad0413315bb300a9cec4f13715f14fa85d0a0ef2a017eb942 EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s15 g-1e-8-2-1549 #4 G-q-r: 1338573 bytes sha256 e9ca60604f8cb8cae4689d16362b97b438bd0e1ed103bff099f485756e786abd EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s22 g-1e-8-2-21874 #12 Y3: 3650 bytes sha256 ad6a6a065ead3616ef8dc96d162a7fa7f4ee902ca59d5f41580d72608b03e9b1 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s23 g-1e-8-2-1402 #12 Y4: 3565 bytes sha256 1ffb073daec0dbdb8c4961bf3508218f5c25d5ce1bbaa75f41954acee134d5ba EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s25 g-1e-8-0-33962 #12 Y4: 3567 bytes sha256 696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s27 g-1e-8-3-34419 #21 J4: 21995 bytes sha256 d5389183fa3d15c084d15d2939f4923c151541255ada9ce3fff26be7ee1fca1c EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+ALL GOOD
+# ----
+# end 2026-10-30T10:01:26Z
+# exit 0

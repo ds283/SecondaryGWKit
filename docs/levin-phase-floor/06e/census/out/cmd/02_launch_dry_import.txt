@@ -1,0 +1,15 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c import\ sys\;\ sys.path.insert\(0\,\ \'scripts\'\)\;\ print\(sys.version\)\;\ import\ launch\;\ print\(\'PURPOSE:\'\,\ launch.PURPOSE\)\;\ print\(\'SCOPE:\'\,\ launch.SCOPE\)\;\ print\(\'SCRIPT:\'\,\ launch.SCRIPT\)\;\ print\(\'N_ROWS:\'\,\ launch.N_ROWS\)\;\ import\ prov\;\ print\(\'TREES:\'\,\ prov.TREES\)\;\ print\(\'RUN06C:\'\,\ prov.RUN06C\,\ prov.RUN06C.exists\(\)\)
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T07:54:56Z
+# ----
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+PURPOSE: levin-phase-floor prompt 06e section 5 on the Mac Studio (mps026298; Python 3.13.16): 06c's census re-run at 06e's code f4d8e17 (exact Chebyshev end nodes; the Clenshaw-Curtis node term from each node's measured displacement), every A3 v2 QuadSourceIntegral row (9280) re-run in-process at rtol 1e-7 and 1e-8 (atol 1e-32), Ray-free, no lock, against 06c's run levin-phase-floor-06c-census-20261029T130214 as the before; also 07's before. One tree, g, the git worktree at Part B's dispatch SHA 6d81fad (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad; its code outside docs/ and prompts/ is f4d8e17's; the parent 50277f3, whose code is 06c's census's e5764a6, reproduces 06c by Gate Z0). It reads, read-only, 06's certified scratch copy of A3 v2 (var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint 0e32f24a) on a stand-in ShardedPool, with 06a's producer cache. One worker per k per rtol, at most six at once; every 1e-7 unit before any 1e-8 unit; 300 s budget per unit; per call, 06c's records (the global budget's counters, the solves by purpose, every returned leaf's numbers); after each unit's timed section, every returned Clenshaw-Curtis leaf's floor terms (re-solved, checked bit for bit), and the deepest line, with its end-node tiling, of each call past depth 12; in every 1e-7 unit, 06a's stationary-point scan and 06b's W3 evidence. The manifest's git_head is the main checkout's (28ebaf0), where no tree code runs; 06c's run took 2 h 30 min
+SCOPE: all 9280 QuadSourceIntegral rows of handover-A3-v2-lambdacdm (read-only, through 06's certified scratch copy), listed in var/levin-phase-floor-06e/census/state/rows.json (06a's, sha256 aa523d28); tree g (worktree 6d81fad, code f4d8e17); rtol 1e-7 and 1e-8; no store write, no Ray, no lock
+SCRIPT: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts/run_census.py
+N_ROWS: 9280
+TREES: {'p': (PosixPath('/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3'), '50277f3e019bb37df6d91a5c2340877755498508'), 'g': (PosixPath('/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad'), '6d81fad43cbf1f17cff8d0f48fc7b65966e343ab')}
+RUN06C: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214 True
+# ----
+# end 2026-10-30T07:54:56Z
+# exit 0

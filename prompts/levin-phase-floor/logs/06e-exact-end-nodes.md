@@ -133,7 +133,8 @@ over $\phi_{\rm node}$ is at least 10. A failure is a finding, not a stop.* Scor
 cells of test 4 (`parent_demo.txt` section C): **median 848.3** (min 75.7, max $2.07\times10^4$).
 **Holds.**
 
-The following are §4's and §5's, copied before they run. **Not yet scored.**
+The following are §4's and §5's, copied before they run. **Scored 2026-10-31 on the Mac Studio**
+(Part B, below): **Z0, Z1 and Z4 hold; Z2, Z3 and Z5 fail.**
 
 §4, the value comparison:
 
@@ -434,3 +435,85 @@ occurred.
   calls outside stationary points to go (the draws: 101 → 0), calls whose floor-limited leaves hid
   the offset to declare more honestly (Observations 2), and fallback-heavy calls to cost about twice
   per solve. The AdaptiveLevin root runs `git show 50277f3` at test time (deviation 14).
+
+## Part B: the Mac Studio record (appended by the orchestrator, 2026-10-31)
+
+Part B ran on 2026-10-30 and 2026-10-31 on the Mac Studio (`mps026298`): R19 and Z0's reproduction
+at `50277f3` (06d's code), R20 and the census at `6d81fad` (`f4d8e17`'s code, §B.2). The Mac Studio
+orchestrator ran §B.0's read-only preflight (`06e/review/preflight/`), dispatched a rehearsal agent
+and a census agent, and reviewed both: **the review passes, and no §7 stop condition was met.** The
+full records are in `docs/levin-phase-floor/06e/`: `review.md` (the review), `rehearsal/` and
+`census/` (each agent's log, verification, issues, scripts and outputs). What stays on the Mac
+Studio is listed in `06e/KEPT_ON_MAC_STUDIO.md`.
+
+**§4.** R19 `levin-phase-floor-06e-r19-parent-20261030T074440` and R20
+`levin-phase-floor-06e-r20-endnodes-20261030T075034`, both `done`, both `1b332ffa…`, re-fingerprinted
+by the review. Outside `QuadSourceIntegral` every value table is identical. Inside, 864 rows:
+`total` bit-identical in 361, `total_converged` 863 → 864, regions 34,892 → 31,216, rows at depth
+≥ 12 46 → 11. **Z1 holds**: no violation; the largest $|\Delta T|/(e_{19}+e_{20})$ is 0.00312. Six
+readers exit 0; the lock released. Both stores were retired on 2026-10-31 by the user, after their
+sidecars and fingerprints were written from a checkout at `6d81fad`.
+
+**§5.** Census `levin-phase-floor-06e-census-20261030T081318`: 18,560 of 18,560 units `done` in
+about 1 h 47 min (06c: 2 h 30 min), none in error or over budget; A3 v2's scratch copy and 06c's
+checkpoint unchanged by SHA-256. Unit wall 2.282 h and 2.974 h at `1e-7` and `1e-8` against 06c's
+3.208 h and 5.775 h (×0.711, ×0.515); solves 7.26 M → 4.86 M and 12.44 M → 6.21 M; calls at depth
+20 109 → 11 and 153 → 18, of them outside the 720 rows 84 → 0 and 133 → 1.
+
+| | `1e-7` | `1e-8` | verdict |
+|---|---|---|---|
+| Z0 | all three clauses | | holds |
+| Z1 | 864 rows, 0 violations | | holds |
+| Z2 | 0 calls outside the 720 at depth 20 | 1: `g-1e-8-0-33995` call 5 | fails |
+| Z3 | 6 references count, 7 dropped; sample 3 at 1.245× (06c 1.197×) | | fails |
+| Z4 | 8,560 rows, 0 violations | 8,560, 0 | holds |
+| Z5 | 85 of 85 06c-unconverged calls converge | 172 of 173 (the Z2 call) | fails |
+
+**What the failures are** (`06e/review.md`; `06e/census/issues.md` D1–D6; the orchestrator's
+checks on the laptop, 2026-10-31):
+- **Z2 and Z5 (D1).** `g-1e-8-0-33995` call 5 (`G−q+r`, $k = r = 3.14\times10^5$, $q = 10^5$) ends
+  unconverged at depth 20 with 8,706 regions. Its floor, $1.333\times10^{-33}$ against atol
+  $6.69\times10^{-34}$, is 06e's node term ($1.318\times10^{-33}$, of it $|E|$
+  $1.312\times10^{-33}$) summed over 8,600 Clenshaw–Curtis leaves; the declared-phase term is 0 on
+  this call. $\Delta_k$ is set by the spacing of doubles at $x \approx 20$, not by the leaf's width,
+  so the sum of $|E|$ does not fall under splitting and the loop chases it:
+  `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`. The per-leaf terms are added in
+  absolute value, though $E$'s sign varies from leaf to leaf: opened as
+  `[06e-node-errors-add-in-absolute-value]`. At `1e-7` the call converges at depth 11.
+- **Z3 (D2).** Sample 3 (`g-1e-7-3-34370` call 4) is 1.245× its declared error; its reference's
+  resolutions agree to 0.0083 of the error. Under 06c's census code it was 1.197×. The
+  orchestrator's leaf breakdown (`06e/investigations/d3-leaf-values/s03.txt`): one leaf at depth 2
+  with $r = 0.507$ carries the error; its quarters sum is itself $1.7\times10^{-34}$ off, so the
+  error falls more slowly than the geometric extrapolation $\Delta_1/(1-r)$ assumes. That is
+  `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`, not the common error of
+  `[06b-moved-calls-declare-less-than-their-error]` the census agent proposed.
+- **D3.** On samples 2, 8, 9 and 14 (three distinct calls) $|v - {\rm ref}|/{\rm abserr}$ is
+  0.998–0.9995 in both codes. The orchestrator's leaf breakdown (`06e/investigations/d3-leaf-values/`)
+  finds the mechanism: in each, one trusted leaf with $r \le 0.0014$ carries the error, and the trust
+  check keeps that leaf's own value $V_P$ ("Its value is unchanged") while declaring
+  $\max(\epsilon_P, \Delta_1)/(1-r)$. So the declared error is $V_P$'s true error to within $r$, and
+  the quarters sum it has already computed is 650–2,200× closer: with each trusted leaf's value
+  replaced by its quarters sum the ratio falls to 0.0005–0.0015, and sample 3's to 0.50. Opened as
+  `[06e-trusted-leaf-returns-its-coarsest-value]`.
+- **D4.** Over the floor-attributed Clenshaw–Curtis leaves the declared endpoint-phase term
+  (`_declared_endpoint_phase_err`, a caller's `theta_abserr` against an $|f|$-scaled proxy for
+  $|p|$) is 99.4 % of the summed floor. The sum is weighted to the largest calls: per call it is the
+  largest floor term on 2,493 and 2,785 calls, against 2,644 and 3,216 for $(n+4)uS$ and 491 and
+  1,323 for the node term. Opened as `[06e-cc-declared-phase-term-is-a-crude-proxy]`.
+- **D5.** At `1e-8`, `g-1e-8-1-2174` call 1, a stationary-point row, converges at depth 7 on
+  depth20-tiling's pinned value, 1,678× its declared error from 06c's: recorded on
+  `[06-levin-accepts-a-region-across-a-stationary-point]`.
+- **D6.** Y1's 12 equilateral rows are not A3 v2 rows, so the census cannot report them. Recorded
+  here only.
+
+**Cost of Z3's references.** The prompt's estimates came from depth20-tiling's sizing of
+`refq.py`, once at about 500 rad a panel. The runs used `orch_ref.py` at P = 128 and P = 64, with
+two node counts each, about 4× the sub-panels a pass: the short passes took 305–6,095 s, 2–3.5× the
+estimates, and the long run 3,984 + 11,131 s (s03) and 5,081 + 14,301 s (s15), 9 h 35 min in all.
+A future reference batch should be sized from these walls.
+
+**The user's rulings** (2026-10-31, the board's Decisions, **06e Part B lands**): both header
+issues close despite Z2's failure, *"OK. Close both header issues. We need to open a new issue for
+D4."* D3 was opened after its mechanism was checked, on the user's word: *"we need to chase the D3
+problem also."* R19 and R20 are retired; the worktrees are removed. The census run directory
+(1.5 GB) stays on the Mac Studio in full for 07.

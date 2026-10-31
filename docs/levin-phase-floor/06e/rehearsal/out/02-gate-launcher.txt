@@ -1,0 +1,65 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-30T07:44:17Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+echo '== auth token (the stat in 01 was GNU stat; this is /usr/bin/stat)'; /usr/bin/stat -f '%Sp %N' ~/.ray/auth_token; echo '== launcher, tool, readers, classify, levin_quadrature SHA-256'; shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/RunDrivers/quadsource_atol_sweep.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/RunDrivers/quadsource_atol_sweep.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/tools/store_value_diff.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/tools/store_value_diff.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/dk-and-rpk-migration/rehearsal/run_readers.sh /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/rehearsal/scripts/run_readers_worktree.sh /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/05/rehearsal/scripts/classify_non_qsi.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/rehearsal/scripts/classify_non_qsi.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/AdaptiveLevin/levin_quadrature.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/AdaptiveLevin/levin_quadrature.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/ComputeTargets/QuadSourceIntegral.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/ComputeTargets/QuadSourceIntegral.py; echo '== R17/R18 manifests script_sha256 and git_head'; for d in var/runs/levin-phase-floor-06c-r17-parent-20261029T123720 var/runs/levin-phase-floor-06c-r18-global-20261029T124058; do ./venv/bin/python -I -c 'import json,sys; m=json.load(open(sys.argv[1]+"/manifest.json")); print(m["run_id"], m["git_head"], m["script_sha256"])' $d; done; echo '== R8 status fingerprint'; grep -o '1b332ffa[0-9a-f]*' var/runs/handover-12-r8-reference-20261025T210551/status.json | sort -u; echo '== launcher --help'; cd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 && PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B RunDrivers/quadsource_atol_sweep.py --help; echo "help exit $?"; echo '== parent worktree status after --help'; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 status --short --ignored
+# output:
+== auth token (the stat in 01 was GNU stat; this is /usr/bin/stat)
+-rw------- /Users/ds283/.ray/auth_token
+== launcher, tool, readers, classify, levin_quadrature SHA-256
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/RunDrivers/quadsource_atol_sweep.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/RunDrivers/quadsource_atol_sweep.py
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/tools/store_value_diff.py
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/tools/store_value_diff.py
+7c63a5ba45726c81561538acdb65711c5d98897f1ae7f0cc32b88a580042560a  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/dk-and-rpk-migration/rehearsal/run_readers.sh
+ec96cf0915b486718763b3a5d73177516e8dd32775906e86e2e6bb5006cddb72  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/rehearsal/scripts/run_readers_worktree.sh
+26690e6112348716df97cccec31256bf62af357b286b89d78e6db24c006827b0  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/05/rehearsal/scripts/classify_non_qsi.py
+26690e6112348716df97cccec31256bf62af357b286b89d78e6db24c006827b0  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/rehearsal/scripts/classify_non_qsi.py
+ed0648dcbff012e11f32acd8bb0baccd804c8ec24368ee87577f670415440cd1  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/AdaptiveLevin/levin_quadrature.py
+8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/AdaptiveLevin/levin_quadrature.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/ComputeTargets/QuadSourceIntegral.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/ComputeTargets/QuadSourceIntegral.py
+== R17/R18 manifests script_sha256 and git_head
+levin-phase-floor-06c-r17-parent-20261029T123720 fef401c2614da3dbbf1b4261edd31f5f7f80cdbf 5b984c7516912cbec69de7678b3a6f0caf016e937aeba0ef418d8a242c58344b
+levin-phase-floor-06c-r18-global-20261029T124058 e5764a6708757cb11704b95bcd66825baab4ba29 b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19
+== R8 status fingerprint
+1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+== launcher --help
+usage: quadsource_atol_sweep.py [-h] [--prepare] [--force] [--report]
+                                [--build] [--rehearsal] [--database DATABASE]
+                                [--resume] [--job-name JOB_NAME] [--atol ATOL]
+                                [--rtol RTOL] [--cpus CPUS]
+                                [--phase {low-z,low-z-check,main,seam}]
+                                [--register SLUG] [--purpose PURPOSE]
+                                [--campaign CAMPAIGN] [--prompt PROMPT]
+
+Does ``DEFAULT_QUADRATURE_ATOL = 1e-32`` cost two hundred times what it buys?
+
+options:
+  -h, --help            show this help message and exit
+  --prepare             copy the baseline store
+  --force               with --prepare: refused. A sweep store is no longer
+                        replaced; see the error
+  --report              read the sweep store back
+  --build               full 9280-item build at one tolerance pair into
+                        --database (not a sweep)
+  --rehearsal           with --build only: a rehearsal scope (3 log-spaced k
+                        over 1e5-1e6 /Mpc, --zend 250) in place of the
+                        production one. It is not A3 v2
+  --database DATABASE   with --build
+  --resume              with --build: continue into an existing store at the
+                        SAME tolerance pair
+  --job-name JOB_NAME
+  --atol ATOL           with --build: absolute tolerance
+  --rtol RTOL           with --build: relative tolerance
+  --cpus CPUS
+  --phase {low-z,low-z-check,main,seam}
+                        which case set to run
+  --register SLUG
+  --purpose PURPOSE
+  --campaign CAMPAIGN
+  --prompt PROMPT
+help exit 0
+== parent worktree status after --help
+# exit: 0
+# end: 2026-10-30T07:44:18Z

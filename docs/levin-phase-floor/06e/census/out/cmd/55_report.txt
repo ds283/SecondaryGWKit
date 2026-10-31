@@ -1,0 +1,359 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06e.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:53:45Z
+# ----
+# levin-phase-floor 06e: the census's scores and descriptive items
+# written 2026-10-31T10:53:45Z on mps026298.phys.susx.ac.uk
+# script analyse06e.py sha256 030a07953c44326011369cdd30f48d605328e65ae3698e6cf6831640ce33f0b3
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/predictions.md sha256 f27771cc2c16691a027a068f7849e49f18f477bcb26ee45313fbcbedf594c840
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/y1-references/results.json sha256 533c4e091e1e29b8f157605fef5d07efccca6cf2d89e84fcb5256634ae61babc
+
+06a's stationary-point rows: 720 (must be 720: True)
+Y1's 12 rows (y1-references rank 1-12) -> rows.json: {'Y01': [], 'Y02': [], 'Y03': [], 'Y04': [], 'Y05': [], 'Y06': [], 'Y07': [], 'Y08': [], 'Y09': [], 'Y10': [], 'Y11': [], 'Y12': []}
+
+================ rtol 1e-7: units g 9280, 06c 9280
+status g {'done': 9280}; 06c {'done': 9280}
+over budget: 0 (0 outside the 720); done with wall_s > 300 s: []
+matching problems: 0 []
+
+== Z2 (rtol 1e-7): calls outside the 720 reaching depth 20: 0; over-budget units outside: 0 -> holds
+   (reported) calls of the 720 at depth 20: 11
+      ('g-1e-7-0-1795', 1, 'group', 'k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=174.13, z in (5.406e+09, 174.13), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-2-2078', 1, 'group', 'k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=57.642, z in (5.1721e+12, 57.642), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-2-34707', 1, 'group', 'k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=19.081, z in (5.2861e+10, 19.081), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-1-2174', 1, 'group', 'k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-2-34820', 1, 'group', 'k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=14.474, z in (5.2861e+10, 14.474), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-1-2137', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=2.091, z in (1.6711e+10, 2.091), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-0-14322', 1, 'group', 'k=3.14e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.52504, z in (1.6721e+11, 0.52504), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-1-14230', 1, 'group', 'k=9.85e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.69219, z in (5.169e+11, 0.69219), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-1-2232', 1, 'group', 'k=9.85e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-3-38099', 1, 'group', 'k=9.7e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=132.08, z in (1.6721e+11, 132.08), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-3-34945', 1, 'group', 'k=9.7e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r', 20)
+
+== Z4 (rtol 1e-7): rows scored 8560; non-finite total_abserr in either 0; violating 0 -> holds
+
+== Z5 (rtol 1e-7): Levin calls outside the 720 that 06c reported unconverged: 85; unconverged under g: 0; unmatched 0 -> holds
+
+-- descriptive (rtol 1e-7): convergence and depth-20 calls, g vs 06c (all rows)
+   analytic at depth 20: g 0  06c 95
+   analytic calls: g 107416  06c 107416
+   analytic unconverged: g 0  06c 89
+   group at depth 20: g 11  06c 14
+   group calls: g 37325  06c 37325
+   group unconverged: g 9  06c 15
+   rows total_converged false: g 9  06c 13
+   outside the 720:
+      analytic at depth 20: g 0  06c 76
+      analytic calls: g 95896  06c 95896
+      analytic unconverged: g 0  06c 75
+      group at depth 20: g 0  06c 8
+      group calls: g 33725  06c 33725
+      group unconverged: g 0  06c 10
+      rows total_converged false: g 0  06c 9
+   row depth (max over the row's Levin calls) histogram, depth: g / 06c
+   0: 246/259; 1: 250/226; 2: 296/210; 3: 464/261; 4: 1190/422; 5: 1086/543; 6: 999/767; 7: 1330/1101; 8: 777/978; 9: 205/617; 10: 108/372; 11: 29/279; 12: 13/247; 13: 18/236; 14: 12/182; 15: 6/91; 16: 10/82; 17: 4/61; 18: 4/39; 19: 7/29; 20: 11/63
+   call depth histogram, depth: g / 06c
+   0: 48148/46421; 1: 20933/20983; 2: 12967/12507; 3: 12796/11807; 4: 35447/22426; 5: 6954/9004; 6: 3030/6528; 7: 2809/5593; 8: 1156/3522; 9: 263/1870; 10: 118/1067; 11: 34/835; 12: 13/625; 13: 18/549; 14: 12/372; 15: 7/168; 16: 10/149; 17: 4/86; 18: 4/71; 19: 7/49; 20: 11/109
+   cost: regions g 625878 / 06c 973698 (x0.643); solves g 4862283 / 06c 7255157 (x0.670); unit walls summed g 2.282 h / 06c 3.208 h (x0.711); largest unit g g-1e-7-0-14051 6.0 s / 06c g-1e-7-0-38939 425.6 s
+   where the budget went (per call, largest of residual/floor/truncation): {('analytic', 'floor'): 45392, ('analytic', 'resolution'): 61997, ('analytic', 'truncation'): 27, ('group', 'floor'): 6417, ('group', 'resolution'): 30908}
+   CC floor terms summed over floor-attributed CC leaves (5628 calls): R_2 6.978e-34, R_c 1.754e-34, R_g 2.236e-21, abs_E 7.117e-21, declared 1.568e-17, node_term 9.354e-21, phase_err_resolve 1.577e-17, t_argument 4.123e-21, t_value_rounding 7.263e-20
+   as shares of the floor sum: t_value_rounding 0.0046, t_argument 0.0003, node_term 0.0006, abs_E 0.0005, R_g 0.0001, R_2 0.0000, R_c 0.0000, declared 0.9945
+   per call, largest floor term among (n+4)uS, argument, node, declared: {'t_value_rounding': 2644, 'node_term': 491, 'declared': 2493}
+   calls past depth 12 (outside the 720 / inside): 14 / 59
+      g-1e-7-1-35310 #6 11, 6.9475e+05), regime Gqr, group G-q-r: depth 15 conv True tiles True; resid/floor last five [12.4, 2.41, 2.7, 1.95, 0.0481]
+      g-1e-7-2-1495 #5 11, 6.9475e+05), regime Gqr, group G-q+r: depth 14 conv True tiles True; resid/floor last five [7.11, 151.0, 0.5, 2.84, 0.5]
+      g-1e-7-0-12973 #4 09e+09, 8342.9), regime Gqr, group G+q-r: depth 13 conv True tiles True; resid/floor last five [34.4, 199.0, 0.419, 1.1, 0.205]
+      g-1e-7-0-14051 #6 09e+09, 100.19), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [1520.0, 29.8, 1.57, 4.65, 0.554]
+      g-1e-7-0-2005 #2 61e+10, 75.993), regime Gqr, group G+q-r: depth 15 conv True tiles True; resid/floor last five [21.2, 2.71, 0.155, 1.54, 1.45]
+      g-1e-7-0-2005 #3 61e+10, 75.993), regime Gqr, group G-q+r: depth 15 conv True tiles True; resid/floor last five [21.2, 2.71, 0.155, 1.54, 1.45]
+      g-1e-7-0-38938 #4 51e+12, 4.7913), regime Gqr, group G-q-r: depth 14 conv True tiles True; resid/floor last five [25.1, 26.2, 1.6, 1.22, 1.64]
+      g-1e-7-2-34823 #3 09e+09, 4.7913), regime Gqr, group G+q+r: depth 15 conv True tiles True; resid/floor last five [34.4, 11.7, 0.249, 1.37, 0.0515]
+      g-1e-7-2-39041 #5 6e+09, 0.13184), regime Gqr, group G-q+r: depth 13 conv True tiles True; resid/floor last five [54.1, 10.9, 132.0, 5.83, 0.132]
+      g-1e-7-3-34098 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [106.0, 7.86, 0.488, 1.04, 0.0113]
+      g-1e-7-3-34386 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [103.0, 7.46, 0.489, 1.04, 0.0108]
+      g-1e-7-3-13613 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [62.3, 4.03, 0.492, 1.05, 0.00424]
+      g-1e-7-3-34864 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [97.4, 6.8, 0.489, 1.04, 0.00984]
+      g-1e-7-3-35008 #6 1e+10, 0.30208), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [108.0, 29.5, 1.55, 1.08, 0.255]
+   the 720: totals moved 642; by more than total_abserr_06c 7; |dtotal|/e_06c p0 0, p10 0, p50 1.28e-08, p90 4.28e-07, p99 0.00221, p100 261
+      g-1e-7-1-2174 call 1 7913), regime Gqr, group G+q+r (in 720: True): g value 0x1.0c5f181ecc5d9p-86 abserr 0x1.7587ea331e3e3p-110 depth 20 regions 94 conv False | 06c 0x1.0c5f181ecdbffp-86 0x1.75833833809f1p-110 depth 20 regions 50 conv False; |dv|/abserr_06c 1.448e-05, /abserr_g 1.448e-05
+
+================ rtol 1e-8: units g 9280, 06c 9280
+status g {'done': 9280}; 06c {'done': 9280}
+over budget: 0 (0 outside the 720); done with wall_s > 300 s: []
+matching problems: 0 []
+
+== Z2 (rtol 1e-8): calls outside the 720 reaching depth 20: 1; over-budget units outside: 0 -> fails
+   ('g-1e-8-0-33995', 5, 'group', 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r', 20)
+   (reported) calls of the 720 at depth 20: 17
+      ('g-1e-8-2-2078', 1, 'group', 'k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=57.642, z in (5.1721e+12, 57.642), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-0-12974', 1, 'group', 'k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=2094.9, z in (5.406e+09, 2094.9), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-2364', 1, 'group', 'k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=0.30208, z in (1.6351e+12, 0.30208), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-1839', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=693.47, z in (1.6711e+10, 693.47), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-0-1795', 1, 'group', 'k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=174.13, z in (5.406e+09, 174.13), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-2-34707', 1, 'group', 'k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=19.081, z in (5.2861e+10, 19.081), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-2-34820', 1, 'group', 'k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=14.474, z in (5.2861e+10, 14.474), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-34769', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=33.165, z in (1.6711e+10, 33.165), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-2137', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=2.091, z in (1.6711e+10, 2.091), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-14230', 1, 'group', 'k=9.85e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.69219, z in (5.169e+11, 0.69219), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-2232', 1, 'group', 'k=9.85e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-14233', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=0.30208, z in (1.6711e+10, 0.30208), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-38099', 1, 'group', 'k=9.7e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=132.08, z in (1.6721e+11, 132.08), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-34736', 1, 'group', 'k=1e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=25.156, z in (1.6711e+10, 25.156), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-34945', 1, 'group', 'k=9.7e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-35018', 1, 'group', 'k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=6.3166, z in (5.406e+09, 6.3166), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-14586', 1, 'group', 'k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=0.1, z in (5.406e+09, 0.1), regime Gqr, group G+q+r', 20)
+
+== Z4 (rtol 1e-8): rows scored 8560; non-finite total_abserr in either 0; violating 0 -> holds
+
+== Z5 (rtol 1e-8): Levin calls outside the 720 that 06c reported unconverged: 173; unconverged under g: 1; unmatched 0 -> fails
+   ('g-1e-8-0-33995', 5, 'group', 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r', 20, '0x1.badaaed87034dp-110')
+
+-- descriptive (rtol 1e-8): convergence and depth-20 calls, g vs 06c (all rows)
+   analytic at depth 20: g 0  06c 141
+   analytic calls: g 107416  06c 107416
+   analytic unconverged: g 0  06c 151
+   group at depth 20: g 18  06c 12
+   group calls: g 37325  06c 37325
+   group unconverged: g 15  06c 49
+   rows total_converged false: g 15  06c 45
+   outside the 720:
+      analytic at depth 20: g 0  06c 124
+      analytic calls: g 95896  06c 95896
+      analytic unconverged: g 0  06c 139
+      group at depth 20: g 1  06c 9
+      group calls: g 33725  06c 33725
+      group unconverged: g 1  06c 34
+      rows total_converged false: g 1  06c 33
+   row depth (max over the row's Levin calls) histogram, depth: g / 06c
+   0: 242/253; 1: 219/207; 2: 300/211; 3: 491/239; 4: 1614/383; 5: 846/504; 6: 692/656; 7: 812/764; 8: 924/1046; 9: 397/837; 10: 310/478; 11: 65/299; 12: 30/293; 13: 27/245; 14: 17/200; 15: 11/127; 16: 17/94; 17: 11/71; 18: 11/50; 19: 11/27; 20: 18/81
+   call depth histogram, depth: g / 06c
+   0: 39227/37815; 1: 18116/16531; 2: 13501/13724; 3: 17342/14590; 4: 43119/26114; 5: 4363/9439; 6: 2646/7373; 7: 2674/6093; 8: 2153/4970; 9: 885/2757; 10: 445/1445; 11: 103/1076; 12: 40/841; 13: 28/664; 14: 17/440; 15: 14/266; 16: 17/192; 17: 11/120; 18: 11/81; 19: 11/57; 20: 18/153
+   cost: regions g 799186 / 06c 2086346 (x0.383); solves g 6209807 / 06c 12444591 (x0.499); unit walls summed g 2.974 h / 06c 5.775 h (x0.515); largest unit g g-1e-8-0-33995 105.1 s / 06c g-1e-8-2-38298 1184.7 s
+   where the budget went (per call, largest of residual/floor/truncation): {('analytic', 'floor'): 53113, ('analytic', 'resolution'): 54303, ('group', 'floor'): 6266, ('group', 'resolution'): 31059}
+   CC floor terms summed over floor-attributed CC leaves (7326 calls): R_2 7.859e-34, R_c 2.059e-34, R_g 2.735e-21, abs_E 9.111e-21, declared 1.955e-17, node_term 1.185e-20, phase_err_resolve 1.967e-17, t_argument 5.225e-21, t_value_rounding 9.444e-20
+   as shares of the floor sum: t_value_rounding 0.0048, t_argument 0.0003, node_term 0.0006, abs_E 0.0005, R_g 0.0001, R_2 0.0000, R_c 0.0000, declared 0.9943
+   per call, largest floor term among (n+4)uS, argument, node, declared: {'t_value_rounding': 3216, 'node_term': 1323, 'declared': 2785, 't_argument': 2}
+   calls past depth 12 (outside the 720 / inside): 24 / 103
+      g-1e-8-2-1495 #5 11, 6.9475e+05), regime Gqr, group G-q+r: depth 14 conv True tiles True; resid/floor last five [7.11, 151.0, 0.5, 2.84, 0.5]
+      g-1e-8-1-35310 #6 11, 6.9475e+05), regime Gqr, group G-q-r: depth 15 conv True tiles True; resid/floor last five [12.4, 2.41, 2.7, 1.95, 0.0481]
+      g-1e-8-0-33995 #5 +09, 4.809e+06), regime Gqr, group G-q+r: depth 20 conv False tiles True; resid/floor last five [38.2, 0.00335, 0.0439, 0.0158, 0.00683]
+      g-1e-8-0-12689 #4 09, 2.7669e+06), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [2.22, 2.36, 3.71, 1.58, 0.00432]
+      g-1e-8-0-12783 #4 09, 3.9973e+05), regime Gqr, group G+q-r: depth 14 conv True tiles True; resid/floor last five [121.0, 1.32, 0.523, 4.45, 0.453]
+      g-1e-8-0-12973 #4 09e+09, 8342.9), regime Gqr, group G+q-r: depth 13 conv True tiles True; resid/floor last five [34.4, 199.0, 0.419, 1.1, 0.205]
+      g-1e-8-0-14051 #6 09e+09, 100.19), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [1520.0, 29.8, 1.57, 4.65, 0.554]
+      g-1e-8-0-2005 #2 61e+10, 75.993), regime Gqr, group G+q-r: depth 15 conv True tiles True; resid/floor last five [21.2, 2.71, 0.155, 1.54, 1.45]
+      g-1e-8-0-2005 #3 61e+10, 75.993), regime Gqr, group G-q+r: depth 15 conv True tiles True; resid/floor last five [21.2, 2.71, 0.155, 1.54, 1.45]
+      g-1e-8-0-2006 #6 09e+09, 57.642), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [16.0, 0.306, 2.21, 0.268, 0.315]
+      g-1e-8-2-34823 #3 09e+09, 4.7913), regime Gqr, group G+q+r: depth 15 conv True tiles True; resid/floor last five [34.4, 11.7, 0.249, 1.37, 0.0515]
+      g-1e-8-0-13955 #5 09e+09, 25.156), regime Gqr, group G-q+r: depth 13 conv True tiles True; resid/floor last five [122.0, 66.2, 0.509, 1.4, 0.187]
+      g-1e-8-0-38938 #4 51e+12, 4.7913), regime Gqr, group G-q-r: depth 14 conv True tiles True; resid/floor last five [25.1, 26.2, 1.6, 1.22, 1.64]
+      g-1e-8-2-39041 #5 6e+09, 0.13184), regime Gqr, group G-q+r: depth 13 conv True tiles True; resid/floor last five [54.1, 10.9, 132.0, 5.83, 0.132]
+      g-1e-8-0-38454 #5 09e+09, 1.2031), regime Gqr, group G-q+r: depth 14 conv True tiles True; resid/floor last five [99.2, 0.253, 3.1, 1.03, 0.195]
+      g-1e-8-3-34098 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [106.0, 7.86, 0.488, 1.04, 0.0113]
+      g-1e-8-3-34264 #4 +09, 3.032e+05), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [15.9, 14.0, 0.103, 8.81, 0.00988]
+      g-1e-8-3-34155 #4 +09, 3.032e+05), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [14.2, 0.00269, 6.68, 3.52, 0.133]
+      g-1e-8-3-34111 #4 10, 1.7445e+05), regime Gqr, group G-q-r: depth 14 conv True tiles True; resid/floor last five [111.0, 5.94, 0.0989, 0.924, 0.788]
+      g-1e-8-3-34386 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [103.0, 7.46, 0.489, 1.04, 0.0108]
+      g-1e-8-3-13613 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [62.3, 4.03, 0.492, 1.05, 0.00424]
+      g-1e-8-3-13839 #4 61e+10, 100.19), regime Gqr, group G-q-r: depth 15 conv True tiles True; resid/floor last five [133.0, 0.497, 3.17, 3.18, 0.057]
+      g-1e-8-3-34864 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [97.4, 6.8, 0.489, 1.04, 0.00984]
+      g-1e-8-3-35008 #6 1e+10, 0.30208), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [108.0, 29.5, 1.55, 1.08, 0.255]
+   the 720: totals moved 630; by more than total_abserr_06c 8; |dtotal|/e_06c p0 0, p10 0, p50 4.03e-08, p90 6.04e-06, p99 0.533, p100 2.29e+03
+      g-1e-8-1-2174 call 1 7913), regime Gqr, group G+q+r (in 720: True): g value 0x1.0c6c2cd926acfp-86 abserr 0x1.febd253628d92p-110 depth 7 regions 18 conv True | 06c 0x1.0c5f181ecdc0bp-86 0x1.758384c2f61c3p-110 depth 20 regions 48 conv False; |dv|/abserr_06c 2295, /abserr_g 1678
+
+== summary
+{
+ "1e-7": {
+  "Z2": "holds",
+  "Z4": "holds",
+  "Z5": "holds",
+  "z2_viol": 0,
+  "z2_sp": 11,
+  "z4_n": 8560,
+  "z4_viol": 0,
+  "z4_nonfinite": 0,
+  "z5_n": 85,
+  "z5_fail": 0,
+  "over": 0,
+  "regions": [
+   625878,
+   973698
+  ],
+  "solves": [
+   4862283,
+   7255157
+  ],
+  "wall_h": [
+   2.281680802246879,
+   3.2079195655141826
+  ],
+  "conv": [
+   {
+    "analytic calls": 107416,
+    "group calls": 37325,
+    "group at depth 20": 11,
+    "rows total_converged false": 9,
+    "group unconverged": 9
+   },
+   {
+    "analytic calls": 107416,
+    "group calls": 37325,
+    "rows total_converged false": 13,
+    "group unconverged": 15,
+    "analytic at depth 20": 95,
+    "analytic unconverged": 89,
+    "group at depth 20": 14
+   }
+  ],
+  "row_depth": [
+   {
+    "0": 246,
+    "1": 250,
+    "2": 296,
+    "3": 464,
+    "4": 1190,
+    "5": 1086,
+    "6": 999,
+    "8": 777,
+    "9": 205,
+    "7": 1330,
+    "11": 29,
+    "10": 108,
+    "12": 13,
+    "15": 6,
+    "14": 12,
+    "13": 18,
+    "19": 7,
+    "20": 11,
+    "16": 10,
+    "17": 4,
+    "18": 4
+   },
+   {
+    "0": 259,
+    "1": 226,
+    "2": 210,
+    "3": 261,
+    "4": 422,
+    "5": 543,
+    "6": 767,
+    "8": 978,
+    "9": 617,
+    "7": 1101,
+    "10": 372,
+    "11": 279,
+    "12": 247,
+    "13": 236,
+    "14": 182,
+    "16": 82,
+    "15": 91,
+    "17": 61,
+    "18": 39,
+    "19": 29,
+    "20": 63
+   }
+  ]
+ },
+ "1e-8": {
+  "Z2": "fails",
+  "Z4": "holds",
+  "Z5": "fails",
+  "z2_viol": 1,
+  "z2_sp": 17,
+  "z4_n": 8560,
+  "z4_viol": 0,
+  "z4_nonfinite": 0,
+  "z5_n": 173,
+  "z5_fail": 1,
+  "over": 0,
+  "regions": [
+   799186,
+   2086346
+  ],
+  "solves": [
+   6209807,
+   12444591
+  ],
+  "wall_h": [
+   2.9736375210612054,
+   5.774899149056097
+  ],
+  "conv": [
+   {
+    "analytic calls": 107416,
+    "group calls": 37325,
+    "rows total_converged false": 15,
+    "group unconverged": 15,
+    "group at depth 20": 18
+   },
+   {
+    "analytic calls": 107416,
+    "group calls": 37325,
+    "rows total_converged false": 45,
+    "group unconverged": 49,
+    "analytic unconverged": 151,
+    "analytic at depth 20": 141,
+    "group at depth 20": 12
+   }
+  ],
+  "row_depth": [
+   {
+    "0": 242,
+    "1": 219,
+    "2": 300,
+    "3": 491,
+    "4": 1614,
+    "5": 846,
+    "6": 692,
+    "8": 924,
+    "9": 397,
+    "7": 812,
+    "11": 65,
+    "10": 310,
+    "12": 30,
+    "14": 17,
+    "15": 11,
+    "20": 18,
+    "13": 27,
+    "17": 11,
+    "19": 11,
+    "16": 17,
+    "18": 11
+   },
+   {
+    "0": 253,
+    "1": 207,
+    "2": 211,
+    "3": 239,
+    "4": 383,
+    "5": 504,
+    "6": 656,
+    "8": 1046,
+    "9": 837,
+    "7": 764,
+    "10": 478,
+    "11": 299,
+    "12": 293,
+    "13": 245,
+    "14": 200,
+    "16": 94,
+    "15": 127,
+    "17": 71,
+    "18": 50,
+    "20": 81,
+    "19": 27
+   }
+  ]
+ }
+}
+wrote out/census_rows_06e.csv.gz (18560 units) and out/deep_calls_06e.json (200 calls)
+# ----
+# end 2026-10-31T10:54:04Z
+# exit 0

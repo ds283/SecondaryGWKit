@@ -1,0 +1,2017 @@
+=================== 00_harness_copied (out/cmd/00_harness_copied.txt)
+$ cp -p /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/census/scripts/* /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts/ ; cp -p /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/census/scripts/* /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/scripts_06c_reference/ (and the checks below)
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/review
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T07:47:10Z
+# ----
+source: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/census/scripts (code worktree 6d81fad, 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab)
+diff -r source vs main checkout's var/levin-phase-floor-06c/census/scripts:
+  identical
+diff -r source vs scripts/:
+  identical
+diff -r source vs state/scripts_06c_reference/:
+  identical
+files: 57
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  analyse06.py
+c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609  analyse06a.py
+6446b7ac0ea2050d0bbdbc5dfd68474ffaaf1095a191a8b8aeb6ce3afa0e0649  analyse06b.py
+c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600  analyse06c.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  characterise_s2.py
+babc19fa82d4cb49f196a22d4f9d907e7fbb5d6a6a4221e7d546882293661df7  check_predictions.py
+e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa  checks_after.py
+b8c57a5a6a89c85cadf9298983957b29bef770d385d9d72c66712b358823e508  compare_hashes.sh
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  convergence_kinds.py
+e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d  convergence_kinds_06a.py
+012521549f8165fdde0f3e0198703e0590eb309c0023903a15b292217b712866  dev_worker_functions.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  draw_sample.py
+ab377c62624d1df938c6f815cd66996e9eca0be18f8d474968e25357aa3e6ffd  explore06b_pool.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  explore_store.py
+be04fac8c9694f773685a90c296ae1afe0c0fa3b93b44a9a6c6d6896e3190383  extract_predictions.sh
+1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea  extras_after.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  fingerprint_copy.py
+2180820cbac2bc8624fbe1cfe674c749b2f5c684d0499938704312f4ee56ad51  harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  l0.py
+cd0ed58b93f1ee323847fe5e3e873aa7ce7dffccb5f9598d06ee6e9d5e7871fe  launch.py
+60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094  make_capture.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  make_copy.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  make_rows.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  probe.py
+c526bec4f1b43cc6c703c77bdbf71be5895b8af602cdd052c07984c23582483b  prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  pure_wkb_zinit.py
+dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212  rebuild.py
+f2a6ce26fba1bd9f53bcbb506bbcb4063d71dcd55325be093b49bcdb1f256768  rec.sh
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  rescore_t1.py
+ae11f6bc466062d297a2abd09799af86f98b91e64234593b699c6e9c2995c81f  run_census.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  run_wider.py
+bfbbdd4a479389a668d7265081e316d07dfc4ebd906bf0eafe13b97e2c303a97  scripts_equal.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  spscan.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  t1_true_step_only.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  u0.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  u0_clause_a.py
+f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f  w0.py
+90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf  w0_clause1.py
+0296b05317a4cb6e2a5538e6185b13dd8af286d2b80075152e84b36bc378c122  w2_crosscheck.py
+47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31  w2_reference.py
+e9d019beb726cca1b5b65b681164d5ced5161af446d5f0e5e08fe286cead2381  w2_request.py
+d1d09db27b433e58e83cb9d20d2cadd8497414ff5dda6636ddfccbee11c36b4e  worker.py
+757e50f2ca900cf3921217ff3104adad2cbd8f4981d414a5e64416b3f76ea2c0  x0.py
+282a9245673e5312b1734aa254aa93e1e35bfbcb23620285f2d75f0f11e3d1d1  x0_clause1.py
+dafe695a19ba52f27fe193ba221a0d0ac77c2be3815cc350ffbff217a3cc019a  x1_capture.py
+5baf61550482d49fafa38d405e3f3061f52e906a4a3dc7ac2bfe36dbb9eaa4ac  x1_crosscheck.py
+86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118  x1_reference.py
+54ca0c3e4038b496c22219936e27f6b9162b6e14ae66f639dd5a211bf7c75adb  x4_detail.py
+# ----
+# end 2026-10-30T07:47:11Z
+# exit 0
+=================== 01_rows_json_copied (out/cmd/01_rows_json_copied.txt)
+$ /bin/bash -c cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json\ state/rows.json\ \&\&\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json\ state/rows.json\ \&\&\ echo\ \"expected\ aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417\ \(prov.ROWS06A_SHA256\)\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T07:47:17Z
+# ----
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/census/state/rows.json
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  state/rows.json
+expected aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417 (prov.ROWS06A_SHA256)
+# ----
+# end 2026-10-30T07:47:17Z
+# exit 0
+=================== 02_launch_dry_import (out/cmd/02_launch_dry_import.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c import\ sys\;\ sys.path.insert\(0\,\ \'scripts\'\)\;\ print\(sys.version\)\;\ import\ launch\;\ print\(\'PURPOSE:\'\,\ launch.PURPOSE\)\;\ print\(\'SCOPE:\'\,\ launch.SCOPE\)\;\ print\(\'SCRIPT:\'\,\ launch.SCRIPT\)\;\ print\(\'N_ROWS:\'\,\ launch.N_ROWS\)\;\ import\ prov\;\ print\(\'TREES:\'\,\ prov.TREES\)\;\ print\(\'RUN06C:\'\,\ prov.RUN06C\,\ prov.RUN06C.exists\(\)\)
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T07:54:56Z
+# ----
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+PURPOSE: levin-phase-floor prompt 06e section 5 on the Mac Studio (mps026298; Python 3.13.16): 06c's census re-run at 06e's code f4d8e17 (exact Chebyshev end nodes; the Clenshaw-Curtis node term from each node's measured displacement), every A3 v2 QuadSourceIntegral row (9280) re-run in-process at rtol 1e-7 and 1e-8 (atol 1e-32), Ray-free, no lock, against 06c's run levin-phase-floor-06c-census-20261029T130214 as the before; also 07's before. One tree, g, the git worktree at Part B's dispatch SHA 6d81fad (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad; its code outside docs/ and prompts/ is f4d8e17's; the parent 50277f3, whose code is 06c's census's e5764a6, reproduces 06c by Gate Z0). It reads, read-only, 06's certified scratch copy of A3 v2 (var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint 0e32f24a) on a stand-in ShardedPool, with 06a's producer cache. One worker per k per rtol, at most six at once; every 1e-7 unit before any 1e-8 unit; 300 s budget per unit; per call, 06c's records (the global budget's counters, the solves by purpose, every returned leaf's numbers); after each unit's timed section, every returned Clenshaw-Curtis leaf's floor terms (re-solved, checked bit for bit), and the deepest line, with its end-node tiling, of each call past depth 12; in every 1e-7 unit, 06a's stationary-point scan and 06b's W3 evidence. The manifest's git_head is the main checkout's (28ebaf0), where no tree code runs; 06c's run took 2 h 30 min
+SCOPE: all 9280 QuadSourceIntegral rows of handover-A3-v2-lambdacdm (read-only, through 06's certified scratch copy), listed in var/levin-phase-floor-06e/census/state/rows.json (06a's, sha256 aa523d28); tree g (worktree 6d81fad, code f4d8e17); rtol 1e-7 and 1e-8; no store write, no Ray, no lock
+SCRIPT: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts/run_census.py
+N_ROWS: 9280
+TREES: {'p': (PosixPath('/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3'), '50277f3e019bb37df6d91a5c2340877755498508'), 'g': (PosixPath('/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad'), '6d81fad43cbf1f17cff8d0f48fc7b65966e343ab')}
+RUN06C: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214 True
+# ----
+# end 2026-10-30T07:54:56Z
+# exit 0
+=================== 10_state_before (out/cmd/10_state_before.txt)
+$ /bin/bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad\;\ do\ echo\ \"==\ \$t\"\;\ git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\ \$\(\[\ \$t\ \!=\ /Users/ds283/Documents/Code/SecondaryGWKit\ \]\ \&\&\ echo\ --ignored\)\;\ done\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -8\;\ df\ -h\ .\ \|\ tail\ -1\;\ uptime\;\ ls\ -ld\ ~/.raypoolkit/rehearsal-lock\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:07:54Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3
+50277f3e019bb37df6d91a5c2340877755498508
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad
+6d81fad43cbf1f17cff8d0f48fc7b65966e343ab
+   py313-venv-02-reference-20261025T163202               failed            -   4d 15h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_c
+   handover-07-a3-v2-20261022T211155                     done              -   7d 11h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-c-20261022T200159                 done              -   7d 13h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-b-20261022T200009                 killed            -   7d 13h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718                 killed            -   7d 13h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228                 done              -   7d 13h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+33 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 33 finished; 0 with no host recorded.
+/dev/disk3s3s1  927G  830G   97G  90% /
+ 8:07  up 22 days, 22:44, 2 users, load averages: 4.04 6.59 7.34
+ls: cannot access '/Users/ds283/.raypoolkit/rehearsal-lock': No such file or directory
+# ----
+# end 2026-10-30T08:07:55Z
+# exit 2
+=================== 11_lock_status (out/cmd/11_lock_status.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:03Z
+# ----
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: 1
+    2919 2917 sed -n 5,30p
+# ----
+# end 2026-10-30T08:08:03Z
+# exit 0
+=================== 13_copy_files_before (out/cmd/13_copy_files_before.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py copy_before_Z0 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:04Z
+# ----
+# store files copy_before_Z0
+# written 2026-10-30T08:08:05Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+# handover-A3-v2-lambdacdm.manifest.json: absent
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-30T08:08:05Z
+# exit 0
+=================== 14_copy_vs_certified (out/cmd/14_copy_vs_certified.txt)
+$ scripts/compare_hashes.sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt out/cmd/13_copy_files_before.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:05Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+== out/cmd/13_copy_files_before.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+EQUAL
+# ----
+# end 2026-10-30T08:08:05Z
+# exit 0
+=================== 15_fingerprint_copy_at_g (out/cmd/15_fingerprint_copy_at_g.txt)
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/fingerprint_copy.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:16Z
+# ----
+# config.fingerprint from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/config/fingerprint.py; format 6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  8e36e81ea009
+                             10  8e36e81ea009  []
+  redshift                 1740  f5851073507a
+                           1740  f5851073507a  []
+  wavenumber                  8  f82c94216164
+                              8  f82c94216164  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        8  045639da7d40
+                              8  045639da7d40  []
+  BackgroundModel             1  e3fb6cb1cf7e
+                              1  e3fb6cb1cf7e  [LargestSourceRedshift_2.0636e+16, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2]
+  TkNumericIntegration        8  07061fe0dd0f
+                              8  07061fe0dd0f  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  TkWKBIntegration            8  eeb4f2f07e7b
+                              8  eeb4f2f07e7b  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  GkNumericIntegration     4549  c123f591d2b0
+                           4549  c123f591d2b0  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkWKBIntegration        13920  7dec4350b90c
+                          13920  7dec4350b90c  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSource                 1160  d4826c22a775
+                           1160  d4826c22a775  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSourcePolicyData       1160  95597c5bbddc
+                           1160  95597c5bbddc  []
+  QuadSource                 36  7e6b5a68b3e0
+                             36  7e6b5a68b3e0  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  QuadSourceIntegral       9280  1ae722d5fbcb
+                           9280  1ae722d5fbcb  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+# top-level keys: ['digest', 'encoding_format', 'fingerprint_format', 'problems', 'taken']
+digest: "0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56"
+encoding_format: 1
+fingerprint_format: 6
+taken: {"at": "2026-10-30T08:08:18.337323+00:00"}
+# ----
+# end 2026-10-30T08:08:27Z
+# exit 0
+=================== 16_fingerprint_copy_at_p (out/cmd/16_fingerprint_copy_at_p.txt)
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/fingerprint_copy.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:27Z
+# ----
+# config.fingerprint from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/config/fingerprint.py; format 6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  8e36e81ea009
+                             10  8e36e81ea009  []
+  redshift                 1740  f5851073507a
+                           1740  f5851073507a  []
+  wavenumber                  8  f82c94216164
+                              8  f82c94216164  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        8  045639da7d40
+                              8  045639da7d40  []
+  BackgroundModel             1  e3fb6cb1cf7e
+                              1  e3fb6cb1cf7e  [LargestSourceRedshift_2.0636e+16, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2]
+  TkNumericIntegration        8  07061fe0dd0f
+                              8  07061fe0dd0f  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  TkWKBIntegration            8  eeb4f2f07e7b
+                              8  eeb4f2f07e7b  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  GkNumericIntegration     4549  c123f591d2b0
+                           4549  c123f591d2b0  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkWKBIntegration        13920  7dec4350b90c
+                          13920  7dec4350b90c  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSource                 1160  d4826c22a775
+                           1160  d4826c22a775  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSourcePolicyData       1160  95597c5bbddc
+                           1160  95597c5bbddc  []
+  QuadSource                 36  7e6b5a68b3e0
+                             36  7e6b5a68b3e0  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  QuadSourceIntegral       9280  1ae722d5fbcb
+                           9280  1ae722d5fbcb  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+# top-level keys: ['digest', 'encoding_format', 'fingerprint_format', 'problems', 'taken']
+digest: "0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56"
+encoding_format: 1
+fingerprint_format: 6
+taken: {"at": "2026-10-30T08:08:28.654317+00:00"}
+# ----
+# end 2026-10-30T08:08:37Z
+# exit 0
+=================== 17_checkpoint06c_before (out/cmd/17_checkpoint06c_before.txt)
+$ shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:37Z
+# ----
+b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl
+# ----
+# end 2026-10-30T08:08:40Z
+# exit 0
+=================== 18_job_name_is_inert (out/cmd/18_job_name_is_inert.txt)
+$ grep -n job_name /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:40Z
+# ----
+117:        job_name: Optional[str] = None,
+149:        self._job_name: Optional[str] = job_name
+# ----
+# end 2026-10-30T08:08:40Z
+# exit 0
+=================== 19_Z0_run (out/cmd/19_Z0_run.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/z0.py run state/Z0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:44Z
+# ----
+determinism unit g-1e-7-0-14164 (0-14164) (06c's X0 unit); no capture
+P1: tree p, pid 3076, units ['p-1e-7-2-38302']
+P2: tree p, pid 3077, units ['p-1e-7-2-2095']
+P3: tree p, pid 3078, units ['p-1e-8-0-1971']
+G1: tree g, pid 3079, units ['g-1e-7-0-14164']
+G2: tree g, pid 3080, units ['g-1e-7-0-14164']
+exit codes {'P1': 0, 'P2': 0, 'P3': 0, 'G1': 0, 'G2': 0}
+/tmp/ray-sgk entries before 82, after 82, new [] (descriptive)
+# ----
+# end 2026-10-30T08:09:46Z
+# exit 0
+=================== 20_Z0_check (out/cmd/20_Z0_check.txt)
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/z0.py check state/Z0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:09:52Z
+# ----
+# levin-phase-floor 06e: Gate Z0 clauses 2 and 3
+# written 2026-10-30T08:09:53Z on mps026298.phys.susx.ac.uk
+# script z0.py sha256 b83b6782b89659f836471affc561152c5d61cdcea2feab7a775c48dd233736f1
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+
+== tree evidence (each worker's hello) and each unit's module roots
+   P1: tree p head 50277f3e019bb37df6d91a5c2340877755498508 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/AdaptiveLevin/levin_quadrature.py; premise check True; trust check True; CC floor True; _local_atol False; default depth_max 20
+      p-1e-7-2-38302: status done; wall 1.21 s; tree_head 50277f3e019bb37df6d91a5c2340877755498508; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   P2: tree p head 50277f3e019bb37df6d91a5c2340877755498508 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/AdaptiveLevin/levin_quadrature.py; premise check True; trust check True; CC floor True; _local_atol False; default depth_max 20
+      p-1e-7-2-2095: status done; wall 1.14 s; tree_head 50277f3e019bb37df6d91a5c2340877755498508; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   P3: tree p head 50277f3e019bb37df6d91a5c2340877755498508 status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/AdaptiveLevin/levin_quadrature.py; premise check True; trust check True; CC floor True; _local_atol False; default depth_max 20
+      p-1e-8-0-1971: status done; wall 3.71 s; tree_head 50277f3e019bb37df6d91a5c2340877755498508; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   G1: tree g head 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/AdaptiveLevin/levin_quadrature.py; premise check True; trust check True; CC floor True; _local_atol False; default depth_max 20
+      g-1e-7-0-14164: status done; wall 1.26 s; tree_head 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+   G2: tree g head 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status empty; all_in_tree True; levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/AdaptiveLevin/levin_quadrature.py; premise check True; trust check True; CC floor True; _local_atol False; default depth_max 20
+      g-1e-7-0-14164: status done; wall 1.25 s; tree_head 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab; modules by root {'own tree': 102, 'python': 265, 'scripts': 8, 'no file': 41, 'venv': 1438}; foreign []
+
+== clause 2: the harness at the parent reproduces 06c's units bit for bit
+   P1 p-1e-7-2-38302 vs 06c g-1e-7-2-38302 (2-38302): IDENTICAL in every value 06c recorded; C0 (c) terms identical (14 group-call values/abserrs, 10 group-call regions)
+      total 0x1.5e6b398fe7c77p-101 abserr 0x1.d73ac6f7e7d48p-111 | 06c 0x1.5e6b398fe7c77p-101 0x1.d73ac6f7e7d48p-111; group calls 7, analytic-block calls 16 (97 regions); region arrays compared on 06c's keys ['abserr', 'abserr_truncation', 'convergence_ratio', 'declared_resolution', 'delta1', 'delta2', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'total_err', 'trusted', 'type', 'x_span']; 06c deep lines 0, here 0
+      (descriptive) dispatcher counts {'G': 1509, 'T': 193, 'other': 0} | 06c {'G': 1509, 'T': 193, 'other': 0}: equal; W3 {'n_regions': 14, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': 0.5044400333266349}
+   P2 p-1e-7-2-2095 vs 06c g-1e-7-2-2095 (2-2095): IDENTICAL in every value 06c recorded; C0 (c) terms identical (14 group-call values/abserrs, 12 group-call regions)
+      total -0x1.e3272e29c8b8bp-102 abserr 0x1.ebac444565a34p-107 | 06c -0x1.e3272e29c8b8bp-102 0x1.ebac444565a34p-107; group calls 7, analytic-block calls 16 (73 regions); region arrays compared on 06c's keys ['abserr', 'abserr_truncation', 'convergence_ratio', 'declared_resolution', 'delta1', 'delta2', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'total_err', 'trusted', 'type', 'x_span']; 06c deep lines 0, here 0
+      (descriptive) dispatcher counts {'G': 742, 'T': 274, 'other': 0} | 06c {'G': 742, 'T': 274, 'other': 0}: equal; W3 {'n_regions': 20, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': 0.5319837540857275}
+   P3 p-1e-8-0-1971 vs 06c g-1e-8-0-1971 (0-1971): IDENTICAL in every value 06c recorded; C0 (c) terms identical (10 group-call values/abserrs, 104 group-call regions)
+      total 0x1.6ad248e2d3adap-66 abserr 0x1.350e5d9cc9dc3p-92 | 06c 0x1.6ad248e2d3adap-66 0x1.350e5d9cc9dc3p-92; group calls 5, analytic-block calls 16 (167 regions); region arrays compared on 06c's keys ['abserr', 'abserr_truncation', 'convergence_ratio', 'declared_resolution', 'delta1', 'delta2', 'depth', 'end', 'group', 'index', 'phase_err', 'phase_limited', 'regime', 'relerr', 'start', 'total_err', 'trusted', 'type', 'x_span']; 06c deep lines 0, here 0
+      (descriptive) dispatcher counts {'G': 23791, 'T': 32382, 'other': 0} | 06c {'G': 23791, 'T': 32382, 'other': 0}: equal; W3 None
+   clause 2 holds
+
+== clause 3: the new code is deterministic (one g unit, two fresh workers)
+   g-1e-7-0-14164 (0-14164): G1 vs G2 IDENTICAL in every computed value
+      total -0x1.96dd79018b272p-91 abserr 0x1.8114b6a387b75p-107 converged True; 06c -0x1.96dd7901882f6p-91 0x1.810bd5b280d1dp-107 converged True
+      call 0 G: g value -0x1.08b22c5a3c629p-93 abserr 0x1.71525840e0477p-109 conv True regions 6 depth 4 untrusted 0 leaves {'levin': 0, 'cc': 6, 'trusted': 6, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 0, 'widened': 6} E_share-largest resolution budget {'num_leaves': 6, 'num_splits': 5, 'num_floor_limited': 0, 'num_at_depth_max': 0, 'num_checks': 7, 'num_check_passes': 2, 'num_untrusted_found': 1, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 4, 'Levin right-comparison region': 4, 'fallback half, for _check_leaf': 10, 'trust check: a quarter': 28} cc_floor {'n_cc_leaves': 6, 'n_reproduced': 6, 'n_errors': 0, 'n_floor_attributed': 0, 'sums_all_cc_leaves': {'t_value_rounding': {'repr': '1.237256999940398e-41', 'hex': '0x1.13eae34fe71acp-136'}, 't_argument': {'repr': '1.2795881594678836e-42', 'hex': '0x1.c892830af1525p-140'}, 'node_term': {'repr': '5.293033712840635e-41', 'hex': '0x1.2718b3982b4bbp-134'}, 'R_g': {'repr': '4.607550476154824e-41', 'hex': '0x1.00e128699726dp-134'}, 'R_2': {'repr': '1.9600129014170123e-53', 'hex': '0x1.e09800fc39a26p-176'}, 'R_c': {'repr': '5.9383353992152506e-55', 'hex': '0x1.d1f1b6a1d932cp-181'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '6.658249528727821e-41', 'hex': '0x1.7335b67850d7bp-134'}, 'abs_E': {'repr': '6.854832366837919e-42', 'hex': '0x1.31bc59749d48ep-137'}}, 'sums_floor_attributed_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}} | 06c value -0x1.08b22c5a3c629p-93 abserr 0x1.71525840e0477p-109 conv True regions 6 depth 4
+      call 1 G+r: g value -0x1.ea0d5b4068d54p-94 abserr 0x1.378020cd70b38p-112 conv True regions 2 depth 1 untrusted 0 leaves {'levin': 2, 'cc': 0, 'trusted': 2, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 0, 'widened': 2} E_share-largest resolution budget {'num_leaves': 2, 'num_splits': 1, 'num_floor_limited': 0, 'num_at_depth_max': 0, 'num_checks': 2, 'num_check_passes': 1, 'num_untrusted_found': 0, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 8} cc_floor {'n_cc_leaves': 0, 'n_reproduced': 0, 'n_errors': 0, 'n_floor_attributed': 0, 'sums_all_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}, 'sums_floor_attributed_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}} | 06c value -0x1.ea0d5b4068618p-94 abserr 0x1.3780311be128ep-112 conv True regions 2 depth 1
+      call 2 G-r: g value 0x1.46ad59ef32818p-95 abserr 0x1.b4355b16bf3e8p-117 conv True regions 2 depth 1 untrusted 0 leaves {'levin': 2, 'cc': 0, 'trusted': 2, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 0, 'widened': 2} E_share-largest resolution budget {'num_leaves': 2, 'num_splits': 1, 'num_floor_limited': 0, 'num_at_depth_max': 0, 'num_checks': 2, 'num_check_passes': 1, 'num_untrusted_found': 0, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 8} cc_floor {'n_cc_leaves': 0, 'n_reproduced': 0, 'n_errors': 0, 'n_floor_attributed': 0, 'sums_all_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}, 'sums_floor_attributed_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}} | 06c value 0x1.46ad59ef3280ep-95 abserr 0x1.b435d8df62d17p-117 conv True regions 2 depth 1
+      call 3 G+q+r: g value 0x1.7c2951e606a2fp-97 abserr 0x1.8386c9075e5d6p-123 conv True regions 3 depth 2 untrusted 0 leaves {'levin': 3, 'cc': 0, 'trusted': 3, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 0, 'widened': 3} E_share-largest floor budget {'num_leaves': 3, 'num_splits': 2, 'num_floor_limited': 0, 'num_at_depth_max': 0, 'num_checks': 4, 'num_check_passes': 2, 'num_untrusted_found': 1, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 16} cc_floor {'n_cc_leaves': 0, 'n_reproduced': 0, 'n_errors': 0, 'n_floor_attributed': 0, 'sums_all_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}, 'sums_floor_attributed_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}} | 06c value 0x1.7c2951e61a89cp-97 abserr 0x1.0f333534e96c8p-125 conv True regions 7 depth 4
+      call 4 G+q-r: g value 0x1.2dc457200ad2fp-101 abserr 0x1.bfa309354f8c8p-125 conv True regions 5 depth 4 untrusted 0 leaves {'levin': 5, 'cc': 0, 'trusted': 4, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 1, 'widened': 4} E_share-largest floor budget {'num_leaves': 5, 'num_splits': 4, 'num_floor_limited': 1, 'num_at_depth_max': 0, 'num_checks': 8, 'num_check_passes': 4, 'num_untrusted_found': 4, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 32} cc_floor {'n_cc_leaves': 0, 'n_reproduced': 0, 'n_errors': 0, 'n_floor_attributed': 0, 'sums_all_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}, 'sums_floor_attributed_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}} | 06c value 0x1.2dc45722baa69p-101 abserr 0x1.65e70a4bac322p-127 conv True regions 14 depth 6
+      call 5 G-q+r: g value -0x1.f5083b1129b4dp-97 abserr 0x1.745d98cdf530cp-123 conv True regions 6 depth 4 untrusted 0 leaves {'levin': 6, 'cc': 0, 'trusted': 5, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 1, 'widened': 5} E_share-largest floor budget {'num_leaves': 6, 'num_splits': 5, 'num_floor_limited': 1, 'num_at_depth_max': 0, 'num_checks': 10, 'num_check_passes': 5, 'num_untrusted_found': 5, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 40} cc_floor {'n_cc_leaves': 0, 'n_reproduced': 0, 'n_errors': 0, 'n_floor_attributed': 0, 'sums_all_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}, 'sums_floor_attributed_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}} | 06c value -0x1.f5083b111385fp-97 abserr 0x1.3d9d064fee8f6p-125 conv True regions 15 depth 6
+      call 6 G-q-r: g value 0x1.35c49484d92fap-101 abserr 0x1.bec717085a703p-125 conv True regions 5 depth 4 untrusted 0 leaves {'levin': 5, 'cc': 0, 'trusted': 4, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 1, 'widened': 4} E_share-largest floor budget {'num_leaves': 5, 'num_splits': 4, 'num_floor_limited': 1, 'num_at_depth_max': 0, 'num_checks': 8, 'num_check_passes': 4, 'num_untrusted_found': 4, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0} solves {'Levin subregion': 1, 'Levin left-comparison region': 3, 'Levin right-comparison region': 3, 'trust check: a quarter': 32} cc_floor {'n_cc_leaves': 0, 'n_reproduced': 0, 'n_errors': 0, 'n_floor_attributed': 0, 'sums_all_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}, 'sums_floor_attributed_cc_leaves': {'t_value_rounding': {'repr': '0.0', 'hex': '0x0.0p+0'}, 't_argument': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'node_term': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_g': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_2': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'R_c': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'declared': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'phase_err_resolve': {'repr': '0.0', 'hex': '0x0.0p+0'}, 'abs_E': {'repr': '0.0', 'hex': '0x0.0p+0'}}} | 06c value 0x1.35c494827736cp-101 abserr 0x1.a0801f54a4aa9p-124 conv True regions 9 depth 4
+      analytic-block calls (index, label, g: conv, regions, depth, untrusted, CC leaves reproduced/n; 06c: conv, regions, depth):
+         7 analytic J1: True 3 2 0 0/0 | (True, 7, 4)
+         8 analytic Y1: True 6 4 0 0/0 | (True, 12, 5)
+         9 analytic J2: True 7 4 0 0/0 | (True, 6, 4)
+         10 analytic Y2: True 6 4 0 0/0 | (True, 6, 4)
+         11 analytic J3: True 5 4 0 0/0 | (True, 9, 4)
+         12 analytic Y3: True 5 3 0 0/0 | (True, 9, 4)
+         13 analytic J4: True 5 3 0 0/0 | (True, 6, 4)
+         14 analytic Y4: True 5 4 0 0/0 | (True, 6, 4)
+         15 analytic J1: True 2 1 0 0/0 | (True, 2, 1)
+         16 analytic Y1: True 8 4 0 0/0 | (True, 9, 6)
+         17 analytic J2: True 6 4 0 0/0 | (True, 2, 1)
+         18 analytic Y2: True 9 5 0 0/0 | (True, 18, 7)
+         19 analytic J3: True 5 4 0 0/0 | (True, 6, 4)
+         20 analytic Y3: True 3 2 0 0/0 | (True, 2, 1)
+         21 analytic J4: True 9 5 0 0/0 | (True, 2, 1)
+         22 analytic Y4: True 7 5 0 0/0 | (True, 2, 1)
+      W3 {'n_regions': 25, 'n_premise_fails': 0, 'n_own_floor_differs_from_stored': 0, 'n_errors': 0, 'min_ratio': 0.5823099578315398}; deep lines {'n_calls': 0, 'n_errors': 0, 'n_not_reproducing': 0}
+      (prompt 06e) deep lines past depth 12 {'depth_threshold': 12, 'n_calls': 0, 'n_errors': 0, 'n_not_reproducing': 0}; CC floor terms: 23 calls with fallback leaves, 6 of 6 leaves reproduced; tree evidence g: [('levin_has_cc_roundoff_floor', True), ('levin_has_chebyshev_node_displacements', True), ('levin_has_cc_node_term_parts', True), ('levin_has_cc_node_error_bound_06d', False), ('levin_quadrature_sha256', '8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c')]
+      captured calls: none (prompt 06e: no capture)
+      wall 1.26 s and 1.25 s (timings, not compared)
+   clause 3 holds
+
+== no Ray
+   workers' ray_initialized at exit: {'P1': False, 'P2': False, 'P3': False, 'G1': False, 'G2': False}: none initialised Ray
+   (descriptive) /tmp/ray-sgk entries before 82, after 82, new []
+
+== the parent tree's modules imported by the harness (P1-P3, union): 102; written to state/Z0/p_tree_modules.json
+   of them under a tests package: ['ComputeTargets.tests', 'ComputeTargets.tests.test_main_plumbing']
+
+== Z0 clauses 2 and 3 (and no Ray): HOLD
+# ----
+# end 2026-10-30T08:09:54Z
+# exit 0
+=================== 21_Z0_clause1 (out/cmd/21_Z0_clause1.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/z0_clause1.py state/Z0/p_tree_modules.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:10:01Z
+# ----
+# levin-phase-floor 06e: Gate Z0 clause 1
+# written 2026-10-30T08:10:01Z on mps026298.phys.susx.ac.uk
+# script z0_clause1.py sha256 80434d7a44852073e21f00a628dac311d22493f8ab5ccffbe0e9d49e2528e77e
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/Z0/p_tree_modules.json sha256 37cf51424a20b8f0142e105e3edbdfdf37f63c09f26f6d94a63b1536867e5728
+
+$ git diff --stat e5764a6 50277f3 -- . ':!docs' ':!prompts'
+ CLAUDE.md | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+1 files
+
+the harness's imports from the parent tree (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3): 102 modules
+  of them in a tests package: ['ComputeTargets.tests', 'ComputeTargets.tests.test_main_plumbing']
+
+== each changed file
+  M CLAUDE.md: CLAUDE.md -- allowed
+
+== Z0 clause 1: HOLDS
+# ----
+# end 2026-10-30T08:10:02Z
+# exit 0
+=================== 21b_dev_line_tiling_at_g (out/cmd/21b_dev_line_tiling_at_g.txt)
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/dev_line_tiling.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:10:13Z
+# ----
+levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/AdaptiveLevin/levin_quadrature.py
+0 [True, True, True, True]
+1 [True, True, True, True]
+2 [True, True, True, True]
+3 [True, True, True, True]
+4 [True, True, True, True]
+5 [True, True, True, True]
+6 [True, True, True, True]
+7 [True, True, True, True]
+8 [True, True, True, True]
+9 [True, True, True, True]
+10 [True, True, True, True]
+11 [True, True, True, True]
+12 [True, True, True, True]
+13 [True, True, True, True]
+14 [True, True, True, True]
+15 [True, True, True, True]
+16 [True, True, True, True]
+17 [True, True, True, True]
+18 [True, True, True, True]
+19 [True, True, True, True]
+20 [True, True, True, True]
+levels 21 tile at N on all: True exact at N on all: True tile at 2N-1 on all: True exact at 2N-1 on all: True
+# ----
+# end 2026-10-30T08:10:14Z
+# exit 0
+=================== 21b_dev_line_tiling_at_p (out/cmd/21b_dev_line_tiling_at_p.txt)
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/dev_line_tiling.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:10:14Z
+# ----
+levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/AdaptiveLevin/levin_quadrature.py
+0 [False, False, False, False]
+1 [False, False, False, False]
+2 [False, False, False, False]
+3 [True, False, True, False]
+4 [False, False, False, False]
+5 [False, False, False, False]
+6 [True, False, True, False]
+7 [False, False, False, False]
+8 [True, False, True, False]
+9 [False, False, False, False]
+10 [True, False, True, False]
+11 [True, False, True, False]
+12 [False, False, False, False]
+13 [True, False, True, False]
+14 [True, False, True, False]
+15 [False, False, False, False]
+16 [False, False, False, False]
+17 [False, False, False, False]
+18 [True, False, True, False]
+19 [True, False, True, False]
+20 [False, False, False, False]
+levels 21 tile at N on all: False exact at N on all: False tile at 2N-1 on all: False exact at 2N-1 on all: False
+# ----
+# end 2026-10-30T08:10:15Z
+# exit 0
+=================== 22_smoke_driver (out/cmd/22_smoke_driver.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/run_census.py --out-dir state/smoke --rows 1-34599\,3-13829 --max-workers 2
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:10:19Z
+# ----
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts/run_census.py", "script_sha256": "a6d9bac49193bec1c3c11cfc60390e3ed2d58bf7c98aadaa871443f45f23e4e0", "scripts_sha256": {"run_census.py": "a6d9bac49193bec1c3c11cfc60390e3ed2d58bf7c98aadaa871443f45f23e4e0", "worker.py": "45e8f68c6ec05ceb314c953755025d65a0baa205818235b1bd34e08023c354e3", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "849dea2d530cec73b641db66d68efc4ea2bff27541d58fbe518695f7cdede25d", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "5bd606fdc2eae66c0dd9961f847c64b3ea0bc9e2bf4b2d3c5cbbe5d2cdb5d092", "launch.py": "96f4e859f4c5d87f408fec6ae185fc6f222d273f5d618b4cf623f9be82b57f92", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b"}, "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417", "w2_capture_sha256": null, "tree": "g", "trees": {"p": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3", "50277f3e019bb37df6d91a5c2340877755498508"], "g": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad", "6d81fad43cbf1f17cff8d0f48fc7b65966e343ab"]}, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 3414, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census", "started": "2026-10-30T08:10:19.527532+00:00", "n_units": 4, "workers": {"1e-7": [["1e-7-k1_102", 1], ["1e-7-k3_1", 1]], "1e-8": [["1e-8-k1_102", 1], ["1e-8-k3_1", 1]]}, "budget_s": 300.0, "max_workers": 2, "skipped_as_recorded": 0}
+# worker 1e-7-k1_102 pid 3415 (1 units)
+# worker 1e-7-k3_1 pid 3416 (1 units)
+# worker 1e-7-k1_102 exit 0
+# worker 1e-7-k3_1 exit 0
+# worker 1e-8-k1_102 pid 3445 (1 units)
+# worker 1e-8-k3_1 pid 3446 (1 units)
+# worker 1e-8-k3_1 exit 0
+# worker 1e-8-k1_102 exit 0
+
+== run ends: 4 of 4 units recorded; units in error 0; problems []
+# ----
+# end 2026-10-30T08:12:10Z
+# exit 0
+=================== 23_copy_files_after_Z0 (out/cmd/23_copy_files_after_Z0.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py copy_after_Z0 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:12:24Z
+# ----
+# store files copy_after_Z0
+# written 2026-10-30T08:12:24Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+# handover-A3-v2-lambdacdm.manifest.json: absent
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-30T08:12:24Z
+# exit 0
+=================== 24_copy_after_Z0_vs_certified (out/cmd/24_copy_after_Z0_vs_certified.txt)
+$ scripts/compare_hashes.sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt out/cmd/23_copy_files_after_Z0.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:12:24Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+== out/cmd/23_copy_files_after_Z0.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+EQUAL
+# ----
+# end 2026-10-30T08:12:24Z
+# exit 0
+=================== 25_predictions_check (out/cmd/25_predictions_check.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_predictions.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:12:36Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts/check_predictions.py", line 19, in <module>
+    data = pred.read_bytes()
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py", line 625, in read_bytes
+    with self.open(mode='rb') as f:
+         ~~~~~~~~~^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/predictions.md'
+# ----
+# end 2026-10-30T08:12:36Z
+# exit 1
+=================== 26_predictions_check (out/cmd/26_predictions_check.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_predictions.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:12:47Z
+# ----
+prompt /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/prompts/levin-phase-floor/06e-exact-end-nodes.md sha256 72eb7411f17c3012817ba2be3f8e213bac153ed10c52c19fe8e7541818bc9d71; lines 345-375: 1944 bytes
+predictions /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/predictions.md: Part A 1944 bytes; equal to the prompt's bytes: True
+predictions sha256 f27771cc2c16691a027a068f7849e49f18f477bcb26ee45313fbcbedf594c840 size 10735 mtime 2026-10-30T08:12:47.431379+00:00
+# ----
+# end 2026-10-30T08:12:47Z
+# exit 0
+=================== 27_scripts_equal (out/cmd/27_scripts_equal.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/scripts_equal.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:12:57Z
+# ----
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  analyse06.py
+c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609  analyse06a.py
+6446b7ac0ea2050d0bbdbc5dfd68474ffaaf1095a191a8b8aeb6ce3afa0e0649  analyse06b.py
+c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600  analyse06c.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  characterise_s2.py
+5fd97d8f64b92d5a0596b64a75bb97956ee461061a778f744f4ae6e19de049fb  check_predictions.py
+e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa  checks_after.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  convergence_kinds.py
+e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d  convergence_kinds_06a.py
+9d7b35f35fcfb76099f1d20d4b28d2d5e347b2bab78e02ee26218bc386fc0c54  dev_line_tiling.py
+012521549f8165fdde0f3e0198703e0590eb309c0023903a15b292217b712866  dev_worker_functions.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  draw_sample.py
+ab377c62624d1df938c6f815cd66996e9eca0be18f8d474968e25357aa3e6ffd  explore06b_pool.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  explore_store.py
+1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea  extras_after.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  fingerprint_copy.py
+849dea2d530cec73b641db66d68efc4ea2bff27541d58fbe518695f7cdede25d  harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  l0.py
+96f4e859f4c5d87f408fec6ae185fc6f222d273f5d618b4cf623f9be82b57f92  launch.py
+60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094  make_capture.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  make_copy.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  make_rows.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  probe.py
+5bd606fdc2eae66c0dd9961f847c64b3ea0bc9e2bf4b2d3c5cbbe5d2cdb5d092  prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  pure_wkb_zinit.py
+dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212  rebuild.py
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  rescore_t1.py
+a6d9bac49193bec1c3c11cfc60390e3ed2d58bf7c98aadaa871443f45f23e4e0  run_census.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  run_wider.py
+2e2cdfef39affdd885c9ad4534ae4f95d79dfc5a911ca86216ae3a483b162dc7  scripts_equal.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  spscan.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  t1_true_step_only.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  u0.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  u0_clause_a.py
+f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f  w0.py
+90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf  w0_clause1.py
+0296b05317a4cb6e2a5538e6185b13dd8af286d2b80075152e84b36bc378c122  w2_crosscheck.py
+47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31  w2_reference.py
+e9d019beb726cca1b5b65b681164d5ced5161af446d5f0e5e08fe286cead2381  w2_request.py
+45e8f68c6ec05ceb314c953755025d65a0baa205818235b1bd34e08023c354e3  worker.py
+757e50f2ca900cf3921217ff3104adad2cbd8f4981d414a5e64416b3f76ea2c0  x0.py
+282a9245673e5312b1734aa254aa93e1e35bfbcb23620285f2d75f0f11e3d1d1  x0_clause1.py
+dafe695a19ba52f27fe193ba221a0d0ac77c2be3815cc350ffbff217a3cc019a  x1_capture.py
+5baf61550482d49fafa38d405e3f3061f52e906a4a3dc7ac2bfe36dbb9eaa4ac  x1_crosscheck.py
+86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118  x1_reference.py
+54ca0c3e4038b496c22219936e27f6b9162b6e14ae66f639dd5a211bf7c75adb  x4_detail.py
+b83b6782b89659f836471affc561152c5d61cdcea2feab7a775c48dd233736f1  z0.py
+80434d7a44852073e21f00a628dac311d22493f8ab5ccffbe0e9d49e2528e77e  z0_clause1.py
+state/Z0/G1/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/G1/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/G2/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/G2/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P1/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P1/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P2/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P2/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P3/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P3/emit.jsonl (unit): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-7-1-34599): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-7-3-13829): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-8-3-13829): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-8-1-34599): 9 scripts; differing now: none
+ALL EQUAL
+# ----
+# end 2026-10-30T08:12:57Z
+# exit 0
+=================== 28_checkpoint06c_after_prep (out/cmd/28_checkpoint06c_after_prep.txt)
+$ shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:12:57Z
+# ----
+b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl
+# ----
+# end 2026-10-30T08:13:00Z
+# exit 0
+=================== 29_prelaunch_state (out/cmd/29_prelaunch_state.txt)
+$ /bin/bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad\;\ do\ echo\ \"==\ \$t\"\;\ git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\ \$\(\[\ \$t\ \!=\ /Users/ds283/Documents/Code/SecondaryGWKit\ \]\ \&\&\ echo\ --ignored\)\;\ done\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -1\;\ df\ -h\ .\ \|\ tail\ -1\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:12Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3
+50277f3e019bb37df6d91a5c2340877755498508
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad
+6d81fad43cbf1f17cff8d0f48fc7b65966e343ab
+33 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 33 finished; 0 with no host recorded.
+/dev/disk3s3s1  927G  830G   97G  90% /
+ 8:13  up 22 days, 22:49, 2 users, load averages: 4.53 5.79 6.76
+# ----
+# end 2026-10-30T08:13:12Z
+# exit 0
+=================== 32_copy_files_prelaunch (out/cmd/32_copy_files_prelaunch.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py copy_prelaunch /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:14Z
+# ----
+# store files copy_prelaunch
+# written 2026-10-30T08:13:14Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+# handover-A3-v2-lambdacdm.manifest.json: absent
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-30T08:13:15Z
+# exit 0
+=================== 33_copy_prelaunch_vs_certified (out/cmd/33_copy_prelaunch_vs_certified.txt)
+$ scripts/compare_hashes.sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt out/cmd/32_copy_files_prelaunch.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:15Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+== out/cmd/32_copy_files_prelaunch.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+EQUAL
+# ----
+# end 2026-10-30T08:13:15Z
+# exit 0
+=================== 34_scripts_equal_prelaunch (out/cmd/34_scripts_equal_prelaunch.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/scripts_equal.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:15Z
+# ----
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  analyse06.py
+c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609  analyse06a.py
+6446b7ac0ea2050d0bbdbc5dfd68474ffaaf1095a191a8b8aeb6ce3afa0e0649  analyse06b.py
+c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600  analyse06c.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  characterise_s2.py
+5fd97d8f64b92d5a0596b64a75bb97956ee461061a778f744f4ae6e19de049fb  check_predictions.py
+e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa  checks_after.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  convergence_kinds.py
+e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d  convergence_kinds_06a.py
+9d7b35f35fcfb76099f1d20d4b28d2d5e347b2bab78e02ee26218bc386fc0c54  dev_line_tiling.py
+012521549f8165fdde0f3e0198703e0590eb309c0023903a15b292217b712866  dev_worker_functions.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  draw_sample.py
+ab377c62624d1df938c6f815cd66996e9eca0be18f8d474968e25357aa3e6ffd  explore06b_pool.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  explore_store.py
+1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea  extras_after.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  fingerprint_copy.py
+849dea2d530cec73b641db66d68efc4ea2bff27541d58fbe518695f7cdede25d  harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  l0.py
+96f4e859f4c5d87f408fec6ae185fc6f222d273f5d618b4cf623f9be82b57f92  launch.py
+60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094  make_capture.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  make_copy.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  make_rows.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  probe.py
+5bd606fdc2eae66c0dd9961f847c64b3ea0bc9e2bf4b2d3c5cbbe5d2cdb5d092  prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  pure_wkb_zinit.py
+dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212  rebuild.py
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  rescore_t1.py
+a6d9bac49193bec1c3c11cfc60390e3ed2d58bf7c98aadaa871443f45f23e4e0  run_census.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  run_wider.py
+2e2cdfef39affdd885c9ad4534ae4f95d79dfc5a911ca86216ae3a483b162dc7  scripts_equal.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  spscan.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  t1_true_step_only.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  u0.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  u0_clause_a.py
+f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f  w0.py
+90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf  w0_clause1.py
+0296b05317a4cb6e2a5538e6185b13dd8af286d2b80075152e84b36bc378c122  w2_crosscheck.py
+47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31  w2_reference.py
+e9d019beb726cca1b5b65b681164d5ced5161af446d5f0e5e08fe286cead2381  w2_request.py
+45e8f68c6ec05ceb314c953755025d65a0baa205818235b1bd34e08023c354e3  worker.py
+757e50f2ca900cf3921217ff3104adad2cbd8f4981d414a5e64416b3f76ea2c0  x0.py
+282a9245673e5312b1734aa254aa93e1e35bfbcb23620285f2d75f0f11e3d1d1  x0_clause1.py
+dafe695a19ba52f27fe193ba221a0d0ac77c2be3815cc350ffbff217a3cc019a  x1_capture.py
+5baf61550482d49fafa38d405e3f3061f52e906a4a3dc7ac2bfe36dbb9eaa4ac  x1_crosscheck.py
+86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118  x1_reference.py
+54ca0c3e4038b496c22219936e27f6b9162b6e14ae66f639dd5a211bf7c75adb  x4_detail.py
+b83b6782b89659f836471affc561152c5d61cdcea2feab7a775c48dd233736f1  z0.py
+80434d7a44852073e21f00a628dac311d22493f8ab5ccffbe0e9d49e2528e77e  z0_clause1.py
+state/Z0/G1/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/G1/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/G2/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/G2/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P1/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P1/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P2/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P2/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P3/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P3/emit.jsonl (unit): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-7-1-34599): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-7-3-13829): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-8-3-13829): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-8-1-34599): 9 scripts; differing now: none
+ALL EQUAL
+# ----
+# end 2026-10-30T08:13:15Z
+# exit 0
+=================== 35_predictions_check_prelaunch (out/cmd/35_predictions_check_prelaunch.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_predictions.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:15Z
+# ----
+prompt /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/prompts/levin-phase-floor/06e-exact-end-nodes.md sha256 72eb7411f17c3012817ba2be3f8e213bac153ed10c52c19fe8e7541818bc9d71; lines 345-375: 1944 bytes
+predictions /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/predictions.md: Part A 1944 bytes; equal to the prompt's bytes: True
+predictions sha256 f27771cc2c16691a027a068f7849e49f18f477bcb26ee45313fbcbedf594c840 size 10735 mtime 2026-10-30T08:12:47.431379+00:00
+# ----
+# end 2026-10-30T08:13:15Z
+# exit 0
+=================== 36_launch (out/cmd/36_launch.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/launch.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:18Z
+# ----
+run id      levin-phase-floor-06e-census-20261030T081318
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+manifest    /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/manifest.json
+expected    18560 units (9280 rows at 1e-7, then at 1e-8)
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts/run_census.py sha256 a6d9bac49193bec1c3c11cfc60390e3ed2d58bf7c98aadaa871443f45f23e4e0
+sh pid      3892 (nohup execs sh; sh runs the driver as its child)
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts/run_census.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318; exit $?
+launcher    pid 3888, exiting without waiting
+# ----
+# end 2026-10-30T08:13:18Z
+# exit 0
+=================== 37_launch_check (out/cmd/37_launch_check.txt)
+$ /bin/bash -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\;\ date\ -u\;\ cat\ \$R/status.json\;\ echo\;\ echo\ \"checkpoint\ lines:\ \$\(wc\ -l\ \<\ \$R/checkpoint.jsonl\ 2\>/dev/null\)\"\;\ head\ -c\ 400\ \$R/checkpoint.jsonl\ 2\>/dev/null\;\ echo\;\ echo\ \"--\ stdout\ tail\"\;\ tail\ -8\ \$R/stdout.log\;\ echo\ \"--\ stderr\ bytes\ \$\(wc\ -c\ \<\ \$R/stderr.log\)\"\;\ kill\ -0\ 3892\ \&\&\ echo\ \"sh\ 3892\ alive\"\;\ P=\$\(python3\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\).get\(\\\"pid\\\"\)\)\"\)\;\ echo\ \"status\ pid\ \$P\"\;\ kill\ -0\ \$P\ \&\&\ echo\ \"driver\ \$P\ alive\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:23Z
+# ----
+Fri Oct 30 08:13:23 UTC 2026
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-30T08:13:18+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 3896,
+  "stage": "started worker 1e-7-k2_302 (1160 units)",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 18560
+}
+
+/bin/bash: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl: No such file or directory
+checkpoint lines: 
+
+-- stdout tail
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts/run_census.py", "script_sha256": "a6d9bac49193bec1c3c11cfc60390e3ed2d58bf7c98aadaa871443f45f23e4e0", "scripts_sha256": {"run_census.py": "a6d9bac49193bec1c3c11cfc60390e3ed2d58bf7c98aadaa871443f45f23e4e0", "worker.py": "45e8f68c6ec05ceb314c953755025d65a0baa205818235b1bd34e08023c354e3", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "849dea2d530cec73b641db66d68efc4ea2bff27541d58fbe518695f7cdede25d", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "5bd606fdc2eae66c0dd9961f847c64b3ea0bc9e2bf4b2d3c5cbbe5d2cdb5d092", "launch.py": "96f4e859f4c5d87f408fec6ae185fc6f222d273f5d618b4cf623f9be82b57f92", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b"}, "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417", "w2_capture_sha256": null, "tree": "g", "trees": {"p": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3", "50277f3e019bb37df6d91a5c2340877755498508"], "g": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad", "6d81fad43cbf1f17cff8d0f48fc7b65966e343ab"]}, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 3896, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census", "started": "2026-10-30T08:13:18.651497+00:00", "n_units": 18560, "workers": {"1e-7": [["1e-7-k0_101", 1160], ["1e-7-k0_202", 1160], ["1e-7-k1_102", 1160], ["1e-7-k1_301", 1160], ["1e-7-k2_2", 1160], ["1e-7-k2_302", 1160], ["1e-7-k3_1", 1160], ["1e-7-k3_201", 1160]], "1e-8": [["1e-8-k0_101", 1160], ["1e-8-k0_202", 1160], ["1e-8-k1_102", 1160], ["1e-8-k1_301", 1160], ["1e-8-k2_2", 1160], ["1e-8-k2_302", 1160], ["1e-8-k3_1", 1160], ["1e-8-k3_201", 1160]]}, "budget_s": 300.0, "max_workers": 6, "skipped_as_recorded": 0}
+# worker 1e-7-k0_101 pid 3903 (1160 units)
+# worker 1e-7-k0_202 pid 3904 (1160 units)
+# worker 1e-7-k1_102 pid 3905 (1160 units)
+# worker 1e-7-k1_301 pid 3906 (1160 units)
+# worker 1e-7-k2_2 pid 3907 (1160 units)
+# worker 1e-7-k2_302 pid 3909 (1160 units)
+-- stderr bytes 0
+sh 3892 alive
+status pid 3896
+driver 3896 alive
+# ----
+# end 2026-10-30T08:13:23Z
+# exit 0
+=================== 38_after_run_status (out/cmd/38_after_run_status.txt)
+$ /bin/bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/status.json\;\ echo\;\ wc\ -l\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\;\ wc\ -c\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/stderr.log\;\ tail\ -3\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/stdout.log\ \|\ cut\ -c1-600\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\ \|\ wc\ -l\;\ grep\ -c\ \'\"status\":\ \"over\ budget\"\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\;\ grep\ -c\ \'\"status\":\ \"error\"\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\;\ for\ f\ in\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/worker_\*_bye.json\;\ do\ python3\ -c\ \"import\ json\,sys\;\ d=json.load\(open\(\'\$f\'\)\)\;\ print\(\'\$f\'.split\(\'/\'\)\[-1\]\,\ d.get\(\'ray_initialized\'\)\,\ len\(d.get\(\'modules_foreign\'\)\ or\ \[\]\)\)\"\;\ done
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:00:19Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-10-30T09:59:15+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 3896,
+  "stage": "18560 units recorded; last g-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+18560
+0
+# worker 1e-8-k3_1 exit 0
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+1.6G	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+149
+0
+0
+worker_1e-7-k0_101_bye.json False 0
+worker_1e-7-k0_202_bye.json False 0
+worker_1e-7-k1_102_bye.json False 0
+worker_1e-7-k1_301_bye.json False 0
+worker_1e-7-k2_2_bye.json False 0
+worker_1e-7-k2_302_bye.json False 0
+worker_1e-7-k3_1_bye.json False 0
+worker_1e-7-k3_201_bye.json False 0
+worker_1e-8-k0_101_bye.json False 0
+worker_1e-8-k0_202_bye.json False 0
+worker_1e-8-k1_102_bye.json False 0
+worker_1e-8-k1_301_bye.json False 0
+worker_1e-8-k2_2_bye.json False 0
+worker_1e-8-k2_302_bye.json False 0
+worker_1e-8-k3_1_bye.json False 0
+worker_1e-8-k3_201_bye.json False 0
+# ----
+# end 2026-10-30T10:00:38Z
+# exit 0
+=================== 39_checks_after (out/cmd/39_checks_after.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/checks_after_06e.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:00:51Z
+# ----
+record keys seen: ['data', 'git_dirty', 'git_head', 'recorded', 'script_sha256', 'unit']
+cc errors: 0
+cc leaves: 278863
+cc reproduced: 278863
+deep(cap) lines: 29
+deep06e errors: 0
+deep06e lines: 200
+deep06e not reproducing: 0
+records: 18560
+script_sha a6d9bac4: 18560
+status done: 18560
+units with wall_s > 300 s: 0 []
+records failing tree/scripts/modules checks: 0 []
+# ----
+# end 2026-10-30T10:00:57Z
+# exit 0
+=================== 40_copy_files_after (out/cmd/40_copy_files_after.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py copy_after_run /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:06Z
+# ----
+# store files copy_after_run
+# written 2026-10-30T10:01:06Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+# handover-A3-v2-lambdacdm.manifest.json: absent
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-30T10:01:07Z
+# exit 0
+=================== 41_copy_after_vs_certified (out/cmd/41_copy_after_vs_certified.txt)
+$ scripts/compare_hashes.sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt out/cmd/40_copy_files_after.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:07Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+== out/cmd/40_copy_files_after.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+EQUAL
+# ----
+# end 2026-10-30T10:01:07Z
+# exit 0
+=================== 42_fingerprint_copy_after_at_g (out/cmd/42_fingerprint_copy_after_at_g.txt)
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/fingerprint_copy.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:07Z
+# ----
+# config.fingerprint from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/config/fingerprint.py; format 6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  8e36e81ea009
+                             10  8e36e81ea009  []
+  redshift                 1740  f5851073507a
+                           1740  f5851073507a  []
+  wavenumber                  8  f82c94216164
+                              8  f82c94216164  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        8  045639da7d40
+                              8  045639da7d40  []
+  BackgroundModel             1  e3fb6cb1cf7e
+                              1  e3fb6cb1cf7e  [LargestSourceRedshift_2.0636e+16, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2]
+  TkNumericIntegration        8  07061fe0dd0f
+                              8  07061fe0dd0f  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  TkWKBIntegration            8  eeb4f2f07e7b
+                              8  eeb4f2f07e7b  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  GkNumericIntegration     4549  c123f591d2b0
+                           4549  c123f591d2b0  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkWKBIntegration        13920  7dec4350b90c
+                          13920  7dec4350b90c  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSource                 1160  d4826c22a775
+                           1160  d4826c22a775  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSourcePolicyData       1160  95597c5bbddc
+                           1160  95597c5bbddc  []
+  QuadSource                 36  7e6b5a68b3e0
+                             36  7e6b5a68b3e0  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  QuadSourceIntegral       9280  1ae722d5fbcb
+                           9280  1ae722d5fbcb  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+# top-level keys: ['digest', 'encoding_format', 'fingerprint_format', 'problems', 'taken']
+digest: "0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56"
+encoding_format: 1
+fingerprint_format: 6
+taken: {"at": "2026-10-30T10:01:10.045852+00:00"}
+# ----
+# end 2026-10-30T10:01:19Z
+# exit 0
+=================== 43_copy_files_after_fingerprint (out/cmd/43_copy_files_after_fingerprint.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py copy_after_fingerprint /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:19Z
+# ----
+# store files copy_after_fingerprint
+# written 2026-10-30T10:01:19Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+# handover-A3-v2-lambdacdm.manifest.json: absent
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-30T10:01:19Z
+# exit 0
+=================== 44_copy_after_fingerprint_vs_certified (out/cmd/44_copy_after_fingerprint_vs_certified.txt)
+$ scripts/compare_hashes.sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt out/cmd/43_copy_files_after_fingerprint.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:19Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+== out/cmd/43_copy_files_after_fingerprint.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+EQUAL
+# ----
+# end 2026-10-30T10:01:19Z
+# exit 0
+=================== 45_checkpoint06c_after_run (out/cmd/45_checkpoint06c_after_run.txt)
+$ shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:19Z
+# ----
+b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl
+# ----
+# end 2026-10-30T10:01:22Z
+# exit 0
+=================== 46_slice_inputs (out/cmd/46_slice_inputs.txt)
+$ /bin/bash -c cd\ references\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ slice_inputs.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:26Z
+# ----
+script slice_inputs.py sha256 32045d92a0b3135905f18d29835d695f02692b79d44662fd08b3e84f3bd0eb5b
+captured.json sha256 4f29bf95bc95986aab2b05de76e92be18f59a1b887200553f45f27c9b690722d
+s01 g-1e-7-2-1444 #4 G+q-r: 1318261 bytes sha256 7f162791c9b19f1cf15ef0b02ccd35910d0da83c8681aba7558642dfefbf8bb0 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s02 g-1e-7-2-1627 #3 G-q+r: 1353643 bytes sha256 0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s03 g-1e-7-3-34370 #4 G-q-r: 1342891 bytes sha256 81cff8d83b285ca9f1851e5d56e964e5fdb05293b07202b0d3eb9799b1cf4892 EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s08 g-1e-7-3-37319 #6 Y1: 3566 bytes sha256 861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s09 g-1e-7-1-35340 #18 Y2: 22397 bytes sha256 cbe9cb72607d7c19ae7d65a4b50726e9b0a0915998b5a3ca8f715e4a6d8285d3 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s10 g-1e-7-1-35332 #10 Y3: 3565 bytes sha256 08f40073cbfe11d70d1f4fec19ee6ebc1876c95145375eb0823533bfe0bbd5af EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s13 g-1e-8-3-34220 #4 G+q-r: 1322154 bytes sha256 54bd746d5ac6a1fd51f31822e374a2fe60a1143fc04579a7f80cbbc4ddf96b56 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s14 g-1e-8-2-1627 #3 G-q+r: 1353787 bytes sha256 9570b1794986758ad0413315bb300a9cec4f13715f14fa85d0a0ef2a017eb942 EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s15 g-1e-8-2-1549 #4 G-q-r: 1338573 bytes sha256 e9ca60604f8cb8cae4689d16362b97b438bd0e1ed103bff099f485756e786abd EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s22 g-1e-8-2-21874 #12 Y3: 3650 bytes sha256 ad6a6a065ead3616ef8dc96d162a7fa7f4ee902ca59d5f41580d72608b03e9b1 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s23 g-1e-8-2-1402 #12 Y4: 3565 bytes sha256 1ffb073daec0dbdb8c4961bf3508218f5c25d5ce1bbaa75f41954acee134d5ba EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+s25 g-1e-8-0-33962 #12 Y4: 3567 bytes sha256 696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42 EQUALS captured.json; capture_matches_census True; orchestrator's copy: identical
+s27 g-1e-8-3-34419 #21 J4: 21995 bytes sha256 d5389183fa3d15c084d15d2939f4923c151541255ada9ce3fff26be7ee1fca1c EQUALS captured.json; capture_matches_census True; orchestrator's copy: absent
+ALL GOOD
+# ----
+# end 2026-10-30T10:01:26Z
+# exit 0
+=================== 47_replay_g (out/cmd/47_replay_g.txt)
+$ /bin/bash -c cd\ references\ \&\&\ env\ PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad\ PYTHONDONTWRITEBYTECODE=1\ GIT_OPTIONAL_LOCKS=0\ OMP_NUM_THREADS=1\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ replay_g.py\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:33Z
+# ----
+# host mps026298.phys.susx.ac.uk utc 2026-10-30T10:01:33+00:00
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status lines 0
+# script sha256 eabe9dfc017081633811fa101b16c69da21da2f4a8768ed1f70f7de4744ce282 levin_quadrature sha256 8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c
+# census run /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318 checkpoint sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/replay_g.py", line 102, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/replay_g.py", line 66, in main
+    rec, sha = load(HERE / "inputs" / e["pickle"])
+               ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/replay_g.py", line 28, in load
+    return cp.loads(blob), hashlib.sha256(blob).hexdigest()
+           ~~~~~~~~^^^^^^
+ModuleNotFoundError: No module named 'harness'
+# ----
+# end 2026-10-30T10:01:35Z
+# exit 1
+=================== 48_replay_g_rerun (out/cmd/48_replay_g_rerun.txt)
+$ /bin/bash -c cd\ references\ \&\&\ env\ PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/scripts\ PYTHONDONTWRITEBYTECODE=1\ GIT_OPTIONAL_LOCKS=0\ OMP_NUM_THREADS=1\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ replay_g.py\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:02:09Z
+# ----
+# host mps026298.phys.susx.ac.uk utc 2026-10-30T10:02:09+00:00
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status lines 0
+# script sha256 eabe9dfc017081633811fa101b16c69da21da2f4a8768ed1f70f7de4744ce282 levin_quadrature sha256 8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c
+# census run /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318 checkpoint sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+{"sample": 1, "unit": "g-1e-7-2-1444", "index": 4, "scale": null, "replay": {"value": "0x1.c427c1ab41d00p-89", "abserr": "0x1.81cb7dded8c1ap-117", "num_regions": 2, "max_depth": 1, "converged": true}, "census06c": {"value": "0x1.c427c1ab729c6p-89", "abserr": "0x1.e75e77abcc7b6p-115"}, "g_call": {"value": "0x1.c427c1ab41d00p-89", "abserr": "0x1.81cb7dded8c1ap-117", "num_regions": 2, "max_depth": 1, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 2, "unit": "g-1e-7-2-1627", "index": 3, "scale": null, "replay": {"value": "-0x1.8274be9da55f4p-95", "abserr": "0x1.f35087217bd59p-115", "num_regions": 7, "max_depth": 6, "converged": true}, "census06c": {"value": "-0x1.8274be9da55efp-95", "abserr": "0x1.f350a57b8ff13p-115"}, "g_call": {"value": "-0x1.8274be9da55f4p-95", "abserr": "0x1.f35087217bd59p-115", "num_regions": 7, "max_depth": 6, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 3, "unit": "g-1e-7-3-34370", "index": 4, "scale": null, "replay": {"value": "0x1.2549f248a5a85p-88", "abserr": "0x1.cb647a7f43ea2p-112", "num_regions": 4, "max_depth": 2, "converged": true}, "census06c": {"value": "0x1.2549f2489da62p-88", "abserr": "0x1.ddc88087c8490p-112"}, "g_call": {"value": "0x1.2549f248a5a85p-88", "abserr": "0x1.cb647a7f43ea2p-112", "num_regions": 4, "max_depth": 2, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 8, "unit": "g-1e-7-3-37319", "index": 6, "scale": null, "replay": {"value": "-0x1.5957d1ae877cbp-30", "abserr": "0x1.feb0798665f4ep-56", "num_regions": 3, "max_depth": 2, "converged": true}, "census06c": {"value": "-0x1.5957d1ae87874p-30", "abserr": "0x1.fec7202556ba5p-56"}, "g_call": {"value": "-0x1.5957d1ae877cbp-30", "abserr": "0x1.feb0798665f4ep-56", "num_regions": 3, "max_depth": 2, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 9, "unit": "g-1e-7-1-35340", "index": 18, "scale": null, "replay": {"value": "0x1.9e838ef109ff8p-33", "abserr": "0x1.8dc0e9e93e321p-65", "num_regions": 8, "max_depth": 4, "converged": true}, "census06c": {"value": "0x1.9e838ef109fc4p-33", "abserr": "0x1.90820b21d2a6ep-65"}, "g_call": {"value": "0x1.9e838ef109ff8p-33", "abserr": "0x1.8dc0e9e93e321p-65", "num_regions": 8, "max_depth": 4, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 10, "unit": "g-1e-7-1-35332", "index": 10, "scale": null, "replay": {"value": "0x1.53f0186022d19p-44", "abserr": "0x1.fec92197c6400p-78", "num_regions": 4, "max_depth": 2, "converged": true}, "census06c": {"value": "0x1.53f0186022c00p-44", "abserr": "0x1.0892b0dd35d3ap-77"}, "g_call": {"value": "0x1.53f0186022d19p-44", "abserr": "0x1.fec92197c6400p-78", "num_regions": 4, "max_depth": 2, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 13, "unit": "g-1e-8-3-34220", "index": 4, "scale": null, "replay": {"value": "0x1.f022b8fae2452p-94", "abserr": "0x1.4e9792d3061f5p-123", "num_regions": 2, "max_depth": 1, "converged": true}, "census06c": {"value": "0x1.f022b8fa455f2p-94", "abserr": "0x1.8e28ba0bdd213p-116"}, "g_call": {"value": "0x1.f022b8fae2452p-94", "abserr": "0x1.4e9792d3061f5p-123", "num_regions": 2, "max_depth": 1, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 14, "unit": "g-1e-8-2-1627", "index": 3, "scale": null, "replay": {"value": "-0x1.8274be9da55d8p-95", "abserr": "0x1.f350869124fbdp-115", "num_regions": 4, "max_depth": 3, "converged": true}, "census06c": {"value": "-0x1.8274be9da55e1p-95", "abserr": "0x1.f350a0c941ba3p-115"}, "g_call": {"value": "-0x1.8274be9da55d8p-95", "abserr": "0x1.f350869124fbdp-115", "num_regions": 4, "max_depth": 3, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 15, "unit": "g-1e-8-2-1549", "index": 4, "scale": null, "replay": {"value": "-0x1.38011d966319fp-91", "abserr": "0x1.a63eefc9a64b1p-116", "num_regions": 3, "max_depth": 2, "converged": true}, "census06c": {"value": "-0x1.38011d9663c89p-91", "abserr": "0x1.a6a5ba739c9cbp-116"}, "g_call": {"value": "-0x1.38011d966319fp-91", "abserr": "0x1.a63eefc9a64b1p-116", "num_regions": 3, "max_depth": 2, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 22, "unit": "g-1e-8-2-21874", "index": 12, "scale": null, "replay": {"value": "-0x1.35f747459d339p-46", "abserr": "0x1.6e343f1eb5419p-81", "num_regions": 5, "max_depth": 4, "converged": true}, "census06c": {"value": "-0x1.35f747459e2b1p-46", "abserr": "0x1.343feabeaf356p-78"}, "g_call": {"value": "-0x1.35f747459d339p-46", "abserr": "0x1.6e343f1eb5419p-81", "num_regions": 5, "max_depth": 4, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 23, "unit": "g-1e-8-2-1402", "index": 12, "scale": null, "replay": {"value": "-0x1.1202ddb9e5bd2p-42", "abserr": "0x1.9f6ad7e2b35e7p-80", "num_regions": 7, "max_depth": 4, "converged": true}, "census06c": {"value": "-0x1.1202ddb9e5bd6p-42", "abserr": "0x1.a8cef17512fefp-80"}, "g_call": {"value": "-0x1.1202ddb9e5bd2p-42", "abserr": "0x1.9f6ad7e2b35e7p-80", "num_regions": 7, "max_depth": 4, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 25, "unit": "g-1e-8-0-33962", "index": 12, "scale": null, "replay": {"value": "-0x1.856da4f8bbbc3p-52", "abserr": "0x1.a2517359ee192p-86", "num_regions": 6, "max_depth": 3, "converged": true}, "census06c": {"value": "-0x1.856da4f5d0ee7p-52", "abserr": "0x1.0c4b38939c8e0p-70"}, "g_call": {"value": "-0x1.856da4f8bbbc3p-52", "abserr": "0x1.a2517359ee192p-86", "num_regions": 6, "max_depth": 3, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+{"sample": 27, "unit": "g-1e-8-3-34419", "index": 21, "scale": null, "replay": {"value": "0x1.b5ae337655536p-42", "abserr": "0x1.57495e0df31f8p-74", "num_regions": 7, "max_depth": 4, "converged": true}, "census06c": {"value": "0x1.b5ae337651871p-42", "abserr": "0x1.faa615e5ea6fcp-74"}, "g_call": {"value": "0x1.b5ae337655536p-42", "abserr": "0x1.57495e0df31f8p-74", "num_regions": 7, "max_depth": 4, "converged": true, "unit_status": "done"}, "same_label_and_span": true, "stands_for_g_call": true}
+# every sample's input stands for its g call: True
+# ----
+# end 2026-10-30T10:02:15Z
+# exit 0
+=================== 49_launch_short (out/cmd/49_launch_short.txt)
+$ /bin/bash -c cd\ references\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ launch_short.py\ 02\ 08\ 10\ 13\ 14\ 22\ 23\ 27
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:02:21Z
+# ----
+2026-10-30T10:02:21+00:00 sh pid 50499 command /bin/bash /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/run_short.sh 02 08 10 13 14 22 23 27; exit $? launcher pid 50498
+# ----
+# end 2026-10-30T10:02:21Z
+# exit 0
+=================== 50_short_launch_check (out/cmd/50_short_launch_check.txt)
+$ /bin/bash -c date\ -u\;\ cat\ references/out/short_progress.txt\;\ echo\ \"--\ driver\ log\"\;\ cat\ references/out/short_driver.log\;\ echo\ \"--\ ref-s02-P128\ so\ far\"\;\ cat\ references/out/ref-s02-P128.txt\;\ kill\ -0\ 50499\ \&\&\ echo\ \"sh\ 50499\ alive\"\;\ ps\ -o\ pid\,ppid\,command\ -p\ \$\(pgrep\ -P\ 50499\ \|\ tr\ \"\\n\"\ \"\,\"\ \|\ sed\ \"s/\,\$//\"\)\ 2\>/dev/null\ \|\ cut\ -c1-200
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:02:25Z
+# ----
+Fri Oct 30 10:02:25 UTC 2026
+2026-10-30T10:02:21Z s02 P128 start (bash pid 50504)
+-- driver log
+-- ref-s02-P128 so far
+host mps026298.phys.susx.ac.uk utc 2026-10-30T10:02:21+00:00
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status lines 0
+script sha256 8a0d291d09d74d444b47ff1f34b0f9000e4a045c4b94c36e5dec3158f2ea863b
+pickle inputs/s02.pkl sha256 0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183
+span 0x1.329fc5ed4906ap+3 0x1.d463901811304p+4 kw {'atol': 1.7738571168699037e-33, 'rtol': 1e-07, 'chebyshev_order': 24, 'notify_label': 'k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=14500, z in (5.1721e+12, 14500), regime Gqr, group G-q+r'}
+driver replay value -0x1.8274be9da55f4p-95 abserr 0x1.f35087217bd59p-115 regions 7 depth 6 converged True
+  equals captured False
+  scaled by None -> None None
+cells 19693; total |dtheta| 9.36109e+07 rad; theta extrema between cells at x = []
+sub-panels 746786 nodes 119485760
+sh 50499 alive
+  PID  PPID COMMAND
+50504 50499 /bin/bash /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/run_short.sh 02 08 10 13 14 22 23 27
+# ----
+# end 2026-10-30T10:02:26Z
+# exit 0
+=================== 51_short_done (out/cmd/51_short_done.txt)
+$ /bin/bash -c cat\ references/out/short_progress.txt\;\ echo\ \"--\ driver\ log\"\;\ cat\ references/out/short_driver.log\;\ for\ f\ in\ references/out/ref-s\*-P\*.txt\;\ do\ echo\ \"==\ \$f\"\;\ grep\ -E\ \"\^S\|\^driver\|\^wall\|equals\ captured\|Traceback\|Error\"\ \$f\;\ done\;\ kill\ -0\ 50499\ 2\>\&1\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -1\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T19:27:24Z
+# ----
+2026-10-30T10:02:21Z s02 P128 start (bash pid 50504)
+2026-10-30T10:21:43Z s02 P128 exit 0
+2026-10-30T10:21:43Z s02 P64 start (bash pid 50504)
+2026-10-30T11:15:35Z s02 P64 exit 0
+2026-10-30T11:15:35Z s08 P128 start (bash pid 50504)
+2026-10-30T11:49:49Z s08 P128 exit 0
+2026-10-30T11:49:49Z s08 P64 start (bash pid 50504)
+2026-10-30T13:24:45Z s08 P64 exit 0
+2026-10-30T13:24:45Z s10 P128 start (bash pid 50504)
+2026-10-30T14:00:53Z s10 P128 exit 0
+2026-10-30T14:00:53Z s10 P64 start (bash pid 50504)
+2026-10-30T15:42:31Z s10 P64 exit 0
+2026-10-30T15:42:31Z s13 P128 start (bash pid 50504)
+2026-10-30T15:47:39Z s13 P128 exit 0
+2026-10-30T15:47:39Z s13 P64 start (bash pid 50504)
+2026-10-30T16:01:40Z s13 P64 exit 0
+2026-10-30T16:01:40Z s14 P128 start (bash pid 50504)
+2026-10-30T16:21:55Z s14 P128 exit 0
+2026-10-30T16:21:55Z s14 P64 start (bash pid 50504)
+2026-10-30T17:19:10Z s14 P64 exit 0
+2026-10-30T17:19:10Z s22 P128 start (bash pid 50504)
+2026-10-30T17:27:46Z s22 P128 exit 0
+2026-10-30T17:27:46Z s22 P64 start (bash pid 50504)
+2026-10-30T17:50:08Z s22 P64 exit 0
+2026-10-30T17:50:08Z s23 P128 start (bash pid 50504)
+2026-10-30T18:02:56Z s23 P128 exit 0
+2026-10-30T18:02:56Z s23 P64 start (bash pid 50504)
+2026-10-30T18:38:10Z s23 P64 exit 0
+2026-10-30T18:38:10Z s27 P128 start (bash pid 50504)
+2026-10-30T18:50:53Z s27 P128 exit 0
+2026-10-30T18:50:53Z s27 P64 start (bash pid 50504)
+2026-10-30T19:25:40Z s27 P64 exit 0
+2026-10-30T19:25:40Z all done, exit 0
+-- driver log
+== references/out/ref-s02-P128.txt
+driver replay value -0x1.8274be9da55f4p-95 abserr 0x1.f35087217bd59p-115 regions 7 depth 6 converged True
+  equals captured False
+wall 1159.1 s
+S64 = -0x1.82749f74cc61dp-95 (-3.810746017471299e-29)
+S96 = -0x1.82749f74d2eb2p-95 (-3.8107460174863057e-29)   |S2-S1| = 1.501e-40   sum|terms| 3.324e-28
+driver (this tree) |value - S96| / abserr = 0.9985
+== references/out/ref-s02-P64.txt
+driver replay value -0x1.8274be9da55f4p-95 abserr 0x1.f35087217bd59p-115 regions 7 depth 6 converged True
+  equals captured False
+wall 3228.9 s
+S96 = -0x1.82749f74cc70ep-95 (-3.810746017471434e-29)
+S128 = -0x1.82749f74c8bdcp-95 (-3.81074601746294e-29)   |S2-S1| = 8.494e-41   sum|terms| 3.324e-28
+driver (this tree) |value - S128| / abserr = 0.9985
+== references/out/ref-s08-P128.txt
+driver replay value -0x1.5957d1ae877cbp-30 abserr 0x1.feb0798665f4ep-56 regions 3 depth 2 converged True
+  equals captured False
+wall 2052.1 s
+S64 = -0x1.5957d22e489a3p-30 (-1.2563507001847786e-09)
+S96 = -0x1.5957d22e09b8ep-30 (-1.256350700131517e-09)   |S2-S1| = 5.326e-20   sum|terms| 9.786e-08
+driver (this tree) |value - S96| / abserr = 0.9987
+== references/out/ref-s08-P64.txt
+driver replay value -0x1.5957d1ae877cbp-30 abserr 0x1.feb0798665f4ep-56 regions 3 depth 2 converged True
+  equals captured False
+wall 5691.0 s
+S96 = -0x1.5957d22e229dap-30 (-1.2563507001526028e-09)
+S128 = -0x1.5957d22e23d99p-30 (-1.256350700153648e-09)   |S2-S1| = 1.045e-21   sum|terms| 9.786e-08
+driver (this tree) |value - S128| / abserr = 0.9995
+== references/out/ref-s10-P128.txt
+driver replay value 0x1.53f0186022d19p-44 abserr 0x1.fec92197c6400p-78 regions 4 depth 2 converged True
+  equals captured False
+wall 2165.6 s
+S64 = 0x1.53f0185fa7ba3p-44 (7.54813704678516e-14)
+S96 = 0x1.53f0185fa5979p-44 (7.54813704677412e-14)   |S2-S1| = 1.104e-25   sum|terms| 3.559e-12
+driver (this tree) |value - S96| / abserr = 0.9807
+== references/out/ref-s10-P64.txt
+driver replay value 0x1.53f0186022d19p-44 abserr 0x1.fec92197c6400p-78 regions 4 depth 2 converged True
+  equals captured False
+wall 6094.9 s
+S96 = 0x1.53f0185fa29b0p-44 (7.54813704675868e-14)
+S128 = 0x1.53f0185fa507ap-44 (7.548137046771214e-14)   |S2-S1| = 1.253e-25   sum|terms| 3.559e-12
+driver (this tree) |value - S128| / abserr = 0.9851
+== references/out/ref-s13-P128.txt
+driver replay value 0x1.f022b8fae2452p-94 abserr 0x1.4e9792d3061f5p-123 regions 2 depth 1 converged True
+  equals captured False
+wall 304.6 s
+S64 = 0x1.f022b7f1ac565p-94 (9.784549843109732e-29)
+S96 = 0x1.f022b84477c01p-94 (9.784549940434296e-29)   |S2-S1| = 9.732e-37   sum|terms| 4.248e-24
+driver (this tree) |value - S96| / abserr = 17.45
+== references/out/ref-s13-P64.txt
+driver replay value 0x1.f022b8fae2452p-94 abserr 0x1.4e9792d3061f5p-123 regions 2 depth 1 converged True
+  equals captured False
+wall 838.2 s
+S96 = 0x1.f022b8fcb0f28p-94 (9.784550156987893e-29)
+S128 = 0x1.f022b88e640adp-94 (9.784550027330383e-29)   |S2-S1| = 1.297e-36   sum|terms| 4.248e-24
+driver (this tree) |value - S128| / abserr = 10.38
+== references/out/ref-s14-P128.txt
+driver replay value -0x1.8274be9da55d8p-95 abserr 0x1.f350869124fbdp-115 regions 4 depth 3 converged True
+  equals captured False
+wall 1212.6 s
+S64 = -0x1.82749f74cc61dp-95 (-3.810746017471299e-29)
+S96 = -0x1.82749f74d2eb2p-95 (-3.8107460174863057e-29)   |S2-S1| = 1.501e-40   sum|terms| 3.324e-28
+driver (this tree) |value - S96| / abserr = 0.9985
+== references/out/ref-s14-P64.txt
+driver replay value -0x1.8274be9da55d8p-95 abserr 0x1.f350869124fbdp-115 regions 4 depth 3 converged True
+  equals captured False
+wall 3429.1 s
+S96 = -0x1.82749f74cc70ep-95 (-3.810746017471434e-29)
+S128 = -0x1.82749f74c8bdcp-95 (-3.81074601746294e-29)   |S2-S1| = 8.494e-41   sum|terms| 3.324e-28
+driver (this tree) |value - S128| / abserr = 0.9985
+== references/out/ref-s22-P128.txt
+driver replay value -0x1.35f747459d339p-46 abserr 0x1.6e343f1eb5419p-81 regions 5 depth 4 converged True
+  equals captured False
+wall 511.8 s
+S64 = -0x1.35f747456df55p-46 (-1.7206565686841734e-14)
+S96 = -0x1.35f7474579d00p-46 (-1.7206565686994946e-14)   |S2-S1| = 1.532e-25   sum|terms| 8.156e-12
+driver (this tree) |value - S96| / abserr = 0.7731
+== references/out/ref-s22-P64.txt
+driver replay value -0x1.35f747459d339p-46 abserr 0x1.6e343f1eb5419p-81 regions 5 depth 4 converged True
+  equals captured False
+wall 1339.4 s
+S96 = -0x1.35f747459fd37p-46 (-1.7206565687486258e-14)
+S128 = -0x1.35f74745a7127p-46 (-1.7206565687579912e-14)   |S2-S1| = 9.365e-26   sum|terms| 8.156e-12
+driver (this tree) |value - S128| / abserr = 0.2156
+== references/out/ref-s23-P128.txt
+driver replay value -0x1.1202ddb9e5bd2p-42 abserr 0x1.9f6ad7e2b35e7p-80 regions 7 depth 4 converged True
+  equals captured False
+wall 765.9 s
+S64 = -0x1.1202ddb9de710p-42 (-2.4337083084005797e-13)
+S96 = -0x1.1202ddb9dfa87p-42 (-2.4337083084030955e-13)   |S2-S1| = 2.516e-25   sum|terms| 2.187e-12
+driver (this tree) |value - S96| / abserr = 0.9368
+== references/out/ref-s23-P64.txt
+driver replay value -0x1.1202ddb9e5bd2p-42 abserr 0x1.9f6ad7e2b35e7p-80 regions 7 depth 4 converged True
+  equals captured False
+wall 2111.9 s
+S96 = -0x1.1202ddb9df38ap-42 (-2.433708308402192e-13)
+S128 = -0x1.1202ddb9df72fp-42 (-2.4337083084026633e-13)   |S2-S1| = 4.71e-26   sum|terms| 2.187e-12
+driver (this tree) |value - S128| / abserr = 0.969
+== references/out/ref-s27-P128.txt
+driver replay value 0x1.b5ae337655536p-42 abserr 0x1.57495e0df31f8p-74 regions 7 depth 4 converged True
+  equals captured False
+wall 760.3 s
+S64 = 0x1.b5ae337c56bd5p-42 (3.8873835093992226e-13)
+S96 = 0x1.b5ae3378067fep-42 (3.887383507115708e-13)   |S2-S1| = 2.284e-22   sum|terms| 1.439e-09
+driver (this tree) |value - S96| / abserr = 1.262
+== references/out/ref-s27-P64.txt
+driver replay value 0x1.b5ae337655536p-42 abserr 0x1.57495e0df31f8p-74 regions 7 depth 4 converged True
+  equals captured False
+wall 2085.0 s
+S96 = 0x1.b5ae3378617d9p-42 (3.887383507303873e-13)
+S128 = 0x1.b5ae33790d84ap-42 (3.8873835076596175e-13)   |S2-S1| = 3.557e-23   sum|terms| 1.439e-09
+driver (this tree) |value - S128| / abserr = 2.028
+/bin/bash: line 0: kill: (50499) - No such process
+34 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 34 finished; 0 with no host recorded.
+19:27  up 23 days, 10:04, 1 user, load averages: 4.28 7.75 9.26
+# ----
+# end 2026-10-30T19:27:25Z
+# exit 0
+=================== 52_launch_refs (out/cmd/52_launch_refs.txt)
+$ /bin/bash -c cd\ references\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ launch_refs.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T19:27:30Z
+# ----
+run id      levin-phase-floor-06e-references-20261030T192730
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/run_refs.py
+sh pid      87997
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/run_refs.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730; exit $?
+launcher    pid 87993, exiting without waiting
+# ----
+# end 2026-10-30T19:27:30Z
+# exit 0
+=================== 53_refs_launch_check (out/cmd/53_refs_launch_check.txt)
+$ /bin/bash -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730\;\ date\ -u\;\ cat\ \$R/status.json\;\ echo\;\ echo\ \"stderr\ bytes\ \$\(wc\ -c\ \<\ \$R/stderr.log\)\"\;\ cat\ \$R/stdout.log\;\ echo\ \"--\ ref-s03-P128\ so\ far\"\;\ cat\ references/out/ref-s03-P128.txt\ 2\>\&1\ \|\ cut\ -c1-250\;\ kill\ -0\ 87997\ \&\&\ echo\ \"sh\ 87997\ alive\"\;\ P=\$\(python3\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\)\[\\\"pid\\\"\]\)\"\)\;\ kill\ -0\ \$P\ \&\&\ echo\ \"driver\ \$P\ alive\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T19:27:36Z
+# ----
+Fri Oct 30 19:27:36 UTC 2026
+{
+  "exit_code": null,
+  "heartbeat": "2026-10-30T19:27:30+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 88002,
+  "stage": "s03-P128 running",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 4
+}
+
+stderr bytes 0
+-- ref-s03-P128 so far
+host mps026298.phys.susx.ac.uk utc 2026-10-30T19:27:31+00:00
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status lines 0
+script sha256 8a0d291d09d74d444b47ff1f34b0f9000e4a045c4b94c36e5dec3158f2ea863b
+pickle inputs/s03.pkl sha256 81cff8d83b285ca9f1851e5d56e964e5fdb05293b07202b0d3eb9799b1cf4892
+span 0x1.329fc5ed4906ap+3 0x1.9d7b0833fb59fp+4 kw {'atol': 1.4647277180521766e-33, 'rtol': 1e-07, 'chebyshev_order': 24, 'notify_label': 'k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14500, z in (1.6721e+11, 14500), regime Gqr, group G-q-r'
+driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True
+  equals captured False
+  scaled by None -> None None
+cells 16261; total |dtheta| 3.24714e+08 rad; theta extrema between cells at x = []
+sub-panels 2548199 nodes 407711840
+sh 87997 alive
+driver 88002 alive
+# ----
+# end 2026-10-30T19:27:36Z
+# exit 0
+=================== 54_refs_done (out/cmd/54_refs_done.txt)
+$ /bin/bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730/status.json\;\ echo\;\ wc\ -c\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730/stderr.log\;\ cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730/checkpoint.jsonl\ \|\ cut\ -c1-600\;\ for\ f\ in\ references/out/ref-s03-P\*.txt\ references/out/ref-s15-P\*.txt\;\ do\ echo\ ==\ \$f\;\ grep\ -E\ \'\^S\|\^driver\|\^wall\|\^sub-panels\|Traceback\'\ \$f\;\ done\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:52:19Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-10-31T05:02:41+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 88002,
+  "stage": "s15-P64 exit 0",
+  "state": "done",
+  "units_done": 4,
+  "units_total": 4
+}
+
+0
+{"unit": "s03-P128", "recorded": "2026-10-30T20:33:57+00:00", "script_sha256": "77dcfdd908513dc3700725364c32978829b6b9a32bebde322ac1e0701f00ab40", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "output": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s03-P128.txt", "output_sha256": "ae168022a9523f616b0787c645c7c6946bd3a0b850076d3d923b2cfec04fa15e", "lines": ["driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True", "wall 3983
+{"unit": "s03-P64", "recorded": "2026-10-30T23:39:32+00:00", "script_sha256": "77dcfdd908513dc3700725364c32978829b6b9a32bebde322ac1e0701f00ab40", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "output": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s03-P64.txt", "output_sha256": "0b0f08129aaa68935028697efee7b911adeeca3781555802fccbdfa64c25ce61", "lines": ["driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True", "wall 11131.
+{"unit": "s15-P128", "recorded": "2026-10-31T01:04:16+00:00", "script_sha256": "77dcfdd908513dc3700725364c32978829b6b9a32bebde322ac1e0701f00ab40", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "output": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s15-P128.txt", "output_sha256": "ad641acccfcfa60021241337791a929a27ffaa003820bff4d94242a101fbb526", "lines": ["driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True", "wall 508
+{"unit": "s15-P64", "recorded": "2026-10-31T05:02:41+00:00", "script_sha256": "77dcfdd908513dc3700725364c32978829b6b9a32bebde322ac1e0701f00ab40", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "output": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s15-P64.txt", "output_sha256": "89b68d40185b334a128551a920d668baea6a3a95affc73ffcd6aa45561bb9657", "lines": ["driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True", "wall 14301
+== references/out/ref-s03-P128.txt
+driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True
+sub-panels 2548199 nodes 407711840
+wall 3983.5 s
+S64 = 0x1.2549f00929c9ap-88 (3.70182533076849e-27)
+S96 = 0x1.2549f0108200ap-88 (3.7018253362939445e-27)   |S2-S1| = 5.525e-36   sum|terms| 7.925e-24
+driver (this tree) |value - S96| / abserr = 1.237
+== references/out/ref-s03-P64.txt
+driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True
+sub-panels 5084681 nodes 1138968544
+wall 11131.3 s
+S96 = 0x1.2549f00d6ab8ap-88 (3.701825333968578e-27)
+S128 = 0x1.2549f00caea6ep-88 (3.701825333415892e-27)   |S2-S1| = 5.527e-37   sum|terms| 7.925e-24
+driver (this tree) |value - S128| / abserr = 1.245
+== references/out/ref-s15-P128.txt
+driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True
+sub-panels 3255756 nodes 520920960
+wall 5080.9 s
+S64 = -0x1.38011e39b010fp-91 (-4.922560954823933e-28)
+S96 = -0x1.38011e396c296p-91 (-4.922560954574491e-28)   |S2-S1| = 2.494e-38   sum|terms| 2.561e-25
+driver (this tree) |value - S96| / abserr = 0.7722
+== references/out/ref-s15-P64.txt
+driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True
+sub-panels 6499933 nodes 1455984992
+wall 14301.2 s
+S96 = -0x1.38011e3ab17c1p-91 (-4.922560955769539e-28)
+S128 = -0x1.38011e3b4d40ap-91 (-4.9225609563417395e-28)   |S2-S1| = 5.722e-38   sum|terms| 2.562e-25
+driver (this tree) |value - S128| / abserr = 0.7811
+12K	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730
+# ----
+# end 2026-10-31T10:52:19Z
+# exit 0
+=================== 55_report (out/cmd/55_report.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06e.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:53:45Z
+# ----
+# levin-phase-floor 06e: the census's scores and descriptive items
+# written 2026-10-31T10:53:45Z on mps026298.phys.susx.ac.uk
+# script analyse06e.py sha256 030a07953c44326011369cdd30f48d605328e65ae3698e6cf6831640ce33f0b3
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/predictions.md sha256 f27771cc2c16691a027a068f7849e49f18f477bcb26ee45313fbcbedf594c840
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/docs/levin-phase-floor/06c/y1-references/results.json sha256 533c4e091e1e29b8f157605fef5d07efccca6cf2d89e84fcb5256634ae61babc
+
+06a's stationary-point rows: 720 (must be 720: True)
+Y1's 12 rows (y1-references rank 1-12) -> rows.json: {'Y01': [], 'Y02': [], 'Y03': [], 'Y04': [], 'Y05': [], 'Y06': [], 'Y07': [], 'Y08': [], 'Y09': [], 'Y10': [], 'Y11': [], 'Y12': []}
+
+================ rtol 1e-7: units g 9280, 06c 9280
+status g {'done': 9280}; 06c {'done': 9280}
+over budget: 0 (0 outside the 720); done with wall_s > 300 s: []
+matching problems: 0 []
+
+== Z2 (rtol 1e-7): calls outside the 720 reaching depth 20: 0; over-budget units outside: 0 -> holds
+   (reported) calls of the 720 at depth 20: 11
+      ('g-1e-7-0-1795', 1, 'group', 'k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=174.13, z in (5.406e+09, 174.13), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-2-2078', 1, 'group', 'k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=57.642, z in (5.1721e+12, 57.642), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-2-34707', 1, 'group', 'k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=19.081, z in (5.2861e+10, 19.081), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-1-2174', 1, 'group', 'k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-2-34820', 1, 'group', 'k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=14.474, z in (5.2861e+10, 14.474), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-1-2137', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=2.091, z in (1.6711e+10, 2.091), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-0-14322', 1, 'group', 'k=3.14e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.52504, z in (1.6721e+11, 0.52504), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-1-14230', 1, 'group', 'k=9.85e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.69219, z in (5.169e+11, 0.69219), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-1-2232', 1, 'group', 'k=9.85e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-3-38099', 1, 'group', 'k=9.7e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=132.08, z in (1.6721e+11, 132.08), regime Gqr, group G+q+r', 20)
+      ('g-1e-7-3-34945', 1, 'group', 'k=9.7e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r', 20)
+
+== Z4 (rtol 1e-7): rows scored 8560; non-finite total_abserr in either 0; violating 0 -> holds
+
+== Z5 (rtol 1e-7): Levin calls outside the 720 that 06c reported unconverged: 85; unconverged under g: 0; unmatched 0 -> holds
+
+-- descriptive (rtol 1e-7): convergence and depth-20 calls, g vs 06c (all rows)
+   analytic at depth 20: g 0  06c 95
+   analytic calls: g 107416  06c 107416
+   analytic unconverged: g 0  06c 89
+   group at depth 20: g 11  06c 14
+   group calls: g 37325  06c 37325
+   group unconverged: g 9  06c 15
+   rows total_converged false: g 9  06c 13
+   outside the 720:
+      analytic at depth 20: g 0  06c 76
+      analytic calls: g 95896  06c 95896
+      analytic unconverged: g 0  06c 75
+      group at depth 20: g 0  06c 8
+      group calls: g 33725  06c 33725
+      group unconverged: g 0  06c 10
+      rows total_converged false: g 0  06c 9
+   row depth (max over the row's Levin calls) histogram, depth: g / 06c
+   0: 246/259; 1: 250/226; 2: 296/210; 3: 464/261; 4: 1190/422; 5: 1086/543; 6: 999/767; 7: 1330/1101; 8: 777/978; 9: 205/617; 10: 108/372; 11: 29/279; 12: 13/247; 13: 18/236; 14: 12/182; 15: 6/91; 16: 10/82; 17: 4/61; 18: 4/39; 19: 7/29; 20: 11/63
+   call depth histogram, depth: g / 06c
+   0: 48148/46421; 1: 20933/20983; 2: 12967/12507; 3: 12796/11807; 4: 35447/22426; 5: 6954/9004; 6: 3030/6528; 7: 2809/5593; 8: 1156/3522; 9: 263/1870; 10: 118/1067; 11: 34/835; 12: 13/625; 13: 18/549; 14: 12/372; 15: 7/168; 16: 10/149; 17: 4/86; 18: 4/71; 19: 7/49; 20: 11/109
+   cost: regions g 625878 / 06c 973698 (x0.643); solves g 4862283 / 06c 7255157 (x0.670); unit walls summed g 2.282 h / 06c 3.208 h (x0.711); largest unit g g-1e-7-0-14051 6.0 s / 06c g-1e-7-0-38939 425.6 s
+   where the budget went (per call, largest of residual/floor/truncation): {('analytic', 'floor'): 45392, ('analytic', 'resolution'): 61997, ('analytic', 'truncation'): 27, ('group', 'floor'): 6417, ('group', 'resolution'): 30908}
+   CC floor terms summed over floor-attributed CC leaves (5628 calls): R_2 6.978e-34, R_c 1.754e-34, R_g 2.236e-21, abs_E 7.117e-21, declared 1.568e-17, node_term 9.354e-21, phase_err_resolve 1.577e-17, t_argument 4.123e-21, t_value_rounding 7.263e-20
+   as shares of the floor sum: t_value_rounding 0.0046, t_argument 0.0003, node_term 0.0006, abs_E 0.0005, R_g 0.0001, R_2 0.0000, R_c 0.0000, declared 0.9945
+   per call, largest floor term among (n+4)uS, argument, node, declared: {'t_value_rounding': 2644, 'node_term': 491, 'declared': 2493}
+   calls past depth 12 (outside the 720 / inside): 14 / 59
+      g-1e-7-1-35310 #6 11, 6.9475e+05), regime Gqr, group G-q-r: depth 15 conv True tiles True; resid/floor last five [12.4, 2.41, 2.7, 1.95, 0.0481]
+      g-1e-7-2-1495 #5 11, 6.9475e+05), regime Gqr, group G-q+r: depth 14 conv True tiles True; resid/floor last five [7.11, 151.0, 0.5, 2.84, 0.5]
+      g-1e-7-0-12973 #4 09e+09, 8342.9), regime Gqr, group G+q-r: depth 13 conv True tiles True; resid/floor last five [34.4, 199.0, 0.419, 1.1, 0.205]
+      g-1e-7-0-14051 #6 09e+09, 100.19), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [1520.0, 29.8, 1.57, 4.65, 0.554]
+      g-1e-7-0-2005 #2 61e+10, 75.993), regime Gqr, group G+q-r: depth 15 conv True tiles True; resid/floor last five [21.2, 2.71, 0.155, 1.54, 1.45]
+      g-1e-7-0-2005 #3 61e+10, 75.993), regime Gqr, group G-q+r: depth 15 conv True tiles True; resid/floor last five [21.2, 2.71, 0.155, 1.54, 1.45]
+      g-1e-7-0-38938 #4 51e+12, 4.7913), regime Gqr, group G-q-r: depth 14 conv True tiles True; resid/floor last five [25.1, 26.2, 1.6, 1.22, 1.64]
+      g-1e-7-2-34823 #3 09e+09, 4.7913), regime Gqr, group G+q+r: depth 15 conv True tiles True; resid/floor last five [34.4, 11.7, 0.249, 1.37, 0.0515]
+      g-1e-7-2-39041 #5 6e+09, 0.13184), regime Gqr, group G-q+r: depth 13 conv True tiles True; resid/floor last five [54.1, 10.9, 132.0, 5.83, 0.132]
+      g-1e-7-3-34098 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [106.0, 7.86, 0.488, 1.04, 0.0113]
+      g-1e-7-3-34386 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [103.0, 7.46, 0.489, 1.04, 0.0108]
+      g-1e-7-3-13613 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [62.3, 4.03, 0.492, 1.05, 0.00424]
+      g-1e-7-3-34864 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [97.4, 6.8, 0.489, 1.04, 0.00984]
+      g-1e-7-3-35008 #6 1e+10, 0.30208), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [108.0, 29.5, 1.55, 1.08, 0.255]
+   the 720: totals moved 642; by more than total_abserr_06c 7; |dtotal|/e_06c p0 0, p10 0, p50 1.28e-08, p90 4.28e-07, p99 0.00221, p100 261
+      g-1e-7-1-2174 call 1 7913), regime Gqr, group G+q+r (in 720: True): g value 0x1.0c5f181ecc5d9p-86 abserr 0x1.7587ea331e3e3p-110 depth 20 regions 94 conv False | 06c 0x1.0c5f181ecdbffp-86 0x1.75833833809f1p-110 depth 20 regions 50 conv False; |dv|/abserr_06c 1.448e-05, /abserr_g 1.448e-05
+
+================ rtol 1e-8: units g 9280, 06c 9280
+status g {'done': 9280}; 06c {'done': 9280}
+over budget: 0 (0 outside the 720); done with wall_s > 300 s: []
+matching problems: 0 []
+
+== Z2 (rtol 1e-8): calls outside the 720 reaching depth 20: 1; over-budget units outside: 0 -> fails
+   ('g-1e-8-0-33995', 5, 'group', 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r', 20)
+   (reported) calls of the 720 at depth 20: 17
+      ('g-1e-8-2-2078', 1, 'group', 'k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=57.642, z in (5.1721e+12, 57.642), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-0-12974', 1, 'group', 'k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=2094.9, z in (5.406e+09, 2094.9), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-2364', 1, 'group', 'k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=0.30208, z in (1.6351e+12, 0.30208), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-1839', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=693.47, z in (1.6711e+10, 693.47), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-0-1795', 1, 'group', 'k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=174.13, z in (5.406e+09, 174.13), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-2-34707', 1, 'group', 'k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=19.081, z in (5.2861e+10, 19.081), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-2-34820', 1, 'group', 'k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=14.474, z in (5.2861e+10, 14.474), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-34769', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=33.165, z in (1.6711e+10, 33.165), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-2137', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=2.091, z in (1.6711e+10, 2.091), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-14230', 1, 'group', 'k=9.85e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.69219, z in (5.169e+11, 0.69219), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-2232', 1, 'group', 'k=9.85e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-1-14233', 1, 'group', 'k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=0.30208, z in (1.6711e+10, 0.30208), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-38099', 1, 'group', 'k=9.7e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=132.08, z in (1.6721e+11, 132.08), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-34736', 1, 'group', 'k=1e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=25.156, z in (1.6711e+10, 25.156), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-34945', 1, 'group', 'k=9.7e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-35018', 1, 'group', 'k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=6.3166, z in (5.406e+09, 6.3166), regime Gqr, group G+q+r', 20)
+      ('g-1e-8-3-14586', 1, 'group', 'k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=0.1, z in (5.406e+09, 0.1), regime Gqr, group G+q+r', 20)
+
+== Z4 (rtol 1e-8): rows scored 8560; non-finite total_abserr in either 0; violating 0 -> holds
+
+== Z5 (rtol 1e-8): Levin calls outside the 720 that 06c reported unconverged: 173; unconverged under g: 1; unmatched 0 -> fails
+   ('g-1e-8-0-33995', 5, 'group', 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r', 20, '0x1.badaaed87034dp-110')
+
+-- descriptive (rtol 1e-8): convergence and depth-20 calls, g vs 06c (all rows)
+   analytic at depth 20: g 0  06c 141
+   analytic calls: g 107416  06c 107416
+   analytic unconverged: g 0  06c 151
+   group at depth 20: g 18  06c 12
+   group calls: g 37325  06c 37325
+   group unconverged: g 15  06c 49
+   rows total_converged false: g 15  06c 45
+   outside the 720:
+      analytic at depth 20: g 0  06c 124
+      analytic calls: g 95896  06c 95896
+      analytic unconverged: g 0  06c 139
+      group at depth 20: g 1  06c 9
+      group calls: g 33725  06c 33725
+      group unconverged: g 1  06c 34
+      rows total_converged false: g 1  06c 33
+   row depth (max over the row's Levin calls) histogram, depth: g / 06c
+   0: 242/253; 1: 219/207; 2: 300/211; 3: 491/239; 4: 1614/383; 5: 846/504; 6: 692/656; 7: 812/764; 8: 924/1046; 9: 397/837; 10: 310/478; 11: 65/299; 12: 30/293; 13: 27/245; 14: 17/200; 15: 11/127; 16: 17/94; 17: 11/71; 18: 11/50; 19: 11/27; 20: 18/81
+   call depth histogram, depth: g / 06c
+   0: 39227/37815; 1: 18116/16531; 2: 13501/13724; 3: 17342/14590; 4: 43119/26114; 5: 4363/9439; 6: 2646/7373; 7: 2674/6093; 8: 2153/4970; 9: 885/2757; 10: 445/1445; 11: 103/1076; 12: 40/841; 13: 28/664; 14: 17/440; 15: 14/266; 16: 17/192; 17: 11/120; 18: 11/81; 19: 11/57; 20: 18/153
+   cost: regions g 799186 / 06c 2086346 (x0.383); solves g 6209807 / 06c 12444591 (x0.499); unit walls summed g 2.974 h / 06c 5.775 h (x0.515); largest unit g g-1e-8-0-33995 105.1 s / 06c g-1e-8-2-38298 1184.7 s
+   where the budget went (per call, largest of residual/floor/truncation): {('analytic', 'floor'): 53113, ('analytic', 'resolution'): 54303, ('group', 'floor'): 6266, ('group', 'resolution'): 31059}
+   CC floor terms summed over floor-attributed CC leaves (7326 calls): R_2 7.859e-34, R_c 2.059e-34, R_g 2.735e-21, abs_E 9.111e-21, declared 1.955e-17, node_term 1.185e-20, phase_err_resolve 1.967e-17, t_argument 5.225e-21, t_value_rounding 9.444e-20
+   as shares of the floor sum: t_value_rounding 0.0048, t_argument 0.0003, node_term 0.0006, abs_E 0.0005, R_g 0.0001, R_2 0.0000, R_c 0.0000, declared 0.9943
+   per call, largest floor term among (n+4)uS, argument, node, declared: {'t_value_rounding': 3216, 'node_term': 1323, 'declared': 2785, 't_argument': 2}
+   calls past depth 12 (outside the 720 / inside): 24 / 103
+      g-1e-8-2-1495 #5 11, 6.9475e+05), regime Gqr, group G-q+r: depth 14 conv True tiles True; resid/floor last five [7.11, 151.0, 0.5, 2.84, 0.5]
+      g-1e-8-1-35310 #6 11, 6.9475e+05), regime Gqr, group G-q-r: depth 15 conv True tiles True; resid/floor last five [12.4, 2.41, 2.7, 1.95, 0.0481]
+      g-1e-8-0-33995 #5 +09, 4.809e+06), regime Gqr, group G-q+r: depth 20 conv False tiles True; resid/floor last five [38.2, 0.00335, 0.0439, 0.0158, 0.00683]
+      g-1e-8-0-12689 #4 09, 2.7669e+06), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [2.22, 2.36, 3.71, 1.58, 0.00432]
+      g-1e-8-0-12783 #4 09, 3.9973e+05), regime Gqr, group G+q-r: depth 14 conv True tiles True; resid/floor last five [121.0, 1.32, 0.523, 4.45, 0.453]
+      g-1e-8-0-12973 #4 09e+09, 8342.9), regime Gqr, group G+q-r: depth 13 conv True tiles True; resid/floor last five [34.4, 199.0, 0.419, 1.1, 0.205]
+      g-1e-8-0-14051 #6 09e+09, 100.19), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [1520.0, 29.8, 1.57, 4.65, 0.554]
+      g-1e-8-0-2005 #2 61e+10, 75.993), regime Gqr, group G+q-r: depth 15 conv True tiles True; resid/floor last five [21.2, 2.71, 0.155, 1.54, 1.45]
+      g-1e-8-0-2005 #3 61e+10, 75.993), regime Gqr, group G-q+r: depth 15 conv True tiles True; resid/floor last five [21.2, 2.71, 0.155, 1.54, 1.45]
+      g-1e-8-0-2006 #6 09e+09, 57.642), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [16.0, 0.306, 2.21, 0.268, 0.315]
+      g-1e-8-2-34823 #3 09e+09, 4.7913), regime Gqr, group G+q+r: depth 15 conv True tiles True; resid/floor last five [34.4, 11.7, 0.249, 1.37, 0.0515]
+      g-1e-8-0-13955 #5 09e+09, 25.156), regime Gqr, group G-q+r: depth 13 conv True tiles True; resid/floor last five [122.0, 66.2, 0.509, 1.4, 0.187]
+      g-1e-8-0-38938 #4 51e+12, 4.7913), regime Gqr, group G-q-r: depth 14 conv True tiles True; resid/floor last five [25.1, 26.2, 1.6, 1.22, 1.64]
+      g-1e-8-2-39041 #5 6e+09, 0.13184), regime Gqr, group G-q+r: depth 13 conv True tiles True; resid/floor last five [54.1, 10.9, 132.0, 5.83, 0.132]
+      g-1e-8-0-38454 #5 09e+09, 1.2031), regime Gqr, group G-q+r: depth 14 conv True tiles True; resid/floor last five [99.2, 0.253, 3.1, 1.03, 0.195]
+      g-1e-8-3-34098 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [106.0, 7.86, 0.488, 1.04, 0.0113]
+      g-1e-8-3-34264 #4 +09, 3.032e+05), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [15.9, 14.0, 0.103, 8.81, 0.00988]
+      g-1e-8-3-34155 #4 +09, 3.032e+05), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [14.2, 0.00269, 6.68, 3.52, 0.133]
+      g-1e-8-3-34111 #4 10, 1.7445e+05), regime Gqr, group G-q-r: depth 14 conv True tiles True; resid/floor last five [111.0, 5.94, 0.0989, 0.924, 0.788]
+      g-1e-8-3-34386 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [103.0, 7.46, 0.489, 1.04, 0.0108]
+      g-1e-8-3-13613 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [62.3, 4.03, 0.492, 1.05, 0.00424]
+      g-1e-8-3-13839 #4 61e+10, 100.19), regime Gqr, group G-q-r: depth 15 conv True tiles True; resid/floor last five [133.0, 0.497, 3.17, 3.18, 0.057]
+      g-1e-8-3-34864 #2 21e+11, 1.709e+09), regime Gr, group G-r: depth 13 conv True tiles True; resid/floor last five [97.4, 6.8, 0.489, 1.04, 0.00984]
+      g-1e-8-3-35008 #6 1e+10, 0.30208), regime Gqr, group G-q-r: depth 13 conv True tiles True; resid/floor last five [108.0, 29.5, 1.55, 1.08, 0.255]
+   the 720: totals moved 630; by more than total_abserr_06c 8; |dtotal|/e_06c p0 0, p10 0, p50 4.03e-08, p90 6.04e-06, p99 0.533, p100 2.29e+03
+      g-1e-8-1-2174 call 1 7913), regime Gqr, group G+q+r (in 720: True): g value 0x1.0c6c2cd926acfp-86 abserr 0x1.febd253628d92p-110 depth 7 regions 18 conv True | 06c 0x1.0c5f181ecdc0bp-86 0x1.758384c2f61c3p-110 depth 20 regions 48 conv False; |dv|/abserr_06c 2295, /abserr_g 1678
+
+== summary
+{
+ "1e-7": {
+  "Z2": "holds",
+  "Z4": "holds",
+  "Z5": "holds",
+  "z2_viol": 0,
+  "z2_sp": 11,
+  "z4_n": 8560,
+  "z4_viol": 0,
+  "z4_nonfinite": 0,
+  "z5_n": 85,
+  "z5_fail": 0,
+  "over": 0,
+  "regions": [
+   625878,
+   973698
+  ],
+  "solves": [
+   4862283,
+   7255157
+  ],
+  "wall_h": [
+   2.281680802246879,
+   3.2079195655141826
+  ],
+  "conv": [
+   {
+    "analytic calls": 107416,
+    "group calls": 37325,
+    "group at depth 20": 11,
+    "rows total_converged false": 9,
+    "group unconverged": 9
+   },
+   {
+    "analytic calls": 107416,
+    "group calls": 37325,
+    "rows total_converged false": 13,
+    "group unconverged": 15,
+    "analytic at depth 20": 95,
+    "analytic unconverged": 89,
+    "group at depth 20": 14
+   }
+  ],
+  "row_depth": [
+   {
+    "0": 246,
+    "1": 250,
+    "2": 296,
+    "3": 464,
+    "4": 1190,
+    "5": 1086,
+    "6": 999,
+    "8": 777,
+    "9": 205,
+    "7": 1330,
+    "11": 29,
+    "10": 108,
+    "12": 13,
+    "15": 6,
+    "14": 12,
+    "13": 18,
+    "19": 7,
+    "20": 11,
+    "16": 10,
+    "17": 4,
+    "18": 4
+   },
+   {
+    "0": 259,
+    "1": 226,
+    "2": 210,
+    "3": 261,
+    "4": 422,
+    "5": 543,
+    "6": 767,
+    "8": 978,
+    "9": 617,
+    "7": 1101,
+    "10": 372,
+    "11": 279,
+    "12": 247,
+    "13": 236,
+    "14": 182,
+    "16": 82,
+    "15": 91,
+    "17": 61,
+    "18": 39,
+    "19": 29,
+    "20": 63
+   }
+  ]
+ },
+ "1e-8": {
+  "Z2": "fails",
+  "Z4": "holds",
+  "Z5": "fails",
+  "z2_viol": 1,
+  "z2_sp": 17,
+  "z4_n": 8560,
+  "z4_viol": 0,
+  "z4_nonfinite": 0,
+  "z5_n": 173,
+  "z5_fail": 1,
+  "over": 0,
+  "regions": [
+   799186,
+   2086346
+  ],
+  "solves": [
+   6209807,
+   12444591
+  ],
+  "wall_h": [
+   2.9736375210612054,
+   5.774899149056097
+  ],
+  "conv": [
+   {
+    "analytic calls": 107416,
+    "group calls": 37325,
+    "rows total_converged false": 15,
+    "group unconverged": 15,
+    "group at depth 20": 18
+   },
+   {
+    "analytic calls": 107416,
+    "group calls": 37325,
+    "rows total_converged false": 45,
+    "group unconverged": 49,
+    "analytic unconverged": 151,
+    "analytic at depth 20": 141,
+    "group at depth 20": 12
+   }
+  ],
+  "row_depth": [
+   {
+    "0": 242,
+    "1": 219,
+    "2": 300,
+    "3": 491,
+    "4": 1614,
+    "5": 846,
+    "6": 692,
+    "8": 924,
+    "9": 397,
+    "7": 812,
+    "11": 65,
+    "10": 310,
+    "12": 30,
+    "14": 17,
+    "15": 11,
+    "20": 18,
+    "13": 27,
+    "17": 11,
+    "19": 11,
+    "16": 17,
+    "18": 11
+   },
+   {
+    "0": 253,
+    "1": 207,
+    "2": 211,
+    "3": 239,
+    "4": 383,
+    "5": 504,
+    "6": 656,
+    "8": 1046,
+    "9": 837,
+    "7": 764,
+    "10": 478,
+    "11": 299,
+    "12": 293,
+    "13": 245,
+    "14": 200,
+    "16": 94,
+    "15": 127,
+    "17": 71,
+    "18": 50,
+    "20": 81,
+    "19": 27
+   }
+  ]
+ }
+}
+wrote out/census_rows_06e.csv.gz (18560 units) and out/deep_calls_06e.json (200 calls)
+# ----
+# end 2026-10-31T10:54:04Z
+# exit 0
+=================== 57_z3_score (out/cmd/57_z3_score.txt)
+$ /bin/bash -c cd\ references\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ score_z3.py\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:54:44Z
+# ----
+script score_z3.py sha256 92d6756798b842a00619e0408392b9ee69279bc01282dc631d2dc2f5f81e10f8
+census checkpoint sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c ; 06c checkpoint sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+
+sample unit #index block | counts | range/min(abserr) (orch reading) | |v_g-ref|/e_g | |v_06c-ref|/e_06c | checks
+s01 g-1e-7-2-1444 #4 G+q-r | dropped | 0.961 (0.583) | 0.6259 | 0.1223 | all hold
+s02 g-1e-7-2-1627 #3 G-q+r | COUNTED | 4.976e-06 (4.976e-06) | 0.9985 | 0.9985 | all hold
+s03 g-1e-7-3-34370 #4 G-q-r | COUNTED | 0.008327 (0.008327) | 1.245 VIOLATES | 1.197 | all hold
+s08 g-1e-7-3-37319 #6 Y1 | COUNTED | 0.0007994 (0.0007994) | 0.9995 | 0.9993 | all hold
+s09 g-1e-7-1-35340 #18 Y2 | COUNTED | 0.006664 (0.004516) | 0.9979 | 0.991 | all hold
+s10 g-1e-7-1-35332 #10 Y3 | dropped | 0.02339 (0.01898) | 0.9851 | 0.9504 | all hold
+s13 g-1e-8-3-34220 #4 G+q-r | dropped | 17.62 (10.55) | 10.38 VIOLATES | 0.06774 | all hold
+s14 g-1e-8-2-1627 #3 G-q+r | COUNTED | 4.976e-06 (4.976e-06) | 0.9985 | 0.9985 | all hold
+s15 g-1e-8-2-1549 #4 G-q-r | COUNTED | 0.008901 (0.008901) | 0.7811 | 0.7804 | all hold
+s22 g-1e-8-2-21874 #12 Y3 | dropped | 0.9887 (0.9887) | 0.2156 | 0.02889 | all hold
+s23 g-1e-8-2-1402 #12 Y4 | dropped | 0.06729 (0.03509) | 0.969 | 0.9477 | all hold
+s25 g-1e-8-0-33962 #12 Y4 | dropped | 65.72 (65.72) | 9.193 VIOLATES | 4.883e-05 | all hold
+s27 g-1e-8-3-34419 #21 J4 | dropped | 0.7662 (0.7662) | 2.028 VIOLATES | 1.382 | all hold
+
+counted 6 [2, 3, 8, 9, 14, 15]; dropped 7 [1, 10, 13, 22, 23, 25, 27]
+violations among counted: [(3, 1.245)]
+Z3: fails
+wrote references/out/z3_scores.json
+# ----
+# end 2026-10-31T10:54:49Z
+# exit 0
+=================== 58_z2_call_detail (out/cmd/58_z2_call_detail.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json\nR=\'/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\'\nC=\'/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl\'\nfor path,uid in ((R,\'g-1e-8-0-33995\'),(C,\'g-1e-8-0-33995\'),(R,\'g-1e-7-0-33995\'),(C,\'g-1e-7-0-33995\')):\n  for line in open(path):\n    if uid not in line[:200]: continue\n    r=json.loads(line)\n    if r[\'unit\']!=uid: continue\n    d=r[\'data\']; c=[c for c in d[\'calls\'] if c[\'index\']==5][0]\n    print(path.split(\'/\')[-2][:30], uid, \'wall\', round(d[\'wall_s\'],1), \'total\', d[\'result\'][\'total\'][\'hex\'], d[\'result\'][\'total_abserr\'][\'hex\'], d[\'result\'][\'total_converged\'])\n    print(\'  call5\', {k:c.get(k) for k in (\'notify_label\',\'converged\',\'max_depth\',\'num_regions\',\'n_at_depth_max\',\'num_untrusted_regions\',\'num_subregion_solves\',\'E_largest_share\',\'leaves\',\'r_max_finite\',\'budget\')})\n    print(\'  value\', c[\'value\'][\'hex\'], \'abserr\', c[\'abserr\'][\'hex\'], \'atol\', c[\'atol\'], \'rtol\', c[\'rtol\'], \'E_share\', {k:v[\'repr\'] for k,v in c[\'E_share\'].items()}, \'cc_floor\', (c.get(\'cc_floor\') or {}).get(\'n_cc_leaves\'))\n    if d.get(\'scan\'): print(\'  scan\', [s for s in d[\'scan\'] if s and s[\'index\']==5])\n    break\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:55:05Z
+# ----
+levin-phase-floor-06e-census-2 g-1e-8-0-33995 wall 105.1 total 0x1.03e24afe8a4bbp-53 0x1.861579bb09ac9p-77 False
+  call5 {'notify_label': 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r', 'converged': False, 'max_depth': 20, 'num_regions': 8706, 'n_at_depth_max': 3064, 'num_untrusted_regions': 0, 'num_subregion_solves': 30707, 'E_largest_share': 'floor', 'leaves': {'levin': 106, 'cc': 8600, 'trusted': 0, 'untrusted': 0, 'unchecked': 3064, 'floor_limited': 5642, 'widened': 0}, 'r_max_finite': 33158.416666666664, 'budget': {'num_leaves': 8706, 'num_splits': 8705, 'num_floor_limited': 5642, 'num_at_depth_max': 3064, 'num_checks': 1506, 'num_check_passes': 9, 'num_untrusted_found': 663, 'num_untrusted_returned': 0, 'num_unchecked_returned': 3064, 'running_stop': False, 'budget_met': False, 'disagree': '', 'num_resum_rejections': 0}}
+  value -0x1.0e0aae8560300p-85 abserr 0x1.badaaed87034dp-110 atol 6.689401715969813e-34 rtol 1e-08 E_share {'resolution': '5.788724719768818e-38', 'floor': '1.3326080867899117e-33', 'truncation': '0.0'} cc_floor 8600
+levin-phase-floor-06c-census-2 g-1e-8-0-33995 wall 9.2 total 0x1.03e24afe8b998p-53 0x1.8f2428a71637ep-77 False
+  call5 {'notify_label': 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r', 'converged': False, 'max_depth': 13, 'num_regions': 688, 'n_at_depth_max': 0, 'num_untrusted_regions': 0, 'num_subregion_solves': 2751, 'E_largest_share': 'floor', 'leaves': {'levin': 159, 'cc': 529, 'trusted': 0, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 688, 'widened': 0}, 'r_max_finite': None, 'budget': {'num_leaves': 688, 'num_splits': 687, 'num_floor_limited': 688, 'num_at_depth_max': 0, 'num_checks': 0, 'num_check_passes': 0, 'num_untrusted_found': 0, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': False, 'budget_met': False, 'disagree': '', 'num_resum_rejections': 0}}
+  value -0x1.0e0aae873ea00p-85 abserr 0x1.03342da94d17cp-104 atol 6.689401715969813e-34 rtol 1e-08 E_share {'resolution': '0.0', 'floor': '4.992084019822108e-32', 'truncation': '0.0'} cc_floor None
+levin-phase-floor-06e-census-2 g-1e-7-0-33995 wall 4.2 total 0x1.03e24b1b26df4p-53 0x1.6c64568ac4eafp-74 True
+  call5 {'notify_label': 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r', 'converged': True, 'max_depth': 11, 'num_regions': 121, 'n_at_depth_max': 0, 'num_untrusted_regions': 0, 'num_subregion_solves': 967, 'E_largest_share': 'resolution', 'leaves': {'levin': 44, 'cc': 77, 'trusted': 112, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 9, 'widened': 112}, 'r_max_finite': 2062.568, 'budget': {'num_leaves': 121, 'num_splits': 120, 'num_floor_limited': 9, 'num_at_depth_max': 0, 'num_checks': 177, 'num_check_passes': 10, 'num_untrusted_found': 54, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': True, 'budget_met': True, 'disagree': '', 'num_resum_rejections': 0}}
+  value -0x1.0e0aaea273b00p-85 abserr 0x1.bd81aa19e5c41p-109 atol 6.689401715969813e-34 rtol 1e-07 E_share {'resolution': '2.667733449411563e-33', 'floor': '1.3561276251685782e-35', 'truncation': '0.0'} cc_floor 77
+  scan [{'index': 5, 'h': 0.0014338778303729393, 'n_sign_changes': 0, 'min_over_max_abs_theta_deriv': 0.002811927457758453, 'sign_change_x': [], 'n_regions_listed': 0, 'n_regions_listed_grid': 0, 'n_regions_listed_ends': 0, 'n_nonfinite': 0}]
+levin-phase-floor-06c-census-2 g-1e-7-0-33995 wall 7.9 total 0x1.03e24b1b2f9a4p-53 0x1.6d7d853299db2p-74 False
+  call5 {'notify_label': 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r', 'converged': False, 'max_depth': 13, 'num_regions': 688, 'n_at_depth_max': 0, 'num_untrusted_regions': 0, 'num_subregion_solves': 2751, 'E_largest_share': 'floor', 'leaves': {'levin': 159, 'cc': 529, 'trusted': 0, 'untrusted': 0, 'unchecked': 0, 'floor_limited': 688, 'widened': 0}, 'r_max_finite': None, 'budget': {'num_leaves': 688, 'num_splits': 687, 'num_floor_limited': 688, 'num_at_depth_max': 0, 'num_checks': 0, 'num_check_passes': 0, 'num_untrusted_found': 0, 'num_untrusted_returned': 0, 'num_unchecked_returned': 0, 'running_stop': False, 'budget_met': False, 'disagree': '', 'num_resum_rejections': 0}}
+  value -0x1.0e0aae873ea00p-85 abserr 0x1.03342da94d17cp-104 atol 6.689401715969813e-34 rtol 1e-07 E_share {'resolution': '0.0', 'floor': '4.992084019822108e-32', 'truncation': '0.0'} cc_floor None
+  scan [{'index': 5, 'h': 0.0014338778303729393, 'n_sign_changes': 0, 'min_over_max_abs_theta_deriv': 0.002811927457758453, 'sign_change_x': [], 'n_regions_listed': 0, 'n_regions_listed_grid': 0, 'n_regions_listed_ends': 0, 'n_nonfinite': 0}]
+# ----
+# end 2026-10-31T10:55:05Z
+# exit 0
+=================== 59_copy_files_final (out/cmd/59_copy_files_final.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_store.py copy_final /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:55:21Z
+# ----
+# store files copy_final
+# written 2026-10-31T10:55:21Z on mps026298.phys.susx.ac.uk
+# script hash_store.py sha256 881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 HEAD 50277f3e019bb37df6d91a5c2340877755498508 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad HEAD 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# sha256  size_bytes  mtime_ns  mtime_utc  path (in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy)
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+# handover-A3-v2-lambdacdm.manifest.json: absent
+# journal/-wal/-shm files beside the store: none
+# ----
+# end 2026-10-31T10:55:22Z
+# exit 0
+=================== 60_copy_final_vs_certified (out/cmd/60_copy_final_vs_certified.txt)
+$ scripts/compare_hashes.sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt out/cmd/59_copy_files_final.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:55:22Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+== out/cmd/59_copy_files_final.txt
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  36864  1793053176103501769  2026-10-26T22:19:36.103502+00:00  handover-A3-v2-lambdacdm.sqlite
+bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17  106340352  1793053177002995298  2026-10-26T22:19:37.002995+00:00  handover-A3-v2-lambdacdm-shard0000.sqlite
+aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05  107569152  1793053177006611629  2026-10-26T22:19:37.006612+00:00  handover-A3-v2-lambdacdm-shard0001.sqlite
+5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66  107429888  1793053177010231252  2026-10-26T22:19:37.010231+00:00  handover-A3-v2-lambdacdm-shard0002.sqlite
+ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de  105791488  1793053177013929166  2026-10-26T22:19:37.013929+00:00  handover-A3-v2-lambdacdm-shard0003.sqlite
+EQUAL
+# ----
+# end 2026-10-31T10:55:22Z
+# exit 0
+=================== 61_final_state (out/cmd/61_final_state.txt)
+$ /bin/bash -c shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\ state/predictions.md\;\ stat\ -f\ \"%Sm\ %N\"\ -t\ \"%Y-%m-%dT%H:%M:%S%z\"\ state/predictions.md\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\ \|\ wc\ -l\;\ for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad\;\ do\ echo\ \"==\ \$t\ \$\(git\ --no-optional-locks\ -C\ \$t\ rev-parse\ --short\ HEAD\)\"\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\ \$\(\[\ \$t\ \!=\ /Users/ds283/Documents/Code/SecondaryGWKit\ \]\ \&\&\ echo\ --ignored\)\;\ done\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:55:22Z
+# ----
+b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl
+a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl
+f27771cc2c16691a027a068f7849e49f18f477bcb26ee45313fbcbedf594c840  state/predictions.md
+stat: cannot read file system information for '%Sm %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S%z': No such file or directory
+state/predictions.md 100000d0000001a ? 1a 4096 4096 242837545 25176059 25176059 1013870639 1007042360
+1.6G	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+12K	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730
+21M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+149
+== /Users/ds283/Documents/Code/SecondaryGWKit 28ebaf0
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 50277f3
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad
+35 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 35 finished; 0 with no host recorded.
+# ----
+# end 2026-10-31T10:55:29Z
+# exit 0
+=================== 62_predictions_check_after (out/cmd/62_predictions_check_after.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_predictions.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:55:32Z
+# ----
+prompt /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/prompts/levin-phase-floor/06e-exact-end-nodes.md sha256 72eb7411f17c3012817ba2be3f8e213bac153ed10c52c19fe8e7541818bc9d71; lines 345-375: 1944 bytes
+predictions /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/predictions.md: Part A 1944 bytes; equal to the prompt's bytes: True
+predictions sha256 f27771cc2c16691a027a068f7849e49f18f477bcb26ee45313fbcbedf594c840 size 10735 mtime 2026-10-30T08:12:47.431379+00:00
+# ----
+# end 2026-10-31T10:55:32Z
+# exit 0

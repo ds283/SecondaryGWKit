@@ -1,0 +1,31 @@
+R19/R20 store hashes now vs the agent's final:
+11,21d10
+< no
+< var/datastores/levin-phase-floor-06e-r19-shard0000.sqlite
+< var/datastores/levin-phase-floor-06e-r19-shard0001.sqlite
+< var/datastores/levin-phase-floor-06e-r19-shard0002.sqlite
+< var/datastores/levin-phase-floor-06e-r19-shard0003.sqlite
+< var/datastores/levin-phase-floor-06e-r19.sqlite
+< var/datastores/levin-phase-floor-06e-r20-shard0000.sqlite
+< var/datastores/levin-phase-floor-06e-r20-shard0001.sqlite
+< var/datastores/levin-phase-floor-06e-r20-shard0002.sqlite
+< var/datastores/levin-phase-floor-06e-r20-shard0003.sqlite
+< var/datastores/levin-phase-floor-06e-r20.sqlite
+sizes:
+1.6G	var/runs/levin-phase-floor-06e-census-20261030T081318
+28K	var/runs/levin-phase-floor-06e-r19-parent-20261030T074440
+8.0K	var/runs/levin-phase-floor-06e-r19.launch.log
+28K	var/runs/levin-phase-floor-06e-r20-endnodes-20261030T075034
+8.0K	var/runs/levin-phase-floor-06e-r20.launch.log
+12K	var/runs/levin-phase-floor-06e-references-20261030T192730
+221M	var/levin-phase-floor-06e/rehearsal
+21M	var/levin-phase-floor-06e/census
+1.8M	var/levin-phase-floor-06e/review
+74M	total
+75M	total
+var/runs/levin-phase-floor-06e-census-20261030T081318/ 149 files
+var/runs/levin-phase-floor-06e-r19-parent-20261030T074440/ 4 files
+var/runs/levin-phase-floor-06e-r20-endnodes-20261030T075034/ 4 files
+var/runs/levin-phase-floor-06e-references-20261030T192730/ 5 files
+files compared 10 ; equal to the agent final hashes: True
+180M	var/levin-phase-floor-06e/rehearsal/extract

@@ -1,0 +1,31 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/dev_line_tiling.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:10:13Z
+# ----
+levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad/AdaptiveLevin/levin_quadrature.py
+0 [True, True, True, True]
+1 [True, True, True, True]
+2 [True, True, True, True]
+3 [True, True, True, True]
+4 [True, True, True, True]
+5 [True, True, True, True]
+6 [True, True, True, True]
+7 [True, True, True, True]
+8 [True, True, True, True]
+9 [True, True, True, True]
+10 [True, True, True, True]
+11 [True, True, True, True]
+12 [True, True, True, True]
+13 [True, True, True, True]
+14 [True, True, True, True]
+15 [True, True, True, True]
+16 [True, True, True, True]
+17 [True, True, True, True]
+18 [True, True, True, True]
+19 [True, True, True, True]
+20 [True, True, True, True]
+levels 21 tile at N on all: True exact at N on all: True tile at 2N-1 on all: True exact at 2N-1 on all: True
+# ----
+# end 2026-10-30T08:10:14Z
+# exit 0

@@ -1,0 +1,7 @@
+emit kinds: ['hello', 'store', 'levin_logging', 'context', 'event', 'event', 'event', 'event', 'unit', 'bye']
+unit record keys: ['GkPolicy', 'budget_s', 'cache_built', 'calls', 'cc_floor_s', 'deep_lines', 'deep_lines_06e', 'dispatcher_counts', 'dispatcher_flags', 'error', 'k_key', 'modules', 'n_calls_total', 'names05', 'other_calls', 'pickle', 'pickle_length', 'pickle_offset', 'pickle_record_sha256', 'policy_warnings', 'qs_check', 'rebuild_checks_all_hold', 'rebuild_s', 'result', 'row', 'rows_sha256', 'rtol', 'scan', 'scan_error', 'scan_s', 'scripts_sha256', 'serial', 'shard', 'status', 'stored', 'tree', 'tree_head', 'tree_status_short', 'unit', 'w2_capture_sha256', 'w3', 'wall_s', 'worker', 'worker_pid', 'x1_inputs']
+hello tree p 50277f3e019bb37df6d91a5c2340877755498508 status ''
+compared fields: 383  of which float.hex: 70  differing: []
+total: 06c 0x1.6ad248e2d3adap-66  parent 0x1.6ad248e2d3adap-66
+total_abserr: 06c 0x1.350e5d9cc9dc3p-92  parent 0x1.350e5d9cc9dc3p-92
+len calls 06c 5 parent 5

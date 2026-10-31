@@ -1,0 +1,56 @@
+$ /bin/bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730/status.json\;\ echo\;\ wc\ -c\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730/stderr.log\;\ cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730/checkpoint.jsonl\ \|\ cut\ -c1-600\;\ for\ f\ in\ references/out/ref-s03-P\*.txt\ references/out/ref-s15-P\*.txt\;\ do\ echo\ ==\ \$f\;\ grep\ -E\ \'\^S\|\^driver\|\^wall\|\^sub-panels\|Traceback\'\ \$f\;\ done\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-31T10:52:19Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-10-31T05:02:41+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 88002,
+  "stage": "s15-P64 exit 0",
+  "state": "done",
+  "units_done": 4,
+  "units_total": 4
+}
+
+0
+{"unit": "s03-P128", "recorded": "2026-10-30T20:33:57+00:00", "script_sha256": "77dcfdd908513dc3700725364c32978829b6b9a32bebde322ac1e0701f00ab40", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "output": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s03-P128.txt", "output_sha256": "ae168022a9523f616b0787c645c7c6946bd3a0b850076d3d923b2cfec04fa15e", "lines": ["driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True", "wall 3983
+{"unit": "s03-P64", "recorded": "2026-10-30T23:39:32+00:00", "script_sha256": "77dcfdd908513dc3700725364c32978829b6b9a32bebde322ac1e0701f00ab40", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "output": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s03-P64.txt", "output_sha256": "0b0f08129aaa68935028697efee7b911adeeca3781555802fccbdfa64c25ce61", "lines": ["driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True", "wall 11131.
+{"unit": "s15-P128", "recorded": "2026-10-31T01:04:16+00:00", "script_sha256": "77dcfdd908513dc3700725364c32978829b6b9a32bebde322ac1e0701f00ab40", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "output": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s15-P128.txt", "output_sha256": "ad641acccfcfa60021241337791a929a27ffaa003820bff4d94242a101fbb526", "lines": ["driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True", "wall 508
+{"unit": "s15-P64", "recorded": "2026-10-31T05:02:41+00:00", "script_sha256": "77dcfdd908513dc3700725364c32978829b6b9a32bebde322ac1e0701f00ab40", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "output": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/out/ref-s15-P64.txt", "output_sha256": "89b68d40185b334a128551a920d668baea6a3a95affc73ffcd6aa45561bb9657", "lines": ["driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True", "wall 14301
+== references/out/ref-s03-P128.txt
+driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True
+sub-panels 2548199 nodes 407711840
+wall 3983.5 s
+S64 = 0x1.2549f00929c9ap-88 (3.70182533076849e-27)
+S96 = 0x1.2549f0108200ap-88 (3.7018253362939445e-27)   |S2-S1| = 5.525e-36   sum|terms| 7.925e-24
+driver (this tree) |value - S96| / abserr = 1.237
+== references/out/ref-s03-P64.txt
+driver replay value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 regions 4 depth 2 converged True
+sub-panels 5084681 nodes 1138968544
+wall 11131.3 s
+S96 = 0x1.2549f00d6ab8ap-88 (3.701825333968578e-27)
+S128 = 0x1.2549f00caea6ep-88 (3.701825333415892e-27)   |S2-S1| = 5.527e-37   sum|terms| 7.925e-24
+driver (this tree) |value - S128| / abserr = 1.245
+== references/out/ref-s15-P128.txt
+driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True
+sub-panels 3255756 nodes 520920960
+wall 5080.9 s
+S64 = -0x1.38011e39b010fp-91 (-4.922560954823933e-28)
+S96 = -0x1.38011e396c296p-91 (-4.922560954574491e-28)   |S2-S1| = 2.494e-38   sum|terms| 2.561e-25
+driver (this tree) |value - S96| / abserr = 0.7722
+== references/out/ref-s15-P64.txt
+driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True
+sub-panels 6499933 nodes 1455984992
+wall 14301.2 s
+S96 = -0x1.38011e3ab17c1p-91 (-4.922560955769539e-28)
+S128 = -0x1.38011e3b4d40ap-91 (-4.9225609563417395e-28)   |S2-S1| = 5.722e-38   sum|terms| 2.562e-25
+driver (this tree) |value - S128| / abserr = 0.7811
+12K	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-references-20261030T192730
+# ----
+# end 2026-10-31T10:52:19Z
+# exit 0

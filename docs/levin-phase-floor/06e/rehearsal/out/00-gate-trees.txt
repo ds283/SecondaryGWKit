@@ -1,0 +1,37 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-30T07:43:57Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+echo '== main'; git --no-optional-locks rev-parse --abbrev-ref HEAD; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short; echo '== parent worktree'; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 rev-parse HEAD; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 status --short --ignored; echo '== code worktree'; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad rev-parse HEAD; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad status --short --ignored; echo '== worktree list'; git --no-optional-locks worktree list; echo '== f4d8e17^'; git --no-optional-locks rev-parse f4d8e17^; echo '== log 50277f3..6d81fad'; git --no-optional-locks log --oneline 50277f3..6d81fad; echo '== diff --stat f4d8e17 6d81fad outside docs/prompts'; git --no-optional-locks diff --stat f4d8e17 6d81fad -- . ':!docs' ':!prompts'; echo '== diff --stat e5764a6 50277f3 outside docs/prompts'; git --no-optional-locks diff --stat e5764a6 50277f3 -- . ':!docs' ':!prompts'; echo '== diff --stat 50277f3 6d81fad outside docs/prompts'; git --no-optional-locks diff --stat 50277f3 6d81fad -- . ':!docs' ':!prompts'
+# output:
+== main
+handover-remedial
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== parent worktree
+50277f3e019bb37df6d91a5c2340877755498508
+== code worktree
+6d81fad43cbf1f17cff8d0f48fc7b65966e343ab
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf0 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-e5764a6 e5764a6 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06c-fef401c fef401c (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 50277f3 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad (detached HEAD)
+== f4d8e17^
+50277f3e019bb37df6d91a5c2340877755498508
+== log 50277f3..6d81fad
+6d81fad Record levin-phase-floor 06e's landing and Part B's dispatch
+f4d8e17 Pin Chebyshev end nodes and measure the node displacement
+== diff --stat f4d8e17 6d81fad outside docs/prompts
+== diff --stat e5764a6 50277f3 outside docs/prompts
+ CLAUDE.md | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+== diff --stat 50277f3 6d81fad outside docs/prompts
+ AdaptiveLevin/levin_quadrature.py               | 493 +++++++++++++++--
+ AdaptiveLevin/tests/test_levin_cc_floor.py      |  13 +-
+ AdaptiveLevin/tests/test_levin_end_nodes.py     | 685 ++++++++++++++++++++++++
+ AdaptiveLevin/tests/test_levin_quadrature.py    |  12 +-
+ AdaptiveLevin/tests/test_levin_roundoff_exit.py |  32 +-
+ 5 files changed, 1168 insertions(+), 67 deletions(-)
+# exit: 0
+# end: 2026-10-30T07:43:58Z

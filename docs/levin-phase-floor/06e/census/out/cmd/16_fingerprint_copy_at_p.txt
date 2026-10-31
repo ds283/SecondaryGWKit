@@ -1,0 +1,57 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/fingerprint_copy.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:08:27Z
+# ----
+# config.fingerprint from /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/config/fingerprint.py; format 6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  8e36e81ea009
+                             10  8e36e81ea009  []
+  redshift                 1740  f5851073507a
+                           1740  f5851073507a  []
+  wavenumber                  8  f82c94216164
+                              8  f82c94216164  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        8  045639da7d40
+                              8  045639da7d40  []
+  BackgroundModel             1  e3fb6cb1cf7e
+                              1  e3fb6cb1cf7e  [LargestSourceRedshift_2.0636e+16, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2]
+  TkNumericIntegration        8  07061fe0dd0f
+                              8  07061fe0dd0f  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  TkWKBIntegration            8  eeb4f2f07e7b
+                              8  eeb4f2f07e7b  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  GkNumericIntegration     4549  c123f591d2b0
+                           4549  c123f591d2b0  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkWKBIntegration        13920  7dec4350b90c
+                          13920  7dec4350b90c  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSource                 1160  d4826c22a775
+                           1160  d4826c22a775  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6]
+  GkSourcePolicyData       1160  95597c5bbddc
+                           1160  95597c5bbddc  []
+  QuadSource                 36  7e6b5a68b3e0
+                             36  7e6b5a68b3e0  [LargestSourceRedshift_2.0636e+16, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  QuadSourceIntegral       9280  1ae722d5fbcb
+                           9280  1ae722d5fbcb  [GkOneLoopDensity, LargestSourceRedshift_2.0636e+16, ResponseRedshiftGrid_145_c51d43ac, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_0.1, SourceGridConstruction_2, SourceRedshiftGrid_1740_8d1d43b6, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+# top-level keys: ['digest', 'encoding_format', 'fingerprint_format', 'problems', 'taken']
+digest: "0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56"
+encoding_format: 1
+fingerprint_format: 6
+taken: {"at": "2026-10-30T08:08:28.654317+00:00"}
+# ----
+# end 2026-10-30T08:08:37Z
+# exit 0

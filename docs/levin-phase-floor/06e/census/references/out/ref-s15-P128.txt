@@ -1,0 +1,14 @@
+host mps026298.phys.susx.ac.uk utc 2026-10-30T23:39:32+00:00
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status lines 0
+script sha256 8a0d291d09d74d444b47ff1f34b0f9000e4a045c4b94c36e5dec3158f2ea863b
+pickle inputs/s15.pkl sha256 e9ca60604f8cb8cae4689d16362b97b438bd0e1ed103bff099f485756e786abd
+span 0x1.329fc5ed4906ap+3 0x1.9d7b0833fb59fp+4 kw {'atol': 1.4647277180521766e-33, 'rtol': 1e-08, 'chebyshev_order': 24, 'notify_label': 'k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14500, z in (1.6721e+11, 14500), regime Gqr, group G-q-r'}
+driver replay value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 regions 3 depth 2 converged True
+  equals captured False
+  scaled by None -> None None
+cells 16261; total |dtheta| 4.15297e+08 rad; theta extrema between cells at x = []
+sub-panels 3255756 nodes 520920960
+wall 5080.9 s
+S64 = -0x1.38011e39b010fp-91 (-4.922560954823933e-28)
+S96 = -0x1.38011e396c296p-91 (-4.922560954574491e-28)   |S2-S1| = 2.494e-38   sum|terms| 2.561e-25
+driver (this tree) |value - S96| / abserr = 0.7722

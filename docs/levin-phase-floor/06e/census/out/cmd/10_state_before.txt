@@ -1,0 +1,25 @@
+$ /bin/bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad\;\ do\ echo\ \"==\ \$t\"\;\ git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\ \$\(\[\ \$t\ \!=\ /Users/ds283/Documents/Code/SecondaryGWKit\ \]\ \&\&\ echo\ --ignored\)\;\ done\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -8\;\ df\ -h\ .\ \|\ tail\ -1\;\ uptime\;\ ls\ -ld\ ~/.raypoolkit/rehearsal-lock\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:07:54Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3
+50277f3e019bb37df6d91a5c2340877755498508
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad
+6d81fad43cbf1f17cff8d0f48fc7b65966e343ab
+   py313-venv-02-reference-20261025T163202               failed            -   4d 15h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree aac52bc; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_c
+   handover-07-a3-v2-20261022T211155                     done              -   7d 11h  handover prompt 07: A3 v2, the LambdaCDM store rebuilt from scratch at QuadSourceIntegral atol 1e-32 rtol 1e-7 (main.py 9280-item work list, 8 k over 1e5-3e8/Mpc, zend 0.1, 6 cpus) on the Mac Studio at b90752d; R4 (handover 06) reproduced 39809dca on this host; estimated 39-44 h  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-c-20261022T200159                 done              -   7d 13h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): third launch of the resumed rehearsal build, --resume, run to done; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+   handover-06-resumed-b-20261022T200009                 killed            -   7d 13h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718                 killed            -   7d 13h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-reference-20261022T195228                 done              -   7d 13h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): reference rehearsal build (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete
+
+33 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 33 finished; 0 with no host recorded.
+/dev/disk3s3s1  927G  830G   97G  90% /
+ 8:07  up 22 days, 22:44, 2 users, load averages: 4.04 6.59 7.34
+ls: cannot access '/Users/ds283/.raypoolkit/rehearsal-lock': No such file or directory
+# ----
+# end 2026-10-30T08:07:55Z
+# exit 2

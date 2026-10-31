@@ -1,0 +1,22 @@
+# host mps026088 utc 2026-10-31T15:03:32Z tree 6d81fad4 status lines 0
+# pickle sha256 cbe9cb72607d7c19ae7d65a4b50726e9b0a0915998b5a3ca8f715e4a6d8285d3  reference S128(P64) 0x1.9e838ef296e66p-33
+scale None
+value 0x1.9e838ef109ff8p-33 abserr 4.211380e-20 regions 8 converged True
+|v-ref|/abserr 0.997859  v-ref -4.202362e-20
+  [-11.211506,-7.755944] d2 Levin  abserr 4.208e-20 trusted True r 0.00023958584821683624 declared 4.2087960108976534e-20
+      VP-H -4.207788e-20  H-Q -1.008126e-23  VP-Q -4.208796e-20  delta1 4.207787642935411e-20  delta2 1.0081263715490025e-23
+  [-7.755944,-6.028163] d3 Levin  abserr 9.694e-27 trusted None r 1.25 declared None
+      VP-H +9.693523e-27  H-Q -1.211690e-26  VP-Q -2.423381e-27  delta1 9.693522803355793e-27  delta2 1.2116903504194741e-26
+  [-6.028163,-5.164273] d4 Levin  abserr 2.019e-28 trusted None r 4.0 declared None
+      VP-H +2.019484e-28  H-Q +8.077936e-28  VP-Q +1.009742e-27  delta1 2.0194839173657902e-28  delta2 8.077935669463161e-28
+  [-5.164273,-4.300382] d4 Levin  abserr 0.000e+00 trusted None r inf declared None
+      VP-H +0.000000e+00  H-Q -3.029226e-28  VP-Q -3.029226e-28  delta1 0.0  delta2 3.0292258760486853e-28
+  [-4.300382,-2.572602] d3 Levin  abserr 8.835e-29 trusted True r 0.14285714285714285 declared 1.0307782494887887e-28
+      VP-H -8.835242e-29  H-Q -1.262177e-29  VP-Q -1.009742e-28  delta1 8.835242138475332e-29  delta2 1.262177448353619e-29
+  [-2.572602,-1.708711] d4 Levin  abserr 2.524e-29 trusted True r 0.375 declared 4.0389678347315807e-29
+      VP-H -2.524355e-29  H-Q +9.466331e-30  VP-Q -1.577722e-29  delta1 2.524354896707238e-29  delta2 9.466330862652142e-30
+  [-1.708711,-0.844821] d4 Levin  abserr 1.578e-30 trusted None r 4.0 declared None
+      VP-H +1.577722e-30  H-Q -6.310887e-30  VP-Q -4.733165e-30  delta1 1.5777218104420236e-30  delta2 6.310887241768095e-30
+  [-0.844821,2.610741] d2 Levin  abserr 0.000e+00 trusted True r 0.0 declared 0.0
+      VP-H +0.000000e+00  H-Q +0.000000e+00  VP-Q +0.000000e+00  delta1 0.0  delta2 0.0
+value with checked leaves -> quarters: |v'-ref|/abserr 0.001528

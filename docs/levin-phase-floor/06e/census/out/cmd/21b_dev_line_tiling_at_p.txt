@@ -1,0 +1,31 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/dev_line_tiling.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:10:14Z
+# ----
+levin_quadrature /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3/AdaptiveLevin/levin_quadrature.py
+0 [False, False, False, False]
+1 [False, False, False, False]
+2 [False, False, False, False]
+3 [True, False, True, False]
+4 [False, False, False, False]
+5 [False, False, False, False]
+6 [True, False, True, False]
+7 [False, False, False, False]
+8 [True, False, True, False]
+9 [False, False, False, False]
+10 [True, False, True, False]
+11 [True, False, True, False]
+12 [False, False, False, False]
+13 [True, False, True, False]
+14 [True, False, True, False]
+15 [False, False, False, False]
+16 [False, False, False, False]
+17 [False, False, False, False]
+18 [True, False, True, False]
+19 [True, False, True, False]
+20 [False, False, False, False]
+levels 21 tile at N on all: False exact at N on all: False tile at 2N-1 on all: False exact at 2N-1 on all: False
+# ----
+# end 2026-10-30T08:10:15Z
+# exit 0

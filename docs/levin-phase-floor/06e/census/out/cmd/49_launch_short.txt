@@ -1,0 +1,9 @@
+$ /bin/bash -c cd\ references\ \&\&\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ launch_short.py\ 02\ 08\ 10\ 13\ 14\ 22\ 23\ 27
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:02:21Z
+# ----
+2026-10-30T10:02:21+00:00 sh pid 50499 command /bin/bash /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/run_short.sh 02 08 10 13 14 22 23 27; exit $? launcher pid 50498
+# ----
+# end 2026-10-30T10:02:21Z
+# exit 0

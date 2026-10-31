@@ -1,0 +1,12 @@
+var/runs/levin-phase-floor-06e-census-20261030T081318/
+  {'campaign': 'levin-phase-floor', 'prompt': '06e', 'slug': None, 'git_sha': None, 'git_dirty': False, 'cwd': '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census', 'store': None}
+  status: {'state': 'done', 'exit_code': 0, 'units_done': 18560, 'units_total': 18560, 'stage': '18560 units recorded; last g-1e-8-3-14506 done'}
+var/runs/levin-phase-floor-06e-r19-parent-20261030T074440/
+  {'campaign': 'levin-phase-floor', 'prompt': '06e', 'slug': None, 'git_sha': None, 'git_dirty': False, 'cwd': '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3', 'store': None}
+  status: {'state': 'done', 'exit_code': 0, 'units_done': 0, 'units_total': None, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete'}
+var/runs/levin-phase-floor-06e-r20-endnodes-20261030T075034/
+  {'campaign': 'levin-phase-floor', 'prompt': '06e', 'slug': None, 'git_sha': None, 'git_dirty': False, 'cwd': '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad', 'store': None}
+  status: {'state': 'done', 'exit_code': 0, 'units_done': 0, 'units_total': None, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete'}
+var/runs/levin-phase-floor-06e-references-20261030T192730/
+  {'campaign': 'levin-phase-floor', 'prompt': '06e', 'slug': None, 'git_sha': None, 'git_dirty': False, 'cwd': '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references', 'store': None}
+  status: {'state': 'done', 'exit_code': 0, 'units_done': 4, 'units_total': 4, 'stage': 's15-P64 exit 0'}

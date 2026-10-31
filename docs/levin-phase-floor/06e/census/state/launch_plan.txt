@@ -1,0 +1,56 @@
+# levin-phase-floor 06e section 5: the plan from Z0 to the launch, as prepared on 2026-10-30 (not yet run).
+# Run only when the orchestrator says to (after R19, R20, the comparison and the readers are over and the
+# lock is released). Every command from the census directory, each recorded by scripts/rec.sh into out/cmd/.
+cd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+PY=/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python
+G=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad      # tree g
+P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3      # tree p
+COPY=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+CERT=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+CK06C=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl
+
+# A. state before (trees clean, registry, lock, Ray, host load)
+scripts/rec.sh 10_state_before /bin/bash -c 'for t in /Users/ds283/Documents/Code/SecondaryGWKit /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad; do echo "== $t"; git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short $([ $t != /Users/ds283/Documents/Code/SecondaryGWKit ] && echo --ignored); done; cd /Users/ds283/Documents/Code/SecondaryGWKit && ./venv/bin/python -m runregistrykit list | tail -8; df -h . | tail -1; uptime; ls -ld ~/.raypoolkit/rehearsal-lock 2>&1'
+scripts/rec.sh 11_lock_status $PY -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+$PY -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/cmd/12_ray_processes.txt 2>&1
+# B. the store and 06c's checkpoint, before Z0
+scripts/rec.sh 13_copy_files_before $PY -B scripts/hash_store.py copy_before_Z0 $COPY
+scripts/rec.sh 14_copy_vs_certified scripts/compare_hashes.sh $CERT out/cmd/13_copy_files_before.txt
+scripts/rec.sh 15_fingerprint_copy_at_g env PYTHONPATH=$G PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/fingerprint_copy.py $COPY/handover-A3-v2-lambdacdm.sqlite
+scripts/rec.sh 16_fingerprint_copy_at_p env PYTHONPATH=$P PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/fingerprint_copy.py $COPY/handover-A3-v2-lambdacdm.sqlite
+scripts/rec.sh 17_checkpoint06c_before shasum -a 256 $CK06C      # must be b61cb034...
+scripts/rec.sh 18_job_name_is_inert grep -n job_name /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py
+# C. Gate Z0 (five workers at once: P1-P3 at p, G1 and G2 at g; started in the background, one wait)
+scripts/rec.sh 19_Z0_run $PY -B scripts/z0.py run state/Z0
+scripts/rec.sh 20_Z0_check env PYTHONPATH=$G PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/z0.py check state/Z0
+scripts/rec.sh 21_Z0_clause1 $PY -B scripts/z0_clause1.py state/Z0/p_tree_modules.json
+#    any clause failing: STOP, report, do not launch (prompt 06e section 7)
+# D. the driver smoke test (06c's two rows, both rtols, two workers), and the copy after Z0
+scripts/rec.sh 22_smoke_driver $PY -B scripts/run_census.py --out-dir state/smoke --rows 1-34599,3-13829 --max-workers 2
+scripts/rec.sh 23_copy_files_after_Z0 $PY -B scripts/hash_store.py copy_after_Z0 $COPY
+scripts/rec.sh 24_copy_after_Z0_vs_certified scripts/compare_hashes.sh $CERT out/cmd/23_copy_files_after_Z0.txt
+# E. predictions (Part A: prompt lines 345-375 byte for byte; Part B: state/drafts/predictions_partB_draft.md, finalised)
+#    write state/predictions.md, then:
+scripts/rec.sh 25_predictions_check $PY -B scripts/check_predictions.py
+scripts/rec.sh 26_scripts_equal $PY -B scripts/scripts_equal.py
+scripts/rec.sh 27_checkpoint06c_after_prep shasum -a 256 $CK06C
+#    save out/scripts_diff_against_06c_final.txt (diff -ruN state/scripts_06c_reference scripts)
+# F. pre-launch (each its own command)
+scripts/rec.sh 28_prelaunch_state <as 10>
+scripts/rec.sh 29_prelaunch_lock_status $PY -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+$PY -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/cmd/30_prelaunch_ray_processes.txt 2>&1
+scripts/rec.sh 31_copy_files_prelaunch $PY -B scripts/hash_store.py copy_prelaunch $COPY
+scripts/rec.sh 32_copy_prelaunch_vs_certified scripts/compare_hashes.sh $CERT out/cmd/31_copy_files_prelaunch.txt
+scripts/rec.sh 33_scripts_equal_prelaunch $PY -B scripts/scripts_equal.py
+scripts/rec.sh 34_predictions_check_prelaunch $PY -B scripts/check_predictions.py
+# G. the launch (registered, detached: runregistrykit.begin first, nohup sh -c, new session), then ONE check, then end the turn
+scripts/rec.sh 35_launch $PY -B scripts/launch.py
+scripts/rec.sh 36_launch_check /bin/bash -c 'R=<run dir>; cat $R/status.json; head -c 600 $R/checkpoint.jsonl; tail -5 $R/stdout.log; wc -c $R/stderr.log; kill -0 <driver pid> && echo driver alive; kill -0 <sh pid> && echo sh alive'
+
+# After the census (resumed with its status.json): the store and 06c's checkpoint after; the over-budget pass if any
+# (more than twelve: stop and ask); then Z3's references, one at a time, from references/:
+#   python -B slice_inputs.py                         (13 inputs, SHA-checked)
+#   env PYTHONPATH=$G PYTHONDONTWRITEBYTECODE=1 GIT_OPTIONAL_LOCKS=0 $PY -B replay_g.py <census run dir>
+#   python -B launch_short.py 02 08 10 13 14 22 23 27  (one detached sequential script; one check; end the turn)
+#   python -B launch_refs.py                          (samples 3 and 15, registered, slug references; one check; end the turn)
+# then score Z2-Z5 and the descriptive items, and write the records.

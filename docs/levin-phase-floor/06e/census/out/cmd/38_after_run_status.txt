@@ -1,0 +1,47 @@
+$ /bin/bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/status.json\;\ echo\;\ wc\ -l\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\;\ wc\ -c\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/stderr.log\;\ tail\ -3\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/stdout.log\ \|\ cut\ -c1-600\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\ \|\ wc\ -l\;\ grep\ -c\ \'\"status\":\ \"over\ budget\"\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\;\ grep\ -c\ \'\"status\":\ \"error\"\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\;\ for\ f\ in\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/worker_\*_bye.json\;\ do\ python3\ -c\ \"import\ json\,sys\;\ d=json.load\(open\(\'\$f\'\)\)\;\ print\(\'\$f\'.split\(\'/\'\)\[-1\]\,\ d.get\(\'ray_initialized\'\)\,\ len\(d.get\(\'modules_foreign\'\)\ or\ \[\]\)\)\"\;\ done
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:00:19Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-10-30T09:59:15+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 3896,
+  "stage": "18560 units recorded; last g-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+18560
+0
+# worker 1e-8-k3_1 exit 0
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+1.6G	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+149
+0
+0
+worker_1e-7-k0_101_bye.json False 0
+worker_1e-7-k0_202_bye.json False 0
+worker_1e-7-k1_102_bye.json False 0
+worker_1e-7-k1_301_bye.json False 0
+worker_1e-7-k2_2_bye.json False 0
+worker_1e-7-k2_302_bye.json False 0
+worker_1e-7-k3_1_bye.json False 0
+worker_1e-7-k3_201_bye.json False 0
+worker_1e-8-k0_101_bye.json False 0
+worker_1e-8-k0_202_bye.json False 0
+worker_1e-8-k1_102_bye.json False 0
+worker_1e-8-k1_301_bye.json False 0
+worker_1e-8-k2_2_bye.json False 0
+worker_1e-8-k2_302_bye.json False 0
+worker_1e-8-k3_1_bye.json False 0
+worker_1e-8-k3_201_bye.json False 0
+# ----
+# end 2026-10-30T10:00:38Z
+# exit 0

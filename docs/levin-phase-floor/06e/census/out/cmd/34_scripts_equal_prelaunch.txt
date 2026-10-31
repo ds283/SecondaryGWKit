@@ -1,0 +1,80 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/scripts_equal.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:15Z
+# ----
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  analyse06.py
+c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609  analyse06a.py
+6446b7ac0ea2050d0bbdbc5dfd68474ffaaf1095a191a8b8aeb6ce3afa0e0649  analyse06b.py
+c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600  analyse06c.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  characterise_s2.py
+5fd97d8f64b92d5a0596b64a75bb97956ee461061a778f744f4ae6e19de049fb  check_predictions.py
+e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa  checks_after.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  convergence_kinds.py
+e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d  convergence_kinds_06a.py
+9d7b35f35fcfb76099f1d20d4b28d2d5e347b2bab78e02ee26218bc386fc0c54  dev_line_tiling.py
+012521549f8165fdde0f3e0198703e0590eb309c0023903a15b292217b712866  dev_worker_functions.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  draw_sample.py
+ab377c62624d1df938c6f815cd66996e9eca0be18f8d474968e25357aa3e6ffd  explore06b_pool.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  explore_store.py
+1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea  extras_after.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  fingerprint_copy.py
+849dea2d530cec73b641db66d68efc4ea2bff27541d58fbe518695f7cdede25d  harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  l0.py
+96f4e859f4c5d87f408fec6ae185fc6f222d273f5d618b4cf623f9be82b57f92  launch.py
+60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094  make_capture.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  make_copy.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  make_rows.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  probe.py
+5bd606fdc2eae66c0dd9961f847c64b3ea0bc9e2bf4b2d3c5cbbe5d2cdb5d092  prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  pure_wkb_zinit.py
+dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212  rebuild.py
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  rescore_t1.py
+a6d9bac49193bec1c3c11cfc60390e3ed2d58bf7c98aadaa871443f45f23e4e0  run_census.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  run_wider.py
+2e2cdfef39affdd885c9ad4534ae4f95d79dfc5a911ca86216ae3a483b162dc7  scripts_equal.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  spscan.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  t1_true_step_only.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  u0.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  u0_clause_a.py
+f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f  w0.py
+90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf  w0_clause1.py
+0296b05317a4cb6e2a5538e6185b13dd8af286d2b80075152e84b36bc378c122  w2_crosscheck.py
+47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31  w2_reference.py
+e9d019beb726cca1b5b65b681164d5ced5161af446d5f0e5e08fe286cead2381  w2_request.py
+45e8f68c6ec05ceb314c953755025d65a0baa205818235b1bd34e08023c354e3  worker.py
+757e50f2ca900cf3921217ff3104adad2cbd8f4981d414a5e64416b3f76ea2c0  x0.py
+282a9245673e5312b1734aa254aa93e1e35bfbcb23620285f2d75f0f11e3d1d1  x0_clause1.py
+dafe695a19ba52f27fe193ba221a0d0ac77c2be3815cc350ffbff217a3cc019a  x1_capture.py
+5baf61550482d49fafa38d405e3f3061f52e906a4a3dc7ac2bfe36dbb9eaa4ac  x1_crosscheck.py
+86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118  x1_reference.py
+54ca0c3e4038b496c22219936e27f6b9162b6e14ae66f639dd5a211bf7c75adb  x4_detail.py
+b83b6782b89659f836471affc561152c5d61cdcea2feab7a775c48dd233736f1  z0.py
+80434d7a44852073e21f00a628dac311d22493f8ab5ccffbe0e9d49e2528e77e  z0_clause1.py
+state/Z0/G1/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/G1/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/G2/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/G2/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P1/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P1/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P2/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P2/emit.jsonl (unit): 9 scripts; differing now: none
+state/Z0/P3/emit.jsonl (hello): 9 scripts; differing now: none
+state/Z0/P3/emit.jsonl (unit): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-7-1-34599): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-7-3-13829): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-8-3-13829): 9 scripts; differing now: none
+state/smoke/ledger.jsonl (g-1e-8-1-34599): 9 scripts; differing now: none
+ALL EQUAL
+# ----
+# end 2026-10-30T08:13:15Z
+# exit 0

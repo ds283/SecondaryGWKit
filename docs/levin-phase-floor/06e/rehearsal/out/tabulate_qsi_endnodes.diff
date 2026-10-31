@@ -1,0 +1,423 @@
+1,2c1,2
+< """Prompt 06c §4.3: QuadSourceIntegral, R17 (parent fef401c, 06b's code) against R18 (e5764a6,
+< 06c's ad9a5f4 plus 06d's 3d70db9), every row, and Y1.
+---
+> """Prompt 06e §4.3: QuadSourceIntegral, R19 (parent 50277f3, 06d's code) against R20 (6d81fad,
+> 06e's code commit f4d8e17), every row, and Z1.
+3a4,8
+> (06c's `tabulate_qsi_global.py`, copied and adapted for 06e: the store names R17/R18 -> R19/R20,
+> Y1 -> Z1, and 06a's 720 stationary-point rows identified, tabulated and excluded from Z1's
+> scoring; the largest |dtotal|/total_abserr in each store printed with its row. The diff against
+> 06c's copy is saved as out/tabulate_qsi_endnodes.diff.)
+> 
+11c16
+< keeps; its §4.3 rule is replaced by 06c's tabulation and Y1.)
+---
+> keeps; its §4.3 rule is replaced by 06c's tabulation and Z1.)
+52,56c57,64
+< **Y1** (prompt 06c §4.3): every row with finite `total_abserr` in both stores has
+< |total_18 - total_17| <= total_abserr_17 + total_abserr_18, computed in float64 as written
+< (`abs(b - a) <= ea + eb`). Rows whose `total_abserr` is infinite (or not finite, or NULL) in
+< either store are counted separately, by store. A violating row is printed with both totals and
+< both `total_abserr` in `float.hex`.
+---
+> **06a's 720 stationary-point rows** are rows of A3 v2, named `<shard>-<serial>` there. They are
+> identified as `analyse06c.py`'s `scan06a` identifies them: the 1e-7 records of 06a's census
+> checkpoint (`var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl`) whose `scan`
+> has a call with `n_sign_changes > 0`; their number is asserted to be 720. Each is mapped to its
+> physical key (k, q, r, z_response) through 06a's `state/rows.json` (the A3 v2 row's `k`, `q`, `r`
+> and `z_response`, parsed from their repr strings with `float`). A rehearsal row is "among them" iff
+> its own physical key, read from the store, is equal as floats to one of theirs. Both input files
+> are read only, and their SHA-256 printed.
+58c66,73
+<     python -I tabulate_qsi_global.py <R17 primary> <R18 primary> <store_value_diff.json> <out.csv>
+---
+> **Z1** (prompt 06e §4.3): every row outside 06a's 720 stationary-point rows with finite
+> `total_abserr` in both stores has |total_20 - total_19| <= total_abserr_19 + total_abserr_20,
+> computed in float64 as written (`abs(b - a) <= ea + eb`). Rows whose `total_abserr` is infinite (or
+> not finite, or NULL) in either store are counted separately, by store. The stationary-point rows
+> are tabulated, not scored. A violating row is printed with both totals and both `total_abserr` in
+> `float.hex`.
+> 
+>     python -I tabulate_qsi_endnodes.py <R19 primary> <R20 primary> <store_value_diff.json> <out.csv>
+93c108,122
+< DEPTH_MAX = 20  # AdaptiveLevin DEFAULT_LEVIN_MAX_DEPTH, unchanged by 06c and 06d (06c §0.3)
+---
+> DEPTH_MAX = 20  # AdaptiveLevin DEFAULT_LEVIN_MAX_DEPTH, unchanged by 06c, 06d and 06e (06e §0.3)
+> 
+> MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+> CHECKPOINT_06A = MAIN / "var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl"
+> ROWS_JSON_06A = MAIN / "var/levin-phase-floor-06a/state/rows.json"
+> 
+> 
+> def sha256(path):
+>     import hashlib
+> 
+>     h = hashlib.sha256()
+>     with open(path, "rb") as f:
+>         for chunk in iter(lambda: f.read(1 << 20), b""):
+>             h.update(chunk)
+>     return h.hexdigest()
+95a125,150
+> def stationary_point_keys():
+>     """06a's stationary-point rows (scan06a's rule), as A3 v2 names and physical keys."""
+>     sp = set()
+>     with open(CHECKPOINT_06A) as f:
+>         for line in f:
+>             if '"rtol": "1e-7"' not in line:
+>                 continue
+>             d = json.loads(line)["data"]
+>             if d["rtol"] != "1e-7":
+>                 continue
+>             rk = f"{d['shard']}-{d['serial']}"
+>             sc = {s["index"]: s["n_sign_changes"] for s in (d.get("scan") or []) if s}
+>             if any(v > 0 for v in sc.values()):
+>                 sp.add(rk)
+>     assert len(sp) == 720, len(sp)
+>     rows = json.load(open(ROWS_JSON_06A))["rows"]
+>     by_name = {r["name"]: r for r in rows}
+>     keys = {}
+>     for name in sp:
+>         r = by_name[name]
+>         keys[(float(r["k"]), float(r["q"]), float(r["r"]), float(r["z_response"]))] = name
+>     assert len(keys) == 720
+>     a3_keys = {(float(r["k"]), float(r["q"]), float(r["r"]), float(r["z_response"])) for r in rows}
+>     return keys, a3_keys, len(rows)
+> 
+> 
+222a278,280
+> SP_KEYS = {}
+> 
+> 
+227c285
+<     print(f"rows: R17 {len(A)}, R18 {len(B)}; same (k,q,r,z_response) set: {set(A) == set(B)}")
+---
+>     print(f"rows: R19 {len(A)}, R20 {len(B)}; same (k,q,r,z_response) set: {set(A) == set(B)}")
+231c289
+<         f"tolerances (log10 atol, log10 rtol) R17: "
+---
+>         f"tolerances (log10 atol, log10 rtol) R19: "
+233c291
+<         f"R18: {sorted(Counter((v['_atol'], v['_rtol']) for v in B.values()).items())}"
+---
+>         f"R20: {sorted(Counter((v['_atol'], v['_rtol']) for v in B.values()).items())}"
+269a328,344
+>     print()
+> 
+>     global SP_KEYS
+>     print(f"06a census checkpoint {CHECKPOINT_06A} sha256 {sha256(CHECKPOINT_06A)}")
+>     print(f"06a rows.json {ROWS_JSON_06A} sha256 {sha256(ROWS_JSON_06A)}")
+>     sp_all, a3_keys, n_a3 = stationary_point_keys()
+>     SP_KEYS = {k: v for k, v in sp_all.items() if k in A}
+>     print(
+>         f"06a's stationary-point rows: {len(sp_all)} (of A3 v2's {n_a3}); rehearsal rows among them "
+>         f"(physical key equal as floats): {len(SP_KEYS)}; rehearsal rows equal to any A3 v2 row: "
+>         f"{len(set(A) & a3_keys)}"
+>     )
+>     print(
+>         f"  rehearsal k {sorted({k[0] for k in A})}; k shared with A3 v2 "
+>         f"{sorted({k[0] for k in A} & {k[0] for k in a3_keys})}; z_response values: rehearsal "
+>         f"{len({k[3] for k in A})}, shared with A3 v2 {len({k[3] for k in A} & {k[3] for k in a3_keys})}"
+>     )
+294c369,373
+<         if both_finite:
+---
+>         in_sp = key in SP_KEYS
+>         if in_sp:
+>             y1 = "stationary-point-row (not scored)"
+>             y1_ratio = dt / (ea + eb) if both_finite and (ea + eb) > 0 else None
+>         elif both_finite:
+298c377
+<             y1 = "nonfinite:" + ("17" if not finite(ea) else "") + ("18" if not finite(eb) else "")
+---
+>             y1 = "nonfinite:" + ("19" if not finite(ea) else "") + ("20" if not finite(eb) else "")
+310,313c389,392
+<                 "levin_calls_R17": pa["calls"],
+<                 "levin_calls_R18": pb["calls"],
+<                 "total_R17": hx(ta),
+<                 "total_R18": hx(tb),
+---
+>                 "levin_calls_R19": pa["calls"],
+>                 "levin_calls_R20": pb["calls"],
+>                 "total_R19": hx(ta),
+>                 "total_R20": hx(tb),
+320,344c399,424
+<                 "total_abserr_R17": ea,
+<                 "total_abserr_R18": eb,
+<                 "total_abserr_R17_hex": hx(ea),
+<                 "total_abserr_R18_hex": hx(eb),
+<                 "abserr_ratio_R18_R17": (eb / ea) if (finite(ea) and finite(eb) and ea) else None,
+<                 "dtotal_over_abserr_R17": (dt / ea) if (finite(ea) and ea) else None,
+<                 "dtotal_over_abserr_R18": (dt / eb) if (finite(eb) and eb) else None,
+<                 "Y1": y1,
+<                 "Y1_ratio_dtotal_over_sum": y1_ratio,
+<                 "total_converged_R17": a["total_converged"],
+<                 "total_converged_R18": b["total_converged"],
+<                 "total_phase_limited_R17": a["total_phase_limited"],
+<                 "total_phase_limited_R18": b["total_phase_limited"],
+<                 "WKB_Levin_num_regions_R17": a["WKB_Levin_num_regions"],
+<                 "WKB_Levin_num_regions_R18": b["WKB_Levin_num_regions"],
+<                 "WKB_Levin_max_depth_R17": a["WKB_Levin_max_depth"],
+<                 "WKB_Levin_max_depth_R18": b["WKB_Levin_max_depth"],
+<                 "WKB_Levin_evaluations_R17": a["WKB_Levin_evaluations"],
+<                 "WKB_Levin_evaluations_R18": b["WKB_Levin_evaluations"],
+<                 "group_regions_max_R17": pa["group_regions_max"],
+<                 "group_regions_max_R18": pb["group_regions_max"],
+<                 "groups_unconverged_R17": pa["groups_unconverged"],
+<                 "groups_unconverged_R18": pb["groups_unconverged"],
+<                 "groups_phase_limited_R17": pa["groups_pl"],
+<                 "groups_phase_limited_R18": pb["groups_pl"],
+---
+>                 "total_abserr_R19": ea,
+>                 "total_abserr_R20": eb,
+>                 "total_abserr_R19_hex": hx(ea),
+>                 "total_abserr_R20_hex": hx(eb),
+>                 "abserr_ratio_R20_R19": (eb / ea) if (finite(ea) and finite(eb) and ea) else None,
+>                 "dtotal_over_abserr_R19": (dt / ea) if (finite(ea) and ea) else None,
+>                 "dtotal_over_abserr_R20": (dt / eb) if (finite(eb) and eb) else None,
+>                 "stationary_point_row_06a": SP_KEYS.get(key, ""),
+>                 "Z1": y1,
+>                 "Z1_ratio_dtotal_over_sum": y1_ratio,
+>                 "total_converged_R19": a["total_converged"],
+>                 "total_converged_R20": b["total_converged"],
+>                 "total_phase_limited_R19": a["total_phase_limited"],
+>                 "total_phase_limited_R20": b["total_phase_limited"],
+>                 "WKB_Levin_num_regions_R19": a["WKB_Levin_num_regions"],
+>                 "WKB_Levin_num_regions_R20": b["WKB_Levin_num_regions"],
+>                 "WKB_Levin_max_depth_R19": a["WKB_Levin_max_depth"],
+>                 "WKB_Levin_max_depth_R20": b["WKB_Levin_max_depth"],
+>                 "WKB_Levin_evaluations_R19": a["WKB_Levin_evaluations"],
+>                 "WKB_Levin_evaluations_R20": b["WKB_Levin_evaluations"],
+>                 "group_regions_max_R19": pa["group_regions_max"],
+>                 "group_regions_max_R20": pb["group_regions_max"],
+>                 "groups_unconverged_R19": pa["groups_unconverged"],
+>                 "groups_unconverged_R20": pb["groups_unconverged"],
+>                 "groups_phase_limited_R19": pa["groups_pl"],
+>                 "groups_phase_limited_R20": pb["groups_pl"],
+346,353c426,433
+<                 "analytic_regions_R17": pa["analytic_regions"],
+<                 "analytic_regions_R18": pb["analytic_regions"],
+<                 "analytic_blocks_phase_limited_R17": pa["analytic_pl"],
+<                 "analytic_blocks_phase_limited_R18": pb["analytic_pl"],
+<                 "analytic_blocks_unconverged_R17": pa["analytic_unconverged"],
+<                 "analytic_blocks_unconverged_R18": pb["analytic_unconverged"],
+<                 "analytic_rad_R17": hx(a["analytic_rad"]),
+<                 "analytic_rad_R18": hx(b["analytic_rad"]),
+---
+>                 "analytic_regions_R19": pa["analytic_regions"],
+>                 "analytic_regions_R20": pb["analytic_regions"],
+>                 "analytic_blocks_phase_limited_R19": pa["analytic_pl"],
+>                 "analytic_blocks_phase_limited_R20": pb["analytic_pl"],
+>                 "analytic_blocks_unconverged_R19": pa["analytic_unconverged"],
+>                 "analytic_blocks_unconverged_R20": pb["analytic_unconverged"],
+>                 "analytic_rad_R19": hx(a["analytic_rad"]),
+>                 "analytic_rad_R20": hx(b["analytic_rad"]),
+355,356c435,436
+<                 "analytic_abserr_R17": an_a,
+<                 "analytic_abserr_R18": an_b,
+---
+>                 "analytic_abserr_R19": an_a,
+>                 "analytic_abserr_R20": an_b,
+381,383c461,463
+<     lev = [r for r in rows if r["levin_calls_R17"] or r["levin_calls_R18"]]
+<     nolev = [r for r in rows if not (r["levin_calls_R17"] or r["levin_calls_R18"])]
+<     print(f"rows whose column/metadata field sets differ between R17 and R18: {field_sets_differ}")
+---
+>     lev = [r for r in rows if r["levin_calls_R19"] or r["levin_calls_R20"]]
+>     nolev = [r for r in rows if not (r["levin_calls_R19"] or r["levin_calls_R20"])]
+>     print(f"rows whose column/metadata field sets differ between R19 and R20: {field_sets_differ}")
+385,387c465,467
+<         f"rows with a WKB Levin call: {len(lev)} (calls R17 {sum(r['levin_calls_R17'] for r in rows)}, "
+<         f"R18 {sum(r['levin_calls_R18'] for r in rows)}; rows whose call count differs: "
+<         f"{sum(1 for r in rows if r['levin_calls_R17'] != r['levin_calls_R18'])}); with none: {len(nolev)}"
+---
+>         f"rows with a WKB Levin call: {len(lev)} (calls R19 {sum(r['levin_calls_R19'] for r in rows)}, "
+>         f"R20 {sum(r['levin_calls_R20'] for r in rows)}; rows whose call count differs: "
+>         f"{sum(1 for r in rows if r['levin_calls_R19'] != r['levin_calls_R20'])}); with none: {len(nolev)}"
+398c478
+<         f"{sum(r['total_abserr_R17_hex'] == r['total_abserr_R18_hex'] for r in rows)}/{n}"
+---
+>         f"{sum(r['total_abserr_R19_hex'] == r['total_abserr_R20_hex'] for r in rows)}/{n}"
+412c492
+<         f"max |d analytic_rad|/(analytic abserr17+18) "
+---
+>         f"max |d analytic_rad|/(analytic abserr19+20) "
+417,422d496
+<     print("== Y1: |total_18 - total_17| <= total_abserr_17 + total_abserr_18, rows with both finite")
+<     fin = [r for r in rows if not r["Y1"].startswith("nonfinite")]
+<     viol = [r for r in fin if r["Y1"] == "VIOLATES"]
+<     nonf = Counter(r["Y1"] for r in rows if r["Y1"].startswith("nonfinite"))
+<     print(f"  rows with finite total_abserr in both: {len(fin)}; violations: {len(viol)}")
+<     print(f"  rows with a non-finite total_abserr, counted separately: {dict(nonf) or 'none'}")
+424c498,499
+<         f"  |dT|/(abserr17+abserr18) over the finite rows: {q([r['Y1_ratio_dtotal_over_sum'] for r in fin])}"
+---
+>         "== Z1: |total_20 - total_19| <= total_abserr_19 + total_abserr_20, rows outside 06a's 720 "
+>         "stationary-point rows with both finite"
+425a501,524
+>     sprows = [r for r in rows if r["stationary_point_row_06a"]]
+>     fin = [r for r in rows if r["Z1"] in ("holds", "VIOLATES")]
+>     viol = [r for r in fin if r["Z1"] == "VIOLATES"]
+>     nonf = Counter(r["Z1"] for r in rows if r["Z1"].startswith("nonfinite"))
+>     assert len(sprows) + len(fin) + sum(nonf.values()) == n
+>     print(f"  rows among 06a's stationary-point rows (tabulated, not scored): {len(sprows)}")
+>     print(f"  rows scored (outside them, finite total_abserr in both): {len(fin)}; violations: {len(viol)}")
+>     print(f"  rows outside them with a non-finite total_abserr, counted separately: {dict(nonf) or 'none'}")
+>     for r in sprows:
+>         print(
+>             f"    stationary-point row {r['stationary_point_row_06a']}: k={r['k']:.6g} q={r['q']:.6g} "
+>             f"r={r['r']:.6g} z={r['z_response']:.8g}: total19 {r['total_R19']} total20 {r['total_R20']} "
+>             f"abserr19 {r['total_abserr_R19_hex']} abserr20 {r['total_abserr_R20_hex']}"
+>         )
+>     for tag in ("R19", "R20"):
+>         cand = [r for r in fin if r[f"dtotal_over_abserr_{tag}"] is not None]
+>         if cand:
+>             w = max(cand, key=lambda r: r[f"dtotal_over_abserr_{tag}"])
+>             print(
+>                 f"  largest |dT|/total_abserr_{tag[1:]} over the scored rows: "
+>                 f"{w[f'dtotal_over_abserr_{tag}']:.6g} at k={w['k']:.6g} q={w['q']:.6g} r={w['r']:.6g} "
+>                 f"z={w['z_response']:.8g} (total19 {w['total_R19']} total20 {w['total_R20']} abserr19 "
+>                 f"{w['total_abserr_R19_hex']} abserr20 {w['total_abserr_R20_hex']})"
+>             )
+426a526,528
+>         f"  |dT|/(abserr19+abserr20) over the finite rows: {q([r['Z1_ratio_dtotal_over_sum'] for r in fin])}"
+>     )
+>     print(
+428c530
+<         f"{q([r['Y1_ratio_dtotal_over_sum'] for r in fin if not r['total_bit_identical']])}"
+---
+>         f"{q([r['Z1_ratio_dtotal_over_sum'] for r in fin if not r['total_bit_identical']])}"
+433,434c535,536
+<             f"total17 {r['total_R17']} total18 {r['total_R18']} abserr17 {r['total_abserr_R17_hex']} "
+<             f"abserr18 {r['total_abserr_R18_hex']} ratio {r['Y1_ratio_dtotal_over_sum']:.6g}"
+---
+>             f"total19 {r['total_R19']} total20 {r['total_R20']} abserr19 {r['total_abserr_R19_hex']} "
+>             f"abserr20 {r['total_abserr_R20_hex']} ratio {r['Z1_ratio_dtotal_over_sum']:.6g}"
+437c539
+<         if r["Y1"].startswith("nonfinite"):
+---
+>         if r["Z1"].startswith("nonfinite"):
+439,444c541,546
+<                 f"    non-finite {r['Y1']}: k={r['k']:.6g} q={r['q']:.6g} r={r['r']:.6g} "
+<                 f"z={r['z_response']:.8g}: total17 {r['total_R17']} total18 {r['total_R18']} "
+<                 f"abserr17 {r['total_abserr_R17_hex']} abserr18 {r['total_abserr_R18_hex']} "
+<                 f"conv {r['total_converged_R17']}>{r['total_converged_R18']} "
+<                 f"depth {r['WKB_Levin_max_depth_R17']}>{r['WKB_Levin_max_depth_R18']} "
+<                 f"regions {r['WKB_Levin_num_regions_R17']}>{r['WKB_Levin_num_regions_R18']}"
+---
+>                 f"    non-finite {r['Z1']}: k={r['k']:.6g} q={r['q']:.6g} r={r['r']:.6g} "
+>                 f"z={r['z_response']:.8g}: total19 {r['total_R19']} total20 {r['total_R20']} "
+>                 f"abserr19 {r['total_abserr_R19_hex']} abserr20 {r['total_abserr_R20_hex']} "
+>                 f"conv {r['total_converged_R19']}>{r['total_converged_R20']} "
+>                 f"depth {r['WKB_Levin_max_depth_R19']}>{r['WKB_Levin_max_depth_R20']} "
+>                 f"regions {r['WKB_Levin_num_regions_R19']}>{r['WKB_Levin_num_regions_R20']}"
+448,451c550,553
+<     print(f"  abserr18/abserr17 (both finite, nonzero): {q([r['abserr_ratio_R18_R17'] for r in lev if r['abserr_ratio_R18_R17'] is not None])}")
+<     print(f"  |dT|/abserr17: {q([r['dtotal_over_abserr_R17'] for r in lev if r['dtotal_over_abserr_R17'] is not None])}")
+<     print(f"  |dT|/abserr18: {q([r['dtotal_over_abserr_R18'] for r in lev if r['dtotal_over_abserr_R18'] is not None])}")
+<     print(f"  |dT|/|T17|: {q([r['rel_dtotal'] for r in lev])}")
+---
+>     print(f"  abserr20/abserr19 (both finite, nonzero): {q([r['abserr_ratio_R20_R19'] for r in lev if r['abserr_ratio_R20_R19'] is not None])}")
+>     print(f"  |dT|/abserr19: {q([r['dtotal_over_abserr_R19'] for r in lev if r['dtotal_over_abserr_R19'] is not None])}")
+>     print(f"  |dT|/abserr20: {q([r['dtotal_over_abserr_R20'] for r in lev if r['dtotal_over_abserr_R20'] is not None])}")
+>     print(f"  |dT|/|T19|: {q([r['rel_dtotal'] for r in lev])}")
+453,454c555,556
+<         f"  abserr18 > abserr17: {sum(1 for r in lev if finite(r['total_abserr_R17']) and finite(r['total_abserr_R18']) and r['total_abserr_R18'] > r['total_abserr_R17'])}; "
+<         f"abserr18 < abserr17: {sum(1 for r in lev if finite(r['total_abserr_R17']) and finite(r['total_abserr_R18']) and r['total_abserr_R18'] < r['total_abserr_R17'])}"
+---
+>         f"  abserr20 > abserr19: {sum(1 for r in lev if finite(r['total_abserr_R19']) and finite(r['total_abserr_R20']) and r['total_abserr_R20'] > r['total_abserr_R19'])}; "
+>         f"abserr20 < abserr19: {sum(1 for r in lev if finite(r['total_abserr_R19']) and finite(r['total_abserr_R20']) and r['total_abserr_R20'] < r['total_abserr_R19'])}"
+457,458c559,560
+<     print("== total_converged, R17 -> R18 (every row)")
+<     print(f"  {dict(Counter((r['total_converged_R17'], r['total_converged_R18']) for r in rows))}")
+---
+>     print("== total_converged, R19 -> R20 (every row)")
+>     print(f"  {dict(Counter((r['total_converged_R19'], r['total_converged_R20']) for r in rows))}")
+460,463c562,565
+<         f"  converged R17 {sum(1 for r in rows if r['total_converged_R17'])}, "
+<         f"R18 {sum(1 for r in rows if r['total_converged_R18'])} of {n}; "
+<         f"Levin calls unconverged R17 {sum(r['groups_unconverged_R17'] for r in rows)}, "
+<         f"R18 {sum(r['groups_unconverged_R18'] for r in rows)}"
+---
+>         f"  converged R19 {sum(1 for r in rows if r['total_converged_R19'])}, "
+>         f"R20 {sum(1 for r in rows if r['total_converged_R20'])} of {n}; "
+>         f"Levin calls unconverged R19 {sum(r['groups_unconverged_R19'] for r in rows)}, "
+>         f"R20 {sum(r['groups_unconverged_R20'] for r in rows)}"
+465c567
+<     print(f"  total_phase_limited R17 -> R18: {dict(Counter((r['total_phase_limited_R17'], r['total_phase_limited_R18']) for r in rows))}")
+---
+>     print(f"  total_phase_limited R19 -> R20: {dict(Counter((r['total_phase_limited_R19'], r['total_phase_limited_R20']) for r in rows))}")
+467,468c569,570
+<         f"  Levin calls phase-limited R17 {sum(r['groups_phase_limited_R17'] for r in rows)}, "
+<         f"R18 {sum(r['groups_phase_limited_R18'] for r in rows)}"
+---
+>         f"  Levin calls phase-limited R19 {sum(r['groups_phase_limited_R19'] for r in rows)}, "
+>         f"R20 {sum(r['groups_phase_limited_R20'] for r in rows)}"
+473,476c575,578
+<         f"  WKB_Levin_num_regions summed: R17 {sum(r['WKB_Levin_num_regions_R17'] or 0 for r in rows)}, "
+<         f"R18 {sum(r['WKB_Levin_num_regions_R18'] or 0 for r in rows)}; "
+<         f"evaluations R17 {sum(r['WKB_Levin_evaluations_R17'] or 0 for r in rows)}, "
+<         f"R18 {sum(r['WKB_Levin_evaluations_R18'] or 0 for r in rows)}"
+---
+>         f"  WKB_Levin_num_regions summed: R19 {sum(r['WKB_Levin_num_regions_R19'] or 0 for r in rows)}, "
+>         f"R20 {sum(r['WKB_Levin_num_regions_R20'] or 0 for r in rows)}; "
+>         f"evaluations R19 {sum(r['WKB_Levin_evaluations_R19'] or 0 for r in rows)}, "
+>         f"R20 {sum(r['WKB_Levin_evaluations_R20'] or 0 for r in rows)}"
+479,481c581,583
+<         f"  rows: regions equal {sum(1 for r in lev if r['WKB_Levin_num_regions_R17'] == r['WKB_Levin_num_regions_R18'])}, "
+<         f"more in R18 {sum(1 for r in lev if (r['WKB_Levin_num_regions_R18'] or 0) > (r['WKB_Levin_num_regions_R17'] or 0))}, "
+<         f"fewer in R18 {sum(1 for r in lev if (r['WKB_Levin_num_regions_R18'] or 0) < (r['WKB_Levin_num_regions_R17'] or 0))}"
+---
+>         f"  rows: regions equal {sum(1 for r in lev if r['WKB_Levin_num_regions_R19'] == r['WKB_Levin_num_regions_R20'])}, "
+>         f"more in R20 {sum(1 for r in lev if (r['WKB_Levin_num_regions_R20'] or 0) > (r['WKB_Levin_num_regions_R19'] or 0))}, "
+>         f"fewer in R20 {sum(1 for r in lev if (r['WKB_Levin_num_regions_R20'] or 0) < (r['WKB_Levin_num_regions_R19'] or 0))}"
+483,485c585,587
+<     print(f"  regions R18/R17 per row: {q([r['WKB_Levin_num_regions_R18'] / r['WKB_Levin_num_regions_R17'] for r in lev if r['WKB_Levin_num_regions_R17']])}")
+<     print(f"  WKB_Levin_max_depth R17: {dict(sorted(Counter(r['WKB_Levin_max_depth_R17'] for r in lev).items()))}")
+<     print(f"  WKB_Levin_max_depth R18: {dict(sorted(Counter(r['WKB_Levin_max_depth_R18'] for r in lev).items()))}")
+---
+>     print(f"  regions R20/R19 per row: {q([r['WKB_Levin_num_regions_R20'] / r['WKB_Levin_num_regions_R19'] for r in lev if r['WKB_Levin_num_regions_R19']])}")
+>     print(f"  WKB_Levin_max_depth R19: {dict(sorted(Counter(r['WKB_Levin_max_depth_R19'] for r in lev).items()))}")
+>     print(f"  WKB_Levin_max_depth R20: {dict(sorted(Counter(r['WKB_Levin_max_depth_R20'] for r in lev).items()))}")
+487,488c589,590
+<         f"  rows at depth_max ({DEPTH_MAX}): R17 {sum(1 for r in lev if r['WKB_Levin_max_depth_R17'] == DEPTH_MAX)}, "
+<         f"R18 {sum(1 for r in lev if r['WKB_Levin_max_depth_R18'] == DEPTH_MAX)}"
+---
+>         f"  rows at depth_max ({DEPTH_MAX}): R19 {sum(1 for r in lev if r['WKB_Levin_max_depth_R19'] == DEPTH_MAX)}, "
+>         f"R20 {sum(1 for r in lev if r['WKB_Levin_max_depth_R20'] == DEPTH_MAX)}"
+491,493c593,595
+<         f"  max depth: equal {sum(1 for r in lev if r['WKB_Levin_max_depth_R17'] == r['WKB_Levin_max_depth_R18'])}, "
+<         f"deeper in R18 {sum(1 for r in lev if (r['WKB_Levin_max_depth_R18'] or 0) > (r['WKB_Levin_max_depth_R17'] or 0))}, "
+<         f"shallower {sum(1 for r in lev if (r['WKB_Levin_max_depth_R18'] or 0) < (r['WKB_Levin_max_depth_R17'] or 0))}"
+---
+>         f"  max depth: equal {sum(1 for r in lev if r['WKB_Levin_max_depth_R19'] == r['WKB_Levin_max_depth_R20'])}, "
+>         f"deeper in R20 {sum(1 for r in lev if (r['WKB_Levin_max_depth_R20'] or 0) > (r['WKB_Levin_max_depth_R19'] or 0))}, "
+>         f"shallower {sum(1 for r in lev if (r['WKB_Levin_max_depth_R20'] or 0) < (r['WKB_Levin_max_depth_R19'] or 0))}"
+496,501c598,603
+<         f"  analytic-block regions summed: R17 {sum(r['analytic_regions_R17'] for r in rows)}, "
+<         f"R18 {sum(r['analytic_regions_R18'] for r in rows)} (of {sum(r['analytic_blocks'] for r in rows)} blocks); "
+<         f"blocks phase-limited R17 {sum(r['analytic_blocks_phase_limited_R17'] for r in rows)}, "
+<         f"R18 {sum(r['analytic_blocks_phase_limited_R18'] for r in rows)}; "
+<         f"blocks unconverged R17 {sum(r['analytic_blocks_unconverged_R17'] for r in rows)}, "
+<         f"R18 {sum(r['analytic_blocks_unconverged_R18'] for r in rows)}"
+---
+>         f"  analytic-block regions summed: R19 {sum(r['analytic_regions_R19'] for r in rows)}, "
+>         f"R20 {sum(r['analytic_regions_R20'] for r in rows)} (of {sum(r['analytic_blocks'] for r in rows)} blocks); "
+>         f"blocks phase-limited R19 {sum(r['analytic_blocks_phase_limited_R19'] for r in rows)}, "
+>         f"R20 {sum(r['analytic_blocks_phase_limited_R20'] for r in rows)}; "
+>         f"blocks unconverged R19 {sum(r['analytic_blocks_unconverged_R19'] for r in rows)}, "
+>         f"R20 {sum(r['analytic_blocks_unconverged_R20'] for r in rows)}"
+509,512c611,614
+<             f"conv R17 {sum(1 for r in s if r['total_converged_R17'])} R18 {sum(1 for r in s if r['total_converged_R18'])}; "
+<             f"Y1 violations {sum(1 for r in s if r['Y1'] == 'VIOLATES')}; non-finite {sum(1 for r in s if r['Y1'].startswith('nonfinite'))}; "
+<             f"regions R17 {sum(r['WKB_Levin_num_regions_R17'] or 0 for r in s)} R18 {sum(r['WKB_Levin_num_regions_R18'] or 0 for r in s)}; "
+<             f"depth20 R17 {sum(1 for r in s if r['WKB_Levin_max_depth_R17'] == DEPTH_MAX)} R18 {sum(1 for r in s if r['WKB_Levin_max_depth_R18'] == DEPTH_MAX)}"
+---
+>             f"conv R19 {sum(1 for r in s if r['total_converged_R19'])} R20 {sum(1 for r in s if r['total_converged_R20'])}; "
+>             f"Z1 violations {sum(1 for r in s if r['Z1'] == 'VIOLATES')}; non-finite {sum(1 for r in s if r['Z1'].startswith('nonfinite'))}; "
+>             f"regions R19 {sum(r['WKB_Levin_num_regions_R19'] or 0 for r in s)} R20 {sum(r['WKB_Levin_num_regions_R20'] or 0 for r in s)}; "
+>             f"depth20 R19 {sum(1 for r in s if r['WKB_Levin_max_depth_R19'] == DEPTH_MAX)} R20 {sum(1 for r in s if r['WKB_Levin_max_depth_R20'] == DEPTH_MAX)}"
+515c617
+<     print(f"VERDICT Y1: {'holds' if not viol else 'VIOLATED'} ({len(viol)} violations of {len(fin)} rows with finite total_abserr in both; {sum(nonf.values())} rows non-finite in either, counted separately)")
+---
+>     print(f"VERDICT Z1: {'holds' if not viol else 'VIOLATED'} ({len(viol)} violations of {len(fin)} scored rows (outside 06a's stationary-point rows, finite total_abserr in both); {sum(nonf.values())} rows non-finite in either, counted separately; {len(sprows)} stationary-point rows tabulated, not scored)")

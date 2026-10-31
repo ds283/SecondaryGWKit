@@ -1,0 +1,8 @@
+06c qsi_rows.csv rows 864 06e qsi_rows.csv rows 864 same key strings: True
+total_R19 (06e R19) vs total_R18 (06c R18): differ in 0 of 864 rows
+total_abserr_R19_hex (06e R19) vs total_abserr_R18_hex (06c R18): differ in 0 of 864 rows
+total_converged_R19 (06e R19) vs total_converged_R18 (06c R18): differ in 0 of 864 rows
+WKB_Levin_num_regions_R19 (06e R19) vs WKB_Levin_num_regions_R18 (06c R18): differ in 0 of 864 rows
+WKB_Levin_max_depth_R19 (06e R19) vs WKB_Levin_max_depth_R18 (06c R18): differ in 0 of 864 rows
+WKB_Levin_evaluations_R19 (06e R19) vs WKB_Levin_evaluations_R18 (06c R18): differ in 0 of 864 rows
+analytic_rad_R19 (06e R19) vs analytic_rad_R18 (06c R18): differ in 0 of 864 rows

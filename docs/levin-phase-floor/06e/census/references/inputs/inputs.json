@@ -1,0 +1,210 @@
+{
+ "1": {
+  "unit": "g-1e-7-2-1444",
+  "index": 4,
+  "notify_label": "k=3.09e+06/Mpc, q=1e+05/Mpc, r=3.09e+06/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r",
+  "rtol": "1e-7",
+  "block": "G+q-r",
+  "x_span": [
+   "0x1.93e8c4308d6d0p+3",
+   "0x1.54258b68e15fbp+4"
+  ],
+  "census06c_value": "0x1.c427c1ab729c6p-89",
+  "census06c_abserr": "0x1.e75e77abcc7b6p-115",
+  "pickle": "s01.pkl",
+  "sha256": "7f162791c9b19f1cf15ef0b02ccd35910d0da83c8681aba7558642dfefbf8bb0",
+  "bytes": 1318261
+ },
+ "2": {
+  "unit": "g-1e-7-2-1627",
+  "index": 3,
+  "notify_label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=14500, z in (5.1721e+12, 14500), regime Gqr, group G-q+r",
+  "rtol": "1e-7",
+  "block": "G-q+r",
+  "x_span": [
+   "0x1.329fc5ed4906ap+3",
+   "0x1.d463901811304p+4"
+  ],
+  "census06c_value": "-0x1.8274be9da55efp-95",
+  "census06c_abserr": "0x1.f350a57b8ff13p-115",
+  "pickle": "s02.pkl",
+  "sha256": "0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183",
+  "bytes": 1353643
+ },
+ "3": {
+  "unit": "g-1e-7-3-34370",
+  "index": 4,
+  "notify_label": "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14500, z in (1.6721e+11, 14500), regime Gqr, group G-q-r",
+  "rtol": "1e-7",
+  "block": "G-q-r",
+  "x_span": [
+   "0x1.329fc5ed4906ap+3",
+   "0x1.9d7b0833fb59fp+4"
+  ],
+  "census06c_value": "0x1.2549f2489da62p-88",
+  "census06c_abserr": "0x1.ddc88087c8490p-112",
+  "pickle": "s03.pkl",
+  "sha256": "81cff8d83b285ca9f1851e5d56e964e5fdb05293b07202b0d3eb9799b1cf4892",
+  "bytes": 1342891
+ },
+ "8": {
+  "unit": "g-1e-7-3-37319",
+  "index": 6,
+  "notify_label": "analytic Y1",
+  "rtol": "1e-7",
+  "block": "Y1",
+  "x_span": [
+   "-0x1.75043b2e77dc9p+3",
+   "0x1.71064d683ba06p+2"
+  ],
+  "census06c_value": "-0x1.5957d1ae87874p-30",
+  "census06c_abserr": "0x1.fec7202556ba5p-56",
+  "pickle": "s08.pkl",
+  "sha256": "861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80",
+  "bytes": 3566
+ },
+ "9": {
+  "unit": "g-1e-7-1-35340",
+  "index": 18,
+  "notify_label": "analytic Y2",
+  "rtol": "1e-7",
+  "block": "Y2",
+  "x_span": [
+   "-0x1.66c4a907e05e8p+3",
+   "0x1.4e2cc669a9b0cp+1"
+  ],
+  "census06c_value": "0x1.9e838ef109fc4p-33",
+  "census06c_abserr": "0x1.90820b21d2a6ep-65",
+  "pickle": "s09.pkl",
+  "sha256": "cbe9cb72607d7c19ae7d65a4b50726e9b0a0915998b5a3ca8f715e4a6d8285d3",
+  "bytes": 22397
+ },
+ "10": {
+  "unit": "g-1e-7-1-35332",
+  "index": 10,
+  "notify_label": "analytic Y3",
+  "rtol": "1e-7",
+  "block": "Y3",
+  "x_span": [
+   "-0x1.284f540ee281ep+4",
+   "0x1.afb2df750cbadp-2"
+  ],
+  "census06c_value": "0x1.53f0186022c00p-44",
+  "census06c_abserr": "0x1.0892b0dd35d3ap-77",
+  "pickle": "s10.pkl",
+  "sha256": "08f40073cbfe11d70d1f4fec19ee6ebc1876c95145375eb0823533bfe0bbd5af",
+  "bytes": 3565
+ },
+ "13": {
+  "unit": "g-1e-8-3-34220",
+  "index": 4,
+  "notify_label": "k=9.7e+06/Mpc, q=1e+05/Mpc, r=9.7e+06/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r",
+  "rtol": "1e-8",
+  "block": "G+q-r",
+  "x_span": [
+   "0x1.93e8c4308d6d0p+3",
+   "0x1.54258b68e15fbp+4"
+  ],
+  "census06c_value": "0x1.f022b8fa455f2p-94",
+  "census06c_abserr": "0x1.8e28ba0bdd213p-116",
+  "pickle": "s13.pkl",
+  "sha256": "54bd746d5ac6a1fd51f31822e374a2fe60a1143fc04579a7f80cbbc4ddf96b56",
+  "bytes": 1322154
+ },
+ "14": {
+  "unit": "g-1e-8-2-1627",
+  "index": 3,
+  "notify_label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=14500, z in (5.1721e+12, 14500), regime Gqr, group G-q+r",
+  "rtol": "1e-8",
+  "block": "G-q+r",
+  "x_span": [
+   "0x1.329fc5ed4906ap+3",
+   "0x1.d463901811304p+4"
+  ],
+  "census06c_value": "-0x1.8274be9da55e1p-95",
+  "census06c_abserr": "0x1.f350a0c941ba3p-115",
+  "pickle": "s14.pkl",
+  "sha256": "9570b1794986758ad0413315bb300a9cec4f13715f14fa85d0a0ef2a017eb942",
+  "bytes": 1353787
+ },
+ "15": {
+  "unit": "g-1e-8-2-1549",
+  "index": 4,
+  "notify_label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14500, z in (1.6721e+11, 14500), regime Gqr, group G-q-r",
+  "rtol": "1e-8",
+  "block": "G-q-r",
+  "x_span": [
+   "0x1.329fc5ed4906ap+3",
+   "0x1.9d7b0833fb59fp+4"
+  ],
+  "census06c_value": "-0x1.38011d9663c89p-91",
+  "census06c_abserr": "0x1.a6a5ba739c9cbp-116",
+  "pickle": "s15.pkl",
+  "sha256": "e9ca60604f8cb8cae4689d16362b97b438bd0e1ed103bff099f485756e786abd",
+  "bytes": 1338573
+ },
+ "22": {
+  "unit": "g-1e-8-2-21874",
+  "index": 12,
+  "notify_label": "analytic Y3",
+  "rtol": "1e-8",
+  "block": "Y3",
+  "x_span": [
+   "-0x1.03b5973c55a61p+4",
+   "-0x1.4ed878ffd3d9bp+1"
+  ],
+  "census06c_value": "-0x1.35f747459e2b1p-46",
+  "census06c_abserr": "0x1.343feabeaf356p-78",
+  "pickle": "s22.pkl",
+  "sha256": "ad6a6a065ead3616ef8dc96d162a7fa7f4ee902ca59d5f41580d72608b03e9b1",
+  "bytes": 3650
+ },
+ "23": {
+  "unit": "g-1e-8-2-1402",
+  "index": 12,
+  "notify_label": "analytic Y4",
+  "rtol": "1e-8",
+  "block": "Y4",
+  "x_span": [
+   "-0x1.3a9c327828efdp+4",
+   "0x1.2abdfe78f36d0p-3"
+  ],
+  "census06c_value": "-0x1.1202ddb9e5bd6p-42",
+  "census06c_abserr": "0x1.a8cef17512fefp-80",
+  "pickle": "s23.pkl",
+  "sha256": "1ffb073daec0dbdb8c4961bf3508218f5c25d5ce1bbaa75f41954acee134d5ba",
+  "bytes": 3565
+ },
+ "25": {
+  "unit": "g-1e-8-0-33962",
+  "index": 12,
+  "notify_label": "analytic Y4",
+  "rtol": "1e-8",
+  "block": "Y4",
+  "x_span": [
+   "-0x1.999df80104b87p+3",
+   "-0x1.469cb932731a6p+2"
+  ],
+  "census06c_value": "-0x1.856da4f5d0ee7p-52",
+  "census06c_abserr": "0x1.0c4b38939c8e0p-70",
+  "pickle": "s25.pkl",
+  "sha256": "696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42",
+  "bytes": 3567
+ },
+ "27": {
+  "unit": "g-1e-8-3-34419",
+  "index": 21,
+  "notify_label": "analytic J4",
+  "rtol": "1e-8",
+  "block": "J4",
+  "x_span": [
+   "-0x1.66c4a907e05e8p+3",
+   "0x1.4e2cc669a9b0cp+1"
+  ],
+  "census06c_value": "0x1.b5ae337651871p-42",
+  "census06c_abserr": "0x1.faa615e5ea6fcp-74",
+  "pickle": "s27.pkl",
+  "sha256": "d5389183fa3d15c084d15d2939f4923c151541255ada9ce3fff26be7ee1fca1c",
+  "bytes": 21995
+ }
+}

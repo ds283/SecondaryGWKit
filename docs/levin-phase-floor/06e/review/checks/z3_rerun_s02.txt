@@ -1,0 +1,4 @@
+counted 6, violations 1 -> FAILS
+extra s2 var/levin-phase-floor-06e/review/z3_rerun/ref-s02-P96.txt: tree 6d81fad replay==census g True; S80=-0x1.82749f74cd6b9p-95 |vg-S80|/ag=0.998474; S112=-0x1.82749f74cad11p-95 |vg-S112|/ag=0.998476
+orchestrator s02 at P=96 (80/112 nodes): max |mine - agent ref S128(P64)| / min(abserr) = 2.287782300399289e-06
+range over all five resolutions (agent three + mine two) / min(abserr) = 4.976180170855453e-06

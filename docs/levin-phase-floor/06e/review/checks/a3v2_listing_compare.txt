@@ -1,0 +1,6 @@
+A3 v2 (size, mtime, name), whitespace-normalised, before vs after:
+identical
+scratch copy listing, same:
+identical
+journal/-wal/-shm beside either:
+none

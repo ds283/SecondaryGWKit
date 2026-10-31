@@ -1,0 +1,23 @@
+$ /bin/bash -c cd\ references\ \&\&\ env\ PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad\ PYTHONDONTWRITEBYTECODE=1\ GIT_OPTIONAL_LOCKS=0\ OMP_NUM_THREADS=1\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ replay_g.py\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:01:33Z
+# ----
+# host mps026298.phys.susx.ac.uk utc 2026-10-30T10:01:33+00:00
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status lines 0
+# script sha256 eabe9dfc017081633811fa101b16c69da21da2f4a8768ed1f70f7de4744ce282 levin_quadrature sha256 8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c
+# census run /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318 checkpoint sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/replay_g.py", line 102, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/replay_g.py", line 66, in main
+    rec, sha = load(HERE / "inputs" / e["pickle"])
+               ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/replay_g.py", line 28, in load
+    return cp.loads(blob), hashlib.sha256(blob).hexdigest()
+           ~~~~~~~~^^^^^^
+ModuleNotFoundError: No module named 'harness'
+# ----
+# end 2026-10-30T10:01:35Z
+# exit 1

@@ -1,0 +1,14 @@
+host mps026298.phys.susx.ac.uk utc 2026-10-30T14:00:53+00:00
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status lines 0
+script sha256 8a0d291d09d74d444b47ff1f34b0f9000e4a045c4b94c36e5dec3158f2ea863b
+pickle inputs/s10.pkl sha256 08f40073cbfe11d70d1f4fec19ee6ebc1876c95145375eb0823533bfe0bbd5af
+span -0x1.284f540ee281ep+4 0x1.afb2df750cbadp-2 kw {'atol': 1e-32, 'rtol': 1e-07, 'chebyshev_order': 24, 'notify_label': 'analytic Y3'}
+driver replay value 0x1.53f0186022d19p-44 abserr 0x1.fec92197c6400p-78 regions 4 depth 2 converged True
+  equals captured False
+  scaled by None -> None None
+cells 18941; total |dtheta| 1.45707e+08 rad; theta extrema between cells at x = []
+sub-panels 2290843 nodes 513148832
+wall 6094.9 s
+S96 = 0x1.53f0185fa29b0p-44 (7.54813704675868e-14)
+S128 = 0x1.53f0185fa507ap-44 (7.548137046771214e-14)   |S2-S1| = 1.253e-25   sum|terms| 3.559e-12
+driver (this tree) |value - S128| / abserr = 0.9851

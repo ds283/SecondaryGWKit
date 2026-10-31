@@ -227,3 +227,32 @@ pushed.
 **Not yet done:** §B.0's read-only re-check on the Mac Studio, and the worktrees
 `SecondaryGWKit-lpf06e-50277f3` and `SecondaryGWKit-lpf06e-<this commit's short SHA>`, made after
 this commit is pushed. Part B is dispatched on the user's word.
+
+### B.3 Addendum, 2026-10-31: Part B's run, the review and the records
+
+**Dispatched** 2026-10-30 to a Mac Studio session on the user's word, after §B.2's commit (`6d81fad`)
+was pushed and the worktrees `SecondaryGWKit-lpf06e-50277f3` and `SecondaryGWKit-lpf06e-6d81fad`
+made. That session ran §B.0's preflight (`docs/levin-phase-floor/06e/review/preflight/`),
+dispatched a rehearsal agent and a census agent, re-ran sample 2's reference at P = 96 with 80/112
+nodes, and wrote its review (`docs/levin-phase-floor/06e/review.md`): **passes**, no §5 stop.
+
+**Interruptions.** The laptop restarted once and slept twice during the 9 h 35 min references run;
+the Mac Studio kept running. Its session's wait on the driver was re-armed once by message; its turn
+when the run ended failed on an expired login and was resumed by message, with nothing lost.
+
+**What Part B carried** (§B.2): the cost fell (unit wall ×0.711 and ×0.515); Z3's census side
+exceeded 1 only on sample 3 (1.197); the near-singular class did not surface. Z3's reference passes
+took 2–3.5× the prompt's estimates, which were sized for `refq.py`, not `orch_ref.py` at three
+resolutions (the log's Part B record).
+
+**The orchestrator's checks on the laptop:** the records copied back by `rsync` without pickles,
+the readers' extract or files over 2 MB; the Z2 call read from the census checkpoint over SSH (its
+floor is 06e's node term, the declared-phase term 0); sample 3's ratio recomputed from the recorded
+doubles (1.24505); D3's hypothesis checked by replaying samples 2, 3, 8 and 9 at `6d81fad`
+(`docs/levin-phase-floor/06e/investigations/d3-leaf-values/`).
+
+**The user's rulings:** both header issues close, *"OK. Close both header issues. We need to open a
+new issue for D4."*; D3 opened once its mechanism was checked; R19 and R20 retired by the user,
+after fingerprints were written from a checkout at `6d81fad` (the main checkout's `28ebaf0` cannot
+read a store with `theta_residual`); both worktrees removed. The census run directory stays on the
+Mac Studio for 07, whose "before" it is. 07 resumes from `stash@{0}` on the user's word.

@@ -1,0 +1,6 @@
+$ (inline, not via rec.sh) venv python -B -c <read state/smoke/ledger.jsonl: per unit status, wall, max depth, cc_floor counts, deep_lines_06e summary, tree> ; run 2026-10-30 ~08:12Z
+# ----
+g-1e-7-1-34599 done 1.53 maxdepth 7 cc leaves 10 reproduced 10 cc errors 0 deep06e {'depth_threshold': 12, 'n_calls': 0, 'n_errors': 0, 'n_not_reproducing': 0} cc_s 0.009 tree 6d81fad ''
+g-1e-7-3-13829 done 1.78 maxdepth 11 cc leaves 9 reproduced 9 cc errors 0 deep06e {'depth_threshold': 12, 'n_calls': 0, 'n_errors': 0, 'n_not_reproducing': 0} cc_s 0.008 tree 6d81fad ''
+g-1e-8-3-13829 done 1.78 maxdepth 11 cc leaves 24 reproduced 24 cc errors 0 deep06e {'depth_threshold': 12, 'n_calls': 0, 'n_errors': 0, 'n_not_reproducing': 0} cc_s 0.025 tree 6d81fad ''
+g-1e-8-1-34599 done 1.79 maxdepth 8 cc leaves 21 reproduced 21 cc errors 0 deep06e {'depth_threshold': 12, 'n_calls': 0, 'n_errors': 0, 'n_not_reproducing': 0} cc_s 0.017 tree 6d81fad ''

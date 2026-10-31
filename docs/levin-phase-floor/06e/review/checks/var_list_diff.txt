@@ -1,0 +1,20 @@
+var files before (preflight, excl. 06e): 63062; after: 63236
+present before and gone or changed (mtime/size) after: 0
+new after: 174, outside r19/r20 stores and 06e runs:
+(end)
+      1 var/datastores/levin-phase-floor-06e-r19-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-06e-r19-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-06e-r19-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-06e-r19-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-06e-r19.sqlite
+      1 var/datastores/levin-phase-floor-06e-r20-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-06e-r20-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-06e-r20-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-06e-r20-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-06e-r20.sqlite
+    149 var/runs/levin-phase-floor-06e-census-20261030T081318
+      4 var/runs/levin-phase-floor-06e-r19-parent-20261030T074440
+      1 var/runs/levin-phase-floor-06e-r19.launch.log
+      4 var/runs/levin-phase-floor-06e-r20-endnodes-20261030T075034
+      1 var/runs/levin-phase-floor-06e-r20.launch.log
+      5 var/runs/levin-phase-floor-06e-references-20261030T192730

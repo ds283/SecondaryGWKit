@@ -1,0 +1,43 @@
+input var/runs/levin-phase-floor-06c-census-20261029T130214/checkpoint.jsonl sha256 b61cb034c1ee95217fae6edb3d14ace0193d2ff88ce66ee0bd642099873012f7
+input var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+input var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+stationary-point rows from 06a's 1e-7 scans (n_sign_changes > 0): 720
+units: 06c 18560  06e 18560  same unit names: True
+
+======== rtol 1e-7
+06e unit status: {'done': 9280}
+06e units with wall_s > 300: []
+unit wall summed: 06e 2.282 h, 06c 3.208 h, ratio 0.711
+max unit wall: 06e 6.0 s, 06c 425.6 s
+Z2: calls outside the 720 reaching depth_max under g: 0 []
+    inside the 720 (reported, not scored): 11; over-budget units outside: 0
+    06c, outside the 720, calls reaching depth_max: 84; g calls outside past depth 12: 14
+    Z2 at this rtol: HOLDS
+Z4: rows scored 8560, non-finite total_abserr 0, violations 0
+    largest |dT|/(a06c+ag) = 0.00987639 at ('g-1e-7-3-14496', '0x1.c84199dfd3c89p-88', '0x1.c8419a3a99915p-88', '0x1.1f8abdd518a88p-108', '0x1.1ee32bdc79632p-108')
+    Z4 at this rtol: HOLDS
+Z5: 06c unconverged calls outside the 720: 85; not converged under g: 0 []; unmatched []
+    Z5 at this rtol: HOLDS
+  06c: {'rows_total_converged_false': 13, 'analytic_calls': 107416, 'analytic_unconverged': 89, 'depth20_calls': 109, 'regions': 973698, 'solves': 7255157, 'group_calls': 37325, 'group_unconverged': 15, '...outside_720': 9}
+  06c row max-depth histogram: {0: 2474, 1: 226, 2: 210, 3: 261, 4: 422, 5: 543, 6: 767, 7: 1101, 8: 978, 9: 617, 10: 372, 11: 279, 12: 247, 13: 236, 14: 182, 15: 91, 16: 82, 17: 61, 18: 39, 19: 29, 20: 63}
+  06e: {'rows_total_converged_false': 9, 'analytic_calls': 107416, 'analytic_unconverged': 0, 'depth20_calls': 11, 'regions': 625878, 'solves': 4862283, 'group_calls': 37325, 'group_unconverged': 9}
+  06e row max-depth histogram: {0: 2461, 1: 250, 2: 296, 3: 464, 4: 1190, 5: 1086, 6: 999, 7: 1330, 8: 777, 9: 205, 10: 108, 11: 29, 12: 13, 13: 18, 14: 12, 15: 6, 16: 10, 17: 4, 18: 4, 19: 7, 20: 11}
+
+======== rtol 1e-8
+06e unit status: {'done': 9280}
+06e units with wall_s > 300: []
+unit wall summed: 06e 2.974 h, 06c 5.775 h, ratio 0.515
+max unit wall: 06e 105.1 s, 06c 1184.7 s
+Z2: calls outside the 720 reaching depth_max under g: 1 [('g-1e-8-0-33995', ('calls', 5, 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r'), 20, False)]
+    inside the 720 (reported, not scored): 17; over-budget units outside: 0
+    06c, outside the 720, calls reaching depth_max: 133; g calls outside past depth 12: 24
+    Z2 at this rtol: FAILS
+Z4: rows scored 8560, non-finite total_abserr 0, violations 0
+    largest |dT|/(a06c+ag) = 0.0421522 at ('g-1e-8-3-34327', '0x1.aeb6966f78a10p-56', '0x1.aeb696684e752p-56', '0x1.5538d775d870dp-82', '0x1.52ab941ab933dp-82')
+    Z4 at this rtol: HOLDS
+Z5: 06c unconverged calls outside the 720: 173; not converged under g: 1 [('g-1e-8-0-33995', ('calls', 5, 'k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r'), 20, 8706)]; unmatched []
+    Z5 at this rtol: FAILS
+  06c: {'rows_total_converged_false': 45, 'analytic_calls': 107416, 'analytic_unconverged': 151, 'depth20_calls': 153, 'regions': 2086346, 'solves': 12444591, 'group_calls': 37325, 'group_unconverged': 49, '...outside_720': 33}
+  06c row max-depth histogram: {0: 2468, 1: 207, 2: 211, 3: 239, 4: 383, 5: 504, 6: 656, 7: 764, 8: 1046, 9: 837, 10: 478, 11: 299, 12: 293, 13: 245, 14: 200, 15: 127, 16: 94, 17: 71, 18: 50, 19: 27, 20: 81}
+  06e: {'rows_total_converged_false': 15, 'analytic_calls': 107416, 'analytic_unconverged': 0, 'depth20_calls': 18, 'regions': 799186, 'solves': 6209807, 'group_calls': 37325, 'group_unconverged': 15, '...outside_720': 1}
+  06e row max-depth histogram: {0: 2457, 1: 219, 2: 300, 3: 491, 4: 1614, 5: 846, 6: 692, 7: 812, 8: 924, 9: 397, 10: 310, 11: 65, 12: 30, 13: 27, 14: 17, 15: 11, 16: 17, 17: 11, 18: 11, 19: 11, 20: 18}

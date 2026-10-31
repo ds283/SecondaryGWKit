@@ -1,0 +1,157 @@
+$ /bin/bash -c cat\ references/out/short_progress.txt\;\ echo\ \"--\ driver\ log\"\;\ cat\ references/out/short_driver.log\;\ for\ f\ in\ references/out/ref-s\*-P\*.txt\;\ do\ echo\ \"==\ \$f\"\;\ grep\ -E\ \"\^S\|\^driver\|\^wall\|equals\ captured\|Traceback\|Error\"\ \$f\;\ done\;\ kill\ -0\ 50499\ 2\>\&1\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -1\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T19:27:24Z
+# ----
+2026-10-30T10:02:21Z s02 P128 start (bash pid 50504)
+2026-10-30T10:21:43Z s02 P128 exit 0
+2026-10-30T10:21:43Z s02 P64 start (bash pid 50504)
+2026-10-30T11:15:35Z s02 P64 exit 0
+2026-10-30T11:15:35Z s08 P128 start (bash pid 50504)
+2026-10-30T11:49:49Z s08 P128 exit 0
+2026-10-30T11:49:49Z s08 P64 start (bash pid 50504)
+2026-10-30T13:24:45Z s08 P64 exit 0
+2026-10-30T13:24:45Z s10 P128 start (bash pid 50504)
+2026-10-30T14:00:53Z s10 P128 exit 0
+2026-10-30T14:00:53Z s10 P64 start (bash pid 50504)
+2026-10-30T15:42:31Z s10 P64 exit 0
+2026-10-30T15:42:31Z s13 P128 start (bash pid 50504)
+2026-10-30T15:47:39Z s13 P128 exit 0
+2026-10-30T15:47:39Z s13 P64 start (bash pid 50504)
+2026-10-30T16:01:40Z s13 P64 exit 0
+2026-10-30T16:01:40Z s14 P128 start (bash pid 50504)
+2026-10-30T16:21:55Z s14 P128 exit 0
+2026-10-30T16:21:55Z s14 P64 start (bash pid 50504)
+2026-10-30T17:19:10Z s14 P64 exit 0
+2026-10-30T17:19:10Z s22 P128 start (bash pid 50504)
+2026-10-30T17:27:46Z s22 P128 exit 0
+2026-10-30T17:27:46Z s22 P64 start (bash pid 50504)
+2026-10-30T17:50:08Z s22 P64 exit 0
+2026-10-30T17:50:08Z s23 P128 start (bash pid 50504)
+2026-10-30T18:02:56Z s23 P128 exit 0
+2026-10-30T18:02:56Z s23 P64 start (bash pid 50504)
+2026-10-30T18:38:10Z s23 P64 exit 0
+2026-10-30T18:38:10Z s27 P128 start (bash pid 50504)
+2026-10-30T18:50:53Z s27 P128 exit 0
+2026-10-30T18:50:53Z s27 P64 start (bash pid 50504)
+2026-10-30T19:25:40Z s27 P64 exit 0
+2026-10-30T19:25:40Z all done, exit 0
+-- driver log
+== references/out/ref-s02-P128.txt
+driver replay value -0x1.8274be9da55f4p-95 abserr 0x1.f35087217bd59p-115 regions 7 depth 6 converged True
+  equals captured False
+wall 1159.1 s
+S64 = -0x1.82749f74cc61dp-95 (-3.810746017471299e-29)
+S96 = -0x1.82749f74d2eb2p-95 (-3.8107460174863057e-29)   |S2-S1| = 1.501e-40   sum|terms| 3.324e-28
+driver (this tree) |value - S96| / abserr = 0.9985
+== references/out/ref-s02-P64.txt
+driver replay value -0x1.8274be9da55f4p-95 abserr 0x1.f35087217bd59p-115 regions 7 depth 6 converged True
+  equals captured False
+wall 3228.9 s
+S96 = -0x1.82749f74cc70ep-95 (-3.810746017471434e-29)
+S128 = -0x1.82749f74c8bdcp-95 (-3.81074601746294e-29)   |S2-S1| = 8.494e-41   sum|terms| 3.324e-28
+driver (this tree) |value - S128| / abserr = 0.9985
+== references/out/ref-s08-P128.txt
+driver replay value -0x1.5957d1ae877cbp-30 abserr 0x1.feb0798665f4ep-56 regions 3 depth 2 converged True
+  equals captured False
+wall 2052.1 s
+S64 = -0x1.5957d22e489a3p-30 (-1.2563507001847786e-09)
+S96 = -0x1.5957d22e09b8ep-30 (-1.256350700131517e-09)   |S2-S1| = 5.326e-20   sum|terms| 9.786e-08
+driver (this tree) |value - S96| / abserr = 0.9987
+== references/out/ref-s08-P64.txt
+driver replay value -0x1.5957d1ae877cbp-30 abserr 0x1.feb0798665f4ep-56 regions 3 depth 2 converged True
+  equals captured False
+wall 5691.0 s
+S96 = -0x1.5957d22e229dap-30 (-1.2563507001526028e-09)
+S128 = -0x1.5957d22e23d99p-30 (-1.256350700153648e-09)   |S2-S1| = 1.045e-21   sum|terms| 9.786e-08
+driver (this tree) |value - S128| / abserr = 0.9995
+== references/out/ref-s10-P128.txt
+driver replay value 0x1.53f0186022d19p-44 abserr 0x1.fec92197c6400p-78 regions 4 depth 2 converged True
+  equals captured False
+wall 2165.6 s
+S64 = 0x1.53f0185fa7ba3p-44 (7.54813704678516e-14)
+S96 = 0x1.53f0185fa5979p-44 (7.54813704677412e-14)   |S2-S1| = 1.104e-25   sum|terms| 3.559e-12
+driver (this tree) |value - S96| / abserr = 0.9807
+== references/out/ref-s10-P64.txt
+driver replay value 0x1.53f0186022d19p-44 abserr 0x1.fec92197c6400p-78 regions 4 depth 2 converged True
+  equals captured False
+wall 6094.9 s
+S96 = 0x1.53f0185fa29b0p-44 (7.54813704675868e-14)
+S128 = 0x1.53f0185fa507ap-44 (7.548137046771214e-14)   |S2-S1| = 1.253e-25   sum|terms| 3.559e-12
+driver (this tree) |value - S128| / abserr = 0.9851
+== references/out/ref-s13-P128.txt
+driver replay value 0x1.f022b8fae2452p-94 abserr 0x1.4e9792d3061f5p-123 regions 2 depth 1 converged True
+  equals captured False
+wall 304.6 s
+S64 = 0x1.f022b7f1ac565p-94 (9.784549843109732e-29)
+S96 = 0x1.f022b84477c01p-94 (9.784549940434296e-29)   |S2-S1| = 9.732e-37   sum|terms| 4.248e-24
+driver (this tree) |value - S96| / abserr = 17.45
+== references/out/ref-s13-P64.txt
+driver replay value 0x1.f022b8fae2452p-94 abserr 0x1.4e9792d3061f5p-123 regions 2 depth 1 converged True
+  equals captured False
+wall 838.2 s
+S96 = 0x1.f022b8fcb0f28p-94 (9.784550156987893e-29)
+S128 = 0x1.f022b88e640adp-94 (9.784550027330383e-29)   |S2-S1| = 1.297e-36   sum|terms| 4.248e-24
+driver (this tree) |value - S128| / abserr = 10.38
+== references/out/ref-s14-P128.txt
+driver replay value -0x1.8274be9da55d8p-95 abserr 0x1.f350869124fbdp-115 regions 4 depth 3 converged True
+  equals captured False
+wall 1212.6 s
+S64 = -0x1.82749f74cc61dp-95 (-3.810746017471299e-29)
+S96 = -0x1.82749f74d2eb2p-95 (-3.8107460174863057e-29)   |S2-S1| = 1.501e-40   sum|terms| 3.324e-28
+driver (this tree) |value - S96| / abserr = 0.9985
+== references/out/ref-s14-P64.txt
+driver replay value -0x1.8274be9da55d8p-95 abserr 0x1.f350869124fbdp-115 regions 4 depth 3 converged True
+  equals captured False
+wall 3429.1 s
+S96 = -0x1.82749f74cc70ep-95 (-3.810746017471434e-29)
+S128 = -0x1.82749f74c8bdcp-95 (-3.81074601746294e-29)   |S2-S1| = 8.494e-41   sum|terms| 3.324e-28
+driver (this tree) |value - S128| / abserr = 0.9985
+== references/out/ref-s22-P128.txt
+driver replay value -0x1.35f747459d339p-46 abserr 0x1.6e343f1eb5419p-81 regions 5 depth 4 converged True
+  equals captured False
+wall 511.8 s
+S64 = -0x1.35f747456df55p-46 (-1.7206565686841734e-14)
+S96 = -0x1.35f7474579d00p-46 (-1.7206565686994946e-14)   |S2-S1| = 1.532e-25   sum|terms| 8.156e-12
+driver (this tree) |value - S96| / abserr = 0.7731
+== references/out/ref-s22-P64.txt
+driver replay value -0x1.35f747459d339p-46 abserr 0x1.6e343f1eb5419p-81 regions 5 depth 4 converged True
+  equals captured False
+wall 1339.4 s
+S96 = -0x1.35f747459fd37p-46 (-1.7206565687486258e-14)
+S128 = -0x1.35f74745a7127p-46 (-1.7206565687579912e-14)   |S2-S1| = 9.365e-26   sum|terms| 8.156e-12
+driver (this tree) |value - S128| / abserr = 0.2156
+== references/out/ref-s23-P128.txt
+driver replay value -0x1.1202ddb9e5bd2p-42 abserr 0x1.9f6ad7e2b35e7p-80 regions 7 depth 4 converged True
+  equals captured False
+wall 765.9 s
+S64 = -0x1.1202ddb9de710p-42 (-2.4337083084005797e-13)
+S96 = -0x1.1202ddb9dfa87p-42 (-2.4337083084030955e-13)   |S2-S1| = 2.516e-25   sum|terms| 2.187e-12
+driver (this tree) |value - S96| / abserr = 0.9368
+== references/out/ref-s23-P64.txt
+driver replay value -0x1.1202ddb9e5bd2p-42 abserr 0x1.9f6ad7e2b35e7p-80 regions 7 depth 4 converged True
+  equals captured False
+wall 2111.9 s
+S96 = -0x1.1202ddb9df38ap-42 (-2.433708308402192e-13)
+S128 = -0x1.1202ddb9df72fp-42 (-2.4337083084026633e-13)   |S2-S1| = 4.71e-26   sum|terms| 2.187e-12
+driver (this tree) |value - S128| / abserr = 0.969
+== references/out/ref-s27-P128.txt
+driver replay value 0x1.b5ae337655536p-42 abserr 0x1.57495e0df31f8p-74 regions 7 depth 4 converged True
+  equals captured False
+wall 760.3 s
+S64 = 0x1.b5ae337c56bd5p-42 (3.8873835093992226e-13)
+S96 = 0x1.b5ae3378067fep-42 (3.887383507115708e-13)   |S2-S1| = 2.284e-22   sum|terms| 1.439e-09
+driver (this tree) |value - S96| / abserr = 1.262
+== references/out/ref-s27-P64.txt
+driver replay value 0x1.b5ae337655536p-42 abserr 0x1.57495e0df31f8p-74 regions 7 depth 4 converged True
+  equals captured False
+wall 2085.0 s
+S96 = 0x1.b5ae3378617d9p-42 (3.887383507303873e-13)
+S128 = 0x1.b5ae33790d84ap-42 (3.8873835076596175e-13)   |S2-S1| = 3.557e-23   sum|terms| 1.439e-09
+driver (this tree) |value - S128| / abserr = 2.028
+/bin/bash: line 0: kill: (50499) - No such process
+34 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 34 finished; 0 with no host recorded.
+19:27  up 23 days, 10:04, 1 user, load averages: 4.28 7.75 9.26
+# ----
+# end 2026-10-30T19:27:25Z
+# exit 0

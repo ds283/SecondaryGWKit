@@ -1,0 +1,69 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-10-30T08:02:43Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+echo '== stores final vs before the comparison'; cmp var/levin-phase-floor-06e/rehearsal/state/store_sha256_before_diff.txt var/levin-phase-floor-06e/rehearsal/state/stores_sha256_final.txt && echo 'both stores unchanged since the comparison (and R19 since its build)'; head -5 var/levin-phase-floor-06e/rehearsal/state/r19_store_sha256_after_build.txt | cmp - var/levin-phase-floor-06e/rehearsal/state/r19_store_sha256_at_r20_launch.txt && echo 'R19 equal at build and at R20 launch'; echo '== registry'; ./venv/bin/python -B -m runregistrykit list | tail -1; ./venv/bin/python -B -m runregistrykit list | head -3 | cut -c1-140; echo '== main'; git --no-optional-locks rev-parse --abbrev-ref HEAD; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short; echo '== worktrees'; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad; do git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short --ignored; find $t -newer var/levin-phase-floor-06e/rehearsal/state/r19_launch_marker -not -path '*/.git/*' | head; done; echo '== ~/.raypoolkit'; ls -la ~/.raypoolkit; echo '== 06e stores'; ls -la var/datastores | grep 06e; echo '== inputs read (06a) unchanged sha'; shasum -a 256 var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl var/levin-phase-floor-06a/state/rows.json; echo '== output hashes'; shasum -a 256 var/levin-phase-floor-06e/rehearsal/out/store_value_diff.json var/levin-phase-floor-06e/rehearsal/out/qsi_rows.csv var/levin-phase-floor-06e/rehearsal/out/qsi_tabulation.txt var/levin-phase-floor-06e/rehearsal/out/classify_non_qsi.txt var/levin-phase-floor-06e/rehearsal/scripts/*; echo '== black --check (records, left as run)'; ./venv/bin/python -m black --check var/levin-phase-floor-06e/rehearsal/scripts/tabulate_qsi_endnodes.py var/levin-phase-floor-06e/rehearsal/scripts/classify_non_qsi.py 2>&1; echo '== uptime'; uptime
+# output:
+== stores final vs before the comparison
+both stores unchanged since the comparison (and R19 since its build)
+R19 equal at build and at R20 launch
+== registry
+33 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 33 finished; 0 with no host recorded.
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06e-r20-endnodes-20261030T075034    done              -      12m  levin-phase-floor prompt 06e, R20 on the Mac Studio (
+   levin-phase-floor-06e-r19-parent-20261030T074440      done              -      18m  levin-phase-floor prompt 06e, R19 on the Mac Studio (
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__main__.py", line 696, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__main__.py", line 664, in main
+    sys.stdout.flush()
+    ~~~~~~~~~~~~~~~~^^
+BrokenPipeError: [Errno 32] Broken pipe
+Exception ignored on flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe
+== main
+handover-remedial
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== worktrees
+50277f3e019bb37df6d91a5c2340877755498508
+6d81fad43cbf1f17cff8d0f48fc7b65966e343ab
+== ~/.raypoolkit
+total 0
+drwxr-xr-x   2 ds283 staff   64 Oct 30 08:02 .
+drwxr-x--- 159 ds283 staff 5088 Oct 30 07:48 ..
+== 06e stores
+-rw-r--r--  1 ds283 staff  25071616 Oct 30 07:49 levin-phase-floor-06e-r19-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25161728 Oct 30 07:49 levin-phase-floor-06e-r19-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Oct 30 07:44 levin-phase-floor-06e-r19-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24412160 Oct 30 07:49 levin-phase-floor-06e-r19-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Oct 30 07:44 levin-phase-floor-06e-r19.sqlite
+-rw-r--r--  1 ds283 staff  25063424 Oct 30 07:55 levin-phase-floor-06e-r20-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25329664 Oct 30 07:55 levin-phase-floor-06e-r20-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Oct 30 07:50 levin-phase-floor-06e-r20-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24453120 Oct 30 07:55 levin-phase-floor-06e-r20-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Oct 30 07:50 levin-phase-floor-06e-r20.sqlite
+== inputs read (06a) unchanged sha
+c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a  var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  var/levin-phase-floor-06a/state/rows.json
+== output hashes
+cdafa6fcb04c9070c66df98cfdb0bbdce5e0d19d0df699b316861f1c4070dcae  var/levin-phase-floor-06e/rehearsal/out/store_value_diff.json
+4ae92ce380af065a7415b15716eccfffd66a61a7ce509b2b8c22e4953525b8da  var/levin-phase-floor-06e/rehearsal/out/qsi_rows.csv
+b51f483b844cb8a46d24918586edbc547518c8cba06fc32e873f8c96f60b6d9b  var/levin-phase-floor-06e/rehearsal/out/qsi_tabulation.txt
+54ea89e80fe923350f31489077ba46274dcd206a5d1368b4359ef7fb9fdbc2bd  var/levin-phase-floor-06e/rehearsal/out/classify_non_qsi.txt
+26690e6112348716df97cccec31256bf62af357b286b89d78e6db24c006827b0  var/levin-phase-floor-06e/rehearsal/scripts/classify_non_qsi.py
+e5dc47a7e3044fa2afc831fe4f7ee3985db98f73a96a26a39f8d4f48af4a30c5  var/levin-phase-floor-06e/rehearsal/scripts/rec.sh
+ec96cf0915b486718763b3a5d73177516e8dd32775906e86e2e6bb5006cddb72  var/levin-phase-floor-06e/rehearsal/scripts/run_readers_worktree.sh
+6b34c725a20d6c612e10fe3a2255a8cef1989771829f6c5a880ab47e40907be3  var/levin-phase-floor-06e/rehearsal/scripts/tabulate_qsi_endnodes.py
+== black --check (records, left as run)
+would reformat var/levin-phase-floor-06e/rehearsal/scripts/classify_non_qsi.py
+would reformat var/levin-phase-floor-06e/rehearsal/scripts/tabulate_qsi_endnodes.py
+
+Oh no! 💥 💔 💥
+2 files would be reformatted.
+== uptime
+ 8:02  up 22 days, 22:39, 2 users, load averages: 11.32 11.31 8.83
+# exit: 0
+# end: 2026-10-30T08:02:45Z

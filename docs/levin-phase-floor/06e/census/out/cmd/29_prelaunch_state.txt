@@ -1,0 +1,17 @@
+$ /bin/bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad\;\ do\ echo\ \"==\ \$t\"\;\ git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\ \$\(\[\ \$t\ \!=\ /Users/ds283/Documents/Code/SecondaryGWKit\ \]\ \&\&\ echo\ --ignored\)\;\ done\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -1\;\ df\ -h\ .\ \|\ tail\ -1\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T08:13:12Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-50277f3
+50277f3e019bb37df6d91a5c2340877755498508
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad
+6d81fad43cbf1f17cff8d0f48fc7b65966e343ab
+33 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 33 finished; 0 with no host recorded.
+/dev/disk3s3s1  927G  830G   97G  90% /
+ 8:13  up 22 days, 22:49, 2 users, load averages: 4.53 5.79 6.76
+# ----
+# end 2026-10-30T08:13:12Z
+# exit 0

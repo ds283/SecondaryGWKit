@@ -1,0 +1,17 @@
+sample unit idx | P128 file tree | range/min(abserr) counted | |vg-ref|/ag  |v06c-ref|/a06c | replay at g == census g
+ 1 g-1e-7-2-1444 4 | e5764a6 | 0.961 dropped | 0.62588  0.122295 | n/a (06c tree)  conv_g=True depth_g=1
+ 2 g-1e-7-2-1627 3 | 6d81fad | 4.976e-06 COUNTED | 0.998477  0.998476 | True  conv_g=True depth_g=6
+ 3 g-1e-7-3-34370 4 | 6d81fad | 0.008327 COUNTED | 1.24505 VIOLATES  1.19706 | True  conv_g=True depth_g=2
+     s03: ref S128(P64) 0x1.2549f00caea6ep-88; S96(P64) 0x1.2549f00d6ab8ap-88; S96(P128) 0x1.2549f0108200ap-88
+          v_g 0x1.2549f248a5a85p-88 abserr_g 0x1.cb647a7f43ea2p-112; v_06c 0x1.2549f2489da62p-88 abserr_06c 0x1.ddc88087c8490p-112
+ 8 g-1e-7-3-37319 6 | 6d81fad | 0.0007994 COUNTED | 0.999518  0.999344 | True  conv_g=True depth_g=2
+ 9 g-1e-7-1-35340 18 | e5764a6 | 0.006664 COUNTED | 0.997859  0.991028 | n/a (06c tree)  conv_g=True depth_g=4
+10 g-1e-7-1-35332 10 | 6d81fad | 0.02339 dropped | 0.985061  0.950363 | True  conv_g=True depth_g=2
+13 g-1e-8-3-34220 4 | 6d81fad | 17.62 dropped | 10.3762  0.0677369 | True  conv_g=True depth_g=1
+14 g-1e-8-2-1627 3 | 6d81fad | 4.976e-06 COUNTED | 0.998477  0.998476 | True  conv_g=True depth_g=3
+15 g-1e-8-2-1549 4 | 6d81fad | 0.008901 COUNTED | 0.781131  0.780376 | True  conv_g=True depth_g=2
+22 g-1e-8-2-21874 12 | 6d81fad | 0.9887 dropped | 0.215631  0.0288851 | True  conv_g=True depth_g=4
+23 g-1e-8-2-1402 12 | 6d81fad | 0.06729 dropped | 0.969018  0.947744 | True  conv_g=True depth_g=4
+25 g-1e-8-0-33962 12 | e5764a6 | 65.72 dropped | 9.19349  4.88309e-05 | n/a (06c tree)  conv_g=True depth_g=3
+27 g-1e-8-3-34419 21 | 6d81fad | 0.7662 dropped | 2.02802  1.38161 | True  conv_g=True depth_g=4
+counted 6, violations 1 -> FAILS

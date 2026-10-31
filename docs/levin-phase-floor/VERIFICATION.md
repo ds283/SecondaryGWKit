@@ -2470,3 +2470,71 @@ Decisions, **06c Part B lands**), and they close:
 `[07-per-region-acceptance-misses-a-cancelling-total]`,
 `[06b-resolved-region-keeps-a-floor-bisection-would-cut]`,
 `[07-cc-solves-use-the-levin-roundoff-floor]` and `[07-depth18-diagnostic-divides-by-zero]`.
+
+## 6e. Exact end nodes, and a node term that measures the displacement
+
+*Prompt 06e: the code on the laptop (`f4d8e17`), the rehearsals, the census and Z3's references on
+the Mac Studio on 2026-10-30 and 2026-10-31. The records are under [`06e/`](06e/); what stays on
+the Mac Studio is in [`06e/KEPT_ON_MAC_STUDIO.md`](06e/KEPT_ON_MAC_STUDIO.md).*
+
+### 6e.1 The code
+
+`chebyshev_matrices` sets x[0] := b and x[−1] := a, so a parent's ends and its halves' tile. The
+Clenshaw–Curtis node term becomes $\phi_{\rm node} = |E| + R_g + R_2 + R_c$, with
+$E = \sum_k w_k\,g'(\hat x_k)\,\Delta_k$ from the exact per-node displacements, computed by
+error-free transformations against 160-bit base corrections. The tests, breakages and
+LiouvilleGreen draws are in
+[`logs/06e-exact-end-nodes.md`](../../prompts/levin-phase-floor/logs/06e-exact-end-nodes.md), with
+the draws' records in [`06e/calibration/`](06e/calibration/). P1 holds: the median of 06d's term
+over $\phi_{\rm node}$ on 90 window cells is 848.
+
+### 6e.2 Rehearsals R19 and R20 (prompt 06e §4)
+
+R19 `levin-phase-floor-06e-r19-parent-20261030T074440` at `50277f3` (06d's code) and R20
+`levin-phase-floor-06e-r20-endnodes-20261030T075034` at `6d81fad`, both `done`, both fingerprinted
+`1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7`. Outside `QuadSourceIntegral`
+every value table is identical. Inside, of 864 rows, `total` is bit-identical in 361;
+`total_converged` 863 → 864; regions 34,892 → 31,216; rows at depth ≥ 12 46 → 11.
+- **Z1 holds:** 864 rows, no violation; the largest $|\Delta T|/(e_{19} + e_{20})$ is 0.00312.
+- The agent's full record: [`06e/rehearsal/verification.md`](06e/rehearsal/verification.md).
+
+### 6e.3 The census: 06c's census re-run at the code (prompt 06e §5)
+
+`levin-phase-floor-06e-census-20261030T081318`: 18,560 of 18,560 units `done`, none in error or
+over budget, in about 1 h 47 min against 06c's 2 h 30 min. Unit wall falls ×0.711 at `1e-7` and
+×0.515 at `1e-8`; calls at depth 20 fall 109 → 11 and 153 → 18, and outside 06a's 720
+stationary-point rows 84 → 0 and 133 → 1.
+- **Z0 holds** (06c's units reproduced bit for bit at the parent; $g$ deterministic). **Z4 holds**
+  (8,560 rows at each rtol, no violation).
+- **Z2 and Z5 fail** on one call, `g-1e-8-0-33995` call 5, unconverged at depth 20 with 8,706
+  regions. Its floor, $1.33\times10^{-33}$ against atol $6.7\times10^{-34}$, is 06e's node term
+  summed in absolute value over 8,600 Clenshaw–Curtis leaves; the sum does not fall under
+  splitting.
+- **Z3 fails** on one of six counted references: sample 3 at 1.245× its declared error (06c's code
+  1.197×). The others are at 0.78–0.9995.
+- The agent's full record: [`06e/census/verification.md`](06e/census/verification.md).
+
+### 6e.4 The references, and the trusted leaf's value (2026-10-31)
+
+Z3's references for samples 3 and 15 ran in `levin-phase-floor-06e-references-20261030T192730`, 9 h
+35 min; the short eight ran 10:02–19:25 UTC on 2026-10-30, 2–3.5× the prompt's estimates. The Mac
+Studio review re-ran sample 2's reference at P = 96 with 80/112 nodes and agreed to
+$2.3\times10^{-6}$ of the error.
+
+On the laptop the orchestrator broke down the near-1 ratios of samples 2, 8 and 9
+([`06e/investigations/d3-leaf-values/`](06e/investigations/d3-leaf-values/)): in each, one trusted
+leaf with $r \le 0.0014$ carries the error, and the trust check returns that leaf's own value while
+declaring $\max(\epsilon_P, \Delta_1)/(1-r)$, which is that value's true error to within $r$. Its
+quarters sum, already computed, is 650–2,200× closer. Sample 3's leaf has $r = 0.507$, and its
+quarters sum is itself $1.7\times10^{-34}$ off: the error falls more slowly than the extrapolation
+assumes.
+
+### 6e.5 The review, and the user's rulings
+
+The Mac Studio orchestrator's review ([`06e/review.md`](06e/review.md)) passed, re-scoring Z1–Z5
+with its own readers and re-fingerprinting both stores. The user, 2026-10-31: *"OK. Close both
+header issues. We need to open a new issue for D4."* None of the failures is either header issue
+(the board's Decisions, **06e Part B lands**), and they close:
+`[06c-chebyshev-end-nodes-miss-the-span]` and `[06d-cc-node-term-is-pessimistic]`. Three issues
+open: `[06e-trusted-leaf-returns-its-coarsest-value]`,
+`[06e-cc-declared-phase-term-is-a-crude-proxy]` and `[06e-node-errors-add-in-absolute-value]`.

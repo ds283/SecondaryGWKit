@@ -1,0 +1,25 @@
+{
+ "tree": "p",
+ "name": "P3",
+ "units": [
+  {
+   "uid": "p-1e-8-0-1971",
+   "tree": "p",
+   "rtol": "1e-8",
+   "row": "0-1971",
+   "names05": null,
+   "shard": 0,
+   "serial": 1971,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/Z0/P3",
+ "emit_fd": null,
+ "emit_file": "state/Z0/P3/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

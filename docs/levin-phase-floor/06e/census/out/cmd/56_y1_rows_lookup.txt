@@ -1,0 +1,13 @@
+['# Y1 references: assembled results', '# host mps026298.phys.susx.ac.uk', '# written 2026-10-29T21:32:25Z (UTC)']
+Y01 100000.0 5236.5530126517315 rows with same k,q,r: 145 nearest z 4800.128090981537
+Y02 100000.0 996.4201622779478 rows with same k,q,r: 145 nearest z 914.2397166019924
+Y03 316227.7660168379 434.65132503921666 rows with same k,q,r: 0 nearest z None
+Y04 316227.7660168379 573.1146466584687 rows with same k,q,r: 0 nearest z None
+Y05 316227.7660168379 996.4201622779478 rows with same k,q,r: 0 nearest z None
+Y06 316227.7660168379 5236.5530126517315 rows with same k,q,r: 0 nearest z None
+Y07 316227.7660168379 755.6870974333904 rows with same k,q,r: 0 nearest z None
+Y08 100000.0 249.99999999999994 rows with same k,q,r: 145 nearest z 229.56171747551278
+Y09 316227.7660168379 6904.718924492998 rows with same k,q,r: 0 nearest z None
+Y10 100000.0 3971.4125591760326 rows with same k,q,r: 145 nearest z 3641.0002007484086
+Y11 1000000.0 1313.8415928578513 rows with same k,q,r: 0 nearest z None
+Y12 100000.0 6904.718924492998 rows with same k,q,r: 145 nearest z 6328.269272024162

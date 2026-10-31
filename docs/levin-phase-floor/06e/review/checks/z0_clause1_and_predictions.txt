@@ -1,0 +1,14 @@
+== Z0 clause 1, orchestrator's own:
+ CLAUDE.md | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+== parent unit module files outside the parent worktree:
+102 modules; 0 outside
+== predictions.md:
+f27771cc2c16691a027a068f7849e49f18f477bcb26ee45313fbcbedf594c840  var/levin-phase-floor-06e/census/state/predictions.md
+-rw-r--r-- 1 ds283 staff 10735 2026-10-30T08:12:47 var/levin-phase-floor-06e/census/state/predictions.md
+Z0 outputs mtimes:
+-rw-r--r-- 1 ds283 staff   708 2026-10-30T08:09:46 var/levin-phase-floor-06e/census/out/cmd/19_Z0_run.txt
+-rw-r--r-- 1 ds283 staff 21942 2026-10-30T08:09:54 var/levin-phase-floor-06e/census/out/cmd/20_Z0_check.txt
+-rw-r--r-- 1 ds283 staff  1458 2026-10-30T08:10:02 var/levin-phase-floor-06e/census/out/cmd/21_Z0_clause1.txt
+census manifest mtime and started:
+-rw-r--r-- 1 ds283 staff 4515 2026-10-30T08:13:18 var/runs/levin-phase-floor-06e-census-20261030T081318/manifest.json

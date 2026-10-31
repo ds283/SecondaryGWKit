@@ -1,0 +1,6 @@
+-rw-r--r-- 1 ds283 staff 106340352 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff 107569152 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff 107429888 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff 105791488 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff     10519 Oct 25 00:34 handover-A3-v2-lambdacdm.manifest.json
+-rw-r--r-- 1 ds283 staff     36864 Oct 22 21:12 handover-A3-v2-lambdacdm.sqlite

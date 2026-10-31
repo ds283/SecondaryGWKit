@@ -198,6 +198,7 @@ records in `docs/levin-phase-floor/NN/` ·
 | **07 fourth stop** | **06e before 07: exact end nodes, and a node term that measures the displacement; QUADPACK's rule to 07** (2026-10-30). 07's Part A, rebased onto 06d, stopped a fourth time: §2 cannot complete, its window leaves (never floor-limited, 07 §0.2 (ii)) chased to depth 20 on a flat error, and outside the windows Levin leaves with a residual flat in $h$; seed 0's LiouvilleGreen call 15 does not finish. A leaf study of the stuck cases (`docs/levin-phase-floor/06e/investigations/07-leaves/`) found the common cause in the rounding of $x$: `chebyshev_matrices`' end nodes miss $a$ or $b$ by an ulp on about a third of spans, so leaves do not tile and the step-(4) residual carries an offset $|f|\,{\rm ulp}(x)$ the floor does not model; and 06d's node term is a worst case 20–1000× above the node error it bounds. A check of 06c's production depth-20 calls (`docs/levin-phase-floor/06c/depth20-tiling/`) found the same offset on 28 of 30 sampled calls; pinning the end nodes alone takes them from depth 20 to 1–7 (29 of 30), regions 10,181 → 274, converged 1 → 29; honesty after pinning shown on one call. Y1's 12 worst rows (06c §4) are a stationary point of `G+q+r` at $z \approx 10211$, 07's P1 class. The user: *"My first impression is that we probably want to land all of your 1, 2, and 3"*, then *"No, let's just do a single prompt"*, and on the QUADPACK rule, whose only cases after pinning are 07's window leaves, *"Let's go for (b)"*: prompt 06e pins the end nodes and tightens the node term, with rehearsals R19/R20 and a census against 06c's; QUADPACK's rule becomes 07's answer for window leaves (07 §9 point 8), and 07's rehearsals become R21/R22. On Y1: *"We expect those to clear up on their own once the stationary phase points are handled correctly – right?"*: yes; 07's §6 scores Y1's 12 references |
 | **06c Part B lands** | **06c's records land, and the header issues of 06c and 06d close** (2026-10-30). Part B ran on 06c's and 06d's code together; Y1, X1, X2, X4 and X5 failed, so under the note's rule the four issues closed only on the user's word. None of the failures is any of them: Y1's 12 worst rows are a stationary point (`[06-levin-accepts-a-region-across-a-stationary-point]`, 07), and its other 18 rows and X4 are 06b's under-declaration (`[06b-moved-calls-declare-less-than-their-error]`); X1 is a 7-leaf answer the trust check passed (`[06c-budget-can-stop-on-a-pre-asymptotic-residual]`); X2 and X5 are the end-node offset (`[06c-chebyshev-end-nodes-miss-the-span]`, 06e). The user: *"If there's a real, substantive reason to keep them open, I don't mind. If this is just an argument about words, I don't care."* Closed: `[07-per-region-acceptance-misses-a-cancelling-total]`, `[06b-resolved-region-keeps-a-floor-bisection-would-cut]`, `[07-cc-solves-use-the-levin-roundoff-floor]` and `[07-depth18-diagnostic-divides-by-zero]`. Census C1 and C3 narrow two open issues; C5 opens `[06c-census-budget-is-not-enforced-inside-a-levin-call]` |
 | **06e lands** | **06e's code lands, after one stop on an existing assertion** (2026-10-30). Part A stopped before committing under 06e §7: 06b's fallback-branch test 3 (b) (`test_levin_roundoff_exit`, put there by 06d §5 point 3) asserted that the premise check at least halves the declared error, which no longer holds: 06e's node term is nearly additive under bisection, so on 72 problems of that family the check halves the declared error on 12 under 06d and on none under 06e (best ratio 0.92). The user: *"Looks like (a) to me. The halving assertion looks to me like it was just made up, so no reason to worry about it."* (b) was restated as 06d restated (a): bit-identity across the bypass, honesty kept, the halving assertion withdrawn. The code (`f4d8e17`) passed the orchestrator's nine checks; the user: *"Yes, please land it"*. In the draws, 7 near-singular `test_YJJ_log_singularity` cases that were dishonest and unconverged under 06d are flagged converged under 06e (431 → 438 of 560), their true errors unchanged and no case honest → dishonest; recorded on `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`. Part B (R19, R20, the census) runs on the Mac Studio on the user's word; 07 resumes after it |
+| **06e Part B lands** | **06e's records land, and its two header issues close** (2026-10-31). Part B ran on the Mac Studio on 2026-10-30 and 2026-10-31; the review passed. Z0, Z1 and Z4 hold; the census is ×0.71 and ×0.52 the unit wall of 06c's, and calls outside the stationary-point rows at depth 20 fall 84 → 0 and 133 → 1. **Z2 and Z5 fail** on that one call (`g-1e-8-0-33995` call 5): its floor is 06e's node term summed in absolute value over 8,600 leaves, flat under splitting (`[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`, and opened `[06e-node-errors-add-in-absolute-value]`). **Z3 fails** on sample 3, 1.245× under 06e and 1.197× under 06c's code, a slowly converging leaf (`[06c-budget-can-stop-on-a-pre-asymptotic-residual]`). The user: *"OK. Close both header issues. We need to open a new issue for D4."* On D3 (ratios 0.998–0.9995 on three referenced calls) the user asked for the hypothesis to be checked first; the orchestrator's leaf breakdown confirmed that a trusted leaf returns its own coarse value while its quarters sum is 650–2,200× closer, and the user: *"we need to chase the D3 problem also."* Closed: `[06c-chebyshev-end-nodes-miss-the-span]` and `[06d-cc-node-term-is-pessimistic]`. Opened: `[06e-trusted-leaf-returns-its-coarsest-value]`, `[06e-cc-declared-phase-term-is-a-crude-proxy]` and `[06e-node-errors-add-in-absolute-value]`. R19 and R20 retired by the user; the census run directory kept for 07, whose "before" it is |
 | **G2 Q4 (iii)–(v), Q5** | **Fact-finding after 07:** *"After that we have the next fact-finding exercise to answer Q4(iii)-(v) and Q5."* Prompt 08 measures them with 07's guard in place, and the user answers them at a new gate, G3 |
 
 The orchestrator's choices of method, C1–C6, are in README §6.2. The open questions for the user,
@@ -220,7 +221,7 @@ Q1–Q4, are in README §6.3.
 | 06b | [The round-off-limited exit checks its premise](06b-roundoff-exit-premise.md) | `[07-roundoff-exit-assumes-bisection-cannot-help]`: `_adaptive_levin` accepts a region as round-off-limited only if bisection would not lower its eq. (151) floor by half ($\rho = \tfrac12$: the halves' floors, already computed on the Levin branch and computed on demand on the fallback branch, against the parent's). Strictly stronger than today's test, so a call with no phase-limited region is bit-identical. Tests with three breakages and 20 seeded LiouvilleGreen draws; R15/R16; 06a's census re-run, scored W1–W4, which becomes 07's "before" | code on the laptop; R15, R16 and the census on the Mac Studio | Opus | ✍️ 2026-10-28, on the user's decision the same day, before 07's §2 | ✅ 2026-10-28, W2 and W4 failing. **Code** (§1–§3) landed on the laptop 2026-10-28 (`4ddc3c2`, reviewed and pushed): `_LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 0.5` and `_roundoff_exit_premise_holds`; the Levin branch checks the premise from `dataL`/`dataR`, the fallback branch solves its halves only where the exit would fire and carries them forward if it bisects; a test-only bypass keyword on `_adaptive_levin`. `test_levin_roundoff_exit` (6 methods): test 1's parent accepts $\theta = 100e^x$ on $[0, 20]$ at depth 0 through the exit, relative error $7.5\times10^{-7}$ against `rtol` $10^{-7}$, and the new code converges at $1.7\times10^{-9}$; tests 2–4 hold, test 4 bit-identical on all 25 driven problems; the three breakages caught by tests 1, 2 and 3. 20 seeded LiouvilleGreen draws: no test moves; 1,026 of 4,320 calls phase-limited at the parent, 133 after; every other call bit-identical; **one call reaches depth 20** (seed 15, `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`). AdaptiveLevin 32 → 38, the other six roots equal. Opened two issues (§3). **§4 and §5 on the Mac Studio, 2026-10-28, from worktrees** (`da5c24d`, `92bc62f`): R15 `levin-phase-floor-06b-r15-parent-20261028T135349` and R16 `levin-phase-floor-06b-r16-premise-20261028T135745`, both `done`, `1b332ffa…`; all 7 value tables outside `QuadSourceIntegral` identical; 782 of 864 rows with no phase-limited flag in R15 bit-identical, the 82 others tabulated (`total` moved on 26, by at most 0.36 of R15's `total_abserr`); readers exit 0; lock released. Census `levin-phase-floor-06b-census-20261028T161212`, 18,560/18,560 in 51 min, none over budget: **W0, W1 and W3 hold; W2 fails** (17 of 24 moved calls outside their declared error, median 1.79×, max 19.7×; closer to the reference than 06a's), **W4 fails** (three analytic-block calls at `1e-8` reach depth 20). Mac Studio review: checks 1–9 pass, check 10 (the census log's form) accepted as it stands by the user. Laptop re-checks: one moved R15/R16 row and one census unit against 06a. The header issue stays open on the user's word; W2 opened `[06b-moved-calls-declare-less-than-their-error]` | `4ddc3c2` (code); `92bc62f` (Part B dispatch); records in the records commit | [log](logs/06b-roundoff-exit-premise.md) |
 | 06c | [Global error control in the Levin driver](06c-global-error-control.md) | `[07-per-region-acceptance-misses-a-cancelling-total]`, found by 07's §2: `_adaptive_levin` keeps every leaf of its partition and stops when $\sum e_i \le \max(\texttt{atol}, \texttt{rtol}|\sum v_i|)$, bisecting the refinable leaf with the largest error (QUADPACK's QAG), instead of accepting each region against its own value; a leaf is not refinable at `depth_max`, when floor-limited under 06b's premise, a stall rule for splits that do not help was added before dispatch, amended after Part A's first stop and **withdrawn** after its second (its §8: it misfires where the error estimate is not yet trustworthy, before resolution and on Levin leaves across a stationary point); the question is re-measured after 07; `_local_atol` removed. Also `[06b-resolved-region-keeps-a-floor-bisection-would-cut]`. Each leaf's estimate is checked one level down (its convergence ratio from its grandchildren widens its error, and a leaf not converging is refined), added before the code was pushed (its §8). Every computed value moves (the user, 2026-10-28). Tests with four breakages and 20 seeded LiouvilleGreen draws; R17/R18 with Y1; 06b's census re-run, scored X1–X5, which becomes 07's "before" | code on the laptop; R17, R18 and the census on the Mac Studio | Opus | ✍️ 2026-10-28, on the user's decision the same day, after 06b and before 07's §2 | ✅ 2026-10-30, Y1, X1, X2, X4 and X5 failing, its header issues closed on the user's word. **Code** (§1–§3) landed on the laptop 2026-10-29 (`ad9a5f4`, reviewed and pushed): `c85f753`'s code re-landed unchanged on `fef401c`, after a noise level for the trust check was tried and withdrawn (the fourth and fifth amendments: $8uM$ could not reach 12f's residual, the third stop; a phase-scaled $8uAP$, measured as a scratch variant, overstated the noise and unconverged five calls). `c85f753` was `79ae8c7` (reviewed, never pushed) with the trust check one level down added (§8, the third amendment), after two stops on the stall rule (withdrawn, `cf7913b`). `_adaptive_levin` keeps every leaf on a heap (untrusted first, then by error), with exact running sums confirmed on the returned ascending-$x$ sums; a leaf is not refinable at `depth_max` or when floor-limited; when the budget passes, every unchecked leaf is checked against its grandchildren ($r = \Delta_2/\Delta_1$): trusted leaves declare $\max(\epsilon_P,\Delta_1)/(1-r)$, untrusted ones are refined first, and one left at the cap declares $\max(\epsilon_P,\Delta_1+\Delta_2)$ and the call is unconverged; one new key, `num_untrusted_regions`. `test_levin_global_budget` (15 methods): the parent misses on tests 1–3 and the new code converges, honest; 12a (the Gaussian bump `79ae8c7` declared 4 % short) honest by $1.8\times10^{-4}$; 12c (the stationary-point line (b2) broke) converged and honest; 12d flags an untrusted root at the cap where the parent was dishonest; 12e: none of the 25 driven problems honest at the parent and dishonest under 06c. Breakages (i)–(iv) caught by tests 1, 4, 3 and 12a. Four existing assertions changed, all of §2 test 9's kinds. 20 seeded LiouvilleGreen draws: every test passes under both; converged calls 1,207 → 3,254 of 4,320 (5 True → False, 4 of them for untrusted leaves at the cap); **230 calls reach depth 20** (1 at the parent); solves ×45; at the integral level **5 near-singular `test_YJJ_log_singularity` cases honest at the parent are dishonest under 06c, all flagged converged** (29 the other way). Seven roots re-taken on this commit: AdaptiveLevin 38 → 53, the other six equal, all OK. Tests, breakages and draws carry over from `c85f753`, whose code this is. Item 1's near-singular cases are recorded as input conditioning. Opened and narrowed `[06c-budget-can-stop-on-a-pre-asymptotic-residual]` (§3). **§4 (R17, R18) and §5 (the census) pending** on the Mac Studio **Part B on the Mac Studio, 2026-10-29,** with 06d's code (`e5764a6`): R17 `levin-phase-floor-06c-r17-parent-20261029T123720` (at `fef401c`) and R18 `levin-phase-floor-06c-r18-global-20261029T124058`, both `1b332ffa…`; outside `QuadSourceIntegral` 360,462 rows bit-identical; inside, `total_converged` 516 → 863. **Y1 fails** on 30 of 838 rows: 12 equilateral rows at a stationary point of `G+q+r` (07's), the other 18 06b's under-declaration (orchestrator's references, `06c/y1-references/`). Census `levin-phase-floor-06c-census-20261029T130214`, 18,560/18,560 `done` in 2 h 30 min: **X0 and X3 hold; X1 fails** (1 of 23 at 1.375×, a 7-leaf answer the trust check passed), **X2 fails** (53 and 127 of 20,425 and 22,442 budget misses unconverged, mostly at depth 20), **X4 fails** (263 and 302 rows; on the four referenced, 06b's error was the understated one), **X5 fails** (109 and 153 moved calls at depth 20). The depth-20 calls were then traced to the Chebyshev end nodes (`06c/depth20-tiling/`; Decisions, **07 fourth stop**). Mac Studio review passed; the four header issues of 06c and 06d closed on the user's word (Decisions, **06c Part B lands**) | `ad9a5f4` (code); records in the records commit | [log](logs/06c-global-error-control.md) |
 | 06d | [A round-off floor for the Clenshaw–Curtis rule](06d-cc-roundoff-floor.md) | `[07-cc-solves-use-the-levin-roundoff-floor]` and `[07-depth18-diagnostic-divides-by-zero]`, found by 07's third stop: every Clenshaw–Curtis solve's floor derived from what the rule computes, $(n+4)u\sum_k|w_k|\sum_i|f_{ik}b_{ik}| + u\sum_k|w_k||a_k|\sum_i|f_{ik}|$, with no $1/\theta'$, in place of the Levin solve's eq. (151); and a guard in the depth-18 log. Tests with three breakages and 20 seeded LiouvilleGreen draws. No Part B of its own: 06c's Part B runs after it and measures both | laptop | Opus | ✍️ 2026-10-29, on the user's decisions the same day, before 06c's Part B; amended the same day (its §5): a node-rounding term, the three-Bessel test restated, 06b's test 3 kept under test | ⏸ Part A stopped before committing on 2026-10-29: $\phi_{\rm CC}$ missed the rounding of the nodes (Decisions, **06d node rounding**); resumed on the amendment. ✅ **Code** (§1–§3) committed on the laptop 2026-10-29: $\phi_{\rm CC}$ with three terms (sum, argument, and the node term with $\delta = 5u(\max(|a|,|b|)+h)$, $\max|\theta'|$ and per-node $f'$), no $1/\theta'$; the depth-18 guard. `test_levin_cc_floor` (7 methods): test 2 bounds all 20 cells, raw and reduced (true/$\phi$ ≤ 0.066; eq. (151) short in 11, by up to $7.6\times10^9$); test 4's oracle 96,941 leaves → 76, converged, honest; test 6: 21 driven problems bit-identical, 5 with fallback leaves honest. Breakages (i)–(iv) caught by tests 1, 2 (raw), 5 and 2 (reduced). §5's two test changes made (06b's test 3 onto a node-floor problem; the three-Bessel test restated). 20 seeded LiouvilleGreen draws: all pass under both; converged 3,254 → 3,810 (none True → False); depth-20 calls 230 → 101; **203 near-singular `test_YJJ_log_singularity` cases go from honest-unconverged to converged-dishonest** (converged-dishonest 228 → 431 of 800), their true errors unchanged: 06c's inflated floor had covered them (log, Observations 1). AdaptiveLevin 53 → 60, the other six roots equal. **Reviewed and pushed** 2026-10-29: the orchestrator re-ran tests 1, 2 (the reduced cells with and without the node term) and 4 at the parent and the commit, re-applied breakage (i) (caught by tests 1, 2 and 3), re-ran the seven roots (all OK) and the 20 draws in a throwaway worktree (160 units identical), test 4 bit-identical in two fresh processes. **Landed by the user** (Decisions, **06d lands**), the near-singular cases recorded on `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`. 06c's Part B, which measures 06c and 06d together, ran on 2026-10-29, and its header issues closed in 06c's records commit (Decisions, **06c Part B lands**) | `3d70db9` (code) | [log](logs/06d-cc-roundoff-floor.md) |
-| 06e | [Exact end nodes, and a node term that measures the displacement](06e-exact-end-nodes.md) | `[06c-chebyshev-end-nodes-miss-the-span]` and `[06d-cc-node-term-is-pessimistic]`, found by 07's fourth stop and the depth-20 check: `chebyshev_matrices` sets x[0] := b and x[−1] := a exactly, so leaves tile; 06d's node term replaced by the signed first-order error of the exact per-node displacements $\Delta_k$ with per-node $\theta'$, plus bounded remainders, still a bound. Every computed value moves at round-off; R19/R20; 06c's census re-run, scored Z1–Z5, which becomes 07's "before" | code on the laptop; R19, R20 and the census on the Mac Studio | Opus | ✍️ 2026-10-30, on the user's decisions the same day (Decisions, **07 fourth stop**) | 🟡 **Code** (§1–§3) committed on the laptop 2026-10-30 at dispatch `50277f3` (06d's code): `chebyshev_matrices` sets x[0] := b and x[−1] := a (both halves of every bisection share one float midpoint, confirmed on every path); $\phi_{\rm node} = |E| + R_g + R_2 + R_c$ from the signed displacements $\Delta_k$ (error-free transformations, base nodes in double-double) with $\theta'$ at each fine node ($\eta_\theta = 2^{-10}$ for a supplied $\theta'$, measured worst 0.997 u; $\eta_\theta = \eta_f = 1$ otherwise); `_CC_NODE_ROUNDING_COUNT` and `_cc_node_error_bound` removed. `test_levin_end_nodes` (8 methods): the parent misses its end nodes on 2,046 of 4,000 spans and fails to tile on 1,841 of 3,500 bisections; test 3's offset chase (parent depth 16, Levin residual flat at ~1e-14 over a floor falling to 2.5e-20) converges at depth 0; test 4: $\phi_{\rm node}$ bounds all 122 cells (true/$\phi$ ≤ 0.997), **P1 holds** (median 06d/$\phi$ 848 on 90 window cells); oracle and 25 driven problems honest under both. Breakages (i)–(iii) caught by tests 1–3, 4 and 4. 20 seeded LiouvilleGreen draws: all pass under both; converged 3,810 → 3,830 (none True → False); **depth-20 calls 101 → 0**; no case honest → dishonest. Three existing assertions changed: two of allowed kinds (`mode_filter` region count; which rule), and 06b's fallback-branch test 3 (b) restated as bit-identity across the bypass with its halving assertion withdrawn, after **one stop**, on the user's ruling (*"Looks like (a) to me. The halving assertion looks to me like it was just made up, so no reason to worry about it."*). AdaptiveLevin 60 → 68, the other six roots equal. **Reviewed and pushed** 2026-10-30 (`f4d8e17`): the orchestrator re-ran tests 1, 3 and 4 at the parent and the commit (its own 4,000 spans: the parent misses on 2,029, the commit on none; test 3 depth 16 → 0; two window cells in `mpmath` at 50 digits, true/$\phi_{\rm node}$ 0.249 and 0.976, 06d/$\phi_{\rm node}$ 2,308 and 432), re-applied breakages (i) (caught by tests 1, 2 and 3) and (ii) (test 4, all 122 cells), re-ran the seven roots (all OK) and the 20 draws in a throwaway worktree (160 units, 8,640 calls identical, timings aside), test 3 bit-identical in two fresh processes. **Landed by the user** (Decisions, **06e lands**); the draws' 7 near-singular cases newly flagged converged are recorded on `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`. **§4 (R19, R20) and §5 (the census) pending** on the Mac Studio; the header issues move in the records commit | `f4d8e17` (code) | [log](logs/06e-exact-end-nodes.md) |
+| 06e | [Exact end nodes, and a node term that measures the displacement](06e-exact-end-nodes.md) | `[06c-chebyshev-end-nodes-miss-the-span]` and `[06d-cc-node-term-is-pessimistic]`, found by 07's fourth stop and the depth-20 check: `chebyshev_matrices` sets x[0] := b and x[−1] := a exactly, so leaves tile; 06d's node term replaced by the signed first-order error of the exact per-node displacements $\Delta_k$ with per-node $\theta'$, plus bounded remainders, still a bound. Every computed value moves at round-off; R19/R20; 06c's census re-run, scored Z1–Z5, which becomes 07's "before" | code on the laptop; R19, R20 and the census on the Mac Studio | Opus | ✍️ 2026-10-30, on the user's decisions the same day (Decisions, **07 fourth stop**) | ✅ 2026-10-31, Z2, Z3 and Z5 failing, its header issues closed on the user's word. **Code** (§1–§3) committed on the laptop 2026-10-30 at dispatch `50277f3` (06d's code): `chebyshev_matrices` sets x[0] := b and x[−1] := a (both halves of every bisection share one float midpoint, confirmed on every path); $\phi_{\rm node} = |E| + R_g + R_2 + R_c$ from the signed displacements $\Delta_k$ (error-free transformations, base nodes in double-double) with $\theta'$ at each fine node ($\eta_\theta = 2^{-10}$ for a supplied $\theta'$, measured worst 0.997 u; $\eta_\theta = \eta_f = 1$ otherwise); `_CC_NODE_ROUNDING_COUNT` and `_cc_node_error_bound` removed. `test_levin_end_nodes` (8 methods): the parent misses its end nodes on 2,046 of 4,000 spans and fails to tile on 1,841 of 3,500 bisections; test 3's offset chase (parent depth 16, Levin residual flat at ~1e-14 over a floor falling to 2.5e-20) converges at depth 0; test 4: $\phi_{\rm node}$ bounds all 122 cells (true/$\phi$ ≤ 0.997), **P1 holds** (median 06d/$\phi$ 848 on 90 window cells); oracle and 25 driven problems honest under both. Breakages (i)–(iii) caught by tests 1–3, 4 and 4. 20 seeded LiouvilleGreen draws: all pass under both; converged 3,810 → 3,830 (none True → False); **depth-20 calls 101 → 0**; no case honest → dishonest. Three existing assertions changed: two of allowed kinds (`mode_filter` region count; which rule), and 06b's fallback-branch test 3 (b) restated as bit-identity across the bypass with its halving assertion withdrawn, after **one stop**, on the user's ruling (*"Looks like (a) to me. The halving assertion looks to me like it was just made up, so no reason to worry about it."*). AdaptiveLevin 60 → 68, the other six roots equal. **Reviewed and pushed** 2026-10-30 (`f4d8e17`): the orchestrator re-ran tests 1, 3 and 4 at the parent and the commit (its own 4,000 spans: the parent misses on 2,029, the commit on none; test 3 depth 16 → 0; two window cells in `mpmath` at 50 digits, true/$\phi_{\rm node}$ 0.249 and 0.976, 06d/$\phi_{\rm node}$ 2,308 and 432), re-applied breakages (i) (caught by tests 1, 2 and 3) and (ii) (test 4, all 122 cells), re-ran the seven roots (all OK) and the 20 draws in a throwaway worktree (160 units, 8,640 calls identical, timings aside), test 3 bit-identical in two fresh processes. **Landed by the user** (Decisions, **06e lands**); the draws' 7 near-singular cases newly flagged converged are recorded on `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`. **Part B on the Mac Studio, 2026-10-30 and 2026-10-31,** at `50277f3` (R19) and `6d81fad` (R20, the census): R19 `levin-phase-floor-06e-r19-parent-20261030T074440` and R20 `levin-phase-floor-06e-r20-endnodes-20261030T075034`, both `1b332ffa…`; outside `QuadSourceIntegral` identical; **Z1 holds** (864 rows, largest 0.0031 of the summed error). Census `levin-phase-floor-06e-census-20261030T081318`, 18,560/18,560 `done` in 1 h 47 min (06c: 2 h 30 min), unit wall ×0.711 and ×0.515: **Z0 and Z4 hold; Z2 and Z5 fail** on one call at `1e-8`, its floor 06e's node term summed over 8,600 leaves; **Z3 fails** on sample 3 of six counted (1.245×; 06c's code 1.197×). Calls at depth 20 outside the 720 rows 84 → 0 and 133 → 1. The orchestrator traced D3's near-1 ratios to the trust check returning a leaf's coarsest value (`06e/investigations/d3-leaf-values/`). Mac Studio review passed; the header issues closed on the user's word (Decisions, **06e Part B lands**) | `f4d8e17` (code); records in the records commit | [log](logs/06e-exact-end-nodes.md) |
 | 07 | [The stationary-point guard](07-stationary-point-guard.md) | G2's Q4 (i) and (ii): `[06-levin-accepts-a-region-across-a-stationary-point]`, fixed generically in the Levin integrator's generic code (`_adaptive_levin`), with the basis supplying its phases and their closed-form rates through two new interface methods; `adaptive_levin_sincos` stays a facade. Stationary points and nearly coalescing minima (Airy parameter $\lambda < \Lambda_c$) located in advance; a window of phase half-width $\Phi_w$ round each, integrated in nested Clenshaw–Curtis pieces of at most $2\pi$; the rest to Levin as now; a nodal sign-change guard as the safety net; the round-off-limited exit barred there. $\Phi_w$ and $\Lambda_c$ measured by fixed rules at a planned stop (§2), shown to the user before the tests. R15/R16; 06a's census re-run, scored V1–V5 | code on the laptop; R15, R16 and the census on the Mac Studio | Opus | ✍️ 2026-10-27, (α)–(γ) and (ii) settled by the user in writing it; amended 2026-10-28 (its §9): 06b first, §2's reference and $\omega$ settled, §6 against 06b's census; then (§9 point 6) 06c first, rehearsals R19/R20, §6 against 06c's census | ⏸ Part A stopped before §2 on 2026-10-27; §1 set aside until 06b landed, rebased onto it, and §2 run on 2026-10-28: it stopped again, no rung of $\Phi_w$ qualifying (Decisions, **07 §2 stop**); rebased onto 06c on 2026-10-29 and stopped a third time before §2 could run: window leaves, never floor-limited, carry the Levin floor that grows at the stationary point, and the depth-18 log divided by zero (Decisions, **07 third stop**); paused until 06d landed (`3d70db9`, 2026-10-29), then resumed on 06d's code to re-run §2 (§9 point 7); stopped a fourth time on 2026-10-29: §2 cannot complete, window leaves and flat-residual Levin leaves chased to depth 20, and a LiouvilleGreen call that does not finish (Decisions, **07 fourth stop**); set aside a fourth time on 2026-10-30 (`stash@{0}`, `var/levin-phase-floor-07/wip/`) until 06e lands, then rebased onto it with QUADPACK's rule for window leaves (§9 point 8) | — | — |
 | 08 | Fact-finding for layer 3 and `rtol` | G2's Q4 (iii)–(v) and Q5, measured with 07's guard in place: the depth cap, the dead `local_atol` branch, what `total_converged` means, and `rtol` | Mac Studio | Opus | ⬜ not written | ⬜ | — | — |
 
@@ -635,6 +636,13 @@ regions harder.
   with a zero of $\theta'$ at $z \approx 279.5$, the only sampled call that pinning the end nodes
   leaves at depth 20. **For 07:** the 12 rows' references are scored in 07's §6 (07 §9 point 8).
 
+  **Narrowed 2026-10-31** by 06e's census, its D5: at `1e-8`, `g-1e-8-1-2174` call 1, the
+  depth-20 check's stationary-point call, converges at depth 7 with 18 regions on depth20-tiling's
+  pinned value, $1.678\times10^3$× its declared error from 06c's census value; at `1e-7` it stays at
+  depth 20, unconverged, near 06c's value. Probably converged and dishonest; no reference
+  (`docs/levin-phase-floor/06e/census/issues.md` D5). **For 07:** a row of this class reported
+  converged at one rtol.
+
 - **[07-roundoff-exit-assumes-bisection-cannot-help]** *(opened 2026-10-28 by the orchestrator,
   from 07's Part A stop 2)* — `_adaptive_levin` accepts a region as round-off-limited
   (`phase_limited`) when its eq. (151) floor is finite and above tolerance and the residual is down
@@ -729,6 +737,18 @@ regions harder.
   floor-limited. QUADPACK's rule, round-off detected when bisection leaves the error flat a set
   number of times, is 07's answer for them, measured on its stuck cases (07 §9 point 8; Decisions,
   **07 fourth stop**: *"Let's go for (b)"*).
+
+  **Narrowed 2026-10-31** by 06e's census (Z2 and Z5 fail, its D1): outside the 720 rows one call
+  reaches depth 20, `g-1e-8-0-33995` call 5 (`G−q+r`, $k = r = 3.14\times10^5$, $q = 10^5$),
+  unconverged with 8,706 regions (8,600 Clenshaw–Curtis, 3,064 at depth 20), 105 s against 06c's
+  9.2 s. Its floor, $1.333\times10^{-33}$ against atol $6.69\times10^{-34}$, is 06e's node term
+  ($1.318\times10^{-33}$, of it $|E|$ $1.312\times10^{-33}$), with no declared-phase term. The
+  node displacement $\Delta_k$ is set by the spacing of doubles at $x \approx 20$, not the leaf's
+  width, so the floor summed over leaves stays where it is under splitting and the loop chases it.
+  06c's code stopped this call at depth 13 on a floor of $4.99\times10^{-32}$. At `1e-7` it
+  converges at depth 11. How the leaves' node terms combine is
+  `[06e-node-errors-add-in-absolute-value]`
+  (`docs/levin-phase-floor/06e/census/out/cmd/58_z2_call_detail.txt`).
 
 - **[06b-moved-calls-declare-less-than-their-error]** *(opened 2026-10-28 by prompt 06b's census,
   its C1, on the user's word)* — where 06b's premise check now bisects a region the old exit
@@ -863,48 +883,16 @@ regions harder.
   worst true/declared $8.1\times10^5$ under both, true errors unchanged; no case moves from honest to
   dishonest (06e's log, Verification, test 7; Decisions, **06e lands**). The next step is unchanged.
 
-- **[06c-chebyshev-end-nodes-miss-the-span]** *(opened 2026-10-30 by the orchestrator, from 07's
-  fourth stop and the depth-20 check)* — `chebyshev_matrices` forms
-  $x = (a+b)/2 + (b-a)/2\cdot x_{\rm base}$, whose end nodes miss $a$ or $b$ by an ulp on 1,249 of
-  4,000 random spans, against its docstring.
-  - **The mechanism.** A Levin leaf integrates a shifted interval, an error
-    $g(b)\,\delta b - g(a)\,\delta a \approx |f|\,{\rm ulp}(x)$. The step-(4) residual sees it
-    wherever a parent's ends and its halves' fail to tile; eq. (151) (about $10^{-19}$ there) does
-    not. So the leaf is never floor-limited and its flat residual is chased to `depth_max`. Where
-    the ends tile, the offset hides, and floor-limited leaves declare up to $10^3\times$ less than
-    their true error, at $10^{-17}$.
-  - **Where seen.** 07's stuck cases (`docs/levin-phase-floor/06e/investigations/07-leaves/out/tables.md`): 301 of 302
-    flat-residual leaves at $c = 10^6$, 50 to 35,000 radians from the stationary point.
-    Production (`docs/levin-phase-floor/06c/depth20-tiling/results.md`): 06c's census has 262 calls
-    at depth 20; over their last five levels 1,179 of 1,222 Levin levels with residual above 10×
-    floor do not tile, all 17 below it tile. On 30 sampled calls, pinning the end nodes brings 127
-    of 138 flagged levels within 10× of the floor; max depth 20 → 1–7 on 29, regions 10,181 → 274,
-    converged 1 → 29, wall 91.6 s → 3.5 s. Values move by under 5% of the declared error on 29.
-  - **Not established:** honesty after pinning, which shrinks the declared error 10–$4\times10^4$×.
-    One reference converged (sample 9: 0.991 before, 0.998 after); sample 1 is consistent;
-    sample 25's references scatter at 65× the pinned error.
-
-  **Impact:** most of production's depth-20 cost and its unconverged depth-20 calls; leaves that
-  under-declare where the offset hides; 07's flat Levin leaves.
-
-  **Next step:** prompt 06e (Decisions, **07 fourth stop**).
-
-- **[06d-cc-node-term-is-pessimistic]** *(opened 2026-10-30 by the orchestrator, from the floor
-  breakdown and 07's leaf study)* — 06d's node term
-  $\sum_k |w_k|\,\delta\,\sum_i(\max|\theta'|\,|f_{ik}| + |f'_{ik}|)$ is a worst case: one
-  $\delta = 5u(\max(|a|,|b|)+h)$ for every node where the measured displacement is at most about
-  $0.5\,{\rm ulp}(x)$; the region's largest $|\theta'|$ at every node; absolute values where the
-  signs are effectively random.
-  - **Where seen.** On 07's Clenshaw–Curtis leaves it exceeds the true node error 20–1000×
-    (`docs/levin-phase-floor/06e/investigations/07-leaves/out/tables.md`); in 06d's floor breakdown it is 98.8–99.7% of
-    the declared error (`docs/levin-phase-floor/06e/investigations/floor-breakdown/tables.md`). It is flat under
-    splitting.
-
-  **Impact:** honest, but a leaf it dominates is floor-limited far above its true error, and calls
-  near a stationary point declare errors that much too large: 07's windows cannot meet requests
-  their true error meets.
-
-  **Next step:** prompt 06e.
+  **Narrowed 2026-10-31** by 06e's census, Z3 (its D2): sample 3, `g-1e-7-3-34370` call 4 (`G−q−r`,
+  converged at depth 2 on 4 leaves), is 1.245× its declared error against a reference whose
+  resolutions agree to 0.0083 of it; 06c's census code was 1.197×. The orchestrator's leaf breakdown
+  (`docs/levin-phase-floor/06e/investigations/d3-leaf-values/s03.txt`): the leaf $[21.78, 25.84]$
+  with $r = 0.507$ carries the error; $V_P - Q = 2.56\times10^{-34}$ of a true
+  $4.30\times10^{-34}$, so the quarters sum is itself $1.7\times10^{-34}$ off and the error falls
+  more slowly than $\Delta_1/(1-r)$ extrapolates. A pre-asymptotic leaf the trust check passed, as
+  X1's; not the common error of `[06b-moved-calls-declare-less-than-their-error]` the census agent
+  proposed. Returning the quarters sum would halve its error
+  (`[06e-trusted-leaf-returns-its-coarsest-value]`).
 
 - **[06d-cc-nested-estimate-measures-the-coarse-rule]** *(opened 2026-10-30 by the orchestrator,
   from 07's leaf study)* — `_adaptive_levin_subregion_cc` returns CC₃₁'s value with
@@ -931,6 +919,70 @@ regions harder.
 
   **Next step:** record it against the harness in 06e's census; a deadline check inside the Levin
   loop, if wanted, is harness work, not the integrator's.
+
+  **Not met 2026-10-31** by 06e's census: no unit's `wall_s` exceeds 300 s (the largest 105 s), so
+  the harness's gap did not bite (`docs/levin-phase-floor/06e/census/log.md`). Still open for 07's
+  census, which inherits the harness.
+
+- **[06e-trusted-leaf-returns-its-coarsest-value]** *(opened 2026-10-31 by the orchestrator, from
+  06e's census, its D3, on the user's word)* — 06c's trust check computes a leaf's halves and
+  quarters and declares $\max(\epsilon_P, \Delta_1)/(1-r)$, but the leaf returns its own value
+  $V_P$, the coarsest of the three (`_check_leaf`: "Its value is unchanged"). Where the leaf has
+  converged, $V_P$'s true error is about $\Delta_1$, so the declared error equals the true error to
+  within $r$, and a value $\Delta_1$ better has already been computed and is discarded.
+  - **Where seen.** Z3 on 06e's census: $|v - {\rm ref}|/{\rm abserr}$ is 0.998477, 0.999518 and
+    0.997859 on samples 2 (and 14, the same call), 8 and 9, under 06c's code and 06e's. On each
+    the orchestrator's breakdown finds one trusted leaf with $r \le 0.0014$ carrying the call's
+    error; with each trusted leaf's value replaced by its quarters sum the ratios fall to 0.0012,
+    0.00046 and 0.0015 (`docs/levin-phase-floor/06e/investigations/d3-leaf-values/`). On sample 3,
+    which converges slowly ($r = 0.507$), 1.245 → 0.50. The depth-20 check's one honest pinned call
+    was also at 0.998 (`VERIFICATION.md` §6c.4).
+  - **Not a remedy yet.** Returning $Q$ calls for an error that belongs to $Q$: $\Delta_2\,r/(1-r)$
+    leans harder on the geometric extrapolation, which sample 3 shows can fail; keeping the present
+    declared error with $Q$'s value is the conservative choice. The quarters are also kept as the
+    leaf's grandchildren for a later bisection.
+
+  **Impact:** honest on the calls referenced but with no margin, so a small second error tips them
+  over (sample 3); and stored values up to $10^3$× less accurate than the work done allows.
+
+  **Next step:** for the user: a prompt that returns the finest computed value with a declared
+  error that covers it, measured on the Z3 samples, ordered against 07.
+
+- **[06e-cc-declared-phase-term-is-a-crude-proxy]** *(opened 2026-10-31 by the orchestrator, from
+  06e's census, its D4, on the user's word)* — on the Clenshaw–Curtis fallback the
+  declared-`theta_abserr` endpoint term (`_declared_endpoint_phase_err`) multiplies the caller's
+  $\theta$ error by a proxy for $|p|$ at each endpoint taken from the integrand's scale, since the
+  rule has no Levin antiderivative.
+  - **Where seen.** 06e's census (`docs/levin-phase-floor/06e/census/out/cmd/55_report.txt`): over
+    the floor-attributed Clenshaw–Curtis leaves (5,628 calls at `1e-7`, 7,326 at `1e-8`) it is
+    99.4 % of the summed floor, against 0.46 % for $(n+4)uS$ and 0.06 % for the node term. The sum
+    is weighted to the largest calls: per call it is the largest floor term on 2,493 and 2,785
+    calls, against 2,644 and 3,216 for $(n+4)uS$ and 491 and 1,323 for the node term.
+  - **Not measured:** how far above the true endpoint-phase error the proxy sits.
+
+  **Impact:** where it dominates, a leaf is floor-limited at the proxy, so the call declares an
+  error that size and may not reach a request its true error meets.
+
+  **Next step:** measure the proxy against the true endpoint-phase error on a sample of the
+  calls where it is the largest term, before any remedy.
+
+- **[06e-node-errors-add-in-absolute-value]** *(opened 2026-10-31 by the orchestrator, from 06e's
+  census, Z2 and its D1)* — each Clenshaw–Curtis leaf's floor carries $|E|$, its node term's signed
+  first-order error in absolute value, and the call's floor is the sum over leaves. $E$'s sign
+  varies from leaf to leaf, so the call's real node error is probably well below the sum; and since
+  $\Delta_k$ is set by ${\rm ulp}(x)$, not by the leaf's width, the sum does not fall when a leaf is
+  split.
+  - **Where seen.** Z2's one call, `g-1e-8-0-33995` call 5: the floor $1.333\times10^{-33}$ is
+    $1.318\times10^{-33}$ node term over 8,600 leaves, against atol $6.69\times10^{-34}$; the call
+    is unconverged at depth 20 (`[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`).
+  - **Not measured:** the signed sum of $E$ over that call's leaves, against the sum of $|E|$.
+
+  **Impact:** a call whose integrand cancels heavily (here the value is $2.7\times10^{-26}$, its
+  floor $5\times10^{-8}$ of it) can be held above its request by the node term's combination,
+  and refined to the cap.
+
+  **Next step:** measure the signed sum on Z2's call before any remedy; with 07's flat-floor
+  detection (QUADPACK's rule) it decides whether the chase stops honestly.
 
 - **[06-time-integrals-must-reach-late-resonances]** *(opened 2026-10-27 by the orchestrator,
   from the user's decision on 06's P1, Decisions **06 P1** and **07 scope**)* — the time integrals
@@ -1046,6 +1098,67 @@ regions harder.
 01 confirms whether it reaches A3 v2, and narrows it there.
 
 ## 4. Resolved issues
+
+- **[06c-chebyshev-end-nodes-miss-the-span]** *(opened 2026-10-30 by the orchestrator, from 07's
+  fourth stop and the depth-20 check)* — `chebyshev_matrices` forms
+  $x = (a+b)/2 + (b-a)/2\cdot x_{\rm base}$, whose end nodes miss $a$ or $b$ by an ulp on 1,249 of
+  4,000 random spans, against its docstring.
+  - **The mechanism.** A Levin leaf integrates a shifted interval, an error
+    $g(b)\,\delta b - g(a)\,\delta a \approx |f|\,{\rm ulp}(x)$. The step-(4) residual sees it
+    wherever a parent's ends and its halves' fail to tile; eq. (151) (about $10^{-19}$ there) does
+    not. So the leaf is never floor-limited and its flat residual is chased to `depth_max`. Where
+    the ends tile, the offset hides, and floor-limited leaves declare up to $10^3\times$ less than
+    their true error, at $10^{-17}$.
+  - **Where seen.** 07's stuck cases (`docs/levin-phase-floor/06e/investigations/07-leaves/out/tables.md`): 301 of 302
+    flat-residual leaves at $c = 10^6$, 50 to 35,000 radians from the stationary point.
+    Production (`docs/levin-phase-floor/06c/depth20-tiling/results.md`): 06c's census has 262 calls
+    at depth 20; over their last five levels 1,179 of 1,222 Levin levels with residual above 10×
+    floor do not tile, all 17 below it tile. On 30 sampled calls, pinning the end nodes brings 127
+    of 138 flagged levels within 10× of the floor; max depth 20 → 1–7 on 29, regions 10,181 → 274,
+    converged 1 → 29, wall 91.6 s → 3.5 s. Values move by under 5% of the declared error on 29.
+  - **Not established:** honesty after pinning, which shrinks the declared error 10–$4\times10^4$×.
+    One reference converged (sample 9: 0.991 before, 0.998 after); sample 1 is consistent;
+    sample 25's references scatter at 65× the pinned error.
+
+  **Impact:** most of production's depth-20 cost and its unconverged depth-20 calls; leaves that
+  under-declare where the offset hides; 07's flat Levin leaves.
+
+  **Next step:** prompt 06e (Decisions, **07 fourth stop**).
+
+  **Closed 2026-10-31 by prompt 06e, on the user's word** (Decisions, **06e Part B lands**):
+  `chebyshev_matrices` sets x[0] := b and x[−1] := a (`f4d8e17`); on 4,000 spans the parent
+  misses on 2,029 and the code on none. On 06c's census re-run the calls at depth 20 outside the
+  stationary-point rows fall 84 → 0 at `1e-7` and 133 → 1 at `1e-8`; the one left is a node-term
+  floor above its request (`[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`). Honesty
+  after pinning: on six counted references five are within their error, at 0.78–0.9995; the sixth is
+  a slowly converging leaf (`[06c-budget-can-stop-on-a-pre-asymptotic-residual]`), and the near-1
+  ratios are `[06e-trusted-leaf-returns-its-coarsest-value]`. `VERIFICATION.md` §6e.
+
+- **[06d-cc-node-term-is-pessimistic]** *(opened 2026-10-30 by the orchestrator, from the floor
+  breakdown and 07's leaf study)* — 06d's node term
+  $\sum_k |w_k|\,\delta\,\sum_i(\max|\theta'|\,|f_{ik}| + |f'_{ik}|)$ is a worst case: one
+  $\delta = 5u(\max(|a|,|b|)+h)$ for every node where the measured displacement is at most about
+  $0.5\,{\rm ulp}(x)$; the region's largest $|\theta'|$ at every node; absolute values where the
+  signs are effectively random.
+  - **Where seen.** On 07's Clenshaw–Curtis leaves it exceeds the true node error 20–1000×
+    (`docs/levin-phase-floor/06e/investigations/07-leaves/out/tables.md`); in 06d's floor breakdown it is 98.8–99.7% of
+    the declared error (`docs/levin-phase-floor/06e/investigations/floor-breakdown/tables.md`). It is flat under
+    splitting.
+
+  **Impact:** honest, but a leaf it dominates is floor-limited far above its true error, and calls
+  near a stationary point declare errors that much too large: 07's windows cannot meet requests
+  their true error meets.
+
+  **Next step:** prompt 06e.
+
+  **Closed 2026-10-31 by prompt 06e, on the user's word** (Decisions, **06e Part B lands**): the
+  term is the signed first-order error of the exact per-node displacements, with $\theta'$ at each
+  node, plus bounded remainders (`f4d8e17`). On test 4's window cells 06d's term over the new one
+  has median 848, and on two cells recomputed in `mpmath` the true node error is 0.249 and 0.976 of
+  it. On 06c's census re-run it is 0.06 % of the summed Clenshaw–Curtis floor
+  (`docs/levin-phase-floor/06e/census/issues.md` D4). Where it does dominate, on Z2's one call, it
+  is added in absolute value over 8,600 leaves: `[06e-node-errors-add-in-absolute-value]`.
+  `VERIFICATION.md` §6e.
 
 - **[07-per-region-acceptance-misses-a-cancelling-total]** *(opened 2026-10-28 by the orchestrator,
   from 07's §2 stop)* — `_adaptive_levin` accepts each region against its own value (`relerr <

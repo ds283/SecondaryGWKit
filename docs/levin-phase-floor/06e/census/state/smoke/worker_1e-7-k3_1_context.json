@@ -1,0 +1,36 @@
+{
+ "worker": "1e-7-k3_1",
+ "tree": "g",
+ "seconds": 0.6896444580052048,
+ "checks": [
+  [
+   "one LambdaCDM model",
+   true,
+   "1"
+  ],
+  [
+   "exit times available",
+   true,
+   ""
+  ],
+  [
+   "rebuilt redshifts equal stored z exactly",
+   true,
+   "[]"
+  ],
+  [
+   "background model available",
+   true,
+   "1"
+  ]
+ ],
+ "rtol_1e-7": [
+  3,
+  "1e-07"
+ ],
+ "rtol_1e-8": [
+  6,
+  "1e-08"
+ ],
+ "main_py_sha256": "a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4"
+}

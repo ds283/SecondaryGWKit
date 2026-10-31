@@ -1,0 +1,25 @@
+$ /bin/bash -c date\ -u\;\ cat\ references/out/short_progress.txt\;\ echo\ \"--\ driver\ log\"\;\ cat\ references/out/short_driver.log\;\ echo\ \"--\ ref-s02-P128\ so\ far\"\;\ cat\ references/out/ref-s02-P128.txt\;\ kill\ -0\ 50499\ \&\&\ echo\ \"sh\ 50499\ alive\"\;\ ps\ -o\ pid\,ppid\,command\ -p\ \$\(pgrep\ -P\ 50499\ \|\ tr\ \"\\n\"\ \"\,\"\ \|\ sed\ \"s/\,\$//\"\)\ 2\>/dev/null\ \|\ cut\ -c1-200
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-10-30T10:02:25Z
+# ----
+Fri Oct 30 10:02:25 UTC 2026
+2026-10-30T10:02:21Z s02 P128 start (bash pid 50504)
+-- driver log
+-- ref-s02-P128 so far
+host mps026298.phys.susx.ac.uk utc 2026-10-30T10:02:21+00:00
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06e-6d81fad 6d81fad43cbf1f17cff8d0f48fc7b65966e343ab status lines 0
+script sha256 8a0d291d09d74d444b47ff1f34b0f9000e4a045c4b94c36e5dec3158f2ea863b
+pickle inputs/s02.pkl sha256 0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183
+span 0x1.329fc5ed4906ap+3 0x1.d463901811304p+4 kw {'atol': 1.7738571168699037e-33, 'rtol': 1e-07, 'chebyshev_order': 24, 'notify_label': 'k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=14500, z in (5.1721e+12, 14500), regime Gqr, group G-q+r'}
+driver replay value -0x1.8274be9da55f4p-95 abserr 0x1.f35087217bd59p-115 regions 7 depth 6 converged True
+  equals captured False
+  scaled by None -> None None
+cells 19693; total |dtheta| 9.36109e+07 rad; theta extrema between cells at x = []
+sub-panels 746786 nodes 119485760
+sh 50499 alive
+  PID  PPID COMMAND
+50504 50499 /bin/bash /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/run_short.sh 02 08 10 13 14 22 23 27
+# ----
+# end 2026-10-30T10:02:26Z
+# exit 0
