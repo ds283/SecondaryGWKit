@@ -186,3 +186,126 @@ Part B must carry.
 As 06h's note §5, with prompt 06g's §7 in place of 06h's. Also stop if the noise clause or the slow
 threshold costs convergence on more than a handful of rows (V8), before scoring the rest. **Never
 touch 07's stashes or saved work.**
+
+## A.5 Addendum, 2026-11-01: the review, the rulings and the landing
+
+**Dispatched** at `4f4f9ed` on the user's word (*"Dispatch prompt 06g … and carry out the review"*),
+the seven roots taken there by the orchestrator, each on its own: 68 / 780 / 39 / 156 (1 skipped) /
+280 / 127 / 58, all OK, as §A.0. The agent asked no question and stopped nowhere; it committed
+**`3ae6f3a`**, not pushed.
+
+**The review of `3ae6f3a`**, the ten checks of §A.3, run by the orchestrator:
+1. **Scope:** 19 paths, all §A.2's; the checkout clean; the four stashes and
+   `var/levin-phase-floor-07/wip/` (9 files) unchanged by SHA-256; nothing under `var/` newer than
+   the marker.
+2. **By AST without docstrings:** outside tests only `levin_quadrature.py` and the new
+   `tools/filon_reference.py` change. In the module: changed `_ExactSum`, `_adaptive_levin`,
+   `_adaptive_levin_subregion_cc`, `_adaptive_levin_subregion_impl`, `_levin_leaf.error`,
+   `_roundoff_exit_premise_holds`, `_sum_leaves_ascending` and `used_interval`; added
+   `_LEVIN_TRUST_MAX_RATIO`, `_ExactSum.total_with`, `_solve_floor_{declared,roundoff,in_budget}` and
+   `used_interval`'s new properties; nothing removed. Each is in prompt §1. The tool imports neither
+   Ray nor a datastore (its command line can name `ray.cloudpickle` as the unpickler of a capture,
+   the caller's choice); only its tests and `calibration/scripts/breakages.py` import it.
+3. **The construction**, read against prompt §0.2: (a) $Q$ as `(LL + LR) + (RL + RR)`, the
+   declaration unchanged, the value sum moved through `_ExactSum` by `_set_value` and restored in
+   `_exempt_floor_limited`, `_remove_leaf` subtracting the value held; (b) the trust test exactly,
+   $r_{\rm trust} = 1/4$ named with the prompt's basis, both `depth_max` declarations; (c) $E$ added
+   in `_add_leaf` and removed in `_remove_leaf` only, $e'_i$ = `budget_err` from a floor formed with
+   $R_g + R_2 + R_c$ alone (equal to $\phi - |E|$ to $6\times10^{-14}$ relative on test 4's 232
+   leaves), $\sum e'_i + |\sum E|$ in the running test, the ascending confirmation and `abserr`,
+   the floor-limited test on the full floor, `node_limited` reached only after every leaf is checked
+   with none untrusted refinable; (d) both branches return the declared term, the halving test on
+   `phase_err_roundoff`, the budget clause in `_split_could_meet_budget`, an infinite half floor
+   making the premise hold, 06b's bypass skipping it whole; (e) the tool's routes, implementations,
+   constants and resolutions equal to 06i's scripts.
+4. **The roots,** each on its own: AdaptiveLevin 82 (+14), tools 63 (+5), the other five equal, all
+   OK.
+5. **The tests:** 1–7 re-run, 20 tests OK, the parent's numbers as the log's. On test 1's
+   `sinc_1e3` cell the orchestrator solved each trusted leaf's four quarters with
+   `_adaptive_levin_subregion`: 3 trusted leaves, each returning its quarters sum bit for bit and
+   recording $V_P$; the partition, depths, errors and `abserr` equal the parent's; the true error
+   $1.095\times10^{-18} \to 5.32\times10^{-19}$ at 40 digits. On test 4's GRZIntegral(1000):
+   `math.fsum` of the 232 regions' $E$ ($-5.198\times10^{-18}$; 113 positive, 119 negative) and of
+   $|E|$ ($1.297\times10^{-15}$) equal the returned keys, and $\sum e'_i + |\sum E|$ restated from
+   the regions equals `abserr` ($4.1724\times10^{-14}$; the parent's $4.3015\times10^{-14}$), both
+   unconverged on the same 238 floor-limited leaves. The Filon tool against the orchestrator's own
+   antiderivative: R0's cell 1 at $\omega = 10^6$, $W = 10^3$ and $\omega = 10^9$, $W = 10$, all four
+   readings within 0.018 of the tolerance; and an all-orders-½ stand-in of its own ($K < 0$,
+   $K_{\rm lo} = 2.9\times10^{-12}$, $u \in [0.3, 1.1]$) against
+   $A[{\rm Ci}(|K|\eta_b) - {\rm Ci}(|K|\eta_a)]$ and its sine counterpart in Si, within 0.011.
+   The two changed assertions are counts that (b) moves. The 20 draws re-run in a throwaway
+   worktree: 160 units identical to the committed output but for timings and the module's path; the
+   committed run's module hash `d89c959e…` is the committed file's.
+6. **The breakages:** (i) re-applied by hand, caught by test 1 on all seven cells and by three more
+   tests; (ii) by tests 4 and 5; (iii) by test 7's first case; (iv) and (v) from the record.
+7. **Determinism:** `adaptive_levin_sincos` on SincIntegral at rtol $10^{-10}$, order 12 (17
+   regions, 8 Clenshaw–Curtis, 16 returning $Q$: value, `abserr`, the node keys, converged and every
+   region's fields) and one FCC reading of the Ci case, each bit-identical in two fresh processes.
+8. **Slow leaves:** at the parent 670 of the draws' 60,241 checked leaves (1.1 %) sat at
+   $1/4 \le r < 1$ above their floor, under the few per cent this check reports; under 06g regions
+   rise 61,126 → 73,464 and solves 431,180 → 504,212.
+9. **The records:** README §5.1's headings, 16 deviations classified; V1, Gate V and V2–V8
+   verbatim, not yet scored; `black` clean; the commit message as `CLAUDE.md`. One slip, in
+   `docs/OPEN_ISSUES.md`'s campaign sentence (a lost comma), corrected in this addendum's commit.
+10. `4f4f9ed..HEAD` held only `3ae6f3a`.
+
+**The rulings** (the board's Decisions, **06g Part A lands**). Deviation 1, the budget clause held
+when the call already meets its request: *"Deviation 1: accept"*. Deviation 6, test 7's first cell:
+*"Deviation 6: accept"*. The issue the agent opened,
+`[06g-node-limited-stop-can-end-a-call-refinement-would-converge]`: *"run Part B as written and see
+what happens"*. **Landed:** `3ae6f3a` pushed. 06h's two Mac Studio worktrees were removed on the
+user's word, both clean (§B).
+
+### B.2 Addendum, 2026-11-01: Part B's dispatch (§B.1)
+
+**Part A** is the code commit **`3ae6f3a`**, whose parent is **`4f4f9ed`**, reviewed (§A.5) and
+pushed.
+
+**The trees, by SHA:**
+- **R23 and Gate V's reproduction** at **`4f4f9ed`**, in the parent worktree. Its code is 06h's
+  census tree's: `git diff --stat c1ec3b2 4f4f9ed -- . ':!docs' ':!prompts'` shows only
+  `CLAUDE.md` (checked on the laptop).
+- **R24, $g$ and the references** at **this addendum's commit**, in the code worktree. Its code is
+  `3ae6f3a`'s: the commit adds only records. Gate V's second clause, `git diff --stat c1ec3b2
+  3ae6f3a -- . ':!docs' ':!prompts'`, touches `AdaptiveLevin/` (the module and four test files),
+  `tools/` (the tool and its test) and `CLAUDE.md`, and nothing else (checked on the laptop).
+- **06h's census** `levin-phase-floor-06h-census-20261101T005037` is the "before", its
+  `checkpoint.jsonl` `3104c18e…` (`docs/levin-phase-floor/06h/KEPT_ON_MAC_STUDIO.md`).
+- **Z3's 30 calls** are `docs/levin-phase-floor/06c/depth20-tiling/results.json`'s `calls`; 06i's
+  13 references are `docs/levin-phase-floor/06i/out/readings/`.
+
+**What Part B must carry:**
+- **The census harness** wraps `_roundoff_exit_premise_holds` to count premise checks (06h's); the
+  function now takes `split_could_meet_budget=`, which a wrapper must pass through (the log's
+  Observation 6). Each harness change is a deviation, its diff saved.
+- **The tool's command line:** `python -m tools.filon_reference PICKLE --tolerance T --unpickler
+  ray.cloudpickle --workers 6`, with $g$ and the census harness on `PYTHONPATH` (the captures name
+  the harness's functions). Route B's default edges walk the captured integrand's closures as 06i
+  did; a capture whose closures differ raises, and its edges must be passed. The tool was not run
+  on 06i's 13 captures on the laptop (the log's deviation 12): §5's comparison with 06i's readings
+  is that check, and a disagreement is a §7 stop.
+- **V8 may fail.** The issue `[06g-node-limited-stop-can-end-a-call-refinement-would-converge]`
+  shows synthetic fallback calls far from the origin that the parent converges and 06g stops
+  node-limited; on the laptop's draws two calls lost convergence to (b), none to `node_limited`.
+  The user ruled to run Part B as written: each lost call is reported with its cause, and the §5
+  stop "the noise clause or the slow threshold costs convergence on more than a handful of rows"
+  (§5 of this note) stands.
+- **The near-singular class** moved 6 honest → dishonest and 10 the other way on the draws; if A3 v2
+  reaches it, report it as such.
+
+**§B.0 re-checked on the Mac Studio at 10:55 UTC, 2026-11-01,** read-only before the removal:
+- the main checkout is `handover-remedial` at `28ebaf0`, `git status --short` empty;
+- 06h's worktrees `SecondaryGWKit-lpf06h-2c325f5` and `-c1ec3b2` were clean, with no `var/`, and
+  were removed on the user's word with `git worktree remove`; `git worktree list` now shows the main
+  checkout alone;
+- the registry holds 40 runs, all finished, nothing `running` or stale;
+- the lock is free (`~/.raypoolkit/` empty), and `ray-processes --ray-temp-dir /tmp/ray-sgk` lists
+  none; no other project's job runs (load about 4, background services);
+- there is no `var/levin-phase-floor-06g*` and no `var/datastores/levin-phase-floor-06g*`;
+- the scratch copy's five files match 06e's certified SHA-256s
+  (`06e/review/checks/a3v2_copy_after.sha256`), with no `-wal` or `-shm`;
+- 06h's census checkpoint is `3104c18e…`;
+- 95 GiB free.
+
+**The worktrees,** made by the laptop after this commit is pushed, detached, with no venv:
+`SecondaryGWKit-lpf06g-4f4f9ed` and `SecondaryGWKit-lpf06g-<this commit's short SHA>`.

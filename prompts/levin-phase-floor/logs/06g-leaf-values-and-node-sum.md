@@ -197,6 +197,8 @@ Nothing in §1–§3 is a scored prediction.
    - *For the user.* This is the deviation to review. The prompt's sentence "A leaf whose split
      might be all the call needs is bisected" is kept: when the call needs no split for its budget,
      no split "is all the call needs".
+   - **Accepted by the user, 2026-11-01** (*"Deviation 1: accept"*), after the orchestrator's
+     review (the board's Decisions, **06g Part A lands**).
 2. **The candidates are ordered by $e'_i$**, the leaf's contribution to the call's error, not by
    `total_err`. IMPLEMENTATION CHOICE. The prompt leaves the order unstated. Ordering by `total_err`
    would choose leaves for their $|E_i|$, which bisection does not lower systematically. On every
@@ -231,6 +233,7 @@ Nothing in §1–§3 is a scored prediction.
      root's), so the budget clause holds at the root and only the halving test decides there. It
      must also be above what two levels reach (0.505). Converged-and-caught held for 0.51–0.55;
      0.53 is used. This is deterministic, and breakage (iii) is caught there.
+   - **Accepted by the user, 2026-11-01** (*"Deviation 6: accept"*).
 7. **Test 1's "at most the parent's" is asserted on seven cells, and a noise-level cell where it
    does not hold is a separate test.** IMPLEMENTATION CHOICE. The separate test,
    `test_noise_level_cell`, asserts §0.3's bound instead (the value moves by at most the trusted
@@ -404,6 +407,8 @@ Nothing in §1–§3 is a scored prediction.
   ray.cloudpickle --workers 6`, run with the census tree $g$ and its harness on `PYTHONPATH` (the
   captures name the harness's functions). Route B's default edges walk the captured integrand's
   closures as 06i did; a capture whose closures differ raises, and its edges must be passed.
-- **Deviation 1 is for the orchestrator and the user** before §4 runs.
+- **Deviation 1 is for the orchestrator and the user** before §4 runs. *(Orchestrator, 2026-11-01:
+  reviewed in ten checks, deviations 1 and 6 accepted by the user, the commit pushed; orchestrator
+  note §A.5.)*
 - The issue opened bears on V8.
 - Nothing was written under `var/`, and no run was registered.
