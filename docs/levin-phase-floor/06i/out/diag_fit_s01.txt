@@ -1,0 +1,51 @@
+{
+ "host": "mps026088.phys.susx.ac.uk",
+ "utc": "2026-11-01T02:29:28+00:00",
+ "python": "3.13.16",
+ "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+ "numpy": "2.2.4",
+ "scipy": "1.16.3",
+ "mpmath": "1.3.0",
+ "main_checkout_head": "d7cb6d36bbfbda5c7a13c1e4987bc14c52708f80",
+ "main_checkout_status_lines": 0,
+ "integrand_tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06i-6d81fad",
+ "integrand_tree_head": "6d81fad43cbf1f17cff8d0f48fc7b65966e343ab",
+ "integrand_tree_status_lines": 0,
+ "scripts_sha256": {
+  "closed_form_a.py": "6d5b45e81065c9a843a79530785193c33b6ccfa93c7f2613c7ce87f42f6ac1ec",
+  "diag_fit.py": "e62059e346d51e213a96efb9e1cb41e0eebe761a4c5059bf54f37c51d2f9ffc3",
+  "filon.py": "36e2a7f33c476a956eaa11b02a76001632e4a7f0b1cd7f43163a351529543e33",
+  "prov.py": "11fd7680ab0d371f00d43abee7f7657bd35b1d73c727979a1206ddb576d76abc",
+  "r0_closed_forms.py": "28b32fe62e4b9dd014eae72804113e696cc1d4b85dce97ebfaf36c624d173475",
+  "r0_integrand.py": "3ffd56c8e0a112b40d084b441866af7f3cbebacfc4cfc219fd86e668ec56399b",
+  "r0_jitter.py": "29e2c603c764b1e5a010cf667028ca04d171e2d0324ab8c41ee65e01ac7eb21a",
+  "route_a.py": "2b2ec6b01bd7ce84ed5e5c6a3a67b75b6437b0c5a110b19d5e18d8928bbac5e2",
+  "route_b.py": "b264c8e139f7315b45b9c4da3c8d8c573532ccdc994899966f22b6c817798ffb",
+  "samples.py": "64dd1aba5b896ad1abaa8a09aa9ee6b7e66c9250703adac1cb9ce3bb010c3fe9",
+  "score.py": "5e79a7201296e4227a59f88a971f10ea997c21064a8c3fa004f396d66618fe83"
+ },
+ "inputs_sha256": {
+  "s01.pkl": "7f162791c9b19f1cf15ef0b02ccd35910d0da83c8681aba7558642dfefbf8bb0"
+ },
+ "argv": [
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06i/scripts/diag_fit.py",
+  "1"
+ ]
+}
+
+sample 1: 750 segments; totals (20,241) 2.853501110176301533754837e-27, (24,301) 2.853501110167475364218609e-27, (24,241) 2.853501110178946216332922e-27, (20,301) 2.853501110165674877957968e-27
+  (24,301) - (20,241) = -8.826e-39
+  (24,241) - (20,241) = +2.645e-39
+  (20,301) - (20,241) = -1.063e-38
+largest per-segment |I(24,301) - I(20,241)|:
+  seg 666 x [20.291822, 20.303338] |dI| 3.046e-39 sigma 1.78e-13 dp(X_l) +1.46e-14 dp(X_r) -4.18e-14 I 3.190e-27
+  seg 663 x [20.257274, 20.268790] |dI| 1.881e-39 sigma 1.84e-13 dp(X_l) +2.26e-14 dp(X_r) -1.96e-14 I 2.109e-27
+  seg 654 x [20.153629, 20.165145] |dI| 1.676e-39 sigma 2.42e-13 dp(X_l) +5.19e-14 dp(X_r) +2.41e-14 I 9.563e-28
+  seg 619 x [19.750569, 19.762085] |dI| 1.440e-39 sigma 2.69e-13 dp(X_l) +9.40e-14 dp(X_r) -8.43e-14 I 5.648e-28
+  seg 656 x [20.176661, 20.188177] |dI| 1.428e-39 sigma 2.34e-13 dp(X_l) +6.87e-14 dp(X_r) +2.03e-14 I 3.739e-28
+  seg 728 x [21.005814, 21.017330] |dI| 1.342e-39 sigma 9.06e-14 dp(X_l) +1.61e-14 dp(X_r) +2.92e-14 I 1.316e-27
+  seg 605 x [19.589345, 19.600861] |dI| 1.305e-39 sigma 3.84e-13 dp(X_l) -7.69e-14 dp(X_r) -1.72e-13 I -1.234e-27
+  seg 646 x [20.061501, 20.073017] |dI| 1.298e-39 sigma 1.41e-13 dp(X_l) +4.40e-14 dp(X_r) -3.09e-14 I -1.186e-27
+  seg 613 x [19.681473, 19.692989] |dI| 1.254e-39 sigma 3.07e-13 dp(X_l) +1.71e-13 dp(X_r) -1.15e-13 I 9.741e-28
+  seg 684 x [20.499110, 20.510626] |dI| 1.237e-39 sigma 1.25e-13 dp(X_l) -1.10e-14 dp(X_r) +1.89e-14 I -7.012e-28
+binned in x (integer bins), sum of I(24,301) - I(20,241): 13: -9.82e-41, 14: +5.32e-42, 15: +4.77e-41, 16: -8.61e-41, 17: -6.47e-40, 18: +8.74e-40, 19: -4.15e-39, 20: -1.68e-40, 21: -4.60e-39

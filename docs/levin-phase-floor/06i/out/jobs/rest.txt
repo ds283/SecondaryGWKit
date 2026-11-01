@@ -1,0 +1,38 @@
+route_b.py 1 --impl fcc --res 1 --bound
+route_b.py 1 --impl fcc --res 2
+route_b.py 2 --impl fcc --res 1 --bound
+route_b.py 2 --impl fcc --res 2
+route_b.py 3 --impl fcc --res 1 --bound
+route_b.py 3 --impl fcc --res 2
+route_b.py 13 --impl fcc --res 1 --bound
+route_b.py 13 --impl fcc --res 2
+route_b.py 14 --impl fcc --res 1 --bound
+route_b.py 14 --impl fcc --res 2
+route_b.py 15 --impl fcc --res 1 --bound
+route_b.py 15 --impl fcc --res 2
+route_a.py 25 --impl qawo --res 1
+route_a.py 25 --impl qawo --res 2
+route_a.py 9 --impl qawo --res 1
+route_a.py 9 --impl qawo --res 2
+route_a.py 22 --impl qawo --res 1
+route_a.py 22 --impl qawo --res 2
+route_a.py 23 --impl qawo --res 1
+route_a.py 23 --impl qawo --res 2
+route_a.py 27 --impl qawo --res 1
+route_a.py 27 --impl qawo --res 2
+route_a.py 8 --impl qawo --res 1
+route_a.py 8 --impl qawo --res 2
+route_a.py 10 --impl qawo --res 1
+route_a.py 10 --impl qawo --res 2
+route_b.py 1 --impl qawo --res 1
+route_b.py 1 --impl qawo --res 2
+route_b.py 13 --impl qawo --res 1
+route_b.py 13 --impl qawo --res 2
+route_b.py 2 --impl qawo --res 1
+route_b.py 2 --impl qawo --res 2
+route_b.py 14 --impl qawo --res 1
+route_b.py 14 --impl qawo --res 2
+route_b.py 3 --impl qawo --res 1
+route_b.py 3 --impl qawo --res 2
+route_b.py 15 --impl qawo --res 1
+route_b.py 15 --impl qawo --res 2

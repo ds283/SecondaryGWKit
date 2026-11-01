@@ -1,0 +1,140 @@
+{
+ "header": {
+  "host": "mps026088.phys.susx.ac.uk",
+  "utc": "2026-11-01T01:55:20+00:00",
+  "python": "3.13.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "numpy": "2.2.4",
+  "scipy": "1.16.3",
+  "mpmath": "1.3.0",
+  "main_checkout_head": "d7cb6d36bbfbda5c7a13c1e4987bc14c52708f80",
+  "main_checkout_status_lines": 0,
+  "integrand_tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06i-6d81fad",
+  "integrand_tree_head": "6d81fad43cbf1f17cff8d0f48fc7b65966e343ab",
+  "integrand_tree_status_lines": 0,
+  "scripts_sha256": {
+   "closed_form_a.py": "6d5b45e81065c9a843a79530785193c33b6ccfa93c7f2613c7ce87f42f6ac1ec",
+   "filon.py": "36e2a7f33c476a956eaa11b02a76001632e4a7f0b1cd7f43163a351529543e33",
+   "prov.py": "11fd7680ab0d371f00d43abee7f7657bd35b1d73c727979a1206ddb576d76abc",
+   "r0_closed_forms.py": "28b32fe62e4b9dd014eae72804113e696cc1d4b85dce97ebfaf36c624d173475",
+   "r0_integrand.py": "3ffd56c8e0a112b40d084b441866af7f3cbebacfc4cfc219fd86e668ec56399b",
+   "r0_jitter.py": "29e2c603c764b1e5a010cf667028ca04d171e2d0324ab8c41ee65e01ac7eb21a",
+   "route_a.py": "2b2ec6b01bd7ce84ed5e5c6a3a67b75b6437b0c5a110b19d5e18d8928bbac5e2",
+   "route_b.py": "b264c8e139f7315b45b9c4da3c8d8c573532ccdc994899966f22b6c817798ffb",
+   "samples.py": "64dd1aba5b896ad1abaa8a09aa9ee6b7e66c9250703adac1cb9ce3bb010c3fe9"
+  },
+  "inputs_sha256": {
+   "s08.pkl": "861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80",
+   "s10.pkl": "08f40073cbfe11d70d1f4fec19ee6ebc1876c95145375eb0823533bfe0bbd5af",
+   "s22.pkl": "ad6a6a065ead3616ef8dc96d162a7fa7f4ee902ca59d5f41580d72608b03e9b1",
+   "s23.pkl": "1ffb073daec0dbdb8c4961bf3508218f5c25d5ce1bbaa75f41954acee134d5ba",
+   "s25.pkl": "696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42"
+  },
+  "argv": [
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06i/scripts/closed_form_a.py"
+  ]
+ },
+ "closed_form": "I = s_f A [Ci(|K| e^{u_b}) - Ci(|K| e^{u_a})], A = (2/pi)^(3/2)/sqrt(m1 m2 m3)",
+ "samples": [
+  {
+   "sample": 8,
+   "b": 0.0,
+   "slot": "cos",
+   "s_f": -1,
+   "amplitude_A": "0.0000000088643971205931803296819119493",
+   "captured_amplitude_over_A_max_dev": 2.220446049250313e-16,
+   "f_sin_max": 0.0,
+   "residual_max_at_9_points": 0.0,
+   "K": "7944154827683031/17179869184",
+   "C": "0.0",
+   "eta_a": "0.0000086602540378443891993972135231",
+   "eta_b": "319.261228644535702418246783884",
+   "value_30": "-0.000000001256350700166389603550911290840617",
+   "value_hex": "-0x1.5957d22e32e47p-30",
+   "spot_checks": [
+    {
+     "sub_span": [
+      "8.6602540378443891994e-6",
+      "0.0013674492501941399921"
+     ],
+     "quad": "-0.00000000124571367956617508824053532529",
+     "ci": "-0.00000000124571367956617508824053532529",
+     "rel_diff": 0.0
+    },
+    {
+     "sub_span": [
+      "0.052582158043351559347",
+      "0.05394094703950785495"
+     ],
+     "quad": "-9.01045427742777596941353280242e-15",
+     "ci": "-9.01045427742777596941353280242e-15",
+     "rel_diff": 1.2705082476214558e-47
+    }
+   ]
+  },
+  {
+   "sample": 10,
+   "b": 0.0,
+   "slot": "cos",
+   "s_f": -1,
+   "amplitude_A": "2.99960959164415957490136931431e-13",
+   "captured_amplitude_over_A_max_dev": 4.440892098500626e-16,
+   "f_sin_max": 0.0,
+   "residual_max_at_9_points": 0.0,
+   "K": "801824915507205/8388608",
+   "C": "0.0",
+   "eta_a": "0.00000000906026676134647993772292300131",
+   "eta_b": "1.52436934975808831600015014979",
+   "value_30": "7.5481370467662726271237632393971296e-14",
+   "value_hex": "0x1.53f0185fa412fp-44"
+  },
+  {
+   "sample": 22,
+   "b": 0.0,
+   "slot": "cos",
+   "s_f": -1,
+   "amplitude_A": "9.41448009311085339892887405221e-13",
+   "captured_amplitude_over_A_max_dev": 2.220446049250313e-16,
+   "f_sin_max": 0.0,
+   "residual_max_at_9_points": 0.0,
+   "K": "502084670438287557/1073741824",
+   "C": "0.0",
+   "eta_a": "0.0000000892491729755000576798654811195",
+   "eta_b": "0.0730960301277717984947152645445",
+   "value_30": "-1.7206565687453230904726532591542552e-14",
+   "value_hex": "-0x1.35f747459d454p-46"
+  },
+  {
+   "sample": 23,
+   "b": 0.0,
+   "slot": "cos",
+   "s_f": -1,
+   "amplitude_A": "1.69316362491309156374809945501e-13",
+   "captured_amplitude_over_A_max_dev": 2.220446049250313e-16,
+   "f_sin_max": 0.0,
+   "residual_max_at_9_points": 0.0,
+   "K": "-389316652155749/8388608",
+   "C": "0.0",
+   "eta_a": "0.00000000288675134594813207824950950413",
+   "eta_b": "1.15704599067789050540255869434",
+   "value_30": "-2.4337083084024859358156955708043365e-13",
+   "value_hex": "-0x1.1202ddb9df5d0p-42"
+  },
+  {
+   "sample": 25,
+   "b": 0.0,
+   "slot": "cos",
+   "s_f": -1,
+   "amplitude_A": "5.23472357422809383281692609781e-12",
+   "captured_amplitude_over_A_max_dev": 4.440892098500626e-16,
+   "f_sin_max": 0.0,
+   "residual_max_at_9_points": 0.0,
+   "K": "-5945889239237309449/17179869184",
+   "C": "0.0",
+   "eta_a": "0.00000275930065400024635790926910475",
+   "eta_b": "0.00607656543123177773884459378989",
+   "value_30": "-3.377752058242510251841095279395014e-16",
+   "value_hex": "-0x1.856da4f8becd9p-52"
+  }
+ ]
+}

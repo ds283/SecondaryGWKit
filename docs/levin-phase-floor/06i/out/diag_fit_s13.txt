@@ -1,0 +1,51 @@
+{
+ "host": "mps026088.phys.susx.ac.uk",
+ "utc": "2026-11-01T02:30:15+00:00",
+ "python": "3.13.16",
+ "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+ "numpy": "2.2.4",
+ "scipy": "1.16.3",
+ "mpmath": "1.3.0",
+ "main_checkout_head": "d7cb6d36bbfbda5c7a13c1e4987bc14c52708f80",
+ "main_checkout_status_lines": 0,
+ "integrand_tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06i-6d81fad",
+ "integrand_tree_head": "6d81fad43cbf1f17cff8d0f48fc7b65966e343ab",
+ "integrand_tree_status_lines": 0,
+ "scripts_sha256": {
+  "closed_form_a.py": "6d5b45e81065c9a843a79530785193c33b6ccfa93c7f2613c7ce87f42f6ac1ec",
+  "diag_fit.py": "e62059e346d51e213a96efb9e1cb41e0eebe761a4c5059bf54f37c51d2f9ffc3",
+  "filon.py": "36e2a7f33c476a956eaa11b02a76001632e4a7f0b1cd7f43163a351529543e33",
+  "prov.py": "11fd7680ab0d371f00d43abee7f7657bd35b1d73c727979a1206ddb576d76abc",
+  "r0_closed_forms.py": "28b32fe62e4b9dd014eae72804113e696cc1d4b85dce97ebfaf36c624d173475",
+  "r0_integrand.py": "3ffd56c8e0a112b40d084b441866af7f3cbebacfc4cfc219fd86e668ec56399b",
+  "r0_jitter.py": "29e2c603c764b1e5a010cf667028ca04d171e2d0324ab8c41ee65e01ac7eb21a",
+  "route_a.py": "2b2ec6b01bd7ce84ed5e5c6a3a67b75b6437b0c5a110b19d5e18d8928bbac5e2",
+  "route_b.py": "b264c8e139f7315b45b9c4da3c8d8c573532ccdc994899966f22b6c817798ffb",
+  "samples.py": "64dd1aba5b896ad1abaa8a09aa9ee6b7e66c9250703adac1cb9ce3bb010c3fe9",
+  "score.py": "5e79a7201296e4227a59f88a971f10ea997c21064a8c3fa004f396d66618fe83"
+ },
+ "inputs_sha256": {
+  "s13.pkl": "54bd746d5ac6a1fd51f31822e374a2fe60a1143fc04579a7f80cbbc4ddf96b56"
+ },
+ "argv": [
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06i/scripts/diag_fit.py",
+  "13"
+ ]
+}
+
+sample 13: 750 segments; totals (20,241) 9.784550155838460378819298e-29, (24,301) 9.784550155893761785533344e-29, (24,241) 9.784550155832588704188375e-29, (20,301) 9.784550155853458548223661e-29
+  (24,301) - (20,241) = +5.530e-40
+  (24,241) - (20,241) = -5.872e-41
+  (20,301) - (20,241) = +1.500e-40
+largest per-segment |I(24,301) - I(20,241)|:
+  seg 744 x [21.190070, 21.201586] |dI| 1.686e-40 sigma 1.99e-13 dp(X_l) +3.14e-14 dp(X_r) +1.22e-14 I -5.259e-29
+  seg 733 x [21.063394, 21.074910] |dI| 1.582e-40 sigma 2.41e-13 dp(X_l) +8.55e-14 dp(X_r) +4.46e-15 I 8.069e-29
+  seg 734 x [21.074910, 21.086426] |dI| 1.211e-40 sigma 2.46e-13 dp(X_l) +4.49e-15 dp(X_r) -1.09e-14 I -8.326e-30
+  seg 658 x [20.199693, 20.211209] |dI| 1.205e-40 sigma 6.80e-13 dp(X_l) -1.90e-13 dp(X_r) -1.39e-13 I 1.150e-29
+  seg 723 x [20.948234, 20.959750] |dI| 1.106e-40 sigma 3.22e-13 dp(X_l) -1.43e-14 dp(X_r) -4.11e-14 I -2.135e-28
+  seg 741 x [21.155522, 21.167038] |dI| 1.035e-40 sigma 1.98e-13 dp(X_l) -2.30e-14 dp(X_r) +6.29e-14 I -6.825e-29
+  seg 735 x [21.086426, 21.097942] |dI| 1.033e-40 sigma 2.28e-13 dp(X_l) -1.09e-14 dp(X_r) +4.00e-14 I 1.131e-29
+  seg 722 x [20.936718, 20.948234] |dI| 1.008e-40 sigma 3.19e-13 dp(X_l) -6.32e-14 dp(X_r) -1.43e-14 I 1.188e-28
+  seg 730 x [21.028846, 21.040362] |dI| 9.285e-41 sigma 2.60e-13 dp(X_l) +1.02e-13 dp(X_r) +8.19e-14 I 1.176e-28
+  seg 713 x [20.833074, 20.844590] |dI| 9.209e-41 sigma 3.76e-13 dp(X_l) -6.73e-14 dp(X_r) -6.65e-14 I 2.423e-28
+binned in x (integer bins), sum of I(24,301) - I(20,241): 13: +5.88e-42, 14: +1.15e-42, 15: -1.51e-42, 16: -1.08e-41, 17: +1.24e-41, 18: +1.10e-41, 19: -8.45e-41, 20: +2.77e-40, 21: +3.42e-40

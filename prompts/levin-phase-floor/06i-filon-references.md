@@ -209,3 +209,28 @@ Copied into the log unchanged before any sample is run. Each is scored **holds**
 - **Route B's $t(x)$ cannot be bounded** below $1/100$ of a sample's minimum abserr. Report the
   bound, and run Route B no further on that sample.
 - **A code change** looks necessary. Report it; do not make it.
+
+## 9. Amendments
+
+**1 — R0's integrand rule (2026-11-01, after the stop at Gate R0).** As written, the rule compared
+the captured integrand with Route A's to "the phase declaration times $|f|$" at 06e's census tree.
+That declaration is the one 06h found incomplete: it omits the rounding of $\hat K\hat x$, of $K$
+and of the abscissa, which Route A excludes by design. The cosmological groups declare no phase
+error at all. So the rule could not hold, and the fault was the prompt's. The user ruled
+(*"Yes, (A), and your two additions"*):
+- R0 is recorded as failing as written, the integrand cell badly posed. The closed forms are met;
+  Route A's integrand agrees once the three roundings are removed; Route B's agrees up to the
+  phase jitter.
+- **Route B integrates the least-squares smooth phase**, the only well-defined target: every method
+  integrates the jitter at different nodes.
+- **Added:** each Route B call reports the jitter's estimated contribution, so an R3 violation can be
+  attributed; and the all-order-½ samples (8, 10, 22, 23, 25) are compared with a closed form in
+  Ci and Si.
+- The jitter finding narrows `[05a-t-phase-abscissa-rounding-remains]`; no new issue.
+
+**2 — sample 8 (2026-11-01).** §8's implementation check exceeded 1 on sample 8 (5.1×, $3.5\times10^{-25}$,
+$1.3\times10^{-8}$ of the minimum abserr, the closed form between the two). The user: *"I accept
+sample 8."*
+
+**3 — §4 (2026-11-01).** The 17 never-referenced Z3 samples are not run here. The user: *"I think
+we should leave the 17 Z3 samples that could not be computed for 06g."*

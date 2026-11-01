@@ -1,0 +1,64 @@
+{
+ "header": {
+  "host": "mps026088.phys.susx.ac.uk",
+  "utc": "2026-11-01T01:56:31+00:00",
+  "python": "3.13.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "numpy": "2.2.4",
+  "scipy": "1.16.3",
+  "mpmath": "1.3.0",
+  "main_checkout_head": "d7cb6d36bbfbda5c7a13c1e4987bc14c52708f80",
+  "main_checkout_status_lines": 0,
+  "integrand_tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06i-6d81fad",
+  "integrand_tree_head": "6d81fad43cbf1f17cff8d0f48fc7b65966e343ab",
+  "integrand_tree_status_lines": 0,
+  "scripts_sha256": {
+   "closed_form_a.py": "6d5b45e81065c9a843a79530785193c33b6ccfa93c7f2613c7ce87f42f6ac1ec",
+   "filon.py": "36e2a7f33c476a956eaa11b02a76001632e4a7f0b1cd7f43163a351529543e33",
+   "prov.py": "11fd7680ab0d371f00d43abee7f7657bd35b1d73c727979a1206ddb576d76abc",
+   "r0_closed_forms.py": "28b32fe62e4b9dd014eae72804113e696cc1d4b85dce97ebfaf36c624d173475",
+   "r0_integrand.py": "3ffd56c8e0a112b40d084b441866af7f3cbebacfc4cfc219fd86e668ec56399b",
+   "r0_jitter.py": "29e2c603c764b1e5a010cf667028ca04d171e2d0324ab8c41ee65e01ac7eb21a",
+   "route_a.py": "2b2ec6b01bd7ce84ed5e5c6a3a67b75b6437b0c5a110b19d5e18d8928bbac5e2",
+   "route_b.py": "b264c8e139f7315b45b9c4da3c8d8c573532ccdc994899966f22b6c817798ffb",
+   "samples.py": "64dd1aba5b896ad1abaa8a09aa9ee6b7e66c9250703adac1cb9ce3bb010c3fe9"
+  },
+  "inputs_sha256": {
+   "s25.pkl": "696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42",
+   "z3_scores.json": "e37a2af0615bf662df0c3c000a7d0ab914e050fec27ea0675fa8f59a2e898b97"
+  },
+  "argv": [
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06i/scripts/route_a.py",
+   "25",
+   "--impl",
+   "fcc",
+   "--res",
+   "1"
+  ]
+ },
+ "sample": 25,
+ "route": "A",
+ "impl": "fcc",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "N": 32
+ },
+ "workers": 6,
+ "limit_panels": 0,
+ "n_panels": 31,
+ "u_breaks": [],
+ "K_exact": "-5945889239237309449/17179869184",
+ "K_hat": -346096304.66656,
+ "K_lo": -5.238689482212067e-10,
+ "K_lo_fsum": -5.238689482212067e-10,
+ "C_exact": "0.0",
+ "value_hex": "-0x1.856da4f8bed6cp-52",
+ "value_30": "-3.37775205824258296029765706106e-16",
+ "imag_30": "5.46890437998366150163970524784e-15",
+ "wall_s": 1.7369918823242188,
+ "setup_s": 0.5142498016357422,
+ "stats": {},
+ "z3_unit": "g-1e-8-0-33962",
+ "z3_index": 12
+}

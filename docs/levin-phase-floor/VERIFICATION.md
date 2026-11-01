@@ -2661,3 +2661,69 @@ The review adds two observations:
 - **Narrowed:** `[06e-node-errors-add-in-absolute-value]` (M1) and
   `[06e-cc-declared-phase-term-is-a-crude-proxy]` (M2).
 - **Closed:** nothing. Whether either term's remedy joins 06g is the user's to decide.
+
+## 6i. Filon references for Z3's calls
+
+*Prompt 06i, a measurement. It ran on the laptop on 2026-11-01, Ray-free, with no store and no code
+changed. The records are under [`06i/`](06i/); Z3's 13 captured inputs stay in the laptop's
+`var/levin-phase-floor-06i/inputs/` and on the Mac Studio, their SHA-256 in
+[`06i/inputs_SHA256SUMS.txt`](06i/inputs_SHA256SUMS.txt).*
+
+### 6i.1 The method
+
+Each reference integrates the call's amplitude against an exactly integrated oscillation, so its
+rounding is of the size of the answer, not of $\int|{\rm integrand}|$, and its cost does not grow
+with the number of oscillations.
+- **Route A, the analytic Bessel blocks** (samples 8, 9, 10, 22, 23, 25, 27): in $\eta$, where the
+  phase is $K\eta + C + R(\eta)$ with $K$ taken exactly from the group's coefficients.
+- **Route B, the cosmological groups** (samples 1, 2, 3, 13, 14, 15): the phase itself as the
+  variable, through a continuous least-squares smooth phase fitted segment by segment between the
+  integrand's knots. Its 1σ fit-noise bound is below $1/100$ of the minimum abserr on every sample.
+- **Two implementations:** QUADPACK's QAWO, with every internal product made exact, and a
+  Filon–Clenshaw–Curtis rule with moments in `mpmath`; each at two resolutions.
+
+The integrand was loaded at 06e's census tree `6d81fad`. The captured `BesselPhaseGroup` objects
+predate 06h, and Route A does not use their `sin_cos`.
+
+### 6i.2 The results
+
+| | Verdict | |
+|---|---|---|
+| R0, the method check | fails as written: the integrand rule was badly posed (prompt §9) | closed forms met by both implementations, worst 0.087 of tolerance; Route A's integrand within 0.061 of `theta_abserr` once the three roundings 06h names are removed; Route B's within its jitter |
+| R1, Filon reproduces Gauss–Legendre where it resolved | **holds**, both routes | samples 8, 9 (A) and 2, 3, 14, 15 (B); worst 0.22 of the allowance |
+| R2, Filon resolves where Gauss–Legendre did not | **holds**, both routes | samples 10, 22, 23, 25, 27 (A) and 1, 13 (B); scatter at most $4.5\times10^{-3}$ of the minimum abserr |
+| R3, Z3 re-scored on 13 counted references | **fails** on sample 3 alone | $|v_{06e} - {\rm ref}|/{\rm abserr}_{06e} = 1.2410$ (06c's code 1.1932) |
+| R4, cost | **holds** | slowest reading 203 s; Gauss–Legendre took 40 s to 4 h per resolution |
+
+- **Sample 3** is Levin's own error, its slowly converging leaf ($r = 0.507$, 06e's D3). The jitter's
+  contribution is $2.6$–$4.9\times10^{-39}$, against an excess of $8.5\times10^{-35}$.
+- **The calls Gauss–Legendre could not settle are honest:** samples 1, 13 and 25 at 0.33, 0.084 and
+  0.029 under 06e, where Gauss–Legendre had read 0.63, 10.4 and 9.2 within its own scatter.
+- **Six calls sit just under 1** under 06e: samples 2/14 (0.9985), 8 (0.99998), 9 (0.9995), 10
+  (0.9925), 23 (0.9822) and 27 (0.9762). On 2, 8 and 9 the cause is the trusted leaf's coarsest
+  value (06e's D3); on 10, 23 and 27 it is not yet checked. 06g's census re-scores all 13.
+- **The closed form.** Samples 8, 10, 22, 23 and 25 have all orders ½, so their phase is exactly
+  $K\eta$ and the integral is $s_f A[{\rm Ci}(|K|\eta_b) - {\rm Ci}(|K|\eta_a)]$. Every reading is within
+  1.07 of its own scatter of it, and at most $6.8\times10^{-4}$ of the minimum abserr.
+- **Sample 8's two implementations** differ by $3.5\times10^{-25}$, 5.1× the larger one's own scatter
+  but $1.3\times10^{-8}$ of the minimum abserr, with the closed form between them. The user accepted
+  the reference.
+- **The phase jitter** in the cosmological groups is in $G$'s phase as well as $T$'s, and it is why
+  Gauss–Legendre dropped samples 1 and 13. It narrows `[05a-t-phase-abscissa-rounding-remains]`.
+
+### 6i.3 The review
+
+The orchestrator's checks, on the laptop:
+- **Scope:** no commit and no code change; the inputs, 07's stashes and `wip/` unchanged by
+  SHA-256; the integrand worktree clean; the predictions copied at 01:12:45Z, before anything ran.
+- **R0** re-checked on two cells, $\omega = 10^6$ and $10^9$ at $10^5$ wavelengths, against the
+  orchestrator's own antiderivative: every implementation's error as the agent recorded it, at
+  most 0.072 of tolerance.
+- **Sample 8's closed form** re-derived from the captured inputs (constant amplitude, $R \equiv 0$,
+  $C = 0$, $K$ exact): all four readings within $3\times10^{-25}$ of it; 06e's ratio 0.99998.
+- **Determinism:** sample 9's FCC reading re-run in a fresh process, value bit-identical.
+- **R1–R4** re-scored by the orchestrator's own reader from the 52 readings and 06e's
+  `z3_scores.json`: the same verdicts and numbers.
+
+**Issues.** Narrowed: `[05a-t-phase-abscissa-rounding-remains]`. Opened and closed: none.
+

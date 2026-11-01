@@ -87,3 +87,36 @@ records commit:
 At any of prompt §8's conditions, or when a check above fails: report the specific check and what
 the log says about it. Do not repair. **Never touch 07's stashes or saved work, or anything on the
 Mac Studio.**
+
+## 6. Addendum, 2026-11-01: the stop, the run, the review and the records
+
+**The stop.** The agent stopped at Gate R0, before any sample. The closed forms were met, but the
+integrand rule could not hold: it compared against the census tree's declaration, which 06h found
+incomplete, and the cosmological groups declare none. Relayed verbatim, with the orchestrator's
+view that the prompt was at fault; the user: *"Yes, (A), and your two additions"* (prompt §9
+point 1).
+
+**The run.** All 52 readings ran on the laptop, at most 6 processes, none over 4 minutes. At the
+user's request the agent moved its remaining readings into one background job, to stop interim
+wake-ups. R1, R2 and R4 hold; R3 fails on sample 3 alone, 1.241. The agent asked about sample 8's
+implementation check; the user: *"I accept sample 8."*
+
+**The review** (§3), run by the orchestrator, passed:
+1. **Scope:** no commit, no code change, the inputs, stashes and `wip/` unchanged, the worktree
+   clean.
+2. **R0:** two cells at $\omega = 10^6$ and $10^9$ against the orchestrator's own antiderivative,
+   every implementation's error as recorded.
+3. **One reference re-made:** sample 8 by the orchestrator's own closed form from the captured
+   inputs, all four readings within $3\times10^{-25}$. For Route B, sample 2's Filon reference
+   agrees with 06e's independent Gauss–Legendre one to $10^{-4}$ of the allowance.
+4. **Determinism:** sample 9's FCC reading bit-identical in a fresh process.
+5. **R1–R4** re-scored by the orchestrator's reader, the same verdicts.
+6. **Route B's $t(x)$:** read against prompt §0.3; its fit-noise bound is below $1/100$ of the
+   minimum abserr on every sample.
+7. **The records:** README §5.1's headings, 15 deviations classified, the predictions before the
+   numbers, provenance headers.
+
+**The records commit**, on the user's word (*"Yes, please make 06i's records commit"*), carries
+`docs/levin-phase-floor/06i/`, the log, `VERIFICATION.md` §6i, the prompt's §9, the board and
+`docs/OPEN_ISSUES.md`. The scripts are `black`-clean, so `CLAUDE.md`'s formatting paragraph does not
+list them. The 17 never-referenced Z3 samples go to 06g.

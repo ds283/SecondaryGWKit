@@ -1,0 +1,14 @@
+route_a.py 8 --impl fcc --res 1
+route_a.py 8 --impl fcc --res 2
+route_a.py 9 --impl fcc --res 1
+route_a.py 9 --impl fcc --res 2
+route_a.py 10 --impl fcc --res 1
+route_a.py 10 --impl fcc --res 2
+route_a.py 22 --impl fcc --res 1
+route_a.py 22 --impl fcc --res 2
+route_a.py 23 --impl fcc --res 1
+route_a.py 23 --impl fcc --res 2
+route_a.py 25 --impl fcc --res 1
+route_a.py 25 --impl fcc --res 2
+route_a.py 27 --impl fcc --res 1
+route_a.py 27 --impl fcc --res 2
