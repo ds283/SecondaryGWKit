@@ -682,8 +682,18 @@ class TestLevinGlobalBudget(unittest.TestCase):
         new = _run(TEST12B_SPAN, f, theta, **kwargs)
         self.assertTrue(new["converged"])
         self._assert_honest(new, ref, ref_err, "test 12b")
-        self.assertTrue(all(r.trusted for r in new["regions"]))
-        self.assertTrue(all(r.convergence_ratio < 1.0 for r in new["regions"]))
+        # Since prompts/levin-phase-floor 06g's trust test (r < 1/4, or r < 1 within the floor) the
+        # leaf [1.38671875, 1.7734375] (r = 0.9107) is untrusted and refined, and one of the
+        # fallback leaves it is refined into, [1.652587890625, 1.6767578125] (r = 2, its delta1
+        # 6.5e-19 rounding noise), is found floor-limited, so exempt: a count of exit firings that
+        # 06g's (b) moves, 0 at 06g's parent (4f4f9ed, 9 regions, all trusted) and 1 under 06g (17
+        # regions, 16 trusted). Every other region is trusted, with r < 1 (06g's log, section 2
+        # test 10).
+        self.assertEqual(sum(1 for r in new["regions"] if r.phase_limited), 1)
+        self.assertTrue(all(r.trusted or r.phase_limited for r in new["regions"]))
+        self.assertTrue(
+            all(r.convergence_ratio < 1.0 for r in new["regions"] if r.trusted)
+        )
 
     def test_trust_check_stationary_point_line(self):
         """

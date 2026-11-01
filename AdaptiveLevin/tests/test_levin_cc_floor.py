@@ -482,6 +482,13 @@ PARENT_HAS_FALLBACK_LEAF = frozenset(
         "GRZIntegral(1000)",
         "stationary_phase",
         "mode_filter_tight",
+        # since prompts/levin-phase-floor 06g's trust test (r < 1/4, or r < 1 within the floor):
+        # the leaf [1.38671875, 1.7734375] (r = 0.9107, delta1 above its floor) is untrusted and
+        # refined into fallback leaves -- at 06g's parent (4f4f9ed) 9 Levin regions and 0 fallback,
+        # under 06g 17 regions, 8 of them fallback (06g's log, section 2 test 10). A count of
+        # regions that 06g's (b) moves; they are asserted honest with the rest of this set.
+        "SincIntegral",
+        "vectorized_sinc",
     }
 )
 

@@ -769,5 +769,179 @@ class TestRoundoffExitPremise(unittest.TestCase):
                 self.assertGreaterEqual(new["evaluations"], parent["evaluations"], name)
 
 
+# ---------------------------------------------------------------------------------------------
+# Test 7 of prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md: the premise as 06g states it.
+# The exit fires on a chosen leaf only if (1) its halves' floors less their declared endpoint terms
+# sum to at least half its own less its own, and (2) the call's error, with the leaf replaced by its
+# halves' floors, would still be above the request. The parent is the dispatch commit's module
+# (test_levin_leaf_values.load_parent()); the numbers quoted are
+# docs/levin-phase-floor/06g/calibration/out/cells.txt's.
+#
+# 7a: theta = 1e4 e^x on [0, 2], f = (1, 0), theta' supplied -- the shape of test 1 above, on a
+# span where the halves' eq. (151) floors sum to 0.408 of the root's -- with a caller theta_abserr
+# c e^{-5x}, which declares a phase error at the left end that bisection leaves where it is (the
+# halves' declared terms sum to 1.005 of the root's); c is sized so the declared term is a quarter
+# of the root's floor. The halves' whole floors then sum to 0.557 of the root's, so the parent's
+# premise holds. The request is 0.53 of the root's floor: below the halves' whole floors, so the
+# budget clause holds at the root and only the halving test decides there, and above what two
+# levels of bisection reach.
+TEST7A_A = 1.0e4
+TEST7A_SPAN = (0.0, 2.0)
+TEST7A_DECAY = 5.0
+TEST7A_DECLARED_FRACTION = 0.25
+TEST7A_REQUEST_FRACTION = 0.53
+# 7b: theta = 1e4 e^x on [0, 1], f = (1, 0), no theta_abserr: the halves' floors sum to 0.668 of
+# the root's, and the request is 0.8 of it.
+TEST7B_SPAN = (0.0, 1.0)
+TEST7B_REQUEST_FRACTION = 0.8
+
+
+def _exp_phase(A, theta_abserr=None):
+    theta = {"theta": lambda x: A * np.exp(x), "theta_deriv": lambda x: A * np.exp(x)}
+    if theta_abserr is not None:
+        theta["theta_abserr"] = theta_abserr
+    return theta
+
+
+def _root_solve(span, f, theta):
+    return _adaptive_levin_subregion(span, f, _Basis_SinCos(theta), None, rtol=1e-7)
+
+
+def test7a_problem():
+    """
+    (span, f, theta with theta_abserr, theta without, kwargs): c and the request from the root's
+    own solves, as the comment above describes.
+    """
+    f = [lambda x: 1.0, lambda x: 0.0]
+    plain = _exp_phase(TEST7A_A)
+    root = _root_solve(TEST7A_SPAN, f, plain)
+    unit = _root_solve(
+        TEST7A_SPAN, f, _exp_phase(TEST7A_A, lambda x: exp(-TEST7A_DECAY * x))
+    )["phase_err_declared"]
+    c = (
+        TEST7A_DECLARED_FRACTION
+        * root["phase_err_roundoff"]
+        / (1.0 - TEST7A_DECLARED_FRACTION)
+        / unit
+    )
+    declared = _exp_phase(TEST7A_A, lambda x, c=c: c * exp(-TEST7A_DECAY * x))
+    root = _root_solve(TEST7A_SPAN, f, declared)
+    rtol = TEST7A_REQUEST_FRACTION * root["phase_err"] / abs(root["value"])
+    return TEST7A_SPAN, f, declared, plain, dict(atol=1e-30, rtol=rtol)
+
+
+def _parent_module():
+    from AdaptiveLevin.tests.test_levin_leaf_values import load_parent
+
+    return load_parent()
+
+
+def _full_signature(data):
+    """_call_signature, with converged, the regions' values and the region list's errors."""
+    return _call_signature(data) + (
+        data["converged"],
+        tuple(r.total_err for r in data["regions"]),
+    )
+
+
+class TestRoundoffExitPremise06g(unittest.TestCase):
+
+    def _run_both(self, span, f, theta, **kwargs):
+        parent = _parent_module()
+        old = parent._adaptive_levin(span, f, parent._Basis_SinCos(theta), **kwargs)
+        new = _run(span, f, theta, **kwargs)
+        return old, new
+
+    def test_declared_term_excluded(self):
+        """
+        Test 7, the first case. At the parent the root is accepted at depth 0 through the exit, on
+        its whole floor 2.104e-15 (eq. (151) 1.578e-15 plus the declared term 5.26e-16), and the
+        call misses its request 1.115e-15. Under 06g the halving test compares the eq. (151) floors
+        alone, 0.408 < 1/2, so the root is bisected; the call converges on 3 Levin leaves at depth
+        2, abserr 1.065e-15, honest. With no theta_abserr on the same request the two codes give
+        identical results (2 leaves at depth 1, both floor-limited, converged).
+        """
+        span, f, declared, plain, kwargs = test7a_problem()
+        b = _Basis_SinCos(declared)
+        root = _adaptive_levin_subregion(span, f, b, None, rtol=1e-7)
+        fraction = root["phase_err_declared"] / root["phase_err"]
+        self.assertTrue(0.15 <= fraction <= 0.30, fraction)
+        c = 0.5 * (span[0] + span[1])
+        L = _adaptive_levin_subregion((span[0], c), f, b, None, rtol=1e-7)
+        R = _adaptive_levin_subregion((c, span[1]), f, b, None, rtol=1e-7)
+        # the halving test holds on the whole floors, and fails on the eq. (151) floors
+        self.assertGreaterEqual(
+            L["phase_err"] + R["phase_err"], 0.5 * root["phase_err"]
+        )
+        self.assertLess(
+            L["phase_err_roundoff"] + R["phase_err_roundoff"],
+            0.5 * root["phase_err_roundoff"],
+        )
+        # the budget clause holds at the root: the halves' floors are above the request
+        request = kwargs["rtol"] * abs(root["value"])
+        self.assertGreater(L["phase_err"] + R["phase_err"], request)
+
+        old, new = self._run_both(span, f, declared, **kwargs)
+        self.assertEqual(old["num_regions"], 1)
+        self.assertEqual(old["num_phase_limited_regions"], 1)
+        self.assertFalse(old["converged"])
+        self.assertGreater(old["abserr"], request)
+        self.assertTrue(new["converged"])
+        self.assertGreaterEqual(new["max_depth"], 1)
+        self.assertFalse(new["node_limited"])
+        ref, ref_err = _reference(
+            lambda: mpmath.si(mpmath.mpf(TEST7A_A) * mpmath.exp(mpmath.mpf(span[1])))
+            - mpmath.si(mpmath.mpf(TEST7A_A) * mpmath.exp(mpmath.mpf(span[0])))
+        )
+        self.assertLessEqual(abs(new["value"] - ref), new["abserr"])
+
+        old, new = self._run_both(span, f, plain, **kwargs)
+        self.assertEqual(_full_signature(new), _full_signature(old))
+
+    def test_budget_clause(self):
+        """
+        Test 7, the second case. The halves' floors sum to 0.668 of the root's 3.218e-16, and fit
+        the request (0.8 of it). At the parent the halving test holds, the root is accepted at
+        depth 0, and the call misses its request; under 06g the split could meet the request, so
+        the root is bisected, and the call converges on 2 leaves at depth 1.
+        """
+        f = [lambda x: 1.0, lambda x: 0.0]
+        theta = _exp_phase(TEST7A_A)
+        root = _root_solve(TEST7B_SPAN, f, theta)
+        c = 0.5 * (TEST7B_SPAN[0] + TEST7B_SPAN[1])
+        halves = (
+            _root_solve((TEST7B_SPAN[0], c), f, theta)["phase_err"]
+            + _root_solve((c, TEST7B_SPAN[1]), f, theta)["phase_err"]
+        )
+        self.assertTrue(0.5 * root["phase_err"] <= halves < root["phase_err"])
+        rtol = TEST7B_REQUEST_FRACTION * root["phase_err"] / abs(root["value"])
+        request = rtol * abs(root["value"])
+        self.assertLessEqual(halves, request)
+        old, new = self._run_both(TEST7B_SPAN, f, theta, atol=1e-30, rtol=rtol)
+        self.assertEqual(old["num_regions"], 1)
+        self.assertEqual(old["num_phase_limited_regions"], 1)
+        self.assertFalse(old["converged"])
+        self.assertTrue(new["converged"])
+        self.assertEqual(new["max_depth"], 1)
+        self.assertFalse(new["node_limited"])
+
+    def test_termination(self):
+        """
+        Test 7, the third case: 06b's test 2 problems, whose floors do not fall under bisection
+        and lie above the request. The exit fires under 06g on the same leaf as the parent's, the
+        root, and the two results are identical, values included.
+        """
+        for problem, span, label in (
+            (_test2a_problem(), TEST2A_SPAN, "06b 2a"),
+            (_test2b_problem(), TEST2B_SPAN, "06b 2b"),
+        ):
+            f, theta, kwargs, _, _ = problem
+            old, new = self._run_both(span, f, theta, **kwargs)
+            self.assertEqual(new["num_phase_limited_regions"], 1, label)
+            self.assertEqual(new["max_depth"], 0, label)
+            self.assertFalse(new["node_limited"], label)
+            self.assertEqual(_full_signature(new), _full_signature(old), label)
+
+
 if __name__ == "__main__":
     unittest.main()

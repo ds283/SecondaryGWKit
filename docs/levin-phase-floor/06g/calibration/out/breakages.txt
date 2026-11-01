@@ -1,0 +1,75 @@
+# levin-phase-floor 06g: breakages (i)-(v), each applied, its catching test run, then reverted
+# written 2026-11-01T10:30:08+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script breakages.py sha256 422312814318b5a02db73031c819d8852c7f7113f342b071060dc57f3a93326b
+# prov.py sha256 8d667c1da62b12ee7ba398fc12cfcce073a2a2b296f9707328d07f77b4dd1603
+# AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# input AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# input tools/filon_reference.py sha256 d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b
+# input AdaptiveLevin/tests/test_levin_leaf_values.py sha256 dc0a12259a36365b28952beb54e610792c7eec4a4d1c2e365f5273be1d427eda
+# input AdaptiveLevin/tests/test_levin_node_sum.py sha256 4eb5584d072716b2a8bbf49b7f9c5e9f43aa5c9f6cccda4f2ad04eb19ce4259d
+# input AdaptiveLevin/tests/test_levin_roundoff_exit.py sha256 9e14bb3f5702f5dd6f23a5281c02bf9957d8482d30035033ead9f6d58a4cec5f
+# input tools/tests/test_filon_reference.py sha256 f5f99b3cff26304b02f8ee19d3f4b032cb343c5b38dcdee62c2ce2e84b724769
+# HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M AdaptiveLevin/tests/test_levin_cc_floor.py
+#      M AdaptiveLevin/tests/test_levin_global_budget.py
+#      M AdaptiveLevin/tests/test_levin_roundoff_exit.py
+#      M docs/OPEN_ISSUES.md
+#      M prompts/levin-phase-floor/IMPLEMENTATION_STATE.md
+#     ?? AdaptiveLevin/tests/test_levin_leaf_values.py
+#     ?? AdaptiveLevin/tests/test_levin_node_sum.py
+#     ?? docs/levin-phase-floor/06g/
+#     ?? prompts/levin-phase-floor/logs/06g-leaf-values-and-node-sum.md
+#     ?? tools/filon_reference.py
+#     ?? tools/tests/test_filon_reference.py
+# uptime at start: 10:30  up 1 day, 12:50, 1 user, load averages: 4.71 8.28 8.65
+# clean AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# clean tools/filon_reference.py sha256 d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b
+== (i) a trusted leaf returns V_P: AdaptiveLevin/levin_quadrature.py, 1 replacement(s); test AdaptiveLevin.tests.test_levin_leaf_values.TestTrustedLeafReturnsQuarters.test_trusted_leaf_returns_quarters
+   Ran 1 test in 0.187s
+   FAILED (failures=7)
+   FAIL: test_trusted_leaf_returns_quarters (AdaptiveLevin.tests.test_levin_leaf_values.TestTrustedLeafReturnsQuarters.test_trusted_leaf_returns_quarters) (cell='exp_sin_1e3')
+   AssertionError: np.float64(0.0007418160636754203) != np.float64(0.00074181606367542) : exp_sin_1e3
+   FAIL: test_trusted_leaf_returns_quarters (AdaptiveLevin.tests.test_levin_leaf_values.TestTrustedLeafReturnsQuarters.test_trusted_leaf_returns_quarters) (cell='si_1000_exp')
+   AssertionError: np.float64(0.0005631664802565968) != np.float64(0.0005631664802467448) : si_1000_exp
+   FAIL: test_trusted_leaf_returns_quarters (AdaptiveLevin.tests.test_levin_leaf_values.TestTrustedLeafReturnsQuarters.test_trusted_leaf_returns_quarters) (cell='sinc_1e3')
+   AssertionError: np.float64(-0.0004079471786755684) != np.float64(-0.0004079471786755676) : sinc_1e3
+   FAIL: test_trusted_leaf_returns_quarters (AdaptiveLevin.tests.test_levin_leaf_values.TestTrustedLeafReturnsQuarters.test_trusted_leaf_returns_quarters) (cell='gaussian_bump')
+   AssertionError: np.float64(-1.7419308213803568e-26) != np.float64(-1.7423176914626136e-26) : gaussian_bump
+   FAIL: test_trusted_leaf_returns_quarters (AdaptiveLevin.tests.test_levin_leaf_values.TestTrustedLeafReturnsQuarters.test_trusted_leaf_returns_quarters) (cell='sqrt_fallback(1e-08)')
+   AssertionError: 0.024507906998558662 != 0.024507907029114265 : sqrt_fallback(1e-08)
+   FAIL: test_trusted_leaf_returns_quarters (AdaptiveLevin.tests.test_levin_leaf_values.TestTrustedLeafReturnsQuarters.test_trusted_leaf_returns_quarters) (cell='sqrt_fallback(1e-10)')
+   AssertionError: 0.000790416310178567 != 0.0007904163102075686 : sqrt_fallback(1e-10)
+   FAIL: test_trusted_leaf_returns_quarters (AdaptiveLevin.tests.test_levin_leaf_values.TestTrustedLeafReturnsQuarters.test_trusted_leaf_returns_quarters) (cell='runge_fallback')
+   AssertionError: 0.0006302241876636019 != 0.0006302241876636018 : runge_fallback
+== (ii) the call carries sum |E| again: AdaptiveLevin/levin_quadrature.py, 3 replacement(s); test AdaptiveLevin.tests.test_levin_node_sum.TestSignedNodeSum.test_signed_node_sum
+   Ran 1 test in 0.159s
+   FAILED (failures=1)
+   FAIL: test_signed_node_sum (AdaptiveLevin.tests.test_levin_node_sum.TestSignedNodeSum.test_signed_node_sum)
+   AssertionError: 0.0 != -5.197741174390941e-18
+== (iii) the declared term left in the premise's ratio: AdaptiveLevin/levin_quadrature.py, 1 replacement(s); test AdaptiveLevin.tests.test_levin_roundoff_exit.TestRoundoffExitPremise06g.test_declared_term_excluded
+   Ran 1 test in 0.058s
+   FAILED (failures=1)
+   FAIL: test_declared_term_excluded (AdaptiveLevin.tests.test_levin_roundoff_exit.TestRoundoffExitPremise06g.test_declared_term_excluded)
+   AssertionError: False is not true
+== (iv) r_trust = 1: AdaptiveLevin/levin_quadrature.py, 1 replacement(s); test AdaptiveLevin.tests.test_levin_leaf_values.TestSlowLeaves
+   Ran 3 tests in 0.054s
+   FAILED (failures=2)
+   FAIL: test_noise_leaf_trusted (AdaptiveLevin.tests.test_levin_leaf_values.TestSlowLeaves.test_noise_leaf_trusted)
+   AssertionError: 0 not greater than 0
+   FAIL: test_slow_leaf_untrusted_and_refined (AdaptiveLevin.tests.test_levin_leaf_values.TestSlowLeaves.test_slow_leaf_untrusted_and_refined)
+   AssertionError: True is not False
+== (v) Route A with K rounded once: tools/filon_reference.py, 1 replacement(s); test tools.tests.test_filon_reference.TestFilonReference.test_ci_closed_form
+   Ran 1 test in 0.012s
+   FAILED (failures=1)
+   FAIL: test_ci_closed_form (tools.tests.test_filon_reference.TestFilonReference.test_ci_closed_form)
+   AssertionError: 2.1576308264680378e-19 not less than or equal to 1.1953897578191143e-21 : qawo 1
+
+(i) a trusted leaf returns V_P: CAUGHT
+(ii) the call carries sum |E| again: CAUGHT
+(iii) the declared term left in the premise's ratio: CAUGHT
+(iv) r_trust = 1: CAUGHT
+(v) Route A with K rounded once: CAUGHT
+modules restored: True

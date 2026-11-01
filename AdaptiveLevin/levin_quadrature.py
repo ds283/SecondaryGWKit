@@ -288,7 +288,49 @@ _LEVIN_ROUNDOFF_G0_NOISE_FLOOR = 1.0e-10
 #     parent's, and the exit fires; R = 10 gives about 0.35, and the region is bisected.
 #   * Not 1: that would never let the exit fire while G1/G0 > 1, however slowly the floor fell,
 #     and would drive every such region on towards depth_max.
+#
+# What is compared (since prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2
+# (d)). The floors compared are each solve's "phase_err_roundoff": its floor less the declared
+# endpoint term (_declared_endpoint_phase_err()), on both sides. That term is the caller's own phase
+# error carried to the region's endpoints; bisection does not lower it, and the argument for rho
+# above is about the round-off part alone -- eq. (151)'s floor on the Levin branch, the
+# Clenshaw-Curtis rule's floor with its node term on the fallback branch, as 06b compared them.
+# Left in, it dilutes the ratio on both sides and can make the premise hold where bisection would
+# cut the round-off floor that sets the error: found on 06h's census
+# ([07-roundoff-exit-assumes-bisection-cannot-help], g-1e-8-3-1072 call 13), where the declared term
+# pushed the halves' sum past half the parent's and the call stopped unconverged at depth 0, which
+# under 06e split once and converged.
+#
+# And the premise is not enough by itself: the halves are compared with the parent, not with what
+# the call needs. A split that lowers a floor by 30 % fails the halving test, though it may be all
+# the call needs. So the exit also needs the split to be unable to meet the budget: the call's
+# error recomputed with the leaf replaced by its halves' floors (lower bounds on their errors) is
+# still above the request. A leaf whose split might be all the call needs is bisected. It cannot
+# chase: where floors do not fall, the recomputed error is the call's error now, which is above
+# the request, so the exit fires as before; and every split it allows deepens a leaf. See
+# _roundoff_exit_premise_holds() and _adaptive_levin().
 _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 0.5
+
+# The trust check's cut-off on the observed convergence ratio r = delta2 / delta1
+# (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (b)). A checked leaf is
+# trusted -- its error bounded by max(residual, delta1) / (1 - r), the geometric tail from here on --
+# only if r < this, or if r < 1 and delta1 is at most the leaf's own round-off floor (then delta1
+# and delta2 are differences of rounding noise, r means nothing, and the floor bounds them).
+# Otherwise it is untrusted, and refined whatever the budget says.
+#
+# Why 1/4.
+#   * Every rule here converges, in its asymptotic regime, by far more than 4x per halving: a Levin
+#     leaf of Chebyshev order n >= 8 by about 2^-n, and the nested Clenshaw-Curtis pair spectrally.
+#     A leaf at r >= 1/4 is not in that regime, and there one ratio does not predict the next: on
+#     06e's census (Z3's sample 3) a leaf at r = 0.507 was trusted, and its value was 1.245x its
+#     declaration ([06c-budget-can-stop-on-a-pre-asymptotic-residual]).
+#   * At r < 1/4 the geometric tail adds at most a third to delta1, so the bound leans little on
+#     the extrapolation.
+#   * A cut-off that ends refinement starts at the conservative end (the campaign's practice): 1/4
+#     trusts fewer leaves than 1/2 would. 06g's tests and census report every checked leaf's r, so
+#     the value can be revisited on that evidence.
+# Until 06g the cut-off was 1, with no noise clause.
+_LEVIN_TRUST_MAX_RATIO = 0.25
 
 # The unit round-off of IEEE double precision, u = 2^-53: the bound on the relative error of one
 # correctly rounded floating-point operation. Used by _cc_roundoff_floor(), the round-off floor of a
@@ -784,19 +826,33 @@ def _declared_endpoint_phase_err(
 
 
 def _roundoff_exit_premise_holds(
-    phase_err: float, phase_err_L: float, phase_err_R: float
+    phase_err: float,
+    phase_err_L: float,
+    phase_err_R: float,
+    split_could_meet_budget: bool = False,
 ) -> bool:
     """
     The round-off-limited exit's premise: would bisecting this region leave its floor materially
-    where it is? True if its two halves' floors ("phase_err", as each half's own subregion solve
-    reports it) sum to at least _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO times its own -- see that
-    constant's comment for the argument and the value.
+    where it is, and leave the call short of its request? True if both hold:
+
+      1. the halving test: its two halves' floors sum to at least
+         _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO times its own;
+      2. the budget clause: split_could_meet_budget is False.
+
+    The floors passed are the part bisection can lower: each solve's "phase_err_roundoff", its floor
+    less the declared endpoint term (since prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md;
+    until then the whole "phase_err"). _adaptive_levin() computes split_could_meet_budget: True
+    when the call's error is above its request now and would meet it with this leaf replaced by its
+    halves' floors. See the comment above _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO for both.
 
     _adaptive_levin() asks this only once every other condition of the exit holds, so phase_err is
     always finite here. A half's floor can be +inf (an interior stationary point at or near one of
-    its nodes; see _roundoff_floor()); the sum is then +inf, the premise holds and the exit may
-    fire, exactly as it did before the premise was checked.
+    its nodes; see _roundoff_floor()); the sum is then +inf, the halving test holds, the recomputed
+    error is +inf so the budget clause holds too, and the exit may fire, exactly as it did before
+    the premise was checked.
     """
+    if split_could_meet_budget:
+        return False
     return (
         phase_err_L + phase_err_R
     ) >= _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO * phase_err
@@ -815,6 +871,35 @@ def _error_for_ordering(err: float) -> float:
     if err != err:
         return float("inf")
     return err
+
+
+def _solve_floor_declared(data: dict) -> float:
+    """A subregion solve's declared endpoint term, "phase_err_declared" (0.0 if it reports none)."""
+    return data.get("phase_err_declared", 0.0) or 0.0
+
+
+def _solve_floor_roundoff(data: dict) -> float:
+    """
+    A subregion solve's floor less its declared endpoint term, "phase_err_roundoff": the part of
+    "phase_err" bisection can lower, which the round-off exit's halving test compares
+    (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (d)). Every solve in
+    this module reports it; a solve that does not (a test's stand-in) is read as having no declared
+    term, its whole "phase_err".
+    """
+    if "phase_err_roundoff" in data:
+        return data["phase_err_roundoff"]
+    return data.get("phase_err", 0.0) or 0.0
+
+
+def _solve_floor_in_budget(data: dict) -> float:
+    """
+    A subregion solve's floor as it enters the call's error, the lower bound the round-off exit's
+    budget clause takes for its error: "phase_err_less_node" on a fallback solve, whose node error E
+    the call carries signed, else "phase_err".
+    """
+    if data.get("phase_err_less_node") is not None:
+        return data["phase_err_less_node"]
+    return data.get("phase_err", 0.0) or 0.0
 
 
 class _ExactSum:
@@ -851,6 +936,10 @@ class _ExactSum:
     def total(self) -> float:
         return math.fsum(self._partials)
 
+    def total_with(self, *terms: float) -> float:
+        """The correctly rounded sum of everything added and of terms, leaving the sum unchanged."""
+        return math.fsum(self._partials + [float(t) for t in terms])
+
 
 class used_interval:
 
@@ -866,6 +955,11 @@ class used_interval:
         phase_err: Optional[float] = None,
         phase_limited: bool = False,
         abserr_truncation: Optional[float] = None,
+        value: Optional[float] = None,
+        phase_err_declared: Optional[float] = None,
+        phase_err_roundoff: Optional[float] = None,
+        node_error_signed: Optional[float] = None,
+        phase_err_less_node: Optional[float] = None,
     ):
         self._start = start
         self._end = end
@@ -903,16 +997,39 @@ class used_interval:
         # section 8, the third amendment; see _adaptive_levin()). delta1 = |V_P - (V_L + V_R)|,
         # delta2 = |(V_L + V_R) - (V_LL + V_LR + V_RL + V_RR)|, convergence_ratio = delta2 /
         # delta1, all None until the check is taken. trusted is None until then (and for a
-        # floor-limited region, which is exempt), True if convergence_ratio < 1, False otherwise.
-        # declared_resolution, when set, replaces abserr in total_err: max(abserr, delta1) /
-        # (1 - r) for a trusted region, max(abserr, delta1 + delta2) for an untrusted one at
-        # depth_max. abserr itself stays the raw estimate (the step-(4) residual, or the nested
-        # pair), as do abserr_resolution/abserr_fallback.
+        # floor-limited region, which is exempt), True if the trust test passes (convergence_ratio
+        # < _LEVIN_TRUST_MAX_RATIO, or convergence_ratio < 1 with delta1 at most phase_err; since
+        # 06g), False otherwise. declared_resolution, when set, replaces abserr in total_err:
+        # max(abserr, delta1) / (1 - r) for a trusted region and for an untrusted one at depth_max
+        # with r < 1, max(abserr, delta1 + delta2) for an untrusted one at depth_max with r >= 1.
+        # abserr itself stays the raw estimate (the step-(4) residual, or the nested pair), as do
+        # abserr_resolution/abserr_fallback.
         self._delta1 = None
         self._delta2 = None
         self._convergence_ratio = None
         self._trusted = None
         self._declared_resolution = None
+
+        # The value this region contributes to the call's value, and which one it is
+        # (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (a)): "own", the
+        # region's own solve V_P (the Levin solve, or CC_{2N-1} on the fallback), or "quarters",
+        # the quarters sum Q = (V_LL + V_LR) + (V_RL + V_RR) a trusted region returns. value_own
+        # is V_P whichever is returned.
+        self._value = value
+        self._value_own = value
+        self._value_kind = "own"
+
+        # The floor's parts (06g, section 0.2 (c) and (d)): phase_err_declared is the declared
+        # endpoint term (_declared_endpoint_phase_err()), phase_err_roundoff the rest of phase_err
+        # (phase_err = phase_err_roundoff + phase_err_declared, as the solve formed it), the part
+        # bisection can lower, which the round-off exit's halving test compares. On a fallback
+        # region node_error_signed is E, its node term's signed first-order error, and
+        # phase_err_less_node is phase_err with |E| taken out of the node term (the rule's floor
+        # formed with R_g + R_2 + R_c alone, plus the declared term); both None on a Levin region.
+        self._phase_err_declared = phase_err_declared
+        self._phase_err_roundoff = phase_err_roundoff
+        self._node_error_signed = node_error_signed
+        self._phase_err_less_node = phase_err_less_node
 
     def __str__(self):
         if self._abserr is not None:
@@ -942,6 +1059,8 @@ class used_interval:
                 f", r={self._convergence_ratio:.4g}"
                 + ("" if self._trusted else " (UNTRUSTED)")
             )
+        if self._value_kind != "own":
+            phase_label = phase_label + f", value={self._value_kind}"
 
         return f"({self._start:.8g}, {self._end:.8g}), depth={self._depth} | {types[self._type]}, {abserr_label}, {relerr_label}, {phase_label} | p-ratios={p_ratios_label}"
 
@@ -988,12 +1107,14 @@ class used_interval:
     @property
     def phase_limited(self) -> bool:
         """
-        True if _adaptive_levin() chose this region (leaf) for refinement while the call's error
-        budget was unmet, and found it floor-limited: its round-off floor is finite, its residual
-        is at most that floor, and its two halves' floors sum to at least
-        _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2 of its own, so bisecting it would not lower its
-        error materially. Never True when phase_err is not finite. A region the loop never chose
-        is never flagged, whatever its floor -- see _adaptive_levin().
+        True if _adaptive_levin() chose this region (leaf) for refinement and found it
+        floor-limited: its round-off floor is finite, its residual is at most that floor, its two
+        halves' floors less their declared endpoint terms sum to at least
+        _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2 of its own less its own, and the split could not
+        meet the call's request (since prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md),
+        so bisecting it would not lower its error materially. Never True when phase_err is not
+        finite. A region the loop never chose is never flagged, whatever its floor -- see
+        _adaptive_levin().
         """
         return self._phase_limited
 
@@ -1018,11 +1139,13 @@ class used_interval:
     @property
     def trusted(self) -> Optional[bool]:
         """
-        Whether this region's error estimate passed the trust check one level down (r < 1). None
-        if the check was not taken on it: a floor-limited region is exempt, and a region at
-        depth_max returned by a call whose budget was never met need not have been checked. A
-        region returned with trusted False is at depth_max, and declares
-        max(abserr, delta1 + delta2) as its resolution error; see _adaptive_levin().
+        Whether this region's error estimate passed the trust check one level down: r <
+        _LEVIN_TRUST_MAX_RATIO, or r < 1 with delta1 at most phase_err (since
+        prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md; until then r < 1). None if the
+        check was not taken on it: a floor-limited region is exempt, and a region at depth_max
+        returned by a call whose budget was never met need not have been checked. A region
+        returned with trusted False is at depth_max, and declares max(abserr, delta1) / (1 - r) as
+        its resolution error if r < 1, max(abserr, delta1 + delta2) if not; see _adaptive_levin().
         """
         return self._trusted
 
@@ -1030,36 +1153,109 @@ class used_interval:
     def declared_resolution(self) -> Optional[float]:
         """
         The resolution error this region declares in total_err when the trust check changed it:
-        max(abserr, delta1) / (1 - r) if trusted, max(abserr, delta1 + delta2) if untrusted at
-        depth_max; None if total_err uses abserr as it stands.
+        max(abserr, delta1) / (1 - r) if trusted, or if untrusted at depth_max with r < 1;
+        max(abserr, delta1 + delta2) if untrusted at depth_max with r >= 1; None if total_err uses
+        abserr as it stands.
         """
         return self._declared_resolution
+
+    @property
+    def value(self) -> Optional[float]:
+        """
+        The value this region contributes to the call's value: its own solve's (value_own, V_P),
+        or, if the trust check trusted it, its quarters sum Q (value_kind "quarters"; since
+        prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md). The call's value is the sum of
+        these over its regions, in ascending x.
+        """
+        return self._value
+
+    @property
+    def value_kind(self) -> str:
+        """Which value the region returns: "own" (V_P) or "quarters" (Q); see value."""
+        return self._value_kind
+
+    @property
+    def value_own(self) -> Optional[float]:
+        """V_P, the region's own solve's value, whichever value it returns; see value."""
+        return self._value_own
+
+    @property
+    def phase_err_declared(self) -> Optional[float]:
+        """
+        The declared endpoint term in phase_err (_declared_endpoint_phase_err(); 0.0 when the phase
+        declares no theta_abserr). The round-off exit's halving test leaves it out; see
+        _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO.
+        """
+        return self._phase_err_declared
+
+    @property
+    def phase_err_roundoff(self) -> Optional[float]:
+        """phase_err less its declared endpoint term: eq. (151)'s floor on a Levin region, the
+        Clenshaw-Curtis rule's floor, with its node term, on a fallback region."""
+        return self._phase_err_roundoff
+
+    @property
+    def node_error_signed(self) -> Optional[float]:
+        """
+        E, the signed first-order error of a fallback region's nodes (_cc_node_term_parts()), whose
+        absolute value is in phase_err's node term; None on a Levin region. _adaptive_levin()
+        carries the sum of E over the call's fallback regions signed, |sum E| in place of
+        sum |E| (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (c)).
+        """
+        return self._node_error_signed
+
+    @property
+    def phase_err_less_node(self) -> Optional[float]:
+        """phase_err with |E| taken out of the node term, on a fallback region; None on a Levin
+        region. See budget_err."""
+        return self._phase_err_less_node
 
     @property
     def total_err(self) -> Optional[float]:
         """
         Combined per-region error estimate: max(resolution/fallback residual, round-off floor),
-        plus the truncation term (prompt 06) if this region has one. This is the leaf error e_i of
-        _adaptive_levin()'s global budget: the loop stops when the sum of it over the leaves meets
-        max(atol, rtol*|value|), and the call reports the same sum as "abserr". The truncation term is added
+        plus the truncation term (prompt 06) if this region has one. The truncation term is added
         rather than maxed because it is a distinct, always-present bias -- the endpoint
         contribution of modes the rtol gate discarded from this region's own value -- not another
         estimate of the same underlying quantity the max() is choosing between.
 
         The resolution error in the max is declared_resolution when the trust check one level
         down has set it (widened by the observed convergence ratio), else abserr.
+
+        This is the region's own error, its node term's |E| included. It is the leaf error e_i of
+        _adaptive_levin()'s global budget on a Levin region; on a fallback region the budget takes
+        budget_err, which leaves |E| out, and carries |sum E| over the call's fallback regions
+        instead (since prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md; until then
+        every region entered the budget by this).
         """
+        return self._combine(self._phase_err)
+
+    @property
+    def budget_err(self) -> Optional[float]:
+        """
+        The region's contribution e'_i to _adaptive_levin()'s budget and its returned "abserr"
+        (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (c)): total_err with
+        |E| taken out of the floor, max(resolution, phase_err_less_node) plus truncation, on a
+        fallback region; total_err itself on a Levin region, which has no node term. The call's
+        error is sum_i e'_i + |sum_i E_i|: the node errors are carried signed, since their signs
+        vary from leaf to leaf, and the sum of |E| does not fall under bisection.
+        """
+        if self._phase_err_less_node is None:
+            return self._combine(self._phase_err)
+        return self._combine(self._phase_err_less_node)
+
+    def _combine(self, floor: Optional[float]) -> Optional[float]:
         resolution = (
             self._declared_resolution
             if self._declared_resolution is not None
             else self._abserr
         )
         if resolution is None:
-            base = self._phase_err
-        elif self._phase_err is None:
+            base = floor
+        elif floor is None:
             base = resolution
         else:
-            base = max(resolution, self._phase_err)
+            base = max(resolution, floor)
 
         if base is None:
             return self._abserr_truncation
@@ -1205,8 +1401,13 @@ class _levin_leaf:
 
     @property
     def error(self) -> float:
-        """This leaf's e_i: used_interval.total_err of its region."""
-        return self.region.total_err
+        """
+        This leaf's contribution e'_i to the call's error: used_interval.budget_err of its region
+        (total_err on a Levin leaf; on a fallback leaf, total_err with its node error |E| taken out
+        of the floor, which the call carries signed; since
+        prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md).
+        """
+        return self.region.budget_err
 
 
 @lru_cache(maxsize=32)
@@ -2274,6 +2475,11 @@ def _adaptive_levin_subregion_impl(
         "p_ratios": p_ratios,
         "phase_span": phase_span,
         "phase_err": round_off_err + declared_err,
+        # phase_err's two parts, each as it was added (prompts/levin-phase-floor/
+        # 06g-leaf-values-and-node-sum.md, section 0.2 (d)): the round-off exit's halving test
+        # compares the eq. (151) floor alone, the part bisection can lower
+        "phase_err_roundoff": round_off_err,
+        "phase_err_declared": declared_err,
         "abserr_truncation": abserr_truncation,
         "metadata": metadata,
         "is_direct": False,
@@ -2320,9 +2526,13 @@ def _adaptive_levin_subregion_cc(
         likewise already computed by the caller's call to build_Levin_data(). It gives theta' at
         the even fine nodes, which are those points, in the round-off floor's node term (until 06d
         it gave eq. (151)'s G0/G1; under 06d its maximum bounded |theta'| at every node).
-    :return: a dict with the same "value"/"phase_span"/"phase_err"/"metadata" keys as the Levin
-        path, "abserr_direct" in place of a p-based estimate, "is_direct": True, and
-        "p_sample"/"p_ratios" both None (the Levin antiderivative concept does not apply here).
+    :return: a dict with the same "value"/"phase_span"/"phase_err"/"phase_err_roundoff"/
+        "phase_err_declared"/"metadata" keys as the Levin path, "abserr_direct" in place of a
+        p-based estimate, "is_direct": True, and "p_sample"/"p_ratios" both None (the Levin
+        antiderivative concept does not apply here); and, since
+        prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, the node term's parts,
+        "node_error_signed" (E) and "node_error_bound" (R_g + R_2 + R_c), and "phase_err_less_node",
+        the floor with |E| taken out of the node term.
     """
     if vectorize_cache is None:
         vectorize_cache = {}
@@ -2429,6 +2639,19 @@ def _adaptive_levin_subregion_cc(
         arguments_fine,
         abs(E) + R_g + R_2 + R_c,
     )
+    # The same floor with |E| taken out of its node term (prompts/levin-phase-floor/
+    # 06g-leaf-values-and-node-sum.md, section 0.2 (c)): E's sign varies from leaf to leaf, so
+    # _adaptive_levin() carries sum E signed over the call's fallback leaves, and each leaf enters
+    # the call's error with this floor in place of round_off_err. Formed as its own sum, not by
+    # subtracting |E| from round_off_err, so that it carries no cancellation.
+    node_bound = R_g + R_2 + R_c
+    round_off_err_less_node = _cc_roundoff_floor(
+        w_fine,
+        f_fine,
+        basis_fine,
+        arguments_fine,
+        node_bound,
+    )
 
     # Optional declared-theta_abserr endpoint term (recommendation 5.2), 0.0 unless the phase dict
     # supplied "theta_abserr". This fallback has no Levin antiderivative p to weight by, so it
@@ -2452,6 +2675,15 @@ def _adaptive_levin_subregion_cc(
         "p_ratios": None,
         "phase_span": phase_span,
         "phase_err": round_off_err + declared_err,
+        # phase_err's parts (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section
+        # 0.2 (c) and (d)): the rule's floor, with its node term, and the declared endpoint term,
+        # each as it was added; the node term's signed first-order error E and the rest of the
+        # node term, R_g + R_2 + R_c; and phase_err with |E| taken out of the node term
+        "phase_err_roundoff": round_off_err,
+        "phase_err_declared": declared_err,
+        "node_error_signed": E,
+        "node_error_bound": node_bound,
+        "phase_err_less_node": round_off_err_less_node + declared_err,
         # No Levin antiderivative exists on this branch, so there is no p-mode to gate and
         # nothing for the rtol filter to discard -- see used_interval.abserr_truncation.
         "abserr_truncation": None,
@@ -2526,22 +2758,29 @@ def _log_depth_history(
         prev_rel = this_rel
 
 
-def _sum_leaves_ascending(leaves_ascending) -> Tuple[float, float]:
+def _sum_leaves_ascending(leaves_ascending) -> Tuple[float, float, float]:
     """
-    The call's value and abserr, each summed over the leaves in ascending x (the order the
-    returned "regions" list is in), with plain floating-point addition. _adaptive_levin() computes
-    its returned "value", "abserr" and "converged" from these, and confirms its running stop test
-    against them before it stops, so a call that stops on the budget reports "converged" True by
-    the same arithmetic it returns.
+    The call's value, the sum of its leaves' errors e'_i (used_interval.budget_err), and the
+    signed sum of its fallback leaves' node errors E, over the leaves in ascending x (the order
+    the returned "regions" list is in): the first two with plain floating-point addition, the
+    third correctly rounded (math.fsum, the value the loop's exact running sum holds). The call's
+    error is the second plus the absolute value of the third (prompts/levin-phase-floor/
+    06g-leaf-values-and-node-sum.md, section 0.2 (c)). _adaptive_levin() computes its returned
+    "value", "abserr" and "converged" from these, and confirms its running stop test against them
+    before it stops, so a call that stops on the budget reports "converged" True by the same
+    arithmetic it returns.
     """
     val = 0.0
     abserr_total = 0.0
+    node_errors = []
     for leaf in leaves_ascending:
         val = val + leaf.value
-        contribution = leaf.region.total_err
+        contribution = leaf.region.budget_err
         if contribution is not None:
             abserr_total = abserr_total + contribution
-    return val, abserr_total
+        if leaf.region.node_error_signed is not None:
+            node_errors.append(leaf.region.node_error_signed)
+    return val, abserr_total, math.fsum(node_errors)
 
 
 def _adaptive_levin(
@@ -2563,21 +2802,38 @@ def _adaptive_levin(
     The adaptive driver, under one error budget for the whole call
     (prompts/levin-phase-floor/06c-global-error-control.md). Global adaptivity, as QUADPACK's QAG:
     the driver keeps every *leaf* of the current partition of x_span, each with its value v_i and
-    its error e_i (used_interval.total_err: max(residual, round-off floor) + truncation), and
-    decides only against the whole call:
+    its error e'_i (used_interval.budget_err: max(residual, round-off floor) + truncation, with a
+    Clenshaw-Curtis leaf's node error |E_i| taken out of its floor), and decides only against the
+    whole call. The call's error is
 
-      1. Let E = sum_i e_i and V = sum_i v_i over the leaves. If E <= max(atol, rtol*|V|), stop:
-         converged.
-      2. Otherwise choose the *refinable* leaf with the largest e_i (ties: the smaller start), and
-         replace it by its two halves.
-      3. If no leaf is refinable, stop: unconverged.
+        E_call = sum_i e'_i + |sum_i E_i|,
+
+    the node errors carried signed over the fallback leaves (prompts/levin-phase-floor/
+    06g-leaf-values-and-node-sum.md, section 0.2 (c): E's sign varies from leaf to leaf, so
+    sum |E_i| overstates the call's node error, by 54x on 06e's Z2 call, and since E is set by
+    ulp(x), not by a leaf's width, sum |E_i| does not fall systematically when a leaf is split,
+    06f). With V = sum_i v_i and the request max(atol, rtol*|V|):
+
+      1. If E_call meets the request, stop: converged.
+      2. If sum_i e'_i meets it and E_call does not, stop unconverged, flagged node_limited:
+         |sum E| alone holds the call above its request, and bisection does not lower it
+         systematically, so refining further would chase it.
+      3. Otherwise choose the *refinable* leaf with the largest e'_i (ties: the smaller start),
+         and replace it by its two halves.
+      4. If no leaf is refinable, stop: unconverged.
+
+    Stops 1 and 2 also need every leaf checked or floor-limited and no refinable leaf untrusted
+    (the trust check, below).
 
     A leaf is refinable unless one of these holds:
       * it is at depth_max;
-      * it is *floor-limited*: its round-off floor is finite, its residual is at most that floor,
-        and 06b's premise holds -- its halves' floors sum to at least rho = 1/2 of its own
-        (_roundoff_exit_premise_holds()) -- so bisecting it would not lower its error
-        materially. Checked only on the leaf chosen; flagged used_interval.phase_limited.
+      * it is *floor-limited*: its round-off floor is finite, its residual is at most that floor
+        (the whole floor, its own |E| included), and 06b's premise holds, as 06g states it
+        (_roundoff_exit_premise_holds()): its halves' floors less their declared endpoint terms
+        sum to at least rho = 1/2 of its own less its own, and the call's error, recomputed with
+        the leaf replaced by its halves' floors, would still be above the request -- so bisecting
+        it would not lower its error materially, and could not meet the budget. Checked only on
+        the leaf chosen; flagged used_interval.phase_limited.
     A leaf found not refinable is never chosen again. No rule stops a leaf because bisecting it has
     stopped lowering its error: a leaf whose error does not fall with h is chased to depth_max if it
     holds the total back, at a cost in work but not in honesty. (A stall rule was tried and
@@ -2585,25 +2841,32 @@ def _adaptive_levin(
     pre-asymptotic leaves and on Levin leaves across a stationary point, and stopped refinement
     where it works -- prompts/levin-phase-floor/06c-global-error-control.md, section 8.)
 
-    The trust check one level down (section 8, the third amendment). The budget trusts each leaf's
-    error estimate, and an estimate taken before the leaf is resolved can understate its error:
-    the step-(4) residual |V_P - (V_L + V_R)| is V_P's error only if V_L + V_R is much better than
-    V_P. So, for each leaf, from its halves and its grandchildren (each valued by its own branch's
-    rule), delta1 = |V_P - (V_L + V_R)|, delta2 = |(V_L + V_R) - (V_LL + V_LR + V_RL + V_RR)| and
-    r = delta2 / delta1. If the error falls from this level on at least as fast as observed, the
-    leaf's error is at most delta1 / (1 - r), so:
-      * a trusted leaf (r < 1) declares max(residual, delta1) / (1 - r) as its resolution error;
-      * an untrusted leaf (r >= 1) is refinable whatever the budget says, and is chosen before
-        every trusted leaf; the loop does not stop while a refinable leaf is untrusted. One at
-        depth_max declares max(residual, delta1 + delta2), is flagged (used_interval.trusted
-        False), and the call is not converged while one is returned;
+    The trust check one level down (06c section 8, the third amendment; the trust test and the value
+    returned since 06g). The budget trusts each leaf's error estimate, and an estimate taken before
+    the leaf is resolved can understate its error: the step-(4) residual |V_P - (V_L + V_R)| is
+    V_P's error only if V_L + V_R is much better than V_P. So, for each leaf, from its halves and
+    its grandchildren (each valued by its own branch's rule), delta1 = |V_P - (V_L + V_R)|,
+    delta2 = |(V_L + V_R) - Q|, Q = (V_LL + V_LR) + (V_RL + V_RR), and r = delta2 / delta1. If the
+    error falls from this level on at least as fast as observed, the leaf's error is at most
+    delta1 / (1 - r), so:
+      * a leaf is trusted if r < _LEVIN_TRUST_MAX_RATIO = 1/4, or if r < 1 and delta1 is at most
+        its own round-off floor (then delta1 and delta2 are rounding noise, which the floor
+        bounds). A trusted leaf declares max(residual, delta1) / (1 - r) as its resolution error
+        and returns Q, the finest value computed, in place of V_P; the declaration bounds Q's
+        error under the same assumption that makes it bound V_P's, and is not tightened;
+      * any other leaf is untrusted: refinable whatever the budget says, and chosen before every
+        trusted leaf; the loop does not stop while a refinable leaf is untrusted. One at
+        depth_max declares max(residual, delta1) / (1 - r) if r < 1 and max(residual,
+        delta1 + delta2) if not, keeps V_P, is flagged (used_interval.trusted False), and the call
+        is not converged while one is returned;
       * a floor-limited leaf is exempt: its differences are round-off noise, which its floor
-        bounds.
+        bounds. If it was checked first, its declared error and its value revert to its own.
     The check is taken lazily: when the budget passes, every leaf not yet checked is checked, and
     a widened error or an untrusted leaf reopens the loop. A call that stops on the budget returns
     every leaf checked or floor-limited. The grandchildren are carried forward as the children's
-    halves if a leaf is later bisected, and a leaf's value is unchanged. It does not reach an error
-    common to a leaf and all its descendants ([06b-moved-calls-declare-less-than-their-error]).
+    halves if a leaf is later bisected. The running value sum follows each leaf's returned value
+    exactly. It does not reach an error common to a leaf and all its descendants
+    ([06b-moved-calls-declare-less-than-their-error]).
 
     So the loop stops on exactly the quantity the call reports as "abserr", and "converged" keeps
     its formula, abserr <= max(atol, rtol*|value|), with no untrusted leaf returned. This
@@ -2615,7 +2878,7 @@ def _adaptive_levin(
     cancelling-total]); and a region accepted on its own residual could keep an eq. (151) floor
     that its halves would cut by orders ([06b-resolved-region-keeps-a-floor-bisection-would-cut]).
     Under one budget, the target is rtol times the current total; an inflated floor is the
-    largest e_i, and is bisected where the premise fails; an infinite floor (a stationary point at
+    largest e'_i, and is bisected where the premise fails; an infinite floor (a stationary point at
     a node) is always chosen first, and is bisected until it is finite or reaches depth_max.
 
     Termination: every bisection deepens a leaf, and a leaf at depth_max is never chosen.
@@ -2625,6 +2888,7 @@ def _adaptive_levin(
     # budget is unmet is found floor-limited on its floor and residual alone, without checking
     # that bisection would not lower its floor -- the round-off-limited exit's own test as it was
     # before prompts/levin-phase-floor/06b-roundoff-exit-premise.md, now inside the global budget.
+    # It skips the premise whole: its halving test and, since 06g, its budget clause.
     # It exists so the tests and calibration scripts can run that behaviour beside the default; it
     # is read only at the floor-limited test below, and adaptive_levin_sincos() does not expose
     # it. Never set it in production code.
@@ -2859,6 +3123,11 @@ def _adaptive_levin(
                 phase_err=phase_err,
                 # no Levin antiderivative on this branch -- see used_interval.abserr_truncation.
                 abserr_truncation=data.get("abserr_truncation"),
+                value=estimate,
+                phase_err_declared=_solve_floor_declared(data),
+                phase_err_roundoff=_solve_floor_roundoff(data),
+                node_error_signed=data.get("node_error_signed"),
+                phase_err_less_node=data.get("phase_err_less_node"),
             )
         else:
             # Chen et al. (173): the step-(4) residual against the leaf's two halves. They are
@@ -2896,6 +3165,9 @@ def _adaptive_levin(
                 # contributes, so data["abserr_truncation"] is the truncation actually incurred
                 # by that value (prompt 06, problem (b)).
                 abserr_truncation=data.get("abserr_truncation"),
+                value=estimate,
+                phase_err_declared=_solve_floor_declared(data),
+                phase_err_roundoff=_solve_floor_roundoff(data),
             )
 
         seq_counter += 1
@@ -2918,22 +3190,35 @@ def _adaptive_levin(
 
     # The current partition: every leaf, by its sequence number. The candidates for bisection are
     # the refinable leaves, on a heap ordered first by trust -- a leaf the trust check found
-    # untrusted before every other -- then by error, largest first, ties broken by the smaller
-    # start and then by the sequence number, so the order is total and deterministic. A leaf at
-    # depth_max, or found floor-limited, is never a candidate. When a leaf's error or trust
-    # changes it is pushed again under a new version, and an entry whose version is stale, or whose
-    # leaf has been bisected, is skipped when popped.
+    # untrusted before every other -- then by error e'_i (_levin_leaf.error), largest first, ties
+    # broken by the smaller start and then by the sequence number, so the order is total and
+    # deterministic. A leaf at depth_max, or found floor-limited, is never a candidate. When a
+    # leaf's error or trust changes it is pushed again under a new version, and an entry whose
+    # version is stale, or whose leaf has been bisected, is skipped when popped.
     leaves = {}
     candidates = []
     untrusted_refinable = set()
 
-    # Running sums over the leaves, held exactly (_ExactSum): the finite errors, the count of
-    # errors that are not finite (+inf, or NaN read as +inf -- see _error_for_ordering()), and the
-    # values.
+    # Running sums over the leaves, held exactly (_ExactSum): the finite errors e'_i, the count of
+    # errors that are not finite (+inf, or NaN read as +inf -- see _error_for_ordering()), the
+    # values, and (since prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md) the fallback
+    # leaves' signed node errors E, a non-finite E counted with the non-finite errors. Each is
+    # updated when a leaf is added, removed, or changes its error or its value.
     error_sum = _ExactSum()
     value_sum = _ExactSum()
+    node_sum = _ExactSum()
     num_nonfinite_errors = 0
     num_direct_leaves = 0
+
+    def _add_node_error(leaf: _levin_leaf, sign: float) -> None:
+        nonlocal num_nonfinite_errors
+        node = leaf.region.node_error_signed
+        if node is None:
+            return
+        if np.isfinite(node):
+            node_sum.add(sign * node)
+        else:
+            num_nonfinite_errors += 1 if sign > 0 else -1
 
     def _add_leaf(leaf: _levin_leaf) -> None:
         nonlocal num_nonfinite_errors, num_direct_leaves
@@ -2943,6 +3228,7 @@ def _adaptive_levin(
             error_sum.add(err)
         else:
             num_nonfinite_errors += 1
+        _add_node_error(leaf, 1.0)
         value_sum.add(leaf.value)
         if leaf.is_direct:
             num_direct_leaves += 1
@@ -2997,13 +3283,29 @@ def _adaptive_levin(
         del leaves[leaf.seq]
         untrusted_refinable.discard(leaf.seq)
         _remove_error(leaf)
+        _add_node_error(leaf, -1.0)
         value_sum.add(-leaf.value)
         if leaf.is_direct:
             num_direct_leaves -= 1
 
-    def _running_sums() -> Tuple[float, float]:
-        running_error = float("inf") if num_nonfinite_errors > 0 else error_sum.total()
-        return value_sum.total(), running_error
+    def _set_value(leaf: _levin_leaf, value: float, kind: str) -> None:
+        # A leaf's returned value changes (06g, section 0.2 (a)): to its quarters sum when the trust
+        # check trusts it, back to its own when the floor-limited test exempts it. The running
+        # value sum follows exactly.
+        value_sum.add(-leaf.value)
+        value_sum.add(value)
+        leaf.value = value
+        leaf.region._value = value
+        leaf.region._value_kind = kind
+
+    def _running_sums() -> Tuple[float, float, float]:
+        """
+        The running value, the running sum of e'_i, and |sum E|; the call's error is the sum of
+        the last two (+inf while any error or E is not finite).
+        """
+        if num_nonfinite_errors > 0:
+            return value_sum.total(), float("inf"), float("inf")
+        return value_sum.total(), error_sum.total(), abs(node_sum.total())
 
     def _leaves_ascending() -> List[_levin_leaf]:
         return sorted(leaves.values(), key=lambda leaf: leaf.start)
@@ -3020,21 +3322,31 @@ def _adaptive_levin(
     def _check_leaf(leaf: _levin_leaf) -> None:
         """
         The trust check one level down (prompts/levin-phase-floor/06c-global-error-control.md,
-        section 8, the third amendment). With V each solve's own value (the region's own solve on
-        the Levin branch, CC_{2N-1} on the fallback):
+        section 8, the third amendment; its trust test and the value returned since
+        prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md). With V each solve's own value
+        (the region's own solve on the Levin branch, CC_{2N-1} on the fallback):
 
             delta1 = |V_P - (V_L + V_R)|,
-            delta2 = |(V_L + V_R) - (V_LL + V_LR + V_RL + V_RR)|,
+            delta2 = |(V_L + V_R) - Q|,     Q = (V_LL + V_LR) + (V_RL + V_RR),
             r = delta2 / delta1   (0 if both are 0; +inf if only delta1 is 0, or either is not
                                    finite).
 
         If the error falls from this level on at least as fast as observed, the leaf's error is at
-        most delta1 (1 + r + r^2 + ...) = delta1 / (1 - r), so a trusted leaf (r < 1) declares
-        max(abserr, delta1) / (1 - r) as its resolution error. For r >= 1 no such bound exists: the
-        leaf is untrusted, refinable whatever the budget says and chosen before every trusted
-        leaf; at depth_max, where it cannot be refined, it declares max(abserr, delta1 + delta2)
-        and the call is not converged. The grandchildren are kept, to become its children's halves
-        if it is bisected. Its value is unchanged.
+        most delta1 (1 + r + r^2 + ...) = delta1 / (1 - r). The leaf is trusted if r <
+        _LEVIN_TRUST_MAX_RATIO (1/4; that constant's comment gives the basis), or if r < 1 and
+        delta1 is at most the leaf's own round-off floor phase_err, where delta1 and delta2 are
+        differences of rounding noise, r means nothing, and the floor bounds them. A trusted leaf
+        declares max(abserr, delta1) / (1 - r) as its resolution error and returns Q, the finest
+        value computed, in place of V_P: under the assumption that makes delta1 / (1 - r) a bound
+        on V_P's error it bounds Q's too, and the declaration is not tightened (06e's leaf
+        breakdown measured Q's error at about 3 delta2 on Z3's sample 8, so a declaration built
+        from delta2 would understate it). The running value sum is moved by Q - V_P exactly.
+
+        Otherwise the leaf is untrusted, keeps V_P, and is refinable whatever the budget says,
+        chosen before every trusted leaf; at depth_max, where it cannot be refined, it declares
+        max(abserr, delta1) / (1 - r) if r < 1 and max(abserr, delta1 + delta2) if not, and the
+        call is not converged. The grandchildren are kept, to become its children's halves if it
+        is bisected.
         """
         nonlocal num_checks, num_untrusted_found
         if leaf.dataL is None:
@@ -3051,9 +3363,11 @@ def _adaptive_levin(
         RR = _solve((cR, b), "trust check: right half of right half")
         leaf.grandchildren = ((LL, LR), (RL, RR))
 
+        region = leaf.region
+        own_value = region._value_own
         halves_sum = dataL["value"] + dataR["value"]
         quarters_sum = (LL["value"] + LR["value"]) + (RL["value"] + RR["value"])
-        delta1 = float(np.fabs(leaf.value - halves_sum))
+        delta1 = float(np.fabs(own_value - halves_sum))
         delta2 = float(np.fabs(halves_sum - quarters_sum))
         if not (np.isfinite(delta1) and np.isfinite(delta2)):
             ratio = float("inf")
@@ -3062,22 +3376,31 @@ def _adaptive_levin(
         else:
             ratio = delta2 / delta1
 
-        region = leaf.region
         residual = region.abserr
+        trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
+            ratio < 1.0 and delta1 <= region.phase_err
+        )
         _remove_error(leaf)
         region._delta1 = delta1
         region._delta2 = delta2
         region._convergence_ratio = ratio
-        if ratio < 1.0:
+        if trusted:
             region._trusted = True
             region._declared_resolution = max(residual, delta1) / (1.0 - ratio)
         else:
             region._trusted = False
             num_untrusted_found += 1
-            region._declared_resolution = (
-                max(residual, delta1 + delta2) if leaf.depth >= depth_max else None
-            )
+            if leaf.depth >= depth_max:
+                region._declared_resolution = (
+                    max(residual, delta1) / (1.0 - ratio)
+                    if ratio < 1.0
+                    else max(residual, delta1 + delta2)
+                )
+            else:
+                region._declared_resolution = None
         _restore_error(leaf)
+        if trusted:
+            _set_value(leaf, quarters_sum, "quarters")
         leaf.checked = True
         num_checks += 1
         _push_candidate(leaf)
@@ -3085,25 +3408,78 @@ def _adaptive_levin(
     def _exempt_floor_limited(leaf: _levin_leaf) -> None:
         # A floor-limited leaf is exempt from the trust check: its differences are round-off
         # noise, and the floor bounds them. If the check was taken on it before it was found
-        # floor-limited, its declared resolution error reverts to its own estimate; the
-        # differences stay recorded.
+        # floor-limited, its declared resolution error reverts to its own estimate, and its value
+        # to its own, V_P, if the check had trusted it (06g); the differences stay recorded.
         region = leaf.region
         if region._trusted is not None or region._declared_resolution is not None:
             _remove_error(leaf)
             region._trusted = None
             region._declared_resolution = None
             _restore_error(leaf)
+        if region._value_kind != "own":
+            _set_value(leaf, region._value_own, "own")
         leaf.grandchildren = None
+
+    def _split_could_meet_budget(leaf: _levin_leaf) -> bool:
+        """
+        The round-off exit's budget clause (06g, section 0.2 (d) item 2): True if the call's error
+        is above its request now, and would meet it with this leaf's e' replaced by its halves'
+        floors as each would enter the call's error (_solve_floor_in_budget(): less |E| on a
+        fallback half) and sum E updated by the halves' E in place of the leaf's. The floors are
+        lower bounds on the halves' errors, so a False here means the split cannot meet the
+        request. The recomputed sums are exact (_ExactSum.total_with()); a non-finite error
+        elsewhere in the call, or a non-finite half floor, makes the recomputed error +inf.
+
+        When the call meets its request already -- the leaf was chosen because the trust check
+        found it untrusted -- the split is not what the call needs for its budget, and this is
+        False: the premise is then decided by the halving test alone, as before 06g. (As written,
+        the clause would bisect every such leaf, a noise-level one included, on towards depth_max;
+        see 06g's log.)
+        """
+        running_value, running_eprime, running_node = _running_sums()
+        request = max(atol, rtol * np.fabs(running_value))
+        if running_eprime + running_node <= request:
+            return False
+
+        region = leaf.region
+        e_leaf = _error_for_ordering(leaf.error)
+        E_leaf = region.node_error_signed
+        own_nonfinite = (0 if np.isfinite(e_leaf) else 1) + (
+            1 if E_leaf is not None and not np.isfinite(E_leaf) else 0
+        )
+        if num_nonfinite_errors - own_nonfinite > 0:
+            return False
+
+        error_terms = []
+        node_terms = []
+        if np.isfinite(e_leaf):
+            error_terms.append(-e_leaf)
+        if E_leaf is not None and np.isfinite(E_leaf):
+            node_terms.append(-E_leaf)
+        for half in (leaf.dataL, leaf.dataR):
+            floor = _solve_floor_in_budget(half)
+            node = half.get("node_error_signed")
+            if not np.isfinite(floor) or (node is not None and not np.isfinite(node)):
+                return False
+            error_terms.append(floor)
+            if node is not None:
+                node_terms.append(node)
+
+        recomputed = error_sum.total_with(*error_terms) + abs(
+            node_sum.total_with(*node_terms)
+        )
+        return recomputed <= request
 
     _add_leaf(_make_leaf(x_span[0], x_span[1], 0, None, {}, {}, {}))
 
     running_stop = False
+    node_limited = False
 
     while True:
         now = time.time()
         if now - last_notify > notify_interval:
             updates_issued = updates_issued + 1
-            current_val, _ = _running_sums()
+            current_val, _, _ = _running_sums()
             _notify_progress(
                 now,
                 last_notify,
@@ -3144,22 +3520,33 @@ def _adaptive_levin(
 
             last_notify = time.time()
 
-        # Step 1: the budget. The running sums are exact, so this test is the correctly rounded
-        # one; before stopping on it, it is confirmed on the sums the call returns (summed in
-        # ascending x, _sum_leaves_ascending()), so that a call which stops here reports
-        # converged by the same arithmetic. If they disagree -- a total at the boundary, within
-        # rounding -- refinement continues.
+        # Step 1: the budget. The call's error is sum e'_i + |sum E| (06g, section 0.2 (c)). The
+        # running sums are exact, so this test is the correctly rounded one; before stopping on
+        # it, it is confirmed on the sums the call returns (summed in ascending x,
+        # _sum_leaves_ascending()), so that a call which stops here reports converged by the same
+        # arithmetic. If they disagree -- a total at the boundary, within rounding -- refinement
+        # continues.
         #
         # Then the trust check one level down, taken lazily: when the budget passes, every leaf not
         # yet checked (and not floor-limited, which is exempt) is checked, in ascending x. A
         # widened error, or an untrusted leaf, reopens the loop, which continues and checks again
         # at the next pass. The loop stops on the budget only with every leaf checked or
         # floor-limited, and no refinable leaf untrusted.
-        running_value, running_error = _running_sums()
-        running_stop = running_error <= max(atol, rtol * np.fabs(running_value))
-        if running_stop:
-            check_value, check_error = _sum_leaves_ascending(_leaves_ascending())
-            if check_error <= max(atol, rtol * np.fabs(check_value)):
+        #
+        # The node-limited stop (06g). The test above is taken on sum e'_i alone, which the stop
+        # needs either way. When sum e'_i meets the request and sum e'_i + |sum E| does not, with
+        # every other condition of the stop holding, the call stops unconverged, flagged
+        # node_limited: |sum E| alone holds it above its request, and bisection does not lower
+        # sum E systematically (06f), so refining further would chase it.
+        running_value, running_eprime, running_node = _running_sums()
+        running_request = max(atol, rtol * np.fabs(running_value))
+        running_stop = running_eprime + running_node <= running_request
+        if running_eprime <= running_request:
+            check_value, check_eprime, check_node = _sum_leaves_ascending(
+                _leaves_ascending()
+            )
+            check_request = max(atol, rtol * np.fabs(check_value))
+            if check_eprime <= check_request:
                 unchecked = [
                     candidate
                     for candidate in _leaves_ascending()
@@ -3171,6 +3558,8 @@ def _adaptive_levin(
                         _check_leaf(candidate)
                     continue
                 if not untrusted_refinable:
+                    if not (check_eprime + np.fabs(check_node) <= check_request):
+                        node_limited = True
                     break
             else:
                 num_resum_rejections += 1
@@ -3184,10 +3573,16 @@ def _adaptive_levin(
 
         # Floor-limited? Its round-off floor is finite, its residual (the step-(4) residual on the
         # Levin branch, the nested-pair estimate on the fallback branch) is already down at that
-        # floor, and bisecting it would not lower the floor: its halves' floors sum to at least
-        # _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2 of its own (06b's premise; see that
-        # constant's comment for why 1/2). Then bisection buys cost and no accuracy, so the leaf
-        # is not refined, and is flagged phase_limited.
+        # floor, and bisecting it would not help: 06b's premise holds, as 06g states it
+        # (_roundoff_exit_premise_holds(); the comment above _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO
+        # gives the argument and the values) --
+        #   1. the halving test: its halves' floors, less their declared endpoint terms, sum to at
+        #      least 1/2 of its own, less its own;
+        #   2. the budget clause: the split could not meet the call's request
+        #      (_split_could_meet_budget()).
+        # Then bisection buys cost and no accuracy, so the leaf is not refined, and is flagged
+        # phase_limited. The residual is compared with the leaf's whole floor, its node error |E|
+        # included: the residual of one leaf sees its own node error, not the call's sum (06g).
         #
         # The premise is checked from the halves: on the Levin branch they are dataL/dataR, in
         # hand already, so the check is free; on the fallback branch they are solved here, on
@@ -3207,9 +3602,10 @@ def _adaptive_levin(
                 if leaf.dataL is None:
                     _solve_halves(leaf)
                 floor_limited = _roundoff_exit_premise_holds(
-                    phase_err,
-                    leaf.dataL.get("phase_err", 0.0) or 0.0,
-                    leaf.dataR.get("phase_err", 0.0) or 0.0,
+                    region.phase_err_roundoff,
+                    _solve_floor_roundoff(leaf.dataL),
+                    _solve_floor_roundoff(leaf.dataR),
+                    split_could_meet_budget=_split_could_meet_budget(leaf),
                 )
             if floor_limited:
                 region._phase_limited = True
@@ -3281,9 +3677,13 @@ def _adaptive_levin(
     elapsed = driver_stop - driver_start
 
     # Aggregate value and error estimate, each summed over the leaves in ascending x. Each leaf
-    # contributes max(resolution/fallback residual, round-off floor), plus its truncation term:
-    # used_interval.total_err, the e_i the loop's budget sums. The two are estimates of independent
-    # error sources, and the larger dominates.
+    # contributes max(resolution/fallback residual, round-off floor), plus its truncation term --
+    # with its node error |E| taken out of a fallback leaf's floor (used_interval.budget_err, the
+    # e'_i the loop's budget sums) -- and the fallback leaves' node errors enter signed, as
+    # |sum E| (since prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (c):
+    # E's sign varies from leaf to leaf, and sum |E| does not fall under bisection). The
+    # resolution and round-off estimates are of independent error sources, and the larger
+    # dominates.
     #
     # The regions are summed in absolute value rather than in quadrature. The round-off
     # contributions are not independent random errors -- neighbouring regions share endpoints, and
@@ -3297,7 +3697,16 @@ def _adaptive_levin(
     # progress by bisecting further (until depth_max); a large abserr_roundoff means it cannot,
     # no matter the tolerance requested; a large abserr_truncation means the rtol gate on small
     # p-modes (prompt 06) is the limiting factor, and a smaller rtol would help.
-    val, abserr_total = _sum_leaves_ascending(leaves_ascending)
+    val, abserr_less_node, node_error_signed_sum = _sum_leaves_ascending(
+        leaves_ascending
+    )
+    abserr_node_signed = float(np.fabs(node_error_signed_sum))
+    abserr_total = abserr_less_node + abserr_node_signed
+    node_error_abs_sum = math.fsum(
+        abs(region.node_error_signed)
+        for region in used_regions
+        if region.node_error_signed is not None
+    )
 
     abserr_resolution_total = 0.0
     abserr_roundoff_total = 0.0
@@ -3332,7 +3741,9 @@ def _adaptive_levin(
     # A call that stopped on the budget meets it by construction; one that stopped because no
     # leaf was refinable does not, and every leaf still holding error back is then at depth_max,
     # or floor-limited (round-off, phase_limited). And the call is not converged while a leaf it
-    # returns is untrusted (the trust check one level down; such a leaf is at depth_max).
+    # returns is untrusted (the trust check one level down; such a leaf is at depth_max). A call
+    # that stopped node-limited does not meet it either: there sum e'_i meets the request and
+    # |sum E| holds the call above it.
     requested_total = max(atol, rtol * np.fabs(val))
     budget_met = abserr_total <= requested_total
     converged = budget_met and num_untrusted == 0
@@ -3341,7 +3752,8 @@ def _adaptive_levin(
         "adaptive_levin (%s): global budget | %d leaves, %d bisections, %d floor-limited, "
         "%d at depth_max | trust check: %d checks in %d passes, %d found untrusted, %d returned "
         "untrusted, %d returned unchecked | running test %s, returned budget met %s%s, running "
-        "test passed but returned sums did not %d time(s)",
+        "test passed but returned sums did not %d time(s) | node errors: sum E %.3g, sum |E| "
+        "%.3g, node-limited %s",
         _format_label(notify_label, id_label),
         num_used_regions,
         num_splits,
@@ -3356,6 +3768,9 @@ def _adaptive_levin(
         budget_met,
         " (DISAGREE)" if bool(running_stop) != bool(budget_met) else "",
         num_resum_rejections,
+        node_error_signed_sum,
+        node_error_abs_sum,
+        node_limited,
     )
 
     if not converged:
@@ -3368,16 +3783,26 @@ def _adaptive_levin(
             atol,
             rtol,
         )
-        _logger.warning(
-            "   -- no leaf of the partition could be refined further: of %d leaves, %d are at "
-            "depth_max (%d of them with an error estimate that failed the trust check one level "
-            "down) and %d are limited by the round-off floor (Chen et al. eq. 151); consider a "
-            "looser atol/rtol, a larger depth_max, or a smaller chebyshev_order",
-            num_used_regions,
-            num_at_depth_max,
-            num_untrusted,
-            num_phase_limited,
-        )
+        if node_limited:
+            _logger.warning(
+                "   -- node-limited: the leaves' errors meet the request, and the signed sum of "
+                "the Clenshaw-Curtis leaves' node errors, |sum E| = %.3g (sum |E| = %.3g), holds "
+                "the call above it; bisection does not lower it systematically, so the call was "
+                "not refined further",
+                abserr_node_signed,
+                node_error_abs_sum,
+            )
+        else:
+            _logger.warning(
+                "   -- no leaf of the partition could be refined further: of %d leaves, %d are at "
+                "depth_max (%d of them with an error estimate that failed the trust check one "
+                "level down) and %d are limited by the round-off floor (Chen et al. eq. 151); "
+                "consider a looser atol/rtol, a larger depth_max, or a smaller chebyshev_order",
+                num_used_regions,
+                num_at_depth_max,
+                num_untrusted,
+                num_phase_limited,
+            )
 
     # Health check. If the requested accuracy is not attainable -- typically because the caller has
     # asked for an accuracy the phase function cannot deliver -- the bisection runs to the depth
@@ -3452,6 +3877,18 @@ def _adaptive_levin(
         "abserr_roundoff": float(abserr_roundoff_total),
         "abserr_fallback": float(abserr_fallback_total),
         "abserr_truncation": float(abserr_truncation_total),
+        # The Clenshaw-Curtis leaves' node errors (prompts/levin-phase-floor/
+        # 06g-leaf-values-and-node-sum.md, section 0.2 (c)): their signed sum, correctly rounded
+        # (math.fsum over the regions in ascending x); the sum of their absolute values, which
+        # "abserr_roundoff" carries as before; and |sum E|, the node errors' part of "abserr",
+        # which carries them signed. The correction by -sum E is measured, not applied.
+        "node_error_signed_sum": float(node_error_signed_sum),
+        "node_error_abs_sum": float(node_error_abs_sum),
+        "abserr_node_signed": abserr_node_signed,
+        # True if the call stopped because |sum E| alone held it above its request: the leaves'
+        # errors met it, every leaf was checked or floor-limited, and no refinable leaf was
+        # untrusted. "converged" is then False.
+        "node_limited": bool(node_limited),
         # True if the aggregate abserr meets max(atol, rtol*|value|) -- the call's budget, which
         # the loop refines until it is met or no leaf is refinable (06c) -- and no leaf returned is
         # untrusted. False means every leaf still holding error back is at depth_max or
@@ -3898,8 +4335,19 @@ def adaptive_levin_sincos(
           * "value" -- the estimated value of the integral.
           * "abserr" -- estimated absolute error of "value". This is a sum, over the subintervals
             of the final partition, of max(resolution/fallback residual, round-off floor) plus any
-            truncation term (see abserr_truncation below) -- the quantity the driver's budget is
-            tested on; it is an estimate, not a proven bound.
+            truncation term (see abserr_truncation below) -- with the Clenshaw-Curtis
+            subintervals' node errors taken out of their floors and carried signed, as
+            |node_error_signed_sum| (as of prompts/levin-phase-floor/
+            06g-leaf-values-and-node-sum.md) -- the quantity the driver's budget is tested on; it
+            is an estimate, not a proven bound.
+          * "node_error_signed_sum", "node_error_abs_sum", "abserr_node_signed" -- the
+            Clenshaw-Curtis subintervals' node errors E (the signed first-order error of their
+            computed nodes): their signed sum, the sum of their absolute values (which
+            abserr_roundoff carries), and the absolute value of the signed sum (which abserr
+            carries). New as of 06g; all zero when no subinterval took the fallback.
+          * "node_limited" -- True if the driver stopped because |node_error_signed_sum| alone
+            held the call above its request, with every subinterval's own error within it;
+            "converged" is then False (new as of 06g).
           * "abserr_resolution", "abserr_roundoff", "abserr_fallback", "abserr_truncation" --
             "abserr" broken down by source: the summed step-(4) residual over Levin regions (new
             as of prompt 04), the summed round-off floor (Chen et al. eq. 151 on Levin regions,
@@ -3917,7 +4365,7 @@ def adaptive_levin_sincos(
             was met in aggregate, and no subinterval returned failed the trust check. The driver
             refines until both hold, so False means no subinterval could be refined further:
             every one still holding error back is at depth_max or floor-limited, or one at
-            depth_max is untrusted.
+            depth_max is untrusted; or the call stopped node-limited (see "node_limited").
           * "phase_limited" -- True if at least one subinterval the driver chose to refine while
             the budget was unmet was found floor-limited: its achievable accuracy was set by the
             round-off floor rather than by lack of resolution, on a floor that bisecting it would
@@ -3926,10 +4374,14 @@ def adaptive_levin_sincos(
           * "num_phase_limited_regions" -- count of such regions.
           * "num_untrusted_regions" -- count of subintervals returned that failed the trust
             check one level down: their halves' and grandchildren's values do not show the error
-            falling (r = delta2 / delta1 >= 1), so their estimate cannot be relied on. Each is at
-            depth_max, declares max(residual, delta1 + delta2), and makes "converged" False (new
-            as of 06c). Each returned used_interval carries delta1, delta2, convergence_ratio,
-            trusted and declared_resolution.
+            falling fast enough to extrapolate (r = delta2 / delta1 at least 1/4, unless r < 1 and
+            delta1 is within the subinterval's round-off floor; until 06g, r >= 1), so their
+            estimate cannot be relied on. Each is at depth_max, declares max(residual, delta1) /
+            (1 - r) if r < 1 and max(residual, delta1 + delta2) if not, and makes "converged" False
+            (new as of 06c). Each returned used_interval carries delta1, delta2,
+            convergence_ratio, trusted and declared_resolution; and value, value_kind and value_own:
+            a trusted subinterval returns its quarters sum, the finest value computed, in place of
+            its own solve's (as of 06g).
           * "num_regions" -- number of subintervals of the final partition (Levin + direct
             quadrature).
           * "num_simple_regions" -- of those, how many were handled by direct quadrature rather

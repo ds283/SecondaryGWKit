@@ -1,0 +1,253 @@
+# levin-phase-floor 06g: section 2 tests 1-7: the cells, at the parent and at 06g
+# written 2026-11-01T10:30:07+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script cells.py sha256 3deb1b2f1ec55271d161e6e117e8cb22c645e7e1dc87b28ca06cd7340eb7f1f6
+# prov.py sha256 8d667c1da62b12ee7ba398fc12cfcce073a2a2b296f9707328d07f77b4dd1603
+# AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# input AdaptiveLevin/tests/test_levin_leaf_values.py sha256 dc0a12259a36365b28952beb54e610792c7eec4a4d1c2e365f5273be1d427eda
+# input AdaptiveLevin/tests/test_levin_node_sum.py sha256 4eb5584d072716b2a8bbf49b7f9c5e9f43aa5c9f6cccda4f2ad04eb19ce4259d
+# input AdaptiveLevin/tests/test_levin_roundoff_exit.py sha256 9e14bb3f5702f5dd6f23a5281c02bf9957d8482d30035033ead9f6d58a4cec5f
+# HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M AdaptiveLevin/tests/test_levin_cc_floor.py
+#      M AdaptiveLevin/tests/test_levin_global_budget.py
+#      M AdaptiveLevin/tests/test_levin_roundoff_exit.py
+#      M docs/OPEN_ISSUES.md
+#      M prompts/levin-phase-floor/IMPLEMENTATION_STATE.md
+#     ?? AdaptiveLevin/tests/test_levin_leaf_values.py
+#     ?? AdaptiveLevin/tests/test_levin_node_sum.py
+#     ?? docs/levin-phase-floor/06g/
+#     ?? prompts/levin-phase-floor/logs/06g-leaf-values-and-node-sum.md
+#     ?? tools/filon_reference.py
+#     ?? tools/tests/test_filon_reference.py
+# uptime at start: 10:30  up 1 day, 12:50, 1 user, load averages: 4.71 8.28 8.65
+# parent 4f4f9ed2a31fb7437fcfca01263d260eebaff842 module sha256 8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c
+
+== Test 1's cells: parent -> 06g
+-- exp_sin_1e3 (identical asserted: True) kwargs {'atol': 1e-20, 'rtol': 1e-12}
+   parent: value 0.0007418160636754203 abserr 2.1496e-16 converged True regions 1 (fallback 0) depth 0 solves 7 floor-limited 0 untrusted 0 | true error 5.4210e-19
+      [0.3333333333333333, 2.3333333333333335] d0 Levin res 2.1684e-19 floor 2.1496e-16 r 0 d1 2.1684e-19 d2 0.0000e+00 trusted True limited False
+   06g:    value 0.00074181606367542 abserr 2.1496e-16 converged True regions 1 (fallback 0) depth 0 solves 7 floor-limited 0 untrusted 0 node-limited False sumE 0.0000e+00 sum|E| 0.0000e+00 | true error 3.2526e-19
+      [0.3333333333333333, 2.3333333333333335] d0 Levin res 2.1684e-19 floor 2.1496e-16 r 0 d1 2.1684e-19 d2 0.0000e+00 trusted True limited False value quarters
+   true error parent/06g 1.667
+-- si_1000_exp (identical asserted: True) kwargs {'atol': 1e-15, 'rtol': 1e-07}
+   parent: value 0.0005632048276956291 abserr 2.2178e-11 converged True regions 3 (fallback 0) depth 2 solves 23 floor-limited 0 untrusted 0 | true error 1.0948e-14
+      [0.0, 10.0] d1 Levin res 9.8058e-15 floor 2.2027e-11 r 0.00471 d1 9.8058e-15 d2 4.6187e-17 trusted True limited False
+      [10.0, 15.0] d2 Levin res 1.9852e-23 floor 7.4457e-14 r 0.3333 d1 1.9852e-23 d2 6.6174e-24 trusted True limited False
+      [15.0, 20.0] d2 Levin res 0.0000e+00 floor 7.4457e-14 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+   06g:    value 0.0005632048276857771 abserr 2.2178e-11 converged True regions 3 (fallback 0) depth 2 solves 23 floor-limited 0 untrusted 0 node-limited False sumE 0.0000e+00 sum|E| 0.0000e+00 | true error 1.0965e-15
+      [0.0, 10.0] d1 Levin res 9.8058e-15 floor 2.2027e-11 r 0.00471 d1 9.8058e-15 d2 4.6187e-17 trusted True limited False value quarters
+      [10.0, 15.0] d2 Levin res 1.9852e-23 floor 7.4457e-14 r 0.3333 d1 1.9852e-23 d2 6.6174e-24 trusted True limited False value quarters
+      [15.0, 20.0] d2 Levin res 0.0000e+00 floor 7.4457e-14 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters
+   true error parent/06g 9.985
+-- sinc_1e3 (identical asserted: True) kwargs {'atol': 1e-20, 'rtol': 1e-12}
+   parent: value 0.0006584234171906965 abserr 4.4436e-16 converged True regions 5 (fallback 0) depth 4 solves 39 floor-limited 2 untrusted 0 | true error 1.0842e-18
+      [1.0, 1.5625] d4 Levin res 4.3368e-19 floor 8.4375e-17 r 2 d1 4.3368e-19 d2 8.6736e-19 trusted None limited True
+      [1.5625, 2.125] d4 Levin res 5.4210e-19 floor 5.4000e-17 r 0.5 d1 5.4210e-19 d2 2.7105e-19 trusted True limited False
+      [2.125, 3.25] d3 Levin res 1.3553e-19 floor 7.9412e-17 r 4.6 d1 1.3553e-19 d2 6.2342e-19 trusted None limited True
+      [3.25, 5.5] d2 Levin res 4.2013e-19 floor 1.0385e-16 r 0.129 d1 4.2013e-19 d2 5.4210e-20 trusted True limited False
+      [5.5, 10.0] d1 Levin res 3.6592e-19 floor 1.2273e-16 r 0.1852 d1 3.6592e-19 d2 6.7763e-20 trusted True limited False
+   06g:    value 0.0006584234171906981 abserr 4.4436e-16 converged True regions 5 (fallback 0) depth 4 solves 39 floor-limited 2 untrusted 0 node-limited False sumE 0.0000e+00 sum|E| 0.0000e+00 | true error 5.4210e-19
+      [1.0, 1.5625] d4 Levin res 4.3368e-19 floor 8.4375e-17 r 2 d1 4.3368e-19 d2 8.6736e-19 trusted None limited True value own
+      [1.5625, 2.125] d4 Levin res 5.4210e-19 floor 5.4000e-17 r 0.5 d1 5.4210e-19 d2 2.7105e-19 trusted True limited False value quarters
+      [2.125, 3.25] d3 Levin res 1.3553e-19 floor 7.9412e-17 r 4.6 d1 1.3553e-19 d2 6.2342e-19 trusted None limited True value own
+      [3.25, 5.5] d2 Levin res 4.2013e-19 floor 1.0385e-16 r 0.129 d1 4.2013e-19 d2 5.4210e-20 trusted True limited False value quarters
+      [5.5, 10.0] d1 Levin res 3.6592e-19 floor 1.2273e-16 r 0.1852 d1 3.6592e-19 d2 6.7763e-20 trusted True limited False value quarters
+   true error parent/06g 2
+-- gaussian_bump (identical asserted: False) kwargs {'atol': 1e-10}
+   parent: value -8.562612177253725e-11 abserr 8.5641e-11 converged True regions 5 (fallback 0) depth 3 solves 39 floor-limited 0 untrusted 0 | true error 8.5626e-11
+      [0.0, 0.75] d2 Levin res 3.1110e-30 floor 5.8982e-38 r 0.2435 d1 3.1110e-30 d2 7.5768e-31 trusted True limited False
+      [0.75, 1.5] d2 Levin res 8.2189e-11 floor 1.0378e-16 r 0.04031 d1 8.2189e-11 d2 3.3131e-12 trusted True limited False
+      [1.5, 2.25] d2 Levin res 2.9825e-36 floor 1.8043e-44 r 0.5243 d1 2.9825e-36 d2 1.5637e-36 trusted True limited False
+      [2.25, 2.625] d3 Levin res 1.5536e-237 floor 0.0000e+00 r 0.7341 d1 1.5536e-237 d2 1.1406e-237 trusted True limited False
+      [2.625, 3.0] d3 Levin res 0.0000e+00 floor 0.0000e+00 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+   06g:    value -1.2394789310049392e-13 abserr 8.5641e-11 converged True regions 10 (fallback 0) depth 5 solves 79 floor-limited 0 untrusted 0 node-limited False sumE 0.0000e+00 sum|E| 0.0000e+00 | true error 1.2395e-13
+      [0.0, 0.75] d2 Levin res 3.1110e-30 floor 5.8982e-38 r 0.2435 d1 3.1110e-30 d2 7.5768e-31 trusted True limited False value quarters
+      [0.75, 1.5] d2 Levin res 8.2189e-11 floor 1.0378e-16 r 0.04031 d1 8.2189e-11 d2 3.3131e-12 trusted True limited False value quarters
+      [1.5, 1.875] d3 Levin res 1.5637e-36 floor 9.0214e-45 r 0.1027 d1 1.5637e-36 d2 1.6065e-37 trusted True limited False value quarters
+      [1.875, 2.0625] d4 Levin res 9.2268e-113 floor 1.2878e-121 r 0.2311 d1 9.2268e-113 d2 2.1321e-113 trusted True limited False value quarters
+      [2.0625, 2.25] d4 Levin res 1.7284e-168 floor 3.3080e-178 r 0.2029 d1 1.7284e-168 d2 3.5072e-169 trusted True limited False value quarters
+      [2.25, 2.34375] d5 Levin res 4.6392e-238 floor 0.0000e+00 r 0.1151 d1 4.6392e-238 d2 5.3377e-239 trusted True limited False value quarters
+      [2.34375, 2.4375] d5 Levin res 5.9505e-277 floor 0.0000e+00 r 0.0605 d1 5.9505e-277 d2 3.5998e-278 trusted True limited False value quarters
+      [2.4375, 2.53125] d5 Levin res 1.7218e-318 floor 0.0000e+00 r 0.1087 d1 1.7218e-318 d2 1.8719e-319 trusted True limited False value quarters
+      [2.53125, 2.625] d5 Levin res 0.0000e+00 floor 0.0000e+00 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters
+      [2.625, 3.0] d3 Levin res 0.0000e+00 floor 0.0000e+00 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters
+   true error parent/06g 690.8
+-- sqrt_fallback(1e-08) (identical asserted: False) kwargs {'atol': 1e-20, 'rtol': 1e-08}
+   parent: value 0.5423702304643001 abserr 3.0806e-09 converged True regions 3 (fallback 3) depth 2 solves 23 floor-limited 1 untrusted 0 | true error 3.0585e-11
+      [0.0, 0.25] d2 direct res 2.9375e-09 floor 1.0066e-16 r 0.04644 d1 2.9200e-11 d2 1.3561e-12 trusted True limited False
+      [0.25, 0.5] d2 direct res 0.0000e+00 floor 4.2167e-16 r inf d1 0.0000e+00 d2 1.3878e-17 trusted None limited True
+      [0.5, 1.0] d1 direct res 0.0000e+00 floor 1.6890e-15 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+   06g:    value 0.5423702304948557 abserr 3.0806e-09 converged True regions 3 (fallback 3) depth 2 solves 23 floor-limited 1 untrusted 0 node-limited False sumE 2.1441e-18 sum|E| 2.1441e-18 | true error 2.9088e-14
+      [0.0, 0.25] d2 direct res 2.9375e-09 floor 1.0066e-16 r 0.04644 d1 2.9200e-11 d2 1.3561e-12 trusted True limited False value quarters E 3.3652e-19 floor-less-E 1.0032e-16
+      [0.25, 0.5] d2 direct res 0.0000e+00 floor 4.2167e-16 r inf d1 0.0000e+00 d2 1.3878e-17 trusted None limited True value own E 3.7248e-22 floor-less-E 4.2167e-16
+      [0.5, 1.0] d1 direct res 0.0000e+00 floor 1.6890e-15 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters E 1.8072e-18 floor-less-E 1.6872e-15
+   true error parent/06g 1051
+-- sqrt_fallback(1e-10) (identical asserted: False) kwargs {'atol': 1e-20, 'rtol': 1e-10}
+   parent: value 0.5423702304948557 abserr 3.2408e-11 converged True regions 5 (fallback 5) depth 4 solves 39 floor-limited 1 untrusted 0 | true error 2.9088e-14
+      [0.0, 0.0625] d4 direct res 3.2135e-11 floor 3.4364e-18 r 0.008342 d1 2.8762e-14 d2 2.3993e-16 trusted True limited False
+      [0.0625, 0.125] d4 direct res 0.0000e+00 floor 1.4866e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+      [0.125, 0.25] d3 direct res 6.9389e-18 floor 8.1320e-17 r 0 d1 3.4694e-18 d2 0.0000e+00 trusted True limited False
+      [0.25, 0.5] d2 direct res 0.0000e+00 floor 4.2167e-16 r inf d1 0.0000e+00 d2 1.3878e-17 trusted None limited True
+      [0.5, 1.0] d1 direct res 0.0000e+00 floor 1.6890e-15 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+   06g:    value 0.5423702304948848 abserr 3.2408e-11 converged True regions 5 (fallback 5) depth 4 solves 39 floor-limited 1 untrusted 0 node-limited False sumE 1.7934e-18 sum|E| 1.8432e-18 | true error 0.0000e+00
+      [0.0, 0.0625] d4 direct res 3.2135e-11 floor 3.4364e-18 r 0.008342 d1 2.8762e-14 d2 2.3993e-16 trusted True limited False value quarters E 1.0724e-20 floor-less-E 3.4257e-18
+      [0.0625, 0.125] d4 direct res 0.0000e+00 floor 1.4866e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters E -4.5691e-21 floor-less-E 1.4861e-17
+      [0.125, 0.25] d3 direct res 6.9389e-18 floor 8.1320e-17 r 0 d1 3.4694e-18 d2 0.0000e+00 trusted True limited False value quarters E -2.0324e-20 floor-less-E 8.1299e-17
+      [0.25, 0.5] d2 direct res 0.0000e+00 floor 4.2167e-16 r inf d1 0.0000e+00 d2 1.3878e-17 trusted None limited True value own E 3.7248e-22 floor-less-E 4.2167e-16
+      [0.5, 1.0] d1 direct res 0.0000e+00 floor 1.6890e-15 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters E 1.8072e-18 floor-less-E 1.6872e-15
+   true error parent/06g inf
+-- runge_fallback (identical asserted: False) kwargs {'atol': 1e-20, 'rtol': 1e-08}
+   parent: value 0.12608727072036166 abserr 3.6124e-11 converged True regions 11 (fallback 11) depth 5 solves 87 floor-limited 1 untrusted 0 | true error 0.0000e+00
+      [-1.0, -0.75] d3 direct res 0.0000e+00 floor 4.8939e-19 r inf d1 0.0000e+00 d2 1.3553e-20 trusted None limited True
+      [-0.75, -0.5] d3 direct res 1.0842e-19 floor 2.6297e-18 r 0 d1 1.0842e-19 d2 0.0000e+00 trusted True limited False
+      [-0.5, -0.25] d3 direct res 2.5153e-17 floor 1.2291e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+      [-0.25, -0.125] d4 direct res 2.0817e-17 floor 2.7716e-17 r 0 d1 8.6736e-19 d2 0.0000e+00 trusted True limited False
+      [-0.125, 0.0] d4 direct res 3.6111e-11 floor 1.9785e-16 r 0 d1 1.3878e-17 d2 0.0000e+00 trusted True limited False
+      [0.0, 0.0625] d5 direct res 1.2178e-14 floor 1.5488e-16 r 0 d1 6.9389e-18 d2 0.0000e+00 trusted True limited False
+      [0.0625, 0.125] d5 direct res 1.7347e-18 floor 5.3325e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+      [0.125, 0.25] d4 direct res 2.0817e-17 floor 3.4740e-17 r 0 d1 1.7347e-18 d2 0.0000e+00 trusted True limited False
+      [0.25, 0.375] d4 direct res 4.3368e-19 floor 1.2826e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+      [0.375, 0.5] d4 direct res 4.3368e-19 floor 6.6583e-18 r 0 d1 2.1684e-19 d2 0.0000e+00 trusted True limited False
+      [0.5, 1.0] d2 direct res 4.0332e-17 floor 1.0189e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False
+   06g:    value 0.12608727072036166 abserr 3.6124e-11 converged True regions 11 (fallback 11) depth 5 solves 87 floor-limited 1 untrusted 0 node-limited False sumE -1.1976e-18 sum|E| 1.1976e-18 | true error 0.0000e+00
+      [-1.0, -0.75] d3 direct res 0.0000e+00 floor 4.8939e-19 r inf d1 0.0000e+00 d2 1.3553e-20 trusted None limited True value own E -1.4402e-21 floor-less-E 4.8795e-19
+      [-0.75, -0.5] d3 direct res 1.0842e-19 floor 2.6297e-18 r 0 d1 1.0842e-19 d2 0.0000e+00 trusted True limited False value quarters E -6.2984e-21 floor-less-E 2.6234e-18
+      [-0.5, -0.25] d3 direct res 2.5153e-17 floor 1.2291e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters E -4.4767e-20 floor-less-E 1.2246e-17
+      [-0.25, -0.125] d4 direct res 2.0817e-17 floor 2.7716e-17 r 0 d1 8.6736e-19 d2 0.0000e+00 trusted True limited False value quarters E -7.5239e-20 floor-less-E 2.7640e-17
+      [-0.125, 0.0] d4 direct res 3.6111e-11 floor 1.9785e-16 r 0 d1 1.3878e-17 d2 0.0000e+00 trusted True limited False value quarters E -6.4792e-19 floor-less-E 1.9721e-16
+      [0.0, 0.0625] d5 direct res 1.2178e-14 floor 1.5488e-16 r 0 d1 6.9389e-18 d2 0.0000e+00 trusted True limited False value quarters E -2.2143e-19 floor-less-E 1.5466e-16
+      [0.0625, 0.125] d5 direct res 1.7347e-18 floor 5.3325e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters E -7.4018e-20 floor-less-E 5.3251e-17
+      [0.125, 0.25] d4 direct res 2.0817e-17 floor 3.4740e-17 r 0 d1 1.7347e-18 d2 0.0000e+00 trusted True limited False value quarters E -7.9586e-20 floor-less-E 3.4660e-17
+      [0.25, 0.375] d4 direct res 4.3368e-19 floor 1.2826e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters E -1.4087e-20 floor-less-E 1.2812e-17
+      [0.375, 0.5] d4 direct res 4.3368e-19 floor 6.6583e-18 r 0 d1 2.1684e-19 d2 0.0000e+00 trusted True limited False value quarters E -3.6666e-21 floor-less-E 6.6547e-18
+      [0.5, 1.0] d2 direct res 4.0332e-17 floor 1.0189e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters E -2.9186e-20 floor-less-E 1.0160e-17
+   true error parent/06g inf
+
+== The noise-level cell (test_noise_level_cell)
+   parent: value 0.43869358659800484 abserr 1.0715e-13 converged True regions 6 (fallback 6) depth 3 solves 47 floor-limited 2 untrusted 0 | true error 0.0000e+00
+   06g:    value 0.4386935865980049 abserr 1.0715e-13 converged True regions 6 (fallback 6) depth 3 solves 47 floor-limited 2 untrusted 0 node-limited False sumE -3.1026e-18 sum|E| 3.1026e-18 | true error 5.5511e-17
+      [-1.0, -0.5] d2 direct res 9.0206e-17 floor 4.6203e-17 r 0 d1 0.0000e+00 d2 0.0000e+00 trusted True limited False value quarters E -2.8134e-19 floor-less-E 4.5921e-17
+      [-0.5, -0.25] d3 direct res 1.3878e-17 floor 1.4530e-16 r inf d1 0.0000e+00 d2 6.9389e-18 trusted None limited True value own E -3.0143e-19 floor-less-E 1.4500e-16
+      [-0.25, 0.0] d3 direct res 6.7557e-14 floor 5.6352e-16 r 0 d1 2.7756e-17 d2 0.0000e+00 trusted True limited False value quarters E -1.0522e-18 floor-less-E 5.6247e-16
+      [0.0, 0.25] d3 direct res 3.8969e-14 floor 6.4614e-16 r 0 d1 2.7756e-17 d2 0.0000e+00 trusted True limited False value quarters E -8.1350e-19 floor-less-E 6.4533e-16
+      [0.25, 0.5] d3 direct res 1.3878e-17 floor 2.3523e-16 r 1 d1 6.9389e-18 d2 6.9389e-18 trusted None limited True value own E -3.0205e-19 floor-less-E 2.3493e-16
+      [0.5, 1.0] d2 direct res 9.7145e-17 floor 1.4972e-16 r 0 d1 6.9389e-18 d2 0.0000e+00 trusted True limited False value quarters E -3.5212e-19 floor-less-E 1.4936e-16
+
+== Test 3's cell: SincIntegral (06c's test 12b)
+   parent: value 0.00866607849685356 abserr 2.1595e-13 converged True regions 9 (fallback 0) depth 8 solves 71 floor-limited 0 untrusted 0 | true error 5.2063e-14
+      [1.0, 1.38671875] d8 Levin res 1.7287e-15 floor 1.8267e-16 r 0.143 d1 1.7287e-15 d2 2.4720e-16 trusted True limited False
+      [1.38671875, 1.7734375] d8 Levin res 1.1553e-15 floor 1.3173e-16 r 0.9107 d1 1.1553e-15 d2 1.0521e-15 trusted True limited False
+      [1.7734375, 2.546875] d7 Levin res 5.5988e-15 floor 1.2481e-16 r 0.1466 d1 5.5988e-15 d2 8.2052e-16 trusted True limited False
+      [2.546875, 4.09375] d6 Levin res 4.5479e-14 floor 1.1728e-16 r 0.01444 d1 4.5479e-14 d2 6.5659e-16 trusted True limited False
+      [4.09375, 7.1875] d5 Levin res 4.1181e-14 floor 1.1336e-16 r 0.004802 d1 4.1181e-14 d2 1.9776e-16 trusted True limited False
+      [7.1875, 13.375] d4 Levin res 3.7807e-14 floor 1.2913e-16 r 0.003522 d1 3.7807e-14 d2 1.3314e-16 trusted True limited False
+      [13.375, 25.75] d3 Levin res 4.5416e-14 floor 1.3879e-16 r 0.002012 d1 4.5416e-14 d2 9.1398e-17 trusted True limited False
+      [25.75, 50.5] d2 Levin res 1.8802e-14 floor 1.4417e-16 r 0.003261 d1 1.8802e-14 d2 6.1312e-17 trusted True limited False
+      [50.5, 100.0] d1 Levin res 4.5970e-15 floor 1.4703e-16 r 0.001297 d1 4.5970e-15 d2 5.9631e-18 trusted True limited False
+   06g:    value 0.008666078496903562 abserr 2.0739e-13 converged True regions 17 (fallback 8) depth 12 solves 135 floor-limited 1 untrusted 0 node-limited False sumE 3.1390e-18 sum|E| 6.2812e-17 | true error 2.0609e-15
+      [1.0, 1.38671875] d8 Levin res 1.7287e-15 floor 1.8267e-16 r 0.143 d1 1.7287e-15 d2 2.4720e-16 trusted True limited False value quarters
+      [1.38671875, 1.580078125] d9 Levin res 9.3415e-16 floor 1.1779e-16 r 0.03343 d1 9.3415e-16 d2 3.1225e-17 trusted True limited False value quarters
+      [1.580078125, 1.604248046875] d12 direct res 3.7470e-16 floor 4.0031e-16 r 0 d1 6.9389e-18 d2 0.0000e+00 trusted True limited False value quarters E 1.0608e-17 floor-less-E 3.8970e-16
+      [1.604248046875, 1.62841796875] d12 direct res 4.5797e-16 floor 4.0434e-16 r 0.3333 d1 1.0408e-17 d2 3.4694e-18 trusted True limited False value quarters E -1.2325e-17 floor-less-E 3.9201e-16
+      [1.62841796875, 1.652587890625] d12 direct res 3.1052e-16 floor 3.9083e-16 r 0.1667 d1 5.2042e-18 d2 8.6736e-19 trusted True limited False value quarters E 7.8865e-18 floor-less-E 3.8294e-16
+      [1.652587890625, 1.6767578125] d12 direct res 1.4420e-17 floor 3.7877e-16 r 2 d1 6.5052e-19 d2 1.3010e-18 trusted None limited True value own E 3.2959e-19 floor-less-E 3.7844e-16
+      [1.6767578125, 1.700927734375] d12 direct res 2.8189e-16 floor 3.8852e-16 r 0.25 d1 6.9389e-18 d2 1.7347e-18 trusted True limited False value quarters E -8.1472e-18 floor-less-E 3.8038e-16
+      [1.700927734375, 1.72509765625] d12 direct res 4.3021e-16 floor 3.9703e-16 r 0 d1 8.6736e-18 d2 0.0000e+00 trusted True limited False value quarters E 1.1707e-17 floor-less-E 3.8533e-16
+      [1.72509765625, 1.749267578125] d12 direct res 3.5909e-16 floor 3.8804e-16 r 0 d1 5.2042e-18 d2 0.0000e+00 trusted True limited False value quarters E -9.3646e-18 floor-less-E 3.7867e-16
+      [1.749267578125, 1.7734375] d12 direct res 1.1362e-16 floor 3.7503e-16 r 0.25 d1 1.7347e-18 d2 4.3368e-19 trusted True limited False value quarters E 2.4444e-18 floor-less-E 3.7259e-16
+      [1.7734375, 2.546875] d7 Levin res 5.5988e-15 floor 1.2481e-16 r 0.1466 d1 5.5988e-15 d2 8.2052e-16 trusted True limited False value quarters
+      [2.546875, 4.09375] d6 Levin res 4.5479e-14 floor 1.1728e-16 r 0.01444 d1 4.5479e-14 d2 6.5659e-16 trusted True limited False value quarters
+      [4.09375, 7.1875] d5 Levin res 4.1181e-14 floor 1.1336e-16 r 0.004802 d1 4.1181e-14 d2 1.9776e-16 trusted True limited False value quarters
+      [7.1875, 13.375] d4 Levin res 3.7807e-14 floor 1.2913e-16 r 0.003522 d1 3.7807e-14 d2 1.3314e-16 trusted True limited False value quarters
+      [13.375, 25.75] d3 Levin res 4.5416e-14 floor 1.3879e-16 r 0.002012 d1 4.5416e-14 d2 9.1398e-17 trusted True limited False value quarters
+      [25.75, 50.5] d2 Levin res 1.8802e-14 floor 1.4417e-16 r 0.003261 d1 1.8802e-14 d2 6.1312e-17 trusted True limited False value quarters
+      [50.5, 100.0] d1 Levin res 4.5970e-15 floor 1.4703e-16 r 0.001297 d1 4.5970e-15 d2 5.9631e-18 trusted True limited False value quarters
+
+== Test 3's descriptive table over tests 1 and 3's cells: every checked leaf (returned or later bisected), by r band and delta1 against the leaf's floor phi_P
+   parent
+            r<1/16  1/16<=r<1/4     1/4<=r<1         r>=1   (counts, d1>phi / d1<=phi)
+    d1>phi            9            3            3            2
+   d1<=phi           18            2            2            9
+      total 48
+   06g
+            r<1/16  1/16<=r<1/4     1/4<=r<1         r>=1   (counts, d1>phi / d1<=phi)
+    d1>phi           11            8            7            2
+   d1<=phi           22            3            5           10
+      total 68
+
+== Test 4: GRZIntegral(1000)
+   parent: value 3.0184188481996443e-16 abserr 4.3015e-14 converged False regions 238 (fallback 232) depth 10 solves 951 floor-limited 238 untrusted 0
+   06g:    value 3.0184188481996443e-16 abserr 4.1724e-14 converged False regions 238 (fallback 232) depth 10 solves 951 floor-limited 238 untrusted 0 node-limited False sumE -5.1977e-18 sum|E| 1.2975e-15
+   fallback leaves 232, E > 0 113, E < 0 119; sum|E| / |sum E| 249.6; the parent's combination on 06g's partition 4.3015e-14, / abserr 1.031
+
+== Test 5: sin(0.9 (x - 4e+07)) on [x0, x0 + 3.6], {'atol': 1e-40, 'rtol': 1e-09}
+   parent: value 2.2168465543035074 abserr 4.8254e-09 converged False regions 12 (fallback 12) depth 11 solves 47 floor-limited 12 untrusted 0 | true error 4.7988e-09
+      [40000000.0, 40000000.45] d3 direct res 2.3182e-12 floor 8.8682e-12 trusted None limited True
+      [40000000.45, 40000000.675] d4 direct res 2.5799e-14 floor 3.4824e-13 trusted None limited True
+      [40000000.675, 40000000.787499994] d5 direct res 3.6642e-13 floor 4.1555e-13 trusted None limited True
+      [40000000.787499994, 40000000.84375] d6 direct res 1.0140e-13 floor 1.8760e-13 trusted None limited True
+      [40000000.84375, 40000000.871875] d7 direct res 1.1519e-14 floor 8.8827e-14 trusted None limited True
+      [40000000.871875, 40000000.8859375] d8 direct res 1.2084e-14 floor 3.4211e-14 trusted None limited True
+      [40000000.8859375, 40000000.892968744] d9 direct res 6.9753e-15 floor 1.3741e-14 trusted None limited True
+      [40000000.892968744, 40000000.896484375] d10 direct res 1.2577e-16 floor 7.5486e-15 trusted None limited True
+      [40000000.896484375, 40000000.89824219] d11 direct res 2.0535e-16 floor 2.9537e-15 trusted None limited True
+      [40000000.89824219, 40000000.9] d11 direct res 1.3463e-14 floor 4.0681e-12 trusted None limited True
+      [40000000.9, 40000001.8] d2 direct res 1.4296e-11 floor 9.3044e-10 trusted None limited True
+      [40000001.8, 40000003.6] d1 direct res 2.5891e-10 floor 3.8809e-09 trusted None limited True
+   06g:    value 2.216846554447182 abserr 6.6446e-09 converged False regions 5 (fallback 5) depth 4 solves 39 floor-limited 4 untrusted 0 node-limited True sumE -5.3665e-09 sum|E| 5.3826e-09 | true error 4.6551e-09
+      [40000000.0, 40000000.45] d3 direct res 2.3182e-12 floor 8.8682e-12 r 0.9774 d1 3.9243e-11 d2 3.8357e-11 trusted None limited True value own E 8.0813e-12 floor-less-E 7.8689e-13
+      [40000000.45, 40000000.675] d4 direct res 2.5799e-14 floor 3.4824e-13 r 29.5 d1 3.3529e-13 d2 9.8894e-12 trusted None limited True value own E -1.4709e-14 floor-less-E 3.3354e-13
+      [40000000.675, 40000000.9] d4 direct res 1.4813e-12 floor 5.7277e-10 r 0.1576 d1 8.4439e-10 d2 1.3304e-10 trusted True limited False value quarters E -5.7203e-10 floor-less-E 7.3646e-13
+      [40000000.9, 40000001.8] d2 direct res 1.4296e-11 floor 9.3044e-10 r 0.3048 d1 1.7752e-09 d2 5.4109e-10 trusted None limited True value own E -9.2749e-10 floor-less-E 2.9468e-12
+      [40000001.8, 40000003.6] d1 direct res 2.5891e-10 floor 3.8809e-09 r 4.677 d1 9.6112e-10 d2 4.4948e-09 trusted None limited True value own E -3.8750e-09 floor-less-E 5.8916e-12
+   request 2.2168e-09; sum e' 1.2782e-09; |V - sum E - ref| 7.1135e-10
+
+== Test 6: sin(1.25 (x - 3e+08)) on [x0, x0 + 1.25], {'atol': 1e-40, 'rtol': 1e-10}
+   parent: value 0.7933630158675556 abserr 1.1811e-09 converged False regions 1 (fallback 1) depth 0 solves 3 floor-limited 1 untrusted 0 | true error 1.1666e-09
+      [300000000.0, 300000001.25] d0 direct res 7.9966e-10 floor 1.1811e-09 trusted None limited True
+   06g:    value 0.7933630158675556 abserr 1.9663e-09 converged False regions 1 (fallback 1) depth 0 solves 3 floor-limited 1 untrusted 0 node-limited False sumE 1.1666e-09 sum|E| 1.1666e-09 | true error 1.1666e-09
+      [300000000.0, 300000001.25] d0 direct res 7.9966e-10 floor 1.1811e-09 trusted None limited True value own E 1.1666e-09 floor-less-E 1.4462e-11
+   request 7.9336e-11; sum e' 7.9966e-10; |V - sum E - ref| 1.1102e-16
+
+== Test 7
+   7a: rtol np.float64(1.0310527936849625e-11); root floor 2.1037e-15 (eq. 151 1.5778e-15, declared 5.2594e-16, 0.2500); halves whole 0.5572, eq. 151 0.4079, declared 1.0050; request 1.1150e-15
+   7a with theta_abserr: parent: value -0.00010814059203802663 abserr 2.1037e-15 converged False regions 1 (fallback 0) depth 0 solves 3 floor-limited 1 untrusted 0
+   7a with theta_abserr: 06g:    value -0.00010814059203802659 abserr 1.0654e-15 converged True regions 3 (fallback 0) depth 2 solves 19 floor-limited 2 untrusted 0 node-limited False sumE 0.0000e+00 sum|E| 0.0000e+00
+   7a without: parent: value -0.00010814059203802657 abserr 6.4366e-16 converged True regions 2 (fallback 0) depth 1 solves 15 floor-limited 2 untrusted 0
+   7a without: 06g:    value -0.00010814059203802657 abserr 6.4366e-16 converged True regions 2 (fallback 0) depth 1 solves 15 floor-limited 2 untrusted 0 node-limited False sumE 0.0000e+00 sum|E| 0.0000e+00
+   7b: root floor 3.2183e-16, rtol np.float64(2.9141238527740046e-12)
+   7b: parent: value -8.834989838597304e-05 abserr 3.2183e-16 converged False regions 1 (fallback 0) depth 0 solves 3 floor-limited 1 untrusted 0
+   7b: 06g:    value -8.834989838597304e-05 abserr 2.1487e-16 converged True regions 2 (fallback 0) depth 1 solves 15 floor-limited 2 untrusted 0 node-limited False sumE 0.0000e+00 sum|E| 0.0000e+00
+
+== The budget clause as the prompt writes it (no exemption when the call meets its request now) against as built, on test 7b's family (theta = 1e4 e^x on [0, L], f = 1) at requests kappa x the root's floor
+   L 1.0 kappa 0.75: as built: converged True regions 2 depth 1 solves 15 | as written: converged True regions 6 depth 4 solves 47 untrusted 0
+   L 1.0 kappa 0.8: as built: converged True regions 2 depth 1 solves 15 | as written: converged True regions 6 depth 4 solves 47 untrusted 0
+   L 1.0 kappa 0.9: as built: converged True regions 2 depth 1 solves 15 | as written: converged True regions 6 depth 4 solves 47 untrusted 0
+   L 0.8 kappa 0.75: as built: converged True regions 2 depth 1 solves 15 | as written: converged True regions 29 depth 7 solves 231 untrusted 0
+   L 0.8 kappa 0.8: as built: converged True regions 2 depth 1 solves 15 | as written: converged True regions 35 depth 7 solves 279 untrusted 0
+   L 0.8 kappa 0.9: as built: converged True regions 2 depth 1 solves 15 | as written: converged False regions 48 depth 11 solves 323 untrusted 0
+   L 0.6 kappa 0.75: as built: converged False regions 1 depth 0 solves 3 | as written: converged False regions 1 depth 0 solves 3 untrusted 0
+   L 0.6 kappa 0.8: as built: converged True regions 2 depth 1 solves 15 | as written: converged True regions 8 depth 6 solves 63 untrusted 0
+   L 0.6 kappa 0.9: as built: converged True regions 2 depth 1 solves 15 | as written: converged False regions 17 depth 10 solves 103 untrusted 0
+
+== Convergence lost under 06g on fallback cells far from the origin: sin(c (x - x0)) (or f = 1, theta = 4 (x - x0)) at requests where the parent converges
+   f=1, theta=4(x-x0), x0=1e6, L=4, rtol 3.162e-10:
+      parent: value 0.4894148699303752 abserr 1.5095e-10 converged True regions 2 (fallback 2) depth 1 solves 15 floor-limited 2 untrusted 0
+      06g:    value 0.48941486999342354 abserr 2.4561e-10 converged False regions 2 (fallback 2) depth 1 solves 15 floor-limited 1 untrusted 0 node-limited True sumE -1.5047e-10 sum|E| 1.5047e-10
+      [1000000.0, 1000002.0] d1 direct res 8.3372e-12 floor 8.8283e-11 r 0.5231 d1 5.8383e-11 d2 3.0542e-11 trusted None limited True value own E -8.8046e-11 floor-less-E 2.3732e-13
+      [1000002.0, 1000004.0] d1 direct res 5.9110e-12 floor 6.2664e-11 r 0.5231 d1 4.1394e-11 d2 2.1655e-11 trusted True limited False value quarters E -6.2425e-11 floor-less-E 2.3889e-13
+   sin(1.0 (x - 1e8)), L=2, rtol 1e-09:
+      parent: value 1.416146837371739 abserr 1.3249e-09 converged True regions 1 (fallback 1) depth 0 solves 7 floor-limited 0 untrusted 0
+      06g:    value 1.416146836460647 abserr 2.1495e-09 converged False regions 1 (fallback 1) depth 0 solves 7 floor-limited 0 untrusted 0 node-limited True sumE 8.2460e-10 sum|E| 8.2460e-10
+      [100000000.0, 100000002.0] d0 direct res 8.1477e-10 floor 8.3170e-10 r 0.1707 d1 1.0987e-09 d2 1.8758e-10 trusted True limited False value quarters E 8.2460e-10 floor-less-E 7.1020e-12
+   sin(1.0 (x - 3e7)), L=3, rtol 1e-09:
+      parent: value 1.9899924973416983 abserr 1.4005e-09 converged True regions 1 (fallback 1) depth 0 solves 7 floor-limited 0 untrusted 0
+      06g:    value 1.9899924965126181 abserr 2.1417e-09 converged False regions 1 (fallback 1) depth 0 solves 7 floor-limited 0 untrusted 0 node-limited True sumE 7.4125e-10 sum|E| 7.4125e-10
+      [30000000.0, 30000003.0] d0 direct res 1.1946e-09 floor 7.4410e-10 r 0.147 d1 7.2284e-10 d2 1.0624e-10 trusted True limited False value quarters E 7.4125e-10 floor-less-E 2.8463e-12
+   sin(1.0 (x - 1e8)), L=3, rtol 1e-09:
+      parent: value 1.989992495620404 abserr 1.7111e-09 converged True regions 2 (fallback 2) depth 1 solves 15 floor-limited 0 untrusted 0
+      06g:    value 1.989992496635086 abserr 2.6912e-09 converged False regions 2 (fallback 2) depth 1 solves 15 floor-limited 0 untrusted 0 node-limited True sumE -9.8004e-10 sum|E| 9.8004e-10
+      [100000000.0, 100000001.5] d1 direct res 6.8036e-11 floor 4.6282e-10 r 0.2299 d1 6.1531e-10 d2 1.4149e-10 trusted True limited False value quarters E -4.5765e-10 floor-less-E 5.1673e-12
+      [100000001.5, 100000003.0] d1 direct res 7.7661e-11 floor 5.2756e-10 r 0.2299 d1 7.0236e-10 d2 1.6150e-10 trusted True limited False value quarters E -5.2239e-10 floor-less-E 5.1680e-12
