@@ -1,0 +1,33 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/scripts/method_check_06f.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_h.json h-1e-7-0-12689 19
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# start 2026-11-01T03:43:35Z
+# ----
+# levin-phase-floor 06h: the phase re-measurement's method check (06f's, at the exact e^u)
+# written 2026-11-01T03:43:35+00:00 on mps026298.phys.susx.ac.uk
+# script method_check_06f.py sha256 1933ce376ef7a9058e8eda46e33b02acedfe87cf6935f539dbe361ea5afe62a3; replay06f.py sha256 d15356db75a0f6c7c27c599237c00f64701495791c0244fb063dcec7458cd0f7
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 (status --short: empty); expected (PosixPath('/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2'), 'c1ec3b2c819cc5df22ddf4b303f69c7129a54d62')
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_h.json sha256 5d227768d3f479cfbf2b4fbadeb92e004dfc39eafd0bccc81404cbb160585559; call h-1e-7-0-12689 #19
+# capture blob sha256 4ec2498332b73e960802c8775ddeb1bc0c939d883efe2931424eea29e93e5223
+
+constituent 0: nu = 0.5, x_star = 1e-05, near region False, declared scalar theta_abserr 8.882e-16
+   x = 4.242640687119287: phase-pair error 9.0927e-18; theta_mod_2pi error -1.9916e-16; declared theta_abserr_at(x) 8.8818e-16; |ref(30) - ref(50)| 5.53e-32; |atan2(J,-Y) - (arg H1 + pi/2)| 0.00e+00
+      nu = 1/2, documented phase-pair error 1.11e-16: measured 9.0927e-18 -> reproduces
+   x = 1000.0: phase-pair error 5.9411e-17; theta_mod_2pi error -1.3608e-16; declared theta_abserr_at(x) 8.8818e-16; |ref(30) - ref(50)| 8.30e-32; |atan2(J,-Y) - (arg H1 + pi/2)| 9.86e-32
+      nu = 1/2, documented phase-pair error 1.11e-16: measured 5.9411e-17 -> reproduces
+
+constituent 1: nu = 2.5, x_star = 89.57910314503313, near region True, declared scalar theta_abserr 5.000e-13
+   x = 2.4494897427831797: phase-pair error 2.0651e-16; theta_mod_2pi error -1.6055e-16; declared theta_abserr_at(x) 5.0000e-13; |ref(30) - ref(50)| 6.74e-33; |atan2(J,-Y) - (arg H1 + pi/2)| 9.86e-32
+   x = 1000.0: phase-pair error 2.2499e-16; theta_mod_2pi error +1.7099e-16; declared theta_abserr_at(x) 8.8887e-16; |ref(30) - ref(50)| 2.17e-31; |atan2(J,-Y) - (arg H1 + pi/2)| 0.00e+00
+
+constituent 2: nu = 2.5, x_star = 89.57910314503313, near region True, declared scalar theta_abserr 5.000e-13
+   x = 2.4494897427831797: phase-pair error 2.0651e-16; theta_mod_2pi error -1.6055e-16; declared theta_abserr_at(x) 5.0000e-13; |ref(30) - ref(50)| 6.74e-33; |atan2(J,-Y) - (arg H1 + pi/2)| 9.86e-32
+   x = 1000.0: phase-pair error 2.2499e-16; theta_mod_2pi error +1.7099e-16; declared theta_abserr_at(x) 8.8887e-16; |ref(30) - ref(50)| 2.17e-31; |atan2(J,-Y) - (arg H1 + pi/2)| 0.00e+00
+
+group at the lower endpoint u = -11.211506381400753, at the exact e^u: delta theta at 30 digits +8.618620e-16, at 50 digits +8.618620e-16; |ref(30) - ref(50)| 7.48e-32; |atan2(J,-Y) - (arg H1 + pi/2)| summed over the group 0.00e+00; theta_abserr 1.0102e-12
+   (06f's convention, at x_hat = np.exp(u): delta theta +8.928252e-16)
+   theta_abserr's parts: constituents 1.0009e-12, abscissa 1.0828e-15, phi_eval 8.1857e-15
+
+method check: passes
+# ----
+# end 2026-11-01T03:43:36Z
+# exit 0

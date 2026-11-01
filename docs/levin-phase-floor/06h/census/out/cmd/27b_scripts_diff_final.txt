@@ -1,0 +1,18 @@
+$ /bin/bash -c diff\ -ruN\ state/scripts_06e_reference\ scripts\ \>\ out/scripts_diff_against_06e_final.txt\;\ for\ pair\ in\ \"z0.py\ gate_h.py\"\ \"z0_clause1.py\ gate_h_clause1.py\"\ \"checks_after_06e.py\ checks_after_06h.py\"\;\ do\ set\ --\ \$pair\;\ echo\ \"###\ new\ file\ scripts/\$2\,\ against\ its\ 06e\ source\ state/scripts_06e_reference/\$1\"\;\ diff\ -u\ state/scripts_06e_reference/\$1\ scripts/\$2\;\ done\ \>\ out/scripts_diff_new_files_against_06e_sources_final.txt\;\ wc\ -l\ out/scripts_diff_\*final.txt\;\ diff\ -u\ state/drafts/worker_at_gate_h_1.py\ scripts/worker.py\ \>\ out/worker_diff_gate_h_1_to_final.txt\;\ wc\ -l\ out/worker_diff_gate_h_1_to_final.txt\;\ shasum\ -a\ 256\ scripts/worker.py\ scripts/gate_h.py\ scripts/run_census.py\ scripts/launch.py\ scripts/prov.py\ scripts/harness.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T00:50:14Z
+# ----
+  1465 out/scripts_diff_against_06e_final.txt
+   341 out/scripts_diff_new_files_against_06e_sources_final.txt
+  1806 total
+169 out/worker_diff_gate_h_1_to_final.txt
+4533f0df2203469813c49f491efc55bab89a5fb7c809aa8f63a7ab6606fea517  scripts/worker.py
+f7c66409e1d6fc4aacbb36a944d982ee960e5ea50542547b5ba0f858924738b9  scripts/gate_h.py
+e11dcd729ad98ad128858b9b8f16c6485a292aefb7c5a17256c4430d7fbfc7f9  scripts/run_census.py
+fa79cf6c680e66d0c0bafe1e0590e12c8e388e32215b834a4aedf0101aa75a0e  scripts/launch.py
+dc2e79ee5df5fdf7b6695f702aa5af70765389e39c96d473502c33433157a3f7  scripts/prov.py
+2ce9725f6761afb31a70e744e96cad95770a96a769db632db27dda8c8b7d9436  scripts/harness.py
+# ----
+# end 2026-11-01T00:50:15Z
+# exit 0

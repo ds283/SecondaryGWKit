@@ -1,0 +1,46 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T00:34:50Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=var/levin-phase-floor-06h/rehearsal; echo "== reader exits"; grep -c "^exit 0;" $R/out/readers.txt; grep "^exit" $R/out/readers.txt; echo "== store-identical lines"; grep -c "store files: identical before and after" $R/out/readers.txt; echo "== R22 hashes before reads vs after reads"; cat $R/state/r22_store_sha256_after_reads.txt; head -5 $R/state/r22_store_sha256_after_reads.txt | cmp - $R/state/r22_store_sha256_before_reads.txt && echo "R22 identical before and after the readers"; echo "== Traceback in reader logs"; grep -c Traceback $R/extract/*.log; echo "== WARNING lines"; grep -h "!! WARNING" $R/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | sort | uniq -c | cut -c1-220; echo "== extract size"; du -sh $R/extract; echo "== worktrees"; for T in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2; do git --no-optional-locks -C $T rev-parse HEAD; git --no-optional-locks -C $T status --short --ignored; find $T -newer $R/state/r21_launch_marker | head; done
+# output:
+== reader exits
+6
+exit 0; wall 24 s; files written 396
+exit 0; wall 43 s; files written 2436
+exit 0; wall 18 s; files written 134
+exit 0; wall 15 s; files written 27
+exit 0; wall 13 s; files written 27
+exit 0; wall 15 s; files written 73
+exit 0
+== store-identical lines
+6
+== R22 hashes before reads vs after reads
+d7154ef1b9466988711edfe540aeadbcd1e9ce5c651cd6d70cddbac0d6a5a605  var/datastores/levin-phase-floor-06h-r22-shard0000.sqlite
+7929750e570c34c55cd6bf27e4442922b985d1b1e461b07fea7046803df707bd  var/datastores/levin-phase-floor-06h-r22-shard0001.sqlite
+5e9ae5a4a1225dd078c3abd37ab8a449bc73d875d129bbbc398f41d7c2959d7c  var/datastores/levin-phase-floor-06h-r22-shard0002.sqlite
+0b92ef735063b1f2fbe5f7a11f7c5bb903dec553343e7d21848de3f631244202  var/datastores/levin-phase-floor-06h-r22-shard0003.sqlite
+4205df39f46c2fcc0589086c6e2f0e0731f4deccf7124565aa6b0ef4d8d270c4  var/datastores/levin-phase-floor-06h-r22.sqlite
+var/datastores/levin-phase-floor-06h-r22-shard0000.sqlite 24997888 1793492932
+var/datastores/levin-phase-floor-06h-r22-shard0001.sqlite 25243648 1793492932
+var/datastores/levin-phase-floor-06h-r22-shard0002.sqlite 1077248 1793492673
+var/datastores/levin-phase-floor-06h-r22-shard0003.sqlite 24612864 1793492932
+var/datastores/levin-phase-floor-06h-r22.sqlite 36864 1793492673
+no journal/wal/shm
+R22 identical before and after the readers
+== Traceback in reader logs
+var/levin-phase-floor-06h/rehearsal/extract/extract_GkSource_data.log:0
+var/levin-phase-floor-06h/rehearsal/extract/extract_GkWKB_data.log:0
+var/levin-phase-floor-06h/rehearsal/extract/extract_Gk_data.log:0
+var/levin-phase-floor-06h/rehearsal/extract/extract_QuadSourceIntegral_data.log:0
+var/levin-phase-floor-06h/rehearsal/extract/extract_TkWKB_data.log:0
+var/levin-phase-floor-06h/rehearsal/extract/extract_tensor_source_data.log:0
+== WARNING lines
+      6 !! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+== extract size
+172M	var/levin-phase-floor-06h/rehearsal/extract
+== worktrees
+2c325f56641666b45df483adb8c1202575721c42
+c1ec3b2c819cc5df22ddf4b303f69c7129a54d62
+# exit: 0
+# end: 2026-11-01T00:34:51Z

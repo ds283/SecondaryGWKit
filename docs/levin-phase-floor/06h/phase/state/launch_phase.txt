@@ -1,0 +1,6 @@
+run id      levin-phase-floor-06h-phase-20261101T033514
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-phase-20261101T033514
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/scripts/run_06h.py
+sh pid      18666
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/scripts/run_06h.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-phase-20261101T033514; exit $?
+launcher    pid 18662, exiting without waiting

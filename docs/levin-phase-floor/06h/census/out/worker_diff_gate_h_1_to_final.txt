@@ -1,0 +1,169 @@
+--- state/drafts/worker_at_gate_h_1.py	2026-11-01 00:24:50
++++ scripts/worker.py	2026-11-01 00:45:29
+@@ -32,6 +32,18 @@
+   leaf counts and the sums (``math.fsum``) of the declared term, its parts and the floor over the
+   reproduced leaves, all and floor-attributed (06c's attribution, as ``_cc_floor_terms``). Per leaf in
+   the pickle (``declared_terms_06h``). 06e's ``cc_floor`` is kept unchanged beside it.
++- **the analytic oracle** (``analytic_06h``; H3's second reading, at the orchestrator's request:
++  06h's code cannot move ``total``, which is numeric_quad + WKB_Levin, but moves ``analytic_rad``):
++  h's own oracle, ``result["metadata"]["analytic"]``'s abserr and converged beside ``analytic_rad``;
++  and, in a unit at ``g``, **06e's oracle as a counterfactual**: ``analytic_integral``'s arguments
++  are kept by a pass-through at the module attribute ``QSI_MOD.analytic_integral`` (installed with
++  the timed section's other wrappers; it records its arguments and calls the original, changing no
++  value), and after the timed section ``analytic_integral`` is called once more on them with
++  ``QSI_MOD.BesselPhaseGroup`` replaced by the parent's class: the module source
++  ``2c325f5:LiouvilleGreen/three_bessel_integrals.py`` read from git (SHA-256 checked against
++  ``PARENT_TBI_SHA256``, the parent workers' file) and executed into a module object with no file,
++  registered nowhere. Its value, abserr and converged are recorded; the analysis counts the
++  counterfactual as 06e's only where its value equals 06e's recorded ``analytic_rad`` bit for bit.
+ 
+ (06e's text follows, unchanged.)
+ 
+@@ -1365,8 +1377,38 @@
+         "errors": errors,
+     }
+     return record, summary
++
++
++# prompt 06h: the parent's three_bessel_integrals, for 06e's analytic oracle as a counterfactual
++PARENT_TBI_SHA = "2c325f56641666b45df483adb8c1202575721c42"
++PARENT_TBI_PATH = "LiouvilleGreen/three_bessel_integrals.py"
++PARENT_TBI_SHA256 = "862a18fef4752e7431ae8c2d592e2004c681601d42fe6c196e83dbe914e8c909"  # Gate H's P workers' file
++_PARENT_TBI = []
++_H_BPG = None
+ 
+ 
++def _parent_tbi():
++    """The parent's module, from git (read-only), SHA-256 checked, executed into a module object with
++    no file that is registered nowhere (its imports resolve in this process's tree, where the
++    modules it imports are unchanged by 06h). Loaded once per process."""
++    if not _PARENT_TBI:
++        import hashlib as _hl
++        import subprocess as _sp
++        import types as _types
++
++        src = _sp.run(
++            ["git", "--no-optional-locks", "-C", "/Users/ds283/Documents/Code/SecondaryGWKit", "show",
++             f"{PARENT_TBI_SHA}:{PARENT_TBI_PATH}"],
++            capture_output=True, check=True,
++        ).stdout
++        if _hl.sha256(src).hexdigest() != PARENT_TBI_SHA256:
++            raise RuntimeError("the parent's three_bessel_integrals.py has another SHA-256")
++        mod = _types.ModuleType("three_bessel_integrals_06e_parent")
++        exec(compile(src, f"<{PARENT_TBI_SHA[:7]}:{PARENT_TBI_PATH}>", "exec"), mod.__dict__)
++        _PARENT_TBI.append(mod)
++    return _PARENT_TBI[0]
++
++
+ def main():
+     spec = json.loads(Path(sys.argv[1]).read_text())
+     tree_name = spec["tree"]
+@@ -1397,6 +1439,10 @@
+         raise SystemExit(f"worker {worker_name}: tree evidence does not hold: {ev}")
+ 
+     from harness import QSI_MOD, close_pool, dump_record, open_readonly_pool, standin_ray
++    from unittest import mock  # prompt 06h
++
++    global _H_BPG  # prompt 06h
++    _H_BPG = QSI_MOD.BesselPhaseGroup
+     import rebuild as RB
+     from rebuild import MAIN_PY_SHA256, CensusCache, build_context, rebuild_row  # prompt 06a
+     from prov import STORE_DIR_BY_TREE
+@@ -1473,7 +1519,16 @@
+ 
+     orig_levin = QSI_MOD.adaptive_levin_sincos
+     orig_eval = QSI_MOD.evaluate_QuadSource_integral
+-    holder = {"calls": None, "disp": None, "deadline": None, "premise_log": None, "solve_acc": None}  # prompt 06c
++    holder = {"calls": None, "disp": None, "deadline": None, "premise_log": None, "solve_acc": None,  # prompt 06c
++              "analytic_args": None}  # prompt 06h
++    # prompt 06h: analytic_integral's arguments, kept by a pass-through (timed section only)
++    orig_analytic = QSI_MOD.analytic_integral
++
++    def w_analytic(*a_, **kw_):
++        acc = holder.get("analytic_args")
++        if acc is not None:
++            acc.append((a_, kw_))
++        return orig_analytic(*a_, **kw_)
+     # prompt 06b: the code's premise check, counted per call by a pass-through (b only)
+     orig_premise = getattr(LQ, "_roundoff_exit_premise_holds", None)
+ 
+@@ -1488,11 +1543,13 @@
+         if orig_premise is not None:
+             LQ._roundoff_exit_premise_holds = w_premise
+         LQ._adaptive_levin_subregion = w_subregion  # prompt 06c
++        QSI_MOD.analytic_integral = w_analytic  # prompt 06h
+ 
+     def restore_premise():
+         if orig_premise is not None:
+             LQ._roundoff_exit_premise_holds = orig_premise
+         LQ._adaptive_levin_subregion = orig_subregion  # prompt 06c
++        QSI_MOD.analytic_integral = orig_analytic  # prompt 06h
+ 
+     def w_levin(*a, **kw):
+         plog = []  # prompt 06b
+@@ -1571,6 +1628,7 @@
+                     err = None
+                     result = None
+                     calls = []
++                    analytic_args = []  # prompt 06h
+                     wall = None
+                     rb = None
+                     holder.update(disp=None)
+@@ -1589,7 +1647,7 @@
+                             cache=cache,  # prompt 06a
+                         )
+                         rebuild_s = time.perf_counter() - t_rb
+-                        holder.update(calls=calls)
++                        holder.update(calls=calls, analytic_args=analytic_args)  # prompt 06h: analytic_args
+                         QSI_MOD.adaptive_levin_sincos = w_levin
+                         QSI_MOD.evaluate_QuadSource_integral = w_eval
+                         install_premise()  # prompt 06b
+@@ -1604,7 +1662,7 @@
+                             result = None
+                         finally:
+                             wall = time.perf_counter() - t0
+-                            holder.update(calls=None, deadline=None)
++                            holder.update(calls=None, deadline=None, analytic_args=None)  # prompt 06h: analytic_args
+                             QSI_MOD.adaptive_levin_sincos = orig_levin
+                             QSI_MOD.evaluate_QuadSource_integral = orig_eval
+                             restore_premise()  # prompt 06b
+@@ -1622,6 +1680,7 @@
+                     assert QSI_MOD.evaluate_QuadSource_integral is orig_eval
+                     assert orig_premise is None or LQ._roundoff_exit_premise_holds is orig_premise
+                     assert LQ._adaptive_levin_subregion is orig_subregion  # prompt 06c
++                    assert QSI_MOD.analytic_integral is orig_analytic  # prompt 06h
+                     assert DP.PrimitivePhase.__dict__["theta_mod_2pi"] is DP.ORIG_THETA_MOD_2PI
+                     disp = holder["disp"]
+                     group_calls = [
+@@ -1860,6 +1919,31 @@
+                         for s_ in data["calls"] + data["other_calls"]:
+                             s_["declared_06h"] = decl_summ.get(s_["index"])
+                         data["declared_06h_s"] = time.perf_counter() - t_dc
++                    # prompt 06h: the analytic oracle under h, and 06e's as a counterfactual (g only)
++                    data["analytic_06h"] = None
++                    if result is not None:
++                        t_an = time.perf_counter()
++                        md_an = (result.get("metadata") or {}).get("analytic") or {}
++                        an = {
++                            "h": {"value": fx(result["analytic_rad"]), "abserr": fx(md_an.get("abserr")),
++                                  "converged": None if md_an.get("converged") is None else bool(md_an["converged"])},
++                            "n_captured": len(analytic_args),
++                            "parent_counterfactual": None,
++                        }
++                        if tree_name == "g":
++                            try:
++                                if len(analytic_args) != 1:
++                                    raise RuntimeError(f"{len(analytic_args)} analytic_integral calls captured, not 1")
++                                a_an, kw_an = analytic_args[0]
++                                with mock.patch.object(QSI_MOD, "BesselPhaseGroup", _parent_tbi().BesselPhaseGroup):
++                                    cf = orig_analytic(*a_an, **kw_an)
++                                assert QSI_MOD.BesselPhaseGroup is _H_BPG
++                                an["parent_counterfactual"] = {"value": fx(cf["value"]), "abserr": fx(cf["abserr"]),
++                                                               "converged": bool(cf["converged"])}
++                            except Exception:
++                                an["parent_counterfactual"] = {"error": traceback.format_exc()[-4000:]}
++                        an["seconds"] = time.perf_counter() - t_an
++                        data["analytic_06h"] = an
+                     # prompt 06b, W2's inputs: each listed call's span, f, theta and arguments
+                     # prompt 06c: X1's, under the key x1_inputs
+                     data["x1_inputs"] = None

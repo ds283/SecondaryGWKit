@@ -1,0 +1,174 @@
+$ sh -c ls\ -d\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-\*\;\ ls\ -l\ --time-style=full-iso\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037\;\ cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/status.json\;\ echo\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl\;\ head\ -c\ 300\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:34:52Z
+# ----
+/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037
+total 2360972
+-rw-r--r-- 1 ds283 staff 1642892823 2026-11-01 03:23:49.926348329 +0000 checkpoint.jsonl
+-rw-r--r-- 1 ds283 staff     258440 2026-11-01 01:26:24.580249600 +0000 events_1e-7-k0_101.jsonl
+-rw-r--r-- 1 ds283 staff     269793 2026-11-01 01:27:34.614245569 +0000 events_1e-7-k0_202.jsonl
+-rw-r--r-- 1 ds283 staff     261108 2026-11-01 01:27:34.096457117 +0000 events_1e-7-k1_102.jsonl
+-rw-r--r-- 1 ds283 staff     272460 2026-11-01 01:28:10.771928407 +0000 events_1e-7-k1_301.jsonl
+-rw-r--r-- 1 ds283 staff     263899 2026-11-01 01:29:22.052474097 +0000 events_1e-7-k2_2.jsonl
+-rw-r--r-- 1 ds283 staff     274988 2026-11-01 01:29:07.190861583 +0000 events_1e-7-k2_302.jsonl
+-rw-r--r-- 1 ds283 staff     254974 2026-11-01 01:59:54.670713457 +0000 events_1e-7-k3_1.jsonl
+-rw-r--r-- 1 ds283 staff     266971 2026-11-01 02:04:07.547106723 +0000 events_1e-7-k3_201.jsonl
+-rw-r--r-- 1 ds283 staff     258451 2026-11-01 02:52:28.017435183 +0000 events_1e-8-k0_101.jsonl
+-rw-r--r-- 1 ds283 staff     269806 2026-11-01 02:41:17.656609663 +0000 events_1e-8-k0_202.jsonl
+-rw-r--r-- 1 ds283 staff     261139 2026-11-01 02:51:52.022805418 +0000 events_1e-8-k1_102.jsonl
+-rw-r--r-- 1 ds283 staff     272465 2026-11-01 02:41:19.836755842 +0000 events_1e-8-k1_301.jsonl
+-rw-r--r-- 1 ds283 staff     263870 2026-11-01 02:49:43.276607671 +0000 events_1e-8-k2_2.jsonl
+-rw-r--r-- 1 ds283 staff     274985 2026-11-01 02:42:53.240264505 +0000 events_1e-8-k2_302.jsonl
+-rw-r--r-- 1 ds283 staff     254996 2026-11-01 03:23:16.083679378 +0000 events_1e-8-k3_1.jsonl
+-rw-r--r-- 1 ds283 staff     267025 2026-11-01 03:19:12.003417861 +0000 events_1e-8-k3_201.jsonl
+-rw-r--r-- 1 ds283 staff       4755 2026-11-01 00:50:37.416658251 +0000 manifest.json
+-rw-r--r-- 1 ds283 staff   44490421 2026-11-01 01:26:48.667610503 +0000 regions_1e-7-k0_101.pkl
+-rw-r--r-- 1 ds283 staff   48105868 2026-11-01 01:28:03.765617183 +0000 regions_1e-7-k0_202.pkl
+-rw-r--r-- 1 ds283 staff   46298652 2026-11-01 01:27:57.303440601 +0000 regions_1e-7-k1_102.pkl
+-rw-r--r-- 1 ds283 staff   48853158 2026-11-01 01:28:39.638480125 +0000 regions_1e-7-k1_301.pkl
+-rw-r--r-- 1 ds283 staff   48223718 2026-11-01 01:29:45.523616407 +0000 regions_1e-7-k2_2.pkl
+-rw-r--r-- 1 ds283 staff   50393958 2026-11-01 01:29:37.369767813 +0000 regions_1e-7-k2_302.pkl
+-rw-r--r-- 1 ds283 staff   43211593 2026-11-01 02:00:19.842474492 +0000 regions_1e-7-k3_1.pkl
+-rw-r--r-- 1 ds283 staff   48262720 2026-11-01 02:04:33.059749210 +0000 regions_1e-7-k3_201.pkl
+-rw-r--r-- 1 ds283 staff   48152021 2026-11-01 02:53:02.729628197 +0000 regions_1e-8-k0_101.pkl
+-rw-r--r-- 1 ds283 staff   44350722 2026-11-01 02:41:41.007644142 +0000 regions_1e-8-k0_202.pkl
+-rw-r--r-- 1 ds283 staff   48962062 2026-11-01 02:52:23.184648690 +0000 regions_1e-8-k1_102.pkl
+-rw-r--r-- 1 ds283 staff   44819092 2026-11-01 02:41:45.016340489 +0000 regions_1e-8-k1_301.pkl
+-rw-r--r-- 1 ds283 staff   48758500 2026-11-01 02:50:09.976509905 +0000 regions_1e-8-k2_2.pkl
+-rw-r--r-- 1 ds283 staff   46069173 2026-11-01 02:43:22.604341253 +0000 regions_1e-8-k2_302.pkl
+-rw-r--r-- 1 ds283 staff   43920834 2026-11-01 03:23:49.923076040 +0000 regions_1e-8-k3_1.pkl
+-rw-r--r-- 1 ds283 staff   45535094 2026-11-01 03:19:34.740359577 +0000 regions_1e-8-k3_201.pkl
+-rw-r--r-- 1 ds283 staff     278428 2026-11-01 00:50:37.608758783 +0000 spec_1e-7-k0_101.json
+-rw-r--r-- 1 ds283 staff     278311 2026-11-01 00:50:37.613924156 +0000 spec_1e-7-k0_202.json
+-rw-r--r-- 1 ds283 staff     278339 2026-11-01 00:50:37.619090778 +0000 spec_1e-7-k1_102.json
+-rw-r--r-- 1 ds283 staff     278565 2026-11-01 00:50:37.624508401 +0000 spec_1e-7-k1_301.json
+-rw-r--r-- 1 ds283 staff     275715 2026-11-01 00:50:37.631262564 +0000 spec_1e-7-k2_2.json
+-rw-r--r-- 1 ds283 staff     277998 2026-11-01 00:50:37.637762019 +0000 spec_1e-7-k2_302.json
+-rw-r--r-- 1 ds283 staff     272787 2026-11-01 01:26:49.096084346 +0000 spec_1e-7-k3_1.json
+-rw-r--r-- 1 ds283 staff     275150 2026-11-01 01:27:57.756402178 +0000 spec_1e-7-k3_201.json
+-rw-r--r-- 1 ds283 staff     280748 2026-11-01 02:04:33.436504259 +0000 spec_1e-8-k0_101.json
+-rw-r--r-- 1 ds283 staff     280631 2026-11-01 02:04:33.442465213 +0000 spec_1e-8-k0_202.json
+-rw-r--r-- 1 ds283 staff     280659 2026-11-01 02:04:33.446707835 +0000 spec_1e-8-k1_102.json
+-rw-r--r-- 1 ds283 staff     280885 2026-11-01 02:04:33.451098165 +0000 spec_1e-8-k1_301.json
+-rw-r--r-- 1 ds283 staff     278035 2026-11-01 02:04:33.455623286 +0000 spec_1e-8-k2_2.json
+-rw-r--r-- 1 ds283 staff     280318 2026-11-01 02:04:33.460062700 +0000 spec_1e-8-k2_302.json
+-rw-r--r-- 1 ds283 staff     275107 2026-11-01 02:41:41.432736268 +0000 spec_1e-8-k3_1.json
+-rw-r--r-- 1 ds283 staff     277470 2026-11-01 02:41:45.449159235 +0000 spec_1e-8-k3_201.json
+-rw-r--r-- 1 ds283 staff        306 2026-11-01 03:23:50.294065106 +0000 status.json
+-rw-r--r-- 1 ds283 staff          0 2026-11-01 00:50:37.417489792 +0000 stderr.log
+-rw-r--r-- 1 ds283 staff       3284 2026-11-01 03:23:50.293505565 +0000 stdout.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 01:26:48.733347127 +0000 worker_1e-7-k0_101_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 00:50:40.734625403 +0000 worker_1e-7-k0_101_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 00:50:39.567454215 +0000 worker_1e-7-k0_101_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 00:50:39.806277225 +0000 worker_1e-7-k0_101_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 00:50:39.805283017 +0000 worker_1e-7-k0_101_store.json
+-rw-r--r-- 1 ds283 staff     552879 2026-11-01 01:26:48.673053250 +0000 worker_1e-7-k0_101.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 01:28:03.831210015 +0000 worker_1e-7-k0_202_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 00:50:40.741809524 +0000 worker_1e-7-k0_202_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 00:50:39.550599182 +0000 worker_1e-7-k0_202_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 00:50:39.805785933 +0000 worker_1e-7-k0_202_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 00:50:39.804986392 +0000 worker_1e-7-k0_202_store.json
+-rw-r--r-- 1 ds283 staff     532233 2026-11-01 01:28:03.771185429 +0000 worker_1e-7-k0_202.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 01:27:57.368977933 +0000 worker_1e-7-k1_102_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 00:50:40.742755940 +0000 worker_1e-7-k1_102_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 00:50:39.573133296 +0000 worker_1e-7-k1_102_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 00:50:39.813121055 +0000 worker_1e-7-k1_102_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 00:50:39.812234097 +0000 worker_1e-7-k1_102_store.json
+-rw-r--r-- 1 ds283 staff     492341 2026-11-01 01:27:57.310015722 +0000 worker_1e-7-k1_102.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 01:28:39.701032626 +0000 worker_1e-7-k1_301_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 00:50:40.743106940 +0000 worker_1e-7-k1_301_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 00:50:39.551968056 +0000 worker_1e-7-k1_301_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 00:50:39.806109516 +0000 worker_1e-7-k1_301_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 00:50:39.805436767 +0000 worker_1e-7-k1_301_store.json
+-rw-r--r-- 1 ds283 staff     594218 2026-11-01 01:28:39.643569580 +0000 worker_1e-7-k1_301.log
+-rw-r--r-- 1 ds283 staff      14100 2026-11-01 01:29:45.616109929 +0000 worker_1e-7-k2_2_bye.json
+-rw-r--r-- 1 ds283 staff        478 2026-11-01 00:50:40.747672688 +0000 worker_1e-7-k2_2_context.json
+-rw-r--r-- 1 ds283 staff       5789 2026-11-01 00:50:39.559644802 +0000 worker_1e-7-k2_2_hello.json
+-rw-r--r-- 1 ds283 staff        147 2026-11-01 00:50:39.811085056 +0000 worker_1e-7-k2_2_levin_logging.json
+-rw-r--r-- 1 ds283 staff        177 2026-11-01 00:50:39.810143931 +0000 worker_1e-7-k2_2_store.json
+-rw-r--r-- 1 ds283 staff     365929 2026-11-01 01:29:45.529210820 +0000 worker_1e-7-k2_2.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 01:29:37.482371655 +0000 worker_1e-7-k2_302_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 00:50:40.742956899 +0000 worker_1e-7-k2_302_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 00:50:39.557269762 +0000 worker_1e-7-k2_302_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 00:50:39.814311804 +0000 worker_1e-7-k2_302_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 00:50:39.813623513 +0000 worker_1e-7-k2_302_store.json
+-rw-r--r-- 1 ds283 staff     635078 2026-11-01 01:29:37.375082518 +0000 worker_1e-7-k2_302.log
+-rw-r--r-- 1 ds283 staff      14100 2026-11-01 02:00:19.903876154 +0000 worker_1e-7-k3_1_bye.json
+-rw-r--r-- 1 ds283 staff        478 2026-11-01 01:26:52.320204351 +0000 worker_1e-7-k3_1_context.json
+-rw-r--r-- 1 ds283 staff       5789 2026-11-01 01:26:51.083813497 +0000 worker_1e-7-k3_1_hello.json
+-rw-r--r-- 1 ds283 staff        147 2026-11-01 01:26:51.338233080 +0000 worker_1e-7-k3_1_levin_logging.json
+-rw-r--r-- 1 ds283 staff        177 2026-11-01 01:26:51.336972414 +0000 worker_1e-7-k3_1_store.json
+-rw-r--r-- 1 ds283 staff     606917 2026-11-01 02:00:19.847029322 +0000 worker_1e-7-k3_1.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 02:04:33.117318291 +0000 worker_1e-7-k3_201_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 01:28:00.758337453 +0000 worker_1e-7-k3_201_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 01:27:59.571006192 +0000 worker_1e-7-k3_201_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 01:27:59.820958069 +0000 worker_1e-7-k3_201_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 01:27:59.820166112 +0000 worker_1e-7-k3_201_store.json
+-rw-r--r-- 1 ds283 staff     362876 2026-11-01 02:04:33.064400456 +0000 worker_1e-7-k3_201.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 02:53:02.793002154 +0000 worker_1e-8-k0_101_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 02:04:36.937376705 +0000 worker_1e-8-k0_101_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 02:04:35.722827620 +0000 worker_1e-8-k0_101_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 02:04:35.999284078 +0000 worker_1e-8-k0_101_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 02:04:35.998364120 +0000 worker_1e-8-k0_101_store.json
+-rw-r--r-- 1 ds283 staff     540641 2026-11-01 02:53:02.734600277 +0000 worker_1e-8-k0_101.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 02:41:41.067424101 +0000 worker_1e-8-k0_202_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 02:04:36.940336744 +0000 worker_1e-8-k0_202_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 02:04:35.723096995 +0000 worker_1e-8-k0_202_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 02:04:36.000706452 +0000 worker_1e-8-k0_202_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 02:04:35.999760078 +0000 worker_1e-8-k0_202_store.json
+-rw-r--r-- 1 ds283 staff     518366 2026-11-01 02:41:41.012614638 +0000 worker_1e-8-k0_202.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 02:52:23.244527066 +0000 worker_1e-8-k1_102_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 02:04:36.936672122 +0000 worker_1e-8-k1_102_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 02:04:35.725730451 +0000 worker_1e-8-k1_102_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 02:04:35.986823754 +0000 worker_1e-8-k1_102_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 02:04:35.986032546 +0000 worker_1e-8-k1_102_store.json
+-rw-r--r-- 1 ds283 staff     479866 2026-11-01 02:52:23.189625853 +0000 worker_1e-8-k1_102.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 02:41:45.079050529 +0000 worker_1e-8-k1_301_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 02:04:36.930480835 +0000 worker_1e-8-k1_301_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 02:04:35.725971117 +0000 worker_1e-8-k1_301_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 02:04:35.998701912 +0000 worker_1e-8-k1_301_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 02:04:35.997987204 +0000 worker_1e-8-k1_301_store.json
+-rw-r--r-- 1 ds283 staff     579132 2026-11-01 02:41:45.021120236 +0000 worker_1e-8-k1_301.log
+-rw-r--r-- 1 ds283 staff      14100 2026-11-01 02:50:10.038233404 +0000 worker_1e-8-k2_2_bye.json
+-rw-r--r-- 1 ds283 staff        478 2026-11-01 02:04:36.934998081 +0000 worker_1e-8-k2_2_context.json
+-rw-r--r-- 1 ds283 staff       5789 2026-11-01 02:04:35.723299745 +0000 worker_1e-8-k2_2_hello.json
+-rw-r--r-- 1 ds283 staff        147 2026-11-01 02:04:36.000556869 +0000 worker_1e-8-k2_2_levin_logging.json
+-rw-r--r-- 1 ds283 staff        177 2026-11-01 02:04:35.999583995 +0000 worker_1e-8-k2_2_store.json
+-rw-r--r-- 1 ds283 staff     351225 2026-11-01 02:50:09.981512068 +0000 worker_1e-8-k2_2.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 02:43:22.666256669 +0000 worker_1e-8-k2_302_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 02:04:36.931820626 +0000 worker_1e-8-k2_302_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 02:04:35.726319534 +0000 worker_1e-8-k2_302_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 02:04:35.987125879 +0000 worker_1e-8-k2_302_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 02:04:35.986265088 +0000 worker_1e-8-k2_302_store.json
+-rw-r--r-- 1 ds283 staff     620610 2026-11-01 02:43:22.608989125 +0000 worker_1e-8-k2_302.log
+-rw-r--r-- 1 ds283 staff      14100 2026-11-01 03:23:49.982699705 +0000 worker_1e-8-k3_1_bye.json
+-rw-r--r-- 1 ds283 staff        478 2026-11-01 02:41:44.539166647 +0000 worker_1e-8-k3_1_context.json
+-rw-r--r-- 1 ds283 staff       5789 2026-11-01 02:41:43.334190095 +0000 worker_1e-8-k3_1_hello.json
+-rw-r--r-- 1 ds283 staff        147 2026-11-01 02:41:43.582149467 +0000 worker_1e-8-k3_1_levin_logging.json
+-rw-r--r-- 1 ds283 staff        177 2026-11-01 02:41:43.581096343 +0000 worker_1e-8-k3_1_store.json
+-rw-r--r-- 1 ds283 staff     594858 2026-11-01 03:23:49.927988287 +0000 worker_1e-8-k3_1.log
+-rw-r--r-- 1 ds283 staff      14102 2026-11-01 03:19:34.803320365 +0000 worker_1e-8-k3_201_bye.json
+-rw-r--r-- 1 ds283 staff        480 2026-11-01 02:41:48.076855275 +0000 worker_1e-8-k3_201_context.json
+-rw-r--r-- 1 ds283 staff       5791 2026-11-01 02:41:46.975840110 +0000 worker_1e-8-k3_201_hello.json
+-rw-r--r-- 1 ds283 staff        149 2026-11-01 02:41:47.187962798 +0000 worker_1e-8-k3_201_levin_logging.json
+-rw-r--r-- 1 ds283 staff        179 2026-11-01 02:41:47.187154382 +0000 worker_1e-8-k3_201_store.json
+-rw-r--r-- 1 ds283 staff     347718 2026-11-01 03:19:34.745272324 +0000 worker_1e-8-k3_201.log
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-01T03:23:50+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 73329,
+  "stage": "18560 units recorded; last g-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl
+{"unit": "g-1e-7-2-32862", "recorded": "2026-11-01T00:51:36+00:00", "script_sha256": "e11dcd729ad98ad128858b9b8f16c6485a292aefb7c5a17256c4430d7fbfc7f9", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"unit": "g-1e-7-2-32862", "tree": "g", "rtol": "1e-7", "row": # ----
+# end 2026-11-01T03:34:57Z
+# exit 0

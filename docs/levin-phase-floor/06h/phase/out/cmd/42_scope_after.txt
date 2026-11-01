@@ -1,0 +1,37 @@
+$ sh -c echo\ \"==\ census06h\ checkpoint\"\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl\;\ echo\ \"==\ 06e\ checkpoint\"\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\;\ echo\ \"==\ var/datastores\ newer\ than\ marker\"\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores\ -newer\ state/marker_stage2\;\ echo\ \"==\ var/\ newer\ than\ marker\ outside\ phase\ dir\ and\ own\ run\"\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit/var\ -newer\ state/marker_stage2\ -not\ -path\ \"\*/levin-phase-floor-06h/phase\*\"\ -not\ -path\ \"\*/runs/levin-phase-floor-06h-phase-20261101T033514\*\"\ \|\ head\ -20\;\ echo\ \"==\ trees\"\;\ for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5\;\ do\ echo\ \"\$t\ \$\(git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\)\ \[\$\(git\ --no-optional-locks\ -C\ \$t\ status\ --short\ --ignored\)\]\"\;\ done\;\ echo\ \"main\ \$\(git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\)\ \[\$\(git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\)\]\"\;\ echo\ \"==\ pycache\"\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase\ -name\ __pycache__\;\ echo\ \"==\ registry\"\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -B\ -m\ runregistrykit\ list\ 2\>\&1\ \|\ grep\ -E\ \"06h-phase\|run\\\(s\\\)\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:51:24Z
+# ----
+== census06h checkpoint
+3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl
+== 06e checkpoint
+a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl
+== var/datastores newer than marker
+== var/ newer than marker outside phase dir and own run
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/fingerprint_r22.stderr
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/orch_census.stderr
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/fingerprint_note.txt
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/stores_before_my_reads.sha256
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/fingerprint_r21.json
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/orch_h0.txt
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/store_value_diff_mine.txt
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/classify_non_qsi_mine.txt
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/fingerprint_r22.json
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/fingerprint_r21.stderr
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/gate_h_mine.txt
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/checks/orch_census.txt
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/review/scripts/orch_census.py
+/Users/ds283/Documents/Code/SecondaryGWKit/var/runs
+== trees
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 []
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 2c325f56641666b45df483adb8c1202575721c42 []
+main 28ebaf0743e0555fb2c4512ce714884005a60eff []
+== pycache
+== registry
+   levin-phase-floor-06h-phase-20261101T033514           done          84/84      16m  levin-phase-floor prompt 06h section 5 on the Mac Studio (mps026298; Python 3.13.16): the phase re-measurement, 06f's M2 items 1 and 4 repeated at 06h's code (H1, H2). Captures 06f's 20 M2 calls by 06e's x1_capture.py (06h's copy) at the parent p (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5, 2c325f5, code 06e's; each capture checked bit for bit against 06e's census checkpoint a0dc4d7f) and at h (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2, dispatch SHA c1ec3b2, code 7172a8f + ac1c6f4; each checked against 06h's census checkpoint), reading 06's certified scratch copy of A3 v2 read-only (fingerprint 0e32f24a) on a stand-in ShardedPool; the method check at the exact e^u before any scoring; replays each call in its own process in its own tree with 06f's pass-throughs, with mpmath phase references at 30 digits at the exact e^u (and at 06f's x_hat), at every node of every returned leaf and 06f's seeded dense sample of 1,000 points per call; each tree's code scored at the other's points; the reference re-checked at 50 digits at h's worst point. At most six processes; Ray-free, no lock, no store built, no code changed  · refcheck running
+40 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 40 finished; 0 with no host recorded.
+# ----
+# end 2026-11-01T03:51:34Z
+# exit 0

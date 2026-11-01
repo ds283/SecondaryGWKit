@@ -1,0 +1,27 @@
+exit 1
+68b9c378166368df621d21c0aac12d5a4edcb548a43cc719f67e7421c841fd0f  /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit-lpf06h-c1ec3b2/ac9a9640-1d2f-4170-926f-aa4151b6da0c/scratchpad/svd.json
+68b9c378166368df621d21c0aac12d5a4edcb548a43cc719f67e7421c841fd0f  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/rehearsal/out/store_value_diff.json
+dict ['a', 'b', 'classes', 'not_compared', 'identical']
+identical: False
+not_compared: []
+version {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+store_tag {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+redshift {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+wavenumber {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+tolerance {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+LambdaCDM {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+QCD_Cosmology {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+IntegrationSolver {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+GkSourcePolicy {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+QuadSourcePolicy {'identical': True, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+wavenumber_exit_time {'identical': False, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+BackgroundModel {'identical': False, 'replicated': True, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': ['BackgroundModelValue'], 'unresolvable_columns': 0}
+TkNumericIntegration {'identical': False, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': ['TkNumericValue'], 'unresolvable_columns': 0}
+TkWKBIntegration {'identical': False, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': ['TkWKBValue'], 'unresolvable_columns': 0}
+GkNumericIntegration {'identical': False, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': ['GkNumericValue'], 'unresolvable_columns': 0}
+GkWKBIntegration {'identical': False, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': ['GkWKBValue'], 'unresolvable_columns': 0}
+GkSource {'identical': False, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': ['GkSourceValue'], 'unresolvable_columns': 0}
+GkSourcePolicyData {'identical': True, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+QuadSource {'identical': False, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': ['QuadSourceValue'], 'unresolvable_columns': 0}
+QuadSourceIntegral {'identical': False, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}
+OneLoopIntegral {'identical': True, 'replicated': False, 'rows': ['identical', 'differ', 'only_in_a', 'only_in_b', 'unmatched', 'columns_only_in_a', 'columns_only_in_b', 'columns'], 'values': [], 'unresolvable_columns': 0}

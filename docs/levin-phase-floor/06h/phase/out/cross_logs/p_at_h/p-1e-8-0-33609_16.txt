@@ -1,0 +1,7 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/scripts/cross06h.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_p.json p-1e-8-0-33609 16 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33609_16 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33609_16 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h
+# start 2026-11-01T03:50:02Z
+# ----
+{"unit": "p-1e-8-0-33609", "index": 16, "checks": {"spans_equal": true, "coefficients_equal": true, "signs_equal": true, "orders_equal": true, "K_equal": true, "dense_points_equal": true, "dense_references_equal": true}, "all": {"n": 1047, "n_violating": 0, "max_ratio": 0.002695340694170273, "n_other_violating": 0, "max_other_ratio": 0.0031490198958890763}, "digest": "bea61a8e5a28fe980d6eb2ba83e3e1febd0d75cbb2dafeb25d79336895f7c145"}
+# ----
+# end 2026-11-01T03:50:04Z
+# exit 0

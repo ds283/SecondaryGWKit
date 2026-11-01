@@ -1,0 +1,43 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/select_06h.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:35:00Z
+# ----
+# levin-phase-floor 06h: the phase re-measurement's selections (06f's 20 M2 calls, at p and h)
+# written 2026-11-01T03:35:00Z on mps026298.phys.susx.ac.uk
+# script select_06h.py sha256 c1fbee23b8985d42a187e33fbd4231ee846c60b5412003748f9bfb3c85b9c48a
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 HEAD 2c325f56641666b45df483adb8c1202575721c42 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/sample/selection.json sha256 2c654660c814056bd19090b565246c55703feeded176f96700bc197ca383567e
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/docs/levin-phase-floor/06f/out/sample/selection.json sha256 2c654660c814056bd19090b565246c55703feeded176f96700bc197ca383567e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl sha256 3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372
+06f's M2 calls: 20
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/sample/selection_p.json sha256 6ad4cec07d7d4df831e7a9b1ec24459088bce1407f63be54d77ccd0fe2c38cec
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/sample/selection_h.json sha256 74efc98ede9f19b1209dd6d7938ac647db040671e4d04aae79899229c75ca0a8
+
+unit (06f) | index | label | p: regions, depth, conv, abserr | h: regions, depth, conv, abserr | h census unit, status
+g-1e-7-0-33555 | 13 | analytic Y3 | 1, 0, True, 8.2402e-21 | 1, 0, True, 8.2882e-21 | g-1e-7-0-33555, done
+g-1e-7-1-10824 | 12 | analytic Y2 | 1, 0, True, 2.0383e-21 | 1, 0, True, 2.3238e-21 | g-1e-7-1-10824, done
+g-1e-7-3-1054 | 20 | analytic Y4 | 2, 1, True, 1.1960e-19 | 2, 1, True, 1.2065e-19 | g-1e-7-3-1054, done
+g-1e-7-2-21508 | 15 | analytic J3 | 1, 0, True, 8.1746e-23 | 1, 0, True, 8.3258e-23 | g-1e-7-2-21508, done
+g-1e-7-2-33311 | 12 | analytic Y1 | 1, 0, True, 6.5018e-26 | 1, 0, True, 6.8507e-26 | g-1e-7-2-33311, done
+g-1e-7-3-668 | 8 | analytic J1 | 2, 1, True, 5.8705e-24 | 2, 1, True, 5.9471e-24 | g-1e-7-3-668, done
+g-1e-7-1-10895 | 12 | analytic J2 | 2, 1, True, 1.0229e-23 | 2, 1, True, 1.0385e-23 | g-1e-7-1-10895, done
+g-1e-7-0-12689 | 19 | analytic J4 | 4, 2, True, 2.1596e-20 | 4, 2, True, 2.1790e-20 | g-1e-7-0-12689, done
+g-1e-7-3-657 | 15 | analytic Y3 | 1, 0, True, 4.7709e-26 | 1, 0, True, 4.7864e-26 | g-1e-7-3-657, done
+g-1e-7-2-21613 | 14 | analytic Y2 | 1, 0, True, 2.6909e-22 | 1, 0, True, 2.7151e-22 | g-1e-7-2-21613, done
+g-1e-8-1-20297 | 13 | analytic Y3 | 1, 0, True, 2.0170e-25 | 1, 0, True, 2.0337e-25 | g-1e-8-1-20297, done
+g-1e-8-2-33275 | 11 | analytic Y2 | 1, 0, True, 9.7963e-23 | 1, 0, True, 9.8542e-23 | g-1e-8-2-33275, done
+g-1e-8-0-10589 | 1 | analytic Y1 | 1, 0, True, 3.7612e-24 | 1, 0, True, 5.6669e-24 | g-1e-8-0-10589, done
+g-1e-8-0-33586 | 12 | analytic J3 | 1, 0, True, 6.7046e-22 | 1, 0, True, 6.7325e-22 | g-1e-8-0-33586, done
+g-1e-8-0-33609 | 16 | analytic Y4 | 1, 0, True, 1.1124e-23 | 1, 0, True, 1.1223e-23 | g-1e-8-0-33609, done
+g-1e-8-0-33599 | 8 | analytic J1 | 1, 0, True, 2.0478e-22 | 1, 0, True, 2.0719e-22 | g-1e-8-0-33599, done
+g-1e-8-1-10740 | 12 | analytic J2 | 1, 0, True, 3.8354e-22 | 1, 0, True, 3.8544e-22 | g-1e-8-1-10740, done
+g-1e-8-3-914 | 16 | analytic J4 | 1, 0, True, 9.3994e-20 | 1, 0, True, 9.4796e-20 | g-1e-8-3-914, done
+g-1e-8-1-20245 | 13 | analytic Y3 | 2, 1, True, 1.3631e-24 | 2, 1, True, 1.3758e-24 | g-1e-8-1-20245, done
+g-1e-8-0-33532 | 12 | analytic Y2 | 1, 0, True, 9.9052e-21 | 1, 0, True, 9.9694e-21 | g-1e-8-0-33532, done
+# ----
+# end 2026-11-01T03:35:03Z
+# exit 0

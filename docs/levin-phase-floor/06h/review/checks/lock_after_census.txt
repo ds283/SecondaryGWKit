@@ -1,0 +1,5 @@
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
+exit 0
+exit 0
+(orchestrator: ray-processes printed nothing, exit 0 = none; ps shows 0 gcs_server/raylet/ray-sgk processes at 2026-11-01T03:34:24Z; registry 39 runs, none running or stale)

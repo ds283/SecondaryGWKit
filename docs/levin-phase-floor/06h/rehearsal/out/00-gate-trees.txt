@@ -1,0 +1,99 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T00:18:15Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5; C=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2; for T in $M $P $C; do echo "== $T"; git --no-optional-locks -C $T rev-parse HEAD; git --no-optional-locks -C $T rev-parse --abbrev-ref HEAD; echo "-- status --short --ignored:"; git --no-optional-locks -C $T status --short --ignored | grep -v "^!! var/\|^!! venv/" ; done; echo "== main status --short"; git --no-optional-locks -C $M status --short; echo "== worktree list"; git --no-optional-locks -C $M worktree list; echo "== 7172a8f^"; git --no-optional-locks -C $C rev-parse 7172a8f^; echo "== log 2c325f5..c1ec3b2"; git --no-optional-locks -C $C log --oneline 2c325f5..c1ec3b2; echo "== diff --stat ac1c6f4 c1ec3b2 outside docs prompts"; git --no-optional-locks -C $C diff --stat ac1c6f4 c1ec3b2 -- . ":!docs" ":!prompts"; echo "== diff --stat 2c325f5 c1ec3b2 outside docs prompts"; git --no-optional-locks -C $C diff --stat 2c325f5 c1ec3b2 -- . ":!docs" ":!prompts"; echo "== diff --stat 6d81fad 2c325f5 outside docs prompts"; git --no-optional-locks -C $C diff --stat 6d81fad 2c325f5 -- . ":!docs" ":!prompts"
+# output:
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+-- status --short --ignored:
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+!! CosmologyModels/__pycache__/
+!! Datastore/
+!! GkSource-out/
+!! LiouvilleGreen/.DS_Store
+!! LiouvilleGreen/__pycache__/
+!! LiouvilleGreen/tests/.DS_Store
+!! LiouvilleGreen/tests/__pycache__/
+!! LiouvilleGreen/tests/test_3bessel_analytic/
+!! LiouvilleGreen/tests/three_bessel_debug/
+!! MetadataConcepts/__pycache__/
+!! ObjectFactories/__pycache__/
+!! Omega_GW_sensitivity.pdf
+!! Omega_GW_sensitivity.png
+!! Quadrature/__pycache__/
+!! Quadrature/integrators/__pycache__/
+!! Quadrature/supervisors/__pycache__/
+!! RayTools/
+!! StoreFixtures/__pycache__/
+!! Units/__pycache__/
+!! __pycache__/
+!! config/__pycache__/
+!! docs/handover/a3-v2/findings/__pycache__/
+!! profile-db.sqlite
+!! test-db-qcd-shard0000.sqlite
+!! test-db-qcd-shard0001.sqlite
+!! test-db-qcd-shard0002.sqlite
+!! test-db-qcd-shard0003.sqlite
+!! test-db-qcd-shard0004.sqlite
+!! test-db-qcd-shard0005.sqlite
+!! test-db-qcd-shard0006.sqlite
+!! test-db-qcd-shard0007.sqlite
+!! test-db-qcd-shard0008.sqlite
+!! test-db-qcd-shard0009.sqlite
+!! test-db-qcd-shard0010.sqlite
+!! test-db-qcd-shard0011.sqlite
+!! test-db-qcd-shard0012.sqlite
+!! test-db-qcd-shard0013.sqlite
+!! test-db-qcd-shard0014.sqlite
+!! test-db-qcd-shard0015.sqlite
+!! test-db-qcd-shard0016.sqlite
+!! test-db-qcd-shard0017.sqlite
+!! test-db-qcd-shard0018.sqlite
+!! test-db-qcd-shard0019.sqlite
+!! test-db-qcd.sqlite
+!! thirdparty/__pycache__/
+!! three_bessel_debug/
+!! tools/__pycache__/
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5
+2c325f56641666b45df483adb8c1202575721c42
+HEAD
+-- status --short --ignored:
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2
+c1ec3b2c819cc5df22ddf4b303f69c7129a54d62
+HEAD
+-- status --short --ignored:
+== main status --short
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 2c325f56 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 c1ec3b2c (detached HEAD)
+== 7172a8f^
+2c325f56641666b45df483adb8c1202575721c42
+== log 2c325f5..c1ec3b2
+c1ec3b2c Record levin-phase-floor 06h's landing and dispatch its Part B
+ac1c6f41 Test the group's declaration on the phase it declares
+7172a8f5 Carry the Bessel group phase's rounding and declare the rest
+== diff --stat ac1c6f4 c1ec3b2 outside docs prompts
+== diff --stat 2c325f5 c1ec3b2 outside docs prompts
+ ComputeTargets/tests/test_quadsource_integral.py  |  82 ++-
+ LiouvilleGreen/bessel_phase.py                    |   6 +-
+ LiouvilleGreen/tests/test_group_phase_rounding.py | 749 ++++++++++++++++++++++
+ LiouvilleGreen/tests/test_three_bessel.py         | 190 +++++-
+ LiouvilleGreen/three_bessel_integrals.py          | 344 ++++++++--
+ 5 files changed, 1289 insertions(+), 82 deletions(-)
+== diff --stat 6d81fad 2c325f5 outside docs prompts
+ CLAUDE.md | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+# exit: 0
+# end: 2026-11-01T00:18:17Z

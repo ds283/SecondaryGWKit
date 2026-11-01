@@ -1,0 +1,30 @@
+{
+ "tree": "p",
+ "name": "C13",
+ "units": [
+  {
+   "uid": "p-1e-8-0-33599",
+   "tree": "p",
+   "rtol": "1e-8",
+   "row": "0-33599",
+   "names05": null,
+   "shard": 0,
+   "serial": 33599,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     8,
+     "analytic J1"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/state/capture_p/C13",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/state/capture_p/C13/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

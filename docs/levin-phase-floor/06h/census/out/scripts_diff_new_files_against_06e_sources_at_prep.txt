@@ -1,0 +1,322 @@
+### new file scripts/gate_h.py, against its 06e source state/scripts_06e_reference/z0.py
+--- state/scripts_06e_reference/z0.py	2026-10-31 23:50:48
++++ scripts/gate_h.py	2026-11-01 00:26:31
+@@ -1,4 +1,33 @@
+-"""levin-phase-floor prompt 06e section 5, Gate Z0's second and third clauses (and the import list
++"""levin-phase-floor prompt 06h section 5, Gate H: "the parent reproduces 06e" (its bit-for-bit
++clause; the git clause is gate_h_clause1.py, which reads the import list this script writes) and
++"the new code is deterministic". Copied from 06e's z0.py (kept unchanged in
++state/scripts_06e_reference/) and changed, each change marked "prompt 06h":
++- **the trees and the "before":** P1-P3 run at the parent ``p`` (2c325f5, whose code is 06e's census
++  tree 6d81fad's) and are compared with 06e's census units ``g-<rtol>-<shard>-<serial>`` of run
++  levin-phase-floor-06e-census-20261030T081318 (prov.RUN06E) by bit pattern, on 06e's own keys:
++  every key 06e's worker recorded, now **including 06e's ``deep_lines_06e`` and ``cc_floor_terms``**
++  (checkpoint and pickle) and the per-call ``cc_floor`` (inside the calls' dicts), which 06c's
++  record, Z0's "before", did not have. 06e's keys are a subset of what this worker records, each
++  unchanged; the new 06h keys (``declared_06h`` per call, ``declared_terms_06h`` in the pickle)
++  are left out of the comparison with 06e and compared in clause "deterministic";
++- **the determinism unit** is ``g-1e-7-0-14164`` (06c's X0 unit and 06e's Z0 unit), run at ``g``
++  (the tree h, c1ec3b2) in two fresh workers, G1 and G2, compared on every key the worker
++  records, 06h's new ones included (``declared_06h`` per call, ``declared_terms_06h``), timings
++  excepted. It qualifies (Part B's census brief): its row has two analytic blocks, sixteen
++  ``adaptive_levin_sincos`` calls ("analytic J1" ... "analytic Y4"), each handed a
++  ``BesselPhaseGroup.levin_theta()`` that supplies ``theta_abserr`` (06e's out/cmd/20); under h
++  every such call's phase and declaration move, so the unit exercises 06h's ``sin_cos`` and
++  ``theta_abserr`` on both scalar and array paths, and its group calls exercise the
++  Clenshaw-Curtis branch (call 0, six fallback leaves). The G check prints the declared terms it
++  recorded and fails clause "deterministic" if no analytic-block call reports
++  ``supplies_theta_abserr`` with a non-zero declared sum;
++- the five workers run at once, as in 06e (five, within the six-core rule), only when the
++  orchestrator has released the cores.
++Usage: python -B gate_h.py run|check OUT_DIR. ``check`` runs with ``PYTHONPATH`` the tree g.
++
++(06e's text follows, unchanged; read its Z0 as Gate H.)
++
++levin-phase-floor prompt 06e section 5, Gate Z0's second and third clauses (and the import list
+ its first clause reads). Copied from 06c's x0.py (kept unchanged in state/scripts_06c_reference/)
+ and changed, each change marked "prompt 06e":
+ - **the trees and the "before":** P1-P3 run at the parent ``p`` (50277f3, whose code is 06c's census
+@@ -70,7 +99,7 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+-from prov import PYTHON, RUN06A, RUN06B, RUN06C, TREES, WIDER, header, sha256  # noqa: E402  prompt 06e: RUN06C
++from prov import PYTHON, RUN06A, RUN06B, RUN06C, RUN06E, TREES, WIDER, header, sha256  # noqa: E402  prompt 06e: RUN06C; prompt 06h: RUN06E
+ 
+ BUDGET_S = 300.0
+ ROWS_JSON = WIDER / "state" / "rows.json"
+@@ -140,7 +169,7 @@
+     shard, serial = map(int, DET_UNIT_KEY.split("-")[2:])
+     D = next(r for r in doc["rows"] if r["shard"] == shard and r["serial"] == serial)
+     cap = None  # prompt 06e: no capture
+-    print(f"determinism unit g-{DET_UNIT_KEY} ({D['name']}) (06c's X0 unit); no capture")
++    print(f"determinism unit g-{DET_UNIT_KEY} ({D['name']}) (06c's X0 unit, 06e's Z0 unit; prompt 06h); no capture")
+     specs = {
+         "P1": ("p", [unit(by05["low-G+r-1"], "1e-7", "p")]),
+         "P2": ("p", [unit(by05["ctrl-low-1"], "1e-7", "p")]),
+@@ -316,20 +345,32 @@
+         diffs.append("deep lines (checkpoint)")
+     if json.dumps(a_rec.get("deep_lines"), sort_keys=True) != json.dumps(b_rec.get("deep_lines"), sort_keys=True):
+         diffs.append("deep lines (pickle)")
++    # prompt 06h: 06e recorded these, so they are compared in both modes (06e: only when not
++    # restricted to the before's keys, since 06c had none)
++    if json.dumps(_drop_timings(a_data.get("deep_lines_06e")), sort_keys=True) != json.dumps(
++        _drop_timings(b_data.get("deep_lines_06e")), sort_keys=True
++    ):
++        diffs.append("deep lines past depth 12 (checkpoint)")
++    if json.dumps(a_rec.get("deep_lines_06e"), sort_keys=True) != json.dumps(b_rec.get("deep_lines_06e"), sort_keys=True):
++        diffs.append("deep lines past depth 12 (pickle)")
++    if _cc_terms_bytes(a_rec.get("cc_floor_terms")) != _cc_terms_bytes(b_rec.get("cc_floor_terms")):
++        diffs.append("Clenshaw-Curtis floor terms (pickle)")
+     if not restrict_to_b:
+-        # prompt 06e: the new keys (per call cc_floor is inside the calls' dicts, compared above)
+-        if json.dumps(_drop_timings(a_data.get("deep_lines_06e")), sort_keys=True) != json.dumps(
+-            _drop_timings(b_data.get("deep_lines_06e")), sort_keys=True
+-        ):
+-            diffs.append("deep lines past depth 12 (checkpoint)")
+-        if json.dumps(a_rec.get("deep_lines_06e"), sort_keys=True) != json.dumps(b_rec.get("deep_lines_06e"), sort_keys=True):
+-            diffs.append("deep lines past depth 12 (pickle)")
+-        if _cc_terms_bytes(a_rec.get("cc_floor_terms")) != _cc_terms_bytes(b_rec.get("cc_floor_terms")):
+-            diffs.append("Clenshaw-Curtis floor terms (pickle)")
+-        ka = set(a_data) - {"wall_s", "rebuild_s", "scan_s", "cc_floor_s", "worker", "worker_pid", "pickle_offset", "pickle_record_sha256", "pickle_length", "pickle", "unit", "policy_warnings"}
+-        kb = set(b_data) - {"wall_s", "rebuild_s", "scan_s", "cc_floor_s", "worker", "worker_pid", "pickle_offset", "pickle_record_sha256", "pickle_length", "pickle", "unit", "policy_warnings"}
++        # prompt 06h: the new keys (per call declared_06h is inside the calls' dicts, compared above)
++        if _cc_terms_bytes(a_rec.get("declared_terms_06h")) != _cc_terms_bytes(b_rec.get("declared_terms_06h")):
++            diffs.append("declared terms by leaf (pickle)")
++        ka = set(a_data) - {"wall_s", "rebuild_s", "scan_s", "cc_floor_s", "declared_06h_s", "worker", "worker_pid", "pickle_offset", "pickle_record_sha256", "pickle_length", "pickle", "unit", "policy_warnings"}  # prompt 06h: declared_06h_s
++        kb = set(b_data) - {"wall_s", "rebuild_s", "scan_s", "cc_floor_s", "declared_06h_s", "worker", "worker_pid", "pickle_offset", "pickle_record_sha256", "pickle_length", "pickle", "unit", "policy_warnings"}  # prompt 06h: declared_06h_s
+         if ka != kb:
+             diffs.append(f"checkpoint keys differ: {sorted(ka ^ kb)}")
++    else:
++        # prompt 06h: every pickle key the before recorded is compared above, or listed here
++        compared = {"unit", "regions", "scan", "result_full", "other_regions", "w3", "deep_lines", "deep_lines_06e", "cc_floor_terms"}
++        missing = set(b_rec) - compared
++        if missing:
++            diffs.append(f"the before's pickle keys not compared: {sorted(missing)}")
++        if a_rec.get("unit", "").split("-", 1)[1:] != b_rec.get("unit", "").split("-", 1)[1:]:
++            diffs.append("pickle unit")
+     return diffs
+ 
+ 
+@@ -369,8 +410,8 @@
+     out_dir = Path(out_dir)
+     for l in header(
+         Path(__file__).resolve(),
+-        "levin-phase-floor 06e: Gate Z0 clauses 2 and 3",  # prompt 06e
+-        [ROWS_JSON, RUN06C / "checkpoint.jsonl"],
++        "levin-phase-floor 06h: Gate H, the parent reproduces 06e and the new code is deterministic",  # prompt 06e; prompt 06h
++        [ROWS_JSON, RUN06E / "checkpoint.jsonl"],
+     ):
+         print(l)
+     W, byes, hellos = {}, {}, {}
+@@ -386,17 +427,25 @@
+             f"premise check {ev['levin_has_roundoff_exit_premise_holds']}; trust check {ev['levin_has_trust_check']}; "
+             f"CC floor {ev['levin_has_cc_roundoff_floor']}; _local_atol {ev['levin_has_local_atol']}; default depth_max {ev['levin_default_max_depth']}"
+         )
++        # prompt 06h: 06h's group phase in this worker's tree
++        bpg_file = [v_ for k_, v_ in ev["files"].items() if k_.startswith("BesselPhaseGroup")]
++        print(
++            f"      (06h) three_bessel_integrals {ev['files']['LiouvilleGreen.three_bessel_integrals']} sha256 {ev['three_bessel_integrals_sha256']}; "
++            f"QSI's BesselPhaseGroup from {bpg_file}; "
++            f"_declared_error_parts {ev['group_has_declared_error_parts']}; _two_product_error {ev['three_bessel_has_two_product_error']}; "
++            f"EXP_RELERR {ev['three_bessel_EXP_RELERR']}; levin_quadrature sha256 {ev['levin_quadrature_sha256']}"
++        )
+         for uid, d in W[name].items():
+             m = d["modules"]
+             print(f"      {uid}: status {d['status']}; wall {d['wall_s']:.2f} s; tree_head {d['tree_head']}; modules by root {m['counts_by_root']}; foreign {m['foreign']}")
+ 
+     all_ok = True
+-    print("\n== clause 2: the harness at the parent reproduces 06c's units bit for bit")  # prompt 06e
++    print("\n== the parent reproduces 06e: the harness at the parent reproduces 06e's units bit for bit")  # prompt 06e; prompt 06h
+     for name in ("P1", "P2", "P3"):
+         for uid, d in W[name].items():
+-            b_uid = "g-" + uid.split("-", 1)[1]  # prompt 06e: 06c's census unit
+-            bd = read_one(RUN06C, b_uid)
+-            brec = load_census_record(RUN06C, bd)
++            b_uid = "g-" + uid.split("-", 1)[1]  # prompt 06e: 06c's census unit; prompt 06h: 06e's
++            bd = read_one(RUN06E, b_uid)  # prompt 06h
++            brec = load_census_record(RUN06E, bd)  # prompt 06h
+             prec = load_census_record(out_dir / name, d)
+             diffs = compare_units(d, prec, bd, brec, restrict_to_b=True)
+             okc, nv, nr = compare_c(d, prec, bd, brec)
+@@ -405,25 +454,30 @@
+             r = d.get("result") or {}
+             n_oregions = sum(len(o["start"]) for o in prec["other_regions"])
+             print(
+-                f"   {name} {uid} vs 06c {b_uid} ({d['row']}): "
+-                f"{'IDENTICAL in every value 06c recorded' if ok else 'DIFFERS in ' + str(diffs)}; "
++                f"   {name} {uid} vs 06e {b_uid} ({d['row']}): "  # prompt 06h
++                f"{'IDENTICAL in every value 06e recorded' if ok else 'DIFFERS in ' + str(diffs)}; "  # prompt 06h
+                 f"C0 (c) terms {'identical' if okc else 'DIFFER'} ({nv} group-call values/abserrs, {nr} group-call regions)"
+             )
+             print(
+-                f"      total {hx(r.get('total'))} abserr {hx(r.get('total_abserr'))} | 06c "
++                f"      total {hx(r.get('total'))} abserr {hx(r.get('total_abserr'))} | 06e "  # prompt 06h
+                 f"{hx(bd['result']['total'])} {hx(bd['result']['total_abserr'])}; "
+                 f"group calls {len(d['calls'])}, analytic-block calls {len(d['other_calls'])} ({n_oregions} regions); "
+-                f"region arrays compared on 06c's keys {sorted(_keys_of(brec['regions']))}; "
+-                f"06c deep lines {(bd.get('deep_lines') or {}).get('n_calls')}, here {(d.get('deep_lines') or {}).get('n_calls')}"
++                f"region arrays compared on 06e's keys {sorted(_keys_of(brec['regions']))}; "  # prompt 06h
++                f"06e deep lines {(bd.get('deep_lines') or {}).get('n_calls')}, here {(d.get('deep_lines') or {}).get('n_calls')}; "  # prompt 06h
++                f"06e deep lines past 12 {(bd.get('deep_lines_06e') or {}).get('n_calls')}, here {(d.get('deep_lines_06e') or {}).get('n_calls')}; "  # prompt 06h
++                f"CC floor-term leaves 06e {sum(len(x_['reproduces']) for x_ in (brec.get('cc_floor_terms') or []))}, here {sum(len(x_['reproduces']) for x_ in (prec.get('cc_floor_terms') or []))}; "  # prompt 06h
++                f"call keys compared {sorted(_keys_of(bd['calls']))}"  # prompt 06h
+             )
++            # prompt 06h: every float of the comparison is a JSON hex string or array bytes, so equal is
++            # equal by bit pattern; the three totals in float.hex are printed above
+             print(
+-                f"      (descriptive) dispatcher counts {d['dispatcher_counts']} | 06c {bd['dispatcher_counts']}: "
++                f"      (descriptive) dispatcher counts {d['dispatcher_counts']} | 06e {bd['dispatcher_counts']}: "  # prompt 06h
+                 f"{'equal' if d['dispatcher_counts'] == bd['dispatcher_counts'] else 'differ'}; W3 {_drop_timings(d.get('w3'))}"
+             )
+     c2_ok = all_ok
+-    print(f"   clause 2 {'holds' if c2_ok else 'FAILS'}")
++    print(f"   the parent reproduces 06e (bit for bit): {'holds' if c2_ok else 'FAILS'}")  # prompt 06h
+ 
+-    print("\n== clause 3: the new code is deterministic (one g unit, two fresh workers)")
++    print("\n== the new code is deterministic (one h unit, two fresh workers)")  # prompt 06h
+     (uid,) = list(W["G1"])
+     a, b = W["G1"][uid], W["G2"][uid]
+     arec = load_census_record(out_dir / "G1", a)
+@@ -431,27 +485,43 @@
+     diffs = compare_units(a, arec, b, brec, restrict_to_b=False)
+     vals = "none (prompt 06e: no capture)"
+     c3_ok = len(diffs) == 0
+-    bd = read_one(RUN06C, "g-" + uid.split("-", 1)[1])  # prompt 06e: 06c's census unit, descriptive
++    bd = read_one(RUN06E, "g-" + uid.split("-", 1)[1])  # prompt 06e: 06c's census unit, descriptive; prompt 06h: 06e's
+     print(f"   {uid} ({a['row']}): G1 vs G2 {'IDENTICAL in every computed value' if c3_ok else 'DIFFERS in ' + str(diffs)}")
+     print(f"      total {hx(a['result']['total'])} abserr {hx(a['result']['total_abserr'])} converged {a['result']['total_converged']}; "
+-          f"06c {hx(bd['result']['total'])} {hx(bd['result']['total_abserr'])} converged {bd['result']['total_converged']}")
++          f"06e {hx(bd['result']['total'])} {hx(bd['result']['total_abserr'])} converged {bd['result']['total_converged']}")  # prompt 06h
+     cb = {c["index"]: c for c in bd["calls"]}
+     for ca in a["calls"]:
+         ch = cb[ca["index"]]
+         print(
+             f"      call {ca['index']} {ca['group']}: g value {hx(ca['value'])} abserr {hx(ca['abserr'])} conv {ca['converged']} regions {ca['num_regions']} "
+             f"depth {ca['max_depth']} untrusted {ca['num_untrusted_regions']} leaves {ca['leaves']} E_share-largest {ca['E_largest_share']} "
+-            f"budget {ca['budget']} solves {ca['solves_by_purpose']} cc_floor {ca.get('cc_floor')} | 06c value {hx(ch['value'])} abserr {hx(ch['abserr'])} conv {ch['converged']} "
++            f"budget {ca['budget']} solves {ca['solves_by_purpose']} cc_floor {ca.get('cc_floor')} declared_06h {ca.get('declared_06h')} | 06e value {hx(ch['value'])} abserr {hx(ch['abserr'])} conv {ch['converged']} "  # prompt 06h
+             f"regions {ch['num_regions']} depth {ch['max_depth']}"
+         )
+     ob = {(c["index"]): c for c in bd["other_calls"]}
+-    print("      analytic-block calls (index, label, g: conv, regions, depth, untrusted, CC leaves reproduced/n; 06c: conv, regions, depth):")
++    print("      analytic-block calls (index, label, h: value, abserr, conv, regions, depth, untrusted, CC leaves reproduced/n; "
++          "declared terms: leaves reproduced/n, Levin and CC sums of the declared term and its three parts, the request; "
++          "06e: value, abserr, conv, regions, depth):")  # prompt 06h
++    n_decl_nonzero = 0  # prompt 06h
+     for ca in a["other_calls"]:
+         ch = ob.get(ca["index"])
+         ccf = ca.get("cc_floor") or {}
+-        print(f"         {ca['index']} {ca['notify_label']}: {ca['converged']} {ca['num_regions']} {ca['max_depth']} {ca['num_untrusted_regions']} "
+-              f"{ccf.get('n_reproduced')}/{ccf.get('n_cc_leaves')} | "
+-              f"{None if ch is None else (ch['converged'], ch['num_regions'], ch['max_depth'])}")
++        dc = ca.get("declared_06h") or {}
++        if dc.get("supplies_theta_abserr") and dc.get("n_reproduced") == dc.get("n_leaves") and any(
++            float.fromhex(dc[b_]["declared"]["hex"]) > 0 for b_ in ("levin", "cc")
++        ):
++            n_decl_nonzero += 1
++        dcs = {b_: {k_: (dc[b_][k_]["repr"] if isinstance(dc[b_].get(k_), dict) else dc[b_].get(k_))
++                    for k_ in ("n", "n_reproduced", "declared", "declared_constituents", "declared_abscissa", "declared_phi_eval", "floor")}
++               for b_ in ("levin", "cc") if b_ in dc}
++        print(f"         {ca['index']} {ca['notify_label']}: {hx(ca['value'])} {hx(ca['abserr'])} {ca['converged']} {ca['num_regions']} {ca['max_depth']} {ca['num_untrusted_regions']} "
++              f"{ccf.get('n_reproduced')}/{ccf.get('n_cc_leaves')}; declared {dc.get('n_reproduced')}/{dc.get('n_leaves')} {dcs} request {(dc.get('request') or {}).get('repr')} | "
++              f"{None if ch is None else (hx(ch['value']), hx(ch['abserr']), ch['converged'], ch['num_regions'], ch['max_depth'])}")
++    print(f"      (prompt 06h) analytic-block calls supplying theta_abserr with every leaf reproduced and a non-zero declared sum: "
++          f"{n_decl_nonzero} of {len(a['other_calls'])}")
++    if n_decl_nonzero == 0:
++        c3_ok = False
++        print("      (prompt 06h) NO analytic-block call carries a declared term: the unit does not qualify")
+     print(f"      W3 {_drop_timings(a['w3'])}; deep lines {_drop_timings({k: v for k, v in (a['deep_lines'] or {}).items() if k != 'lines'})}")
+     print(f"      (prompt 06e) deep lines past depth 12 {_drop_timings({k: v for k, v in (a['deep_lines_06e'] or {}).items() if k != 'lines'})}; "
+           f"CC floor terms: {sum(1 for d_ in (arec.get('cc_floor_terms') or []))} calls with fallback leaves, "
+@@ -460,7 +530,7 @@
+           f"tree evidence g: {[(k, v) for k, v in hellos['G1']['evidence'].items() if k.startswith('levin_has_c') or k == 'levin_quadrature_sha256']}")
+     print(f"      captured calls: {vals}")
+     print(f"      wall {a['wall_s']:.2f} s and {b['wall_s']:.2f} s (timings, not compared)")
+-    print(f"   clause 3 {'holds' if c3_ok else 'FAILS'}")
++    print(f"   the new code is deterministic: {'holds' if c3_ok else 'FAILS'}")  # prompt 06h
+ 
+     print("\n== no Ray")
+     before = json.loads((out_dir / "tmp_ray_sgk_before.json").read_text())
+@@ -480,7 +550,7 @@
+     tests = sorted(m for m in own if ".tests." in m or m.endswith(".tests"))
+     print(f"   of them under a tests package: {tests}")
+     ok = c2_ok and c3_ok and r_ok
+-    print(f"\n== Z0 clauses 2 and 3 (and no Ray): {'HOLD' if ok else 'DO NOT HOLD'}")  # prompt 06e
++    print(f"\n== Gate H, the bit-for-bit reproduction and determinism (and no Ray): {'HOLD' if ok else 'DO NOT HOLD'}")  # prompt 06e; prompt 06h
+     return 0 if ok else 1
+ 
+ 
+### new file scripts/gate_h_clause1.py, against its 06e source state/scripts_06e_reference/z0_clause1.py
+--- state/scripts_06e_reference/z0_clause1.py	2026-10-31 23:50:48
++++ scripts/gate_h_clause1.py	2026-11-01 00:26:07
+@@ -1,4 +1,13 @@
+-"""levin-phase-floor prompt 06e section 5, Gate Z0's first clause: the parent's production code is
++"""levin-phase-floor prompt 06h section 5, Gate H's git clause ("the parent reproduces 06e": ``git diff
++--stat 6d81fad <code commit's parent> -- . ':!docs' ':!prompts'`` shows only CLAUDE.md and files whose
++ASTs without docstrings equal the dispatch commit's). Copied from 06e's z0_clause1.py (kept unchanged
++in state/scripts_06e_reference/); changed (prompt 06h) only in the two commits: 06e's Part B dispatch
++commit ``6d81fad`` (prov.G06E_SHA) and 06h's code commit's parent ``2c325f5`` (prov.P_SHA), and the
++gate's name. MODULES_JSON is state/H/p_tree_modules.json, written by ``gate_h.py check`` from Gate H's
++parent workers (the harness's imports from the parent tree). (06e's text follows, unchanged; read its
++Z0 as Gate H.)
++
++levin-phase-floor prompt 06e section 5, Gate Z0's first clause: the parent's production code is
+ 06c's census's. Copied from 06c's x0_clause1.py (kept unchanged in state/scripts_06c_reference/);
+ changed (prompt 06e) only in the two commits: 06c's Part B dispatch commit ``e5764a6``
+ (prov.G06C_SHA) and 06e's code commit's parent ``50277f3`` (prov.P_SHA), and the gate's name.
+@@ -33,7 +42,7 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+-from prov import G06C_SHA as B06B_SHA, MAIN, P_SHA, TREES, header  # noqa: E402  prompt 06e: e5764a6 under 06c's name
++from prov import G06E_SHA as B06B_SHA, MAIN, P_SHA, TREES, header  # noqa: E402  prompt 06e: e5764a6 under 06c's name; prompt 06h: 6d81fad
+ 
+ 
+ def git(*args):
+@@ -58,7 +67,7 @@
+ def main():
+     modules_json = Path(sys.argv[1])
+     mods = json.loads(modules_json.read_text())
+-    for l in header(Path(__file__).resolve(), "levin-phase-floor 06e: Gate Z0 clause 1", [modules_json]):
++    for l in header(Path(__file__).resolve(), "levin-phase-floor 06h: Gate H, the git clause", [modules_json]):  # prompt 06h
+         print(l)
+     rng = [B06B_SHA, P_SHA, "--", ".", ":!docs", ":!prompts"]
+     print(f"\n$ git diff --stat {B06B_SHA[:7]} {P_SHA[:7]} -- . ':!docs' ':!prompts'")
+@@ -88,7 +97,7 @@
+         else:
+             print(f"  {st} {path}: AST differs (imported by the harness: {imported}) -- NOT ALLOWED")
+             ok = False
+-    print(f"\n== Z0 clause 1: {'HOLDS' if ok else 'FAILS'}")  # prompt 06e
++    print(f"\n== Gate H, the git clause: {'HOLDS' if ok else 'FAILS'}")  # prompt 06e; prompt 06h
+     return 0 if ok else 1
+ 
+ 
+### new file scripts/checks_after_06h.py, against its 06e source state/scripts_06e_reference/checks_after_06e.py
+--- state/scripts_06e_reference/checks_after_06e.py	2026-10-31 23:50:48
++++ scripts/checks_after_06h.py	2026-11-01 00:26:42
+@@ -1,4 +1,7 @@
+-"""levin-phase-floor 06e: the run's records after it ended (new in 06e; 06c did the same inline in its
++"""levin-phase-floor 06h: copied from 06e's checks_after_06e.py (kept in state/scripts_06e_reference/); changed
++(prompt 06h) in this note, in the tree (prov.G_SHA is now h's, c1ec3b2), and by the counts of 06h's declared
++terms per call (supplies theta_abserr, leaves, reproduced, errors) and the run's over-budget and error units.
++06e's text: levin-phase-floor 06e: the run's records after it ended (new in 06e; 06c did the same inline in its
+ report). Per record: the registry's script stamp, the tree's HEAD and status, the scripts' SHA-256
+ against scripts/ now, status, wall_s > 300 s, foreign modules, deep-line and CC-term errors.
+ Usage: python -B checks_after_06e.py RUN_DIR"""
+@@ -27,6 +30,15 @@
+         if f is None: c["cc_floor None"] += 1; continue
+         if "error" in f: c["cc_floor error"] += 1; continue
+         c["cc leaves"] += f["n_cc_leaves"]; c["cc reproduced"] += f["n_reproduced"]; c["cc errors"] += f["n_errors"]
++    for cl in d["calls"] + d["other_calls"]:  # prompt 06h
++        g6 = cl.get("declared_06h")
++        if g6 is None: c["declared_06h None"] += 1; continue
++        if "error" in g6: c["declared_06h error"] += 1; continue
++        if not g6["supplies_theta_abserr"]: c["calls supplying no theta_abserr"] += 1; continue
++        c["calls supplying theta_abserr"] += 1
++        c["declared_06h leaves"] += g6["n_leaves"]; c["declared_06h reproduced"] += g6["n_reproduced"]; c["declared_06h errors"] += g6["n_errors"]
++        c["declared_06h with parts"] += bool(g6["has_parts"])
++    if d["status"] != "done": c["unit " + d["status"] + ": " + r["unit"]] += 1  # prompt 06h
+ print("record keys seen:", sorted(k for k in json.loads(open(run / "checkpoint.jsonl").readline()).keys()))
+ for k, v in sorted(c.items()): print(f"{k}: {v}")
+ print("units with wall_s > 300 s:", len(over300), over300)

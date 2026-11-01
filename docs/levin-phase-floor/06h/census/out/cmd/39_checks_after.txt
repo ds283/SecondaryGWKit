@@ -1,0 +1,29 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/checks_after_06h.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:24:57Z
+# ----
+record keys seen: ['data', 'git_dirty', 'git_head', 'recorded', 'script_sha256', 'unit']
+analytic_06h captured != 1: 0
+analytic_06h counterfactual ok: 18560
+calls supplying no theta_abserr: 74650
+calls supplying theta_abserr: 214832
+cc errors: 0
+cc leaves: 278727
+cc reproduced: 278727
+declared_06h errors: 0
+declared_06h leaves: 757680
+declared_06h reproduced: 757680
+declared_06h with parts: 214832
+deep(cap) lines: 29
+deep06e errors: 0
+deep06e lines: 200
+deep06e not reproducing: 0
+records: 18560
+script_sha e11dcd72: 18560
+status done: 18560
+units with wall_s > 300 s: 0 []
+records failing tree/scripts/modules checks: 0 []
+# ----
+# end 2026-11-01T03:25:07Z
+# exit 0

@@ -1,0 +1,15 @@
+$ git diff --stat 6d81fad 2c325f5 -- . :!docs :!prompts
+ CLAUDE.md | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+$ git diff --stat ac1c6f4 c1ec3b2 -- . :!docs :!prompts
+$ git log --oneline 2c325f5..c1ec3b2
+c1ec3b2c Record levin-phase-floor 06h's landing and dispatch its Part B
+ac1c6f41 Test the group's declaration on the phase it declares
+7172a8f5 Carry the Bessel group phase's rounding and declare the rest
+$ git diff --stat 2c325f5 c1ec3b2 -- . :!docs :!prompts
+ ComputeTargets/tests/test_quadsource_integral.py  |  82 ++-
+ LiouvilleGreen/bessel_phase.py                    |   6 +-
+ LiouvilleGreen/tests/test_group_phase_rounding.py | 749 ++++++++++++++++++++++
+ LiouvilleGreen/tests/test_three_bessel.py         | 190 +++++-
+ LiouvilleGreen/three_bessel_integrals.py          | 344 ++++++++--
+ 5 files changed, 1289 insertions(+), 82 deletions(-)

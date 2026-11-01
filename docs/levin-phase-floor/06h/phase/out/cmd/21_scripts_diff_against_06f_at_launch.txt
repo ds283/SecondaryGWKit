@@ -1,0 +1,2121 @@
+$ sh -c diff\ -ruN\ state/scripts_06f_reference/scripts\ scripts\ -x\ orch_m2.py\;\ diff\ -uN\ state/scripts_06f_reference/review_scripts/orch_m2.py\ scripts/orch_m2.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:35:09Z
+# ----
+diff -ruN -x o state/scripts_06f_reference/scripts/analyse06h.py scripts/analyse06h.py
+--- state/scripts_06f_reference/scripts/analyse06h.py	1970-01-01 01:00:00
++++ scripts/analyse06h.py	2026-11-01 00:29:38
+@@ -0,0 +1,451 @@
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement: H1 and H2 scored against the rules
++as prompt 06h section 5 wrote them, the parent's column beside them, and the descriptive split by
++the declaration's dominant term. New in 06h (its M2 tables follow 06f's analyse06f.py).
++
++Reads, read only: out/sample/selection_{p,h}.json, out/capture_{p,h}.json, out/replay_{p,h}/*/
++(result.json, nodes.json.gz, dense.json.gz), out/cross/{p_at_h,h_at_p}/*/ (cross.json,
++rows.json.gz), out/cmd/32_method_check.txt and 33_refcheck_50_digits.txt, and 06f's own nodes
++(var/levin-phase-floor-06f/out/replay/<unit>_<index>/nodes.json.gz) for the parent's reproduction of
++06f. Writes out/phase_calls.csv, out/phase_leaves.csv, out/scores.json; prints everything.
++
++**H1's points** are h's: every node of every returned leaf of h's replay (Clenshaw-Curtis fine nodes,
++Levin collocation nodes) **and** 06f's seeded dense sample of 1,000 points per call ("at every point
++sampled"). Each is scored |delta theta(u)| <= theta_abserr_h(u), the reference at the exact e^u.
++**The parent's column** is the parent's code -- its theta_mod_2pi and its theta_abserr -- on the same
++points (cross06h.py, p at h's points); and, beside it, on its own returned leaves' nodes and the dense
++sample (its own replay).
++
++**H2** is scored on h's returned leaves: |dI_measured| (06f's item 4, the first-order response to the
++measured error at the exact e^u, at the points where the rule evaluates theta) <= the leaf's declared
++term (the one the driver added, from the replay's pass-through at _declared_endpoint_phase_err).
++
++Usage: python -B analyse06h.py   (from var/levin-phase-floor-06h/phase/)"""
++
++import csv
++import gzip
++import json
++import statistics
++import sys
++from pathlib import Path
++
++import numpy as np
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parent
++sys.path.insert(0, str(HERE))
++from prov import REC06F, header, sha256  # noqa: E402
++
++PARTS = ("constituents", "abscissa", "phi_eval")
++
++
++def gz(p):
++    return json.load(gzip.open(p, "rt"))
++
++
++def rest(unit):
++    return unit.split("-", 1)[1]
++
++
++def main():
++    out = ROOT / "out"
++    sel = {
++        t: json.loads((out / "sample" / f"selection_{t}.json").read_text())
++        for t in ("h", "p")
++    }
++    caps = {t: json.loads((out / f"capture_{t}.json").read_text()) for t in ("h", "p")}
++    inputs = [out / "sample" / f"selection_{t}.json" for t in ("h", "p")]
++    inputs += [out / f"capture_{t}.json" for t in ("h", "p")]
++    inputs += [
++        out / "cmd" / "32_method_check.txt",
++        out / "cmd" / "33_refcheck_50_digits.txt",
++    ]
++    calls = []
++    for e in sel["h"]:
++        k = (rest(e["unit"]), e["index"])
++        ep = [x for x in sel["p"] if (rest(x["unit"]), x["index"]) == k][0]
++        tag = {"h": f"{e['unit']}_{e['index']}", "p": f"{ep['unit']}_{ep['index']}"}
++        c = {
++            "key": k,
++            "unit_06f": e["unit_06f"],
++            "label": e["notify_label"],
++            "tag": tag,
++        }
++        for t in ("h", "p"):
++            d = out / f"replay_{t}" / tag[t]
++            for n in ("result.json", "nodes.json.gz", "dense.json.gz"):
++                inputs.append(d / n)
++            c[f"res_{t}"] = json.loads((d / "result.json").read_text())
++            c[f"nodes_{t}"] = gz(d / "nodes.json.gz")
++            c[f"dense_{t}"] = gz(d / "dense.json.gz")
++            other = "p" if t == "h" else "h"
++            x = out / "cross" / f"{t}_at_{other}" / tag[t]
++            inputs += [x / "cross.json", x / "rows.json.gz"]
++            c[f"cross_{t}"] = json.loads((x / "cross.json").read_text())
++            c[f"cross_rows_{t}"] = gz(x / "rows.json.gz")
++        f06 = (
++            REC06F
++            / "out"
++            / "replay"
++            / f"{e['unit_06f']}_{e['index']}"
++            / "nodes.json.gz"
++        )
++        inputs.append(f06)
++        c["nodes_06f"] = gz(f06)
++        calls.append(c)
++    for l in header(
++        Path(__file__).resolve(),
++        "levin-phase-floor 06h: the phase re-measurement, H1 and H2",
++        inputs,
++    ):
++        print(l)
++
++    # ---------------- the captures and replays reproduce their census
++    print("\n== The captures and the replays against each tree's census (bit for bit)")
++    capok = {}
++    for t in ("p", "h"):
++        n = sum(1 for e in caps[t] if e.get("capture_matches_census"))
++        ray = sorted({str(e.get("capture_ray_initialized")) for e in caps[t]})
++        capok[t] = n == len(sel[t]) == len(caps[t])
++        print(
++            f"   {t}: captures matching the census {n} of {len(sel[t])}; ray_initialized {ray}"
++        )
++    f0 = {}
++    for t in ("p", "h"):
++        held = [c for c in calls if c[f"res_{t}"]["F0"]["holds"]]
++        f0[t] = len(held) == len(calls)
++        print(
++            f"   {t}: replays with F0 holding (replay = census on value, abserr, regions, depth, converged; "
++            f"terms = cc_floor; every leaf reproduced) {len(held)} of {len(calls)}"
++        )
++    errs = [
++        (c["tag"][t], k)
++        for c in calls
++        for t in ("h", "p")
++        for k in ("M1_error", "M2_error")
++        if k in c[f"res_{t}"]
++    ]
++    print(f"   replay errors: {errs if errs else 'none'}")
++
++    # ---------------- the cross checks
++    print("\n== The two trees' calls: spans, groups and dense samples")
++    cross_ok = True
++    for c in calls:
++        ch = c["cross_p"]["checks"]
++        bad = [k for k, v in ch.items() if not v]
++        cross_ok &= not bad
++        if bad:
++            print(f"   {c['unit_06f']} #{c['key'][1]}: NOT EQUAL {bad}")
++    print(
++        f"   every call: spans, coefficients, signs, orders, K, dense points and dense references equal: {cross_ok}"
++    )
++
++    # ---------------- the parent reproduces 06f (06f's error at x_hat, at 06f's own nodes)
++    print(
++        "\n== The parent's replay reproduces 06f's M2 item 1 (its error at x_hat, 06f's convention)"
++    )
++    rep06f = []
++    for c in calls:
++        a = [
++            (
++                r["leaf"],
++                r["k"],
++                r["u"],
++                r["theta_mod_2pi"],
++                float(r["delta_theta"]).hex(),
++                float(r["theta_abserr"]).hex(),
++            )
++            for r in c["nodes_06f"]
++        ]
++        b = [
++            (
++                r["leaf"],
++                r["k"],
++                r["u"],
++                r["theta_mod_2pi"],
++                float(r["delta_theta_float"]).hex(),
++                float(r["theta_abserr"]).hex(),
++            )
++            for r in c["nodes_p"]
++        ]
++        rep06f.append(a == b)
++        if a != b:
++            print(
++                f"   {c['unit_06f']} #{c['key'][1]}: differs ({len(a)} vs {len(b)} nodes)"
++            )
++    n06 = sum(len(c["nodes_06f"]) for c in calls)
++    v06 = sum(
++        1
++        for c in calls
++        for r in c["nodes_p"]
++        if r["ratio_float"] is not None and r["ratio_float"] > 1
++    )
++    m06 = max(
++        r["ratio_float"]
++        for c in calls
++        for r in c["nodes_p"]
++        if r["ratio_float"] is not None
++    )
++    print(
++        f"   calls whose parent nodes equal 06f's (u, theta_mod_2pi, delta theta at x_hat, theta_abserr, hex): "
++        f"{sum(rep06f)} of {len(calls)}; nodes {n06}; at x_hat the parent violates at {v06}, worst {m06:.4g} (06f: 49, 148)"
++    )
++
++    # ---------------- H1
++    def pts(c, t):
++        rows = [dict(r, set="node") for r in c[f"nodes_{t}"]]
++        rows += [dict(r, set="dense") for r in c[f"dense_{t}"]]
++        return rows
++
++    def dom(r):
++        p = r.get("theta_abserr_parts")
++        if not p:
++            return None
++        return PARTS[int(np.argmax(p))]
++
++    print(
++        "\n== H1 -- the declaration is honest (h's points; reference at the exact e^u)"
++    )
++    callrows = []
++    worst = None
++    n_pts = n_viol = 0
++    by_set = {"node": [0, 0, 0.0], "dense": [0, 0, 0.0]}
++    for c in calls:
++        P = pts(c, "h")
++        rat = [r["ratio"] for r in P]
++        nv = sum(1 for x in rat if x > 1.0)
++        n_pts += len(P)
++        n_viol += nv
++        for r in P:
++            s = by_set[r["set"]]
++            s[0] += 1
++            s[1] += r["ratio"] > 1.0
++            s[2] = max(s[2], r["ratio"])
++            if worst is None or r["ratio"] > worst[0]:
++                worst = (r["ratio"], c, r)
++        # the parent on h's points
++        X = c["cross_rows_p"]
++        xr = [r["ratio"] for r in X]
++        # the parent on its own points
++        Pp = pts(c, "p")
++        pr = [r["ratio"] for r in Pp]
++        lv = c["res_h"]["M2"]["per_leaf"]
++        lp = c["res_p"]["M2"]["per_leaf"]
++        callrows.append(
++            {
++                "unit_06f": c["unit_06f"],
++                "index": c["key"][1],
++                "label": c["label"],
++                "leaves_h": len(lv),
++                "levin_leaves_h": sum(1 for L in lv if L["branch"] == "levin"),
++                "leaves_p": len(lp),
++                "levin_leaves_p": sum(1 for L in lp if L["branch"] == "levin"),
++                "same_leaves": [(L["a"], L["b"], L["branch"]) for L in lv]
++                == [(L["a"], L["b"], L["branch"]) for L in lp],
++                "points_h": len(P),
++                "nodes_h": len(c["nodes_h"]),
++                "violations_h": nv,
++                "max_ratio_h": max(rat),
++                "median_ratio_h": float(np.median(rat)),
++                "max_abs_dtheta_h": max(abs(r["delta_theta"]) for r in P),
++                "parent_at_h_points_violations": sum(1 for x in xr if x > 1.0),
++                "parent_at_h_points_max_ratio": max(xr),
++                "points_p": len(Pp),
++                "parent_own_violations": sum(1 for x in pr if x > 1.0),
++                "parent_own_max_ratio": max(pr),
++                "h_at_p_points_violations": c["cross_h"]["summary"]["all"][
++                    "n_violating"
++                ],
++                "h_at_p_points_max_ratio": c["cross_h"]["summary"]["all"]["max_ratio"],
++                "theta_abserr_h_min": min(r["theta_abserr"] for r in P),
++                "theta_abserr_h_max": max(r["theta_abserr"] for r in P),
++                "D_h": c["res_h"]["M2"]["D"],
++                "D_p": c["res_p"]["M2"]["D"],
++                "abserr_h": c["res_h"]["M2"]["declared_error"],
++                "abserr_p": c["res_p"]["M2"]["declared_error"],
++                "request_h": c["res_h"]["M2"]["request"],
++            }
++        )
++    H1 = n_viol == 0
++    wr, wc, wp = worst
++    parts = dict(zip(PARTS, wp["theta_abserr_parts"]))
++    x_parent = sum(r["parent_at_h_points_violations"] for r in callrows)
++    x_parent_max = max(r["parent_at_h_points_max_ratio"] for r in callrows)
++    x_parent_call = max(callrows, key=lambda r: r["parent_at_h_points_max_ratio"])
++    own_parent = sum(r["parent_own_violations"] for r in callrows)
++    own_parent_n = sum(r["points_p"] for r in callrows)
++    own_parent_max = max(r["parent_own_max_ratio"] for r in callrows)
++    print(
++        f"   points scored {n_pts} (nodes {by_set['node'][0]}, dense {by_set['dense'][0]}); violating {n_viol} "
++        f"(nodes {by_set['node'][1]}, dense {by_set['dense'][1]}) -> H1 {'holds' if H1 else 'fails'}"
++    )
++    print(
++        f"   worst |delta theta|/theta_abserr_h = {wr:.6g} on {wc['unit_06f']} #{wc['key'][1]} ({wc['label']}), "
++        f"{wp['set']} {'leaf ' + str(wp['leaf']) + ' node ' + str(wp['k']) if wp['set'] == 'node' else 'j ' + str(wp['j'])}, "
++        f"u = {float.fromhex(wp['u'])!r} ({wp['u']}); delta theta {wp['delta_theta']:+.4e}, theta_abserr {wp['theta_abserr']:.4e} = "
++        f"constituents {parts['constituents']:.4e} + abscissa {parts['abscissa']:.4e} + phi_eval {parts['phi_eval']:.4e}; "
++        f"dominant: {dom(wp)}"
++    )
++    print(
++        f"   the parent on the same points: violating {x_parent} of {n_pts}, worst ratio {x_parent_max:.6g} "
++        f"({x_parent_call['unit_06f']} #{x_parent_call['index']})"
++    )
++    print(
++        f"   the parent on its own leaves' nodes and the dense sample: violating {own_parent} of {own_parent_n}, worst {own_parent_max:.6g}"
++    )
++    print(
++        "\n   call | label | leaves h (Levin) | leaves p (Levin) | same | points | viol h | max h | parent at h's pts: viol, max | parent own: viol, max"
++    )
++    for r in callrows:
++        print(
++            f"   {r['unit_06f']} #{r['index']} | {r['label']} | {r['leaves_h']} ({r['levin_leaves_h']}) | {r['leaves_p']} ({r['levin_leaves_p']}) | "
++            f"{r['same_leaves']} | {r['points_h']} | {r['violations_h']} | {r['max_ratio_h']:.4g} | "
++            f"{r['parent_at_h_points_violations']}, {r['parent_at_h_points_max_ratio']:.4g} | {r['parent_own_violations']}, {r['parent_own_max_ratio']:.4g}"
++        )
++
++    # ---------------- descriptive: by dominant part (h's points)
++    print(
++        "\n== Descriptive: measured/declared at h's points by the declaration's dominant part (test 4's split)"
++    )
++    split = {}
++    for c in calls:
++        for r in pts(c, "h"):
++            split.setdefault(dom(r), []).append(r["ratio"])
++    split_out = {}
++    for part in PARTS:
++        rr = np.array(split.get(part, []))
++        if not len(rr):
++            print(f"   {part:12s} points 0")
++            split_out[part] = {"n": 0}
++            continue
++        split_out[part] = {
++            "n": int(len(rr)),
++            "median": float(np.median(rr)),
++            "p90": float(np.quantile(rr, 0.9)),
++            "max": float(rr.max()),
++            "min": float(rr.min()),
++        }
++        print(
++            f"   {part:12s} points {len(rr):5d}; median {np.median(rr):.3e}; 90 % {np.quantile(rr, 0.9):.3e}; "
++            f"max {rr.max():.3e}; min {rr.min():.3e}"
++        )
++
++    # ---------------- H2
++    print("\n== H2 -- the declared term covers the response (h's returned leaves)")
++    leafrows = []
++    for c in calls:
++        for t in ("h", "p"):
++            for L in c[f"res_{t}"]["M2"]["per_leaf"]:
++                dec = L["declared"]
++                resp = abs(L["dI_measured"])
++                leafrows.append(
++                    {
++                        "tree": t,
++                        "unit_06f": c["unit_06f"],
++                        "index": c["key"][1],
++                        "label": c["label"],
++                        "leaf": L["i"],
++                        "branch": L["branch"],
++                        "a": L["a"],
++                        "b": L["b"],
++                        "depth": L["depth"],
++                        "declared": dec,
++                        "abs_dI_measured": resp,
++                        "ratio": (
++                            (resp / dec)
++                            if dec > 0
++                            else (float("inf") if resp > 0 else 0.0)
++                        ),
++                        "abs_dI_measured_float": abs(L["dI_measured_float"]),
++                        "max_abs_delta_theta": L["max_abs_delta_theta"],
++                        "theta_abserr_a": L["theta_abserr_a"],
++                        "theta_abserr_b": L["theta_abserr_b"],
++                    }
++                )
++    hl = [r for r in leafrows if r["tree"] == "h"]
++    pl = [r for r in leafrows if r["tree"] == "p"]
++    H2 = all(r["abs_dI_measured"] <= r["declared"] for r in hl)
++    wl = max(hl, key=lambda r: r["ratio"])
++    med = statistics.median(r["ratio"] for r in hl)
++    pv = [r for r in pl if r["abs_dI_measured"] > r["declared"]]
++    wpl = max(pl, key=lambda r: r["ratio"])
++    print(
++        f"   leaves scored {len(hl)} ({sum(1 for r in hl if r['branch'] == 'levin')} Levin); violating "
++        f"{sum(1 for r in hl if r['abs_dI_measured'] > r['declared'])} -> H2 {'holds' if H2 else 'fails'}"
++    )
++    print(
++        f"   worst |dI_measured|/declared = {wl['ratio']:.6g} on {wl['unit_06f']} #{wl['index']} leaf {wl['leaf']} "
++        f"({wl['branch']}, depth {wl['depth']}): {wl['abs_dI_measured']:.4e} against {wl['declared']:.4e}; median {med:.4g}"
++    )
++    print(
++        f"   the parent (its own leaves, its own declared terms): {len(pl)} leaves, violating {len(pv)}, worst "
++        f"{wpl['ratio']:.6g} on {wpl['unit_06f']} #{wpl['index']} leaf {wpl['leaf']} ({wpl['branch']}); median "
++        f"{statistics.median(r['ratio'] for r in pl):.4g}"
++    )
++    for r in sorted(hl, key=lambda r: -r["ratio"])[:10]:
++        print(
++            f"   h {r['unit_06f']} #{r['index']} leaf {r['leaf']} {r['branch']}: |dI| {r['abs_dI_measured']:.3e}, declared "
++            f"{r['declared']:.3e}, ratio {r['ratio']:.3g}"
++        )
++
++    # ---------------- tables
++    with open(out / "phase_calls.csv", "w", newline="") as f:
++        w = csv.DictWriter(f, fieldnames=list(callrows[0]))
++        w.writeheader()
++        w.writerows(callrows)
++    with open(out / "phase_leaves.csv", "w", newline="") as f:
++        w = csv.DictWriter(f, fieldnames=list(leafrows[0]))
++        w.writeheader()
++        w.writerows(leafrows)
++    scores = {
++        "captures_match_census": capok,
++        "replays_F0_hold": f0,
++        "two_trees_calls_equal": cross_ok,
++        "parent_reproduces_06f_nodes": f"{sum(rep06f)} of {len(calls)}",
++        "H1": {
++            "verdict": "holds" if H1 else "fails",
++            "points": n_pts,
++            "points_nodes": by_set["node"][0],
++            "points_dense": by_set["dense"][0],
++            "violations": n_viol,
++            "worst_ratio": wr,
++            "worst_call": f"{wc['unit_06f']} #{wc['key'][1]}",
++            "worst_point": {
++                k: wp.get(k)
++                for k in (
++                    "set",
++                    "leaf",
++                    "k",
++                    "j",
++                    "u",
++                    "delta_theta",
++                    "theta_abserr",
++                    "theta_abserr_parts",
++                )
++            },
++            "worst_dominant_part": dom(wp),
++            "parent_on_same_points_violations": x_parent,
++            "parent_on_same_points_worst_ratio": x_parent_max,
++            "parent_own_points": own_parent_n,
++            "parent_own_violations": own_parent,
++            "parent_own_worst_ratio": own_parent_max,
++        },
++        "H2": {
++            "verdict": "holds" if H2 else "fails",
++            "leaves": len(hl),
++            "violations": sum(1 for r in hl if r["abs_dI_measured"] > r["declared"]),
++            "worst_ratio": wl["ratio"],
++            "worst_leaf": f"{wl['unit_06f']} #{wl['index']} leaf {wl['leaf']} ({wl['branch']})",
++            "median_ratio": med,
++            "parent_leaves": len(pl),
++            "parent_violations": len(pv),
++            "parent_worst_ratio": wpl["ratio"],
++        },
++        "split_by_dominant_part": split_out,
++    }
++    (out / "scores.json").write_text(json.dumps(scores, indent=1))
++    for p in ("phase_calls.csv", "phase_leaves.csv", "scores.json"):
++        print(f"wrote out/{p} sha256 {sha256(out / p)}")
++
++
++if __name__ == "__main__":
++    main()
+diff -ruN -x o state/scripts_06f_reference/scripts/cross06h.py scripts/cross06h.py
+--- state/scripts_06f_reference/scripts/cross06h.py	1970-01-01 01:00:00
++++ scripts/cross06h.py	2026-11-01 00:29:38
+@@ -0,0 +1,197 @@
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement: one tree's code scored at the
++other tree's points. New in 06h.
++
++H1 is scored on h's points: every node of every returned leaf of h's replay, and the dense sample.
++"The parent's declaration is scored on the same points beside it" (prompt 06h section 5): where h's
++and the parent's returned leaves differ, the node sets differ, so each tree's replay scores its own
++nodes, and this script scores the tree on PYTHONPATH (normally ``p``) at the **other** tree's points
++(normally ``h``'s), with its own captured group: production's ``theta_mod_2pi(u)`` and
++``theta_abserr(u)`` of this tree, against the other tree's stored reference at the exact e^u
++(replay06f.py's ``ref_exact_mod_2pi``, 40 digits, reduced into (-pi, pi]). The reference is a
++function of the group's orders, coefficients and signs alone, which both trees' captures share
++(checked here: the two groups' coefficients, signs and orders are equal, and the two calls' spans
++are equal bit for bit). No mpmath Bessel function is evaluated here; the difference is reduced at
++30 digits, as in the replay.
++
++The dense sample is the same in both trees when the spans are equal (one seed, one span): this
++script also checks that the other tree's dense points and references equal this tree's own, bit
++for bit and digit for digit.
++
++Writes OUT_DIR/<this unit>_<index>/cross.json (summary) and rows.json.gz (one row per point).
++
++Usage: PYTHONPATH=<tree T>:<scripts> python -B cross06h.py CAPTURE_JSON UNIT INDEX OWN_REPLAY_DIR
++       OTHER_REPLAY_DIR OUT_DIR
++(OWN_REPLAY_DIR and OTHER_REPLAY_DIR are the two trees' out/replay_<tree>/<unit>_<index> dirs.)
++"""
++
++import gzip
++import hashlib
++import json
++import os
++import socket
++import sys
++from datetime import datetime, timezone
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++from prov import TREES, sha256, tree_state  # noqa: E402
++from replay06f import MP_DPS, jdump, load_capture, wrap  # noqa: E402
++
++
++def main():
++    cap_json, uid, index, own_dir, other_dir, out_dir = sys.argv[1:7]
++    index = int(index)
++    own_dir, other_dir = Path(own_dir), Path(other_dir)
++    import mpmath as mp
++
++    import AdaptiveLevin.levin_quadrature as LQ
++
++    tree = LQ.__file__.split("/AdaptiveLevin/")[0]
++    head, status = tree_state(tree)
++    names = [n for n, (t, _s) in TREES.items() if str(t) == tree]
++    tree_name = names[0] if len(names) == 1 else None
++    hdr = {
++        "title": "levin-phase-floor 06h: one tree's code scored at the other tree's points",
++        "written": datetime.now(timezone.utc).isoformat(timespec="seconds"),
++        "host": socket.gethostname(),
++        "pid": os.getpid(),
++        "script": "cross06h.py",
++        "script_sha256": sha256(Path(__file__).resolve()),
++        "replay06f_sha256": sha256(HERE / "replay06f.py"),
++        "prov_sha256": sha256(HERE / "prov.py"),
++        "tree": tree,
++        "tree_name": tree_name,
++        "tree_head": head,
++        "tree_status_short": status,
++        "three_bessel_integrals_sha256": sha256(
++            Path(tree) / "LiouvilleGreen" / "three_bessel_integrals.py"
++        ),
++        "capture_json": cap_json,
++        "capture_json_sha256": sha256(cap_json),
++        "unit": uid,
++        "index": index,
++        "own_replay_dir": str(own_dir),
++        "other_replay_dir": str(other_dir),
++        "inputs_sha256": {
++            str(p): sha256(p)
++            for p in (
++                own_dir / "result.json",
++                own_dir / "dense.json.gz",
++                other_dir / "result.json",
++                other_dir / "nodes.json.gz",
++                other_dir / "dense.json.gz",
++            )
++        },
++        "PYTHONPATH": os.environ.get("PYTHONPATH"),
++        "dont_write_bytecode": sys.dont_write_bytecode,
++    }
++    if (
++        tree_name is None
++        or head != TREES[tree_name][1]
++        or status.strip()
++        or not uid.startswith(tree_name + "-")
++    ):
++        raise SystemExit(f"tree evidence does not hold: {hdr}")
++    rec, cap = load_capture(cap_json, uid, index)
++    hdr["capture_blob_sha256"] = cap["sha256"]
++    group = rec["theta"]["theta_mod_2pi"].__self__
++    own = json.loads((own_dir / "result.json").read_text())
++    other = json.loads((other_dir / "result.json").read_text())
++    og = other["M2"]["group"]
++    checks = {
++        "spans_equal": [x["hex"] for x in own["x_span"]]
++        == [x["hex"] for x in other["x_span"]],
++        "coefficients_equal": [float(c).hex() for c in group.coefficients]
++        == [float(c).hex() for c in og["coefficients"]],
++        "signs_equal": list(map(float, group.signs)) == list(map(float, og["signs"])),
++        "orders_equal": [float(p.nu) for p in group.phases]
++        == [float(n) for n in og["nu"]],
++        "K_equal": float(group.K).hex() == float(og["K"]).hex(),
++    }
++    own_dense = json.load(gzip.open(own_dir / "dense.json.gz", "rt"))
++    other_dense = json.load(gzip.open(other_dir / "dense.json.gz", "rt"))
++    checks["dense_points_equal"] = [r["u"] for r in own_dense] == [
++        r["u"] for r in other_dense
++    ]
++    checks["dense_references_equal"] = [r["ref_exact_mod_2pi"] for r in own_dense] == [
++        r["ref_exact_mod_2pi"] for r in other_dense
++    ]
++    if not all(
++        checks[k]
++        for k in ("coefficients_equal", "signs_equal", "orders_equal", "K_equal")
++    ):
++        raise SystemExit(f"the two trees' groups differ: {checks}")
++    mp.mp.dps = MP_DPS
++    rows = []
++    for name, kind in (("nodes.json.gz", "node"), ("dense.json.gz", "dense")):
++        for r in json.load(gzip.open(other_dir / name, "rt")):
++            u = float.fromhex(r["u"])
++            th = float(group.theta_mod_2pi(u))
++            ta = float(group.theta_abserr(u))
++            d = float(wrap(mp, mp.mpf(th) - mp.mpf(r["ref_exact_mod_2pi"])))
++            parts = None
++            if hasattr(group, "_declared_error_parts"):
++                parts = [float(x) for x in group._declared_error_parts(u)]
++            rows.append(
++                {
++                    "set": kind,
++                    "leaf_other": r.get("leaf"),
++                    "k": r.get("k", r.get("j")),
++                    "u": r["u"],
++                    "theta_mod_2pi": th.hex(),
++                    "delta_theta": d,
++                    "theta_abserr": ta,
++                    "ratio": abs(d) / ta if ta > 0 else None,
++                    "theta_abserr_parts": parts,
++                    "other_theta_mod_2pi": r["theta_mod_2pi"],
++                    "other_delta_theta": r["delta_theta"],
++                    "other_theta_abserr": r["theta_abserr"],
++                    "other_ratio": r["ratio"],
++                }
++            )
++    odir = Path(out_dir) / f"{uid}_{index}"
++    odir.mkdir(parents=True, exist_ok=False)
++    rows_sha = jdump(odir / "rows.json.gz", rows)
++    summ = {}
++    for kind in ("node", "dense", "all"):
++        sel = [r for r in rows if kind == "all" or r["set"] == kind]
++        rat = [r["ratio"] for r in sel if r["ratio"] is not None]
++        summ[kind] = {
++            "n": len(sel),
++            "n_violating": sum(1 for x in rat if x > 1.0),
++            "max_ratio": max(rat) if rat else None,
++            "n_other_violating": sum(
++                1
++                for r in sel
++                if r["other_ratio"] is not None and r["other_ratio"] > 1.0
++            ),
++            "max_other_ratio": max(
++                (r["other_ratio"] for r in sel if r["other_ratio"] is not None),
++                default=None,
++            ),
++        }
++    out = {
++        "header": hdr,
++        "checks": checks,
++        "summary": summ,
++        "rows_sha256": rows_sha,
++    }
++    (odir / "cross.json").write_text(json.dumps(out, indent=1))
++    print(
++        json.dumps(
++            {
++                "unit": uid,
++                "index": index,
++                "checks": checks,
++                "all": summ["all"],
++                "digest": hashlib.sha256(rows_sha.encode()).hexdigest(),
++            }
++        ),
++        flush=True,
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff -ruN -x o state/scripts_06f_reference/scripts/launch_06h.py scripts/launch_06h.py
+--- state/scripts_06f_reference/scripts/launch_06h.py	1970-01-01 01:00:00
++++ scripts/launch_06h.py	2026-11-01 00:28:08
+@@ -0,0 +1,104 @@
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement: launch run_06h.py as one registered,
++detached run (campaign levin-phase-floor, prompt 06h, slug ``phase``). Copied from 06f's
++launch_06f.py and changed only in its script, slug, purpose, scope and unit count:
++``runregistrykit.begin`` first (manifest, script run_06h.py), then ``nohup sh -c '<driver>; exit
++$?'`` in a new session, stdin from /dev/null, stdout and stderr into the run directory, the sh pid
++recorded with ``Run.heartbeat(pid=...)``; the driver replaces it with its own. New in 06h.
++Usage (from var/levin-phase-floor-06h/phase/): python -B scripts/launch_06h.py"""
++
++import json
++import os
++import shlex
++import subprocess
++import sys
++from pathlib import Path
++
++import runregistrykit
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parent
++PYTHON = "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python"
++SCRIPT = HERE / "run_06h.py"
++N_CALLS = len(json.loads((ROOT / "out" / "sample" / "selection_h.json").read_text()))
++assert N_CALLS == len(
++    json.loads((ROOT / "out" / "sample" / "selection_p.json").read_text())
++)
++PURPOSE = (
++    "levin-phase-floor prompt 06h section 5 on the Mac Studio (mps026298; Python 3.13.16): the phase "
++    "re-measurement, 06f's M2 items 1 and 4 repeated at 06h's code (H1, H2). Captures 06f's 20 M2 calls "
++    "by 06e's x1_capture.py (06h's copy) at the parent p (worktree "
++    "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5, 2c325f5, code 06e's; each capture checked "
++    "bit for bit against 06e's census checkpoint a0dc4d7f) and at h (worktree "
++    "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2, dispatch SHA c1ec3b2, code 7172a8f + "
++    "ac1c6f4; each checked against 06h's census checkpoint), reading 06's certified scratch copy of A3 v2 "
++    "read-only (fingerprint 0e32f24a) on a stand-in ShardedPool; the method check at the exact e^u before "
++    "any scoring; replays each call in its own process in its own tree with 06f's pass-throughs, with "
++    "mpmath phase references at 30 digits at the exact e^u (and at 06f's x_hat), at every node of every "
++    "returned leaf and 06f's seeded dense sample of 1,000 points per call; each tree's code scored at the "
++    "other's points; the reference re-checked at 50 digits at h's worst point. At most six processes; "
++    "Ray-free, no lock, no store built, no code changed"
++)
++SCOPE = (
++    f"out/sample/selection_p.json and selection_h.json ({N_CALLS} calls each, 06f's M2 sample, seed "
++    "20261031); outputs under var/levin-phase-floor-06h/phase/ (state/capture_p, state/capture_h, "
++    "out/capture_p.json, out/capture_h.json, out/replay_p, out/replay_h, out/replay_logs, out/cross, "
++    "out/cross_logs, out/cmd/30-33)"
++)
++HEARTBEAT_MEANS = (
++    "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each "
++    "stage's and each child's start and end, and every 60 s by a thread of the driver while its process lives."
++)
++
++
++def main():
++    argv = [PYTHON, "-B", str(SCRIPT), "--run-dir", "<run dir>"]
++    run = runregistrykit.begin(
++        campaign="levin-phase-floor",
++        prompt="06h",
++        slug="phase",
++        purpose=PURPOSE,
++        argv=argv,
++        cwd=str(ROOT),
++        script=str(SCRIPT),
++        unit="units",
++        expected_units=2 + 1 + 2 * N_CALLS + 2 * N_CALLS + 1,
++        checkpoint=True,
++        results=None,
++        scope=SCOPE,
++        heartbeat_means=HEARTBEAT_MEANS,
++    )
++    env = dict(os.environ)
++    env.pop("PYTHONPATH", None)
++    env["PYTHONDONTWRITEBYTECODE"] = "1"
++    stdout = open(run.stdout_path, "ab")
++    stderr = open(run.stderr_path, "ab")
++    command = (
++        " ".join(
++            shlex.quote(a) for a in [PYTHON, "-B", str(SCRIPT), "--run-dir", run.path]
++        )
++        + "; exit $?"
++    )
++    child = subprocess.Popen(
++        ["nohup", "sh", "-c", command],
++        cwd=str(ROOT),
++        env=env,
++        stdin=subprocess.DEVNULL,
++        stdout=stdout,
++        stderr=stderr,
++        start_new_session=True,
++        close_fds=True,
++    )
++    stdout.close()
++    stderr.close()
++    run.heartbeat(pid=child.pid, stage="launched (detached sh started)")
++    print(f"run id      {run.id}")
++    print(f"run dir     {run.path}")
++    print(f"script      {SCRIPT}")
++    print(f"sh pid      {child.pid}")
++    print(f"command     {command}")
++    print(f"launcher    pid {os.getpid()}, exiting without waiting")
++
++
++if __name__ == "__main__":
++    main()
++    sys.exit(0)
+diff -ruN -x o state/scripts_06f_reference/scripts/method_check_06f.py scripts/method_check_06f.py
+--- state/scripts_06f_reference/scripts/method_check_06f.py	2026-10-31 23:50:48
++++ scripts/method_check_06f.py	2026-11-01 00:29:38
+@@ -1,5 +1,20 @@
+-"""levin-phase-floor prompt 06f section 3, item 1's method check. New in 06f.
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement's method check: copied from prompt
++06f's scripts/method_check_06f.py (a record, not edited; its copy is in
++state/scripts_06f_reference/scripts/), adapted to the reference at the exact e^u (prompt 06h
++section 2), each change marked "prompt 06h":
++- the tree is the one on PYTHONPATH, one of prov.TREES, and the capture JSON is that tree's;
++- the group's check at the call's lower endpoint is made at the **exact** e^u (mp.exp of the
++  double u at the working precision), at 30 and at 50 digits, which must agree to 1e-25 (06f: at
++  the double x_hat); the error at x_hat is printed beside it;
++- the second reference formula, arg H1_nu(y) + pi/2 (06f's review, orch_m2.py; prompt 06h section 2
++  test 7), is compared with atan2(J, -Y) at 30 digits: at each constituent's two arguments, and for
++  the group at the exact e^u. They must agree to 1e-25;
++- at h the declaration's three parts at the endpoint are printed.
++The constituents' checks are at their own double arguments, as 06f's are: that is where
++bessel_phase.py documents each one's error. 06f's text follows.
+ 
++levin-phase-floor prompt 06f section 3, item 1's method check. New in 06f.
++
+ The comparison item 1 makes (production's phase against atan2(J, -Y) from mpmath at 30 digits) is
+ made here on one constituent at one argument, where LiouvilleGreen/bessel_phase.py documents the
+ error: EVALUATION_FLOOR's comment, "at nu = 1/2 the residual is identically zero and the series is
+@@ -18,6 +33,7 @@
+ constituent (near region, declared 5e-13) and for the group at the call's lower endpoint.
+ 
+ Usage: PYTHONPATH=<tree g>:<scripts> python -B method_check_06f.py CAPTURE_JSON UNIT INDEX
++(prompt 06h: PYTHONPATH=<tree T>:<scripts>, CAPTURE_JSON that tree's)
+ """
+ 
+ import hashlib
+@@ -43,6 +59,20 @@
+         return mp.atan2(mp.besselj(mp.mpf(nu), y), -mp.bessely(mp.mpf(nu), y))
+ 
+ 
++def ref_theta_hankel(mp, nu, y):
++    """prompt 06h: the other formula, arg H1_nu(y) + pi/2 (06f's review, orch_m2.py's ref_phase),
++    at the working precision, y an mpmath number taken as it is."""
++    return mp.arg(mp.hankel1(mp.mpf(nu), y)) + mp.pi / 2
++
++
++def group_ref_hankel(mp, group, eta):
++    """prompt 06h: the group phase by the Hankel formula, at the abscissa eta (an mpmath number)."""
++    tot = mp.mpf(0)
++    for phase, c, s in zip(group.phases, group.coefficients, group.signs):
++        tot += mp.mpf(s) * ref_theta_hankel(mp, phase.nu, mp.mpf(c) * eta)
++    return tot
++
++
+ def main():
+     import mpmath as mp
+ 
+@@ -51,16 +81,23 @@
+     cap_json, uid, index = sys.argv[1], sys.argv[2], int(sys.argv[3])
+     tree = LQ.__file__.split("/AdaptiveLevin/")[0]
+     head, status = tree_state(tree)
+-    print("# levin-phase-floor 06f: item 1's method check")
+     print(
++        "# levin-phase-floor 06h: the phase re-measurement's method check (06f's, at the exact e^u)"
++    )  # prompt 06h
++    print(
+         f"# written {datetime.now(timezone.utc).isoformat(timespec='seconds')} on {socket.gethostname()}"
+     )
+     print(
+         f"# script method_check_06f.py sha256 {sha256(Path(__file__).resolve())}; replay06f.py sha256 {sha256(HERE / 'replay06f.py')}"
+     )
++    names = [n for n, (t, _s) in TREES.items() if str(t) == tree]  # prompt 06h
+     print(
+-        f"# tree {tree} HEAD {head} (status --short: {'empty' if not status.strip() else repr(status)}); expected {TREES['g']}"
++        f"# tree {tree} HEAD {head} (status --short: {'empty' if not status.strip() else repr(status)}); expected "
++        f"{TREES[names[0]] if len(names) == 1 else 'NOT ONE OF prov.TREES'}"
+     )
++    if len(names) != 1 or head != TREES[names[0]][1] or status.strip():
++        print("tree evidence does not hold")
++        return 1
+     print(f"# input {cap_json} sha256 {sha256(cap_json)}; call {uid} #{index}")
+     rec, cap = load_capture(cap_json, uid, index)
+     print(f"# capture blob sha256 {cap['sha256']}")
+@@ -86,10 +123,15 @@
+                 dth = wrap(mp, mp.mpf(float(phase.theta_mod_2pi(x))) - t30)
+             with mp.workdps(50):
+                 ref_diff = abs(wrap(mp, t30 - t50))
++            with mp.workdps(30):  # prompt 06h: the other formula
++                h30 = ref_theta_hankel(mp, phase.nu, mp.mpf(float(x)))
++                formulas = abs(wrap(mp, t30 - h30))
++            ok &= float(formulas) < 1e-25  # prompt 06h
+             ta = float(phase.theta_abserr_at(x))
+             print(
+                 f"   x = {x!r}: phase-pair error {float(pair):.4e}; theta_mod_2pi error {float(dth):+.4e}; "
+-                f"declared theta_abserr_at(x) {ta:.4e}; |ref(30) - ref(50)| {float(ref_diff):.2e}"
++                f"declared theta_abserr_at(x) {ta:.4e}; |ref(30) - ref(50)| {float(ref_diff):.2e}; "
++                f"|atan2(J,-Y) - (arg H1 + pi/2)| {float(formulas):.2e}"  # prompt 06h
+             )
+             if phase.nu == 0.5:
+                 passed = float(pair) <= DOCUMENTED and float(ref_diff) < 1e-25
+@@ -97,17 +139,36 @@
+                 print(
+                     f"      nu = 1/2, documented phase-pair error 1.11e-16: measured {float(pair):.4e} -> {'reproduces' if passed else 'DOES NOT reproduce'}"
+                 )
++    # prompt 06h: the group at the exact e^u (06f: at eta_hat), at 30 and 50 digits, by both formulas
+     with mp.workdps(30):
+-        g30 = mp_group_phase(group, eta_hat, mp)
++        g30 = mp_group_phase(group, mp.exp(mp.mpf(u0)), mp)
+         d30 = wrap(mp, mp.mpf(float(group.theta_mod_2pi(u0))) - g30)
++        h30 = group_ref_hankel(mp, group, mp.exp(mp.mpf(u0)))
++        group_formulas = abs(wrap(mp, g30 - h30))
++        d30_hat = wrap(
++            mp,
++            mp.mpf(float(group.theta_mod_2pi(u0))) - mp_group_phase(group, eta_hat, mp),
++        )
+     with mp.workdps(50):
+-        g50 = mp_group_phase(group, eta_hat, mp)
++        g50 = mp_group_phase(group, mp.exp(mp.mpf(u0)), mp)
+         d50 = wrap(mp, mp.mpf(float(group.theta_mod_2pi(u0))) - g50)
++        ref_30_50 = abs(wrap(mp, mp.mpf(g30) - g50))
+     print(
+-        f"\ngroup at the lower endpoint u = {u0!r}: delta theta at 30 digits {float(d30):+.6e}, at 50 digits {float(d50):+.6e}; "
++        f"\ngroup at the lower endpoint u = {u0!r}, at the exact e^u: delta theta at 30 digits {float(d30):+.6e}, "
++        f"at 50 digits {float(d50):+.6e}; |ref(30) - ref(50)| {float(ref_30_50):.2e}; "
++        f"|atan2(J,-Y) - (arg H1 + pi/2)| summed over the group {float(group_formulas):.2e}; "
+         f"theta_abserr {float(group.theta_abserr(u0)):.4e}"
+     )
++    print(
++        f"   (06f's convention, at x_hat = np.exp(u): delta theta {float(d30_hat):+.6e})"
++    )
++    if hasattr(group, "_declared_error_parts"):
++        c_, a_, f_ = (float(v) for v in group._declared_error_parts(u0))
++        print(
++            f"   theta_abserr's parts: constituents {c_:.4e}, abscissa {a_:.4e}, phi_eval {f_:.4e}"
++        )
+     ok &= abs(float(d30) - float(d50)) < 1e-25
++    ok &= float(ref_30_50) < 1e-25 and float(group_formulas) < 1e-25
+     print(f"\nmethod check: {'passes' if ok else 'FAILS'}")
+     return 0 if ok else 1
+ 
+diff -ruN -x o state/scripts_06f_reference/scripts/prov.py scripts/prov.py
+--- state/scripts_06f_reference/scripts/prov.py	2026-10-31 23:50:48
++++ scripts/prov.py	2026-11-01 00:22:36
+@@ -1,4 +1,22 @@
+-"""levin-phase-floor prompt 06f section 1 (a measurement of two Clenshaw-Curtis floor terms on calls
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement (06f's M2 items 1 and 4 repeated at
++06h's code, on the Mac Studio): provenance shared by every script. Copied from prompt 06f's
++``scripts/prov.py`` (docs/levin-phase-floor/06f/scripts/prov.py, a record, not edited; its copy is
++kept unchanged in state/scripts_06f_reference/scripts/); changed here only in its trees and its
++paths, each change marked "prompt 06h":
++- two trees, both detached worktrees (Part B's dispatch brief): ``h``, Part B's dispatch SHA
++  ``c1ec3b2`` (``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2``), whose code is 06h's
++  code commit 7172a8f's plus its tests-only follow-up ac1c6f4; and ``p``, the code commit's parent
++  ``2c325f5`` (``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5``), whose code is 06e's
++  (H1's parent column). 06f's ``g`` is named below for the record and not used;
++- the scripts sit one directory deeper than 06f's (``var/levin-phase-floor-06h/phase/scripts``), so
++  ``WIDER`` is ``var/levin-phase-floor-06h/phase`` and the depth assertion is one level more;
++- the census record each tree's captures are checked against: at ``p`` 06e's census run (read only,
++  as in 06f), at ``h`` 06h's census run (``levin-phase-floor-06h-census-*``, the census agent's,
++  read only), located by ``census_run_06h()`` once it exists.
++
++(06f's text follows, unchanged.)
++
++levin-phase-floor prompt 06f section 1 (a measurement of two Clenshaw-Curtis floor terms on calls
+ captured from 06e's census, on the Mac Studio): provenance shared by every script. Copied from
+ prompt 06e's census ``scripts/prov.py`` (docs/levin-phase-floor/06e/census/scripts/prov.py, a
+ record, not edited; its copy is kept unchanged in state/scripts_06e_reference/census_scripts/);
+@@ -126,9 +144,9 @@
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census
++WIDER = HERE.parent  # prompt 06h: var/levin-phase-floor-06h/phase; prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+-assert HERE.parents[2] == MAIN, HERE  # prompt 06f: var/levin-phase-floor-06f/scripts (06b-06e: parents[3])
++assert HERE.parents[3] == MAIN, HERE  # prompt 06h: var/levin-phase-floor-06h/phase/scripts (06f: parents[2]; 06b-06e: parents[3])
+ 
+ # prompt 06a: one tree, h, the worktree at the dispatch SHA (code = 06's s tree's, f5cee4c)
+ H_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f")
+@@ -171,6 +189,35 @@
+ ROWS06E = REC06E / "state" / "rows.json"
+ ROWS06E_SHA256 = "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
+ 
++# prompt 06h: 06f's tree is kept above, by name, for the record; the two trees of 06h section 5's
++# phase re-measurement. Each capture names the tree it runs in, and is checked against that tree's
++# census: p against 06e's census (RUN06E above), h against 06h's.
++G06F_TREE, G06F_SHA = G_TREE, G_SHA  # 06f's tree (f4770d13), not used
++H_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2")
++H_SHA = "c1ec3b2c819cc5df22ddf4b303f69c7129a54d62"  # Part B's dispatch SHA; code = 7172a8f + ac1c6f4
++P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5")
++P_SHA = "2c325f56641666b45df483adb8c1202575721c42"  # 06h's code commit's parent; code = 06e's
++CODE_SHA_06H = "7172a8f"  # 06h's code commit (short), for the record
++TREES = {"h": (H_TREE, H_SHA), "p": (P_TREE, P_SHA)}  # prompt 06h
++# prompt 06h: 06f's records (the sample, the 06f nodes 06f measured), read only
++REC06F = MAIN / "var" / "levin-phase-floor-06f"
++RUNS = MAIN / "var" / "runs"
++
++
++def census_run_06h():
++    """prompt 06h: 06h's census run directory, the census agent's (read only). Exactly one
++    ``levin-phase-floor-06h-census-*`` directory must exist, and it must hold a checkpoint."""
++    found = sorted(RUNS.glob("levin-phase-floor-06h-census-*"))
++    if len(found) != 1 or not (found[0] / "checkpoint.jsonl").exists():
++        raise SystemExit(f"06h's census run: expected exactly one with a checkpoint, found {found}")
++    return found[0]
++
++
++def census_run(tree_name):
++    """prompt 06h: the census whose record a capture at ``tree_name`` must reproduce."""
++    return {"p": RUN06E, "h": None}[tree_name] or census_run_06h()
++
++
+ # prompt 06e: 06c's census run (the "before") and records, read only
+ RUN06C = MAIN / "var" / "runs" / "levin-phase-floor-06c-census-20261029T130214"
+ REC06C = MAIN / "var" / "levin-phase-floor-06c" / "census"
+@@ -203,7 +250,7 @@
+ # route (B), as in 06 (the user's decision, 2026-10-26): h opens, read-only, 06's certified scratch
+ # copy of A3 v2. prompt 06a: the copy is 06's, under var/levin-phase-floor-06/wider/state/.
+ COPY_DIR = REC06 / "state" / "a3v2_copy"
+-STORE_DIR_BY_TREE = {"p": COPY_DIR, "g": COPY_DIR}  # prompt 06c: both trees read the copy
++STORE_DIR_BY_TREE = {"p": COPY_DIR, "g": COPY_DIR, "h": COPY_DIR}  # prompt 06c: both trees read the copy; prompt 06h: h too
+ 
+ 
+ def sha256(path):
+diff -ruN -x o state/scripts_06f_reference/scripts/replay06f.py scripts/replay06f.py
+--- state/scripts_06f_reference/scripts/replay06f.py	2026-10-31 23:50:48
++++ scripts/replay06f.py	2026-11-01 00:30:11
+@@ -1,4 +1,24 @@
+-"""levin-phase-floor prompt 06f sections 1-3: replay one captured call at the tree on PYTHONPATH, with
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement: copied from prompt 06f's
++scripts/replay06f.py (a record, not edited; its copy is in state/scripts_06f_reference/scripts/),
++and changed, each change marked "prompt 06h", in:
++- **the tree**: the replay runs in the tree on PYTHONPATH, which must be one of prov.TREES (``h`` or
++  ``p``), clean at its SHA; its captures are capture_<tree>.json's, and F0's comparison is against
++  that tree's census (prov.census_run: 06h's census at h, 06e's at p), matched by
++  ``<rtol>-<shard>-<serial>`` and call index (each census names its units by its own tree);
++- **M2 item 1's reference**: at the **exact** e^u -- ``mpmath.exp`` of the double u, then each
++  constituent's phase at m_i e^u exactly, composed with the group's signs (prompt 06h section 2) --
++  which is the one scored (H1). 06f's reference at the double x_hat = np.exp(u) is kept beside it,
++  descriptively, computed exactly as 06f computed it (so the parent's reproduces 06f's numbers);
++- **what is kept per point**: both errors, the reduced exact reference (40 digits, for scoring the
++  other tree's code at these points, cross06h.py), and at h the three parts of the declaration
++  (``BesselPhaseGroup._declared_error_parts``); the dense sample's points are kept one by one
++  (dense.json.gz), not only summarised;
++- **item 4**: the response is to the error at the exact e^u (the one in the leaf rows), with the
++  response to 06f's error kept beside it.
++Nothing else changes: the replay, the pass-throughs, F0, M1 and items 2-3 are 06f's. 06f's text
++follows.
++
++levin-phase-floor prompt 06f sections 1-3: replay one captured call at the tree on PYTHONPATH, with
+ pass-throughs at four module attributes, and measure M1's and M2's quantities on it. New in 06f.
+ 
+ The capture is x1_capture.py's (06e's, run at g): the call's span, integrand f, phase dict theta and
+@@ -57,7 +77,14 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+-from prov import CHECKPOINT06E_SHA256, RUN06E, TREES, sha256, tree_state  # noqa: E402
++from prov import (
++    CHECKPOINT06E_SHA256,
++    RUN06E,
++    TREES,
++    census_run,
++    sha256,
++    tree_state,
++)  # noqa: E402
+ 
+ CC_SUM_TERMS = (
+     "t_value_rounding",
+@@ -92,20 +119,38 @@
+     return hashlib.sha256(data).hexdigest()
+ 
+ 
+-def census_call(uid, index):
+-    with open(RUN06E / "checkpoint.jsonl") as f:
++def census_call(tree_name, uid, index):
++    """prompt 06h: the call's record in the census of ``tree_name`` (prov.census_run), matched by
++    the unit's ``<rtol>-<shard>-<serial>`` (each census names its units by its own tree) and the
++    call index. Every record of the unit is read; if more than one holds the call (an over-budget
++    pass), they must agree on value, abserr, regions, maximum depth and converged."""
++    rest = uid.split("-", 1)[1]
++    found = []
++    with open(census_run(tree_name) / "checkpoint.jsonl") as f:
+         for line in f:
+-            if f'"unit": "{uid}"' not in line[:200]:
++            if f'-{rest}"' not in line[:200]:
+                 continue
+             r = json.loads(line)
+-            if r["unit"] != uid:
++            if r.get("unit", "").split("-", 1)[-1] != rest:
+                 continue
+             for c in (r["data"].get("calls") or []) + (
+                 r["data"].get("other_calls") or []
+             ):
+                 if c["index"] == index:
+-                    return c
+-    return None
++                    found.append(c)
++    if not found:
++        return None
++    key = lambda c: (
++        c["value"]["hex"],
++        c["abserr"]["hex"],
++        c["num_regions"],
++        c["max_depth"],
++        bool(c["converged"]),
++        c["notify_label"],
++    )
++    if len({key(c) for c in found}) != 1:
++        raise SystemExit(f"{uid} {index}: {len(found)} census records disagree")
++    return found[0]
+ 
+ 
+ def load_capture(capture_json, uid, index):
+@@ -661,10 +706,16 @@
+ def mp_group_phase(group, eta_hat, mp):
+     """The group phase sum_i s_i theta_nu_i(c_i eta_hat), each theta = atan2(J, -Y) at 30 digits, at
+     the double eta_hat (the argument production evaluates at), the products c_i eta_hat exact.
++
++    prompt 06h: ``eta_hat`` may also be an mpmath number, taken as it is -- the exact e^u, which is
++    the reference H1 is scored against; a double is taken exactly, as before.
+     """
+     tot = mp.mpf(0)
++    eta = (
++        eta_hat if isinstance(eta_hat, mp.mpf) else mp.mpf(float(eta_hat))
++    )  # prompt 06h
+     for phase, c, s in zip(group.phases, group.coefficients, group.signs):
+-        y = mp.mpf(c) * mp.mpf(float(eta_hat))
++        y = mp.mpf(c) * eta  # prompt 06h (06f: mp.mpf(c) * mp.mpf(float(eta_hat)))
+         J = mp.besselj(mp.mpf(phase.nu), y)
+         Y = mp.bessely(mp.mpf(phase.nu), y)
+         tot += mp.mpf(s) * mp.atan2(J, -Y)
+@@ -677,11 +728,29 @@
+ 
+ 
+ def delta_theta(group, u, mp):
+-    """production theta_mod_2pi(u) minus the reference, reduced into (-pi, pi]."""
++    """production theta_mod_2pi(u) minus the reference, reduced into (-pi, pi].
++
++    prompt 06h: returns a dict -- ``exact``, the error against the reference at the exact e^u
++    (mp.exp of the double u at the working precision; prompt 06h section 2), which H1 scores;
++    ``float``, 06f's error against the reference at the double x_hat = np.exp(u), computed exactly
++    as 06f computed it; ``theta``, production's theta_mod_2pi(u); ``ref_exact``, the exact
++    reference reduced into (-pi, pi], as a 40-digit string; and ``parts``, the declaration's three
++    parts (constituents, abscissa, phi_eval) where the tree's group has them (h), else None.
++    """
+     th = group.theta_mod_2pi(u)
+     eta_hat = np.exp(u)
+     ref = mp_group_phase(group, eta_hat, mp)
+-    return float(wrap(mp, mp.mpf(float(th)) - ref)), float(th)
++    ref_exact = mp_group_phase(group, mp.exp(mp.mpf(float(u))), mp)
++    parts = None
++    if hasattr(group, "_declared_error_parts"):
++        parts = [float(x) for x in group._declared_error_parts(u)]
++    return {
++        "exact": float(wrap(mp, mp.mpf(float(th)) - ref_exact)),
++        "float": float(wrap(mp, mp.mpf(float(th)) - ref)),
++        "theta": float(th),
++        "ref_exact": mp.nstr(wrap(mp, ref_exact), 40),
++        "parts": parts,
++    }
+ 
+ 
+ def gl_integral(fun, a, b, n):
+@@ -709,6 +778,7 @@
+             "signs": list(group.signs),
+             "K": group.K,
+             "C": group.C,
++            "K_lo": getattr(group, "K_lo", None),  # prompt 06h: None at p
+             "nu": [p.nu for p in group.phases],
+             "x_star": [p.x_star for p in group.phases],
+             "has_near": [p._corrections.near is not None for p in group.phases],
+@@ -745,23 +815,31 @@
+             w = fs = args = None
+         # item 1: the measured phase error at every node of the leaf
+         dth = []
++        dth_float = []  # prompt 06h: 06f's error, at x_hat, kept beside the scored one
+         for k, u in enumerate(nodes):
+-            d, th = delta_theta(group, float(u), mp)
++            dd = delta_theta(group, float(u), mp)  # prompt 06h
++            d, th = dd["exact"], dd["theta"]  # prompt 06h: the error at the exact e^u
+             ta = float(group.theta_abserr(float(u)))
+             if args is not None and float(th).hex() != float(args[0][k]).hex():
+                 raise RuntimeError(
+                     f"leaf {L['i']} node {k}: theta_mod_2pi differs from the solve's argument"
+                 )
+             dth.append(d)
++            dth_float.append(dd["float"])  # prompt 06h
+             node_rows.append(
+                 {
+                     "leaf": L["i"],
+                     "k": k,
+                     "u": float(u).hex(),
+                     "theta_mod_2pi": float(th).hex(),
+-                    "delta_theta": d,
++                    "delta_theta": d,  # prompt 06h: at the exact e^u (06f: at x_hat)
+                     "theta_abserr": ta,
+                     "ratio": abs(d) / ta if ta > 0 else None,
++                    # prompt 06h: 06f's error at x_hat, the exact reference, the declaration's parts
++                    "delta_theta_float": dd["float"],
++                    "ratio_float": abs(dd["float"]) / ta if ta > 0 else None,
++                    "ref_exact_mod_2pi": dd["ref_exact"],
++                    "theta_abserr_parts": dd["parts"],
+                 }
+             )
+         rowL = {
+@@ -784,6 +862,9 @@
+         if L["branch"] == "cc":
+             g_prime = fs[0] * np.cos(args[0]) - fs[1] * np.sin(args[0])
+             rowL["dI_measured"] = math.fsum((w * g_prime * np.array(dth)).tolist())
++            rowL["dI_measured_float"] = math.fsum(
++                (w * g_prime * np.array(dth_float)).tolist()
++            )  # prompt 06h: 06f's item 4, to 06f's error
+             ta_nodes = np.array([float(group.theta_abserr(float(u))) for u in nodes])
+             rowL["dI_declared_rule_plus"] = math.fsum((w * g_prime * ta_nodes).tolist())
+             fabs = np.sqrt(fs[0] ** 2 + fs[1] ** 2)
+@@ -824,12 +905,19 @@
+                 np.sum(np.where(use, P_b * bp_b, 0.0)) * dth[0]
+                 - np.sum(np.where(use, P_a * bp_a, 0.0)) * dth[-1]
+             )
++            rowL["dI_measured_float"] = float(
++                np.sum(np.where(use, P_b * bp_b, 0.0)) * dth_float[0]
++                - np.sum(np.where(use, P_a * bp_a, 0.0)) * dth_float[-1]
++            )  # prompt 06h: 06f's item 4, to 06f's error
+             rowL["dI_declared_rule_plus"] = float(
+                 np.sum(np.where(use, P_b * bp_b, 0.0)) * float(group.theta_abserr(b))
+                 - np.sum(np.where(use, P_a * bp_a, 0.0)) * float(group.theta_abserr(a))
+             )
+             rowL["declared_honest"] = H(L["declared"])
+         rowL["max_abs_delta_theta"] = float(np.max(np.abs(dth)))
++        rowL["max_abs_delta_theta_float"] = float(
++            np.max(np.abs(dth_float))
++        )  # prompt 06h
+         per_leaf.append(rowL)
+ 
+     # item 3: the response to delta theta = s * theta_abserr(x), per leaf by Gauss-Legendre, kinks split, doubled
+@@ -892,6 +980,9 @@
+     maxs = max(abs(dIp), abs(dIm))
+     allnodes = np.array([r["delta_theta"] for r in node_rows])
+     ratios = np.array([r["ratio"] for r in node_rows if r["ratio"] is not None])
++    ratios_float = np.array(
++        [r["ratio_float"] for r in node_rows if r["ratio_float"] is not None]
++    )  # prompt 06h
+     out.update(
+         {
+             "n_leaves": len(per_leaf),
+@@ -925,6 +1016,13 @@
+             "max_ratio_delta_theta_over_theta_abserr": float(np.max(ratios)),
+             "median_ratio": float(np.median(ratios)),
+             "n_nodes_violating": int(np.sum(ratios > 1.0)),
++            # prompt 06h: 06f's measurement, at x_hat, beside it
++            "dI_measured_float": math.fsum(r["dI_measured_float"] for r in per_leaf),
++            "max_abs_delta_theta_float": float(
++                np.max(np.abs([r["delta_theta_float"] for r in node_rows]))
++            ),
++            "max_ratio_float": float(np.max(ratios_float)),
++            "n_nodes_violating_float": int(np.sum(ratios_float > 1.0)),
+             "theta_abserr_range": [
+                 float(min(r["theta_abserr"] for r in node_rows)),
+                 float(max(r["theta_abserr"] for r in node_rows)),
+@@ -936,11 +1034,30 @@
+     rng = random.Random(DENSE_SEED)  # the same seed for every call
+     pts = sorted(rng.uniform(a0, b0) for _ in range(DENSE_N))
+     dd, rr_ = [], []
+-    for u in pts:
+-        d, _th = delta_theta(group, u, mp)
++    dd_f, rr_f = [], []  # prompt 06h: 06f's error at x_hat, beside the scored one
++    dense_rows = []  # prompt 06h: every point kept
++    for j, u in enumerate(pts):
++        e = delta_theta(group, u, mp)  # prompt 06h
++        d = e["exact"]
+         ta = float(group.theta_abserr(u))
+         dd.append(abs(d))
+         rr_.append(abs(d) / ta)
++        dd_f.append(abs(e["float"]))
++        rr_f.append(abs(e["float"]) / ta)
++        dense_rows.append(
++            {
++                "j": j,
++                "u": float(u).hex(),
++                "theta_mod_2pi": float(e["theta"]).hex(),
++                "delta_theta": d,
++                "theta_abserr": ta,
++                "ratio": abs(d) / ta,
++                "delta_theta_float": e["float"],
++                "ratio_float": abs(e["float"]) / ta,
++                "ref_exact_mod_2pi": e["ref_exact"],
++                "theta_abserr_parts": e["parts"],
++            }
++        )
+     out["dense"] = {
+         "n": DENSE_N,
+         "seed": DENSE_SEED,
+@@ -949,8 +1066,12 @@
+         "max_ratio": max(rr_),
+         "median_ratio": float(np.median(rr_)),
+         "n_violating": sum(1 for x in rr_ if x > 1.0),
++        # prompt 06h: 06f's error at x_hat, beside it
++        "max_ratio_float": max(rr_f),
++        "n_violating_float": sum(1 for x in rr_f if x > 1.0),
++        "max_abs_delta_theta_float": max(dd_f),
+     }
+-    return out, node_rows
++    return out, node_rows, dense_rows
+ 
+ 
+ def main():
+@@ -966,21 +1087,36 @@
+ 
+     tree = LQ.__file__.split("/AdaptiveLevin/")[0]
+     head, status = tree_state(tree)
++    # prompt 06h: the tree on PYTHONPATH names itself; it must be one of prov.TREES
++    names = [n for n, (t, _sha) in TREES.items() if str(t) == tree]
++    tree_name = names[0] if len(names) == 1 else None
+     hdr = {
+-        "title": "levin-phase-floor 06f: replay and M1/M2 of one captured call",
++        "title": "levin-phase-floor 06h: replay and M1/M2 of one captured call (06f's replay)",  # prompt 06h
+         "written": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+         "host": socket.gethostname(),
+         "pid": os.getpid(),
+-        "script": "replay06f.py",
++        "script": "replay06f.py (06h's copy)",  # prompt 06h
+         "script_sha256": sha256(Path(__file__).resolve()),
+         "prov_sha256": sha256(HERE / "prov.py"),
+         "tree": tree,
+         "tree_head": head,
+         "tree_status_short": status,
+-        "tree_expected": list(map(str, TREES["g"])),
++        "tree_name": tree_name,  # prompt 06h
++        "tree_expected": (
++            list(map(str, TREES[tree_name])) if tree_name else None
++        ),  # prompt 06h
+         "levin_quadrature_sha256": sha256(LQ.__file__),
+-        "checkpoint": str(RUN06E / "checkpoint.jsonl"),
+-        "checkpoint_sha256_expected": CHECKPOINT06E_SHA256,
++        "three_bessel_integrals_sha256": sha256(
++            Path(tree) / "LiouvilleGreen" / "three_bessel_integrals.py"
++        ),  # prompt 06h
++        # prompt 06h: the census of this tree (06e's at p, 06h's at h; the latter's hash is taken
++        # once, before and after the run, out/cmd)
++        "checkpoint": (
++            str(census_run(tree_name) / "checkpoint.jsonl") if tree_name else None
++        ),
++        "checkpoint_sha256_expected": (
++            CHECKPOINT06E_SHA256 if tree_name == "p" else None
++        ),
+         "capture_json": args.capture_json,
+         "capture_json_sha256": sha256(args.capture_json),
+         "unit": args.unit,
+@@ -990,12 +1126,17 @@
+         "PYTHONPATH": os.environ.get("PYTHONPATH"),
+         "dont_write_bytecode": sys.dont_write_bytecode,
+     }
+-    if tree != str(TREES["g"][0]) or head != TREES["g"][1] or status.strip():
++    if (
++        tree_name is None
++        or head != TREES[tree_name][1]
++        or status.strip()
++        or not args.unit.startswith(tree_name + "-")
++    ):  # prompt 06h: the tree named by PYTHONPATH, and the unit named for it
+         raise SystemExit(f"tree evidence does not hold: {hdr}")
+     rec, cap = load_capture(args.capture_json, args.unit, args.index)
+     hdr["capture_blob_sha256"] = cap["sha256"]
+     hdr["capture_pickle"] = str(Path(cap["dir"]) / cap["pickle"])
+-    census = census_call(args.unit, args.index)
++    census = census_call(tree_name, args.unit, args.index)  # prompt 06h
+     if census is None or census["notify_label"] != rec["notify_label"]:
+         raise SystemExit("census call not found, or its label differs")
+     odir = Path(args.out_dir) / f"{args.unit}_{args.index}{args.tag}"
+@@ -1036,9 +1177,12 @@
+             import mpmath as mp
+ 
+             mp.mp.dps = MP_DPS
+-            m2_out, node_rows = m2(LQ, rec, rr, leaves, solves, mp)
++            m2_out, node_rows, dense_rows = m2(LQ, rec, rr, leaves, solves, mp)
+             result["M2"] = m2_out
+             result["nodes_sha256"] = jdump(odir / "nodes.json.gz", node_rows)
++            result["dense_sha256"] = jdump(
++                odir / "dense.json.gz", dense_rows
++            )  # prompt 06h
+         except Exception:
+             result["M2_error"] = traceback.format_exc()
+     (odir / "result.json").write_text(json.dumps(result, indent=1, default=float))
+diff -ruN -x o state/scripts_06f_reference/scripts/run_06h.py scripts/run_06h.py
+--- state/scripts_06f_reference/scripts/run_06h.py	1970-01-01 01:00:00
++++ scripts/run_06h.py	2026-11-01 00:29:38
+@@ -0,0 +1,353 @@
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement: the registered run (slug ``phase``).
++New in 06h, adapted from 06f's run_06f.py (its stages, children, heartbeat and signal handling).
++
++Stages, strictly in order, from var/levin-phase-floor-06h/phase/; at most six child processes at
++any time, one stage after another:
++1. capture at p: x1_capture.py --tree p on out/sample/selection_p.json (select_06h.py; 06e's census
++   record), six workers, into state/capture_p/ and out/capture_p.json; output
++   out/cmd/30_capture_p.txt. Unit ``capture p``.
++2. capture at h: the same with --tree h on selection_h.json (06h's census record), into
++   state/capture_h/ and out/capture_h.json; output out/cmd/31_capture_h.txt. Unit ``capture h``.
++   **A capture that does not reproduce its census record is a stop** (the dispatch brief): if any
++   of the 40 does not, nothing further runs and the run is recorded ``failed``.
++3. the method check: method_check_06f.py (06h's copy, at the exact e^u) on h's capture of
++   ``h-1e-7-0-12689`` #19 (06f's worst call), output out/cmd/32_method_check.txt, **before any
++   scoring**: if it fails nothing further runs. Unit ``method``.
++4. the replays: replay06f.py --m2 (06h's copy) on every call in each tree, one process per call,
++   into out/replay_<tree>/, each process's output in out/replay_logs/<tree>/. One unit per process.
++5. the cross scoring: cross06h.py, each tree's code at the other tree's points (p at h's: H1's
++   parent column on H1's points; h at p's: descriptive), into out/cross/<tree>_at_<other>/, output
++   in out/cross_logs/. One unit per process.
++6. the reference at 50 digits: orch_m2.py worst h 5 (06f's review method, 06h's copy) at h's worst
++   point, output out/cmd/33_refcheck_50_digits.txt. Unit ``refcheck``.
++Every child runs with its tree first on PYTHONPATH (x1_capture.py: the tree alone, as it requires;
++the others the tree then scripts/, for the pickles' harness functions), no bytecode, git's optional
++locks off, one BLAS/OpenMP thread. Heartbeat every 60 s; on SIGTERM or SIGINT the children are sent
++SIGTERM, the run is recorded ``killed``, and the driver dies by the signal. No Ray, no lock, no store
++opened except the scratch copy, read-only, by the capture's census workers.
++
++Usage: python -B run_06h.py --run-dir RUN_DIR   (launch_06h.py starts it)"""
++
++import argparse
++import hashlib
++import json
++import os
++import signal
++import subprocess
++import sys
++import threading
++import time
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parent
++sys.path.insert(0, str(HERE))
++from prov import TREES  # noqa: E402
++
++PYTHON = "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python"
++METHOD_CALL = ("h-1e-7-0-12689", 19)
++MAX_PROCS = 6
++
++
++def sha(p):
++    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
++
++
++def utc():
++    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--run-dir", required=True)
++    a = ap.parse_args()
++    import runregistrykit
++
++    run = runregistrykit.Run(a.run_dir)
++    children = {}
++
++    def terminal(signum, _frame):
++        for ch in list(children.values()):
++            if ch.poll() is None:
++                try:
++                    ch.send_signal(signal.SIGTERM)
++                except Exception:
++                    pass
++        run.finish("killed", exit_code=128 + signum)
++        signal.signal(signum, signal.SIG_DFL)
++        os.kill(os.getpid(), signum)
++
++    for s_ in (signal.SIGTERM, signal.SIGINT):
++        signal.signal(s_, terminal)
++    run.heartbeat(pid=os.getpid(), stage="started: capture at p is next")
++    stop = threading.Event()
++
++    def beat():
++        while not stop.wait(60.0):
++            try:
++                run.heartbeat()
++            except Exception:
++                pass
++
++    threading.Thread(target=beat, daemon=True).start()
++    base = dict(os.environ)
++    base.update(
++        PYTHONDONTWRITEBYTECODE="1",
++        GIT_OPTIONAL_LOCKS="0",
++        OMP_NUM_THREADS="1",
++        OPENBLAS_NUM_THREADS="1",
++        VECLIB_MAXIMUM_THREADS="1",
++        MKL_NUM_THREADS="1",
++    )
++    env_cap = {t: dict(base, PYTHONPATH=str(TREES[t][0])) for t in TREES}
++    env_rep = {
++        t: dict(base, PYTHONPATH=str(TREES[t][0]) + ":" + str(HERE)) for t in TREES
++    }
++
++    def one(name, argv, env, out, unit):
++        """Run one child to completion, its output in ``out``; record the unit."""
++        if out.exists():
++            raise SystemExit(f"{out} exists; not overwritten")
++        out.parent.mkdir(parents=True, exist_ok=True)
++        with open(out, "wb") as fo:
++            fo.write(
++                (" ".join(argv) + f"\n# cwd {ROOT}\n# start {utc()}\n# ----\n").encode()
++            )
++            fo.flush()
++            ch = subprocess.Popen(
++                argv,
++                cwd=str(ROOT),
++                env=env,
++                stdin=subprocess.DEVNULL,
++                stdout=fo,
++                stderr=subprocess.STDOUT,
++            )
++            children[name] = ch
++            rc = ch.wait()
++            children.pop(name)
++            fo.write(f"# ----\n# end {utc()}\n# exit {rc}\n".encode())
++        return rc
++
++    def pool(jobs, stage):
++        """jobs: [(name, argv, env, log path)]; at most MAX_PROCS at once. Returns {name: rc}."""
++        running = {}
++        rcs = {}
++        pending = list(jobs)
++        while pending or running:
++            while pending and len(running) < MAX_PROCS:
++                name, argv, env, lp = pending.pop(0)
++                if lp.exists():
++                    raise SystemExit(f"{lp} exists; not overwritten")
++                lp.parent.mkdir(parents=True, exist_ok=True)
++                lf = open(lp, "wb")
++                lf.write((" ".join(argv) + f"\n# start {utc()}\n# ----\n").encode())
++                lf.flush()
++                ch = subprocess.Popen(
++                    argv,
++                    cwd=str(ROOT),
++                    env=env,
++                    stdin=subprocess.DEVNULL,
++                    stdout=lf,
++                    stderr=subprocess.STDOUT,
++                )
++                lf.close()
++                children[name] = ch
++                running[name] = lp
++                run.heartbeat(stage=f"{stage} {name} started")
++            for name in list(running):
++                rc = children[name].poll()
++                if rc is None:
++                    continue
++                lp = running.pop(name)
++                children.pop(name)
++                with open(lp, "ab") as lf:
++                    lf.write(f"# ----\n# end {utc()}\n# exit {rc}\n".encode())
++                line = [
++                    l
++                    for l in lp.read_text(errors="replace").splitlines()
++                    if l.startswith("{")
++                ]
++                run.record(
++                    f"{stage} {name}",
++                    {
++                        "status": "done" if rc == 0 else "error",
++                        "exit_code": rc,
++                        "log": str(lp),
++                        "log_sha256": sha(lp),
++                        "summary": line[-1] if line else None,
++                    },
++                )
++                run.heartbeat(stage=f"{stage} {name} exit {rc}")
++                rcs[name] = rc
++            time.sleep(0.5)
++        return rcs
++
++    ok = True
++    try:
++        # 1-2. the captures, p then h
++        caps = {}
++        for i, tree in enumerate(("p", "h")):
++            sel = ROOT / "out" / "sample" / f"selection_{tree}.json"
++            cap_dir = ROOT / "state" / f"capture_{tree}"
++            cap_json = ROOT / "out" / f"capture_{tree}.json"
++            out1 = ROOT / "out" / "cmd" / f"3{i}_capture_{tree}.txt"
++            for p_ in (cap_dir, cap_json):
++                if p_.exists():
++                    raise SystemExit(f"{p_} exists; not overwritten")
++            run.heartbeat(stage=f"capture at {tree} running")
++            argv = [
++                PYTHON,
++                "-B",
++                str(HERE / "x1_capture.py"),
++                str(sel),
++                str(cap_dir),
++                str(cap_json),
++                "--tree",
++                tree,
++                "--workers",
++                str(MAX_PROCS),
++            ]
++            rc = one(f"capture {tree}", argv, env_cap[tree], out1, f"capture {tree}")
++            caps[tree] = json.loads(cap_json.read_text()) if cap_json.exists() else []
++            n_sel = len(json.loads(sel.read_text()))
++            n_match = sum(1 for e in caps[tree] if e.get("capture_matches_census"))
++            run.record(
++                f"capture {tree}",
++                {
++                    "status": "done" if rc == 0 else "error",
++                    "exit_code": rc,
++                    "output": str(out1),
++                    "output_sha256": sha(out1),
++                    "capture_json_sha256": sha(cap_json) if cap_json.exists() else None,
++                    "n_selected": n_sel,
++                    "n_matching_census": n_match,
++                },
++            )
++            run.heartbeat(
++                stage=f"capture at {tree} exit {rc}; {n_match} of {n_sel} matching"
++            )
++            ok &= rc == 0 and n_match == n_sel and len(caps[tree]) == n_sel
++        if not ok:
++            run.heartbeat(stage="STOP: a capture does not reproduce its census record")
++            raise RuntimeError("a capture does not reproduce its census record: stop")
++        # 3. the method check, before any scoring
++        out3 = ROOT / "out" / "cmd" / "32_method_check.txt"
++        argv = [
++            PYTHON,
++            "-B",
++            str(HERE / "method_check_06f.py"),
++            str(ROOT / "out" / "capture_h.json"),
++            METHOD_CALL[0],
++            str(METHOD_CALL[1]),
++        ]
++        run.heartbeat(stage="method check running")
++        rc = one("method", argv, env_rep["h"], out3, "method")
++        run.record(
++            "method",
++            {
++                "status": "done" if rc == 0 else "error",
++                "exit_code": rc,
++                "output": str(out3),
++                "output_sha256": sha(out3),
++            },
++        )
++        if rc != 0:
++            run.heartbeat(stage="STOP: the method check fails")
++            raise RuntimeError("the method check fails: stop")
++        # 4. the replays
++        jobs = []
++        for tree in ("h", "p"):
++            for e in caps[tree]:
++                name = f"{e['unit']}_{e['index']}"
++                argv = [
++                    PYTHON,
++                    "-B",
++                    str(HERE / "replay06f.py"),
++                    str(ROOT / "out" / f"capture_{tree}.json"),
++                    e["unit"],
++                    str(e["index"]),
++                    str(ROOT / "out" / f"replay_{tree}"),
++                    "--m2",
++                ]
++                jobs.append(
++                    (
++                        name,
++                        argv,
++                        env_rep[tree],
++                        ROOT / "out" / "replay_logs" / tree / f"{name}.txt",
++                    )
++                )
++        rcs = pool(jobs, "replay")
++        ok &= all(rc == 0 for rc in rcs.values()) and len(rcs) == len(jobs)
++        # 5. the cross scoring (needs both trees' replays of a call)
++        jobs = []
++        by_rest = {
++            t: {(e["unit"].split("-", 1)[1], e["index"]): e for e in caps[t]}
++            for t in caps
++        }
++        for tree, other in (("p", "h"), ("h", "p")):
++            for k, e in sorted(by_rest[tree].items()):
++                eo = by_rest[other].get(k)
++                if eo is None:
++                    continue
++                name = f"{e['unit']}_{e['index']}"
++                own_dir = ROOT / "out" / f"replay_{tree}" / name
++                other_dir = (
++                    ROOT / "out" / f"replay_{other}" / f"{eo['unit']}_{eo['index']}"
++                )
++                if (
++                    not (own_dir / "result.json").exists()
++                    or not (other_dir / "result.json").exists()
++                ):
++                    continue
++                argv = [
++                    PYTHON,
++                    "-B",
++                    str(HERE / "cross06h.py"),
++                    str(ROOT / "out" / f"capture_{tree}.json"),
++                    e["unit"],
++                    str(e["index"]),
++                    str(own_dir),
++                    str(other_dir),
++                    str(ROOT / "out" / "cross" / f"{tree}_at_{other}"),
++                ]
++                jobs.append(
++                    (
++                        f"{tree}_at_{other} {name}",
++                        argv,
++                        env_rep[tree],
++                        ROOT
++                        / "out"
++                        / "cross_logs"
++                        / f"{tree}_at_{other}"
++                        / f"{name}.txt",
++                    )
++                )
++        rcs = pool(jobs, "cross")
++        ok &= all(rc == 0 for rc in rcs.values()) and len(rcs) == 2 * len(caps["h"])
++        # 6. the reference at 50 digits at h's worst point
++        out6 = ROOT / "out" / "cmd" / "33_refcheck_50_digits.txt"
++        argv = [PYTHON, "-B", str(HERE / "orch_m2.py"), "worst", "h", "5"]
++        run.heartbeat(stage="refcheck running")
++        rc = one("refcheck", argv, env_rep["h"], out6, "refcheck")
++        run.record(
++            "refcheck",
++            {
++                "status": "done" if rc == 0 else "error",
++                "exit_code": rc,
++                "output": str(out6),
++                "output_sha256": sha(out6),
++            },
++        )
++        ok &= rc == 0
++    except BaseException:
++        stop.set()
++        run.finish("failed", exit_code=1)
++        raise
++    stop.set()
++    run.finish("done" if ok else "failed", exit_code=0 if ok else 2)
++    sys.exit(0 if ok else 2)
++
++
++if __name__ == "__main__":
++    main()
+diff -ruN -x o state/scripts_06f_reference/scripts/select_06h.py scripts/select_06h.py
+--- state/scripts_06f_reference/scripts/select_06h.py	1970-01-01 01:00:00
++++ scripts/select_06h.py	2026-11-01 00:29:38
+@@ -0,0 +1,192 @@
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement: the two selections the captures
++run on. New in 06h.
++
++The calls are 06f's 20 M2 calls (06f's out/sample/selection.json, its entries with ``"sample":
++"M2"``, read only; its SHA-256 is checked against the committed copy in the code worktree,
++docs/levin-phase-floor/06f/out/sample/selection.json). Each is captured twice, at ``p`` (06h's
++code commit's parent, whose code is 06e's) and at ``h`` (06h's code), and each capture must
++reproduce its own tree's census record bit for bit (x1_capture.py compares value, abserr, regions,
++maximum depth, converged and the label). So each selection carries that census's record:
++- ``selection_p.json``: from 06e's census checkpoint (prov.RUN06E, its SHA-256 checked against
++  prov.CHECKPOINT06E_SHA256). These must equal the census fields of 06f's own selection, which was
++  drawn from the same checkpoint (checked);
++- ``selection_h.json``: from 06h's census checkpoint (prov.census_run_06h(), the census agent's run,
++  read only; its SHA-256 printed).
++A call is matched by the unit's ``<rtol>-<shard>-<serial>`` (each census names its units by its own
++tree) and the call index, and its label must equal 06f's. Every record of a unit is read; if more
++than one holds the call (an over-budget pass), they must agree. The units are renamed
++``<tree>-<rtol>-<shard>-<serial>`` (x1_capture.py runs them in that tree); 06f's name is kept as
++``unit_06f`` and the census's own as ``census_unit``. A call missing from a census, or whose
++records disagree, stops this script with nothing written.
++
++Usage: python -B select_06h.py   (from var/levin-phase-floor-06h/phase/; writes out/sample/)
++"""
++
++import json
++import sys
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parent
++sys.path.insert(0, str(HERE))
++from prov import (  # noqa: E402
++    CHECKPOINT06E_SHA256,
++    REC06F,
++    RUN06E,
++    TREES,
++    census_run_06h,
++    header,
++    sha256,
++)
++
++SEL06F = REC06F / "out" / "sample" / "selection.json"
++SEL06F_DOCS = (
++    TREES["h"][0]
++    / "docs"
++    / "levin-phase-floor"
++    / "06f"
++    / "out"
++    / "sample"
++    / "selection.json"
++)
++
++
++def rest_of(unit):
++    return unit.split("-", 1)[1]
++
++
++def scan(checkpoint, rests):
++    """{(rest, index): [(census unit, unit status, call record), ...]} for the wanted calls."""
++    want = {}
++    for rest, index in rests:
++        want.setdefault(rest, set()).add(index)
++    found = {}
++    with open(checkpoint) as f:
++        for line in f:
++            head = line[:200]
++            if not any(f'-{r}"' in head for r in want):
++                continue
++            rec = json.loads(line)
++            unit = rec.get("unit", "")
++            rest = unit.split("-", 1)[-1]
++            if rest not in want:
++                continue
++            data = rec.get("data") or {}
++            for c in (data.get("calls") or []) + (data.get("other_calls") or []):
++                if c["index"] in want[rest]:
++                    found.setdefault((rest, c["index"]), []).append(
++                        (unit, data.get("status"), c)
++                    )
++    return found
++
++
++def key(c):
++    return (
++        c["value"]["hex"],
++        c["abserr"]["hex"],
++        c["num_regions"],
++        c["max_depth"],
++        bool(c["converged"]),
++        c["notify_label"],
++    )
++
++
++def main():
++    run06h = census_run_06h()
++    ck = {"p": RUN06E / "checkpoint.jsonl", "h": run06h / "checkpoint.jsonl"}
++    for l in header(
++        Path(__file__).resolve(),
++        "levin-phase-floor 06h: the phase re-measurement's selections (06f's 20 M2 calls, at p and h)",
++        [SEL06F, SEL06F_DOCS, ck["p"], ck["h"]],
++    ):
++        print(l)
++    if sha256(SEL06F) != sha256(SEL06F_DOCS):
++        raise SystemExit("06f's selection differs from its committed copy")
++    if sha256(ck["p"]) != CHECKPOINT06E_SHA256:
++        raise SystemExit("06e's census checkpoint is not a0dc4d7f...")
++    sel06f = [e for e in json.loads(SEL06F.read_text()) if e.get("sample") == "M2"]
++    print(f"06f's M2 calls: {len(sel06f)}")
++    if len(sel06f) != 20:
++        raise SystemExit("expected 20 M2 calls")
++    rests = [(rest_of(e["unit"]), e["index"]) for e in sel06f]
++    out = {}
++    problems = []
++    for tree in ("p", "h"):
++        found = scan(ck[tree], rests)
++        sel = []
++        for e in sel06f:
++            k = (rest_of(e["unit"]), e["index"])
++            recs = found.get(k) or []
++            if not recs:
++                problems.append(f"{tree}: {e['unit']} #{e['index']} not in the census")
++                continue
++            if len({key(c) for _u, _s, c in recs}) != 1:
++                problems.append(
++                    f"{tree}: {e['unit']} #{e['index']}: {len(recs)} census records disagree"
++                )
++                continue
++            unit, status, c = recs[0]
++            if c["notify_label"] != e["notify_label"]:
++                problems.append(
++                    f"{tree}: {e['unit']} #{e['index']}: label {c['notify_label']!r} != 06f's"
++                )
++                continue
++            r = dict(e)
++            r.update(
++                unit=f"{tree}-{k[0]}",
++                unit_06f=e["unit"],
++                census_unit=unit,
++                census_unit_status=status,
++                census_n_records=len(recs),
++                census_value=c["value"]["hex"],
++                census_abserr=c["abserr"]["hex"],
++                census_num_regions=c["num_regions"],
++                census_max_depth=c["max_depth"],
++                census_converged=bool(c["converged"]),
++                census=("06e " if tree == "p" else "06h ") + str(ck[tree]),
++            )
++            if tree == "p":
++                same = all(
++                    r[f] == e[f]
++                    for f in (
++                        "census_value",
++                        "census_abserr",
++                        "census_num_regions",
++                        "census_max_depth",
++                        "census_converged",
++                    )
++                )
++                if not same:
++                    problems.append(
++                        f"p: {e['unit']} #{e['index']}: 06e's record differs from 06f's selection"
++                    )
++            sel.append(r)
++        out[tree] = sel
++    for p_ in problems:
++        print("PROBLEM:", p_)
++    if problems:
++        print("nothing written")
++        return 1
++    dest = ROOT / "out" / "sample"
++    dest.mkdir(parents=True, exist_ok=True)
++    for tree, sel in out.items():
++        path = dest / f"selection_{tree}.json"
++        if path.exists():
++            raise SystemExit(f"{path} exists; not overwritten")
++        path.write_text(json.dumps(sel, indent=1))
++        print(f"wrote {path} sha256 {sha256(path)}")
++    print(
++        "\nunit (06f) | index | label | p: regions, depth, conv, abserr | h: regions, depth, conv, abserr | h census unit, status"
++    )
++    for ep, eh in zip(out["p"], out["h"]):
++        print(
++            f"{ep['unit_06f']} | {ep['index']} | {ep['notify_label']} | {ep['census_num_regions']}, {ep['census_max_depth']}, "
++            f"{ep['census_converged']}, {float.fromhex(ep['census_abserr']):.4e} | {eh['census_num_regions']}, "
++            f"{eh['census_max_depth']}, {eh['census_converged']}, {float.fromhex(eh['census_abserr']):.4e} | "
++            f"{eh['census_unit']}, {eh['census_unit_status']}"
++        )
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff -ruN -x o state/scripts_06f_reference/scripts/x1_capture.py scripts/x1_capture.py
+--- state/scripts_06f_reference/scripts/x1_capture.py	2026-10-31 23:50:48
++++ scripts/x1_capture.py	2026-11-01 00:24:53
+@@ -1,4 +1,12 @@
+-"""levin-phase-floor prompt 06f section 1: copied from prompt 06e's census scripts/x1_capture.py (a record, not
++"""levin-phase-floor prompt 06h section 5 (the phase re-measurement): copied from prompt 06f's
++scripts/x1_capture.py (a record, not edited; its copy is in state/scripts_06f_reference/scripts/),
++changed only in its tree, each change marked "prompt 06h": the tree is named on the command line
++(``--tree h`` or ``--tree p``, prov.TREES), PYTHONPATH must be that tree, the units are named
++``<tree>-<rtol>-<shard>-<serial>`` and run in that tree's census worker, and SELECTION_JSON carries
++the census record of that tree's census (select_06h.py: 06h's census at h, 06e's at p).
++ROWS_JSON stays 06e's census rows.json, read only, as in 06f. 06f's text follows.
++
++levin-phase-floor prompt 06f section 1: copied from prompt 06e's census scripts/x1_capture.py (a record, not
+ edited; its copy is in state/scripts_06e_reference/census_scripts/), changed only in ROWS_JSON, which is
+ 06e's census state/rows.json, read only; marked "prompt 06f". 06e's text follows.
+ 
+@@ -24,6 +32,7 @@
+ its capture's {"dir", "pickle", "offset", "length", "sha256"} and ``capture_matches_census``.
+ 
+ Usage: PYTHONPATH=<tree g> python -B x1_capture.py SELECTION_JSON OUT_DIR OUT_JSON [--workers N]
++(prompt 06h: PYTHONPATH=<tree T> python -B x1_capture.py SELECTION_JSON OUT_DIR OUT_JSON --tree T [--workers N])
+ """
+ 
+ import argparse
+@@ -49,14 +58,15 @@
+     ap.add_argument("out_dir")
+     ap.add_argument("out_json")
+     ap.add_argument("--workers", type=int, default=6)
++    ap.add_argument("--tree", required=True, choices=sorted(TREES))  # prompt 06h
+     args = ap.parse_args()
+     if args.workers > 6:
+         raise SystemExit("at most six workers")
+     # the captured records hold functions pickled by reference to g's modules, and are unpickled
+     # here to be matched to the census (out/cmd/11, the first development capture, stopped there)
+-    if os.environ.get("PYTHONPATH") != str(TREES["g"][0]):
+-        raise SystemExit("PYTHONPATH must be the tree g")
+-    for l in header(Path(__file__).resolve(), "levin-phase-floor 06c: X1's inputs, captured at g", [Path(args.selection), ROWS_JSON]):
++    if os.environ.get("PYTHONPATH") != str(TREES[args.tree][0]):  # prompt 06h: the tree named
++        raise SystemExit(f"PYTHONPATH must be the tree {args.tree}")
++    for l in header(Path(__file__).resolve(), f"levin-phase-floor 06h: the M2 calls' inputs, captured at {args.tree} (06c's X1 capture)", [Path(args.selection), ROWS_JSON]):  # prompt 06h
+         print(l)
+     sel = json.loads(Path(args.selection).read_text())
+     rows = json.loads(ROWS_JSON.read_text())["rows"]
+@@ -70,12 +80,12 @@
+     for i, (uid, ents) in enumerate(sorted(by_unit.items())):
+         parts = uid.split("-")  # "g-1e-7-<shard>-<serial>": the rtol holds a "-" (06b's deviation 20)
+         tree, shard, serial, rtol = parts[0], parts[-2], parts[-1], "-".join(parts[1:-2])
+-        if tree != "g" or rtol not in ("1e-7", "1e-8"):
+-            raise SystemExit(f"{uid}: not a g unit")
++        if tree != args.tree or rtol not in ("1e-7", "1e-8"):  # prompt 06h: the tree named
++            raise SystemExit(f"{uid}: not a {args.tree} unit")
+         R = by_key[f"{shard}-{serial}"]
+         u = {
+             "uid": uid,
+-            "tree": "g",
++            "tree": args.tree,  # prompt 06h
+             "rtol": rtol,
+             "row": R["name"],
+             "names05": R["names05"],
+@@ -91,7 +101,7 @@
+         wdir = out_dir / name
+         wdir.mkdir()
+         spec = {
+-            "tree": "g",
++            "tree": args.tree,  # prompt 06h
+             "name": name,
+             "units": [u],
+             "out_dir": str(wdir),
+@@ -103,7 +113,7 @@
+         (wdir / "spec.json").write_text(json.dumps(spec, indent=1))
+         pending.append((name, wdir))
+     env = dict(os.environ)
+-    env["PYTHONPATH"] = str(TREES["g"][0])
++    env["PYTHONPATH"] = str(TREES[args.tree][0])  # prompt 06h
+     env["PYTHONDONTWRITEBYTECODE"] = "1"
+     env["OMP_NUM_THREADS"] = "1"
+     running = {}
+--- state/scripts_06f_reference/review_scripts/orch_m2.py	2026-10-31 23:50:48
++++ scripts/orch_m2.py	2026-11-01 00:26:07
+@@ -1,4 +1,18 @@
+-"""06f review, check 4 (the orchestrator's own): M2 re-checked on captured calls, independently of
++"""levin-phase-floor prompt 06h section 5, the phase re-measurement: the check of the reference at 50
++digits. Copied from 06f's review script docs/levin-phase-floor/06f/review/scripts/orch_m2.py (a
++record, not edited; its copy is in state/scripts_06f_reference/review_scripts/), whose method --
++the Hankel formula, the exact e^u, 30 and 50 digits -- is used as it is. Changed, each change
++marked "prompt 06h", only in:
++- its paths: 06h's phase directory, and each tree's captures and replays (capture_<tree>.json,
++  out/replay_<tree>/), the tree read from the tag's prefix (``h-...`` or ``p-...``);
++- the points of ``nodes``: the replay's nodes **and** its dense sample (dense.json.gz), so that
++  the worst point may be either; the stored error compared with is the one at the exact e^u
++  (replay06f.py's ``delta_theta``), with 06f's at x_hat beside it;
++- a mode ``worst``: over every call of a tree, the point with the largest |delta theta| /
++  theta_abserr, and ``nodes`` run on its call with that point first.
++06f's review text follows.
++
++06f review, check 4 (the orchestrator's own): M2 re-checked on captured calls, independently of
+ replay06f.py's m2().
+ 
+ (a) delta theta at chosen nodes of one call. Production's group.theta_mod_2pi(u), recomputed here,
+@@ -17,7 +31,8 @@
+     1e-12, split at the theta_abserr kinks the agent records. Compared with result.json M2 dI_plus /
+     dI_minus.
+ 
+-Usage: PYTHONPATH=<tree g>:<06f scripts> python -B orch_m2.py nodes TAG K   |   dI TAG [TAG ...]"""
++Usage: PYTHONPATH=<tree g>:<06f scripts> python -B orch_m2.py nodes TAG K   |   dI TAG [TAG ...]
++(prompt 06h: PYTHONPATH=<tree T>:<scripts> python -B orch_m2.py nodes TAG K | worst T K | dI TAG ...)"""
+ 
+ import gzip
+ import hashlib
+@@ -32,19 +47,25 @@
+ import numpy as np
+ 
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+-V = MAIN / "var/levin-phase-floor-06f"
++V = MAIN / "var/levin-phase-floor-06h/phase"  # prompt 06h (06f: var/levin-phase-floor-06f)
+ 
+ 
++def rdir(tag):
++    """prompt 06h: the replay directory of a tag, by its tree prefix."""
++    return V / f"out/replay_{tag.split('-', 1)[0]}" / tag
++
++
+ def load(tag):
+     import ray.cloudpickle as cp
+ 
+     unit, index = tag.rsplit("_", 1)
+-    cap = [e for e in json.loads((V / "out/capture.json").read_text()) if e["unit"] == unit and e["index"] == int(index)][0]
++    tree = unit.split("-", 1)[0]  # prompt 06h
++    cap = [e for e in json.loads((V / f"out/capture_{tree}.json").read_text()) if e["unit"] == unit and e["index"] == int(index)][0]
+     with open(Path(cap["dir"]) / cap["pickle"], "rb") as f:
+         f.seek(cap["offset"])
+         blob = f.read(cap["length"])
+     assert hashlib.sha256(blob).hexdigest() == cap["sha256"]
+-    return cp.loads(blob), json.loads((V / "out/replay" / tag / "result.json").read_text())
++    return cp.loads(blob), json.loads((rdir(tag) / "result.json").read_text())  # prompt 06h
+ 
+ 
+ def ref_phase(mp, group, y_of_i):
+@@ -64,21 +85,25 @@
+ 
+     rec, res = load(tag)
+     group = rec["theta"]["theta_mod_2pi"].__self__
+-    rows = json.load(gzip.open(V / "out/replay" / tag / "nodes.json.gz", "rt"))
++    # prompt 06h: the nodes and the dense sample, each row marked with its set
++    rows = [dict(r, set="node") for r in json.load(gzip.open(rdir(tag) / "nodes.json.gz", "rt"))]
++    rows += [dict(r, set="dense", leaf=None, k=r["j"]) for r in json.load(gzip.open(rdir(tag) / "dense.json.gz", "rt"))]
+     viol = sorted(rows, key=lambda r: -(r["ratio"] or 0))[:3]
+     rng = random.Random(20261031)
+     rest = [r for r in rows if r not in viol]
+     pick = viol + rng.sample(rest, k - 3)
+-    print(f"== {tag}: {len(rows)} nodes in the agent's table; 3 largest ratios and {k - 3} drawn (seed 20261031)")
++    print(f"== {tag}: {len(rows)} points in the agent's tables (nodes and dense); 3 largest ratios and {k - 3} drawn (seed 20261031)")  # prompt 06h
+     print("   group coefficients", group.coefficients, "signs", group.signs, "nu", [p.nu for p in group.phases])
+     for r in pick:
+         u = float.fromhex(r["u"])
+         th = float(group.theta_mod_2pi(u))
+         ta = float(group.theta_abserr(u))
+         xh = float(np.exp(u))
+-        out = {"leaf": r["leaf"], "k": r["k"], "u": r["u"], "x_hat": xh.hex(), "K_x_hat": group.K * xh,
++        out = {"set": r["set"], "leaf": r["leaf"], "k": r["k"], "u": r["u"], "x_hat": xh.hex(), "K_x_hat": group.K * xh,  # prompt 06h: set
+                "theta_mod_2pi_equal_agent": th.hex() == r["theta_mod_2pi"],
+-               "theta_abserr_mine": ta, "theta_abserr_agent": r["theta_abserr"], "agent_delta_theta": r["delta_theta"]}
++               "theta_abserr_mine": ta, "theta_abserr_agent": r["theta_abserr"], "agent_delta_theta": r["delta_theta"],
++               "agent_delta_theta_float": r.get("delta_theta_float"), "agent_ref_exact_mod_2pi": r.get("ref_exact_mod_2pi"),
++               "theta_abserr_parts": r.get("theta_abserr_parts")}  # prompt 06h
+         for dps in (30, 50):
+             mp.mp.dps = dps
+             xe = mp.exp(mp.mpf(u))
+@@ -88,10 +113,27 @@
+             out[f"dtheta_exact_exp_{dps}"] = float(d_exa)
+         out["ratio_xhat_30"] = abs(out["dtheta_xhat_30"]) / ta
+         out["ratio_exact_exp_30"] = abs(out["dtheta_exact_exp_30"]) / ta
+-        out["rel_diff_mine_vs_agent"] = abs(out["dtheta_xhat_30"] - r["delta_theta"]) / abs(r["delta_theta"]) if r["delta_theta"] else None
++        # prompt 06h: the agent's delta_theta is now at the exact e^u, and 06f's (at x_hat) beside it
++        out["rel_diff_mine_vs_agent"] = abs(out["dtheta_exact_exp_30"] - r["delta_theta"]) / abs(r["delta_theta"]) if r["delta_theta"] else None
++        out["rel_diff_mine_vs_agent_50"] = abs(out["dtheta_exact_exp_50"] - r["delta_theta"]) / abs(r["delta_theta"]) if r["delta_theta"] else None
++        out["rel_diff_mine_vs_agent_xhat"] = (abs(out["dtheta_xhat_30"] - r["delta_theta_float"]) / abs(r["delta_theta_float"])
++                                              if r.get("delta_theta_float") else None)
+         print(json.dumps(out))
+ 
+ 
++def worst(tree, k):
++    """prompt 06h: the point of largest |delta theta| / theta_abserr over every call of ``tree``
++    (nodes and dense), then ``nodes`` on its call."""
++    best = None
++    for d in sorted((V / f"out/replay_{tree}").iterdir()):
++        for name, kind in (("nodes.json.gz", "node"), ("dense.json.gz", "dense")):
++            for r in json.load(gzip.open(d / name, "rt")):
++                if r["ratio"] is not None and (best is None or r["ratio"] > best[0]):
++                    best = (r["ratio"], d.name, kind, r["u"])
++    print(f"== worst over {tree}: ratio {best[0]!r} on {best[1]} ({best[2]}, u {best[3]})")
++    nodes(best[1], k)
++
++
+ def dI(tag):
+     import AdaptiveLevin.levin_quadrature as LQ
+ 
+@@ -116,7 +158,7 @@
+         return g
+ 
+     a0, b0 = (float(x) for x in rec["x_span"])
+-    cuts = [a0] + sorted(set(k for k in m2["theta_abserr_kinks_u"] if a0 < k < b0)) + [b0]
++    cuts = [a0] + sorted(set(k for k in m2["theta_abserr_kinks_u"] if a0 < k < b0)) + [b0]  # (dI: not used by 06h)
+     print(f"== {tag}: span ({a0!r}, {b0!r}), cuts {cuts[1:-1]}, agent dI_plus {m2['dI_plus']!r} dI_minus {m2['dI_minus']!r}"
+           f" (converged rel {m2['dI_converged_rel']!r}); D {m2['D']!r}; sum|dI_leaf| {m2['sum_abs_dI_leaf']!r}")
+     for rtol in (1e-10, 1e-12):
+@@ -145,6 +187,8 @@
+     print("# script sha256", hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+     if sys.argv[1] == "nodes":
+         nodes(sys.argv[2], int(sys.argv[3]))
++    elif sys.argv[1] == "worst":  # prompt 06h
++        worst(sys.argv[2], int(sys.argv[3]))
+     else:
+         for t in sys.argv[2:]:
+             dI(t)
+# ----
+# end 2026-11-01T03:35:10Z
+# exit 1

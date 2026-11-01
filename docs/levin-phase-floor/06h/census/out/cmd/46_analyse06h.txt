@@ -1,0 +1,948 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06h.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:27:28Z
+# ----
+# levin-phase-floor 06h: the census's scores and descriptive items
+# written 2026-11-01T03:27:29Z on mps026298.phys.susx.ac.uk
+# script analyse06h.py sha256 fe240ec69b12847827c4a981e2c9f0c80ad02d4d22098c09913e6ebe4d52f1c2
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 HEAD 2c325f56641666b45df483adb8c1202575721c42 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl sha256 3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl sha256 a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/predictions.md sha256 6ff4f05b5fe7220f5ae8df2dd8a3542da42b8c565152a507b006e5a3a2597f15
+
+06a's stationary-point rows: 720 (must be 720: True)
+
+================ rtol 1e-7: units h 9280, 06e 9280
+status h {'done': 9280}; 06e {'done': 9280}
+over budget: 0 (0 outside the 720); done with wall_s > 300 s: []
+matching problems: 0 []
+
+== H3 as written, on total (rtol 1e-7): rows scored 8560; non-finite total_abserr in either 0; violating 0 -> holds
+   (fact 1) rows outside the 720 with total bit-identical to 06e's: 8560; total_abserr bit-identical: 8560
+
+== H3, second reading, on the analytic oracle (rtol 1e-7): rows outside the 720 whose oracle moved 4203; 06e's counterfactual equal to 06e's recorded analytic_rad bit for bit on 8560 rows, not on 0; rows scored 8560; non-finite abserr in either 0; violating 0 -> holds
+   |a_h - a_06e| / (abserr_06e + abserr_h): p0 0, p10 0, p50 0, p90 4.31e-08, p99 1.02e-06, p100 0.0756
+   the two readings AGREE: holds / holds
+
+== H4 (rtol 1e-7): Levin calls outside the 720 scored: analytic-block 95896, group 33725; 06e converged: analytic-block 95896, group 33725; lost (06e converged, h not) 0 (analytic 0, group 0); gained 0 (analytic 0, group 0); unmatched 06e-converged 0 -> holds
+   group calls (all rows) bit-identical to 06e's in value, abserr, converged, regions, depth: {'identical': 37325}
+
+-- descriptive (rtol 1e-7): what the declaration costs, analytic-block calls (all rows)
+   CC branch, 06f's method (06e): any declared > 0 {'calls': 5224, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 0, 'D_attr >= 0.01 request': 1, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}; declared-dominated {'calls': 2493, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 0, 'D_attr >= 0.01 request': 1, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}
+   CC branch, 06f's method (h): any declared > 0 {'calls': 5299, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 0, 'D_attr >= 0.01 request': 2, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}; declared-dominated {'calls': 5137, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 0, 'D_attr >= 0.01 request': 2, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}
+   CC branch, declared over all fallback leaves, h / 06e on matched analytic calls with both > 0 (6165): p0 0.797, p10 1.01, p50 1.95, p90 2.47, p99 5.38, p100 31.8
+   h, by branch (107416 analytic calls supplying theta_abserr; leaves not reproduced 0):
+      Levin declared / request: p0 0, p10 9.47e-08, p50 3.01e-06, p90 4.78e-05, p99 0.000348, p100 0.0254
+      CC declared / request: p0 0, p10 0, p50 0, p90 0, p99 8.02e-05, p100 0.0341
+      total declared / request: p0 4.96e-08, p10 1.06e-07, p50 5.32e-06, p90 5.73e-05, p99 0.00037, p100 0.0341; {'total declared >= 1 request': 0, 'total declared >= 0.1 request': 0, 'total declared >= 0.01 request': 6, 'total declared >= 0.001 request': 293, 'calls with a declared Levin term > 0': 102603, 'calls with a declared CC term > 0': 6166, 'unconverged': 0, 'unconverged with total declared >= 0.1 request': 0}
+      the abscissa part's share of the declared term: p0 0.000932, p10 0.00524, p50 0.256, p90 0.971, p99 0.999, p100 1
+      declared / its constituents part (the counterfactual: what 06e's declaration would charge on h's leaves): p0 1, p10 1.01, p50 2.36, p90 62, p99 2.43e+03, p100 1.89e+04
+
+-- descriptive (rtol 1e-7): convergence and depth, h vs 06e
+   all rows: analytic calls h 107416 06e 107416; group at depth 20 h 11 06e 11; group calls h 37325 06e 37325; group unconverged h 9 06e 9; rows total_converged false h 9 06e 9; rows with an unconverged call h 9 06e 9
+   outside the 720: analytic calls h 95896 06e 95896; group calls h 33725 06e 33725
+   the 720: analytic calls h 11520 06e 11520; group at depth 20 h 11 06e 11; group calls h 3600 06e 3600; group unconverged h 9 06e 9; rows total_converged false h 9 06e 9; rows with an unconverged call h 9 06e 9
+   row depth (max over the row's Levin calls), depth: h / 06e
+   0: 250/246; 1: 270/250; 2: 316/296; 3: 680/464; 4: 1159/1190; 5: 923/1086; 6: 954/999; 7: 1314/1330; 8: 773/777; 9: 204/205; 10: 108/108; 11: 29/29; 12: 13/13; 13: 18/18; 14: 12/12; 15: 6/6; 16: 10/10; 17: 4/4; 18: 4/4; 19: 7/7; 20: 11/11
+   analytic call depth, depth: h / 06e
+   0: 36725/36305; 1: 17046/16731; 2: 11350/10104; 3: 25353/9101; 4: 15520/30546; 5: 1147/4087; 6: 231/454; 7: 43/81; 8: 1/6; 9: 0/1
+   group call depth, depth: h / 06e
+   0: 11843/11843; 1: 4202/4202; 2: 2863/2863; 3: 3695/3695; 4: 4901/4901; 5: 2867/2867; 6: 2576/2576; 7: 2728/2728; 8: 1150/1150; 9: 262/262; 10: 118/118; 11: 34/34; 12: 13/13; 13: 18/18; 14: 12/12; 15: 7/7; 16: 10/10; 17: 4/4; 18: 4/4; 19: 7/7; 20: 11/11
+
+-- descriptive (rtol 1e-7): cost
+   analytic calls: regions h 349052 / 06e 398505 (x0.8759); solves h 2685000 / 06e 3080624 (x0.8716)
+   group calls: regions h 227373 / 06e 227373 (x1.0000); solves h 1781659 / 06e 1781659 (x1.0000)
+   all calls: regions h 576425 / 06e 625878 (x0.9210); solves h 4466659 / 06e 4862283 (x0.9186)
+   unit wall (wall_s, the timed section) summed h 2.223 h / 06e 2.282 h (x0.974); largest unit h g-1e-7-3-13490 5.7 s / 06e g-1e-7-0-14051 6.0 s
+   h, outside wall_s, summed (h): analytic_06h_s 1.311, cc_floor_s 0.044, declared_06h_s 0.207, deep_s 0.001, rebuild_s 0.277, scan_s 0.266, w3_s 0.141
+
+-- descriptive (rtol 1e-7): the 720: totals moved 0; analytic oracle moved 462, beyond the second reading's bound 0; |da|/(e_06e + e_h) p0 0, p10 0, p50 3.99e-09, p90 4e-08, p99 8.02e-07, p100 5.69e-06; calls lost convergence 0, gained 0
+
+================ rtol 1e-8: units h 9280, 06e 9280
+status h {'done': 9280}; 06e {'done': 9280}
+over budget: 0 (0 outside the 720); done with wall_s > 300 s: []
+matching problems: 0 []
+
+== H3 as written, on total (rtol 1e-8): rows scored 8560; non-finite total_abserr in either 0; violating 0 -> holds
+   (fact 1) rows outside the 720 with total bit-identical to 06e's: 8560; total_abserr bit-identical: 8560
+
+== H3, second reading, on the analytic oracle (rtol 1e-8): rows outside the 720 whose oracle moved 3920; 06e's counterfactual equal to 06e's recorded analytic_rad bit for bit on 8560 rows, not on 0; rows scored 8560; non-finite abserr in either 0; violating 0 -> holds
+   |a_h - a_06e| / (abserr_06e + abserr_h): p0 0, p10 0, p50 0, p90 2.17e-07, p99 2.18e-06, p100 0.000135
+   the two readings AGREE: holds / holds
+
+== H4 (rtol 1e-8): Levin calls outside the 720 scored: analytic-block 95896, group 33725; 06e converged: analytic-block 95896, group 33724; lost (06e converged, h not) 1 (analytic 1, group 0); gained 0 (analytic 0, group 0); unmatched 06e-converged 0 -> fails
+   LOST g-1e-8-3-1072 #13 analytic analytic J1: 06e ['-0x1.e0bfc7790b7c0p-60', '0x1.1b7b52ad37b7ap-87', True, 2, 1] | h ['-0x1.e0bfc77801bc0p-60', '0x1.d34a73ec76c16p-86', False, 1, 0]
+   group calls (all rows) bit-identical to 06e's in value, abserr, converged, regions, depth: {'identical': 37325}
+
+-- descriptive (rtol 1e-8): what the declaration costs, analytic-block calls (all rows)
+   CC branch, 06f's method (06e): any declared > 0 {'calls': 6055, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 1, 'D_attr >= 0.01 request': 22, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}; declared-dominated {'calls': 2785, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 1, 'D_attr >= 0.01 request': 22, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}
+   CC branch, 06f's method (h): any declared > 0 {'calls': 6117, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 2, 'D_attr >= 0.01 request': 23, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}; declared-dominated {'calls': 5939, 'D_attr >= request': 0, 'D_attr >= 0.1 request': 2, 'D_attr >= 0.01 request': 23, 'unconverged': 0, 'unconverged and D_attr >= 0.1 request': 0}
+   CC branch, declared over all fallback leaves, h / 06e on matched analytic calls with both > 0 (6948): p0 0.797, p10 1.01, p50 1.97, p90 2.41, p99 5.19, p100 31.8
+   h, by branch (107416 analytic calls supplying theta_abserr; leaves not reproduced 0):
+      Levin declared / request: p0 0, p10 9.66e-07, p50 3.56e-05, p90 0.000519, p99 0.00388, p100 0.254
+      CC declared / request: p0 0, p10 0, p50 0, p90 0, p99 0.000919, p100 0.341
+      total declared / request: p0 4.96e-07, p10 1.12e-06, p50 6.29e-05, p90 0.000608, p99 0.00396, p100 0.341; {'total declared >= 1 request': 0, 'total declared >= 0.1 request': 6, 'total declared >= 0.01 request': 349, 'total declared >= 0.001 request': 7055, 'calls with a declared Levin term > 0': 102603, 'calls with a declared CC term > 0': 6960, 'unconverged': 1, 'unconverged with total declared >= 0.1 request': 1}
+      the abscissa part's share of the declared term: p0 0.000932, p10 0.00637, p50 0.283, p90 0.975, p99 0.999, p100 1
+      declared / its constituents part (the counterfactual: what 06e's declaration would charge on h's leaves): p0 1, p10 1.01, p50 2.44, p90 73.6, p99 2.68e+03, p100 1.69e+04
+
+-- descriptive (rtol 1e-8): convergence and depth, h vs 06e
+   all rows: analytic calls h 107416 06e 107416; analytic unconverged h 1 06e 0; group at depth 20 h 18 06e 18; group calls h 37325 06e 37325; group unconverged h 15 06e 15; rows total_converged false h 15 06e 15; rows with an unconverged call h 16 06e 15
+   outside the 720: analytic calls h 95896 06e 95896; analytic unconverged h 1 06e 0; group at depth 20 h 1 06e 1; group calls h 33725 06e 33725; group unconverged h 1 06e 1; rows total_converged false h 1 06e 1; rows with an unconverged call h 2 06e 1
+   the 720: analytic calls h 11520 06e 11520; group at depth 20 h 17 06e 17; group calls h 3600 06e 3600; group unconverged h 14 06e 14; rows total_converged false h 14 06e 14; rows with an unconverged call h 14 06e 14
+   row depth (max over the row's Levin calls), depth: h / 06e
+   0: 245/242; 1: 241/219; 2: 331/300; 3: 798/491; 4: 1344/1614; 5: 754/846; 6: 691/692; 7: 812/812; 8: 924/924; 9: 397/397; 10: 310/310; 11: 65/65; 12: 30/30; 13: 27/27; 14: 17/17; 15: 11/11; 16: 17/17; 17: 11/11; 18: 11/11; 19: 11/11; 20: 18/18
+   analytic call depth, depth: h / 06e
+   0: 28478/28046; 1: 14421/14122; 2: 14232/10938; 3: 32906/13833; 4: 17235/38780; 5: 142/1693; 6: 2/4
+   group call depth, depth: h / 06e
+   0: 11181/11181; 1: 3994/3994; 2: 2563/2563; 3: 3509/3509; 4: 4339/4339; 5: 2670/2670; 6: 2642/2642; 7: 2674/2674; 8: 2153/2153; 9: 885/885; 10: 445/445; 11: 103/103; 12: 40/40; 13: 28/28; 14: 17/17; 15: 14/14; 16: 17/17; 17: 11/11; 18: 11/11; 19: 11/11; 20: 18/18
+
+-- descriptive (rtol 1e-8): cost
+   analytic calls: regions h 408628 / 06e 469661 (x0.8700); solves h 3161604 / 06e 3649872 (x0.8662)
+   group calls: regions h 329525 / 06e 329525 (x1.0000); solves h 2559935 / 06e 2559935 (x1.0000)
+   all calls: regions h 738153 / 06e 799186 (x0.9236); solves h 5721539 / 06e 6209807 (x0.9214)
+   unit wall (wall_s, the timed section) summed h 2.919 h / 06e 2.974 h (x0.981); largest unit h g-1e-8-0-33995 105.2 s / 06e g-1e-8-0-33995 105.1 s
+   h, outside wall_s, summed (h): analytic_06h_s 1.562, cc_floor_s 0.087, declared_06h_s 0.240, deep_s 0.003, rebuild_s 0.278, scan_s 0.000, w3_s 0.000
+
+-- descriptive (rtol 1e-8): the 720: totals moved 0; analytic oracle moved 421, beyond the second reading's bound 0; |da|/(e_06e + e_h) p0 0, p10 0, p50 1.67e-08, p90 1.62e-07, p99 6.99e-07, p100 2.86e-06; calls lost convergence 0, gained 0
+
+== summary
+{
+ "1e-7": {
+  "H3": "holds",
+  "H3_oracle": "holds",
+  "H4": "holds",
+  "h3_n": 8560,
+  "h3_viol": 0,
+  "h3_nonfinite": 0,
+  "h3_bitident_total": 8560,
+  "h3b_n": 8560,
+  "h3b_viol": 0,
+  "h3b_nonfinite": 0,
+  "h3b_nocf": 0,
+  "h3b_moved": 4203,
+  "h4": {
+   "analytic calls scored": 95896,
+   "analytic 06e converged": 95896,
+   "group calls scored": 33725,
+   "group 06e converged": 33725
+  },
+  "h4_lost": 0,
+  "h4_gained": 0,
+  "h4_unmatched": 0,
+  "group_bitident": {
+   "identical": 37325
+  },
+  "over": 0,
+  "match_probs": 0,
+  "cc_06f_06e": {
+   "any declared > 0": {
+    "calls": 5224,
+    "D_attr >= request": 0,
+    "D_attr >= 0.1 request": 0,
+    "D_attr >= 0.01 request": 1,
+    "unconverged": 0,
+    "unconverged and D_attr >= 0.1 request": 0
+   },
+   "declared-dominated": {
+    "calls": 2493,
+    "D_attr >= request": 0,
+    "D_attr >= 0.1 request": 0,
+    "D_attr >= 0.01 request": 1,
+    "unconverged": 0,
+    "unconverged and D_attr >= 0.1 request": 0
+   }
+  },
+  "cc_06f_h": {
+   "declared-dominated": {
+    "calls": 5137,
+    "D_attr >= request": 0,
+    "D_attr >= 0.1 request": 0,
+    "D_attr >= 0.01 request": 2,
+    "unconverged": 0,
+    "unconverged and D_attr >= 0.1 request": 0
+   },
+   "any declared > 0": {
+    "calls": 5299,
+    "D_attr >= request": 0,
+    "D_attr >= 0.1 request": 0,
+    "D_attr >= 0.01 request": 2,
+    "unconverged": 0,
+    "unconverged and D_attr >= 0.1 request": 0
+   }
+  },
+  "declared_h": {
+   "n_calls": 107416,
+   "unreproduced": 0,
+   "thresholds": {
+    "total declared >= 1 request": 0,
+    "total declared >= 0.1 request": 0,
+    "total declared >= 0.01 request": 6,
+    "total declared >= 0.001 request": 293,
+    "calls with a declared Levin term > 0": 102603,
+    "calls with a declared CC term > 0": 6166,
+    "unconverged": 0,
+    "unconverged with total declared >= 0.1 request": 0
+   },
+   "total_over_request_q": "p0 4.96e-08, p10 1.06e-07, p50 5.32e-06, p90 5.73e-05, p99 0.00037, p100 0.0341",
+   "levin_over_request_q": "p0 0, p10 9.47e-08, p50 3.01e-06, p90 4.78e-05, p99 0.000348, p100 0.0254",
+   "cc_over_request_q": "p0 0, p10 0, p50 0, p90 0, p99 8.02e-05, p100 0.0341",
+   "abscissa_share_q": "p0 0.000932, p10 0.00524, p50 0.256, p90 0.971, p99 0.999, p100 1",
+   "over_constituents_q": "p0 1, p10 1.01, p50 2.36, p90 62, p99 2.43e+03, p100 1.89e+04"
+  },
+  "conv_all rows": {
+   "analytic calls": [
+    107416,
+    107416
+   ],
+   "group at depth 20": [
+    11,
+    11
+   ],
+   "group calls": [
+    37325,
+    37325
+   ],
+   "group unconverged": [
+    9,
+    9
+   ],
+   "rows total_converged false": [
+    9,
+    9
+   ],
+   "rows with an unconverged call": [
+    9,
+    9
+   ]
+  },
+  "conv_outside the 720": {
+   "analytic calls": [
+    95896,
+    95896
+   ],
+   "group calls": [
+    33725,
+    33725
+   ]
+  },
+  "conv_the 720": {
+   "analytic calls": [
+    11520,
+    11520
+   ],
+   "group at depth 20": [
+    11,
+    11
+   ],
+   "group calls": [
+    3600,
+    3600
+   ],
+   "group unconverged": [
+    9,
+    9
+   ],
+   "rows total_converged false": [
+    9,
+    9
+   ],
+   "rows with an unconverged call": [
+    9,
+    9
+   ]
+  },
+  "call_depth_analytic": {
+   "0": [
+    36725,
+    36305
+   ],
+   "1": [
+    17046,
+    16731
+   ],
+   "2": [
+    11350,
+    10104
+   ],
+   "3": [
+    25353,
+    9101
+   ],
+   "4": [
+    15520,
+    30546
+   ],
+   "5": [
+    1147,
+    4087
+   ],
+   "6": [
+    231,
+    454
+   ],
+   "7": [
+    43,
+    81
+   ],
+   "8": [
+    1,
+    6
+   ],
+   "9": [
+    0,
+    1
+   ]
+  },
+  "call_depth_group": {
+   "0": [
+    11843,
+    11843
+   ],
+   "1": [
+    4202,
+    4202
+   ],
+   "2": [
+    2863,
+    2863
+   ],
+   "3": [
+    3695,
+    3695
+   ],
+   "4": [
+    4901,
+    4901
+   ],
+   "5": [
+    2867,
+    2867
+   ],
+   "6": [
+    2576,
+    2576
+   ],
+   "7": [
+    2728,
+    2728
+   ],
+   "8": [
+    1150,
+    1150
+   ],
+   "9": [
+    262,
+    262
+   ],
+   "10": [
+    118,
+    118
+   ],
+   "11": [
+    34,
+    34
+   ],
+   "12": [
+    13,
+    13
+   ],
+   "13": [
+    18,
+    18
+   ],
+   "14": [
+    12,
+    12
+   ],
+   "15": [
+    7,
+    7
+   ],
+   "16": [
+    10,
+    10
+   ],
+   "17": [
+    4,
+    4
+   ],
+   "18": [
+    4,
+    4
+   ],
+   "19": [
+    7,
+    7
+   ],
+   "20": [
+    11,
+    11
+   ]
+  },
+  "row_depth": {
+   "0": [
+    250,
+    246
+   ],
+   "1": [
+    270,
+    250
+   ],
+   "2": [
+    316,
+    296
+   ],
+   "3": [
+    680,
+    464
+   ],
+   "4": [
+    1159,
+    1190
+   ],
+   "5": [
+    923,
+    1086
+   ],
+   "6": [
+    954,
+    999
+   ],
+   "7": [
+    1314,
+    1330
+   ],
+   "8": [
+    773,
+    777
+   ],
+   "9": [
+    204,
+    205
+   ],
+   "10": [
+    108,
+    108
+   ],
+   "11": [
+    29,
+    29
+   ],
+   "12": [
+    13,
+    13
+   ],
+   "13": [
+    18,
+    18
+   ],
+   "14": [
+    12,
+    12
+   ],
+   "15": [
+    6,
+    6
+   ],
+   "16": [
+    10,
+    10
+   ],
+   "17": [
+    4,
+    4
+   ],
+   "18": [
+    4,
+    4
+   ],
+   "19": [
+    7,
+    7
+   ],
+   "20": [
+    11,
+    11
+   ]
+  },
+  "cost_analytic": {
+   "regions": [
+    349052,
+    398505
+   ],
+   "solves": [
+    2685000,
+    3080624
+   ]
+  },
+  "cost_group": {
+   "regions": [
+    227373,
+    227373
+   ],
+   "solves": [
+    1781659,
+    1781659
+   ]
+  },
+  "cost_all": {
+   "regions": [
+    576425,
+    625878
+   ],
+   "solves": [
+    4466659,
+    4862283
+   ]
+  },
+  "wall_h": [
+   2.2229492613096307,
+   2.281680802246879
+  ],
+  "post_h": {
+   "declared_06h_s": 0.20683797262233888,
+   "analytic_06h_s": 1.3112117601218374,
+   "cc_floor_s": 0.04395672522575801,
+   "scan_s": 0.26557423180059736,
+   "w3_s": 0.14082355726225715,
+   "deep_s": 0.0011002218026098692,
+   "rebuild_s": 0.2772471013424608
+  },
+  "sp": {
+   "totals_moved": 0,
+   "oracle_moved": 462,
+   "oracle_beyond": 0,
+   "lost": 0,
+   "gained": 0
+  }
+ },
+ "1e-8": {
+  "H3": "holds",
+  "H3_oracle": "holds",
+  "H4": "fails",
+  "h3_n": 8560,
+  "h3_viol": 0,
+  "h3_nonfinite": 0,
+  "h3_bitident_total": 8560,
+  "h3b_n": 8560,
+  "h3b_viol": 0,
+  "h3b_nonfinite": 0,
+  "h3b_nocf": 0,
+  "h3b_moved": 3920,
+  "h4": {
+   "analytic calls scored": 95896,
+   "analytic 06e converged": 95896,
+   "group calls scored": 33725,
+   "group 06e converged": 33724
+  },
+  "h4_lost": 1,
+  "h4_gained": 0,
+  "h4_unmatched": 0,
+  "group_bitident": {
+   "identical": 37325
+  },
+  "over": 0,
+  "match_probs": 0,
+  "cc_06f_06e": {
+   "any declared > 0": {
+    "calls": 6055,
+    "D_attr >= request": 0,
+    "D_attr >= 0.1 request": 1,
+    "D_attr >= 0.01 request": 22,
+    "unconverged": 0,
+    "unconverged and D_attr >= 0.1 request": 0
+   },
+   "declared-dominated": {
+    "calls": 2785,
+    "D_attr >= request": 0,
+    "D_attr >= 0.1 request": 1,
+    "D_attr >= 0.01 request": 22,
+    "unconverged": 0,
+    "unconverged and D_attr >= 0.1 request": 0
+   }
+  },
+  "cc_06f_h": {
+   "declared-dominated": {
+    "calls": 5939,
+    "D_attr >= request": 0,
+    "D_attr >= 0.1 request": 2,
+    "D_attr >= 0.01 request": 23,
+    "unconverged": 0,
+    "unconverged and D_attr >= 0.1 request": 0
+   },
+   "any declared > 0": {
+    "calls": 6117,
+    "D_attr >= request": 0,
+    "D_attr >= 0.1 request": 2,
+    "D_attr >= 0.01 request": 23,
+    "unconverged": 0,
+    "unconverged and D_attr >= 0.1 request": 0
+   }
+  },
+  "declared_h": {
+   "n_calls": 107416,
+   "unreproduced": 0,
+   "thresholds": {
+    "total declared >= 1 request": 0,
+    "total declared >= 0.1 request": 6,
+    "total declared >= 0.01 request": 349,
+    "total declared >= 0.001 request": 7055,
+    "calls with a declared Levin term > 0": 102603,
+    "calls with a declared CC term > 0": 6960,
+    "unconverged": 1,
+    "unconverged with total declared >= 0.1 request": 1
+   },
+   "total_over_request_q": "p0 4.96e-07, p10 1.12e-06, p50 6.29e-05, p90 0.000608, p99 0.00396, p100 0.341",
+   "levin_over_request_q": "p0 0, p10 9.66e-07, p50 3.56e-05, p90 0.000519, p99 0.00388, p100 0.254",
+   "cc_over_request_q": "p0 0, p10 0, p50 0, p90 0, p99 0.000919, p100 0.341",
+   "abscissa_share_q": "p0 0.000932, p10 0.00637, p50 0.283, p90 0.975, p99 0.999, p100 1",
+   "over_constituents_q": "p0 1, p10 1.01, p50 2.44, p90 73.6, p99 2.68e+03, p100 1.69e+04"
+  },
+  "conv_all rows": {
+   "analytic calls": [
+    107416,
+    107416
+   ],
+   "analytic unconverged": [
+    1,
+    0
+   ],
+   "group at depth 20": [
+    18,
+    18
+   ],
+   "group calls": [
+    37325,
+    37325
+   ],
+   "group unconverged": [
+    15,
+    15
+   ],
+   "rows total_converged false": [
+    15,
+    15
+   ],
+   "rows with an unconverged call": [
+    16,
+    15
+   ]
+  },
+  "conv_outside the 720": {
+   "analytic calls": [
+    95896,
+    95896
+   ],
+   "analytic unconverged": [
+    1,
+    0
+   ],
+   "group at depth 20": [
+    1,
+    1
+   ],
+   "group calls": [
+    33725,
+    33725
+   ],
+   "group unconverged": [
+    1,
+    1
+   ],
+   "rows total_converged false": [
+    1,
+    1
+   ],
+   "rows with an unconverged call": [
+    2,
+    1
+   ]
+  },
+  "conv_the 720": {
+   "analytic calls": [
+    11520,
+    11520
+   ],
+   "group at depth 20": [
+    17,
+    17
+   ],
+   "group calls": [
+    3600,
+    3600
+   ],
+   "group unconverged": [
+    14,
+    14
+   ],
+   "rows total_converged false": [
+    14,
+    14
+   ],
+   "rows with an unconverged call": [
+    14,
+    14
+   ]
+  },
+  "call_depth_analytic": {
+   "0": [
+    28478,
+    28046
+   ],
+   "1": [
+    14421,
+    14122
+   ],
+   "2": [
+    14232,
+    10938
+   ],
+   "3": [
+    32906,
+    13833
+   ],
+   "4": [
+    17235,
+    38780
+   ],
+   "5": [
+    142,
+    1693
+   ],
+   "6": [
+    2,
+    4
+   ]
+  },
+  "call_depth_group": {
+   "0": [
+    11181,
+    11181
+   ],
+   "1": [
+    3994,
+    3994
+   ],
+   "2": [
+    2563,
+    2563
+   ],
+   "3": [
+    3509,
+    3509
+   ],
+   "4": [
+    4339,
+    4339
+   ],
+   "5": [
+    2670,
+    2670
+   ],
+   "6": [
+    2642,
+    2642
+   ],
+   "7": [
+    2674,
+    2674
+   ],
+   "8": [
+    2153,
+    2153
+   ],
+   "9": [
+    885,
+    885
+   ],
+   "10": [
+    445,
+    445
+   ],
+   "11": [
+    103,
+    103
+   ],
+   "12": [
+    40,
+    40
+   ],
+   "13": [
+    28,
+    28
+   ],
+   "14": [
+    17,
+    17
+   ],
+   "15": [
+    14,
+    14
+   ],
+   "16": [
+    17,
+    17
+   ],
+   "17": [
+    11,
+    11
+   ],
+   "18": [
+    11,
+    11
+   ],
+   "19": [
+    11,
+    11
+   ],
+   "20": [
+    18,
+    18
+   ]
+  },
+  "row_depth": {
+   "0": [
+    245,
+    242
+   ],
+   "1": [
+    241,
+    219
+   ],
+   "2": [
+    331,
+    300
+   ],
+   "3": [
+    798,
+    491
+   ],
+   "4": [
+    1344,
+    1614
+   ],
+   "5": [
+    754,
+    846
+   ],
+   "6": [
+    691,
+    692
+   ],
+   "7": [
+    812,
+    812
+   ],
+   "8": [
+    924,
+    924
+   ],
+   "9": [
+    397,
+    397
+   ],
+   "10": [
+    310,
+    310
+   ],
+   "11": [
+    65,
+    65
+   ],
+   "12": [
+    30,
+    30
+   ],
+   "13": [
+    27,
+    27
+   ],
+   "14": [
+    17,
+    17
+   ],
+   "15": [
+    11,
+    11
+   ],
+   "16": [
+    17,
+    17
+   ],
+   "17": [
+    11,
+    11
+   ],
+   "18": [
+    11,
+    11
+   ],
+   "19": [
+    11,
+    11
+   ],
+   "20": [
+    18,
+    18
+   ]
+  },
+  "cost_analytic": {
+   "regions": [
+    408628,
+    469661
+   ],
+   "solves": [
+    3161604,
+    3649872
+   ]
+  },
+  "cost_group": {
+   "regions": [
+    329525,
+    329525
+   ],
+   "solves": [
+    2559935,
+    2559935
+   ]
+  },
+  "cost_all": {
+   "regions": [
+    738153,
+    799186
+   ],
+   "solves": [
+    5721539,
+    6209807
+   ]
+  },
+  "wall_h": [
+   2.9185394683260366,
+   2.9736375210612054
+  ],
+  "post_h": {
+   "declared_06h_s": 0.2404563521305358,
+   "analytic_06h_s": 1.5624151924544842,
+   "cc_floor_s": 0.08663407838838692,
+   "scan_s": 0.0,
+   "w3_s": 0.0,
+   "deep_s": 0.0026262770760028314,
+   "rebuild_s": 0.27809034105661945
+  },
+  "sp": {
+   "totals_moved": 0,
+   "oracle_moved": 421,
+   "oracle_beyond": 0,
+   "lost": 0,
+   "gained": 0
+  }
+ }
+}
+wrote out/census_rows_06h.csv.gz (18560 units) and out/h4_changed_calls_06h.json (1 calls)
+# ----
+# end 2026-11-01T03:27:58Z
+# exit 0

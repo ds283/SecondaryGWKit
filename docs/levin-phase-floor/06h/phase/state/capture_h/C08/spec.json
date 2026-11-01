@@ -1,0 +1,30 @@
+{
+ "tree": "h",
+ "name": "C08",
+ "units": [
+  {
+   "uid": "h-1e-7-3-657",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-657",
+   "names05": null,
+   "shard": 3,
+   "serial": 657,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     15,
+     "analytic Y3"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/state/capture_h/C08",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/state/capture_h/C08/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

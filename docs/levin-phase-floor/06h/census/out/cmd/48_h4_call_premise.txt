@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json\nfor name, rd in ((\'06e\', \'/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318\'), (\'h\', \'/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037\')):\n    for line in open(rd + \'/checkpoint.jsonl\'):\n        if \'"unit": "g-1e-8-3-1072"\' in line:\n            d = json.loads(line)[\'data\']\n            c = next(x for x in d[\'other_calls\'] if x[\'index\'] == 13)\n            print(name, {k: c.get(k) for k in (\'premise_checks\', \'premise_failed\', \'n_phase_limited_regions\', \'num_subregion_solves\', \'num_solves_direct\', \'num_solves_lstsq\')})\n            print(name, \'other analytic calls of the unit, converged:\', [(x[\'index\'], x[\'notify_label\'], x[\'converged\'], x[\'num_regions\']) for x in d[\'other_calls\']])\n            break\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:28:47Z
+# ----
+06e {'premise_checks': 2, 'premise_failed': 1, 'n_phase_limited_regions': 1, 'num_subregion_solves': 15, 'num_solves_direct': 15, 'num_solves_lstsq': 0}
+06e other analytic calls of the unit, converged: [(5, 'analytic J1', True, 1), (6, 'analytic Y1', True, 1), (7, 'analytic J2', True, 1), (8, 'analytic Y2', True, 1), (9, 'analytic J3', True, 1), (10, 'analytic Y3', True, 1), (11, 'analytic J4', True, 3), (12, 'analytic Y4', True, 3), (13, 'analytic J1', True, 2), (14, 'analytic Y1', True, 2), (15, 'analytic J2', True, 1), (16, 'analytic Y2', True, 1), (17, 'analytic J3', True, 1), (18, 'analytic Y3', True, 1), (19, 'analytic J4', True, 2), (20, 'analytic Y4', True, 2)]
+h {'premise_checks': 1, 'premise_failed': 0, 'n_phase_limited_regions': 1, 'num_subregion_solves': 3, 'num_solves_direct': 3, 'num_solves_lstsq': 0}
+h other analytic calls of the unit, converged: [(5, 'analytic J1', True, 1), (6, 'analytic Y1', True, 1), (7, 'analytic J2', True, 1), (8, 'analytic Y2', True, 1), (9, 'analytic J3', True, 1), (10, 'analytic Y3', True, 1), (11, 'analytic J4', True, 2), (12, 'analytic Y4', True, 2), (13, 'analytic J1', False, 1), (14, 'analytic Y1', True, 1), (15, 'analytic J2', True, 1), (16, 'analytic Y2', True, 1), (17, 'analytic J3', True, 1), (18, 'analytic Y3', True, 1), (19, 'analytic J4', True, 1), (20, 'analytic Y4', True, 1)]
+# ----
+# end 2026-11-01T03:28:48Z
+# exit 0

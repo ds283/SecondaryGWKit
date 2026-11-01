@@ -1,0 +1,29 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/gate_h_clause1.py state/H2/p_tree_modules.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T00:47:13Z
+# ----
+# levin-phase-floor 06h: Gate H, the git clause
+# written 2026-11-01T00:47:13Z on mps026298.phys.susx.ac.uk
+# script gate_h_clause1.py sha256 fd91118748401a301b1bb5f9fbbca9d808abe06092a81f743976e9137373ea33
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 HEAD 2c325f56641666b45df483adb8c1202575721c42 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/H2/p_tree_modules.json sha256 7b604df65312b2e1758d74ecdbbcf9fc7fe6ec2ca22dc151e2845746b791dce7
+
+$ git diff --stat 6d81fad 2c325f5 -- . ':!docs' ':!prompts'
+ CLAUDE.md | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+1 files
+
+the harness's imports from the parent tree (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5): 102 modules
+  of them in a tests package: ['ComputeTargets.tests', 'ComputeTargets.tests.test_main_plumbing']
+
+== each changed file
+  M CLAUDE.md: CLAUDE.md -- allowed
+
+== Gate H, the git clause: HOLDS
+# ----
+# end 2026-11-01T00:47:14Z
+# exit 0

@@ -458,3 +458,94 @@ both OK and unchanged; no test method was added.
 - `docs/levin-phase-floor/06h/calibration/`: `scripts/` (`prov.py`, `measure_exp_relerr.py`,
   `breakages.py`, `lg_seeded_draws.py`) and `out/` (`exp_relerr.txt`, `breakages.txt`,
   `lg_seeded_draws.jsonl`, `lg_seeded_draws_report.txt`).
+
+## Part B: the Mac Studio record (appended by the orchestrator, 2026-11-01)
+
+Part B ran on 2026-11-01 on the Mac Studio (`mps026298`): R21 and Gate H's reproduction at
+`2c325f5` (06e's code), R22, the census and the phase measurement at $h$ = `c1ec3b2` (`7172a8f`'s
+and `ac1c6f4`'s code). The Mac Studio orchestrator ran the read-only preflight
+(`06h/review/preflight/`), dispatched a rehearsal agent, a census agent and a phase agent, and
+reviewed all three in ten checks: **the review passes, and no §7 stop condition was met.** The full
+records are in `docs/levin-phase-floor/06h/`: `review.md` (the review), `rehearsal/`, `census/` and
+`phase/` (each agent's log, verification, issues, scripts and outputs). What stays on the Mac
+Studio is listed in `06h/KEPT_ON_MAC_STUDIO.md`.
+
+**The gate test on the Mac Studio.** `test_group_phase_rounding` passes, 8 tests. Its test 5
+measures $\varepsilon_{\exp}$'s basis on that host's `np.exp` as $1.114619\times10^{-16}$
+(1.0040 u), identical to the laptop's, so `EXP_RELERR` = $2.23\times10^{-16}$ holds there too
+(Observation 4 above).
+
+**§4.** R21 `levin-phase-floor-06h-r21-parent-20261101T001852` and R22
+`levin-phase-floor-06h-r22-groupphase-20261101T002423`, both `done`, both `1b332ffa…`,
+re-fingerprinted by the review from the worktree at `c1ec3b2`. Outside `QuadSourceIntegral` the
+seven value tables are identical (360,462 rows). Inside, 864 rows: `total` and `total_abserr`
+bit-identical in all 864. **H0 holds, trivially**: 06h cannot reach `total` (below). Scored on the
+analytic oracle instead (`analytic_rad` against `analytic.abserr`), it holds too: 464 rows move, the
+worst at $2.5\times10^{-5}$ of the bound. Six readers exit 0, R22 byte-identical before and after;
+the lock released.
+
+**§5.** Census `levin-phase-floor-06h-census-20261101T005037`: 18,560 of 18,560 units `done` in
+2 h 33 min, none in error or over budget. Phase measurement `levin-phase-floor-06h-phase-20261101T033514`:
+84 of 84 units. A3 v2's scratch copy and 06e's checkpoint `a0dc4d7f…` unchanged by SHA-256.
+
+| | `1e-7` | `1e-8` | verdict |
+|---|---|---|---|
+| Gate H | three units equal to 06e's census at the parent; $h$ deterministic | | holds |
+| H1 | 21,177 points on 06f's 20 calls, 0 violations, worst 0.4933 (the parent: 561, worst 376.5) | | holds |
+| H2 | 27 returned leaves, 0 violations, worst 0.268 (the parent: 2, worst 41.6) | | holds |
+| H3 (`total`) | 8,560 rows, 0 violations | 8,560, 0 | holds |
+| H3 (the oracle) | 8,560 rows, 0 violations, worst 0.0756 | 8,560, 0, worst $1.35\times10^{-4}$ | holds |
+| H4 | 95,896 analytic-block calls, none lost | 1 lost: `g-1e-8-3-1072` #13 | fails |
+
+**What H0 and H3 measure.** `total` is `numeric_quad + WKB_Levin`. `BesselPhaseGroup`, the only class
+06h changes, reaches `QuadSourceIntegral` only through the analytic oracle, so every `total` is
+bit-identical to 06e's and the two rules as written cannot fail. Their second reading, on the
+oracle, is the meaningful one, and holds at both rtols. The prompt was wrong to expect `total` to
+move (prompt §8, amendment 1).
+
+**H1 and H2.** H1's worst point is `g-1e-7-0-12689` #19 (J4), Clenshaw–Curtis leaf 1, node 11:
+$\delta\theta = 4.50\times10^{-13}$ against `theta_abserr` $9.13\times10^{-13}$, the review
+recomputing $\delta\theta$ in `mpmath` at the exact $e^u$ at 30 and 50 digits. At the parent's worst
+point (#19, dense point 996) the parent is 376.47× its declaration and $h$ 0.387×. By dominant term
+at $h$: constituents 20,446 points (median $6.8\times10^{-4}$ of the declaration), abscissa 731
+(median 0.134), $\phi_{\rm eval}$ none. `K_lo` is non-zero on 9 of 20 calls, at most
+$4.66\times10^{-9}$.
+
+**H4's failure** (`06h/census/issues.md` D1). `g-1e-8-3-1072` call 13, analytic J1, group (+,+,+),
+$k = 10^5$, $q = r = 3\times10^8$:
+- **under 06e,** the round-off exit's premise failed at the root, the root was split once, and both
+  halves converged as Levin leaves: abserr $7.16\times10^{-27}$ against a request of
+  $1.63\times10^{-26}$;
+- **under $h$,** the root's floor is the eq. (151) floor $1.94\times10^{-26}$ plus the declared term
+  $4.14\times10^{-27}$, almost all of it the abscissa's. The premise held, so the exit accepted the
+  root at depth 0, unconverged at $2.36\times10^{-26}$.
+
+The declared term does not fall under bisection, so it pushed the halves' summed floor past half
+the parent's, where 06b's test says bisection cannot help. Bisection would still have helped. Under
+06e the halves' floors summed to $9\times10^{-27}$; adding 06h's whole declared term gives about
+$1.3\times10^{-26}$, still below the request. The halves' floors under $h$ were not recorded; the
+reading rests on the premise counters and 06e's halves. The row's `total` and oracle value are bit-identical to
+06e's. It is the only lost call of $2\times129{,}621$ scored.
+
+**Descriptive.** Unit wall ×0.974 and ×0.981 of 06e's. Analytic-block regions fall ×0.876 and
+×0.870 (625,878 → 576,425 regions in all at `1e-7`; 799,186 → 738,153 at `1e-8`); group calls
+unchanged. The declared term reaches at most 0.341 of a call's request (median $5.3\times10^{-6}$
+and $6.3\times10^{-5}$). On the Clenshaw–Curtis branch, calls whose largest floor term is the
+declared one rise 2,493 → 5,137 and 2,785 → 5,939. The 720 stationary-point rows: no `total` moved,
+the oracle moved in 462 and 421, within the bound; no convergence changed. The near-singular class
+(435 rows, all (+,+,−) with $q = r \gg k$) did not move.
+
+**The user's rulings** (2026-11-01, the board's Decisions, **06h Part B lands**):
+- **H4 counts as failing.** Its call narrows `[07-roundoff-exit-assumes-bisection-cannot-help]`:
+  the premise test compares the halves' floors with the parent's, so a part of the floor that does
+  not fall under bisection can make it hold where bisection would reach the request.
+- **The header issue closes.** `[06f-theta-abserr-omits-the-product-rounding]`'s condition, §2's
+  tests and §5's H1 and H2, is met.
+- **D3 narrows `[06e-cc-declared-phase-term-is-a-crude-proxy]`**: the proxy now multiplies a larger
+  declaration.
+- **Nothing else opens.** The rehearsal agent's question about the readers is answered: they start
+  Ray and ran under the lock, as the prompt requires, and the brief that said otherwise was
+  imprecise. The `BrokenPipeError` of `runregistrykit list | head` is Python's ordinary behaviour
+  on a closed pipe.
+- **On the Mac Studio:** the user will retire R21 and R22. The census run directory (2.3 GB) stays
+  in full as 06g's "before".

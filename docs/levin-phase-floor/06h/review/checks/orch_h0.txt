@@ -1,0 +1,9 @@
+rows R21 864, R22 864, keys equal True
+total_converged differing: 0; true in R21 864, in R22 864
+field total: bit-identical in 864 of 864
+field abserr: bit-identical in 864 of 864
+field arad: bit-identical in 400 of 864
+field aerr: bit-identical in 205 of 864
+H0 (total, as written): scored 864, bit-identical 864, violations 0, non-finite 0, skipped (missing) 0, worst |d|/(e21+e22) 0.000000e+00 at None
+H0 form on analytic_rad / analytic.abserr: scored 864, bit-identical 400, violations 0, non-finite 0, skipped (missing) 0, worst |d|/(e21+e22) 2.484860e-05 at (316227.7660168379, 100000.0, 316227.7660168379, 13627426843.66573, -32.0, -7.0)
+exit 0

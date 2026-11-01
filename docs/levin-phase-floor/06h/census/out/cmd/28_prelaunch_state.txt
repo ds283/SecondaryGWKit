@@ -1,0 +1,19 @@
+$ /bin/bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2\;\ do\ echo\ \"==\ \$t\"\;\ git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\ \$\(\[\ \$t\ \!=\ /Users/ds283/Documents/Code/SecondaryGWKit\ \]\ \&\&\ echo\ --ignored\)\;\ done\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -1\;\ df\ -h\ .\ \|\ tail\ -1\;\ uptime\;\ ls\ -ld\ ~/.raypoolkit/rehearsal-lock\ ~/ScienceData/.rehearsal-lock\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T00:50:20Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5
+2c325f56641666b45df483adb8c1202575721c42
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2
+c1ec3b2c819cc5df22ddf4b303f69c7129a54d62
+38 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 38 finished; 0 with no host recorded.
+/dev/disk3s3s1  927G  831G   96G  90% /
+ 0:50  up 24 days, 15:26, 2 users, load averages: 3.95 5.51 6.28
+ls: cannot access '/Users/ds283/.raypoolkit/rehearsal-lock': No such file or directory
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+# ----
+# end 2026-11-01T00:50:20Z
+# exit 2

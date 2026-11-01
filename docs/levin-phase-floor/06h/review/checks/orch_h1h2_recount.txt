@@ -1,0 +1,4 @@
+H1 h: calls 20, points 21177, violations 0, nodes 1177 (violations 0), worst (0.49329224769987506, 'h-1e-7-0-12689_19', 'nodes', 1, 11, None, '-0x1.e633fe4760d6fp+2')
+H1 p: calls 20, points 21177, violations 561, nodes 1177 (violations 53), worst (376.4734532016188, 'p-1e-7-0-12689_19', 'dense', None, None, 996, '-0x1.d81c11a079cf0p+0')
+H2 h: leaves 27 (cc 23, levin 4), violations 0, worst 0.2676 at g-1e-7-0-12689 #19 leaf 3 levin, median 4.48e-05
+H2 p: leaves 27 (cc 23, levin 4), violations 2, worst 41.57 at g-1e-7-0-12689 #19 leaf 3 levin, median 8.7e-05

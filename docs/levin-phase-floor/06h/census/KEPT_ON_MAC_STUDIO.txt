@@ -1,0 +1,34 @@
+# levin-phase-floor 06h, the census (Mac Studio): every pickle and every file over 2 MB this census made, kept on the Mac Studio and not copied to the laptop. SHA-256, size in bytes, path. Written 2026-11-01T03:30:25Z.
+# The run directory /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037 is kept in full (06g's census compares against it): 149 files, 2360972 KiB.
+f48dcb2633a4aa42bc5c8655655fce6127ad2876f2a9249ab2f7e50331dfbaea  71632  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H/G1/regions_G1.pkl
+c9ac81ac060a0c549d7107991c9f29458f2b3a48b538d9a25dbcd08a612d775c  71632  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H/G2/regions_G2.pkl
+386002be34f5dafdfae8b1861ea863013b76cfea4ffc2efe2f6af1c0c1177400  73594  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H/P1/regions_P1.pkl
+2c785aeda43e301c2777175fd23b2f29601d07a78a2973a1d36e837b012b2518  62367  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H/P2/regions_P2.pkl
+cb921a6a37b28f09da12d84a1b58e53b066c0c463347c0afe5f61052c3a1e311  71449  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H/P3/regions_P3.pkl
+edb86f6ec5bfe1d92f246aa22b5c73c08d6aa22da8243bb689d8182a6cb55de5  71632  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H2/G1/regions_G1.pkl
+b906f39872ebde085e096d504d6e236cbf098d5bd7b4fd169b5f9912c9838918  71632  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H2/G2/regions_G2.pkl
+32863ef0f36825da27506ca405ed7f2d16554fa2650d7ff05299f125487c5e62  73594  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H2/P1/regions_P1.pkl
+ce607e46326d9f4d44602e1436a8e4bf90dec4584ff8421cb708393a13f7cfe3  62367  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H2/P2/regions_P2.pkl
+13bcc7d83c8d49a2670583e6a74373c28db4ae151c0248409c3e1f27407fc4ef  71449  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/H2/P3/regions_P3.pkl
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  7796457  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/rows.json
+0800ed677df2ae71f53d977e897fae461c63b73919cf32b716a648403ad129cf  59037  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/smoke/regions_1e-7-k1_102.pkl
+809ff9cb0d438cc859a57821565582198f3261a58903a00f288f584ca9eb849a  73249  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/smoke/regions_1e-7-k3_1.pkl
+027fab2526b947ba94ef1c3466cb1abc0e17c9ce2a431b8cea855666e8202860  59065  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/smoke/regions_1e-8-k1_102.pkl
+eba399d5dc2dc81a3c97ac2bc06e4ee723bc699df589822d8cdfe975694ef50c  55166  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/smoke/regions_1e-8-k3_1.pkl
+3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372  1642892823  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl
+8fe702b7db90a4597c7d07636a718468698fd64b2865b03849280853c8ba0df2  44490421  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-7-k0_101.pkl
+26344888f48dea6690db12525495cf0969cdff3c27f628ee7c40e0aa596b9a5b  48105868  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-7-k0_202.pkl
+369e6a473510230436d5ffafcfe12205e3826a6b1db92fe7bd2df570c2736009  46298652  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-7-k1_102.pkl
+92048ee386607b2fcd1f7a57d5dd9ed8334c5dcf796030cb3b3f3e2727b790e1  48853158  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-7-k1_301.pkl
+d8d337163e79de12d2a6e1b48d84a0c1f06a7552a5c5c923423e61f14b30c332  48223718  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-7-k2_2.pkl
+3738acfb60729cd730dab82c343e348a1e717ae11a0d36e1477a0aaefb58f31f  50393958  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-7-k2_302.pkl
+1e5db7cb5eca51dd41b0927ba744a8e5c6d19a01c57eab3ee4885b79a3d5fff6  43211593  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-7-k3_1.pkl
+3504195198d31a1fcf8621ada4cf745631fee2cdb349e31f633ec029780132bb  48262720  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-7-k3_201.pkl
+c183b2d43db99134b133ace5e71effebe6acd9f5c100015454f9525702849f90  48152021  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-8-k0_101.pkl
+f970708a1abb4da5380ba366a51cdbce1c83ae3e6986703eb1569bbdecbb8a45  44350722  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-8-k0_202.pkl
+9a5f1c7a8b5cc41b53d2a7f908722042b88162f175b7c48b81a4678669d20043  48962062  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-8-k1_102.pkl
+d36b4ec49dbae99184d4a720aa4de04cb63a4d4026f92e2b96b583432b30fca9  44819092  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-8-k1_301.pkl
+ba1296ca1abe6941a80a0963f0f95c027d5cba103fc1a309ed46a3c1443cff3a  48758500  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-8-k2_2.pkl
+d256322144f23bdff8d47cbf493994b97ac678d3ee0fa97f182f1619884d8f75  46069173  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-8-k2_302.pkl
+582c1c6eca8da4133cc7f6c66cca9da3ea50d24060a65ea32edeb34d1f88f249  43920834  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-8-k3_1.pkl
+126bc3f7ccfd8daec30928a1f70a8ad2d0b86a03d18a7893ab47cd6ad4808682  45535094  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/regions_1e-8-k3_201.pkl

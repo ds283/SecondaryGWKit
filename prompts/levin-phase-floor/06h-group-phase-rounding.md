@@ -389,3 +389,12 @@ stationary-point rows" are 06a's 720 (`spscan.py`).
 - **The census:** Gate H fails, or a unit ends in an error (not over budget).
 - **Any store file** changes.
 - **The lock** is held, or will not release.
+
+## 8. Amendments after the run (2026-11-01)
+
+1. **H0 and H3 score `total`, which 06h cannot move.** `total` is `numeric_quad + WKB_Levin`;
+   `BesselPhaseGroup` reaches `QuadSourceIntegral` only through the analytic oracle (`analytic_rad`,
+   `analytic.*`). Every `total` stayed bit-identical, so both rules held trivially. The test that
+   bears on the change is the same rule applied to the oracle's value and declared error; it was
+   scored beside each as a second reading, and holds (log, Part B). A future prompt that changes
+   the analytic blocks scores that reading.

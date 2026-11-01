@@ -1,0 +1,33 @@
+2026-11-01T03:35:19Z
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-01T03:35:14+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 18673,
+  "stage": "capture at p running",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 84
+}
+
+kill -0 driver 18673: alive
+kill -0 sh 18666: alive
+  PID  PPID ELAPSED COMMAND
+18673 18666   00:05 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Secon
+-- stderr:
+-- capture record head:
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/scripts/x1_capture.py /Users/ds283/Documents/Code/SecondaryGWKi
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# start 2026-11-01T03:35:14Z
+# ----
+# levin-phase-floor 06h: the M2 calls' inputs, captured at p (06c's X1 capture)
+# written 2026-11-01T03:35:14Z on mps026298.phys.susx.ac.uk
+# script x1_capture.py sha256 18cb18ea315633618052aa1b1013a4f0407032478b6af6f49044d09b1379918b
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 HEAD 2c325f56641666b45df483adb8c1202575721c42 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/sample/selection_p.json sha256 6ad4cec07d7d4df831e7a9b1ec24459088bce1407f63be54d77ccd0fe2c38cec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417

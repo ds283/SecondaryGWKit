@@ -1,0 +1,4 @@
+var/runs/levin-phase-floor-06h-census-20261101T005037/ 28ebaf0743e0 False /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census mps026298.phys.susx.ac.uk 2026-11-01T00:50:37+00:00
+var/runs/levin-phase-floor-06h-phase-20261101T033514/ 28ebaf0743e0 False /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase mps026298.phys.susx.ac.uk 2026-11-01T03:35:14+00:00
+var/runs/levin-phase-floor-06h-r21-parent-20261101T001852/ 2c325f566416 False /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 mps026298.phys.susx.ac.uk 2026-11-01T00:18:52+00:00
+var/runs/levin-phase-floor-06h-r22-groupphase-20261101T002423/ c1ec3b2c819c False /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 mps026298.phys.susx.ac.uk 2026-11-01T00:24:23+00:00

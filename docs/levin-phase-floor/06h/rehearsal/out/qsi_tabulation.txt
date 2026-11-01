@@ -1,0 +1,60 @@
+rows: R21 864, R22 864; same (k,q,r,z_response) set: True
+columns equal: True; 48 columns
+tolerances (log10 atol, log10 rtol) R21: [((-32.0, -7.0), 864)]; R22: [((-32.0, -7.0), 864)]
+tolerances equal row by row: True
+column kinds: timing: ['WKB_Levin_elapsed', 'analytic_compute_time', 'compute_time', 'numeric_quad_compute_time', 'numeric_quad_max_RHS_time', 'numeric_quad_mean_RHS_time', 'numeric_quad_min_RHS_time']; label: ['label']; identity: ['Tq_WKB_serial', 'Tq_numeric_serial', 'Tr_WKB_serial', 'Tr_numeric_serial', 'atol_serial', 'data_serial', 'k_wavenumber_exit_serial', 'model_serial', 'policy_serial', 'q_wavenumber_exit_serial', 'quad_policy_serial', 'r_wavenumber_exit_serial', 'rtol_serial', 'serial', 'source_serial', 'timestamp', 'z_response_serial', 'z_source_max_serial']; counter: ['WKB_Levin_SVD_errors', 'WKB_Levin_chebyshev_min_order', 'WKB_Levin_evaluations', 'WKB_Levin_max_depth', 'WKB_Levin_num_regions', 'WKB_Levin_order_changes', 'WKB_Levin_simple_regions', 'numeric_quad_RHS_evaluations', 'numeric_quad_compute_steps']; value: ['WKB_Levin', 'WKB_phase_spline_chunks', 'analytic_rad', 'b', 'eta_response', 'eta_source_max', 'numeric_quad', 'total', 'total_abserr', 'total_converged', 'total_phase_limited', 'version']
+tool: 864 rows differ, 0 identical, only_in_a 0, only_in_b 0, unmatched 0; its keys equal the stores' set: True
+cross-check of `total` against the tool: 0 mismatches
+
+06a census checkpoint /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+06a rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+06a's stationary-point rows: 720 (of A3 v2's 9280); rehearsal rows among them (physical key equal as floats): 0; rehearsal rows equal to any A3 v2 row: 0
+  rehearsal k [100000.0, 316227.7660168379, 1000000.0]; k shared with A3 v2 [100000.0]; z_response values: rehearsal 96, shared with A3 v2 0
+
+rows whose column/metadata field sets differ between R21 and R22: 0
+rows with a WKB Levin call: 573 (calls R21 3105, R22 3105; rows whose call count differs: 0); with none: 291
+
+== bit-identity (float.hex), every row
+  total bit-identical: 864/864 (rows with a Levin call 573/573, rows with none 291/291)
+  total_abserr bit-identical: 864/864
+  every value field (columns and metadata, timings/labels/identity/counters excluded) bit-identical: 205/864 (rows with a Levin call 0, rows with none 205)
+  rows with no Levin call whose value fields differ: 86
+  analytic_rad bit-identical: 400/864; max |d analytic_rad|/(analytic abserr21+22) 2.485e-05
+  value fields differing, by field (indices folded), rows: {'meta:analytic.abserr': 659, 'meta:analytic.0pt5.Levin.Y2_data.abserr': 643, 'meta:analytic.0pt5.Levin.J1_data.abserr': 643, 'meta:analytic.0pt5.Levin.Y3_data.abserr': 641, 'meta:analytic.0pt5.Levin.J4_data.abserr': 630, 'meta:analytic.0pt5.Levin.Y1_data.abserr': 630, 'meta:analytic.0pt5.Levin.Y4_data.abserr': 627, 'meta:analytic.0pt5.Levin.J2_data.abserr': 623, 'meta:analytic.0pt5.Levin.J3_data.abserr': 600, 'meta:analytic.2pt5.Levin.J4_data.abserr': 586, 'meta:analytic.2pt5.Levin.J1_data.abserr': 583, 'meta:analytic.2pt5.Levin.Y1_data.abserr': 579, 'meta:analytic.2pt5.Levin.Y4_data.abserr': 576, 'meta:analytic.2pt5.Levin.Y2_data.abserr': 574, 'meta:analytic.2pt5.Levin.Y3_data.abserr': 573, 'meta:analytic.2pt5.Levin.J2_data.abserr': 572, 'meta:analytic.2pt5.Levin.J3_data.abserr': 564, 'col:analytic_rad': 464, 'meta:analytic.0pt5.Levin.Y2_data.phase_limited': 83, 'meta:analytic.0pt5.Levin.Y3_data.phase_limited': 83, 'meta:analytic.0pt5.Levin.J2_data.phase_limited': 82, 'meta:analytic.0pt5.Levin.J4_data.phase_limited': 76, 'meta:analytic.2pt5.Levin.J1_data.phase_limited': 74, 'meta:analytic.0pt5.Levin.Y1_data.phase_limited': 73, 'meta:analytic.0pt5.Levin.J3_data.phase_limited': 72, 'meta:analytic.2pt5.Levin.Y1_data.phase_limited': 68, 'meta:analytic.2pt5.Levin.Y4_data.phase_limited': 68, 'meta:analytic.0pt5.Levin.J1_data.phase_limited': 66, 'meta:analytic.2pt5.Levin.Y2_data.phase_limited': 65, 'meta:analytic.2pt5.Levin.J2_data.phase_limited': 64, 'meta:analytic.0pt5.Levin.Y4_data.phase_limited': 62, 'meta:analytic.2pt5.Levin.J3_data.phase_limited': 61, 'meta:analytic.2pt5.Levin.Y3_data.phase_limited': 60, 'meta:analytic.2pt5.Levin.J4_data.phase_limited': 47}
+
+== H0: |total_22 - total_21| <= total_abserr_21 + total_abserr_22, rows outside 06a's 720 stationary-point rows with both finite
+  rows among 06a's stationary-point rows (tabulated, not scored): 0
+  rows scored (outside them, finite total_abserr in both): 864; violations: 0
+  rows outside them with a non-finite total_abserr, counted separately: none
+  largest |dT|/total_abserr_21 over the scored rows: 0 at k=100000 q=100000 r=100000 z=250 (total21 -0x1.1ef6b1cc98106p-59 total22 -0x1.1ef6b1cc98106p-59 abserr21 0x1.53e216ef43535p-82 abserr22 0x1.53e216ef43535p-82)
+  largest |dT|/total_abserr_22 over the scored rows: 0 at k=100000 q=100000 r=100000 z=250 (total21 -0x1.1ef6b1cc98106p-59 total22 -0x1.1ef6b1cc98106p-59 abserr21 0x1.53e216ef43535p-82 abserr22 0x1.53e216ef43535p-82)
+  |dT|/(abserr21+abserr22) over the finite rows: p0 0, p50 0, p90 0, p99 0, p100 0
+  over the finite rows whose total moved: none
+
+== total_abserr and the totals, rows with a Levin call
+  abserr22/abserr21 (both finite, nonzero): p0 1, p50 1, p90 1, p99 1, p100 1
+  |dT|/abserr21: p0 0, p50 0, p90 0, p99 0, p100 0
+  |dT|/abserr22: p0 0, p50 0, p90 0, p99 0, p100 0
+  |dT|/|T21|: p0 0, p50 0, p90 0, p99 0, p100 0
+  abserr22 > abserr21: 0; abserr22 < abserr21: 0
+
+== total_converged, R21 -> R22 (every row)
+  {(1, 1): 864}
+  converged R21 864, R22 864 of 864; Levin calls unconverged R21 0, R22 0
+  total_phase_limited R21 -> R22: {(1, 1): 195, (0, 0): 669}
+  Levin calls phase-limited R21 406, R22 406
+
+== region counts and maximum depths (rows with a Levin call)
+  WKB_Levin_num_regions summed: R21 31216, R22 31216; evaluations R21 246623, R22 246623
+  rows: regions equal 573, more in R22 0, fewer in R22 0
+  regions R22/R21 per row: p0 1, p50 1, p90 1, p99 1, p100 1
+  WKB_Levin_max_depth R21: {0: 4, 1: 1, 2: 4, 3: 6, 4: 4, 5: 23, 6: 145, 7: 247, 8: 75, 9: 33, 10: 12, 11: 8, 12: 1, 13: 2, 14: 1, 15: 2, 16: 2, 18: 2, 19: 1}
+  WKB_Levin_max_depth R22: {0: 4, 1: 1, 2: 4, 3: 6, 4: 4, 5: 23, 6: 145, 7: 247, 8: 75, 9: 33, 10: 12, 11: 8, 12: 1, 13: 2, 14: 1, 15: 2, 16: 2, 18: 2, 19: 1}
+  rows at depth_max (20): R21 0, R22 0
+  max depth: equal 573, deeper in R22 0, shallower 0
+  analytic-block regions summed: R21 28785, R22 24428 (of 10072 blocks); blocks phase-limited R21 3832, R22 3896; blocks unconverged R21 0, R22 0
+
+== by tolerance, rows with a Levin call
+  (log10 atol, log10 rtol) (-32.0, -7.0): rows 573; total moved 0; conv R21 573 R22 573; H0 violations 0; non-finite 0; regions R21 31216 R22 31216; depth20 R21 0 R22 0
+
+VERDICT H0: holds (0 violations of 864 scored rows (outside 06a's stationary-point rows, finite total_abserr in both); 0 rows non-finite in either, counted separately; 0 stationary-point rows tabulated, not scored)

@@ -1,0 +1,28 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T00:24:04Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+./venv/bin/python -B -m runregistrykit list > var/levin-phase-floor-06h/rehearsal/out/r21_end_registry_list.txt 2>&1; echo "list exit $?"; head -3 var/levin-phase-floor-06h/rehearsal/out/r21_end_registry_list.txt | cut -c1-160; tail -1 var/levin-phase-floor-06h/rehearsal/out/r21_end_registry_list.txt; echo "== class digests and counts vs R19 and R8"; ./venv/bin/python -I -c "
+import json
+a=json.load(open(\"var/runs/levin-phase-floor-06h-r21-parent-20261101T001852/status.json\"))[\"fingerprint\"]
+for name in (\"levin-phase-floor-06e-r19-parent-20261030T074440\",\"handover-12-r8-reference-20261025T210551\"):
+    b=json.load(open(\"var/runs/\"+name+\"/status.json\"))[\"fingerprint\"]
+    print(name, \"classes equal:\", a[\"classes\"]==b[\"classes\"], \"digest equal:\", a[\"digest\"]==b[\"digest\"], \"formats\", (a[\"fingerprint_format\"],a[\"encoding_format\"])==(b[\"fingerprint_format\"],b[\"encoding_format\"]))
+print(\"problems\", a[\"problems\"], \"taken\", a[\"taken\"])
+print(\"QuadSourceIntegral count\", a[\"classes\"][\"QuadSourceIntegral\"][\"count\"])
+"; echo "== journals"; ls var/datastores | grep 06h | grep -E "journal|wal|shm" || echo none
+# output:
+list exit 0
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06h-r21-parent-20261101T001852      done              -       5m  levin-phase-floor prompt 06h, R21 on the Mac Studio (mps026298; tree 2c32
+   levin-phase-floor-06f-measure-20261031T204803         done          44/44   3h 36m  levin-phase-floor prompt 06f on the Mac Studio (mps026298; Python 3.13.16
+37 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 37 finished; 0 with no host recorded.
+== class digests and counts vs R19 and R8
+levin-phase-floor-06e-r19-parent-20261030T074440 classes equal: True digest equal: True formats True
+handover-12-r8-reference-20261025T210551 classes equal: True digest equal: True formats True
+problems {} taken {'git_dirty': False, 'git_head': '2c325f56641666b45df483adb8c1202575721c42', 'run_id': 'levin-phase-floor-06h-r21-parent-20261101T001852', 'when': '2026-11-01T00:23:28+00:00'}
+QuadSourceIntegral count 864
+== journals
+none
+# exit: 0
+# end: 2026-11-01T00:24:05Z

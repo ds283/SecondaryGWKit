@@ -1,0 +1,5 @@
+2026-11-01T00:13:57Z
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  831G   96G  90% /
+ 0:13  up 24 days, 14:50, 2 users, load averages: 4.67 4.27 4.60

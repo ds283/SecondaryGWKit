@@ -1,0 +1,66 @@
+{
+ "header": {
+  "title": "levin-phase-floor 06h: one tree's code scored at the other tree's points",
+  "written": "2026-11-01T03:49:58+00:00",
+  "host": "mps026298.phys.susx.ac.uk",
+  "pid": 20224,
+  "script": "cross06h.py",
+  "script_sha256": "5a4f3e2dc20a051f4e9e600b1c69408949c1b7d1d9f1b007f29cd55ef2e4e819",
+  "replay06f_sha256": "d15356db75a0f6c7c27c599237c00f64701495791c0244fb063dcec7458cd0f7",
+  "prov_sha256": "bf5e754333cda0e8b3498421acc95b38b1e199a72779f9b93c1c375a3c86211b",
+  "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5",
+  "tree_name": "p",
+  "tree_head": "2c325f56641666b45df483adb8c1202575721c42",
+  "tree_status_short": "",
+  "three_bessel_integrals_sha256": "862a18fef4752e7431ae8c2d592e2004c681601d42fe6c196e83dbe914e8c909",
+  "capture_json": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_p.json",
+  "capture_json_sha256": "0cbe1340bd302c80ab29a4ef161bc26fdb676b5f539c7b0927b70c2be11d1493",
+  "unit": "p-1e-7-0-12689",
+  "index": 19,
+  "own_replay_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-12689_19",
+  "other_replay_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-12689_19",
+  "inputs_sha256": {
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-12689_19/result.json": "f6c0e4e4ae5015230a18dadaf4da90b2f3030f4436747a757f0d29cb4f9c1a7c",
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-12689_19/dense.json.gz": "5f655c53d55c558670885523c2fd9f3b9d2e69e0e5693d6b2f773a940b49692a",
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-12689_19/result.json": "fea93cc6dc7ef4fb039fb1a89f40f012c47b8c47f60fa04852bace4ce0ca5429",
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-12689_19/nodes.json.gz": "4ca51b7878402e7b0c0ed2e41b0932c3327cbb73bead0fca8a39d3a2744d0503",
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-12689_19/dense.json.gz": "9309d100e8a6d034df9ed47636013c2cf44a265c0f9c3890933d9a400206ac42"
+  },
+  "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/scripts",
+  "dont_write_bytecode": true,
+  "capture_blob_sha256": "e46df7b72c3bb83eb371d33b09d01d2f6d08e6d65b8187e267e24cb092a905d2"
+ },
+ "checks": {
+  "spans_equal": true,
+  "coefficients_equal": true,
+  "signs_equal": true,
+  "orders_equal": true,
+  "K_equal": true,
+  "dense_points_equal": true,
+  "dense_references_equal": true
+ },
+ "summary": {
+  "node": {
+   "n": 119,
+   "n_violating": 48,
+   "max_ratio": 277.19078716022557,
+   "n_other_violating": 0,
+   "max_other_ratio": 0.49329224769987506
+  },
+  "dense": {
+   "n": 1000,
+   "n_violating": 486,
+   "max_ratio": 376.4734532016188,
+   "n_other_violating": 0,
+   "max_other_ratio": 0.4930397506445101
+  },
+  "all": {
+   "n": 1119,
+   "n_violating": 534,
+   "max_ratio": 376.4734532016188,
+   "n_other_violating": 0,
+   "max_other_ratio": 0.49329224769987506
+  }
+ },
+ "rows_sha256": "8aabf17518178939f5174c090b261279832b023a9efdd074ff939792721ba6b0"
+}

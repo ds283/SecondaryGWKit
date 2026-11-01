@@ -1,0 +1,85 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T00:29:16Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+D=var/runs/levin-phase-floor-06h-r22-groupphase-20261101T002423; echo "== status.json (without classes)"; ./venv/bin/python -I -c "
+import json,sys
+s=json.load(open(sys.argv[1]+\"/status.json\"))
+f=s[\"fingerprint\"]
+print(json.dumps({k:v for k,v in s.items() if k!=\"fingerprint\"},indent=1))
+print(\"digest\",f[\"digest\"],f[\"digest\"]==\"1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7\")
+print(\"problems\",f[\"problems\"],\"taken\",f[\"taken\"],\"formats\",f[\"fingerprint_format\"],f[\"encoding_format\"])
+print(\"QuadSourceIntegral\",f[\"classes\"][\"QuadSourceIntegral\"][\"count\"])
+for name in (\"levin-phase-floor-06h-r21-parent-20261101T001852\",\"levin-phase-floor-06e-r19-parent-20261030T074440\",\"handover-12-r8-reference-20261025T210551\"):
+    b=json.load(open(\"var/runs/\"+name+\"/status.json\"))[\"fingerprint\"]
+    print(name,\"classes equal:\",f[\"classes\"]==b[\"classes\"],\"digest equal:\",f[\"digest\"]==b[\"digest\"])
+" $D; echo "== kill -0"; kill -0 68069 2>&1 || echo "68069 gone"; kill -0 68065 2>&1 || echo "68065 gone"; echo "== launch log tail"; tail -1 var/runs/levin-phase-floor-06h-r22.launch.log; echo "== Traceback / WARNING counts"; grep -c Traceback var/runs/levin-phase-floor-06h-r21.launch.log var/runs/levin-phase-floor-06h-r22.launch.log $D/stdout.log $D/stderr.log; grep -c "!! WARNING" var/runs/levin-phase-floor-06h-r21.launch.log var/runs/levin-phase-floor-06h-r22.launch.log; echo "== run dir"; ls -la $D; echo "== worktrees"; for T in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2; do git --no-optional-locks -C $T rev-parse HEAD; git --no-optional-locks -C $T status --short --ignored; find $T -newer var/levin-phase-floor-06h/rehearsal/state/r21_launch_marker | head; done; echo "== store files"; ls -la var/datastores | grep 06h; ls var/datastores | grep 06h | grep -E "journal|wal|shm" || echo "no journal/wal/shm"; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > var/levin-phase-floor-06h/rehearsal/out/r22_end_registry_list.txt 2>&1; echo "list exit $?"; head -3 var/levin-phase-floor-06h/rehearsal/out/r22_end_registry_list.txt | cut -c1-160; tail -1 var/levin-phase-floor-06h/rehearsal/out/r22_end_registry_list.txt; echo "== main"; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short
+# output:
+== status.json (without classes)
+{
+ "exit_code": 0,
+ "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r22.manifest.json is not a problem-free registry sidecar (there is none)",
+ "heartbeat": "2026-11-01T00:28:54+00:00",
+ "host": {
+  "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+  "id": "d120d1cf03551e6f"
+ },
+ "pid": 68069,
+ "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+ "state": "done",
+ "units_done": 0,
+ "units_total": null
+}
+digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 True
+problems {} taken {'git_dirty': False, 'git_head': 'c1ec3b2c819cc5df22ddf4b303f69c7129a54d62', 'run_id': 'levin-phase-floor-06h-r22-groupphase-20261101T002423', 'when': '2026-11-01T00:28:52+00:00'} formats 6 1
+QuadSourceIntegral 864
+levin-phase-floor-06h-r21-parent-20261101T001852 classes equal: True digest equal: True
+levin-phase-floor-06e-r19-parent-20261030T074440 classes equal: True digest equal: True
+handover-12-r8-reference-20261025T210551 classes equal: True digest equal: True
+== kill -0
+sh: line 11: kill: (68069) - No such process
+68069 gone
+sh: line 11: kill: (68065) - No such process
+68065 gone
+== launch log tail
+** driver exit status 0
+== Traceback / WARNING counts
+var/runs/levin-phase-floor-06h-r21.launch.log:0
+var/runs/levin-phase-floor-06h-r22.launch.log:0
+var/runs/levin-phase-floor-06h-r22-groupphase-20261101T002423/stdout.log:0
+var/runs/levin-phase-floor-06h-r22-groupphase-20261101T002423/stderr.log:0
+var/runs/levin-phase-floor-06h-r21.launch.log:0
+var/runs/levin-phase-floor-06h-r22.launch.log:0
+== run dir
+total 28
+drwxr-xr-x  6 ds283 staff   192 Nov  1 00:28 .
+drwxr-xr-x 65 ds283 staff  2080 Nov  1 00:24 ..
+-rw-r--r--  1 ds283 staff  5193 Nov  1 00:24 manifest.json
+-rw-r--r--  1 ds283 staff 10328 Nov  1 00:28 status.json
+-rw-r--r--  1 ds283 staff     0 Nov  1 00:24 stderr.log
+-rw-r--r--  1 ds283 staff  8030 Nov  1 00:28 stdout.log
+== worktrees
+2c325f56641666b45df483adb8c1202575721c42
+c1ec3b2c819cc5df22ddf4b303f69c7129a54d62
+== store files
+-rw-r--r--  1 ds283 staff  25030656 Nov  1 00:23 levin-phase-floor-06h-r21-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25219072 Nov  1 00:23 levin-phase-floor-06h-r21-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 00:19 levin-phase-floor-06h-r21-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24494080 Nov  1 00:23 levin-phase-floor-06h-r21-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 00:19 levin-phase-floor-06h-r21.sqlite
+-rw-r--r--  1 ds283 staff  24997888 Nov  1 00:28 levin-phase-floor-06h-r22-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25243648 Nov  1 00:28 levin-phase-floor-06h-r22-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 00:24 levin-phase-floor-06h-r22-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24612864 Nov  1 00:28 levin-phase-floor-06h-r22-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 00:24 levin-phase-floor-06h-r22.sqlite
+no journal/wal/shm
+== registry
+list exit 0
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06h-r22-groupphase-20261101T002423  done              -       5m  levin-phase-floor prompt 06h, R22 on the Mac Studio (mps026298; tree c1ec
+   levin-phase-floor-06h-r21-parent-20261101T001852      done              -      10m  levin-phase-floor prompt 06h, R21 on the Mac Studio (mps026298; tree 2c32
+38 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 38 finished; 0 with no host recorded.
+== main
+28ebaf0743e0555fb2c4512ce714884005a60eff
+# exit: 0
+# end: 2026-11-01T00:29:16Z

@@ -1,0 +1,72 @@
+# levin-phase-floor 06h section 5, the census: the plan from Gate H to the launch, as prepared on
+# 2026-11-01 (stage 1 of the census brief; nothing below has been run). Run only when the orchestrator
+# resumes the census agent: after R21, R22, the comparison, H0 and the readers are over and the lock is
+# released. Every command from the census directory, each recorded by scripts/rec.sh into out/cmd/
+# (except the two ray-processes listings, which append by >> and are their own shell commands).
+cd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+PY=/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python
+H=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2      # tree h (the scripts' g), c1ec3b2
+P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5      # tree p, 2c325f5 (06e's code)
+COPY=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+CERT=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+CK06E=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl
+
+# A. state before (trees clean, registry, lock, Ray, host load), and the launcher's dry import
+scripts/rec.sh 10_state_before /bin/bash -c 'for t in /Users/ds283/Documents/Code/SecondaryGWKit /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2; do echo "== $t"; git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short $([ $t != /Users/ds283/Documents/Code/SecondaryGWKit ] && echo --ignored); done; cd /Users/ds283/Documents/Code/SecondaryGWKit && ./venv/bin/python -m runregistrykit list | tail -8; df -h . | tail -1; uptime; ls -ld ~/.raypoolkit/rehearsal-lock ~/ScienceData/.rehearsal-lock 2>&1'
+scripts/rec.sh 11_lock_status $PY -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+$PY -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/cmd/12_ray_processes.txt 2>&1
+scripts/rec.sh 02_launch_dry_import $PY -B -c "import sys; sys.path.insert(0, 'scripts'); print(sys.version); import launch; print('PURPOSE:', launch.PURPOSE); print('SCOPE:', launch.SCOPE); print('SCRIPT:', launch.SCRIPT); print('N_ROWS:', launch.N_ROWS); import prov; print('TREES:', prov.TREES); print('RUN06E:', prov.RUN06E, prov.RUN06E.exists())"
+
+# B. the store (hashed, against its certification; fingerprint at h and at p) and 06e's checkpoint, before Gate H
+scripts/rec.sh 13_copy_files_before $PY -B scripts/hash_store.py copy_before_gate_h $COPY
+scripts/rec.sh 14_copy_vs_certified scripts/compare_hashes.sh $CERT out/cmd/13_copy_files_before.txt
+scripts/rec.sh 15_fingerprint_copy_at_h env PYTHONPATH=$H PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/fingerprint_copy.py $COPY/handover-A3-v2-lambdacdm.sqlite
+scripts/rec.sh 16_fingerprint_copy_at_p env PYTHONPATH=$P PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/fingerprint_copy.py $COPY/handover-A3-v2-lambdacdm.sqlite
+#    both must print the digest 0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56 and no problems
+scripts/rec.sh 17_checkpoint06e_before shasum -a 256 $CK06E      # must be a0dc4d7f5c47eb28d8691b450559d005a76e1d9f3bd41442e249a419fb15904c
+scripts/rec.sh 18_job_name_is_inert grep -n job_name /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py
+#    any store file not EQUAL, a fingerprint not 0e32f24a..., or 06e's checkpoint not a0dc4d7f...: STOP
+
+# C. Gate H (five workers at once, within six: P1-P3 at p, G1 and G2 at h; one wait), then its checks
+scripts/rec.sh 19_gate_h_run $PY -B scripts/gate_h.py run state/H
+scripts/rec.sh 20_gate_h_check env PYTHONPATH=$H PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/gate_h.py check state/H
+scripts/rec.sh 21_gate_h_git_clause $PY -B scripts/gate_h_clause1.py state/H/p_tree_modules.json
+#    P1 p-1e-7-2-38302 (low-G+r-1), P2 p-1e-7-2-2095 (ctrl-low-1), P3 p-1e-8-0-1971 (0-1971), each against 06e's
+#    g- unit on 06e's keys by bit pattern; G1/G2 g-1e-7-0-14164 at h on every key; the git diff 6d81fad..2c325f5
+#    outside docs/ and prompts/ (CLAUDE.md only expected) against the parent workers' import list.
+#    Any part failing: STOP (prompt 06h section 7), report, do not launch.
+
+# D. the driver smoke test (06e's two rows, both rtols, two workers), and the copy after Gate H
+scripts/rec.sh 22_smoke_driver $PY -B scripts/run_census.py --out-dir state/smoke --rows 1-34599,3-13829 --max-workers 2
+#    22b: the smoke ledger summarised (status, tree, declared_06h reproduced/leaves per unit), read only
+scripts/rec.sh 23_copy_files_after_gate_h $PY -B scripts/hash_store.py copy_after_gate_h $COPY
+scripts/rec.sh 24_copy_after_gate_h_vs_certified scripts/compare_hashes.sh $CERT out/cmd/23_copy_files_after_gate_h.txt
+
+# E. predictions: state/predictions.md = header + "## Part A" (prompt lines 334-347, byte for byte) +
+#    "## Part B" (state/drafts/predictions_partB_draft.md, finalised); written after Gate H, before the launch,
+#    and never edited after the launch
+scripts/rec.sh 25_predictions_check $PY -B scripts/check_predictions.py
+scripts/rec.sh 26_scripts_equal $PY -B scripts/scripts_equal.py
+scripts/rec.sh 27_checkpoint06e_after_prep shasum -a 256 $CK06E
+#    save out/scripts_diff_against_06e_final.txt (diff -ruN state/scripts_06e_reference scripts)
+
+# F. pre-launch (each its own command)
+scripts/rec.sh 28_prelaunch_state <as 10>
+scripts/rec.sh 29_prelaunch_lock_status $PY -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+$PY -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/cmd/30_prelaunch_ray_processes.txt 2>&1
+scripts/rec.sh 31_copy_files_prelaunch $PY -B scripts/hash_store.py copy_prelaunch $COPY
+scripts/rec.sh 32_copy_prelaunch_vs_certified scripts/compare_hashes.sh $CERT out/cmd/31_copy_files_prelaunch.txt
+scripts/rec.sh 33_scripts_equal_prelaunch $PY -B scripts/scripts_equal.py
+scripts/rec.sh 34_predictions_check_prelaunch $PY -B scripts/check_predictions.py
+
+# G. the launch, only if both parts of Gate H hold: registered (campaign levin-phase-floor, prompt 06h, slug
+#    census), detached (runregistrykit.begin first, then nohup sh -c '<driver>; exit $?' in a new session,
+#    stdout/stderr into the run directory, the sh pid recorded, the driver's own pid recorded by it), then ONE
+#    check, then end the turn
+scripts/rec.sh 35_launch $PY -B scripts/launch.py
+scripts/rec.sh 36_launch_check /bin/bash -c 'R=<run dir>; date -u; cat $R/status.json; echo; echo "checkpoint lines: $(wc -l < $R/checkpoint.jsonl 2>/dev/null)"; head -c 400 $R/checkpoint.jsonl 2>/dev/null; echo; echo "-- stdout tail"; tail -8 $R/stdout.log; echo "-- stderr bytes $(wc -c < $R/stderr.log)"; kill -0 <sh pid> && echo "sh <sh pid> alive"; P=$(/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -c "import json;print(json.load(open(\"$R/status.json\")).get(\"pid\"))"); echo "status pid $P"; kill -0 $P && echo "driver $P alive"'
+
+# After the census (resumed with its status.json): the store and 06e's checkpoint after, the fingerprint after;
+# checks_after_06h.py on the run; the over-budget pass if any (more than twelve: stop and ask; one re-run of each
+# at h with 3,600 s, at most six at once); then H3, H4 and the descriptive items (analyse06h.py, to be written,
+# reading both checkpoints and the pickles read only); the records.

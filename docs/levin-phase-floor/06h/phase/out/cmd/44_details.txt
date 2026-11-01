@@ -1,0 +1,23 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B -c $'\nimport json,gzip,glob,statistics\nf06={}\nfor t in (\'p\',\'h\'):\n  allr=[];nodes=[];dense=[]\n  for d in sorted(glob.glob(f\'out/replay_{t}/*\')):\n    n=json.load(gzip.open(d+\'/nodes.json.gz\',\'rt\')); de=json.load(gzip.open(d+\'/dense.json.gz\',\'rt\'))\n    nodes+=[(r[\'ratio\'],d.split(\'/\')[-1],\'node\',r[\'leaf\'],r[\'k\'],r[\'u\'],r[\'ratio_float\'],r[\'theta_abserr_parts\']) for r in n]\n    dense+=[(r[\'ratio\'],d.split(\'/\')[-1],\'dense\',None,r[\'j\'],r[\'u\'],r[\'ratio_float\'],r[\'theta_abserr_parts\']) for r in de]\n  for name,S in ((\'nodes\',nodes),(\'dense\',dense)):\n    v=[x for x in S if x[0]>1]; vf=[x for x in S if x[6]>1]\n    print(t,name,\'n\',len(S),\'violating exact\',len(v),\'max exact\',max(S)[:6],\'| violating at x_hat\',len(vf),\'max x_hat\',max(x[6] for x in S))\n  print(t,\'three largest node ratios (exact):\',[ (round(x[0],4),x[1],x[3],x[4], \'x_hat ratio\',round(x[6],4)) for x in sorted(nodes,reverse=True)[:3]])\n  if t==\'h\':\n    ab=[x for x in nodes+dense if x[7] and max(range(3),key=lambda i:x[7][i])==1]\n    print(\'h worst where the abscissa dominates:\',max(ab)[:6], \'parts\',max(ab)[7])\n    print(\'h violations at x_hat (06f convention, descriptive):\',sum(1 for x in nodes+dense if x[6]>1),\'max\',max(x[6] for x in nodes+dense))\nr=json.load(open(\'out/replay_h/h-1e-7-0-12689_19/result.json\'))[\'M2\']; rp=json.load(open(\'out/replay_p/p-1e-7-0-12689_19/result.json\'))[\'M2\']\nprint(\'#19 group K\',r[\'group\'][\'K\'],\'K_lo\',r[\'group\'][\'K_lo\'])\nfor a,b in zip(r[\'per_leaf\'],rp[\'per_leaf\']):\n  print(\' leaf\',a[\'i\'],a[\'branch\'],\'declared h\',a[\'declared\'],\'p\',b[\'declared\'],\'|dI_meas| h\',abs(a[\'dI_measured\']),\'p\',abs(b[\'dI_measured\']),\'p at x_hat\',abs(b[\'dI_measured_float\']))\nprint(\'K_lo over all h calls:\',sorted({json.load(open(d+\'/result.json\'))[\'M2\'][\'group\'][\'K_lo\'] for d in glob.glob(\'out/replay_h/*\')}))\nprint(\'call abserr h/p:\', [(d.split(\'/\')[-1], json.load(open(d+\'/result.json\'))[\'M2\'][\'declared_error\']) for d in sorted(glob.glob(\'out/replay_h/*\'))][:0])\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:51:55Z
+# ----
+p nodes n 1177 violating exact 53 max exact (277.19078716022557, 'p-1e-7-0-12689_19', 'node', 3, 0, '-0x1.c978f88239ba7p+0') | violating at x_hat 49 max x_hat 147.9792865458528
+p dense n 20000 violating exact 508 max exact (376.4734532016188, 'p-1e-7-0-12689_19', 'dense', None, 996, '-0x1.d81c11a079cf0p+0') | violating at x_hat 473 max x_hat 165.86568340941636
+p three largest node ratios (exact): [(277.1908, 'p-1e-7-0-12689_19', 3, 0, 'x_hat ratio', 54.5967), (245.7616, 'p-1e-7-0-12689_19', 3, 4, 'x_hat ratio', 147.9793), (190.3846, 'p-1e-7-0-12689_19', 3, 2, 'x_hat ratio', 29.5128)]
+h nodes n 1177 violating exact 0 max exact (0.49329224769987506, 'h-1e-7-0-12689_19', 'node', 1, 11, '-0x1.e633fe4760d6fp+2') | violating at x_hat 0 max x_hat 0.49148647866471795
+h dense n 20000 violating exact 0 max exact (0.4930397506445101, 'h-1e-7-0-12689_19', 'dense', None, 380, '-0x1.e4f54e4d13858p+2') | violating at x_hat 0 max x_hat 0.492219292564339
+h three largest node ratios (exact): [(0.4933, 'h-1e-7-0-12689_19', 1, 11, 'x_hat ratio', 0.4915), (0.4716, 'h-1e-7-3-1054_20', 1, 10, 'x_hat ratio', 0.4762), (0.4706, 'h-1e-7-0-12689_19', 1, 10, 'x_hat ratio', 0.4759)]
+h worst where the abscissa dominates: (0.4594068654202977, 'h-1e-7-0-12689_19', 'node', 3, 22, '-0x1.08753cee6217bp+2') parts [2.6649934198032834e-15, 1.737633588482335e-13, 6.407491717207054e-15]
+h violations at x_hat (06f convention, descriptive): 0 max 0.492219292564339
+#19 group K -48553.82323826663 K_lo 0.0
+ leaf 0 cc declared h 2.082985615347633e-20 p 2.0649309443902813e-20 |dI_meas| h 4.606810368146945e-24 p 4.024939383053691e-24 p at x_hat 3.995318196338524e-24
+ leaf 1 levin declared h 8.343627730360765e-22 p 8.259916749816699e-22 |dI_meas| h 3.0365746121796333e-26 p 1.3440415649395708e-26 p at x_hat 1.4940700235136735e-25
+ leaf 2 levin declared h 2.9679437030403435e-24 p 2.3136281410548507e-25 |dI_meas| h 6.6053058280655415e-25 p 8.387262286272469e-25 p at x_hat 2.344749185207441e-25
+ leaf 3 levin declared h 2.2977608902390555e-24 p 1.8964315052082612e-26 |dI_meas| h 6.149730991896023e-25 p 7.882599576489052e-25 p at x_hat 1.7254120236418676e-25
+K_lo over all h calls: [-4.6566128730773926e-09, -3.725290298461914e-09, -5.820766091346741e-11, -2.9103830456733704e-11, 0.0, 7.275957614183426e-12, 2.9103830456733704e-11]
+call abserr h/p: []
+# ----
+# end 2026-11-01T03:51:55Z
+# exit 0

@@ -1,0 +1,46 @@
+$ /bin/bash -c date\ -u\;\ cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/status.json\;\ echo\;\ wc\ -l\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl\;\ wc\ -c\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/stderr.log\;\ tail\ -3\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/stdout.log\ \|\ cut\ -c1-400\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037\ \|\ wc\ -l\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037\;\ for\ f\ in\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/worker_\*_bye.json\;\ do\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -c\ \"import\ json\,sys\;\ b=json.load\(open\(sys.argv\[1\]\)\)\;\ print\(sys.argv\[1\].rsplit\(\'/\'\,1\)\[1\]\,\ \'ray_initialized\'\,\ b\[\'ray_initialized\'\]\,\ \'foreign\'\,\ b\[\'modules_foreign\'\]\)\"\ \$f\;\ done
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:24:52Z
+# ----
+Sun Nov  1 03:24:52 UTC 2026
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-01T03:23:50+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 73329,
+  "stage": "18560 units recorded; last g-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+18560
+0
+# worker 1e-8-k3_1 exit 0
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+149
+2.3G	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037
+worker_1e-7-k0_101_bye.json ray_initialized False foreign []
+worker_1e-7-k0_202_bye.json ray_initialized False foreign []
+worker_1e-7-k1_102_bye.json ray_initialized False foreign []
+worker_1e-7-k1_301_bye.json ray_initialized False foreign []
+worker_1e-7-k2_2_bye.json ray_initialized False foreign []
+worker_1e-7-k2_302_bye.json ray_initialized False foreign []
+worker_1e-7-k3_1_bye.json ray_initialized False foreign []
+worker_1e-7-k3_201_bye.json ray_initialized False foreign []
+worker_1e-8-k0_101_bye.json ray_initialized False foreign []
+worker_1e-8-k0_202_bye.json ray_initialized False foreign []
+worker_1e-8-k1_102_bye.json ray_initialized False foreign []
+worker_1e-8-k1_301_bye.json ray_initialized False foreign []
+worker_1e-8-k2_2_bye.json ray_initialized False foreign []
+worker_1e-8-k2_302_bye.json ray_initialized False foreign []
+worker_1e-8-k3_1_bye.json ray_initialized False foreign []
+worker_1e-8-k3_201_bye.json ray_initialized False foreign []
+# ----
+# end 2026-11-01T03:24:53Z
+# exit 0

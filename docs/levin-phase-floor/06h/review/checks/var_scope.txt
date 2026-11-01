@@ -1,0 +1,5 @@
+before 67284 files, after 71634; removed 0, added 4350, changed (size or mtime) 1
+removed outside 06h's paths: 0
+added outside 06h's paths: 0
+changed outside 06h's paths: 0
+added by top dir: [('var/levin-phase-floor-06h/rehearsal', 3151), ('var/levin-phase-floor-06h/phase', 707), ('var/levin-phase-floor-06h/census', 289), ('var/runs/levin-phase-floor-06h-census-20261101T005037', 149), ('var/levin-phase-floor-06h/review', 29), ('var/runs/levin-phase-floor-06h-phase-20261101T033514', 5), ('var/runs/levin-phase-floor-06h-r21-parent-20261101T001852', 4), ('var/runs/levin-phase-floor-06h-r22-groupphase-20261101T002423', 4), ('var/datastores/levin-phase-floor-06h-r21-shard0000.sqlite', 1), ('var/datastores/levin-phase-floor-06h-r21-shard0001.sqlite', 1)]

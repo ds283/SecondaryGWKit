@@ -1,0 +1,71 @@
+{
+ "captures_match_census": {
+  "p": true,
+  "h": true
+ },
+ "replays_F0_hold": {
+  "p": true,
+  "h": true
+ },
+ "two_trees_calls_equal": true,
+ "parent_reproduces_06f_nodes": "20 of 20",
+ "H1": {
+  "verdict": "holds",
+  "points": 21177,
+  "points_nodes": 1177,
+  "points_dense": 20000,
+  "violations": 0,
+  "worst_ratio": 0.49329224769987506,
+  "worst_call": "g-1e-7-0-12689 #19",
+  "worst_point": {
+   "set": "node",
+   "leaf": 1,
+   "k": 11,
+   "j": null,
+   "u": "-0x1.e633fe4760d6fp+2",
+   "delta_theta": 4.502680015621786e-13,
+   "theta_abserr": 9.127814265512786e-13,
+   "theta_abserr_parts": [
+    9.008595228992057e-13,
+    5.464754008513311e-15,
+    6.457149643559691e-15
+   ]
+  },
+  "worst_dominant_part": "constituents",
+  "parent_on_same_points_violations": 561,
+  "parent_on_same_points_worst_ratio": 376.4734532016188,
+  "parent_own_points": 21177,
+  "parent_own_violations": 561,
+  "parent_own_worst_ratio": 376.4734532016188
+ },
+ "H2": {
+  "verdict": "holds",
+  "leaves": 27,
+  "violations": 0,
+  "worst_ratio": 0.26764016299608157,
+  "worst_leaf": "g-1e-7-0-12689 #19 leaf 3 (levin)",
+  "median_ratio": 4.480112694051577e-05,
+  "parent_leaves": 27,
+  "parent_violations": 2,
+  "parent_worst_ratio": 41.56543252335077
+ },
+ "split_by_dominant_part": {
+  "constituents": {
+   "n": 20446,
+   "median": 0.0006762071141289008,
+   "p90": 0.006337082248593872,
+   "max": 0.49329224769987506,
+   "min": 5.571014477776813e-08
+  },
+  "abscissa": {
+   "n": 731,
+   "median": 0.1343824080406381,
+   "p90": 0.2750486525153361,
+   "max": 0.4594068654202977,
+   "min": 0.00025773377398174025
+  },
+  "phi_eval": {
+   "n": 0
+  }
+ }
+}

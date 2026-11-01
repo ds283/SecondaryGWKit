@@ -1,0 +1,3 @@
+(record git_head, dirty, tree_head, tree status, n foreign, n own-tree, n files from another SecondaryGWKit tree, script sha, worker_tree): count
+('28ebaf0', False, 'c1ec3b2', '', 0, 102, 0, 'e11dcd72', 'g') 18560
+examples: []

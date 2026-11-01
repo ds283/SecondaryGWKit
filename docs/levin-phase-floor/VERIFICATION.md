@@ -2662,6 +2662,74 @@ The review adds two observations:
   `[06e-cc-declared-phase-term-is-a-crude-proxy]` (M2).
 - **Closed:** nothing. Whether either term's remedy joins 06g is the user's to decide.
 
+## 6h. The group phase's rounding
+
+*Prompt 06h: the code on the laptop (`7172a8f`, and `ac1c6f4`, tests only), the rehearsals, the
+census and the phase re-measurement on the Mac Studio on 2026-11-01. The records are under
+[`06h/`](06h/); what stays on the Mac Studio is in
+[`06h/KEPT_ON_MAC_STUDIO.md`](06h/KEPT_ON_MAC_STUDIO.md).*
+
+### 6h.1 The code
+
+`BesselPhaseGroup.sin_cos` carries the product's rounding $p_{\rm lo} = \hat K\hat x - {\rm
+fl}(\hat K\hat x)$ (TwoProduct: `math.fma` on scalars, Dekker on arrays, bit-identical) and the
+coefficient sum's, $K_{\rm lo}\hat x$ (`K_lo` by `fsum`), exactly in its small angle.
+`theta_abserr` declares what remains: the constituents' errors, the abscissa's rounding
+$\varepsilon_{\exp}[(|\hat K|+|K_{\rm lo}|)\hat x + 2\sum|r'_i|]$, and the group's own evaluation
+$\phi_{\rm eval}$. $\varepsilon_{\exp} = 2.23\times10^{-16}$ is twice the measured worst of
+`np.exp`, $1.1146\times10^{-16}$, equal on the laptop and the Mac Studio. The tests, breakages and
+LiouvilleGreen draws are in
+[`logs/06h-group-phase-rounding.md`](../../prompts/levin-phase-floor/logs/06h-group-phase-rounding.md),
+with the draws' records in [`06h/calibration/`](06h/calibration/). Following the user's ruling on
+deviation 10, the declaration is asserted on `theta_mod_2pi`, the phase it declares: the worst
+point is at 0.4135 of it under 06h, and the parent fails by up to $2.4\times10^9$.
+
+### 6h.2 Rehearsals R21 and R22 (prompt 06h §4)
+
+R21 `levin-phase-floor-06h-r21-parent-20261101T001852` at `2c325f5` (06e's code) and R22
+`levin-phase-floor-06h-r22-groupphase-20261101T002423` at `c1ec3b2`, both `done`, both fingerprinted
+`1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7`. Outside `QuadSourceIntegral`
+every value table is identical. Inside, `total` and `total_abserr` are bit-identical in all 864
+rows: 06h reaches only the analytic oracle.
+- **H0 holds**, trivially on `total`. On the oracle's value against its declared error, it holds
+  too: 464 rows move, the worst at $2.5\times10^{-5}$ of the bound.
+- The agent's full record: [`06h/rehearsal/verification.md`](06h/rehearsal/verification.md).
+
+### 6h.3 The census: 06e's census re-run at the code (prompt 06h §5)
+
+`levin-phase-floor-06h-census-20261101T005037`: 18,560 of 18,560 units `done`, none in error or
+over budget. Unit wall ×0.974 and ×0.981 of 06e's; analytic-block regions ×0.876 and ×0.870; group
+calls unchanged.
+- **Gate H holds:** three units at the parent equal 06e's census, and $h$ is deterministic.
+- **H3 holds** on `total` (bit-identical) and on the oracle: 8,560 rows at each rtol, no violation,
+  worst 0.0756 and $1.35\times10^{-4}$.
+- **H4 fails** on one call of $2\times129{,}621$: `g-1e-8-3-1072` #13, analytic J1. The declared
+  term ($4.14\times10^{-27}$, mostly the abscissa's) raised the root's floor from
+  $1.94\times10^{-26}$ to $2.36\times10^{-26}$ against a request of $1.63\times10^{-26}$. The round-off
+  exit's premise then held at the root and the call stopped unconverged at depth 0. Under 06e it
+  split once and both halves converged.
+- The agent's full record: [`06h/census/verification.md`](06h/census/verification.md).
+
+### 6h.4 The phase re-measurement: 06f's M2 repeated (prompt 06h §5)
+
+`levin-phase-floor-06h-phase-20261101T033514`, 84 of 84 units, on 06f's 20 calls captured afresh at
+$h$ and at the parent. The reference is taken at the exact $e^u$.
+- **H1 holds:** 21,177 points (1,177 nodes and 20,000 dense), no violation, worst 0.4933 of
+  `theta_abserr` at `g-1e-7-0-12689` #19, recomputed by the review in `mpmath` at 30 and 50 digits.
+  The parent violates on 561 points, worst 376.5.
+- **H2 holds:** on 27 returned leaves the response to the measured phase error is at most 0.268 of
+  the declared term. The parent violates on 2, worst 41.6.
+- The agent's full record: [`06h/phase/verification.md`](06h/phase/verification.md).
+
+### 6h.5 The review, and the user's rulings
+
+The Mac Studio orchestrator's review ([`06h/review.md`](06h/review.md)) passed all ten checks,
+re-scoring Gate H, H0–H4 and the descriptive counts with its own readers and re-fingerprinting both
+stores. The user, 2026-11-01, ruled that H4 counts as failing, and that the header issue
+`[06f-theta-abserr-omits-the-product-rounding]` closes: its condition, §2's tests and §5's H1 and
+H2, is met. H4's call narrows `[07-roundoff-exit-assumes-bisection-cannot-help]`; the doubled count
+of declared-dominated Clenshaw–Curtis calls narrows `[06e-cc-declared-phase-term-is-a-crude-proxy]`.
+
 ## 6i. Filon references for Z3's calls
 
 *Prompt 06i, a measurement. It ran on the laptop on 2026-11-01, Ray-free, with no store and no code

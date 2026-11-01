@@ -1,0 +1,58 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/scripts/x1_capture.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/sample/selection_p.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/state/capture_p /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_p.json --tree p --workers 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# start 2026-11-01T03:35:14Z
+# ----
+# levin-phase-floor 06h: the M2 calls' inputs, captured at p (06c's X1 capture)
+# written 2026-11-01T03:35:14Z on mps026298.phys.susx.ac.uk
+# script x1_capture.py sha256 18cb18ea315633618052aa1b1013a4f0407032478b6af6f49044d09b1379918b
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 HEAD 2c325f56641666b45df483adb8c1202575721c42 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/sample/selection_p.json sha256 6ad4cec07d7d4df831e7a9b1ec24459088bce1407f63be54d77ccd0fe2c38cec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 18690
+C01: pid 18691
+C02: pid 18692
+C03: pid 18693
+C04: pid 18694
+C05: pid 18695
+C06: pid 18955
+C07: pid 18956
+C08: pid 18962
+C09: pid 18963
+C10: pid 18964
+C11: pid 18982
+C12: pid 19249
+C13: pid 19261
+C14: pid 19262
+C15: pid 19268
+C16: pid 19269
+C17: pid 19280
+C18: pid 19327
+C19: pid 19328
+exit codes {'C02': 0, 'C03': 0, 'C01': 0, 'C04': 0, 'C05': 0, 'C00': 0, 'C10': 0, 'C06': 0, 'C07': 0, 'C08': 0, 'C11': 0, 'C09': 0, 'C12': 0, 'C13': 0, 'C14': 0, 'C15': 0, 'C16': 0, 'C17': 0, 'C18': 0, 'C19': 0}
+captured and matching the census bit for bit: 20 of 20
+   p-1e-7-0-12689 19: matches True; error None; ray_initialized False
+   p-1e-7-0-33555 13: matches True; error None; ray_initialized False
+   p-1e-7-1-10824 12: matches True; error None; ray_initialized False
+   p-1e-7-1-10895 12: matches True; error None; ray_initialized False
+   p-1e-7-2-21508 15: matches True; error None; ray_initialized False
+   p-1e-7-2-21613 14: matches True; error None; ray_initialized False
+   p-1e-7-2-33311 12: matches True; error None; ray_initialized False
+   p-1e-7-3-1054 20: matches True; error None; ray_initialized False
+   p-1e-7-3-657 15: matches True; error None; ray_initialized False
+   p-1e-7-3-668 8: matches True; error None; ray_initialized False
+   p-1e-8-0-10589 1: matches True; error None; ray_initialized False
+   p-1e-8-0-33532 12: matches True; error None; ray_initialized False
+   p-1e-8-0-33586 12: matches True; error None; ray_initialized False
+   p-1e-8-0-33599 8: matches True; error None; ray_initialized False
+   p-1e-8-0-33609 16: matches True; error None; ray_initialized False
+   p-1e-8-1-10740 12: matches True; error None; ray_initialized False
+   p-1e-8-1-20245 13: matches True; error None; ray_initialized False
+   p-1e-8-1-20297 13: matches True; error None; ray_initialized False
+   p-1e-8-2-33275 11: matches True; error None; ray_initialized False
+   p-1e-8-3-914 16: matches True; error None; ray_initialized False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_p.json sha256 0cbe1340bd302c80ab29a4ef161bc26fdb676b5f539c7b0927b70c2be11d1493
+# ----
+# end 2026-11-01T03:39:28Z
+# exit 0

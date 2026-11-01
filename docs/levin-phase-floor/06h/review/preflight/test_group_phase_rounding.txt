@@ -1,0 +1,104 @@
+2026-11-01T00:13:12Z
+mps026298.phys.susx.ac.uk
+c1ec3b2c819cc5df22ddf4b303f69c7129a54d62
+1626d726f9196633e3ee6b815a732597412da08ec962f6f5abdf69d6f0506f36  LiouvilleGreen/tests/test_group_phase_rounding.py
+fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e  LiouvilleGreen/three_bessel_integrals.py
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+2.2.4
+test_1_the_product_rounding_is_gone (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_1_the_product_rounding_is_gone)
+In every cell, the phase sin_cos represents (atan2 of the pair, exactly) and theta_mod_2pi, ... ok
+test_2_the_rounding_of_K_is_gone (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_2_the_rounding_of_K_is_gone)
+On the fl(K) != K cell, against the reference with the exact K (the constituents at the ... ok
+test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_3_the_declaration_bounds_the_phase_error_as_a_function_of_u)
+In every cell, at every point, |theta_mod_2pi(u) - theta(e^u)| <= theta_abserr(u), the ... ok
+test_4_the_declaration_is_not_loose_by_orders_where_its_new_terms_dominate (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_4_the_declaration_is_not_loose_by_orders_where_its_new_terms_dominate)
+Descriptive, not asserted: measured over declared at the exact e^u, split by the part of ... ok
+test_5_eps_exp_basis (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_5_eps_exp_basis)
+eps_exp is measured (the library documents no accuracy): on the seeded sample of ... ok
+test_6_scalar_and_array_agree_bit_for_bit (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_6_scalar_and_array_agree_bit_for_bit)
+sin_cos, theta_mod_2pi and theta_abserr on an array of u are bit-identical to their scalar ... ok
+test_7_the_method_check (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_7_the_method_check)
+The constituent reference reproduces, at one argument per order, the error bessel_phase.py ... ok
+test_the_06f_cells_reproduce_06f (LiouvilleGreen.tests.test_group_phase_rounding.TestGroupPhaseRounding.test_the_06f_cells_reproduce_06f)
+The 06f cells are 06f's calls: K, the declared scalars, and the parent's theta_mod_2pi at ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 18.371s
+
+OK
+
+@@ 06h test 1, GROUP_CASES K = 0 exactly: |delta theta| at the float x: 06h worst 1.9733e-12 (0.499 of constituents + phi_eval); parent worst 1.9741e-12 (0.5 x its declaration)
+
+@@ 06h test 1, GROUP_CASES K/max ~ 1e-6: |delta theta| at the float x: 06h worst 8.6819e-13 (0.497 of constituents + phi_eval); parent worst 8.6908e-13 (0.499 x its declaration)
+
+@@ 06h test 1, GROUP_CASES K/max ~ 1e-10: |delta theta| at the float x: 06h worst 5.8495e-14 (0.132 of constituents + phi_eval); parent worst 5.9390e-14 (0.235 x its declaration)
+
+@@ 06h test 1, GROUP_CASES generic: |delta theta| at the float x: 06h worst 5.4543e-13 (0.497 of constituents + phi_eval); parent worst 6.4204e-06 (2.41e+09 x its declaration)
+
+@@ 06h test 1, fl(K) != K: |delta theta| at the float x: 06h worst 1.7609e-15 (0.0971 of constituents + phi_eval); parent worst 9.2105e-05 (3.46e+10 x its declaration)
+
+@@ 06h test 1, three non-zero residuals: |delta theta| at the float x: 06h worst 4.9902e-13 (0.0862 of constituents + phi_eval); parent worst 3.0518e-05 (1.15e+10 x its declaration)
+
+@@ 06h test 1, QSI near-resonant: |delta theta| at the float x: 06h worst 1.2385e-12 (0.498 of constituents + phi_eval); parent worst 1.2385e-12 (0.499 x its declaration)
+
+@@ 06h test 1, QSI generic: |delta theta| at the float x: 06h worst 1.8280e-15 (0.136 of constituents + phi_eval); parent worst 7.5053e-09 (2.82e+06 x its declaration)
+
+@@ 06h test 1, 06f g-1e-7-0-12689 #19 (J4): |delta theta| at the float x: 06h worst 7.4371e-14 (0.469 of constituents + phi_eval); parent worst 4.3365e-13 (163 x its declaration)
+
+@@ 06h test 1, 06f g-1e-7-3-1054 #20 (Y4): |delta theta| at the float x: 06h worst 3.8002e-13 (0.493 of constituents + phi_eval); parent worst 3.8092e-13 (1.81 x its declaration)
+
+@@ 06h test 2: K = 1.6, K_lo = -8.326673e-17; 06h worst 1.7119e-15; parent worst 9.2105e-05 at x = 1.0000e+12, where |K_lo| x = 8.3267e-05 and u |fl(K) x| = 1.7764e-04
+
+@@ 06h test 3, GROUP_CASES K = 0 exactly: worst |delta theta|/theta_abserr at the exact e^u: 06h 0.4988; parent 0.4997, violating at 0 of 50 points
+
+@@ 06h test 3, GROUP_CASES K/max ~ 1e-6: worst |delta theta|/theta_abserr at the exact e^u: 06h 0.4969; parent 1.029e+04, violating at 20 of 50 points
+
+@@ 06h test 3, GROUP_CASES K/max ~ 1e-10: worst |delta theta|/theta_abserr at the exact e^u: 06h 0.1575; parent 1.473, violating at 2 of 50 points
+
+@@ 06h test 3, GROUP_CASES generic: worst |delta theta|/theta_abserr at the exact e^u: 06h 0.4955; parent 3.489e+09, violating at 35 of 50 points
+
+@@ 06h test 3, fl(K) != K: worst |delta theta|/theta_abserr at the exact e^u: 06h 0.3352; parent 1.73e+10, violating at 44 of 50 points
+
+@@ 06h test 3, three non-zero residuals: worst |delta theta|/theta_abserr at the exact e^u: 06h 0.3538; parent 4.376e+10, violating at 43 of 50 points
+
+@@ 06h test 3, QSI near-resonant: worst |delta theta|/theta_abserr at the exact e^u: 06h 0.4981; parent 0.4994, violating at 0 of 50 points
+
+@@ 06h test 3, QSI generic: worst |delta theta|/theta_abserr at the exact e^u: 06h 0.378; parent 6.025e+06, violating at 40 of 50 points
+
+@@ 06h test 3, 06f g-1e-7-0-12689 #19 (J4): worst |delta theta|/theta_abserr at the exact e^u: 06h 0.4521; parent 277.2, violating at 29 of 53 points
+
+@@ 06h test 3, 06f g-1e-7-3-1054 #20 (Y4): worst |delta theta|/theta_abserr at the exact e^u: 06h 0.4876; parent 3.137, violating at 5 of 53 points
+
+@@ 06h test 4: measured/declared at the exact e^u, by dominant part
+   constituents points  146; median 5.220e-04; 90 % 3.581e-01; max 4.988e-01; min 4.468e-07
+   abscissa     points  229; median 1.544e-01; 90 % 3.161e-01; max 4.698e-01; min 2.492e-03
+   phi_eval     points  131; median 3.523e-02; 90 % 7.963e-02; max 1.306e-01; min 3.214e-04
+
+@@ 06h test 5: worst relative error of np.exp 1.114619e-16 = 1.0040 u; EXP_RELERR 2.2300e-16 = 2.0 x 1.114619e-16, rounded up
+
+@@ 06h test 6, GROUP_CASES K = 0 exactly: 06h bit-identical at all 50 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 14}
+
+@@ 06h test 6, GROUP_CASES K/max ~ 1e-6: 06h bit-identical at all 50 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 10}
+
+@@ 06h test 6, GROUP_CASES K/max ~ 1e-10: 06h bit-identical at all 50 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 11}
+
+@@ 06h test 6, GROUP_CASES generic: 06h bit-identical at all 50 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 7}
+
+@@ 06h test 6, fl(K) != K: 06h bit-identical at all 50 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 13}
+
+@@ 06h test 6, three non-zero residuals: 06h bit-identical at all 50 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 11}
+
+@@ 06h test 6, QSI near-resonant: 06h bit-identical at all 50 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 8}
+
+@@ 06h test 6, QSI generic: 06h bit-identical at all 50 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 14}
+
+@@ 06h test 6, 06f g-1e-7-0-12689 #19 (J4): 06h bit-identical at all 53 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 14}
+
+@@ 06h test 6, 06f g-1e-7-3-1054 #20 (Y4): 06h bit-identical at all 53 points; parent's array and scalar results differ at {'theta_mod_2pi': 0, 'theta_abserr': 2}
+
+@@ 06h test 7, nu = 0.5 at x = 1000: phase-pair error 5.9411e-17 (documented 1.11e-16); |atan2(J,-Y) - (arg H1 + pi/2)| 9.86e-32; |30 - 50 digits| 8.30e-32
+
+@@ 06h test 7, nu = 1.5 at x = 1000: phase-pair error 8.4098e-17 (documented 1.1e-16); |atan2(J,-Y) - (arg H1 + pi/2)| 1.97e-31; |30 - 50 digits| 5.05e-32
+
+@@ 06h test 7, nu = 2.5 at x = 1e+07: phase-pair error 1.4804e-16 (documented 8.9e-16); |atan2(J,-Y) - (arg H1 + pi/2)| 1.48e-31; |30 - 50 digits| 5.07e-32
+exit 0

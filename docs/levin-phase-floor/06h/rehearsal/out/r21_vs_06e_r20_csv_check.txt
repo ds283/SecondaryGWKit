@@ -1,0 +1,32 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T00:35:17Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+./venv/bin/python -I -c "
+import csv
+E=\"/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/docs/levin-phase-floor/06e/rehearsal/out/qsi_rows.csv\"
+H=\"var/levin-phase-floor-06h/rehearsal/out/qsi_rows.csv\"
+def load(p):
+    return {(r[\"k\"],r[\"q\"],r[\"r\"],r[\"z_response\"]): r for r in csv.DictReader(open(p))}
+e=load(E); h=load(H)
+print(\"rows 06e\", len(e), \"06h\", len(h), \"same keys\", set(e)==set(h))
+pairs=[(\"total_R20\",\"total_R21\"),(\"total_abserr_R20_hex\",\"total_abserr_R21_hex\"),(\"total_converged_R20\",\"total_converged_R21\"),(\"WKB_Levin_num_regions_R20\",\"WKB_Levin_num_regions_R21\"),(\"WKB_Levin_max_depth_R20\",\"WKB_Levin_max_depth_R21\"),(\"WKB_Levin_evaluations_R20\",\"WKB_Levin_evaluations_R21\"),(\"analytic_rad_R20\",\"analytic_rad_R21\"),(\"analytic_regions_R20\",\"analytic_regions_R21\"),(\"analytic_abserr_R20\",\"analytic_abserr_R21\"),(\"total_R20\",\"total_R22\"),(\"total_abserr_R20_hex\",\"total_abserr_R22_hex\"),(\"analytic_rad_R20\",\"analytic_rad_R22\")]
+for a,b in pairs:
+    print(f\"06e {a} == 06h {b}: {sum(e[k][a]==h[k][b] for k in e)}/{len(e)}\")
+"
+# output:
+rows 06e 864 06h 864 same keys True
+06e total_R20 == 06h total_R21: 864/864
+06e total_abserr_R20_hex == 06h total_abserr_R21_hex: 864/864
+06e total_converged_R20 == 06h total_converged_R21: 864/864
+06e WKB_Levin_num_regions_R20 == 06h WKB_Levin_num_regions_R21: 864/864
+06e WKB_Levin_max_depth_R20 == 06h WKB_Levin_max_depth_R21: 864/864
+06e WKB_Levin_evaluations_R20 == 06h WKB_Levin_evaluations_R21: 864/864
+06e analytic_rad_R20 == 06h analytic_rad_R21: 864/864
+06e analytic_regions_R20 == 06h analytic_regions_R21: 864/864
+06e analytic_abserr_R20 == 06h analytic_abserr_R21: 864/864
+06e total_R20 == 06h total_R22: 864/864
+06e total_abserr_R20_hex == 06h total_abserr_R22_hex: 864/864
+06e analytic_rad_R20 == 06h analytic_rad_R22: 400/864
+# exit: 0
+# end: 2026-11-01T00:35:17Z

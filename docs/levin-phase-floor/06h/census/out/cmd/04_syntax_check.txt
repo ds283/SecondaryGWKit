@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c import\ ast\,sys\;\ \[ast.parse\(open\(f\).read\(\)\,\ f\)\ for\ f\ in\ sys.argv\[1:\]\]\;\ print\(\'ast.parse\ ok:\'\,\ sys.argv\[1:\]\) scripts/worker.py scripts/prov.py scripts/harness.py scripts/launch.py scripts/run_census.py scripts/gate_h.py scripts/gate_h_clause1.py scripts/check_predictions.py scripts/scripts_equal.py scripts/checks_after_06h.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T00:29:51Z
+# ----
+ast.parse ok: ['scripts/worker.py', 'scripts/prov.py', 'scripts/harness.py', 'scripts/launch.py', 'scripts/run_census.py', 'scripts/gate_h.py', 'scripts/gate_h_clause1.py', 'scripts/check_predictions.py', 'scripts/scripts_equal.py', 'scripts/checks_after_06h.py']
+# ----
+# end 2026-11-01T00:29:51Z
+# exit 0

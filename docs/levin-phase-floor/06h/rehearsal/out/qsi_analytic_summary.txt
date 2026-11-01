@@ -1,0 +1,25 @@
+rows 864; rows with a three-Bessel Levin block 659; blocks 10072
+analytic_rad bit-identical: 400/864 (rows with a block 195/659, rows without 205/205)
+analytic_rad None in R21/R22: 0/0; analytic.abserr non-finite or absent R21/R22: 0/0
+analytic.abserr bit-identical: 205/864
+rows whose analytic_rad moved: 464
+  |d analytic_rad|/(abserr21+abserr22): p0 3.562e-10, p1 5.088e-10, p10 1.367e-09, p50 9.079e-09, p90 2.197e-07, p99 1.15e-05, p100 2.485e-05
+  |d analytic_rad|/abserr21: p0 7.124e-10, p1 1.018e-09, p10 2.733e-09, p50 1.816e-08, p90 4.395e-07, p99 2.304e-05, p100 5.037e-05
+  |d analytic_rad|/abserr22: p0 7.124e-10, p1 1.018e-09, p10 2.733e-09, p50 1.816e-08, p90 4.395e-07, p99 2.298e-05, p100 4.904e-05
+  |d analytic_rad|/|analytic_rad21|: p0 1.11e-16, p1 1.239e-16, p10 1.612e-16, p50 6.208e-16, p90 5.886e-15, p99 8.418e-14, p100 1.033e-11
+  rows with |d analytic_rad| > abserr21 + abserr22: 0
+  largest: 2.48486e-05 at k=316228 q=100000 r=316228 z=1.3627427e+10: rad21 -0x1.60509ba2ceb16p-39 rad22 -0x1.60509ba2ceb18p-39 abserr21 0x1.3638d1213ffcfp-76 abserr22 0x1.3e961353b521dp-76
+analytic.abserr R22/R21 (rows with a block): p0 0.2583, p1 0.8906, p10 0.9999, p50 1, p90 1, p99 1.138, p100 3.072
+  rows abserr up 456, down 203, equal 0
+analytic.converged R21 -> R22: {(True, True): 864}
+
+three-Bessel Levin blocks:
+  abserr bit-identical: 428/10072
+  abserr R22/R21: p0 5.948e-07, p1 0.7817, p10 1, p50 1, p90 1.052, p99 1.684, p100 1.153e+05
+  converged R21 -> R22: {(True, True): 10072}
+  phase_limited R21 -> R22: {(True, True): 3312, (False, False): 5656, (False, True): 584, (True, False): 520}
+  regions summed R21 28785, R22 24428; blocks more 538, fewer 2456, equal 7078
+  regions per block R21: {1: 4780, 2: 1452, 3: 635, 4: 748, 5: 927, 6: 490, 7: 357, 8: 313, 9: 195, 10: 97, 11: 47, 12: 21, 13: 8, 14: 2}
+  regions per block R22: {1: 4792, 2: 1474, 3: 997, 4: 1215, 5: 996, 6: 375, 7: 188, 8: 28, 9: 5, 11: 2}
+  0pt5: blocks 5272; regions R21 14948 R22 12684; abserr R22/R21 p0 5.948e-07, p50 1, p100 1.153e+05
+  2pt5: blocks 4800; regions R21 13837 R22 11744; abserr R22/R21 p0 0.0002753, p50 1, p100 2107

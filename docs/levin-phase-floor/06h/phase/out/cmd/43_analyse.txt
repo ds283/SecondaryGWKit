@@ -1,0 +1,304 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06h.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:51:38Z
+# ----
+# levin-phase-floor 06h: the phase re-measurement, H1 and H2
+# written 2026-11-01T03:51:39Z on mps026298.phys.susx.ac.uk
+# script analyse06h.py sha256 5620c73f4e74338c06569f9a403eca460d32a79fc56fd9abee5e37821cbc0274
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 HEAD 2c325f56641666b45df483adb8c1202575721c42 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/sample/selection_h.json sha256 74efc98ede9f19b1209dd6d7938ac647db040671e4d04aae79899229c75ca0a8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/sample/selection_p.json sha256 6ad4cec07d7d4df831e7a9b1ec24459088bce1407f63be54d77ccd0fe2c38cec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_h.json sha256 5d227768d3f479cfbf2b4fbadeb92e004dfc39eafd0bccc81404cbb160585559
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_p.json sha256 0cbe1340bd302c80ab29a4ef161bc26fdb676b5f539c7b0927b70c2be11d1493
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cmd/32_method_check.txt sha256 20b094cf039b42d8ad7f0c55860df634d51f38fe2b32cc911e5f623724013ea6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cmd/33_refcheck_50_digits.txt sha256 d42232cc831a8e68665d9ac917dbabc71517df2237545c0087d7fab15d7f7059
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-33555_13/result.json sha256 6c687d8d161093254e15a6cee42420c773e752802fe8a9aebe5f8bd6fa9c9fec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-33555_13/nodes.json.gz sha256 6414cad1ba809595446b3677a78edcdc65d51953ea9c88ea905554725cb7772f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-33555_13/dense.json.gz sha256 1e0479520f86b5f94000fc0321c2bad7dcb437fa276166539433b1e2af023edf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-0-33555_13/cross.json sha256 824b92e9d9d00c220da1f61fe60b094cb0451954c115adf7f34575674adbbf9b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-0-33555_13/rows.json.gz sha256 2f709bfe93384efcecbcd681a57c0ce9256e14e27f5b8520b3d1d98fe958e7c4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-33555_13/result.json sha256 bb08ba2bb5aff237568d60cfb6813e46da217b87683b04732115e353185ccf54
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-33555_13/nodes.json.gz sha256 7ed036c6be7975445a0177335c17cb6a1f54935ce3c3d3befb64a4b8fd49647b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-33555_13/dense.json.gz sha256 cecc6a48187d5c28c5224be9a4cc98bbe05d3cbb7d12a1e59f546b6828ea3c5a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-0-33555_13/cross.json sha256 21cfe292951ac9511ab0433c58f7a18c0234714289c4732ffe5f4d23c6959c86
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-0-33555_13/rows.json.gz sha256 6ffff4397b8231075bde1c4ba2e61f6432721d099729c1e74ff3e9e96857e97c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-0-33555_13/nodes.json.gz sha256 053465c9f34394030234d9b4ed4431b3b9e4c4914139d7fff2b9a73bcd9eaf0b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-1-10824_12/result.json sha256 f9d1549b45182b0c09995069deb14e1a2f4715a0520116fe7e1dcc3b0acf78ad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-1-10824_12/nodes.json.gz sha256 6c38eda59a4eedd9d9d71a7bc26975686be401ecd81bac969c2bfc3e06060901
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-1-10824_12/dense.json.gz sha256 9fca5e11da2e937861da0ca0451c97aabf7d39930a0c5ca8dd8c4ebee6daadbc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-1-10824_12/cross.json sha256 548376561cdb0ab48c057b0ba4ac92943a82ea9e110c4042bf15332407ea89ca
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-1-10824_12/rows.json.gz sha256 94a95ff6ea4a4795ab11a51b5665305efe9463efd7914ebbcba8efc4c45bbd93
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-1-10824_12/result.json sha256 251573c037f8ce30588e5f199fc810e0cbb173c63fb51b1375edaec33d58ac9f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-1-10824_12/nodes.json.gz sha256 741db01a434d73cb0bb972b808fb6e34c03d13d332f49839c1666a7680fda373
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-1-10824_12/dense.json.gz sha256 c77cbee868e79ae29976a76f9772af4baa516dfe486adff36f652921c712da3f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-1-10824_12/cross.json sha256 e39832e10bbc675eabdc41b9f7381e3de57c16f2420a9ffd8c7979c4ae8d2920
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-1-10824_12/rows.json.gz sha256 62b41f1ac953e6714c2ba8bae7804491232a9167b4028cff96f716b127157247
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-10824_12/nodes.json.gz sha256 7351a951f77fc31c863ebc30bd1bcddd3809fe88d2aa359828f198699ad89203
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-1054_20/result.json sha256 518ca2676d5c6bd4cc951582a2c9f102f6957c82d840f438047f3537b7273889
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-1054_20/nodes.json.gz sha256 a52037668b0f51ef173f2a5192bc201a9fe33c46babad47d4bbf341b22d1ac3b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-1054_20/dense.json.gz sha256 dd74266664e5928e6e2c88e2df222fcbd7251ebf7c0e7ae88784de4a3e68bbcc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-3-1054_20/cross.json sha256 03a43b2e26547f0db94840e8c7cffb04a28e79abc6ab856180f73dc9167a627f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-3-1054_20/rows.json.gz sha256 0757fb2d706ead5b30f49e2d6915b30df425af4d77e84cb8bca914a0a2f11f84
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-1054_20/result.json sha256 de09ce4cdd20f718d4480395cd11acae9bc4ec59cf7fc075b685c7b688fc31b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-1054_20/nodes.json.gz sha256 28d14665b692859ccf79fa7f404d9ba4c592e560995c56d9ea16f96fbbdac1c4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-1054_20/dense.json.gz sha256 045137b0e7a209a2e1ca5677a91a87567a6bcb387997dc84ad64fc270ed79f28
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-3-1054_20/cross.json sha256 8bf36e9f7b3117b9b59143eb2bdbdf910cbdc794819447a5fe64408b76838d3a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-3-1054_20/rows.json.gz sha256 5bb52dc822bde5bf8fe4d5eaf71cdce5ee86ead098892d542a705757e7751adf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-3-1054_20/nodes.json.gz sha256 b6cc865c4a96b0c66ec17d92301dd8262cba1cee147534e111d907e86c1f5407
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-21508_15/result.json sha256 7940b63af1786343e399803a852a4752f34c1202568190af02c7ffcf9fd578ec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-21508_15/nodes.json.gz sha256 2ef330d8bba65872c173dcae20933fe50c0a6c3d89e7183494f0809a06461d05
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-21508_15/dense.json.gz sha256 d5d116b36eeed0e17e0c46b997ca7154c206c8504edc1a055fd03ffe9f717900
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-2-21508_15/cross.json sha256 e80782920c30bf2e39056c5f6d4bc1465eb6a784951de54f3ef3db9c5197abb6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-2-21508_15/rows.json.gz sha256 02771a9070c835817dcd030f12f994c01f9302ff6d31cdbcb7ca15c87432f9d8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-21508_15/result.json sha256 2366b258a3bd388f3620196633a834af2b5dca14e33b3c895e8a228d7a71f4ef
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-21508_15/nodes.json.gz sha256 2d8878db3f21b78df1eac4f4d0ffc6bc9791c9d6acb2ee8dfd2700e397349217
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-21508_15/dense.json.gz sha256 4038bf66ab3d639dbf3e676a05d18f984b3f21a77051606104930e6dc7a9a547
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-2-21508_15/cross.json sha256 ad60522ef631beb8581b6461cb0a967d72065382a20ec2862148450f113c1e28
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-2-21508_15/rows.json.gz sha256 94e20b26b140136c1af00c69d33d291c006b548890fc10b0641fd1d4244b1379
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-2-21508_15/nodes.json.gz sha256 61acb1ffd41fac8872fcaf78185edf35d22806bce0303715931be0cc54588213
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-33311_12/result.json sha256 77eafb87761ddac6863eef0148b56ddd02ca2c90bc37311e52d219175fd213b2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-33311_12/nodes.json.gz sha256 6f4ae448d890747e3a6c1b51cb0775de2731d244fa8121f986e3eda858a95eab
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-33311_12/dense.json.gz sha256 b650cf5d89c14b3cccc717dc2841f069ff63fa9374a89d5c44cdf31c1892d9ac
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-2-33311_12/cross.json sha256 91b9e2d3749d43bf9a552e44de9ab0138868e563f67f30eba1d0a6b9e0bdac53
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-2-33311_12/rows.json.gz sha256 3dc9ca78d97163597e0d44eda6c9b9e9b72adbbfa80eb44a40cc07f486f8a83b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-33311_12/result.json sha256 c45659ec7616f5d7f1bb89d246d9607da0a08da2770d39153e2957e4556f09f5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-33311_12/nodes.json.gz sha256 be8a8dfae70015c94a38cb640e84f75e97e88681e30556f20d702d47c7126203
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-33311_12/dense.json.gz sha256 91c46387e7de54a209b29efb694bea9d34c776fd9596f0751d124983eec36b6c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-2-33311_12/cross.json sha256 cfb74d91af5c27bbe313b837818304c3adf2c10a68e12b72c31e4b35249416b5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-2-33311_12/rows.json.gz sha256 9b5d4366908b271db3ecb17641a07b8ed8bfb19f3b0624c4a530787f70c6289f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-2-33311_12/nodes.json.gz sha256 4da6e9736a88af49ca9a49604032f1ea708bc78776c9fbd0bafe1b4565181342
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-668_8/result.json sha256 13a54c9f4b5d0ec852128af1da5b4057e332fda78f302dc6370912dd8b879f81
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-668_8/nodes.json.gz sha256 5d4ebf38f81647c019d4057fbafa4c6afeac2478bd9d22fe336e5a69ec047a4c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-668_8/dense.json.gz sha256 bcfdec982069e75234b0b8949e20be016489398c7769911a49cf7fd2763d8c78
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-3-668_8/cross.json sha256 6223083096b862ac6cda9c4367299622006242c0b0198e6bf8098685340bc8f9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-3-668_8/rows.json.gz sha256 8a28092850d1927b747bc302d199e39da4e556ce70c3257ff58fb24e0ce6c4ec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-668_8/result.json sha256 9543133367947877b2843eb07efefba970e8ef4617e6992b4c8cff0766ad8b75
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-668_8/nodes.json.gz sha256 0c0876d29f7678b3024d961756eec37c8e43ea22e766d769ca7c84d03c1383e8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-668_8/dense.json.gz sha256 cf5f0631474ddfa544fc96806ed47e07bab623d3019a33c5da245002b10e84c6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-3-668_8/cross.json sha256 9887b3bb389533afc2050aa1f2f2846cf11154631cb6c4579c0fb4d7ec939f22
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-3-668_8/rows.json.gz sha256 8ce278c72d40d91d1564d5f7e0737f88ed1a53dc8f2b53efba44fecba096ecc3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-3-668_8/nodes.json.gz sha256 2ef011add7ef400ee6efb02be48759e1a3db7ef5ce43994aa39dd7b26e0fc3e8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-1-10895_12/result.json sha256 b52d0e4fd0682bf1cb1d17f3ac06a596cb6929f4d568712d425de0a4dc38c395
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-1-10895_12/nodes.json.gz sha256 3926d2d6a5bdb53f8596242056a6ec9f58534af991a0a06229313913c3439c3f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-1-10895_12/dense.json.gz sha256 b055ba3d939cfcad25350bb93d883f1c300a3ad816a3b8692e2ac3372bf3e128
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-1-10895_12/cross.json sha256 7f4a8963613eeb99c7cd5951e0f06f5de48f43834861ceafa6d9a3b27978fc59
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-1-10895_12/rows.json.gz sha256 48556fa53cbdfa9a1974d27c2a28f50b97818919c160c55458fd8fdc7461793e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-1-10895_12/result.json sha256 e3d4aac983399ec6b4b06f43a8dd6e8559753d44a9f517ddfd972bdf48ebbc07
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-1-10895_12/nodes.json.gz sha256 05b163f8a88c5b48e81bd933f462e74436ea1c585757dcb78b614e869b693f9b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-1-10895_12/dense.json.gz sha256 8d232c9f33c1316a1bcc943dc47f07d3fa59c63cda4cc581335354335c726626
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-1-10895_12/cross.json sha256 5110cb64f76fe36f992cf3a5ddaa87459c9363cf4a8553d6985e20e04d90935f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-1-10895_12/rows.json.gz sha256 65ba34c4a7053864378ec2c17a3aae701948207bf3c32a937fadf9556d4ccd31
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-1-10895_12/nodes.json.gz sha256 9c7ed3493ef199474e8155d8d388ad0b84e8b19d69b31743bfdfe2d654676bc5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-12689_19/result.json sha256 fea93cc6dc7ef4fb039fb1a89f40f012c47b8c47f60fa04852bace4ce0ca5429
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-12689_19/nodes.json.gz sha256 4ca51b7878402e7b0c0ed2e41b0932c3327cbb73bead0fca8a39d3a2744d0503
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-0-12689_19/dense.json.gz sha256 9309d100e8a6d034df9ed47636013c2cf44a265c0f9c3890933d9a400206ac42
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-0-12689_19/cross.json sha256 4ea257a5e7621dc72313b11873d78e7246efbd3b7f7df61552b46b9850ab7427
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-0-12689_19/rows.json.gz sha256 b34b263c2c39bd9e124889e376beb5de2ea987bfbef4e789f969ea32134afb1b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-12689_19/result.json sha256 f6c0e4e4ae5015230a18dadaf4da90b2f3030f4436747a757f0d29cb4f9c1a7c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-12689_19/nodes.json.gz sha256 df8f1c2074778f213d126fe2ee42c667ad3ac680545346b57389da1a90946f65
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-0-12689_19/dense.json.gz sha256 5f655c53d55c558670885523c2fd9f3b9d2e69e0e5693d6b2f773a940b49692a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-0-12689_19/cross.json sha256 8857955b69c31086f3eb73862db6d80a6af3f03ee485029a5fb906b09692234b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-0-12689_19/rows.json.gz sha256 49934b43a27c368f4610aae7509bbdbac9b2f7f034faf5ab8f9ae127da1bf27a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-0-12689_19/nodes.json.gz sha256 a3a2385efd54673d974e9c2a1931dc484d6fe3386b0f576341221050e1b90916
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-657_15/result.json sha256 27473ad4cc2dece95f33ce4446f455bcc1504b40a615b8de175da5b80f9d8858
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-657_15/nodes.json.gz sha256 8b40b223e0277af9bde26cae88581156307bd9fc0132aeda4582736c2522f888
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-3-657_15/dense.json.gz sha256 b8860e08ef063b0c8a147d0430ca99bcdb30d279fb436883c663eb00f36911e6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-3-657_15/cross.json sha256 d68fd4fc26c372ac25eb10420ccf53e199577c221ef8c60a742328d439de3777
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-3-657_15/rows.json.gz sha256 07233a9ba5f4388168e2d758fe637b3baf555a4581ecf2224a43a2cee5435581
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-657_15/result.json sha256 747ca415dfbb6fd8e8fdf16b6b932f50825f83fd9668fb7299a13e000d49b877
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-657_15/nodes.json.gz sha256 75a611b2bec635b59f4a221383240bcbef2e4bc4c8c5fe0748d0f9a8e6920cfc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-3-657_15/dense.json.gz sha256 5f6b76f600e602d34adbe7e646a46fe40e6afa85e1236d955db8d420004153d5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-3-657_15/cross.json sha256 c5dd0826f8e880f197d47706329dec189732df1aecf2b1f07a44de1d41c55376
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-3-657_15/rows.json.gz sha256 c42788ba6aaae870a7b9f3de1f17fd0e6e649101fc2198673812d2dbb953c47c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-3-657_15/nodes.json.gz sha256 c20eb3797a5e96ce42cfc77b2b969a5191fb50cab6548adb9d2d5534166ed9e4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-21613_14/result.json sha256 d29ef6274c84240ea4ad9fa1151cf3296111ec1f4f7ab2151b95df53ff40e263
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-21613_14/nodes.json.gz sha256 17fe4448382eada3c8f5517e2ce0175a15493738146e55d7455aa52f7b30cc23
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-7-2-21613_14/dense.json.gz sha256 3379001d6a883a6db9a0ff583ebe08bc7aa2c74de525cd704d4d81d99253b73f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-2-21613_14/cross.json sha256 07db766a84d33315b58d90776b6cc6f1b8a31f6e1f3f4b04effe74edfc354276
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-7-2-21613_14/rows.json.gz sha256 5b65a3169d417f62d80d07645444948832e3c641070de94417e007c9e0a1f352
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-21613_14/result.json sha256 7eec66546aa0c84377a44cdf1c9583302e8c3077474760c636857b6e75191ed7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-21613_14/nodes.json.gz sha256 1b283117cc16a53ac93604f830d6ef63a4340c45dff3d4747e7498dd7da9b9b7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-7-2-21613_14/dense.json.gz sha256 5107b8ae2d83184dbacc9bbb3c483db73062a9c055deae17f8f7e9e7fac6a4d0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-2-21613_14/cross.json sha256 3f8249f44c950c893afc64ebe98a385b1b1da967a706e6c104f7829d85a68ab7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-7-2-21613_14/rows.json.gz sha256 9e1465354c0f86048b6c54baca648868b5b98933cd97789564af8182879d92f1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-7-2-21613_14/nodes.json.gz sha256 512a7df68fc4854da3d235619084229d7e32126f9eb96c32cf043b8f80c8d466
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-20297_13/result.json sha256 3bd0ace823144758e989f0d9586af42e31a3320ad33cc2a1ee512c9618362bda
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-20297_13/nodes.json.gz sha256 837ae2af0e5eca2a3e250f93d237954736252546d3ef2d7e91afd665913743a1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-20297_13/dense.json.gz sha256 df8a8dad072f00d2d7f2ad8d18d7a90c9f57716e8a59830f40ffe6016d9b7915
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-1-20297_13/cross.json sha256 99e978c62cfed0074d8f2cc8608d07bcee437f2bd83beeaabcef1b99de92ad0c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-1-20297_13/rows.json.gz sha256 4c0b3707c67e4d35b8a63e4661b09171d0dbdf0c27f7258b92f6c8efdfb2a3c4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-20297_13/result.json sha256 39847082359286d87c9d730f5bf40380fc7efead8f305ea5ed7f4b57b6f199b6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-20297_13/nodes.json.gz sha256 25226ca3b8e1bdd6454cfb92e8fa85fb98f44dbc5d15c01f3b014f89873b0802
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-20297_13/dense.json.gz sha256 419b9cfd224a31da5f8cb928a8c3c2ac6bedbac05af601b6bfafa4ded139e65b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-1-20297_13/cross.json sha256 9b597ff0d9fa7119cdb5814b70b39cfd8000d61a5ff6773657d6aa244fbca4f3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-1-20297_13/rows.json.gz sha256 6111e6c5bfac0be9b2d86c28dd98097e5abbf34c921e2de7c5cfcf35538fbf16
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-20297_13/nodes.json.gz sha256 05eb9b6b78ff671eba48115b63cbe84cc151df929d3ddc3441e3134f775bc942
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-2-33275_11/result.json sha256 081513530484a5d1a19944b3be63761899087ecf59d016ae7bdf46a24b8a25a9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-2-33275_11/nodes.json.gz sha256 8c69448298c0380a54dcb04b37d982c1e5b4287de81c7482db4217334b4a11e3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-2-33275_11/dense.json.gz sha256 c725f08dc3a273b4cbedaac1e3b95cebb05d653f1ed7bc079af3129f4a82aa52
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-2-33275_11/cross.json sha256 76d0750458570a1892e6bbfcf1c769ee24c27768afa2dd8817e29e438b90b44d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-2-33275_11/rows.json.gz sha256 318b8af73c84ee5d282e0f216636e12865128b9600b7f388c5095cb71a242ca8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-2-33275_11/result.json sha256 c80637d4e06919344bde3be029b8ad675c4f2a9f4a9d7ecfc161736f8e684a03
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-2-33275_11/nodes.json.gz sha256 bd77f018f7fa8013969d8f7a27e399f6c055e492af6b2ce9575f0de541c06630
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-2-33275_11/dense.json.gz sha256 ac04a2355f5452a87f0a275c9f0e2c06a83cff34e3801b36c973540269fb751d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-2-33275_11/cross.json sha256 20dd95237b7c751480a54068998e19ef6fc5fb7bcbf9c5a75388fd6e6e86807b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-2-33275_11/rows.json.gz sha256 f4fb6c3730f6edb51c80a70ec20278b572109cd29e0d53a80358d3e212a44341
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-2-33275_11/nodes.json.gz sha256 cc6c86883949ddb3e547140b01bc1c203204df2a545f1385f0653839505ddc8a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-10589_1/result.json sha256 77a09765ec6325db5acd6cc37fd993fc30f9815d3c2964413063c499cacbecc8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-10589_1/nodes.json.gz sha256 987ed1cf406b4237f0758d8bdfe60fff14e98e03b5f7de40e55b2b4141ace1cf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-10589_1/dense.json.gz sha256 642a0bb7fdc9a3ce17b81242dde2e5850bc4788faaccac35b6673eb5a38043da
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-10589_1/cross.json sha256 852b0e946e8514ca06041ccade636e3b8a148db362cee743d889982d125d4a2e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-10589_1/rows.json.gz sha256 05d298fccf8ed97fcaff7cc1bfa30cdc8bafbdc768b021f99ce1b9f339061a56
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-10589_1/result.json sha256 f4deba9f41d887d11105624c897465f0ac2283f45770adf6ff384d7647357cc0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-10589_1/nodes.json.gz sha256 6681d00b60da8697abfeb6326c299ea20c50c45c322db6a16b7c4744c3733882
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-10589_1/dense.json.gz sha256 ce6f6a583dd6855b3aeb832be57816efe0bd343302bcbf3d400ea8959dbdf418
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-10589_1/cross.json sha256 6b55786fc209a525a0409e9f103b9180e0e8aac55ac7e9e5fc34ff79ba8bc4f1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-10589_1/rows.json.gz sha256 f92b9a09bdab71f41a597da8582bfb02e2c202dfa2b4de93e301d43aeee56e44
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-10589_1/nodes.json.gz sha256 389991d2dfcafe352e8425acf7ca05e5afdf3d103ad56a98fbf9e7347d81f53c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33586_12/result.json sha256 7f098b6f7f2481fb7904a8841487f8431f02973664d0c835a652a1467cae5c26
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33586_12/nodes.json.gz sha256 6475c097f88ebd5253526d952c7637e65a75bc23c88d7a63365c15621a74f170
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33586_12/dense.json.gz sha256 69c35f02dd1171ebee973a55efa318f5360a7ea0f33195be1524714cc44d1c2f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-33586_12/cross.json sha256 5af0e5d1ce478dac80ba8a8181238728fe15c84cf904034cc9c78505fc70d1e1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-33586_12/rows.json.gz sha256 e8276e53531f3fb298e435694a021a4a2186decf579c5348cfcf4dbd2aae5feb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33586_12/result.json sha256 4e973f50cdc8ff9a4816b6cc717008746f8db9aa1a356ebe2e20d5856c99e99a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33586_12/nodes.json.gz sha256 2cdc680f3093d0eb1eaa6c0610298bd2134ed8cefdfccfa5a515330df51b7f1e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33586_12/dense.json.gz sha256 c8f26b6d7ac7bb0e118b834e391206766f533d3fa8deedb0338f006146435d97
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-33586_12/cross.json sha256 97824b0b486df31185ecadedc83e928b8490b471db8d678300fb591c9f93b73b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-33586_12/rows.json.gz sha256 ba1949b59e73a431f748357ed446f3243f96a9344487745b5fdc1c4ad5241fe1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33586_12/nodes.json.gz sha256 e534828b5826496f440f41fb595debf880bac751ab95a7fd1e8d7d6d84e34949
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33609_16/result.json sha256 3a804486d5c19574b52facde425ea0fc3d9d77bb497604fd51bbd10e8835ee0c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33609_16/nodes.json.gz sha256 fc9f1a263b38b65f8cf45a2553fed849eb983dd05cbfad2175c713b9316ea49e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33609_16/dense.json.gz sha256 684a8ec717ff3d9348c14a6a853daec639f09a701382f1a207db817e682bb82d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-33609_16/cross.json sha256 a96f98a43fbb6ec2f5b8ef1e4bc965748bf8d29f8260c16e21c45d5d9f57f8d3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-33609_16/rows.json.gz sha256 e8647a112d5e4c8298b0880757b4a551bc8a1939f7b0d3f75aef98dce8fa98c5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33609_16/result.json sha256 32a714f6ad326cb1532a67e9c090000d9d753fe8d40ef9bd9deb0707098c243e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33609_16/nodes.json.gz sha256 c22436180bcc653ae879d84eda601eb0e5221f912dc66556625c0abbc583272e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33609_16/dense.json.gz sha256 fe5aa3cec0462d900929b26e91878b4e97f31a05646c913d90de7183795bfa5a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-33609_16/cross.json sha256 cb609fcb9498902a69cbc7d294f79467fa94beeb7a81c44d9d0554e04ca864af
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-33609_16/rows.json.gz sha256 f7fd189e898f42bde793aa7ca68631f4ca6169743b22dc85f5d96061b907dc50
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33609_16/nodes.json.gz sha256 61e73828f2961b2c4978671315453cb809914008488586060d5a27b19643451d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33599_8/result.json sha256 aa34690a1f77ca7d8f0621faa5f31942be2d8ef6699d74daa53280a03850b14c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33599_8/nodes.json.gz sha256 5c87eabe9103493d2b8f16d69307dd2018504091d5e4a72e1a298568636677fc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33599_8/dense.json.gz sha256 c3baa61afcb91424966cc7df14e2b95e8cbf6166b9316e1f47a5d2744925c88d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-33599_8/cross.json sha256 e682973260c8289b4ca9367afc70865ca480d7a3959fa779975be92dd018607f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-33599_8/rows.json.gz sha256 e8b5006dd08cc0fce049160b9ee89dc98d1a520cb450d8ab5d3208a915d1497b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33599_8/result.json sha256 9a404e7a122c6bc661654a50e52f47eb094625a1716ce2eabf064fa9b90f8ce0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33599_8/nodes.json.gz sha256 7ae0e3dcacd5c05d97baef1a78f0ce487847cb621cf33bc01507bb963a9df9d3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33599_8/dense.json.gz sha256 6f63b087e09cd8046df2a60f069c4e2269da8a3b2aea76361a5c6fa970ca50f9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-33599_8/cross.json sha256 4821ac005433c2c8268a46be95724a0dfee119a467af5c593c43797d20a22420
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-33599_8/rows.json.gz sha256 08c0d106df88dfad9aa70f2a6c959c72787ae4905de8ac1ea978c9819f53c248
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33599_8/nodes.json.gz sha256 8af2cc30bc4d4bcb41c9a0de473484d8e539cf88d4fbc4c1e76e50184d9aa1ba
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-10740_12/result.json sha256 9f089eb1039a7606df6825444b9e4031b7bb1210818fb6372874086a4eb4fe87
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-10740_12/nodes.json.gz sha256 8ed5cfcb49c11ff5b5bdc1402e7122dfa04fed9e80173b2c0dec6c7d41d90d46
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-10740_12/dense.json.gz sha256 c0a9e3f4d42102581e56f6afb3c952707b8acda96d2aa5d88e3a75ea04e22a05
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-1-10740_12/cross.json sha256 4df0d5c28549f56450286532b12b9cd6d0cdae2ac34a949d1a455a0f4910e4a3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-1-10740_12/rows.json.gz sha256 aefe1859112bc100209c4079062c8ea690fe089652e0f9604f5874b9c6840f67
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-10740_12/result.json sha256 5be8c3cf6bf7241d0fa902c10532e931d47e51133d77167a019150ec045029ee
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-10740_12/nodes.json.gz sha256 cd8ffea64f3a74741ea21de3cdc606dd118f1d9b1b66b40e3916b90434a2ffed
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-10740_12/dense.json.gz sha256 45d20a8e59fbfbc6b9e922e661ace33df75d0056614dd3dffd844474c10ec1cc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-1-10740_12/cross.json sha256 98909278fbb9725b26eb574e047038417a317cca58fdd5b85cafd479b54f2228
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-1-10740_12/rows.json.gz sha256 ac1c9706878544c2b8298faa39d67df0663c8b3101caa7d9364e746fe8dcac13
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-10740_12/nodes.json.gz sha256 930ac08942ee8e3809929c3892234b520210e987adfc855f38cf7803db471d40
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-3-914_16/result.json sha256 8d8acfbea0f6a38016f579bab22350ce35b6e5abe9cdd643ff6f302f6005e782
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-3-914_16/nodes.json.gz sha256 c6a62e211eb1ef3524cddedd6bb51ef98557f3261e005bd64734de3328ed9235
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-3-914_16/dense.json.gz sha256 c478455d9746098efb7289a6126264f30fec05e8538874a347bcf9f793e61388
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-3-914_16/cross.json sha256 d582d7b5c3d079c504a27ea8ee4413377302cd8ff06966af07ea9c2a0fff3c4d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-3-914_16/rows.json.gz sha256 985767879dc3eb5a46106b8d3c8c05a723fc29a94e119aa2a9aca626548f7494
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-3-914_16/result.json sha256 be2c47cf819a4e58124441d997bfc1bce90358da22053005696549af81ccaf40
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-3-914_16/nodes.json.gz sha256 426c934c53327e806df4444aeeb10f187db8054f2cf9640cc643c67f2fbc53ce
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-3-914_16/dense.json.gz sha256 b7c1a71b54f1f3e43c1d684ba4af83105f334b601ad47d35f0fcb23618d8286c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-3-914_16/cross.json sha256 14dcf849840ba0fe9bc5999a0033fcdab952cdf30e4fddae8da21277f4a8eff1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-3-914_16/rows.json.gz sha256 73a1eebdc7e67f1aa41f69902435c2d682ede6562f0ef7333d95998947f14bd6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-3-914_16/nodes.json.gz sha256 cd3cb3bf201d6da58c54b6cf9c8b1a2edd642d10d8bac0c797f0490b28fa6021
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-20245_13/result.json sha256 a31164ad3170af7a0a89f573d7ca2e11802f322171c151688ba3d83d3417e8b4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-20245_13/nodes.json.gz sha256 2e70add1c35bdd2f4ccae810fb844997a32b53d006eedb4f42f0abadc87ec3b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-1-20245_13/dense.json.gz sha256 37d258fcf51e4428bcd8da84696c227f565e65ff7ddc69c189ec0f116cfe2405
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-1-20245_13/cross.json sha256 c2e5425bc81a0d5a3ec41a0bfc690f0aad8d543ed35e77801be9d92f3a2e2272
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-1-20245_13/rows.json.gz sha256 abd0466a46f99585ea44bff28a363913cf73617aab9bd0d586af8d8aab5b3682
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-20245_13/result.json sha256 fc0932d3b1a3f75f68d73797fbc73f615545a88faf90784dedd0a9d87ae80e39
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-20245_13/nodes.json.gz sha256 5f03fdc57fc309a775dee1cfb6ce6ddb49bb32f62b935bfd8fed87c008600d4c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-1-20245_13/dense.json.gz sha256 b83fc090479887342e0d5c2e0d86abb75cedd25887e063d82e2d0b1e3a03e9bf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-1-20245_13/cross.json sha256 87a692d627cd69cd5e8be539cebcffdd85c65f7b0f3a56c0e0e2ba3fec73deec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-1-20245_13/rows.json.gz sha256 cc8e23e750cb7d034981bde8213e07736506b7902e2f9ed7fe7ec28792970f5c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-1-20245_13/nodes.json.gz sha256 00c77ac5aba5e6164cffe68658722ab577da8f31d4eb24e99b2ff0acd978c4fa
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33532_12/result.json sha256 bf676a9210958427402d68df7498a18cb9f7adf55376523e5cdbc9b59cd6b375
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33532_12/nodes.json.gz sha256 e0b69f6298b1e294aafe5940781aa8fb27e7d3d8125c8d8292c46c2978e401ab
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h/h-1e-8-0-33532_12/dense.json.gz sha256 07f72bc909fdc60ce13eff8c0e2825af3a42b74e1ea48e8410df51c4e341e3c5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-33532_12/cross.json sha256 114be9ba89a2c6fbfb4a073604290dcb48e265ac064177827853a7753cf8cc36
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/h_at_p/h-1e-8-0-33532_12/rows.json.gz sha256 e7a8ccd836cbfd767ea041a2c3d476167a91ea56b20a214669383b68cee7ae22
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33532_12/result.json sha256 c1c20b40dbbfe94c6669f1a43143b06929bd3ae60991ee05be799514e9bd59a2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33532_12/nodes.json.gz sha256 7d4a9096bceb5b712e61193676264e6e797ab5b2f0eaaf75dc36e91500b536b2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_p/p-1e-8-0-33532_12/dense.json.gz sha256 3dceb8123bc6875dc1e14375c8ffd06f0703bbaa5029ad079d36b7778f1d74d7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-33532_12/cross.json sha256 f68391769f23faa52b3ee148ba663f66a79b542b64db3697a2c8cf9005e36ddb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/cross/p_at_h/p-1e-8-0-33532_12/rows.json.gz sha256 f8b97f069160f4169f73b30cf1875b771811e46d90d029559205e39ea34bdd64
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06f/out/replay/g-1e-8-0-33532_12/nodes.json.gz sha256 16059e1242f4ff05e7602e86b62668421ece3b332c458456e03cda447af21acf
+
+== The captures and the replays against each tree's census (bit for bit)
+   p: captures matching the census 20 of 20; ray_initialized ['False']
+   h: captures matching the census 20 of 20; ray_initialized ['False']
+   p: replays with F0 holding (replay = census on value, abserr, regions, depth, converged; terms = cc_floor; every leaf reproduced) 20 of 20
+   h: replays with F0 holding (replay = census on value, abserr, regions, depth, converged; terms = cc_floor; every leaf reproduced) 20 of 20
+   replay errors: none
+
+== The two trees' calls: spans, groups and dense samples
+   every call: spans, coefficients, signs, orders, K, dense points and dense references equal: True
+
+== The parent's replay reproduces 06f's M2 item 1 (its error at x_hat, 06f's convention)
+   calls whose parent nodes equal 06f's (u, theta_mod_2pi, delta theta at x_hat, theta_abserr, hex): 20 of 20; nodes 1177; at x_hat the parent violates at 49, worst 148 (06f: 49, 148)
+
+== H1 -- the declaration is honest (h's points; reference at the exact e^u)
+   points scored 21177 (nodes 1177, dense 20000); violating 0 (nodes 0, dense 0) -> H1 holds
+   worst |delta theta|/theta_abserr_h = 0.493292 on g-1e-7-0-12689 #19 (analytic J4), node leaf 1 node 11, u = -7.596923417764045 (-0x1.e633fe4760d6fp+2); delta theta +4.5027e-13, theta_abserr 9.1278e-13 = constituents 9.0086e-13 + abscissa 5.4648e-15 + phi_eval 6.4571e-15; dominant: constituents
+   the parent on the same points: violating 561 of 21177, worst ratio 376.473 (g-1e-7-0-12689 #19)
+   the parent on its own leaves' nodes and the dense sample: violating 561 of 21177, worst 376.473
+
+   call | label | leaves h (Levin) | leaves p (Levin) | same | points | viol h | max h | parent at h's pts: viol, max | parent own: viol, max
+   g-1e-7-0-33555 #13 | analytic Y3 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.001308 | 0, 0.001694 | 0, 0.001694
+   g-1e-7-1-10824 #12 | analytic Y2 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.002731 | 0, 0.005014 | 0, 0.005014
+   g-1e-7-3-1054 #20 | analytic Y4 | 2 (1) | 2 (1) | True | 1071 | 0 | 0.4921 | 27, 3.137 | 27, 3.137
+   g-1e-7-2-21508 #15 | analytic J3 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.004846 | 0, 0.01144 | 0, 0.01144
+   g-1e-7-2-33311 #12 | analytic Y1 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.01372 | 0, 0.02889 | 0, 0.02889
+   g-1e-7-3-668 #8 | analytic J1 | 2 (0) | 2 (0) | True | 1094 | 0 | 0.004572 | 0, 0.005936 | 0, 0.005936
+   g-1e-7-1-10895 #12 | analytic J2 | 2 (0) | 2 (0) | True | 1094 | 0 | 0.111 | 0, 0.4875 | 0, 0.4875
+   g-1e-7-0-12689 #19 | analytic J4 | 4 (3) | 4 (3) | True | 1119 | 0 | 0.4933 | 534, 376.5 | 534, 376.5
+   g-1e-7-3-657 #15 | analytic Y3 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.0004507 | 0, 0.0008651 | 0, 0.0008651
+   g-1e-7-2-21613 #14 | analytic Y2 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.003599 | 0, 0.005326 | 0, 0.005326
+   g-1e-8-1-20297 #13 | analytic Y3 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.002963 | 0, 0.004543 | 0, 0.004543
+   g-1e-8-2-33275 #11 | analytic Y2 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.001826 | 0, 0.002198 | 0, 0.002198
+   g-1e-8-0-10589 #1 | analytic Y1 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.06963 | 0, 0.1294 | 0, 0.1294
+   g-1e-8-0-33586 #12 | analytic J3 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.0006225 | 0, 0.0009232 | 0, 0.0009232
+   g-1e-8-0-33609 #16 | analytic Y4 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.003149 | 0, 0.002695 | 0, 0.002695
+   g-1e-8-0-33599 #8 | analytic J1 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.003365 | 0, 0.004677 | 0, 0.004677
+   g-1e-8-1-10740 #12 | analytic J2 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.0009841 | 0, 0.001719 | 0, 0.001719
+   g-1e-8-3-914 #16 | analytic J4 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.003317 | 0, 0.003148 | 0, 0.003148
+   g-1e-8-1-20245 #13 | analytic Y3 | 2 (0) | 2 (0) | True | 1094 | 0 | 0.003974 | 0, 0.007613 | 0, 0.007613
+   g-1e-8-0-33532 #12 | analytic Y2 | 1 (0) | 1 (0) | True | 1047 | 0 | 0.002296 | 0, 0.003324 | 0, 0.003324
+
+== Descriptive: measured/declared at h's points by the declaration's dominant part (test 4's split)
+   constituents points 20446; median 6.762e-04; 90 % 6.337e-03; max 4.933e-01; min 5.571e-08
+   abscissa     points   731; median 1.344e-01; 90 % 2.750e-01; max 4.594e-01; min 2.577e-04
+   phi_eval     points 0
+
+== H2 -- the declared term covers the response (h's returned leaves)
+   leaves scored 27 (4 Levin); violating 0 -> H2 holds
+   worst |dI_measured|/declared = 0.26764 on g-1e-7-0-12689 #19 leaf 3 (levin, depth 2): 6.1497e-25 against 2.2978e-24; median 4.48e-05
+   the parent (its own leaves, its own declared terms): 27 leaves, violating 2, worst 41.5654 on g-1e-7-0-12689 #19 leaf 3 (levin); median 8.703e-05
+   h g-1e-7-0-12689 #19 leaf 3 levin: |dI| 6.150e-25, declared 2.298e-24, ratio 0.268
+   h g-1e-7-0-12689 #19 leaf 2 levin: |dI| 6.605e-25, declared 2.968e-24, ratio 0.223
+   h g-1e-8-0-10589 #1 leaf 0 cc: |dI| 2.138e-26, declared 3.809e-24, ratio 0.00561
+   h g-1e-7-1-10895 #12 leaf 1 cc: |dI| 5.846e-28, declared 4.997e-25, ratio 0.00117
+   h g-1e-7-2-33311 #12 leaf 0 cc: |dI| 4.734e-29, declared 6.622e-26, ratio 0.000715
+   h g-1e-8-3-914 #16 leaf 0 cc: |dI| 3.102e-23, declared 9.457e-20, ratio 0.000328
+   h g-1e-7-3-668 #8 leaf 1 cc: |dI| 9.444e-28, declared 2.919e-24, ratio 0.000324
+   h g-1e-7-2-21508 #15 leaf 0 cc: |dI| 2.210e-26, declared 8.234e-23, ratio 0.000268
+   h g-1e-7-0-12689 #19 leaf 0 cc: |dI| 4.607e-24, declared 2.083e-20, ratio 0.000221
+   h g-1e-8-1-20297 #13 leaf 0 cc: |dI| 3.013e-29, declared 2.023e-25, ratio 0.000149
+wrote out/phase_calls.csv sha256 f25c565c9ac00e7bb8aeed82217ece831838ec453966cdd53478344655f62131
+wrote out/phase_leaves.csv sha256 d67f0a61daf51a3b66a5295e2780b7059f08db914c1f05d769aa3c740709c66c
+wrote out/scores.json sha256 8b10d67535811d132641888f38a790f05fb92ddc3044f2deb20dbde4f57f6b3e
+# ----
+# end 2026-11-01T03:51:39Z
+# exit 0

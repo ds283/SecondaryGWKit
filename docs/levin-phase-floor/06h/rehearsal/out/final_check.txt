@@ -1,0 +1,102 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T00:35:26Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=var/levin-phase-floor-06h/rehearsal; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > $R/out/final_registry_list.txt 2>&1; echo "list exit $?"; head -4 $R/out/final_registry_list.txt | cut -c1-150; tail -1 $R/out/final_registry_list.txt; echo "== lock dir"; ls -la ~/.raypoolkit/; echo "== trees"; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short; for T in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2; do git --no-optional-locks -C $T rev-parse HEAD; git --no-optional-locks -C $T status --short --ignored; find $T -newer $R/state/r21_launch_marker | head; done; echo "== stores final"; cat $R/state/stores_sha256_final.txt; echo "== records"; find $R -path $R/extract -prune -o -type f -print | sort | while read f; do printf "%s  %s  %s\n" "$(shasum -a 256 "$f" | cut -c1-64)" "$(/usr/bin/stat -f %z "$f")" "$f"; done; echo "== pycache in records"; find $R -name __pycache__; echo "== black --check (records, not applied)"; ./venv/bin/python -m black --check $R/scripts/*.py 2>&1
+# output:
+== registry
+list exit 0
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06h-r22-groupphase-20261101T002423  done              -      11m  levin-phase-floor prompt 06h, R22 on the Mac Studio (mps026298;
+   levin-phase-floor-06h-r21-parent-20261101T001852      done              -      17m  levin-phase-floor prompt 06h, R21 on the Mac Studio (mps026298;
+   levin-phase-floor-06f-measure-20261031T204803         done          44/44   3h 47m  levin-phase-floor prompt 06f on the Mac Studio (mps026298; Pyth
+38 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 38 finished; 0 with no host recorded.
+== lock dir
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  1 00:35 .
+drwxr-x--- 159 ds283 staff 5088 Nov  1 00:12 ..
+== trees
+28ebaf0743e0555fb2c4512ce714884005a60eff
+2c325f56641666b45df483adb8c1202575721c42
+c1ec3b2c819cc5df22ddf4b303f69c7129a54d62
+== stores final
+b1d0b36abfd528c66806972d368a819a4c022eecb1336b9ec5798c6bbb97f282  var/datastores/levin-phase-floor-06h-r21-shard0000.sqlite
+b509e29894d4eed632ac6070a9d1d70547e482672be7fa4a5dc17c8777c3bf1f  var/datastores/levin-phase-floor-06h-r21-shard0001.sqlite
+b0c7e398f6d65c44f767234b5ab7f5ee79d142ba31ec9eb74a4784e33a1e88e3  var/datastores/levin-phase-floor-06h-r21-shard0002.sqlite
+c688f7ad14d4ce3f46905ba357a722476fdd7e2caa3dbd686346de0d16d8b09f  var/datastores/levin-phase-floor-06h-r21-shard0003.sqlite
+3e91761ef45628d61bf04f0daa7d6c3aab4bfdf4563ac67af6c2ba1ddcb69584  var/datastores/levin-phase-floor-06h-r21.sqlite
+d7154ef1b9466988711edfe540aeadbcd1e9ce5c651cd6d70cddbac0d6a5a605  var/datastores/levin-phase-floor-06h-r22-shard0000.sqlite
+7929750e570c34c55cd6bf27e4442922b985d1b1e461b07fea7046803df707bd  var/datastores/levin-phase-floor-06h-r22-shard0001.sqlite
+5e9ae5a4a1225dd078c3abd37ab8a449bc73d875d129bbbc398f41d7c2959d7c  var/datastores/levin-phase-floor-06h-r22-shard0002.sqlite
+0b92ef735063b1f2fbe5f7a11f7c5bb903dec553343e7d21848de3f631244202  var/datastores/levin-phase-floor-06h-r22-shard0003.sqlite
+4205df39f46c2fcc0589086c6e2f0e0731f4deccf7124565aa6b0ef4d8d270c4  var/datastores/levin-phase-floor-06h-r22.sqlite
+var/datastores/levin-phase-floor-06h-r21-shard0000.sqlite 25030656 1793492608
+var/datastores/levin-phase-floor-06h-r21-shard0001.sqlite 25219072 1793492608
+var/datastores/levin-phase-floor-06h-r21-shard0002.sqlite 1077248 1793492343
+var/datastores/levin-phase-floor-06h-r21-shard0003.sqlite 24494080 1793492608
+var/datastores/levin-phase-floor-06h-r21.sqlite 36864 1793492343
+var/datastores/levin-phase-floor-06h-r22-shard0000.sqlite 24997888 1793492932
+var/datastores/levin-phase-floor-06h-r22-shard0001.sqlite 25243648 1793492932
+var/datastores/levin-phase-floor-06h-r22-shard0002.sqlite 1077248 1793492673
+var/datastores/levin-phase-floor-06h-r22-shard0003.sqlite 24612864 1793492932
+var/datastores/levin-phase-floor-06h-r22.sqlite 36864 1793492673
+no journal/wal/shm
+== records
+010b4a0e03d2faab75e97ee5053f661845ff4a9d83e0e05fa4af9b0b35852d9a  4700  var/levin-phase-floor-06h/rehearsal/out/00-gate-trees.txt
+39f99046302aa1f03e5d61b6eb7a05c7c5298cb8f1b2876eb5dc75fb5b9a5ac2  9643  var/levin-phase-floor-06h/rehearsal/out/01-gate-registry-lock.txt
+4e0b3654847eb916d6201737083602d3ef818056d54bb7951441d19af1d0d355  36  var/levin-phase-floor-06h/rehearsal/out/classify_non_qsi.stderr
+571a48c7a1dd1d76c06e5a1ab1fd62f7a098fd818671f866c455abb597c63135  4087  var/levin-phase-floor-06h/rehearsal/out/classify_non_qsi.txt
+b216e7481f14b194da51001f22d7ab7aca05a6b651b1fb4e93cae048a9b4c09a  12395  var/levin-phase-floor-06h/rehearsal/out/commands.log
+e9c23fe0f58362e5e8d42358f20e4602728b79e4e0e3265bdd59bcc39e464a0f  4852  var/levin-phase-floor-06h/rehearsal/out/final_check.txt
+4152f8ab1996d3e511a8de3f2f1cf70f0ac8064327251ce816935a235aea1a75  30790  var/levin-phase-floor-06h/rehearsal/out/final_registry_list.txt
+f98ffebb4e6533e22380a050cf04076d940a8167192c541d7d75fc15c6b44cee  203841  var/levin-phase-floor-06h/rehearsal/out/qsi_analytic_rows.csv
+28d3b9e880a77975493dc7e359144c0295a4f694cfe0af4f928c22307bc5c320  7  var/levin-phase-floor-06h/rehearsal/out/qsi_analytic_summary.stderr
+41091fa87fac81928f3cd52a42ce724dd29506c06cf1dc8117a97bc39ea1e1e5  2137  var/levin-phase-floor-06h/rehearsal/out/qsi_analytic_summary.txt
+840ef35cbdacbf7ee3999894f2336643a3325659754d2dddaee0bb1e6181dc49  357805  var/levin-phase-floor-06h/rehearsal/out/qsi_rows.csv
+af3344e4073ef5ae3998379f917eeed5ccab6342060ecca2ceb7782ebc86514c  36  var/levin-phase-floor-06h/rehearsal/out/qsi_tabulation.stderr
+6a206e53ea187770a95bb484fc0a80c39ac60b30d6e1f47326b81a5886a1d3ee  7226  var/levin-phase-floor-06h/rehearsal/out/qsi_tabulation.txt
+5c13f5a16dd69f6d868e532cd4413c5e52f5ba476e5075143937b3ec5d41d2ed  17544  var/levin-phase-floor-06h/rehearsal/out/r21_end_check.txt
+8858c66fb17c3646f3ac4b3669409303122abb8f079079014df812fdaac2313f  2360  var/levin-phase-floor-06h/rehearsal/out/r21_end_check2.txt
+a80813ef8affa7817a5967a2404ba3fdc0347fcddffee0b81694f50908de5722  29810  var/levin-phase-floor-06h/rehearsal/out/r21_end_registry_list.txt
+206dd4333453a41fdc42482a09f2e9160a33336fb39ca8cbf70d0fc74721f70d  7984  var/levin-phase-floor-06h/rehearsal/out/r21_launch_check.txt
+b3f999c855bc78734338dc9f6b4bd767e564fe8208b96719a04a9a40d90e6cf5  10324  var/levin-phase-floor-06h/rehearsal/out/r21_status.json
+4560bfbb61dd0dc413b4a6d5d83d1b0040edac24ba2cf12a85c0dc4dc06b1f4b  2029  var/levin-phase-floor-06h/rehearsal/out/r21_vs_06e_r20_csv_check.txt
+4cbcffa73b1827d69d2bf8ed55ca0039261d12b5f09e63f2202d49a744baa4cc  6162  var/levin-phase-floor-06h/rehearsal/out/r22_end_check.txt
+aa9ef6ac289b65ed49a8ca8152d75e0da05c69dfb5dc5eeb4224d4c77e1636bf  30790  var/levin-phase-floor-06h/rehearsal/out/r22_end_registry_list.txt
+e9750c0d3b713a011bc2f232c2d69e5be4b8e36288b0c32ac1299814787f96a2  7723  var/levin-phase-floor-06h/rehearsal/out/r22_launch_check.txt
+161f6ec20fecaafed9db7986693a99889943d43d9b0977f46ca0e3accec729fe  30788  var/levin-phase-floor-06h/rehearsal/out/r22_launch_registry_list.txt
+5f74c1c13c444e90579ea61932eb6357763925d9841a9b3485b58fcc4bd9a352  10328  var/levin-phase-floor-06h/rehearsal/out/r22_status.json
+c434f4e94be717e0be814c21abb4fa97cf859ed8fc2df4622ac91e6d572d655e  3319  var/levin-phase-floor-06h/rehearsal/out/readers_check.txt
+ce4ff5e48cee907455a7bbced8d74ebf59c6cbc5cb2b60e2f18be2fcb6a3906f  11419  var/levin-phase-floor-06h/rehearsal/out/readers.txt
+c2ce260b41a50ee15c480dab391cacda4ee0be5a1178b76e59ecb65f2c6f8990  1026  var/levin-phase-floor-06h/rehearsal/out/run_readers_worktree.diff
+68b9c378166368df621d21c0aac12d5a4edcb548a43cc719f67e7421c841fd0f  40969988  var/levin-phase-floor-06h/rehearsal/out/store_value_diff.json
+b8b715d80cbc540394dcdd2f3b27f3c4da7c47f5ab5a329ff6f96f78e844fa16  38  var/levin-phase-floor-06h/rehearsal/out/store_value_diff.json.stderr
+ff8b2ff90e33dbcf47af1d743beb54c54ad7b1e1584a0df513f1b8c6cafc424b  23535  var/levin-phase-floor-06h/rehearsal/out/tabulate_qsi_groupphase.diff
+26690e6112348716df97cccec31256bf62af357b286b89d78e6db24c006827b0  3574  var/levin-phase-floor-06h/rehearsal/scripts/classify_non_qsi.py
+7cb08e8f5b657d46b648cc703160cad3068c268c52d59f603e337bfed649c8d3  9505  var/levin-phase-floor-06h/rehearsal/scripts/qsi_analytic_summary.py
+a24f685eb82e1119038d7c1833448347d357f15656501075861ce24127f1678f  668  var/levin-phase-floor-06h/rehearsal/scripts/rec.sh
+ec96cf0915b486718763b3a5d73177516e8dd32775906e86e2e6bb5006cddb72  4317  var/levin-phase-floor-06h/rehearsal/scripts/run_readers_worktree.sh
+dea79d01f323fad01a2caa42b31a3905dd87e43186b1e620d30bc0276508764a  31724  var/levin-phase-floor-06h/rehearsal/scripts/tabulate_qsi_groupphase.py
+76b453068f3d6bacb4a16040d3ec48fb454b90f730237b39b863b4ad66837fae  43  var/levin-phase-floor-06h/rehearsal/state/launch_r21.txt
+2754d9f6c677c99ce8f6c05346f7b8ad21c019fbc0c8a84569d10aeb3323d69b  43  var/levin-phase-floor-06h/rehearsal/state/launch_r22.txt
+147bbf5f7f10fa134b1cc9d9f929854d92917ca77309109f3945fa19ce5ca11e  719  var/levin-phase-floor-06h/rehearsal/state/lock.log
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  0  var/levin-phase-floor-06h/rehearsal/state/r21_launch_marker
+7d4b5658771eca293f80a3c5b8b9fd3d7960a84121e70289c6f74941083085ad  1005  var/levin-phase-floor-06h/rehearsal/state/r21_store_sha256_after_build.txt
+e1b5cc9050ef1f879be4796cd51f0384eae6f5ab0acf3959a643c60312093eeb  610  var/levin-phase-floor-06h/rehearsal/state/r21_store_sha256_at_r22_launch.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  0  var/levin-phase-floor-06h/rehearsal/state/r22_launch_marker
+ad41ec75733662f99b23cbea730602912d9a59b9f07988232c5d21f7a3b30a22  1005  var/levin-phase-floor-06h/rehearsal/state/r22_store_sha256_after_reads.txt
+4edaa93cd04ec2a91fd05ad4b73848c241860dc39dcc9d0798932a573955faa8  610  var/levin-phase-floor-06h/rehearsal/state/r22_store_sha256_before_reads.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  0  var/levin-phase-floor-06h/rehearsal/state/readers_marker
+9a9aa9352f4f7de5aaf3e619379c9d6fc2653f1554e2636055c21a0f783a614c  1991  var/levin-phase-floor-06h/rehearsal/state/store_sha256_after_diff.txt
+9a9aa9352f4f7de5aaf3e619379c9d6fc2653f1554e2636055c21a0f783a614c  1991  var/levin-phase-floor-06h/rehearsal/state/store_sha256_before_diff.txt
+9a9aa9352f4f7de5aaf3e619379c9d6fc2653f1554e2636055c21a0f783a614c  1991  var/levin-phase-floor-06h/rehearsal/state/stores_sha256_final.txt
+== pycache in records
+== black --check (records, not applied)
+would reformat var/levin-phase-floor-06h/rehearsal/scripts/classify_non_qsi.py
+would reformat var/levin-phase-floor-06h/rehearsal/scripts/qsi_analytic_summary.py
+would reformat var/levin-phase-floor-06h/rehearsal/scripts/tabulate_qsi_groupphase.py
+
+Oh no! 💥 💔 💥
+3 files would be reformatted.
+# exit: 1
+# end: 2026-11-01T00:35:29Z

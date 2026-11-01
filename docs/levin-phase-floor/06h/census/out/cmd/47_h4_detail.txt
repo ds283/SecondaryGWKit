@@ -1,0 +1,78 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/h4_detail06h.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:28:27Z
+# ----
+# levin-phase-floor 06h: the calls whose convergence changed, in detail
+# written 2026-11-01T03:28:27Z on mps026298.phys.susx.ac.uk
+# script h4_detail06h.py sha256 72f2ecdae3762ddf6f2ec4cd9f3c36b072ed7b467a6acaab074059e575a1204f
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5 HEAD 2c325f56641666b45df483adb8c1202575721c42 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/out/h4_changed_calls_06h.json sha256 7b7fa196fd3d772f9d329f05e55355387f4c0e7400459371da170c5ba2f16226
+
+==== g-1e-8-3-1072 call 13 (analytic, analytic J1); row 3-1072: k 100000.0 q 300000000.0000001 r 300000000.0000001 z_response 1209757702.2357628 band seam; stationary-point row False
+
+-- 06e: unit total -0x1.9cd746d4b803bp-58 abserr 0x1.7b4f67d17cea8p-79; analytic_rad -0x1.9f88a8d93a945p-58; analytic_06h null
+   index: 13
+   notify_label: "analytic J1"
+   value: {"repr": "-1.6288414351839023e-18", "hex": "-0x1.e0bfc7790b7c0p-60"}
+   abserr: {"repr": "7.15608493997929e-27", "hex": "0x1.1b7b52ad37b7ap-87"}
+   converged: true
+   phase_limited: true
+   num_regions: 2
+   max_depth: 1
+   rtol: 1e-08
+   atol: 1e-32
+   relerr: {"repr": "4.393358853356613e-09", "hex": "0x1.2de8c94b7d5e3p-28"}
+   abserr_resolution: {"repr": "2.341930812374879e-31", "hex": "0x1.3000000000000p-102"}
+   abserr_roundoff: {"repr": "7.15608493997929e-27", "hex": "0x1.1b7b52ad37b7ap-87"}
+   abserr_fallback: {"repr": "0.0", "hex": "0x0.0p+0"}
+   abserr_truncation: {"repr": "0.0", "hex": "0x0.0p+0"}
+   num_untrusted_regions: 0
+   n_phase_limited_regions: 1
+   E_share: {"resolution": {"repr": "0.0", "hex": "0x0.0p+0"}, "floor": {"repr": "7.15608493997929e-27", "hex": "0x1.1b7b52ad37b7ap-87"}, "truncation": {"repr": "0.0", "hex": "0x0.0p+0"}}
+   E_largest_share: "floor"
+   E_unwidened: {"repr": "7.15608493997929e-27", "hex": "0x1.1b7b52ad37b7ap-87"}
+   leaves: {"levin": 2, "cc": 0, "trusted": 1, "untrusted": 0, "unchecked": 0, "floor_limited": 1, "widened": 1}
+   budget: {"num_leaves": 2, "num_splits": 1, "num_floor_limited": 1, "num_at_depth_max": 0, "num_checks": 2, "num_check_passes": 1, "num_untrusted_found": 1, "num_untrusted_returned": 0, "num_unchecked_returned": 0, "running_stop": true, "budget_met": true, "disagree": "", "num_resum_rejections": 0}
+   solves_by_purpose: {"Levin subregion": 1, "Levin left-comparison region": 3, "Levin right-comparison region": 3, "trust check: a quarter": 8}
+   cc_floor: {"n_cc_leaves": 0, "n_reproduced": 0, "n_errors": 0, "n_floor_attributed": 0, "sums_all_cc_leaves": {"t_value_rounding": {"repr": "0.0", "hex": "0x0.0p+0"}, "t_argument": {"repr": "0.0", "hex": "0x0.0p+0"}, "node_term": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_g": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_2": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_c": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared": {"repr": "0.0", "hex": "0x0.0p+0"}, "phase_err_resolve": {"repr": "0.0", "hex": "0x0.0p+0"}, "abs_E": {"repr": "0.0", "hex": "0x0.0p+0"}}, "sums_floor_attributed_cc_leaves": {"t_value_rounding": {"repr": "0.0", "hex": "0x0.0p+0"}, "t_argument": {"repr": "0.0", "hex": "0x0.0p+0"}, "node_term": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_g": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_2": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_c": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared": {"repr": "0.0", "hex": "0x0.0p+0"}, "phase_err_resolve": {"repr": "0.0", "hex": "0x0.0p+0"}, "abs_E": {"repr": "0.0", "hex": "0x0.0p+0"}}}
+   leaves (2):
+      start=-0x1.422aec355382ap+3, end=-0x1.1ef54b989c38dp+3, depth=1, type=0, abserr=0x1.a000000000000p-103, phase_err=0x1.1b8a7c93cae46p-88, total_err=0x1.1b8a7c93cae46p-88, phase_limited=False, trusted=1, declared_resolution=0x1.a000000000000p-103, abserr_truncation=0x0.0p+0
+      start=-0x1.1ef54b989c38dp+3, end=-0x1.f77f55f7c9de0p+2, depth=1, type=0, abserr=0x1.8000000000000p-104, phase_err=0x1.1b6c28c6a48aep-88, total_err=0x1.1b6c28c6a48aep-88, phase_limited=True, trusted=-1, declared_resolution=nan, abserr_truncation=0x0.0p+0
+
+-- h: unit total -0x1.9cd746d4b803bp-58 abserr 0x1.7b4f67d17cea8p-79; analytic_rad -0x1.9f88a8d93a945p-58; analytic_06h {"h": {"value": {"repr": "-5.631533466881991e-18", "hex": "-0x1.9f88a8d93a945p-58"}, "abserr": {"repr": "4.522242028076425e-19", "hex": "0x1.0af2307b1dae6p-61"}, "converged": false}, "n_captured": 1, "parent_counterfactual": {"value": {"repr": "-5.631533466881991e-18", "hex": "-0x1.9f88a8d93a945p-58"}, "abserr": {"repr": "4.522242028076363e-19", "hex": "0x1.0af2307b1daa5p-61"}, "converged": false}, "seconds": 0.37630304135382175}
+   index: 13
+   notify_label: "analytic J1"
+   value: {"repr": "-1.6288414349742625e-18", "hex": "-0x1.e0bfc77801bc0p-60"}
+   abserr: {"repr": "2.359215796635226e-26", "hex": "0x1.d34a73ec76c16p-86"}
+   converged: false
+   phase_limited: true
+   num_regions: 1
+   max_depth: 0
+   rtol: 1e-08
+   atol: 1e-32
+   relerr: {"repr": "1.4484011432779548e-08", "hex": "0x1.f1aab63ee9571p-27"}
+   abserr_resolution: {"repr": "6.162975822039155e-32", "hex": "0x1.4000000000000p-104"}
+   abserr_roundoff: {"repr": "2.359215796635226e-26", "hex": "0x1.d34a73ec76c16p-86"}
+   abserr_fallback: {"repr": "0.0", "hex": "0x0.0p+0"}
+   abserr_truncation: {"repr": "0.0", "hex": "0x0.0p+0"}
+   num_untrusted_regions: 0
+   n_phase_limited_regions: 1
+   E_share: {"resolution": {"repr": "0.0", "hex": "0x0.0p+0"}, "floor": {"repr": "2.359215796635226e-26", "hex": "0x1.d34a73ec76c16p-86"}, "truncation": {"repr": "0.0", "hex": "0x0.0p+0"}}
+   E_largest_share: "floor"
+   E_unwidened: {"repr": "2.359215796635226e-26", "hex": "0x1.d34a73ec76c16p-86"}
+   leaves: {"levin": 1, "cc": 0, "trusted": 0, "untrusted": 0, "unchecked": 0, "floor_limited": 1, "widened": 0}
+   budget: {"num_leaves": 1, "num_splits": 0, "num_floor_limited": 1, "num_at_depth_max": 0, "num_checks": 0, "num_check_passes": 0, "num_untrusted_found": 0, "num_untrusted_returned": 0, "num_unchecked_returned": 0, "running_stop": false, "budget_met": false, "disagree": "", "num_resum_rejections": 0}
+   solves_by_purpose: {"Levin subregion": 1, "Levin left-comparison region": 1, "Levin right-comparison region": 1}
+   cc_floor: {"n_cc_leaves": 0, "n_reproduced": 0, "n_errors": 0, "n_floor_attributed": 0, "sums_all_cc_leaves": {"t_value_rounding": {"repr": "0.0", "hex": "0x0.0p+0"}, "t_argument": {"repr": "0.0", "hex": "0x0.0p+0"}, "node_term": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_g": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_2": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_c": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared": {"repr": "0.0", "hex": "0x0.0p+0"}, "phase_err_resolve": {"repr": "0.0", "hex": "0x0.0p+0"}, "abs_E": {"repr": "0.0", "hex": "0x0.0p+0"}}, "sums_floor_attributed_cc_leaves": {"t_value_rounding": {"repr": "0.0", "hex": "0x0.0p+0"}, "t_argument": {"repr": "0.0", "hex": "0x0.0p+0"}, "node_term": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_g": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_2": {"repr": "0.0", "hex": "0x0.0p+0"}, "R_c": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared": {"repr": "0.0", "hex": "0x0.0p+0"}, "phase_err_resolve": {"repr": "0.0", "hex": "0x0.0p+0"}, "abs_E": {"repr": "0.0", "hex": "0x0.0p+0"}}}
+   declared_06h: {"supplies_theta_abserr": true, "request": {"repr": "1.6288414349742626e-26", "hex": "0x1.42a012aa27d99p-86"}, "has_parts": true, "n_leaves": 1, "n_reproduced": 1, "n_errors": 0, "levin": {"n": 1, "n_reproduced": 1, "declared": {"repr": "4.142645305738432e-27", "hex": "0x1.4836d434fe96ap-88"}, "floor": {"repr": "1.944951266061383e-26", "hex": "0x1.813cbedf371bcp-86"}, "phase_err_resolve": {"repr": "2.359215796635226e-26", "hex": "0x1.d34a73ec76c16p-86"}, "declared_constituents": {"repr": "1.8672141578245465e-30", "hex": "0x1.2ef90aa961f14p-99"}, "declared_abscissa": {"repr": "4.1362889397648136e-27", "hex": "0x1.47b5e8116411ep-88"}, "declared_phi_eval": {"repr": "4.489151815793644e-30", "hex": "0x1.6c34091561fc9p-98"}, "max_theta_abserr_a": {"repr": "3.287434988224572e-12", "hex": "0x1.ceaa53f180999p-39"}, "max_theta_abserr_b": {"repr": "2.9613883706964426e-11", "hex": "0x1.047c89ae2af24p-35"}}, "levin_floor_attributed": {"n": 1, "n_reproduced": 1, "declared": {"repr": "4.142645305738432e-27", "hex": "0x1.4836d434fe96ap-88"}, "floor": {"repr": "1.944951266061383e-26", "hex": "0x1.813cbedf371bcp-86"}, "phase_err_resolve": {"repr": "2.359215796635226e-26", "hex": "0x1.d34a73ec76c16p-86"}, "declared_constituents": {"repr": "1.8672141578245465e-30", "hex": "0x1.2ef90aa961f14p-99"}, "declared_abscissa": {"repr": "4.1362889397648136e-27", "hex": "0x1.47b5e8116411ep-88"}, "declared_phi_eval": {"repr": "4.489151815793644e-30", "hex": "0x1.6c34091561fc9p-98"}, "max_theta_abserr_a": {"repr": "3.287434988224572e-12", "hex": "0x1.ceaa53f180999p-39"}, "max_theta_abserr_b": {"repr": "2.9613883706964426e-11", "hex": "0x1.047c89ae2af24p-35"}}, "cc": {"n": 0, "n_reproduced": 0, "declared": {"repr": "0.0", "hex": "0x0.0p+0"}, "floor": {"repr": "0.0", "hex": "0x0.0p+0"}, "phase_err_resolve": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared_constituents": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared_abscissa": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared_phi_eval": {"repr": "0.0", "hex": "0x0.0p+0"}, "max_theta_abserr_a": null, "max_theta_abserr_b": null}, "cc_floor_attributed": {"n": 0, "n_reproduced": 0, "declared": {"repr": "0.0", "hex": "0x0.0p+0"}, "floor": {"repr": "0.0", "hex": "0x0.0p+0"}, "phase_err_resolve": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared_constituents": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared_abscissa": {"repr": "0.0", "hex": "0x0.0p+0"}, "declared_phi_eval": {"repr": "0.0", "hex": "0x0.0p+0"}, "max_theta_abserr_a": null, "max_theta_abserr_b": null}}
+   leaves (1):
+      start=-0x1.422aec355382ap+3, end=-0x1.f77f55f7c9de0p+2, depth=0, type=0, abserr=0x1.4000000000000p-104, phase_err=0x1.d34a73ec76c16p-86, total_err=0x1.d34a73ec76c16p-86, phase_limited=True, trusted=-1, declared_resolution=nan, abserr_truncation=0x0.0p+0
+   declared terms by leaf (h):
+      branch=np.int8(0), floor_attributed=np.True_, declared=np.float64(4.142645305738432e-27), floor=np.float64(1.944951266061383e-26), phase_err_resolve=np.float64(2.359215796635226e-26), theta_abserr_a=np.float64(3.287434988224572e-12), theta_abserr_b=np.float64(2.9613883706964426e-11), p_l1_a=np.float64(6.308656981431706e-16), p_l1_b=np.float64(6.985626597518319e-17), constituents_a=np.float64(2.6647165578011112e-15), abscissa_a=np.float64(3.278363748874597e-12), phi_eval_a=np.float64(6.406522792174151e-15), constituents_b=np.float64(2.6645553356631963e-15), abscissa_b=np.float64(2.960481319311392e-11), phi_eval_b=np.float64(6.405958514838727e-15), declared_constituents=np.float64(1.8672141578245465e-30), declared_abscissa=np.float64(4.1362889397648136e-27), declared_phi_eval=np.float64(4.489151815793644e-30), reproduces=np.True_, captured=np.True_
+   errors []
+# ----
+# end 2026-11-01T03:28:29Z
+# exit 0

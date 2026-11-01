@@ -257,3 +257,32 @@ it was measured on the laptop only (the log's Observation 4).
 
 **The worktrees,** made by the laptop after this commit is pushed, detached, with no venv:
 `SecondaryGWKit-lpf06h-2c325f5` and `SecondaryGWKit-lpf06h-<this commit's short SHA>`.
+
+### B.3 Addendum, 2026-11-01: Part B's review, the rulings and the records
+
+**Part B** ran on the Mac Studio on 2026-11-01, through an orchestrator session there: a rehearsal
+agent (R21, R22, the readers), a census agent (Gate H, the census, H3, H4) and a phase agent (06f's
+20 calls captured afresh at $h$ and at the parent, H1, H2). Its review, `06h/review.md`, passed all
+ten checks; no §7 stop fired. The gate test passed on that host, and $\varepsilon_{\exp}$ measured
+there equals the laptop's.
+
+**The verdicts.** Gate H, H1, H2 and H3 hold. H0 and H3 hold trivially as written: 06h cannot reach
+`total`, so every `total` is 06e's; their second reading, on the analytic oracle, holds too, and is
+the one that bears on the change (prompt §8, amendment 1, written at this commit). H4 fails on
+`g-1e-8-3-1072` #13: 06h's declared term raised the root's floor, 06b's premise then held, and the
+call stopped unconverged at depth 0 where 06e split it once and converged.
+
+**The rulings**, on the orchestrator's recommendations (the board's Decisions, **06h Part B
+lands**): H4 counts as failing and narrows `[07-roundoff-exit-assumes-bisection-cannot-help]`;
+`[06f-theta-abserr-omits-the-product-rounding]` closes; the census's D3 narrows
+`[06e-cc-declared-phase-term-is-a-crude-proxy]`; nothing else opens. The user will retire R21 and
+R22; the census run directory stays as 06g's "before".
+
+**The records commit**, made on the laptop: `var/levin-phase-floor-06h/` copied back by `rsync`
+without `rehearsal/extract/` or pickles; `docs/levin-phase-floor/06h/` from it, without the two
+files over 2 MB, whose SHA-256 match on both machines (`06h/KEPT_ON_MAC_STUDIO.md`); the log's
+Part B record; `VERIFICATION.md` §6h; the prompt's §8; the board, `docs/OPEN_ISSUES.md` (125 →
+124) and both READMEs. The copied scripts are not `black`-clean and are listed in `CLAUDE.md`'s
+formatting paragraph. The Mac Studio worktrees `SecondaryGWKit-lpf06h-2c325f5` and
+`-c1ec3b2` are left for the user's retirement of R21 and R22, which needs a checkout whose code
+declares `theta_residual`.

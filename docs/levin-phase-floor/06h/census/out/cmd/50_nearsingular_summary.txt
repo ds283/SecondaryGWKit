@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport re, collections\nL = [l for l in open(\'out/cmd/49_nearsingular.txt\') if l.startswith(\'   \') and \' rel \' in l]\nc = collections.Counter(); mx = 0.0\nfor l in L:\n    an = int(re.search(r\'analytic calls (\\d+)\', l).group(1)); c[\'rows\'] += 1; c[\'with analytic Levin calls\'] += an > 0\n    c[\'band \' + re.search(r\'band (\\S+);\', l).group(1)] += 1\n    c[\'group \' + re.search(r\'group (\\S+) \', l).group(1)] += 1\n    for r in re.findall(r\'\\|da\\|/\\(e_06e\\+e_h\\) ([0-9.e+-]+)\', l): mx = max(mx, float(r))\n    c[\'oracle unconverged (h, 1e-7)\'] += \'oracle converged h False\' in l.split(\'; 1e-8\')[0]\n    c[\'rows with a call changed\'] += "calls changed [(" in l\n    c[\'rel values \' + re.search(r\'rel (\\S+)\', l).group(1)] += 1\nprint(dict(c)); print(\'max second-reading ratio over these rows, both rtols:\', mx)\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T03:29:46Z
+# ----
+{'rows': 435, 'with analytic Levin calls': 301, 'band seam': 285, 'group (+,+,-)': 435, 'oracle unconverged (h, 1e-7)': 302, 'rows with a call changed': 1, 'rel values 0.000289': 145, 'band mid': 99, 'band low': 51, 'rel values 0.000905': 290}
+max second-reading ratio over these rows, both rtols: 4.99e-14
+# ----
+# end 2026-11-01T03:29:46Z
+# exit 0

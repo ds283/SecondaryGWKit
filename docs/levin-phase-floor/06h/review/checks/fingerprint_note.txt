@@ -1,0 +1,2 @@
+first attempt from the main checkout (28ebaf0) refused: older code does not declare theta_residual; nothing was read. Re-run from worktree c1ec3b2 with PYTHONPATH=.; no --write.
+stores unchanged after my reads

@@ -1,0 +1,79 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T00:18:27Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+echo "== registry"; ./venv/bin/python -B -m runregistrykit list | cut -c1-140; echo "== lock dir"; ls -la ~/.raypoolkit/ 2>&1; ls -la ~/ScienceData/.rehearsal-lock 2>&1; echo "== auth token"; /usr/bin/stat -f "%Sp %N" ~/.ray/auth_token; echo "== df"; df -h /Users/ds283 | tail -1; echo "== load"; sysctl -n vm.loadavg; echo "== venv"; ./venv/bin/python -B -c "import sys,ray,sqlalchemy,datastorekit,raypoolkit,runregistrykit; print(sys.version); print(ray.__version__, sqlalchemy.__version__)"; ./venv/bin/pip freeze 2>/dev/null | grep -i -E "datastorekit|raypoolkit|runregistrykit"; echo "== 06h stores and runs"; ls var/datastores | grep 06h; ls var/runs | grep 06h; echo "== launcher hashes"; shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/RunDrivers/quadsource_atol_sweep.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/RunDrivers/quadsource_atol_sweep.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/main.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/main.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/LiouvilleGreen/three_bessel_integrals.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/LiouvilleGreen/three_bessel_integrals.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/ComputeTargets/QuadSourceIntegral.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/ComputeTargets/QuadSourceIntegral.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/AdaptiveLevin/levin_quadrature.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/AdaptiveLevin/levin_quadrature.py; echo "== 06e R19 manifest script_sha256"; grep script_sha256 var/runs/levin-phase-floor-06e-r19-parent-20261030T074440/manifest.json
+# output:
+== registry
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06f-measure-20261031T204803         done          44/44   3h 30m  levin-phase-floor prompt 06f on the Mac Studio (mps02
+   levin-phase-floor-06e-references-20261030T192730      done            4/4   1d 04h  levin-phase-floor prompt 06e section 5, Z3 on the Mac
+   levin-phase-floor-06e-census-20261030T081318          done      18560/18560   1d 16h  levin-phase-floor prompt 06e section 5 on the Mac S
+   levin-phase-floor-06e-r20-endnodes-20261030T075034    done              -   1d 16h  levin-phase-floor prompt 06e, R20 on the Mac Studio (
+   levin-phase-floor-06e-r19-parent-20261030T074440      done              -   1d 16h  levin-phase-floor prompt 06e, R19 on the Mac Studio (
+   levin-phase-floor-06c-census-20261029T130214          done      18560/18560   2d 11h  levin-phase-floor prompt 06c section 5 on the Mac S
+   levin-phase-floor-06c-r18-global-20261029T124058      done              -   2d 11h  levin-phase-floor prompt 06c, R18 on the Mac Studio (
+   levin-phase-floor-06c-r17-parent-20261029T123720      done              -   2d 11h  levin-phase-floor prompt 06c, R17 on the Mac Studio (
+   levin-phase-floor-06b-census-20261028T161212          done      18560/18560   3d 08h  levin-phase-floor prompt 06b section 5 on the Mac S
+   levin-phase-floor-06b-r16-premise-20261028T135745     done              -   3d 10h  levin-phase-floor prompt 06b, R16 on the Mac Studio (
+   levin-phase-floor-06b-r15-parent-20261028T135349      done              -   3d 10h  levin-phase-floor prompt 06b, R15 on the Mac Studio (
+   levin-phase-floor-06a-census-20261027T023143          done      18560/18560   4d 21h  levin-phase-floor prompt 06a on the Mac Studio (mps
+   levin-phase-floor-06-wider-20261026T223634            done        109/109   5d 01h  levin-phase-floor prompt 06 section 6 on the Mac Stud
+   levin-phase-floor-06-r14-residual-20261026T215945     done              -   5d 02h  levin-phase-floor prompt 06, R14 on the Mac Studio (m
+   levin-phase-floor-06-r13-parent-20261026T215550       done              -   5d 02h  levin-phase-floor prompt 06, R13 on the Mac Studio (m
+   handover-04-cost-growth-20261026T173720               done          60/60   5d 06h  handover prompt 04 (A4) on the Mac Studio (mps026298;
+   handover-04-cost-growth-20261026T152704               failed        60/60   5d 08h  handover prompt 04 (A4) on the Mac Studio (mps026298;
+   levin-phase-floor-05a-wider-20261026T123047           done        109/109   5d 11h  levin-phase-floor prompt 05a section 6 (T1 as amended
+   levin-phase-floor-05a-r12-reanchor-t-20261026T122434  done              -   5d 11h  levin-phase-floor prompt 05a, R12 on the Mac Studio (
+   levin-phase-floor-05a-r11-parent-20261026T122041      done              -   5d 11h  levin-phase-floor prompt 05a, R11 on the Mac Studio (
+   levin-phase-floor-05-wider-20261026T020005            done        109/109   5d 22h  levin-phase-floor prompt 05 section 6 on the Mac Stud
+   levin-phase-floor-05-r10-reanchor-20261026T015120     done              -   5d 22h  levin-phase-floor prompt 05, R10 on the Mac Studio (m
+   levin-phase-floor-05-r9-parent-20261026T014729        done              -   5d 22h  levin-phase-floor prompt 05, R9 on the Mac Studio (mp
+   levin-phase-floor-04-remove-20261025T231110           done          28/28   6d 01h  levin-phase-floor prompt 04 on the Mac Studio (mps026
+   handover-12-r8-reference-20261025T210551              done              -   6d 03h  handover prompt 12, R8 on the Mac Studio (mps026298; 
+   levin-phase-floor-03-instrument-20261025T194950       done            7/7   6d 04h  levin-phase-floor prompt 03 on the Mac Studio (mps026
+   py313-venv-02-resumed-c-20261025T165549               done              -   6d 07h  py313-venv prompt 02, R7 on the Mac Studio (mps026298
+   py313-venv-02-resumed-b-20261025T165402               killed            -   6d 07h  py313-venv prompt 02, R7 on the Mac Studio (mps026298
+   py313-venv-02-resumed-a-20261025T165114               killed            -   6d 07h  py313-venv prompt 02, R7 on the Mac Studio (mps026298
+   py313-venv-02-reference-20261025T164631               done              -   6d 07h  py313-venv prompt 02, R7 on the Mac Studio (mps026298
+   py313-venv-02-reference-20261025T163202               failed            -   6d 07h  py313-venv prompt 02, R7 on the Mac Studio (mps026298
+   handover-07-a3-v2-20261022T211155                     done              -   9d 04h  handover prompt 07: A3 v2, the LambdaCDM store rebuil
+   handover-06-resumed-c-20261022T200159                 done              -   9d 05h  handover prompt 06, R4 on the Mac Studio (mps026298; 
+   handover-06-resumed-b-20261022T200009                 killed            -   9d 05h  handover prompt 06, R4 on the Mac Studio (mps026298; 
+   handover-06-resumed-a-20261022T195718                 killed            -   9d 05h  handover prompt 06, R4 on the Mac Studio (mps026298; 
+   handover-06-reference-20261022T195228                 done              -   9d 05h  handover prompt 06, R4 on the Mac Studio (mps026298; 
+
+36 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 36 finished; 0 with no host recorded.
+== lock dir
+total 0
+drwxr-xr-x   2 ds283 staff   64 Oct 30 08:02 .
+drwxr-x--- 159 ds283 staff 5088 Nov  1 00:12 ..
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+== auth token
+-rw------- /Users/ds283/.ray/auth_token
+== df
+/dev/disk3s3s1  927G  831G   96G  90% /
+== load
+{ 4.73 4.25 4.48 }
+== venv
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+2.59.0 2.0.55
+datastorekit @ git+https://github.com/ds283/DatastoreKit@f47b9a255e9ad58e0d0eaf85644f53b575884d31
+raypoolkit @ git+https://github.com/ds283/RayPoolKit@67a75b97a656accb98195a4bda93f64e6a5f3fb2
+runregistrykit @ git+https://github.com/ds283/RunRegistryKit@0bae3a3c501a8264ee4be5bc24f06422af38720f
+== 06h stores and runs
+== launcher hashes
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/RunDrivers/quadsource_atol_sweep.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/RunDrivers/quadsource_atol_sweep.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/main.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/main.py
+862a18fef4752e7431ae8c2d592e2004c681601d42fe6c196e83dbe914e8c909  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/LiouvilleGreen/three_bessel_integrals.py
+fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/LiouvilleGreen/three_bessel_integrals.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/ComputeTargets/QuadSourceIntegral.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/ComputeTargets/QuadSourceIntegral.py
+8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5/AdaptiveLevin/levin_quadrature.py
+8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/AdaptiveLevin/levin_quadrature.py
+== 06e R19 manifest script_sha256
+  "script_sha256": "b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19",
+# exit: 0
+# end: 2026-11-01T00:18:29Z

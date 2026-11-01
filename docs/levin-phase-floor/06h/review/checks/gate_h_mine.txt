@@ -1,0 +1,22 @@
+{('1e-7', '2-38302'): ('P1', ['low-G+r-1'], '2c325f5'), ('1e-7', '2-2095'): ('P2', ['ctrl-low-1'], '2c325f5'), ('1e-8', '0-1971'): ('P3', None, '2c325f5')}
+P1 ('1e-7', '2-38302') total 0x1.5e6b398fe7c40p-101 EQUAL
+P1 ('1e-7', '2-38302') total_abserr 0x1.d73ac6f8dd18ep-111 EQUAL
+P1 ('1e-7', '2-38302') total_converged True EQUAL
+P1 ('1e-7', '2-38302') numeric_quad 0x0.0p+0 EQUAL
+P1 ('1e-7', '2-38302') WKB_Levin 0x1.5e6b398fe7c40p-101 EQUAL
+P1 ('1e-7', '2-38302') analytic_rad 0x1.788bd6a8c65b5p-97 EQUAL
+P1 ('1e-7', '2-38302') calls (group+analytic) 23 equal on value/abserr/regions/depth/conv
+P2 ('1e-7', '2-2095') total -0x1.e3272e29c8b71p-102 EQUAL
+P2 ('1e-7', '2-2095') total_abserr 0x1.ebac443a55117p-107 EQUAL
+P2 ('1e-7', '2-2095') total_converged True EQUAL
+P2 ('1e-7', '2-2095') numeric_quad 0x0.0p+0 EQUAL
+P2 ('1e-7', '2-2095') WKB_Levin -0x1.e3272e29c8b71p-102 EQUAL
+P2 ('1e-7', '2-2095') analytic_rad -0x1.3877439914f9bp-98 EQUAL
+P2 ('1e-7', '2-2095') calls (group+analytic) 23 equal on value/abserr/regions/depth/conv
+P3 ('1e-8', '0-1971') total 0x1.6ad248e2d3ab7p-66 EQUAL
+P3 ('1e-8', '0-1971') total_abserr 0x1.350e2c0d63ac7p-92 EQUAL
+P3 ('1e-8', '0-1971') total_converged True EQUAL
+P3 ('1e-8', '0-1971') numeric_quad 0x0.0p+0 EQUAL
+P3 ('1e-8', '0-1971') WKB_Levin 0x1.6ad248e2d3ab7p-66 EQUAL
+P3 ('1e-8', '0-1971') analytic_rad 0x1.5e506b336b14cp-64 EQUAL
+P3 ('1e-8', '0-1971') calls (group+analytic) 21 equal on value/abserr/regions/depth/conv

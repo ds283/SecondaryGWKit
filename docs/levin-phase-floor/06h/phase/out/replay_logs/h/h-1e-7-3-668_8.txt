@@ -1,0 +1,7 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/scripts/replay06f.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/capture_h.json h-1e-7-3-668 8 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/phase/out/replay_h --m2
+# start 2026-11-01T03:43:46Z
+# ----
+{"unit": "h-1e-7-3-668", "index": 8, "tag": "", "F0_holds": true, "replay_equals_census": true, "terms_equal": true, "wall_s": 0.18, "digest": "a0f0ccf6eddf9b985d1fbaf124dd53d629f6e20e4bad1b220d0541c5e9eac32a", "M1_error": false, "M2_error": false}
+# ----
+# end 2026-11-01T03:43:51Z
+# exit 0

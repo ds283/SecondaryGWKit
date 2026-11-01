@@ -1,0 +1,24 @@
+06e units 18560 (dup records 0); 06h units 18560 (dup records 0)
+keys equal: True; stationary-point rows: 720
+06h tree heads/status: {('c1ec3b2c819cc5df22ddf4b303f69c7129a54d62', ''): 18560}
+status 06e {'done': 18560}; status 06h {'done': 18560}
+[1e-7] H3 total: scored 8560, bit-identical 8560, violations 0, non-finite 0, not done 0, worst ratio 0.000000e+00 at None
+[1e-7] analytic_rad present in both 8560, bit-identical 4357
+[1e-7] H3 oracle: scored 8560, violations 0, non-finite 0, no oracle record 0, worst ratio 7.561769e-02 at ('1e-7', '2-38300'); counterfactual == 06e analytic_rad in 8560, differs/absent in 0
+[1e-7] H4: calls scored {'analytic': 95896, 'group': 33725}; lost convergence 0; gained 0; matching problems 0
+[1e-7] converged calls 06e 144732, 06h 144732
+[1e-7] regions 06e 625878, 06h 576425; solves 06e 4862283, 06h 4466659
+[1e-7] unit wall_s 06e 2.282 h, 06h 2.223 h
+[1e-7] max_depth 06e [(0, 48148), (1, 20933), (10, 118), (11, 34), (12, 13), (13, 18), (14, 12), (15, 7), (16, 10), (17, 4), (18, 4), (19, 7), (2, 12967), (20, 11), (3, 12796), (4, 35447), (5, 6954), (6, 3030), (7, 2809), (8, 1156), (9, 263)]
+[1e-7] max_depth 06h [(0, 48568), (1, 21248), (10, 118), (11, 34), (12, 13), (13, 18), (14, 12), (15, 7), (16, 10), (17, 4), (18, 4), (19, 7), (2, 14213), (20, 11), (3, 29048), (4, 20421), (5, 4014), (6, 2807), (7, 2771), (8, 1151), (9, 262)]
+[1e-8] H3 total: scored 8560, bit-identical 8560, violations 0, non-finite 0, not done 0, worst ratio 0.000000e+00 at None
+[1e-8] analytic_rad present in both 8560, bit-identical 4640
+[1e-8] H3 oracle: scored 8560, violations 0, non-finite 0, no oracle record 0, worst ratio 1.351188e-04 at ('1e-8', '1-20510'); counterfactual == 06e analytic_rad in 8560, differs/absent in 0
+[1e-8] H4: calls scored {'analytic': 95896, 'group': 33725}; lost convergence 1; gained 0; matching problems 0
+  LOST (('1e-8', '3-1072'), 'analytic', 13, 'analytic J1')
+[1e-8] converged calls 06e 144726, 06h 144725
+[1e-8] regions 06e 799186, 06h 738153; solves 06e 6209807, 06h 5721539
+[1e-8] unit wall_s 06e 2.974 h, 06h 2.919 h
+[1e-8] max_depth 06e [(0, 39227), (1, 18116), (10, 445), (11, 103), (12, 40), (13, 28), (14, 17), (15, 14), (16, 17), (17, 11), (18, 11), (19, 11), (2, 13501), (20, 18), (3, 17342), (4, 43119), (5, 4363), (6, 2646), (7, 2674), (8, 2153), (9, 885)]
+[1e-8] max_depth 06h [(0, 39659), (1, 18415), (10, 445), (11, 103), (12, 40), (13, 28), (14, 17), (15, 14), (16, 17), (17, 11), (18, 11), (19, 11), (2, 16795), (20, 18), (3, 36415), (4, 21574), (5, 2812), (6, 2644), (7, 2674), (8, 2153), (9, 885)]
+exit 0

@@ -1,0 +1,51 @@
+$ /bin/bash -c echo\ \"==\ fact\ 1:\ what\ 06e\ checkpoint\ records\ per\ unit\ result\ \(first\ record\)\"\;\ head\ -1\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06e-census-20261030T081318/checkpoint.jsonl\ \|\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -c\ \"import\ json\,sys\;\ d=json.loads\(sys.stdin.readline\(\)\)\[\\\"data\\\"\]\;\ print\(\\\"unit\\\"\,\ d\[\\\"unit\\\"\]\)\;\ print\(\\\"result\ keys\\\"\,\ sorted\(d\[\\\"result\\\"\]\)\)\;\ print\(\\\"other_calls\\\"\,\ len\(d\[\\\"other_calls\\\"\]\)\,\ \[c\[\\\"notify_label\\\"\]\ for\ c\ in\ d\[\\\"other_calls\\\"\]\]\[:8\]\)\"\;\ echo\ \"==\ QSI:\ total\ and\ analytic_rad\"\;\ grep\ -n\ \"\\\"total\\\":\ numeric_quad\ +\ WKB_Levin\\\|\\\"analytic_rad\\\":\ analytic_data\\\|\\\"abserr\\\":\ analytic_data\\\[\\\|BesselPhaseGroup\"\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2/ComputeTargets/QuadSourceIntegral.py\;\ echo\ \"==\ worker:\ what\ the\ slim\ and\ full\ result\ summaries\ keep\"\;\ grep\ -n\ \"def\ _slim_result\\\|def\ summarise_result\\\|analytic_rad\\\|\\\"metadata\\\"\\\|md.get\"\ scripts/worker.py\;\ echo\ \"==\ fact\ 2:\ the\ timed\ section\ and\ the\ post-timed\ passes\ in\ worker.py\"\;\ grep\ -n\ \"t0\ =\ time.perf_counter\(\)\\\|holder\\\[\\\"deadline\\\"\\\]\ =\ \\\|wall\ =\ time.perf_counter\(\)\ -\ t0\\\|holder.update\(calls=None\,\ deadline=None\)\\\|QSI_MOD.evaluate_QuadSource_integral\ =\ orig_eval\\\|with\ DP.install\\\|rec_cc\,\ summ_cc\ =\ _cc_floor_terms\\\|rec_dc\,\ summ_dc\ =\ _declared_terms_06h\\\|data\\\[\\\"declared_06h_s\\\"\\\]\ =\ time\\\|\\\"wall_s\\\":\ wall\"\ scripts/worker.py\;\ grep\ -n\ \"deadline\\\|perf_counter\"\ scripts/dispatch.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T00:42:42Z
+# ----
+== fact 1: what 06e checkpoint records per unit result (first record)
+unit g-1e-7-2-32862
+result keys ['WKB_Levin', 'WKB_Levin_data', 'analytic_rad', 'compute_time', 'numeric_quad', 'total', 'total_abserr', 'total_converged', 'total_phase_limited']
+other_calls 0 []
+== QSI: total and analytic_rad
+18:from LiouvilleGreen.three_bessel_integrals import BesselPhaseGroup
+799:        "total": numeric_quad + WKB_Levin,
+815:        "analytic_rad": analytic_data["value"],
+824:                "abserr": analytic_data["abserr"],
+1164:    # absolute error of its *largest* constituent. BesselPhaseGroup instead holds the group as
+1176:    # ComputeTargets/tests/test_quadsource_integral.py's TestThreeBesselPhaseGroups.
+1192:    group1 = BesselPhaseGroup(group_phases, group_coefficients, (1.0, 1.0, 1.0))
+1193:    group2 = BesselPhaseGroup(group_phases, group_coefficients, (1.0, 1.0, -1.0))
+1194:    group3 = BesselPhaseGroup(group_phases, group_coefficients, (1.0, -1.0, 1.0))
+1195:    group4 = BesselPhaseGroup(group_phases, group_coefficients, (1.0, -1.0, -1.0))
+== worker: what the slim and full result summaries keep
+386:def summarise_result(result):
+388:    md = result["metadata"]
+396:        "analytic_rad": fx(result["analytic_rad"]),
+410:            json.dumps(md.get("WKB_Levin", {}).get("subintervals"), default=float)
+413:            json.dumps(md.get("numeric_quad", {}).get("subintervals"), default=float)
+415:        "partition": json.loads(json.dumps(md.get("partition"), default=float)),
+582:def _slim_result(result):
+593:        "analytic_rad": fx(result["analytic_rad"]),
+== fact 2: the timed section and the post-timed passes in worker.py
+1537:        with DP.install(deadline=holder["deadline"], stop_exc=OverBudget) as disp:
+1596:                        t0 = time.perf_counter()
+1598:                        holder["deadline"] = None if budget is None else t0 + budget
+1606:                            wall = time.perf_counter() - t0
+1607:                            holder.update(calls=None, deadline=None)
+1609:                            QSI_MOD.evaluate_QuadSource_integral = orig_eval
+1618:                        QSI_MOD.evaluate_QuadSource_integral = orig_eval
+1646:                        "wall_s": wall,
+1836:                                rec_cc, summ_cc = _cc_floor_terms(LQ, c)
+1854:                                rec_dc, summ_dc = _declared_terms_06h(LQ, c)
+1862:                        data["declared_06h_s"] = time.perf_counter() - t_dc
+1994:        QSI_MOD.evaluate_QuadSource_integral = orig_eval
+10:  ``time.perf_counter()`` is past ``deadline``, before calling anything (prompt 05 section 6:
+46:    def __init__(self, deadline=None, stop_exc=None):
+47:        self.deadline = deadline
+53:        if self.deadline is not None and time.perf_counter() > self.deadline:
+63:def install(deadline=None, stop_exc=None):
+68:    dispatcher = Dispatcher(deadline=deadline, stop_exc=stop_exc)
+# ----
+# end 2026-11-01T00:42:43Z
+# exit 0

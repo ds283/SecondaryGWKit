@@ -1,0 +1,10 @@
+capture h-1e-7-0-12689 #19: blob sha256 ok; top-level dict; groups found 4
+group coefficients (313856.84721559234, 181205.33522692948, 181205.33522692948) signs (1.0, -1.0, -1.0) nu (0.5, 2.5, 2.5); K -48553.82323826663 K_lo 0.0
+  u -0x1.e633fe4760d6fp+2 = -7.596923417764045; code theta_mod_2pi 0.6930780908573765; theta_abserr 9.127814265512786e-13
+  dps 30: delta_theta 4.5026800156217862e-13; |delta|/theta_abserr 0.4932922477
+  dps 50: delta_theta 4.5026800156217862e-13; |delta|/theta_abserr 0.4932922477
+capture h-1e-7-0-12689 #19: blob sha256 ok; top-level dict; groups found 4
+group coefficients (313856.84721559234, 181205.33522692948, 181205.33522692948) signs (1.0, -1.0, -1.0) nu (0.5, 2.5, 2.5); K -48553.82323826663 K_lo 0.0
+  u -0x1.d81c11a079cf0p+0 = -1.8441782967363984; code theta_mod_2pi -0.9885628001703239; theta_abserr 1.7214968242104014e-12
+  dps 30: delta_theta 6.6641364814254062e-13; |delta|/theta_abserr 0.3871129117
+  dps 50: delta_theta 6.6641364814253688e-13; |delta|/theta_abserr 0.3871129117

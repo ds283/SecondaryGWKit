@@ -1,0 +1,25 @@
+{
+ "tree": "g",
+ "name": "1e-8-k3_1",
+ "units": [
+  {
+   "uid": "g-1e-8-3-13829",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "3-13829",
+   "names05": null,
+   "shard": 3,
+   "serial": 13829,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/smoke",
+ "emit_fd": 5,
+ "emit_file": null,
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

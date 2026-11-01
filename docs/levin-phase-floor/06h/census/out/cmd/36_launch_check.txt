@@ -1,0 +1,38 @@
+$ /bin/bash -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037\;\ date\ -u\;\ cat\ \$R/status.json\;\ echo\;\ echo\ \"checkpoint\ lines:\ \$\(wc\ -l\ \<\ \$R/checkpoint.jsonl\ 2\>/dev/null\)\"\;\ head\ -c\ 400\ \$R/checkpoint.jsonl\ 2\>/dev/null\;\ echo\;\ echo\ \"--\ stdout\ tail\"\;\ tail\ -8\ \$R/stdout.log\ \|\ cut\ -c1-300\;\ echo\ \"--\ stderr\ bytes\ \$\(wc\ -c\ \<\ \$R/stderr.log\)\"\;\ kill\ -0\ 73326\ \&\&\ echo\ \"sh\ 73326\ alive\"\;\ P=\$\(/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\).get\(\\\"pid\\\"\)\)\"\)\;\ echo\ \"status\ pid\ \$P\"\;\ kill\ -0\ \$P\ \&\&\ echo\ \"driver\ \$P\ alive\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T00:50:42Z
+# ----
+Sun Nov  1 00:50:42 UTC 2026
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-01T00:50:37+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 73329,
+  "stage": "started worker 1e-7-k2_302 (1160 units)",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 18560
+}
+
+/bin/bash: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl: No such file or directory
+checkpoint lines: 
+
+-- stdout tail
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/scripts/run_census.py", "script_sha256": "e11dcd729ad98ad128858b9b8f16c6485a292aefb7c5a17256c4430d7fbfc7f9", "scripts_sha256": {"run_census.py": "e11dcd729ad98ad128858b9b8f16c6485a292aefb7c5a1
+# worker 1e-7-k0_101 pid 73336 (1160 units)
+# worker 1e-7-k0_202 pid 73337 (1160 units)
+# worker 1e-7-k1_102 pid 73338 (1160 units)
+# worker 1e-7-k1_301 pid 73339 (1160 units)
+# worker 1e-7-k2_2 pid 73340 (1160 units)
+# worker 1e-7-k2_302 pid 73341 (1160 units)
+-- stderr bytes 0
+sh 73326 alive
+status pid 73329
+driver 73329 alive
+# ----
+# end 2026-11-01T00:50:43Z
+# exit 0

@@ -1,0 +1,25 @@
+Kept on the Mac Studio (mps026298), not copied back: every pickle (none made) and every file over
+2 MB made by the 06h rehearsal agent, with SHA-256 and size in bytes. Paths are relative to the
+main checkout /Users/ds283/Documents/Code/SecondaryGWKit.
+
+Records directory:
+68b9c378166368df621d21c0aac12d5a4edcb548a43cc719f67e7421c841fd0f  40969988  var/levin-phase-floor-06h/rehearsal/out/store_value_diff.json
+var/levin-phase-floor-06h/rehearsal/extract/  (the readers' output: 3,099 files, 172 MB in all; no single file over 2 MB; unseeded random subsamples, not reproducible file for file)
+
+The stores (kept until the user says otherwise; prompt 06h §4.6):
+b1d0b36abfd528c66806972d368a819a4c022eecb1336b9ec5798c6bbb97f282  25030656  var/datastores/levin-phase-floor-06h-r21-shard0000.sqlite
+b509e29894d4eed632ac6070a9d1d70547e482672be7fa4a5dc17c8777c3bf1f  25219072  var/datastores/levin-phase-floor-06h-r21-shard0001.sqlite
+b0c7e398f6d65c44f767234b5ab7f5ee79d142ba31ec9eb74a4784e33a1e88e3   1077248  var/datastores/levin-phase-floor-06h-r21-shard0002.sqlite
+c688f7ad14d4ce3f46905ba357a722476fdd7e2caa3dbd686346de0d16d8b09f  24494080  var/datastores/levin-phase-floor-06h-r21-shard0003.sqlite
+3e91761ef45628d61bf04f0daa7d6c3aab4bfdf4563ac67af6c2ba1ddcb69584     36864  var/datastores/levin-phase-floor-06h-r21.sqlite
+d7154ef1b9466988711edfe540aeadbcd1e9ce5c651cd6d70cddbac0d6a5a605  24997888  var/datastores/levin-phase-floor-06h-r22-shard0000.sqlite
+7929750e570c34c55cd6bf27e4442922b985d1b1e461b07fea7046803df707bd  25243648  var/datastores/levin-phase-floor-06h-r22-shard0001.sqlite
+5e9ae5a4a1225dd078c3abd37ab8a449bc73d875d129bbbc398f41d7c2959d7c   1077248  var/datastores/levin-phase-floor-06h-r22-shard0002.sqlite
+0b92ef735063b1f2fbe5f7a11f7c5bb903dec553343e7d21848de3f631244202  24612864  var/datastores/levin-phase-floor-06h-r22-shard0003.sqlite
+4205df39f46c2fcc0589086c6e2f0e0731f4deccf7124565aa6b0ef4d8d270c4     36864  var/datastores/levin-phase-floor-06h-r22.sqlite
+
+The run directories (each under 2 MB; recorded in the registry):
+var/runs/levin-phase-floor-06h-r21-parent-20261101T001852/
+var/runs/levin-phase-floor-06h-r22-groupphase-20261101T002423/
+var/runs/levin-phase-floor-06h-r21.launch.log
+var/runs/levin-phase-floor-06h-r22.launch.log

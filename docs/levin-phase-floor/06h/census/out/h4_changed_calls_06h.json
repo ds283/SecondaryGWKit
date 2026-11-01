@@ -1,0 +1,25 @@
+[
+{
+"rtol": "1e-8",
+"unit": "g-1e-8-3-1072",
+"index": 13,
+"kind": "analytic",
+"label": "analytic J1",
+"stationary_point_row": false,
+"06e": [
+"-0x1.e0bfc7790b7c0p-60",
+"0x1.1b7b52ad37b7ap-87",
+true,
+2,
+1
+],
+"h": [
+"-0x1.e0bfc77801bc0p-60",
+"0x1.d34a73ec76c16p-86",
+false,
+1,
+0
+],
+"lost": true
+}
+]
