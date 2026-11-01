@@ -150,3 +150,28 @@ refused redirect in `checks/scope.txt` that wrote nothing. The rehearsal launch 
   `3104c18e…`, 16 region pickles — 06g's before); the census's Gate H and smoke pickles and
   `state/rows.json`; the phase's 80 capture pickles. Each agent's `KEPT_ON_MAC_STUDIO.txt` lists
   them with SHA-256; everything else in the three agent directories is for the records commit.
+
+## Addendum, 2026-11-01T09:16Z: R21 and R22 retired
+
+At the user's request, from the worktree `c1ec3b2` (clean; the main checkout's code cannot read
+these stores), with the registry's roots resolving to the main checkout's `var/`:
+`store create` made a sidecar for each (`store_id` R21 `90b58d40…`, R22 `da339c18…`);
+`store fingerprint --write` recorded `1b332ffa…`, problems none, in both; `store retire --dry-run`
+found a fresh fingerprint matching, no sidecar referencing either store and one run each (its own);
+`store retire` then deleted each store's five files. What is left of each is its sidecar,
+`var/datastores/levin-phase-floor-06h-r2{1,2}.manifest.json`, `state: retired`. The reason recorded
+names this review and `rehearsal/` as where the values are certified; `rehearsal/out/store_value_diff.json`
+and `rehearsal/extract/` stay on this host. Every command and its output is in
+`review/checks/retire_r21_r22.txt`, `fingerprint_write_r2{1,2}.txt` and `retire_r2{1,2}.txt`. The
+"Kept on this host" list above is as it stood before this.
+
+## Addendum, 2026-11-01: the phase capture pickles removed
+
+At the user's word (*"Yes, after the commit"*), once 06h's records commit `9aaf271` was on
+`origin/handover-remedial`. Checked first, against that commit's tree on GitHub: the files under
+`phase/state/capture_h/` and `phase/state/capture_p/` that it does not hold are exactly 80, all
+pickles, exactly the hashed list of `phase/KEPT_ON_MAC_STUDIO.txt`, and every one's SHA-256 matched
+that list. Those 80 files (1.9 MB) were removed; the 120 committed files beside them stay. The
+captures are reproducible from 06h's census checkpoint, the scratch copy of A3 v2 and the trees, as
+06h re-captured 06f's; H1's and H2's tables, the replays and `scores.json` are in the commit. The
+command and every file removed are in `review/checks/phase_captures_removed.txt`.

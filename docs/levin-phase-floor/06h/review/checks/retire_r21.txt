@@ -1,0 +1,52 @@
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r21.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r21.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06h-r21-parent-20261101T001852  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06h-r21-shard0000.sqlite
+  var/datastores/levin-phase-floor-06h-r21-shard0001.sqlite
+  var/datastores/levin-phase-floor-06h-r21-shard0002.sqlite
+  var/datastores/levin-phase-floor-06h-r21-shard0003.sqlite
+  var/datastores/levin-phase-floor-06h-r21.sqlite
+tombstone:
+  {
+    "completed": "2026-11-01T09:16:00+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06h-r21-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06h-r21-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06h-r21-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06h-r21-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06h-r21.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "c1ec3b2c819cc5df22ddf4b303f69c7129a54d62",
+    "reason": "06h Part B rehearsal no longer needed; its values are certified by the fingerprint 1b332ffa, store_value_diff (68b9c378) and H0's scoring recorded in var/levin-phase-floor-06h/rehearsal/ and review.md, for 06h's records commit",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06h-r21-parent-20261101T001852",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-01T09:16:00+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r21.manifest.json

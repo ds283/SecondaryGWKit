@@ -12,9 +12,14 @@ readers' `rehearsal/extract/`. Each agent's own list, with SHA-256 and sizes, is
 - `rehearsal/extract/` (3,099 files, 172 MB), the readers' output: unseeded random subsamples, not
   reproducible file for file;
 - the census's Gate H and smoke pickles, `census/state/H/`, `census/state/H2/` and
-  `census/state/smoke/` (14 files);
-- the phase measurement's 80 capture pickles, `phase/state/capture_h/` and `phase/state/capture_p/`,
-  the inputs and regions of 06f's 20 M2 calls at $h$ and at the parent.
+  `census/state/smoke/` (14 files).
+
+**Removed on the user's word, 2026-11-01:** the phase measurement's 80 capture pickles,
+`phase/state/capture_h/` and `phase/state/capture_p/` (1.9 MB), after 06h's records commit
+`9aaf271` was on `origin/handover-remedial`. Each matched its SHA-256 in
+[`phase/KEPT_ON_MAC_STUDIO.txt`](phase/KEPT_ON_MAC_STUDIO.txt), which stays as their record; they
+are reproducible from the census checkpoint, A3 v2's scratch copy and the trees
+([`review.md`](review.md), its last addendum; `review/checks/phase_captures_removed.txt`).
 
 **The census's run directory** `var/runs/levin-phase-floor-06h-census-20261101T005037/` (149 files,
 2.3 GB) stays there in full: the checkpoint, 16 region pickles, the events and the worker logs. It
@@ -23,11 +28,12 @@ is 06g's "before". Its `checkpoint.jsonl` has SHA-256
 directory `levin-phase-floor-06h-phase-20261101T033514` stays in `var/runs/` as the registry's
 record.
 
-**The rehearsal stores** `var/datastores/levin-phase-floor-06h-r21*` and `-r22*` are kept until the
-user retires them; on 2026-11-01 the user said they will (*"I'll retire R21 and R22 to keep things
-clean."*). Their fingerprint, `1b332ffa…`, can be taken only from a checkout whose code declares
-`theta_residual`, such as the worktree `SecondaryGWKit-lpf06h-c1ec3b2`, not from the Mac Studio's
-main checkout at `28ebaf0` (`review/checks/fingerprint_note.txt`). The run directories
+**The rehearsal stores** `var/datastores/levin-phase-floor-06h-r21*` and `-r22*` were retired by
+the user on 2026-11-01, from the worktree `SecondaryGWKit-lpf06h-c1ec3b2` (the main checkout's code
+cannot read them): `store create`, `store fingerprint --write` (`1b332ffa…`, problems none), then
+`store retire`. Their sidecars, `levin-phase-floor-06h-r2{1,2}.manifest.json`, `state: retired`,
+stay in `var/datastores/`; the commands and outputs are `review/checks/retire_r21_r22.txt`,
+`fingerprint_write_r2{1,2}.txt` and `retire_r2{1,2}.txt`. The run directories
 `levin-phase-floor-06h-r21-parent-20261101T001852` and
 `levin-phase-floor-06h-r22-groupphase-20261101T002423` stay in `var/runs/`, with their launch logs
 `levin-phase-floor-06h-r2{1,2}.launch.log` beside them.

@@ -1,0 +1,163 @@
+== 2026-11-01T09:15:19Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2 HEAD c1ec3b2c819cc5df22ddf4b303f69c7129a54d62 status ''
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r21.manifest.json
+{
+  "created": "2026-11-01T09:15:19+00:00",
+  "datastore": "levin-phase-floor-06h-r21.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "c1ec3b2c819cc5df22ddf4b303f69c7129a54d62",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06h-r21.sqlite",
+      "when": "2026-11-01T09:15:20+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06h-r21",
+  "purpose": "levin-phase-floor prompt 06h Part B: the r21 side (2c325f5, the parent of 06h's code commit 7172a8f; 06e's code) of the R21/R22 value-comparison pair (R8 rehearsal scope), fingerprint 1b332ffa; records in var/levin-phase-floor-06h/rehearsal/ and review.md on the Mac Studio, for 06h's records commit; sidecar created so the store can be retired",
+  "sidecar_format": 1,
+  "store_id": "90b58d40b82340859015c80e2f1de805"
+}
+r21 create exit 0
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r22.manifest.json
+{
+  "created": "2026-11-01T09:15:20+00:00",
+  "datastore": "levin-phase-floor-06h-r22.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "c1ec3b2c819cc5df22ddf4b303f69c7129a54d62",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06h-r22.sqlite",
+      "when": "2026-11-01T09:15:20+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06h-r22",
+  "purpose": "levin-phase-floor prompt 06h Part B: the r22 side (c1ec3b2, 06h's code 7172a8f + tests-only ac1c6f4; the Bessel group phase's product and K roundings carried exactly) of the R21/R22 value-comparison pair (R8 rehearsal scope), fingerprint 1b332ffa; records in var/levin-phase-floor-06h/rehearsal/ and review.md on the Mac Studio, for 06h's records commit; sidecar created so the store can be retired",
+  "sidecar_format": 1,
+  "store_id": "da339c18349c4caab1015216c5ea8ee2"
+}
+r22 create exit 0
+== fingerprint --write r21 2026-11-01T09:15:26Z
+exit 0
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+problems: none
+sidecar fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 {'git_dirty': False, 'git_head': 'c1ec3b2c819cc5df22ddf4b303f69c7129a54d62', 'run_id': None, 'when': '2026-11-01T09:15:29+00:00'}
+== fingerprint --write r22 2026-11-01T09:15:31Z
+exit 0
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+problems: none
+sidecar fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 {'git_dirty': False, 'git_head': 'c1ec3b2c819cc5df22ddf4b303f69c7129a54d62', 'run_id': None, 'when': '2026-11-01T09:15:32+00:00'}
+== retire --dry-run r21 2026-11-01T09:15:40Z
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r21.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r21.manifest.json
+dry run:  nothing was written or deleted
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06h-r21-parent-20261101T001852  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files to be deleted:
+  var/datastores/levin-phase-floor-06h-r21-shard0000.sqlite
+  var/datastores/levin-phase-floor-06h-r21-shard0001.sqlite
+  var/datastores/levin-phase-floor-06h-r21-shard0002.sqlite
+  var/datastores/levin-phase-floor-06h-r21-shard0003.sqlite
+  var/datastores/levin-phase-floor-06h-r21.sqlite
+tombstone:
+  {
+    "completed": null,
+    "files": [
+      "var/datastores/levin-phase-floor-06h-r21-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06h-r21-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06h-r21-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06h-r21-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06h-r21.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "c1ec3b2c819cc5df22ddf4b303f69c7129a54d62",
+    "reason": "06h Part B rehearsal no longer needed; its values are certified by the fingerprint 1b332ffa, store_value_diff (68b9c378) and H0's scoring recorded in var/levin-phase-floor-06h/rehearsal/ and review.md, for 06h's records commit",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06h-r21-parent-20261101T001852",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retiring",
+    "when": "2026-11-01T09:15:43+00:00"
+  }
+exit 0
+== retire --dry-run r22 2026-11-01T09:15:43Z
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r22.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06h-r22.manifest.json
+dry run:  nothing was written or deleted
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06h-r22-groupphase-20261101T002423  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files to be deleted:
+  var/datastores/levin-phase-floor-06h-r22-shard0000.sqlite
+  var/datastores/levin-phase-floor-06h-r22-shard0001.sqlite
+  var/datastores/levin-phase-floor-06h-r22-shard0002.sqlite
+  var/datastores/levin-phase-floor-06h-r22-shard0003.sqlite
+  var/datastores/levin-phase-floor-06h-r22.sqlite
+tombstone:
+  {
+    "completed": null,
+    "files": [
+      "var/datastores/levin-phase-floor-06h-r22-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06h-r22-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06h-r22-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06h-r22-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06h-r22.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "c1ec3b2c819cc5df22ddf4b303f69c7129a54d62",
+    "reason": "06h Part B rehearsal no longer needed; its values are certified by the fingerprint 1b332ffa, store_value_diff (68b9c378) and H0's scoring recorded in var/levin-phase-floor-06h/rehearsal/ and review.md, for 06h's records commit",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06h-r22-groupphase-20261101T002423",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retiring",
+    "when": "2026-11-01T09:15:47+00:00"
+  }
+exit 0
+== retire r21 2026-11-01T09:15:57Z
+exit 0
+== retire r22 2026-11-01T09:16:00Z
+exit 0

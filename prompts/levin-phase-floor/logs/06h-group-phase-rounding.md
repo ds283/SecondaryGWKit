@@ -547,5 +547,6 @@ the oracle moved in 462 and 421, within the bound; no convergence changed. The n
   Ray and ran under the lock, as the prompt requires, and the brief that said otherwise was
   imprecise. The `BrokenPipeError` of `runregistrykit list | head` is Python's ordinary behaviour
   on a closed pipe.
-- **On the Mac Studio:** the user will retire R21 and R22. The census run directory (2.3 GB) stays
-  in full as 06g's "before".
+- **On the Mac Studio:** the user retired R21 and R22 on 2026-11-01, and the phase measurement's 80
+  capture pickles were removed on the user's word after the records commit (`06h/review.md`, its
+  addenda). The census run directory (2.3 GB) stays in full as 06g's "before".

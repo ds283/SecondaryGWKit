@@ -286,3 +286,8 @@ Part B record; `VERIFICATION.md` §6h; the prompt's §8; the board, `docs/OPEN_I
 formatting paragraph. The Mac Studio worktrees `SecondaryGWKit-lpf06h-2c325f5` and
 `-c1ec3b2` are left for the user's retirement of R21 and R22, which needs a checkout whose code
 declares `theta_residual`.
+
+**After the records commit,** the same day, on the user's word: R21 and R22 retired from the
+worktree `-c1ec3b2`, and the phase measurement's 80 capture pickles removed once `9aaf271` was
+pushed (`06h/review.md`, its two last addenda, copied here with their checks). Both worktrees remain
+on the Mac Studio; 06g's note says what becomes of them.
