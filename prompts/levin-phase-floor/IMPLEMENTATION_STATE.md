@@ -1295,6 +1295,45 @@ regions harder.
 
 ## 4. Resolved issues
 
+- **[06g-filon-route-b-inverts-through-a-stationary-point]** *(opened and closed 2026-11-02 by the
+  orchestrator, from 06g Part B's references)* — `tools/filon_reference.py`'s Route B solved for
+  $x(t)$ on every segment. On a segment holding a stationary point of the phase, the map is
+  two-valued. The tool detected such a segment (`monotone` False, `tmap.all_monotone` False) and its
+  docstring said the reference "must not be used", but nothing enforced that, and every reading went
+  through the inversion.
+  - **Where seen:**
+    - Part B's references part 2: nine QAWO readings ended in a `ZeroDivisionError` at the Newton
+      step `fval / dpy`.
+    - Reproduced on z00 at r1: the segment at $x \in [5.6355, 5.6470]$ has $dp/dy$ running from
+      $-1{,}422$ to $+12{,}192$, and Newton ran onto the turning point.
+    - Across all 205 Route B readings, exactly one segment is non-monotone in each of 14 samples:
+      all of V1's 12 (w00–w11), and z00 and z12. These are `G+q+r` calls. The FCC readings went
+      through the same inversion without failing, and are unsound: z00's two old FCC readings differ
+      by $3.7\times10^{-7}$ relatively.
+  - **Fixed** in the commit that records this:
+    - A non-monotone segment is integrated directly in its variable $y$ against the same smooth
+      phase: by Gauss–Legendre in `mpmath` in the FCC readings, and by QUADPACK's QAG in double in
+      the QAWO readings.
+    - Both inversions refuse such a segment, and refuse $dp/dy = 0$, with a `ValueError`.
+    - Readings report `direct_segments`. QAWO readings also record QUADPACK's flag messages by
+      kind (`ier_messages`).
+  - **Verified:**
+    - A Fresnel closed form with the stationary point inside one of twelve segments: the direct
+      integration alone is within $2\times10^{-16}$ relatively, and every reading within
+      $2.3\times10^{-13}$ (`tools/tests/test_filon_reference.py`, test 6).
+    - Readings on monotone calls are bit-identical to the tool at `1c5336e`: the Route B and Ci
+      stand-ins at all four settings, and the real capture r55 at FCC r1 and r2 and QAWO r1.
+    - z00 on the laptop, all four readings (wall 160, 735, 309 and 1,023 s at six workers):
+      - FCC r2, QAWO r1 and QAWO r2 agree to within $4\times10^{-13}$ relatively;
+      - FCC r1 is $8.1\times10^{-10}$ out;
+      - the old readings were $1.9\times10^{-4}$ out;
+      - $g$'s value at rtol 1e-7 (z00) is 0.018 of its declared error from the new reference;
+      - at 1e-8 (z12, the same integrand) $g$'s value is $1.9\times10^{-4}$ out, 1,680× its
+        declared error, and sits with the old unsound readings.
+  - **Observation, not acted on:** FCC at resolution 1 is $2.3\times10^{-13}$ out on the Fresnel
+    case. The error comes from the monotone segments beside the stationary point, where $1/p'$ is
+    nearly singular in $t$; resolution 2 is within $2\times10^{-16}$. The readings' scatter shows it.
+
 - **[06f-theta-abserr-omits-the-product-rounding]** *(opened 2026-10-31 by the orchestrator, from
   06f's F4)* — `BesselPhaseGroup.theta_abserr` is the sum of its constituents' declared phase
   errors. It does not declare the rounding of the product $K\eta$ in `BesselPhaseGroup.sin_cos`,

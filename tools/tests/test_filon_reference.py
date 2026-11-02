@@ -13,6 +13,9 @@ The Filon reference tool, tools/filon_reference.py (prompts/levin-phase-floor/
    bound.
 4. The count rule: four readings agreeing count; one perturbed past the tolerance does not.
 5. Determinism: one reading bit-identical in a fresh process, and with two worker processes.
+6. A stationary point inside a Route B segment: the phase Omega (x - x0)^2, whose integral is a
+   pair of Fresnel integrals; the segment holding x0 is integrated directly, and the inverse map
+   refuses it.
 
 No Ray and no datastore.
 """
@@ -210,6 +213,52 @@ def _b_reference():
         return G(mp.exp(mp.mpf(B_SPAN[1]))) - G(mp.exp(mp.mpf(B_SPAN[0])))
 
 
+# ------------------------------------------------------------------------------------------------
+# 6. Route B with a stationary point: theta(x) = Omega (x - x0)^2 on [0, 1], x0 inside the seventh of
+# twelve segments, f = (S_F, C_F) constant. With k = sqrt(2 Omega / pi), u = x - x0,
+#   I = int [S_F sin(Omega u^2) + C_F cos(Omega u^2)] du
+#     = sqrt(pi / (2 Omega)) sum over the two ends of [C_F C(|u| k) + S_F S(|u| k)],
+# C and S mpmath's Fresnel integrals.
+SP_OMEGA = 2000.0
+SP_X0 = 0.53
+SP_SPAN = (0.0, 1.0)
+SP_SEGMENTS = 12
+SP_F = (0.3, 1.0)
+
+
+def _sp_theta_mod_2pi(x):
+    with mp.workdps(30):
+        v = mp.mpf(SP_OMEGA) * (mp.mpf(x) - mp.mpf(SP_X0)) ** 2
+        return float(v - 2 * mp.pi * mp.floor(v / (2 * mp.pi)))
+
+
+def stationary_call():
+    return {
+        "x_span": SP_SPAN,
+        "f": [lambda x: SP_F[0], lambda x: SP_F[1]],
+        "theta": {
+            "theta": lambda x: SP_OMEGA * (x - SP_X0) ** 2,
+            "theta_mod_2pi": _sp_theta_mod_2pi,
+            "theta_deriv": lambda x: 2 * SP_OMEGA * (x - SP_X0),
+        },
+        "kw": {},
+    }
+
+
+def _sp_edges():
+    a, b = SP_SPAN
+    return [a + (b - a) * j / SP_SEGMENTS for j in range(SP_SEGMENTS + 1)]
+
+
+def _sp_reference():
+    with mp.workdps(50):
+        k = mp.sqrt(2 * mp.mpf(SP_OMEGA) / mp.pi)
+        ends = (mp.mpf(SP_X0) - SP_SPAN[0], SP_SPAN[1] - mp.mpf(SP_X0))
+        return mp.sqrt(mp.pi / (2 * mp.mpf(SP_OMEGA))) * mp.fsum(
+            SP_F[1] * mp.fresnelc(u * k) + SP_F[0] * mp.fresnels(u * k) for u in ends
+        )
+
+
 def _err(reading, reference):
     with mp.workdps(50):
         return float(abs(mp.mpf(reading["value_30"]) - reference))
@@ -292,6 +341,37 @@ class TestFilonReference(unittest.TestCase):
             self.assertLessEqual(
                 _err(reading, reference), 3.0 * bounds[res], f"{impl} {res}"
             )
+
+    def test_route_b_stationary_point(self):
+        """
+        Route B with a stationary point of the phase inside one segment: that segment, and only
+        it, is integrated directly, and every reading is within 1e-12 of the Fresnel closed form,
+        relatively. (The direct integration alone is within about 2e-16; FCC at resolution 1 is
+        about 2e-13 out, from the monotone segments beside the stationary point, where
+        1/p' is nearly singular.) The inverse map refuses the segment.
+        """
+        call = stationary_call()
+        self.assertEqual(F.route_of(call), "B")
+        reference = _sp_reference()
+        tolerance = 1e-12 * float(abs(reference))
+        for impl in ("fcc", "qawo"):
+            for res in F.RESOLUTIONS:
+                reading = F.reading(call, impl, res, edges=_sp_edges())
+                self.assertFalse(reading["tmap"]["all_monotone"])
+                self.assertEqual(reading["tmap"]["direct_segments"], 1)
+                direct = [s for s in reading["segments"] if s["direct"]]
+                self.assertLess(direct[0]["X_l"], SP_X0)
+                self.assertGreater(direct[0]["X_r"], SP_X0)
+                self.assertLessEqual(
+                    _err(reading, reference), tolerance, f"{impl} {res}"
+                )
+                if impl == "qawo":
+                    self.assertGreater(reading["stats"]["direct_panels"], 0)
+        segment = F.fit_segments(call, _sp_edges(), 6, 7, 20, 241)[0]
+        self.assertFalse(segment.monotone)
+        with mp.workdps(F.DPS):
+            with self.assertRaises(ValueError):
+                segment.solve_y((segment.T_l + segment.T_r) / 2)
 
     def test_count_rule(self):
         """Four readings within the tolerance count; one moved past it does not."""

@@ -70,8 +70,16 @@ smooth-phase integral in the limit (06i, the user's ruling on R0). Its error ter
 the fit's residual rms per segment (``sigma``), the fit-noise bound (the 1-sigma error of the
 reference due to ``t(x)``'s noise, propagated through the fit's covariance; FCC only), the jitter's
 estimated contribution at the FCC nodes, the abscissa correction, monotonicity and the
-``2 pi`` branch margin. A segment must not contain a stationary point of the phase; one that does
-is reported (``all_monotone`` False) and the reference must not be used. The segment edges are the
+``2 pi`` branch margin. A segment that holds a stationary point of the phase (``p'`` of both signs
+at 161 points, or ``theta_deriv`` disagreeing with it; the segment's ``monotone`` False) has no
+inverse ``x(t)``, and is integrated **directly** in its variable ``y``,
+``half int_{-1}^{1} F(x(y)) exp(i p(y)) dy``, against the same smooth ``p``, on uniform ``y``-panels
+of phase span at most ``dphi``: by Gauss-Legendre in ``mpmath`` in the FCC readings and by
+QUADPACK's QAG in double in the QAWO readings. The phase is taken at the node itself, the amplitude
+at ``fl(x(y))``. Such a reading reports ``all_monotone`` False and ``direct_segments``, the number
+of segments so integrated; the inverse map refuses such a segment (``ValueError``), and so does
+either Newton iteration where ``dp/dy`` is exactly zero. (Before 2026-11-02 the tool solved for
+``x(t)`` on such a segment regardless: those readings are unsound.) The segment edges are the
 caller's (``edges=``), or else found in the captured integrand's closures as 06i found them (the
 phase splines' knots, the Green's function amplitude spline's knots, and every cumulative table's
 nodes, switch midpoints and breaks: 06i's deviation 5), which ties that default to the integrand's
@@ -88,15 +96,17 @@ reading at resolution 2 (06i's choice). The resolutions:
   span at most ``2^12`` rad, ``epsrel = 1e-13``, and ``du = 0.125``, ``2^9`` rad, ``1.2e-14``.
 * Route B: fit ``(M, K) = (20, 241)`` and ``(24, 301)``; FCC one ``t``-panel per segment with
   ``N = 32``, three with ``N = 48``; QAWO dyadic ``t``-panels of span at most ``2^12`` rad with
-  ``epsrel = 1e-13``, and ``2^10`` rad with ``1.2e-14``.
+  ``epsrel = 1e-13``, and ``2^10`` rad with ``1.2e-14``. A segment with a stationary point: FCC
+  readings 24-point Gauss-Legendre on panels of at most 2 rad, and 48-point on 1 rad; QAWO readings
+  QAG on 4 rad with ``epsrel = 1e-13``, and on 2 rad with ``1.2e-14``.
 * :func:`linear_phase_integral`, for a ``g`` and ``omega`` given directly (06i's Gate R0): FCC
   ``N = 32`` on 4 panels and ``N = 48`` on 7; QAWO as Route A's, with panels at most a sixteenth of
   the span.
 
 **What it does not do.** It does not test the phase's representation: every reference is built from
 the call's own amplitude and phase (Route A from the group's own ``K``, ``C`` and residual; Route B
-from its own captured phase, smoothed). It does not handle a stationary point inside a Route B
-segment. It does not load a captured call: a pickle written through Ray's cloudpickle is loaded by
+from its own captured phase, smoothed). It does not load a captured call: a pickle written through
+Ray's cloudpickle is loaded by
 the caller (the command line below takes the unpickling module by name). It is a tool, not
 production code: nothing in ``ComputeTargets/``, ``LiouvilleGreen/`` or ``AdaptiveLevin/`` imports
 it, and it imports neither Ray nor a datastore.
@@ -149,6 +159,14 @@ ROUTE_B_QAWO = {
     1: dict(Pmax=2.0**12, epsrel=1e-13),
     2: dict(Pmax=2.0**10, epsrel=1.2e-14),
 }
+#: a Route B segment holding a stationary point, integrated directly in its variable y on uniform
+#: panels of phase span at most dphi: the FCC readings by Gauss-Legendre in mpmath (24 and 48
+#: points), the QAWO readings by QUADPACK's QAG in double
+ROUTE_B_DIRECT_FCC = {1: dict(dphi=2.0, degree=4), 2: dict(dphi=1.0, degree=5)}
+ROUTE_B_DIRECT_QAWO = {
+    1: dict(dphi=4.0, epsrel=1e-13),
+    2: dict(dphi=2.0, epsrel=1.2e-14),
+}
 LINEAR_FCC = {1: dict(N=32, panels=4), 2: dict(N=48, panels=7)}
 LINEAR_QAWO = {
     1: dict(Pmax=2.0**12, epsrel=1e-13),
@@ -169,13 +187,14 @@ ROUTE_B_CHUNK = 16
 _GL_CACHE = {}
 
 
-def _gl_nodes():
-    """384-point Gauss-Legendre nodes and weights on [-1, 1] at the working precision."""
-    prec = mp.mp.prec
-    nodes = _GL_CACHE.get(prec)
+def _gl_nodes(degree=8):
+    """``3 2^(degree-1)``-point Gauss-Legendre nodes and weights on [-1, 1] at the working
+    precision (384 points at the default ``degree = 8``)."""
+    key = (degree, mp.mp.prec)
+    nodes = _GL_CACHE.get(key)
     if nodes is None:
-        nodes = GaussLegendre(mp.mp).calc_nodes(8, prec)
-        _GL_CACHE[prec] = nodes
+        nodes = GaussLegendre(mp.mp).calc_nodes(degree, mp.mp.prec)
+        _GL_CACHE[key] = nodes
     return nodes
 
 
@@ -358,7 +377,7 @@ def qawo_panel(gfun_d, cen, h, omega_r, d_omega, epsabs, epsrel, limit=200, maxp
     w = abs(omega_r)
     sg = 1.0 if omega_r >= 0 else -1.0
     res = {}
-    info = {"ier": [], "last": 0, "abserr": 0.0}
+    info = {"ier": [], "messages": [], "last": 0, "abserr": 0.0}
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         for part, fn in (("r", lambda s: G(s).real), ("i", lambda s: G(s).imag)):
@@ -376,10 +395,7 @@ def qawo_panel(gfun_d, cen, h, omega_r, d_omega, epsabs, epsrel, limit=200, maxp
                     full_output=1,
                 )
                 res[part + wt] = out[0]
-                # scipy appends a message only when QUADPACK's ier != 0
-                info["ier"].append(1 if len(out) > 3 else 0)
-                info["abserr"] += abs(out[1])
-                info["last"] = max(info["last"], out[2].get("last", 0))
+                _note_quad(info, out)
     info["neval"] = len(memo)
     # exp(i omega_r s) = cos(w s) + i sg sin(w s)
     re = res["rcos"] - sg * res["isin"]
@@ -387,20 +403,37 @@ def qawo_panel(gfun_d, cen, h, omega_r, d_omega, epsabs, epsrel, limit=200, maxp
     return complex(re, im), info
 
 
+def _note_quad(info, out):
+    """Record one ``integrate.quad(..., full_output=1)`` call's error, subdivisions and flag."""
+    # scipy appends a message only when QUADPACK's ier != 0; its first line names the ier
+    flagged = len(out) > 3
+    info["ier"].append(1 if flagged else 0)
+    if flagged:
+        info["messages"].append(str(out[3]).strip().splitlines()[0][:80])
+    info["abserr"] += abs(out[1])
+    info["last"] = max(info["last"], out[2].get("last", 0))
+
+
 def _new_qawo_stats():
     return {
         "panels": 0,
+        "direct_panels": 0,
         "neval": 0,
         "ier_nonzero": 0,
+        "ier_messages": {},
         "max_last": 0,
         "sum_quad_abserr": 0.0,
     }
 
 
-def _add_qawo_stats(stats, info):
+def _add_qawo_stats(stats, info, direct=False):
     stats["panels"] += 1
+    if direct:
+        stats["direct_panels"] += 1
     stats["neval"] += info["neval"]
     stats["ier_nonzero"] += sum(1 for x in info["ier"] if x)
+    for message in info["messages"]:
+        stats["ier_messages"][message] = stats["ier_messages"].get(message, 0) + 1
     stats["max_last"] = max(stats["max_last"], info["last"])
     stats["sum_quad_abserr"] += info["abserr"]
 
@@ -408,8 +441,16 @@ def _add_qawo_stats(stats, info):
 def _merge_qawo_stats(parts):
     out = _new_qawo_stats()
     for st in parts:
-        for key in ("panels", "neval", "ier_nonzero", "sum_quad_abserr"):
+        for key in (
+            "panels",
+            "direct_panels",
+            "neval",
+            "ier_nonzero",
+            "sum_quad_abserr",
+        ):
             out[key] += st[key]
+        for message, n in st["ier_messages"].items():
+            out["ier_messages"][message] = out["ier_messages"].get(message, 0) + n
         out["max_last"] = max(out["max_last"], st["max_last"])
     return out
 
@@ -838,6 +879,28 @@ class Segment:
         signs.update(v > 0 for v in td)
         self.monotone = len(signs) == 1 and all(v != 0 for v in td)
 
+    def require_monotone(self):
+        """Raise unless ``t = p(x)`` is invertible on this segment."""
+        if not self.monotone:
+            raise ValueError(
+                f"Route B segment [{self.X_l!r}, {self.X_r!r}] holds a stationary point of the "
+                "phase: t does not determine x there, so it is integrated directly in y"
+            )
+
+    def nonzero_slope(self, y):
+        """``dp/dy`` at the double ``y``, refused where it is zero."""
+        slope = cheb_eval(self.dc_d, y)
+        if slope == 0.0:
+            raise ValueError(
+                f"Route B segment [{self.X_l!r}, {self.X_r!r}]: dp/dy = 0 at y = {y!r}, a "
+                "stationary point the monotonicity check did not find"
+            )
+        return slope
+
+    def max_abs_slope(self):
+        """``max |dp/dy|`` over 161 points of ``[-1, 1]``."""
+        return max(abs(cheb_eval(self.dc_d, -1 + 2 * i / 160)) for i in range(161))
+
     def q_shift(self, shift):
         """``p - shift`` as double Chebyshev coefficients (``shift`` an ``mpf`` near ``p``)."""
         c = list(self.c_d)
@@ -856,7 +919,9 @@ class Segment:
 
     def solve_y(self, t, shift=None):
         """``y`` in ``[-1, 1]`` with ``p(y) = t``: Newton in double on ``p(y) - t`` with the constant
-        shifted, from a linear guess, then one Newton step in ``mpmath``."""
+        shifted, from a linear guess, then one Newton step in ``mpmath``. Refused on a segment that
+        holds a stationary point, where ``t`` does not determine ``y``."""
+        self.require_monotone()
         if shift is None:
             shift = t
         c = list(self.c_d)
@@ -866,7 +931,7 @@ class Segment:
         y = -1 + 2 * float(t - self.T_l) / span if span != 0 else 0.0
         y = min(1.0, max(-1.0, y))
         for _ in range(30):
-            step = (cheb_eval(c, y) - target) / cheb_eval(self.dc_d, y)
+            step = (cheb_eval(c, y) - target) / self.nonzero_slope(y)
             yn = min(1.0, max(-1.0, y - step))
             if abs(yn - y) <= 1e-16 * max(1.0, abs(y)):
                 y = yn
@@ -924,9 +989,109 @@ def _segment_diag(sg):
         max_resid=sg.max_resid,
         branch_margin=sg.branch_margin,
         monotone=sg.monotone,
+        direct=not sg.monotone,
         edge_jump=max(sg.edge_jump),
         t_span=float(sg.T_r - sg.T_l),
     )
+
+
+def _direct_panels(sg, dphi):
+    """The number of uniform ``y``-panels that keeps each one's phase span at most ``dphi``, from a
+    quarter above the sampled ``max |dp/dy|``."""
+    return max(1, math.ceil(2 * 1.25 * sg.max_abs_slope() / dphi))
+
+
+def _direct_segment_fcc(call, sg, cfg):
+    """
+    A segment holding a stationary point, ``half int_{-1}^{1} F(x(y)) exp(i p(y)) dy``, by
+    Gauss-Legendre in ``mpmath`` on uniform ``y``-panels. The phase is the smooth ``p`` at the exact
+    node and the amplitude is taken at ``fl(x(y))``, so no abscissa correction arises. Returns the
+    smooth-phase value, the value with the captured phase (``exp(i delta)``, ``delta`` as in
+    :func:`_route_b_fcc_chunk`), the variance white jitter of the segment's sigma puts on ``Re(I)``,
+    and ``J_k = i half int F exp(i p) T_k dy`` for the fit-noise bound.
+    """
+    theta_mod_2pi = call["theta"]["theta_mod_2pi"]
+    nodes = _gl_nodes(cfg["degree"])
+    n_pan = _direct_panels(sg, cfg["dphi"])
+    total = mp.mpc(0)
+    total_jit = mp.mpc(0)
+    var_jit = 0.0
+    Jk = [mp.mpc(0)] * (sg.M + 1)
+    for j in range(n_pan):
+        c = -1 + (2 * j + 1) * mp.mpf(1) / n_pan
+        h = mp.mpf(1) / n_pan
+        for s, w in nodes:
+            y = c + h * s
+            xh = float(sg.mid + sg.half * y)
+            Fv = _F(call, xh)
+            term = h * w * sg.half * mp.mpc(Fv.real, Fv.imag) * mp.expj(sg.p(y))
+            total += term
+            delta = _rem2pi(mp.mpf(theta_mod_2pi(xh)) - sg.p(sg.y_of(mp.mpf(xh))))
+            total_jit += term * mp.expj(delta)
+            var_jit += float(term.imag) ** 2 * sg.sigma**2
+            t0, t1 = mp.mpf(1), y
+            Jk[0] += mp.mpc(0, 1) * term
+            Jk[1] += mp.mpc(0, 1) * term * t1
+            for k in range(2, sg.M + 1):
+                t0, t1 = t1, 2 * y * t1 - t0
+                Jk[k] += mp.mpc(0, 1) * term * t1
+    return total, total_jit, var_jit, Jk
+
+
+def qag_panel(gfun_d, a, b, epsabs, epsrel, limit=200):
+    """``int_a^b g(y) dy`` in double by QUADPACK's QAG (``scipy.integrate.quad``, no weight), real
+    and imaginary parts sharing one memo of ``g``. Returns (the complex result, an info dict as
+    :func:`qawo_panel`'s)."""
+    memo = {}
+
+    def G(y):
+        v = memo.get(y)
+        if v is None:
+            v = gfun_d(y)
+            memo[y] = v
+        return v
+
+    res = {}
+    info = {"ier": [], "messages": [], "last": 0, "abserr": 0.0}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        for part, fn in (("r", lambda y: G(y).real), ("i", lambda y: G(y).imag)):
+            out = integrate.quad(
+                fn, a, b, epsabs=epsabs, epsrel=epsrel, limit=limit, full_output=1
+            )
+            res[part] = out[0]
+            _note_quad(info, out)
+    info["neval"] = len(memo)
+    return complex(res["r"], res["i"]), info
+
+
+def _direct_segment_qawo(call, sg, cfg, stats):
+    """
+    A segment holding a stationary point, ``half int_{-1}^{1} F(x(y)) exp(i p(y)) dy``, by QAG in
+    double on uniform ``y``-panels: on each, ``p - p(y_c)`` in double from the shifted coefficients
+    (:meth:`Segment.q_shift`), and ``exp(i p(y_c))`` in ``mpmath``. Adds to ``stats``; returns the
+    value.
+    """
+    n_pan = _direct_panels(sg, cfg["dphi"])
+    half_d, mid_d = sg.half_d, sg.mid_d
+    total = mp.mpc(0)
+    for j in range(n_pan):
+        ya = -1.0 + 2.0 * j / n_pan
+        yb = -1.0 + 2.0 * (j + 1) / n_pan
+        yc = (ya + yb) / 2
+        pc = sg.p(mp.mpf(yc))
+        qc = sg.q_shift(pc)
+
+        def gfun(y, qc=qc):
+            return (
+                half_d * _F(call, mid_d + half_d * y) * cmath.exp(1j * cheb_eval(qc, y))
+            )
+
+        g0 = abs(gfun(yc))
+        v, info = qag_panel(gfun, ya, yb, 1e-17 * g0 * (yb - ya), cfg["epsrel"])
+        total += mp.expj(pc) * mp.mpc(v.real, v.imag)
+        _add_qawo_stats(stats, info, direct=True)
+    return total
 
 
 def _route_b_fcc_chunk(state, i0, i1, res):
@@ -954,6 +1119,16 @@ def _route_b_fcc_chunk(state, i0, i1, res):
         d = _segment_diag(sg)
         Jk = [mp.mpc(0)] * (sg.M + 1)
         P = cfg["pieces"]
+        if not sg.monotone:
+            # a stationary point: no t-panels; the segment is integrated directly in y
+            P = 0
+            v_seg, v_jit, var_seg, Jk = _direct_segment_fcc(
+                call, sg, ROUTE_B_DIRECT_FCC[res]
+            )
+            total += v_seg
+            total_unc += v_seg
+            total_jit += v_jit
+            var_jit += var_seg
         for piece in range(P):
             ta = sg.T_l + (sg.T_r - sg.T_l) * piece / P
             tb = sg.T_l + (sg.T_r - sg.T_l) * (piece + 1) / P
@@ -1034,6 +1209,10 @@ def _route_b_qawo_chunk(state, i0, i1, res):
     diags = []
     for sg in segs:
         diags.append(_segment_diag(sg))
+        if not sg.monotone:
+            # a stationary point: no t-panels; the segment is integrated directly in y
+            total += _direct_segment_qawo(call, sg, ROUTE_B_DIRECT_QAWO[res], stats)
+            continue
         nF = 24
         yF = np.cos(np.pi * np.arange(nF + 1) / nF)
         xF = [float(sg.mid + sg.half * mp.mpf(float(y))) for y in yF]
@@ -1059,7 +1238,7 @@ def _route_b_qawo_chunk(state, i0, i1, res):
                 y = min(1.0, max(-1.0, y_c + 2 * sig / span_d))
                 for _ in range(40):
                     fval = cheb_eval(qc, y) - sig
-                    dpy = cheb_eval(sg.dc_d, y)
+                    dpy = sg.nonzero_slope(y)
                     yn = min(1.0, max(-1.0, y - fval / dpy))
                     if abs(yn - y) <= 2e-16:
                         y = yn
@@ -1225,6 +1404,7 @@ def reading(call, impl, res, route=None, edges=None, workers=1, call_source=None
             "max_sigma": max(d["sigma"] for d in segments),
             "max_branch_margin": max(d["branch_margin"] for d in segments),
             "all_monotone": all(d["monotone"] for d in segments),
+            "direct_segments": sum(1 for d in segments if d["direct"]),
             "max_edge_jump_unconstrained": max(d["edge_jump"] for d in segments),
         }
         extra = {
