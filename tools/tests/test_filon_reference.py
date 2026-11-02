@@ -344,24 +344,32 @@ class TestFilonReference(unittest.TestCase):
 
     def test_route_b_stationary_point(self):
         """
-        Route B with a stationary point of the phase inside one segment: that segment, and only
-        it, is integrated directly, and every reading is within 1e-12 of the Fresnel closed form,
-        relatively. (The direct integration alone is within about 2e-16; FCC at resolution 1 is
-        about 2e-13 out, from the monotone segments beside the stationary point, where
-        1/p' is nearly singular.) The inverse map refuses the segment.
+        Route B with a stationary point of the phase inside one segment: QAWO integrates that
+        segment, and only it, directly; FCC also the two beside it, whose slope ratios (3.78 and
+        2.56) exceed 2. Every reading is within 1e-14 of the Fresnel closed form, relatively (each
+        is within about 4e-16; with t-panels beside the stationary point FCC at resolution 1 was
+        2.3e-13 out). The inverse map refuses the segment.
         """
         call = stationary_call()
         self.assertEqual(F.route_of(call), "B")
         reference = _sp_reference()
-        tolerance = 1e-12 * float(abs(reference))
+        tolerance = 1e-14 * float(abs(reference))
         for impl in ("fcc", "qawo"):
             for res in F.RESOLUTIONS:
                 reading = F.reading(call, impl, res, edges=_sp_edges())
                 self.assertFalse(reading["tmap"]["all_monotone"])
-                self.assertEqual(reading["tmap"]["direct_segments"], 1)
                 direct = [s for s in reading["segments"] if s["direct"]]
-                self.assertLess(direct[0]["X_l"], SP_X0)
-                self.assertGreater(direct[0]["X_r"], SP_X0)
+                stationary = [s for s in direct if not s["monotone"]]
+                self.assertEqual(len(stationary), 1)
+                self.assertLess(stationary[0]["X_l"], SP_X0)
+                self.assertGreater(stationary[0]["X_r"], SP_X0)
+                beside = [s for s in direct if s["monotone"]]
+                self.assertEqual(len(beside), 2 if impl == "fcc" else 0)
+                for s in beside:
+                    self.assertGreater(
+                        s["slope_ratio"], F.ROUTE_B_FCC_DIRECT_SLOPE_RATIO
+                    )
+                self.assertEqual(reading["tmap"]["direct_segments"], len(direct))
                 self.assertLessEqual(
                     _err(reading, reference), tolerance, f"{impl} {res}"
                 )

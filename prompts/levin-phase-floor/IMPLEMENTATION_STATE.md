@@ -1330,9 +1330,31 @@ regions harder.
       - $g$'s value at rtol 1e-7 (z00) is 0.018 of its declared error from the new reference;
       - at 1e-8 (z12, the same integrand) $g$'s value is $1.9\times10^{-4}$ out, 1,680× its
         declared error, and sits with the old unsound readings.
-  - **Observation, not acted on:** FCC at resolution 1 is $2.3\times10^{-13}$ out on the Fresnel
-    case. The error comes from the monotone segments beside the stationary point, where $1/p'$ is
-    nearly singular in $t$; resolution 2 is within $2\times10^{-16}$. The readings' scatter shows it.
+  - **Observation:** FCC at resolution 1 is $2.3\times10^{-13}$ out on the Fresnel case. The error
+    comes from the monotone segments beside the stationary point, where $1/p'$ is nearly singular in
+    $t$; resolution 2 is within $2\times10^{-16}$. The readings' scatter shows it.
+  - **Extended (2026-11-02, on the user's word), after the stage-2 scores.** On V1's 12, FCC
+    stood $10^{-9}$ to $8\times10^{-6}$ from QAWO at resolution 2, and up to $7\times10^{-4}$ at
+    resolution 1, while QAWO r1 and r2 agreed to about $10^{-14}$. A per-segment scan of w07 put
+    the whole error in the segment beside the stationary one:
+    - that segment's $\max|p'|/\min|p'|$ is 24.9, and it was 0.1 and $1.8\times10^{-3}$ out at
+      resolutions 1 and 2;
+    - the segments at ratio 2.07 and 1.93, one further along on each side, were within
+      $5\times10^{-15}$.
+
+    So FCC readings now integrate directly any monotone segment whose ratio exceeds 2
+    (`ROUTE_B_FCC_DIRECT_SLOPE_RATIO`). QAWO's adaptive rule resolves such a segment, and keeps its
+    $t$-panels.
+    - **Which samples it touches.** Over every Route B capture of 06g's references, the 41 monotone
+      samples' segments are at most 1.08 ($\theta'$ at 161 points), so none of them is touched. The
+      14 stationary-point samples each have one segment above 4: 24.9 on w00–w11, and 10.6 on z00
+      and z12.
+    - **What it gives.**
+      - On w07 and w06, FCC now agrees with QAWO r2 to within $1.8\times10^{-14}$ (r1) and
+        $4\times10^{-16}$ (r2).
+      - On the Fresnel case, every reading is within $3.5\times10^{-16}$, and test 6 holds them to
+        $10^{-14}$.
+      - Readings on monotone calls stay bit-identical.
 
 - **[06f-theta-abserr-omits-the-product-rounding]** *(opened 2026-10-31 by the orchestrator, from
   06f's F4)* — `BesselPhaseGroup.theta_abserr` is the sum of its constituents' declared phase

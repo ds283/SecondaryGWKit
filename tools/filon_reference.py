@@ -76,10 +76,14 @@ inverse ``x(t)``, and is integrated **directly** in its variable ``y``,
 ``half int_{-1}^{1} F(x(y)) exp(i p(y)) dy``, against the same smooth ``p``, on uniform ``y``-panels
 of phase span at most ``dphi``: by Gauss-Legendre in ``mpmath`` in the FCC readings and by
 QUADPACK's QAG in double in the QAWO readings. The phase is taken at the node itself, the amplitude
-at ``fl(x(y))``. Such a reading reports ``all_monotone`` False and ``direct_segments``, the number
-of segments so integrated; the inverse map refuses such a segment (``ValueError``), and so does
-either Newton iteration where ``dp/dy`` is exactly zero. (Before 2026-11-02 the tool solved for
-``x(t)`` on such a segment regardless: those readings are unsound.) The segment edges are the
+at ``fl(x(y))``. The FCC readings also integrate directly a monotone segment beside a stationary
+point, where ``1/p'`` is nearly singular in ``t``: one whose ``max |p'| / min |p'|`` (its
+``slope_ratio``) exceeds ``ROUTE_B_FCC_DIRECT_SLOPE_RATIO``; QAWO's adaptive rule keeps such a
+segment's ``t``-panels. Such a reading reports ``all_monotone`` False and ``direct_segments``, the
+number of segments so integrated; the inverse map refuses a segment with a stationary point
+(``ValueError``), and so does either Newton iteration where ``dp/dy`` is exactly zero. (Before
+2026-11-02 the tool solved for ``x(t)`` on such a segment regardless, and until the slope-ratio rule
+FCC kept ``t``-panels beside one: those readings are unsound.) The segment edges are the
 caller's (``edges=``), or else found in the captured integrand's closures as 06i found them (the
 phase splines' knots, the Green's function amplitude spline's knots, and every cumulative table's
 nodes, switch midpoints and breaks: 06i's deviation 5), which ties that default to the integrand's
@@ -96,8 +100,9 @@ reading at resolution 2 (06i's choice). The resolutions:
   span at most ``2^12`` rad, ``epsrel = 1e-13``, and ``du = 0.125``, ``2^9`` rad, ``1.2e-14``.
 * Route B: fit ``(M, K) = (20, 241)`` and ``(24, 301)``; FCC one ``t``-panel per segment with
   ``N = 32``, three with ``N = 48``; QAWO dyadic ``t``-panels of span at most ``2^12`` rad with
-  ``epsrel = 1e-13``, and ``2^10`` rad with ``1.2e-14``. A segment with a stationary point: FCC
-  readings 24-point Gauss-Legendre on panels of at most 2 rad, and 48-point on 1 rad; QAWO readings
+  ``epsrel = 1e-13``, and ``2^10`` rad with ``1.2e-14``. A segment with a stationary point (or, for
+  FCC, a slope ratio above 2): FCC readings 24-point Gauss-Legendre on panels of at most 2 rad, and
+  48-point on 1 rad; QAWO readings
   QAG on 4 rad with ``epsrel = 1e-13``, and on 2 rad with ``1.2e-14``.
 * :func:`linear_phase_integral`, for a ``g`` and ``omega`` given directly (06i's Gate R0): FCC
   ``N = 32`` on 4 panels and ``N = 48`` on 7; QAWO as Route A's, with panels at most a sixteenth of
@@ -167,6 +172,14 @@ ROUTE_B_DIRECT_QAWO = {
     1: dict(dphi=4.0, epsrel=1e-13),
     2: dict(dphi=2.0, epsrel=1.2e-14),
 }
+#: FCC also integrates directly a monotone segment whose max |p'| / min |p'| exceeds this. Beside a
+#: stationary point 1/p' is nearly singular in t, which a fixed-order rule cannot resolve: on V1's
+#: w07 the segment next to it, at ratio 24.9, was 0.1 and 1.8e-3 out at FCC resolutions 1 and 2,
+#: and on the Fresnel test case one at ratio 3.78 was about 2e-13 out at resolution 1; segments at
+#: 1.93 and 2.07 were within 5e-15. Every segment of the 41 monotone Route B samples of 06g's
+#: references is at most 1.08 (theta_deriv at 161 points), so none of them is affected. QAWO's
+#: adaptive rule resolves such a segment, and keeps its t-panels.
+ROUTE_B_FCC_DIRECT_SLOPE_RATIO = 2.0
 LINEAR_FCC = {1: dict(N=32, panels=4), 2: dict(N=48, panels=7)}
 LINEAR_QAWO = {
     1: dict(Pmax=2.0**12, epsrel=1e-13),
@@ -873,11 +886,16 @@ class Segment:
         self.half_d = float(self.half)
         # monotone: p' at 161 points has one sign, and it is theta_deriv's sign
         signs = set()
+        slopes = []
         for i in range(161):
-            signs.add(cheb_eval(self.dc_d, -1 + 2 * i / 160) > 0)
+            slopes.append(cheb_eval(self.dc_d, -1 + 2 * i / 160))
+            signs.add(slopes[-1] > 0)
         td = [th["theta_deriv"](x) for x in (X_l, float(self.mid), X_r)]
         signs.update(v > 0 for v in td)
         self.monotone = len(signs) == 1 and all(v != 0 for v in td)
+        # max |p'| / min |p'| at the same points: large beside a stationary point
+        low = min(abs(s) for s in slopes)
+        self.slope_ratio = max(abs(s) for s in slopes) / low if low > 0 else math.inf
 
     def require_monotone(self):
         """Raise unless ``t = p(x)`` is invertible on this segment."""
@@ -990,6 +1008,7 @@ def _segment_diag(sg):
         branch_margin=sg.branch_margin,
         monotone=sg.monotone,
         direct=not sg.monotone,
+        slope_ratio=sg.slope_ratio,
         edge_jump=max(sg.edge_jump),
         t_span=float(sg.T_r - sg.T_l),
     )
@@ -1119,9 +1138,11 @@ def _route_b_fcc_chunk(state, i0, i1, res):
         d = _segment_diag(sg)
         Jk = [mp.mpc(0)] * (sg.M + 1)
         P = cfg["pieces"]
-        if not sg.monotone:
-            # a stationary point: no t-panels; the segment is integrated directly in y
+        if not sg.monotone or sg.slope_ratio > ROUTE_B_FCC_DIRECT_SLOPE_RATIO:
+            # a stationary point, or a segment beside one: no t-panels; the segment is
+            # integrated directly in y
             P = 0
+            d["direct"] = True
             v_seg, v_jit, var_seg, Jk = _direct_segment_fcc(
                 call, sg, ROUTE_B_DIRECT_FCC[res]
             )
