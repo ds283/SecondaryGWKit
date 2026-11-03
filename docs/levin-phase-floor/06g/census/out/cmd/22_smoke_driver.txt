@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/run_census.py --out-dir state/smoke --rows 1-34599\,3-13829 --max-workers 2
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:39:17Z
+# ----
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/scripts/run_census.py", "script_sha256": "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2", "scripts_sha256": {"run_census.py": "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2", "worker.py": "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf", "launch.py": "d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b"}, "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417", "w2_capture_sha256": null, "tree": "g", "trees": {"p": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed", "4f4f9ed2a31fb7437fcfca01263d260eebaff842"], "g": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e", "1c5336e7e0ab8ed4495601a4033841f2df17ebdd"]}, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 50655, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census", "started": "2026-11-01T11:39:17.128245+00:00", "n_units": 4, "workers": {"1e-7": [["1e-7-k1_102", 1], ["1e-7-k3_1", 1]], "1e-8": [["1e-8-k1_102", 1], ["1e-8-k3_1", 1]]}, "budget_s": 300.0, "max_workers": 2, "skipped_as_recorded": 0}
+# worker 1e-7-k1_102 pid 50656 (1 units)
+# worker 1e-7-k3_1 pid 50657 (1 units)
+# worker 1e-7-k1_102 exit 0
+# worker 1e-7-k3_1 exit 0
+# worker 1e-8-k1_102 pid 50693 (1 units)
+# worker 1e-8-k3_1 pid 50694 (1 units)
+# worker 1e-8-k1_102 exit 0
+# worker 1e-8-k3_1 exit 0
+
+== run ends: 4 of 4 units recorded; units in error 0; problems []
+# ----
+# end 2026-11-01T11:41:34Z
+# exit 0

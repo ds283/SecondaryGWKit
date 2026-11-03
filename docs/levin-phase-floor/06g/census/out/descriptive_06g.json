@@ -1,0 +1,698 @@
+{
+ "V2": {
+  "1e-7 total": {
+   "scored": 8560,
+   "nonfinite": 0,
+   "no_result": 0,
+   "violations": 5,
+   "moved": 6071,
+   "max_ratio": 2.1636016560954157
+  },
+  "1e-7 oracle": {
+   "scored": 8560,
+   "nonfinite": 0,
+   "no_result": 0,
+   "violations": 0,
+   "moved": 5957,
+   "max_ratio": 0.49898973238895156
+  },
+  "1e-8 total": {
+   "scored": 8560,
+   "nonfinite": 0,
+   "no_result": 0,
+   "violations": 5,
+   "moved": 6071,
+   "max_ratio": 2.1636016560954157
+  },
+  "1e-8 oracle": {
+   "scored": 8560,
+   "nonfinite": 0,
+   "no_result": 0,
+   "violations": 0,
+   "moved": 5953,
+   "max_ratio": 0.4980823135593386
+  }
+ },
+ "V5": {
+  "1e-7": {
+   "calls_at_cap": 966,
+   "rows_at_cap": 577,
+   "over_budget": 0,
+   "calls_at_cap_in_720": 357,
+   "06h_calls_at_cap": 0,
+   "by_kind": {
+    "group": 966
+   },
+   "converged_at_cap": 165,
+   "by_group": {
+    "G-q+r": 270,
+    "G+q+r": 244,
+    "G+q-r": 233,
+    "G-q-r": 212,
+    "G-r": 6,
+    "q+r": 1
+   }
+  },
+  "1e-8": {
+   "calls_at_cap": 996,
+   "rows_at_cap": 582,
+   "over_budget": 0,
+   "calls_at_cap_in_720": 385,
+   "06h_calls_at_cap": 1,
+   "by_kind": {
+    "group": 996
+   },
+   "converged_at_cap": 168,
+   "by_group": {
+    "G-q+r": 279,
+    "G+q+r": 250,
+    "G+q-r": 240,
+    "G-q-r": 220,
+    "G-r": 6,
+    "q+r": 1
+   }
+  }
+ },
+ "V6": {
+  "holds": false,
+  "ending": "node_limited",
+  "g": {
+   "converged": false,
+   "node_limited": true,
+   "max_depth": 20,
+   "num_regions": 963,
+   "num_subregion_solves": 7703,
+   "abserr": "0x1.dc18edb89b801p-111",
+   "node_error_signed_sum": "-0x1.2fb7cd0adf85bp-114",
+   "node_error_abs_sum": "0x1.b0a44edf6cb56p-111",
+   "abserr_node_signed": "0x1.2fb7cd0adf85bp-114"
+  },
+  "06h": {
+   "converged": false,
+   "max_depth": 20,
+   "num_regions": 8706,
+   "abserr": "0x1.badaaed87034dp-110",
+   "sum_abs_E": "0x1.b4186452c4a69p-110",
+   "sum_E_pickle": [
+    2.4313432841972046e-35,
+    8600,
+    8600
+   ]
+  }
+ },
+ "V7": {
+  "holds": true,
+  "g_premise_checks": [
+   {
+    "result": false,
+    "split_could_meet_budget": true,
+    "halving": false,
+    "phase_err": "0x1.813cbedf371bcp-86",
+    "phase_err_L": "0x1.1b5d0b86e8354p-88",
+    "phase_err_R": "0x1.1b5d09e907288p-88"
+   },
+   {
+    "result": true,
+    "split_could_meet_budget": false,
+    "halving": true,
+    "phase_err": "0x1.1b5d09e907288p-88",
+    "phase_err_L": "0x1.6921f083cb57bp-90",
+    "phase_err_R": "0x1.6921f05e0c576p-90"
+   }
+  ]
+ },
+ "1e-7": {
+  "values": {
+   "same partition, quarters returned": {
+    "n": 80502,
+    "over1": 0,
+    "p50": 0.8638711639714316,
+    "max": 1.0
+   },
+   "same partition, no quarters": {
+    "n": 5404,
+    "over1": 0,
+    "p50": 0.0,
+    "max": 0.0
+   },
+   "different partition": {
+    "n": 43715,
+    "over1": 1805,
+    "p50": 0.6079915602031224,
+    "max": 26.664682491026344
+   }
+  },
+  "slow_leaves": {
+   "g_all": {
+    "1/16<=r<1/4|d1<=phi": 36794,
+    "r<1/16|d1<=phi": 128095,
+    "1/4<=r<1|d1<=phi": 176712,
+    "r>=1|d1<=phi": 536925,
+    "1/16<=r<1/4|d1>phi": 331317,
+    "r<1/16|d1>phi": 371479,
+    "1/4<=r<1|d1>phi": 592745,
+    "r>=1|d1>phi": 558406
+   },
+   "g_returned": {
+    "1/16<=r<1/4|d1<=phi": 36793,
+    "r<1/16|d1<=phi": 128095,
+    "1/4<=r<1|d1<=phi": 176648,
+    "r>=1|d1<=phi": 252397,
+    "1/16<=r<1/4|d1>phi": 330247,
+    "r<1/16|d1>phi": 369107,
+    "r>=1|d1>phi": 105204,
+    "1/4<=r<1|d1>phi": 130597
+   },
+   "06h_returned": {
+    "1/16<=r<1/4|d1<=phi": 15142,
+    "r<1/16|d1<=phi": 108651,
+    "1/4<=r<1|d1<=phi": 83385,
+    "r>=1|d1<=phi": 111027,
+    "1/16<=r<1/4|d1>phi": 50979,
+    "r<1/16|d1>phi": 147165,
+    "1/4<=r<1|d1>phi": 59285,
+    "r>=1|d1>phi": 791
+   },
+   "b_calls": 22845,
+   "regions_added": 776371,
+   "solves_added": 6210968
+  },
+  "node_sum": {
+   "n_cc": 24983,
+   "n_material": 3110,
+   "n_zero": 0,
+   "p50": 1.0,
+   "max": 17565.306030948388
+  },
+  "exit": {
+   "firings_06h": 90509,
+   "firings_g": 402760,
+   "checks_06h": 260979,
+   "checks_g": 691088,
+   "changed": {
+    "more firings": 22067,
+    "analytic": 15222,
+    "fewer firings": 2823,
+    "group": 9668
+   }
+  },
+  "cost all rows group": {
+   "regions_06h": 227373,
+   "regions_g": 1124662,
+   "solves_06h": 1781659,
+   "solves_g": 8959971
+  },
+  "cost all rows analytic": {
+   "regions_06h": 349052,
+   "regions_g": 404426,
+   "solves_06h": 2685000,
+   "solves_g": 3127992
+  },
+  "cost outside the 720 group": {
+   "regions_06h": 198082,
+   "regions_g": 967154,
+   "solves_06h": 1550931,
+   "solves_g": 7703507
+  },
+  "cost outside the 720 analytic": {
+   "regions_06h": 287062,
+   "regions_g": 334592,
+   "solves_06h": 2200600,
+   "solves_g": 2580840
+  },
+  "wall": {
+   "unit_wall_h_06h": 2.2229492613096307,
+   "unit_wall_h_g": 7.616343306101885,
+   "largest_06h": [
+    5.696740999817848,
+    "g-1e-7-3-13490"
+   ],
+   "largest_g": [
+    47.138198915869,
+    "g-1e-7-0-36806"
+   ],
+   "post_h_06h": 1.9695044688353989,
+   "post_h_g": 3.379862224065647
+  },
+  "depth outside the 720 group": {
+   "converged_06h": 33725,
+   "converged_g": 32924,
+   "n": 33725,
+   "hist_06h": {
+    "0": 11203,
+    "1": 4011,
+    "2": 2628,
+    "3": 3358,
+    "4": 4301,
+    "5": 2431,
+    "6": 2286,
+    "7": 2243,
+    "8": 907,
+    "9": 216,
+    "10": 104,
+    "11": 17,
+    "12": 6,
+    "13": 8,
+    "14": 2,
+    "15": 4
+   },
+   "hist_g": {
+    "0": 8816,
+    "1": 1707,
+    "2": 1064,
+    "3": 2675,
+    "4": 2561,
+    "5": 1980,
+    "6": 1705,
+    "7": 1944,
+    "8": 1775,
+    "9": 937,
+    "10": 672,
+    "11": 669,
+    "12": 701,
+    "13": 932,
+    "14": 1031,
+    "15": 1163,
+    "16": 897,
+    "17": 729,
+    "18": 448,
+    "19": 353,
+    "20": 966
+   }
+  },
+  "depth outside the 720 analytic": {
+   "converged_06h": 95896,
+   "converged_g": 95896,
+   "n": 95896,
+   "hist_06h": {
+    "0": 36725,
+    "1": 15690,
+    "2": 9368,
+    "3": 22880,
+    "4": 10186,
+    "5": 841,
+    "6": 175,
+    "7": 30,
+    "8": 1
+   },
+   "hist_g": {
+    "0": 35794,
+    "1": 15594,
+    "2": 8252,
+    "3": 8168,
+    "4": 24149,
+    "5": 2355,
+    "6": 948,
+    "7": 395,
+    "8": 143,
+    "9": 55,
+    "10": 19,
+    "11": 12,
+    "12": 11,
+    "15": 1
+   }
+  },
+  "rows unconverged outside the 720": {
+   "06h": 0,
+   "g": 470
+  },
+  "depth the 720 group": {
+   "converged_06h": 3591,
+   "converged_g": 3275,
+   "n": 3600,
+   "hist_06h": {
+    "0": 640,
+    "1": 191,
+    "2": 235,
+    "3": 337,
+    "4": 600,
+    "5": 436,
+    "6": 290,
+    "7": 485,
+    "8": 243,
+    "9": 46,
+    "10": 14,
+    "11": 17,
+    "12": 7,
+    "13": 10,
+    "14": 10,
+    "15": 3,
+    "16": 10,
+    "17": 4,
+    "18": 4,
+    "19": 7,
+    "20": 11
+   },
+   "hist_g": {
+    "0": 635,
+    "1": 94,
+    "2": 97,
+    "3": 200,
+    "4": 271,
+    "5": 212,
+    "6": 135,
+    "7": 163,
+    "8": 254,
+    "9": 163,
+    "10": 59,
+    "11": 65,
+    "12": 43,
+    "13": 72,
+    "14": 128,
+    "15": 171,
+    "16": 222,
+    "17": 121,
+    "18": 84,
+    "19": 54,
+    "20": 357
+   }
+  },
+  "depth the 720 analytic": {
+   "converged_06h": 11520,
+   "converged_g": 11520,
+   "n": 11520,
+   "hist_06h": {
+    "1": 1356,
+    "2": 1982,
+    "3": 2473,
+    "4": 5334,
+    "5": 306,
+    "6": 56,
+    "7": 13
+   },
+   "hist_g": {
+    "1": 1354,
+    "2": 1980,
+    "3": 837,
+    "4": 5453,
+    "5": 1567,
+    "6": 191,
+    "7": 84,
+    "8": 38,
+    "9": 10,
+    "10": 6
+   }
+  },
+  "rows unconverged the 720": {
+   "06h": 9,
+   "g": 220
+  },
+  "the 720": {
+   "totals_moved": 720,
+   "oracles_moved": 720,
+   "calls_lost": 316,
+   "calls_gained": 0
+  }
+ },
+ "1e-8": {
+  "values": {
+   "same partition, quarters returned": {
+    "n": 73965,
+    "over1": 0,
+    "p50": 0.5450695633021865,
+    "max": 1.0
+   },
+   "same partition, no quarters": {
+    "n": 5443,
+    "over1": 0,
+    "p50": 0.0,
+    "max": 0.0
+   },
+   "different partition": {
+    "n": 50213,
+    "over1": 1560,
+    "p50": 0.4715682671497062,
+    "max": 26.664682491026344
+   }
+  },
+  "slow_leaves": {
+   "g_all": {
+    "1/16<=r<1/4|d1<=phi": 45935,
+    "r<1/16|d1<=phi": 139109,
+    "1/4<=r<1|d1<=phi": 224593,
+    "r>=1|d1<=phi": 627087,
+    "1/16<=r<1/4|d1>phi": 370160,
+    "r<1/16|d1>phi": 397438,
+    "1/4<=r<1|d1>phi": 637283,
+    "r>=1|d1>phi": 585919
+   },
+   "g_returned": {
+    "1/16<=r<1/4|d1<=phi": 45932,
+    "r<1/16|d1<=phi": 139109,
+    "1/4<=r<1|d1<=phi": 224467,
+    "r>=1|d1<=phi": 296221,
+    "1/16<=r<1/4|d1>phi": 367684,
+    "r<1/16|d1>phi": 392990,
+    "r>=1|d1>phi": 115931,
+    "1/4<=r<1|d1>phi": 146723
+   },
+   "06h_returned": {
+    "1/16<=r<1/4|d1<=phi": 21187,
+    "r<1/16|d1<=phi": 115237,
+    "1/4<=r<1|d1<=phi": 117043,
+    "r>=1|d1<=phi": 144258,
+    "1/16<=r<1/4|d1>phi": 77956,
+    "r<1/16|d1>phi": 176113,
+    "1/4<=r<1|d1>phi": 74843,
+    "r>=1|d1>phi": 3312
+   },
+   "b_calls": 21362,
+   "regions_added": 789433,
+   "solves_added": 6354404
+  },
+  "node_sum": {
+   "n_cc": 26441,
+   "n_material": 3431,
+   "n_zero": 0,
+   "p50": 1.0,
+   "max": 17565.306030948388
+  },
+  "exit": {
+   "firings_06h": 127498,
+   "firings_g": 461974,
+   "checks_06h": 339559,
+   "checks_g": 808455,
+   "changed": {
+    "more firings": 25565,
+    "analytic": 18864,
+    "fewer firings": 3659,
+    "group": 10360
+   }
+  },
+  "cost all rows group": {
+   "regions_06h": 329525,
+   "regions_g": 1255648,
+   "solves_06h": 2559935,
+   "solves_g": 10007859
+  },
+  "cost all rows analytic": {
+   "regions_06h": 408628,
+   "regions_g": 473409,
+   "solves_06h": 3161604,
+   "solves_g": 3679856
+  },
+  "cost outside the 720 group": {
+   "regions_06h": 281444,
+   "regions_g": 1070803,
+   "solves_06h": 2178887,
+   "solves_g": 8532699
+  },
+  "cost outside the 720 analytic": {
+   "regions_06h": 338192,
+   "regions_g": 395778,
+   "solves_06h": 2609636,
+   "solves_g": 3070328
+  },
+  "wall": {
+   "unit_wall_h_06h": 2.9185394683260366,
+   "unit_wall_h_g": 8.64335739241887,
+   "largest_06h": [
+    105.23702691681683,
+    "g-1e-8-0-33995"
+   ],
+   "largest_g": [
+    46.811343166045845,
+    "g-1e-8-0-36806"
+   ],
+   "post_h_06h": 1.8921319000494097,
+   "post_h_g": 2.6015268035148944
+  },
+  "depth outside the 720 group": {
+   "converged_06h": 33724,
+   "converged_g": 32894,
+   "n": 33725,
+   "hist_06h": {
+    "0": 10568,
+    "1": 3671,
+    "2": 2347,
+    "3": 3239,
+    "4": 4012,
+    "5": 2378,
+    "6": 2499,
+    "7": 2232,
+    "8": 1583,
+    "9": 714,
+    "10": 378,
+    "11": 64,
+    "12": 16,
+    "13": 13,
+    "14": 5,
+    "15": 5,
+    "20": 1
+   },
+   "hist_g": {
+    "0": 8530,
+    "1": 1593,
+    "2": 968,
+    "3": 2684,
+    "4": 2428,
+    "5": 1806,
+    "6": 1697,
+    "7": 1681,
+    "8": 1754,
+    "9": 1281,
+    "10": 1014,
+    "11": 793,
+    "12": 747,
+    "13": 968,
+    "14": 1086,
+    "15": 1208,
+    "16": 922,
+    "17": 748,
+    "18": 461,
+    "19": 360,
+    "20": 996
+   }
+  },
+  "depth outside the 720 analytic": {
+   "converged_06h": 95895,
+   "converged_g": 95896,
+   "n": 95896,
+   "hist_06h": {
+    "0": 28478,
+    "1": 13970,
+    "2": 12503,
+    "3": 29957,
+    "4": 10898,
+    "5": 88,
+    "6": 2
+   },
+   "hist_g": {
+    "0": 27554,
+    "1": 13751,
+    "2": 9408,
+    "3": 12709,
+    "4": 31884,
+    "5": 588,
+    "6": 2
+   }
+  },
+  "rows unconverged outside the 720": {
+   "06h": 1,
+   "g": 476
+  },
+  "depth the 720 group": {
+   "converged_06h": 3586,
+   "converged_g": 3246,
+   "n": 3600,
+   "hist_06h": {
+    "0": 613,
+    "1": 323,
+    "2": 216,
+    "3": 270,
+    "4": 327,
+    "5": 292,
+    "6": 143,
+    "7": 442,
+    "8": 570,
+    "9": 171,
+    "10": 67,
+    "11": 39,
+    "12": 24,
+    "13": 15,
+    "14": 12,
+    "15": 9,
+    "16": 17,
+    "17": 11,
+    "18": 11,
+    "19": 11,
+    "20": 17
+   },
+   "hist_g": {
+    "0": 613,
+    "1": 219,
+    "2": 101,
+    "3": 177,
+    "4": 166,
+    "5": 159,
+    "6": 73,
+    "7": 75,
+    "8": 216,
+    "9": 273,
+    "10": 93,
+    "11": 92,
+    "12": 51,
+    "13": 80,
+    "14": 135,
+    "15": 176,
+    "16": 237,
+    "17": 131,
+    "18": 90,
+    "19": 58,
+    "20": 385
+   }
+  },
+  "depth the 720 analytic": {
+   "converged_06h": 11520,
+   "converged_g": 11520,
+   "n": 11520,
+   "hist_06h": {
+    "1": 451,
+    "2": 1729,
+    "3": 2949,
+    "4": 6337,
+    "5": 54
+   },
+   "hist_g": {
+    "1": 448,
+    "2": 1730,
+    "3": 850,
+    "4": 7393,
+    "5": 1093,
+    "6": 6
+   }
+  },
+  "rows unconverged the 720": {
+   "06h": 14,
+   "g": 241
+  },
+  "the 720": {
+   "totals_moved": 720,
+   "oracles_moved": 720,
+   "calls_lost": 340,
+   "calls_gained": 0
+  }
+ },
+ "near_singular": {
+  "1e-7": {
+   "rows": 435,
+   "analytic_lost": 0,
+   "analytic_gained": 0,
+   "group_lost": 43,
+   "group_gained": 0,
+   "oracle_converged_06h": 133,
+   "oracle_converged_g": 133,
+   "max_ratio": 1.623278901981961e-07
+  },
+  "1e-8": {
+   "rows": 435,
+   "analytic_lost": 0,
+   "analytic_gained": 1,
+   "group_lost": 43,
+   "group_gained": 0,
+   "oracle_converged_06h": 131,
+   "oracle_converged_g": 131,
+   "max_ratio": 2.072243568360976e-08
+  }
+ }
+}

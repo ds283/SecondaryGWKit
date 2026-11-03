@@ -1,0 +1,1661 @@
+diff -ruN state/scripts_06h_reference/check_predictions.py scripts/check_predictions.py
+--- state/scripts_06h_reference/check_predictions.py	2026-11-01 10:58:11
++++ scripts/check_predictions.py	2026-11-01 11:15:45
+@@ -1,4 +1,4 @@
+-"""levin-phase-floor 06h (prompt 06h: copied from 06e's check_predictions.py, kept in state/scripts_06e_reference/; changed only in the prompt, 06h-group-phase-rounding.md, and its lines, 334-347: section 5's "Predictions, fixed before the run" and H1-H4). 06e's text: levin-phase-floor 06e (prompt 06e: copied from 06c's check_predictions.py; changed only in the prompt, 06e-exact-end-nodes.md, and its lines, 345-375: section 5's "Predictions, fixed before the run" and Z2-Z5). 06c's text: levin-phase-floor 06c: state/predictions.md's Part A against prompt 06c's lines 363-392 (section
++"""levin-phase-floor 06g (prompt 06g: copied from 06h's check_predictions.py, kept in state/scripts_06h_reference/; changed only in the prompt, 06g-leaf-values-and-node-sum.md, and its lines, 401-422: section 5's "Predictions, fixed before the run" and V2-V8). 06h's text: levin-phase-floor 06h (prompt 06h: copied from 06e's check_predictions.py, kept in state/scripts_06e_reference/; changed only in the prompt, 06h-group-phase-rounding.md, and its lines, 334-347: section 5's "Predictions, fixed before the run" and H1-H4). 06e's text: levin-phase-floor 06e (prompt 06e: copied from 06c's check_predictions.py; changed only in the prompt, 06e-exact-end-nodes.md, and its lines, 345-375: section 5's "Predictions, fixed before the run" and Z2-Z5). 06c's text: levin-phase-floor 06c: state/predictions.md's Part A against prompt 06c's lines 363-392 (section
+ 5's "Predictions, fixed before the run" and X1-X5), byte for byte; and its SHA-256 and mtime.
+ Copied from 06b's check_predictions.py (kept in state/scripts_06b_reference/); changed (prompt
+ 06c) only in the prompt, its lines and the tree it is read from.
+@@ -12,9 +12,9 @@
+ sys.path.insert(0, str(HERE))
+ from prov import G_TREE, WIDER, sha256  # noqa: E402  prompt 06c
+ 
+-prompt = G_TREE / "prompts" / "levin-phase-floor" / "06h-group-phase-rounding.md"  # prompt 06c; prompt 06e; prompt 06h
++prompt = G_TREE / "prompts" / "levin-phase-floor" / "06g-leaf-values-and-node-sum.md"  # prompt 06c; prompt 06e; prompt 06h; prompt 06g
+ lines = prompt.read_bytes().split(b"\n")
+-want = b"\n".join(lines[333:347]) + b"\n"  # prompt 06c: lines 363-392; prompt 06e: lines 345-375; prompt 06h: lines 334-347
++want = b"\n".join(lines[400:422]) + b"\n"  # prompt 06c: lines 363-392; prompt 06e: lines 345-375; prompt 06h: lines 334-347; prompt 06g: lines 401-422
+ pred = WIDER / "state" / "predictions.md"
+ data = pred.read_bytes()
+ a = data.index(b"## Part A")
+@@ -22,7 +22,7 @@
+ end = data.index(b"\n## Part B")
+ got = data[start:end]
+ got = got.rstrip(b"\n") + b"\n"
+-print(f"prompt {prompt} sha256 {sha256(prompt)}; lines 334-347: {len(want)} bytes")  # prompt 06e; prompt 06h
++print(f"prompt {prompt} sha256 {sha256(prompt)}; lines 401-422: {len(want)} bytes")  # prompt 06e; prompt 06h; prompt 06g
+ print(f"predictions {pred}: Part A {len(got)} bytes; equal to the prompt's bytes: {got == want}")
+ st = os.stat(pred)
+ print(f"predictions sha256 {sha256(pred)} size {st.st_size} mtime "
+diff -ruN state/scripts_06h_reference/checks_after_06g.py scripts/checks_after_06g.py
+--- state/scripts_06h_reference/checks_after_06g.py	1970-01-01 01:00:00
++++ scripts/checks_after_06g.py	2026-11-01 11:15:56
+@@ -0,0 +1,75 @@
++"""levin-phase-floor 06g: copied from 06h's checks_after_06h.py (kept in state/scripts_06h_reference/); changed
++(prompt 06g) in this note, in the tree (prov.G_SHA is now g's, 1c5336e), and by 06g's records' own checks per call
++(an error in 06g's additions, the premise and checked-leaf records, abserr and value reassembled bit for bit, the
++budget record parsed, 06g's trust test against the region's final flag) and the units' counts of them.
++06h's text: levin-phase-floor 06h: copied from 06e's checks_after_06e.py (kept in state/scripts_06e_reference/); changed
++(prompt 06h) in this note, in the tree (prov.G_SHA is now h's, c1ec3b2), and by the counts of 06h's declared
++terms per call (supplies theta_abserr, leaves, reproduced, errors) and the run's over-budget and error units.
++06e's text: levin-phase-floor 06e: the run's records after it ended (new in 06e; 06c did the same inline in its
++report). Per record: the registry's script stamp, the tree's HEAD and status, the scripts' SHA-256
++against scripts/ now, status, wall_s > 300 s, foreign modules, deep-line and CC-term errors.
++Usage: python -B checks_after_06e.py RUN_DIR"""
++import collections, hashlib, json, sys
++from pathlib import Path
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++from prov import G_SHA, sha256  # noqa: E402
++run = Path(sys.argv[1])
++now = {p.name: sha256(p) for p in HERE.glob("*.py")}
++c = collections.Counter(); over300 = []; bad = []
++for line in open(run / "checkpoint.jsonl"):
++    r = json.loads(line); d = r["data"]
++    c["records"] += 1; c["status " + d["status"]] += 1
++    c["script_sha " + str(r.get("script_sha256", r.get("script_hash", "?")))[:8]] += 1
++    if d["tree_head"] != G_SHA or d["tree_status_short"].strip(): bad.append((r["unit"], "tree"))
++    if any(now.get(k) != v for k, v in d["scripts_sha256"].items()): bad.append((r["unit"], "scripts"))
++    if d["modules"]["foreign"]: bad.append((r["unit"], "foreign modules"))
++    if d["wall_s"] is not None and d["wall_s"] > 300: over300.append((r["unit"], round(d["wall_s"], 1)))
++    dl = d.get("deep_lines_06e") or {}
++    c["deep06e lines"] += dl.get("n_calls", 0); c["deep06e errors"] += dl.get("n_errors", 0); c["deep06e not reproducing"] += dl.get("n_not_reproducing", 0)
++    dc = d.get("deep_lines") or {}
++    c["deep(cap) lines"] += dc.get("n_calls", 0)
++    for cl in d["calls"] + d["other_calls"]:
++        f = cl.get("cc_floor")
++        if f is None: c["cc_floor None"] += 1; continue
++        if "error" in f: c["cc_floor error"] += 1; continue
++        c["cc leaves"] += f["n_cc_leaves"]; c["cc reproduced"] += f["n_reproduced"]; c["cc errors"] += f["n_errors"]
++    for cl in d["calls"] + d["other_calls"]:  # prompt 06h
++        g6 = cl.get("declared_06h")
++        if g6 is None: c["declared_06h None"] += 1; continue
++        if "error" in g6: c["declared_06h error"] += 1; continue
++        if not g6["supplies_theta_abserr"]: c["calls supplying no theta_abserr"] += 1; continue
++        c["calls supplying theta_abserr"] += 1
++        c["declared_06h leaves"] += g6["n_leaves"]; c["declared_06h reproduced"] += g6["n_reproduced"]; c["declared_06h errors"] += g6["n_errors"]
++        c["declared_06h with parts"] += bool(g6["has_parts"])
++    for cl in d["calls"] + d["other_calls"]:  # prompt 06g
++        c["06g calls"] += 1
++        if "error_06g" in cl: c["06g error_06g"] += 1
++        if cl.get("abserr_reassembles") is not True: c["06g abserr does not reassemble"] += 1
++        if (cl.get("values_06g") or {}).get("value_reassembles") is not True: c["06g value does not reassemble"] += 1
++        pm = cl.get("premise_06g")
++        if pm is None: c["06g premise_06g None"] += 1
++        elif "error" in pm: c["06g premise_06g error"] += 1
++        else:
++            c["06g premise checks"] += pm["n_checks"]; c["06g premise fired"] += pm["n_fired"]
++            c["06g premise split could meet budget"] += pm["n_split_could_meet_budget"] or 0
++        ck = cl.get("checked_06g")
++        if ck is None: c["06g checked_06g None"] += 1
++        elif "error" in ck: c["06g checked_06g error"] += 1
++        else:
++            c["06g checked leaves"] += ck["n_checked"]; c["06g checked leaves returned"] += ck["n_checked_returned"]
++            c["06g trust_g differs from the final flag"] += ck["n_trust_g_differs_from_trusted_final"]
++        bud = cl.get("budget") or {}
++        if "raw" in bud or "node_limited" not in bud: c["06g budget record not parsed with 06g's keys"] += 1
++        if cl.get("node_limited"): c["06g node_limited calls"] += 1
++    if d["status"] != "done": c["unit " + d["status"] + ": " + r["unit"]] += 1  # prompt 06h
++    an = d.get("analytic_06h")  # prompt 06h
++    if an is None: c["analytic_06h None"] += 1
++    else:
++        cf = an.get("parent_counterfactual") or {}
++        c["analytic_06h counterfactual " + ("error" if "error" in cf else "ok" if "value" in cf else "absent")] += 1
++        c["analytic_06h captured != 1"] += an.get("n_captured") != 1
++print("record keys seen:", sorted(k for k in json.loads(open(run / "checkpoint.jsonl").readline()).keys()))
++for k, v in sorted(c.items()): print(f"{k}: {v}")
++print("units with wall_s > 300 s:", len(over300), over300)
++print("records failing tree/scripts/modules checks:", len(bad), bad[:20])
+diff -ruN state/scripts_06h_reference/gate_v.py scripts/gate_v.py
+--- state/scripts_06h_reference/gate_v.py	1970-01-01 01:00:00
++++ scripts/gate_v.py	2026-11-01 11:14:59
+@@ -0,0 +1,655 @@
++"""levin-phase-floor prompt 06g section 5, Gate V: "the parent reproduces 06h" (its bit-for-bit clause; the
++git clauses, "the integrand is 06h's" among them, are gate_v_clause1.py, which reads the import list
++this script writes) and "the new code is deterministic". Copied from 06h's gate_h.py (kept unchanged in
++state/scripts_06h_reference/) and changed, each change marked "prompt 06g":
++- **the trees and the "before":** P1-P3 run at the parent ``p`` (4f4f9ed, whose code is 06h's census
++  tree c1ec3b2's) and are compared with 06h's census units ``g-<rtol>-<shard>-<serial>`` of run
++  levin-phase-floor-06h-census-20261101T005037 (prov.RUN06H) by bit pattern, on 06h's own keys: every
++  key 06h's worker recorded, ``declared_06h`` (per call), ``declared_terms_06h`` (pickle) and
++  ``analytic_06h``'s own oracle (``h``: value, abserr, converged) now included. ``analytic_06h``'s
++  ``parent_counterfactual`` is computed only in a unit at ``g`` (06h's worker), so it is not part of
++  the comparison at ``p``; it is printed. 06h's keys are a subset of what this worker records, each
++  unchanged at ``p``; 06g's new keys (per call ``node_*``, ``has_cc_leaf``, ``abserr_eprime_sum``,
++  ``abserr_reassembles``, ``values_06g``, ``premise_06g``, ``checked_06g``, ``error_06g``; the region
++  arrays' new fields; the pickle's ``checked_leaves_06g`` and ``premise_06g``) are left out of the
++  comparison with 06h and compared in clause "deterministic". The brief's list -- the row's total,
++  total_abserr, the oracle, and every call's value, abserr, regions, depth and convergence -- is a
++  subset of that comparison, and is also printed call by call in float.hex;
++- **the determinism unit** is ``g-1e-7-0-14164`` (06c's X0 unit, 06e's Z0 unit, 06h's Gate H unit),
++  run at ``g`` (1c5336e) in two fresh workers, G1 and G2, compared on every key the worker records,
++  06g's new ones included, timings excepted. It qualifies (Part B's census brief: Clenshaw-Curtis
++  leaves, so that sum E is non-zero, and trusted leaves returning their quarters) only if, in G1, at
++  least one call has ``has_cc_leaf`` with ``node_error_abs_sum`` > 0 and ``node_error_signed_sum``
++  non-zero, and at least one returned leaf has value kind "quarters" (``values_06g.n_quarters`` > 0);
++  the check prints both and fails clause "deterministic" if either is absent. (06h's gate recorded
++  call 0 with six fallback leaves and sixteen analytic-block calls whose leaves were trusted.)
++- the five workers run at once, as in 06h (five, within the six-core rule), only when the
++  orchestrator has released the cores.
++Usage: python -B gate_v.py run|check OUT_DIR. ``check`` runs with ``PYTHONPATH`` the tree g.
++
++(06h's text follows, unchanged; read its Gate H as Gate V, its 06e as 06h, its h as g.)
++
++levin-phase-floor prompt 06h section 5, Gate H: "the parent reproduces 06e" (its bit-for-bit
++clause; the git clause is gate_h_clause1.py, which reads the import list this script writes) and
++"the new code is deterministic". Copied from 06e's z0.py (kept unchanged in
++state/scripts_06e_reference/) and changed, each change marked "prompt 06h":
++- **the trees and the "before":** P1-P3 run at the parent ``p`` (2c325f5, whose code is 06e's census
++  tree 6d81fad's) and are compared with 06e's census units ``g-<rtol>-<shard>-<serial>`` of run
++  levin-phase-floor-06e-census-20261030T081318 (prov.RUN06E) by bit pattern, on 06e's own keys:
++  every key 06e's worker recorded, now **including 06e's ``deep_lines_06e`` and ``cc_floor_terms``**
++  (checkpoint and pickle) and the per-call ``cc_floor`` (inside the calls' dicts), which 06c's
++  record, Z0's "before", did not have. 06e's keys are a subset of what this worker records, each
++  unchanged; the new 06h keys (``declared_06h`` per call, ``declared_terms_06h`` in the pickle)
++  are left out of the comparison with 06e and compared in clause "deterministic";
++- **the determinism unit** is ``g-1e-7-0-14164`` (06c's X0 unit and 06e's Z0 unit), run at ``g``
++  (the tree h, c1ec3b2) in two fresh workers, G1 and G2, compared on every key the worker
++  records, 06h's new ones included (``declared_06h`` per call, ``declared_terms_06h``), timings
++  excepted. It qualifies (Part B's census brief): its row has two analytic blocks, sixteen
++  ``adaptive_levin_sincos`` calls ("analytic J1" ... "analytic Y4"), each handed a
++  ``BesselPhaseGroup.levin_theta()`` that supplies ``theta_abserr`` (06e's out/cmd/20); under h
++  every such call's phase and declaration move, so the unit exercises 06h's ``sin_cos`` and
++  ``theta_abserr`` on both scalar and array paths, and its group calls exercise the
++  Clenshaw-Curtis branch (call 0, six fallback leaves). The G check prints the declared terms it
++  recorded and fails clause "deterministic" if no analytic-block call reports
++  ``supplies_theta_abserr`` with a non-zero declared sum;
++- the five workers run at once, as in 06e (five, within the six-core rule), only when the
++  orchestrator has released the cores.
++Usage: python -B gate_h.py run|check OUT_DIR. ``check`` runs with ``PYTHONPATH`` the tree g.
++
++(06e's text follows, unchanged; read its Z0 as Gate H.)
++
++levin-phase-floor prompt 06e section 5, Gate Z0's second and third clauses (and the import list
++its first clause reads). Copied from 06c's x0.py (kept unchanged in state/scripts_06c_reference/)
++and changed, each change marked "prompt 06e":
++- **the trees and the "before":** P1-P3 run at the parent ``p`` (50277f3, whose code is 06c's census
++  tree e5764a6's) and are compared with 06c's census units ``g-<rtol>-<shard>-<serial>`` of run
++  levin-phase-floor-06c-census-20261029T130214 (prov.RUN06C), on 06c's own keys: every key 06c's
++  worker recorded, now **including 06c's deep lines** (checkpoint and pickle), which 06b's record,
++  X0's "before", did not have; 06c's keys are a subset of what this worker records, each unchanged;
++- **the determinism unit** is 06c's X0 unit, ``g-1e-7-0-14164``, run at ``g`` (6d81fad) in two fresh
++  workers, G1 and G2, compared on every key the worker records, 06e's new ones included
++  (``cc_floor`` per call, ``deep_lines_06e``, ``cc_floor_terms``), timings excepted;
++- **no capture:** no unit captures inputs (Z3's inputs are depth20-tiling's captures), so the
++  captured-call comparison of 06c's clause 3 is not made;
++- the five workers run at once, as in 06c (five, within the six-core rule), only when the
++  orchestrator has released the cores.
++Usage: python -B z0.py run|check OUT_DIR. ``check`` runs with ``PYTHONPATH`` the tree g.
++
++(06c's text follows, unchanged; read its 06b as 06c, its X0 as Z0, its g as 06e's g.)
++
++levin-phase-floor prompt 06c section 5, Gate X0's second and third clauses (and the import list
++its first clause reads). New in 06c; adapted from 06b's w0.py (its ``run`` and ``check``; a record,
++kept unchanged in state/scripts_06b_reference/).
++
++``run OUT_DIR``: five fresh census workers (worker.py, the producer cache), each its own process,
++all at once (five, within the six-worker rule), no Ray:
++- at the parent ``p`` (``fef401c``, whose code is 06b's census's), one worker per unit: P1
++  ``low-G+r-1`` at 1e-7, P2 ``ctrl-low-1`` at 1e-7, P3 ``0-1971`` at 1e-8 (prompt 06c section 5);
++- at ``g`` (``e5764a6``), G1 and G2: the same unit twice, ``g-1e-7-0-14164``, in two fresh workers.
++  The row is fixed by rule (explore06b_pool.py, out/cmd/07): of the 1e-7 rows outside 06a's 720
++  stationary-point rows, the one whose 06b unit has the most X2-type calls (06b unconverged, no
++  region at depth_max, no phase-limited region, finite abserr; group and analytic), ties broken by
++  rows.json's order. Each G worker also captures the inputs of that unit's first X2-type group call
++  (lowest index), so that the capture path X1 will use is exercised and compared.
++Every 1e-7 unit carries the scan and 06b's W3 evidence, as in the run; no P unit captures. Budget
++300 s, as in the run. Each worker's ``bye`` lists every module it loaded from its tree.
++
++``check OUT_DIR``:
++- **clause 2, the harness reproduces 06b:** each P unit against 06b's ``b`` unit of the same
++  (rtol, shard, serial) in run levin-phase-floor-06b-census-20261028T161212, bit for bit in every
++  value 06b's census recorded, restricted to 06b's own keys (the worker records more under 06c):
++  the checkpoint's group calls and analytic-block calls (every 06b key but ``elapsed``), the slim
++  result without ``compute_time``, ``GkPolicy``, the checkpoint's scan, the group calls' and the
++  analytic blocks' region arrays (06b's eight arrays, as bytes with their dtypes, and each entry's
++  index, labels and span), the pickle's scan without its timing, the full result summary without
++  timings, and 06b's W3 numbers (checkpoint summary without its timing, and the pickle's per-region
++  numbers). 06a's C0 (c) terms are printed with it. The dispatcher's counts are printed, and are
++  not part of the verdict;
++- **clause 3, the new code is deterministic:** G1's unit against G2's, on every key the worker
++  records (calls and analytic-block calls with every 06c key, the budget counters and the solves by
++  purpose among them; every region array; W3; the deep lines; the captured call's value, abserr,
++  regions, depth and converged), timings excepted;
++- **no Ray:** every worker reported ``ray_initialized`` false at exit. (/tmp/ray-sgk is listed
++  before and after, descriptively: R17 and R18 run Ray there in the same period.)
++
++Read-only outside OUT_DIR. Usage: python -B x0.py run|check OUT_DIR. ``check`` runs with
++``PYTHONPATH`` the tree g: the captured call's record holds functions pickled by reference to g's
++modules, and is unpickled to read its value and abserr (06b's out/cmd/13 stopped there without it).
++"""
++
++import hashlib
++import json
++import math
++import os
++import pickle
++import subprocess
++import sys
++from pathlib import Path
++
++import numpy as np
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++from prov import PYTHON, RUN06A, RUN06B, RUN06C, RUN06E, RUN06H, TREES, WIDER, header, sha256  # noqa: E402  prompt 06e: RUN06C; prompt 06h: RUN06E; prompt 06g: RUN06H
++
++BUDGET_S = 300.0
++ROWS_JSON = WIDER / "state" / "rows.json"
++DET_UNIT_KEY = "1e-7-0-14164"  # the rule in the docstring (out/cmd/07); checked in cmd_run
++DEPTH_MAX = 20
++REGION_FIELDS_06 = ("start", "end", "depth", "type", "abserr")
++
++
++def load_rows():
++    doc = json.loads(ROWS_JSON.read_text())
++    by_name05 = {}
++    by_name = {}
++    for r in doc["rows"]:
++        by_name[r["name"]] = r
++        for n in r["names05"] or []:
++            by_name05[n] = r
++    return doc, by_name05, by_name
++
++
++def read_one(run_dir, uid):
++    with open(Path(run_dir) / "checkpoint.jsonl") as f:
++        for line in f:
++            if f'"unit": "{uid}"' in line:
++                r = json.loads(line)
++                if r["unit"] == uid:
++                    return r["data"]
++    raise KeyError(uid)
++
++
++def x2_type(c):
++    return (
++        not c["converged"]
++        and c["max_depth"] < DEPTH_MAX
++        and c["n_phase_limited_regions"] == 0
++        and math.isfinite(float.fromhex(c["abserr"]["hex"]))
++    )
++
++
++def unit(r, rtol, tree, capture=None):
++    key = f"{rtol}-{r['shard']}-{r['serial']}"
++    return {
++        "uid": f"{tree}-{key}",
++        "tree": tree,
++        "rtol": rtol,
++        "row": r["name"],
++        "names05": r["names05"],
++        "shard": r["shard"],
++        "serial": r["serial"],
++        "k_key": r["k_key"],
++        "budget": BUDGET_S,
++        "scan": rtol == "1e-7",
++        "w3": rtol == "1e-7",
++        "capture": capture,
++    }
++
++
++def tmp_listing():
++    try:
++        return sorted(os.listdir("/tmp/ray-sgk"))
++    except FileNotFoundError:
++        return []
++
++
++def cmd_run(out_dir):
++    out_dir = Path(out_dir)
++    doc, by05, by_name = load_rows()
++    shard, serial = map(int, DET_UNIT_KEY.split("-")[2:])
++    D = next(r for r in doc["rows"] if r["shard"] == shard and r["serial"] == serial)
++    cap = None  # prompt 06e: no capture
++    print(f"determinism unit g-{DET_UNIT_KEY} ({D['name']}) (06c's X0 unit, 06e's Z0 unit, 06h's Gate H unit; prompt 06g); no capture")
++    specs = {
++        "P1": ("p", [unit(by05["low-G+r-1"], "1e-7", "p")]),
++        "P2": ("p", [unit(by05["ctrl-low-1"], "1e-7", "p")]),
++        "P3": ("p", [unit(by_name["0-1971"], "1e-8", "p")]),
++        "G1": ("g", [unit(D, "1e-7", "g", cap)]),
++        "G2": ("g", [unit(D, "1e-7", "g", cap)]),
++    }
++    before = tmp_listing()
++    out_dir.mkdir(parents=True, exist_ok=False)
++    (out_dir / "tmp_ray_sgk_before.json").write_text(json.dumps(before))
++    procs = {}
++    for name, (tree, units) in specs.items():
++        env = dict(os.environ)
++        env["PYTHONPATH"] = str(TREES[tree][0])
++        env["PYTHONDONTWRITEBYTECODE"] = "1"
++        env["OMP_NUM_THREADS"] = "1"
++        wdir = out_dir / name
++        wdir.mkdir()
++        spec = {
++            "tree": tree,
++            "name": name,
++            "units": units,
++            "out_dir": str(wdir),
++            "emit_fd": None,
++            "emit_file": str(wdir / "emit.jsonl"),
++            "rows_sha256": sha256(ROWS_JSON),
++            "w2_capture_sha256": None,
++        }
++        sp = wdir / "spec.json"
++        sp.write_text(json.dumps(spec, indent=1))
++        log = open(wdir / "worker.log", "ab")
++        procs[name] = subprocess.Popen(
++            [str(PYTHON), "-B", str(HERE / "worker.py"), str(sp)],
++            cwd=str(WIDER),
++            env=env,
++            stdin=subprocess.DEVNULL,
++            stdout=log,
++            stderr=subprocess.STDOUT,
++        )
++        log.close()
++        print(f"{name}: tree {tree}, pid {procs[name].pid}, units {[u['uid'] for u in units]}", flush=True)
++    rc = {name: p.wait() for name, p in procs.items()}
++    after = tmp_listing()
++    (out_dir / "tmp_ray_sgk_after.json").write_text(json.dumps(after))
++    print(f"exit codes {rc}")
++    print(f"/tmp/ray-sgk entries before {len(before)}, after {len(after)}, new {sorted(set(after) - set(before))} (descriptive)")
++    return 0 if all(v == 0 for v in rc.values()) else 1
++
++
++# --------------------------------------------------------------------------------------------- reading
++
++
++def read_emit(path):
++    units, bye, hello = {}, None, None
++    with open(path) as f:
++        for line in f:
++            m = json.loads(line)
++            if m["kind"] == "unit":
++                units[m["data"]["unit"]] = m["data"]
++            elif m["kind"] == "bye":
++                bye = m
++            elif m["kind"] == "hello":
++                hello = m
++    return units, bye, hello
++
++
++def load_census_record(dir_, data):
++    with open(Path(dir_) / data["pickle"], "rb") as f:
++        f.seek(data["pickle_offset"])
++        blob = f.read(data["pickle_length"])
++    if hashlib.sha256(blob).hexdigest() != data["pickle_record_sha256"]:
++        raise RuntimeError(f"{data['unit']}: pickle record sha256 differs")
++    return pickle.loads(blob)
++
++
++def load_input_record(dir_, ent):
++    with open(Path(dir_) / ent["pickle"], "rb") as f:
++        f.seek(ent["offset"])
++        blob = f.read(ent["length"])
++    if hashlib.sha256(blob).hexdigest() != ent["sha256"]:
++        raise RuntimeError(f"input record sha256 differs: {ent}")
++    return blob
++
++
++def hx(d):
++    return None if d is None else d["hex"]
++
++
++TIMING_KEYS = ("compute_time", "elapsed", "seconds")
++
++
++def _drop_timings(x):
++    if isinstance(x, dict):
++        return {k: _drop_timings(v) for k, v in x.items() if k not in TIMING_KEYS}
++    if isinstance(x, list):
++        return [_drop_timings(v) for v in x]
++    return x
++
++
++def _calls_on_keys(calls, keys=None):
++    """Each call dict without ``elapsed``; restricted to ``keys`` (06b's) if given."""
++    out = []
++    for c in calls:
++        out.append({k: v for k, v in c.items() if k != "elapsed" and (keys is None or k in keys)})
++    return out
++
++
++def _arr_bytes(arrs, keys=None):
++    out = []
++    for a in arrs:
++        d = {}
++        for k, v in a.items():
++            if keys is not None and k not in keys:
++                continue
++            d[k] = (v.dtype.str, v.shape, v.tobytes()) if isinstance(v, np.ndarray) else v
++        out.append(d)
++    return out
++
++
++def _strip_result(r):
++    return None if r is None else {k: v for k, v in r.items() if k != "compute_time"}
++
++
++def _strip_scan(scan):
++    if scan is None:
++        return None
++    return [None if s is None else {k: v for k, v in s.items() if k != "seconds"} for s in scan]
++
++
++def _keys_of(lst):
++    ks = set()
++    for d in lst:
++        ks |= set(d.keys())
++    return ks
++
++
++def compare_units(a_data, a_rec, b_data, b_rec, restrict_to_b=False):
++    """Every computed value two census units recorded; with restrict_to_b, only on the keys
++    ``b`` (06b's record) holds. Returns the list of differing items (empty: identical)."""
++    diffs = []
++    ck = _keys_of(b_data["calls"]) if restrict_to_b else None
++    ok_ = _keys_of(b_data["other_calls"]) if restrict_to_b else None
++    if _calls_on_keys(a_data["calls"], ck) != _calls_on_keys(b_data["calls"], ck):
++        diffs.append("group calls")
++    if _calls_on_keys(a_data["other_calls"], ok_) != _calls_on_keys(b_data["other_calls"], ok_):
++        diffs.append("analytic-block calls")
++    if _strip_result(a_data.get("result")) != _strip_result(b_data.get("result")):
++        diffs.append("result")
++    if a_data.get("GkPolicy") != b_data.get("GkPolicy"):
++        diffs.append("GkPolicy")
++    if json.dumps(a_data.get("scan")) != json.dumps(b_data.get("scan")):
++        diffs.append("scan (checkpoint)")
++    rk = _keys_of(b_rec["regions"]) if restrict_to_b else None
++    if _arr_bytes(a_rec["regions"], rk) != _arr_bytes(b_rec["regions"], rk):
++        diffs.append("group calls' region arrays")
++    ork = _keys_of(b_rec["other_regions"]) if restrict_to_b else None
++    if _arr_bytes(a_rec["other_regions"], ork) != _arr_bytes(b_rec["other_regions"], ork):
++        diffs.append("analytic blocks' region arrays")
++    if pickle.dumps(_strip_scan(a_rec["scan"])) != pickle.dumps(_strip_scan(b_rec["scan"])):
++        diffs.append("scan (pickle)")
++    if json.dumps(_drop_timings(a_rec.get("result_full")), sort_keys=True) != json.dumps(
++        _drop_timings(b_rec.get("result_full")), sort_keys=True
++    ):
++        diffs.append("full result summary")
++    if _drop_timings(a_data.get("w3")) != _drop_timings(b_data.get("w3")):
++        diffs.append("W3 (checkpoint)")
++    if json.dumps(a_rec.get("w3"), sort_keys=True) != json.dumps(b_rec.get("w3"), sort_keys=True):
++        diffs.append("W3 (pickle)")
++    # prompt 06e: 06c recorded deep lines, so they are compared in both modes
++    if json.dumps(_drop_timings(a_data.get("deep_lines")), sort_keys=True) != json.dumps(
++        _drop_timings(b_data.get("deep_lines")), sort_keys=True
++    ):
++        diffs.append("deep lines (checkpoint)")
++    if json.dumps(a_rec.get("deep_lines"), sort_keys=True) != json.dumps(b_rec.get("deep_lines"), sort_keys=True):
++        diffs.append("deep lines (pickle)")
++    # prompt 06h: 06e recorded these, so they are compared in both modes (06e: only when not
++    # restricted to the before's keys, since 06c had none)
++    if json.dumps(_drop_timings(a_data.get("deep_lines_06e")), sort_keys=True) != json.dumps(
++        _drop_timings(b_data.get("deep_lines_06e")), sort_keys=True
++    ):
++        diffs.append("deep lines past depth 12 (checkpoint)")
++    if json.dumps(a_rec.get("deep_lines_06e"), sort_keys=True) != json.dumps(b_rec.get("deep_lines_06e"), sort_keys=True):
++        diffs.append("deep lines past depth 12 (pickle)")
++    if _cc_terms_bytes(a_rec.get("cc_floor_terms")) != _cc_terms_bytes(b_rec.get("cc_floor_terms")):
++        diffs.append("Clenshaw-Curtis floor terms (pickle)")
++    # prompt 06g: 06h recorded these, so they are compared in both modes
++    if _cc_terms_bytes(a_rec.get("declared_terms_06h")) != _cc_terms_bytes(b_rec.get("declared_terms_06h")):
++        diffs.append("declared terms by leaf (pickle)")
++    if (a_data.get("analytic_06h") or {}).get("h") != (b_data.get("analytic_06h") or {}).get("h"):
++        diffs.append("the analytic oracle (analytic_06h.h: value, abserr, converged)")
++    if (a_data.get("analytic_06h") or {}).get("n_captured") != (b_data.get("analytic_06h") or {}).get("n_captured"):
++        diffs.append("analytic_06h.n_captured")
++    if not restrict_to_b:
++        # prompt 06h: the new keys (per call declared_06h is inside the calls' dicts, compared above)
++        if _drop_timings(a_data.get("analytic_06h")) != _drop_timings(b_data.get("analytic_06h")):
++            diffs.append("the analytic oracle and its counterfactual (analytic_06h)")
++        # prompt 06g: 06g's new pickle keys (its per-call keys are inside the calls' dicts, compared above)
++        if _cc_terms_bytes(a_rec.get("checked_leaves_06g")) != _cc_terms_bytes(b_rec.get("checked_leaves_06g")):
++            diffs.append("checked leaves (pickle, checked_leaves_06g)")
++        if json.dumps(a_rec.get("premise_06g"), sort_keys=True) != json.dumps(b_rec.get("premise_06g"), sort_keys=True):
++            diffs.append("premise checks (pickle, premise_06g)")
++        _tk = {"wall_s", "rebuild_s", "scan_s", "cc_floor_s", "declared_06h_s", "checked_06g_s", "worker", "worker_pid", "pickle_offset", "pickle_record_sha256", "pickle_length", "pickle", "unit", "policy_warnings"}  # prompt 06h: declared_06h_s; prompt 06g: checked_06g_s
++        ka = set(a_data) - _tk
++        kb = set(b_data) - _tk
++        if ka != kb:
++            diffs.append(f"checkpoint keys differ: {sorted(ka ^ kb)}")
++        pk = {"unit", "regions", "scan", "result_full", "other_regions", "w3", "deep_lines", "deep_lines_06e", "cc_floor_terms",
++              "declared_terms_06h", "checked_leaves_06g", "premise_06g"}  # prompt 06g: every pickle key compared
++        if set(a_rec) != set(b_rec) or set(a_rec) - pk:
++            diffs.append(f"pickle keys: {sorted(set(a_rec) ^ set(b_rec))}, not compared: {sorted(set(a_rec) - pk)}")
++    else:
++        # prompt 06h: every pickle key the before recorded is compared above, or listed here
++        compared = {"unit", "regions", "scan", "result_full", "other_regions", "w3", "deep_lines", "deep_lines_06e", "cc_floor_terms",
++                    "declared_terms_06h"}  # prompt 06g: declared_terms_06h
++        missing = set(b_rec) - compared
++        if missing:
++            diffs.append(f"the before's pickle keys not compared: {sorted(missing)}")
++        if a_rec.get("unit", "").split("-", 1)[1:] != b_rec.get("unit", "").split("-", 1)[1:]:
++            diffs.append("pickle unit")
++    return diffs
++
++
++def _cc_terms_bytes(lst):
++    """prompt 06e: the pickle's cc_floor_terms, arrays as (dtype, shape, bytes).
++    prompt 06g: an entry may be None (a call whose checked-leaf record failed)."""
++    if lst is None:
++        return None
++    return [None if d is None else _arr_bytes([{k: v for k, v in d.items() if k != "errors"}])[0] | {"errors": json.dumps(d.get("errors"))} for d in lst]
++
++
++def compare_c(c_data, c_rec, s_data, s_rec):
++    """06a's C0 (c) comparison: total, total_abserr, every call's value and abserr (and label,
++    regime, group), and 06's five region arrays. Returns (holds, n call values, n regions)."""
++    cr, sr = c_data.get("result"), s_data.get("result")
++    if cr is None or sr is None:
++        return False, 0, 0
++    ok = hx(cr["total"]) == hx(sr["total"]) and hx(cr["total_abserr"]) == hx(sr["total_abserr"])
++    ok &= len(c_data["calls"]) == len(s_data["calls"])
++    n_vals = 0
++    for a, b in zip(c_data["calls"], s_data["calls"]):
++        for key in ("index", "notify_label", "regime", "group"):
++            ok &= a[key] == b[key]
++        for key in ("value", "abserr"):
++            n_vals += 1
++            ok &= hx(a[key]) == hx(b[key])
++    ok &= len(c_rec["regions"]) == len(s_rec["regions"])
++    n_regions = 0
++    for a, b in zip(c_rec["regions"], s_rec["regions"]):
++        for f in REGION_FIELDS_06:
++            x, y = a[f], b[f]
++            ok &= x.dtype == y.dtype and x.shape == y.shape and x.tobytes() == y.tobytes()
++        n_regions += len(a["start"])
++    return bool(ok), n_vals, n_regions
++
++
++def cmd_check(out_dir):
++    out_dir = Path(out_dir)
++    for l in header(
++        Path(__file__).resolve(),
++        "levin-phase-floor 06g: Gate V, the parent reproduces 06h and the new code is deterministic",  # prompt 06e; prompt 06h; prompt 06g
++        [ROWS_JSON],  # prompt 06g: 06h's checkpoint is hashed by its own command (out/cmd), not here
++    ):
++        print(l)
++    W, byes, hellos = {}, {}, {}
++    for name in ("P1", "P2", "P3", "G1", "G2"):
++        W[name], byes[name], hellos[name] = read_emit(out_dir / name / "emit.jsonl")
++
++    print("\n== tree evidence (each worker's hello) and each unit's module roots")
++    for name in W:
++        ev = hellos[name]["evidence"]
++        print(
++            f"   {name}: tree {ev['tree']} head {ev['head']} status {'empty' if not ev['status_short'].strip() else repr(ev['status_short'])}; "
++            f"all_in_tree {ev['all_in_tree']}; levin_quadrature {ev['files']['AdaptiveLevin.levin_quadrature']}; "
++            f"premise check {ev['levin_has_roundoff_exit_premise_holds']}; trust check {ev['levin_has_trust_check']}; "
++            f"CC floor {ev['levin_has_cc_roundoff_floor']}; _local_atol {ev['levin_has_local_atol']}; default depth_max {ev['levin_default_max_depth']}"
++        )
++        # prompt 06h: 06h's group phase in this worker's tree
++        bpg_file = [v_ for k_, v_ in ev["files"].items() if k_.startswith("BesselPhaseGroup")]
++        print(  # prompt 06g: 06g's markers and the premise's signature
++            f"      (06g) trust max ratio {ev.get('levin_trust_max_ratio_06g')}; _solve_floor_in_budget {ev.get('levin_has_solve_floor_in_budget_06g')}; "
++            f"budget_err {ev.get('levin_used_interval_has_budget_err_06g')}; value_kind {ev.get('levin_used_interval_has_value_kind_06g')}; "
++            f"premise signature {ev.get('levin_roundoff_exit_premise_signature')}"
++        )
++        print(
++            f"      (06h) three_bessel_integrals {ev['files']['LiouvilleGreen.three_bessel_integrals']} sha256 {ev['three_bessel_integrals_sha256']}; "
++            f"QSI's BesselPhaseGroup from {bpg_file}; "
++            f"_declared_error_parts {ev['group_has_declared_error_parts']}; _two_product_error {ev['three_bessel_has_two_product_error']}; "
++            f"EXP_RELERR {ev['three_bessel_EXP_RELERR']}; levin_quadrature sha256 {ev['levin_quadrature_sha256']}"
++        )
++        for uid, d in W[name].items():
++            m = d["modules"]
++            print(f"      {uid}: status {d['status']}; wall {d['wall_s']:.2f} s; tree_head {d['tree_head']}; modules by root {m['counts_by_root']}; foreign {m['foreign']}")
++
++    all_ok = True
++    print("\n== the parent reproduces 06h: the harness at the parent reproduces 06h's units bit for bit")  # prompt 06e; prompt 06h; prompt 06g
++    for name in ("P1", "P2", "P3"):
++        for uid, d in W[name].items():
++            b_uid = "g-" + uid.split("-", 1)[1]  # prompt 06e: 06c's census unit; prompt 06h: 06e's; prompt 06g: 06h's
++            bd = read_one(RUN06H, b_uid)  # prompt 06h; prompt 06g
++            brec = load_census_record(RUN06H, bd)  # prompt 06h; prompt 06g
++            prec = load_census_record(out_dir / name, d)
++            diffs = compare_units(d, prec, bd, brec, restrict_to_b=True)
++            okc, nv, nr = compare_c(d, prec, bd, brec)
++            ok = not diffs
++            all_ok &= ok and okc
++            r = d.get("result") or {}
++            n_oregions = sum(len(o["start"]) for o in prec["other_regions"])
++            print(
++                f"   {name} {uid} vs 06e {b_uid} ({d['row']}): "  # prompt 06h
++                f"{'IDENTICAL in every value 06h recorded' if ok else 'DIFFERS in ' + str(diffs)}; "  # prompt 06h; prompt 06g
++                f"C0 (c) terms {'identical' if okc else 'DIFFER'} ({nv} group-call values/abserrs, {nr} group-call regions)"
++            )
++            print(
++                f"      total {hx(r.get('total'))} abserr {hx(r.get('total_abserr'))} | 06e "  # prompt 06h
++                f"{hx(bd['result']['total'])} {hx(bd['result']['total_abserr'])}; "
++                f"group calls {len(d['calls'])}, analytic-block calls {len(d['other_calls'])} ({n_oregions} regions); "
++                f"region arrays compared on 06e's keys {sorted(_keys_of(brec['regions']))}; "  # prompt 06h
++                f"06e deep lines {(bd.get('deep_lines') or {}).get('n_calls')}, here {(d.get('deep_lines') or {}).get('n_calls')}; "  # prompt 06h
++                f"06e deep lines past 12 {(bd.get('deep_lines_06e') or {}).get('n_calls')}, here {(d.get('deep_lines_06e') or {}).get('n_calls')}; "  # prompt 06h
++                f"CC floor-term leaves 06e {sum(len(x_['reproduces']) for x_ in (brec.get('cc_floor_terms') or []))}, here {sum(len(x_['reproduces']) for x_ in (prec.get('cc_floor_terms') or []))}; "  # prompt 06h
++                f"call keys compared {sorted(_keys_of(bd['calls']))}"  # prompt 06h
++            )
++            # prompt 06h: every float of the comparison is a JSON hex string or array bytes, so equal is
++            # equal by bit pattern; the three totals in float.hex are printed above
++            print(
++                f"      (descriptive) dispatcher counts {d['dispatcher_counts']} | 06h {bd['dispatcher_counts']}: "  # prompt 06h; prompt 06g
++                f"{'equal' if d['dispatcher_counts'] == bd['dispatcher_counts'] else 'differ'}; W3 {_drop_timings(d.get('w3'))}"
++            )
++            # prompt 06g: the brief's list, by bit pattern (float.hex), printed; each is inside the comparison above
++            an_p = (d.get("analytic_06h") or {}).get("h") or {}
++            an_b = (bd.get("analytic_06h") or {}).get("h") or {}
++            print(f"      (06g) oracle p {hx(an_p.get('value'))} abserr {hx(an_p.get('abserr'))} conv {an_p.get('converged')} | "
++                  f"06h {hx(an_b.get('value'))} {hx(an_b.get('abserr'))} {an_b.get('converged')}; analytic_rad p {hx(r.get('analytic_rad'))} 06h {hx(bd['result']['analytic_rad'])}")
++            bcalls = {(k_, c_["index"]): c_ for k_ in ("calls", "other_calls") for c_ in bd[k_]}
++            n_eq = n_all = 0
++            for k_ in ("calls", "other_calls"):
++                for c_ in d[k_]:
++                    cb_ = bcalls.get((k_, c_["index"]))
++                    t_p = (hx(c_["value"]), hx(c_["abserr"]), c_["num_regions"], c_["max_depth"], c_["converged"])
++                    t_b = None if cb_ is None else (hx(cb_["value"]), hx(cb_["abserr"]), cb_["num_regions"], cb_["max_depth"], cb_["converged"])
++                    n_all += 1
++                    n_eq += t_p == t_b
++                    print(f"         {k_[:5]} {c_['index']} {c_['notify_label'] if k_ == 'other_calls' else c_['group']}: p {t_p} | 06h {t_b} {'=' if t_p == t_b else 'DIFFER'}")
++            print(f"      (06g) calls equal on (value, abserr, regions, depth, converged): {n_eq} of {n_all} (06h has {len(bcalls)})")
++    c2_ok = all_ok
++    print(f"   the parent reproduces 06h (bit for bit): {'holds' if c2_ok else 'FAILS'}")  # prompt 06h; prompt 06g
++
++    print("\n== the new code is deterministic (one g unit, two fresh workers)")  # prompt 06h; prompt 06g
++    (uid,) = list(W["G1"])
++    a, b = W["G1"][uid], W["G2"][uid]
++    arec = load_census_record(out_dir / "G1", a)
++    brec = load_census_record(out_dir / "G2", b)
++    diffs = compare_units(a, arec, b, brec, restrict_to_b=False)
++    vals = "none (prompt 06e: no capture)"
++    c3_ok = len(diffs) == 0
++    bd = read_one(RUN06H, "g-" + uid.split("-", 1)[1])  # prompt 06e: 06c's census unit, descriptive; prompt 06h: 06e's; prompt 06g: 06h's
++    print(f"   {uid} ({a['row']}): G1 vs G2 {'IDENTICAL in every computed value' if c3_ok else 'DIFFERS in ' + str(diffs)}")
++    print(f"      total {hx(a['result']['total'])} abserr {hx(a['result']['total_abserr'])} converged {a['result']['total_converged']}; "
++          f"06h {hx(bd['result']['total'])} {hx(bd['result']['total_abserr'])} converged {bd['result']['total_converged']}")  # prompt 06h; prompt 06g
++    cb = {c["index"]: c for c in bd["calls"]}
++    for ca in a["calls"]:
++        ch = cb[ca["index"]]
++        print(
++            f"      call {ca['index']} {ca['group']}: g value {hx(ca['value'])} abserr {hx(ca['abserr'])} conv {ca['converged']} regions {ca['num_regions']} "
++            f"depth {ca['max_depth']} untrusted {ca['num_untrusted_regions']} leaves {ca['leaves']} E_share-largest {ca['E_largest_share']} "
++            f"budget {ca['budget']} solves {ca['solves_by_purpose']} cc_floor {ca.get('cc_floor')} | 06g: sum E {hx(ca.get('node_error_signed_sum'))} sum|E| {hx(ca.get('node_error_abs_sum'))} "
++            f"node_limited {ca.get('node_limited')} reassembles {ca.get('abserr_reassembles')} values {ca.get('values_06g')} premise {ca.get('premise_06g')} checked {ca.get('checked_06g')} | 06h value {hx(ch['value'])} abserr {hx(ch['abserr'])} conv {ch['converged']} "  # prompt 06h; prompt 06g
++            f"regions {ch['num_regions']} depth {ch['max_depth']}"
++        )
++    ob = {(c["index"]): c for c in bd["other_calls"]}
++    print("      analytic-block calls (index, label, h: value, abserr, conv, regions, depth, untrusted, CC leaves reproduced/n; "
++          "declared terms: leaves reproduced/n, Levin and CC sums of the declared term and its three parts, the request; "
++          "06h: value, abserr, conv, regions, depth):")  # prompt 06h; prompt 06g
++    n_decl_nonzero = 0  # prompt 06h
++    for ca in a["other_calls"]:
++        ch = ob.get(ca["index"])
++        ccf = ca.get("cc_floor") or {}
++        dc = ca.get("declared_06h") or {}
++        if dc.get("supplies_theta_abserr") and dc.get("n_reproduced") == dc.get("n_leaves") and any(
++            float.fromhex(dc[b_]["declared"]["hex"]) > 0 for b_ in ("levin", "cc")
++        ):
++            n_decl_nonzero += 1
++        dcs = {b_: {k_: (dc[b_][k_]["repr"] if isinstance(dc[b_].get(k_), dict) else dc[b_].get(k_))
++                    for k_ in ("n", "n_reproduced", "declared", "declared_constituents", "declared_abscissa", "declared_phi_eval", "floor")}
++               for b_ in ("levin", "cc") if b_ in dc}
++        print(f"         {ca['index']} {ca['notify_label']}: {hx(ca['value'])} {hx(ca['abserr'])} {ca['converged']} {ca['num_regions']} {ca['max_depth']} {ca['num_untrusted_regions']} "
++              f"{ccf.get('n_reproduced')}/{ccf.get('n_cc_leaves')}; declared {dc.get('n_reproduced')}/{dc.get('n_leaves')} {dcs} request {(dc.get('request') or {}).get('repr')} | "
++              f"{None if ch is None else (hx(ch['value']), hx(ch['abserr']), ch['converged'], ch['num_regions'], ch['max_depth'])}")
++    print(f"      (prompt 06h, descriptive in 06g) analytic-block calls supplying theta_abserr with every leaf reproduced and a non-zero declared sum: "
++          f"{n_decl_nonzero} of {len(a['other_calls'])}")
++    # prompt 06g: the unit qualifies only with Clenshaw-Curtis leaves whose sum E is non-zero and trusted
++    # leaves returning their quarters
++    n_cc_signed = 0
++    n_quarters = 0
++    for ca in a["calls"] + a["other_calls"]:
++        es, ea = ca.get("node_error_signed_sum"), ca.get("node_error_abs_sum")
++        if ca.get("has_cc_leaf") and ea is not None and es is not None and float.fromhex(ea["hex"]) > 0 and float.fromhex(es["hex"]) != 0:
++            n_cc_signed += 1
++        n_quarters += ((ca.get("values_06g") or {}).get("n_quarters") or 0)
++    n_q_arr = sum(int((x_["value_kind"] == 1).sum()) for x_ in arec["regions"] + arec["other_regions"])
++    print(f"      (prompt 06g) calls with Clenshaw-Curtis leaves and sum E non-zero: {n_cc_signed}; returned leaves returning their quarters: "
++          f"{n_quarters} (per-call counts), {n_q_arr} (region arrays)")
++    n_reass = sum(1 for ca in a["calls"] + a["other_calls"] if ca.get("abserr_reassembles") is True)
++    n_vreass = sum(1 for ca in a["calls"] + a["other_calls"] if (ca.get("values_06g") or {}).get("value_reassembles") is True)
++    n_err6g = sum(1 for ca in a["calls"] + a["other_calls"] if "error_06g" in ca)
++    print(f"      (prompt 06g) calls whose abserr reassembles from e' and |sum E| bit for bit: {n_reass} of {len(a['calls']) + len(a['other_calls'])}; "
++          f"whose value reassembles from the returned values: {n_vreass}; with an error in 06g's records: {n_err6g}")
++    if n_cc_signed == 0 or n_quarters == 0 or n_q_arr == 0:
++        c3_ok = False
++        print("      (prompt 06g) the unit does not qualify: no Clenshaw-Curtis call with sum E non-zero, or no leaf returning its quarters")
++    print(f"      W3 {_drop_timings(a['w3'])}; deep lines {_drop_timings({k: v for k, v in (a['deep_lines'] or {}).items() if k != 'lines'})}")
++    print(f"      (prompt 06e) deep lines past depth 12 {_drop_timings({k: v for k, v in (a['deep_lines_06e'] or {}).items() if k != 'lines'})}; "
++          f"CC floor terms: {sum(1 for d_ in (arec.get('cc_floor_terms') or []))} calls with fallback leaves, "
++          f"{sum(int(d_['reproduces'].sum()) for d_ in (arec.get('cc_floor_terms') or []))} of "
++          f"{sum(len(d_['reproduces']) for d_ in (arec.get('cc_floor_terms') or []))} leaves reproduced; "
++          f"tree evidence g: {[(k, v) for k, v in hellos['G1']['evidence'].items() if k.startswith('levin_has_c') or k == 'levin_quadrature_sha256']}")
++    print(f"      captured calls: {vals}")
++    print(f"      wall {a['wall_s']:.2f} s and {b['wall_s']:.2f} s (timings, not compared)")
++    print(f"   the new code is deterministic: {'holds' if c3_ok else 'FAILS'}")  # prompt 06h
++    # prompt 06g: the analytic oracle under g against 06h's (descriptive, not part of Gate V); 06h's
++    # counterfactual (06e's group phase) is still computed at g by the worker, and only printed
++    an = a.get("analytic_06h") or {}
++    an_b = bd.get("analytic_06h") or {}
++    print(f"\n== (prompt 06g, not part of Gate V) the analytic oracle of {uid}")
++    print(f"   g: {(an.get('h') or {})}; 06h: {(an_b.get('h') or {})}")
++    print(f"   06h's counterfactual as computed at g: {an.get('parent_counterfactual')}; in 06h's record: {an_b.get('parent_counterfactual')}")
++
++    print("\n== no Ray")
++    before = json.loads((out_dir / "tmp_ray_sgk_before.json").read_text())
++    after = json.loads((out_dir / "tmp_ray_sgk_after.json").read_text())
++    ray_flags = {n: (None if byes[n] is None else byes[n]["ray_initialized"]) for n in byes}
++    r_ok = all(v is False for v in ray_flags.values())
++    print(f"   workers' ray_initialized at exit: {ray_flags}: {'none initialised Ray' if r_ok else 'RAY INITIALISED'}")
++    print(f"   (descriptive) /tmp/ray-sgk entries before {len(before)}, after {len(after)}, new {sorted(set(after) - set(before))}")
++
++    own = {}
++    for name in ("P1", "P2", "P3"):
++        for mname, f in byes[name]["modules_own_tree"]:
++            own[mname] = f
++    out = out_dir / "p_tree_modules.json"
++    out.write_text(json.dumps(dict(sorted(own.items())), indent=1))
++    print(f"\n== the parent tree's modules imported by the harness (P1-P3, union): {len(own)}; written to {out}")
++    tests = sorted(m for m in own if ".tests." in m or m.endswith(".tests"))
++    print(f"   of them under a tests package: {tests}")
++    ok = c2_ok and c3_ok and r_ok
++    print(f"\n== Gate V, the bit-for-bit reproduction and determinism (and no Ray): {'HOLD' if ok else 'DO NOT HOLD'}")  # prompt 06e; prompt 06h; prompt 06g
++    return 0 if ok else 1
++
++
++if __name__ == "__main__":
++    cmd, arg = sys.argv[1], sys.argv[2]
++    sys.exit({"run": cmd_run, "check": cmd_check}[cmd](arg))
+diff -ruN state/scripts_06h_reference/gate_v_clause1.py scripts/gate_v_clause1.py
+--- state/scripts_06h_reference/gate_v_clause1.py	1970-01-01 01:00:00
++++ scripts/gate_v_clause1.py	2026-11-01 11:15:27
+@@ -0,0 +1,119 @@
++"""levin-phase-floor prompt 06g section 5, Gate V's git clauses. New in 06g; adapted from 06h's
++gate_h_clause1.py (kept unchanged in state/scripts_06h_reference/; its helpers ``git``,
++``strip_docstrings`` and ``ast_key`` are copied unchanged). Read-only git (``--no-optional-locks``,
++run against the main checkout's object store, which holds every commit named here).
++
++Three clauses, each printed with its ``git diff --stat`` and its file list:
++
++1. **"The integrand is 06h's"** (prompt 06g section 5, Gate V, second bullet): ``git diff --stat
++   c1ec3b2 3ae6f3a -- . ':!docs' ':!prompts'`` (06h's census tree against 06g's code commit) touches
++   only ``AdaptiveLevin/``, ``tools/``, test files and ``CLAUDE.md``. A path is allowed if it is
++   ``CLAUDE.md``, starts with ``AdaptiveLevin/`` or ``tools/``, or is a test file (a ``.py`` file under
++   a ``tests/`` directory). Each changed file is also looked up in MODULES_JSON (every module the
++   harness imported from the parent tree in Gate V's parent workers, written by ``gate_v.py check``)
++   and reported: the ones the census imports are the ones whose change reaches it.
++2. **The parent's code is 06h's census's** (what makes "the parent reproduces 06h" a reproduction of
++   06h's code): ``git diff --stat c1ec3b2 4f4f9ed -- . ':!docs' ':!prompts'`` shows only ``CLAUDE.md``
++   and files whose ASTs without docstrings equal c1ec3b2's (06h's own rule for its parent), each
++   looked up in MODULES_JSON.
++3. **The census tree's code is the code commit's:** ``git diff --stat 3ae6f3a 1c5336e -- .
++   ':!docs' ':!prompts'`` is empty (Part B's dispatch commit adds only records).
++
++Usage: python -B gate_v_clause1.py MODULES_JSON
++"""
++
++import ast
++import json
++import subprocess
++import sys
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE))
++from prov import CODE_SHA_06G_FULL, G06H_SHA, G_SHA, MAIN, P_SHA, TREES, header  # noqa: E402
++
++
++def git(*args):
++    return subprocess.run(
++        ["git", "--no-optional-locks", "-C", str(MAIN), *args], capture_output=True, text=True, check=True
++    ).stdout
++
++
++def strip_docstrings(tree):
++    for node in ast.walk(tree):
++        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
++            b = node.body
++            if b and isinstance(b[0], ast.Expr) and isinstance(b[0].value, ast.Constant) and isinstance(b[0].value.value, str):
++                node.body = b[1:] or [ast.Pass()]
++    return tree
++
++
++def ast_key(src, name):
++    return ast.dump(strip_docstrings(ast.parse(src, filename=name)), include_attributes=False)
++
++
++def changed(a, b):
++    rng = [a, b, "--", ".", ":!docs", ":!prompts"]
++    print(f"\n$ git diff --stat {a[:7]} {b[:7]} -- . ':!docs' ':!prompts'")
++    print(git("diff", "--stat", *rng))
++    files = [l.split("\t") for l in git("diff", "--name-status", *rng).splitlines() if l.strip()]
++    print(f"{len(files)} files")
++    return files
++
++
++def modname(path):
++    return path[:-3].replace("/", ".") if path.endswith(".py") else None
++
++
++def is_test_file(path):
++    parts = path.split("/")
++    return path.endswith(".py") and "tests" in parts[:-1]
++
++
++def main():
++    modules_json = Path(sys.argv[1])
++    mods = json.loads(modules_json.read_text())
++    for l in header(Path(__file__).resolve(), "levin-phase-floor 06g: Gate V, the git clauses", [modules_json]):
++        print(l)
++    print(f"\nthe harness's imports from the parent tree ({TREES['p'][0]}): {len(mods)} modules")
++    print(f"  of them in a tests package: {sorted(m for m in mods if '.tests' in m)}")
++    print(f"  of them under AdaptiveLevin: {sorted(m for m in mods if m.startswith('AdaptiveLevin'))}")
++    print(f"  of them under tools: {sorted(m for m in mods if m.startswith('tools'))}")
++
++    print("\n== clause 1, the integrand is 06h's: 06h's census tree c1ec3b2 against 06g's code commit 3ae6f3a")
++    ok1 = True
++    for st, path in changed(G06H_SHA, CODE_SHA_06G_FULL):
++        allowed = path == "CLAUDE.md" or path.startswith("AdaptiveLevin/") or path.startswith("tools/") or is_test_file(path)
++        imported = modname(path) in mods if modname(path) else False
++        print(f"  {st} {path}: {'allowed' if allowed else 'NOT ALLOWED'} (imported by the harness at the parent: {imported})")
++        ok1 &= allowed
++    print(f"   clause 1: {'HOLDS' if ok1 else 'FAILS'}")
++
++    print("\n== clause 2, the parent's code is 06h's census's: c1ec3b2 against 06g's parent 4f4f9ed")
++    ok2 = True
++    for st, path in changed(G06H_SHA, P_SHA):
++        if path == "CLAUDE.md":
++            print(f"  {st} {path}: CLAUDE.md -- allowed")
++            continue
++        if not path.endswith(".py") or st not in ("M",):
++            print(f"  {st} {path}: NOT A MODIFIED .py FILE -- not allowed")
++            ok2 = False
++            continue
++        same = ast_key(git("show", f"{G06H_SHA}:{path}"), path) == ast_key(git("show", f"{P_SHA}:{path}"), path)
++        print(f"  {st} {path}: AST without docstrings {'EQUAL -- allowed' if same else 'DIFFERS -- NOT ALLOWED'} "
++              f"(imported by the harness: {modname(path) in mods})")
++        ok2 &= same
++    print(f"   clause 2: {'HOLDS' if ok2 else 'FAILS'}")
++
++    print("\n== clause 3, the census tree's code is the code commit's: 3ae6f3a against 1c5336e")
++    files3 = changed(CODE_SHA_06G_FULL, G_SHA)
++    ok3 = len(files3) == 0
++    print(f"   clause 3: {'HOLDS' if ok3 else 'FAILS'}")
++
++    ok = ok1 and ok2 and ok3
++    print(f"\n== Gate V, the git clauses: {'HOLD' if ok else 'DO NOT HOLD'}")
++    return 0 if ok else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff -ruN state/scripts_06h_reference/harness.py scripts/harness.py
+--- state/scripts_06h_reference/harness.py	2026-11-01 10:58:11
++++ scripts/harness.py	2026-11-01 11:11:02
+@@ -1,4 +1,9 @@
+ """
++levin-phase-floor prompt 06g section 5 (copied from prompt 06h's census scripts/harness.py, a record
++that is not edited; its copy is kept in state/scripts_06h_reference/). Changed here, marked "prompt
++06g", only in the ShardedPool's ``job_name``, which Part B's census brief names
++``levin-phase-floor-06g``. 06h's text follows.
++
+ levin-phase-floor prompt 06h section 5 (copied from prompt 06e's census scripts/harness.py, a record
+ that is not edited; its copy is kept in state/scripts_06e_reference/). Changed here, marked "prompt
+ 06h", only in the ShardedPool's ``job_name``, which Part B's dispatch brief names
+@@ -208,7 +213,7 @@
+             sharded_tables=sharded_tables,
+             timeout=timeout,
+             profile_agent=None,
+-            job_name="levin-phase-floor-06h",  # prompt 06e (the dispatch brief); stored, never read; prompt 06h: 06h's name
++            job_name="levin-phase-floor-06g",  # prompt 06e (the dispatch brief); stored, never read; prompt 06h: 06h's name; prompt 06g: 06g's
+             read_only=True,
+             read_table_config=read_table_config,
+             factories=factories,
+diff -ruN state/scripts_06h_reference/launch.py scripts/launch.py
+--- state/scripts_06h_reference/launch.py	2026-11-01 10:58:11
++++ scripts/launch.py	2026-11-01 11:11:18
+@@ -1,4 +1,12 @@
+ """
++levin-phase-floor prompt 06g section 5 (copied from prompt 06h's census scripts/launch.py,
++docs/levin-phase-floor/06h/census/scripts/launch.py, a record that is not edited; its copy is kept
++in state/scripts_06h_reference/). Changed here, each change marked "prompt 06g": the prompt
++(``06g``) under which the run is registered (slug ``census``, as 06h's), the purpose and scope (the
++tree g, its SHA and the code commit's, the copy's fingerprint, the row count, the two rtols, 06h's
++run as the before, what each unit records), and the names imported from prov.py. 06h's text
++follows, unchanged.
++
+ levin-phase-floor prompt 06h section 5 (copied from prompt 06e's census scripts/launch.py,
+ docs/levin-phase-floor/06e/census/scripts/launch.py, a record that is not edited; its copy is kept
+ in state/scripts_06e_reference/). Changed here, each change marked "prompt 06h": the prompt
+@@ -88,16 +96,15 @@
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+ 
+-from prov import (  # noqa: E402  prompt 06c; prompt 06e; prompt 06h
++from prov import (  # noqa: E402  prompt 06c; prompt 06e; prompt 06h; prompt 06g
+     A3V2_DIGEST,
+-    CODE_SHA_06H,
+-    CODE_SHA_06H_TESTS,
+-    G06E_SHA,
++    CODE_SHA_06G,
++    G06H_SHA,
+     G_SHA,
+     G_TREE,
+     P_SHA,
+     PYTHON,
+-    RUN06E,
++    RUN06H,
+     WIDER,
+     sha256,
+ )
+@@ -108,32 +115,32 @@
+ 
+ ROWS = WIDER / "state" / "rows.json"  # prompt 06a
+ N_ROWS = len(__import__("json").loads(ROWS.read_text())["rows"])
+-PURPOSE = (  # prompt 06h
+-    "levin-phase-floor prompt 06h section 5 on the Mac Studio (mps026298; Python 3.13.16): 06e's "
+-    f"census re-run at 06h's code {CODE_SHA_06H} (+ {CODE_SHA_06H_TESTS}, tests only; the Bessel "
+-    "group phase's product and K roundings carried exactly in its small angle, the abscissa and the "
+-    "group's own evaluation declared in theta_abserr), every A3 v2 QuadSourceIntegral row "
+-    f"({N_ROWS}) re-run in-process at rtol 1e-7 and 1e-8 (atol 1e-32), Ray-free, no lock, against "
+-    f"06e's run {RUN06E.name} as the before; also 06g's before. One tree, h (the scripts' g), the "
+-    f"git worktree at Part B's dispatch SHA {G_SHA[:7]} ({G_TREE}; its code outside docs/ and "
+-    f"prompts/ is {CODE_SHA_06H_TESTS}'s; the parent {P_SHA[:7]}, whose code is 06e's census's "
+-    f"{G06E_SHA[:7]}, reproduces 06e by Gate H). It reads, read-only, 06's certified scratch copy "
+-    f"of A3 v2 (var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint {A3V2_DIGEST[:8]}) on "
+-    "a stand-in ShardedPool, with 06a's producer cache. One worker per k per rtol, at most six at "
+-    "once; every 1e-7 unit before any 1e-8 unit; 300 s budget per unit; per call, 06e's records "
+-    "(the global budget's counters, the solves by purpose, every returned leaf's numbers, the "
+-    "Clenshaw-Curtis floor's terms, the deep lines past depth 12) and, after each unit's timed "
+-    "section, for every call that supplies theta_abserr, every returned leaf's declared phase term "
+-    "(re-solved, checked bit for bit) with its endpoint theta_abserr and its three parts, summed "
+-    "per call by branch beside the call's request; in every 1e-7 unit, 06a's stationary-point scan "
++PURPOSE = (  # prompt 06g
++    "levin-phase-floor prompt 06g section 5 on the Mac Studio (mps026298; Python 3.13.16): 06h's "
++    f"census re-run at 06g's code {CODE_SHA_06G} (AdaptiveLevin's driver: a trusted leaf returns its "
++    "quarters sum; a leaf is trusted only at r < 1/4, or r < 1 with delta1 within its floor; the "
++    "fallback leaves' node errors carried as |sum E|, with a node-limited stop; the round-off exit's "
++    "halving test without the declared term, and no firing where the split could meet the budget), "
++    f"every A3 v2 QuadSourceIntegral row ({N_ROWS}) re-run in-process at rtol 1e-7 and 1e-8 (atol "
++    f"1e-32), Ray-free, no lock, against 06h's run {RUN06H.name} as the before; also 07's before. "
++    f"One tree, g, the git worktree at Part B's dispatch SHA {G_SHA[:7]} ({G_TREE}; its code outside "
++    f"docs/ and prompts/ is {CODE_SHA_06G}'s; the parent {P_SHA[:7]}, whose code is 06h's census's "
++    f"{G06H_SHA[:7]}, reproduces 06h by Gate V). It reads, read-only, 06's certified scratch copy of "
++    f"A3 v2 (var/levin-phase-floor-06/wider/state/a3v2_copy, fingerprint {A3V2_DIGEST[:8]}) on a "
++    "stand-in ShardedPool, with 06a's producer cache. One worker per k per rtol, at most six at "
++    "once; every 1e-7 unit before any 1e-8 unit; 300 s budget per unit; per call, 06h's records "
++    "and 06g's: sum E, sum |E|, |sum E|, node_limited, the leaves' e' sum, the round-off exit's "
++    "premise checks (the halving test and the budget clause) and firings, every checked leaf "
++    "(returned or bisected) with r, delta1, its floor, trust and the value it returned, and every "
++    "returned leaf's value, V_P and value kind; in every 1e-7 unit, 06a's stationary-point scan "
+     "and 06b's W3 evidence. The manifest's git_head is the main checkout's (28ebaf0), where no tree "
+-    "code runs; 06e's run took 1 h 47 min"
++    "code runs; 06h's run took 2 h 33 min"
+ )
+-SCOPE = (  # prompt 06h
++SCOPE = (  # prompt 06g
+     f"all {N_ROWS} QuadSourceIntegral rows of handover-A3-v2-lambdacdm (read-only, through 06's "
+-    "certified scratch copy), listed in var/levin-phase-floor-06h/census/state/rows.json (06a's, "
+-    f"sha256 aa523d28); tree h (worktree {G_SHA[:7]}, code {CODE_SHA_06H} + {CODE_SHA_06H_TESTS}); "
+-    "rtol 1e-7 and 1e-8; no store write, no Ray, no lock"
++    "certified scratch copy), listed in var/levin-phase-floor-06g/census/state/rows.json (06a's, "
++    f"sha256 aa523d28); tree g (worktree {G_SHA[:7]}, code {CODE_SHA_06G}); rtol 1e-7 and 1e-8; no "
++    "store write, no Ray, no lock"
+ )
+ HEARTBEAT_MEANS = (
+     "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at "
+@@ -148,7 +155,7 @@
+     child_argv = [str(PYTHON), "-B", str(SCRIPT), "--run-dir", "<run dir>"]
+     run = runregistrykit.begin(
+         campaign="levin-phase-floor",
+-        prompt="06h",  # prompt 06e; prompt 06h
++        prompt="06g",  # prompt 06e; prompt 06h; prompt 06g
+         slug="census",
+         purpose=PURPOSE,
+         argv=child_argv,
+diff -ruN state/scripts_06h_reference/prov.py scripts/prov.py
+--- state/scripts_06h_reference/prov.py	2026-11-01 10:58:11
++++ scripts/prov.py	2026-11-01 11:10:52
+@@ -1,4 +1,28 @@
+-"""levin-phase-floor prompt 06h section 5 (06e's census re-run at 06h's code, the Bessel group phase's
++"""levin-phase-floor prompt 06g section 5 (06h's census re-run at 06g's code: the trusted leaf's
++finest value, slow leaves untrusted, the node errors signed and the round-off exit's premise; on the
++Mac Studio): provenance shared by every script. Copied from prompt 06h's census ``scripts/prov.py``
++(docs/levin-phase-floor/06h/census/scripts/prov.py, a record, not edited; its copy is kept unchanged
++in state/scripts_06h_reference/); changed here only in its trees and its paths (Part B's census
++brief: "Change the tree and its paths"), each change marked "prompt 06g".
++
++Two trees take part, both detached git worktrees (Part B's dispatch brief):
++- ``p``, 06g's code commit 3ae6f3a's parent ``4f4f9ed``
++  (``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed``), whose code is 06h's census's
++  (c1ec3b2's; ``git diff --stat c1ec3b2 4f4f9ed`` outside docs/ and prompts/ shows CLAUDE.md only):
++  Gate V's reproduction of 06h;
++- ``g``, Part B's dispatch SHA ``1c5336e``, whose code is 06g's code commit 3ae6f3a's (the dispatch
++  commit adds only records; ``git diff --stat 3ae6f3a 1c5336e`` outside docs/ and prompts/ is empty)
++  (``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e``): the census and Gate V's
++  determinism unit. The units are ``g-<rtol>-<shard>-<serial>`` as in 06h's census.
++06h's census tree was ``c1ec3b2``; it is read only through git history. 06h's worktrees
++(``-lpf06h-2c325f5``, ``-lpf06h-c1ec3b2``) are not used. The main checkout (``MAIN``, at
++``28ebaf0``) holds the venv, the stores, ``var/`` and the registry, and no tree code runs from it.
++Nothing is written in either worktree. Both trees read, read-only, 06's certified scratch copy of
++A3 v2.
++
++(06h's text follows, unchanged.)
++
++levin-phase-floor prompt 06h section 5 (06e's census re-run at 06h's code, the Bessel group phase's
+ rounding carried and declared, on the Mac Studio): provenance shared by every script. Copied from
+ prompt 06e's census ``scripts/prov.py`` (docs/levin-phase-floor/06e/census/scripts/prov.py, a
+ record, not edited; its copy is kept unchanged in state/scripts_06e_reference/); changed here only in
+@@ -136,7 +160,7 @@
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census
++WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+ assert HERE.parents[3] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's
+ 
+@@ -184,6 +208,22 @@
+ REC06E = MAIN / "var" / "levin-phase-floor-06e" / "census"
+ ROWS06E = REC06E / "state" / "rows.json"
+ ROWS06E_SHA256 = "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
++# prompt 06g: 06h's trees are kept above, by name, for the record; the two trees of 06g section 5
++P06H_TREE, P06H_SHA = P_TREE, P_SHA  # 06h's parent tree (2c325f5), not used
++G06H_TREE, G06H_SHA = G_TREE, G_SHA  # 06h's census tree (c1ec3b2), read only through git history
++P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed")
++P_SHA = "4f4f9ed2a31fb7437fcfca01263d260eebaff842"  # 06g's code commit 3ae6f3a's parent (06h's code)
++G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e")
++G_SHA = "1c5336e7e0ab8ed4495601a4033841f2df17ebdd"  # Part B's dispatch SHA, the tree g; code = 3ae6f3a's
++CODE_SHA_06G = "3ae6f3a"  # 06g's code commit (short), for the record
++CODE_SHA_06G_FULL = "3ae6f3a499a2c7c9d0b38d1f418cc8fe85e66054"
++TREES = {"p": (P_TREE, P_SHA), "g": (G_TREE, G_SHA)}  # prompt 06g
++# prompt 06g: 06h's census run (the "before") and its records, read only
++RUN06H = MAIN / "var" / "runs" / "levin-phase-floor-06h-census-20261101T005037"
++CHECKPOINT06H_SHA256 = "3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372"
++REC06H = MAIN / "var" / "levin-phase-floor-06h" / "census"
++ROWS06H = REC06H / "state" / "rows.json"
++ROWS06H_SHA256 = "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
+ 
+ # prompt 06e: 06c's census run (the "before") and records, read only
+ RUN06C = MAIN / "var" / "runs" / "levin-phase-floor-06c-census-20261029T130214"
+diff -ruN state/scripts_06h_reference/run_census.py scripts/run_census.py
+--- state/scripts_06h_reference/run_census.py	2026-11-01 10:58:11
++++ scripts/run_census.py	2026-11-01 11:11:02
+@@ -1,4 +1,13 @@
+ """
++levin-phase-floor prompt 06g section 5: the registered run (slug ``census``), 06h's census re-run at
++06g's code (the tree g). Copied from prompt 06h's census scripts/run_census.py
++(docs/levin-phase-floor/06h/census/scripts/run_census.py, a record that is not edited; its copy is
++kept in state/scripts_06h_reference/). Unchanged in its code: the tree ``g`` (the default) and ``p``
++are prov.TREES, which prompt 06g moves to the worktrees at 1c5336e and 4f4f9ed; every unit is
++``<tree>-<rtol>-<shard>-<serial>``, every 1e-7 unit carries ``"w3"`` and ``"scan"``, no unit carries
++``"capture"``, the budget is 300 s and at most six workers run, as in 06h. Changed (prompt 06g) only
++in this paragraph. 06h's text follows, unchanged.
++
+ levin-phase-floor prompt 06h section 5: the registered run (slug ``census``), 06e's census re-run at
+ 06h's code (the tree h). Copied from prompt 06e's census scripts/run_census.py
+ (docs/levin-phase-floor/06e/census/scripts/run_census.py, a record that is not edited; its copy is
+diff -ruN state/scripts_06h_reference/scripts_equal.py scripts/scripts_equal.py
+--- state/scripts_06h_reference/scripts_equal.py	2026-11-01 10:58:11
++++ scripts/scripts_equal.py	2026-11-01 11:15:45
+@@ -1,4 +1,4 @@
+-"""levin-phase-floor 06h (prompt 06h: copied from 06e's scripts_equal.py, kept in state/scripts_06e_reference/; changed only in the gate's directory, state/H, and this note). 06e's text: levin-phase-floor 06e (prompt 06e: copied from 06c's scripts_equal.py, changed only in the gate's directory, state/Z0, and this note). 06c's text: levin-phase-floor 06c: the run's scripts now, against those Gate X0's workers and the driver smoke
++"""levin-phase-floor 06g (prompt 06g: copied from 06h's scripts_equal.py, kept in state/scripts_06h_reference/; changed only in the gate's directory, state/V, and this note). 06h's text: levin-phase-floor 06h (prompt 06h: copied from 06e's scripts_equal.py, kept in state/scripts_06e_reference/; changed only in the gate's directory, state/H, and this note). 06e's text: levin-phase-floor 06e (prompt 06e: copied from 06c's scripts_equal.py, changed only in the gate's directory, state/Z0, and this note). 06c's text: levin-phase-floor 06c: the run's scripts now, against those Gate X0's workers and the driver smoke
+ test recorded (each worker's hello evidence and each smoke unit's scripts_sha256). Copied from 06b's
+ scripts_equal.py; changed (prompt 06c) only in the gate's directory, state/X0.
+ Usage: python -B scripts_equal.py"""
+@@ -14,7 +14,7 @@
+ for name, h in now.items():
+     print(f"{h}  {name}")
+ ok = True
+-for src in sorted((WIDER / "state" / "H2").glob("*/emit.jsonl")) + [WIDER / "state" / "smoke" / "ledger.jsonl"]:  # prompt 06c: X0; prompt 06e: Z0; prompt 06h: H2 (Gate H as run on the final worker)
++for src in sorted((WIDER / "state" / "V").glob("*/emit.jsonl")) + [WIDER / "state" / "smoke" / "ledger.jsonl"]:  # prompt 06c: X0; prompt 06e: Z0; prompt 06h: H2 (Gate H as run on the final worker); prompt 06g: V (Gate V)
+     for line in open(src):
+         m = json.loads(line)
+         rec = m.get("evidence", {}).get("scripts_sha256") if m.get("kind") == "hello" else (m.get("data") or {}).get("scripts_sha256")
+diff -ruN state/scripts_06h_reference/static_names.py scripts/static_names.py
+--- state/scripts_06h_reference/static_names.py	1970-01-01 01:00:00
++++ scripts/static_names.py	2026-11-01 11:19:16
+@@ -0,0 +1,29 @@
++"""levin-phase-floor 06g (census agent, stage 1): a static check, by symtable, that no function in the named
++scripts reads a global name that is neither defined at module level nor a builtin. New in 06g. Imports nothing
++from any tree. Usage: python3 static_names.py FILE...
++"""
++
++import builtins
++import symtable
++import sys
++
++ok = True
++for fn in sys.argv[1:]:
++    src = open(fn).read()
++    st = symtable.symtable(src, fn, "exec")
++    mod_names = set(st.get_identifiers())
++    bad = set()
++
++    def walk(t):
++        for ch in t.get_children():
++            for sym in ch.get_symbols():
++                n = sym.get_name()
++                if sym.is_global() and n not in mod_names and not hasattr(builtins, n):
++                    bad.add((ch.get_name(), n))
++            walk(ch)
++
++    walk(st)
++    ok &= not bad
++    print(fn, sorted(bad) or "no undefined globals")
++print("ALL CLEAN" if ok else "UNDEFINED GLOBALS FOUND")
++sys.exit(0 if ok else 1)
+diff -ruN state/scripts_06h_reference/worker.py scripts/worker.py
+--- state/scripts_06h_reference/worker.py	2026-11-01 10:58:11
++++ scripts/worker.py	2026-11-01 11:13:34
+@@ -1,4 +1,50 @@
+ """
++levin-phase-floor prompt 06g section 5 (06h's census re-run at 06g's code, the tree g: a trusted leaf
++returns its quarters sum, a slow leaf is untrusted, the fallback leaves' node errors are carried
++signed, and the round-off exit's premise leaves out the declared term and holds only where the split
++could not meet the budget; copied from prompt 06h's census scripts/worker.py,
++docs/levin-phase-floor/06h/census/scripts/worker.py, a record that is not edited; its copy is kept
++unchanged in state/scripts_06h_reference/). Changed here, each change marked "prompt 06g" (Part B's
++census brief: "Change the tree and its paths, and add what prompt section 5 says it records"; a change
++that records what Gate V, V2, V5-V8 or a descriptive item needs is allowed, if it changes no computed
++value). No key 06h recorded changes at the parent; every addition is a new key.
++- **the trees** ``p`` (06g's code commit's parent 4f4f9ed, Gate V's reproduction of 06h) and ``g``
++  (1c5336e: 06g's code 3ae6f3a), prov.TREES; the tree evidence also records whether
++  ``AdaptiveLevin.levin_quadrature`` has 06g's markers (``_LEVIN_TRUST_MAX_RATIO``,
++  ``_solve_floor_in_budget``, ``used_interval.budget_err``, ``used_interval.value_kind``) and the
++  signature of ``_roundoff_exit_premise_holds``; the worker refuses to start unless that signature
++  is 06h's (three floors) or 06g's (three floors and ``split_could_meet_budget``);
++- **the premise counter passes the budget clause through** (06g's code log, observation 6): the
++  pass-through at ``_roundoff_exit_premise_holds`` forwards every keyword it is given (at g,
++  ``split_could_meet_budget=``) and returns the original's value; 06h's ``premise_log`` (the results)
++  is kept, and beside it each check's detail: the result, the budget clause as passed (None at p),
++  the halving test alone (the original called once more on the three floors with no keyword, a pure
++  function), and the three floors as passed (hex). Per call in the checkpoint ``premise_06g``
++  (counts: checks, firings, halving-test failures, checks where the split could meet the budget);
++  per check in the pickle ``premise_06g``;
++- **every checked leaf** (prompt section 5: per checked leaf r, delta1, phi_P, trust and the returned
++  value's kind; the descriptive item "slow leaves", over every checked leaf, those later bisected
++  included, as 06g's code log's test 3 counted them): a pass-through at ``used_interval.__init__`` (the
++  class attribute, installed for the timed section only, restored in a finally) keeps every region
++  the driver makes in the call; after the call, each with its trust check taken (``delta1`` set) is
++  recorded with whether it was returned or bisected. Per call in the checkpoint ``checked_06g``
++  (counts by test 3's classes); per leaf in the pickle ``checked_leaves_06g``;
++- **per call** (``_summarise_call_06g``): the result's ``node_error_signed_sum``,
++  ``node_error_abs_sum``, ``abserr_node_signed`` and ``node_limited`` (None at p); ``has_cc_leaf``;
++  the returned leaves' e' sum in ascending x as the driver forms it (``abserr_eprime_sum``) and
++  whether it plus |sum E| reassembles ``abserr`` bit for bit; the returned leaves by value kind and
++  the sum of |Q - V_P| over those returning Q (``values_06g``); and 06g's three new numbers in the
++  budget record (sum E, sum |E|, node-limited), which 06h's parser would otherwise have kept only as
++  raw text;
++- **every returned leaf** (``_region_arrays_06g``): 06h's arrays plus its returned value, V_P, value
++  kind (0 own, 1 quarters, -1 none), the floor's parts (declared, round-off, less |E|), E and e';
++- **06h's two re-solving records at g** (``_cc_floor_terms``, ``_declared_terms_06h``): 06g's fallback
++  solve calls ``_cc_roundoff_floor`` twice (the floor, then the floor less |E|); their pass-throughs
++  keep the first call's capture, the floor in ``phase_err``, as 06h's single call gave. At p there
++  is one call, so nothing changes there.
++
++(06h's text follows, unchanged.)
++
+ levin-phase-floor prompt 06h section 5 (06e's census re-run at 06h's code, the tree h: the Bessel group
+ phase's product and K roundings carried in its small angle, the abscissa and the group's evaluation
+ declared; copied from prompt 06e's census scripts/worker.py,
+@@ -553,6 +599,16 @@
+         "three_bessel_EXP_RELERR": getattr(tbi, "EXP_RELERR", None),
+         "three_bessel_integrals_sha256": sha256(tbi.__file__),
+         "bessel_phase_sha256": sha256(bph.__file__),
++        # prompt 06g: 06g's driver (present at g, absent at p) and the premise's signature
++        "levin_trust_max_ratio_06g": getattr(lq, "_LEVIN_TRUST_MAX_RATIO", None),
++        "levin_has_solve_floor_in_budget_06g": hasattr(lq, "_solve_floor_in_budget"),
++        "levin_used_interval_has_budget_err_06g": hasattr(lq.used_interval, "budget_err"),
++        "levin_used_interval_has_value_kind_06g": hasattr(lq.used_interval, "value_kind"),
++        "levin_roundoff_exit_premise_signature": (
++            str(inspect.signature(lq._roundoff_exit_premise_holds))
++            if hasattr(lq, "_roundoff_exit_premise_holds")
++            else None
++        ),
+         "PYTHONPATH": os.environ.get("PYTHONPATH"),
+         "PYTHONDONTWRITEBYTECODE": os.environ.get("PYTHONDONTWRITEBYTECODE"),
+         "dont_write_bytecode": sys.dont_write_bytecode,
+@@ -745,11 +801,25 @@
+ )
+ 
+ 
++# prompt 06g: 06g's record carries three more arguments after these (its "node errors: sum E %.3g,
++# sum |E| %.3g, node-limited %s"); at p (06h's code) the record is 06h's, and parsed as before
++_BUDGET_RECORD_KEYS_06G = ("node_error_signed_sum", "node_error_abs_sum", "node_limited")
++
++
+ def _budget_record(args):
+-    """prompt 06c: the budget record's arguments as a dict (None if none was captured)."""
++    """prompt 06c: the budget record's arguments as a dict (None if none was captured).
++    prompt 06g: a record with 06g's three further arguments is parsed too, the two sums as exact
++    floats (repr and hex) and the flag as a bool; one of 06h's length is parsed exactly as before."""
+     if args is None:
+         return None
+     args = list(args)
++    if len(args) == 1 + len(_BUDGET_RECORD_KEYS) + len(_BUDGET_RECORD_KEYS_06G):  # prompt 06g
++        out = _budget_record(args[: 1 + len(_BUDGET_RECORD_KEYS)])
++        e_s, e_a, n_l = args[1 + len(_BUDGET_RECORD_KEYS):]
++        out["node_error_signed_sum"] = fx(e_s)
++        out["node_error_abs_sum"] = fx(e_a)
++        out["node_limited"] = bool(n_l)
++        return out
+     if len(args) != 1 + len(_BUDGET_RECORD_KEYS):
+         return {"raw": [repr(a) for a in args]}
+     out = {}
+@@ -1072,6 +1142,8 @@
+ 
+         def w_floor(*a_, **k_):
+             r_ = orig_floor(*a_, **k_)
++            if "floor" in cap:  # prompt 06g: the solve's second call (its floor less |E|) is not the floor
++                return r_
+             ba = sig_floor.bind(*a_, **k_)
+             w_, f_, b_, g_ = (ba.arguments[n_] for n_ in ("weights", "f_sample", "basis_sample", "argument_sample"))
+             t_val = orig_floor(w_, f_, b_, np.zeros_like(g_), 0.0)
+@@ -1269,7 +1341,8 @@
+ 
+         def w_ccf(*a_, **k_):
+             r_ = orig_ccf(*a_, **k_)
+-            cap["floor"] = float(r_)
++            if "floor" not in cap:  # prompt 06g: keep the first call (the floor), not its floor less |E|
++                cap["floor"] = float(r_)
+             return r_
+ 
+         LQ._declared_endpoint_phase_err = w_decl
+@@ -1379,6 +1452,208 @@
+     return record, summary
+ 
+ 
++# prompt 06g ------------------------------------------------------------------------------------
++
++# test 3's classes (06g's code log, "Test 3's descriptive table"; its calibration's _r_class): the band
++# of r, and delta1 against the leaf's floor phase_err
++R_BANDS_06G = ("r<1/16", "1/16<=r<1/4", "1/4<=r<1", "r>=1")
++VALUE_KIND_CODE_06G = {"own": 0, "quarters": 1}
++
++
++def _r_class_06g(r, delta1, phase_err):
++    """prompt 06g: test 3's class of a checked leaf, as 06g's calibration's _r_class forms it."""
++    if r < 1.0 / 16.0:
++        band = "r<1/16"
++    elif r < 0.25:
++        band = "1/16<=r<1/4"
++    elif r < 1.0:
++        band = "1/4<=r<1"
++    else:
++        band = "r>=1"
++    return f"{band}|{'d1<=phi' if delta1 <= phase_err else 'd1>phi'}"
++
++
++def _opt(r, name):
++    """prompt 06g: an attribute a region may not have (p's used_interval lacks 06g's), else None."""
++    return getattr(r, name, None)
++
++
++def _region_arrays_06g(call):
++    """prompt 06g: 06h's region arrays (06c's), plus each returned leaf's value, V_P, value kind (0 own,
++    1 quarters, -1 where the tree has none), the floor's parts, E and e' (NaN where absent)."""
++    regs = call["result"]["regions"]
++    out = _region_arrays_06c(call)
++
++    def arr(name):
++        vals = []
++        for r in regs:
++            v = _opt(r, name)
++            vals.append(np.nan if v is None else float(v))
++        return np.array(vals, dtype=float)
++
++    for name in ("value", "value_own", "phase_err_declared", "phase_err_roundoff", "node_error_signed",
++                 "phase_err_less_node", "budget_err"):
++        out[name] = arr(name)
++    out["value_kind"] = np.array(
++        [VALUE_KIND_CODE_06G.get(_opt(r, "value_kind"), -1) for r in regs], dtype=np.int8
++    )
++    return out
++
++
++def _checked_leaves_06g(call):
++    """prompt 06g: every region the driver made in the call with its trust check taken (delta1 set),
++    returned or later bisected. Returns (per-leaf arrays for the pickle, counts for the checkpoint).
++    trust_g is 06g's test (r < 1/4, or r < 1 with delta1 <= phase_err) and trust_parent 06h's (r < 1),
++    each evaluated here on the leaf's recorded numbers; trusted_final is the region's flag as it
++    ended (None, reset by the floor-limited exemption, as -1)."""
++    import math
++
++    made = call.get("made") or []
++    returned_ids = {id(r) for r in call["result"]["regions"]}
++    checked = [r for r in made if _opt(r, "delta1") is not None]
++    n = len(checked)
++    f = {k_: np.full(n, np.nan) for k_ in ("start", "end", "delta1", "delta2", "convergence_ratio", "phase_err",
++                                          "phase_err_roundoff", "abserr", "declared_resolution", "value",
++                                          "value_own", "node_error_signed", "budget_err", "total_err")}
++    i8 = {k_: np.full(n, -1, dtype=np.int8) for k_ in ("type", "trusted_final", "value_kind")}
++    depth = np.zeros(n, dtype=np.int16)
++    b = {k_: np.zeros(n, dtype=bool) for k_ in ("returned", "phase_limited", "trust_g", "trust_parent")}
++    classes_all, classes_ret = {}, {}
++    n_b = n_b_ret = n_noise_trusted = n_fl = 0
++    for j, r in enumerate(checked):
++        for k_ in f:
++            v = _opt(r, k_)
++            f[k_][j] = np.nan if v is None else float(v)
++        depth[j] = int(r.depth)
++        i8["type"][j] = 0 if r.type == "Levin" else 1
++        tf = _opt(r, "trusted")
++        i8["trusted_final"][j] = -1 if tf is None else int(bool(tf))
++        i8["value_kind"][j] = VALUE_KIND_CODE_06G.get(_opt(r, "value_kind"), -1)
++        ret = id(r) in returned_ids
++        b["returned"][j] = ret
++        b["phase_limited"][j] = bool(r.phase_limited)
++        n_fl += bool(r.phase_limited)
++        rr, d1, phi = float(r.convergence_ratio), float(r.delta1), float(r.phase_err if r.phase_err is not None else 0.0)
++        b["trust_g"][j] = bool(rr < 0.25 or (rr < 1.0 and d1 <= phi))
++        b["trust_parent"][j] = bool(rr < 1.0)
++        key = _r_class_06g(rr, d1, phi)
++        classes_all[key] = classes_all.get(key, 0) + 1
++        if ret:
++            classes_ret[key] = classes_ret.get(key, 0) + 1
++        if key == "1/4<=r<1|d1>phi":  # (b): untrusted under 06g, trusted under 06h's r < 1
++            n_b += 1
++            n_b_ret += ret
++        if key == "1/4<=r<1|d1<=phi":
++            n_noise_trusted += 1
++    record = {
++        "index": call["index"],
++        "notify_label": call["notify_label"],
++        "n_made": len(made),
++        "depth": depth,
++        **f,
++        **i8,
++        **b,
++    }
++    summary = {
++        "n_made": len(made),
++        "n_checked": n,
++        "n_checked_returned": int(b["returned"].sum()),
++        "n_checked_bisected": int(n - b["returned"].sum()),
++        "n_checked_then_floor_limited": int(n_fl),
++        "classes_all": dict(sorted(classes_all.items())),
++        "classes_returned": dict(sorted(classes_ret.items())),
++        "n_b_untrusted": int(n_b),
++        "n_b_untrusted_returned": int(n_b_ret),
++        "n_noise_clause_trusted": int(n_noise_trusted),
++        "n_trust_g_differs_from_trusted_final": int(
++            sum(1 for j in range(n) if i8["trusted_final"][j] != -1 and bool(i8["trusted_final"][j]) != bool(b["trust_g"][j]))
++        ),
++    }
++    return record, summary
++
++
++def _premise_summary_06g(call):
++    """prompt 06g: the premise checks of the call (see the module docstring). Returns (per-check
++    list for the pickle, counts for the checkpoint); (None, None) where the tree has no premise."""
++    det = call.get("premise_detail")
++    if det is None:
++        return None, None
++    n_scmb = sum(1 for d_ in det if d_["split_could_meet_budget"] is True)
++    summary = {
++        "n_checks": len(det),
++        "n_fired": sum(1 for d_ in det if d_["result"]),
++        "n_not_fired": sum(1 for d_ in det if not d_["result"]),
++        "n_halving_failed": sum(1 for d_ in det if not d_["halving"]),
++        "n_split_could_meet_budget": None if any(d_["split_could_meet_budget"] is None for d_ in det) else n_scmb,
++        "n_halving_held_but_split_could_meet_budget": sum(
++            1 for d_ in det if d_["halving"] and d_["split_could_meet_budget"] is True
++        ),
++    }
++    return det, summary
++
++
++def _summarise_call_06g(call):
++    """prompt 06g: 06h's per-call summary (06c's), plus 06g's numbers (see the module docstring). An
++    exception in 06g's additions is recorded under ``error_06g`` and leaves 06h's summary as it is."""
++    out = _summarise_call_06c(call)
++    try:
++        out.update(_call_extras_06g(call))
++    except Exception:
++        out["error_06g"] = traceback.format_exc()[-2000:]
++    return out
++
++
++def _call_extras_06g(call):
++    import math
++
++    out = {}
++    res = call["result"]
++    regs = res["regions"]
++    for k in ("node_error_signed_sum", "node_error_abs_sum", "abserr_node_signed"):
++        out[k] = fx(res.get(k))
++    nl = res.get("node_limited")
++    out["node_limited"] = None if nl is None else bool(nl)
++    out["has_cc_leaf"] = bool(int(res["num_simple_regions"]) > 0)
++    # the leaves' e' sum in ascending x, as _sum_leaves_ascending forms it (plain addition over the
++    # returned regions, which are in ascending x); None where the tree's regions have no budget_err
++    if regs and all(hasattr(r, "budget_err") for r in regs):
++        e_sum = 0.0
++        for r in regs:
++            c_ = r.budget_err
++            if c_ is not None:
++                e_sum = e_sum + c_
++        out["abserr_eprime_sum"] = fx(e_sum)
++        ans = res.get("abserr_node_signed")
++        out["abserr_reassembles"] = (
++            None if ans is None else float(e_sum + float(ans)).hex() == float(res["abserr"]).hex()
++        )
++    else:
++        out["abserr_eprime_sum"] = None
++        out["abserr_reassembles"] = None
++    if regs and all(hasattr(r, "value_kind") for r in regs):
++        q_ = [r for r in regs if r.value_kind == "quarters"]
++        out["values_06g"] = {
++            "n_quarters": len(q_),
++            "n_own": sum(1 for r in regs if r.value_kind == "own"),
++            "sum_abs_q_minus_own": fx(math.fsum(abs(float(r.value) - float(r.value_own)) for r in q_)),
++            "value_reassembles": float(sum_ascending_values(regs)).hex() == float(res["value"]).hex(),
++        }
++    else:
++        out["values_06g"] = None
++    out["premise_06g"] = call.get("premise_06g_summary")
++    out["checked_06g"] = call.get("checked_06g_summary")
++    return out
++
++
++def sum_ascending_values(regs):
++    """prompt 06g: the returned values summed in ascending x with plain addition, as the driver sums
++    its value (_sum_leaves_ascending), from 0.0."""
++    v = 0.0
++    for r in regs:
++        v = v + r.value
++    return v
++
++
+ # prompt 06h: the parent's three_bessel_integrals, for 06e's analytic oracle as a counterfactual
+ PARENT_TBI_SHA = "2c325f56641666b45df483adb8c1202575721c42"
+ PARENT_TBI_PATH = "LiouvilleGreen/three_bessel_integrals.py"
+@@ -1520,7 +1795,8 @@
+     orig_levin = QSI_MOD.adaptive_levin_sincos
+     orig_eval = QSI_MOD.evaluate_QuadSource_integral
+     holder = {"calls": None, "disp": None, "deadline": None, "premise_log": None, "solve_acc": None,  # prompt 06c
+-              "analytic_args": None}  # prompt 06h
++              "analytic_args": None,  # prompt 06h
++              "premise_detail": None, "made": None}  # prompt 06g
+     # prompt 06h: analytic_integral's arguments, kept by a pass-through (timed section only)
+     orig_analytic = QSI_MOD.analytic_integral
+ 
+@@ -1531,37 +1807,80 @@
+         return orig_analytic(*a_, **kw_)
+     # prompt 06b: the code's premise check, counted per call by a pass-through (b only)
+     orig_premise = getattr(LQ, "_roundoff_exit_premise_holds", None)
++    # prompt 06g: the signatures the pass-through is written for: 06h's (p) and 06g's (g)
++    _PREMISE_PARAMS = (
++        ["phase_err", "phase_err_L", "phase_err_R"],
++        ["phase_err", "phase_err_L", "phase_err_R", "split_could_meet_budget"],
++    )
++    if orig_premise is not None and list(inspect.signature(orig_premise).parameters) not in _PREMISE_PARAMS:
++        emit("refused", {"why": "_roundoff_exit_premise_holds has a signature the pass-through does not forward",
++                         "signature": str(inspect.signature(orig_premise))})
++        raise SystemExit(f"worker {worker_name}: unexpected premise signature {inspect.signature(orig_premise)}")
+ 
+-    def w_premise(phase_err, phase_err_L, phase_err_R):
+-        r_ = orig_premise(phase_err, phase_err_L, phase_err_R)
++    def w_premise(phase_err, phase_err_L, phase_err_R, **kw_):  # prompt 06g: keywords passed through
++        r_ = orig_premise(phase_err, phase_err_L, phase_err_R, **kw_)
+         log_ = holder["premise_log"]
+         if log_ is not None:
+             log_.append(bool(r_))
++            det_ = holder.get("premise_detail")  # prompt 06g: each check's detail
++            if det_ is not None:
++                try:  # never let the record change the computation
++                    halving = bool(orig_premise(phase_err, phase_err_L, phase_err_R))
++                except Exception:
++                    halving = None
++                scmb = kw_.get("split_could_meet_budget") if "split_could_meet_budget" in kw_ else None
++                det_.append({
++                    "result": bool(r_),
++                    "split_could_meet_budget": None if scmb is None else bool(scmb),
++                    "halving": halving,
++                    "phase_err": float(phase_err).hex(),
++                    "phase_err_L": float(phase_err_L).hex(),
++                    "phase_err_R": float(phase_err_R).hex(),
++                })
+         return r_
+ 
++    # prompt 06g: every region the driver makes in a call, by a pass-through at used_interval.__init__
++    # (the class attribute; installed for the timed section only, like the premise counter)
++    UI_CLASS = LQ.used_interval
++    orig_ui_init = UI_CLASS.__dict__["__init__"]
++
++    def w_ui_init(self, *a_, **k_):
++        orig_ui_init(self, *a_, **k_)
++        acc_ = holder.get("made")
++        if acc_ is not None:
++            acc_.append(self)
++
+     def install_premise():
+         if orig_premise is not None:
+             LQ._roundoff_exit_premise_holds = w_premise
+         LQ._adaptive_levin_subregion = w_subregion  # prompt 06c
+         QSI_MOD.analytic_integral = w_analytic  # prompt 06h
++        UI_CLASS.__init__ = w_ui_init  # prompt 06g
+ 
+     def restore_premise():
+         if orig_premise is not None:
+             LQ._roundoff_exit_premise_holds = orig_premise
+         LQ._adaptive_levin_subregion = orig_subregion  # prompt 06c
+         QSI_MOD.analytic_integral = orig_analytic  # prompt 06h
++        UI_CLASS.__init__ = orig_ui_init  # prompt 06g
+ 
+     def w_levin(*a, **kw):
+         plog = []  # prompt 06b
+         holder["premise_log"] = plog
+         sacc = {}  # prompt 06c
+         holder["solve_acc"] = sacc
++        pdet = []  # prompt 06g
++        holder["premise_detail"] = pdet
++        made = []  # prompt 06g
++        holder["made"] = made
+         budget_filter.last = None
+         try:
+             result = orig_levin(*a, **kw)
+         finally:
+             holder["premise_log"] = None
+             holder["solve_acc"] = None  # prompt 06c
++            holder["premise_detail"] = None  # prompt 06g
++            holder["made"] = None  # prompt 06g
+         budget_args = budget_filter.last  # prompt 06c
+         budget_filter.last = None
+         calls = holder["calls"]
+@@ -1586,6 +1905,8 @@
+                     "budget": _budget_record(budget_args),  # prompt 06c
+                     "solves": dict(sacc),  # prompt 06c
+                     "default_depth_max": getattr(LQ, "DEFAULT_LEVIN_MAX_DEPTH", None),  # prompt 06c
++                    "premise_detail": pdet if orig_premise is not None else None,  # prompt 06g
++                    "made": made,  # prompt 06g
+                 }
+             )
+         return result
+@@ -1681,6 +2002,7 @@
+                     assert orig_premise is None or LQ._roundoff_exit_premise_holds is orig_premise
+                     assert LQ._adaptive_levin_subregion is orig_subregion  # prompt 06c
+                     assert QSI_MOD.analytic_integral is orig_analytic  # prompt 06h
++                    assert UI_CLASS.__dict__["__init__"] is orig_ui_init  # prompt 06g
+                     assert DP.PrimitivePhase.__dict__["theta_mod_2pi"] is DP.ORIG_THETA_MOD_2PI
+                     disp = holder["disp"]
+                     group_calls = [
+@@ -1690,6 +2012,24 @@
+                     events = cache.events[n_events_before:]
+                     for e in events:
+                         emit("event", {"unit": uid, "event": e})
++                    # prompt 06g: each call's premise checks and checked leaves (after the timed section)
++                    t_6g = time.perf_counter()
++                    prem_06g, checked_06g = {}, {}
++                    for c in calls:
++                        try:
++                            det_, sm_ = _premise_summary_06g(c)
++                        except Exception:
++                            det_, sm_ = None, {"error": traceback.format_exc()[-2000:]}
++                        c["premise_06g_summary"] = sm_
++                        prem_06g[c["index"]] = det_
++                        try:
++                            rec_, sm2_ = _checked_leaves_06g(c)
++                        except Exception:
++                            rec_, sm2_ = None, {"error": traceback.format_exc()[-2000:]}
++                        c["checked_06g_summary"] = sm2_
++                        checked_06g[c["index"]] = rec_
++                        c["made"] = None
++                    checked_06g_s = time.perf_counter() - t_6g
+                     head_now, status_now = tree_state(TREES[tree_name][0])
+                     data = {
+                         "unit": uid,
+@@ -1714,12 +2054,13 @@
+                         "w2_capture_sha256": spec.get("w2_capture_sha256"),  # prompt 06b
+                         "worker": worker_name,
+                         "worker_pid": os.getpid(),
+-                        "calls": [_summarise_call_06c(c) for c in group_calls],  # prompt 06c
++                        "calls": [_summarise_call_06g(c) for c in group_calls],  # prompt 06c; prompt 06g
+                         # prompt 06b: the other Levin calls (the analytic blocks), as the group calls
+                         "other_calls": [
+-                            _summarise_call_06c(c) for c in calls if id(c) not in {id(g) for g in group_calls}  # prompt 06c
++                            _summarise_call_06g(c) for c in calls if id(c) not in {id(g) for g in group_calls}  # prompt 06c; prompt 06g
+                         ],
+                         "n_calls_total": len(calls),
++                        "checked_06g_s": checked_06g_s,  # prompt 06g
+                         "cache_built": [
+                             {k_: v for k_, v in e.items() if k_ in ("kind", "k_serial", "z_response_serial", "mode_serial", "q_serial", "r_serial")}
+                             for e in events
+@@ -2015,7 +2356,7 @@
+                                     "regime": c["parsed"]["regime"],
+                                     "group": c["parsed"]["group"],
+                                     "x_span": c["x_span"],
+-                                    **_region_arrays_06c(c),  # prompt 06c
++                                    **_region_arrays_06g(c),  # prompt 06c; prompt 06g
+                                 }
+                                 for c in group_calls
+                             ],
+@@ -2027,7 +2368,7 @@
+                                     "index": c["index"],
+                                     "notify_label": c["notify_label"],
+                                     "x_span": c["x_span"],
+-                                    **_region_arrays_06c(c),  # prompt 06c
++                                    **_region_arrays_06g(c),  # prompt 06c; prompt 06g
+                                 }
+                                 for c in calls
+                                 if id(c) not in {id(g) for g in group_calls}
+@@ -2037,6 +2378,9 @@
+                             "deep_lines_06e": deep_06e,  # prompt 06e
+                             "cc_floor_terms": cc_terms_detail,  # prompt 06e
+                             "declared_terms_06h": decl_detail,  # prompt 06h
++                            # prompt 06g: every checked leaf, and every premise check, per call
++                            "checked_leaves_06g": [checked_06g.get(c["index"]) for c in calls],
++                            "premise_06g": [{"index": c["index"], "checks": prem_06g.get(c["index"])} for c in calls],
+                         }
+                         import io as _io
+ 
+@@ -2071,6 +2415,7 @@
+                     )
+                     emit("unit", {"data": data})
+                     del calls, group_calls, result, rb, scans, deep_detail, deep_06e, cc_terms_detail, decl_detail  # prompt 06c; 06e; 06h
++                    del prem_06g, checked_06g  # prompt 06g
+             finally:
+                 print(close_pool(pool, cluster).strip(), flush=True)
+     finally:

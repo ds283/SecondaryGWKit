@@ -1,0 +1,25 @@
+rows 864; rows with a three-Bessel Levin block 659; blocks 10072
+analytic_rad bit-identical: 228/864 (rows with a block 23/659, rows without 205/205)
+analytic_rad None in R23/R24: 0/0; analytic.abserr non-finite or absent R23/R24: 0/0
+analytic.abserr bit-identical: 378/864
+rows whose analytic_rad moved: 636
+  |d analytic_rad|/(abserr23+abserr24): p0 1.809e-09, p1 6.669e-09, p10 1.071e-06, p50 0.1055, p90 0.4322, p99 0.4941, p100 0.4986
+  |d analytic_rad|/abserr23: p0 3.618e-09, p1 1.334e-08, p10 2.142e-06, p50 0.2111, p90 0.8644, p99 0.9882, p100 0.9972
+  |d analytic_rad|/abserr24: p0 3.618e-09, p1 1.334e-08, p10 2.142e-06, p50 0.2111, p90 0.8644, p99 0.9882, p100 0.9972
+  |d analytic_rad|/|analytic_rad23|: p0 1.184e-16, p1 1.545e-16, p10 3.695e-15, p50 7.072e-09, p90 9.866e-08, p99 6.561e-07, p100 9.032e-06
+  rows with |d analytic_rad| > abserr23 + abserr24: 0
+  largest: 0.498585 at k=316228 q=316228 r=316228 z=6904.7189: rad23 0x1.4cc04d1a3a4fep-60 rad24 0x1.4cc04bc6b9c85p-60 abserr23 0x1.54771c151b0e5p-84 abserr24 0x1.54771bf48862cp-84
+analytic.abserr R24/R23 (rows with a block): p0 0.9287, p1 0.9999, p10 1, p50 1, p90 1, p99 1.019, p100 3.134
+  rows abserr up 153, down 333, equal 173
+analytic.converged R23 -> R24: {(True, True): 864}
+
+three-Bessel Levin blocks:
+  abserr bit-identical: 6886/10072
+  abserr R24/R23: p0 0.1662, p1 0.9864, p10 1, p50 1, p90 1, p99 1.01, p100 1.556e+04
+  converged R23 -> R24: {(True, True): 10072}
+  phase_limited R23 -> R24: {(True, True): 3757, (False, False): 6165, (False, True): 11, (True, False): 139}
+  regions summed R23 24428, R24 29228; blocks more 2496, fewer 0, equal 7576
+  regions per block R23: {1: 4792, 2: 1474, 3: 997, 4: 1215, 5: 996, 6: 375, 7: 188, 8: 28, 9: 5, 11: 2}
+  regions per block R24: {1: 4701, 2: 1496, 3: 684, 4: 748, 5: 892, 6: 445, 7: 352, 8: 323, 9: 203, 10: 104, 11: 68, 12: 39, 13: 10, 14: 6, 16: 1}
+  0pt5: blocks 5272; regions R23 12684 R24 15012; abserr R24/R23 p0 0.5847, p50 1, p100 1.556e+04
+  2pt5: blocks 4800; regions R23 11744 R24 14216; abserr R24/R23 p0 0.1662, p50 1, p100 239.5

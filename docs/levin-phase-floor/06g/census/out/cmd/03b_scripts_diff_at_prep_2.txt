@@ -1,0 +1,21 @@
+$ /bin/bash -c diff\ -ruN\ state/scripts_06h_reference\ scripts\ \>\ out/scripts_diff_against_06h_at_prep.txt\;\ echo\ \"diff\ exit\ \$\?\ \(1\ =\ differences\)\"\;\ grep\ \"\^diff\ -ruN\"\ out/scripts_diff_against_06h_at_prep.txt\;\ wc\ -l\ out/scripts_diff_against_06h_at_prep.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:19:23Z
+# ----
+diff exit 1 (1 = differences)
+diff -ruN state/scripts_06h_reference/check_predictions.py scripts/check_predictions.py
+diff -ruN state/scripts_06h_reference/checks_after_06g.py scripts/checks_after_06g.py
+diff -ruN state/scripts_06h_reference/gate_v.py scripts/gate_v.py
+diff -ruN state/scripts_06h_reference/gate_v_clause1.py scripts/gate_v_clause1.py
+diff -ruN state/scripts_06h_reference/harness.py scripts/harness.py
+diff -ruN state/scripts_06h_reference/launch.py scripts/launch.py
+diff -ruN state/scripts_06h_reference/prov.py scripts/prov.py
+diff -ruN state/scripts_06h_reference/run_census.py scripts/run_census.py
+diff -ruN state/scripts_06h_reference/scripts_equal.py scripts/scripts_equal.py
+diff -ruN state/scripts_06h_reference/static_names.py scripts/static_names.py
+diff -ruN state/scripts_06h_reference/worker.py scripts/worker.py
+1661 out/scripts_diff_against_06h_at_prep.txt
+# ----
+# end 2026-11-01T11:19:23Z
+# exit 0

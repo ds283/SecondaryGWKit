@@ -1,0 +1,672 @@
+# The references, rescored per addendum 6 (an addition beside the stage-2 scores)
+
+# rescoring script score_refs_a6.py sha256 4209b342124a531c63a82c18d8332bd7d85ebf825b68f68f3a72895015905d27 (it runs score_refs.py's rules with addendum 6's changes)
+
+# levin-phase-floor 06g: the references, scored after stage 2 of the rerun batch
+# written 2026-11-03T02:08:14Z on mps026298.phys.susx.ac.uk
+# script score_refs.py sha256 734f494b96061dd8ce6540d188307533006f5433557d95e0af3ae6439b98529f
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r00-fcc-r1.json sha256 e5099464271e4af6e29306c7f6fdfd494741287b59ebf4a322e056bd884d750f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r00-fcc-r2.json sha256 03ac71ff7050c055353a4999357591dffb5615ac29170265abd2e213d3dbcab4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r00-qawo-r1.json sha256 9b5b3ca5195fdfb73964b911861f815a2f5d805a9c6024641ab9b8ee8a3cb4fb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r00-qawo-r2.json sha256 371fba7934f3ae874c83231149a1a7b1124c893a3af0938b9912441d758eb273
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r01-fcc-r1.json sha256 07f330911a8c01fad32df3196c286d4382cffdaf95423418c6c42771a9b78e35
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r01-fcc-r2.json sha256 e2b478a76fa79ee36ece11ae4f2eaa3943cd2a15455e1fc7d72fbef9d9f83d80
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r01-qawo-r1.json sha256 70d2f1c1c84f8d8217bc9a187c14cb3eb16512d0f87198baca1247a289329bdb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r01-qawo-r2.json sha256 c66296dac908703cb4791e71e7e63875ce03d21b4e1e218cccd72efb87428321
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r02-fcc-r1.json sha256 8dddc49fe48cce24c19624869c10a7a33938eb022f163169da02f674ae1cf936
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r02-fcc-r2.json sha256 3f94341013e743a4db355f1c9cb544f36495dd6cb2eb1d423d19d6d9cdace22e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r02-qawo-r1.json sha256 4c2c4fd60306e2743c34d0423a0687ea65c32d66abc8d6f0f96052df90bbc470
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r02-qawo-r2.json sha256 b47214fe357281532bbe5b632a68323a21cb051141cde04557ebb6babd689cc4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r03-fcc-r1.json sha256 7578c663bf864dbe0e582ed2d8b494173b3ee9afb983005d5489beb0ddbc42db
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r03-fcc-r2.json sha256 8d20fef95cf071a544f535e7aab060bac43f9a89d2673a49ccb88d7bcba121df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r03-qawo-r1.json sha256 a9bf874b647fad5f009bc198708a967fd4cf144f33df055f4ac2a786a9e56c4e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r03-qawo-r2.json sha256 abbfd7a44be39279c2453e521140a3ca4ac70d2868f04207a6e5e97385185f97
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r04-fcc-r1.json sha256 62e0d64dfc0f86c91178425d0f4a47e8984438538f20cc96819cbe74f3d2ae1e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r04-fcc-r2.json sha256 fe3d2aaea25ec4a5d5326b34a1eaf6e9f6c50f2af69bff3521fe55f7b384519f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r04-qawo-r1.json sha256 9a8b00455948995391fd52f34c4e485cf1c178bece68d6d7f98858e5e5c631f2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r04-qawo-r2.json sha256 127dc0a56715084ca76c1323cd7a69e0d5f20e27ff49c2ca14541f762314b3ac
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r05-fcc-r1.json sha256 a2276cbf078ad37bfd91337ab8599bb0c312d7a944db8bb0f6edc24c34d879db
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r05-fcc-r2.json sha256 eb942ba2aab40a9402b1919389053ee4ad555f09a752a04269739bdd4910532e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r05-qawo-r1.json sha256 2500f330a2bd9ea14d87c27a68538e15ef3d6aa7a1da2fe62178f8690d9a1d03
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r05-qawo-r2.json sha256 f1db1b02a18dd134d04f3469c51fe1f38ddb8d6a97674364a989208154fee3ed
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r06-fcc-r1.json sha256 ac9bd1a49241ccbdcc7ce4b667ded249e419c68bf74b480f92f1ee97806bbac0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r06-fcc-r2.json sha256 bb4af3f0ead64547f39693a71bdc7ffbc7c81e196f4708e0a824fd7389168388
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r06-qawo-r1.json sha256 4799cf24676fa7deab4d52e9e858dbf786a5b98835994da589b4069bdcf04154
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r06-qawo-r2.json sha256 8d9992340a835a21631f8702053046aa4d046cc7657b3ef8627ef88e33ddbb99
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r07-fcc-r1.json sha256 2a968a6fb5a84136f2bfec4c3e8e8e2c73a1874db0caea02a345ea13beafb222
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r07-fcc-r2.json sha256 6f5a0bf94c6913d06e3a997ace9e99708bb76c00883ff598e3d069b5c6512106
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r07-qawo-r1.json sha256 9744823686381522e1ee9280172566b436eb0d43afd4dc26f5a5e7387262f4de
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r08-fcc-r1.json sha256 10709ac57d16b9771dd68562b4a5fb8cedbf86fc03579bf181cd1c7ccba6470c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r08-fcc-r2.json sha256 6848437eb1dd18dfd32d6d6e3732ce3008f037e1db2d892b53ed78e2f8ddd5e9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r08-qawo-r1.json sha256 f2a515010386fdc2aa247b89f653133b526379ccf93e4c038cde196356687c58
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r08-qawo-r2.json sha256 11d5f9d13a8c6bf6ad05eb7078ce713bfa5ce0a42d7f6b2d73264b1a5f579894
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r09-fcc-r1.json sha256 6d9ba890e3f9259d2b00046aa3bf22ab3a15baf67ba1fea9e8668f2a0610137f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r09-fcc-r2.json sha256 73850a553d41d717b4b91bee9df9da8d18bc3f2814eb655fda56341d543bf50d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r09-qawo-r1.json sha256 fa28175c40a8c7ecd5175965853dc51e93cb8b66d541a319228bc252ef580a5f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r09-qawo-r2.json sha256 4fb4df21a75e646254e587206cbfec27dd8577b6d44e54219dcfce2370e3d212
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r10-fcc-r1.json sha256 65a6f0e75864c3d9adbed27127ca81fcdf9a54bc657e6005a3cea6d12df281e8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r10-fcc-r2.json sha256 261939bea125ce1ec04ec38bff880d04d375f8e12c5f620f58d25494cbaa62a5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r10-qawo-r1.json sha256 595a6abcebe30878f8f8b0c9054cb7abaf8ad2d71233b7753296ce76c961c657
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r10-qawo-r2.json sha256 73292ccc741bd558a6c6a2f01b5056be796171510d227a5482409a7b11a10d87
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r11-fcc-r1.json sha256 4162c416099044afef16dbbb68804b17c53de644927715901e20e9fa34bfbe09
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r11-fcc-r2.json sha256 e8069f6630f4fd866e9825095033ab7855c51b132ab75b0b786ba4d6e5fb8353
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r11-qawo-r1.json sha256 bd1603843ebd642f6d2189a379240d0448e8a4e6a594605ebe090938d85e0ec9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r11-qawo-r2.json sha256 f83b6cf9dc2c7ba20e5a3c3c941cf801e1d626584fc7ac7a10483af3e822f396
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r12-fcc-r1.json sha256 1eeb6c8196d5464f4499c262b4baed89e1796b68ed50fa01aaa1a911793506a7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r12-fcc-r2.json sha256 cc46b44d080552392f69028fdac8a056d6889c25387c10224b04a49cc3134dce
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r12-qawo-r1.json sha256 ef93824a8e5cf8135a42fc425c8cbc996f82429e6aa27ff2917fd8bf9532f387
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r12-qawo-r2.json sha256 fcc267916927dbe957e9412185f94a19e3765a4e5a6f8ae506648eaa6757a691
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r13-fcc-r1.json sha256 81f8447292b31806759249a3c45f5223fa7c72b3edf4717052d091e3a9525b7e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r13-fcc-r2.json sha256 04451811a23a2e61ab36230b4e93a1576ea2ed5fcbd643c81ad07594b20d3b91
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r13-qawo-r1.json sha256 f05b03fca06e2c09b5f8e8942659b608ca5da7a7e43037b48acda1fd338550c5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r13-qawo-r2.json sha256 71517ed17f33d708edab8718f5cd6d27f352be5c9d4f02162e541bdd03971359
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r14-fcc-r1.json sha256 6d7b329e86c0d9dc0cb24cd6d40910e730e9bd20d0ea208b81e8b310045f6b99
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r14-fcc-r2.json sha256 7c70a8912dc7174e4d5dcdda8c5c7d99b371d8f68d37ae3b90a2ff41cdf63b65
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r14-qawo-r1.json sha256 427e9ac9f00ac5e301c3e44e9f9896b5f43d7ab7671418aa3c6baef0b306ba54
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r14-qawo-r2.json sha256 567a2cebe16709efbb67ef640513ab507a62139bb8d1d30f161be30edeaca02e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r15-fcc-r1.json sha256 65616b53d8df852036a9f5423b873ce3027455fea7ee1d6de2558916b37465c0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r15-fcc-r2.json sha256 1bc1f8a7087bb83d58ee21efc6076b75960436b38cfdf999d1f27b712b5b2a13
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r15-qawo-r1.json sha256 60db721a17e3590b0a96ea8ae55590e0b8ee99f75bd27051042e6414b93e6412
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r15-qawo-r2.json sha256 ebe837b60609d0a87a7d500097e3e4d8f9af31fd0721ce7ede059530ca9c1854
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r16-fcc-r1.json sha256 09ef9eb3378b461ecb864a104379c0b1442864d31b3a240babc78feaa42f1189
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r16-fcc-r2.json sha256 bc2d6ecd7929d3f154f2230cd027b8c9ede2c5573014be737eb80787f5fba419
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r16-qawo-r1.json sha256 50bcb38e1e33ecb1289297143dd651874a8458066d704d4f91b23f087dc6c81f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r16-qawo-r2.json sha256 d1e042fbb789b6e37a23a08cf6e67160d671ae50a7d27044fdd6db7e62f4c861
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r17-fcc-r1.json sha256 063050c0d96890571cbca78f04947429b66fef092b2bed24a6efc4e097962dfd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r17-fcc-r2.json sha256 d9354766169d6bb6424508c97dcbdec1ccfb97adfa193140745ad8bb8145cc5d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r17-qawo-r1.json sha256 0f3f5c0a1e82bdfbb95861ee38861bd058e5a1f57961b19ba42f2113853f8a08
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r17-qawo-r2.json sha256 1e72fe44cfc9ffc21260ff79e0d2af62dde189230c29a4a0de8ebdbcd4bdcd7c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r18-fcc-r1.json sha256 073c5c276b1386d826dcae657a72c7b86c16c6cb554b4eec9dc83411bf0153cf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r18-fcc-r2.json sha256 76c24a9677a2521b83f7ee51d7c695704f5ecb9f9877ed3147498b12a1901c03
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r18-qawo-r1.json sha256 02a5a83c2d74bd4ceb16be6d2a891d9ace5de1ac2c44c7cb2aa3594071549f84
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r18-qawo-r2.json sha256 b46cfc77eaa89500ef348e3677262423515c150c62a8240ff62ce156dfeafddf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r19-fcc-r1.json sha256 5338f300ddf082ce04d5ebdfaab8e33bfb4e80c96bec1e81e9d78f19dfd53b8d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r19-fcc-r2.json sha256 afafd611f082d1508aa8ae011d85ed18f79dd0cf4a9e7e1e20c3208e70b217d7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r19-qawo-r1.json sha256 052176e8441b6a0c578755efe84b753f0a2b3a5bf70531a6648fbc28e28dd04a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r19-qawo-r2.json sha256 7643cea143c90da3b351b81f7cf6db8e593360fb2eb765ef5b058e13fdfacf71
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r20-fcc-r1.json sha256 424344e40f28d15a1fe40702df788e757d28cfd6e481c84202375275bdce053d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r20-fcc-r2.json sha256 63f8cee3b2065422038ae33803239b4ed564b905a88632f045520db65f5d9ca9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r20-qawo-r1.json sha256 7d0e66bd0a232cad76d483752ef638991512fd1a6d3104b54fc7e236d14586ff
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r20-qawo-r2.json sha256 05ecf14853845115903bca2ac5e3fec5c8d86496b7cda5c69a9904ea49e4fe47
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r21-fcc-r1.json sha256 abdf97f213f4fa0fd106dd129fafd81ec40d5b4fc72372889eb007e92e0344be
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r21-fcc-r2.json sha256 074347cd27105884204ebd3a9d2283b01e98331c76a166e70373d6d822df9ae9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r21-qawo-r1.json sha256 9d8e3767e9932ba1bda8902b4b175ea2d0af3851724d348261d082579f180e4d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r21-qawo-r2.json sha256 ca6722b63b0b7d0ae1d3c4d4f51c54507b5c8fbee28b83d2de0c03fa0a8be13e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r22-fcc-r1.json sha256 29ec643e5ce23325f01ee7612ff4941877dd433092653242a330e12a5ec36953
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r22-fcc-r2.json sha256 37921ad573c7de8f9f3df1b6f4fbd7c76f28af550e4541e59aae5b62a9dc7a4d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r22-qawo-r1.json sha256 0388f557ea9b58b90f841240835d88ad590be9090dc2ae8d6e401b55ed1423fd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r22-qawo-r2.json sha256 73ecf38501b30980ab6dd5cb2f58f04212333466f5d5c1741e019d7d564fe0bc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r23-fcc-r1.json sha256 d05ec4c170791ae047746b3dd2f9ddfed77202725c7c34d52567166e42fe5689
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r23-fcc-r2.json sha256 2647c0086f93531a32ff553bd9cc514de3cf07b0c1ae2f0344c448edf64775f3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r23-qawo-r1.json sha256 2c7703d3d4a1c91c784b10a1fc83386f9b0afe9ac0b04576eed50ccc79cd9340
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r23-qawo-r2.json sha256 78ffc3f738f7a0d49eac75b15693d0197db87fd2761222829e820e44f227d243
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r24-fcc-r1.json sha256 b2a659904bf6b9f12155f7311feb7606584a00fe484675a33548ea760d55a689
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r24-fcc-r2.json sha256 cfcbe1fe60e2dfc5ca2be1334e56785709c24904a865c509096fe9c44eaed204
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r25-fcc-r1.json sha256 89529c786b46863392f91b4c01f7d07938f54acdbde3cc83d8980033d0334a19
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r25-fcc-r2.json sha256 c51f70a8cce904d7aabeb780d9765ab6c95052d569dd52c9331ad32e4d39d5ec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r25-qawo-r1.json sha256 a55b24c16797c5801779d13e4b9aab643141c521d0a1a5d7d4f3e7a019fec73c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r25-qawo-r2.json sha256 cabb74ddc9a63e369f5348ae7529deb05fa80abe88f40a71af80e48bb7c941c3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r26-fcc-r1.json sha256 1ac06966d7e4c244d9f2d5cb9154e56b77ee69851dca743b08ece45625a999b3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r26-fcc-r2.json sha256 7c8da40260360b208ef1f56b423def93970514e243ffee70328485c542957f3a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r27-fcc-r1.json sha256 b0c2be694a8962fda92ae2db294591279ff3716e796f5033406389265217c8bf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r27-fcc-r2.json sha256 4614b45bc7a40f9e65d3ed0f0daf5ab97d63b0b0260f051cbe0ebaf96086de3d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r27-qawo-r1.json sha256 25783b188135ae51b073fffff1b06e2dbe4cc9f3b38c20ca73727d61a6c408a4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r27-qawo-r2.json sha256 5085d805f18901f537fd83fc02ef980ddc4eaffdf1079571c671c916e5868e09
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r28-fcc-r1.json sha256 3e788d1610abdd6d126856ad0f7b2b6443ff2f10f08b8ba0a9c19dc9fd8ba76d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r28-fcc-r2.json sha256 ffee4c520d870bb81d9adb9fdd9c2edcc1fba5f8c47d9674f190bb866af42fe9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r28-qawo-r1.json sha256 9133c3cd3b24a697fe5e11592fbe61c7d784c9547fa880fa1d4f33a021262d82
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r28-qawo-r2.json sha256 69dc42184972fab59aaf4e43e891bdeb63be819c63429c2597b0a769b1fa5d01
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r29-fcc-r1.json sha256 3d71eee13ae3943704d73c145d8e218ba128d88ea9e96f45494950a8fa2473f2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r29-fcc-r2.json sha256 daa951de4d79e33037e60bf93a94a1658ecbd47f07b017145662cbcff3f0ce71
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r29-qawo-r1.json sha256 ac10b94325c65d08118716a8ababb675dac1aaf91a74dbc5ea7bb65bedc4b6e3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r29-qawo-r2.json sha256 44a5322b9a94abfecac6a0f224d5151522d306d50882645d2cc5ec61d4e8743b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r30-fcc-r1.json sha256 9f2c46444db23d997cfd8382b5cdf4b0483f379005df3acfa44bdcffae2c92a6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r30-fcc-r2.json sha256 b3afe26d0c1a18fbd66204aeb5c2ea6a8e34778287d7ae68030a4bb4b89aee9a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r30-qawo-r1.json sha256 cf41495dcc87ff8f37896c413a76e7fb92948b93d765b31fd0633b3d41e297ab
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r31-fcc-r1.json sha256 ebfeec3ed604df3a93c3ec5bdeb7858c0d36981ddd2ffafbb62ff1439cbb7468
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r31-fcc-r2.json sha256 4006ffbe430dd12f992cf66b0099d222730c48dc02c6ed4620a64c7960168a3e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r31-qawo-r1.json sha256 1546fe998e461cf80269b134de6886ea515f3919449253fcc0a22e3591cbaf96
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r31-qawo-r2.json sha256 5dcb5f58219500308ca455d6c1ddeff1ad4bddcf0a33c6da3d1c23f8b39d84d4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r32-fcc-r1.json sha256 f0072524486750a31b5330846c3b2f4790e9b72c2488c64c0192ab344983bc8f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r32-fcc-r2.json sha256 1bc014f5f4b4b4caa68e222d9becf43df8234baa01b76b2879db8d94921fa265
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r32-qawo-r1.json sha256 ff34df8fa54d05400df6deea7d24fabbc4cc970fa1b73cb97aa054d6ece65623
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r32-qawo-r2.json sha256 7f0278a08dde8e8ee0181b5522355fa1aa05b92c5d0f1c01cdd776725b46b4f8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r33-fcc-r1.json sha256 db39b25a55beb55d4e460c163dcdf6a5eba7136e708bf6d9d8bf9ce9026338be
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r33-fcc-r2.json sha256 84c0b13f7001a120bc25ec09dcc160662452bd03d940619f6430bea66d5996dc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r33-qawo-r1.json sha256 c8ef29dc33069a7f9df9957dfda4f6bd23dce7a40fc6b0485c741060823c95c5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r33-qawo-r2.json sha256 04fc72afe778936fe02f890587d8ec54a4e5cbede684bce49d3bb12e4ec3563e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r34-fcc-r1.json sha256 9a7f2c3119f84da6b486fca0f154a480f01f3e5a25d7e9ea437871dfd5465de6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r34-fcc-r2.json sha256 791375a1ce63a3cdc9149c850b42881106a5491ea4e37d996f217acc3f7955c0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r34-qawo-r1.json sha256 1faa81e918f12746b04f0405e72efeac6b305af61c9a791aaba91b292c262f9d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r34-qawo-r2.json sha256 43978e2f5205afa8eb4acc760f6270db5897f4efb52ef5213eb54505c20d3e43
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r35-fcc-r1.json sha256 8c337c3f90e22e4b21370b13e8bb8b0edd228f8b9fd853a9a8d7ac7baaa393c2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r35-fcc-r2.json sha256 b61de84722c33e7c6a8a170f81c0414639ad21be7fb8c9da78aca77dca545750
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r35-qawo-r1.json sha256 6161e50cc63b8859902f3b6ed3c951f14b62d0837dae0a0d3d28e3b4a2a6bbde
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r35-qawo-r2.json sha256 9104c2f3c307fd615d27f74aef09605af80eac08eb8bd6b06ccc013ac906fb12
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r36-fcc-r1.json sha256 508ae591224b0439ff64b6b935dea07a181da42a21646a77a0ad62280b8551a5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r36-fcc-r2.json sha256 c8f8b69a7e4a631f9e52328a56a85ce66fd7364cf94ccb88084d9fd7cbcd4fcc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r36-qawo-r1.json sha256 4c1c6e5f97cd5b7487187ecfe1689545e2bfa7a2a5438e266fa8c5aee541ea43
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r36-qawo-r2.json sha256 fded3c44f12466fadd1b99b8283699b2e1d30aa4bb9bcd5eb3371446d0ddd950
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r37-fcc-r1.json sha256 701611ef0cdac12735822ec6836d357899baaac8f1f206960dc64b687d71269c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r37-fcc-r2.json sha256 d53fe4b7d107f148429daa0c3a4620f76d1584b0d4bd400276ec23508641f6db
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r37-qawo-r1.json sha256 fc4566f367dd69ad667a51644d17469e1ef944506ed53829e950e3dee3ac9cb6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r37-qawo-r2.json sha256 7d99d716957a5befe0eaf7b30bc28f48622d95ba87912117c69748f39bb8aed1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r38-fcc-r1.json sha256 e653e9c8a65522cadc11c8c3bd05120f187aab0b7e5071745bfce672c766d61c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r38-fcc-r2.json sha256 1294f6ee32fc25fa7f065f9ffeeb1e593873b78e36e1ef253680e0e0b846c297
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r38-qawo-r1.json sha256 fbb41860facc2aba69406b7a3966c9b881564dd320262c8a8635a2eb5b44673c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r38-qawo-r2.json sha256 5ce999721c3072a3cbaa19d198fc7c2790da71af3df056a9ed81fedc406bc95f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r39-fcc-r1.json sha256 e71ca1bf5e21308b984bb3fe8b2ce774516a40cf7be5254e4bce4eaff992c4b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r39-fcc-r2.json sha256 1218199145872ba981bdc97b2252924d0a0b828f857325260478078355ea0773
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r39-qawo-r1.json sha256 7512af0caf85a65e4073de7d364f1ece6e6b3ccc040ecda5936a253a1a43a4e4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r39-qawo-r2.json sha256 8727e7125366417a963b6d8691abe87fa3d21d6a7fac88d9fd6bbbd30fa7c08b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r40-fcc-r1.json sha256 61140e429b0c9bc59ed1e8b74a3ab669029f7670541090f26d5d86f52f32d9e9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r40-fcc-r2.json sha256 1ffc24341ded52b3d28b084b579b97f18e04f5733c9232257da81895503b9703
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r40-qawo-r1.json sha256 09af4cb3cc04b16267417cb19eb152f24716920f9db2f841102715d4fe548371
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r40-qawo-r2.json sha256 116d640adcd47c74b9f5456528c80036d08e9c31e21104e0ab85bc7d30894e0c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r41-fcc-r1.json sha256 13258174c44cdcd01817537558182299275937e599dbfc892edda5d75ab2f2dc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r41-fcc-r2.json sha256 55c8b78aef3a4124d6602f00ef4cb89e212774990c2440eeb9837f34e1c5f6a1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r41-qawo-r1.json sha256 baa735fc7d56efd39678959427f40be70fcc68a3c499a550e1b0e924ea210efe
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r41-qawo-r2.json sha256 88c015e8f813bd0558f6647605ac6b107bbb47ce9e81e008477822d9a3693fd1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r42-fcc-r1.json sha256 b3b87559ef637d59907a5f3dbddc55d2109a86b2cea338c4306cb13dcfc13754
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r42-fcc-r2.json sha256 e1e4bd3281267eb5584844ec0065d94ba0d929b507c7ee1942ff39ed961aba49
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r42-qawo-r1.json sha256 46102c9931f5fa3f6c70837eec0c492d5f5f0313e9b8ea2680f23d421665617f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r42-qawo-r2.json sha256 07e219baa8def4942590bc1d11188fa534727a264f6d5277f32bb77a5365bd49
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r43-fcc-r1.json sha256 17521d4388f1612220cc8aa79b1dcafda1506baed7951e7586e59286acdffab7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r43-fcc-r2.json sha256 0f6368908f3d39aa754759ec5e098fa9dfe9c374da524f4354315eabcd62672d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r43-qawo-r1.json sha256 c7f6ed156c587dec66240712c408a365bf32c5a60c9176345113f0c6093f1150
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r43-qawo-r2.json sha256 b8ec5686110908cbf70125c491edde313989bb6924077ebf181634d8e36811ec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r44-fcc-r1.json sha256 0d16eb611ee5d110ffb79eb553cd42feb633ef306604b53cb652aed123f173f2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r44-fcc-r2.json sha256 abbeecc3a42aeae90d2aae1a0f499a6c28db0e1d8f1700fca5ecb6e583e122f0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r44-qawo-r1.json sha256 58aa5245a21888e50a4e3a2f663732d665d48308f6c189dd6f2e4d0746d1b125
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r44-qawo-r2.json sha256 5b8e177f23be90e7aa9b6e385f6189efbb8b84396a2f412f2650beb5f4dcaca6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r45-fcc-r1.json sha256 5c57f7e237b7174b086edd81740112480e33f9444364667a8fa5eb3d966319bd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r45-fcc-r2.json sha256 a66d8d6fa9e408d7f13b214dcea5c44bc479e64d2ae79dba6511f4eabd3e1308
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r45-qawo-r1.json sha256 6d521c79b8f2d5be4bdeab55ff983ac78092e4430bf546d7fc46d8865c883a30
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r45-qawo-r2.json sha256 41450751935efb997a4f17d17df898ff8db2d5204906d5cc06f6cadef5c0780b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r46-fcc-r1.json sha256 f9c263b08b43c47e0f635a685a45d72d3c37e83735f929f21fcccbf644a06c15
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r46-fcc-r2.json sha256 7ddc001ea506fbbf392355d25eb4ed3cae3025c5a95b8384059d0bc450730dff
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r46-qawo-r1.json sha256 8a81a9f9adb138b773fa82cb6c9eeeaea903a9b3bdc50556558804ccd0c7b165
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r46-qawo-r2.json sha256 616e9ee1db5c9838f185acda006a59fb2bcbf912e08f6812fd289e2a862e491d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r47-fcc-r1.json sha256 687382c420467e05556c5d46580cd5da98719048262dfcad50de82c73acdb567
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r47-fcc-r2.json sha256 d217a8ae92c6cc6f7f94b2f7a3cecba72dec8506551c00b56ec213a2e2d612c3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r47-qawo-r1.json sha256 e3916e32ac062bc359361f97dd2526dc963c73e38c25cc7aecc075a7da5d9ffb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r48-fcc-r1.json sha256 8680cd8ce53126db16d8ed5900deebea0596958fb80622d34614c28e03d22c82
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r48-fcc-r2.json sha256 9ce8d9865774bf617f5601f1c6ce08e8376af7dcdba842e6d75df0550866071f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r48-qawo-r1.json sha256 0642be2eb0e2e292284ec8805c3a2e0c9ddd0dd643b8c7555c155e8cdca25c9d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r48-qawo-r2.json sha256 baa0947b081891894fd72460c9e7d7b32ad1f2c53b73c5eb47bacdb0c9a37773
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r49-fcc-r1.json sha256 509ee152f86ed1afea33c92cab9e6b6fd36ee24fdcabdf59eb6717729af70792
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r49-fcc-r2.json sha256 d6a5536bff4fa315f8fe42d4c94f6a29aa502180fb01a1d794730c20d3d38c58
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r49-qawo-r1.json sha256 c65beb0c9ab8cf5aa922fcc3bb61d2281164e3e5f19eca881f90da4b4e557a9e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r49-qawo-r2.json sha256 619014c5924c79e164fc1924ad779c6b195dbba20ccb16fe906534b1037af738
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r50-fcc-r1.json sha256 80f4dee38bfe2e15276cea8b37ab028bf9fe816482a3082ebb9b896b81d3839c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r50-fcc-r2.json sha256 159edfe875a906b19466838c886ade9c76aaa3d6b14b641a6f738868ee13533f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r50-qawo-r1.json sha256 82f23095ee9341bb33d26bb435fffbe306b7a53f005157ca12b9abfb0ff7191e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r50-qawo-r2.json sha256 189d3bcdbc58156fb5ecbe1991cb31462ca0448a2b868a9c34758e30f74e4560
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r51-fcc-r1.json sha256 d26a1776416696eb48390d1df35ae6c1c9302431bb70c08655155f56281d3758
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r51-fcc-r2.json sha256 50f9d7838c99edafccd1a9b6824a6268b9fb3f7ee6f093962141927c73bdc937
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r51-qawo-r1.json sha256 c68201789102d73eab12052a331e7b25186263f0765d6c108a03e2cc0cef924f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r51-qawo-r2.json sha256 745a376a550b1847415198f0048428d60e3556b04ddae01e166d42369d070677
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r52-fcc-r1.json sha256 2920bf5019dc012853f42638a7bb2a6736d79b7fcb0ca4e7bc44975f7416ab56
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r52-fcc-r2.json sha256 ed3e5dcaa72b1a717c606e849aaa53d52ee92dd406f38db8d6d48cecb1e76d5a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r52-qawo-r1.json sha256 b326a15003757f63a5e337876ee88d24fdd5932a39e85631d326323c442aaa23
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r53-fcc-r1.json sha256 966db16a6c25c852da187c57351d98b2cadfa04efef3fbbeed1ec2bb71a4f0b6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r53-fcc-r2.json sha256 6c9df260e96b16d13f6a04dcccc15e6ce3c66d753f9a07933b7e6aa7a119d458
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r54-fcc-r1.json sha256 721087badec2c5868ab21b8dabdde295a173edfd38a4e37a9a0ad9bb987ae462
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r54-fcc-r2.json sha256 f8924eacd642f1549e32c4c49740e9a9aae3765b613b7e3ae1d36e6455d61399
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r54-qawo-r1.json sha256 064aed62145128320cfd3903a45676b939b355f8cf98a9b5a3eeceaa7c94ab1f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r54-qawo-r2.json sha256 a86bd465fa4211f028c41a868ebca99bfb863427b561909dc9ca90e27367eea7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r55-fcc-r1.json sha256 b6948e58fbaa72b398022a9cdefeb99b55b6da881f74b955ded106f378486862
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r55-fcc-r2.json sha256 fd042b6de147104ba6dc26aeff30b50c0a5262a831eee796bbe1127911e788d0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r55-qawo-r1.json sha256 325aeec69341d32b0455f33d8b2814f06beadc5830a204e0d951d82fbf06deea
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r55-qawo-r2.json sha256 98032cae0fcaa622549d61d30e42950c3eb1b7a4846238ace86026959af55891
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r56-fcc-r1.json sha256 98b9d78f5150526623942d79ba7e698308a6259d117764658168bdc6d708a037
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r56-fcc-r2.json sha256 f1d4c558aaac30b12265be933111387febd92ba879b23ed7353d22ba0244ffed
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r56-qawo-r1.json sha256 accaaa55bea4efe2eecd093ac4113a53667cdc93009da1c0db4070b9c41b9ec6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r56-qawo-r2.json sha256 fa4cce9583707997fd1cdc9eea55e2fb2af3b155d4aa8c24ae3d2b24dec100d7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r57-fcc-r1.json sha256 83739f10c95b9f182af13027d1ad2a445a5055af028593be7e9b0a63ed617ee1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r57-fcc-r2.json sha256 a817ca0683efc806effbf5198dc9e162db06bb87c94ead1a0adbc99db30e0601
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r57-qawo-r1.json sha256 581267c2b776a8990892b027a286a31731de8c8223d0469e6182f7d98d9d9d23
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r57-qawo-r2.json sha256 e2fac7e4829ea2ab6e3e25efaec88b9e4abd8c204501b872fff5c7057dfa4e64
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r58-fcc-r1.json sha256 e9bde9b979ff9645b0000adc84efbd18b1f46235dc10c7509f9141127524273f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r58-fcc-r2.json sha256 8d60e87943b4d8fe59fb971103b67459ab61f1d3ad61a5471857c671d3af3ad3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r58-qawo-r1.json sha256 55ee31e97bed056fe276a2d810e8192a3ff962ca88e9dac40ed5bea53df4a118
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r58-qawo-r2.json sha256 fb2960e3c0f36b0f0a3608c3b946a24826ce890495fe56f2d59707530910b340
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r59-fcc-r1.json sha256 f12050887569cbdcc3e1c41f7da615149d29bff926d911d73b00edaced3ba0a4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r59-fcc-r2.json sha256 0801dba25b726fca150209f1c3ca990007cccb2fc1661becd6baf4fc4e1d5938
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r59-qawo-r1.json sha256 6c272794aded065fd899c836c9def809671bb415c194208cae1204801a789a08
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r59-qawo-r2.json sha256 b0928d4b717739b54497163827b03eeafef52f250b974543002180ef89f38917
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v00-fcc-r1.json sha256 95410204d3c90827309725d1b7b26eca16f40350864666256c05390985eb6a18
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v00-fcc-r2.json sha256 751a8b1c82815d64cdd857fb7bb41357bb72fe89a32354476cc03cfa2fe80f41
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v00-qawo-r1.json sha256 895f21eeaf3396ff2e36019a1d5c0fb5f5d5da4d0d8180334e30b6c60fbb874c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v00-qawo-r2.json sha256 89ceceda800b27fa664c4856f207d5d27fbcae12a538f9676b7dca26cdf17a94
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v01-fcc-r1.json sha256 be3e6cebf6a19f150412e0f768d555b8d94cb70a9067a56513416cb655ae1bee
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v01-fcc-r2.json sha256 6bd949a9feb3a524f00ef7878c9700009788abeadff6f2357b945af258313f1a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v01-qawo-r1.json sha256 a844d56bd4af0b374a212ad387ac75a68356e41587bf871099d19f94dc6456c8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v01-qawo-r2.json sha256 7b460540dacb65b0f3cc3998e2d13a935ee3d9688d69443bf38615019cb66032
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v02-fcc-r1.json sha256 694a2e80961c54f08e555b0cf97950e1906c5e10e9851a90091c09e2508657c6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v02-fcc-r2.json sha256 70893dc0a2a84a7f682d6d9d96b697ea3ee794c02838b471663c04bac6ca79e0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v02-qawo-r1.json sha256 c5234b7542211f99b9f5229d33a6ea9a8ae94533b9f94cd959073c118178c01e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v02-qawo-r2.json sha256 0040e35ef68bd3e15f3c65d933ed37aa2deb33ec5ac57f5dfcb2cbe963ff9b8b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v03-fcc-r1.json sha256 0d2fc1a29626a70233a9e68df56da84227601bed339c018fb75867321dddc378
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v03-fcc-r2.json sha256 d62b4c14fa355fba6e6b3a277e3359436ba858bdddb0aff4ed1466ef2711e0f9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v03-qawo-r1.json sha256 d21203246847349335e3bc9ad52fbd15e7aa907c85e74b1017007b57f0f80a22
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v03-qawo-r2.json sha256 99da6bc4790a1b404edb02a2627b722ee6ec719664b6341607333f77ad9eb43c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v04-fcc-r1.json sha256 3e44758d57253a9f3b215e86849df8d653f01da82aa6bbecdf9d3ee08d1bf290
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v04-fcc-r2.json sha256 b922c3c56731e3a5e85ef9d5814b6613401af152bb0de9c7a582854fd25da9f1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v04-qawo-r1.json sha256 efb298c9438e2ec5697e53e0274c1d4ab69ebcf7e1688883c3211ebd31acb544
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v04-qawo-r2.json sha256 c66f9c3750813fe15ca46ea9ff7ed33de80766e317691ba6befd5fb3f0dcd259
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v05-fcc-r1.json sha256 632de1d123cc7f961c11399b6de741b9c220e26eed5f8df74ce02256373c44d9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v05-fcc-r2.json sha256 7e88dc7606b6effaac428a44eb7353d7847d32ca1fa83aa80ee72fb69b6b3844
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v05-qawo-r1.json sha256 6f49e5883990ee903987ff29d01e97bcf30b7a05ec6ce775f2513f8cebf623d7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v05-qawo-r2.json sha256 8496d800bae56c57dd0c36d885d57b30c5c82b0ffdc2293593829203f5a3ea1c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v06-fcc-r1.json sha256 b1edcc35ffa7b42c92a193cc64d0e0b41eab581100e484bd3f58bff8fae9ee1d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v06-fcc-r2.json sha256 7534f318e290b23211ac149e23fdb32f445df49951ac91e4bb1ac0f93934dfed
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v06-qawo-r1.json sha256 5832d158fabf59978ef9645e7a538e1a486f298cc06f663988c7d3b59b127329
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v06-qawo-r2.json sha256 75ca53b7646eff9caea487720fc7424b0e897b6faaed835de7c09f1b005091d6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v07-fcc-r1.json sha256 a360a0011624137b2be31167c65688f2aa09aba3c87369e32abf6834553d9f41
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v07-fcc-r2.json sha256 a1a5560a8bb7b4eb56519559242dd85915813ce1a35c42762a58faf8e43769cf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v07-qawo-r1.json sha256 4b3ebea76abb9fbf7d7a1f8198e41746940e36223dfa8569e0a1dd4dd287c401
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v07-qawo-r2.json sha256 8f2b371721ad688528d20f1cbf9a7413d938f425adf63cc33f3340f8c4340955
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v08-fcc-r1.json sha256 b609cdaca47fe0244b3941bfe0197eefb28bf613d49f3fc85f6704ca402f3c48
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v08-fcc-r2.json sha256 a68f0ba0291bf4679d10de8b73d18ce17924f28bd05e7e0c2a661c69e2e0d456
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v08-qawo-r1.json sha256 8307cf9e40978df1abb1c4cf0fae4eacc1746d4bbabc43e7d669ffc0be8e6c54
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v08-qawo-r2.json sha256 620e6b6b1d07b20bfb81a6931da7a4025688890193c0de91455741d25ab90167
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v09-fcc-r1.json sha256 ffb2a7abe60b73de865253161e1fb9dfdd4678058597028e374b23e71d8640ac
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v09-fcc-r2.json sha256 21c42cb7d96bffbb4ca622060f474458133c8e884d62a1810b44b9b5bfa2c0d5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v09-qawo-r1.json sha256 2ef3905198569e36793144a4df3a976feeb93ca94d9dcd7684db5b8596ac21f6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v09-qawo-r2.json sha256 a5417a4461e45fa3cedefcc5f8d620fbfe294b4d25b8fc3f67958f7cfd525f61
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v10-fcc-r1.json sha256 62a538b7515e4dba444b69624941c5ace0e4784401e30c101b993f8478d57e48
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v10-fcc-r2.json sha256 c1add1ab58b6dc063c4dfebc4f20fc50d21aaddab86c233c52ed2132b0560b40
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v10-qawo-r1.json sha256 0fe5f648de61e281cb1da8338a07e5112395e13ff986e823146f4b032d8a935c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v10-qawo-r2.json sha256 457c1db04f6e54afcc1f6880d29a76873e6bfe7a5993c462132dec7ae8473198
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v11-fcc-r1.json sha256 0361fa593d6721ce428929374548f7e8eed8131d7de52d451b545dd8434b3029
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v11-fcc-r2.json sha256 8ed7f67e4c5377dd3504990c957687a1af35aa873eca9b67476be6d70ede8c26
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v11-qawo-r1.json sha256 c4beffc68c50e9b05d0dcf8ed62f77116ee93fbf59031f1dfa1e126318b3c7d7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/v11-qawo-r2.json sha256 0fed23c0a687a54f3f5d67b1d1a0eca164df9881313e10a0f158126f83855bdb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w00-qawo-r1-rerun.json sha256 5477b634cb1cb96883a233ef50d31f7325433bbf882a53488016e987f3d908a9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w00-qawo-r2-rerun.json sha256 b601b2b660a6c1f381f26b3585ce4ed1bff209aa8b7db2e5d577eada374ad894
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w01-qawo-r1-rerun.json sha256 6b674467ec36a1476c5cf7416daebce2c686ac592a45789ce15300f65067269a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w01-qawo-r2-rerun.json sha256 ff07822075a2a6c12aca11078d545cbd5bd46bec1221efe40ea05c1b01590a4c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w02-qawo-r1-rerun.json sha256 526abcf8a0ebcbfcbdd7d206f58968e04b5ebdf0a6f7ae7573f0df15c00d9ecf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w02-qawo-r2-rerun.json sha256 a80bfe8a76d4edb8bfe2376bdc29fb1ff91c848effc60953a6f8fe7086297369
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w03-qawo-r1-rerun.json sha256 64f5a7a8d4b25405a65e59913d5031032e21aa9c04acefca270b88aac9b04435
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w03-qawo-r2-rerun.json sha256 e3362b445d728061e308c04f05278873d1f6755b77a7ea8c22a8fb8e23dc9f16
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w04-qawo-r1-rerun.json sha256 d5f8dfccff0b6988b4b375b3e58d2dbe4a5ce951200f0e386ed56799d8279a78
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w04-qawo-r2-rerun.json sha256 2f5fdbed9626ceb40e9fe648b067d8cea56d5737b9a63902d65ae2af304ec627
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w05-qawo-r1-rerun.json sha256 218168b2ed188d22e1cf6f5ea5ce82b759a71f50442aed8cbb59684a4f86b437
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w05-qawo-r2-rerun.json sha256 134b4e3098c69f04f5108f0e51a225ad7ed65ebc8dcc14dcf4b27419266654a6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w06-qawo-r1-rerun.json sha256 b533ebda4fd6e716ef12c4b8c157a2118608d7e1eb63ab72666cb40ead0a200f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w06-qawo-r2-rerun.json sha256 773fd93a390da7b8e006fae3f4a04a34b923e45758ef00eb4fa397fdfec2a8d2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w07-qawo-r1-rerun.json sha256 8ec8f7fa34f9c0da7b1ae3e7b71d3a7182f2567252a1c09efb7cf07c66786dc8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w07-qawo-r2-rerun.json sha256 e6d57208a10aecc9a844e9a2ea5a73827bd770ac81dbad25b47fe45bf779f23f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w08-qawo-r1-rerun.json sha256 3a4c4405942020a5eb14dbdd589c7b95614ce5b9302665886c8e0bf8790d1dad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w08-qawo-r2-rerun.json sha256 a271df3e3f1719896f9c7448f72921fc79e50d9efee875859530e18259175a0a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w09-qawo-r1-rerun.json sha256 935c659f9b4b92c99d9bc6a276a53a48a0de89cbfe2a5b8be4bda1f9401ec3ea
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w09-qawo-r2-rerun.json sha256 e7bc9cdda22c361f5ed8c4dcae7ae5a00d704aedd7da0e69382004f00360fb60
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w10-qawo-r1-rerun.json sha256 6c46164127b3ce637908c11f648724594596a2bb8526c1fccb4c2e5703dfda72
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w10-qawo-r2-rerun.json sha256 720b8590eda70acd2f35d06e623309e5566b30a526d43ab61845ff529b6b0e24
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w11-qawo-r1-rerun.json sha256 7004266101c0bb425cbf635e6bc39e285be8a3c224dd4b93fbce7bc0fbf72f88
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w11-qawo-r2-rerun.json sha256 8273dc08e5f34df8ed9ec665ef2772369f6e27dda0f059ba6c14e79ed735d34a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z00-qawo-r1-rerun.json sha256 00e8ca1b536c93c61a44a04ef9f2e75f3ccd8b6b9345aed0c207a70999f50b2f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z00-qawo-r2-rerun.json sha256 7cf4dae81d0b899a63f29f506577753cf11b9ca25e4fc8325e6b90aaef13ad14
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z04-fcc-r1.json sha256 9b418c8ffcf93b0eff580f1394ce565257a061149163a8924cbaacbdbbb2cb7b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z04-fcc-r2.json sha256 df9a6b760c5cfb8d5b0cb84f8f0db70d9a28caab99fd7b62983e8ecba7cecc95
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z05-fcc-r1.json sha256 17c36404251d8a181557124c8e46b3ca0d1b352659c15cd04c221f2e166e4cd1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z05-fcc-r2.json sha256 85b6d31b46eec6608c11665ed26127f35cc3b10defeab928568e24345ac9d22b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z05-qawo-r1.json sha256 e0de317140733250e3817415c2d5db14d89d91ecfed5f1717c4f7715ae45f7e2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z06-fcc-r1.json sha256 770eea8c198bab42848bba4e0e844ba2d7784ca8ebec979e51697e1dfd52e2d0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z06-fcc-r2.json sha256 ca05efa0149202b33d1cac118a7466bb132e9bbe479db836bdd844aa1ab3f7d9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z07-fcc-r1.json sha256 36ed0ed96070b81ae3d296747a5a149324a0cceff1655593347fed9a68236c0d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z07-fcc-r2.json sha256 3495475ca5aa466c10f518502389a9ca49da06bcd825a33ba0836e9c8f8cda72
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z11-fcc-r1.json sha256 75a1bcb43aacf084357377a7043773609ef189eec41d7d75bb776d37cb8822cd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z11-fcc-r2.json sha256 07fafd904c3da5c9c57276934b516ce418e232b36b269b39a7a2a275ddb16790
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z11-qawo-r1.json sha256 0ff6fa89a88bce56efe30b965d049f18d97e5470c601302d4c578eb1423f3e98
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z12-qawo-r1-rerun.json sha256 038d600e99b4e80839b48e18d139728dc79940626dd92372f9547a1d0bc4714d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z12-qawo-r2-rerun.json sha256 b52cfa72814ec55eaa36009133a4d0b4b68f308d1893501545a7ba6f99ce72c3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z16-fcc-r1.json sha256 96b55a585a61b0aa1da3e7ba139d7f880ee403273012757a52597fe23bfab0a1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z16-fcc-r2.json sha256 027518a99e3e6990f5f31e8df3f99beaba4040f0b17491d3abe0942dbd8e89f5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z16-qawo-r1.json sha256 3350c0f4b22035aa2d9a735ed6323147f4f0664d03c463cd0868be1f6999a937
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z17-fcc-r1.json sha256 88da800638d8b8a43be3612c87b42eac10d3e0ffd9cc002d3a65167caf37dace
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z17-fcc-r2.json sha256 7849838f57360e61cbcb82ccda38ec22123c8eaf6c7a8a2aabab1eeff848564c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z17-qawo-r1.json sha256 67dcd77a7021847f8843f7aca46796f8639c9b96f59f751021cef4caad4ca290
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z18-fcc-r1.json sha256 f6c5ef66fbd9c1b8d9535ee1fed67cb6b5d79661bb87fa6c4749d10b22cd882a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z18-fcc-r2.json sha256 b12427dc3cc4bda821b01d8fe3a93d8cd644665cf786c5b92a41594ff2a318da
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z19-fcc-r1.json sha256 1574803f2ff0edf0164b6c4f2f0ed293c82a503dd533511cf9f05ed7cd2f777d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z19-fcc-r2.json sha256 d216be787211847a0d89f670a26e4727affc8fb70ea10bf588843a4176d2b13a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z19-qawo-r1.json sha256 fe3813d2269ff306365e606d2ffb689ae9cc86789f46c3f497ac0efe973da528
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z20-fcc-r1.json sha256 d059af339eefc634fa51327219c1293500ae5a3fd76c770e5ac8fc4ad3ef1cfd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z20-fcc-r2.json sha256 9922d9db47972a0d2bb4292e46a3708ba77cca33e404aff0bb266106c616392a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z20-qawo-r1.json sha256 6ea4aef817d696eff40fe6a69d279df2ab3128f3f22f94adaa4b55247ade73b2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z21-fcc-r1.json sha256 45a2674f85a9891cafe34fdc60d67ea89e5e9eba8ed5cc839465acb4a1a397c5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z21-fcc-r2.json sha256 528f8e8f4a3e2c6f62c6c0b76a5542f0959052e50cef4a98724fb65780262d9e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z24-fcc-r1.json sha256 df4ea57913496a40d767354658b40390123731b1f62ab752420e59e98f9e7a2d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z24-fcc-r2.json sha256 23c4e0cb7dc2d0f0f0ec0ebde91105c5bd6e03a8a2641faefb07b6f596d1a789
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z26-fcc-r1.json sha256 f5ea54d09c728949219da41121b26bf36a769b5a824cc44aa804f734553d2957
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z26-fcc-r2.json sha256 f58201f759c9c30d8c44454f0892b0d2c7f78516b8643a8037c5a2f5c4589c1f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z26-qawo-r1.json sha256 ce3dd7978b489db1f602ebd729819dce4f0fc271bf84ba236764bb7f20367132
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z28-fcc-r1.json sha256 7b969b0cb01d4fb4b52e7397d2007d2bff37e466c1575e4a4419999b3c079641
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z28-fcc-r2.json sha256 1655c36fca3a3663a2f15d7ba5a4405d3bda3d9813c8bce573de97a554a3dd08
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z28-qawo-r1.json sha256 1223b0d4bb629e8343945194a3c9f08f09c3a2497f68e83d3176868d1a00c59f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z29-fcc-r1.json sha256 2c7a35a18a234cfab432413bf39fd621cf9720cdba71752c9e0b83f666c4089f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/z29-fcc-r2.json sha256 d565bcf51bce37e090dfc9a7b8fe30219461e762458b0571f42ca3a27d4999a5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w00-fcc-r1.json sha256 d4fbd5911512186895442d920666516ebba445b2301380916e411a4144438e5b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w00-fcc-r2.json sha256 de3f2487a97b796671527f218ac53f7d5158127518a09d0ef425f6bfe7c4e3ee
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w01-fcc-r1.json sha256 a0a939f473549fab5408092ff4bb94da8aa06f061ad3269b8c21cfa24c512c6e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w01-fcc-r2.json sha256 2d6d515d2c4ce5ec4ce0c6d6a95904b3095f7d37a4f2a9a17113e6951a2becdd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w02-fcc-r1.json sha256 43540798b730ecf66fe41465da40a40ddc80c8724aa95fd77c9043643c20892d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w02-fcc-r2.json sha256 761c817688dbee429f5549c44e63ca249172479747d5be30953b6140f41fc9c9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w03-fcc-r1.json sha256 253029b0b1d99abc737b6423bc055467c0f2f0bb59052ac152dcc2e58cc2e73a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w03-fcc-r2.json sha256 c9c44972b51a1cebc640f9fb4a37513c2c829c081e562b61db7f6bf57789b61e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w04-fcc-r1.json sha256 cd7d4b897df8901c289c663f6de03a582db94bd45e133fcab6c2ce002affb864
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w04-fcc-r2.json sha256 88ce2e1911180655e32a77fa51b6700f916d920427c6077ecc6f5b39a8f21dfb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w05-fcc-r1.json sha256 6e4260bbe854accd50685b7ac289f55ec249ebc13fa2f0eff5db2de90057cc62
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w05-fcc-r2.json sha256 5bea51e1e8e3187e35c2c177c47d545476ee508952ab8c60f5c26cd8d8104260
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w06-fcc-r1.json sha256 b5666f26f5c026bd367bfce1d40b75241553e64cd411605e19cf09c91d2b57fe
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w06-fcc-r2.json sha256 5c131dc4aff8a494cebdd8f5372a33f5415776ec00a1c9654de9a382b21669ea
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w07-fcc-r1.json sha256 dee544590f76314ce4037dc38487b9f92f1affedf804de41a649e9f0cbdd2261
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w07-fcc-r2.json sha256 b70765fc85124c835f7abb5889c0ea0791d06994fe63c69fbe0772b5725b178f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w08-fcc-r1.json sha256 4a7ce4ac99320428cfe6b58fc521afe04aea41d6c61c0c89a933f0ecc2b61607
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w08-fcc-r2.json sha256 929078b68e57697f79f05f03ea6013a9771f3f06d430b615fed376adee649ac1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w09-fcc-r1.json sha256 aea5716a10dd611813c7dc3dae8b33036f1b2fc2ca1c60bfcdbc39af3a0efead
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w09-fcc-r2.json sha256 3a5676ad6fc9153af6ca496b82f80de386eb60b9ebac43c1fe9786554fefc8da
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w10-fcc-r1.json sha256 496afd352129f011ef3bc60f122b7f695122c4dc49012f4326fe020a4ebf2f90
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w10-fcc-r2.json sha256 591d0c69a544753173ff7b1f245144c5b63475b36fb308461fedc902d287f599
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w11-fcc-r1.json sha256 470252dd8220ff91fa78e04e42fcdb7554ef11a0ed7f6d70583ecb00b1243c4b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/w11-fcc-r2.json sha256 3d6beae85e50194c06d8a88a4dd0d2dcbd3da21862797a45f36f7236ad0cc67d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/z00-fcc-r1.json sha256 6115850dd4ef8a16ceb54c99afe4ea11c7f71ceb54df3033a6ff6ff7be7dc748
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/z00-fcc-r2.json sha256 8cdf506358e906cb40811bb4ec2d104299a24afe8504d55c054eccb37d083a94
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/z12-fcc-r1.json sha256 f2b94bb5baf1c4f935f120e2af3ce3ca721dd22dc55821635a7ba91fd6be79d4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_fcc_b5626ec_laptop/z12-fcc-r2.json sha256 1743b158dc7e3aaada49ca7338f41cb5d79962e3dfb146103b36de9b045b311d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/selection.json sha256 f1d760077f8769a349f67689c6eed05832092ed1e6e980a01f2b5d1fcdfa5b95
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/out/v1_capture.json sha256 71e5b9da1ec4b9b4ee465c0cd0531a34d48ba46f26fb47bd4cf417af9a9ad19a
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s01-fcc-r1-bound.json sha256 ed6f3b0008b804545a44eba1c3022a61388e7cc4497a01ac9ab87fa89455794b
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s01-fcc-r2.json sha256 07691d230a0a5b2693432b11f85bef111e76076bbb3a97892b9f8ed5e7f097ae
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s01-qawo-r1.json sha256 5d32e1f1d9c1367b2157b36aa27710b088d2c9932797be0b993cae86c3fcaf82
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s01-qawo-r2.json sha256 c3fc088358dcd9d9bbb4470945bf83dce8477599460acef811b32435fa0a5e0b
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s02-fcc-r1-bound.json sha256 5fa32b384062fb439803a2a685722f58745b5f7a4489008fe9f21a4ab2aea15b
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s02-fcc-r2.json sha256 dbf56da5b0ae4d78b15701d3da794a30b90da739ca302087a11384fcf33725f9
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s02-qawo-r1.json sha256 25fa7f6e39605aaedeca23e87e6b2470d854ada3a86f36f862bdbcfe7b793c15
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s02-qawo-r2.json sha256 52203618f543e757e5e119f888b690fe643b13421f1d1f47d835c2593f7464d6
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s03-fcc-r1-bound.json sha256 fad494a690797bc67d1438acd5ecc2137abddf35e8466455445b1c3c99ead11c
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s03-fcc-r2.json sha256 e6ecb1e75de70a16b2bab76a3b88ddcf48e8298292b1b9db6376c34d6ef7a7a2
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s03-qawo-r1.json sha256 5544f81348cd5f452a60955dae66244b8aff192b43bed4ae7ba9a9607ce674b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s03-qawo-r2.json sha256 7586c126ee615fcef4582ea6426986b2c5256f4c3706e771d5c8b2bbc0749782
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s08-fcc-r1.json sha256 7d91b507b56a877ed2950df598d981bcfab6825b9d132a7e2fc268cdfb35ebb1
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s08-fcc-r2.json sha256 e333052439424272901b66eef34c6c9b1678ebaa1c33ebfc89e1f3eb6cf388a8
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s08-qawo-r1.json sha256 fd259dd844206c903dd69f8be64e5eec0e4141c85fd97190a05670d040ba850c
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s08-qawo-r2.json sha256 2ea485e99af17021746333bd1a171f31dad2fbeb8e7b8249a61b2677058ee338
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s09-fcc-r1.json sha256 ae5caacfef01cb1132a4a88f29f0f0545332ca1c00fae9023f72bd260dca3a1b
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s09-fcc-r2.json sha256 025390cf0f1a60e5751ca2e45ae89ebaadbfa5d976da838511b2e7489218a134
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s09-qawo-r1.json sha256 743255f6b92b5f3971e6575228f073589119bbbbd3099e487e69fcbd16236c82
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s09-qawo-r2.json sha256 dd1e5fcba7e63df35223dc414a759ce58d203cd459ab53357c569ff08523b8e2
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s10-fcc-r1.json sha256 83a1aa4c13b367bb1d9dbdfdcaa3c5aa56ed7fff60244c040afeddb9a22d60bb
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s10-fcc-r2.json sha256 e01045e3eeae36618a3029772b00c59d792ed9611d6d8dd022d595c114b23f0c
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s10-qawo-r1.json sha256 b0a18eb3756ce012860556ddfe1e478cb6663c481810dbbcde4fd94e151c4ff7
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s10-qawo-r2.json sha256 cda8bc47a890d4f03e30a931220025ce10eb9652fd24456f4fea122ca7ffdfd0
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s13-fcc-r1-bound.json sha256 f4fe16e9282bf3656a38487c217ca55a0b826cb91fcda80bd6e660c40b0285ec
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s13-fcc-r2.json sha256 304aa7cf34e5feabb6b509f22a76c8fdf842c931ebf6541bf4b504287cacada5
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s13-qawo-r1.json sha256 cc692cea46208493cb2dd1df5a28935cc2d5b778481c302c8850ab8192a7a5f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s13-qawo-r2.json sha256 1e2a6541cb2998e6f947d844f2e60e4e26bb876055db289fafa9062a43ba07f9
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s14-fcc-r1-bound.json sha256 06193462c5fda46363766420e59c7ac255ba65aae79c38996f41589f8069f3bb
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s14-fcc-r2.json sha256 148731f0f98daeed055c3b28c3dca6c930faa05a7e3146c586e34559249fd3cd
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s14-qawo-r1.json sha256 04d817bdd2d618f9bcb33f1cce3d03a7198e0ef6ac288edbc631dd0c82c1fc9f
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s14-qawo-r2.json sha256 232859528a702008e7084d3fef54a57d3394ff8bb495ba5ceec2d8b0b3c95827
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s15-fcc-r1-bound.json sha256 0288b05aa856f42b402cac6a85aed738af6b2126dedc9303a9e62d0c9a03a0fa
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s15-fcc-r2.json sha256 7fe1657a54593656c0f5305a5dbbef3d8c8fef8144da7d1d3951eac9ef509876
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s15-qawo-r1.json sha256 6cea6cac18e63ee4dfefbf9e27d0bd9f35906e486f54d91bfeed0e62a02f5db6
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s15-qawo-r2.json sha256 db03386fc200bcabe35374f6e595ad5075080a5759b3cbe78d291be7c353937e
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s22-fcc-r1.json sha256 b31472adccdf653eafb3d24367ccdaaf4b4822fdb14f84a3a4661b319bf704c0
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s22-fcc-r2.json sha256 896a5685a05b745692ebd4bd41e4b97e966bd5e0dad934dc0f8e34c4f6317724
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s22-qawo-r1.json sha256 fab14bc46868a5baf9a82fd151f52a7dcdef1fb20cc96bcce48892debdd15e06
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s22-qawo-r2.json sha256 eb82e847990250ab26d20e3fb95eb01f7fe993b0a123c523607e2ad01ae9751d
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s23-fcc-r1.json sha256 83dd69f21f2d73b1b1fc6a76ab79767f1ead821d787be59c02928847e53c4646
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s23-fcc-r2.json sha256 694a786037aaae18414da9181d0cc56d72fc0d0d391131646114cd245f85480e
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s23-qawo-r1.json sha256 fbfdd733da9b7146d62dd9a3d44639c4de9928d98753db8482c7a83f2957521b
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s23-qawo-r2.json sha256 c098a9c914c66f4e30b20fb5283903d89abfe39a2d021d4be012683a7b024578
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s25-fcc-r1.json sha256 92d0b9f67e15d1ee5ca4aed4173972ac702c6fd7bddb366ed5e04861a2447c85
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s25-fcc-r2.json sha256 6de342e7f6f1168871d837b2aa436ecc3b4c43cdb4926bbc85eaa6f6eece1cf2
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s25-qawo-r1.json sha256 0cc364b1f6fac825da94adfff181a5dbe2edf9cfa0b4b467190f7dae5daec8b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s25-qawo-r2.json sha256 09486745288f4f551510f1e23dd519d1992a399830634e03cf2081b1b499b358
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s27-fcc-r1.json sha256 fc7eb1a34fe5a2b2ca38d70362b3ab83fc5fd012a30887c587eb39ba8fdfdc42
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s27-fcc-r2.json sha256 903a29b6b3246b73bb1ce0b096ffd3015151fa2aa9f46c7f2588275c13b08a5a
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s27-qawo-r1.json sha256 0c74f967e281ce81a9716d202c3e62b8d17ec69bdda5e47f223511965daeec74
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s27-qawo-r2.json sha256 836f2ecf0301db1e61df7a770f80c14dd0c71b99398dac5edf8f1420d90195be
+
+## V3 — honest where referenced
+
+- **As written: holds.** Counted 66 of 90 (four usable clause-(i) readings within tol); violations 0: [].
+- **As the ruling scores it: fails.** Scored 90 of 90 (80 two implementations, 10 FCC only); violations 1: ['z12']. Two-implementation references only: **fails** (1 violations).
+- Not scored: []. Findings: FCC-only violations []; FCC r1 vs r2 over tol []; spread over tol [].
+
+| sid | kind | class | readings | spread/tol | counts as written | \|v_g−ref\|/e_g | \|v_06h−ref\|/e_06h | clauses |
+|---|---|---|---|---|---|---|---|---|
+| z00 (720) | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000351 | no | 0.01831 | 0.5826 | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| z01 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.101 | yes | 0.3203 | 0.3326 | (i) all_monotone |
+| z02 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 9.87e-08 | yes | 0.001215 | 0.9985 | (i) all_monotone |
+| z03 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000239 | yes | 0.03724 | 1.241 | (i) all_monotone |
+| z04 | analytic | FCC only | fcc r1, fcc r2 | 7.91e-06 | no | 0.0001861 | 0.0005141 | Route A |
+| z05 | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 0.00313 | no | 0.09031 | 0.003294 | Route A |
+| z06 | analytic | FCC only | fcc r1, fcc r2 | 6.05e-06 | no | 2.466e-05 | 2.379e-05 | Route A |
+| z07 (720) | analytic | FCC only | fcc r1, fcc r2 | 1.57e-06 | no | 1.525e-06 | 0.2613 | Route A |
+| z08 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1.65e-06 | yes | 2.093e-07 | 1 | Route A |
+| z09 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000953 | yes | 0.0001438 | 0.9997 | Route A |
+| z10 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000507 | yes | 0.0001653 | 0.9925 | Route A |
+| z11 | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 4.92e-06 | no | 0.000135 | 0.000135 | Route A |
+| z12 (720) | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000257 | no | 1681 **VIOLATES** | 1678 | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| z13 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.454 | yes | 0.5769 | 0.08378 | (i) all_monotone |
+| z14 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 9.87e-08 | yes | 0.001215 | 0.9985 | (i) all_monotone |
+| z15 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.45e-05 | yes | 3.949e-06 | 0.7814 | (i) all_monotone |
+| z16 (720) | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 0.000114 | no | 6.543e-06 | 0.2223 | Route A |
+| z17 | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 6.28e-06 | no | 1.188e-06 | 0.9995 | Route A |
+| z18 (720) | analytic | FCC only | fcc r1, fcc r2 | 1.69e-06 | no | 7.388e-07 | 3.041e-05 | Route A |
+| z19 | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 3.96e-05 | no | 1.581e-06 | 1.924e-06 | Route A |
+| z20 | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 0.00882 | no | 0.001701 | 0.001673 | Route A |
+| z21 (720) | analytic | FCC only | fcc r1, fcc r2 | 1.34e-06 | no | 3.482e-07 | 3.361e-05 | Route A |
+| z22 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.00317 | yes | 9.873e-05 | 0.001578 | Route A |
+| z23 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.00224 | yes | 0.0001477 | 0.9815 | Route A |
+| z24 (720) | analytic | FCC only | fcc r1, fcc r2 | 0.00025 | no | 0.002074 | 0.0162 | Route A |
+| z25 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.0614 | yes | 0.01076 | 0.009619 | Route A |
+| z26 | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 5.13e-05 | no | 1.681e-05 | 1.362e-05 | Route A |
+| z27 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.0122 | yes | 0.00406 | 0.3819 | Route A |
+| z28 (720) | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 0.000114 | no | 6.543e-06 | 0.2223 | Route A |
+| z29 (720) | analytic | FCC only | fcc r1, fcc r2 | 3.4e-07 | no | 2.342e-07 | 0.9999 | Route A |
+| r00 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.86e-05 | yes | 3.462e-05 | 0.9999 | Route A |
+| r01 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.0149 | yes | 0.0006576 | 0.9841 | Route A |
+| r02 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000151 | yes | 1.013e-05 | 0.9376 | Route A |
+| r03 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 4.83e-07 | yes | 4.138e-08 | 1 | Route A |
+| r04 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.65e-05 | yes | 1.091e-06 | 0.06116 | Route A |
+| r05 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.19e-06 | yes | 9.471e-07 | 1 | Route A |
+| r06 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.03e-05 | yes | 3.38e-07 | 6.086e-07 | Route A |
+| r07 | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 0.000153 | no | 0.0002212 | 0.00739 | Route A |
+| r08 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.281 | yes | 0.008065 | 0.005309 | Route A |
+| r09 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.0141 | yes | 0.002032 | 0.0007391 | Route A |
+| r10 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.0781 | yes | 0.1228 | 0.0131 | Route A |
+| r11 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000178 | yes | 8.432e-06 | 0.9999 | Route A |
+| r12 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.56e-06 | yes | 6.967e-07 | 1 | Route A |
+| r13 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.016 | yes | 2.374e-05 | 0.9956 | Route A |
+| r14 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.444 | yes | 0.02468 | 0.02468 | Route A |
+| r15 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 6.76e-06 | yes | 0.001275 | 0.4305 | (i) all_monotone |
+| r16 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1e-09 | yes | 0.00881 | 0.9053 | (i) all_monotone |
+| r17 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000154 | yes | 0.5458 | 0.061 | (i) all_monotone |
+| r18 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.00022 | yes | 0.01746 | 0.1996 | (i) all_monotone |
+| r19 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 8.07e-09 | yes | 0.0007163 | 0.9882 | (i) all_monotone |
+| r20 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 6.38e-08 | yes | 0.0004327 | 0.7024 | (i) all_monotone |
+| r21 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 4.23e-07 | yes | 0.001329 | 0.221 | (i) all_monotone |
+| r22 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1.01e-08 | yes | 0.009327 | 0.9681 | (i) all_monotone |
+| r23 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 6.31e-05 | yes | 0.0003015 | 0.7694 | (i) all_monotone |
+| r24 | group | FCC only | fcc r1, fcc r2 | 5.93e-05 | no | 0.3074 | 0.2206 | (i) all_monotone |
+| r25 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.61e-05 | yes | 0.0001094 | 0.0001981 | (i) all_monotone |
+| r26 | group | FCC only | fcc r1, fcc r2 | 1.1e-08 | no | 2.663e-05 | 9.048e-05 | (i) all_monotone |
+| r27 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 9.69e-05 | yes | 0.05213 | 0.6418 | (i) all_monotone |
+| r28 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1.15e-06 | yes | 0.0399 | 0.7608 | (i) all_monotone |
+| r29 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.63e-07 | yes | 0.0007856 | 0.0007373 | (i) all_monotone |
+| r30 | analytic | two implementations | fcc r1, fcc r2, qawo r1 | 2.56e-05 | no | 1.007e-06 | 1 | Route A |
+| r31 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.00249 | yes | 8.574e-06 | 0.801 | Route A |
+| r32 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 8.83e-05 | yes | 1.819e-06 | 0.205 | Route A |
+| r33 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.442 | yes | 0.008224 | 0.01149 | Route A |
+| r34 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000684 | yes | 6.36e-06 | 1 | Route A |
+| r35 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.0103 | yes | 0.0005375 | 1.001 | Route A |
+| r36 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000258 | yes | 8.903e-05 | 0.007262 | Route A |
+| r37 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.12e-05 | yes | 5.893e-05 | 0.9886 | Route A |
+| r38 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000778 | yes | 7.201e-05 | 5.905e-05 | Route A |
+| r39 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.16e-05 | yes | 4.626e-07 | 0.9998 | Route A |
+| r40 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.019 | yes | 0.02966 | 0.02958 | Route A |
+| r41 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 7.5e-06 | yes | 1.842e-06 | 0.998 | Route A |
+| r42 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.289 | yes | 0.335 | 0.335 | Route A |
+| r43 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.00336 | yes | 0.0007419 | 0.001206 | Route A |
+| r44 | analytic | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.149 | yes | 0.009829 | 0.5201 | Route A |
+| r45 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.39e-05 | yes | 0.01178 | 0.233 | (i) all_monotone |
+| r46 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000228 | yes | 0.00541 | 0.471 | (i) all_monotone |
+| r47 | group | two implementations | fcc r1, fcc r2, qawo r1 | 0.00144 | no | 0.1644 | 0.9142 | (i) all_monotone |
+| r48 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.05e-07 | yes | 0.0367 | 0.6135 | (i) all_monotone |
+| r49 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 9.31e-10 | yes | 0.07837 | 1.078 | (i) all_monotone |
+| r50 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1.42e-05 | yes | 0.09016 | 0.8916 | (i) all_monotone |
+| r51 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.69e-05 | yes | 0.0002081 | 0.04276 | (i) all_monotone |
+| r52 | group | two implementations | fcc r1, fcc r2, qawo r1 | 4.38e-05 | no | 0.0007833 | 0.0242 | (i) all_monotone |
+| r53 | group | FCC only | fcc r1, fcc r2 | 0.00168 | no | 0.02185 | 0.08775 | (i) all_monotone |
+| r54 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.35e-09 | yes | 0.001839 | 0.9362 | (i) all_monotone |
+| r55 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1.25e-06 | yes | 0.02665 | 0.9612 | (i) all_monotone |
+| r56 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.49e-05 | yes | 0.005909 | 0.9209 | (i) all_monotone |
+| r57 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1.47e-09 | yes | 0.000106 | 0.9998 | (i) all_monotone |
+| r58 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.5e-06 | yes | 0.09146 | 0.06894 | (i) all_monotone |
+| r59 | group | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 8.5e-07 | yes | 0.001303 | 0.2507 | (i) all_monotone |
+
+### Every V3 violation (as ruled), in float.hex
+
+- **z12** (two implementations, g-1e-8-1-2174 #1): v_g 0x1.0c6c2cc40e857p-86, ref 0x1.0c5f18f86f3efp-86 (1.35492969293828029382601756914e-26), abserr_g 0x1.fdbb1bc1a92b8p-110; |v_g−ref|/e_g 1681.35; 06h: v 0x1.0c6c2cd926acfp-86, abserr 0x1.febd253628d92p-110, ratio 1678.07; counts as written: False
+
+Worst |v_g−ref|/e_g over the scored: z12 1681.35 (06h's ratio beside it 1678.07).
+
+## V4 — the trusted leaf's value
+
+- **As written: holds. As ruled: holds.**
+
+| sample | counts as written | \|v_g−ref\|/e_g | 06h ratio | 06e breakdown (with the quarters) |
+|---|---|---|---|---|
+| z02 | True | 0.00121489 | 0.998475 | 0.0012 |
+| z08 | True | 2.09272e-07 | 0.999978 | 0.00046 |
+| z09 | True | 0.000143816 | 0.999727 | 0.0015 |
+| z14 | True | 0.00121489 | 0.998475 | 0.0012 |
+
+## V1's 12 group calls (addendum 1; the rerun batch's readings at g against R24)
+
+| wid | k, z_r | class | readings | spread/tol | R23 v / e | R24 v / e | ref (FCC r2) | \|v23−ref\|/e23 | \|v24−ref\|/e24 | nearer | its e covers? |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| w00 | 1e+05, 3971.41 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 5.38e-05 | 0x1.57698b554fa10p-71 / 0x1.027ad91660b34p-94 | 0x1.54ad8908895c6p-71 / 0x1.1c2f0130bfabep-94 | 0x1.54ad890b9da52p-71 | 8.874e+04 | 0.005418 | R24 | yes |
+| w01 | 1e+05, 5236.55 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000281 | 0x1.00a5d63c50710p-69 / 0x1.748a3fe748d93p-94 | 0x1.035b11469f5f7p-69 / 0x1.82e2204892e4bp-98 | 0x1.035b115081611p-69 | 2.439e+05 | 0.8174 | R24 | yes |
+| w02 | 1e+05, 6904.72 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.41e-05 | 0x1.171356724b5cdp-70 / 0x1.5b3fd0177f1fep-94 | 0x1.172b1a1bc7132p-70 / 0x1.0c70f5b18a82cp-94 | 0x1.172b1a1ca0a22p-70 | 4485 | 0.003166 | R24 | yes |
+| w03 | 3.16e+05, 434.651 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000165 | 0x1.0017374bd25c4p-74 / 0x1.8e28dd9353d1cp-101 | 0x1.01dc948cf283fp-74 / 0x1.562c743b3cd82p-101 | 0x1.01dc94746ec53p-74 | 5.97e+05 | 0.5732 | R24 | yes |
+| w04 | 3.16e+05, 573.115 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 8.71e-05 | -0x1.e62819158fa3fp-75 / 0x1.1e1da635d3cecp-100 | -0x1.e988cbacb5f32p-75 / 0x1.24bba309a8872p-100 | -0x1.e988cbacfa185p-75 | 3.961e+05 | 0.001819 | R24 | yes |
+| w05 | 3.16e+05, 996.42 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 7.12e-05 | 0x1.e36cb4794d1ccp-75 / 0x1.874d548c43dfcp-100 | 0x1.e6b93b2ab1f20p-75 / 0x1.3a18893c0f6c3p-100 | 0x1.e6b93b33ea861p-75 | 2.829e+05 | 0.05871 | R24 | yes |
+| w06 | 3.16e+05, 6904.72 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 3.12e-06 | -0x1.424916b13a5e5p-76 / 0x1.933cda6e6539dp-100 | -0x1.4458fe9cb7cc3p-76 / 0x1.3b32c37bda8adp-100 | -0x1.4458fec15abcdp-76 | 8.58e+04 | 0.1162 | R24 | yes |
+| w07 | 1e+06, 329.64 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 8.13e-05 | 0x1.044b11266f2a6p-81 / 0x1.9f5b67ef8b90dp-105 | 0x1.003d0c4e14e2dp-81 / 0x1.9da8a887b96f5p-107 | 0x1.003d0beca02fap-81 | 1.638e+05 | 0.9424 | R24 | yes |
+| w08 | 1e+06, 573.115 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 5.43e-05 | 0x1.0529089f7daf8p-79 / 0x1.aabc6c2d616f2p-105 | 0x1.04af57399473bp-79 / 0x1.16b8163839c45p-105 | 0x1.04af5738dd495p-79 | 7.476e+04 | 0.01027 | R24 | yes |
+| w09 | 1e+06, 996.42 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1.52e-05 | 0x1.0732413c2b0aep-79 / 0x1.f405524b0ffb6p-104 | 0x1.06ce80643d26ep-79 / 0x1.83e7f8a5925ebp-103 | 0x1.06ce804c42485p-79 | 2.615e+04 | 0.06182 | R24 | yes |
+| w10 | 1e+06, 1732.38 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.68e-05 | 0x1.07529cb22cf54p-79 / 0x1.24be3137c5852p-104 | 0x1.06f2f0896adebp-79 / 0x1.1f6ae124e6c5fp-104 | 0x1.06f2f0c1a3778p-79 | 4.284e+04 | 0.3912 | R24 | yes |
+| w11 | 1e+06, 6904.72 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 4.19e-05 | -0x1.f97b8333674a1p-80 / 0x1.19af8f575f636p-103 | -0x1.f8439e7d85c46p-80 / 0x1.721170c3128c9p-105 | -0x1.f8439e74c9fefp-80 | 3.628e+04 | 0.0472 | R24 | yes |
+
+**Each reading against each code** (|v - reading|/e, each code's own e; FCC r2 is the reference by rule):
+
+| wid | R24 vs fcc r1 / fcc r2 / qawo r1 / qawo r2 | R23 vs fcc r1 / fcc r2 / qawo r1 / qawo r2 | nearer against every reading |
+|---|---|---|---|
+| w00 | 0.00542 / 0.00542 / 0.00542 / 0.00542 | 8.87e+04 / 8.87e+04 / 8.87e+04 / 8.87e+04 | R24 |
+| w01 | 0.817 / 0.817 / 0.817 / 0.817 | 2.44e+05 / 2.44e+05 / 2.44e+05 / 2.44e+05 | R24 |
+| w02 | 0.00317 / 0.00317 / 0.00317 / 0.00317 | 4.49e+03 / 4.49e+03 / 4.49e+03 / 4.49e+03 | R24 |
+| w03 | 0.573 / 0.573 / 0.573 / 0.573 | 5.97e+05 / 5.97e+05 / 5.97e+05 / 5.97e+05 | R24 |
+| w04 | 0.00182 / 0.00182 / 0.00182 / 0.00182 | 3.96e+05 / 3.96e+05 / 3.96e+05 / 3.96e+05 | R24 |
+| w05 | 0.0587 / 0.0587 / 0.0587 / 0.0587 | 2.83e+05 / 2.83e+05 / 2.83e+05 / 2.83e+05 | R24 |
+| w06 | 0.116 / 0.116 / 0.116 / 0.116 | 8.58e+04 / 8.58e+04 / 8.58e+04 / 8.58e+04 | R24 |
+| w07 | 0.942 / 0.942 / 0.942 / 0.942 | 1.64e+05 / 1.64e+05 / 1.64e+05 / 1.64e+05 | R24 |
+| w08 | 0.0103 / 0.0103 / 0.0103 / 0.0103 | 7.48e+04 / 7.48e+04 / 7.48e+04 / 7.48e+04 | R24 |
+| w09 | 0.0618 / 0.0618 / 0.0618 / 0.0618 | 2.61e+04 / 2.61e+04 / 2.61e+04 / 2.61e+04 | R24 |
+| w10 | 0.391 / 0.391 / 0.391 / 0.391 | 4.28e+04 / 4.28e+04 / 4.28e+04 / 4.28e+04 | R24 |
+| w11 | 0.0472 / 0.0472 / 0.0472 / 0.0472 | 3.63e+04 / 3.63e+04 / 3.63e+04 / 3.63e+04 | R24 |
+
+Clauses: every V1 reading meets clause (ii) (ff3e8394, direct_segments = its non-monotone count): ['(ii) ff3e8394, direct_segments 1', '(iii) b5626ecb FCC, 1 non-monotone segment(s) direct'].
+
+## The V8 sample (addendum 2)
+
+| vid | unit #i | class | readings | spread/tol | g v / e / conv | 06h v / e / conv | ref | \|v_g−ref\|/e_g | \|v_06h−ref\|/e_06h |
+|---|---|---|---|---|---|---|---|---|---|
+| v00 | g-1e-7-2-1380 #4 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.665 | -0x1.e9ba0850f8170p-110 / 0x1.3dfe0749bb4b9p-137 / False | -0x1.e9ba0858015a8p-110 / 0x1.1863dae6f89dep-136 / True | -0x1.e9ba0853f4debp-110 | 0.07516 | 0.05776 |
+| v01 | g-1e-7-0-12617 #5 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000789 | -0x1.47edd6b41f28ap-96 / 0x1.8f6db238179d3p-122 / False | -0x1.47edd6593adb9p-96 / 0x1.7fb5fccd634d6p-122 / True | -0x1.47edd68f8a14ep-96 | 0.3663 | 0.5661 |
+| v02 | g-1e-7-3-34212 #4 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.00013 | -0x1.0a6fe76a57daap-92 / 0x1.0d7130306c403p-116 / False | -0x1.0a6fe76cc0a6fp-92 / 0x1.ae82fca4a1941p-118 / True | -0x1.0a6fe76bc7c69p-92 | 0.005334 | 0.009033 |
+| v03 | g-1e-7-1-34521 #4 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.0153 | -0x1.44db86e35e156p-83 / 0x1.26e8c8089da5ap-109 / False | -0x1.44db86b69f998p-83 / 0x1.301276a6bb4d2p-111 / True | -0x1.44db868ab28acp-83 | 1.203 **>1** | 2.311 **>1** |
+| v04 | g-1e-7-3-34296 #1 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 8.41e-05 | 0x1.a31e66204b4c8p-86 / 0x1.4a0104a9ea1e0p-110 / False | 0x1.a31e6675ccff2p-86 / 0x1.4f66719dcf92ap-110 / True | 0x1.a31e66203ad0bp-86 | 0.0001951 | 0.2551 |
+| v05 | g-1e-7-3-34090 #4 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000517 | 0x1.e11c90375194cp-79 / 0x1.8e35bfbd0eda4p-102 / False | 0x1.e11c8fd887df8p-79 / 0x1.17e0085312206p-102 / True | 0x1.e11c9033bcbaep-79 | 0.004497 | 0.1629 |
+| v06 | g-1e-8-2-1380 #4 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.665 | -0x1.e9ba0850f8170p-110 / 0x1.3dfe0749bb4b9p-137 / False | -0x1.e9ba0858015a8p-110 / 0x1.1863dae6f89dep-136 / True | -0x1.e9ba0853f4debp-110 | 0.07516 | 0.05776 |
+| v07 | g-1e-8-0-12606 #5 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.0042 | 0x1.a59b4411ebbc8p-96 / 0x1.88367c2b9c477p-122 / False | 0x1.a59b44852f66ep-96 / 0x1.6eed469f642bep-121 / True | 0x1.a59b4416224bdp-96 | 0.04297 | 0.6053 |
+| v08 | g-1e-8-3-1192 #5 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.00974 | 0x1.565e4e359a9e2p-91 / 0x1.968fd44f1fb26p-117 / False | 0x1.565e4de8a662fp-91 / 0x1.218ed2551a59dp-119 / True | 0x1.565e4e3658251p-91 | 0.007284 | 4.293 **>1** |
+| v09 | g-1e-8-1-35480 #2 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 1.01e-05 | -0x1.f912b4f680f74p-86 / 0x1.e1172e84c9ff5p-112 / False | -0x1.f912b58029823p-86 / 0x1.b7af2106bed10p-110 / True | -0x1.f912b4f73d8b9p-86 | 0.006125 | 0.3114 |
+| v10 | g-1e-8-3-38023 #4 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 0.000229 | -0x1.51c04d54877a4p-79 / 0x1.6de3b7d10f287p-106 / False | -0x1.51c04d405221ep-79 / 0x1.b0992c93a7f45p-106 / True | -0x1.51c04d547aeacp-79 | 0.001073 | 0.3728 |
+| v11 | g-1e-8-0-12655 #3 | two implementations | fcc r1, fcc r2, qawo r1, qawo r2 | 2.56e-05 | -0x1.11ab22e904a9bp-85 / 0x1.a3f78ff684b90p-110 / False | -0x1.11ab236f7f7e7p-85 / 0x1.a1ff554c9db1dp-110 / True | -0x1.11ab228f08c11p-85 | 0.4285 | 1.074 **>1** |
+
+## The correction −ΣE (descriptive; scored V3 references with a Clenshaw–Curtis leaf)
+
+| sid | class | ΣE (hex) | \|v_g−ref\| | \|v_g−ΣE−ref\| | corrected / uncorrected | \|v_g−ref\|/e_g | \|v_g−ΣE−ref\|/e_g | has_cc_leaf |
+|---|---|---|---|---|---|---|---|---|
+| z00 | two implementations | 0x1.4a530ec88c7dcp-126 | 2.052e-35 | 2.054e-35 | 1.001 | 0.01831 | 0.01832 | True |
+| z03 | two implementations | 0x1.39d99b311ac72p-127 | 3.456e-35 | 3.455e-35 | 0.9998 | 0.03724 | 0.03723 | True |
+| z12 | two implementations | 0x1.4c1baf077c401p-126 | 2.579e-30 | 2.579e-30 | 1 | 1681 | 1681 | True |
+| z15 | two implementations | 0x1.1da5ea6175897p-136 | 1.934e-40 | 1.806e-40 | 0.9338 | 3.949e-06 | 3.687e-06 | True |
+| r09 | two implementations | -0x1.6c8bf54785073p-90 | 3.333e-27 | 4.483e-27 | 1.345 | 0.002032 | 0.002734 | True |
+| r15 | two implementations | -0x1.ae995be49d427p-142 | 2.255e-37 | 2.255e-37 | 1 | 0.001275 | 0.001275 | True |
+| r16 | two implementations | 0x1.ecb610a251ee5p-140 | 2.28e-35 | 2.28e-35 | 1 | 0.00881 | 0.00881 | True |
+| r17 | two implementations | -0x1.1ce127de03dbep-123 | 1.55e-32 | 1.55e-32 | 1 | 0.5458 | 0.5458 | True |
+| r19 | two implementations | -0x1.1f303d841f109p-141 | 3.2e-36 | 3.2e-36 | 1 | 0.0007163 | 0.0007163 | True |
+| r20 | two implementations | 0x1.1b49069a1c140p-134 | 2.879e-37 | 2.879e-37 | 1 | 0.0004327 | 0.0004328 | True |
+| r21 | two implementations | 0x1.6c7fc27b56a6ep-133 | 3.301e-35 | 3.301e-35 | 1 | 0.001329 | 0.001329 | True |
+| r22 | two implementations | -0x1.60cc151e40fdcp-148 | 2.377e-37 | 2.377e-37 | 1 | 0.009327 | 0.009327 | True |
+| r23 | two implementations | 0x1.ea111b599a6b2p-136 | 1.501e-39 | 1.523e-39 | 1.015 | 0.0003015 | 0.0003059 | True |
+| r27 | two implementations | -0x1.95ff3d0e8f992p-142 | 2.79e-38 | 2.789e-38 | 1 | 0.05213 | 0.05213 | True |
+| r33 | two implementations | -0x1.45450689fed56p-81 | 3.411e-25 | 1.844e-25 | 0.5407 | 0.008224 | 0.004446 | True |
+| r43 | two implementations | 0x1.4693c8f209257p-77 | 1.586e-23 | 7.422e-24 | 0.4679 | 0.0007419 | 0.0003471 | True |
+| r45 | two implementations | 0x1.73fa488abba85p-131 | 2.164e-36 | 2.164e-36 | 0.9998 | 0.01178 | 0.01178 | True |
+| r46 | two implementations | 0x1.68d8de2ce8c59p-119 | 3.149e-33 | 3.147e-33 | 0.9993 | 0.00541 | 0.005407 | True |
+| r47 | two implementations | -0x1.874bb91fff0cep-130 | 4.031e-37 | 4.043e-37 | 1.003 | 0.1644 | 0.1649 | True |
+| r51 | two implementations | -0x1.017c9504124e8p-119 | 2.326e-36 | 8.131e-37 | 0.3495 | 0.0002081 | 7.273e-05 | True |
+| r52 | two implementations | 0x1.f506fb8dd04a3p-130 | 1.248e-37 | 1.233e-37 | 0.9885 | 0.0007833 | 0.0007743 | True |
+| r53 | FCC only | -0x1.f096ba3e69794p-130 | 6.554e-38 | 6.412e-38 | 0.9783 | 0.02185 | 0.02138 | True |
+| r54 | two implementations | 0x1.3e808cc21bc27p-137 | 4.643e-36 | 4.643e-36 | 1 | 0.001839 | 0.001839 | True |
+| r58 | two implementations | -0x1.1c2a8b98db3e2p-139 | 3.119e-35 | 3.119e-35 | 1 | 0.09146 | 0.09146 | True |
+| r59 | two implementations | -0x1.7236d63455271p-133 | 3.342e-36 | 3.342e-36 | 1 | 0.001303 | 0.001303 | True |
+
+25 references with a CC leaf; the correction brings v nearer the reference on 12.
+
+## z00 across two hosts (addendum 5 item 4)
+
+| reading | Mac Studio | laptop | identical | |difference| | Mac wall s |
+|---|---|---|---|---|---|
+| qawo r1 | 0x1.0c5f18f86f93bp-86 | 0x1.0c5f18f86f93bp-86 | True | 5.28e-43 | 258 |
+| qawo r2 | 0x1.0c5f18f86f3e1p-86 | 0x1.0c5f18f86f3e1p-86 | True | 7.34e-43 | 1010 |
+| fcc r1 | 0x1.0c5f18f4cb423p-86 | 0x1.0c5f18f4cb423p-86 | True | 1.37e-42 | 156 |
+| fcc r2 | 0x1.0c5f18f86f178p-86 | 0x1.0c5f18f86f178p-86 | True | 1.21e-42 | 706 |
+
+## Addendum 6's additions
+
+- **V3 with clauses (ii) and (iii) accepted in place of all_monotone** in the count rule as written (four usable readings within tol): **fails**; counted 68 of 90; violations ['z12']; counted only because of (ii)/(iii): ['z00', 'z12'].
+- As written (all_monotone required), z00 and z12 cannot count: their readings are usable only by (ii) or (iii).
+
+**The count rule for each of the 14** (four readings within 1/100 of the minimum abserr):
+
+| sample | readings | spread / tol | agree within tol | clauses |
+|---|---|---|---|---|
+| w00 | 4 | 5.38e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w01 | 4 | 0.000281 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w02 | 4 | 3.41e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w03 | 4 | 0.000165 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w04 | 4 | 8.71e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w05 | 4 | 7.12e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w06 | 4 | 3.12e-06 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w07 | 4 | 8.13e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w08 | 4 | 5.43e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w09 | 4 | 1.52e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w10 | 4 | 2.68e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| w11 | 4 | 4.19e-05 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| z00 | 4 | 0.000351 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+| z12 | 4 | 0.000257 | yes | (ii) ff3e8394, direct_segments 1; (iii) b5626ecb FCC, 1 non-monotone segment(s) direct |
+
+Superseded and unscored: the 14 stationary-point samples' stage-2 FCC readings (out/readings/*-fcc-r*-rerun.json): superseded by the laptop's FCC at b5626ecb (addendum 6); on disk, unscored.

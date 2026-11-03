@@ -1,0 +1,98 @@
+2026-11-02T21:10:03Z stopped r24-qawo-r1: elapsed 1802 s, estimate 6402-10669 s, progress 12/152 chunks (out of order), projected total 22831 s, finish in 21029 s
+2026-11-02T21:15:04Z stopped r24-qawo-r1: elapsed 2103 s, estimate 6402-10669 s, progress 12/152 chunks (out of order), projected total 26637 s, finish in 24534 s
+2026-11-02T21:20:04Z stopped r24-qawo-r1: elapsed 2403 s, estimate 6402-10669 s, progress 15/152 chunks (out of order), projected total 24353 s, finish in 21950 s
+2026-11-02T21:25:04Z stopped r24-qawo-r1: elapsed 2704 s, estimate 6402-10669 s, progress 18/152 chunks (out of order), projected total 22831 s, finish in 20128 s
+2026-11-02T21:30:05Z stopped r24-qawo-r1: elapsed 3004 s, estimate 6402-10669 s, progress 18/152 chunks (out of order), projected total 25368 s, finish in 22364 s
+2026-11-02T21:35:05Z stopped r24-qawo-r1: elapsed 3304 s, estimate 6402-10669 s, progress 21/152 chunks (out of order), projected total 23918 s, finish in 20614 s
+2026-11-02T21:40:06Z stopped r24-qawo-r1: elapsed 3605 s, estimate 6402-10669 s, progress 24/152 chunks (out of order), projected total 22831 s, finish in 19226 s
+2026-11-02T21:45:06Z stopped r24-qawo-r1: elapsed 3905 s, estimate 6402-10669 s, progress 24/152 chunks (out of order), projected total 24733 s, finish in 20828 s
+2026-11-02T21:50:06Z stopped r24-qawo-r1: elapsed 4206 s, estimate 6402-10669 s, progress 27/152 chunks (out of order), projected total 23677 s, finish in 19471 s
+2026-11-02T21:55:07Z stopped r24-qawo-r1: elapsed 4506 s, estimate 6402-10669 s, progress 30/152 chunks (out of order), projected total 22831 s, finish in 18325 s
+2026-11-02T22:00:07Z stopped r24-qawo-r1: elapsed 4807 s, estimate 6402-10669 s, progress 31/152 chunks (out of order), projected total 23567 s, finish in 18761 s
+2026-11-02T22:05:08Z stopped r24-qawo-r1: elapsed 5107 s, estimate 6402-10669 s, progress 36/152 chunks (out of order), projected total 21562 s, finish in 16455 s
+2026-11-02T22:10:08Z stopped r24-qawo-r1: elapsed 5407 s, estimate 6402-10669 s, progress 36/152 chunks (out of order), projected total 22831 s, finish in 17423 s
+2026-11-02T22:15:08Z stopped r24-qawo-r1: elapsed 5708 s, estimate 6402-10669 s, progress 42/152 chunks (out of order), projected total 20656 s, finish in 14949 s
+2026-11-02T22:20:09Z stopped r24-qawo-r1: elapsed 6008 s, estimate 6402-10669 s, progress 51/152 chunks (out of order), projected total 17906 s, finish in 11898 s
+2026-11-02T22:51:43Z stopped r53-qawo-r1: elapsed 1802 s, estimate 8136-13560 s, progress 7/138 chunks (out of order), projected total 35531 s, finish in 33729 s
+2026-11-02T22:56:44Z stopped r53-qawo-r1: elapsed 2103 s, estimate 8136-13560 s, progress 9/138 chunks (out of order), projected total 32242 s, finish in 30139 s
+2026-11-02T23:01:44Z stopped r53-qawo-r1: elapsed 2403 s, estimate 8136-13560 s, progress 10/138 chunks (out of order), projected total 33163 s, finish in 30760 s
+2026-11-02T23:06:44Z stopped r53-qawo-r1: elapsed 2704 s, estimate 8136-13560 s, progress 11/138 chunks (out of order), projected total 33917 s, finish in 31214 s
+2026-11-02T23:11:45Z stopped r53-qawo-r1: elapsed 3004 s, estimate 8136-13560 s, progress 12/138 chunks (out of order), projected total 34545 s, finish in 31541 s
+2026-11-02T23:16:45Z stopped r53-qawo-r1: elapsed 3304 s, estimate 8136-13560 s, progress 12/138 chunks (out of order), projected total 38000 s, finish in 34696 s
+2026-11-02T23:21:46Z stopped r53-qawo-r1: elapsed 3605 s, estimate 8136-13560 s, progress 13/138 chunks (out of order), projected total 38266 s, finish in 34662 s
+2026-11-02T23:26:46Z stopped r53-qawo-r1: elapsed 3905 s, estimate 8136-13560 s, progress 14/138 chunks (out of order), projected total 38494 s, finish in 34588 s
+2026-11-02T23:31:46Z stopped r53-qawo-r1: elapsed 4205 s, estimate 8136-13560 s, progress 16/138 chunks (out of order), projected total 36272 s, finish in 32067 s
+2026-11-02T23:36:47Z stopped r53-qawo-r1: elapsed 4506 s, estimate 8136-13560 s, progress 17/138 chunks (out of order), projected total 36577 s, finish in 32071 s
+2026-11-02T23:41:47Z stopped r53-qawo-r1: elapsed 4806 s, estimate 8136-13560 s, progress 18/138 chunks (out of order), projected total 36848 s, finish in 32042 s
+2026-11-02T23:46:48Z stopped r53-qawo-r1: elapsed 5107 s, estimate 8136-13560 s, progress 18/138 chunks (out of order), projected total 39151 s, finish in 34044 s
+2026-11-02T23:51:48Z stopped r53-qawo-r1: elapsed 5407 s, estimate 8136-13560 s, progress 20/138 chunks (out of order), projected total 37308 s, finish in 31901 s
+2026-11-02T23:56:48Z stopped r53-qawo-r1: elapsed 5707 s, estimate 8136-13560 s, progress 23/138 chunks (out of order), projected total 34244 s, finish in 28537 s
+2026-11-03T00:01:49Z stopped r53-qawo-r1: elapsed 6008 s, estimate 8136-13560 s, progress 24/138 chunks (out of order), projected total 34545 s, finish in 28537 s
+2026-11-03T00:06:49Z stopped r53-qawo-r1: elapsed 6308 s, estimate 8136-13560 s, progress 24/138 chunks (out of order), projected total 36273 s, finish in 29964 s
+2026-11-03T00:11:50Z stopped r53-qawo-r1: elapsed 6609 s, estimate 8136-13560 s, progress 30/138 chunks (out of order), projected total 30400 s, finish in 23791 s
+2026-11-03T00:16:50Z stopped r53-qawo-r1: elapsed 6909 s, estimate 8136-13560 s, progress 30/138 chunks (out of order), projected total 31782 s, finish in 24873 s
+2026-11-03T00:21:50Z stopped r53-qawo-r1: elapsed 7209 s, estimate 8136-13560 s, progress 36/138 chunks (out of order), projected total 27636 s, finish in 20427 s
+2026-11-03T00:26:51Z stopped r53-qawo-r1: elapsed 7510 s, estimate 8136-13560 s, progress 42/138 chunks (out of order), projected total 24675 s, finish in 17165 s
+2026-11-03T01:01:18Z stopped r47-qawo-r2: elapsed 1802 s, estimate 11004-18340 s, no chunk back yet (0/116); the estimate's high end, projected total 18340 s, finish in 16538 s
+2026-11-03T01:06:18Z stopped r47-qawo-r2: elapsed 2103 s, estimate 11004-18340 s, no chunk back yet (0/116); the estimate's high end, projected total 18340 s, finish in 16237 s
+2026-11-03T01:11:19Z stopped r47-qawo-r2: elapsed 2403 s, estimate 11004-18340 s, no chunk back yet (0/116); the estimate's high end, projected total 18340 s, finish in 15937 s
+2026-11-03T01:16:19Z stopped r47-qawo-r2: elapsed 2704 s, estimate 11004-18340 s, no chunk back yet (0/116); the estimate's high end, projected total 18340 s, finish in 15636 s
+2026-11-03T01:21:20Z stopped r47-qawo-r2: elapsed 3004 s, estimate 11004-18340 s, no chunk back yet (0/116); the estimate's high end, projected total 18340 s, finish in 15336 s
+2026-11-03T01:26:20Z stopped r47-qawo-r2: elapsed 3305 s, estimate 11004-18340 s, no chunk back yet (0/116); the estimate's high end, projected total 18340 s, finish in 15036 s
+2026-11-03T01:31:20Z stopped r47-qawo-r2: elapsed 3605 s, estimate 11004-18340 s, no chunk back yet (0/116); the estimate's high end, projected total 18340 s, finish in 14735 s
+2026-11-03T01:36:21Z stopped r47-qawo-r2: elapsed 3905 s, estimate 11004-18340 s, progress 1/116 chunks (out of order), projected total 453016 s, finish in 449110 s
+2026-11-03T01:36:21Z stopped r47-qawo-r2: STOPPED, projected total 453016 s >= 86400 s (progress 1/116 chunks (out of order))
+2026-11-03T02:06:23Z stopped r53-qawo-r2: elapsed 1802 s, estimate 32544-54240 s, no chunk back yet (0/138); the estimate's high end, projected total 54240 s, finish in 52438 s
+2026-11-03T02:11:24Z stopped r53-qawo-r2: elapsed 2103 s, estimate 32544-54240 s, progress 1/138 chunks (out of order), projected total 290165 s, finish in 288062 s
+2026-11-03T02:11:24Z stopped r53-qawo-r2: STOPPED, projected total 290165 s >= 86400 s (progress 1/138 chunks (out of order))
+2026-11-03T02:41:26Z stopped r26-qawo-r1: elapsed 1802 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 84410 s
+2026-11-03T02:46:26Z stopped r26-qawo-r1: elapsed 2103 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 84110 s
+2026-11-03T02:51:27Z stopped r26-qawo-r1: elapsed 2403 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 83809 s
+2026-11-03T02:56:27Z stopped r26-qawo-r1: elapsed 2704 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 83509 s
+2026-11-03T03:01:28Z stopped r26-qawo-r1: elapsed 3004 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 83209 s
+2026-11-03T03:06:28Z stopped r26-qawo-r1: elapsed 3304 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 82908 s
+2026-11-03T03:11:28Z stopped r26-qawo-r1: elapsed 3605 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 82608 s
+2026-11-03T03:16:29Z stopped r26-qawo-r1: elapsed 3905 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 82307 s
+2026-11-03T03:21:29Z stopped r26-qawo-r1: elapsed 4206 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 82007 s
+2026-11-03T03:26:30Z stopped r26-qawo-r1: elapsed 4506 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 81706 s
+2026-11-03T03:31:30Z stopped r26-qawo-r1: elapsed 4806 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 81406 s
+2026-11-03T03:36:30Z stopped r26-qawo-r1: elapsed 5107 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 81106 s
+2026-11-03T03:41:31Z stopped r26-qawo-r1: elapsed 5407 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 80805 s
+2026-11-03T03:46:31Z stopped r26-qawo-r1: elapsed 5708 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 80505 s
+2026-11-03T03:51:32Z stopped r26-qawo-r1: elapsed 6008 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 80205 s
+2026-11-03T03:56:32Z stopped r26-qawo-r1: elapsed 6308 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 79904 s
+2026-11-03T04:01:32Z stopped r26-qawo-r1: elapsed 6609 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 79604 s
+2026-11-03T04:06:33Z stopped r26-qawo-r1: elapsed 6909 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 79303 s
+2026-11-03T04:11:33Z stopped r26-qawo-r1: elapsed 7210 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 79003 s
+2026-11-03T04:16:34Z stopped r26-qawo-r1: elapsed 7510 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 78703 s
+2026-11-03T04:21:34Z stopped r26-qawo-r1: elapsed 7810 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 78402 s
+2026-11-03T04:26:34Z stopped r26-qawo-r1: elapsed 8111 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 78102 s
+2026-11-03T04:31:35Z stopped r26-qawo-r1: elapsed 8411 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 77801 s
+2026-11-03T04:36:35Z stopped r26-qawo-r1: elapsed 8712 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 77501 s
+2026-11-03T04:41:36Z stopped r26-qawo-r1: elapsed 9012 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 77201 s
+2026-11-03T04:46:36Z stopped r26-qawo-r1: elapsed 9312 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 76900 s
+2026-11-03T04:51:36Z stopped r26-qawo-r1: elapsed 9613 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 76600 s
+2026-11-03T04:56:37Z stopped r26-qawo-r1: elapsed 9913 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 76299 s
+2026-11-03T05:01:37Z stopped r26-qawo-r1: elapsed 10214 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 75999 s
+2026-11-03T05:06:37Z stopped r26-qawo-r1: elapsed 10514 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 75699 s
+2026-11-03T05:11:38Z stopped r26-qawo-r1: elapsed 10814 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 75398 s
+2026-11-03T05:16:38Z stopped r26-qawo-r1: elapsed 11115 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 75098 s
+2026-11-03T05:21:39Z stopped r26-qawo-r1: elapsed 11415 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 74797 s
+2026-11-03T05:26:39Z stopped r26-qawo-r1: elapsed 11716 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 74497 s
+2026-11-03T05:31:39Z stopped r26-qawo-r1: elapsed 12016 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 74197 s
+2026-11-03T05:36:40Z stopped r26-qawo-r1: elapsed 12316 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 73896 s
+2026-11-03T05:41:40Z stopped r26-qawo-r1: elapsed 12617 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 73596 s
+2026-11-03T05:46:41Z stopped r26-qawo-r1: elapsed 12917 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 73295 s
+2026-11-03T05:51:41Z stopped r26-qawo-r1: elapsed 13218 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 72995 s
+2026-11-03T05:56:42Z stopped r26-qawo-r1: elapsed 13518 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 72695 s
+2026-11-03T06:01:42Z stopped r26-qawo-r1: elapsed 13818 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 72394 s
+2026-11-03T06:06:42Z stopped r26-qawo-r1: elapsed 14119 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 72094 s
+2026-11-03T06:11:43Z stopped r26-qawo-r1: elapsed 14419 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 71793 s
+2026-11-03T06:16:43Z stopped r26-qawo-r1: elapsed 14720 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 71493 s
+2026-11-03T06:21:43Z stopped r26-qawo-r1: elapsed 15020 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 71193 s
+2026-11-03T06:26:44Z stopped r26-qawo-r1: elapsed 15320 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 70892 s
+2026-11-03T06:31:44Z stopped r26-qawo-r1: elapsed 15621 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 70592 s
+2026-11-03T06:36:45Z stopped r26-qawo-r1: elapsed 15921 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 70292 s
+2026-11-03T06:41:45Z stopped r26-qawo-r1: elapsed 16221 s, estimate 51728-86213 s, no chunk back yet (0/139); the estimate's high end, projected total 86213 s, finish in 69991 s
+2026-11-03T06:46:45Z stopped r26-qawo-r1: elapsed 16522 s, estimate 51728-86213 s, progress 1/139 chunks (out of order), projected total 2296531 s, finish in 2280009 s
+2026-11-03T06:46:45Z stopped r26-qawo-r1: STOPPED, projected total 2296531 s >= 86400 s (progress 1/139 chunks (out of order))

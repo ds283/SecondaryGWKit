@@ -1,0 +1,89 @@
+=== extract_Gk_data: 2026-11-01 11:27:35 +0000: (cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e) PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python extract_Gk_data.py --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite --ray-address local --models LambdaCDM --output /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/extract/extract_Gk_data/
+exit 0; wall 25 s; files written 432
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a  2026-11-01T11:12:26 36864 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite
+  c9e3b2ab01e75b4e58500ff8c97296a2b519c1056af1421d49d799ec23ad98c8  2026-11-01T11:22:43 25042944 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite
+  b869b71f874738c8ec85acabdf91d42df113e67ef83af4bf172e6d31984a5385  2026-11-01T11:22:43 25264128 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite
+  c8a98a8dad08900b0f191f21df6f4aeebda0fe9db0b798a6715eb4441350e964  2026-11-01T11:12:26 1077248 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite
+  45c6f6e86eba5fcba1009df216f2d71615d6349e871893318eb362f578e47fc2  2026-11-01T11:22:43 24489984 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 1136/sec)
+24:      Queue summary: 3 lookup (avg 1156/sec)
+31:      Queue summary: 116 lookup (avg 10.37/sec)
+=== extract_GkWKB_data: 2026-11-01 11:28:01 +0000: (cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e) PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python extract_GkWKB_data.py --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite --ray-address local --models LambdaCDM --output /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/extract/extract_GkWKB_data/
+exit 0; wall 42 s; files written 2436
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a  2026-11-01T11:12:26 36864 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite
+  c9e3b2ab01e75b4e58500ff8c97296a2b519c1056af1421d49d799ec23ad98c8  2026-11-01T11:22:43 25042944 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite
+  b869b71f874738c8ec85acabdf91d42df113e67ef83af4bf172e6d31984a5385  2026-11-01T11:22:43 25264128 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite
+  c8a98a8dad08900b0f191f21df6f4aeebda0fe9db0b798a6715eb4441350e964  2026-11-01T11:12:26 1077248 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite
+  45c6f6e86eba5fcba1009df216f2d71615d6349e871893318eb362f578e47fc2  2026-11-01T11:22:43 24489984 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+16:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 997.5/sec)
+26:      Queue summary: 3 lookup (avg 1104/sec)
+31:      Queue summary: 348 lookup (avg 11.75/sec)
+=== extract_GkSource_data: 2026-11-01 11:28:44 +0000: (cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e) PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python extract_GkSource_data.py --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite --ray-address local --models LambdaCDM --output /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/extract/extract_GkSource_data/
+exit 0; wall 19 s; files written 186
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a  2026-11-01T11:12:26 36864 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite
+  c9e3b2ab01e75b4e58500ff8c97296a2b519c1056af1421d49d799ec23ad98c8  2026-11-01T11:22:43 25042944 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite
+  b869b71f874738c8ec85acabdf91d42df113e67ef83af4bf172e6d31984a5385  2026-11-01T11:22:43 25264128 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite
+  c8a98a8dad08900b0f191f21df6f4aeebda0fe9db0b798a6715eb4441350e964  2026-11-01T11:12:26 1077248 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite
+  45c6f6e86eba5fcba1009df216f2d71615d6349e871893318eb362f578e47fc2  2026-11-01T11:22:43 24489984 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+7:** reading run "default", the only run in this datastore (no --run-label given)
+16:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+21:      Queue summary: 3 lookup (avg 1068/sec)
+26:      Queue summary: 3 lookup (avg 1178/sec)
+33:      Queue summary: 10 lookup (avg 91.6/min)
+=== extract_TkWKB_data: 2026-11-01 11:29:04 +0000: (cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e) PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python extract_TkWKB_data.py --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite --ray-address local --models LambdaCDM --output /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/extract/extract_TkWKB_data/
+exit 0; wall 15 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a  2026-11-01T11:12:26 36864 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite
+  c9e3b2ab01e75b4e58500ff8c97296a2b519c1056af1421d49d799ec23ad98c8  2026-11-01T11:22:43 25042944 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite
+  b869b71f874738c8ec85acabdf91d42df113e67ef83af4bf172e6d31984a5385  2026-11-01T11:22:43 25264128 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite
+  c8a98a8dad08900b0f191f21df6f4aeebda0fe9db0b798a6715eb4441350e964  2026-11-01T11:12:26 1077248 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite
+  45c6f6e86eba5fcba1009df216f2d71615d6349e871893318eb362f578e47fc2  2026-11-01T11:22:43 24489984 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 958.1/sec)
+26:      Queue summary: 3 lookup (avg 78.07/min)
+=== extract_tensor_source_data: 2026-11-01 11:29:20 +0000: (cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e) PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python extract_tensor_source_data.py --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite --ray-address local --models LambdaCDM --output /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/extract/extract_tensor_source_data/
+exit 0; wall 14 s; files written 27
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a  2026-11-01T11:12:26 36864 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite
+  c9e3b2ab01e75b4e58500ff8c97296a2b519c1056af1421d49d799ec23ad98c8  2026-11-01T11:22:43 25042944 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite
+  b869b71f874738c8ec85acabdf91d42df113e67ef83af4bf172e6d31984a5385  2026-11-01T11:22:43 25264128 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite
+  c8a98a8dad08900b0f191f21df6f4aeebda0fe9db0b798a6715eb4441350e964  2026-11-01T11:12:26 1077248 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite
+  45c6f6e86eba5fcba1009df216f2d71615d6349e871893318eb362f578e47fc2  2026-11-01T11:22:43 24489984 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+14:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+19:      Queue summary: 3 lookup (avg 971.2/sec)
+32:      Queue summary: 6 lookup (avg 147.5/min)
+=== extract_QuadSourceIntegral_data: 2026-11-01 11:29:35 +0000: (cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e) PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python extract_QuadSourceIntegral_data.py --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite --ray-address local --models LambdaCDM --output /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/extract/extract_QuadSourceIntegral_data/
+exit 0; wall 16 s; files written 73
+store files: identical before and after (SHA-256, mtime, size); no journal
+after:
+  6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a  2026-11-01T11:12:26 36864 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite
+  c9e3b2ab01e75b4e58500ff8c97296a2b519c1056af1421d49d799ec23ad98c8  2026-11-01T11:22:43 25042944 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite
+  b869b71f874738c8ec85acabdf91d42df113e67ef83af4bf172e6d31984a5385  2026-11-01T11:22:43 25264128 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite
+  c8a98a8dad08900b0f191f21df6f4aeebda0fe9db0b798a6715eb4441350e964  2026-11-01T11:12:26 1077248 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite
+  45c6f6e86eba5fcba1009df216f2d71615d6349e871893318eb362f578e47fc2  2026-11-01T11:22:43 24489984 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite
+Ray processes from this checkout's venv after: 0
+5:** reading run "default", the only run in this datastore (no --run-label given)
+7:>> RUNNING PIPELINE FOR MODEL LambdaCDM
+27:      Queue summary: 3 lookup (avg 909.7/sec)
+32:      Queue summary: 3 lookup (avg 987.8/sec)
+37:      Queue summary: 24 lookup (avg 357.9/min)
+exit 0

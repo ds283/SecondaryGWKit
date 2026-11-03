@@ -1,0 +1,391 @@
+{
+ "source": "../census/out/v8_calls.json",
+ "source_sha256": "1e9a62b0f8d95deade4f265d1fa1a8b5bbd63f587f7c9761d78882db5367c42e",
+ "rule": "Select the V8 reference sample (the user's ruling of 2026-11-01, relayed by the laptop).\n\nRule: from census/out/v8_calls.json, at each rtol, take the lost calls outside the 720\nstationary-point rows whose class is \"(b), refined to the depth cap\" or \"(b), below the depth cap\"\n(node_limited excluded). Sort by abserr_g / request_g ascending, ties broken by (unit, call index).\nWith n calls, take positions round(q * (n - 1)) for q = 0, 0.2, 0.4, 0.6, 0.8, 1.\nPython's round (banker's rounding on .5) is used as written here; positions are printed.\n",
+ "samples": [
+  {
+   "rtol": "1e-7",
+   "q": 0.0,
+   "position": 0,
+   "n": 801,
+   "unit": "g-1e-7-2-1380",
+   "row": "2-1380",
+   "call_index": 4,
+   "group": "G+q-r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 5.7089125439286096e-09,
+   "g": {
+    "value": "-0x1.e9ba0850f8170p-110",
+    "abserr": "0x1.3dfe0749bb4b9p-137",
+    "converged": false,
+    "num_regions": 76,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "-0x1.e9ba0858015a8p-110",
+    "abserr": "0x1.1863dae6f89dep-136",
+    "converged": true,
+    "num_regions": 10,
+    "max_depth": 4,
+    "has_cc_leaf": null
+   },
+   "request_g": 1.2488602448621787e-33,
+   "request_06h": 1.2488602448621787e-33,
+   "notify_label": "k=3e+08/Mpc, q=3.09e+06/Mpc, r=3e+08/Mpc @ z_response=1.7445e+05, z in (5.2861e+10, 1.7445e+05), regime Gqr, group G+q-r"
+  },
+  {
+   "rtol": "1e-7",
+   "q": 0.2,
+   "position": 160,
+   "n": 801,
+   "unit": "g-1e-7-0-12617",
+   "row": "0-12617",
+   "call_index": 5,
+   "group": "G-q+r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.00024036326840937922,
+   "g": {
+    "value": "-0x1.47edd6b41f28ap-96",
+    "abserr": "0x1.8f6db238179d3p-122",
+    "converged": false,
+    "num_regions": 122,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "-0x1.47edd6593adb9p-96",
+    "abserr": "0x1.7fb5fccd634d6p-122",
+    "converged": true,
+    "num_regions": 10,
+    "max_depth": 5,
+    "has_cc_leaf": null
+   },
+   "request_g": 1.2208758777594076e-33,
+   "request_06h": 1.2208758777594076e-33,
+   "notify_label": "k=3.05e+07/Mpc, q=3.09e+06/Mpc, r=3.05e+07/Mpc @ z_response=3.032e+05, z in (5.2861e+10, 3.032e+05), regime Gqr, group G-q+r"
+  },
+  {
+   "rtol": "1e-7",
+   "q": 0.4,
+   "position": 320,
+   "n": 801,
+   "unit": "g-1e-7-3-34212",
+   "row": "3-34212",
+   "call_index": 4,
+   "group": "G+q-r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.01063191686320278,
+   "g": {
+    "value": "-0x1.0a6fe76a57daap-92",
+    "abserr": "0x1.0d7130306c403p-116",
+    "converged": false,
+    "num_regions": 400,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "-0x1.0a6fe76cc0a6fp-92",
+    "abserr": "0x1.ae82fca4a1941p-118",
+    "converged": true,
+    "num_regions": 2,
+    "max_depth": 1,
+    "has_cc_leaf": null
+   },
+   "request_g": 1.191610955391148e-33,
+   "request_06h": 1.191610955391148e-33,
+   "notify_label": "k=9.7e+06/Mpc, q=3.09e+06/Mpc, r=9.7e+06/Mpc @ z_response=5.2699e+05, z in (5.2861e+10, 5.2699e+05), regime Gqr, group G+q-r"
+  },
+  {
+   "rtol": "1e-7",
+   "q": 0.6,
+   "position": 480,
+   "n": 801,
+   "unit": "g-1e-7-1-34521",
+   "row": "1-34521",
+   "call_index": 4,
+   "group": "G+q-r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.13527441064902826,
+   "g": {
+    "value": "-0x1.44db86e35e156p-83",
+    "abserr": "0x1.26e8c8089da5ap-109",
+    "converged": false,
+    "num_regions": 120,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "-0x1.44db86b69f998p-83",
+    "abserr": "0x1.301276a6bb4d2p-111",
+    "converged": true,
+    "num_regions": 7,
+    "max_depth": 4,
+    "has_cc_leaf": null
+   },
+   "request_g": 1.3120891023422394e-32,
+   "request_06h": 1.3120890915704946e-32,
+   "notify_label": "k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=229.56, z in (1.709e+09, 229.56), regime Gqr, group G+q-r"
+  },
+  {
+   "rtol": "1e-7",
+   "q": 0.8,
+   "position": 640,
+   "n": 801,
+   "unit": "g-1e-7-3-34296",
+   "row": "3-34296",
+   "call_index": 1,
+   "group": "G+q+r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.4693125765494292,
+   "g": {
+    "value": "0x1.a31e66204b4c8p-86",
+    "abserr": "0x1.4a0104a9ea1e0p-110",
+    "converged": false,
+    "num_regions": 79,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "0x1.a31e6675ccff2p-86",
+    "abserr": "0x1.4f66719dcf92ap-110",
+    "converged": true,
+    "num_regions": 5,
+    "max_depth": 3,
+    "has_cc_leaf": null
+   },
+   "request_g": 2.1160089166319172e-33,
+   "request_06h": 2.1160089423631333e-33,
+   "notify_label": "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=10999, z in (1.6721e+11, 10999), regime Gqr, group G+q+r"
+  },
+  {
+   "rtol": "1e-7",
+   "q": 1.0,
+   "position": 800,
+   "n": 801,
+   "unit": "g-1e-7-3-34090",
+   "row": "3-34090",
+   "call_index": 4,
+   "group": "G-q-r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.98668018960497,
+   "g": {
+    "value": "0x1.e11c90375194cp-79",
+    "abserr": "0x1.8e35bfbd0eda4p-102",
+    "converged": false,
+    "num_regions": 207,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "0x1.e11c8fd887df8p-79",
+    "abserr": "0x1.17e0085312206p-102",
+    "converged": true,
+    "num_regions": 14,
+    "max_depth": 6,
+    "has_cc_leaf": null
+   },
+   "request_g": 3.109110685784775e-31,
+   "request_06h": 3.1091106492737957e-31,
+   "notify_label": "k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=1.2075e+06, z in (5.406e+09, 1.2075e+06), regime Gqr, group G-q-r"
+  },
+  {
+   "rtol": "1e-8",
+   "q": 0.0,
+   "position": 0,
+   "n": 827,
+   "unit": "g-1e-8-2-1380",
+   "row": "2-1380",
+   "call_index": 4,
+   "group": "G+q-r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 5.7089125439286096e-09,
+   "g": {
+    "value": "-0x1.e9ba0850f8170p-110",
+    "abserr": "0x1.3dfe0749bb4b9p-137",
+    "converged": false,
+    "num_regions": 76,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "-0x1.e9ba0858015a8p-110",
+    "abserr": "0x1.1863dae6f89dep-136",
+    "converged": true,
+    "num_regions": 10,
+    "max_depth": 4,
+    "has_cc_leaf": null
+   },
+   "request_g": 1.2488602448621787e-33,
+   "request_06h": 1.2488602448621787e-33,
+   "notify_label": "k=3e+08/Mpc, q=3.09e+06/Mpc, r=3e+08/Mpc @ z_response=1.7445e+05, z in (5.2861e+10, 1.7445e+05), regime Gqr, group G+q-r"
+  },
+  {
+   "rtol": "1e-8",
+   "q": 0.2,
+   "position": 165,
+   "n": 827,
+   "unit": "g-1e-8-0-12606",
+   "row": "0-12606",
+   "call_index": 5,
+   "group": "G-q+r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.0002773298700115314,
+   "g": {
+    "value": "0x1.a59b4411ebbc8p-96",
+    "abserr": "0x1.88367c2b9c477p-122",
+    "converged": false,
+    "num_regions": 116,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "0x1.a59b44852f66ep-96",
+    "abserr": "0x1.6eed469f642bep-121",
+    "converged": true,
+    "num_regions": 11,
+    "max_depth": 6,
+    "has_cc_leaf": null
+   },
+   "request_g": 1.03902432268493e-33,
+   "request_06h": 1.03902432268493e-33,
+   "notify_label": "k=3.05e+07/Mpc, q=9.85e+05/Mpc, r=3.05e+07/Mpc @ z_response=9.1593e+05, z in (1.6711e+10, 9.1593e+05), regime Gqr, group G-q+r"
+  },
+  {
+   "rtol": "1e-8",
+   "q": 0.4,
+   "position": 330,
+   "n": 827,
+   "unit": "g-1e-8-3-1192",
+   "row": "3-1192",
+   "call_index": 5,
+   "group": "G-q+r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.013463333347374743,
+   "g": {
+    "value": "0x1.565e4e359a9e2p-91",
+    "abserr": "0x1.968fd44f1fb26p-117",
+    "converged": false,
+    "num_regions": 206,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "0x1.565e4de8a662fp-91",
+    "abserr": "0x1.218ed2551a59dp-119",
+    "converged": true,
+    "num_regions": 1,
+    "max_depth": 0,
+    "has_cc_leaf": null
+   },
+   "request_g": 7.099447454918504e-34,
+   "request_06h": 7.099447454918504e-34,
+   "notify_label": "k=9.7e+06/Mpc, q=3.14e+05/Mpc, r=9.7e+06/Mpc @ z_response=1.4527e+07, z in (5.406e+09, 1.4527e+07), regime Gqr, group G-q+r"
+  },
+  {
+   "rtol": "1e-8",
+   "q": 0.6,
+   "position": 496,
+   "n": 827,
+   "unit": "g-1e-8-1-35480",
+   "row": "1-35480",
+   "call_index": 2,
+   "group": "G+q-r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.24373484460153894,
+   "g": {
+    "value": "-0x1.f912b4f680f74p-86",
+    "abserr": "0x1.e1172e84c9ff5p-112",
+    "converged": false,
+    "num_regions": 172,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "-0x1.f912b58029823p-86",
+    "abserr": "0x1.b7af2106bed10p-110",
+    "converged": true,
+    "num_regions": 4,
+    "max_depth": 2,
+    "has_cc_leaf": null
+   },
+   "request_g": 1.4849428135011517e-33,
+   "request_06h": 1.4849428135011517e-33,
+   "notify_label": "k=9.85e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=8342.9, z in (1.6721e+11, 8342.9), regime Gqr, group G+q-r"
+  },
+  {
+   "rtol": "1e-8",
+   "q": 0.8,
+   "position": 661,
+   "n": 827,
+   "unit": "g-1e-8-3-38023",
+   "row": "3-38023",
+   "call_index": 4,
+   "group": "G-q-r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.8071294925468142,
+   "g": {
+    "value": "-0x1.51c04d54877a4p-79",
+    "abserr": "0x1.6de3b7d10f287p-106",
+    "converged": false,
+    "num_regions": 196,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "-0x1.51c04d405221ep-79",
+    "abserr": "0x1.b0992c93a7f45p-106",
+    "converged": true,
+    "num_regions": 20,
+    "max_depth": 7,
+    "has_cc_leaf": null
+   },
+   "request_g": 2.182665843234626e-32,
+   "request_06h": 2.1826658354506412e-32,
+   "notify_label": "k=1e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=132.08, z in (1.6711e+10, 132.08), regime Gqr, group G-q-r"
+  },
+  {
+   "rtol": "1e-8",
+   "q": 1.0,
+   "position": 826,
+   "n": 827,
+   "unit": "g-1e-8-0-12655",
+   "row": "0-12655",
+   "call_index": 3,
+   "group": "G-q+r",
+   "kind": "group",
+   "class": "(b), refined to the depth cap",
+   "ratio_abserr_over_request_g": 0.9962814681147718,
+   "g": {
+    "value": "-0x1.11ab22e904a9bp-85",
+    "abserr": "0x1.a3f78ff684b90p-110",
+    "converged": false,
+    "num_regions": 142,
+    "max_depth": 20,
+    "has_cc_leaf": true
+   },
+   "06h": {
+    "value": "-0x1.11ab236f7f7e7p-85",
+    "abserr": "0x1.a1ff554c9db1dp-110",
+    "converged": true,
+    "num_regions": 2,
+    "max_depth": 1,
+    "has_cc_leaf": null
+   },
+   "request_g": 1.2685093343741828e-33,
+   "request_06h": 1.2685093343741828e-33,
+   "notify_label": "k=3.14e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=1.2075e+06, z in (1.6721e+11, 1.2075e+06), regime Gqr, group G-q+r"
+  }
+ ]
+}

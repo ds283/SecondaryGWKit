@@ -1,0 +1,110 @@
+[
+ {
+  "wid": "w00",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1127
+ },
+ {
+  "wid": "w01",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1103
+ },
+ {
+  "wid": "w02",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1079
+ },
+ {
+  "wid": "w03",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1419
+ },
+ {
+  "wid": "w04",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1395
+ },
+ {
+  "wid": "w05",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1347
+ },
+ {
+  "wid": "w06",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1179
+ },
+ {
+  "wid": "w07",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1557
+ },
+ {
+  "wid": "w08",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1509
+ },
+ {
+  "wid": "w09",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1461
+ },
+ {
+  "wid": "w10",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1413
+ },
+ {
+  "wid": "w11",
+  "route": "B",
+  "criterion_first_difference": null,
+  "integrand_first_difference": null,
+  "descriptive_first_difference": null,
+  "n_factors": 3,
+  "n_edges": 1293
+ }
+]

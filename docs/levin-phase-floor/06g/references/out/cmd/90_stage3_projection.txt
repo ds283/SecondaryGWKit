@@ -1,0 +1,60 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/stage3_projection.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T06:51:27Z
+# ----
+== validation on the finished stage-3 readings (k from the actual wall time)
+r24 qawo-r1: 152 chunks, actual wall 6098 s, fitted k 3.429e-07 s/rad (0.3429 us/rad); first chunk at 554 s in the model
+   at 1802 s: monitor 12 done, model 12 done
+   at 2103 s: monitor 12 done, model 12 done
+   at 2403 s: monitor 15 done, model 15 done
+   at 2704 s: monitor 18 done, model 18 done
+   at 3004 s: monitor 18 done, model 18 done
+   at 3304 s: monitor 21 done, model 21 done
+   at 3605 s: monitor 24 done, model 24 done
+   at 3905 s: monitor 24 done, model 24 done
+   at 4206 s: monitor 27 done, model 27 done
+   at 4506 s: monitor 30 done, model 30 done
+   at 4807 s: monitor 31 done, model 30 done
+   at 5107 s: monitor 36 done, model 36 done
+   at 5407 s: monitor 36 done, model 36 done
+   at 5708 s: monitor 42 done, model 42 done
+   at 6008 s: monitor 51 done, model 49 done
+r53 qawo-r1: 138 chunks, actual wall 7772 s, fitted k 3.439e-07 s/rad (0.3439 us/rad); first chunk at 476 s in the model
+   at 1802 s: monitor 7 done, model 7 done
+   at 2103 s: monitor 9 done, model 9 done
+   at 2403 s: monitor 10 done, model 10 done
+   at 2704 s: monitor 11 done, model 11 done
+   at 3004 s: monitor 12 done, model 12 done
+   at 3304 s: monitor 12 done, model 12 done
+   at 3605 s: monitor 13 done, model 13 done
+   at 3905 s: monitor 14 done, model 14 done
+   at 4205 s: monitor 16 done, model 16 done
+   at 4506 s: monitor 17 done, model 18 done
+   at 4806 s: monitor 18 done, model 18 done
+   at 5107 s: monitor 18 done, model 19 done
+   at 5407 s: monitor 20 done, model 20 done
+   at 5707 s: monitor 23 done, model 23 done
+   at 6008 s: monitor 24 done, model 24 done
+   at 6308 s: monitor 24 done, model 25 done
+   at 6609 s: monitor 30 done, model 30 done
+   at 6909 s: monitor 30 done, model 30 done
+   at 7209 s: monitor 36 done, model 36 done
+   at 7510 s: monitor 42 done, model 42 done
+
+== the three stopped readings
+r47 qawo-r2: total 116 chunks, first chunk back at t1 = 3641 s (done 1); stop's projection 422336 s
+   (A) uniform, six in flight: 3641 x 116 / 6 = 70389 s (19.6 h): under a day
+   (B) by phase span: chunks 0-5 hold 41.1% of the span; cheapest of them is chunk 5 (2.57e+09 rad), k = 3641/2.57e+09 = 1.417e-06 s/rad (1.4167 us/rad); makespan 10826 s (3.0 h): under a day
+   estimate 11004-18340 s
+r53 qawo-r2: total 138 chunks, first chunk back at t1 = 1954 s (done 1); stop's projection 269659 s
+   (A) uniform, six in flight: 1954 x 138 / 6 = 44943 s (12.5 h): under a day
+   (B) by phase span: chunks 0-5 hold 9.3% of the span; cheapest of them is chunk 0 (1.385e+09 rad), k = 1954/1.385e+09 = 1.411e-06 s/rad (1.4110 us/rad); makespan 31889 s (8.9 h): under a day
+   estimate 32544-54240 s
+r26 qawo-r1: total 139 chunks, first chunk back at t1 = 16331 s (done 1); stop's projection 2269941 s
+   (A) uniform, six in flight: 16331 x 139 / 6 = 378324 s (105.1 h): a day or more
+   (B) by phase span: chunks 0-5 hold 34.8% of the span; cheapest of them is chunk 5 (4.773e+10 rad), k = 16331/4.773e+10 = 3.421e-07 s/rad (0.3421 us/rad); makespan 49162 s (13.7 h): under a day
+   estimate 51728-86213 s
+# ----
+# end 2026-11-03T06:51:27Z
+# exit 0

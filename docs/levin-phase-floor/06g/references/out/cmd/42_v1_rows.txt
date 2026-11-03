@@ -1,0 +1,26 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -I -B v1/scripts/v1_rows.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T20:01:01Z
+# ----
+# v1_rows.py sha256 edf893fa97321c10f1e7a2cf18d53434b92bcaa64544d1e9ca26a9c4d72d100a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/out/qsi_rows.csv sha256 325228f931dbdb69b024c616b2975b68da544a0be4cec36a1d8a0bdf69694e3b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/out/v1_violations_detail.txt sha256 aaa4a95f97f1bfbf3bfb6ccff1dc13d232081c0265b35069e5c97f8dd809eb15
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.sqlite sha256 88cc355f9a018e17816f13b8fb587017f0cde54e7fc3a07b8c4a6f2ed6c4944a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite sha256 6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a
+w00 k=100000 q=100000 r=100000 z=3971.4125591760326: R23 3-114 v23 0x1.4d0cf4361bcb7p-59 e23 0x1.f55c967465becp-83 | R24 3-166 v24 0x1.4a6610ee6fad8p-59 e24 0x1.139be8c909148p-82 | in detail.txt True/True
+w01 k=100000 q=100000 r=100000 z=5236.5530126517315: R23 3-260 v23 0x1.482ce759249c8p-57 e23 0x1.dc5de323ac890p-82 | R24 3-154 v24 0x1.4ba3565b9af3ap-57 e24 0x1.eeb51d1f9229ep-86 | in detail.txt True/True
+w02 k=100000 q=100000 r=100000 z=6904.718924492998: R23 3-132 v23 0x1.d6831390e5863p-58 e23 0x1.24b9aec9529acp-81 | R24 3-195 v24 0x1.d6ab246aa73cfp-58 e24 0x1.c4953d030202bp-82 | in detail.txt True/True
+w03 k=316228 q=316228 r=316228 z=434.65132503921666: R23 0-20340 v23 0x1.b3ce3f51b975ap-66 e23 0x1.52c962a9ee175p-92 | R24 0-20309 v24 0x1.b6d1c410fcf8fp-66 e24 0x1.232633a21a36ep-92 | in detail.txt True/True
+w04 k=316228 q=316228 r=316228 z=573.1146466584687: R23 0-20313 v23 -0x1.1091692e08decp-65 e23 0x1.40d3a40591b70p-91 | R24 0-20335 v24 -0x1.1276361261a5cp-65 e24 0x1.483f2391ef15fp-91 | in detail.txt True/True
+w05 k=316228 q=316228 r=316228 z=996.4201622779478: R23 0-20242 v23 0x1.d6e05e30a4c1ep-65 e23 0x1.7d2524d51034bp-90 | R24 0-20529 v24 0x1.da16f90a7e713p-65 e24 0x1.31f161c648463p-90 | in detail.txt True/True
+w06 k=316228 q=316228 r=316228 z=6904.718924492998: R23 0-10090 v23 -0x1.0fae68c0011dap-63 e23 0x1.53ec322b5f463p-87 | R24 0-10094 v24 -0x1.116b6cd029a04p-63 e24 0x1.09b4f6aa451e8p-87 | in detail.txt True/True
+w07 k=1e+06 q=1e+06 r=1e+06 z=329.64045755914753: R23 1-10202 v23 0x1.502f790a3a6e2p-73 e23 0x1.0c3aec5dbef62p-96 | R24 1-20173 v24 0x1.4af2cdfcba0ddp-73 e24 0x1.0b222bc7d699fp-98 | in detail.txt True/True
+w08 k=1e+06 q=1e+06 r=1e+06 z=573.1146466584687: R23 1-10147 v23 0x1.24d7f9228c98fp-70 e23 0x1.de81b387e67f8p-96 | R24 1-10184 v24 0x1.244f84477b190p-70 e24 0x1.38885b0ca8f1bp-96 | in detail.txt True/True
+w09 k=1e+06 q=1e+06 r=1e+06 z=996.4201622779478: R23 1-10231 v23 0x1.005d537719008p-69 e23 0x1.e70ab4200f6c6p-94 | R24 1-20168 v24 0x1.fff852f4ea1f3p-70 e24 0x1.79d659c94dd73p-93 | in detail.txt True/True
+w10 k=1e+06 q=1e+06 r=1e+06 z=1732.3813753196057: R23 1-10286 v23 0x1.bdbdaae023e47p-69 e23 0x1.ef8aca1232c8ap-94 | R24 1-20108 v24 0x1.bd1bb7a4fc4c4p-69 e24 0x1.e68708d27f1bep-94 | in detail.txt True/True
+w11 k=1e+06 q=1e+06 r=1e+06 z=6904.718924492998: R23 1-20098 v23 -0x1.aa1cfee9822a1p-67 e23 0x1.dae9ad40fefb0p-91 | R24 1-10148 v24 -0x1.a9161328411f6p-67 e24 0x1.37f613bc74e3ap-92 | in detail.txt True/True
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/out/v1_rows.json sha256 2df277bce398565b835040b62b0bf024e32745c85fecc4a1da7c595299d5b4d0; every v/e found in v1_violations_detail.txt: True
+# ----
+# end 2026-11-01T20:01:01Z
+# exit 0

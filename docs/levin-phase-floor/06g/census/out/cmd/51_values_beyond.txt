@@ -1,0 +1,92 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/values_beyond06g.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:38:41Z
+# ----
+== 1e-7: calls outside the 720 with |v_g - v_06h| > abserr_06h + abserr_g: 62 in 59 rows; by kind {'group': 62}; by group {'G-q-r': 22, 'G+r': 12, 'G-q+r': 10, 'G+q+r': 8, 'G+q-r': 6, 'G-r': 3, 'q+r': 1}
+   same region count under both: 0; g converged 57, 06h converged 62
+   0-1873 group 1 G+r: ratio 11.1; |dv| 7.199e-33; abserr 06h 3.549e-34 g 2.948e-34; regions 2 -> 15; depth 1 -> 6; conv True -> True
+   0-2108 group 1 G+r: ratio 10.3; |dv| 7.206e-33; abserr 06h 4.320e-34 g 2.703e-34; regions 2 -> 14; depth 1 -> 6; conv True -> True
+   0-12778 group 1 G+r: ratio 8.31; |dv| 7.107e-33; abserr 06h 5.477e-34 g 3.080e-34; regions 2 -> 16; depth 1 -> 7; conv True -> True
+   0-33730 group 1 G+r: ratio 7.23; |dv| 7.076e-33; abserr 06h 6.671e-34 g 3.111e-34; regions 2 -> 16; depth 1 -> 7; conv True -> True
+   0-33803 group 1 G+r: ratio 6.39; |dv| 7.179e-33; abserr 06h 4.847e-34 g 6.394e-34; regions 2 -> 12; depth 1 -> 5; conv True -> True
+   0-33806 group 1 G+r: ratio 6.25; |dv| 7.165e-33; abserr 06h 5.112e-34 g 6.345e-34; regions 2 -> 12; depth 1 -> 5; conv True -> True
+   0-33648 group 1 G+r: ratio 6.2; |dv| 7.142e-33; abserr 06h 4.576e-34 g 6.951e-34; regions 2 -> 14; depth 1 -> 5; conv True -> True
+   0-12959 group 1 G+r: ratio 6.08; |dv| 7.147e-33; abserr 06h 5.466e-34 g 6.283e-34; regions 2 -> 12; depth 1 -> 5; conv True -> True
+   3-34150 group 1 G+q+r: ratio 5.55; |dv| 9.031e-33; abserr 06h 5.893e-34 g 1.039e-33; regions 1 -> 33; depth 0 -> 10; conv True -> True
+   0-33715 group 1 G+r: ratio 5.26; |dv| 7.055e-33; abserr 06h 7.362e-34 g 6.051e-34; regions 2 -> 13; depth 1 -> 5; conv True -> True
+   0-33892 group 1 G+r: ratio 5.15; |dv| 7.042e-33; abserr 06h 7.659e-34 g 6.022e-34; regions 2 -> 13; depth 1 -> 5; conv True -> True
+   2-14343 group 2 G-r: ratio 4.96; |dv| 3.411e-32; abserr 06h 3.251e-33 g 3.632e-33; regions 8 -> 67; depth 5 -> 11; conv True -> True
+   1-35120 group 6 G-q-r: ratio 4.78; |dv| 1.206e-32; abserr 06h 1.104e-33 g 1.422e-33; regions 3 -> 62; depth 2 -> 12; conv True -> True
+   1-35318 group 6 G-q-r: ratio 2.99; |dv| 1.241e-32; abserr 06h 2.201e-33 g 1.950e-33; regions 3 -> 32; depth 2 -> 8; conv True -> True
+   0-1891 group 6 G-q-r: ratio 2.46; |dv| 3.333e-31; abserr 06h 1.616e-32 g 1.195e-31; regions 5 -> 149; depth 3 -> 20; conv True -> False
+   0-1793 group 4 G+q-r: ratio 2.32; |dv| 3.531e-31; abserr 06h 1.946e-32 g 1.330e-31; regions 5 -> 264; depth 4 -> 20; conv True -> False
+   1-11253 group 6 G-q-r: ratio 2.12; |dv| 9.719e-33; abserr 06h 2.077e-33 g 2.518e-33; regions 1 -> 87; depth 0 -> 14; conv True -> True
+   1-38841 group 5 G-q+r: ratio 1.9; |dv| 3.618e-32; abserr 06h 1.185e-32 g 7.220e-33; regions 5 -> 65; depth 4 -> 20; conv True -> False
+   3-926 group 2 G-r: ratio 1.89; |dv| 1.192e-33; abserr 06h 2.827e-34 g 3.463e-34; regions 1 -> 6; depth 0 -> 3; conv True -> True
+   1-35052 group 6 G-q-r: ratio 1.87; |dv| 1.209e-32; abserr 06h 2.269e-33 g 4.206e-33; regions 6 -> 59; depth 4 -> 15; conv True -> True
+   3-1173 group 2 G-r: ratio 1.68; |dv| 1.980e-33; abserr 06h 4.533e-34 g 7.244e-34; regions 8 -> 38; depth 5 -> 7; conv True -> True
+   1-2155 group 6 G-q-r: ratio 1.64; |dv| 1.124e-32; abserr 06h 3.460e-33 g 3.389e-33; regions 7 -> 81; depth 4 -> 15; conv True -> True
+   0-1784 group 4 G+q-r: ratio 1.62; |dv| 3.404e-31; abserr 06h 1.216e-32 g 1.981e-31; regions 7 -> 178; depth 4 -> 16; conv True -> True
+   3-34929 group 6 G-q-r: ratio 1.6; |dv| 1.108e-35; abserr 06h 1.760e-36 g 5.152e-36; regions 8 -> 104; depth 4 -> 15; conv True -> True
+   1-34620 group 3 G+q+r: ratio 1.59; |dv| 1.914e-32; abserr 06h 5.645e-33 g 6.377e-33; regions 14 -> 54; depth 7 -> 17; conv True -> True
+   1-2205 group 6 G-q-r: ratio 1.5; |dv| 1.198e-32; abserr 06h 3.203e-33 g 4.774e-33; regions 9 -> 71; depth 5 -> 18; conv True -> True
+   2-21505 group 4 G+q-r: ratio 1.46; |dv| 4.004e-34; abserr 06h 7.506e-35 g 2.001e-34; regions 1 -> 15; depth 0 -> 5; conv True -> True
+   0-12727 group 6 G-q-r: ratio 1.4; |dv| 2.926e-31; abserr 06h 3.693e-32 g 1.716e-31; regions 1 -> 102; depth 0 -> 15; conv True -> True
+   0-12727 group 4 G+q-r: ratio 1.37; |dv| 3.249e-31; abserr 06h 1.740e-32 g 2.203e-31; regions 2 -> 74; depth 1 -> 14; conv True -> True
+   1-37620 group 6 G-q-r: ratio 1.3; |dv| 1.145e-32; abserr 06h 3.038e-33 g 5.789e-33; regions 6 -> 136; depth 5 -> 16; conv True -> True
+   0-12965 group 6 G-q-r: ratio 1.29; |dv| 3.452e-31; abserr 06h 6.092e-32 g 2.077e-31; regions 7 -> 134; depth 4 -> 16; conv True -> True
+   1-34558 group 3 G+q+r: ratio 1.28; |dv| 1.171e-32; abserr 06h 4.452e-33 g 4.712e-33; regions 7 -> 78; depth 4 -> 15; conv True -> True
+   0-38992 group 6 G-q-r: ratio 1.18; |dv| 3.025e-31; abserr 06h 1.315e-31 g 1.252e-31; regions 5 -> 62; depth 4 -> 14; conv True -> True
+   1-35217 group 5 G-q+r: ratio 1.17; |dv| 3.203e-32; abserr 06h 7.854e-33 g 1.950e-32; regions 1 -> 45; depth 0 -> 11; conv True -> True
+   1-34520 group 3 G+q+r: ratio 1.16; |dv| 2.061e-32; abserr 06h 4.804e-33 g 1.299e-32; regions 7 -> 107; depth 4 -> 19; conv True -> True
+   1-11026 group 5 G-q+r: ratio 1.16; |dv| 3.452e-32; abserr 06h 7.104e-33 g 2.278e-32; regions 1 -> 49; depth 0 -> 11; conv True -> True
+   3-746 group 4 G+q-r: ratio 1.15; |dv| 1.544e-35; abserr 06h 4.150e-36 g 9.254e-36; regions 1 -> 11; depth 0 -> 5; conv True -> True
+   3-845 group 1 G+r: ratio 1.15; |dv| 1.621e-33; abserr 06h 4.317e-34 g 9.791e-34; regions 1 -> 10; depth 0 -> 5; conv True -> True
+   1-35497 group 5 G-q+r: ratio 1.14; |dv| 3.193e-32; abserr 06h 6.363e-33 g 2.165e-32; regions 8 -> 69; depth 4 -> 15; conv True -> True
+   1-35173 group 6 G-q-r: ratio 1.14; |dv| 9.734e-33; abserr 06h 4.726e-33 g 3.829e-33; regions 2 -> 154; depth 1 -> 16; conv True -> True
+== 1e-8: calls outside the 720 with |v_g - v_06h| > abserr_06h + abserr_g: 80 in 75 rows; by kind {'group': 80}; by group {'G-q-r': 29, 'G+q-r': 14, 'G+r': 12, 'G+q+r': 11, 'G-q+r': 11, 'G-r': 2, 'q+r': 1}
+   same region count under both: 0; g converged 72, 06h converged 80
+   0-1873 group 1 G+r: ratio 11.1; |dv| 7.199e-33; abserr 06h 3.549e-34 g 2.948e-34; regions 2 -> 15; depth 1 -> 6; conv True -> True
+   0-2108 group 1 G+r: ratio 10.3; |dv| 7.206e-33; abserr 06h 4.320e-34 g 2.703e-34; regions 2 -> 14; depth 1 -> 6; conv True -> True
+   0-1784 group 4 G+q-r: ratio 10.1; |dv| 3.559e-31; abserr 06h 1.216e-32 g 2.305e-32; regions 7 -> 191; depth 4 -> 16; conv True -> True
+   0-1793 group 4 G+q-r: ratio 9.23; |dv| 3.590e-31; abserr 06h 1.946e-32 g 1.942e-32; regions 5 -> 289; depth 4 -> 20; conv True -> False
+   0-12778 group 1 G+r: ratio 8.31; |dv| 7.107e-33; abserr 06h 5.477e-34 g 3.080e-34; regions 2 -> 16; depth 1 -> 7; conv True -> True
+   0-33730 group 1 G+r: ratio 7.23; |dv| 7.076e-33; abserr 06h 6.671e-34 g 3.111e-34; regions 2 -> 16; depth 1 -> 7; conv True -> True
+   0-1891 group 6 G-q-r: ratio 7.18; |dv| 3.333e-31; abserr 06h 1.616e-32 g 3.024e-32; regions 5 -> 150; depth 3 -> 20; conv True -> False
+   0-33803 group 1 G+r: ratio 6.39; |dv| 7.179e-33; abserr 06h 4.847e-34 g 6.394e-34; regions 2 -> 12; depth 1 -> 5; conv True -> True
+   0-33806 group 1 G+r: ratio 6.25; |dv| 7.165e-33; abserr 06h 5.112e-34 g 6.345e-34; regions 2 -> 12; depth 1 -> 5; conv True -> True
+   0-33648 group 1 G+r: ratio 6.2; |dv| 7.142e-33; abserr 06h 4.576e-34 g 6.951e-34; regions 2 -> 14; depth 1 -> 5; conv True -> True
+   0-12959 group 1 G+r: ratio 6.08; |dv| 7.147e-33; abserr 06h 5.466e-34 g 6.283e-34; regions 2 -> 12; depth 1 -> 5; conv True -> True
+   0-12727 group 4 G+q-r: ratio 6.07; |dv| 3.249e-31; abserr 06h 1.740e-32 g 3.610e-32; regions 2 -> 76; depth 1 -> 14; conv True -> True
+   3-34150 group 1 G+q+r: ratio 5.55; |dv| 9.031e-33; abserr 06h 5.893e-34 g 1.039e-33; regions 1 -> 33; depth 0 -> 10; conv True -> True
+   0-33715 group 1 G+r: ratio 5.26; |dv| 7.055e-33; abserr 06h 7.362e-34 g 6.051e-34; regions 2 -> 13; depth 1 -> 5; conv True -> True
+   0-33892 group 1 G+r: ratio 5.15; |dv| 7.042e-33; abserr 06h 7.659e-34 g 6.022e-34; regions 2 -> 13; depth 1 -> 5; conv True -> True
+   1-1748 group 6 G-q-r: ratio 5.05; |dv| 9.099e-33; abserr 06h 5.862e-34 g 1.215e-33; regions 7 -> 89; depth 5 -> 16; conv True -> True
+   1-35535 group 5 G-q+r: ratio 4.68; |dv| 1.957e-32; abserr 06h 1.561e-33 g 2.620e-33; regions 9 -> 91; depth 4 -> 18; conv True -> True
+   1-11065 group 6 G-q-r: ratio 4.34; |dv| 7.832e-33; abserr 06h 4.113e-34 g 1.392e-33; regions 1 -> 93; depth 0 -> 13; conv True -> True
+   1-35408 group 6 G-q-r: ratio 4.32; |dv| 9.347e-33; abserr 06h 1.020e-33 g 1.145e-33; regions 12 -> 111; depth 4 -> 20; conv True -> False
+   0-1891 group 4 G+q-r: ratio 4.09; |dv| 2.865e-31; abserr 06h 2.913e-32 g 4.083e-32; regions 13 -> 218; depth 5 -> 20; conv True -> False
+   0-12905 group 4 G-q-r: ratio 3.39; |dv| 1.019e-31; abserr 06h 1.344e-32 g 1.659e-32; regions 15 -> 138; depth 7 -> 15; conv True -> True
+   1-2019 group 4 G+q-r: ratio 3.35; |dv| 9.688e-33; abserr 06h 1.256e-33 g 1.633e-33; regions 4 -> 26; depth 3 -> 11; conv True -> True
+   0-1782 group 4 G+q-r: ratio 3.1; |dv| 2.039e-31; abserr 06h 3.379e-32 g 3.199e-32; regions 11 -> 33; depth 4 -> 13; conv True -> True
+   1-35407 group 6 G-q-r: ratio 3.02; |dv| 6.052e-33; abserr 06h 8.902e-34 g 1.115e-33; regions 10 -> 86; depth 4 -> 14; conv True -> True
+   0-38460 group 3 G+q+r: ratio 2.8; |dv| 5.634e-31; abserr 06h 7.972e-32 g 1.218e-31; regions 8 -> 46; depth 4 -> 9; conv True -> True
+   0-33995 group 6 G-q-r: ratio 2.65; |dv| 1.876e-31; abserr 06h 3.681e-32 g 3.392e-32; regions 8 -> 108; depth 6 -> 20; conv True -> False
+   0-12965 group 4 G+q-r: ratio 2.58; |dv| 2.315e-31; abserr 06h 4.098e-32 g 4.875e-32; regions 7 -> 26; depth 3 -> 10; conv True -> True
+   0-12710 group 4 G+q-r: ratio 2.52; |dv| 2.459e-31; abserr 06h 5.333e-32 g 4.438e-32; regions 1 -> 35; depth 0 -> 7; conv True -> True
+   1-35299 group 5 G-q+r: ratio 2.4; |dv| 1.904e-32; abserr 06h 2.569e-33 g 5.359e-33; regions 7 -> 67; depth 5 -> 17; conv True -> True
+   3-995 group 4 G-q-r: ratio 2.19; |dv| 1.965e-31; abserr 06h 4.344e-32 g 4.638e-32; regions 19 -> 58; depth 9 -> 12; conv True -> True
+   1-34503 group 6 G-q-r: ratio 2.14; |dv| 5.388e-33; abserr 06h 1.059e-33 g 1.461e-33; regions 6 -> 175; depth 4 -> 15; conv True -> True
+   1-1834 group 6 G-q-r: ratio 2.03; |dv| 5.948e-33; abserr 06h 1.472e-33 g 1.457e-33; regions 7 -> 98; depth 4 -> 14; conv True -> True
+   3-34796 group 1 G+q+r: ratio 1.97; |dv| 6.040e-33; abserr 06h 1.540e-33 g 1.529e-33; regions 27 -> 28; depth 7 -> 9; conv True -> True
+   3-1054 group 4 G-q-r: ratio 1.95; |dv| 3.794e-30; abserr 06h 9.554e-31 g 9.906e-31; regions 9 -> 18; depth 4 -> 5; conv True -> True
+   3-926 group 2 G-r: ratio 1.89; |dv| 1.192e-33; abserr 06h 2.827e-34 g 3.463e-34; regions 1 -> 6; depth 0 -> 3; conv True -> True
+   3-36018 group 4 G-q-r: ratio 1.87; |dv| 3.169e-32; abserr 06h 8.448e-33 g 8.480e-33; regions 17 -> 100; depth 7 -> 14; conv True -> True
+   2-21961 group 5 G-q+r: ratio 1.84; |dv| 7.231e-34; abserr 06h 5.017e-35 g 3.420e-34; regions 1 -> 47; depth 0 -> 12; conv True -> True
+   1-35446 group 4 G-q-r: ratio 1.78; |dv| 3.848e-33; abserr 06h 1.132e-33 g 1.030e-33; regions 5 -> 52; depth 3 -> 12; conv True -> True
+   3-1173 group 2 G-r: ratio 1.68; |dv| 1.980e-33; abserr 06h 4.533e-34 g 7.244e-34; regions 8 -> 38; depth 5 -> 7; conv True -> True
+   1-35227 group 4 G-q-r: ratio 1.65; |dv| 3.331e-33; abserr 06h 9.363e-34 g 1.088e-33; regions 21 -> 123; depth 7 -> 20; conv True -> False
+# ----
+# end 2026-11-01T17:39:11Z
+# exit 0

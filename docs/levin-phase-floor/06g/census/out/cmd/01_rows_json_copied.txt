@@ -1,0 +1,11 @@
+$ /bin/bash -c ls\ -l\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/rows.json\;\ cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/rows.json\ state/rows.json\ \&\&\ cmp\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/rows.json\ state/rows.json\ \&\&\ echo\ \'cmp:\ identical\'\;\ ls\ -l\ state/rows.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:10:33Z
+# ----
+-rw-r--r-- 1 ds283 staff 7796457 Oct 27 02:17 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06h/census/state/rows.json
+cmp: identical
+-rw-r--r-- 1 ds283 staff 7796457 Oct 27 02:17 state/rows.json
+# ----
+# end 2026-11-01T11:10:34Z
+# exit 0

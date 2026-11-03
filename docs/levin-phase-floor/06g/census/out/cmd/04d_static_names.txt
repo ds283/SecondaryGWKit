@@ -1,0 +1,19 @@
+$ python3 -B scripts/static_names.py scripts/worker.py scripts/gate_v.py scripts/gate_v_clause1.py scripts/checks_after_06g.py scripts/prov.py scripts/launch.py scripts/harness.py scripts/run_census.py scripts/scripts_equal.py scripts/check_predictions.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:19:16Z
+# ----
+scripts/worker.py no undefined globals
+scripts/gate_v.py no undefined globals
+scripts/gate_v_clause1.py no undefined globals
+scripts/checks_after_06g.py no undefined globals
+scripts/prov.py no undefined globals
+scripts/launch.py no undefined globals
+scripts/harness.py no undefined globals
+scripts/run_census.py no undefined globals
+scripts/scripts_equal.py no undefined globals
+scripts/check_predictions.py no undefined globals
+ALL CLEAN
+# ----
+# end 2026-11-01T11:19:16Z
+# exit 0

@@ -1,0 +1,123 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:06:54Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+cat var/levin-phase-floor-06g/rehearsal/state/lock.log; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > var/levin-phase-floor-06g/rehearsal/out/r23_launch_registry_list.txt 2>&1; echo "list exit $?"; head -2 var/levin-phase-floor-06g/rehearsal/out/r23_launch_registry_list.txt | cut -c1-200; tail -1 var/levin-phase-floor-06g/rehearsal/out/r23_launch_registry_list.txt; D=$(ls -d var/runs/levin-phase-floor-06g-r23-parent-*); echo "run dir: $D"; ls $D; echo "== status.json"; cat $D/status.json; echo; echo "== launch log head"; head -25 var/runs/levin-phase-floor-06g-r23.launch.log; echo "== Traceback count"; grep -c Traceback var/runs/levin-phase-floor-06g-r23.launch.log; echo "== kill -0"; kill -0 44460 && echo "44460 alive"; kill -0 44456 && echo "44456 alive"; echo "== cwd of driver"; lsof -a -d cwd -p 44460; echo "== manifest"; ./venv/bin/python -I -c "import json,sys; m=json.load(open(sys.argv[1]+\"/manifest.json\")); print(json.dumps({k:m[k] for k in m if k in (\"run_id\",\"cwd\",\"git_head\",\"git_dirty\",\"script\",\"script_sha256\",\"results\",\"argv\",\"campaign\",\"prompt\",\"created\",\"host\")}, indent=1))" $D; echo "== worktrees"; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed status --short --ignored; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e status --short --ignored; echo "== store files"; ls -la var/datastores | grep 06g
+# output:
+exit 0
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor prompt 06g section 4, rehearsals R23 (worktree 4f4f9ed, parent of 06g code commit 3ae6f3a, 06h's code) and R24 (worktree 1c5336e, code 06g 3ae6f3a) on the Mac Studio (mps026298), then the value comparison, V1 and readers
+exit 0
+recorded pid 44460 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+== registry
+list exit 0
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06g-r23-parent-20261101T110641      running           -      14s  levin-phase-floor prompt 06g, R23 on the Mac Studio (mps026298; tree 4f4f9ed in the worktree /Users/ds283/Documen
+41 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 40 finished; 0 with no host recorded.
+run dir: var/runs/levin-phase-floor-06g-r23-parent-20261101T110641
+manifest.json
+status.json
+stderr.log
+stdout.log
+== status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-01T11:06:54+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 44460,
+  "stage": "CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+== launch log head
+** quadsource_atol_sweep --build: registered as levin-phase-floor-06g-r23-parent-20261101T110641
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r23-parent-20261101T110641/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.sqlite', '--job-name', 'levin-phase-floor-06g', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-11-01 11:06:48,821	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.sqlite" with 4 shards
+
+** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+[36m(Datastore pid=44534)[0m @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=44534)[0m |  Omega_m = 0.3111
+[36m(Datastore pid=44534)[0m |  Omega_cc = 0.6889
+[36m(Datastore pid=44534)[0m |  Omega_r = 9.139e-05
+[36m(Datastore pid=44534)[0m |  present-day energy density = 8.6e-24 g/m^3
+[36m(Datastore pid=44534)[0m |  matter-radiation equality at z = 3403
+[36m(Datastore pid=44534)[0m |  matter-Lambda equality at z = 0.3034
+[36m(Datastore pid=44537)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=44537)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+
+== Traceback count
+0
+== kill -0
+44460 alive
+44456 alive
+== cwd of driver
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  44460 ds283  cwd    DIR   1,13     1120 1231237269 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed
+== manifest
+{
+ "argv": [
+  "RunDrivers/quadsource_atol_sweep.py",
+  "--build",
+  "--rehearsal",
+  "--database",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.sqlite",
+  "--job-name",
+  "levin-phase-floor-06g",
+  "--atol",
+  "1e-32",
+  "--rtol",
+  "1e-7",
+  "--cpus",
+  "6",
+  "--register",
+  "r23-parent",
+  "--purpose",
+  "levin-phase-floor prompt 06g, R23 on the Mac Studio (mps026298; tree 4f4f9ed in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed, the parent of 06g's code commit 3ae6f3a, whose code is 06h's (7172a8f + ac1c6f4, the code 06h's census ran at c1ec3b2); Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the before side of the R23/R24 value comparison, whose after side R24 runs at 1c5336e with the code of 06g 3ae6f3a",
+  "--campaign",
+  "levin-phase-floor",
+  "--prompt",
+  "06g"
+ ],
+ "campaign": "levin-phase-floor",
+ "created": "2026-11-01T11:06:41+00:00",
+ "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed",
+ "git_dirty": false,
+ "git_head": "4f4f9ed2a31fb7437fcfca01263d260eebaff842",
+ "host": {
+  "id": "d120d1cf03551e6f",
+  "machine": "arm64",
+  "name": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16",
+  "release": "27.0.0",
+  "system": "Darwin"
+ },
+ "prompt": "06g",
+ "results": "var/datastores/levin-phase-floor-06g-r23.sqlite",
+ "run_id": "levin-phase-floor-06g-r23-parent-20261101T110641",
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed/RunDrivers/quadsource_atol_sweep.py",
+ "script_sha256": "b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19"
+}
+== worktrees
+== store files
+-rw-r--r--  1 ds283 staff   1241088 Nov  1 11:06 levin-phase-floor-06g-r23-shard0000.sqlite
+-rw-r--r--  1 ds283 staff   1249280 Nov  1 11:06 levin-phase-floor-06g-r23-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 11:06 levin-phase-floor-06g-r23-shard0002.sqlite
+-rw-r--r--  1 ds283 staff   1228800 Nov  1 11:06 levin-phase-floor-06g-r23-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 11:06 levin-phase-floor-06g-r23.sqlite
+# exit: 0
+# end: 2026-11-01T11:06:56Z

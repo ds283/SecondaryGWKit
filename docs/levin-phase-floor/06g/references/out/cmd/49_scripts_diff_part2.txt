@@ -1,0 +1,438 @@
+$ /bin/bash -c echo\ \"##\ scripts/\ vs\ the\ census\ agent\ harness\"\;\ diff\ -ru\ state/scripts_06g_census_reference\ scripts\;\ echo\ \"##\ v1/scripts\ vs\ the\ census\ agent\ harness\"\;\ diff\ -ru\ state/scripts_06g_census_reference\ v1/scripts\;\ echo\ \"##\ one_reading.py\ part\ 1\ vs\ part\ 2\"\;\ diff\ -u\ state/one_reading_part1.py\ scripts/one_reading.py\;\ echo\ \"##\ sha256\"\;\ shasum\ -a\ 256\ scripts/\*.py\ v1/scripts/\*.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T20:14:09Z
+# ----
+## scripts/ vs the census agent harness
+Only in scripts: check_captures.py
+Only in scripts: check_progress_wrapper.py
+Only in scripts: compare06i.py
+Only in scripts: compare13.py
+Only in scripts: draw_refs.py
+Only in scripts: harness_equals_census.py
+Only in scripts: launch_refs.py
+Only in scripts: make_part2_plan.py
+Only in scripts: one_reading.py
+Only in scripts: refs_common.py
+Only in scripts: routes_refs.py
+Only in scripts: run_refs.py
+Only in scripts: select_refs.py
+Only in scripts: slice_refs.py
+diff -ru state/scripts_06g_census_reference/x1_capture.py scripts/x1_capture.py
+--- state/scripts_06g_census_reference/x1_capture.py	2026-11-01 10:58:11
++++ scripts/x1_capture.py	2026-11-01 11:15:50
+@@ -1,4 +1,12 @@
+-"""levin-phase-floor prompt 06c section 5, X1: capture the inputs of the selected calls, after the
++"""levin-phase-floor prompt 06g section 5 (the references): copied from 06h's census
++scripts/x1_capture.py (docs/levin-phase-floor/06h/census/scripts/, a record, not edited; its copy is in
++state/scripts_06h_census_reference/), which is 06c's, changed only where marked "prompt 06g": ROWS_JSON is
++the census agent's state/rows.json (read only, its SHA-256 checked), each unit's budget is its g census
++record's ``budget_s`` (select_refs.py; 300 s in the main pass), and the header names 06g. It runs at g
++(prov.TREES["g"], the code worktree at 1c5336e) with the census agent's harness (worker.py, harness.py,
++rebuild.py, dispatch.py, spscan.py, prov.py), copied unchanged. 06c's text follows.
++
++levin-phase-floor prompt 06c section 5, X1: capture the inputs of the selected calls, after the
+ run. New in 06c.
+ 
+ X1's 24 calls are known only once g has run ("moved" compares g with 06b), and capturing every
+@@ -34,9 +42,10 @@
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+ from prov import PYTHON, TREES, WIDER, header, sha256  # noqa: E402
++import refs_common as RC  # noqa: E402  prompt 06g
+ 
+ BUDGET_S = 300.0
+-ROWS_JSON = WIDER / "state" / "rows.json"
++ROWS_JSON = RC.ROWS  # prompt 06g: the census agent's rows.json, read only (06c: WIDER / "state" / "rows.json")
+ 
+ 
+ def main():
+@@ -52,9 +61,11 @@
+     # here to be matched to the census (out/cmd/11, the first development capture, stopped there)
+     if os.environ.get("PYTHONPATH") != str(TREES["g"][0]):
+         raise SystemExit("PYTHONPATH must be the tree g")
+-    for l in header(Path(__file__).resolve(), "levin-phase-floor 06c: X1's inputs, captured at g", [Path(args.selection), ROWS_JSON]):
++    for l in header(Path(__file__).resolve(), "levin-phase-floor 06g: the references' calls' inputs, captured at g (06c's X1 capture)", [Path(args.selection), ROWS_JSON]):  # prompt 06g
+         print(l)
+     sel = json.loads(Path(args.selection).read_text())
++    if sha256(ROWS_JSON) != RC.ROWS_SHA256:  # prompt 06g
++        raise SystemExit(f"{ROWS_JSON}: sha256 is not {RC.ROWS_SHA256}")
+     rows = json.loads(ROWS_JSON.read_text())["rows"]
+     by_key = {f"{r['shard']}-{r['serial']}": r for r in rows}
+     by_unit = {}
+@@ -78,7 +89,7 @@
+             "shard": R["shard"],
+             "serial": R["serial"],
+             "k_key": R["k_key"],
+-            "budget": BUDGET_S,
++            "budget": ents[0].get("census_unit_budget_s", BUDGET_S),  # prompt 06g: the g census record's budget_s
+             "scan": rtol == "1e-7",
+             "w3": rtol == "1e-7",
+             "capture": [[e["index"], e["notify_label"]] for e in sorted(ents, key=lambda e: e["index"])],
+## v1/scripts vs the census agent harness
+diff -ru state/scripts_06g_census_reference/prov.py v1/scripts/prov.py
+--- state/scripts_06g_census_reference/prov.py	2026-11-01 11:10:52
++++ v1/scripts/prov.py	2026-11-01 20:00:21
+@@ -1,4 +1,6 @@
+-"""levin-phase-floor prompt 06g section 5 (06h's census re-run at 06g's code: the trusted leaf's
++"""[prompt 06g addendum 1 (V1's calls against the rehearsal stores): copied from the census agent's prov.py; changed only where marked.]
++
++levin-phase-floor prompt 06g section 5 (06h's census re-run at 06g's code: the trusted leaf's
+ finest value, slow leaves untrusted, the node errors signed and the round-off exit's premise; on the
+ Mac Studio): provenance shared by every script. Copied from prompt 06h's census ``scripts/prov.py``
+ (docs/levin-phase-floor/06h/census/scripts/prov.py, a record, not edited; its copy is kept unchanged
+@@ -162,7 +164,7 @@
+ HERE = Path(__file__).resolve().parent
+ WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+-assert HERE.parents[3] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's
++assert HERE.parents[4] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's; prompt 06g addendum 1 (V1's calls against the rehearsal stores): one deeper again (references/v1/scripts)
+ 
+ # prompt 06a: one tree, h, the worktree at the dispatch SHA (code = 06's s tree's, f5cee4c)
+ H_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06a-e05c34f")
+@@ -258,6 +260,10 @@
+ # copy of A3 v2. prompt 06a: the copy is 06's, under var/levin-phase-floor-06/wider/state/.
+ COPY_DIR = REC06 / "state" / "a3v2_copy"
+ STORE_DIR_BY_TREE = {"p": COPY_DIR, "g": COPY_DIR}  # prompt 06c: both trees read the copy
++# prompt 06g addendum 1 (V1's calls against the rehearsal stores): p reads R23 and g reads R24, each through a directory of symbolic links
++# (references/v1/stores/r23, r24) that gives the store's files the names rebuild.py and rerun.py
++# open (handover-A3-v2-lambdacdm*.sqlite) and the names its primary's shards table records
++STORE_DIR_BY_TREE = {"p": HERE.parent / "stores" / "r23", "g": HERE.parent / "stores" / "r24"}
+ 
+ 
+ def sha256(path):
+diff -ru state/scripts_06g_census_reference/rebuild.py v1/scripts/rebuild.py
+--- state/scripts_06g_census_reference/rebuild.py	2026-11-01 10:58:11
++++ v1/scripts/rebuild.py	2026-11-01 20:00:21
+@@ -1,4 +1,6 @@
+ """
++[prompt 06g addendum 1 (V1's calls against the rehearsal stores): copied from the census agent's rebuild.py; changed only in A3V2_K_SAMPLE and A3V2_ZEND, marked; the names are kept.]
++
+ levin-phase-floor prompt 06a (copied from prompt 06's scripts/rebuild.py,
+ docs/levin-phase-floor/06/wider/scripts/rebuild.py, a record, not edited). Changed here, each
+ change marked "prompt 06a", only for the census's producer cache (prompt 06a section 0.3 change 1,
+@@ -134,10 +136,10 @@
+ from extract_common import run_label_tag, source_grid_construction_tag
+ 
+ # --- A3 v2's arguments (see the module docstring) ---------------------------------------------
+-A3V2_K_SAMPLE = np.logspace(np.log10(1e5), np.log10(3e8), 8).tolist()
++A3V2_K_SAMPLE = np.logspace(np.log10(1e5), np.log10(1e6), 3).tolist()  # prompt 06g addendum 1 (V1's calls against the rehearsal stores): the rehearsal scope's k sample (RunDrivers/quadsource_atol_sweep.py build_scope, --rehearsal); A3 v2's: logspace(log10 1e5, log10 3e8, 8)
+ A3V2_QUAD_ATOL = 1e-32
+ A3V2_QUAD_RTOL = 1e-7
+-A3V2_ZEND = 0.1  # argparse type=float of "0.1"
++A3V2_ZEND = 250.0  # prompt 06g addendum 1 (V1's calls against the rehearsal stores): argparse type=float of the rehearsal's "250" (REHEARSAL_ZEND); A3 v2's: 0.1
+ A3V2_SOURCE_SAMPLES_PER_LOG10Z = 100
+ A3V2_RESPONSE_SPARSENESS = 12  # main.py DEFAULT_RESPONSE_SAMPLES_SPARSENESS
+ A3V2_RUN_LABEL = "default"  # main.py DEFAULT_RUN_LABEL
+Only in v1/scripts: v1_capture.py
+Only in v1/scripts: v1_compare_groups.py
+Only in v1/scripts: v1_dev_one.py
+Only in v1/scripts: v1_rows.py
+diff -ru state/scripts_06g_census_reference/worker.py v1/scripts/worker.py
+--- state/scripts_06g_census_reference/worker.py	2026-11-01 11:13:34
++++ v1/scripts/worker.py	2026-11-01 20:00:21
+@@ -1,4 +1,6 @@
+-"""
++"""[prompt 06g addendum 1 (V1's calls against the rehearsal stores): copied from the census agent's worker.py; changed only where marked: the 1e-8 tolerance object is optional.]
++
++
+ levin-phase-floor prompt 06g section 5 (06h's census re-run at 06g's code, the tree g: a trusted leaf
+ returns its quarters sum, a slow leaf is untrusted, the fallback leaves' node errors are carried
+ signed, and the round-off exit's premise leaves out the declared term and holds only where the split
+@@ -1925,9 +1927,11 @@
+             try:
+                 t_ctx = time.perf_counter()
+                 ctx = build_context(pool, log=lambda s: print(s, flush=True))
++                # prompt 06g addendum 1 (V1's calls against the rehearsal stores): the rehearsal stores hold no 1e-8 tolerance and V1's units are all at
++                # 1e-7, so the 1e-8 object is not required; a 1e-8 unit is refused below
+                 rtol8 = ray.get(pool.object_get("tolerance", tol=1e-8))
+                 if not (rtol8.available and rtol8.tol == 1e-8):
+-                    raise RuntimeError(f"tolerance 1e-8 not available: {rtol8}")
++                    rtol8 = None
+                 rtol_obj = {"1e-7": None, "1e-8": rtol8}
+                 emit(
+                     "context",
+@@ -1936,7 +1940,7 @@
+                         "seconds": time.perf_counter() - t_ctx,
+                         "checks": ctx["checks"],
+                         "rtol_1e-7": [ctx["quad_rtol"].store_id, repr(ctx["quad_rtol"].tol)],
+-                        "rtol_1e-8": [rtol8.store_id, repr(rtol8.tol)],
++                        "rtol_1e-8": None if rtol8 is None else [rtol8.store_id, repr(rtol8.tol)],  # prompt 06g addendum 1 (V1's calls against the rehearsal stores)
+                         "main_py_sha256": MAIN_PY_SHA256,
+                     },
+                 )
+@@ -1944,6 +1948,8 @@
+                     uid = u["uid"]
+                     if u["tree"] != tree_name:
+                         raise RuntimeError(f"unit {uid} is not for tree {tree_name}")
++                    if u["rtol"] == "1e-8" and rtol8 is None:  # prompt 06g addendum 1 (V1's calls against the rehearsal stores)
++                        raise RuntimeError(f"unit {uid}: no 1e-8 tolerance in this store")
+                     print(f"\n== unit {uid} ({u['row']}: shard {u['shard']}, serial {u['serial']})", flush=True)
+                     status = "done"
+                     err = None
+## one_reading.py part 1 vs part 2
+--- state/one_reading_part1.py	2026-11-01 11:18:16
++++ scripts/one_reading.py	2026-11-01 20:10:07
+@@ -6,7 +6,8 @@
+ ("qawo", "fcc"), for res in (1, 2), ``reading(call, impl, res, route=None, edges=None, workers=6,
+ call_source=("tools.filon_reference", "_load_pickle", (PICKLE, "ray.cloudpickle")))``, then their
+ scatter. This script makes exactly one of those ``reading`` calls, with exactly those arguments, so
+-that the driver (run_refs.py) can stop a reading at 30 minutes and record each reading's wall time
++that the driver (run_refs.py) can stop a reading at 30 minutes (part 1) or check it with its
++progress (part 2, addendum 3: ``--progress``) and record each reading's wall time
+ (the brief); a reading does not depend on the process it runs in (the tool's determinism test, and
+ run_refs.py's command-line check on two of 06i's samples). The pickle is loaded as the command line
+ loads it (``tools.filon_reference._load_pickle(PICKLE, "ray.cloudpickle")``).
+@@ -30,6 +31,57 @@
+ sys.path.insert(0, str(HERE))
+ 
+ 
++def _install_progress(F, path):
++    """Addendum 3 (the user's ruling, 2026-11-01: a reading past 30 minutes is checked, with its
++    progress, not stopped): ``tools.filon_reference._run_jobs`` replaced, in this process only, by
++    the same thing with ``pool.imap`` (ordered, ``chunksize=1``) in place of ``pool.map``, so that
++    each finished chunk is counted into PATH (``{"done", "total", "elapsed_s", "start_unix"}``) as
++    it comes back. The chunks, their order, the function each runs, the workers' initialiser and
++    the results list are the tool's own, so the reading's value is unchanged (checked bit for bit
++    against part 1's readings before part 2 launched). The tool's file is not touched.
++    """
++    import multiprocessing
++
++    t0 = time.time()
++
++    def note(done, total):
++        tmp = path.with_suffix(".tmp")
++        tmp.write_text(
++            json.dumps(
++                {
++                    "done": done,
++                    "total": total,
++                    "elapsed_s": time.time() - t0,
++                    "start_unix": t0,
++                }
++            )
++        )
++        tmp.replace(path)
++
++    def run_jobs(jobs, state, workers, call_source, route, edges):
++        note(0, len(jobs))
++        if workers <= 1:
++            F._WORKER["state"] = state
++            out = []
++            for job in jobs:
++                out.append(F._run_chunk(job))
++                note(len(out), len(jobs))
++            return out
++        if call_source is None:
++            raise ValueError("workers > 1 needs call_source = (module, function, args)")
++        ctx = multiprocessing.get_context("spawn")
++        out = []
++        with ctx.Pool(
++            workers, initializer=F._worker_init, initargs=(call_source, route, edges)
++        ) as pool:
++            for r in pool.imap(F._run_chunk, jobs, chunksize=1):
++                out.append(r)
++                note(len(out), len(jobs))
++        return out
++
++    F._run_jobs = run_jobs
++
++
+ def main():
+     import refs_common as RC
+     from prov import header
+@@ -44,6 +96,9 @@
+     ap.add_argument("--index", type=int, required=True)
+     ap.add_argument("--rtol", required=True)
+     ap.add_argument("--workers", type=int, default=RC.TOOL_WORKERS)
++    ap.add_argument(
++        "--progress", default=None
++    )  # addendum 3: chunks done, for the driver's check
+     a = ap.parse_args()
+     if a.workers > 6:
+         raise SystemExit("at most six workers")
+@@ -60,6 +115,8 @@
+         f"levin-phase-floor 06g: Filon reading {a.sid} {a.impl} res {a.res} (tools.filon_reference)",
+         [Path(pkl), Path(F.__file__)],
+     )
++    if a.progress:
++        _install_progress(F, Path(a.progress))
+     call = F._load_pickle(pkl, "ray.cloudpickle")
+     ray_after_load = ray.is_initialized()
+     route = F.route_of(call)
+## sha256
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  scripts/analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  scripts/analyse06.py
+c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609  scripts/analyse06a.py
+6446b7ac0ea2050d0bbdbc5dfd68474ffaaf1095a191a8b8aeb6ce3afa0e0649  scripts/analyse06b.py
+c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600  scripts/analyse06c.py
+030a07953c44326011369cdd30f48d605328e65ae3698e6cf6831640ce33f0b3  scripts/analyse06e.py
+6fa7a5a59e5a3068c05b535625f5f2e2482cd84608c754c14254561c3a01809e  scripts/analyse06g.py
+fe240ec69b12847827c4a981e2c9f0c80ad02d4d22098c09913e6ebe4d52f1c2  scripts/analyse06h.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  scripts/c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  scripts/certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  scripts/characterise_s2.py
+796be467e87fba0c562e778be06d65315d3eaf3f446a772de7504836c892984b  scripts/check_captures.py
+71c239a85abc48b7bc51943f321b302ec0eea2352ec181d5b69d34320058207c  scripts/check_predictions.py
+bfe94d208e69fadf4c6525258a7327e24792ec5eb0e63aa32431a93965d71fc6  scripts/check_progress_wrapper.py
+e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa  scripts/checks_after.py
+d9ac83b7f6a53c24c84f6ace2af47d459083b7f848396e87bfba2c6190b3a337  scripts/checks_after_06e.py
+35b956e8aba6322e94fe223b88d107b45a40bf1bcf215d068fd2d284f798c2ba  scripts/checks_after_06g.py
+cea81202fc758884e87ff66b441bfd4b73953932600f37a2121a67747141e117  scripts/checks_after_06h.py
+7a1672ac24daa6f32b4fae75c110c5b64ca7307e35d857b90478d253c0bed471  scripts/compare06i.py
+fe079eb0d4fbb90a3aa0b2c7b28f6a7c51e54bb8ab552d2cba0b9d4e36347e56  scripts/compare13.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  scripts/convergence_kinds.py
+e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d  scripts/convergence_kinds_06a.py
+9d7b35f35fcfb76099f1d20d4b28d2d5e347b2bab78e02ee26218bc386fc0c54  scripts/dev_line_tiling.py
+012521549f8165fdde0f3e0198703e0590eb309c0023903a15b292217b712866  scripts/dev_worker_functions.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  scripts/dispatch.py
+67bc2b1dbeff7bfe8cdd8a067ec000a90f929c4179ca7bfdb56c034c4e986ba8  scripts/draw_refs.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  scripts/draw_sample.py
+ab377c62624d1df938c6f815cd66996e9eca0be18f8d474968e25357aa3e6ffd  scripts/explore06b_pool.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  scripts/explore_store.py
+1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea  scripts/extras_after.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  scripts/fingerprint_copy.py
+f7c66409e1d6fc4aacbb36a944d982ee960e5ea50542547b5ba0f858924738b9  scripts/gate_h.py
+fd91118748401a301b1bb5f9fbbca9d808abe06092a81f743976e9137373ea33  scripts/gate_h_clause1.py
+645e9e50c2320be01f1ddb4cc4610d4b367dc6db120ca73d3c7efe7a424bdee0  scripts/gate_v.py
+279587afeeff8590c566d9db5937621a3efe63311ada3946f2a27cfd016c0627  scripts/gate_v_clause1.py
+72f2ecdae3762ddf6f2ec4cd9f3c36b072ed7b467a6acaab074059e575a1204f  scripts/h4_detail06h.py
+17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721  scripts/harness.py
+bbb15ebde2d105ff2ea62b3ab5f4a5392b76b5635384b3ed078d9e51035f88df  scripts/harness_equals_census.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  scripts/l0.py
+d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e  scripts/launch.py
+97d0dfe3db0075cdb071d902e87c8aa5107f4fbaca89a970c2e81cfaedd629b7  scripts/launch_refs.py
+60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094  scripts/make_capture.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  scripts/make_copy.py
+fc70405f60f3b1d2d8f0797400be2d9dae98d65c7b209d644da2c227f6777605  scripts/make_part2_plan.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  scripts/make_rows.py
+05d5c1936a625e9750675a1747bde481fd33682de0e39393f22d1836590ce620  scripts/nearsingular06h.py
+17a642b6962aee97ea7a72410aa83088b4008c17b7d90438c1967996525ba35d  scripts/one_reading.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  scripts/phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  scripts/pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  scripts/probe.py
+22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf  scripts/prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  scripts/pure_wkb_zinit.py
+dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212  scripts/rebuild.py
+873f830720daaa9056e63a9c3147f43356e8be8af0687a30559c641d8062213c  scripts/refs_common.py
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  scripts/rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  scripts/rescore_t1.py
+9ff8f59ddff0f1aed2c2725cefb6fedd0c87e3332620d5cd92cc8d95e4594d60  scripts/routes_refs.py
+5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2  scripts/run_census.py
+68443f94f91c985d9fedab8bf1e73ed04ba9bed1dc1681aa821ea5f0e07cf60a  scripts/run_refs.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  scripts/run_wider.py
+f77238a2745adc81190868134f1f706811f3eeea63b712969bec57d9d15a4c44  scripts/scripts_equal.py
+d4d6dbb8f8f07d82c03a6c4639742fc27f96ab1a8c53377d7766749c5c5b59cc  scripts/select_refs.py
+b1442d6c81e1d4651cd2248a60ad478666a2402af92a76da0684cba85b344669  scripts/slice_refs.py
+98aa102b3f02f7fd46d34ffaee88d96ec2bfe6d576f7e24611d8228a579849f6  scripts/smoke_summary.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  scripts/spscan.py
+71d0fee4789ea646f4ec28bce0b68386af773caa8bc419f3b37457d3a4270686  scripts/static_names.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  scripts/t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  scripts/t1_true_step_only.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  scripts/u0.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  scripts/u0_clause_a.py
+f67e7ccd5d6a5e70968004593ec8cabfc72dde6d919675664fc52233437ce426  scripts/v2_detail06g.py
+621d133f03bcbef436c050384ffd12e2692ad7acb06752066eaf8d730202e595  scripts/v8_06g.py
+d0ce21572f6d46bb3ff78dd25c04ce18e72c19caa81551987286cca51c920642  scripts/v8_breakdown.py
+3923ceb61e3de2c77a7ccdb6d0cd5a2401a6d9e9e22640a031187176f000841b  scripts/v8_slow_leaves.py
+4cf23ff06eb317da7bbdde4ddc312136cd862237abdbd71e3c7ff158bab1eefb  scripts/v8_slow_leaves_coverage.py
+8774d438df5815c8ca9968061102011e40b9511186c75e264bc9d7db001cfc6b  scripts/values_beyond06g.py
+f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f  scripts/w0.py
+90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf  scripts/w0_clause1.py
+0296b05317a4cb6e2a5538e6185b13dd8af286d2b80075152e84b36bc378c122  scripts/w2_crosscheck.py
+47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31  scripts/w2_reference.py
+e9d019beb726cca1b5b65b681164d5ced5161af446d5f0e5e08fe286cead2381  scripts/w2_request.py
+90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4  scripts/worker.py
+757e50f2ca900cf3921217ff3104adad2cbd8f4981d414a5e64416b3f76ea2c0  scripts/x0.py
+282a9245673e5312b1734aa254aa93e1e35bfbcb23620285f2d75f0f11e3d1d1  scripts/x0_clause1.py
+5ce00c1f7f17b795ea985e649bfcaf2574b33c7180d1e2fa278222073ea18cd2  scripts/x1_capture.py
+5baf61550482d49fafa38d405e3f3061f52e906a4a3dc7ac2bfe36dbb9eaa4ac  scripts/x1_crosscheck.py
+86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118  scripts/x1_reference.py
+54ca0c3e4038b496c22219936e27f6b9162b6e14ae66f639dd5a211bf7c75adb  scripts/x4_detail.py
+b83b6782b89659f836471affc561152c5d61cdcea2feab7a775c48dd233736f1  scripts/z0.py
+80434d7a44852073e21f00a628dac311d22493f8ab5ccffbe0e9d49e2528e77e  scripts/z0_clause1.py
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  v1/scripts/analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  v1/scripts/analyse06.py
+c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609  v1/scripts/analyse06a.py
+6446b7ac0ea2050d0bbdbc5dfd68474ffaaf1095a191a8b8aeb6ce3afa0e0649  v1/scripts/analyse06b.py
+c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600  v1/scripts/analyse06c.py
+030a07953c44326011369cdd30f48d605328e65ae3698e6cf6831640ce33f0b3  v1/scripts/analyse06e.py
+6fa7a5a59e5a3068c05b535625f5f2e2482cd84608c754c14254561c3a01809e  v1/scripts/analyse06g.py
+fe240ec69b12847827c4a981e2c9f0c80ad02d4d22098c09913e6ebe4d52f1c2  v1/scripts/analyse06h.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  v1/scripts/c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  v1/scripts/certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  v1/scripts/characterise_s2.py
+71c239a85abc48b7bc51943f321b302ec0eea2352ec181d5b69d34320058207c  v1/scripts/check_predictions.py
+e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa  v1/scripts/checks_after.py
+d9ac83b7f6a53c24c84f6ace2af47d459083b7f848396e87bfba2c6190b3a337  v1/scripts/checks_after_06e.py
+35b956e8aba6322e94fe223b88d107b45a40bf1bcf215d068fd2d284f798c2ba  v1/scripts/checks_after_06g.py
+cea81202fc758884e87ff66b441bfd4b73953932600f37a2121a67747141e117  v1/scripts/checks_after_06h.py
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  v1/scripts/convergence_kinds.py
+e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d  v1/scripts/convergence_kinds_06a.py
+9d7b35f35fcfb76099f1d20d4b28d2d5e347b2bab78e02ee26218bc386fc0c54  v1/scripts/dev_line_tiling.py
+012521549f8165fdde0f3e0198703e0590eb309c0023903a15b292217b712866  v1/scripts/dev_worker_functions.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  v1/scripts/dispatch.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  v1/scripts/draw_sample.py
+ab377c62624d1df938c6f815cd66996e9eca0be18f8d474968e25357aa3e6ffd  v1/scripts/explore06b_pool.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  v1/scripts/explore_store.py
+1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea  v1/scripts/extras_after.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  v1/scripts/fingerprint_copy.py
+f7c66409e1d6fc4aacbb36a944d982ee960e5ea50542547b5ba0f858924738b9  v1/scripts/gate_h.py
+fd91118748401a301b1bb5f9fbbca9d808abe06092a81f743976e9137373ea33  v1/scripts/gate_h_clause1.py
+645e9e50c2320be01f1ddb4cc4610d4b367dc6db120ca73d3c7efe7a424bdee0  v1/scripts/gate_v.py
+279587afeeff8590c566d9db5937621a3efe63311ada3946f2a27cfd016c0627  v1/scripts/gate_v_clause1.py
+72f2ecdae3762ddf6f2ec4cd9f3c36b072ed7b467a6acaab074059e575a1204f  v1/scripts/h4_detail06h.py
+17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721  v1/scripts/harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  v1/scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  v1/scripts/l0.py
+d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e  v1/scripts/launch.py
+60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094  v1/scripts/make_capture.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  v1/scripts/make_copy.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  v1/scripts/make_rows.py
+05d5c1936a625e9750675a1747bde481fd33682de0e39393f22d1836590ce620  v1/scripts/nearsingular06h.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  v1/scripts/phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  v1/scripts/pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  v1/scripts/probe.py
+6a75de774ec35b3e79455df195abb47b86fa281655e9eefa2b18bd64540663a8  v1/scripts/prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  v1/scripts/pure_wkb_zinit.py
+2c6f8269fcca1b7c7135c38d82105bee73b9a18a60808272e8ce2bd561935b24  v1/scripts/rebuild.py
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  v1/scripts/rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  v1/scripts/rescore_t1.py
+5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2  v1/scripts/run_census.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  v1/scripts/run_wider.py
+f77238a2745adc81190868134f1f706811f3eeea63b712969bec57d9d15a4c44  v1/scripts/scripts_equal.py
+98aa102b3f02f7fd46d34ffaee88d96ec2bfe6d576f7e24611d8228a579849f6  v1/scripts/smoke_summary.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  v1/scripts/spscan.py
+71d0fee4789ea646f4ec28bce0b68386af773caa8bc419f3b37457d3a4270686  v1/scripts/static_names.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  v1/scripts/t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  v1/scripts/t1_true_step_only.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  v1/scripts/u0.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  v1/scripts/u0_clause_a.py
+21470b2886b0d7b826fafebb1ec9afb694656d9046e48d4259de31060579e2f8  v1/scripts/v1_capture.py
+d313011a14e7a1ae3134df1c58dc9bda5d35485e571ee36c9324797822521e1a  v1/scripts/v1_compare_groups.py
+d898af12c62c7637b7d3af9eb2e6cf84eebc88beaca38437a0b67cc0d408b4a3  v1/scripts/v1_dev_one.py
+edf893fa97321c10f1e7a2cf18d53434b92bcaa64544d1e9ca26a9c4d72d100a  v1/scripts/v1_rows.py
+f67e7ccd5d6a5e70968004593ec8cabfc72dde6d919675664fc52233437ce426  v1/scripts/v2_detail06g.py
+621d133f03bcbef436c050384ffd12e2692ad7acb06752066eaf8d730202e595  v1/scripts/v8_06g.py
+d0ce21572f6d46bb3ff78dd25c04ce18e72c19caa81551987286cca51c920642  v1/scripts/v8_breakdown.py
+3923ceb61e3de2c77a7ccdb6d0cd5a2401a6d9e9e22640a031187176f000841b  v1/scripts/v8_slow_leaves.py
+4cf23ff06eb317da7bbdde4ddc312136cd862237abdbd71e3c7ff158bab1eefb  v1/scripts/v8_slow_leaves_coverage.py
+8774d438df5815c8ca9968061102011e40b9511186c75e264bc9d7db001cfc6b  v1/scripts/values_beyond06g.py
+f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f  v1/scripts/w0.py
+90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf  v1/scripts/w0_clause1.py
+0296b05317a4cb6e2a5538e6185b13dd8af286d2b80075152e84b36bc378c122  v1/scripts/w2_crosscheck.py
+47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31  v1/scripts/w2_reference.py
+e9d019beb726cca1b5b65b681164d5ced5161af446d5f0e5e08fe286cead2381  v1/scripts/w2_request.py
+a18e60807c65c39895cf115bffaa5a0fc861bb7bc29a7ed23115f0bf93979ca7  v1/scripts/worker.py
+757e50f2ca900cf3921217ff3104adad2cbd8f4981d414a5e64416b3f76ea2c0  v1/scripts/x0.py
+282a9245673e5312b1734aa254aa93e1e35bfbcb23620285f2d75f0f11e3d1d1  v1/scripts/x0_clause1.py
+dafe695a19ba52f27fe193ba221a0d0ac77c2be3815cc350ffbff217a3cc019a  v1/scripts/x1_capture.py
+5baf61550482d49fafa38d405e3f3061f52e906a4a3dc7ac2bfe36dbb9eaa4ac  v1/scripts/x1_crosscheck.py
+86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118  v1/scripts/x1_reference.py
+54ca0c3e4038b496c22219936e27f6b9162b6e14ae66f639dd5a211bf7c75adb  v1/scripts/x4_detail.py
+b83b6782b89659f836471affc561152c5d61cdcea2feab7a775c48dd233736f1  v1/scripts/z0.py
+80434d7a44852073e21f00a628dac311d22493f8ab5ccffbe0e9d49e2528e77e  v1/scripts/z0_clause1.py
+# ----
+# end 2026-11-01T20:14:09Z
+# exit 0

@@ -1,0 +1,101 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:11:54Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+D=var/runs/levin-phase-floor-06g-r23-parent-20261101T110641; R=var/levin-phase-floor-06g/rehearsal; echo "== status.json (no classes)"; ./venv/bin/python -I -c "
+import json,sys
+s=json.load(open(sys.argv[1]))
+def strip(o):
+    if isinstance(o,dict): return {k:(\"<classes omitted>\" if k==\"classes\" else strip(v)) for k,v in o.items()}
+    return o
+print(json.dumps(strip(s),indent=1))
+" $D/status.json; echo "== fingerprint digest vs literal, classes vs R21/R22"; ./venv/bin/python -I -c "
+import json,sys,glob
+L=\"1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7\"
+def find(o,key):
+    if isinstance(o,dict):
+        for k,v in o.items():
+            if k==key: yield v
+            yield from find(v,key)
+    elif isinstance(o,list):
+        for v in o: yield from find(v,key)
+s=json.load(open(sys.argv[1]))
+d=list(find(s,\"digest\")); print(\"digests\",d,[x==L for x in d])
+c=list(find(s,\"classes\"))
+for p in sorted(glob.glob(\"var/runs/levin-phase-floor-06h-r2*/status.json\"))+sorted(glob.glob(\"var/runs/handover-12-r8-reference-*/status.json\")):
+    t=json.load(open(p)); print(p, \"digest\", list(find(t,\"digest\")), \"classes equal\", list(find(t,\"classes\"))==c)
+print(\"problems\", list(find(s,\"problems\")))
+" $D/status.json; echo "== kill -0"; kill -0 44460 && echo "44460 alive" || echo "44460 gone"; kill -0 44456 && echo "44456 alive" || echo "44456 gone"; echo "== launch log tail"; tail -3 var/runs/levin-phase-floor-06g-r23.launch.log; echo "== Traceback / WARNING counts"; for f in var/runs/levin-phase-floor-06g-r23.launch.log $D/stdout.log $D/stderr.log; do echo "$f Traceback $(grep -c Traceback $f) WARNING $(grep -c "!! WARNING" $f)"; done; ls -la $D; echo "== worktrees"; for T in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e; do git --no-optional-locks -C $T rev-parse --short HEAD; git --no-optional-locks -C $T status --short --ignored; find $T -newer $R/state/r23_launch_marker -not -path "*/.git/*" | head; done; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > $R/out/r23_end_registry_list.txt 2>&1; echo "list exit $?"; head -2 $R/out/r23_end_registry_list.txt | cut -c1-120; tail -1 $R/out/r23_end_registry_list.txt; echo "== main"; git --no-optional-locks rev-parse --short HEAD; git --no-optional-locks status --short; echo "== store files"; ls -la var/datastores | grep 06g
+# output:
+== status.json (no classes)
+{
+ "exit_code": 0,
+ "fingerprint": {
+  "classes": "<classes omitted>",
+  "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7",
+  "encoding_format": 1,
+  "fingerprint_format": 6,
+  "problems": {},
+  "taken": {
+   "git_dirty": false,
+   "git_head": "4f4f9ed2a31fb7437fcfca01263d260eebaff842",
+   "run_id": "levin-phase-floor-06g-r23-parent-20261101T110641",
+   "when": "2026-11-01T11:11:15+00:00"
+  }
+ },
+ "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.manifest.json is not a problem-free registry sidecar (there is none)",
+ "heartbeat": "2026-11-01T11:11:17+00:00",
+ "host": {
+  "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+  "id": "d120d1cf03551e6f"
+ },
+ "pid": 44460,
+ "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+ "state": "done",
+ "units_done": 0,
+ "units_total": null
+}
+== fingerprint digest vs literal, classes vs R21/R22
+digests ['02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177', '02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177', '76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16', '76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16', '6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a', '6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572', '49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572', 'a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19', 'a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19', '317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1', '317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1', 'dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2', 'dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', '178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f', '178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f', 'e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e', 'e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e', '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', 'c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1', 'c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1', 'c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab', 'c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab', '49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f', '49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f', '0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551', '0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551', 'f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255', 'f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255', '482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a', '482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a', '31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8', '31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8', '2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89', '2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89', '1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7'] [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True]
+var/runs/levin-phase-floor-06h-r21-parent-20261101T001852/status.json digest ['02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177', '02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177', '76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16', '76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16', '6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a', '6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572', '49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572', 'a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19', 'a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19', '317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1', '317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1', 'dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2', 'dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', '178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f', '178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f', 'e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e', 'e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e', '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', 'c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1', 'c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1', 'c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab', 'c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab', '49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f', '49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f', '0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551', '0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551', 'f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255', 'f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255', '482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a', '482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a', '31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8', '31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8', '2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89', '2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89', '1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7'] classes equal True
+var/runs/levin-phase-floor-06h-r22-groupphase-20261101T002423/status.json digest ['02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177', '02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177', '76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16', '76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16', '6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a', '6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572', '49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572', 'a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19', 'a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19', '317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1', '317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1', 'dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2', 'dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', '178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f', '178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f', 'e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e', 'e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e', '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', 'c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1', 'c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1', 'c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab', 'c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab', '49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f', '49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f', '0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551', '0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551', 'f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255', 'f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255', '482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a', '482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a', '31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8', '31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8', '2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89', '2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89', '1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7'] classes equal True
+var/runs/handover-12-r8-reference-20261025T210551/status.json digest ['02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177', '02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177', '76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16', '76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16', '6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a', '6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572', '49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572', 'a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19', 'a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19', '317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1', '317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1', 'dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2', 'dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', '178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f', '178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f', 'e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e', 'e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e', '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', '064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7', 'c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1', 'c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1', 'c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab', 'c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab', '49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f', '49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f', '0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551', '0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551', 'f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255', 'f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255', '482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a', '482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a', '31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8', '31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8', '2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89', '2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89', '1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7'] classes equal True
+problems [{}]
+== kill -0
+sh: line 23: kill: (44460) - No such process
+44460 gone
+sh: line 23: kill: (44456) - No such process
+44456 gone
+== launch log tail
+[36m(Datastore pid=44538)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"[32m [repeated 3x across cluster][0m
+[36m(Datastore pid=44538)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20[32m [repeated 3x across cluster][0m
+** driver exit status 0
+== Traceback / WARNING counts
+var/runs/levin-phase-floor-06g-r23.launch.log Traceback 0 WARNING 0
+var/runs/levin-phase-floor-06g-r23-parent-20261101T110641/stdout.log Traceback 0 WARNING 0
+var/runs/levin-phase-floor-06g-r23-parent-20261101T110641/stderr.log Traceback 0 WARNING 0
+total 28
+drwxr-xr-x  6 ds283 staff   192 Nov  1 11:11 .
+drwxr-xr-x 69 ds283 staff  2208 Nov  1 11:06 ..
+-rw-r--r--  1 ds283 staff  4909 Nov  1 11:06 manifest.json
+-rw-r--r--  1 ds283 staff 10324 Nov  1 11:11 status.json
+-rw-r--r--  1 ds283 staff     0 Nov  1 11:06 stderr.log
+-rw-r--r--  1 ds283 staff  8021 Nov  1 11:11 stdout.log
+== worktrees
+4f4f9ed2
+1c5336e7
+== registry
+list exit 0
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06g-r23-parent-20261101T110641      done              -       5m  levin-phase-floor prompt 06g, R23
+41 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 41 finished; 0 with no host recorded.
+== main
+28ebaf07
+== store files
+-rw-r--r--  1 ds283 staff  25022464 Nov  1 11:11 levin-phase-floor-06g-r23-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25243648 Nov  1 11:11 levin-phase-floor-06g-r23-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 11:06 levin-phase-floor-06g-r23-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24436736 Nov  1 11:11 levin-phase-floor-06g-r23-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 11:06 levin-phase-floor-06g-r23.sqlite
+# exit: 0
+# end: 2026-11-01T11:11:56Z

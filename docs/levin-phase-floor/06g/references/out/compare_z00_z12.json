@@ -1,0 +1,63 @@
+{
+ "criterion": {
+  "equal": true,
+  "differences": [],
+  "fields": [
+   "factors",
+   "route",
+   "signs",
+   "x_span"
+  ]
+ },
+ "integrand": {
+  "equal": true,
+  "differences": [],
+  "fields": [
+   "f_cos",
+   "f_sin",
+   "n_tables",
+   "production_edges",
+   "theta",
+   "theta_deriv",
+   "theta_mod_2pi"
+  ]
+ },
+ "descriptive": {
+  "equal": false,
+  "differences": [
+   "/kw/rtol: 0x1.ad7f29abcaf48p-24 vs 0x1.5798ee2308c3ap-27"
+  ],
+  "fields": [
+   "kw",
+   "theta_keys"
+  ]
+ },
+ "record_fields": {
+  "keys": [
+   "abserr",
+   "atol",
+   "converged",
+   "f",
+   "index",
+   "kw",
+   "max_depth",
+   "notify_label",
+   "num_regions",
+   "rtol",
+   "theta",
+   "tree",
+   "unit",
+   "value",
+   "x_span"
+  ],
+  "differences": [
+   "/abserr: 0x1.74816ed63d016p-110 vs 0x1.fdbb1bc1a92b8p-110",
+   "/converged: False vs True",
+   "/max_depth: 20 vs 18",
+   "/num_regions: 249 vs 135",
+   "/rtol: 1e-07 vs 1e-08",
+   "/unit: g-1e-7-1-2174 vs g-1e-8-1-2174",
+   "/value: 0x1.0c5f18f19d8ffp-86 vs 0x1.0c6c2cc40e857p-86"
+  ]
+ }
+}

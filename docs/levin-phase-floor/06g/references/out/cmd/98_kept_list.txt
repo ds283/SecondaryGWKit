@@ -1,0 +1,20 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/kept_list.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T07:02:58Z
+# ----
+# levin-phase-floor 06g Part B, the references agent: files kept on the Mac Studio only
+# (mps026298), not copied to the laptop. sha256  size_bytes  path (relative to var/levin-phase-floor-06g/references/
+# or to var/runs/). Written by scripts/kept_list.py.
+## pickles, and files over 2 MB, under var/levin-phase-floor-06g/references/
+# 404 files, 218337076 bytes
+## symbolic links (v1/stores/, to the rehearsal stores R23 and R24 in var/datastores/; read only)
+## run directory var/runs/levin-phase-floor-06g-references-20261101T175231/ (every file)
+# 5 files, 54658 bytes
+## run directory var/runs/levin-phase-floor-06g-references-20261101T201415/ (every file)
+# 5 files, 383144 bytes
+## run directory var/runs/levin-phase-floor-06g-references-rerun-20261102T185324/ (every file)
+# 5 files, 116870 bytes
+# ----
+# end 2026-11-03T07:02:58Z
+# exit 0

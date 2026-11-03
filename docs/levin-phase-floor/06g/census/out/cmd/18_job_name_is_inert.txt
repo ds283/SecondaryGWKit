@@ -1,0 +1,10 @@
+$ grep -n job_name /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:37:34Z
+# ----
+117:        job_name: Optional[str] = None,
+149:        self._job_name: Optional[str] = job_name
+# ----
+# end 2026-11-01T11:37:34Z
+# exit 0

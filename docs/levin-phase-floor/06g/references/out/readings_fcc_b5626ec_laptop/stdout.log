@@ -1,0 +1,32 @@
+check w06 qawo r1 -0x1.4458fec15abc3p-76 True 9.3
+check r55 fcc r1 0x1.78bca75e2ac04p-105 True 10.9
+check r55 fcc r2 0x1.78bca75e2b126p-105 True 34.3
+check r55 qawo r1 0x1.78bca75e2abd3p-105 True 3.4
+fcc w00 fcc r1 0x1.54ad890b9db74p-71  25.0
+fcc w00 fcc r2 0x1.54ad890b9da52p-71  101.4
+fcc w01 fcc r1 0x1.035b1150815edp-69  26.0
+fcc w01 fcc r2 0x1.035b115081611p-69  93.7
+fcc w02 fcc r1 0x1.172b1a1ca0a82p-70  23.5
+fcc w02 fcc r2 0x1.172b1a1ca0a22p-70  91.3
+fcc w03 fcc r1 0x1.01dc94746ec9dp-74  28.3
+fcc w03 fcc r2 0x1.01dc94746ec53p-74  110.6
+fcc w04 fcc r1 -0x1.e988cbacfa208p-75  28.9
+fcc w04 fcc r2 -0x1.e988cbacfa185p-75  107.7
+fcc w05 fcc r1 0x1.e6b93b33ea8d6p-75  27.4
+fcc w05 fcc r2 0x1.e6b93b33ea861p-75  105.1
+fcc w06 fcc r1 -0x1.4458fec15abc8p-76  25.6
+fcc w06 fcc r2 -0x1.4458fec15abcdp-76  96.4
+fcc w07 fcc r1 0x1.003d0beca02a8p-81  31.2
+fcc w07 fcc r2 0x1.003d0beca02fap-81  123.2
+fcc w08 fcc r1 0x1.04af5738dd46fp-79  31.0
+fcc w08 fcc r2 0x1.04af5738dd495p-79  119.3
+fcc w09 fcc r1 0x1.06ce804c4245ep-79  30.3
+fcc w09 fcc r2 0x1.06ce804c42485p-79  116.8
+fcc w10 fcc r1 0x1.06f2f0c1a3750p-79  31.4
+fcc w10 fcc r2 0x1.06f2f0c1a3778p-79  117.8
+fcc w11 fcc r1 -0x1.f8439e74c9fa2p-80  29.4
+fcc w11 fcc r2 -0x1.f8439e74c9fefp-80  114.7
+fcc z00 fcc r1 0x1.0c5f18f86f93ep-86  682.5
+fcc z00 fcc r2 0x1.0c5f18f86f3efp-86  3006.2
+fcc z12 fcc r1 0x1.0c5f18f86f93ep-86  661.1
+fcc z12 fcc r2 0x1.0c5f18f86f3efp-86  3062.1

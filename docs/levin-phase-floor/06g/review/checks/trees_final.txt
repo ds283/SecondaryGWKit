@@ -1,0 +1,7 @@
+stash@{0}: On new: Tower Auto-Stash: 2025-12-15 08:59:49 +0000
+stash@{1}: On temp-branch: Temp
+== main 28ebaf0743e0555fb2c4512ce714884005a60eff status lines: 0
+../SecondaryGWKit-lpf06g-4f4f9ed 4f4f9ed2a31fb7437fcfca01263d260eebaff842 status(--ignored) lines: 0
+../SecondaryGWKit-lpf06g-1c5336e 1c5336e7e0ab8ed4495601a4033841f2df17ebdd status(--ignored) lines: 0
+../SecondaryGWKit-lpf06g-ff3e839 ff3e8394fa3cf81a3d27087708f6fc8acbc3fb63 status(--ignored) lines: 16
+../SecondaryGWKit-lpf06g-b5626ec b5626ecbc78a8242581c3b413cbe431b4e339472 status(--ignored) lines: 0

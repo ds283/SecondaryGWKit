@@ -1,0 +1,224 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/x1_capture.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/selection.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/capture.json --workers 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-01T17:52:31Z
+# ----
+# levin-phase-floor 06g: the references' calls' inputs, captured at g (06c's X1 capture)
+# written 2026-11-01T17:52:31Z on mps026298.phys.susx.ac.uk
+# script x1_capture.py sha256 5ce00c1f7f17b795ea985e649bfcaf2574b33c7180d1e2fa278222073ea18cd2
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/selection.json sha256 f1d760077f8769a349f67689c6eed05832092ed1e6e980a01f2b5d1fcdfa5b95
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 5247
+C01: pid 5248
+C02: pid 5249
+C03: pid 5250
+C04: pid 5251
+C05: pid 5252
+C06: pid 5373
+C07: pid 5385
+C08: pid 5393
+C09: pid 5403
+C10: pid 5406
+C11: pid 5413
+C12: pid 5458
+C13: pid 5459
+C14: pid 5474
+C15: pid 5487
+C16: pid 5490
+C17: pid 5570
+C18: pid 5589
+C19: pid 5592
+C20: pid 5610
+C21: pid 5615
+C22: pid 5619
+C23: pid 5634
+C24: pid 5658
+C25: pid 5664
+C26: pid 5665
+C27: pid 5676
+C28: pid 5688
+C29: pid 5697
+C30: pid 5716
+C31: pid 5726
+C32: pid 5735
+C33: pid 5744
+C34: pid 5757
+C35: pid 5761
+C36: pid 5779
+C37: pid 5789
+C38: pid 5798
+C39: pid 5811
+C40: pid 5822
+C41: pid 5834
+C42: pid 5848
+C43: pid 5858
+C44: pid 5888
+C45: pid 5938
+C46: pid 5958
+C47: pid 5963
+C48: pid 6003
+C49: pid 6011
+C50: pid 6021
+C51: pid 6041
+C52: pid 6044
+C53: pid 6055
+C54: pid 6069
+C55: pid 6072
+C56: pid 6083
+C57: pid 6105
+C58: pid 6118
+C59: pid 6123
+C60: pid 6137
+C61: pid 6140
+C62: pid 6153
+C63: pid 6168
+C64: pid 6177
+C65: pid 6188
+C66: pid 6272
+C67: pid 6289
+C68: pid 6299
+C69: pid 6331
+C70: pid 6337
+C71: pid 6350
+C72: pid 6361
+C73: pid 6364
+C74: pid 6375
+C75: pid 6410
+C76: pid 6449
+C77: pid 6471
+C78: pid 6484
+C79: pid 6510
+C80: pid 6526
+C81: pid 6540
+C82: pid 6551
+C83: pid 6563
+C84: pid 6564
+C85: pid 6578
+C86: pid 6590
+C87: pid 6602
+C88: pid 6616
+C89: pid 6619
+C90: pid 6632
+C91: pid 6642
+C92: pid 6655
+C93: pid 6664
+C94: pid 6678
+C95: pid 6686
+C96: pid 6701
+C97: pid 6706
+C98: pid 6718
+C99: pid 6730
+C100: pid 6740
+C101: pid 6753
+exit codes {'C03': 0, 'C04': 0, 'C00': 0, 'C01': 0, 'C05': 0, 'C02': 0, 'C07': 0, 'C09': 0, 'C06': 0, 'C08': 0, 'C11': 0, 'C10': 0, 'C14': 0, 'C12': 0, 'C15': 0, 'C13': 0, 'C16': 0, 'C17': 0, 'C18': 0, 'C21': 0, 'C22': 0, 'C19': 0, 'C20': 0, 'C23': 0, 'C24': 0, 'C25': 0, 'C26': 0, 'C27': 0, 'C29': 0, 'C28': 0, 'C30': 0, 'C31': 0, 'C32': 0, 'C33': 0, 'C35': 0, 'C34': 0, 'C36': 0, 'C37': 0, 'C38': 0, 'C41': 0, 'C39': 0, 'C40': 0, 'C43': 0, 'C42': 0, 'C44': 0, 'C45': 0, 'C47': 0, 'C46': 0, 'C48': 0, 'C49': 0, 'C50': 0, 'C51': 0, 'C53': 0, 'C52': 0, 'C54': 0, 'C55': 0, 'C56': 0, 'C57': 0, 'C59': 0, 'C58': 0, 'C61': 0, 'C60': 0, 'C62': 0, 'C63': 0, 'C64': 0, 'C65': 0, 'C67': 0, 'C66': 0, 'C68': 0, 'C69': 0, 'C71': 0, 'C70': 0, 'C73': 0, 'C72': 0, 'C74': 0, 'C75': 0, 'C76': 0, 'C77': 0, 'C78': 0, 'C79': 0, 'C80': 0, 'C81': 0, 'C82': 0, 'C84': 0, 'C83': 0, 'C85': 0, 'C86': 0, 'C87': 0, 'C88': 0, 'C89': 0, 'C90': 0, 'C91': 0, 'C92': 0, 'C93': 0, 'C94': 0, 'C95': 0, 'C96': 0, 'C97': 0, 'C98': 0, 'C99': 0, 'C100': 0, 'C101': 0}
+captured and matching the census bit for bit: 102 of 102
+   g-1e-7-0-12606 1: matches True; error None; ray_initialized False
+   g-1e-7-0-12617 5: matches True; error None; ray_initialized False
+   g-1e-7-0-12625 5: matches True; error None; ray_initialized False
+   g-1e-7-0-12682 14: matches True; error None; ray_initialized False
+   g-1e-7-0-12758 18: matches True; error None; ray_initialized False
+   g-1e-7-0-14053 7: matches True; error None; ray_initialized False
+   g-1e-7-0-1786 4: matches True; error None; ray_initialized False
+   g-1e-7-0-1887 3: matches True; error None; ray_initialized False
+   g-1e-7-0-33650 14: matches True; error None; ray_initialized False
+   g-1e-7-0-33732 9: matches True; error None; ray_initialized False
+   g-1e-7-0-33822 0: matches True; error None; ray_initialized False
+   g-1e-8-3-36019 19: matches True; error None; ray_initialized False
+   g-1e-8-3-38023 4: matches True; error None; ray_initialized False
+   g-1e-7-0-33870 18: matches True; error None; ray_initialized False
+   g-1e-7-0-33961 4: matches True; error None; ray_initialized False
+   g-1e-7-0-34026 1: matches True; error None; ray_initialized False
+   g-1e-7-1-10908 13: matches True; error None; ray_initialized False
+   g-1e-7-1-14462 5: matches True; error None; ray_initialized False
+   g-1e-7-1-14572 9: matches True; error None; ray_initialized False
+   g-1e-7-1-20466 5: matches True; error None; ray_initialized False
+   g-1e-7-1-2174 1: matches True; error None; ray_initialized False
+   g-1e-7-1-2229 3: matches True; error None; ray_initialized False
+   g-1e-7-1-34521 4: matches True; error None; ray_initialized False
+   g-1e-7-1-35314 7: matches True; error None; ray_initialized False
+   g-1e-7-1-35332 10: matches True; error None; ray_initialized False
+   g-1e-7-1-35340 18: matches True; error None; ray_initialized False
+   g-1e-7-1-35525 4: matches True; error None; ray_initialized False
+   g-1e-7-1-38737 11: matches True; error None; ray_initialized False
+   g-1e-7-2-1380 4: matches True; error None; ray_initialized False
+   g-1e-7-2-1444 4: matches True; error None; ray_initialized False
+   g-1e-7-2-1517 15: matches True; error None; ray_initialized False
+   g-1e-7-2-1627 3: matches True; error None; ray_initialized False
+   g-1e-7-2-21527 18: matches True; error None; ray_initialized False
+   g-1e-7-2-21673 3: matches True; error None; ray_initialized False
+   g-1e-7-2-21926 0: matches True; error None; ray_initialized False
+   g-1e-7-2-34485 17: matches True; error None; ray_initialized False
+   g-1e-7-2-34708 5: matches True; error None; ray_initialized False
+   g-1e-7-2-34718 11: matches True; error None; ray_initialized False
+   g-1e-7-2-36976 0: matches True; error None; ray_initialized False
+   g-1e-7-3-13510 5: matches True; error None; ray_initialized False
+   g-1e-7-3-14593 21: matches True; error None; ray_initialized False
+   g-1e-7-3-34090 4: matches True; error None; ray_initialized False
+   g-1e-7-3-34212 4: matches True; error None; ray_initialized False
+   g-1e-7-3-34296 1: matches True; error None; ray_initialized False
+   g-1e-7-3-34370 4: matches True; error None; ray_initialized False
+   g-1e-7-3-34409 2: matches True; error None; ray_initialized False
+   g-1e-7-3-34411 13: matches True; error None; ray_initialized False
+   g-1e-7-3-34449 0: matches True; error None; ray_initialized False
+   g-1e-7-3-34853 1: matches True; error None; ray_initialized False
+   g-1e-7-3-36020 20: matches True; error None; ray_initialized False
+   g-1e-7-3-37319 6: matches True; error None; ray_initialized False
+   g-1e-7-3-504 9: matches True; error None; ray_initialized False
+   g-1e-8-0-10552 0: matches True; error None; ray_initialized False
+   g-1e-8-0-12606 5: matches True; error None; ray_initialized False
+   g-1e-8-0-12655 3: matches True; error None; ray_initialized False
+   g-1e-8-0-12662 20: matches True; error None; ray_initialized False
+   g-1e-8-0-12932 14: matches True; error None; ray_initialized False
+   g-1e-8-0-13951 3: matches True; error None; ray_initialized False
+   g-1e-8-0-1823 0: matches True; error None; ray_initialized False
+   g-1e-8-0-33962 12: matches True; error None; ray_initialized False
+   g-1e-8-0-33988 21: matches True; error None; ray_initialized False
+   g-1e-8-0-34014 0: matches True; error None; ray_initialized False
+   g-1e-8-0-37212 8: matches True; error None; ray_initialized False
+   g-1e-8-1-10794 5: matches True; error None; ray_initialized False
+   g-1e-8-1-11031 3: matches True; error None; ray_initialized False
+   g-1e-8-1-11073 20: matches True; error None; ray_initialized False
+   g-1e-8-1-11154 10: matches True; error None; ray_initialized False
+   g-1e-8-1-14231 1: matches True; error None; ray_initialized False
+   g-1e-8-1-14572 8: matches True; error None; ray_initialized False
+   g-1e-8-1-1759 14: matches True; error None; ray_initialized False
+   g-1e-8-1-2174 1: matches True; error None; ray_initialized False
+   g-1e-8-1-2368 9: matches True; error None; ray_initialized False
+   g-1e-8-1-34613 15: matches True; error None; ray_initialized False
+   g-1e-8-1-35133 22: matches True; error None; ray_initialized False
+   g-1e-8-1-35282 19: matches True; error None; ray_initialized False
+   g-1e-8-1-35413 7: matches True; error None; ray_initialized False
+   g-1e-8-1-35480 2: matches True; error None; ray_initialized False
+   g-1e-8-2-1380 4: matches True; error None; ray_initialized False
+   g-1e-8-2-1402 12: matches True; error None; ray_initialized False
+   g-1e-8-2-1549 4: matches True; error None; ray_initialized False
+   g-1e-8-2-1627 3: matches True; error None; ray_initialized False
+   g-1e-8-2-1638 13: matches True; error None; ray_initialized False
+   g-1e-8-2-1673 21: matches True; error None; ray_initialized False
+   g-1e-8-2-21651 21: matches True; error None; ray_initialized False
+   g-1e-8-2-21720 1: matches True; error None; ray_initialized False
+   g-1e-8-2-21874 12: matches True; error None; ray_initialized False
+   g-1e-8-2-33438 16: matches True; error None; ray_initialized False
+   g-1e-8-2-34671 2: matches True; error None; ray_initialized False
+   g-1e-8-2-34708 5: matches True; error None; ray_initialized False
+   g-1e-8-2-34718 5: matches True; error None; ray_initialized False
+   g-1e-8-3-1045 13: matches True; error None; ray_initialized False
+   g-1e-8-3-1192 5: matches True; error None; ray_initialized False
+   g-1e-8-3-13481 2: matches True; error None; ray_initialized False
+   g-1e-8-3-13913 9: matches True; error None; ray_initialized False
+   g-1e-8-3-14492 4: matches True; error None; ray_initialized False
+   g-1e-8-3-1916 4: matches True; error None; ray_initialized False
+   g-1e-8-3-34220 4: matches True; error None; ray_initialized False
+   g-1e-8-3-34389 3: matches True; error None; ray_initialized False
+   g-1e-8-3-34394 3: matches True; error None; ray_initialized False
+   g-1e-8-3-34419 21: matches True; error None; ray_initialized False
+   g-1e-8-3-34453 3: matches True; error None; ray_initialized False
+   g-1e-8-3-34925 1: matches True; error None; ray_initialized False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/capture.json sha256 62b91d27bbd6a4e6a5fc10f64e212e4a491baeb043c1651e1722b0ebf5922a49
+# ----
+# end 2026-11-01T18:12:11Z
+# exit 0
+# status done
+# wall_s 1180.055

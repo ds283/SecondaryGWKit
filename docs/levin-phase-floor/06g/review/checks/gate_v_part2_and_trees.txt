@@ -1,0 +1,20 @@
+== git diff --stat c1ec3b2 3ae6f3a -- . ':!docs' ':!prompts'
+ AdaptiveLevin/levin_quadrature.py               |  730 +++++++++---
+ AdaptiveLevin/tests/test_levin_cc_floor.py      |    7 +
+ AdaptiveLevin/tests/test_levin_global_budget.py |   14 +-
+ AdaptiveLevin/tests/test_levin_leaf_values.py   |  626 +++++++++++
+ AdaptiveLevin/tests/test_levin_node_sum.py      |  182 +++
+ AdaptiveLevin/tests/test_levin_roundoff_exit.py |  174 +++
+ CLAUDE.md                                       |    5 +-
+ tools/filon_reference.py                        | 1345 +++++++++++++++++++++++
+ tools/tests/test_filon_reference.py             |  355 ++++++
+ 9 files changed, 3296 insertions(+), 142 deletions(-)
+== c1ec3b2..4f4f9ed
+ CLAUDE.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+== 3ae6f3a..1c5336e (all)
+== HEADs and status
+/Users/ds283/Documents/Code/SecondaryGWKit 28ebaf0743e0555fb2c4512ce714884005a60eff status:[0 lines]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed 4f4f9ed2a31fb7437fcfca01263d260eebaff842 status:[0 lines]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e 1c5336e7e0ab8ed4495601a4033841f2df17ebdd status:[0 lines]
+Sun Nov  1 20:18:53 UTC 2026

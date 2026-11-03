@@ -1,0 +1,116 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/draw_refs.py 20261101 state/predictions_20261101T175120Z.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:51:59Z
+# ----
+# levin-phase-floor 06g: the references' random sample of 60 calls from 06h's census
+# written 2026-11-01T17:51:59Z on mps026298.phys.susx.ac.uk
+# script draw_refs.py sha256 67bc2b1dbeff7bfe8cdd8a067ec000a90f929c4179ca7bfdb56c034c4e986ba8
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/predictions_20261101T175120Z.md sha256 825b6f04f5a672c02168260a64e69eaa23fdae7f919d22121cea0883489bdfb9
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06c/depth20-tiling/results.json sha256 fdea89891ff0cccdb6fb4c8d1d4527bd20f74e7a3e6ec9432abe9afdba63d604
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl sha256 3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+# predictions file state/predictions_20261101T175120Z.md mtime 2026-11-01T17:51:20.051247+00:00
+06a's stationary-point rows: 720
+06h census records: 18560
+stratum 1e-7 analytic: 95889 eligible; drew 1e-7-0-14053#7, 1e-7-0-33650#14, 1e-7-2-1517#15, 1e-7-0-12758#18, 1e-7-3-34411#13, 1e-7-0-12625#5, 1e-7-0-12682#14, 1e-7-3-14593#21, 1e-7-1-10908#13, 1e-7-1-20466#5, 1e-7-1-35314#7, 1e-7-0-33732#9, 1e-7-0-33870#18, 1e-7-2-21527#18, 1e-7-3-504#9
+stratum 1e-7 group: 33722 eligible; drew 1e-7-3-34409#2, 1e-7-0-33822#0, 1e-7-1-2229#3, 1e-7-0-1786#4, 1e-7-2-21926#0, 1e-7-0-12606#1, 1e-7-3-34449#0, 1e-7-2-36976#0, 1e-7-0-33961#4, 1e-7-3-34853#1, 1e-7-0-1887#3, 1e-7-1-14462#5, 1e-7-0-34026#1, 1e-7-2-21673#3, 1e-7-1-35525#4
+stratum 1e-8 analytic: 95888 eligible; drew 1e-8-1-1759#14, 1e-8-1-35133#22, 1e-8-1-35282#19, 1e-8-0-10552#0, 1e-8-0-33988#21, 1e-8-1-11073#20, 1e-8-2-1673#21, 1e-8-1-34613#15, 1e-8-1-35413#7, 1e-8-1-11154#10, 1e-8-2-21651#21, 1e-8-2-1638#13, 1e-8-2-33438#16, 1e-8-0-12662#20, 1e-8-3-1045#13
+stratum 1e-8 group: 33722 eligible; drew 1e-8-0-13951#3, 1e-8-3-13481#2, 1e-8-3-1916#4, 1e-8-1-11031#3, 1e-8-2-21720#1, 1e-8-3-34389#3, 1e-8-1-14231#1, 1e-8-3-34925#1, 1e-8-3-14492#4, 1e-8-0-34014#0, 1e-8-2-34671#2, 1e-8-1-10794#5, 1e-8-3-34394#3, 1e-8-3-34453#3, 1e-8-0-1823#0
+{
+ "1e-7 analytic": {
+  "calls": 107416,
+  "in_720": 11520,
+  "z3": 7,
+  "abserr_not_finite": 0,
+  "eligible": 95889
+ },
+ "1e-7 group": {
+  "calls": 37325,
+  "in_720": 3600,
+  "z3": 3,
+  "abserr_not_finite": 0,
+  "eligible": 33722
+ },
+ "1e-8 analytic": {
+  "calls": 107416,
+  "in_720": 11520,
+  "z3": 8,
+  "abserr_not_finite": 0,
+  "eligible": 95888
+ },
+ "1e-8 group": {
+  "calls": 37325,
+  "in_720": 3600,
+  "z3": 3,
+  "abserr_not_finite": 0,
+  "eligible": 33722
+ }
+}
+r00 1e-7 analytic g-1e-7-0-14053 #7 'analytic J2' value_06h 0x1.109b5b392222dp-38 abserr_06h 0x1.4397496a3ceafp-70 converged True
+r01 1e-7 analytic g-1e-7-0-33650 #14 'analytic Y4' value_06h 0x1.ab410c894d93bp-42 abserr_06h 0x1.ee68ad9b79209p-79 converged True
+r02 1e-7 analytic g-1e-7-2-1517 #15 'analytic J1' value_06h 0x1.2e4efac97cb47p-37 abserr_06h 0x1.1231770bf2935p-64 converged True
+r03 1e-7 analytic g-1e-7-0-12758 #18 'analytic Y3' value_06h -0x1.85618a2beeb81p-34 abserr_06h 0x1.3914797230469p-57 converged True
+r04 1e-7 analytic g-1e-7-3-34411 #13 'analytic J1' value_06h -0x1.74339441800bfp-35 abserr_06h 0x1.ff5504a671c00p-61 converged True
+r05 1e-7 analytic g-1e-7-0-12625 #5 'analytic J1' value_06h 0x1.4c3598abe6160p-33 abserr_06h 0x1.2f81936f4a538p-58 converged True
+r06 1e-7 analytic g-1e-7-0-12682 #14 'analytic Y1' value_06h 0x1.9e88aafd5488bp-44 abserr_06h 0x1.7acd1289a3607p-68 converged True
+r07 1e-7 analytic g-1e-7-3-14593 #21 'analytic J4' value_06h 0x1.da1baff52abd4p-40 abserr_06h 0x1.f7b8b400f2babp-68 converged True
+r08 1e-7 analytic g-1e-7-1-10908 #13 'analytic J1' value_06h -0x1.91004401a7a54p-40 abserr_06h 0x1.ae394cdc4a6e4p-79 converged True
+r09 1e-7 analytic g-1e-7-1-20466 #5 'analytic Y2' value_06h 0x1.05491c057464cp-41 abserr_06h 0x1.fb293e93e93e9p-80 converged True
+r10 1e-7 analytic g-1e-7-1-35314 #7 'analytic J1' value_06h -0x1.6c10203d4ea55p-47 abserr_06h 0x1.6e8c6bd64693ep-82 converged True
+r11 1e-7 analytic g-1e-7-0-33732 #9 'analytic J3' value_06h 0x1.f9301ae55fdf2p-29 abserr_06h 0x1.32ede00af610dp-62 converged True
+r12 1e-7 analytic g-1e-7-0-33870 #18 'analytic Y3' value_06h -0x1.5046faac65e9dp-42 abserr_06h 0x1.de95e4682334dp-69 converged True
+r13 1e-7 analytic g-1e-7-2-21527 #18 'analytic Y2' value_06h 0x1.c4f466622578fp-47 abserr_06h 0x1.ab6389a31187cp-82 converged True
+r14 1e-7 analytic g-1e-7-3-504 #9 'analytic Y4' value_06h 0x1.c8f5ecee81942p-43 abserr_06h 0x1.f870d52edd799p-86 converged True
+r15 1e-7 group g-1e-7-3-34409 #2 '12, 1.0037e+05), regime Gqr, group G+q-r' value_06h 0x1.03382113c6b05p-85 abserr_06h 0x1.d1682d705ec0dp-113 converged True
+r16 1e-7 group g-1e-7-0-33822 #0 '.6391e+16, 5.169e+11), regime G, group G' value_06h 0x1.f84f12b5b5269p-93 abserr_06h 0x1.ae6aa3537280cp-109 converged True
+r17 1e-7 group g-1e-7-1-2229 #3 '406e+09, 2.091), regime Gqr, group G+q+r' value_06h -0x1.1d47b31779219p-80 abserr_06h 0x1.23a8fdc3425e4p-105 converged True
+r18 1e-7 group g-1e-7-0-1786 #4 '09e+09, 693.47), regime Gqr, group G+q-r' value_06h 0x1.a8b2df1c769bbp-78 abserr_06h 0x1.4e45ca3fe2c64p-101 converged True
+r19 1e-7 group g-1e-7-2-21926 #0 '.6391e+16, 5.169e+11), regime G, group G' value_06h -0x1.dd9fec51b3fb9p-87 abserr_06h 0x1.732a39b731d54p-108 converged True
+r20 1e-7 group g-1e-7-0-12606 #1 '9e+11, 1.6711e+10), regime Gr, group G+r' value_06h 0x1.6d2b6a99535cdp-95 abserr_06h 0x1.ba24882866b3ep-111 converged True
+r21 1e-7 group g-1e-7-3-34449 #0 '.6391e+16, 5.169e+11), regime G, group G' value_06h 0x1.7136b8d200e81p-82 abserr_06h 0x1.01f9c3660a894p-105 converged True
+r22 1e-7 group g-1e-7-2-36976 #0 '6391e+16, 5.1721e+12), regime G, group G' value_06h 0x1.0a48764fa55e9p-94 abserr_06h 0x1.12d7b6c16dc82p-115 converged True
+r23 1e-7 group g-1e-7-0-33961 #4 '12, 7.6274e+07), regime Gqr, group G-q-r' value_06h 0x1.9982fbe9eb139p-94 abserr_06h 0x1.45265ee2efddfp-118 converged True
+r24 1e-7 group g-1e-7-3-34853 #1 '51e+12, 1.5861), regime Gqr, group G+q+r' value_06h 0x1.3a013d1f7134dp-92 abserr_06h 0x1.6f2cf75db5da6p-117 converged True
+r25 1e-7 group g-1e-7-0-1887 #3 '.406e+09, 1589), regime Gqr, group G+q+r' value_06h -0x1.a04a1e8bd5447p-97 abserr_06h 0x1.34dd56a6248dap-113 converged True
+r26 1e-7 group g-1e-7-1-14462 #5 '21e+11, 1.5861), regime Gqr, group G-q+r' value_06h -0x1.bee6aee748731p-102 abserr_06h 0x1.d3741ed13d34dp-111 converged True
+r27 1e-7 group g-1e-7-0-34026 #1 '11, 1.9152e+07), regime Gqr, group G+q+r' value_06h -0x1.2d5af711806a5p-94 abserr_06h 0x1.22dcaec0a40a1p-120 converged True
+r28 1e-7 group g-1e-7-2-21673 #3 '11, 3.6545e+09), regime Gqr, group G-q+r' value_06h 0x1.0373415b1d4ebp-90 abserr_06h 0x1.9ef72d35d5e7fp-116 converged True
+r29 1e-7 group g-1e-7-1-35525 #4 '21e+11, 8342.9), regime Gqr, group G+q-r' value_06h -0x1.2c2cc6fa60268p-103 abserr_06h 0x1.77c558bb4311fp-119 converged True
+r30 1e-8 analytic g-1e-8-1-1759 #14 'analytic Y4' value_06h -0x1.03983a21e180bp-41 abserr_06h 0x1.8eff00d729417p-70 converged True
+r31 1e-8 analytic g-1e-8-1-35133 #22 'analytic Y4' value_06h 0x1.349e01990d31fp-45 abserr_06h 0x1.9bb9163b437b4p-76 converged True
+r32 1e-8 analytic g-1e-8-1-35282 #19 'analytic J4' value_06h -0x1.1d3d41851c203p-39 abserr_06h 0x1.de20ab6cf0f22p-67 converged True
+r33 1e-8 analytic g-1e-8-0-10552 #0 'analytic J1' value_06h -0x1.f02e44a7d7079p-33 abserr_06h 0x1.8c0cccccccccap-75 converged True
+r34 1e-8 analytic g-1e-8-0-33988 #21 'analytic J4' value_06h 0x1.552cfffd16b5bp-42 abserr_06h 0x1.558a07f03355cp-71 converged True
+r35 1e-8 analytic g-1e-8-1-11073 #20 'analytic Y3' value_06h 0x1.dcca57f1b617dp-46 abserr_06h 0x1.bd9650b006945p-78 converged True
+r36 1e-8 analytic g-1e-8-2-1673 #21 'analytic J4' value_06h -0x1.1781a7e23bc02p-49 abserr_06h 0x1.b617b268868c8p-79 converged True
+r37 1e-8 analytic g-1e-8-1-34613 #15 'analytic J1' value_06h 0x1.a551de2c931fdp-34 abserr_06h 0x1.bd811342c48aep-61 converged True
+r38 1e-8 analytic g-1e-8-1-35413 #7 'analytic J1' value_06h 0x1.1e47007f0596bp-45 abserr_06h 0x1.40d7051fb1377p-76 converged True
+r39 1e-8 analytic g-1e-8-1-11154 #10 'analytic Y2' value_06h -0x1.050f51ea7f7eap-41 abserr_06h 0x1.5099b30d88dfap-70 converged True
+r40 1e-8 analytic g-1e-8-2-21651 #21 'analytic J4' value_06h -0x1.1f4e32109ce1ap-49 abserr_06h 0x1.b11f117d73301p-85 converged True
+r41 1e-8 analytic g-1e-8-2-1638 #13 'analytic J4' value_06h -0x1.39ccb7c9fb1ccp-33 abserr_06h 0x1.7347288f18c76p-62 converged True
+r42 1e-8 analytic g-1e-8-2-33438 #16 'analytic J4' value_06h 0x1.bae3371ed77b2p-46 abserr_06h 0x1.9b1003b7c83b9p-85 converged True
+r43 1e-8 analytic g-1e-8-0-12662 #20 'analytic Y4' value_06h 0x1.1972626a5260ep-27 abserr_06h 0x1.93e726a86eeedp-66 converged True
+r44 1e-8 analytic g-1e-8-3-1045 #13 'analytic J1' value_06h 0x1.82e4a7baaab7ap-45 abserr_06h 0x1.13a189f063b5fp-80 converged True
+r45 1e-8 group g-1e-8-0-13951 #3 '69e+11, 174.13), regime Gqr, group G-q+r' value_06h -0x1.6c25ffa750313p-85 abserr_06h 0x1.8c2ae937e835fp-111 converged True
+r46 1e-8 group g-1e-8-3-13481 #2 '.406e+09, 3641), regime Gqr, group G+q-r' value_06h -0x1.88ddf95ce5a26p-74 abserr_06h 0x1.5809c4a71e63ap-101 converged True
+r47 1e-8 group g-1e-8-3-1916 #4 '11e+10, 10.979), regime Gqr, group G+q-r' value_06h 0x1.e7212a4d7ccdfp-93 abserr_06h 0x1.9b99608fd6d5ep-119 converged True
+r48 1e-8 group g-1e-8-1-11031 #3 '+12, 1.104e+10), regime Gqr, group G-q+r' value_06h -0x1.972ed8e997363p-91 abserr_06h 0x1.30231ce931966p-115 converged True
+r49 1e-8 group g-1e-8-2-21720 #1 '1e+12, 1.6721e+11), regime Gr, group G+r' value_06h 0x1.ebdf032586b3cp-103 abserr_06h 0x1.c369b73e114f6p-115 converged True
+r50 1e-8 group g-1e-8-3-34389 #3 '169e+11, 57749), regime Gqr, group G-q+r' value_06h 0x1.b8e187b877709p-94 abserr_06h 0x1.4793896440823p-116 converged True
+r51 1e-8 group g-1e-8-1-14231 #1 '11e+10, 1.709e+09), regime Gr, group G+r' value_06h -0x1.bd83e8fb7d3d5p-80 abserr_06h 0x1.1b89dec108d76p-106 converged True
+r52 1e-8 group g-1e-8-3-34925 #1 '69e+11, 2.7567), regime Gqr, group G+q+r' value_06h -0x1.07d97b36960a2p-89 abserr_06h 0x1.29253942f72d7p-110 converged True
+r53 1e-8 group g-1e-8-3-14492 #4 '1e+10, 0.17381), regime Gqr, group G+q-r' value_06h 0x1.b2dd07398175ep-93 abserr_06h 0x1.a1423487c8269p-120 converged True
+r54 1e-8 group g-1e-8-0-34014 #0 '.6391e+16, 5.169e+11), regime G, group G' value_06h -0x1.5939372fed83fp-93 abserr_06h 0x1.a38ddc6b9e7abp-109 converged True
+r55 1e-8 group g-1e-8-2-34671 #2 '1e+12, 1.6721e+11), regime Gr, group G-r' value_06h 0x1.78be2e213077fp-105 abserr_06h 0x1.968d686dbd9c6p-121 converged True
+r56 1e-8 group g-1e-8-1-10794 #5 '11, 1.7499e+10), regime Gqr, group G-q+r' value_06h -0x1.4a8871cc0d542p-101 abserr_06h 0x1.0543d71cef2b8p-125 converged True
+r57 1e-8 group g-1e-8-3-34394 #3 '21e+12, 8342.9), regime Gqr, group G-q+r' value_06h 0x1.e8c1f84acbe0bp-100 abserr_06h 0x1.1b4b10b4ed577p-111 converged True
+r58 1e-8 group g-1e-8-3-34453 #3 '51e+12, 398.99), regime Gqr, group G-q+r' value_06h 0x1.15b2835437cacp-86 abserr_06h 0x1.d7660b4900221p-112 converged True
+r59 1e-8 group g-1e-8-0-1823 #0 '6391e+16, 1.6721e+11), regime G, group G' value_06h -0x1.059a853cdebaep-81 abserr_06h 0x1.c593db008733ap-109 converged True
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/draw.json sha256 6e26e25335949afb6b137ed9634572a71ca95af9132f958596bf17d19c164caf
+# ----
+# end 2026-11-01T17:52:12Z
+# exit 0

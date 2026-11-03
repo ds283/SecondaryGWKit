@@ -1,0 +1,258 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/v2_detail06g.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315 0-12959 0-12778 0-1873 0-33730 0-2108
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:38:18Z
+# ----
+== g-1e-7-0-12778: total g 2.593575767530359e-22 (abserr 2.871863088355276e-27, conv True) 06h 2.593708768728864e-22 (abserr 3.5343805843975514e-27, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g 2.593575767530359e-22 06h 2.593708768728864e-22
+   calls 0 G: |dv| 1.159e-33 / (e_06h + e_g) 2.687e-33 = 0.431; abserr 06h 1.343e-33 g 1.343e-33; regions 8 -> 8; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.107e-33 / (e_06h + e_g) 8.557e-34 = 8.306; abserr 06h 5.477e-34 g 3.080e-34; regions 2 -> 16; depth 1 -> 7; conv True -> True; (b) leaves 6; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 8.868e-35 / (e_06h + e_g) 4.802e-34 = 0.185; abserr 06h 3.282e-34 g 1.520e-34; regions 11 -> 16; depth 4 -> 5; conv True -> True; (b) leaves 6; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 3.369e-37 / (e_06h + e_g) 8.958e-37 = 0.376; abserr 06h 7.058e-37 g 1.899e-37; regions 13 -> 129; depth 7 -> 17; conv True -> True; (b) leaves 76; untrusted returned 0; CC True
+   calls 4 G+q-r: |dv| 9.150e-39 / (e_06h + e_g) 1.908e-38 = 0.480; abserr 06h 9.541e-39 g 9.541e-39; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 5 G-q+r: |dv| 1.008e-37 / (e_06h + e_g) 4.109e-37 = 0.245; abserr 06h 9.936e-38 g 3.115e-37; regions 2 -> 46; depth 1 -> 13; conv True -> True; (b) leaves 27; untrusted returned 0; CC True
+   calls 6 G-q-r: |dv| 7.029e-39 / (e_06h + e_g) 1.490e-38 = 0.472; abserr 06h 7.452e-39 g 7.452e-39; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 7 analytic J1: |dv| 7.917e-23 / (e_06h + e_g) 2.449e-20 = 0.003; abserr 06h 1.224e-20 g 1.224e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 6.656e-23 / (e_06h + e_g) 2.449e-20 = 0.003; abserr 06h 1.224e-20 g 1.224e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 2.639e-20 / (e_06h + e_g) 5.278e-20 = 0.500; abserr 06h 2.639e-20 g 2.639e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 2.547e-20 / (e_06h + e_g) 5.094e-20 = 0.500; abserr 06h 2.547e-20 g 2.547e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 1.073e-22 / (e_06h + e_g) 2.449e-20 = 0.004; abserr 06h 1.224e-20 g 1.224e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 4.092e-23 / (e_06h + e_g) 2.449e-20 = 0.002; abserr 06h 1.224e-20 g 1.224e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 3.416e-20 / (e_06h + e_g) 6.831e-20 = 0.500; abserr 06h 3.416e-20 g 3.416e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 4.191e-20 / (e_06h + e_g) 8.382e-20 = 0.500; abserr 06h 4.191e-20 g 4.191e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 1.387e-21 / (e_06h + e_g) 5.818e-21 = 0.238; abserr 06h 2.909e-21 g 2.909e-21; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 2.273e-23 / (e_06h + e_g) 5.392e-23 = 0.422; abserr 06h 2.696e-23 g 2.696e-23; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 6.493e-23 / (e_06h + e_g) 1.301e-22 = 0.499; abserr 06h 6.506e-23 g 6.506e-23; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 2.552e-20 / (e_06h + e_g) 5.247e-20 = 0.486; abserr 06h 2.624e-20 g 2.624e-20; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 6.319e-21 / (e_06h + e_g) 1.278e-20 = 0.494; abserr 06h 6.390e-21 g 6.390e-21; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 2.320e-21 / (e_06h + e_g) 5.760e-21 = 0.403; abserr 06h 2.880e-21 g 2.880e-21; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 5.767e-22 / (e_06h + e_g) 1.154e-21 = 0.500; abserr 06h 5.769e-22 g 5.769e-22; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 5.133e-22 / (e_06h + e_g) 1.035e-21 = 0.496; abserr 06h 5.176e-22 g 5.176e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-7-0-12959: total g -1.0138258034795324e-23 (abserr 1.2746948988682462e-28, conv False) 06h -1.0138831675404067e-23 (abserr 1.3766277562369705e-28, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g -1.0138258034795324e-23 06h -1.0138831675404067e-23
+   calls 0 G: |dv| 3.198e-34 / (e_06h + e_g) 1.840e-33 = 0.174; abserr 06h 9.206e-34 g 9.195e-34; regions 8 -> 9; depth 4 -> 4; conv True -> True; (b) leaves 1; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.147e-33 / (e_06h + e_g) 1.175e-33 = 6.082; abserr 06h 5.466e-34 g 6.283e-34; regions 2 -> 12; depth 1 -> 5; conv True -> True; (b) leaves 2; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 6.799e-35 / (e_06h + e_g) 4.668e-34 = 0.146; abserr 06h 3.407e-34 g 1.261e-34; regions 12 -> 23; depth 4 -> 7; conv True -> True; (b) leaves 7; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 4.006e-38 / (e_06h + e_g) 8.225e-38 = 0.487; abserr 06h 4.112e-38 g 4.112e-38; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 4 G+q-r: |dv| 8.286e-39 / (e_06h + e_g) 2.523e-38 = 0.328; abserr 06h 1.204e-38 g 1.319e-38; regions 9 -> 73; depth 4 -> 15; conv True -> True; (b) leaves 39; untrusted returned 0; CC True
+   calls 5 G-q+r: |dv| 1.566e-37 / (e_06h + e_g) 4.337e-37 = 0.361; abserr 06h 1.421e-37 g 2.917e-37; regions 5 -> 42; depth 3 -> 18; conv True -> True; (b) leaves 26; untrusted returned 0; CC True
+   calls 6 G-q-r: |dv| 8.667e-40 / (e_06h + e_g) 4.040e-38 = 0.021; abserr 06h 2.948e-38 g 1.092e-38; regions 13 -> 163; depth 7 -> 20; conv True -> False; (b) leaves 89; untrusted returned 2; CC True
+   other 7 analytic J1: |dv| 1.431e-25 / (e_06h + e_g) 1.218e-22 = 0.001; abserr 06h 6.092e-23 g 6.092e-23; regions 5 -> 5; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 8.903e-25 / (e_06h + e_g) 1.208e-22 = 0.007; abserr 06h 6.022e-23 g 6.060e-23; regions 5 -> 9; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 1.398e-22 / (e_06h + e_g) 2.818e-22 = 0.496; abserr 06h 1.409e-22 g 1.409e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 4.632e-22 / (e_06h + e_g) 9.287e-22 = 0.499; abserr 06h 4.644e-22 g 4.644e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 8.423e-25 / (e_06h + e_g) 1.208e-22 = 0.007; abserr 06h 6.022e-23 g 6.060e-23; regions 5 -> 8; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 9.128e-26 / (e_06h + e_g) 1.332e-22 = 0.001; abserr 06h 7.228e-23 g 6.096e-23; regions 4 -> 6; depth 3 -> 4; conv True -> True; (b) leaves 1; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 6.760e-22 / (e_06h + e_g) 1.355e-21 = 0.499; abserr 06h 6.773e-22 g 6.773e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 2.800e-22 / (e_06h + e_g) 5.621e-22 = 0.498; abserr 06h 2.810e-22 g 2.810e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 1.993e-22 / (e_06h + e_g) 4.021e-22 = 0.496; abserr 06h 2.010e-22 g 2.010e-22; regions 7 -> 8; depth 5 -> 5; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 4.782e-22 / (e_06h + e_g) 9.607e-22 = 0.498; abserr 06h 4.803e-22 g 4.803e-22; regions 5 -> 5; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 5.530e-21 / (e_06h + e_g) 1.106e-20 = 0.500; abserr 06h 5.530e-21 g 5.530e-21; regions 4 -> 6; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 5.660e-21 / (e_06h + e_g) 1.135e-20 = 0.498; abserr 06h 5.677e-21 g 5.677e-21; regions 4 -> 5; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 5.150e-22 / (e_06h + e_g) 1.035e-21 = 0.497; abserr 06h 5.181e-22 g 5.174e-22; regions 4 -> 7; depth 3 -> 5; conv True -> True; (b) leaves 2; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 9.882e-23 / (e_06h + e_g) 1.995e-22 = 0.495; abserr 06h 9.979e-23 g 9.972e-23; regions 5 -> 8; depth 3 -> 5; conv True -> True; (b) leaves 2; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 2.091e-21 / (e_06h + e_g) 4.250e-21 = 0.492; abserr 06h 2.125e-21 g 2.125e-21; regions 4 -> 4; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 8.079e-21 / (e_06h + e_g) 1.616e-20 = 0.500; abserr 06h 8.080e-21 g 8.080e-21; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-7-0-1873: total g 1.441423050598258e-25 (abserr 1.9591005462813862e-30, conv True) 06h 1.4414984300211217e-25 (abserr 2.197990968916969e-30, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g 1.441423050598258e-25 06h 1.4414984300211217e-25
+   calls 0 G: |dv| 9.650e-34 / (e_06h + e_g) 2.295e-33 = 0.421; abserr 06h 1.147e-33 g 1.147e-33; regions 8 -> 9; depth 4 -> 4; conv True -> True; (b) leaves 1; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.199e-33 / (e_06h + e_g) 6.498e-34 = 11.079; abserr 06h 3.549e-34 g 2.948e-34; regions 2 -> 15; depth 1 -> 6; conv True -> True; (b) leaves 5; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 7.238e-35 / (e_06h + e_g) 4.585e-34 = 0.158; abserr 06h 3.297e-34 g 1.288e-34; regions 12 -> 24; depth 4 -> 6; conv True -> True; (b) leaves 11; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 4.540e-38 / (e_06h + e_g) 4.023e-34 = 0.000; abserr 06h 2.011e-34 g 2.011e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 4 G+q-r: |dv| 9.366e-40 / (e_06h + e_g) 1.807e-34 = 0.000; abserr 06h 9.036e-35 g 9.036e-35; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 5 G-q+r: |dv| 2.093e-38 / (e_06h + e_g) 3.772e-34 = 0.000; abserr 06h 1.886e-34 g 1.886e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 6 G-q-r: |dv| 2.767e-39 / (e_06h + e_g) 1.789e-34 = 0.000; abserr 06h 8.943e-35 g 8.943e-35; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 7 analytic J1: |dv| 7.380e-24 / (e_06h + e_g) 1.098e-21 = 0.007; abserr 06h 5.489e-22 g 5.488e-22; regions 4 -> 6; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 3.020e-24 / (e_06h + e_g) 1.098e-21 = 0.003; abserr 06h 5.489e-22 g 5.488e-22; regions 4 -> 6; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 4.052e-21 / (e_06h + e_g) 9.198e-21 = 0.441; abserr 06h 4.599e-21 g 4.599e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 1.134e-21 / (e_06h + e_g) 3.370e-21 = 0.337; abserr 06h 1.685e-21 g 1.685e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 5.026e-25 / (e_06h + e_g) 1.101e-21 = 0.000; abserr 06h 5.507e-22 g 5.507e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 8.846e-24 / (e_06h + e_g) 1.098e-21 = 0.008; abserr 06h 5.489e-22 g 5.488e-22; regions 4 -> 5; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 1.669e-21 / (e_06h + e_g) 4.444e-21 = 0.376; abserr 06h 2.222e-21 g 2.222e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 6.082e-21 / (e_06h + e_g) 1.326e-20 = 0.459; abserr 06h 6.629e-21 g 6.629e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 2.439e-22 / (e_06h + e_g) 6.095e-22 = 0.400; abserr 06h 3.047e-22 g 3.047e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 1.070e-21 / (e_06h + e_g) 2.167e-21 = 0.494; abserr 06h 1.084e-21 g 1.083e-21; regions 4 -> 5; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 1.993e-20 / (e_06h + e_g) 4.037e-20 = 0.494; abserr 06h 2.019e-20 g 2.019e-20; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 3.882e-21 / (e_06h + e_g) 8.810e-21 = 0.441; abserr 06h 4.405e-21 g 4.405e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 8.167e-22 / (e_06h + e_g) 1.661e-21 = 0.492; abserr 06h 8.305e-22 g 8.304e-22; regions 4 -> 6; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 3.173e-22 / (e_06h + e_g) 6.396e-22 = 0.496; abserr 06h 3.198e-22 g 3.198e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 4.521e-21 / (e_06h + e_g) 9.499e-21 = 0.476; abserr 06h 4.749e-21 g 4.749e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 7.077e-21 / (e_06h + e_g) 1.480e-20 = 0.478; abserr 06h 7.402e-21 g 7.402e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-7-0-2108: total g -1.8554905768405225e-26 (abserr 4.193593379588866e-31, conv True) 06h -1.855593593008934e-26 (abserr 4.684071860483878e-31, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g -1.8554905768405225e-26 06h -1.855593593008934e-26
+   calls 0 G: |dv| 4.655e-34 / (e_06h + e_g) 1.430e-33 = 0.325; abserr 06h 7.155e-34 g 7.150e-34; regions 8 -> 9; depth 4 -> 4; conv True -> True; (b) leaves 1; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.206e-33 / (e_06h + e_g) 7.022e-34 = 10.262; abserr 06h 4.320e-34 g 2.703e-34; regions 2 -> 14; depth 1 -> 6; conv True -> True; (b) leaves 3; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 6.938e-35 / (e_06h + e_g) 4.692e-34 = 0.148; abserr 06h 3.378e-34 g 1.314e-34; regions 12 -> 23; depth 4 -> 7; conv True -> True; (b) leaves 9; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 1.100e-37 / (e_06h + e_g) 1.585e-33 = 0.000; abserr 06h 7.923e-34 g 7.923e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 4 G+q-r: |dv| 2.655e-39 / (e_06h + e_g) 5.149e-34 = 0.000; abserr 06h 2.575e-34 g 2.575e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 5 G-q+r: |dv| 1.805e-38 / (e_06h + e_g) 1.463e-33 = 0.000; abserr 06h 7.317e-34 g 7.317e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 6 G-q-r: |dv| 7.076e-39 / (e_06h + e_g) 5.061e-34 = 0.000; abserr 06h 2.530e-34 g 2.530e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 7 analytic J1: |dv| 1.481e-23 / (e_06h + e_g) 2.197e-21 = 0.007; abserr 06h 1.098e-21 g 1.098e-21; regions 5 -> 5; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 1.830e-24 / (e_06h + e_g) 2.202e-21 = 0.001; abserr 06h 1.101e-21 g 1.101e-21; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 5.023e-21 / (e_06h + e_g) 1.224e-20 = 0.410; abserr 06h 6.118e-21 g 6.118e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 5.342e-21 / (e_06h + e_g) 1.288e-20 = 0.415; abserr 06h 6.439e-21 g 6.439e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 6.000e-24 / (e_06h + e_g) 2.202e-21 = 0.003; abserr 06h 1.101e-21 g 1.101e-21; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 1.553e-23 / (e_06h + e_g) 2.197e-21 = 0.007; abserr 06h 1.098e-21 g 1.098e-21; regions 6 -> 6; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 8.113e-21 / (e_06h + e_g) 1.843e-20 = 0.440; abserr 06h 9.216e-21 g 9.216e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 7.355e-21 / (e_06h + e_g) 1.690e-20 = 0.435; abserr 06h 8.451e-21 g 8.451e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 2.907e-23 / (e_06h + e_g) 1.218e-21 = 0.024; abserr 06h 6.090e-22 g 6.089e-22; regions 5 -> 7; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 3.050e-22 / (e_06h + e_g) 1.218e-21 = 0.250; abserr 06h 6.090e-22 g 6.089e-22; regions 5 -> 6; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 1.187e-20 / (e_06h + e_g) 2.402e-20 = 0.494; abserr 06h 1.201e-20 g 1.201e-20; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 3.783e-21 / (e_06h + e_g) 7.588e-21 = 0.499; abserr 06h 3.794e-21 g 3.794e-21; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 1.297e-22 / (e_06h + e_g) 1.206e-21 = 0.108; abserr 06h 6.028e-22 g 6.027e-22; regions 5 -> 7; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 5.868e-23 / (e_06h + e_g) 1.206e-21 = 0.049; abserr 06h 6.029e-22 g 6.028e-22; regions 5 -> 7; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 3.200e-21 / (e_06h + e_g) 6.403e-21 = 0.500; abserr 06h 3.201e-21 g 3.201e-21; regions 4 -> 5; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 1.251e-20 / (e_06h + e_g) 2.502e-20 = 0.500; abserr 06h 1.251e-20 g 1.251e-20; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-7-0-33730: total g -4.971219139664589e-20 (abserr 5.625606418998303e-25, conv True) 06h -4.9714727122780054e-20 (abserr 8.640519103976416e-25, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g -4.971219139664589e-20 06h -4.9714727122780054e-20
+   calls 0 G: |dv| 1.206e-33 / (e_06h + e_g) 2.781e-33 = 0.434; abserr 06h 1.390e-33 g 1.390e-33; regions 8 -> 8; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.076e-33 / (e_06h + e_g) 9.782e-34 = 7.234; abserr 06h 6.671e-34 g 3.111e-34; regions 2 -> 16; depth 1 -> 7; conv True -> True; (b) leaves 6; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 6.591e-35 / (e_06h + e_g) 9.362e-34 = 0.070; abserr 06h 7.863e-34 g 1.499e-34; regions 10 -> 16; depth 4 -> 5; conv True -> True; (b) leaves 6; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 9.882e-38 / (e_06h + e_g) 6.332e-37 = 0.156; abserr 06h 3.850e-37 g 2.482e-37; regions 5 -> 45; depth 3 -> 12; conv True -> True; (b) leaves 34; untrusted returned 0; CC True
+   calls 4 G+q-r: |dv| 5.270e-39 / (e_06h + e_g) 1.436e-38 = 0.367; abserr 06h 7.180e-39 g 7.180e-39; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 5 G-q+r: |dv| 2.515e-37 / (e_06h + e_g) 5.436e-37 = 0.463; abserr 06h 2.740e-37 g 2.696e-37; regions 6 -> 40; depth 4 -> 10; conv True -> True; (b) leaves 27; untrusted returned 0; CC True
+   calls 6 G-q-r: |dv| 3.690e-39 / (e_06h + e_g) 1.752e-38 = 0.211; abserr 06h 6.961e-39 g 1.056e-38; regions 1 -> 29; depth 0 -> 11; conv True -> True; (b) leaves 14; untrusted returned 0; CC True
+   other 7 analytic J1: |dv| 7.245e-26 / (e_06h + e_g) 7.541e-23 = 0.001; abserr 06h 3.771e-23 g 3.771e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 3.280e-25 / (e_06h + e_g) 7.541e-23 = 0.004; abserr 06h 3.771e-23 g 3.771e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 2.078e-22 / (e_06h + e_g) 4.155e-22 = 0.500; abserr 06h 2.078e-22 g 2.078e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 1.845e-22 / (e_06h + e_g) 3.691e-22 = 0.500; abserr 06h 1.845e-22 g 1.845e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 3.670e-25 / (e_06h + e_g) 7.541e-23 = 0.005; abserr 06h 3.771e-23 g 3.771e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 9.815e-26 / (e_06h + e_g) 7.541e-23 = 0.001; abserr 06h 3.771e-23 g 3.771e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 2.381e-22 / (e_06h + e_g) 4.764e-22 = 0.500; abserr 06h 2.382e-22 g 2.382e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 3.471e-22 / (e_06h + e_g) 6.943e-22 = 0.500; abserr 06h 3.471e-22 g 3.471e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 3.690e-23 / (e_06h + e_g) 7.380e-23 = 0.500; abserr 06h 3.690e-23 g 3.690e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 6.158e-23 / (e_06h + e_g) 1.232e-22 = 0.500; abserr 06h 6.158e-23 g 6.158e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 2.063e-22 / (e_06h + e_g) 4.142e-22 = 0.498; abserr 06h 2.071e-22 g 2.071e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 9.745e-22 / (e_06h + e_g) 1.949e-21 = 0.500; abserr 06h 9.745e-22 g 9.745e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 8.207e-23 / (e_06h + e_g) 1.642e-22 = 0.500; abserr 06h 8.208e-23 g 8.208e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 4.532e-24 / (e_06h + e_g) 1.637e-23 = 0.277; abserr 06h 8.186e-24 g 8.186e-24; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 1.009e-21 / (e_06h + e_g) 2.019e-21 = 0.500; abserr 06h 1.009e-21 g 1.009e-21; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 1.234e-21 / (e_06h + e_g) 2.467e-21 = 0.500; abserr 06h 1.234e-21 g 1.234e-21; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-8-0-12778: total g 2.593575767530359e-22 (abserr 2.871863088355276e-27, conv True) 06h 2.593708768728864e-22 (abserr 3.5343805843975514e-27, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g 2.593575767530359e-22 06h 2.593708768728864e-22
+   calls 0 G: |dv| 1.159e-33 / (e_06h + e_g) 2.687e-33 = 0.431; abserr 06h 1.343e-33 g 1.343e-33; regions 8 -> 8; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.107e-33 / (e_06h + e_g) 8.557e-34 = 8.306; abserr 06h 5.477e-34 g 3.080e-34; regions 2 -> 16; depth 1 -> 7; conv True -> True; (b) leaves 6; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 8.868e-35 / (e_06h + e_g) 4.802e-34 = 0.185; abserr 06h 3.282e-34 g 1.520e-34; regions 11 -> 16; depth 4 -> 5; conv True -> True; (b) leaves 6; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 3.369e-37 / (e_06h + e_g) 8.958e-37 = 0.376; abserr 06h 7.058e-37 g 1.899e-37; regions 13 -> 129; depth 7 -> 17; conv True -> True; (b) leaves 76; untrusted returned 0; CC True
+   calls 4 G+q-r: |dv| 9.150e-39 / (e_06h + e_g) 1.908e-38 = 0.480; abserr 06h 9.541e-39 g 9.541e-39; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 5 G-q+r: |dv| 1.008e-37 / (e_06h + e_g) 4.109e-37 = 0.245; abserr 06h 9.936e-38 g 3.115e-37; regions 2 -> 46; depth 1 -> 13; conv True -> True; (b) leaves 27; untrusted returned 0; CC True
+   calls 6 G-q-r: |dv| 7.029e-39 / (e_06h + e_g) 1.490e-38 = 0.472; abserr 06h 7.452e-39 g 7.452e-39; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 7 analytic J1: |dv| 4.584e-26 / (e_06h + e_g) 2.197e-23 = 0.002; abserr 06h 1.098e-23 g 1.098e-23; regions 4 -> 4; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 2.161e-26 / (e_06h + e_g) 4.266e-23 = 0.001; abserr 06h 2.133e-23 g 2.133e-23; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 2.479e-23 / (e_06h + e_g) 7.093e-23 = 0.350; abserr 06h 3.546e-23 g 3.546e-23; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 4.123e-23 / (e_06h + e_g) 8.277e-23 = 0.498; abserr 06h 4.139e-23 g 4.139e-23; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 4.594e-26 / (e_06h + e_g) 2.164e-23 = 0.002; abserr 06h 1.082e-23 g 1.082e-23; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 3.352e-26 / (e_06h + e_g) 2.197e-23 = 0.002; abserr 06h 1.098e-23 g 1.098e-23; regions 4 -> 4; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 6.907e-23 / (e_06h + e_g) 1.595e-22 = 0.433; abserr 06h 7.973e-23 g 7.973e-23; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 2.402e-23 / (e_06h + e_g) 4.866e-23 = 0.494; abserr 06h 2.433e-23 g 2.433e-23; regions 4 -> 4; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 1.612e-23 / (e_06h + e_g) 4.070e-23 = 0.396; abserr 06h 2.035e-23 g 2.035e-23; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 2.273e-23 / (e_06h + e_g) 5.392e-23 = 0.422; abserr 06h 2.696e-23 g 2.696e-23; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 6.493e-23 / (e_06h + e_g) 1.301e-22 = 0.499; abserr 06h 6.506e-23 g 6.506e-23; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 3.547e-22 / (e_06h + e_g) 7.178e-22 = 0.494; abserr 06h 3.589e-22 g 3.589e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 3.528e-23 / (e_06h + e_g) 7.902e-23 = 0.446; abserr 06h 3.951e-23 g 3.951e-23; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 2.328e-25 / (e_06h + e_g) 1.193e-23 = 0.020; abserr 06h 5.965e-24 g 5.965e-24; regions 4 -> 4; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 5.767e-22 / (e_06h + e_g) 1.154e-21 = 0.500; abserr 06h 5.769e-22 g 5.769e-22; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 5.133e-22 / (e_06h + e_g) 1.035e-21 = 0.496; abserr 06h 5.176e-22 g 5.176e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-8-0-12959: total g -1.0138258034795324e-23 (abserr 1.2746948988682462e-28, conv False) 06h -1.0138831675404067e-23 (abserr 1.3766277562369705e-28, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g -1.0138258034795324e-23 06h -1.0138831675404067e-23
+   calls 0 G: |dv| 3.198e-34 / (e_06h + e_g) 1.840e-33 = 0.174; abserr 06h 9.206e-34 g 9.195e-34; regions 8 -> 9; depth 4 -> 4; conv True -> True; (b) leaves 1; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.147e-33 / (e_06h + e_g) 1.175e-33 = 6.082; abserr 06h 5.466e-34 g 6.283e-34; regions 2 -> 12; depth 1 -> 5; conv True -> True; (b) leaves 2; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 6.799e-35 / (e_06h + e_g) 4.668e-34 = 0.146; abserr 06h 3.407e-34 g 1.261e-34; regions 12 -> 23; depth 4 -> 7; conv True -> True; (b) leaves 7; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 4.006e-38 / (e_06h + e_g) 8.225e-38 = 0.487; abserr 06h 4.112e-38 g 4.112e-38; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 4 G+q-r: |dv| 8.286e-39 / (e_06h + e_g) 2.523e-38 = 0.328; abserr 06h 1.204e-38 g 1.319e-38; regions 9 -> 73; depth 4 -> 15; conv True -> True; (b) leaves 39; untrusted returned 0; CC True
+   calls 5 G-q+r: |dv| 1.566e-37 / (e_06h + e_g) 4.337e-37 = 0.361; abserr 06h 1.421e-37 g 2.917e-37; regions 5 -> 42; depth 3 -> 18; conv True -> True; (b) leaves 26; untrusted returned 0; CC True
+   calls 6 G-q-r: |dv| 8.667e-40 / (e_06h + e_g) 4.040e-38 = 0.021; abserr 06h 2.948e-38 g 1.092e-38; regions 13 -> 163; depth 7 -> 20; conv True -> False; (b) leaves 89; untrusted returned 2; CC True
+   other 7 analytic J1: |dv| 4.243e-26 / (e_06h + e_g) 1.214e-22 = 0.000; abserr 06h 6.069e-23 g 6.068e-23; regions 4 -> 5; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 6.281e-25 / (e_06h + e_g) 2.399e-22 = 0.003; abserr 06h 1.199e-22 g 1.199e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 1.397e-22 / (e_06h + e_g) 2.818e-22 = 0.496; abserr 06h 1.409e-22 g 1.409e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 4.630e-22 / (e_06h + e_g) 1.046e-21 = 0.443; abserr 06h 5.231e-22 g 5.231e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 6.070e-25 / (e_06h + e_g) 1.204e-22 = 0.005; abserr 06h 6.020e-23 g 6.018e-23; regions 5 -> 7; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 3.701e-25 / (e_06h + e_g) 1.214e-22 = 0.003; abserr 06h 6.069e-23 g 6.069e-23; regions 4 -> 4; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 6.758e-22 / (e_06h + e_g) 1.472e-21 = 0.459; abserr 06h 7.361e-22 g 7.361e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 2.798e-22 / (e_06h + e_g) 5.611e-22 = 0.499; abserr 06h 2.806e-22 g 2.805e-22; regions 4 -> 5; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 1.991e-22 / (e_06h + e_g) 4.009e-22 = 0.497; abserr 06h 2.005e-22 g 2.005e-22; regions 5 -> 7; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 4.757e-25 / (e_06h + e_g) 2.471e-24 = 0.193; abserr 06h 1.240e-24 g 1.231e-24; regions 6 -> 8; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 1.011e-23 / (e_06h + e_g) 6.972e-23 = 0.145; abserr 06h 3.486e-23 g 3.486e-23; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 8.524e-24 / (e_06h + e_g) 1.760e-23 = 0.484; abserr 06h 8.806e-24 g 8.796e-24; regions 7 -> 9; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 5.149e-22 / (e_06h + e_g) 1.082e-21 = 0.476; abserr 06h 5.409e-22 g 5.409e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 9.909e-23 / (e_06h + e_g) 1.986e-22 = 0.499; abserr 06h 9.928e-23 g 9.928e-23; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 1.698e-23 / (e_06h + e_g) 3.507e-23 = 0.484; abserr 06h 1.754e-23 g 1.753e-23; regions 6 -> 8; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 4.867e-24 / (e_06h + e_g) 1.085e-23 = 0.449; abserr 06h 5.430e-24 g 5.421e-24; regions 6 -> 8; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-8-0-1873: total g 1.441423050598258e-25 (abserr 1.9591005462813862e-30, conv True) 06h 1.4414984300211217e-25 (abserr 2.197990968916969e-30, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g 1.441423050598258e-25 06h 1.4414984300211217e-25
+   calls 0 G: |dv| 9.650e-34 / (e_06h + e_g) 2.295e-33 = 0.421; abserr 06h 1.147e-33 g 1.147e-33; regions 8 -> 9; depth 4 -> 4; conv True -> True; (b) leaves 1; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.199e-33 / (e_06h + e_g) 6.498e-34 = 11.079; abserr 06h 3.549e-34 g 2.948e-34; regions 2 -> 15; depth 1 -> 6; conv True -> True; (b) leaves 5; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 7.238e-35 / (e_06h + e_g) 4.585e-34 = 0.158; abserr 06h 3.297e-34 g 1.288e-34; regions 12 -> 24; depth 4 -> 6; conv True -> True; (b) leaves 11; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 4.540e-38 / (e_06h + e_g) 4.023e-34 = 0.000; abserr 06h 2.011e-34 g 2.011e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 4 G+q-r: |dv| 9.366e-40 / (e_06h + e_g) 1.807e-34 = 0.000; abserr 06h 9.036e-35 g 9.036e-35; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 5 G-q+r: |dv| 2.093e-38 / (e_06h + e_g) 3.772e-34 = 0.000; abserr 06h 1.886e-34 g 1.886e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 6 G-q-r: |dv| 2.767e-39 / (e_06h + e_g) 1.789e-34 = 0.000; abserr 06h 8.943e-35 g 8.943e-35; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 7 analytic J1: |dv| 7.070e-24 / (e_06h + e_g) 2.187e-21 = 0.003; abserr 06h 1.093e-21 g 1.093e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 3.062e-24 / (e_06h + e_g) 2.187e-21 = 0.001; abserr 06h 1.093e-21 g 1.093e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 4.052e-21 / (e_06h + e_g) 8.106e-21 = 0.500; abserr 06h 4.053e-21 g 4.053e-21; regions 5 -> 5; depth 3 -> 3; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 1.134e-21 / (e_06h + e_g) 2.277e-21 = 0.498; abserr 06h 1.139e-21 g 1.138e-21; regions 5 -> 8; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 7.362e-25 / (e_06h + e_g) 2.187e-21 = 0.000; abserr 06h 1.093e-21 g 1.093e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 8.606e-24 / (e_06h + e_g) 2.187e-21 = 0.004; abserr 06h 1.093e-21 g 1.093e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 1.669e-21 / (e_06h + e_g) 3.352e-21 = 0.498; abserr 06h 1.676e-21 g 1.676e-21; regions 5 -> 8; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 6.082e-21 / (e_06h + e_g) 1.217e-20 = 0.500; abserr 06h 6.083e-21 g 6.082e-21; regions 5 -> 7; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 2.439e-22 / (e_06h + e_g) 1.059e-21 = 0.230; abserr 06h 5.293e-22 g 5.293e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 5.847e-24 / (e_06h + e_g) 1.256e-23 = 0.466; abserr 06h 6.324e-24 g 6.234e-24; regions 7 -> 10; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 1.221e-23 / (e_06h + e_g) 2.745e-23 = 0.445; abserr 06h 1.377e-23 g 1.368e-23; regions 6 -> 9; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 3.882e-21 / (e_06h + e_g) 8.356e-21 = 0.465; abserr 06h 4.178e-21 g 4.178e-21; regions 5 -> 6; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 8.166e-22 / (e_06h + e_g) 2.112e-21 = 0.387; abserr 06h 1.056e-21 g 1.056e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 3.173e-22 / (e_06h + e_g) 1.089e-21 = 0.291; abserr 06h 5.444e-22 g 5.444e-22; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 7.274e-23 / (e_06h + e_g) 1.485e-22 = 0.490; abserr 06h 7.430e-23 g 7.424e-23; regions 6 -> 8; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 4.899e-23 / (e_06h + e_g) 9.885e-23 = 0.496; abserr 06h 4.947e-23 g 4.938e-23; regions 7 -> 10; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-8-0-2108: total g -1.8554905768405064e-26 (abserr 4.193593379588866e-31, conv True) 06h -1.855593593008934e-26 (abserr 4.684071860483878e-31, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g -1.8554905768405064e-26 06h -1.855593593008934e-26
+   calls 0 G: |dv| 4.655e-34 / (e_06h + e_g) 1.430e-33 = 0.325; abserr 06h 7.155e-34 g 7.150e-34; regions 8 -> 9; depth 4 -> 4; conv True -> True; (b) leaves 1; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.206e-33 / (e_06h + e_g) 7.022e-34 = 10.262; abserr 06h 4.320e-34 g 2.703e-34; regions 2 -> 14; depth 1 -> 6; conv True -> True; (b) leaves 3; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 6.938e-35 / (e_06h + e_g) 4.692e-34 = 0.148; abserr 06h 3.378e-34 g 1.314e-34; regions 12 -> 23; depth 4 -> 7; conv True -> True; (b) leaves 9; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 1.099e-37 / (e_06h + e_g) 1.585e-33 = 0.000; abserr 06h 7.923e-34 g 7.923e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 4 G+q-r: |dv| 2.655e-39 / (e_06h + e_g) 5.149e-34 = 0.000; abserr 06h 2.575e-34 g 2.575e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 5 G-q+r: |dv| 1.805e-38 / (e_06h + e_g) 1.463e-33 = 0.000; abserr 06h 7.317e-34 g 7.317e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 6 G-q-r: |dv| 7.076e-39 / (e_06h + e_g) 5.061e-34 = 0.000; abserr 06h 2.530e-34 g 2.530e-34; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 7 analytic J1: |dv| 1.742e-27 / (e_06h + e_g) 2.197e-21 = 0.000; abserr 06h 1.098e-21 g 1.098e-21; regions 5 -> 5; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 1.851e-24 / (e_06h + e_g) 4.381e-21 = 0.000; abserr 06h 2.190e-21 g 2.190e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 5.023e-21 / (e_06h + e_g) 1.005e-20 = 0.500; abserr 06h 5.023e-21 g 5.023e-21; regions 7 -> 7; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 5.342e-21 / (e_06h + e_g) 1.069e-20 = 0.500; abserr 06h 5.344e-21 g 5.344e-21; regions 7 -> 7; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 6.050e-24 / (e_06h + e_g) 4.381e-21 = 0.001; abserr 06h 2.190e-21 g 2.190e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 1.548e-23 / (e_06h + e_g) 4.381e-21 = 0.004; abserr 06h 2.190e-21 g 2.190e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 3.734e-24 / (e_06h + e_g) 1.948e-23 = 0.192; abserr 06h 9.738e-24 g 9.738e-24; regions 6 -> 6; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 7.355e-21 / (e_06h + e_g) 1.471e-20 = 0.500; abserr 06h 7.356e-21 g 7.356e-21; regions 7 -> 7; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 2.888e-23 / (e_06h + e_g) 2.132e-21 = 0.014; abserr 06h 1.066e-21 g 1.066e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 6.116e-24 / (e_06h + e_g) 1.327e-23 = 0.461; abserr 06h 6.700e-24 g 6.571e-24; regions 7 -> 10; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 6.747e-23 / (e_06h + e_g) 1.053e-21 = 0.064; abserr 06h 5.266e-22 g 5.266e-22; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 3.783e-21 / (e_06h + e_g) 8.495e-21 = 0.445; abserr 06h 4.248e-21 g 4.248e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 1.298e-22 / (e_06h + e_g) 2.119e-21 = 0.061; abserr 06h 1.060e-21 g 1.060e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 5.887e-23 / (e_06h + e_g) 2.119e-21 = 0.028; abserr 06h 1.060e-21 g 1.060e-21; regions 2 -> 2; depth 1 -> 1; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 3.131e-24 / (e_06h + e_g) 9.214e-22 = 0.003; abserr 06h 4.607e-22 g 4.607e-22; regions 4 -> 5; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 4.363e-23 / (e_06h + e_g) 1.002e-21 = 0.044; abserr 06h 5.012e-22 g 5.011e-22; regions 4 -> 6; depth 3 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+== g-1e-8-0-33730: total g -4.971219139664589e-20 (abserr 5.625606418998303e-25, conv True) 06h -4.9714727122780054e-20 (abserr 8.640519103976416e-25, conv True)
+   numeric_quad g 0.0 06h 0.0; WKB_Levin g -4.971219139664589e-20 06h -4.9714727122780054e-20
+   calls 0 G: |dv| 1.206e-33 / (e_06h + e_g) 2.781e-33 = 0.434; abserr 06h 1.390e-33 g 1.390e-33; regions 8 -> 8; depth 4 -> 4; conv True -> True; (b) leaves 0; untrusted returned 0; CC True
+   calls 1 G+r: |dv| 7.076e-33 / (e_06h + e_g) 9.782e-34 = 7.234; abserr 06h 6.671e-34 g 3.111e-34; regions 2 -> 16; depth 1 -> 7; conv True -> True; (b) leaves 6; untrusted returned 0; CC True
+   calls 2 G-r: |dv| 6.591e-35 / (e_06h + e_g) 9.362e-34 = 0.070; abserr 06h 7.863e-34 g 1.499e-34; regions 10 -> 16; depth 4 -> 5; conv True -> True; (b) leaves 6; untrusted returned 0; CC False
+   calls 3 G+q+r: |dv| 9.882e-38 / (e_06h + e_g) 6.332e-37 = 0.156; abserr 06h 3.850e-37 g 2.482e-37; regions 5 -> 45; depth 3 -> 12; conv True -> True; (b) leaves 34; untrusted returned 0; CC True
+   calls 4 G+q-r: |dv| 5.270e-39 / (e_06h + e_g) 1.436e-38 = 0.367; abserr 06h 7.180e-39 g 7.180e-39; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   calls 5 G-q+r: |dv| 2.515e-37 / (e_06h + e_g) 5.436e-37 = 0.463; abserr 06h 2.740e-37 g 2.696e-37; regions 6 -> 40; depth 4 -> 10; conv True -> True; (b) leaves 27; untrusted returned 0; CC True
+   calls 6 G-q-r: |dv| 3.690e-39 / (e_06h + e_g) 1.752e-38 = 0.211; abserr 06h 6.961e-39 g 1.056e-38; regions 1 -> 29; depth 0 -> 11; conv True -> True; (b) leaves 14; untrusted returned 0; CC True
+   other 7 analytic J1: |dv| 7.245e-26 / (e_06h + e_g) 7.541e-23 = 0.001; abserr 06h 3.771e-23 g 3.771e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 8 analytic Y1: |dv| 3.280e-25 / (e_06h + e_g) 7.541e-23 = 0.004; abserr 06h 3.771e-23 g 3.771e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 9 analytic J2: |dv| 2.078e-22 / (e_06h + e_g) 4.155e-22 = 0.500; abserr 06h 2.078e-22 g 2.078e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 10 analytic Y2: |dv| 1.845e-22 / (e_06h + e_g) 3.691e-22 = 0.500; abserr 06h 1.845e-22 g 1.845e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 11 analytic J3: |dv| 3.670e-25 / (e_06h + e_g) 7.541e-23 = 0.005; abserr 06h 3.771e-23 g 3.771e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 12 analytic Y3: |dv| 9.815e-26 / (e_06h + e_g) 7.541e-23 = 0.001; abserr 06h 3.771e-23 g 3.771e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 13 analytic J4: |dv| 2.381e-22 / (e_06h + e_g) 4.764e-22 = 0.500; abserr 06h 2.382e-22 g 2.382e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 14 analytic Y4: |dv| 3.471e-22 / (e_06h + e_g) 6.943e-22 = 0.500; abserr 06h 3.471e-22 g 3.471e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 15 analytic J1: |dv| 3.690e-23 / (e_06h + e_g) 7.380e-23 = 0.500; abserr 06h 3.690e-23 g 3.690e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 16 analytic Y1: |dv| 6.158e-23 / (e_06h + e_g) 1.232e-22 = 0.500; abserr 06h 6.158e-23 g 6.158e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 17 analytic J2: |dv| 2.063e-22 / (e_06h + e_g) 4.142e-22 = 0.498; abserr 06h 2.071e-22 g 2.071e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 18 analytic Y2: |dv| 9.745e-22 / (e_06h + e_g) 1.949e-21 = 0.500; abserr 06h 9.745e-22 g 9.745e-22; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 19 analytic J3: |dv| 8.207e-23 / (e_06h + e_g) 1.642e-22 = 0.500; abserr 06h 8.208e-23 g 8.208e-23; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 20 analytic Y3: |dv| 4.532e-24 / (e_06h + e_g) 1.637e-23 = 0.277; abserr 06h 8.186e-24 g 8.186e-24; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 21 analytic J4: |dv| 2.946e-25 / (e_06h + e_g) 2.128e-24 = 0.138; abserr 06h 1.064e-24 g 1.064e-24; regions 3 -> 3; depth 2 -> 2; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+   other 22 analytic Y4: |dv| 1.234e-21 / (e_06h + e_g) 2.467e-21 = 0.500; abserr 06h 1.234e-21 g 1.234e-21; regions 1 -> 1; depth 0 -> 0; conv True -> True; (b) leaves 0; untrusted returned 0; CC False
+# ----
+# end 2026-11-01T17:38:20Z
+# exit 0

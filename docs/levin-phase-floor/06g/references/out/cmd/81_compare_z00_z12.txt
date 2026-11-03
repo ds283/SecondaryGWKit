@@ -1,0 +1,16 @@
+$ env PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_z00_z12.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T02:08:33Z
+# ----
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z00.pkl sha256 1b870b17582834a0a066412b636919fa0951331e514a9118bc76dc18fa8c6114
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z12.pkl sha256 7b8792e57d4aa769dcd16dbaea2a107c17b139a0d4aea63d0dc2cf20cb7f4882
+# compare_z00_z12.py sha256 87a610595f708467c39be4fa0e736ab2be60a4be90ee42b74f1c682bb59eb67b; compare13.py fe079eb0d4fbb90a3aa0b2c7b28f6a7c51e54bb8ab552d2cba0b9d4e36347e56; tool /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py
+criterion: EQUAL (0 differing entries) over fields ['factors', 'route', 'signs', 'x_span']
+integrand: EQUAL (0 differing entries) over fields ['f_cos', 'f_sin', 'n_tables', 'production_edges', 'theta', 'theta_deriv', 'theta_mod_2pi']
+descriptive: DIFFERS (1 differing entries) over fields ['kw', 'theta_keys']
+    /kw/rtol: 0x1.ad7f29abcaf48p-24 vs 0x1.5798ee2308c3ap-27
+captured records' other fields: differ: /abserr: 0x1.74816ed63d016p-110 vs 0x1.fdbb1bc1a92b8p-110; /converged: False vs True; /max_depth: 20 vs 18; /num_regions: 249 vs 135; /rtol: 1e-07 vs 1e-08; /unit: g-1e-7-1-2174 vs g-1e-8-1-2174; /value: 0x1.0c5f18f19d8ffp-86 vs 0x1.0c6c2cc40e857p-86
+# ----
+# end 2026-11-03T02:08:35Z
+# exit 0

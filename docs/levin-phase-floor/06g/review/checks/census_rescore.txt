@@ -1,0 +1,55 @@
+06a 1e-7 units 9280 stationary-point rows 720
+units g 18560 06h 18560 keys equal True
+g heads Counter({'1c5336e7e0ab8ed4495601a4033841f2df17ebdd': 18560}) dirty Counter({'': 18560})
+g script Counter({'5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2': 18560})
+g status Counter({'done': 18560}) errors 0
+g over 300 s 0
+
+===== rtol 1e-7
+V2 counts {('total', 'scored'): 8560, ('oracle', 'scored'): 8560} oracle value == result.analytic_rad (g): {True: 8560}
+V2 total: 5 violations; worst ratio 2.1636 at g-1e-7-0-12959
+    2.164 g-1e-7-0-12959 06h -0x1.883a201e2d3f0p-77 g -0x1.883471c422a9ep-77 e06h 0x1.5d043feac4681p-93 eg 0x1.432c6dd21c960p-93
+    2.076 g-1e-7-0-12778 06h 0x1.398f65fbfe830p-72 g 0x1.398b483d83fe6p-72 e06h 0x1.1805c1348a356p-88 eg 0x1.c7109b6234d1bp-89
+    1.813 g-1e-7-0-1873 06h 0x1.64e5d147d3434p-83 g 0x1.64e10a2df3ebep-83 e06h 0x1.64a4f90afdc62p-99 eg 0x1.3de1da5765dacp-99
+    1.777 g-1e-7-0-33730 06h -0x1.d58ad59fabfe2p-65 g -0x1.d584b415d3cd1p-65 e06h 0x1.0b693ec3f7fc2p-80 eg 0x1.5c354abb57f97p-81
+    1.16 g-1e-7-0-2108 06h -0x1.6f89c5f591058p-86 g -0x1.6f848cbba0f9ep-86 e06h 0x1.30037e3e713a6p-101 eg 0x1.102e05838db3ep-101
+V2 oracle: 0 violations; worst ratio 0.49899 at g-1e-7-0-12622
+unmatched calls 0 []
+over budget / not done 0 []
+V5: g calls outside the 720 at max_depth >= depth_max: 966 in rows 577 | with n_at_depth_max > 0: 966 | of which converged: 165 | kinds {'group': 966}
+    06h calls outside the 720 at the cap: 0
+V5: fails
+V8 scored calls by kind {'analytic': 95896, 'group': 33725}
+V8: lost 801 calls in 470 rows; node_limited 0 in rows 0 | kinds {'group': 801} | groups {'G+q+r': 213, 'G+q-r': 195, 'G-q+r': 217, 'G-q-r': 174, 'G-r': 1, 'q+r': 1}
+    gained 0 []
+V8: fails
+
+===== rtol 1e-8
+V2 counts {('total', 'scored'): 8560, ('oracle', 'scored'): 8560} oracle value == result.analytic_rad (g): {True: 8560}
+V2 total: 5 violations; worst ratio 2.1636 at g-1e-8-0-12959
+    2.164 g-1e-8-0-12959 06h -0x1.883a201e2d3f0p-77 g -0x1.883471c422a9ep-77 e06h 0x1.5d043feac4681p-93 eg 0x1.432c6dd21c960p-93
+    2.076 g-1e-8-0-12778 06h 0x1.398f65fbfe830p-72 g 0x1.398b483d83fe6p-72 e06h 0x1.1805c1348a356p-88 eg 0x1.c7109b6234d1bp-89
+    1.813 g-1e-8-0-1873 06h 0x1.64e5d147d3434p-83 g 0x1.64e10a2df3ebep-83 e06h 0x1.64a4f90afdc62p-99 eg 0x1.3de1da5765dacp-99
+    1.777 g-1e-8-0-33730 06h -0x1.d58ad59fabfe2p-65 g -0x1.d584b415d3cd1p-65 e06h 0x1.0b693ec3f7fc2p-80 eg 0x1.5c354abb57f97p-81
+    1.16 g-1e-8-0-2108 06h -0x1.6f89c5f591058p-86 g -0x1.6f848cbba0f66p-86 e06h 0x1.30037e3e713a6p-101 eg 0x1.102e05838db3ep-101
+V2 oracle: 0 violations; worst ratio 0.498082 at g-1e-8-0-33544
+unmatched calls 0 []
+over budget / not done 0 []
+V5: g calls outside the 720 at max_depth >= depth_max: 996 in rows 582 | with n_at_depth_max > 0: 996 | of which converged: 168 | kinds {'group': 996}
+    06h calls outside the 720 at the cap: 1
+V5: fails
+V8 scored calls by kind {'analytic': 95895, 'group': 33724}
+V8: lost 830 calls in 476 rows; node_limited 3 in rows 3 | kinds {'group': 830} | groups {'G+q+r': 218, 'G+q-r': 202, 'G-q+r': 224, 'G-q-r': 183, 'G-r': 2, 'q+r': 1}
+    gained 1 [('g-1e-8-3-1072', ('analytic', 13))]
+V8: fails
+
+V6 g-1e-8-0-33995 call 5 (group, +09, 4.809e+06), regime Gqr, group G-q+r)
+   06h: converged False node_limited None max_depth 20/20 regions 8706 abserr 1.3326659740371103e-33 request 6.689401715969813e-34 sumE None sum|E| None
+   g: converged False node_limited True max_depth 20/20 regions 963 abserr 7.1635171520041565e-34 request 6.689401715969813e-34 sumE {'repr': '-5.71230017372791e-35', 'hex': '-0x1.2fb7cd0adf85bp-114'} sum|E| {'repr': '6.509670724279564e-34', 'hex': '0x1.b0a44edf6cb56p-111'}
+   V6: fails
+
+V7 g-1e-8-3-1072 call 13 (analytic, analytic J1)
+   06h: converged False node_limited None max_depth 0/20 regions 1 abserr 2.359215796635226e-26 request 1.6288414349742626e-26 sumE None sum|E| None
+   g: converged True node_limited False max_depth 1/20 regions 2 abserr 1.5435778599495744e-26 request 1.6288414349742132e-26 sumE {'repr': '0.0', 'hex': '0x0.0p+0'} sum|E| {'repr': '0.0', 'hex': '0x0.0p+0'}
+   V7: holds
+python3 scripts/census_rescore.py  30.41s user 0.92s system 98% cpu 31.915 total

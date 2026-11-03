@@ -1,0 +1,44 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading z26 fcc res 2 (tools.filon_reference)",
+  "# written 2026-11-01T22:18:07Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 17a642b6962aee97ea7a72410aa83088b4008c17b7d90438c1967996525ba35d",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z26.pkl sha256 b5e7f18f3f60e62923055a5e5b9cbb6e79d48df41fc9f125aa8d3842556ddf67",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py sha256 d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b"
+ ],
+ "sample": "z26",
+ "unit": "g-1e-8-0-37212",
+ "index": 8,
+ "rtol": "1e-8",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z26.pkl",
+ "pickle_sha256": "b5e7f18f3f60e62923055a5e5b9cbb6e79d48df41fc9f125aa8d3842556ddf67",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py",
+ "tool_sha256": "d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b",
+ "workers": 6,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 2,
+ "config": {
+  "du": 0.17,
+  "N": 48
+ },
+ "value_hex": "0x1.dd62f5b5896dcp-43",
+ "value_30": "2.12002220988942110135695773469e-13",
+ "imag_30": "5.618571681540371629465831647e-14",
+ "wall_s": 3.557555790990591,
+ "n_panels": 103,
+ "u_breaks": [],
+ "K_exact": "6610246727248863229/137438953472",
+ "K_hat": 48095875.00675744,
+ "K_lo": -2.1827872842550278e-11,
+ "C_exact": "0.0",
+ "process_wall_s": 4.744158165995032,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

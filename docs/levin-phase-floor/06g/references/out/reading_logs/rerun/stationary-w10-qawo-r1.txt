@@ -1,0 +1,12 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w10-g.pkl qawo 1 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w10-qawo-r1-rerun.json --sid w10 --unit R24 k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @  --index 1 --rtol 1e-7 --workers 6 --progress /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/progress_rerun/stationary-w10-qawo-r1.json --progress-order unordered --rerun
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-02T19:23:06Z
+# estimate_s 11.2-320.2
+# ----
+{"sample": "w10", "route": "B", "impl": "qawo", "res": 1, "value_hex": "0x1.06f2f0c1a3750p-79", "value_30": "1.69926799558350520469713361422e-24", "wall_s": 11.142695458140224, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-02T19:23:19Z
+# exit 0
+# status done
+# wall_s 13.156

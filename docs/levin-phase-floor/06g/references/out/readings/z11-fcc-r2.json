@@ -1,0 +1,44 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading z11 fcc res 2 (tools.filon_reference)",
+  "# written 2026-11-01T21:56:03Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 17a642b6962aee97ea7a72410aa83088b4008c17b7d90438c1967996525ba35d",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z11.pkl sha256 06e7acc1106f122251ed48768bfbf1a8307806613f79c2b80b750f570ddd4c88",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py sha256 d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b"
+ ],
+ "sample": "z11",
+ "unit": "g-1e-7-3-36020",
+ "index": 20,
+ "rtol": "1e-7",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z11.pkl",
+ "pickle_sha256": "06e7acc1106f122251ed48768bfbf1a8307806613f79c2b80b750f570ddd4c88",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py",
+ "tool_sha256": "d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b",
+ "workers": 6,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 2,
+ "config": {
+  "du": 0.17,
+  "N": 48
+ },
+ "value_hex": "0x1.714f485cbe48ap-52",
+ "value_30": "3.20325101435834949507188268328e-16",
+ "imag_30": "-5.43864745113993299064110753694e-16",
+ "wall_s": 1.4920402499847114,
+ "n_panels": 89,
+ "u_breaks": [],
+ "K_exact": "-1452530095677875/4194304",
+ "K_hat": -346310161.5137756,
+ "K_lo": 0.0,
+ "C_exact": "6.28318530717958647692528676656",
+ "process_wall_s": 2.5730072082951665,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

@@ -1,0 +1,7 @@
+mps026298.phys.susx.ac.uk
+Sun Nov  1 11:01:03 UTC 2026
+11:01  up 25 days,  1:37, 2 users, load averages: 14.28 10.29 6.58
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  832G   96G  90% /
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+Python 3.13.16

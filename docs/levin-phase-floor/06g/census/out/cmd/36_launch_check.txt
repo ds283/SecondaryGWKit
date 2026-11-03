@@ -1,0 +1,38 @@
+$ /bin/bash -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315\;\ date\ -u\;\ cat\ \$R/status.json\;\ echo\;\ echo\ \"checkpoint\ lines:\ \$\(wc\ -l\ \<\ \$R/checkpoint.jsonl\ 2\>/dev/null\)\"\;\ head\ -c\ 300\ \$R/checkpoint.jsonl\ 2\>/dev/null\;\ echo\;\ echo\ \"--\ stdout\ tail\"\;\ tail\ -8\ \$R/stdout.log\;\ echo\ \"--\ stderr\ bytes\ \$\(wc\ -c\ \<\ \$R/stderr.log\)\"\;\ kill\ -0\ 51178\ \&\&\ echo\ \"sh\ 51178\ alive\"\;\ P=\$\(/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\).get\(\\\"pid\\\"\)\)\"\)\;\ echo\ \"status\ pid\ \$P\"\;\ kill\ -0\ \$P\ \&\&\ echo\ \"driver\ \$P\ alive\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:43:21Z
+# ----
+Sun Nov  1 11:43:21 UTC 2026
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-01T11:43:15+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 51183,
+  "stage": "started worker 1e-7-k2_302 (1160 units)",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 18560
+}
+
+/bin/bash: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl: No such file or directory
+checkpoint lines: 
+
+-- stdout tail
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/scripts/run_census.py", "script_sha256": "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2", "scripts_sha256": {"run_census.py": "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2", "worker.py": "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf", "launch.py": "d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b"}, "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417", "w2_capture_sha256": null, "tree": "g", "trees": {"p": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed", "4f4f9ed2a31fb7437fcfca01263d260eebaff842"], "g": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e", "1c5336e7e0ab8ed4495601a4033841f2df17ebdd"]}, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 51183, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census", "started": "2026-11-01T11:43:15.768599+00:00", "n_units": 18560, "workers": {"1e-7": [["1e-7-k0_101", 1160], ["1e-7-k0_202", 1160], ["1e-7-k1_102", 1160], ["1e-7-k1_301", 1160], ["1e-7-k2_2", 1160], ["1e-7-k2_302", 1160], ["1e-7-k3_1", 1160], ["1e-7-k3_201", 1160]], "1e-8": [["1e-8-k0_101", 1160], ["1e-8-k0_202", 1160], ["1e-8-k1_102", 1160], ["1e-8-k1_301", 1160], ["1e-8-k2_2", 1160], ["1e-8-k2_302", 1160], ["1e-8-k3_1", 1160], ["1e-8-k3_201", 1160]]}, "budget_s": 300.0, "max_workers": 6, "skipped_as_recorded": 0}
+# worker 1e-7-k0_101 pid 51188 (1160 units)
+# worker 1e-7-k0_202 pid 51189 (1160 units)
+# worker 1e-7-k1_102 pid 51190 (1160 units)
+# worker 1e-7-k1_301 pid 51191 (1160 units)
+# worker 1e-7-k2_2 pid 51192 (1160 units)
+# worker 1e-7-k2_302 pid 51194 (1160 units)
+-- stderr bytes 0
+sh 51178 alive
+status pid 51183
+driver 51183 alive
+# ----
+# end 2026-11-01T11:43:21Z
+# exit 0

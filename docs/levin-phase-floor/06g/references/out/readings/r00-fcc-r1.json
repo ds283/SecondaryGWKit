@@ -1,0 +1,44 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading r00 fcc res 1 (tools.filon_reference)",
+  "# written 2026-11-01T22:37:52Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 17a642b6962aee97ea7a72410aa83088b4008c17b7d90438c1967996525ba35d",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r00.pkl sha256 27496cfbe24aefe1d749148fd5a0e3aadd30e364ce432607b4a00433edf65cdb",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py sha256 d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b"
+ ],
+ "sample": "r00",
+ "unit": "g-1e-7-0-14053",
+ "index": 7,
+ "rtol": "1e-7",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r00.pkl",
+ "pickle_sha256": "27496cfbe24aefe1d749148fd5a0e3aadd30e364ce432607b4a00433edf65cdb",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py",
+ "tool_sha256": "d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b",
+ "workers": 6,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "N": 32
+ },
+ "value_hex": "0x1.109b5b37de969p-38",
+ "value_30": "3.87397649077862370712744863901e-12",
+ "imag_30": "1.31725182556280113445685123945e-12",
+ "wall_s": 3.5289127500727773,
+ "n_panels": 84,
+ "u_breaks": [],
+ "K_exact": "5392019577666551/17179869184",
+ "K_hat": 313856.84721559234,
+ "K_lo": 0.0,
+ "C_exact": "0.0",
+ "process_wall_s": 5.20114779099822,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

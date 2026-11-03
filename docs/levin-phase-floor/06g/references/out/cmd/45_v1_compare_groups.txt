@@ -1,0 +1,46 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/v1_compare_groups.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T20:09:00Z
+# ----
+# v1_compare_groups.py sha256 d313011a14e7a1ae3134df1c58dc9bda5d35485e571ee36c9324797822521e1a; compare13.py sha256 fe079eb0d4fbb90a3aa0b2c7b28f6a7c51e54bb8ab552d2cba0b9d4e36347e56
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w00-p.pkl sha256 2888b3c1492328acc7b5d595d59b6290f1f237e60876cf7063bbf489edb78e6a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w00-g.pkl sha256 1012bf434706cb008547fe3c5e4c854f6943130f70224ae93d18f6ee88ed4242
+w00 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w01-p.pkl sha256 668b35c2924d91913cc1a3f425a3e2b79397fffc1b2452ef37143072e893ffbd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w01-g.pkl sha256 cc57610233d2513d71817b81ae968159b75a030613c95767156a5d4f08a93152
+w01 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w02-p.pkl sha256 d74c17865ac704ed54c1e3838b7760193c47489936f9c80f2417a38fa5104aa0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w02-g.pkl sha256 84e7775c0c378c0a919e06cdc93058592320f9eba6cbeac7b17d90c481d0851d
+w02 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w03-p.pkl sha256 57fa3602f0d5f507c4c09e32a3da45d2939798d7fb0a5f7c183492239b1e9cce
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w03-g.pkl sha256 00ca5cc90aede4dcdbe8d49b36acab696aa943334a417207ddc243f11928fe9c
+w03 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w04-p.pkl sha256 5fd857ca5c62317c3dd44af724e19714697ea19aceb1ac1647a0e907255b4546
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w04-g.pkl sha256 b1f33ae9c0fd7d62e28f3b6a7ceca2eb3616990dac666a9b64c8dc6aa3c38d63
+w04 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w05-p.pkl sha256 f301f0b4f714f5d546792abed9a25a89a79bfc55c3fd763dfc5d3dc70f8a64a2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w05-g.pkl sha256 5d780514a4593046a2697a71e885b5c5f5701bd9155e499a07de685331af80f7
+w05 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w06-p.pkl sha256 d1469cace1ac78c6fac80fc8f48b07ab508828e92ad279b7c5c691dfc70f7cfb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w06-g.pkl sha256 7e86a8e9d16a6acde7ef3a8b3020d8b7420f853f361c61d54fcbca7b1dd90dcb
+w06 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w07-p.pkl sha256 a06e21b74a41b178c656aa12db4e8b109d82a2e708072ed91891ae7b3bd81ca0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w07-g.pkl sha256 88a11cf7575f07b5c0294c2d3b0b6b8dae84f8b67c93254a0dd14fcdb373d2db
+w07 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w08-p.pkl sha256 1c81ff62d16e2c75688a8167ef0b37dc43cef068c323c9146a5d004725fc3334
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w08-g.pkl sha256 34d3f38a4c750de96570dc99c7850cf9a799bb83a406559ebd38f895c3753803
+w08 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w09-p.pkl sha256 dc219b6aa1acc1bc80d53170f050feb6ae17a6d93688a00d29e8676f25509067
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w09-g.pkl sha256 825b510465594c256fafc9020d1c0affd7ff852ca186d7346a28307894a610cc
+w09 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w10-p.pkl sha256 f6018618154d0bb0cdb7b502d84d4cfbf65954957c240c34e924aeafb964b67c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w10-g.pkl sha256 fe99a2bdf8ffa18e4a75d70de794f0cc1e2e1a1b63862ddd3f84ea9e08bdb28b
+w10 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w11-p.pkl sha256 01e1f9c76a475f18ea3f96afb4224ad272b4a3f0e8d67f8dfb004b2d738090a7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w11-g.pkl sha256 e7e441399564f9d3ac6f2f5a34f11bf6b350f0ff6ecead37b3379c74a425ae15
+w11 route B: criterion EQUAL; integrand EQUAL; descriptive equal
+12 of 12 groups equal between p and g; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/out/v1_compare_groups.json
+# ----
+# end 2026-11-01T20:09:02Z
+# exit 0

@@ -1,0 +1,51 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:30:47Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=var/levin-phase-floor-06g/rehearsal; echo "== stores final vs after_diff"; cmp $R/state/stores_sha256_final.txt $R/state/store_sha256_after_diff.txt && echo "both stores unchanged since the comparison (R24 also unchanged by the readers)"; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > $R/out/final_registry_list.txt 2>&1; echo "list exit $?"; tail -1 $R/out/final_registry_list.txt; echo "== ~/.raypoolkit"; ls -la ~/.raypoolkit; echo "== main"; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short; echo "== worktrees"; for T in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e; do git --no-optional-locks -C $T rev-parse HEAD; git --no-optional-locks -C $T status --short --ignored; find $T -newer $R/state/r23_launch_marker -not -path "*/.git/*" | head; done; echo "== stores"; ls -la var/datastores | grep 06g; echo "== runs"; ls var/runs | grep 06g; echo "== pycache in records"; find $R -name __pycache__ -o -name "*.pyc"; echo "== files over 2 MB or pickles under R (extract/ summarised)"; find $R -path $R/extract -prune -o -type f \( -size +2M -o -name "*.pkl" -o -name "*.pickle" \) -print; du -sh $R/extract; echo "== black --check (not applied)"; ./venv/bin/python -m black --check $R/scripts/*.py; echo "black exit $?"
+# output:
+== stores final vs after_diff
+both stores unchanged since the comparison (R24 also unchanged by the readers)
+== registry
+list exit 0
+42 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 42 finished; 0 with no host recorded.
+== ~/.raypoolkit
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  1 11:30 .
+drwxr-x--- 159 ds283 staff 5088 Nov  1 10:58 ..
+== main
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== worktrees
+4f4f9ed2a31fb7437fcfca01263d260eebaff842
+1c5336e7e0ab8ed4495601a4033841f2df17ebdd
+== stores
+-rw-r--r--  1 ds283 staff  25022464 Nov  1 11:11 levin-phase-floor-06g-r23-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25243648 Nov  1 11:11 levin-phase-floor-06g-r23-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 11:06 levin-phase-floor-06g-r23-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24436736 Nov  1 11:11 levin-phase-floor-06g-r23-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 11:06 levin-phase-floor-06g-r23.sqlite
+-rw-r--r--  1 ds283 staff  25042944 Nov  1 11:22 levin-phase-floor-06g-r24-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25264128 Nov  1 11:22 levin-phase-floor-06g-r24-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 11:12 levin-phase-floor-06g-r24-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24489984 Nov  1 11:22 levin-phase-floor-06g-r24-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 11:12 levin-phase-floor-06g-r24.sqlite
+== runs
+levin-phase-floor-06g-r23-parent-20261101T110641
+levin-phase-floor-06g-r23.launch.log
+levin-phase-floor-06g-r24-leafvalues-20261101T111215
+levin-phase-floor-06g-r24.launch.log
+== pycache in records
+== files over 2 MB or pickles under R (extract/ summarised)
+var/levin-phase-floor-06g/rehearsal/out/store_value_diff.json
+182M	var/levin-phase-floor-06g/rehearsal/extract
+== black --check (not applied)
+would reformat var/levin-phase-floor-06g/rehearsal/scripts/classify_non_qsi.py
+would reformat var/levin-phase-floor-06g/rehearsal/scripts/v1_violations_detail.py
+would reformat var/levin-phase-floor-06g/rehearsal/scripts/qsi_analytic_summary.py
+would reformat var/levin-phase-floor-06g/rehearsal/scripts/tabulate_qsi_leafvalues.py
+
+Oh no! 💥 💔 💥
+4 files would be reformatted.
+black exit 1
+# exit: 0
+# end: 2026-11-01T11:30:48Z

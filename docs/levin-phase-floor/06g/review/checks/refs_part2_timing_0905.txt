@@ -1,0 +1,196 @@
+plan 380; reading files present 325; not present 55
+status of present readings: {'value': 325}
+wall/projection over 325: median 1.03, p90 20.5, max 1.7e+06
+  v1: n 43 median 1.03 max 1.3
+  v8: n 48 median 0.981 max 7.21
+  ref: n 234 median 1.05 max 1.7e+06
+
+readings more than 5x their projection (ratio, wall s, projection s, sample, unit, route, impl, res, status, segments, panels, ier_nonzero):
+  1697291.7         1      0.0  r09 g-1e-7-1-20466 #5 A qawo r1 status=value seg=None panels=59 ier!=0=34
+  1567354.5         1      0.0  r33 g-1e-8-0-10552 #0 A qawo r1 status=value seg=None panels=30 ier!=0=18
+  276495.6         1      0.0  r09 g-1e-7-1-20466 #5 A qawo r2 status=value seg=None panels=141 ier!=0=67
+  245938.9         1      0.0  r33 g-1e-8-0-10552 #0 A qawo r2 status=value seg=None panels=73 ier!=0=40
+  149455.9         1      0.0  r14 g-1e-7-3-504 #9 A qawo r1 status=value seg=None panels=69 ier!=0=46
+   97104.6         1      0.0  r11 g-1e-7-0-33732 #9 A qawo r1 status=value seg=None panels=166 ier!=0=99
+   55963.7         1      0.0  r42 g-1e-8-2-33438 #16 A qawo r1 status=value seg=None panels=33 ier!=0=40
+   23892.9         1      0.0  r14 g-1e-7-3-504 #9 A qawo r2 status=value seg=None panels=132 ier!=0=88
+   15604.6         1      0.0  r11 g-1e-7-0-33732 #9 A qawo r2 status=value seg=None panels=301 ier!=0=179
+   10384.7         1      0.0  r01 g-1e-7-0-33650 #14 A qawo r1 status=value seg=None panels=250 ier!=0=148
+    8610.4         1      0.0  r42 g-1e-8-2-33438 #16 A qawo r2 status=value seg=None panels=56 ier!=0=61
+    7962.7         1      0.0  r08 g-1e-7-1-10908 #13 A qawo r1 status=value seg=None panels=118 ier!=0=119
+    1607.9         2      0.0  r01 g-1e-7-0-33650 #14 A qawo r2 status=value seg=None panels=476 ier!=0=274
+    1390.3         2      0.0  r08 g-1e-7-1-10908 #13 A qawo r2 status=value seg=None panels=208 ier!=0=241
+     625.0         2      0.0  r13 g-1e-7-2-21527 #18 A qawo r1 status=value seg=None panels=170 ier!=0=217
+     546.9         2      0.0  r12 g-1e-7-0-33870 #18 A qawo r1 status=value seg=None panels=295 ier!=0=206
+     255.4         2      0.0  r43 g-1e-8-0-12662 #20 A qawo r1 status=value seg=None panels=387 ier!=0=301
+     214.7         1      0.0  r40 g-1e-8-2-21651 #21 A qawo r1 status=value seg=None panels=94 ier!=0=123
+     166.7         2      0.0  r44 g-1e-8-3-1045 #13 A qawo r1 status=value seg=None panels=286 ier!=0=238
+     143.7         2      0.0  r13 g-1e-7-2-21527 #18 A qawo r2 status=value seg=None panels=346 ier!=0=525
+     113.2         2      0.0  r35 g-1e-8-1-11073 #20 A qawo r1 status=value seg=None panels=278 ier!=0=275
+     101.0      2594     25.7  r47 g-1e-8-3-1916 #4 B qawo r1 status=value seg=1844 panels=11205098 ier!=0=9534961
+      86.0         2      0.0  r12 g-1e-7-0-33870 #18 A qawo r2 status=value seg=None panels=617 ier!=0=436
+      66.1         2      0.0  r03 g-1e-7-0-12758 #18 A qawo r1 status=value seg=None panels=417 ier!=0=225
+      56.8      1796     31.6  r52 g-1e-8-3-34925 #1 B qawo r1 status=value seg=2270 panels=7772802 ier!=0=7173709
+      48.3         2      0.0  r40 g-1e-8-2-21651 #21 A qawo r2 status=value seg=None panels=260 ier!=0=360
+      42.3         2      0.0  r43 g-1e-8-0-12662 #20 A qawo r2 status=value seg=None panels=829 ier!=0=743
+      30.7      1687     55.0  r29 g-1e-7-1-35525 #4 B qawo r2 status=value seg=1476 panels=7007528 ier!=0=9613487
+      27.5         2      0.1  r34 g-1e-8-0-33988 #21 A qawo r1 status=value seg=None panels=412 ier!=0=263
+      26.5         2      0.1  r44 g-1e-8-3-1045 #13 A qawo r2 status=value seg=None panels=766 ier!=0=810
+      26.2      1839     70.2  r17 g-1e-7-1-2229 #3 B qawo r2 status=value seg=1882 panels=7703573 ier!=0=9959683
+      23.4         2      0.1  r05 g-1e-7-0-12625 #5 A qawo r1 status=value seg=None panels=593 ier!=0=265
+      20.5       422     20.6  r29 g-1e-7-1-35525 #4 B qawo r1 status=value seg=1476 panels=1758332 ier!=0=1560770
+      20.0         2      0.1  r31 g-1e-8-1-35133 #22 A qawo r1 status=value seg=None panels=515 ier!=0=257
+      18.0         2      0.1  r35 g-1e-8-1-11073 #20 A qawo r2 status=value seg=None panels=841 ier!=0=993
+      17.7         2      0.1  r02 g-1e-7-2-1517 #15 A qawo r1 status=value seg=None panels=666 ier!=0=349
+      17.4       849     48.7  r25 g-1e-7-0-1887 #3 B qawo r2 status=value seg=1306 panels=3559321 ier!=0=4555201
+      17.4       455     26.2  r17 g-1e-7-1-2229 #3 B qawo r1 status=value seg=1882 panels=1933288 ier!=0=1679677
+      11.8       215     18.2  r25 g-1e-7-0-1887 #3 B qawo r1 status=value seg=1306 panels=895667 ier!=0=775360
+      10.6         2      0.2  r03 g-1e-7-0-12758 #18 A qawo r2 status=value seg=None panels=1310 ier!=0=1069
+       7.2       299     41.5  v06 g-1e-8-2-1380 #4 B qawo r2 status=value seg=1112 panels=1222216 ier!=0=1511237
+       7.2       298     41.5  v00 g-1e-7-2-1380 #4 B qawo r2 status=value seg=1112 panels=1222216 ier!=0=1511237
+       5.0         2      0.4  r34 g-1e-8-0-33988 #21 A qawo r2 status=value seg=None panels=1821 ier!=0=1781
+       5.0        78     15.5  v06 g-1e-8-2-1380 #4 B qawo r1 status=value seg=1112 panels=310680 ier!=0=260102
+       5.0        78     15.5  v00 g-1e-7-2-1380 #4 B qawo r1 status=value seg=1112 panels=310680 ier!=0=260102
+
+Route B QAWO r1 readings done: panels per segment and ier_nonzero share
+  w00 r1 seg 1126 panels/seg 4 ier!=0 1.11 wall 8
+  w00 r2 seg 1126 panels/seg 5 ier!=0 1.29 wall 10
+  w01 r1 seg 1102 panels/seg 4 ier!=0 1.13 wall 8
+  w01 r2 seg 1102 panels/seg 5 ier!=0 1.30 wall 10
+  w02 r1 seg 1078 panels/seg 4 ier!=0 1.14 wall 8
+  w02 r2 seg 1078 panels/seg 5 ier!=0 1.31 wall 10
+  w03 r1 seg 1418 panels/seg 15 ier!=0 0.85 wall 13
+  w05 r1 seg 1346 panels/seg 8 ier!=0 0.86 wall 10
+  w05 r2 seg 1346 panels/seg 21 ier!=0 1.23 wall 17
+  w06 r1 seg 1178 panels/seg 4 ier!=0 1.08 wall 8
+  w06 r2 seg 1178 panels/seg 6 ier!=0 1.27 wall 11
+  w07 r1 seg 1556 panels/seg 47 ier!=0 0.91 wall 25
+  w07 r2 seg 1556 panels/seg 173 ier!=0 1.50 wall 76
+  w08 r2 seg 1508 panels/seg 100 ier!=0 1.45 wall 46
+  w09 r1 seg 1460 panels/seg 17 ier!=0 0.87 wall 14
+  w09 r2 seg 1460 panels/seg 53 ier!=0 1.35 wall 29
+  w10 r1 seg 1412 panels/seg 10 ier!=0 0.84 wall 11
+  w11 r1 seg 1292 panels/seg 5 ier!=0 0.97 wall 9
+  w11 r2 seg 1292 panels/seg 7 ier!=0 1.24 wall 12
+  v00 r1 seg 1112 panels/seg 279 ier!=0 0.84 wall 78
+  v00 r2 seg 1112 panels/seg 1099 ier!=0 1.24 wall 298
+  v01 r1 seg 1064 panels/seg 10 ier!=0 0.86 wall 9
+  v01 r2 seg 1064 panels/seg 26 ier!=0 1.12 wall 16
+  v02 r1 seg 1016 panels/seg 8 ier!=0 0.88 wall 8
+  v02 r2 seg 1016 panels/seg 17 ier!=0 1.18 wall 12
+  v03 r1 seg 1374 panels/seg 182 ier!=0 0.84 wall 66
+  v03 r2 seg 1374 panels/seg 709 ier!=0 1.20 wall 240
+  v04 r1 seg 1452 panels/seg 74 ier!=0 0.88 wall 33
+  v04 r2 seg 1452 panels/seg 279 ier!=0 1.34 wall 106
+  v05 r1 seg 730 panels/seg 4 ier!=0 1.34 wall 6
+  v05 r2 seg 730 panels/seg 5 ier!=0 1.55 wall 8
+  v06 r1 seg 1112 panels/seg 279 ier!=0 0.84 wall 78
+  v06 r2 seg 1112 panels/seg 1099 ier!=0 1.24 wall 299
+  v07 r1 seg 860 panels/seg 7 ier!=0 0.94 wall 7
+  v07 r2 seg 860 panels/seg 14 ier!=0 1.19 wall 11
+  v08 r1 seg 514 panels/seg 5 ier!=0 1.45 wall 5
+  v08 r2 seg 514 panels/seg 6 ier!=0 1.70 wall 7
+  v09 r1 seg 1476 panels/seg 13 ier!=0 0.86 wall 12
+  v09 r2 seg 1476 panels/seg 38 ier!=0 1.37 wall 25
+  v10 r1 seg 1628 panels/seg 98 ier!=0 0.90 wall 45
+  v10 r2 seg 1628 panels/seg 378 ier!=0 1.44 wall 159
+  v11 r1 seg 1044 panels/seg 3 ier!=0 1.02 wall 7
+  v11 r2 seg 1044 panels/seg 4 ier!=0 1.18 wall 9
+  r15 r1 seg 1458 panels/seg 3 ier!=0 0.95 wall 9
+  r15 r2 seg 1458 panels/seg 4 ier!=0 1.15 wall 12
+  r16 r1 seg 900 panels/seg 1 ier!=0 0.41 wall 4
+  r16 r2 seg 900 panels/seg 1 ier!=0 0.48 wall 5
+  r17 r1 seg 1882 panels/seg 1027 ier!=0 0.87 wall 455
+  r17 r2 seg 1882 panels/seg 4093 ier!=0 1.29 wall 1839
+  r18 r1 seg 1278 panels/seg 35 ier!=0 0.77 wall 17
+  r18 r2 seg 1278 panels/seg 122 ier!=0 1.00 wall 47
+  r19 r1 seg 900 panels/seg 1 ier!=0 0.18 wall 5
+  r19 r2 seg 900 panels/seg 1 ier!=0 0.25 wall 5
+  r20 r1 seg 306 panels/seg 1 ier!=0 1.61 wall 3
+  r20 r2 seg 306 panels/seg 2 ier!=0 1.52 wall 3
+  r21 r1 seg 900 panels/seg 1 ier!=0 0.00 wall 5
+  r21 r2 seg 900 panels/seg 1 ier!=0 0.02 wall 5
+  r22 r1 seg 700 panels/seg 1 ier!=0 0.00 wall 4
+  r22 r2 seg 700 panels/seg 1 ier!=0 0.03 wall 5
+  r23 r1 seg 882 panels/seg 4 ier!=0 1.22 wall 7
+  r23 r2 seg 882 panels/seg 6 ier!=0 1.43 wall 9
+  r25 r1 seg 1306 panels/seg 686 ier!=0 0.87 wall 215
+  r25 r2 seg 1306 panels/seg 2725 ier!=0 1.28 wall 849
+  r27 r1 seg 902 panels/seg 3 ier!=0 1.19 wall 7
+  r27 r2 seg 902 panels/seg 4 ier!=0 1.34 wall 9
+  r28 r1 seg 446 panels/seg 1 ier!=0 1.00 wall 4
+  r28 r2 seg 446 panels/seg 2 ier!=0 1.00 wall 4
+  r29 r1 seg 1476 panels/seg 1191 ier!=0 0.89 wall 422
+  r29 r2 seg 1476 panels/seg 4748 ier!=0 1.37 wall 1687
+  r45 r1 seg 1910 panels/seg 43 ier!=0 0.92 wall 29
+  r45 r2 seg 1910 panels/seg 158 ier!=0 1.54 wall 87
+  r46 r1 seg 1234 panels/seg 7 ier!=0 0.80 wall 9
+  r46 r2 seg 1234 panels/seg 13 ier!=0 1.20 wall 14
+  r47 r1 seg 1844 panels/seg 6077 ier!=0 0.85 wall 2594
+  r48 r1 seg 450 panels/seg 1 ier!=0 0.98 wall 4
+  r48 r2 seg 450 panels/seg 1 ier!=0 0.99 wall 4
+  r49 r1 seg 298 panels/seg 1 ier!=0 1.64 wall 3
+  r49 r2 seg 298 panels/seg 2 ier!=0 1.54 wall 3
+  r50 r1 seg 1406 panels/seg 18 ier!=0 0.84 wall 14
+  r50 r2 seg 1406 panels/seg 58 ier!=0 1.24 wall 31
+  r51 r1 seg 206 panels/seg 1 ier!=0 1.69 wall 3
+  r51 r2 seg 206 panels/seg 2 ier!=0 1.51 wall 3
+  r52 r1 seg 2270 panels/seg 3424 ier!=0 0.92 wall 1796
+
+remaining (not yet written):
+  n=13 v1 w03 R24 k=3.16e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+ #1 B qawo r2 projection 53 s ceiling 3653 s
+  n=16 v1 w04 R24 k=3.16e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+ #1 B qawo r1 projection 19 s ceiling 3619 s
+  n=17 v1 w04 R24 k=3.16e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+ #1 B qawo r2 projection 52 s ceiling 3652 s
+  n=32 v1 w08 R24 k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @  #1 B qawo r1 projection 21 s ceiling 3621 s
+  n=41 v1 w10 R24 k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @  #1 B qawo r2 projection 53 s ceiling 3653 s
+  n=96 ref z00 g-1e-7-1-2174 #1 B qawo r1 projection 28 s ceiling 3628 s
+  n=97 ref z00 g-1e-7-1-2174 #1 B qawo r2 projection 75 s ceiling 3675 s
+  n=110 ref z12 g-1e-8-1-2174 #1 B qawo r1 projection 28 s ceiling 3628 s
+  n=111 ref z12 g-1e-8-1-2174 #1 B qawo r2 projection 75 s ceiling 3675 s
+  n=228 ref r24 g-1e-7-3-34853 #1 B qawo r1 projection 34 s ceiling 3634 s
+  n=229 ref r24 g-1e-7-3-34853 #1 B qawo r2 projection 90 s ceiling 3690 s
+  n=236 ref r26 g-1e-7-1-14462 #5 B qawo r1 projection 31 s ceiling 3631 s
+  n=237 ref r26 g-1e-7-1-14462 #5 B qawo r2 projection 83 s ceiling 3683 s
+  n=319 ref r47 g-1e-8-3-1916 #4 B qawo r2 projection 69 s ceiling 3669 s
+  n=339 ref r52 g-1e-8-3-34925 #1 B qawo r2 projection 85 s ceiling 3685 s
+  n=340 ref r52 g-1e-8-3-34925 #1 B fcc r1 projection 41 s ceiling 3641 s
+  n=341 ref r52 g-1e-8-3-34925 #1 B fcc r2 projection 157 s ceiling 3757 s
+  n=342 ref r53 g-1e-8-3-14492 #4 B qawo r1 projection 31 s ceiling 3631 s
+  n=343 ref r53 g-1e-8-3-14492 #4 B qawo r2 projection 82 s ceiling 3682 s
+  n=344 ref r53 g-1e-8-3-14492 #4 B fcc r1 projection 39 s ceiling 3639 s
+  n=345 ref r53 g-1e-8-3-14492 #4 B fcc r2 projection 153 s ceiling 3753 s
+  n=346 ref r54 g-1e-8-0-34014 #0 B qawo r1 projection 13 s ceiling 3613 s
+  n=347 ref r54 g-1e-8-0-34014 #0 B qawo r2 projection 34 s ceiling 3634 s
+  n=348 ref r54 g-1e-8-0-34014 #0 B fcc r1 projection 16 s ceiling 3616 s
+  n=349 ref r54 g-1e-8-0-34014 #0 B fcc r2 projection 62 s ceiling 3662 s
+  n=350 ref r55 g-1e-8-2-34671 #2 B qawo r1 projection 4 s ceiling 3604 s
+  n=351 ref r55 g-1e-8-2-34671 #2 B qawo r2 projection 11 s ceiling 3611 s
+  n=352 ref r55 g-1e-8-2-34671 #2 B fcc r1 projection 5 s ceiling 3605 s
+  n=353 ref r55 g-1e-8-2-34671 #2 B fcc r2 projection 21 s ceiling 3621 s
+  n=354 ref r56 g-1e-8-1-10794 #5 B qawo r1 projection 3 s ceiling 3603 s
+  n=355 ref r56 g-1e-8-1-10794 #5 B qawo r2 projection 8 s ceiling 3608 s
+  n=356 ref r56 g-1e-8-1-10794 #5 B fcc r1 projection 4 s ceiling 3604 s
+  n=357 ref r56 g-1e-8-1-10794 #5 B fcc r2 projection 14 s ceiling 3614 s
+  n=358 ref r57 g-1e-8-3-34394 #3 B qawo r1 projection 25 s ceiling 3625 s
+  n=359 ref r57 g-1e-8-3-34394 #3 B qawo r2 projection 66 s ceiling 3666 s
+  n=360 ref r57 g-1e-8-3-34394 #3 B fcc r1 projection 32 s ceiling 3632 s
+  n=361 ref r57 g-1e-8-3-34394 #3 B fcc r2 projection 123 s ceiling 3723 s
+  n=362 ref r58 g-1e-8-3-34453 #3 B qawo r1 projection 27 s ceiling 3627 s
+  n=363 ref r58 g-1e-8-3-34453 #3 B qawo r2 projection 72 s ceiling 3672 s
+  n=364 ref r58 g-1e-8-3-34453 #3 B fcc r1 projection 35 s ceiling 3635 s
+  n=365 ref r58 g-1e-8-3-34453 #3 B fcc r2 projection 134 s ceiling 3734 s
+  n=366 ref r59 g-1e-8-0-1823 #0 B qawo r1 projection 14 s ceiling 3614 s
+  n=367 ref r59 g-1e-8-0-1823 #0 B qawo r2 projection 37 s ceiling 3637 s
+  n=368 ref r59 g-1e-8-0-1823 #0 B fcc r1 projection 18 s ceiling 3618 s
+  n=369 ref r59 g-1e-8-0-1823 #0 B fcc r2 projection 69 s ceiling 3669 s
+  n=370 ref_long z20 g-1e-8-0-12932 #14 A qawo r1 projection 554 s ceiling 4154 s
+  n=371 ref_long r30 g-1e-8-1-1759 #14 A qawo r1 projection 1178 s ceiling 7069 s
+  n=372 ref_long z19 g-1e-8-3-36019 #19 A qawo r1 projection 1740 s ceiling 10443 s
+  n=373 ref_long z26 g-1e-8-0-37212 #8 A qawo r1 projection 1802 s ceiling 10809 s
+  n=374 ref_long z05 g-1e-7-2-34485 #17 A qawo r1 projection 2002 s ceiling 12013 s
+  n=375 ref_long z17 g-1e-8-3-13913 #9 A qawo r1 projection 2607 s ceiling 15645 s
+  n=376 ref_long z11 g-1e-7-3-36020 #20 A qawo r1 projection 5466 s ceiling 32796 s
+  n=377 ref_long z16 g-1e-8-2-34708 #5 A qawo r1 projection 6333 s ceiling 37997 s
+  n=378 ref_long z28 g-1e-7-2-34708 #5 A qawo r1 projection 6333 s ceiling 37997 s
+  n=379 ref_long r07 g-1e-7-3-14593 #21 A qawo r1 projection 6512 s ceiling 39075 s
+sum of remaining projections 36673 s

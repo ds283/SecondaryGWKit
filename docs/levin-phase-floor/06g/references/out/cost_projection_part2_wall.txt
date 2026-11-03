@@ -1,0 +1,46 @@
+levin-phase-floor 06g references: part 2's projected WALL time (the coordinator's question, 2026-11-01).
+Nothing changed, nothing launched. Inputs: run levin-phase-floor-06g-references-20261101T175231's
+checkpoint and reading logs, out/routes.json, out/tool_vs_06i.json, out/sample/selection.json; the
+reading-time model of out/cost_projection_part2.txt (4).
+
+1. PART 1: ONE READING AT A TIME. Each reading was one process running the tool with --workers 6
+   (six spawned workers, under a parent waiting in pool.map); the driver ran them strictly in
+   sequence (no two of the 54 reading/CLI logs' start-end intervals overlap).
+   - The reading stage ran 18:12:20Z -> 18:40:41Z = 1,701 s of wall time.
+   - The 52 readings' own times (the tool's wall_s) add to 1,524.8 s; their process wall times
+     (the driver's, load and start-up included) to 1,607.8 s, i.e. 1.60 s of overhead per reading;
+     the two command-line runs (z25, z13: four readings each, repeated) took 10.4 + 82.5 = 93.0 s.
+   - 1,607.8 + 93.0 = 1,700.8 s = the stage's wall time. So in part 1 wall time = the sum of the
+     readings' times plus 1.6 s each: no concurrency beyond the six workers inside each reading.
+
+2. PART 2 AS PLANNED: the same, one reading at a time, each with --workers 6 (six computing
+   processes). Within the 6-process cap that is one reading at once; more readings at once would
+   need fewer workers per reading (e.g. six readings with --workers 1 each).
+
+3. PROJECTED WALL TIME OF PART 2 (404 readings: 101 samples x 4; per-reading model as in (4):
+   Route A QAWO res 1/2 at 1.17e-7 / 7.72e-7 s per rad of phase span, FCC res 1/2 3.16 / 3.79 s;
+   Route B per segment, QAWO 0.0139 / 0.0373 s, FCC 0.0179 / 0.0693 s; V1's 12 at part 2's mean of
+   1,212 segments):
+   Route A per reading: QAWO r1 1.17e-07 s/rad, QAWO r2 7.72e-07 s/rad, FCC r1 3.16 s, FCC r2 3.79 s
+   Route B per reading (s/segment): qawo_r1 0.0139, qawo_r2 0.0373, fcc_r1 0.0179, fcc_r2 0.0693
+   readings in part 2: 404
+   PLANNED (one reading at a time, six workers): uncapped readings 16824 s + 31 capped x 1800 s = 55800 s + 404 x 1.6 s process overhead = 646 s -> 73270 s = 20.35 h; at most 930 s more if every capped reading used its 30 s SIGTERM grace -> 20.61 h
+   SIX AT ONCE (one worker each; each reading's wall taken as 6x its six-worker time, the best case): sum of reading walls 131146 s / 6 = 21858 s; scheduled longest first on 6 slots: makespan 21859 s = 6.07 h; capped readings 38 (vs 31 planned)
+      readings capped at six-at-once but not as planned: 7, their six-worker times [534.8, 553.6, 588.8, 795.2, 1082.9, 1178.1, 1740.5]
+
+   (a) As planned (one at a time, six workers): 16,824 s of uncapped readings + 31 capped readings
+       x 1,800 s = 55,800 s + 404 x 1.6 s = 646 s  ->  73,270 s = 20.35 h (20.61 h if every capped
+       reading also used its 30 s SIGTERM grace). The capped tail is 55,800 s of it: in this mode a
+       capped reading holds all six cores for its 30 minutes.
+   (b) Six at once (one worker each, six computing processes): a reading's value does not depend on
+       its worker count (the tool sums fixed chunks in order; its determinism test covers two
+       workers), but its wall time does. Taking each reading's wall as 6x its six-worker time (the
+       best case for parallel scaling) and the same 30-minute cap: the 404 walls add to 131,146 s,
+       /6 = 21,858 s; scheduled longest first on six slots the makespan is 21,859 s = 6.07 h.
+       A capped reading then holds one core, so the capped tail costs 1/6 as much; but 38 readings
+       exceed 30 minutes instead of 31: the 7 extra (six-worker times 535-1,741 s) are Route A QAWO
+       readings that would finish under the plan and be stopped here. **So the concurrency changes
+       which references the 30-minute rule drops** (those 7 readings' samples would count or not
+       depending on it), not only the wall time. The 6x factor is an estimate: short readings are
+       start-up-bound and would scale worse, long QAWO readings are chunk-parallel and near 6x.
+   Neither mode is under 5 h 40 min (20,400 s): (a) 20.35 h, (b) about 6.07 h.

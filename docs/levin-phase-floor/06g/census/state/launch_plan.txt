@@ -1,0 +1,89 @@
+# levin-phase-floor 06g section 5, the census: the plan from the store checks to the launch, as prepared on
+# 2026-11-01 (stage 1 of the census brief; nothing below has been run). Run only when the orchestrator resumes
+# the census agent: after R23, R24, the comparison, V1 and the readers are over and the lock is released.
+# Every command from the census directory, each recorded by scripts/rec.sh into out/cmd/ (except the two
+# ray-processes listings, which append by >> and are their own shell commands).
+cd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+PY=/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python
+G=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e      # tree g, 1c5336e (code 3ae6f3a)
+P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed      # tree p, 4f4f9ed (06h's code)
+COPY=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+CERT=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt
+CK06H=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl
+
+# A. state before (trees clean, registry, lock, Ray, host load), and the launcher's dry import (light: prov,
+#    runregistrykit; no tree module)
+scripts/rec.sh 10_state_before /bin/bash -c 'for t in /Users/ds283/Documents/Code/SecondaryGWKit /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e; do echo "== $t"; git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short $([ $t != /Users/ds283/Documents/Code/SecondaryGWKit ] && echo --ignored); done; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit worktree list; cd /Users/ds283/Documents/Code/SecondaryGWKit && ./venv/bin/python -m runregistrykit list | tail -8; df -h . | tail -1; uptime; ls -ld ~/.raypoolkit/rehearsal-lock ~/ScienceData/.rehearsal-lock 2>&1'
+scripts/rec.sh 11_lock_status $PY -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+$PY -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/cmd/12_ray_processes.txt 2>&1
+scripts/rec.sh 02_launch_dry_import $PY -B -c "import sys; sys.path.insert(0, 'scripts'); print(sys.version); import launch; print('PURPOSE:', launch.PURPOSE); print('SCOPE:', launch.SCOPE); print('SCRIPT:', launch.SCRIPT); print('N_ROWS:', launch.N_ROWS); import prov; print('TREES:', prov.TREES); print('RUN06H:', prov.RUN06H, prov.RUN06H.exists())"
+#    the registry must show nothing running or stale; the lock free; no Ray process under /tmp/ray-sgk; else STOP
+
+# B. the store (hashed, against its certification; fingerprint at g and at p) and 06h's checkpoint, before Gate V
+scripts/rec.sh 13_copy_files_before $PY -B scripts/hash_store.py copy_before_gate_v $COPY
+scripts/rec.sh 14_copy_vs_certified scripts/compare_hashes.sh $CERT out/cmd/13_copy_files_before.txt
+scripts/rec.sh 15_fingerprint_copy_at_g env PYTHONPATH=$G PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/fingerprint_copy.py $COPY/handover-A3-v2-lambdacdm.sqlite
+scripts/rec.sh 16_fingerprint_copy_at_p env PYTHONPATH=$P PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/fingerprint_copy.py $COPY/handover-A3-v2-lambdacdm.sqlite
+#    both must print the digest 0e32f24a2dc2f4c9ac34f7522f9c228da790096c068b8c3109d58416f8b21d56 and no problems
+scripts/rec.sh 17_checkpoint06h_before shasum -a 256 $CK06H      # must be 3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372
+scripts/rec.sh 18_job_name_is_inert grep -n job_name /Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/datastorekit/SQL/ShardedPool.py
+#    any store file not EQUAL, a journal/-wal/-shm file, a fingerprint not 0e32f24a..., or 06h's checkpoint not
+#    3104c18e...: STOP
+
+# C. Gate V (five workers at once, within six: P1-P3 at p, G1 and G2 at g; one wait), then its checks
+scripts/rec.sh 19_gate_v_run $PY -B scripts/gate_v.py run state/V
+scripts/rec.sh 20_gate_v_check env PYTHONPATH=$G PYTHONDONTWRITEBYTECODE=1 $PY -B scripts/gate_v.py check state/V
+scripts/rec.sh 21_gate_v_git_clauses $PY -B scripts/gate_v_clause1.py state/V/p_tree_modules.json
+#    "the parent reproduces 06h": P1 p-1e-7-2-38302 (low-G+r-1), P2 p-1e-7-2-2095 (ctrl-low-1), P3 p-1e-8-0-1971
+#      (0-1971), each against 06h's g- unit of run levin-phase-floor-06h-census-20261101T005037 on every key 06h
+#      recorded, by bit pattern (JSON hex strings and array bytes): total, total_abserr, the oracle (analytic_rad and
+#      analytic_06h.h's value, abserr, converged), every call's value, abserr, regions, depth, converged (and every
+#      other 06h key, region arrays, cc_floor_terms, declared_terms_06h, deep lines, W3, scan, GkPolicy); the module
+#      list of the harness at the parent is the P workers' (state/V/p_tree_modules.json);
+#    "the integrand is 06h's": git diff --stat c1ec3b2 3ae6f3a outside docs/ and prompts/, file list against the
+#      rule (AdaptiveLevin/, tools/, test files, CLAUDE.md); with c1ec3b2..4f4f9ed (CLAUDE.md only, or AST-equal) and
+#      3ae6f3a..1c5336e (empty);
+#    "the new code is deterministic": G1 = G2 (g-1e-7-0-14164) on every key, 06g's included, timings excepted; the
+#      unit qualifies only with a CC call whose sum E is non-zero and a leaf returning its quarters (printed).
+#    If 14164 does not qualify, the determinism unit is re-chosen by this rule and Gate V's G part re-run (G1/G2
+#      only, two workers): candidates are the rows of state/rows.json, in its order, outside 06a's 720, whose 06h 1e-7
+#      unit has a call with cc_floor.n_cc_leaves >= 2 and a call with leaves.trusted >= 1; the first candidate whose
+#      G1 qualifies is the unit; at most three candidates are tried, else STOP and ask. (A deviation if used.)
+#    Any part failing: STOP (prompt 06g section 7), report, do not launch.
+
+# D. the driver smoke test (06h's two rows, both rtols, two workers), and the copy after Gate V
+scripts/rec.sh 22_smoke_driver $PY -B scripts/run_census.py --out-dir state/smoke --rows 1-34599,3-13829 --max-workers 2
+#    22b: the smoke ledger summarised (status, tree, the 06g keys present, abserr/value reassembled, budget record
+#    parsed, checked leaves, premise checks), read only
+scripts/rec.sh 23_copy_files_after_gate_v $PY -B scripts/hash_store.py copy_after_gate_v $COPY
+scripts/rec.sh 24_copy_after_gate_v_vs_certified scripts/compare_hashes.sh $CERT out/cmd/23_copy_files_after_gate_v.txt
+
+# E. predictions: state/predictions.md = header + "## Part A" (prompt lines 401-422, byte for byte) +
+#    "## Part B" (state/drafts/predictions_partB_draft.md, finalised); written after Gate V, before the launch,
+#    and never edited after the launch
+scripts/rec.sh 25_predictions_check $PY -B scripts/check_predictions.py
+scripts/rec.sh 26_scripts_equal $PY -B scripts/scripts_equal.py
+scripts/rec.sh 27_checkpoint06h_after_prep shasum -a 256 $CK06H
+#    save out/scripts_diff_against_06h_final.txt (diff -ruN state/scripts_06h_reference scripts)
+
+# F. pre-launch (each its own command)
+scripts/rec.sh 28_prelaunch_state <as 10>
+scripts/rec.sh 29_prelaunch_lock_status $PY -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+$PY -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> out/cmd/30_prelaunch_ray_processes.txt 2>&1
+scripts/rec.sh 31_copy_files_prelaunch $PY -B scripts/hash_store.py copy_prelaunch $COPY
+scripts/rec.sh 32_copy_prelaunch_vs_certified scripts/compare_hashes.sh $CERT out/cmd/31_copy_files_prelaunch.txt
+scripts/rec.sh 33_scripts_equal_prelaunch $PY -B scripts/scripts_equal.py
+scripts/rec.sh 34_predictions_check_prelaunch $PY -B scripts/check_predictions.py
+
+# G. the launch, only if all three parts of Gate V hold: registered (campaign levin-phase-floor, prompt 06g, slug
+#    census; job name levin-phase-floor-06g in the harness), detached (runregistrykit.begin first, then
+#    nohup sh -c '<driver>; exit $?' in a new session, stdout/stderr into the run directory, the sh pid recorded, the
+#    driver's own pid recorded by it), then ONE check, then end the turn
+scripts/rec.sh 35_launch $PY -B scripts/launch.py
+scripts/rec.sh 36_launch_check /bin/bash -c 'R=<run dir>; date -u; cat $R/status.json; echo; echo "checkpoint lines: $(wc -l < $R/checkpoint.jsonl 2>/dev/null)"; head -c 400 $R/checkpoint.jsonl 2>/dev/null; echo; echo "-- stdout tail"; tail -8 $R/stdout.log; echo "-- stderr bytes $(wc -c < $R/stderr.log)"; kill -0 <sh pid> && echo "sh <sh pid> alive"; P=$(/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -c "import json;print(json.load(open(\"$R/status.json\")).get(\"pid\"))"); echo "status pid $P"; kill -0 $P && echo "driver $P alive"'
+
+# After the census (resumed with its status.json): the store and 06h's checkpoint after, the fingerprint after;
+# checks_after_06g.py on the run; the over-budget pass if any (06a's: more than twelve over budget, stop and ask;
+# else one re-run of each at g with 3,600 s, at most six at once, by a script written then); V8 only (out/v8.md),
+# then end the turn; when resumed again V2, V5, V6, V7 and the descriptive items (analyse06g.py, to be written,
+# reading both checkpoints and the pickles read only); the records.

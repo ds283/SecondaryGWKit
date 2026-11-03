@@ -1,0 +1,114 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/v1_capture.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T20:03:17Z
+# ----
+# levin-phase-floor 06g addendum 1: V1's group calls captured at p (R23) and g (R24)
+# written 2026-11-01T20:03:18Z on mps026298.phys.susx.ac.uk
+# script v1_capture.py sha256 21470b2886b0d7b826fafebb1ec9afb694656d9046e48d4259de31060579e2f8
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/out/v1_rows.json sha256 2df277bce398565b835040b62b0bf024e32745c85fecc4a1da7c595299d5b4d0
+pass 1: 24 units
+   P1-w00-p: pid 12959
+   P1-w00-g: pid 12960
+   P1-w01-p: pid 12961
+   P1-w01-g: pid 12962
+   P1-w02-p: pid 12963
+   P1-w02-g: pid 12964
+   P1-w03-p: pid 13012
+   P1-w03-g: pid 13015
+   P1-w04-p: pid 13018
+   P1-w04-g: pid 13033
+   P1-w05-p: pid 13041
+   P1-w05-g: pid 13047
+   P1-w06-p: pid 13075
+   P1-w06-g: pid 13081
+   P1-w07-p: pid 13091
+   P1-w07-g: pid 13101
+   P1-w08-p: pid 13111
+   P1-w08-g: pid 13118
+   P1-w09-p: pid 13161
+   P1-w09-g: pid 13182
+   P1-w10-p: pid 13185
+   P1-w10-g: pid 13215
+   P1-w11-p: pid 13230
+   P1-w11-g: pid 13233
+w00 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7126e+09, 3971.4), regime Gqr, group G+q+r)
+w00 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7126e+09, 3971.4), regime Gqr, group G+q+r)
+w01 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7126e+09, 5236.6), regime Gqr, group G+q+r)
+w01 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7126e+09, 5236.6), regime Gqr, group G+q+r)
+w02 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7126e+09, 6904.7), regime Gqr, group G+q+r)
+w02 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7126e+09, 6904.7), regime Gqr, group G+q+r)
+w03 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1 n (5.421e+09, 434.65), regime Gqr, group G+q+r)
+w03 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1 n (5.421e+09, 434.65), regime Gqr, group G+q+r)
+w04 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1 n (5.421e+09, 573.11), regime Gqr, group G+q+r)
+w04 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1 n (5.421e+09, 573.11), regime Gqr, group G+q+r)
+w05 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1 n (5.421e+09, 996.42), regime Gqr, group G+q+r)
+w05 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1 n (5.421e+09, 996.42), regime Gqr, group G+q+r)
+w06 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1 n (5.421e+09, 6904.7), regime Gqr, group G+q+r)
+w06 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1 n (5.421e+09, 6904.7), regime Gqr, group G+q+r)
+w07 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 329.64), regime Gqr, group G+q+r)
+w07 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 329.64), regime Gqr, group G+q+r)
+w08 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 573.11), regime Gqr, group G+q+r)
+w08 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 573.11), regime Gqr, group G+q+r)
+w09 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 996.42), regime Gqr, group G+q+r)
+w09 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 996.42), regime Gqr, group G+q+r)
+w10 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 1732.4), regime Gqr, group G+q+r)
+w10 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 1732.4), regime Gqr, group G+q+r)
+w11 p (R23): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 6904.7), regime Gqr, group G+q+r)
+w11 g (R24): pass 1 rc 0 status done; row total equals the store's True; calls equal to the stored group bit for bit: 1 (#1  (1.7159e+10, 6904.7), regime Gqr, group G+q+r)
+pass 2: 24 units
+   P2-w00-p: pid 13264
+   P2-w00-g: pid 13265
+   P2-w01-p: pid 13266
+   P2-w01-g: pid 13267
+   P2-w02-p: pid 13268
+   P2-w02-g: pid 13269
+   P2-w03-p: pid 13312
+   P2-w03-g: pid 13313
+   P2-w04-p: pid 13318
+   P2-w04-g: pid 13333
+   P2-w05-p: pid 13340
+   P2-w05-g: pid 13348
+   P2-w06-p: pid 13360
+   P2-w06-g: pid 13363
+   P2-w07-p: pid 13372
+   P2-w07-g: pid 13383
+   P2-w08-p: pid 13390
+   P2-w08-g: pid 13398
+   P2-w09-p: pid 13409
+   P2-w09-g: pid 13420
+   P2-w10-p: pid 13423
+   P2-w10-g: pid 13435
+   P2-w11-p: pid 13447
+   P2-w11-g: pid 13450
+w00 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.57698b554fa10p-71 0x1.027ad91660b34p-94); ray_initialized False
+w00 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.54ad8908895c6p-71 0x1.1c2f0130bfabep-94); ray_initialized False
+w01 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.00a5d63c50710p-69 0x1.748a3fe748d93p-94); ray_initialized False
+w01 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.035b11469f5f7p-69 0x1.82e2204892e4bp-98); ray_initialized False
+w02 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.171356724b5cdp-70 0x1.5b3fd0177f1fep-94); ray_initialized False
+w02 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.172b1a1bc7132p-70 0x1.0c70f5b18a82cp-94); ray_initialized False
+w03 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.0017374bd25c4p-74 0x1.8e28dd9353d1cp-101); ray_initialized False
+w03 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.01dc948cf283fp-74 0x1.562c743b3cd82p-101); ray_initialized False
+w04 p: capture REPRODUCES the store's value and abserr bit for bit (-0x1.e62819158fa3fp-75 0x1.1e1da635d3cecp-100); ray_initialized False
+w04 g: capture REPRODUCES the store's value and abserr bit for bit (-0x1.e988cbacb5f32p-75 0x1.24bba309a8872p-100); ray_initialized False
+w05 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.e36cb4794d1ccp-75 0x1.874d548c43dfcp-100); ray_initialized False
+w05 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.e6b93b2ab1f20p-75 0x1.3a18893c0f6c3p-100); ray_initialized False
+w06 p: capture REPRODUCES the store's value and abserr bit for bit (-0x1.424916b13a5e5p-76 0x1.933cda6e6539dp-100); ray_initialized False
+w06 g: capture REPRODUCES the store's value and abserr bit for bit (-0x1.4458fe9cb7cc3p-76 0x1.3b32c37bda8adp-100); ray_initialized False
+w07 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.044b11266f2a6p-81 0x1.9f5b67ef8b90dp-105); ray_initialized False
+w07 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.003d0c4e14e2dp-81 0x1.9da8a887b96f5p-107); ray_initialized False
+w08 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.0529089f7daf8p-79 0x1.aabc6c2d616f2p-105); ray_initialized False
+w08 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.04af57399473bp-79 0x1.16b8163839c45p-105); ray_initialized False
+w09 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.0732413c2b0aep-79 0x1.f405524b0ffb6p-104); ray_initialized False
+w09 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.06ce80643d26ep-79 0x1.83e7f8a5925ebp-103); ray_initialized False
+w10 p: capture REPRODUCES the store's value and abserr bit for bit (0x1.07529cb22cf54p-79 0x1.24be3137c5852p-104); ray_initialized False
+w10 g: capture REPRODUCES the store's value and abserr bit for bit (0x1.06f2f0896adebp-79 0x1.1f6ae124e6c5fp-104); ray_initialized False
+w11 p: capture REPRODUCES the store's value and abserr bit for bit (-0x1.f97b8333674a1p-80 0x1.19af8f575f636p-103); ray_initialized False
+w11 g: capture REPRODUCES the store's value and abserr bit for bit (-0x1.f8439e7d85c46p-80 0x1.721170c3128c9p-105); ray_initialized False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/out/v1_capture.json sha256 71e5b9da1ec4b9b4ee465c0cd0531a34d48ba46f26fb47bd4cf417af9a9ad19a; all reproduce: True
+# ----
+# end 2026-11-01T20:08:29Z
+# exit 0

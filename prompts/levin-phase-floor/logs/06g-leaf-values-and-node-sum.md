@@ -412,3 +412,122 @@ Nothing in §1–§3 is a scored prediction.
   note §A.5.)*
 - The issue opened bears on V8.
 - Nothing was written under `var/`, and no run was registered.
+
+## Part B: the Mac Studio record (appended by the orchestrator, 2026-11-03)
+
+Part B ran from 2026-11-01 to 2026-11-03 on the Mac Studio (`mps026298`), from worktrees:
+- R23 at `4f4f9ed` (06h's code);
+- R24, the census and the references at $g$ = `1c5336e` (`3ae6f3a`'s code);
+- the references' later readings with `tools/filon_reference.py` at `ff3e8394` and `b5626ecb`, the
+  last 32 on the laptop.
+
+The Mac Studio orchestrator dispatched a rehearsal agent, a census agent and a references agent, and
+reviewed all three in ten checks. **The review passes.** The note's §5 stop on V8 fired and was put
+to the user, who ruled to score the rest. No §7 stop fired. The records are in
+`docs/levin-phase-floor/06g/`: `review.md` (the review, with its rulings log and checks under
+`review/`), and `rehearsal/`, `census/` and `references/` (each agent's log, verification, issues,
+scripts and outputs). What stays on the Mac Studio is in `06g/KEPT_ON_MAC_STUDIO.md`.
+
+**§4.**
+- **The runs.** R23 `levin-phase-floor-06g-r23-parent-20261101T110641` and R24
+  `levin-phase-floor-06g-r24-leafvalues-20261101T111215`, both `done`, both `1b332ffa…`.
+- **Outside `QuadSourceIntegral`** the seven value tables are identical (360,462 rows).
+- **V1 fails on `total`** in 12 of 864 rows, worst 13,101.5. In each row the move is confined to
+  sub-interval 1's `G+q+r` call. It holds on the oracle, worst 0.4986.
+- **R24 against R23.** R24 loses convergence on 67 rows (97 calls), and 76 rows reach `depth_max`
+  against 0 under the parent; regions rise 4.29×.
+
+**Gate V holds** on all three parts:
+- the parent reproduces 06h's census;
+- the diff `c1ec3b2..3ae6f3a` touches only `AdaptiveLevin/`, `tools/`, tests and `CLAUDE.md`;
+- G1 equals G2.
+
+**§5, the census.** `levin-phase-floor-06g-census-20261101T114315`: 18,560 of 18,560 units `done`,
+none in error or over budget, in 5 h 40 min (06h: 2 h 33 min). Unit wall rose ×3.43 and ×2.96, and
+group-call regions ×4.95 and ×3.81. A3 v2's scratch copy and 06h's checkpoint are unchanged.
+
+| | Verdict | Numbers |
+|---|---|---|
+| V2 | fails | 5 rows at each rtol on `total`, worst 2.164, all in the `G+r` call (06h on 2 leaves, 06g on 12–16); the oracle 0, worst 0.499 |
+| V5 | fails | 966 calls in 577 rows (`1e-7`) and 996 in 582 (`1e-8`) at `depth_max`, against 0 and 1; 165 and 168 still converge |
+| V6 | fails | `g-1e-8-0-33995` #5 ends `node_limited`, but at depth 20, with 15 untrusted leaves at the cap; 963 regions (06h 8,706) |
+| V7 | holds | `g-1e-8-3-1072` #13 converges at depth 1 |
+| V8 | fails (the §5 stop) | 801 calls in 470 rows (`1e-7`), 830 in 476 (`1e-8`); all but 3 are (b) refined to depth 20, 3 node-limited at `1e-8` |
+
+**The slow leaves behind V8** (a descriptive item, on the user's request):
+- 4,342 leaves at `1e-7`, all at depth 20, with $r$ clustered at 1/2 (1,763 within 0.01);
+- $\Delta_1/\phi_P$ median 2.27, maximum 44.6;
+- $r$ settles only in the last levels of the ancestor chains;
+- a median of 2 clusters per call, none at the call's ends;
+- the same distribution in every group.
+
+The lost calls all meet their request on abserr (median 0.035 of it).
+
+**§5, the references** (parts 1 and 2, a rerun batch, and the laptop's FCC batch):
+- **The tool on 06i's 13 agrees with 06i.** 44 of 52 readings are bit-identical, and the rest are
+  within 0.0033 of the allowance.
+- **The 30-minute cap became a check, not a cutoff,** on the user's ruling, and every reference is
+  scored.
+- **Two tool defects were found and fixed on the laptop.** Both are closed on the board's §4,
+  `[06g-filon-route-b-inverts-through-a-stationary-point]`. 14 samples (V1's w00–w11, z00 and z12)
+  hold a stationary point inside one Route B segment:
+  - **`ff3e8394`:** the inversion is refused there, and the segment is integrated directly;
+  - **`b5626ecb`:** FCC also integrates directly the segment beside it, where $1/p'$ is nearly
+    singular.
+
+  After both fixes, all four readings of each of the 14 agree, at 3.1e-6 to 3.5e-4 of the
+  tolerance. Re-reads under each fix were bit-identical to the old readings on monotone calls,
+  across hosts too.
+
+**V3:**
+
+| Reading of the rule | Counted | Verdict |
+|---|---|---|
+| As written (every Route B reading all monotone) | 66 of 90 | holds, no violation |
+| The new tool's direct segments accepted | 68 | fails, on z12 |
+| As the user's ruling scores it | all 90 (82 with two implementations, 8 FCC-only) | fails, on z12 |
+
+- **z12,** `g-1e-8-1-2174` #1, is one of the 720 stationary-point rows. Reported converged at depth
+  18, it is 1,681.35 of its abserr from a reference whose four readings agree (06h: 1,678.07). z00,
+  the same integrand at `1e-7`, is unconverged at depth 20 and 0.018 from it. The next largest ratio
+  is 0.58.
+- **V4 holds:** 0.00121, 2.1e-7, 1.44e-4 and 0.00121.
+
+**The user's added samples:**
+- **V1's 12.** R24 is honest on all 12 (0.0018–0.942 of its abserr), and R23 is 4.5e3–6.0e5 of its
+  abserr away. V1's failure is the parent's error, which 06g removes.
+- **V8's 12 lost calls.** $g$, unconverged, is within its abserr on 11 of 12 (v03 1.20). 06h,
+  converged, is within on 9 (v03 2.31, v08 4.29, v11 1.07).
+- **The correction $-\sum E$** moves the value nearer the reference on 12 of 25, and is about
+  neutral on most.
+
+**Harness defects,** each recorded in the references agent's log and not opened as issues: they are
+in Part B's own scripts, which are finished.
+- Part 2's backstop projected Route B by segment count rather than phase span, and stopped six
+  readings at about 1 h that would have finished in hours.
+- The rerun batch's projection ignored the chunks in flight, and stopped three readings that would
+  have finished in 3.0, 8.9 and 13.7 h: r47 QAWO r2, r53 QAWO r2 and r26 QAWO r1.
+
+None of these readings bears on a verdict.
+
+**The user's rulings during Part B,** quoted in `06g/review/rulings_log.md` and the orchestrator
+note §B.3–§B.6:
+- score the rest after the V8 stop, with V8's sample referenced;
+- reference V1's 12;
+- the slow-leaf breakdown;
+- the 30-minute cap a check, every reference scored;
+- leave part 2's backstop, then rerun the stopped readings;
+- both tool fixes;
+- the FCC batch on the laptop;
+- score after stage 2, and let stage 3 run.
+
+**Reading the results.**
+- **z12 and V1's 12** are stationary-point calls, where Levin's declared errors are not claimed
+  valid. The user, 2026-11-03: *"What needs to be true is that z12 works after 07. What we see to
+  have found here is the limit of how far we can go before we land the stationary phase surgery."*
+  They are recorded under `[06-levin-accepts-a-region-across-a-stationary-point]`.
+- **V5, V6 and V8** share one cause, rule (b)'s slow leaves at $r \approx 1/2$ outside the
+  stationary points. **V2** is not yet explained. Each is opened on the board. The orchestrator
+  proposes a measurement before any further 06 prompt; the user has not yet ruled on it.
+- **The header issues are not closed in this commit.** Each is narrowed, and its closing waits for
+  the user's word.

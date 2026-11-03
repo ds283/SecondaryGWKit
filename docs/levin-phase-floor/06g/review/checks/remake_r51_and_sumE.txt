@@ -1,0 +1,12 @@
+r51 g-1e-8-1-14231 #1 z in (1.6711e+10, 1.709e+09), regime Gr, group G+r
+  g -0x1.bd83e8f878596p-80 abserr 1.1181e-32 sumE -1.5134e-36 has_cc_leaf True; 06h -0x1.bd83e8fb7d3d5p-80 abserr 1.3652e-32; tol 1.1181e-34
+  qawo-r1  -1.439537487956186744e-24  - fcc res3 = -2.2347e-39 = 1.9988e-5 x tol
+  qawo-r2  -1.439537487956188278e-24  - fcc res3 = -3.7686e-39 = 3.3707e-5 x tol
+  fcc-r1   -1.4395374879561842245e-24  - fcc res3 = 2.8477e-40 = 2.547e-6 x tol
+  fcc-r2   -1.4395374879561883449e-24  - fcc res3 = -3.8356e-39 = 3.4306e-5 x tol
+  the four readings' spread 4.1204e-39 = 3.6853e-5 x tol
+  orchestrator's FCC res 3 (finer than both of the tool's): -1.439537487956184509311774e-24, 243 s, all_monotone True
+  |ref(fcc r2) - fcc res3| = 3.8356e-39 = 3.4306e-5 x tol = 3.4306e-7 abserr_g
+== |v_g - sumE - ref| on this counted CC reference
+  ref = fcc r2: |v_g - ref|/e_g 0.000208083; |v_g - sumE - ref|/e_g 7.27251e-5; ratio corrected/uncorrected 0.349501
+  ref = fcc res 3: |v_g - ref|/e_g 0.000208426; |v_g - sumE - ref|/e_g 7.30682e-5; ratio corrected/uncorrected 0.350571

@@ -1,0 +1,34 @@
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed
+4f4f9ed2a31fb7437fcfca01263d260eebaff842
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e
+1c5336e7e0ab8ed4495601a4033841f2df17ebdd
+== stash
+bf525ffe9cd730dcb5a302f41fb7d0ae1fabf6b4 On new: Tower Auto-Stash: 2025-12-15 08:59:49 +0000
+673a2bb32d3bade87c2ceba9788e4cb8fbaa99eb On temp-branch: Temp
+== diff c1ec3b2..4f4f9ed
+ CLAUDE.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+== diff c1ec3b2..3ae6f3a
+ AdaptiveLevin/levin_quadrature.py               |  730 +++++++++---
+ AdaptiveLevin/tests/test_levin_cc_floor.py      |    7 +
+ AdaptiveLevin/tests/test_levin_global_budget.py |   14 +-
+ AdaptiveLevin/tests/test_levin_leaf_values.py   |  626 +++++++++++
+ AdaptiveLevin/tests/test_levin_node_sum.py      |  182 +++
+ AdaptiveLevin/tests/test_levin_roundoff_exit.py |  174 +++
+ CLAUDE.md                                       |    5 +-
+ tools/filon_reference.py                        | 1345 +++++++++++++++++++++++
+ tools/tests/test_filon_reference.py             |  355 ++++++
+ 9 files changed, 3296 insertions(+), 142 deletions(-)
+== diff 3ae6f3a..1c5336e

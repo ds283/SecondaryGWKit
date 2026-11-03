@@ -1,0 +1,127 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse06g.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:37:00Z
+# ----
+# levin-phase-floor 06g: V2, V5, V6, V7 and the descriptive items
+# written 2026-11-01T17:37:00Z on mps026298.phys.susx.ac.uk
+# script analyse06g.py sha256 6fa7a5a59e5a3068c05b535625f5f2e2482cd84608c754c14254561c3a01809e
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl sha256 03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/predictions.md sha256 930ce6fd28ba6ff2f6bfce03d87c75febc474394156ba3da1230dc99b92ada60
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# 06h's checkpoint sha256 3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372 (expected 3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372: True)
+06a's stationary-point rows: 720 (must be 720)
+units g 18560, 06h 18560; status g {'done': 18560}, 06h {'done': 18560}
+pickle records read: g 18560, 06h 18560 (every SHA-256 checked)
+
+== V2 — the rows agree (Part A V2; Part B rule 4)
+   1e-7 total: scored 8560 rows, non-finite 0, no result 0; moved 6071; violations 5; ratio |d|/(e_06h+e_g): p0 0, p10 0, p50 0.0487, p90 0.467, p99 0.499, p100 2.16
+      VIOLATION 0-12959: ratio 2.164; g -0x1.883471c422a9ep-77 (abserr 0x1.432c6dd21c960p-93); 06h -0x1.883a201e2d3f0p-77 (abserr 0x1.5d043feac4681p-93)
+      VIOLATION 0-12778: ratio 2.076; g 0x1.398b483d83fe6p-72 (abserr 0x1.c7109b6234d1bp-89); 06h 0x1.398f65fbfe830p-72 (abserr 0x1.1805c1348a356p-88)
+      VIOLATION 0-1873: ratio 1.813; g 0x1.64e10a2df3ebep-83 (abserr 0x1.3de1da5765dacp-99); 06h 0x1.64e5d147d3434p-83 (abserr 0x1.64a4f90afdc62p-99)
+      VIOLATION 0-33730: ratio 1.777; g -0x1.d584b415d3cd1p-65 (abserr 0x1.5c354abb57f97p-81); 06h -0x1.d58ad59fabfe2p-65 (abserr 0x1.0b693ec3f7fc2p-80)
+      VIOLATION 0-2108: ratio 1.16; g -0x1.6f848cbba0f9ep-86 (abserr 0x1.102e05838db3ep-101); 06h -0x1.6f89c5f591058p-86 (abserr 0x1.30037e3e713a6p-101)
+   1e-7 oracle: scored 8560 rows, non-finite 0, no result 0; moved 5957; violations 0; ratio |d|/(e_06h+e_g): p0 0, p10 0, p50 1.08e-05, p90 0.26, p99 0.462, p100 0.499
+   1e-8 total: scored 8560 rows, non-finite 0, no result 0; moved 6071; violations 5; ratio |d|/(e_06h+e_g): p0 0, p10 0, p50 0.044, p90 0.467, p99 0.499, p100 2.16
+      VIOLATION 0-12959: ratio 2.164; g -0x1.883471c422a9ep-77 (abserr 0x1.432c6dd21c960p-93); 06h -0x1.883a201e2d3f0p-77 (abserr 0x1.5d043feac4681p-93)
+      VIOLATION 0-12778: ratio 2.076; g 0x1.398b483d83fe6p-72 (abserr 0x1.c7109b6234d1bp-89); 06h 0x1.398f65fbfe830p-72 (abserr 0x1.1805c1348a356p-88)
+      VIOLATION 0-1873: ratio 1.813; g 0x1.64e10a2df3ebep-83 (abserr 0x1.3de1da5765dacp-99); 06h 0x1.64e5d147d3434p-83 (abserr 0x1.64a4f90afdc62p-99)
+      VIOLATION 0-33730: ratio 1.777; g -0x1.d584b415d3cd1p-65 (abserr 0x1.5c354abb57f97p-81); 06h -0x1.d58ad59fabfe2p-65 (abserr 0x1.0b693ec3f7fc2p-80)
+      VIOLATION 0-2108: ratio 1.16; g -0x1.6f848cbba0f66p-86 (abserr 0x1.102e05838db3ep-101); 06h -0x1.6f89c5f591058p-86 (abserr 0x1.30037e3e713a6p-101)
+   1e-8 oracle: scored 8560 rows, non-finite 0, no result 0; moved 5953; violations 0; ratio |d|/(e_06h+e_g): p0 0, p10 0, p50 2.65e-05, p90 0.205, p99 0.45, p100 0.498
+   V2: FAILS (1e-7: fails; 1e-8: fails)
+
+== V5 — the cap (Part A V5; Part B rule 5)
+   1e-7: calls outside the 720 at depth_max under g 966 in 577 rows (by kind {'group': 966}; converged 165; by group {'G-q+r': 270, 'G+q+r': 244, 'G+q-r': 233, 'G-q-r': 212, 'G-r': 6, 'q+r': 1}); over-budget units outside the 720 0; inside the 720: 357 calls at the cap; 06h outside the 720: 0 calls at the cap
+   1e-8: calls outside the 720 at depth_max under g 996 in 582 rows (by kind {'group': 996}; converged 168; by group {'G-q+r': 279, 'G+q+r': 250, 'G+q-r': 240, 'G-q-r': 220, 'G-r': 6, 'q+r': 1}); over-budget units outside the 720 0; inside the 720: 385 calls at the cap; 06h outside the 720: 1 calls at the cap
+   V5: FAILS (1e-7: fails; 1e-8: fails); every call in out/v5_depth_max_calls.csv
+
+== V6 — Z2's call, g-1e-8-0-33995 call 5 (Part A V6; Part B rule 6)
+   label k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=4.809e+06, z in (1.709e+09, 4.809e+06), regime Gqr, group G-q+r group G-q+r span ['0x1.ec5a220b26731p+3', '0x1.54258b68e15fbp+4']
+   g: ending node_limited; converged False; node_limited True; depth 20; regions 963; solves 7703; abserr 7.163517e-34; request 6.689402e-34; sum E -5.712300e-35; sum|E| 6.509671e-34; |sum E| 5.712300e-35; e' sum 6.592287e-34; untrusted returned 15; at cap 32; checked {'n_checked': 1795, 'n_b_untrusted': 649}
+   06h: converged False; depth 20; regions 8706; solves 30707; abserr 1.332666e-33; request 6.689402e-34; sum|E| (cc_floor, reproduced leaves) 1.312326e-33; sum E (pickle fsum, reproduced/n) (2.4313432841972046e-35, 8600, 8600)
+   V6: FAILS
+
+== V7 — H4's call, g-1e-8-3-1072 call 13 (Part A V7; Part B rule 7)
+   g: analytic J1; converged True; abserr 1.543578e-26; request 1.628841e-26; regions 2; depth 1; premise checks 2, failed 1; premise_06g {'n_checks': 2, 'n_fired': 1, 'n_not_fired': 1, 'n_halving_failed': 1, 'n_split_could_meet_budget': 1, 'n_halving_held_but_split_could_meet_budget': 0}
+   06h: analytic J1; converged False; abserr 2.359216e-26; request 1.628841e-26; regions 1; depth 0; premise checks 1, failed 0
+      g premise check: result False; split could meet budget True; halving False; floors 1.9450e-26 | 3.5765e-27 + 3.5765e-27
+      g premise check: result True; split could meet budget False; halving True; floors 3.5765e-27 | 1.1395e-27 + 1.1395e-27
+   V7: HOLDS
+
+== descriptive, rtol 1e-7
+   the values, |v_g - v_06h| / abserr_g per call (outside the 720), by cause:
+      different partition: 43715 calls; ratio p0 0, p10 0.00179, p50 0.608, p90 1, p99 2.12, p100 26.7; > 1: 1805; exactly 0: 205
+      same partition, quarters returned: 80502 calls; ratio p0 0, p10 0.000106, p50 0.864, p90 1, p99 1, p100 1; > 1: 0; exactly 0: 443
+      same partition, no quarters: 5404 calls; ratio p0 0, p10 0, p50 0, p90 0, p99 0, p100 0; > 1: 0; exactly 0: 5404
+   abserr_g / abserr_06h on the same partition, by CC leaf (sum E in the error):
+      CC leaf: 7328 calls; p0 0.277, p10 1, p50 1, p90 1, p99 1.08, p100 1.56; unchanged 2610
+      no CC leaf: 78578 calls; p0 1, p10 1, p50 1, p90 1, p99 1, p100 1; unchanged 78578
+   slow leaves, test 3's classes as (d1 > phi)/(d1 <= phi), all rows:
+      g, every checked leaf (returned or bisected): r<1/16: 371479/128095 | 1/16<=r<1/4: 331317/36794 | 1/4<=r<1: 592745/176712 | r>=1: 558406/536925 | total 2732473
+      g, returned checked leaves: r<1/16: 369107/128095 | 1/16<=r<1/4: 330247/36793 | 1/4<=r<1: 130597/176648 | r>=1: 105204/252397 | total 1529088
+      06h, returned checked leaves (06h did not record bisected ones): r<1/16: 147165/108651 | 1/16<=r<1/4: 50979/15142 | 1/4<=r<1: 59285/83385 | r>=1: 791/111027 | total 576425
+      calls outside the 720 with a (b) leaf: 22845 (group 20793, analytic 2052); regions added 776371, solves added 6210968; of them converged under g 22044
+   the node sum: calls with a CC leaf 24983; with sum|E| >= 1% of abserr_g: 3110 (sum E = 0 exactly: 0); sum|E| / |sum E|: p0 1, p10 1, p50 1, p90 10.5, p99 98.7, p100 1.76e+04
+   the exit (outside the 720): firings 06h 90509 -> g 402760; premise checks 06h 260979 -> g 691088; calls whose firing count changed: {'more firings': 22067, 'analytic': 15222, 'fewer firings': 2823, 'group': 9668}
+   cost, all rows, group: regions 06h 227373 -> g 1124662 (x4.946); solves 06h 1781659 -> g 8959971 (x5.029)
+   cost, all rows, analytic: regions 06h 349052 -> g 404426 (x1.159); solves 06h 2685000 -> g 3127992 (x1.165)
+   cost, outside the 720, group: regions 06h 198082 -> g 967154 (x4.883); solves 06h 1550931 -> g 7703507 (x4.967)
+   cost, outside the 720, analytic: regions 06h 287062 -> g 334592 (x1.166); solves 06h 2200600 -> g 2580840 (x1.173)
+   cost, unit wall (wall_s summed): 06h 2.223 h -> g 7.616 h (x3.426); largest unit 06h 5.7 s (g-1e-7-3-13490) -> g 47.1 s (g-1e-7-0-36806); post-timed seconds summed 06h 1.970 h -> g 3.380 h
+   depth and convergence, outside the 720, group calls (33725): converged 06h 33725 -> g 32924; depth histogram 06h {0: 11203, 1: 4011, 2: 2628, 3: 3358, 4: 4301, 5: 2431, 6: 2286, 7: 2243, 8: 907, 9: 216, 10: 104, 11: 17, 12: 6, 13: 8, 14: 2, 15: 4}
+      g {0: 8816, 1: 1707, 2: 1064, 3: 2675, 4: 2561, 5: 1980, 6: 1705, 7: 1944, 8: 1775, 9: 937, 10: 672, 11: 669, 12: 701, 13: 932, 14: 1031, 15: 1163, 16: 897, 17: 729, 18: 448, 19: 353, 20: 966}
+   depth and convergence, outside the 720, analytic calls (95896): converged 06h 95896 -> g 95896; depth histogram 06h {0: 36725, 1: 15690, 2: 9368, 3: 22880, 4: 10186, 5: 841, 6: 175, 7: 30, 8: 1}
+      g {0: 35794, 1: 15594, 2: 8252, 3: 8168, 4: 24149, 5: 2355, 6: 948, 7: 395, 8: 143, 9: 55, 10: 19, 11: 12, 12: 11, 15: 1}
+   rows with total_converged False, outside the 720: 06h 0 -> g 470
+   depth and convergence, the 720, group calls (3600): converged 06h 3591 -> g 3275; depth histogram 06h {0: 640, 1: 191, 2: 235, 3: 337, 4: 600, 5: 436, 6: 290, 7: 485, 8: 243, 9: 46, 10: 14, 11: 17, 12: 7, 13: 10, 14: 10, 15: 3, 16: 10, 17: 4, 18: 4, 19: 7, 20: 11}
+      g {0: 635, 1: 94, 2: 97, 3: 200, 4: 271, 5: 212, 6: 135, 7: 163, 8: 254, 9: 163, 10: 59, 11: 65, 12: 43, 13: 72, 14: 128, 15: 171, 16: 222, 17: 121, 18: 84, 19: 54, 20: 357}
+   depth and convergence, the 720, analytic calls (11520): converged 06h 11520 -> g 11520; depth histogram 06h {1: 1356, 2: 1982, 3: 2473, 4: 5334, 5: 306, 6: 56, 7: 13}
+      g {1: 1354, 2: 1980, 3: 837, 4: 5453, 5: 1567, 6: 191, 7: 84, 8: 38, 9: 10, 10: 6}
+   rows with total_converged False, the 720: 06h 9 -> g 220
+   the 720 rows: totals moved 720; oracles moved 720; calls lost 316, gained 0
+
+== descriptive, rtol 1e-8
+   the values, |v_g - v_06h| / abserr_g per call (outside the 720), by cause:
+      different partition: 50213 calls; ratio p0 0, p10 0.00038, p50 0.472, p90 1, p99 1.87, p100 26.7; > 1: 1560; exactly 0: 266
+      same partition, quarters returned: 73965 calls; ratio p0 0, p10 4.65e-05, p50 0.545, p90 1, p99 1, p100 1; > 1: 0; exactly 0: 703
+      same partition, no quarters: 5443 calls; ratio p0 0, p10 0, p50 0, p90 0, p99 0, p100 0; > 1: 0; exactly 0: 5443
+   abserr_g / abserr_06h on the same partition, by CC leaf (sum E in the error):
+      CC leaf: 7666 calls; p0 0.277, p10 1, p50 1, p90 1, p99 1.07, p100 1.56; unchanged 2730
+      no CC leaf: 71742 calls; p0 1, p10 1, p50 1, p90 1, p99 1, p100 1; unchanged 71742
+   slow leaves, test 3's classes as (d1 > phi)/(d1 <= phi), all rows:
+      g, every checked leaf (returned or bisected): r<1/16: 397438/139109 | 1/16<=r<1/4: 370160/45935 | 1/4<=r<1: 637283/224593 | r>=1: 585919/627087 | total 3027524
+      g, returned checked leaves: r<1/16: 392990/139109 | 1/16<=r<1/4: 367684/45932 | 1/4<=r<1: 146723/224467 | r>=1: 115931/296221 | total 1729057
+      06h, returned checked leaves (06h did not record bisected ones): r<1/16: 176113/115237 | 1/16<=r<1/4: 77956/21187 | 1/4<=r<1: 74843/117043 | r>=1: 3312/144258 | total 729949
+      calls outside the 720 with a (b) leaf: 21362 (group 21327, analytic 35); regions added 789433, solves added 6354404; of them converged under g 20531
+   the node sum: calls with a CC leaf 26441; with sum|E| >= 1% of abserr_g: 3431 (sum E = 0 exactly: 0); sum|E| / |sum E|: p0 1, p10 1, p50 1, p90 11, p99 111, p100 1.76e+04
+   the exit (outside the 720): firings 06h 127498 -> g 461974; premise checks 06h 339559 -> g 808455; calls whose firing count changed: {'more firings': 25565, 'analytic': 18864, 'fewer firings': 3659, 'group': 10360}
+   cost, all rows, group: regions 06h 329525 -> g 1255648 (x3.810); solves 06h 2559935 -> g 10007859 (x3.909)
+   cost, all rows, analytic: regions 06h 408628 -> g 473409 (x1.159); solves 06h 3161604 -> g 3679856 (x1.164)
+   cost, outside the 720, group: regions 06h 281444 -> g 1070803 (x3.805); solves 06h 2178887 -> g 8532699 (x3.916)
+   cost, outside the 720, analytic: regions 06h 338192 -> g 395778 (x1.170); solves 06h 2609636 -> g 3070328 (x1.177)
+   cost, unit wall (wall_s summed): 06h 2.919 h -> g 8.643 h (x2.962); largest unit 06h 105.2 s (g-1e-8-0-33995) -> g 46.8 s (g-1e-8-0-36806); post-timed seconds summed 06h 1.892 h -> g 2.602 h
+   depth and convergence, outside the 720, group calls (33725): converged 06h 33724 -> g 32894; depth histogram 06h {0: 10568, 1: 3671, 2: 2347, 3: 3239, 4: 4012, 5: 2378, 6: 2499, 7: 2232, 8: 1583, 9: 714, 10: 378, 11: 64, 12: 16, 13: 13, 14: 5, 15: 5, 20: 1}
+      g {0: 8530, 1: 1593, 2: 968, 3: 2684, 4: 2428, 5: 1806, 6: 1697, 7: 1681, 8: 1754, 9: 1281, 10: 1014, 11: 793, 12: 747, 13: 968, 14: 1086, 15: 1208, 16: 922, 17: 748, 18: 461, 19: 360, 20: 996}
+   depth and convergence, outside the 720, analytic calls (95896): converged 06h 95895 -> g 95896; depth histogram 06h {0: 28478, 1: 13970, 2: 12503, 3: 29957, 4: 10898, 5: 88, 6: 2}
+      g {0: 27554, 1: 13751, 2: 9408, 3: 12709, 4: 31884, 5: 588, 6: 2}
+   rows with total_converged False, outside the 720: 06h 1 -> g 476
+   depth and convergence, the 720, group calls (3600): converged 06h 3586 -> g 3246; depth histogram 06h {0: 613, 1: 323, 2: 216, 3: 270, 4: 327, 5: 292, 6: 143, 7: 442, 8: 570, 9: 171, 10: 67, 11: 39, 12: 24, 13: 15, 14: 12, 15: 9, 16: 17, 17: 11, 18: 11, 19: 11, 20: 17}
+      g {0: 613, 1: 219, 2: 101, 3: 177, 4: 166, 5: 159, 6: 73, 7: 75, 8: 216, 9: 273, 10: 93, 11: 92, 12: 51, 13: 80, 14: 135, 15: 176, 16: 237, 17: 131, 18: 90, 19: 58, 20: 385}
+   depth and convergence, the 720, analytic calls (11520): converged 06h 11520 -> g 11520; depth histogram 06h {1: 451, 2: 1729, 3: 2949, 4: 6337, 5: 54}
+      g {1: 448, 2: 1730, 3: 850, 4: 7393, 5: 1093, 6: 6}
+   rows with total_converged False, the 720: 06h 14 -> g 241
+   the 720 rows: totals moved 720; oracles moved 720; calls lost 340, gained 0
+
+== the near-singular class (06h's rule, |K| / (k + q c_s + r c_s) <= 1e-3, the minimum over the three minus groups)
+   rows: 435 (06h's census: 435)
+   1e-7: analytic calls lost 0, gained 0; group calls lost 43, gained 0; oracle converged 06h 133 -> g 133 of 435; oracle |d|/(e_06h+e_g) p0 0, p10 0, p50 7.5e-10, p90 2.84e-08, p99 1.08e-07, p100 1.62e-07; rows in the 720 0
+   1e-8: analytic calls lost 0, gained 1; group calls lost 43, gained 0; oracle converged 06h 131 -> g 131 of 435; oracle |d|/(e_06h+e_g) p0 0, p10 0, p50 5.19e-11, p90 2.28e-09, p99 1.07e-08, p100 2.07e-08; rows in the 720 0
+
+== verdicts: V2 fails; V5 fails; V6 fails; V7 holds (V8: out/v8.md)
+# ----
+# end 2026-11-01T17:37:44Z
+# exit 0

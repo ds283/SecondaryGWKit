@@ -1,0 +1,25 @@
+{
+ "tree": "g",
+ "name": "P1-w07-g",
+ "units": [
+  {
+   "uid": "g-1e-7-1-20173",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "1-20173",
+   "names05": null,
+   "shard": 1,
+   "serial": 20173,
+   "k_key": "1:102",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/capture/pass1/w07-g",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/capture/pass1/w07-g/emit.jsonl",
+ "rows_sha256": null,
+ "w2_capture_sha256": null
+}

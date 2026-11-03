@@ -1,0 +1,46 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading r09 fcc res 1 (tools.filon_reference)",
+  "# written 2026-11-02T18:54:10Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 b00fec6a1b83ee2d0c4147895e7f24f53d001625a1f1ddbb15d82ec9eb35d1a0",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r09.pkl sha256 a53ab159d17db0e1804db75b9049257f3e51ffa049e9910556a098c914967b6e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839/tools/filon_reference.py sha256 5ed56fc24e46eb03e49b33408bc73d73fbfae24c38ec26cf5fd6537b43c4d058"
+ ],
+ "sample": "r09",
+ "unit": "g-1e-7-1-20466",
+ "index": 5,
+ "rtol": "1e-7",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r09.pkl",
+ "pickle_sha256": "a53ab159d17db0e1804db75b9049257f3e51ffa049e9910556a098c914967b6e",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839/tools/filon_reference.py",
+ "tool_sha256": "5ed56fc24e46eb03e49b33408bc73d73fbfae24c38ec26cf5fd6537b43c4d058",
+ "workers": 6,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "N": 32
+ },
+ "value_hex": "0x1.05491c0574658p-41",
+ "value_30": "4.64136433857507414933307265454e-13",
+ "imag_30": "-1.89861316428491031002653933771e-12",
+ "wall_s": 3.3805351671762764,
+ "n_panels": 9,
+ "u_breaks": [],
+ "K_exact": "4230805661927925/4294967296",
+ "K_hat": 985061.2054411147,
+ "K_lo": 0.0,
+ "C_exact": "0.0",
+ "process_wall_s": 4.4501894591376185,
+ "rerun": true,
+ "progress_order": "unordered",
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

@@ -1,0 +1,13 @@
+r52 g-1e-8-3-34925 #1 k=1e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (5.169e+11, 2.7567), regime Gqr, group G+q+r
+  g   value -1.665124694111511e-27 (-0x1.07d97b6fc5898p-89) abserr 1.5928e-34 converged True
+  06h value -1.6651246726007025e-27 (-0x1.07d97b36960a2p-89) abserr 8.9419e-34 converged True
+  agreement tolerance 1/100 min(abserr) = 1.5928e-36
+  qawo r1: -1.6651246942363397e-27 (-0x1.07d97b701a7dcp-89) wall 1796 s  (v-g)/e_g -0.0008  (v-06h)/e_06h -0.0242
+  qawo r2: no value (stopped or not yet run)
+  fcc r1: -1.6651246942363393e-27 (-0x1.07d97b701a7dbp-89) wall 34 s  (v-g)/e_g -0.0008  (v-06h)/e_06h -0.0242
+  fcc r2: -1.6651246942362697e-27 (-0x1.07d97b701a719p-89) wall 128 s  (v-g)/e_g -0.0008  (v-06h)/e_06h -0.0242
+  |qawo r1 - fcc r1| = 3.5873e-43 = 2.252e-07 x tolerance = 2.252e-09 e_g
+  |qawo r1 - fcc r2| = 6.9953e-41 = 4.392e-05 x tolerance = 4.392e-07 e_g
+  |fcc r1 - fcc r2| = 6.9594e-41 = 4.369e-05 x tolerance = 4.369e-07 e_g
+  spread over 3 readings: 6.9953e-41 = 4.392e-05 x tolerance
+  mean of readings -1.6651246942363164e-27: |g - ref|/e_g 0.0008; |06h - ref|/e_06h 0.0242

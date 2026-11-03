@@ -1,0 +1,62 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading r35 qawo res 2 (tools.filon_reference)",
+  "# written 2026-11-02T04:45:18Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 17a642b6962aee97ea7a72410aa83088b4008c17b7d90438c1967996525ba35d",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r35.pkl sha256 7d4bf1ce550fdf210d01331f802736066d8c899c2c1126d36a58741e1711c664",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py sha256 d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b"
+ ],
+ "sample": "r35",
+ "unit": "g-1e-8-1-11073",
+ "index": 20,
+ "rtol": "1e-8",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r35.pkl",
+ "pickle_sha256": "7d4bf1ce550fdf210d01331f802736066d8c899c2c1126d36a58741e1711c664",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py",
+ "tool_sha256": "d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b",
+ "workers": 6,
+ "route_of": "A",
+ "route": "A",
+ "impl": "qawo",
+ "res": 2,
+ "config": {
+  "du": 0.125,
+  "Pmax": 512.0,
+  "epsrel": 1.2e-14
+ },
+ "value_hex": "0x1.dcca57f373f08p-46",
+ "value_30": "2.64671842512315891643531578924e-14",
+ "imag_30": "2.08201790077143091060859537156e-14",
+ "wall_s": 1.8176832916215062,
+ "n_panels": 841,
+ "u_breaks": [
+  -13.33109802395559,
+  -13.049134680365691,
+  -12.599229388573416,
+  -12.149324096781143,
+  -11.699418804988868,
+  -11.249513513196593,
+  -10.79960822140432,
+  -10.349702929612045,
+  -9.89979763781977
+ ],
+ "K_exact": "639890032532441799/4294967296",
+ "K_hat": 148986008.142224,
+ "K_lo": -1.3271346688270569e-08,
+ "C_exact": "0.0",
+ "stats": {
+  "panels": 841,
+  "neval": 18615,
+  "ier_nonzero": 993,
+  "max_last": 0,
+  "sum_quad_abserr": 1.1104075930049467e-26
+ },
+ "process_wall_s": 3.0125994589179754,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

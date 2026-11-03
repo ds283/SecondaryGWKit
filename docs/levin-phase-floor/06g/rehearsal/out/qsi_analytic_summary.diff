@@ -1,0 +1,167 @@
+1c1,2
+< """Prompt 06h §4.3, descriptive: what moved inside QuadSourceIntegral, R21 against R22.
+---
+> """Prompt 06g §4, descriptive: what moved in the analytic oracle of QuadSourceIntegral, R23
+> against R24.
+3,9c4,6
+< 06h changes only `BesselPhaseGroup` (LiouvilleGreen/three_bessel_integrals.py). In
+< QuadSourceIntegral that class is used only by `_three_bessel_Levin`, the analytic oracle, whose
+< result is the column `analytic_rad` and the metadata `analytic.*`; `total` is
+< `numeric_quad + WKB_Levin` (ComputeTargets/QuadSourceIntegral.py, the return of
+< evaluate_QuadSource_integral), and WKB_Levin's phase groups are `ComputeTargets/phase_groups.py`'s,
+< which 06h does not change (06h §0.3). This script describes the analytic side, which H0 (on
+< `total`) does not reach. Nothing here is scored.
+---
+> (06h's `qsi_analytic_summary.py`, copied and adapted for 06g: the store names R21/R22 -> R23/R24
+> and their suffixes, the import from this directory's `tabulate_qsi_leafvalues`, and this
+> paragraph. The diff against 06h's copy is saved as out/qsi_analytic_summary.diff.)
+11c8,14
+< Reads both stores with sqlite `mode=ro`, through `tabulate_qsi_groupphase.read` (same directory),
+---
+> 06g changes `_adaptive_levin` (AdaptiveLevin/levin_quadrature.py), which serves every Levin call
+> in QuadSourceIntegral: the WKB phase groups behind `total` and the three-Bessel blocks of the
+> analytic oracle (`_three_bessel_Levin`), whose result is the column `analytic_rad` and the
+> metadata `analytic.*` (06g §0.3, "`total` moves"). V1 on both is scored by
+> `tabulate_qsi_leafvalues.py`; this script describes the oracle's blocks. Nothing here is scored.
+> 
+> Reads both stores with sqlite `mode=ro`, through `tabulate_qsi_leafvalues.read` (same directory),
+14,17c17,20
+<     `analytic.abserr` in each store, and against their sum (the H0 form on the oracle);
+<   - `analytic.abserr` (the oracle's declared error), R22/R21;
+<   - `analytic.converged`, R21 -> R22.
+< Per three-Bessel Levin block (`analytic.{0pt5,2pt5}.Levin.{J,Y}{1..4}_data`): `abserr` R22/R21,
+---
+>     `analytic.abserr` in each store, and against their sum (V1's form on the oracle);
+>   - `analytic.abserr` (the oracle's declared error), R24/R23;
+>   - `analytic.converged`, R23 -> R24.
+> Per three-Bessel Levin block (`analytic.{0pt5,2pt5}.Levin.{J,Y}{1..4}_data`): `abserr` R24/R23,
+21c24
+<     python -I -B qsi_analytic_summary.py <R21 primary> <R22 primary> <out.csv>
+---
+>     python -I -B qsi_analytic_summary.py <R23 primary> <R24 primary> <out.csv>
+32c35
+< from tabulate_qsi_groupphase import read  # noqa: E402
+---
+> from tabulate_qsi_leafvalues import read  # noqa: E402
+76,83c79,86
+<                     "abserr21": da["abserr"],
+<                     "abserr22": db["abserr"],
+<                     "regions21": da["regions"],
+<                     "regions22": db["regions"],
+<                     "conv21": da["converged"],
+<                     "conv22": db["converged"],
+<                     "pl21": da["phase_limited"],
+<                     "pl22": db["phase_limited"],
+---
+>                     "abserr23": da["abserr"],
+>                     "abserr24": db["abserr"],
+>                     "regions23": da["regions"],
+>                     "regions24": db["regions"],
+>                     "conv23": da["converged"],
+>                     "conv24": db["converged"],
+>                     "pl23": da["phase_limited"],
+>                     "pl24": db["phase_limited"],
+95,96c98,99
+<                 "analytic_rad_R21": None if va is None else float(va).hex(),
+<                 "analytic_rad_R22": None if vb is None else float(vb).hex(),
+---
+>                 "analytic_rad_R23": None if va is None else float(va).hex(),
+>                 "analytic_rad_R24": None if vb is None else float(vb).hex(),
+100,103c103,106
+<                 "analytic_abserr_R21": ea,
+<                 "analytic_abserr_R22": eb,
+<                 "d_over_abserr_R21": d / ea if d is not None and fin(ea) and ea else None,
+<                 "d_over_abserr_R22": d / eb if d is not None and fin(eb) and eb else None,
+---
+>                 "analytic_abserr_R23": ea,
+>                 "analytic_abserr_R24": eb,
+>                 "d_over_abserr_R23": d / ea if d is not None and fin(ea) and ea else None,
+>                 "d_over_abserr_R24": d / eb if d is not None and fin(eb) and eb else None,
+107,109c110,112
+<                 "analytic_abserr_ratio_R22_R21": eb / ea if fin(ea) and fin(eb) and ea else None,
+<                 "analytic_converged_R21": ma.get("converged"),
+<                 "analytic_converged_R22": mb.get("converged"),
+---
+>                 "analytic_abserr_ratio_R24_R23": eb / ea if fin(ea) and fin(eb) and ea else None,
+>                 "analytic_converged_R23": ma.get("converged"),
+>                 "analytic_converged_R24": mb.get("converged"),
+127,130c130,133
+<         f"analytic_rad None in R21/R22: {sum(r['analytic_rad_R21'] is None for r in rows)}/"
+<         f"{sum(r['analytic_rad_R22'] is None for r in rows)}; analytic.abserr non-finite or absent "
+<         f"R21/R22: {sum(not fin(r['analytic_abserr_R21']) for r in rows)}/"
+<         f"{sum(not fin(r['analytic_abserr_R22']) for r in rows)}"
+---
+>         f"analytic_rad None in R23/R24: {sum(r['analytic_rad_R23'] is None for r in rows)}/"
+>         f"{sum(r['analytic_rad_R24'] is None for r in rows)}; analytic.abserr non-finite or absent "
+>         f"R23/R24: {sum(not fin(r['analytic_abserr_R23']) for r in rows)}/"
+>         f"{sum(not fin(r['analytic_abserr_R24']) for r in rows)}"
+134c137
+<         f"{sum(1 for r in rows if fin(r['analytic_abserr_R21']) and fin(r['analytic_abserr_R22']) and float(r['analytic_abserr_R21']).hex() == float(r['analytic_abserr_R22']).hex())}/{n}"
+---
+>         f"{sum(1 for r in rows if fin(r['analytic_abserr_R23']) and fin(r['analytic_abserr_R24']) and float(r['analytic_abserr_R23']).hex() == float(r['analytic_abserr_R24']).hex())}/{n}"
+138,141c141,144
+<     print(f"  |d analytic_rad|/(abserr21+abserr22): {q([r['d_over_sum_abserr'] for r in moved if r['d_over_sum_abserr'] is not None])}")
+<     print(f"  |d analytic_rad|/abserr21: {q([r['d_over_abserr_R21'] for r in moved if r['d_over_abserr_R21'] is not None])}")
+<     print(f"  |d analytic_rad|/abserr22: {q([r['d_over_abserr_R22'] for r in moved if r['d_over_abserr_R22'] is not None])}")
+<     print(f"  |d analytic_rad|/|analytic_rad21|: {q([r['abs_d_analytic_rad'] / abs(float.fromhex(r['analytic_rad_R21'])) for r in moved if r['abs_d_analytic_rad'] is not None and float.fromhex(r['analytic_rad_R21'])])}")
+---
+>     print(f"  |d analytic_rad|/(abserr23+abserr24): {q([r['d_over_sum_abserr'] for r in moved if r['d_over_sum_abserr'] is not None])}")
+>     print(f"  |d analytic_rad|/abserr23: {q([r['d_over_abserr_R23'] for r in moved if r['d_over_abserr_R23'] is not None])}")
+>     print(f"  |d analytic_rad|/abserr24: {q([r['d_over_abserr_R24'] for r in moved if r['d_over_abserr_R24'] is not None])}")
+>     print(f"  |d analytic_rad|/|analytic_rad23|: {q([r['abs_d_analytic_rad'] / abs(float.fromhex(r['analytic_rad_R23'])) for r in moved if r['abs_d_analytic_rad'] is not None and float.fromhex(r['analytic_rad_R23'])])}")
+143c146
+<     print(f"  rows with |d analytic_rad| > abserr21 + abserr22: {len(viol)}")
+---
+>     print(f"  rows with |d analytic_rad| > abserr23 + abserr24: {len(viol)}")
+150,151c153,154
+<             f"z={w['z_response']:.8g}: rad21 {w['analytic_rad_R21']} rad22 {w['analytic_rad_R22']} "
+<             f"abserr21 {float(w['analytic_abserr_R21']).hex()} abserr22 {float(w['analytic_abserr_R22']).hex()}"
+---
+>             f"z={w['z_response']:.8g}: rad23 {w['analytic_rad_R23']} rad24 {w['analytic_rad_R24']} "
+>             f"abserr23 {float(w['analytic_abserr_R23']).hex()} abserr24 {float(w['analytic_abserr_R24']).hex()}"
+153c156
+<     print(f"analytic.abserr R22/R21 (rows with a block): {q([r['analytic_abserr_ratio_R22_R21'] for r in withblk if r['analytic_abserr_ratio_R22_R21'] is not None])}")
+---
+>     print(f"analytic.abserr R24/R23 (rows with a block): {q([r['analytic_abserr_ratio_R24_R23'] for r in withblk if r['analytic_abserr_ratio_R24_R23'] is not None])}")
+155,157c158,160
+<         f"  rows abserr up {sum(1 for r in withblk if (r['analytic_abserr_ratio_R22_R21'] or 1) > 1)}, "
+<         f"down {sum(1 for r in withblk if (r['analytic_abserr_ratio_R22_R21'] or 1) < 1)}, "
+<         f"equal {sum(1 for r in withblk if r['analytic_abserr_ratio_R22_R21'] == 1)}"
+---
+>         f"  rows abserr up {sum(1 for r in withblk if (r['analytic_abserr_ratio_R24_R23'] or 1) > 1)}, "
+>         f"down {sum(1 for r in withblk if (r['analytic_abserr_ratio_R24_R23'] or 1) < 1)}, "
+>         f"equal {sum(1 for r in withblk if r['analytic_abserr_ratio_R24_R23'] == 1)}"
+159c162
+<     print(f"analytic.converged R21 -> R22: {dict(Counter((r['analytic_converged_R21'], r['analytic_converged_R22']) for r in rows))}")
+---
+>     print(f"analytic.converged R23 -> R24: {dict(Counter((r['analytic_converged_R23'], r['analytic_converged_R24']) for r in rows))}")
+163,165c166,168
+<     print(f"  abserr R22/R21: {q([b['abserr22'] / b['abserr21'] for b in blk if b['abserr21']])}")
+<     print(f"  converged R21 -> R22: {dict(Counter((b['conv21'], b['conv22']) for b in blk))}")
+<     print(f"  phase_limited R21 -> R22: {dict(Counter((b['pl21'], b['pl22']) for b in blk))}")
+---
+>     print(f"  abserr R24/R23: {q([b['abserr24'] / b['abserr23'] for b in blk if b['abserr23']])}")
+>     print(f"  converged R23 -> R24: {dict(Counter((b['conv23'], b['conv24']) for b in blk))}")
+>     print(f"  phase_limited R23 -> R24: {dict(Counter((b['pl23'], b['pl24']) for b in blk))}")
+167,170c170,173
+<         f"  regions summed R21 {sum(b['regions21'] for b in blk)}, R22 {sum(b['regions22'] for b in blk)}; "
+<         f"blocks more {sum(1 for b in blk if b['regions22'] > b['regions21'])}, "
+<         f"fewer {sum(1 for b in blk if b['regions22'] < b['regions21'])}, "
+<         f"equal {sum(1 for b in blk if b['regions22'] == b['regions21'])}"
+---
+>         f"  regions summed R23 {sum(b['regions23'] for b in blk)}, R24 {sum(b['regions24'] for b in blk)}; "
+>         f"blocks more {sum(1 for b in blk if b['regions24'] > b['regions23'])}, "
+>         f"fewer {sum(1 for b in blk if b['regions24'] < b['regions23'])}, "
+>         f"equal {sum(1 for b in blk if b['regions24'] == b['regions23'])}"
+172,173c175,176
+<     print(f"  regions per block R21: {dict(sorted(Counter(b['regions21'] for b in blk).items()))}")
+<     print(f"  regions per block R22: {dict(sorted(Counter(b['regions22'] for b in blk).items()))}")
+---
+>     print(f"  regions per block R23: {dict(sorted(Counter(b['regions23'] for b in blk).items()))}")
+>     print(f"  regions per block R24: {dict(sorted(Counter(b['regions24'] for b in blk).items()))}")
+177,178c180,181
+<             f"  {o}: blocks {len(s)}; regions R21 {sum(b['regions21'] for b in s)} R22 {sum(b['regions22'] for b in s)}; "
+<             f"abserr R22/R21 {q([b['abserr22'] / b['abserr21'] for b in s if b['abserr21']], ps=(0.0, 0.5, 1.0))}"
+---
+>             f"  {o}: blocks {len(s)}; regions R23 {sum(b['regions23'] for b in s)} R24 {sum(b['regions24'] for b in s)}; "
+>             f"abserr R24/R23 {q([b['abserr24'] / b['abserr23'] for b in s if b['abserr23']], ps=(0.0, 0.5, 1.0))}"

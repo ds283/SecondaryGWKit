@@ -1,0 +1,10 @@
+Changes against the addendum-6 scores:
+V3 as_ruled two-implementations: {'verdict': 'fails', 'n': 80, 'violations': ['z12']} -> {'verdict': 'fails', 'n': 82, 'violations': ['z12']}
+V3 as_ruled n_fcc_only: 10 -> 8
+row r24 class: FCC only -> two implementations
+row r24 methods: ['fcc r1', 'fcc r2'] -> ['fcc r1', 'fcc r2', 'qawo r1']
+row r24 n_readings: 2 -> 3
+row r53 class: FCC only -> two implementations
+row r53 methods: ['fcc r1', 'fcc r2'] -> ['fcc r1', 'fcc r2', 'qawo r1']
+row r53 n_readings: 2 -> 3
+row r53 spread_over_tol: 0.0016838902590020066 -> 0.0018045859787135926

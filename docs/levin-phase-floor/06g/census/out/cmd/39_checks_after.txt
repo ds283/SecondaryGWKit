@@ -1,0 +1,37 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/checks_after_06g.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:24:40Z
+# ----
+record keys seen: ['data', 'git_dirty', 'git_head', 'recorded', 'script_sha256', 'unit']
+06g calls: 289482
+06g checked leaves: 5759997
+06g checked leaves returned: 3258145
+06g node_limited calls: 6
+06g premise checks: 1777864
+06g premise fired: 1017173
+06g premise split could meet budget: 71177
+06g trust_g differs from the final flag: 0
+analytic_06h captured != 1: 0
+analytic_06h counterfactual ok: 18560
+calls supplying no theta_abserr: 74650
+calls supplying theta_abserr: 214832
+cc errors: 0
+cc leaves: 1381881
+cc reproduced: 1381881
+declared_06h errors: 0
+declared_06h leaves: 877835
+declared_06h reproduced: 877835
+declared_06h with parts: 214832
+deep(cap) lines: 2704
+deep06e errors: 0
+deep06e lines: 15770
+deep06e not reproducing: 0
+records: 18560
+script_sha 5f21f072: 18560
+status done: 18560
+units with wall_s > 300 s: 0 []
+records failing tree/scripts/modules checks: 0 []
+# ----
+# end 2026-11-01T17:24:53Z
+# exit 0

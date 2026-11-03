@@ -1,0 +1,85 @@
+{
+  "argv": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+    "-B",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g-fcc-laptop/scripts/run_fcc.py",
+    "--run-dir",
+    "<run dir>"
+  ],
+  "campaign": "levin-phase-floor",
+  "checkpoint": "var/runs/levin-phase-floor-06g-fcc-laptop-20261102T233229/checkpoint.jsonl",
+  "created": "2026-11-02T23:32:29+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g-fcc-laptop",
+  "expected_units": 32,
+  "git_dirty": true,
+  "git_head": "b5626ecbc78a8242581c3b413cbe431b4e339472",
+  "heartbeat_means": "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each reading's start, and every 60 s by a thread of the driver.",
+  "host": {
+    "id": "8d2b247824882486",
+    "machine": "arm64",
+    "name": "mps026088.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "06g",
+  "purpose": "levin-phase-floor 06g references, on the laptop by the user's word (2026-11-02, the Mac Studio busy with the rerun batch's stage 3): FCC r1 and r2 re-read with tools/filon_reference.py at b5626ec (FCC integrates directly the segments beside a stationary point) on the 14 stationary-point samples w00-w11, z00, z12, from captures copied from the Mac Studio (SHA-256 checked); first four bit-for-bit checks against the Mac Studio's readings (w06 qawo r1, r55 fcc r1/r2, r55 qawo r1). Six worker processes; Ray-free, no lock, no store. Tool from the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-b5626ec",
+  "results": null,
+  "results_store_id": null,
+  "run_id": "levin-phase-floor-06g-fcc-laptop-20261102T233229",
+  "scope": "var/levin-phase-floor-06g-fcc-laptop/ (inputs, readings)",
+  "script": "var/levin-phase-floor-06g-fcc-laptop/scripts/run_fcc.py",
+  "script_sha256": "5258197e1f159bf30b8feeecb7adde14b2d6ad961f6c189cb31c6efde0bd8cd5",
+  "unit": "readings"
+}

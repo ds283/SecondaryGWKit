@@ -1,0 +1,12 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r24.pkl qawo 1 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r24-qawo-r1-rerun.json --sid r24 --unit g-1e-7-3-34853 --index 1 --rtol 1e-7 --workers 6 --progress /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/progress_rerun/stopped-r24-qawo-r1.json --progress-order unordered --rerun
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-02T20:40:01Z
+# estimate_s 6401.5-10669.2
+# ----
+{"sample": "r24", "route": "B", "impl": "qawo", "res": 1, "value_hex": "0x1.3a013cf6f38aep-92", "value_30": "2.47706139562633960774233173849e-28", "wall_s": 6097.579227041919, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-02T22:21:41Z
+# exit 0
+# status done
+# wall_s 6100.211

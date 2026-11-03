@@ -1,0 +1,43 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:30:06Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=var/levin-phase-floor-06g/rehearsal; echo "== reader exits"; grep -c "^exit 0;" $R/out/readers.txt; grep "^exit" $R/out/readers.txt; echo "== store-identical lines"; grep -c "store files: identical before and after" $R/out/readers.txt; echo "== R24 before vs after reads"; cmp $R/state/r24_store_sha256_before_reads.txt $R/state/r24_store_sha256_after_reads.txt && echo "R24 identical before and after the readers"; echo "== Ray processes lines"; grep "Ray processes" $R/out/readers.txt; echo "== Traceback in reader logs"; grep -c Traceback $R/extract/*.log; echo "== WARNING lines"; grep -h "!! WARNING" $R/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | sort | uniq -c | cut -c1-220; echo "== extract size"; du -sh $R/extract; find $R/extract -type f | wc -l; echo "== worktrees"; for T in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e; do git --no-optional-locks -C $T rev-parse HEAD; git --no-optional-locks -C $T status --short --ignored; find $T -newer $R/state/r23_launch_marker -not -path "*/.git/*" | head; done
+# output:
+== reader exits
+6
+exit 0; wall 25 s; files written 432
+exit 0; wall 42 s; files written 2436
+exit 0; wall 19 s; files written 186
+exit 0; wall 15 s; files written 27
+exit 0; wall 14 s; files written 27
+exit 0; wall 16 s; files written 73
+exit 0
+== store-identical lines
+6
+== R24 before vs after reads
+R24 identical before and after the readers
+== Ray processes lines
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+== Traceback in reader logs
+var/levin-phase-floor-06g/rehearsal/extract/extract_GkSource_data.log:0
+var/levin-phase-floor-06g/rehearsal/extract/extract_GkWKB_data.log:0
+var/levin-phase-floor-06g/rehearsal/extract/extract_Gk_data.log:0
+var/levin-phase-floor-06g/rehearsal/extract/extract_QuadSourceIntegral_data.log:0
+var/levin-phase-floor-06g/rehearsal/extract/extract_TkWKB_data.log:0
+var/levin-phase-floor-06g/rehearsal/extract/extract_tensor_source_data.log:0
+== WARNING lines
+      6 !! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+== extract size
+182M	var/levin-phase-floor-06g/rehearsal/extract
+3187
+== worktrees
+4f4f9ed2a31fb7437fcfca01263d260eebaff842
+1c5336e7e0ab8ed4495601a4033841f2df17ebdd
+# exit: 0
+# end: 2026-11-01T11:30:07Z

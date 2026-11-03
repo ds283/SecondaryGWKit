@@ -1,0 +1,8 @@
+  PID  %CPU     ELAPSED COMM
+85672  50.9 14-23:50:56 /System/Library/PrivateFrameworks/Categories.framework/Versions/A/XPCServices/CategoriesService.xpc/Contents/MacOS/CategoriesService
+ 1130  26.0 25-02:10:40 /Applications/ChronoSync.app/Contents/Library/LoginItems/ChronoSync Scheduler.app/Contents/MacOS/ChronoSync Scheduler
+  521  22.2 25-02:10:52 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+  865  19.6 25-02:10:47 /System/Library/PrivateFrameworks/FileProvider.framework/Support/fileproviderd
+ 1298  10.2 25-02:10:29 /Applications/OrbStack.app/Contents/Frameworks/OrbStack Helper.app/Contents/MacOS/OrbStack Helper
+ 1149   9.4 25-02:10:39 /Applications/ChronoSync.app/Contents/MacOS/ChronoSync
+43080   7.3       37:58 /Users/ds283/.claude/remote/ccd-cli/2.1.308-27563e7c3b6d

@@ -1,0 +1,67 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:27:08Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+PYTHONDONTWRITEBYTECODE=1 ./venv/bin/python -I -B -c "
+import sys, json
+from collections import Counter
+sys.path.insert(0, \"var/levin-phase-floor-06g/rehearsal/scripts\")
+from tabulate_qsi_leafvalues import read
+A,_=read(\"var/datastores/levin-phase-floor-06g-r23.sqlite\"); B,_=read(\"var/datastores/levin-phase-floor-06g-r24.sqlite\")
+c=Counter(); ck=Counter(); cpl=Counter(); creg=Counter()
+for key in A:
+    ma=json.loads(A[key][\"metadata\"])[\"WKB_Levin\"][\"subintervals\"]; mb=json.loads(B[key][\"metadata\"])[\"WKB_Levin\"][\"subintervals\"]
+    for i,(sa,sb) in enumerate(zip(ma,mb)):
+        for ga,gb in zip(sa[\"groups\"],sb[\"groups\"]):
+            lab=(i,tuple(sa[\"regime\"]),ga[\"label\"])
+            c[(lab,ga[\"converged\"],gb[\"converged\"])]+=1
+            if ga[\"converged\"] and not gb[\"converged\"]: ck[key[0]]+=1
+            creg[lab]+=gb[\"regions\"]-ga[\"regions\"]
+print(\"groups by (sub index, regime, label, converged23, converged24):\")
+for k,v in sorted(c.items(), key=lambda t:str(t[0])): print(\"  \",k,v)
+print(\"groups converged->unconverged by k:\", dict(ck))
+print(\"regions added R24-R23 by (sub index, regime, label):\")
+for k,v in sorted(creg.items(), key=lambda t:-t[1]): print(\"  \",k,v)
+"
+# output:
+groups by (sub index, regime, label, converged23, converged24):
+   ((0, (False, False, True), 'r'), True, True) 4
+   ((0, (False, True, True), 'q+r'), True, True) 26
+   ((0, (False, True, True), 'q-r'), True, True) 26
+   ((0, (True, False, False), 'G'), True, True) 543
+   ((1, (True, False, True), 'G+r'), True, True) 191
+   ((1, (True, False, True), 'G-r'), True, True) 191
+   ((1, (True, True, True), 'G+q+r'), True, False) 32
+   ((1, (True, True, True), 'G+q+r'), True, True) 323
+   ((1, (True, True, True), 'G+q-r'), True, False) 11
+   ((1, (True, True, True), 'G+q-r'), True, True) 344
+   ((1, (True, True, True), 'G-q+r'), True, False) 11
+   ((1, (True, True, True), 'G-q+r'), True, True) 344
+   ((1, (True, True, True), 'G-q-r'), True, False) 14
+   ((1, (True, True, True), 'G-q-r'), True, True) 341
+   ((2, (True, True, True), 'G+q+r'), True, False) 8
+   ((2, (True, True, True), 'G+q+r'), True, True) 168
+   ((2, (True, True, True), 'G+q-r'), True, False) 8
+   ((2, (True, True, True), 'G+q-r'), True, True) 168
+   ((2, (True, True, True), 'G-q+r'), True, False) 8
+   ((2, (True, True, True), 'G-q+r'), True, True) 168
+   ((2, (True, True, True), 'G-q-r'), True, False) 5
+   ((2, (True, True, True), 'G-q-r'), True, True) 171
+groups converged->unconverged by k: {316227.7660168379: 42, 1000000.0: 32, 100000.0: 23}
+regions added R24-R23 by (sub index, regime, label):
+   (1, (True, True, True), 'G-q-r') 17828
+   (1, (True, True, True), 'G+q+r') 17397
+   (1, (True, True, True), 'G+q-r') 14601
+   (1, (True, True, True), 'G-q+r') 14601
+   (2, (True, True, True), 'G-q+r') 9689
+   (2, (True, True, True), 'G+q-r') 9495
+   (2, (True, True, True), 'G-q-r') 8507
+   (2, (True, True, True), 'G+q+r') 7911
+   (0, (True, False, False), 'G') 2082
+   (1, (True, False, True), 'G-r') 432
+   (1, (True, False, True), 'G+r') 170
+   (0, (False, True, True), 'q+r') 64
+   (0, (False, True, True), 'q-r') 18
+   (0, (False, False, True), 'r') 0
+# exit: 0
+# end: 2026-11-01T11:27:08Z

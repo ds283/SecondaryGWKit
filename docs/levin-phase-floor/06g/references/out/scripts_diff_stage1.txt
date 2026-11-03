@@ -1,0 +1,1380 @@
+$ /bin/bash -c $'\necho "## diff -ru state/scripts_06h_census_reference scripts"; diff -ru state/scripts_06h_census_reference scripts; echo "## exit $?";\nfor pair in "scripts_06h_phase_reference/run_06h.py run_refs.py" "scripts_06h_phase_reference/launch_06h.py launch_refs.py" "scripts_06h_phase_reference/select_06h.py select_refs.py" "scripts_06e_references_reference/slice_inputs.py slice_refs.py"; do set -- $pair; echo "### diff -u state/$1 scripts/$2"; diff -u state/$1 scripts/$2; done;\necho "## sha256 of scripts/"; shasum -a 256 scripts/*'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:25:14Z
+# ----
+## diff -ru state/scripts_06h_census_reference scripts
+Only in scripts: check_captures.py
+Only in scripts: compare06i.py
+Only in scripts: compare13.py
+Only in scripts: draw_refs.py
+Only in scripts: launch_refs.py
+Only in scripts: one_reading.py
+Only in scripts: refs_common.py
+Only in scripts: routes_refs.py
+Only in scripts: run_refs.py
+Only in scripts: select_refs.py
+Only in scripts: slice_refs.py
+diff -ru state/scripts_06h_census_reference/x1_capture.py scripts/x1_capture.py
+--- state/scripts_06h_census_reference/x1_capture.py	2026-11-01 10:58:11
++++ scripts/x1_capture.py	2026-11-01 11:15:50
+@@ -1,4 +1,12 @@
+-"""levin-phase-floor prompt 06c section 5, X1: capture the inputs of the selected calls, after the
++"""levin-phase-floor prompt 06g section 5 (the references): copied from 06h's census
++scripts/x1_capture.py (docs/levin-phase-floor/06h/census/scripts/, a record, not edited; its copy is in
++state/scripts_06h_census_reference/), which is 06c's, changed only where marked "prompt 06g": ROWS_JSON is
++the census agent's state/rows.json (read only, its SHA-256 checked), each unit's budget is its g census
++record's ``budget_s`` (select_refs.py; 300 s in the main pass), and the header names 06g. It runs at g
++(prov.TREES["g"], the code worktree at 1c5336e) with the census agent's harness (worker.py, harness.py,
++rebuild.py, dispatch.py, spscan.py, prov.py), copied unchanged. 06c's text follows.
++
++levin-phase-floor prompt 06c section 5, X1: capture the inputs of the selected calls, after the
+ run. New in 06c.
+ 
+ X1's 24 calls are known only once g has run ("moved" compares g with 06b), and capturing every
+@@ -34,9 +42,10 @@
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+ from prov import PYTHON, TREES, WIDER, header, sha256  # noqa: E402
++import refs_common as RC  # noqa: E402  prompt 06g
+ 
+ BUDGET_S = 300.0
+-ROWS_JSON = WIDER / "state" / "rows.json"
++ROWS_JSON = RC.ROWS  # prompt 06g: the census agent's rows.json, read only (06c: WIDER / "state" / "rows.json")
+ 
+ 
+ def main():
+@@ -52,9 +61,11 @@
+     # here to be matched to the census (out/cmd/11, the first development capture, stopped there)
+     if os.environ.get("PYTHONPATH") != str(TREES["g"][0]):
+         raise SystemExit("PYTHONPATH must be the tree g")
+-    for l in header(Path(__file__).resolve(), "levin-phase-floor 06c: X1's inputs, captured at g", [Path(args.selection), ROWS_JSON]):
++    for l in header(Path(__file__).resolve(), "levin-phase-floor 06g: the references' calls' inputs, captured at g (06c's X1 capture)", [Path(args.selection), ROWS_JSON]):  # prompt 06g
+         print(l)
+     sel = json.loads(Path(args.selection).read_text())
++    if sha256(ROWS_JSON) != RC.ROWS_SHA256:  # prompt 06g
++        raise SystemExit(f"{ROWS_JSON}: sha256 is not {RC.ROWS_SHA256}")
+     rows = json.loads(ROWS_JSON.read_text())["rows"]
+     by_key = {f"{r['shard']}-{r['serial']}": r for r in rows}
+     by_unit = {}
+@@ -78,7 +89,7 @@
+             "shard": R["shard"],
+             "serial": R["serial"],
+             "k_key": R["k_key"],
+-            "budget": BUDGET_S,
++            "budget": ents[0].get("census_unit_budget_s", BUDGET_S),  # prompt 06g: the g census record's budget_s
+             "scan": rtol == "1e-7",
+             "w3": rtol == "1e-7",
+             "capture": [[e["index"], e["notify_label"]] for e in sorted(ents, key=lambda e: e["index"])],
+## exit 1
+### diff -u state/scripts_06h_phase_reference/run_06h.py scripts/run_refs.py
+--- state/scripts_06h_phase_reference/run_06h.py	2026-11-01 10:58:11
++++ scripts/run_refs.py	2026-11-01 11:21:26
+@@ -1,33 +1,47 @@
+-"""levin-phase-floor prompt 06h section 5, the phase re-measurement: the registered run (slug ``phase``).
+-New in 06h, adapted from 06f's run_06f.py (its stages, children, heartbeat and signal handling).
++"""levin-phase-floor prompt 06g section 5, the references: the registered run (slug ``references``).
++New in 06g, adapted from 06h's phase agent's run_06h.py (kept in state/scripts_06h_phase_reference/):
++its children, heartbeat and signal handling.
+ 
+-Stages, strictly in order, from var/levin-phase-floor-06h/phase/; at most six child processes at
+-any time, one stage after another:
+-1. capture at p: x1_capture.py --tree p on out/sample/selection_p.json (select_06h.py; 06e's census
+-   record), six workers, into state/capture_p/ and out/capture_p.json; output
+-   out/cmd/30_capture_p.txt. Unit ``capture p``.
+-2. capture at h: the same with --tree h on selection_h.json (06h's census record), into
+-   state/capture_h/ and out/capture_h.json; output out/cmd/31_capture_h.txt. Unit ``capture h``.
+-   **A capture that does not reproduce its census record is a stop** (the dispatch brief): if any
+-   of the 40 does not, nothing further runs and the run is recorded ``failed``.
+-3. the method check: method_check_06f.py (06h's copy, at the exact e^u) on h's capture of
+-   ``h-1e-7-0-12689`` #19 (06f's worst call), output out/cmd/32_method_check.txt, **before any
+-   scoring**: if it fails nothing further runs. Unit ``method``.
+-4. the replays: replay06f.py --m2 (06h's copy) on every call in each tree, one process per call,
+-   into out/replay_<tree>/, each process's output in out/replay_logs/<tree>/. One unit per process.
+-5. the cross scoring: cross06h.py, each tree's code at the other tree's points (p at h's: H1's
+-   parent column on H1's points; h at p's: descriptive), into out/cross/<tree>_at_<other>/, output
+-   in out/cross_logs/. One unit per process.
+-6. the reference at 50 digits: orch_m2.py worst h 5 (06f's review method, 06h's copy) at h's worst
+-   point, output out/cmd/33_refcheck_50_digits.txt. Unit ``refcheck``.
+-Every child runs with its tree first on PYTHONPATH (x1_capture.py: the tree alone, as it requires;
+-the others the tree then scripts/, for the pickles' harness functions), no bytecode, git's optional
+-locks off, one BLAS/OpenMP thread. Heartbeat every 60 s; on SIGTERM or SIGINT the children are sent
+-SIGTERM, the run is recorded ``killed``, and the driver dies by the signal. No Ray, no lock, no store
+-opened except the scratch copy, read-only, by the capture's census workers.
++Stages, strictly in order, from var/levin-phase-floor-06g/references/; **at most six computing
++processes at any time** (one stage, one child after another; a capture or a reading runs six worker
++processes under a parent that waits on them):
++1. ``capture``: x1_capture.py (06c's, 06g's copy) on out/sample/selection.json (select_refs.py: Z3's
++   30 and the 60 drawn), six census workers at g, into state/capture/ and out/capture.json; output
++   out/cmd/30_capture.txt. Every capture must reproduce its g census record (value, abserr,
++   num_regions, max_depth, converged, label).
++2. ``check``: check_captures.py, the region arrays and the call records against the g census;
++   out/check_captures.json, output out/cmd/31_check_captures.txt.
++   **A capture that does not reproduce its census record is a stop** (the brief): nothing further
++   runs and the run is recorded ``failed``.
++3. ``slice``: slice_refs.py, each capture into state/inputs/<sid>.pkl; 06i's inputs checked against
++   06i's SHA-256 list; out/inputs.json, output out/cmd/32_slice.txt.
++4. ``compare13``: compare13.py, 06i's 13 groups at g against 06i's inputs; out/compare13.json,
++   output out/cmd/33_compare13.txt. A group that differs is a stop.
++5. ``routes``: routes_refs.py, every capture's route and Route B's default edges; out/routes.json,
++   output out/cmd/34_routes.txt. A capture whose edges cannot be found is a stop.
++6. **the tool on 06i's 13**: one_reading.py on each of the 13 captures, four readings each (QAWO and
++   FCC, resolutions 1 and 2, the tool's order), into out/readings_06i13/; then the tool's own command
++   line on two of them (compare06i.CLI_SAMPLES) into out/cli/; then compare06i.py, out/tool_vs_06i.json,
++   output out/cmd/35_tool_vs_06i.txt. **A reading that disagrees with 06i's is a stop** (prompt 06g
++   section 7), as is a reading that fails or exceeds 30 minutes here.
++7. **the references**: one_reading.py on each of the 77 new samples (Z3's 17 not in 06i, then the 60
++   drawn), four readings each, into out/readings/<sid>-<impl>-r<res>.json. Each reading is one
++   registry unit, with its status (``done``, ``timeout``, ``error``) and wall time. **A reading over
++   30 minutes is stopped** (its process group sent SIGTERM, then SIGKILL after 30 s), recorded
++   ``timeout``, and the sample's other readings still run; the sample's reference is dropped at
++   scoring. No reading's failure stops the run.
++Every reading's own output goes to out/reading_logs/<set>/<sid>-<impl>-r<res>.txt.
+ 
+-Usage: python -B run_06h.py --run-dir RUN_DIR   (launch_06h.py starts it)"""
++Every child runs with no bytecode, git's optional locks off and one BLAS/OpenMP thread; x1_capture.py
++with PYTHONPATH the tree g alone, as it requires; the others with the tree g, then scripts/ (the
++pickles name the census harness's functions). Heartbeat every 60 s and at each child's start and end;
++on SIGTERM or SIGINT the running child's process group is sent SIGTERM, the run is recorded
++``killed``, and the driver dies by the signal. No Ray, no lock, no store opened except the scratch
++copy, read-only, by the capture's census workers; nothing is written under var/datastores/.
+ 
++Usage: python -B run_refs.py --run-dir RUN_DIR   (launch_refs.py starts it)
++"""
++
+ import argparse
+ import hashlib
+ import json
+@@ -42,11 +56,12 @@
+ HERE = Path(__file__).resolve().parent
+ ROOT = HERE.parent
+ sys.path.insert(0, str(HERE))
+-from prov import TREES  # noqa: E402
++import refs_common as RC  # noqa: E402
++from compare06i import CLI_SAMPLES  # noqa: E402
+ 
+-PYTHON = "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python"
+-METHOD_CALL = ("h-1e-7-0-12689", 19)
++PYTHON = str(RC.PYTHON)
+ MAX_PROCS = 6
++KILL_GRACE_S = 30.0
+ 
+ 
+ def sha(p):
+@@ -57,6 +72,19 @@
+     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+ 
+ 
++def plan(selection):
++    """(the 13 of 06i, the 77 new), each a list of selection entries in run order."""
++    i06 = [e for e in selection if e["in_06i"]]
++    z_new = [e for e in selection if e["source"] == "z3" and not e["in_06i"]]
++    drawn = [e for e in selection if e["source"] == "draw"]
++    assert len(i06) == 13 and len(z_new) == 17 and len(drawn) == 60
++    return i06, z_new + drawn
++
++
++def expected_units(n13=13, n77=77):
++    return 5 + 4 * n13 + len(CLI_SAMPLES) + 1 + 4 * n77
++
++
+ def main():
+     ap = argparse.ArgumentParser()
+     ap.add_argument("--run-dir", required=True)
+@@ -64,22 +92,29 @@
+     import runregistrykit
+ 
+     run = runregistrykit.Run(a.run_dir)
+-    children = {}
++    current = {"child": None, "group": False}
+ 
++    def kill_child(sig):
++        ch = current["child"]
++        if ch is None or ch.poll() is not None:
++            return
++        try:
++            if current["group"]:
++                os.killpg(ch.pid, sig)
++            else:
++                ch.send_signal(sig)
++        except ProcessLookupError:
++            pass
++
+     def terminal(signum, _frame):
+-        for ch in list(children.values()):
+-            if ch.poll() is None:
+-                try:
+-                    ch.send_signal(signal.SIGTERM)
+-                except Exception:
+-                    pass
++        kill_child(signal.SIGTERM)
+         run.finish("killed", exit_code=128 + signum)
+         signal.signal(signum, signal.SIG_DFL)
+         os.kill(os.getpid(), signum)
+ 
+     for s_ in (signal.SIGTERM, signal.SIGINT):
+         signal.signal(s_, terminal)
+-    run.heartbeat(pid=os.getpid(), stage="started: capture at p is next")
++    run.heartbeat(pid=os.getpid(), stage="started: capture is next")
+     stop = threading.Event()
+ 
+     def beat():
+@@ -99,13 +134,12 @@
+         VECLIB_MAXIMUM_THREADS="1",
+         MKL_NUM_THREADS="1",
+     )
+-    env_cap = {t: dict(base, PYTHONPATH=str(TREES[t][0])) for t in TREES}
+-    env_rep = {
+-        t: dict(base, PYTHONPATH=str(TREES[t][0]) + ":" + str(HERE)) for t in TREES
+-    }
++    env_tree = dict(base, PYTHONPATH=str(RC.G_TREE))
++    env_rd = dict(base, PYTHONPATH=str(RC.G_TREE) + ":" + str(HERE))
+ 
+-    def one(name, argv, env, out, unit):
+-        """Run one child to completion, its output in ``out``; record the unit."""
++    def one(argv, env, out, limit=None):
++        """Run one child to completion in its own process group, its output in ``out``; stop it at
++        ``limit`` seconds. Returns (status, exit code, wall seconds)."""
+         if out.exists():
+             raise SystemExit(f"{out} exists; not overwritten")
+         out.parent.mkdir(parents=True, exist_ok=True)
+@@ -114,6 +148,7 @@
+                 (" ".join(argv) + f"\n# cwd {ROOT}\n# start {utc()}\n# ----\n").encode()
+             )
+             fo.flush()
++            t0 = time.monotonic()
+             ch = subprocess.Popen(
+                 argv,
+                 cwd=str(ROOT),
+@@ -121,225 +156,273 @@
+                 stdin=subprocess.DEVNULL,
+                 stdout=fo,
+                 stderr=subprocess.STDOUT,
++                start_new_session=True,
+             )
+-            children[name] = ch
+-            rc = ch.wait()
+-            children.pop(name)
+-            fo.write(f"# ----\n# end {utc()}\n# exit {rc}\n".encode())
++            current.update(child=ch, group=True)
++            status = None
++            try:
++                rc = ch.wait(timeout=limit)
++            except subprocess.TimeoutExpired:
++                status = "timeout"
++                try:
++                    os.killpg(ch.pid, signal.SIGTERM)
++                except ProcessLookupError:
++                    pass
++                try:
++                    rc = ch.wait(timeout=KILL_GRACE_S)
++                except subprocess.TimeoutExpired:
++                    try:
++                        os.killpg(ch.pid, signal.SIGKILL)
++                    except ProcessLookupError:
++                        pass
++                    rc = ch.wait()
++            wall = time.monotonic() - t0
++            current.update(child=None, group=False)
++            if status is None:
++                status = "done" if rc == 0 else "error"
++            fo.write(
++                f"# ----\n# end {utc()}\n# exit {rc}\n# status {status}\n# wall_s {wall:.3f}\n".encode()
++            )
++        return status, rc, wall
++
++    def stage(name, argv, env, out_name):
++        out = ROOT / "out" / "cmd" / out_name
++        run.heartbeat(stage=f"{name} running")
++        status, rc, wall = one(argv, env, out)
++        run.record(
++            name,
++            {
++                "status": status,
++                "exit_code": rc,
++                "wall_s": wall,
++                "output": str(out),
++                "output_sha256": sha(out),
++            },
++        )
++        run.heartbeat(stage=f"{name} exit {rc}")
+         return rc
+ 
+-    def pool(jobs, stage):
+-        """jobs: [(name, argv, env, log path)]; at most MAX_PROCS at once. Returns {name: rc}."""
+-        running = {}
+-        rcs = {}
+-        pending = list(jobs)
+-        while pending or running:
+-            while pending and len(running) < MAX_PROCS:
+-                name, argv, env, lp = pending.pop(0)
+-                if lp.exists():
+-                    raise SystemExit(f"{lp} exists; not overwritten")
+-                lp.parent.mkdir(parents=True, exist_ok=True)
+-                lf = open(lp, "wb")
+-                lf.write((" ".join(argv) + f"\n# start {utc()}\n# ----\n").encode())
+-                lf.flush()
+-                ch = subprocess.Popen(
+-                    argv,
+-                    cwd=str(ROOT),
+-                    env=env,
+-                    stdin=subprocess.DEVNULL,
+-                    stdout=lf,
+-                    stderr=subprocess.STDOUT,
+-                )
+-                lf.close()
+-                children[name] = ch
+-                running[name] = lp
+-                run.heartbeat(stage=f"{stage} {name} started")
+-            for name in list(running):
+-                rc = children[name].poll()
+-                if rc is None:
+-                    continue
+-                lp = running.pop(name)
+-                children.pop(name)
+-                with open(lp, "ab") as lf:
+-                    lf.write(f"# ----\n# end {utc()}\n# exit {rc}\n".encode())
+-                line = [
+-                    l
+-                    for l in lp.read_text(errors="replace").splitlines()
+-                    if l.startswith("{")
+-                ]
+-                run.record(
+-                    f"{stage} {name}",
+-                    {
+-                        "status": "done" if rc == 0 else "error",
+-                        "exit_code": rc,
+-                        "log": str(lp),
+-                        "log_sha256": sha(lp),
+-                        "summary": line[-1] if line else None,
+-                    },
+-                )
+-                run.heartbeat(stage=f"{stage} {name} exit {rc}")
+-                rcs[name] = rc
+-            time.sleep(0.5)
+-        return rcs
++    def reading(set_name, e, impl, res, rd_dir):
++        sid = e["sid"]
++        pkl = ROOT / "state" / "inputs" / f"{sid}.pkl"
++        dst = rd_dir / f"{sid}-{impl}-r{res}.json"
++        log = ROOT / "out" / "reading_logs" / set_name / f"{sid}-{impl}-r{res}.txt"
++        argv = [
++            PYTHON,
++            "-B",
++            str(HERE / "one_reading.py"),
++            str(pkl),
++            impl,
++            str(res),
++            str(dst),
++            "--sid",
++            sid,
++            "--unit",
++            e["unit"],
++            "--index",
++            str(e["index"]),
++            "--rtol",
++            e["rtol"],
++            "--workers",
++            str(MAX_PROCS),
++        ]
++        name = f"{set_name} {sid} {impl} r{res}"
++        run.heartbeat(stage=f"{name} running")
++        status, rc, wall = one(argv, env_rd, log, limit=RC.READING_LIMIT_S)
++        rec = {
++            "status": status,
++            "exit_code": rc,
++            "driver_wall_s": wall,
++            "limit_s": RC.READING_LIMIT_S,
++            "log": str(log),
++            "log_sha256": sha(log),
++            "reading": str(dst) if dst.exists() else None,
++        }
++        if dst.exists():
++            d = json.loads(dst.read_text())
++            rec.update(
++                value_hex=d["value_hex"],
++                value_30=d["value_30"],
++                wall_s=d["wall_s"],
++                route=d["route"],
++                reading_sha256=sha(dst),
++            )
++        run.record(name, rec)
++        run.heartbeat(stage=f"{name} {status} ({wall:.0f} s)")
++        return status
+ 
+     ok = True
+     try:
+-        # 1-2. the captures, p then h
+-        caps = {}
+-        for i, tree in enumerate(("p", "h")):
+-            sel = ROOT / "out" / "sample" / f"selection_{tree}.json"
+-            cap_dir = ROOT / "state" / f"capture_{tree}"
+-            cap_json = ROOT / "out" / f"capture_{tree}.json"
+-            out1 = ROOT / "out" / "cmd" / f"3{i}_capture_{tree}.txt"
+-            for p_ in (cap_dir, cap_json):
+-                if p_.exists():
+-                    raise SystemExit(f"{p_} exists; not overwritten")
+-            run.heartbeat(stage=f"capture at {tree} running")
+-            argv = [
++        sel_p = ROOT / "out" / "sample" / "selection.json"
++        selection = json.loads(sel_p.read_text())
++        i06, new77 = plan(selection)
++        # 1-2. the captures, and their check against the census
++        for p_ in (ROOT / "state" / "capture", ROOT / "out" / "capture.json"):
++            if p_.exists():
++                raise SystemExit(f"{p_} exists; not overwritten")
++        rc = stage(
++            "capture",
++            [
+                 PYTHON,
+                 "-B",
+                 str(HERE / "x1_capture.py"),
+-                str(sel),
+-                str(cap_dir),
+-                str(cap_json),
+-                "--tree",
+-                tree,
++                str(sel_p),
++                str(ROOT / "state" / "capture"),
++                str(ROOT / "out" / "capture.json"),
+                 "--workers",
+                 str(MAX_PROCS),
++            ],
++            env_tree,
++            "30_capture.txt",
++        )
++        if rc != 0:
++            run.heartbeat(
++                stage="STOP: a capture does not reproduce its census record (x1_capture)"
++            )
++            raise RuntimeError("stop: capture")
++        rc = stage(
++            "check",
++            [
++                PYTHON,
++                "-B",
++                str(HERE / "check_captures.py"),
++                str(ROOT / "out" / "capture.json"),
++                str(sel_p),
++                str(ROOT / "out" / "check_captures.json"),
++            ],
++            env_rd,
++            "31_check_captures.txt",
++        )
++        if rc != 0:
++            run.heartbeat(
++                stage="STOP: a capture does not reproduce its census record (regions)"
++            )
++            raise RuntimeError("stop: check")
++        # 3-5. slice, 06i's 13 groups, the routes
++        rc = stage(
++            "slice",
++            [
++                PYTHON,
++                "-B",
++                str(HERE / "slice_refs.py"),
++                str(ROOT / "out" / "capture.json"),
++                str(ROOT / "out" / "check_captures.json"),
++                str(sel_p),
++            ],
++            base,
++            "32_slice.txt",
++        )
++        if rc != 0:
++            run.heartbeat(stage="STOP: slicing or 06i's inputs' SHA-256")
++            raise RuntimeError("stop: slice")
++        rc = stage(
++            "compare13",
++            [
++                PYTHON,
++                "-B",
++                str(HERE / "compare13.py"),
++                str(ROOT / "out" / "inputs.json"),
++            ],
++            env_rd,
++            "33_compare13.txt",
++        )
++        if rc != 0:
++            run.heartbeat(stage="STOP: one of 06i's 13 groups differs at g")
++            raise RuntimeError("stop: compare13")
++        rc = stage(
++            "routes",
++            [
++                PYTHON,
++                "-B",
++                str(HERE / "routes_refs.py"),
++                str(ROOT / "out" / "inputs.json"),
++            ],
++            env_rd,
++            "34_routes.txt",
++        )
++        if rc != 0:
++            run.heartbeat(stage="STOP: a capture's Route B edges cannot be found")
++            raise RuntimeError("stop: routes")
++        # 6. the tool on 06i's 13, its command line on two, and the comparison with 06i
++        rd13 = ROOT / "out" / "readings_06i13"
++        bad13 = []
++        for e in i06:
++            for impl in RC.IMPLS:
++                for res in RC.RESS:
++                    st = reading("06i13", e, impl, res, rd13)
++                    if st != "done":
++                        bad13.append(f"{e['sid']} {impl} r{res} {st}")
++        if bad13:
++            run.heartbeat(stage=f"STOP: readings on 06i's 13 failed: {bad13}")
++            raise RuntimeError(f"stop: readings on 06i's 13: {bad13}")
++        by_no = {e["sample_no"]: e for e in i06}
++        for n in CLI_SAMPLES:
++            e = by_no[n]
++            g = e["g_record"]
++            h = e["06h_record"]
++            tol = min(RC.H(g["abserr"]), RC.H(h["abserr"])) / 100
++            out_json = ROOT / "out" / "cli" / f"{e['sid']}.json"
++            out_json.parent.mkdir(parents=True, exist_ok=True)
++            argv = [
++                PYTHON,
++                "-B",
++                "-m",
++                "tools.filon_reference",
++                str(ROOT / "state" / "inputs" / f"{e['sid']}.pkl"),
++                "--tolerance",
++                repr(tol),
++                "--unpickler",
++                "ray.cloudpickle",
++                "--workers",
++                str(MAX_PROCS),
++                "--out",
++                str(out_json),
+             ]
+-            rc = one(f"capture {tree}", argv, env_cap[tree], out1, f"capture {tree}")
+-            caps[tree] = json.loads(cap_json.read_text()) if cap_json.exists() else []
+-            n_sel = len(json.loads(sel.read_text()))
+-            n_match = sum(1 for e in caps[tree] if e.get("capture_matches_census"))
++            name = f"cli {e['sid']}"
++            run.heartbeat(stage=f"{name} running")
++            status, rc, wall = one(
++                argv,
++                env_rd,
++                ROOT / "out" / "reading_logs" / "cli" / f"{e['sid']}.txt",
++                limit=4 * RC.READING_LIMIT_S,
++            )
+             run.record(
+-                f"capture {tree}",
++                name,
+                 {
+-                    "status": "done" if rc == 0 else "error",
++                    "status": status,
+                     "exit_code": rc,
+-                    "output": str(out1),
+-                    "output_sha256": sha(out1),
+-                    "capture_json_sha256": sha(cap_json) if cap_json.exists() else None,
+-                    "n_selected": n_sel,
+-                    "n_matching_census": n_match,
++                    "driver_wall_s": wall,
++                    "out": str(out_json) if out_json.exists() else None,
+                 },
+             )
+-            run.heartbeat(
+-                stage=f"capture at {tree} exit {rc}; {n_match} of {n_sel} matching"
+-            )
+-            ok &= rc == 0 and n_match == n_sel and len(caps[tree]) == n_sel
+-        if not ok:
+-            run.heartbeat(stage="STOP: a capture does not reproduce its census record")
+-            raise RuntimeError("a capture does not reproduce its census record: stop")
+-        # 3. the method check, before any scoring
+-        out3 = ROOT / "out" / "cmd" / "32_method_check.txt"
+-        argv = [
+-            PYTHON,
+-            "-B",
+-            str(HERE / "method_check_06f.py"),
+-            str(ROOT / "out" / "capture_h.json"),
+-            METHOD_CALL[0],
+-            str(METHOD_CALL[1]),
+-        ]
+-        run.heartbeat(stage="method check running")
+-        rc = one("method", argv, env_rep["h"], out3, "method")
+-        run.record(
+-            "method",
+-            {
+-                "status": "done" if rc == 0 else "error",
+-                "exit_code": rc,
+-                "output": str(out3),
+-                "output_sha256": sha(out3),
+-            },
++            if status != "done":
++                run.heartbeat(stage=f"STOP: the command line on {e['sid']} {status}")
++                raise RuntimeError(f"stop: cli {e['sid']}")
++        rc = stage(
++            "tool_vs_06i",
++            [
++                PYTHON,
++                "-B",
++                str(HERE / "compare06i.py"),
++                str(rd13),
++                str(ROOT / "out" / "cli"),
++            ],
++            base,
++            "35_tool_vs_06i.txt",
+         )
+         if rc != 0:
+-            run.heartbeat(stage="STOP: the method check fails")
+-            raise RuntimeError("the method check fails: stop")
+-        # 4. the replays
+-        jobs = []
+-        for tree in ("h", "p"):
+-            for e in caps[tree]:
+-                name = f"{e['unit']}_{e['index']}"
+-                argv = [
+-                    PYTHON,
+-                    "-B",
+-                    str(HERE / "replay06f.py"),
+-                    str(ROOT / "out" / f"capture_{tree}.json"),
+-                    e["unit"],
+-                    str(e["index"]),
+-                    str(ROOT / "out" / f"replay_{tree}"),
+-                    "--m2",
+-                ]
+-                jobs.append(
+-                    (
+-                        name,
+-                        argv,
+-                        env_rep[tree],
+-                        ROOT / "out" / "replay_logs" / tree / f"{name}.txt",
+-                    )
+-                )
+-        rcs = pool(jobs, "replay")
+-        ok &= all(rc == 0 for rc in rcs.values()) and len(rcs) == len(jobs)
+-        # 5. the cross scoring (needs both trees' replays of a call)
+-        jobs = []
+-        by_rest = {
+-            t: {(e["unit"].split("-", 1)[1], e["index"]): e for e in caps[t]}
+-            for t in caps
+-        }
+-        for tree, other in (("p", "h"), ("h", "p")):
+-            for k, e in sorted(by_rest[tree].items()):
+-                eo = by_rest[other].get(k)
+-                if eo is None:
+-                    continue
+-                name = f"{e['unit']}_{e['index']}"
+-                own_dir = ROOT / "out" / f"replay_{tree}" / name
+-                other_dir = (
+-                    ROOT / "out" / f"replay_{other}" / f"{eo['unit']}_{eo['index']}"
+-                )
+-                if (
+-                    not (own_dir / "result.json").exists()
+-                    or not (other_dir / "result.json").exists()
+-                ):
+-                    continue
+-                argv = [
+-                    PYTHON,
+-                    "-B",
+-                    str(HERE / "cross06h.py"),
+-                    str(ROOT / "out" / f"capture_{tree}.json"),
+-                    e["unit"],
+-                    str(e["index"]),
+-                    str(own_dir),
+-                    str(other_dir),
+-                    str(ROOT / "out" / "cross" / f"{tree}_at_{other}"),
+-                ]
+-                jobs.append(
+-                    (
+-                        f"{tree}_at_{other} {name}",
+-                        argv,
+-                        env_rep[tree],
+-                        ROOT
+-                        / "out"
+-                        / "cross_logs"
+-                        / f"{tree}_at_{other}"
+-                        / f"{name}.txt",
+-                    )
+-                )
+-        rcs = pool(jobs, "cross")
+-        ok &= all(rc == 0 for rc in rcs.values()) and len(rcs) == 2 * len(caps["h"])
+-        # 6. the reference at 50 digits at h's worst point
+-        out6 = ROOT / "out" / "cmd" / "33_refcheck_50_digits.txt"
+-        argv = [PYTHON, "-B", str(HERE / "orch_m2.py"), "worst", "h", "5"]
+-        run.heartbeat(stage="refcheck running")
+-        rc = one("refcheck", argv, env_rep["h"], out6, "refcheck")
+-        run.record(
+-            "refcheck",
+-            {
+-                "status": "done" if rc == 0 else "error",
+-                "exit_code": rc,
+-                "output": str(out6),
+-                "output_sha256": sha(out6),
+-            },
+-        )
+-        ok &= rc == 0
++            run.heartbeat(
++                stage="STOP: a reading disagrees with 06i's (or the command line differs)"
++            )
++            raise RuntimeError("stop: tool_vs_06i")
++        # 7. the references on the 77 new samples
++        rd = ROOT / "out" / "readings"
++        counts = {"done": 0, "timeout": 0, "error": 0}
++        for e in new77:
++            for impl in RC.IMPLS:
++                for res in RC.RESS:
++                    counts[reading("ref", e, impl, res, rd)] += 1
++        run.heartbeat(stage=f"references: {counts}")
+     except BaseException:
+         stop.set()
+         run.finish("failed", exit_code=1)
+### diff -u state/scripts_06h_phase_reference/launch_06h.py scripts/launch_refs.py
+--- state/scripts_06h_phase_reference/launch_06h.py	2026-11-01 10:58:11
++++ scripts/launch_refs.py	2026-11-01 11:20:44
+@@ -1,10 +1,11 @@
+-"""levin-phase-floor prompt 06h section 5, the phase re-measurement: launch run_06h.py as one registered,
+-detached run (campaign levin-phase-floor, prompt 06h, slug ``phase``). Copied from 06f's
+-launch_06f.py and changed only in its script, slug, purpose, scope and unit count:
+-``runregistrykit.begin`` first (manifest, script run_06h.py), then ``nohup sh -c '<driver>; exit
+-$?'`` in a new session, stdin from /dev/null, stdout and stderr into the run directory, the sh pid
+-recorded with ``Run.heartbeat(pid=...)``; the driver replaces it with its own. New in 06h.
+-Usage (from var/levin-phase-floor-06h/phase/): python -B scripts/launch_06h.py"""
++"""levin-phase-floor prompt 06g section 5, the references: launch run_refs.py as one registered, detached
++run (campaign levin-phase-floor, prompt 06g, slug ``references``). Copied from 06h's phase agent's
++launch_06h.py (kept in state/scripts_06h_phase_reference/) and changed only in its script, slug,
++purpose, scope and unit count: ``runregistrykit.begin`` first (manifest, script run_refs.py), then
++``nohup sh -c '<driver>; exit $?'`` in a new session, stdin from /dev/null, stdout and stderr into the
++run directory, the sh pid recorded with ``Run.heartbeat(pid=...)``; the driver replaces it with its
++own. New in 06g.
++Usage (from var/levin-phase-floor-06g/references/): python -B scripts/launch_refs.py"""
+ 
+ import json
+ import os
+@@ -17,36 +18,33 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ ROOT = HERE.parent
++sys.path.insert(0, str(HERE))
++from run_refs import expected_units, plan  # noqa: E402
++
+ PYTHON = "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python"
+-SCRIPT = HERE / "run_06h.py"
+-N_CALLS = len(json.loads((ROOT / "out" / "sample" / "selection_h.json").read_text()))
+-assert N_CALLS == len(
+-    json.loads((ROOT / "out" / "sample" / "selection_p.json").read_text())
+-)
++SCRIPT = HERE / "run_refs.py"
++SELECTION = json.loads((ROOT / "out" / "sample" / "selection.json").read_text())
++I06, NEW77 = plan(SELECTION)
+ PURPOSE = (
+-    "levin-phase-floor prompt 06h section 5 on the Mac Studio (mps026298; Python 3.13.16): the phase "
+-    "re-measurement, 06f's M2 items 1 and 4 repeated at 06h's code (H1, H2). Captures 06f's 20 M2 calls "
+-    "by 06e's x1_capture.py (06h's copy) at the parent p (worktree "
+-    "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5, 2c325f5, code 06e's; each capture checked "
+-    "bit for bit against 06e's census checkpoint a0dc4d7f) and at h (worktree "
+-    "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2, dispatch SHA c1ec3b2, code 7172a8f + "
+-    "ac1c6f4; each checked against 06h's census checkpoint), reading 06's certified scratch copy of A3 v2 "
+-    "read-only (fingerprint 0e32f24a) on a stand-in ShardedPool; the method check at the exact e^u before "
+-    "any scoring; replays each call in its own process in its own tree with 06f's pass-throughs, with "
+-    "mpmath phase references at 30 digits at the exact e^u (and at 06f's x_hat), at every node of every "
+-    "returned leaf and 06f's seeded dense sample of 1,000 points per call; each tree's code scored at the "
+-    "other's points; the reference re-checked at 50 digits at h's worst point. At most six processes; "
+-    "Ray-free, no lock, no store built, no code changed"
++    "levin-phase-floor prompt 06g section 5 on the Mac Studio (mps026298; Python 3.13.16): the references "
++    "(V3, V4, the correction -sum E). At the code worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e "
++    "(Part B's dispatch SHA 1c5336e, code 06g's 3ae6f3a): captures Z3's 30 calls and 60 calls drawn from 06h's census "
++    "by 06c's x1_capture.py (06g's copy) with the g census harness, each checked bit for bit (value, abserr, label, "
++    "converged, regions) against the g census checkpoint, reading 06's certified scratch copy of A3 v2 read-only "
++    "(fingerprint 0e32f24a) on a stand-in ShardedPool; 06i's 13 groups compared with 06i's inputs; then "
++    "tools/filon_reference.py (QAWO and FCC, two resolutions each, six worker processes) on 06i's 13 captures, "
++    "compared with 06i's readings (a disagreement stops the run), and on the 77 new samples, each reading in its own "
++    "process group, stopped at 30 minutes. At most six computing processes; Ray-free, no lock, no store built, no code changed"
+ )
+ SCOPE = (
+-    f"out/sample/selection_p.json and selection_h.json ({N_CALLS} calls each, 06f's M2 sample, seed "
+-    "20261031); outputs under var/levin-phase-floor-06h/phase/ (state/capture_p, state/capture_h, "
+-    "out/capture_p.json, out/capture_h.json, out/replay_p, out/replay_h, out/replay_logs, out/cross, "
+-    "out/cross_logs, out/cmd/30-33)"
++    f"out/sample/selection.json ({len(SELECTION)} calls: Z3's 30, 13 of them 06i's, and 60 drawn); outputs under "
++    "var/levin-phase-floor-06g/references/ (state/capture, state/inputs, out/capture.json, out/check_captures.json, "
++    "out/inputs.json, out/compare13.json, out/routes.json, out/readings_06i13, out/cli, out/tool_vs_06i.json, "
++    "out/readings, out/reading_logs, out/cmd/30-35)"
+ )
+ HEARTBEAT_MEANS = (
+     "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each "
+-    "stage's and each child's start and end, and every 60 s by a thread of the driver while its process lives."
++    "stage's and each reading's start and end, and every 60 s by a thread of the driver while its process lives."
+ )
+ 
+ 
+@@ -54,14 +52,14 @@
+     argv = [PYTHON, "-B", str(SCRIPT), "--run-dir", "<run dir>"]
+     run = runregistrykit.begin(
+         campaign="levin-phase-floor",
+-        prompt="06h",
+-        slug="phase",
++        prompt="06g",
++        slug="references",
+         purpose=PURPOSE,
+         argv=argv,
+         cwd=str(ROOT),
+         script=str(SCRIPT),
+         unit="units",
+-        expected_units=2 + 1 + 2 * N_CALLS + 2 * N_CALLS + 1,
++        expected_units=expected_units(len(I06), len(NEW77)),
+         checkpoint=True,
+         results=None,
+         scope=SCOPE,
+### diff -u state/scripts_06h_phase_reference/select_06h.py scripts/select_refs.py
+--- state/scripts_06h_phase_reference/select_06h.py	2026-11-01 10:58:11
++++ scripts/select_refs.py	2026-11-01 11:21:26
+@@ -1,25 +1,25 @@
+-"""levin-phase-floor prompt 06h section 5, the phase re-measurement: the two selections the captures
+-run on. New in 06h.
++"""levin-phase-floor prompt 06g section 5, the references: the selection the captures run on. New in
++06g, after 06h's phase agent's select_06h.py (kept in state/scripts_06h_phase_reference/).
+ 
+-The calls are 06f's 20 M2 calls (06f's out/sample/selection.json, its entries with ``"sample":
+-"M2"``, read only; its SHA-256 is checked against the committed copy in the code worktree,
+-docs/levin-phase-floor/06f/out/sample/selection.json). Each is captured twice, at ``p`` (06h's
+-code commit's parent, whose code is 06e's) and at ``h`` (06h's code), and each capture must
+-reproduce its own tree's census record bit for bit (x1_capture.py compares value, abserr, regions,
+-maximum depth, converged and the label). So each selection carries that census's record:
+-- ``selection_p.json``: from 06e's census checkpoint (prov.RUN06E, its SHA-256 checked against
+-  prov.CHECKPOINT06E_SHA256). These must equal the census fields of 06f's own selection, which was
+-  drawn from the same checkpoint (checked);
+-- ``selection_h.json``: from 06h's census checkpoint (prov.census_run_06h(), the census agent's run,
+-  read only; its SHA-256 printed).
+-A call is matched by the unit's ``<rtol>-<shard>-<serial>`` (each census names its units by its own
+-tree) and the call index, and its label must equal 06f's. Every record of a unit is read; if more
+-than one holds the call (an over-budget pass), they must agree. The units are renamed
+-``<tree>-<rtol>-<shard>-<serial>`` (x1_capture.py runs them in that tree); 06f's name is kept as
+-``unit_06f`` and the census's own as ``census_unit``. A call missing from a census, or whose
+-records disagree, stops this script with nothing written.
++The 90 calls: Z3's 30 (06c's depth20-tiling ``results.json``'s ``calls``, ids z00..z29 by
++``sample_no``; 06i's 13 are among them) and the 60 drawn (out/sample/draw.json, r00..r59). Each is
++matched in two censuses by the unit's ``<rtol>-<shard>-<serial>`` and the call index, with the same
++notify_label and x_span (hex):
++- **the g census** (the census agent's run, read only; ``refs_common.census_run_06g``): its record is
++  what a capture must reproduce bit for bit (value, abserr, num_regions, max_depth, converged,
++  label: x1_capture.py; the region arrays: check_captures.py). Every ``done`` record of the unit is
++  read; if more than one holds the call they must agree. Records that are not ``done`` (an
++  over-budget main-pass record) are counted and not used. The unit's budget is the ``done``
++  record's ``budget_s``;
++- **06h's census** (RUN06H, 3104c18e..., checked): v_06h and abserr_06h.
++For 06i's 13 it also carries 06i's reference (its FCC res-2 reading) and 06i's m (min of abserr
++06c and 06e, 06i's scores.json). A call missing from either census, or whose records disagree, stops
++this script with nothing written.
+ 
+-Usage: python -B select_06h.py   (from var/levin-phase-floor-06h/phase/; writes out/sample/)
++Writes out/sample/selection.json (x1_capture.py's SELECTION_JSON: unit ``g-<rest>``, index,
++notify_label and the census_* fields, plus everything above). Reads only.
++
++Usage: python -B select_refs.py   (from var/levin-phase-floor-06g/references/)
+ """
+ 
+ import json
+@@ -27,166 +27,151 @@
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-ROOT = HERE.parent
+ sys.path.insert(0, str(HERE))
+-from prov import (  # noqa: E402
+-    CHECKPOINT06E_SHA256,
+-    REC06F,
+-    RUN06E,
+-    TREES,
+-    census_run_06h,
+-    header,
+-    sha256,
+-)
++import refs_common as RC  # noqa: E402
++from prov import header  # noqa: E402
+ 
+-SEL06F = REC06F / "out" / "sample" / "selection.json"
+-SEL06F_DOCS = (
+-    TREES["h"][0]
+-    / "docs"
+-    / "levin-phase-floor"
+-    / "06f"
+-    / "out"
+-    / "sample"
+-    / "selection.json"
+-)
+ 
++def slim(c):
++    """The census call record, whole (it is a dict of JSON values)."""
++    return c
+ 
+-def rest_of(unit):
+-    return unit.split("-", 1)[1]
+ 
+-
+-def scan(checkpoint, rests):
+-    """{(rest, index): [(census unit, unit status, call record), ...]} for the wanted calls."""
+-    want = {}
+-    for rest, index in rests:
+-        want.setdefault(rest, set()).add(index)
+-    found = {}
+-    with open(checkpoint) as f:
+-        for line in f:
+-            head = line[:200]
+-            if not any(f'-{r}"' in head for r in want):
+-                continue
+-            rec = json.loads(line)
+-            unit = rec.get("unit", "")
+-            rest = unit.split("-", 1)[-1]
+-            if rest not in want:
+-                continue
+-            data = rec.get("data") or {}
+-            for c in (data.get("calls") or []) + (data.get("other_calls") or []):
+-                if c["index"] in want[rest]:
+-                    found.setdefault((rest, c["index"]), []).append(
+-                        (unit, data.get("status"), c)
+-                    )
+-    return found
+-
+-
+-def key(c):
+-    return (
+-        c["value"]["hex"],
+-        c["abserr"]["hex"],
+-        c["num_regions"],
+-        c["max_depth"],
+-        bool(c["converged"]),
+-        c["notify_label"],
+-    )
+-
+-
+ def main():
+-    run06h = census_run_06h()
+-    ck = {"p": RUN06E / "checkpoint.jsonl", "h": run06h / "checkpoint.jsonl"}
++    run06g = RC.census_run_06g()
++    ck = {"g": run06g / "checkpoint.jsonl", "06h": RC.RUN06H / "checkpoint.jsonl"}
++    draw_p = RC.ROOT / "out" / "sample" / "draw.json"
++    out = RC.ROOT / "out" / "sample" / "selection.json"
++    if out.exists():
++        raise SystemExit(f"{out} exists; not overwritten")
+     for l in header(
+         Path(__file__).resolve(),
+-        "levin-phase-floor 06h: the phase re-measurement's selections (06f's 20 M2 calls, at p and h)",
+-        [SEL06F, SEL06F_DOCS, ck["p"], ck["h"]],
++        "levin-phase-floor 06g: the references' selection (Z3's 30 and the 60 drawn), with both censuses' records",
++        [RC.Z3_RESULTS, draw_p, ck["g"], ck["06h"], RC.I06_SCORES],
+     ):
+         print(l)
+-    if sha256(SEL06F) != sha256(SEL06F_DOCS):
+-        raise SystemExit("06f's selection differs from its committed copy")
+-    if sha256(ck["p"]) != CHECKPOINT06E_SHA256:
+-        raise SystemExit("06e's census checkpoint is not a0dc4d7f...")
+-    sel06f = [e for e in json.loads(SEL06F.read_text()) if e.get("sample") == "M2"]
+-    print(f"06f's M2 calls: {len(sel06f)}")
+-    if len(sel06f) != 20:
+-        raise SystemExit("expected 20 M2 calls")
+-    rests = [(rest_of(e["unit"]), e["index"]) for e in sel06f]
+-    out = {}
++    if RC.sha256(ck["06h"]) != RC.CHECKPOINT06H_SHA256:
++        raise SystemExit("06h's census checkpoint is not 3104c18e...")
++    print(f"g census run: {run06g}")
++    entries = []
++    for c in sorted(
++        json.loads(RC.Z3_RESULTS.read_text())["calls"], key=lambda c: c["sample_no"]
++    ):
++        entries.append(
++            {
++                "sid": f"z{c['sample_no']:02d}",
++                "source": "z3",
++                "sample_no": c["sample_no"],
++                "in_06i": c["sample_no"] in RC.I06_SAMPLES,
++                "rest": RC.rest_of(c["unit"]),
++                "index": c["index"],
++                "notify_label": c["notify_label"],
++                "block": c["block"],
++                "rtol": c["rtol"],
++            }
++        )
++    draw = json.loads(draw_p.read_text())
++    for e in draw["drawn"]:
++        entries.append(
++            {
++                "sid": e["sid"],
++                "source": "draw",
++                "sample_no": None,
++                "in_06i": False,
++                "rest": e["rest"],
++                "index": e["index"],
++                "notify_label": e["notify_label"],
++                "block": None,
++                "rtol": e["rtol"],
++                "stratum": e["stratum"],
++            }
++        )
++    if len(entries) != 90 or len({(e["rest"], e["index"]) for e in entries}) != 90:
++        raise SystemExit("expected 90 distinct calls")
++    wanted = {(e["rest"], e["index"]) for e in entries}
++    found = {name: RC.scan_checkpoint(ck[name], wanted) for name in ck}
++    i06 = {r["sample"]: r for r in json.loads(RC.I06_SCORES.read_text())["rows"]}
+     problems = []
+-    for tree in ("p", "h"):
+-        found = scan(ck[tree], rests)
+-        sel = []
+-        for e in sel06f:
+-            k = (rest_of(e["unit"]), e["index"])
+-            recs = found.get(k) or []
+-            if not recs:
+-                problems.append(f"{tree}: {e['unit']} #{e['index']} not in the census")
++    sel = []
++    for e in entries:
++        k = (e["rest"], e["index"])
++        r = dict(e)
++        for name in ("g", "06h"):
++            recs = found[name].get(k) or []
++            done = [x for x in recs if x[1] == "done"]
++            r[f"{name}_n_records"] = len(recs)
++            r[f"{name}_n_records_not_done"] = len(recs) - len(done)
++            if not done:
++                problems.append(f"{e['sid']} {k}: no done record in the {name} census")
+                 continue
+-            if len({key(c) for _u, _s, c in recs}) != 1:
+-                problems.append(
+-                    f"{tree}: {e['unit']} #{e['index']}: {len(recs)} census records disagree"
+-                )
++            if len({RC.call_key(x[3]) for x in done}) != 1:
++                problems.append(f"{e['sid']} {k}: {len(done)} {name} records disagree")
+                 continue
+-            unit, status, c = recs[0]
++            unit, status, kind, c, data = done[0]
+             if c["notify_label"] != e["notify_label"]:
+                 problems.append(
+-                    f"{tree}: {e['unit']} #{e['index']}: label {c['notify_label']!r} != 06f's"
++                    f"{e['sid']} {k}: {name} label {c['notify_label']!r} != {e['notify_label']!r}"
+                 )
+                 continue
+-            r = dict(e)
+-            r.update(
+-                unit=f"{tree}-{k[0]}",
+-                unit_06f=e["unit"],
+-                census_unit=unit,
+-                census_unit_status=status,
+-                census_n_records=len(recs),
+-                census_value=c["value"]["hex"],
+-                census_abserr=c["abserr"]["hex"],
+-                census_num_regions=c["num_regions"],
+-                census_max_depth=c["max_depth"],
+-                census_converged=bool(c["converged"]),
+-                census=("06e " if tree == "p" else "06h ") + str(ck[tree]),
+-            )
+-            if tree == "p":
+-                same = all(
+-                    r[f] == e[f]
+-                    for f in (
+-                        "census_value",
+-                        "census_abserr",
+-                        "census_num_regions",
+-                        "census_max_depth",
+-                        "census_converged",
+-                    )
++            if r.get("kind") is not None and r["kind"] != kind:
++                problems.append(f"{e['sid']} {k}: kinds differ between censuses")
++            r["kind"] = kind
++            xs = [RC.hexof(v) for v in c["x_span"]]
++            if r.get("x_span") is not None and r["x_span"] != xs:
++                problems.append(f"{e['sid']} {k}: x_span differs between censuses")
++            r["x_span"] = xs
++            r[f"{name}_unit"] = unit
++            r[f"{name}_record"] = slim(c)
++            if name == "g":
++                r["census_unit_budget_s"] = data.get("budget_s")
++                r["census_unit_status"] = status
++        if e["source"] == "draw":
++            d = next(x for x in draw["drawn"] if x["sid"] == e["sid"])
++            if r.get("06h_record") is not None and (
++                r["06h_record"]["value"]["hex"] != d["value_06h"]
++                or r["06h_record"]["abserr"]["hex"] != d["abserr_06h"]
++            ):
++                problems.append(f"{e['sid']}: 06h record differs from the draw's")
++        if e["in_06i"]:
++            row = i06[e["sample_no"]]
++            if row["unit"] != "g-" + e["rest"] or row["index"] != e["index"]:
++                problems.append(
++                    f"{e['sid']}: 06i's row is {row['unit']} #{row['index']}"
+                 )
+-                if not same:
+-                    problems.append(
+-                        f"p: {e['unit']} #{e['index']}: 06e's record differs from 06f's selection"
+-                    )
+-            sel.append(r)
+-        out[tree] = sel
+-    for p_ in problems:
+-        print("PROBLEM:", p_)
++            r["i06"] = {
++                "route": row["route"],
++                "ref_30": row["ref_30"],
++                "ref_hex": row["ref_hex"],
++                "min_abserr": row["min_abserr"],
++                "scatter": row["scatter"],
++                "counts_06i": row["counts"],
++                "readings": row["readings"],
++            }
++        if "g_record" in r:
++            g = r["g_record"]
++            r["unit"] = (
++                "g-" + e["rest"]
++            )  # x1_capture.py runs the unit at g by this name
++            r["census_value"] = g["value"]["hex"]
++            r["census_abserr"] = g["abserr"]["hex"]
++            r["census_num_regions"] = g["num_regions"]
++            r["census_max_depth"] = g["max_depth"]
++            r["census_converged"] = bool(g["converged"])
++            r["census"] = f"06g {ck['g']}"
++        sel.append(r)
+     if problems:
+-        print("nothing written")
+-        return 1
+-    dest = ROOT / "out" / "sample"
+-    dest.mkdir(parents=True, exist_ok=True)
+-    for tree, sel in out.items():
+-        path = dest / f"selection_{tree}.json"
+-        if path.exists():
+-            raise SystemExit(f"{path} exists; not overwritten")
+-        path.write_text(json.dumps(sel, indent=1))
+-        print(f"wrote {path} sha256 {sha256(path)}")
+-    print(
+-        "\nunit (06f) | index | label | p: regions, depth, conv, abserr | h: regions, depth, conv, abserr | h census unit, status"
+-    )
+-    for ep, eh in zip(out["p"], out["h"]):
++        for p in problems:
++            print("PROBLEM", p)
++        raise SystemExit(f"{len(problems)} problems; nothing written")
++    out.write_text(json.dumps(sel, indent=1))
++    for r in sel:
+         print(
+-            f"{ep['unit_06f']} | {ep['index']} | {ep['notify_label']} | {ep['census_num_regions']}, {ep['census_max_depth']}, "
+-            f"{ep['census_converged']}, {float.fromhex(ep['census_abserr']):.4e} | {eh['census_num_regions']}, "
+-            f"{eh['census_max_depth']}, {eh['census_converged']}, {float.fromhex(eh['census_abserr']):.4e} | "
+-            f"{eh['census_unit']}, {eh['census_unit_status']}"
++            f"{r['sid']} {r['kind']:8s} {r['unit']} #{r['index']}: g value {r['census_value']} abserr {r['census_abserr']} "
++            f"conv {r['census_converged']} regions {r['census_num_regions']} depth {r['census_max_depth']} | "
++            f"06h value {r['06h_record']['value']['hex']} abserr {r['06h_record']['abserr']['hex']} | budget {r['census_unit_budget_s']}"
+         )
+-    return 0
++    print(f"wrote {out} sha256 {RC.sha256(out)}")
+ 
+ 
+ if __name__ == "__main__":
+-    sys.exit(main())
++    main()
+### diff -u state/scripts_06e_references_reference/slice_inputs.py scripts/slice_refs.py
+--- state/scripts_06e_references_reference/slice_inputs.py	2026-11-01 10:58:10
++++ scripts/slice_refs.py	2026-11-01 11:21:26
+@@ -1,50 +1,102 @@
+-"""levin-phase-floor prompt 06e section 5, Z3: the captured inputs of the samples, copied out of
+-depth20-tiling's captures (var/levin-phase-floor-06c/depth20-tiling/state/capture/, read only) into
+-references/inputs/sNN.pkl, each sliced at captured.json's offset and length and checked against its
+-SHA-256; where the orchestrator's re-check already holds a copy (orchestrator_check/inputs/sNN.pkl),
+-it is compared byte for byte. New in 06e. Read-only outside references/inputs/.
++"""levin-phase-floor prompt 06g section 5, the references: each capture as a file of its own. New in
++06g, after 06e's references/slice_inputs.py (kept in state/scripts_06e_references_reference/).
+ 
+-Usage: python -B slice_inputs.py  (no tree needed; nothing is unpickled)"""
++``tools.filon_reference`` takes one captured call per pickle file (``python -m tools.filon_reference
++PICKLE ...``). The captures' workers append every call to one ``inputs_<worker>.pkl``; this script
++copies each call's blob, at the offset and length x1_capture.py recorded, into state/inputs/<sid>.pkl
++and checks it against the recorded SHA-256. Only captures that reproduce the census (x1_capture.py's
++``capture_matches_census`` and check_captures.py's ``reproduces_census``) are sliced. It also checks
++06i's 13 inputs on this host (var/levin-phase-floor-06e/census/references/inputs/, read in place,
++never copied or written) against 06i's inputs_SHA256SUMS.txt. Nothing is unpickled.
++
++Writes state/inputs/<sid>.pkl (refusing to overwrite) and out/inputs.json.
++
++Usage: python -B slice_refs.py CAPTURE_JSON CHECK_JSON SELECTION_JSON
++"""
++
+ import hashlib
+ import json
+ import sys
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-D20T = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06c/depth20-tiling")
+-SAMPLES = (1, 2, 3, 8, 9, 10, 13, 14, 15, 22, 23, 25, 27)  # prompt 06e section 5, Z3
++sys.path.insert(0, str(HERE))
++import refs_common as RC  # noqa: E402
++from prov import header  # noqa: E402
+ 
+ 
+ def main():
+-    print("script", Path(__file__).name, "sha256", hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+-    cj = D20T / "state" / "captured.json"
+-    print("captured.json sha256", hashlib.sha256(cj.read_bytes()).hexdigest())
+-    cap = {e["sample_no"]: e for e in json.loads(cj.read_text())}
++    cap_p, chk_p, sel_p = (Path(a) for a in sys.argv[1:4])
++    out_dir = RC.ROOT / "state" / "inputs"
++    out_json = RC.ROOT / "out" / "inputs.json"
++    if out_json.exists():
++        raise SystemExit(f"{out_json} exists; not overwritten")
++    for l in header(
++        Path(__file__).resolve(),
++        "levin-phase-floor 06g: the references' captured calls, one file each; 06i's inputs checked",
++        [cap_p, chk_p, sel_p, RC.I06_SUMS],
++    ):
++        print(l)
++    sel = {(e["unit"], e["index"]): e for e in json.loads(sel_p.read_text())}
++    chk = {(r["unit"], r["index"]): r for r in json.loads(chk_p.read_text())}
++    out_dir.mkdir(parents=True, exist_ok=True)
++    doc = {"captures": {}, "inputs_06i": {}}
+     ok = True
+-    out = {}
+-    for n in SAMPLES:
+-        e = cap[n]
+-        src = D20T / e["dir"] / e["pickle"]
+-        with open(src, "rb") as f:
+-            f.seek(e["offset"])
+-            blob = f.read(e["length"])
++    for c in json.loads(cap_p.read_text()):
++        k = (c["unit"], c["index"])
++        e = sel[k]
++        good = bool(c.get("capture_matches_census")) and bool(
++            chk.get(k, {}).get("reproduces_census")
++        )
++        if not good:
++            print(f"{e['sid']}: not sliced (does not reproduce the census)")
++            ok = False
++            continue
++        with open(Path(c["dir"]) / c["pickle"], "rb") as f:
++            f.seek(c["offset"])
++            blob = f.read(c["length"])
+         h = hashlib.sha256(blob).hexdigest()
+-        good = h == e["sha256"] and len(blob) == e["length"] and e["capture_matches_census"] and e["capture_error"] is None
+-        dst = HERE / "inputs" / f"s{n:02d}.pkl"
++        if h != c["sha256"] or len(blob) != c["length"]:
++            raise SystemExit(
++                f"{e['sid']}: blob sha256 or length differs from the capture record"
++            )
++        dst = out_dir / f"{e['sid']}.pkl"
+         if dst.exists():
+             raise SystemExit(f"{dst} exists; not overwritten")
+         dst.write_bytes(blob)
+-        orch = D20T / "orchestrator_check" / "inputs" / f"s{n:02d}.pkl"
+-        same_orch = None if not orch.exists() else orch.read_bytes() == blob
+-        ok &= good and same_orch is not False
+-        out[n] = {"unit": e["unit"], "index": e["index"], "notify_label": e["notify_label"], "rtol": e["rtol"],
+-                  "block": e["block"], "x_span": e["x_span"], "census06c_value": e["census_value"],
+-                  "census06c_abserr": e["census_abserr"], "pickle": dst.name, "sha256": h, "bytes": len(blob)}
+-        print(f"s{n:02d} {e['unit']} #{e['index']} {e['block']}: {len(blob)} bytes sha256 {h} "
+-              f"{'EQUALS' if h == e['sha256'] else 'DIFFERS FROM'} captured.json; capture_matches_census {e['capture_matches_census']}; "
+-              f"orchestrator's copy: {'absent' if same_orch is None else ('identical' if same_orch else 'DIFFERS')}")
+-    (HERE / "inputs" / "inputs.json").write_text(json.dumps(out, indent=1))
+-    print("ALL GOOD" if ok else "SOME NOT GOOD")
++        doc["captures"][e["sid"]] = {
++            "unit": c["unit"],
++            "index": c["index"],
++            "kind": e["kind"],
++            "pickle": str(dst),
++            "sha256": h,
++            "bytes": len(blob),
++            "source": f"{c['dir']}/{c['pickle']}@{c['offset']}",
++        }
++        print(
++            f"{e['sid']} {c['unit']} #{c['index']}: {len(blob)} bytes sha256 {h} -> {dst.name}"
++        )
++    sums = {}
++    for line in RC.I06_SUMS.read_text().splitlines():
++        h, p = line.split()
++        sums[Path(p).name] = h
++    for n in RC.I06_SAMPLES:
++        p = RC.I06_INPUTS / f"s{n:02d}.pkl"
++        h = RC.sha256(p)
++        same = h == sums[p.name]
++        ok &= same
++        doc["inputs_06i"][f"s{n:02d}"] = {
++            "path": str(p),
++            "sha256": h,
++            "equals_06i_sums": same,
++        }
++        print(
++            f"06i input {p}: sha256 {h} {'EQUALS' if same else 'DIFFERS FROM'} 06i's inputs_SHA256SUMS.txt"
++        )
++    out_json.write_text(json.dumps(doc, indent=1))
++    print(
++        f"{len(doc['captures'])} captures sliced; wrote {out_json} sha256 {RC.sha256(out_json)}"
++    )
+     return 0 if ok else 1
+ 
+ 
+## sha256 of scripts/
+b2a5fc752c9b8a951349ddf9dfb126fdc1cda5ab2300458156e28b08b0e5156d  scripts/analyse.py
+a7b4c2560655318e8125f7e730e366677dd65379c547442e8613ffab3bf45ce9  scripts/analyse06.py
+c1c1c68fbe607828e0708d668611ca23bd2e434a29e33913be8efbe7f6a36609  scripts/analyse06a.py
+6446b7ac0ea2050d0bbdbc5dfd68474ffaaf1095a191a8b8aeb6ce3afa0e0649  scripts/analyse06b.py
+c3b0b207797343a7b75bbb3f9c70163804e10d71b8388db844c794c429be7600  scripts/analyse06c.py
+030a07953c44326011369cdd30f48d605328e65ae3698e6cf6831640ce33f0b3  scripts/analyse06e.py
+fe240ec69b12847827c4a981e2c9f0c80ad02d4d22098c09913e6ebe4d52f1c2  scripts/analyse06h.py
+2c1b80672f75b67763d9c698f8de8b78d6bade1ddbe8fdebf14d7cad009f2d32  scripts/c0.py
+b4b3b79fd48e3cf20b60240d970c44c38ff76298d6959f119d81226fd7ff21c0  scripts/certify_copy.py
+26cf49ac5dbb9dc32754954bc7a5a712cf96b9bf8e55419d08ee38b69a17bead  scripts/characterise_s2.py
+796be467e87fba0c562e778be06d65315d3eaf3f446a772de7504836c892984b  scripts/check_captures.py
+7fc5cfec95309c88af57295cdb78eb092fd15b20ace5349a37edc5f30b8b2334  scripts/check_predictions.py
+e70246868342777b324bb5e6733dd837d893ebd87bd6a4499b4d311d0315d5aa  scripts/checks_after.py
+d9ac83b7f6a53c24c84f6ace2af47d459083b7f848396e87bfba2c6190b3a337  scripts/checks_after_06e.py
+cea81202fc758884e87ff66b441bfd4b73953932600f37a2121a67747141e117  scripts/checks_after_06h.py
+7a1672ac24daa6f32b4fae75c110c5b64ca7307e35d857b90478d253c0bed471  scripts/compare06i.py
+fe079eb0d4fbb90a3aa0b2c7b28f6a7c51e54bb8ab552d2cba0b9d4e36347e56  scripts/compare13.py
+b8c57a5a6a89c85cadf9298983957b29bef770d385d9d72c66712b358823e508  scripts/compare_hashes.sh
+49c83a72ab8e0df465fc430efb0e46996ffbcf422b9331b890505d144b54a55b  scripts/convergence_kinds.py
+e04a0a1e65f14847fe66daec096a69047a4d5e1ac0d915fe6ccc2169a35c0b9d  scripts/convergence_kinds_06a.py
+9d7b35f35fcfb76099f1d20d4b28d2d5e347b2bab78e02ee26218bc386fc0c54  scripts/dev_line_tiling.py
+012521549f8165fdde0f3e0198703e0590eb309c0023903a15b292217b712866  scripts/dev_worker_functions.py
+14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b  scripts/dispatch.py
+67bc2b1dbeff7bfe8cdd8a067ec000a90f929c4179ca7bfdb56c034c4e986ba8  scripts/draw_refs.py
+d9816837708fe96ca1d67bca10cb02fc844a6240672d5e681c6b91570b4e52b0  scripts/draw_sample.py
+ab377c62624d1df938c6f815cd66996e9eca0be18f8d474968e25357aa3e6ffd  scripts/explore06b_pool.py
+1911f075c4e654f2808c3023c436b570b635647921171db13ca618d7524a7116  scripts/explore_store.py
+be04fac8c9694f773685a90c296ae1afe0c0fa3b93b44a9a6c6d6896e3190383  scripts/extract_predictions.sh
+1d0306c0b08a4f7c52f6431ee919bace66bafbd58cd1bcb2a8bf380544107bea  scripts/extras_after.py
+348ccce936486167cb0bb7121c6b58579866b0f25c34d96a6642b03401721c58  scripts/fingerprint_copy.py
+f7c66409e1d6fc4aacbb36a944d982ee960e5ea50542547b5ba0f858924738b9  scripts/gate_h.py
+fd91118748401a301b1bb5f9fbbca9d808abe06092a81f743976e9137373ea33  scripts/gate_h_clause1.py
+72f2ecdae3762ddf6f2ec4cd9f3c36b072ed7b467a6acaab074059e575a1204f  scripts/h4_detail06h.py
+2ce9725f6761afb31a70e744e96cad95770a96a769db632db27dda8c8b7d9436  scripts/harness.py
+881355fd4d5319f4563999586838d3e5e6b2b0f274aa953646d08cef4f1b1b69  scripts/hash_store.py
+b2b4866088bc2279fde7fc5ab0cc5aa1218a485643eafe1920966387edefeff7  scripts/l0.py
+fa79cf6c680e66d0c0bafe1e0590e12c8e388e32215b834a4aedf0101aa75a0e  scripts/launch.py
+9de48d4506bd190581f87102f64ce4f6d9e242b610ac0d3dac1db831cc370da0  scripts/launch_refs.py
+60df0581f15c1a966258746d6ddb48ea776ce43d57357f3c7ae070cc52093094  scripts/make_capture.py
+1c50fd4e9db599d48df9a24e57c5ac3415dbaece4f7cdfbc061bb98910edf0f9  scripts/make_copy.py
+8aa6a1429ef6481e7e77e251ce349a3b13b8c9cab98f4c0ca9124ed06f869a70  scripts/make_rows.py
+05d5c1936a625e9750675a1747bde481fd33682de0e39393f22d1836590ce620  scripts/nearsingular06h.py
+8ec8c324732df55ba9685fbd7f5eedab95ae90b1f7a056fd10305708973a78f1  scripts/one_reading.py
+7a1f6989866b67b45449b9b42245594fd05b53151956ded5de3baec66d115b22  scripts/phase_probe06.py
+6b231915addbfafcb8ae909758e6753c7406920c2393cc2cfe30d4a4ee833daf  scripts/pilot.py
+d7dce13c1361101f3923678a8da2777dc0366a2bed26bc6e9044946d508d70ef  scripts/probe.py
+dc2e79ee5df5fdf7b6695f702aa5af70765389e39c96d473502c33433157a3f7  scripts/prov.py
+bc8463fbd244bdcf8a11e03199c0ca8d413cf87f1a2379fb850d8a781f6352f9  scripts/pure_wkb_zinit.py
+dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212  scripts/rebuild.py
+f2a6ce26fba1bd9f53bcbb506bbcb4063d71dcd55325be093b49bcdb1f256768  scripts/rec.sh
+7fb0a261d4ecb57932413a3cf193de0c238f0b9298ff4510da9f14dcddbf618c  scripts/refs_common.py
+6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e  scripts/rerun.py
+f4c14adb6f63aed8c0d2b7dcac10d334968d5713943426aa493ad98fdda94a4d  scripts/rescore_t1.py
+9ff8f59ddff0f1aed2c2725cefb6fedd0c87e3332620d5cd92cc8d95e4594d60  scripts/routes_refs.py
+e11dcd729ad98ad128858b9b8f16c6485a292aefb7c5a17256c4430d7fbfc7f9  scripts/run_census.py
+192c7ff176293080438bcce24bfe6c052a9e291132cb58dc58c1b40b6da6c2b4  scripts/run_refs.py
+962e12c7b98bd7bea0cf86f4b9d1d85c8adbaba0b2096c6396dc4fd1ba713f45  scripts/run_wider.py
+a0fe928c6572d49b9f684e08eab6f59436c185da7df94e6d35f948a224be8310  scripts/scripts_equal.py
+978aec76745c025f658b973de33bee8403f31aee434e241150cd2757eabe88c5  scripts/select_refs.py
+b1442d6c81e1d4651cd2248a60ad478666a2402af92a76da0684cba85b344669  scripts/slice_refs.py
+ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b  scripts/spscan.py
+ebdc8f707c20d7dc93b62ca973bcfdf2fb099dbdf1afb76e01ee32358efa6aa5  scripts/t0.py
+316fa3bd35578f81cb92aded9e4c27d4905736a0c7c74884a6351f5b0020bd8d  scripts/t1_true_step_only.py
+b99c5aa5ef3a9b2e752f8fe054dd73d2fb8acb477b44310f65b318149be45c76  scripts/u0.py
+a6486ea8b0789106fd7ea01d0d4aa1835b1daaf830f0103fb3d73c4c19c5e52a  scripts/u0_clause_a.py
+f0f40f431c8cea4ba583b885dcccdfd6bf07126421e4d3c17a014afce789389f  scripts/w0.py
+90ee95dccd13cfc785f921b48b30fd1571fc6da08b900fd820845a01248b87cf  scripts/w0_clause1.py
+0296b05317a4cb6e2a5538e6185b13dd8af286d2b80075152e84b36bc378c122  scripts/w2_crosscheck.py
+47d3a059bd681070c321cf0defbfccf9c22f7247c83e4aa348c3b9e47ca35c31  scripts/w2_reference.py
+e9d019beb726cca1b5b65b681164d5ced5161af446d5f0e5e08fe286cead2381  scripts/w2_request.py
+4533f0df2203469813c49f491efc55bab89a5fb7c809aa8f63a7ab6606fea517  scripts/worker.py
+757e50f2ca900cf3921217ff3104adad2cbd8f4981d414a5e64416b3f76ea2c0  scripts/x0.py
+282a9245673e5312b1734aa254aa93e1e35bfbcb23620285f2d75f0f11e3d1d1  scripts/x0_clause1.py
+5ce00c1f7f17b795ea985e649bfcaf2574b33c7180d1e2fa278222073ea18cd2  scripts/x1_capture.py
+5baf61550482d49fafa38d405e3f3061f52e906a4a3dc7ac2bfe36dbb9eaa4ac  scripts/x1_crosscheck.py
+86d2cb8e1c340c54b34c60ef82ead08dfeef01615c7d8ca60d729685ca31c118  scripts/x1_reference.py
+54ca0c3e4038b496c22219936e27f6b9162b6e14ae66f639dd5a211bf7c75adb  scripts/x4_detail.py
+b83b6782b89659f836471affc561152c5d61cdcea2feab7a775c48dd233736f1  scripts/z0.py
+80434d7a44852073e21f00a628dac311d22493f8ab5ccffbe0e9d49e2528e77e  scripts/z0_clause1.py
+# ----
+# end 2026-11-01T11:25:14Z
+# exit 0

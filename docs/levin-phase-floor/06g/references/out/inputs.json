@@ -1,0 +1,989 @@
+{
+ "captures": {
+  "r20": {
+   "unit": "g-1e-7-0-12606",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r20.pkl",
+   "sha256": "ee820393bbb133d8715e5a18270ff94b7af95048585bc7dab171c7c7c3c1ad2b",
+   "bytes": 1329250,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C00/inputs_C00.pkl@0"
+  },
+  "v01": {
+   "unit": "g-1e-7-0-12617",
+   "index": 5,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v01.pkl",
+   "sha256": "21f5cd98914bc2c31e8fee1fc54465857f65165962ad8b6321e477e543aaee18",
+   "bytes": 1335092,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C01/inputs_C01.pkl@0"
+  },
+  "r05": {
+   "unit": "g-1e-7-0-12625",
+   "index": 5,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r05.pkl",
+   "sha256": "5a95298c0ce45ae38268924f6effcd479d040564604bb4484167641a61a48d28",
+   "bytes": 3359,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C02/inputs_C02.pkl@0"
+  },
+  "r06": {
+   "unit": "g-1e-7-0-12682",
+   "index": 14,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r06.pkl",
+   "sha256": "42a3cbde2f6a201dd2d31efb4f8cc43d1e52e06512480c6f99d81e0d033b9637",
+   "bytes": 22332,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C03/inputs_C03.pkl@0"
+  },
+  "r03": {
+   "unit": "g-1e-7-0-12758",
+   "index": 18,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r03.pkl",
+   "sha256": "9a84d0cf00b294ed683e53486cf4fed66d9ab50dcbd02cab28d281b0f3a6e2de",
+   "bytes": 22333,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C04/inputs_C04.pkl@0"
+  },
+  "r00": {
+   "unit": "g-1e-7-0-14053",
+   "index": 7,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r00.pkl",
+   "sha256": "27496cfbe24aefe1d749148fd5a0e3aadd30e364ce432607b4a00433edf65cdb",
+   "bytes": 3359,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C05/inputs_C05.pkl@0"
+  },
+  "r18": {
+   "unit": "g-1e-7-0-1786",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r18.pkl",
+   "sha256": "31e1b94e8b1d5ca706779b7d0005ab938ad6abc979e58752abe3b71ee254bf6b",
+   "bytes": 1337610,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C06/inputs_C06.pkl@0"
+  },
+  "r25": {
+   "unit": "g-1e-7-0-1887",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r25.pkl",
+   "sha256": "e0dace4b720221d75b89400a2a2c684894a96fd8589bd917f081d4ab8f637337",
+   "bytes": 1340940,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C07/inputs_C07.pkl@0"
+  },
+  "r01": {
+   "unit": "g-1e-7-0-33650",
+   "index": 14,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r01.pkl",
+   "sha256": "5ba35fccbd752ba88461b4a04c84310abcf79d871997652bb6cd33fa727c7ef1",
+   "bytes": 3665,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C08/inputs_C08.pkl@0"
+  },
+  "r11": {
+   "unit": "g-1e-7-0-33732",
+   "index": 9,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r11.pkl",
+   "sha256": "cafcdb2597ad6e0f5913eb865fe41b3926695213d79e45111edae06f00cf84c8",
+   "bytes": 3359,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C09/inputs_C09.pkl@0"
+  },
+  "r16": {
+   "unit": "g-1e-7-0-33822",
+   "index": 0,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r16.pkl",
+   "sha256": "c9ffddb8080fa4cbde7680676cd620cf4baa7638793ff9841cf70e23cb192e9b",
+   "bytes": 1319053,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C10/inputs_C10.pkl@0"
+  },
+  "z19": {
+   "unit": "g-1e-8-3-36019",
+   "index": 19,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z19.pkl",
+   "sha256": "1435456e5a7d6b4ec23adbfd739dfb5f84984969fe97eb88f44eb88a38a62fc1",
+   "bytes": 21930,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C100/inputs_C100.pkl@0"
+  },
+  "v10": {
+   "unit": "g-1e-8-3-38023",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v10.pkl",
+   "sha256": "98b2319d05c7687b5e8b716fab3c48afe90c2d86f3036e5a69b5cac93cb9249b",
+   "bytes": 1350628,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C101/inputs_C101.pkl@0"
+  },
+  "r12": {
+   "unit": "g-1e-7-0-33870",
+   "index": 18,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r12.pkl",
+   "sha256": "8c81902038239ce855fb4a8dbaedbe38af2658d242058c01239bcfc420a3b01a",
+   "bytes": 22333,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C11/inputs_C11.pkl@0"
+  },
+  "r23": {
+   "unit": "g-1e-7-0-33961",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r23.pkl",
+   "sha256": "e8ae87ce0b072686e740ae7aa60f978cb4b6ee6833c8cb82475fd08c2b32af1d",
+   "bytes": 1330872,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C12/inputs_C12.pkl@0"
+  },
+  "r27": {
+   "unit": "g-1e-7-0-34026",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r27.pkl",
+   "sha256": "b4bfe3bd23e7bc8ce4db5de903eb5a670f14b79e02a0b48276954c29bd7079d4",
+   "bytes": 1325444,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C13/inputs_C13.pkl@0"
+  },
+  "r08": {
+   "unit": "g-1e-7-1-10908",
+   "index": 13,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r08.pkl",
+   "sha256": "940c12ea1533145faecaa8cece6647fe5224ada756ad642780a75d973ca6720d",
+   "bytes": 21931,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C14/inputs_C14.pkl@0"
+  },
+  "r26": {
+   "unit": "g-1e-7-1-14462",
+   "index": 5,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r26.pkl",
+   "sha256": "49260c9647ee937f1e7c3618106b0aa71a191835d5f0ed379771d2c875e08032",
+   "bytes": 1371638,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C15/inputs_C15.pkl@0"
+  },
+  "z29": {
+   "unit": "g-1e-7-1-14572",
+   "index": 9,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z29.pkl",
+   "sha256": "3ec164f2f793501d0832a773255ba80329380377f596ec4128b04dcb6e3f86f7",
+   "bytes": 3359,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C16/inputs_C16.pkl@0"
+  },
+  "r09": {
+   "unit": "g-1e-7-1-20466",
+   "index": 5,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r09.pkl",
+   "sha256": "a53ab159d17db0e1804db75b9049257f3e51ffa049e9910556a098c914967b6e",
+   "bytes": 3581,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C17/inputs_C17.pkl@0"
+  },
+  "z00": {
+   "unit": "g-1e-7-1-2174",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z00.pkl",
+   "sha256": "1b870b17582834a0a066412b636919fa0951331e514a9118bc76dc18fa8c6114",
+   "bytes": 1366668,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C18/inputs_C18.pkl@0"
+  },
+  "r17": {
+   "unit": "g-1e-7-1-2229",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r17.pkl",
+   "sha256": "b1fe5defaf113767dca1ec5597159ce963e145fd9e01dab95fb88090ba2c2ea3",
+   "bytes": 1358005,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C19/inputs_C19.pkl@0"
+  },
+  "v03": {
+   "unit": "g-1e-7-1-34521",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v03.pkl",
+   "sha256": "138121d65b39c18bf71e20a53de58667bd8ad6623a29418b1ee92be1d86ba6ea",
+   "bytes": 1345952,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C20/inputs_C20.pkl@0"
+  },
+  "r10": {
+   "unit": "g-1e-7-1-35314",
+   "index": 7,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r10.pkl",
+   "sha256": "d38e2aeae634c83f1648f576579807075ea24c1dd49f6d14975658855c9ad1ed",
+   "bytes": 3444,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C21/inputs_C21.pkl@0"
+  },
+  "z10": {
+   "unit": "g-1e-7-1-35332",
+   "index": 10,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z10.pkl",
+   "sha256": "39aa9fffe132dd9fadf1959616b0cadf9a07872dbe8bf0442329238c737646df",
+   "bytes": 3581,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C22/inputs_C22.pkl@0"
+  },
+  "z09": {
+   "unit": "g-1e-7-1-35340",
+   "index": 18,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z09.pkl",
+   "sha256": "c41f141154c59ca46e2f8a5573335bd72102f385c034bb580b003a09c3608091",
+   "bytes": 22413,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C23/inputs_C23.pkl@0"
+  },
+  "r29": {
+   "unit": "g-1e-7-1-35525",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r29.pkl",
+   "sha256": "5e3120c4651568239b2e70310b7e1f3199bd408b3cffc918f11f0634344609a6",
+   "bytes": 1344844,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C24/inputs_C24.pkl@0"
+  },
+  "z06": {
+   "unit": "g-1e-7-1-38737",
+   "index": 11,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z06.pkl",
+   "sha256": "67c7bd8f2e3fbc4d4220f7155c271941b7ea26af92c4a5a1aeb731aa336233a3",
+   "bytes": 3443,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C25/inputs_C25.pkl@0"
+  },
+  "v00": {
+   "unit": "g-1e-7-2-1380",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v00.pkl",
+   "sha256": "391fffe37be6529b8ab773a8da016cd0d8cad1cb25f450cfd43cec8d730fc5df",
+   "bytes": 1336307,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C26/inputs_C26.pkl@0"
+  },
+  "z01": {
+   "unit": "g-1e-7-2-1444",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z01.pkl",
+   "sha256": "e796b35ce21def7b9d12b2d5fc16b23d755b41438c78ffb37fbdcc28984d912f",
+   "bytes": 1320469,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C27/inputs_C27.pkl@0"
+  },
+  "r02": {
+   "unit": "g-1e-7-2-1517",
+   "index": 15,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r02.pkl",
+   "sha256": "f8c52760c4baedb89e4dc5641ff03d299039f28068a1b07ebc180e5ac895cdac",
+   "bytes": 22010,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C28/inputs_C28.pkl@0"
+  },
+  "z02": {
+   "unit": "g-1e-7-2-1627",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z02.pkl",
+   "sha256": "71bc4ee8105e0692ca6e5ed1d8c167ca39b417430bb9ad77d83ef0c86d26b02f",
+   "bytes": 1352543,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C29/inputs_C29.pkl@0"
+  },
+  "r13": {
+   "unit": "g-1e-7-2-21527",
+   "index": 18,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r13.pkl",
+   "sha256": "af1ff16ead0eb53633aec8678630730cdb41ade5db723acd83adcc8a3e2ba75e",
+   "bytes": 22413,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C30/inputs_C30.pkl@0"
+  },
+  "r28": {
+   "unit": "g-1e-7-2-21673",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r28.pkl",
+   "sha256": "b30b373f5de2800318a3d5868a09a778a4abb4b2eb03bc5afe6d151f91af6e77",
+   "bytes": 1317926,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C31/inputs_C31.pkl@0"
+  },
+  "r19": {
+   "unit": "g-1e-7-2-21926",
+   "index": 0,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r19.pkl",
+   "sha256": "acfdb9df7637d4804fc3487e307237b7baf266eb4f6ab30793df738fe80c3384",
+   "bytes": 1327473,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C32/inputs_C32.pkl@0"
+  },
+  "z05": {
+   "unit": "g-1e-7-2-34485",
+   "index": 17,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z05.pkl",
+   "sha256": "866bec92d2876806f142f8ba56ad75362b4e0a3875c9f1910dd4b35eef0fb803",
+   "bytes": 22012,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C33/inputs_C33.pkl@0"
+  },
+  "z28": {
+   "unit": "g-1e-7-2-34708",
+   "index": 5,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z28.pkl",
+   "sha256": "d623ccd6a75b33ab0c4275cf06672c6178595d3b73c204e5da8c0867ca378210",
+   "bytes": 3360,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C34/inputs_C34.pkl@0"
+  },
+  "z07": {
+   "unit": "g-1e-7-2-34718",
+   "index": 11,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z07.pkl",
+   "sha256": "b2ff1d324638a91b18f9d8d605b6185674313c23a58bb9eba7acf099adc16996",
+   "bytes": 3360,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C35/inputs_C35.pkl@0"
+  },
+  "r22": {
+   "unit": "g-1e-7-2-36976",
+   "index": 0,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r22.pkl",
+   "sha256": "1a7ff0f00b454e44e351580d2bf669708e79cd448dde15953acc804554cf14bb",
+   "bytes": 1358254,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C36/inputs_C36.pkl@0"
+  },
+  "z04": {
+   "unit": "g-1e-7-3-13510",
+   "index": 5,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z04.pkl",
+   "sha256": "715eee2f9fdf629ea1167be7b10209130007f7a21c5ca2c48f0fb054d93182fb",
+   "bytes": 3360,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C37/inputs_C37.pkl@0"
+  },
+  "r07": {
+   "unit": "g-1e-7-3-14593",
+   "index": 21,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r07.pkl",
+   "sha256": "5f4f0c6bcb0964c816bc351c0f63b0cc04956e0157de704d3fc5c095f1704217",
+   "bytes": 22011,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C38/inputs_C38.pkl@0"
+  },
+  "v05": {
+   "unit": "g-1e-7-3-34090",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v05.pkl",
+   "sha256": "2df97939198a29a85dfe23887bb167dc6b36246fce44473e297293cc18cb0cd6",
+   "bytes": 1315261,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C39/inputs_C39.pkl@0"
+  },
+  "v02": {
+   "unit": "g-1e-7-3-34212",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v02.pkl",
+   "sha256": "ce8c2086fd2fccb47e4ea373c37f0629c24e7e99bd5eef6e4835319a3999b9ad",
+   "bytes": 1332073,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C40/inputs_C40.pkl@0"
+  },
+  "v04": {
+   "unit": "g-1e-7-3-34296",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v04.pkl",
+   "sha256": "d4214dd3bd20eec47ac106f04d6f64d03934993bf67721ed1953480d12e2cb8e",
+   "bytes": 1347901,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C41/inputs_C41.pkl@0"
+  },
+  "z03": {
+   "unit": "g-1e-7-3-34370",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z03.pkl",
+   "sha256": "2dfc55d032fc25f80941a05b7d8aeedf9f76067ea35386849ba048050c3da9da",
+   "bytes": 1350283,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C42/inputs_C42.pkl@0"
+  },
+  "r15": {
+   "unit": "g-1e-7-3-34409",
+   "index": 2,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r15.pkl",
+   "sha256": "dad5ef00a12e2be594180bbee63e25fd4a7b66781cd40cf221df7aa8c2befac2",
+   "bytes": 1350752,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C43/inputs_C43.pkl@0"
+  },
+  "r04": {
+   "unit": "g-1e-7-3-34411",
+   "index": 13,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r04.pkl",
+   "sha256": "5447981d8f831d99c2b34b02ab6467f366ced5473d592379a90b4097680149f6",
+   "bytes": 21931,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C44/inputs_C44.pkl@0"
+  },
+  "r21": {
+   "unit": "g-1e-7-3-34449",
+   "index": 0,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r21.pkl",
+   "sha256": "a0daf868c270b1124aa1e46db9c60df0094a599972508b2b846c766ec95799c7",
+   "bytes": 1357825,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C45/inputs_C45.pkl@0"
+  },
+  "r24": {
+   "unit": "g-1e-7-3-34853",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r24.pkl",
+   "sha256": "f9db8b7439f7e0f4cf485cdea76293b149a72def70de6f6d1ecc4cc7cc863101",
+   "bytes": 1391428,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C46/inputs_C46.pkl@0"
+  },
+  "z11": {
+   "unit": "g-1e-7-3-36020",
+   "index": 20,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z11.pkl",
+   "sha256": "06e7acc1106f122251ed48768bfbf1a8307806613f79c2b80b750f570ddd4c88",
+   "bytes": 22332,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C47/inputs_C47.pkl@0"
+  },
+  "z08": {
+   "unit": "g-1e-7-3-37319",
+   "index": 6,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z08.pkl",
+   "sha256": "01ab389af44fc91afef85bd0873584e9c2c1137a04b2892147a510b9550a9c76",
+   "bytes": 3582,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C48/inputs_C48.pkl@0"
+  },
+  "r14": {
+   "unit": "g-1e-7-3-504",
+   "index": 9,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r14.pkl",
+   "sha256": "ee971ef4fff0c7b74d3f3ef4e14b080e93367f022407ab06e5b7959b4ed4eea4",
+   "bytes": 3579,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C49/inputs_C49.pkl@0"
+  },
+  "r33": {
+   "unit": "g-1e-8-0-10552",
+   "index": 0,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r33.pkl",
+   "sha256": "6d511e1edaf3fa5aceca78ef6f2a7c5fa2f092d030586829478882b0d8b651bd",
+   "bytes": 3360,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C50/inputs_C50.pkl@0"
+  },
+  "v07": {
+   "unit": "g-1e-8-0-12606",
+   "index": 5,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v07.pkl",
+   "sha256": "ada770659d9a54d08a3e320d16818ee648daed85f19c8e02991e88371aa61987",
+   "bytes": 1329267,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C51/inputs_C51.pkl@0"
+  },
+  "v11": {
+   "unit": "g-1e-8-0-12655",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v11.pkl",
+   "sha256": "fd0b16ebe9348ec8ff276e2fb023ccab79ac9d3501eb8ab1bbbf3f28930b4829",
+   "bytes": 1333832,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C52/inputs_C52.pkl@0"
+  },
+  "r43": {
+   "unit": "g-1e-8-0-12662",
+   "index": 20,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r43.pkl",
+   "sha256": "80b194583779db7762cd3dfa7872616e9b164d938564ad68b5c52746e48b63a9",
+   "bytes": 22332,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C53/inputs_C53.pkl@0"
+  },
+  "z20": {
+   "unit": "g-1e-8-0-12932",
+   "index": 14,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z20.pkl",
+   "sha256": "42af8b9120348a8db62e010d3244889ed6c61e3174afa54d31191ae2f15258b4",
+   "bytes": 22333,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C54/inputs_C54.pkl@0"
+  },
+  "r45": {
+   "unit": "g-1e-8-0-13951",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r45.pkl",
+   "sha256": "0cedc78cce77855cd7a57e1dd602d6c4d5a211f1261a14647e12ea0300a1610c",
+   "bytes": 1368034,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C55/inputs_C55.pkl@0"
+  },
+  "r59": {
+   "unit": "g-1e-8-0-1823",
+   "index": 0,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r59.pkl",
+   "sha256": "58bdc331d8f72f8065b1a606a0cc6f124ce2717977eb932900c4aececabd3915",
+   "bytes": 1354084,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C56/inputs_C56.pkl@0"
+  },
+  "z25": {
+   "unit": "g-1e-8-0-33962",
+   "index": 12,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z25.pkl",
+   "sha256": "edb689af0bcf2d064a705eb2ca2a5f751898b99d7773e439629699a91af7191b",
+   "bytes": 3582,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C57/inputs_C57.pkl@0"
+  },
+  "r34": {
+   "unit": "g-1e-8-0-33988",
+   "index": 21,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r34.pkl",
+   "sha256": "6478d88e19297be1f4104a7a2968f96e94296d2e13b66d107939da1f77a5d04b",
+   "bytes": 22011,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C58/inputs_C58.pkl@0"
+  },
+  "r54": {
+   "unit": "g-1e-8-0-34014",
+   "index": 0,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r54.pkl",
+   "sha256": "f76afa979e664409457234ffae18c340f5774585cfc6f8a512730774de4a5882",
+   "bytes": 1311670,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C59/inputs_C59.pkl@0"
+  },
+  "z26": {
+   "unit": "g-1e-8-0-37212",
+   "index": 8,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z26.pkl",
+   "sha256": "b5e7f18f3f60e62923055a5e5b9cbb6e79d48df41fc9f125aa8d3842556ddf67",
+   "bytes": 3665,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C60/inputs_C60.pkl@0"
+  },
+  "r56": {
+   "unit": "g-1e-8-1-10794",
+   "index": 5,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r56.pkl",
+   "sha256": "1a7c77a48ca537e96bc50505eb27fa0c4426ee30de57214c441d6b4017f6705c",
+   "bytes": 1302207,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C61/inputs_C61.pkl@0"
+  },
+  "r48": {
+   "unit": "g-1e-8-1-11031",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r48.pkl",
+   "sha256": "efff6324f8a6c066510b4ffd73ab4915c1c3ab2136868bb645a4b9461b601d6d",
+   "bytes": 1319058,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C62/inputs_C62.pkl@0"
+  },
+  "r35": {
+   "unit": "g-1e-8-1-11073",
+   "index": 20,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r35.pkl",
+   "sha256": "7d4bf1ce550fdf210d01331f802736066d8c899c2c1126d36a58741e1711c664",
+   "bytes": 22413,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C63/inputs_C63.pkl@0"
+  },
+  "r39": {
+   "unit": "g-1e-8-1-11154",
+   "index": 10,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r39.pkl",
+   "sha256": "eb3542a6e30bcc415b13c81660b0fe628d6a40be43d84a693d1a8d28c8a7916c",
+   "bytes": 3666,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C64/inputs_C64.pkl@0"
+  },
+  "r51": {
+   "unit": "g-1e-8-1-14231",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r51.pkl",
+   "sha256": "7b13a18ec03eee72a96455f349f2a31075830ad07915afbd9ce843e5a2f8b4b7",
+   "bytes": 1361917,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C65/inputs_C65.pkl@0"
+  },
+  "z21": {
+   "unit": "g-1e-8-1-14572",
+   "index": 8,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z21.pkl",
+   "sha256": "346ab66c0d844e7c66776866b02505520dfe36b0e1a279a6134e115418820351",
+   "bytes": 3581,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C66/inputs_C66.pkl@0"
+  },
+  "r30": {
+   "unit": "g-1e-8-1-1759",
+   "index": 14,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r30.pkl",
+   "sha256": "b055cd492ed6a070cc459fd1fa4ffe26b6211c7672345f316c9ef0e173b27c96",
+   "bytes": 3665,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C67/inputs_C67.pkl@0"
+  },
+  "z12": {
+   "unit": "g-1e-8-1-2174",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z12.pkl",
+   "sha256": "7b8792e57d4aa769dcd16dbaea2a107c17b139a0d4aea63d0dc2cf20cb7f4882",
+   "bytes": 1365228,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C68/inputs_C68.pkl@0"
+  },
+  "z18": {
+   "unit": "g-1e-8-1-2368",
+   "index": 9,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z18.pkl",
+   "sha256": "5aac1f9ae961e8bef473b3c0658bd540d3ec8c8bcafd1639b0c22c0ce059abfc",
+   "bytes": 3358,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C69/inputs_C69.pkl@0"
+  },
+  "r37": {
+   "unit": "g-1e-8-1-34613",
+   "index": 15,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r37.pkl",
+   "sha256": "2235e7f80b358813b56925ffde43085338cdef6e145b786fdb64f5f5384e1e64",
+   "bytes": 22011,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C70/inputs_C70.pkl@0"
+  },
+  "r31": {
+   "unit": "g-1e-8-1-35133",
+   "index": 22,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r31.pkl",
+   "sha256": "9e25f8a9762ef7d1d49f05495b83f1cacf9f9218c335f5ec5f0bdd26ad693a40",
+   "bytes": 22413,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C71/inputs_C71.pkl@0"
+  },
+  "r32": {
+   "unit": "g-1e-8-1-35282",
+   "index": 19,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r32.pkl",
+   "sha256": "764a37f4007af90b6b2144b51cb1528d04ce071d6bd0c6c7fdad763d98abf7c6",
+   "bytes": 21931,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C72/inputs_C72.pkl@0"
+  },
+  "r38": {
+   "unit": "g-1e-8-1-35413",
+   "index": 7,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r38.pkl",
+   "sha256": "e387be57e34678091a3cdd221ba8851668c515c3d27c884c7366139d6289aa81",
+   "bytes": 3443,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C73/inputs_C73.pkl@0"
+  },
+  "v09": {
+   "unit": "g-1e-8-1-35480",
+   "index": 2,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v09.pkl",
+   "sha256": "60b5c2b5d24f19c041cd354cc47de405843f0135aeb62132984498ba391ed972",
+   "bytes": 1348594,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C74/inputs_C74.pkl@0"
+  },
+  "v06": {
+   "unit": "g-1e-8-2-1380",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v06.pkl",
+   "sha256": "d52c514ea7a776850130895d0c3f56daad73873a936486bcf44a520ddffde913",
+   "bytes": 1336307,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C75/inputs_C75.pkl@0"
+  },
+  "z23": {
+   "unit": "g-1e-8-2-1402",
+   "index": 12,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z23.pkl",
+   "sha256": "71050caaa92ef77d558712b5e444b39e166eb57c555ec8628590f19d958af0cf",
+   "bytes": 3581,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C76/inputs_C76.pkl@0"
+  },
+  "z15": {
+   "unit": "g-1e-8-2-1549",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z15.pkl",
+   "sha256": "5091966329111c96bbf99eb71cd5097b2e8ec365ed168a5a5b39898b9775d1a7",
+   "bytes": 1343410,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C77/inputs_C77.pkl@0"
+  },
+  "z14": {
+   "unit": "g-1e-8-2-1627",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z14.pkl",
+   "sha256": "aaeb30d83624d66a640aaadb344bcb356220b2cc07c12f304c6f48ee4376c118",
+   "bytes": 1352111,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C78/inputs_C78.pkl@0"
+  },
+  "r41": {
+   "unit": "g-1e-8-2-1638",
+   "index": 13,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r41.pkl",
+   "sha256": "cdaafb561f88d7aaf76489db216d0338f0b9557069584bd96cd6a970dd3fd770",
+   "bytes": 3443,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C79/inputs_C79.pkl@0"
+  },
+  "r36": {
+   "unit": "g-1e-8-2-1673",
+   "index": 21,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r36.pkl",
+   "sha256": "baa5b18eaffd6699af9cd70c08db7f00e0828ce7964bb32146f9d808b57b2d34",
+   "bytes": 22011,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C80/inputs_C80.pkl@0"
+  },
+  "r40": {
+   "unit": "g-1e-8-2-21651",
+   "index": 21,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r40.pkl",
+   "sha256": "ef36fdfff5416cd6fde411db0500fa88c1bbae2ac80bb8a4650cc230641e97b3",
+   "bytes": 22012,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C81/inputs_C81.pkl@0"
+  },
+  "r49": {
+   "unit": "g-1e-8-2-21720",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r49.pkl",
+   "sha256": "9d1947abc35ec50d1b92b061f84ceae78fd865285617c76ae4214aa8963e3a8f",
+   "bytes": 1319949,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C82/inputs_C82.pkl@0"
+  },
+  "z22": {
+   "unit": "g-1e-8-2-21874",
+   "index": 12,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z22.pkl",
+   "sha256": "fcfa9c1b2d79a638bfde64bbf916f725101b0264128e09187de9b7a788eb16e5",
+   "bytes": 3666,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C83/inputs_C83.pkl@0"
+  },
+  "r42": {
+   "unit": "g-1e-8-2-33438",
+   "index": 16,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r42.pkl",
+   "sha256": "de9711f05c07e56f78999e661012db36317f6f725a61a60b636387b897aedf95",
+   "bytes": 21930,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C84/inputs_C84.pkl@0"
+  },
+  "r55": {
+   "unit": "g-1e-8-2-34671",
+   "index": 2,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r55.pkl",
+   "sha256": "f0df8234e588c53168407d09ee8d8fbbbd7e3565ab8e605685bef9aecc20bd9e",
+   "bytes": 1357309,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C85/inputs_C85.pkl@0"
+  },
+  "z16": {
+   "unit": "g-1e-8-2-34708",
+   "index": 5,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z16.pkl",
+   "sha256": "2c75369688eaf56819829dea4881a668c8d2e559a2481da4f688f75643dc5742",
+   "bytes": 3360,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C86/inputs_C86.pkl@0"
+  },
+  "z24": {
+   "unit": "g-1e-8-2-34718",
+   "index": 5,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z24.pkl",
+   "sha256": "ba2301b6e77f5af46a229620e0e788aa1c440c1fe2240dd09fa061e8073ab9ef",
+   "bytes": 3359,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C87/inputs_C87.pkl@0"
+  },
+  "r44": {
+   "unit": "g-1e-8-3-1045",
+   "index": 13,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r44.pkl",
+   "sha256": "69c46de7815ac85bb72950d663fbd3e1b3f18e6b42167a1bc122dee4e2776400",
+   "bytes": 21929,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C88/inputs_C88.pkl@0"
+  },
+  "v08": {
+   "unit": "g-1e-8-3-1192",
+   "index": 5,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v08.pkl",
+   "sha256": "232cb8d535aa43850248cd9bea9a71b460529e09b995e10bbea93c1c7ed7b7d0",
+   "bytes": 1315905,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C89/inputs_C89.pkl@0"
+  },
+  "r46": {
+   "unit": "g-1e-8-3-13481",
+   "index": 2,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r46.pkl",
+   "sha256": "a957d1bec7a8a3c0939a1939e83ac8466711ee8ccb920d9f1ddc9ddce70de318",
+   "bytes": 1335228,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C90/inputs_C90.pkl@0"
+  },
+  "z17": {
+   "unit": "g-1e-8-3-13913",
+   "index": 9,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z17.pkl",
+   "sha256": "b33212ea3644f5bb36eab341c752e289bb4a73d9bd068c3c855f9e21918bf6b5",
+   "bytes": 3443,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C91/inputs_C91.pkl@0"
+  },
+  "r53": {
+   "unit": "g-1e-8-3-14492",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r53.pkl",
+   "sha256": "5c63681acc1ecef820c7a8c922c81e78f3e1cfd058b9a06c309d6041aef687ea",
+   "bytes": 1376052,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C92/inputs_C92.pkl@0"
+  },
+  "r47": {
+   "unit": "g-1e-8-3-1916",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r47.pkl",
+   "sha256": "0970abec26bd7ae1486c79168432adf6763a47fac7701fefa43865d27f0f6ebc",
+   "bytes": 1364169,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C93/inputs_C93.pkl@0"
+  },
+  "z13": {
+   "unit": "g-1e-8-3-34220",
+   "index": 4,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z13.pkl",
+   "sha256": "87535b09efb608d90bfa8b058ae74f4c2a5f246b692cd1f355980538e0da67fe",
+   "bytes": 1320661,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C94/inputs_C94.pkl@0"
+  },
+  "r50": {
+   "unit": "g-1e-8-3-34389",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r50.pkl",
+   "sha256": "f6be38e4d5afd2ec5c62c2cf52955eca3d45e9f13e54098c960e162d1357ee0e",
+   "bytes": 1344378,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C95/inputs_C95.pkl@0"
+  },
+  "r57": {
+   "unit": "g-1e-8-3-34394",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r57.pkl",
+   "sha256": "3c910e8238852a993acab484a594de63b1f48c84ba41d5848a681e20f6a2929b",
+   "bytes": 1351981,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C96/inputs_C96.pkl@0"
+  },
+  "z27": {
+   "unit": "g-1e-8-3-34419",
+   "index": 21,
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z27.pkl",
+   "sha256": "59c0b72fcecd668b95fcc9e9b38425cd2be66d9068db7e1a5dc532957b3ec024",
+   "bytes": 22011,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C97/inputs_C97.pkl@0"
+  },
+  "r58": {
+   "unit": "g-1e-8-3-34453",
+   "index": 3,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r58.pkl",
+   "sha256": "0fa56d129506b707624c90ec9cbf06e333de53abcb9807b3da24959e94852b0f",
+   "bytes": 1372098,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C98/inputs_C98.pkl@0"
+  },
+  "r52": {
+   "unit": "g-1e-8-3-34925",
+   "index": 1,
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r52.pkl",
+   "sha256": "096aecf73fd33901187a6c052ca6dd491351f6294d2114bbdc60f00c72b457a8",
+   "bytes": 1382794,
+   "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/capture/C99/inputs_C99.pkl@0"
+  }
+ },
+ "inputs_06i": {
+  "s01": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s01.pkl",
+   "sha256": "7f162791c9b19f1cf15ef0b02ccd35910d0da83c8681aba7558642dfefbf8bb0",
+   "equals_06i_sums": true
+  },
+  "s02": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s02.pkl",
+   "sha256": "0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183",
+   "equals_06i_sums": true
+  },
+  "s03": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s03.pkl",
+   "sha256": "81cff8d83b285ca9f1851e5d56e964e5fdb05293b07202b0d3eb9799b1cf4892",
+   "equals_06i_sums": true
+  },
+  "s08": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s08.pkl",
+   "sha256": "861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80",
+   "equals_06i_sums": true
+  },
+  "s09": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s09.pkl",
+   "sha256": "cbe9cb72607d7c19ae7d65a4b50726e9b0a0915998b5a3ca8f715e4a6d8285d3",
+   "equals_06i_sums": true
+  },
+  "s10": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s10.pkl",
+   "sha256": "08f40073cbfe11d70d1f4fec19ee6ebc1876c95145375eb0823533bfe0bbd5af",
+   "equals_06i_sums": true
+  },
+  "s13": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s13.pkl",
+   "sha256": "54bd746d5ac6a1fd51f31822e374a2fe60a1143fc04579a7f80cbbc4ddf96b56",
+   "equals_06i_sums": true
+  },
+  "s14": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s14.pkl",
+   "sha256": "9570b1794986758ad0413315bb300a9cec4f13715f14fa85d0a0ef2a017eb942",
+   "equals_06i_sums": true
+  },
+  "s15": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s15.pkl",
+   "sha256": "e9ca60604f8cb8cae4689d16362b97b438bd0e1ed103bff099f485756e786abd",
+   "equals_06i_sums": true
+  },
+  "s22": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s22.pkl",
+   "sha256": "ad6a6a065ead3616ef8dc96d162a7fa7f4ee902ca59d5f41580d72608b03e9b1",
+   "equals_06i_sums": true
+  },
+  "s23": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s23.pkl",
+   "sha256": "1ffb073daec0dbdb8c4961bf3508218f5c25d5ce1bbaa75f41954acee134d5ba",
+   "equals_06i_sums": true
+  },
+  "s25": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s25.pkl",
+   "sha256": "696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42",
+   "equals_06i_sums": true
+  },
+  "s27": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s27.pkl",
+   "sha256": "d5389183fa3d15c084d15d2939f4923c151541255ada9ce3fff26be7ee1fca1c",
+   "equals_06i_sums": true
+  }
+ }
+}

@@ -1,0 +1,26 @@
+z00 g-1e-7-1-2174 #1 rtol 1e-7: g 0x1.0c5f18f19d8ffp-86 e_g 1.121e-33; 06h 0x1.0c5f181ecc5d9p-86 e_06h 1.124e-33; tol 1.121e-35
+   qawo1 0x1.0c5f18f86f93bp-86 direct_segments 1  (v_g-v)/e_g -0.02  (v_06h-v)/e_06h -0.58
+   qawo2 0x1.0c5f18f86f3e1p-86 direct_segments 1  (v_g-v)/e_g -0.02  (v_06h-v)/e_06h -0.58
+   fcc1 0x1.0c5f18f4cb423p-86 direct_segments 1  (v_g-v)/e_g -0.01  (v_06h-v)/e_06h -0.57
+   fcc2 0x1.0c5f18f86f178p-86 direct_segments 1  (v_g-v)/e_g -0.02  (v_06h-v)/e_06h -0.58
+   spread 1.096e-35 = 0.978 x tol; four readings agree within tol: True
+z12 g-1e-8-1-2174 #1 rtol 1e-8: g 0x1.0c6c2cc40e857p-86 e_g 1.534e-33; 06h 0x1.0c6c2cd926acfp-86 e_06h 1.537e-33; tol 1.534e-35
+   qawo1 0x1.0c5f18f86f93bp-86 direct_segments 1  (v_g-v)/e_g +1681.35  (v_06h-v)/e_06h +1678.07
+   qawo2 0x1.0c5f18f86f3e1p-86 direct_segments 1  (v_g-v)/e_g +1681.35  (v_06h-v)/e_06h +1678.07
+   fcc1 0x1.0c5f18f4cb423p-86 direct_segments 1  (v_g-v)/e_g +1681.36  (v_06h-v)/e_06h +1678.08
+   fcc2 0x1.0c5f18f86f178p-86 direct_segments 1  (v_g-v)/e_g +1681.35  (v_06h-v)/e_06h +1678.07
+   spread 1.096e-35 = 0.714 x tol; four readings agree within tol: True
+
+V1 detail groups parsed: 12
+w00: qawo1 0x1.54ad890b9db72p-71  qawo2 0x1.54ad890b9da50p-71  fcc1 0x1.54aec087cf10dp-71  fcc2 0x1.54ad89a29f559p-71
+w01: qawo1 0x1.035b1150815edp-69  qawo2 0x1.035b115081611p-69  fcc1 0x1.035aed805c31dp-69  fcc2 0x1.035b11432db2ap-69
+w02: qawo1 0x1.172b1a1ca0a7fp-70  qawo2 0x1.172b1a1ca0a22p-70  fcc1 0x1.172b94603bfc7p-70  fcc2 0x1.172b1a59ddd29p-70
+w03: qawo1 0x1.01dc94746ec9cp-74  qawo2 0x1.01dc94746ec54p-74  fcc1 0x1.01e06969076f0p-74  fcc2 0x1.01dc944ba787ep-74
+w04: qawo1 -0x1.e988cbacfa206p-75  qawo2 -0x1.e988cbacfa185p-75  fcc1 -0x1.e995f06ac6bdfp-75  fcc2 -0x1.e988cb546b64ep-75
+w05: qawo1 0x1.e6b93b33ea8d3p-75  qawo2 0x1.e6b93b33ea861p-75  fcc1 0x1.e6b011b286f4fp-75  fcc2 0x1.e6b93b061258ep-75
+w06: qawo1 -0x1.4458fec15abc3p-76  qawo2 -0x1.4458fec15abcep-76  fcc1 -0x1.441fe3e3aed62p-76  fcc2 -0x1.4458ff03a094cp-76
+w07: qawo1 0x1.003d0beca02a2p-81  qawo2 0x1.003d0beca02f9p-81  fcc1 0x1.002d8dabab757p-81  fcc2 0x1.003c873b530e5p-81
+w08: qawo1 0x1.04af5738dd46ep-79  qawo2 0x1.04af5738dd496p-79  fcc1 0x1.04a7f5fd33e5bp-79  fcc2 0x1.04af4192c65fbp-79
+w09: qawo1 0x1.06ce804c4245dp-79  qawo2 0x1.06ce804c42485p-79  fcc1 0x1.06c7445a6850fp-79  fcc2 0x1.06ce6d4135a4fp-79
+w10: qawo1 0x1.06f2f0c1a3750p-79  qawo2 0x1.06f2f0c1a3778p-79  fcc1 0x1.06ebbd4ee39cdp-79  fcc2 0x1.06f2de34673ffp-79
+w11: qawo1 -0x1.f8439e74c9f9fp-80  qawo2 -0x1.f8439e74c9ff0p-80  fcc1 -0x1.f834a8498da37p-80  fcc2 -0x1.f8436b4cd85f7p-80

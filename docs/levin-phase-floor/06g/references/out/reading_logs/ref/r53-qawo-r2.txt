@@ -1,0 +1,13 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r53.pkl qawo 2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r53-qawo-r2.json --sid r53 --unit g-1e-8-3-14492 --index 4 --rtol 1e-8 --workers 6 --progress /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/progress/r53-qawo-r2.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-02T10:16:05Z
+# projection_s 82.2 ceiling_s 3682.2
+# ----
+# ----
+# end 2026-11-02T10:51:08Z
+# exit -15
+# status stopped
+# wall_s 2102.681
+# backstop (a): projected total 290167 s >= 86400 s
+/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:479: UserWarning: resource_tracker: There appear to be 6 leaked semaphore objects to clean up at shutdown: {'/mp-i1p4hcz_', '/mp-kts1m737', '/mp-5_imbv1p', '/mp-l97rm9hp', '/mp-m2szuvr1', '/mp-z_qtuuzh'}
+  warnings.warn(

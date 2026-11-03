@@ -1,0 +1,43 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:05:53Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed; C=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e; for T in $M $P $C; do echo "== $T"; git --no-optional-locks -C $T rev-parse HEAD; git --no-optional-locks -C $T branch --show-current; echo "-- status --short"; git --no-optional-locks -C $T status --short; done; for T in $P $C; do echo "-- status --short --ignored $T"; git --no-optional-locks -C $T status --short --ignored; done; echo "== worktree list"; git --no-optional-locks -C $M worktree list; echo "== 3ae6f3a^"; git --no-optional-locks -C $M rev-parse 3ae6f3a^; echo "== log 4f4f9ed..1c5336e"; git --no-optional-locks -C $M log --oneline 4f4f9ed..1c5336e; echo "== diff --stat 3ae6f3a 1c5336e outside docs/prompts"; git --no-optional-locks -C $M diff --stat 3ae6f3a 1c5336e -- . ":!docs" ":!prompts"; echo "== diff --stat 4f4f9ed 3ae6f3a outside docs/prompts"; git --no-optional-locks -C $M diff --stat 4f4f9ed 3ae6f3a -- . ":!docs" ":!prompts"; echo "== diff --stat c1ec3b2 4f4f9ed outside docs/prompts"; git --no-optional-locks -C $M diff --stat c1ec3b2 4f4f9ed -- . ":!docs" ":!prompts"
+# output:
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+-- status --short
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed
+4f4f9ed2a31fb7437fcfca01263d260eebaff842
+-- status --short
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e
+1c5336e7e0ab8ed4495601a4033841f2df17ebdd
+-- status --short
+-- status --short --ignored /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed
+-- status --short --ignored /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e 1c5336e7 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed 4f4f9ed2 (detached HEAD)
+== 3ae6f3a^
+4f4f9ed2a31fb7437fcfca01263d260eebaff842
+== log 4f4f9ed..1c5336e
+1c5336e7 Record levin-phase-floor 06g's landing and dispatch its Part B
+3ae6f3a4 Return the trusted leaf's finest value and carry node errors signed
+== diff --stat 3ae6f3a 1c5336e outside docs/prompts
+== diff --stat 4f4f9ed 3ae6f3a outside docs/prompts
+ AdaptiveLevin/levin_quadrature.py               |  730 +++++++++---
+ AdaptiveLevin/tests/test_levin_cc_floor.py      |    7 +
+ AdaptiveLevin/tests/test_levin_global_budget.py |   14 +-
+ AdaptiveLevin/tests/test_levin_leaf_values.py   |  626 +++++++++++
+ AdaptiveLevin/tests/test_levin_node_sum.py      |  182 +++
+ AdaptiveLevin/tests/test_levin_roundoff_exit.py |  174 +++
+ tools/filon_reference.py                        | 1345 +++++++++++++++++++++++
+ tools/tests/test_filon_reference.py             |  355 ++++++
+ 8 files changed, 3292 insertions(+), 141 deletions(-)
+== diff --stat c1ec3b2 4f4f9ed outside docs/prompts
+ CLAUDE.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+# exit: 0
+# end: 2026-11-01T11:05:56Z

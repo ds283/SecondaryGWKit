@@ -1,0 +1,29 @@
+$ /bin/bash -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-references-20261101T175231\;\ cat\ \$R/status.json\;\ P=\$\(python3\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\)\[\\\"pid\\\"\]\)\"\)\;\ kill\ -0\ \$P\ \&\&\ echo\ \"driver\ pid\ \$P\ answers\ kill\ -0\"\;\ echo\ \"stderr\ bytes:\ \$\(wc\ -c\ \<\ \$R/stderr.log\)\"\;\ head\ -3\ out/cmd/30_capture.txt\ 2\>/dev/null\ \|\ cut\ -c1-200\;\ ls\ state/capture\ 2\>/dev/null\ \|\ head\ -3
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:52:36Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-01T17:52:31+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 5223,
+  "stage": "capture running",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 60
+}
+driver pid 5223 answers kill -0
+stderr bytes: 0
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/x1_capture.py /Users/ds283/Documents/Code/Secondar
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-01T17:52:31Z
+C00
+C01
+C02
+# ----
+# end 2026-11-01T17:52:36Z
+# exit 0

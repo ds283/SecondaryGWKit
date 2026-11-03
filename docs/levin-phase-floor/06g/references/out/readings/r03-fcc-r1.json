@@ -1,0 +1,48 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading r03 fcc res 1 (tools.filon_reference)",
+  "# written 2026-11-01T22:38:40Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 17a642b6962aee97ea7a72410aa83088b4008c17b7d90438c1967996525ba35d",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r03.pkl sha256 9a84d0cf00b294ed683e53486cf4fed66d9ab50dcbd02cab28d281b0f3a6e2de",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py sha256 d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b"
+ ],
+ "sample": "r03",
+ "unit": "g-1e-7-0-12758",
+ "index": 18,
+ "rtol": "1e-7",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r03.pkl",
+ "pickle_sha256": "9a84d0cf00b294ed683e53486cf4fed66d9ab50dcbd02cab28d281b0f3a6e2de",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py",
+ "tool_sha256": "d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b",
+ "workers": 6,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "N": 32
+ },
+ "value_hex": "-0x1.856187b9c5c6fp-34",
+ "value_30": "-8.85349839471544511544914121751e-11",
+ "imag_30": "7.08483123380827335969216907229e-11",
+ "wall_s": 3.45351737504825,
+ "n_panels": 44,
+ "u_breaks": [
+  -10.79960822140432,
+  -10.349702929612045,
+  -9.89979763781977
+ ],
+ "K_exact": "5392019577666551/17179869184",
+ "K_hat": 313856.84721559234,
+ "K_lo": 0.0,
+ "C_exact": "0.0",
+ "process_wall_s": 4.5132275419309735,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

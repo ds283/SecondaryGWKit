@@ -2730,6 +2730,83 @@ stores. The user, 2026-11-01, ruled that H4 counts as failing, and that the head
 H2, is met. H4's call narrows `[07-roundoff-exit-assumes-bisection-cannot-help]`; the doubled count
 of declared-dominated Clenshaw–Curtis calls narrows `[06e-cc-declared-phase-term-is-a-crude-proxy]`.
 
+## 6g. The trusted leaf's value, the node errors signed, and the round-off exit's premise
+
+*Prompt 06g: the code on the laptop (`3ae6f3a`); the rehearsals, the census and the references on
+the Mac Studio, 2026-11-01 to 2026-11-03, with the references' tool fixed twice on the laptop
+(`ff3e8394`, `b5626ecb`) and 32 readings made there. The records are under [`06g/`](06g/); what
+stays on the Mac Studio is in [`06g/KEPT_ON_MAC_STUDIO.md`](06g/KEPT_ON_MAC_STUDIO.md).*
+
+### 6g.1 The code
+
+These are the changes to `_adaptive_levin`, with tests 1–8, the breakages and 20 LiouvilleGreen
+draws in [`logs/06g-leaf-values-and-node-sum.md`](../../prompts/levin-phase-floor/logs/06g-leaf-values-and-node-sum.md):
+- **(a)** a trusted leaf returns its quarters sum $Q$;
+- **(b)** a leaf is trusted iff $r < 1/4$, or $r < 1$ with $\Delta_1 \le \phi_P$;
+- **(c)** the node errors are carried as a running signed sum, with a `node_limited` stop;
+- **(d)** the round-off exit's halving test is on the floors less the declared term, with a budget
+  clause;
+- **(e)** `tools/filon_reference.py`.
+
+### 6g.2 Rehearsals R23 and R24, and Gate V (prompt 06g §4)
+
+R23 at `4f4f9ed` (06h's code) and R24 at `1c5336e`, both `done`, both fingerprinted `1b332ffa…`.
+Outside `QuadSourceIntegral` every value table is identical.
+- **V1 fails on `total`** in 12 of 864 rows, worst 13,101.5 of the summed errors. Each move is
+  confined to sub-interval 1's `G+q+r` call, and all 12 calls hold a stationary point of the phase.
+  The references (§6g.4) show R23 wrong on all 12, by 4.5e3–6.0e5 of its abserr, and R24 within its
+  abserr on all 12 (at most 0.942). V1 holds on the oracle, worst 0.4986.
+- **Gate V holds:** the parent reproduces 06h's census, the diff is confined to `AdaptiveLevin/`,
+  `tools/`, tests and `CLAUDE.md`, and $g$ is deterministic.
+
+### 6g.3 The census: 06h's census re-run at the code (prompt 06g §5)
+
+`levin-phase-floor-06g-census-20261101T114315`: 18,560 of 18,560 units `done`, in 5 h 40 min against
+06h's 2 h 33 min. Unit wall rose ×3.43 and ×2.96, and group-call regions ×4.95 and ×3.81. The counts
+below are outside the 720 stationary-point rows.
+- **V2 fails:** 5 rows at each rtol move by more than both errors, worst 2.164, all in the `G+r`
+  call. The oracle holds.
+- **V5 fails:** 966 and 996 group calls reach `depth_max`, against 0 and 1 under 06h.
+- **V6 fails:** Z2's call ends `node_limited`, but at depth 20.
+- **V7 holds:** H4's call converges at depth 1.
+- **V8 fails**, which is the note's §5 stop: 801 calls in 470 rows at `1e-7`, and 830 in 476 at
+  `1e-8`, lose convergence.
+  - **The cause:** all but three are (b)'s slow leaves, refined to depth 20 and returned untrusted.
+  - **The lost calls:** every one meets its request on abserr.
+  - **The slow leaves:** their $r$ clusters at 1/2, at a median of 2 points per call, none at its
+    ends.
+
+### 6g.4 The references (prompt 06g §5)
+
+**The references.** QAWO and FCC at two resolutions, on Z3's 30 calls, 60 drawn, V1's 12 (captured
+at R24's tree) and 12 of V8's lost calls. The tool reproduces 06i's 13.
+
+**The tool defects.** On 14 samples, a stationary point inside one Route B segment made the tool
+invert a two-valued map. `ff3e8394` and `b5626ecb` fix it (the board's §4,
+`[06g-filon-route-b-inverts-through-a-stationary-point]`). After both fixes, the four readings of
+each of the 14 agree, and readings on monotone calls are bit-identical across both fixes and both
+hosts.
+
+**V3:**
+- **Holds as written:** 66 of 90 count, with no violation.
+- **Fails on z12 alone,** under either broader reading. z12 is a stationary-point row, reported
+  converged at depth 18 and 1,681× its abserr from a reference on the same integrand as z00, which
+  is 0.018 from it at `1e-7`. The next largest ratio is 0.58.
+
+**V4 holds:** 0.00121, 2.1e-7, 1.44e-4 and 0.00121.
+
+**V8's sample:** $g$ is within its abserr on 11 of 12, and 06h on 9.
+
+### 6g.5 The review, and the user's rulings
+
+The Mac Studio orchestrator's review ([`06g/review.md`](06g/review.md)) passed all ten checks. The
+rulings it records are in [`06g/review/rulings_log.md`](06g/review/rulings_log.md).
+- **z12 and V1's 12 are stationary-point calls**, recorded as cases for prompt 07. The user: *"What
+  needs to be true is that z12 works after 07."*
+- **Opened:** V5, V6 and V8's common cause, rule (b)'s slow leaves outside the stationary points,
+  and V2.
+- **Not yet decided by the user:** whether 06g's header issues close.
+
 ## 6i. Filon references for Z3's calls
 
 *Prompt 06i, a measurement. It ran on the laptop on 2026-11-01, Ray-free, with no store and no code

@@ -1,0 +1,11 @@
+$ cp -p SRC/* scripts/ && cp -pR SRC state/scripts_06h_reference  (SRC=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06h/census/scripts)
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:05:33Z
+# ----
+diff -r SRC scripts: identical
+diff -r SRC state/scripts_06h_reference: identical
+68
+# ----
+# end 2026-11-01T11:05:34Z
+# exit 0

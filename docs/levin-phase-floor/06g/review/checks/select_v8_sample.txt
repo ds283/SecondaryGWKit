@@ -1,0 +1,18 @@
+rtol 1e-7: 801 eligible calls
+  q=0.0 pos=   0 g-1e-7-2-1380 #4 G+q-r ratio=5.709e-09 regions 10->76
+  q=0.2 pos= 160 g-1e-7-0-12617 #5 G-q+r ratio=2.404e-04 regions 10->122
+  q=0.4 pos= 320 g-1e-7-3-34212 #4 G+q-r ratio=1.063e-02 regions 2->400
+  q=0.6 pos= 480 g-1e-7-1-34521 #4 G+q-r ratio=1.353e-01 regions 7->120
+  q=0.8 pos= 640 g-1e-7-3-34296 #1 G+q+r ratio=4.693e-01 regions 5->79
+  q=1.0 pos= 800 g-1e-7-3-34090 #4 G-q-r ratio=9.867e-01 regions 14->207
+rtol 1e-8: 827 eligible calls
+  q=0.0 pos=   0 g-1e-8-2-1380 #4 G+q-r ratio=5.709e-09 regions 10->76
+  q=0.2 pos= 165 g-1e-8-0-12606 #5 G-q+r ratio=2.773e-04 regions 11->116
+  q=0.4 pos= 330 g-1e-8-3-1192 #5 G-q+r ratio=1.346e-02 regions 1->206
+  q=0.6 pos= 496 g-1e-8-1-35480 #2 G+q-r ratio=2.437e-01 regions 4->172
+  q=0.8 pos= 661 g-1e-8-3-38023 #4 G-q-r ratio=8.071e-01 regions 20->196
+  q=1.0 pos= 826 g-1e-8-0-12655 #3 G-q+r ratio=9.963e-01 regions 2->142
+Sun Nov  1 17:33:53 UTC 2026
+92ff61228b8d99819ee512e78d9bdae48c5fc1009bc64ac93f886f6e2953d4c0  scripts/select_v8_sample.py
+874e17db6e60afd37aba815043fb5783ffebab52c44273c7b0ba55a3c0dc9605  v8_sample.json
+1e9a62b0f8d95deade4f265d1fa1a8b5bbd63f587f7c9761d78882db5367c42e  ../census/out/v8_calls.json

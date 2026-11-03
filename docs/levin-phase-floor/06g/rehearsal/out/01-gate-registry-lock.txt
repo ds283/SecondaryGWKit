@@ -1,0 +1,43 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:06:05Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed; C=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > var/levin-phase-floor-06g/rehearsal/out/01-registry-list.txt 2>&1; echo "list exit $?"; wc -l < var/levin-phase-floor-06g/rehearsal/out/01-registry-list.txt; grep -c " done \| finished " var/levin-phase-floor-06g/rehearsal/out/01-registry-list.txt; grep -E "running|stale|!!" var/levin-phase-floor-06g/rehearsal/out/01-registry-list.txt; echo "== lock dir"; ls -la ~/.raypoolkit; ls -d ~/ScienceData/.rehearsal-lock; echo "== auth token"; ls -l ~/.ray/auth_token; echo "== df"; df -h $PWD; echo "== load"; uptime; echo "== venv"; ./venv/bin/python -I -c "import sys; print(sys.version)"; ./venv/bin/python -I -c "import ray, sqlalchemy; print(ray.__version__, sqlalchemy.__version__)"; echo "== stores/runs"; ls var/datastores | grep 06g; ls var/runs | grep 06g; echo "== launcher, main.py, module hashes P then C"; for T in $P $C; do shasum -a 256 $T/RunDrivers/quadsource_atol_sweep.py $T/main.py $T/ComputeTargets/QuadSourceIntegral.py $T/AdaptiveLevin/levin_quadrature.py $T/LiouvilleGreen/three_bessel_integrals.py; done; echo "== R21/R22 script_sha256"; grep -h script_sha256 var/runs/levin-phase-floor-06h-r2*/manifest.json
+# output:
+== registry
+list exit 0
+43
+34
+   levin-phase-floor-06h-phase-20261101T033514           done          84/84   7h 30m  levin-phase-floor prompt 06h section 5 on the Mac Studio (mps026298; Python 3.13.16): the phase re-measurement, 06f's M2 items 1 and 4 repeated at 06h's code (H1, H2). Captures 06f's 20 M2 calls by 06e's x1_capture.py (06h's copy) at the parent p (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5, 2c325f5, code 06e's; each capture checked bit for bit against 06e's census checkpoint a0dc4d7f) and at h (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2, dispatch SHA c1ec3b2, code 7172a8f + ac1c6f4; each checked against 06h's census checkpoint), reading 06's certified scratch copy of A3 v2 read-only (fingerprint 0e32f24a) on a stand-in ShardedPool; the method check at the exact e^u before any scoring; replays each call in its own process in its own tree with 06f's pass-throughs, with mpmath phase references at 30 digits at the exact e^u (and at 06f's x_hat), at every node of every returned leaf and 06f's seeded dense sample of 1,000 points per call; each tree's code scored at the other's points; the reference re-checked at 50 digits at h's worst point. At most six processes; Ray-free, no lock, no store built, no code changed  · refcheck running
+== lock dir
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  1 00:35 .
+drwxr-x--- 159 ds283 staff 5088 Nov  1 10:58 ..
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+== auth token
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+== df
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  832G   96G  90% /
+== load
+11:06  up 25 days,  1:42, 2 users, load averages: 4.24 6.46 5.89
+== venv
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+2.59.0 2.0.55
+== stores/runs
+== launcher, main.py, module hashes P then C
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed/RunDrivers/quadsource_atol_sweep.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed/main.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed/ComputeTargets/QuadSourceIntegral.py
+8285c1e4436ddc21b9b2402e7f074d17e2d74637e0bf8a87f3ab3f1a599b618c  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed/AdaptiveLevin/levin_quadrature.py
+fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed/LiouvilleGreen/three_bessel_integrals.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/RunDrivers/quadsource_atol_sweep.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/main.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/QuadSourceIntegral.py
+d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/AdaptiveLevin/levin_quadrature.py
+fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/LiouvilleGreen/three_bessel_integrals.py
+== R21/R22 script_sha256
+  "script_sha256": "b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19",
+  "script_sha256": "b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19",
+# exit: 0
+# end: 2026-11-01T11:06:07Z

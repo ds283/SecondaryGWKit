@@ -1,0 +1,9 @@
+$ /bin/bash -c grep\ -E\ \'\^\[0-9a-f\]\{64\}\ \ \'\ var/levin-phase-floor-06g/rehearsal/state/stores_sha256_final.txt\ \|\ diff\ -\ /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit-lpf06g-1c5336e/5dfa088e-5986-494e-9433-38e81a98b2a0/scratchpad/v1_before.txt\ \&\&\ echo\ \'EQUAL:\ all\ ten\ store\ files\ match\ the\ rehearsal\ baseline\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T19:59:55Z
+# ----
+EQUAL: all ten store files match the rehearsal baseline
+# ----
+# end 2026-11-01T19:59:55Z
+# exit 0

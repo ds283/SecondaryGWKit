@@ -1,0 +1,23 @@
+== Gate V part 1: P1 p-1e-7-2-38302 at 4f4f9ed (status '') vs 06h g-1e-7-2-38302 at c1ec3b2
+   result (1): IDENTICAL
+   analytic_06h.h (1): IDENTICAL
+   calls (7): IDENTICAL
+   other_calls (16): IDENTICAL
+== Gate V part 1: P2 p-1e-7-2-2095 at 4f4f9ed (status '') vs 06h g-1e-7-2-2095 at c1ec3b2
+   result (1): IDENTICAL
+   analytic_06h.h (1): IDENTICAL
+   calls (7): IDENTICAL
+   other_calls (16): IDENTICAL
+== Gate V part 1: P3 p-1e-8-0-1971 at 4f4f9ed (status '') vs 06h g-1e-8-0-1971 at c1ec3b2
+   result (1): IDENTICAL
+   analytic_06h.h (1): IDENTICAL
+   calls (5): IDENTICAL
+   other_calls (16): IDENTICAL
+== Gate V part 3: G1 vs G2, g-1e-7-0-14164; workers 50496 / 50497
+   result: IDENTICAL
+   calls: IDENTICAL
+   other_calls: IDENTICAL
+   analytic_06h: IDENTICAL
+   stored: IDENTICAL
+   G1 calls with a CC leaf and sum E != 0: 2
+   G1 trusted leaves (leaves.trusted summed): 107

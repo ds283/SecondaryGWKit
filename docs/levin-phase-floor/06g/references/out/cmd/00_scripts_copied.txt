@@ -1,0 +1,16 @@
+$ /bin/bash -c SRC=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06h/census/scripts\;\ PH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06h/phase/scripts\;\ cp\ -p\ \$SRC/\*\ scripts/\ \&\&\ mkdir\ -p\ state/scripts_06h_census_reference\ state/scripts_06h_phase_reference\ state/scripts_06e_references_reference\ state/scripts_06i_reference\ \&\&\ cp\ -p\ \$SRC/\*\ state/scripts_06h_census_reference/\ \&\&\ cp\ -p\ \$PH/run_06h.py\ \$PH/launch_06h.py\ \$PH/select_06h.py\ state/scripts_06h_phase_reference/\ \&\&\ cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06e/census/references/slice_inputs.py\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06e/census/references/replay_g.py\ state/scripts_06e_references_reference/\ \&\&\ cp\ -p\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/scripts/score.py\ state/scripts_06i_reference/\ \&\&\ diff\ -r\ \$SRC\ scripts\ \&\&\ echo\ \'diff\ -r\ 06h\ census\ scripts\ vs\ scripts/:\ identical\'\ \&\&\ diff\ -r\ \$SRC\ state/scripts_06h_census_reference\ \&\&\ echo\ \'reference\ copy\ identical\'\ \&\&\ for\ f\ in\ run_06h.py\ launch_06h.py\ select_06h.py\;\ do\ cmp\ \$PH/\$f\ state/scripts_06h_phase_reference/\$f\ \&\&\ echo\ \"\$f\ identical\"\;\ done\ \&\&\ cmp\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06e/census/references/slice_inputs.py\ state/scripts_06e_references_reference/slice_inputs.py\ \&\&\ cmp\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06e/census/references/replay_g.py\ state/scripts_06e_references_reference/replay_g.py\ \&\&\ cmp\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/scripts/score.py\ state/scripts_06i_reference/score.py\ \&\&\ echo\ \'others\ identical\'\ \&\&\ ls\ scripts\ \|\ wc\ -l\ \&\&\ \(cd\ state\ \&\&\ shasum\ -a\ 256\ scripts_06h_census_reference/\*\ scripts_06h_phase_reference/\*\ scripts_06e_references_reference/\*\ scripts_06i_reference/\*\ \>\ scripts_references.sha256\)\ \&\&\ wc\ -l\ state/scripts_references.sha256
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:12:11Z
+# ----
+diff -r 06h census scripts vs scripts/: identical
+reference copy identical
+run_06h.py identical
+launch_06h.py identical
+select_06h.py identical
+others identical
+68
+74 state/scripts_references.sha256
+# ----
+# end 2026-11-01T11:12:12Z
+# exit 0

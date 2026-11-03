@@ -1,0 +1,135 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/slice_refs.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/capture.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/check_captures.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/selection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-01T18:12:15Z
+# ----
+# levin-phase-floor 06g: the references' captured calls, one file each; 06i's inputs checked
+# written 2026-11-01T18:12:15Z on mps026298.phys.susx.ac.uk
+# script slice_refs.py sha256 b1442d6c81e1d4651cd2248a60ad478666a2402af92a76da0684cba85b344669
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/capture.json sha256 62b91d27bbd6a4e6a5fc10f64e212e4a491baeb043c1651e1722b0ebf5922a49
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/check_captures.json sha256 ed6c6fb4ad86cadf8abf956326d12603617f5fcdc53de993ceeaf556611303d8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/selection.json sha256 f1d760077f8769a349f67689c6eed05832092ed1e6e980a01f2b5d1fcdfa5b95
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/inputs_SHA256SUMS.txt sha256 bceb42431b6e143fde74e14d5a1b81a271c9e87127e45e154dfaa64e9b87eb42
+r20 g-1e-7-0-12606 #1: 1329250 bytes sha256 ee820393bbb133d8715e5a18270ff94b7af95048585bc7dab171c7c7c3c1ad2b -> r20.pkl
+v01 g-1e-7-0-12617 #5: 1335092 bytes sha256 21f5cd98914bc2c31e8fee1fc54465857f65165962ad8b6321e477e543aaee18 -> v01.pkl
+r05 g-1e-7-0-12625 #5: 3359 bytes sha256 5a95298c0ce45ae38268924f6effcd479d040564604bb4484167641a61a48d28 -> r05.pkl
+r06 g-1e-7-0-12682 #14: 22332 bytes sha256 42a3cbde2f6a201dd2d31efb4f8cc43d1e52e06512480c6f99d81e0d033b9637 -> r06.pkl
+r03 g-1e-7-0-12758 #18: 22333 bytes sha256 9a84d0cf00b294ed683e53486cf4fed66d9ab50dcbd02cab28d281b0f3a6e2de -> r03.pkl
+r00 g-1e-7-0-14053 #7: 3359 bytes sha256 27496cfbe24aefe1d749148fd5a0e3aadd30e364ce432607b4a00433edf65cdb -> r00.pkl
+r18 g-1e-7-0-1786 #4: 1337610 bytes sha256 31e1b94e8b1d5ca706779b7d0005ab938ad6abc979e58752abe3b71ee254bf6b -> r18.pkl
+r25 g-1e-7-0-1887 #3: 1340940 bytes sha256 e0dace4b720221d75b89400a2a2c684894a96fd8589bd917f081d4ab8f637337 -> r25.pkl
+r01 g-1e-7-0-33650 #14: 3665 bytes sha256 5ba35fccbd752ba88461b4a04c84310abcf79d871997652bb6cd33fa727c7ef1 -> r01.pkl
+r11 g-1e-7-0-33732 #9: 3359 bytes sha256 cafcdb2597ad6e0f5913eb865fe41b3926695213d79e45111edae06f00cf84c8 -> r11.pkl
+r16 g-1e-7-0-33822 #0: 1319053 bytes sha256 c9ffddb8080fa4cbde7680676cd620cf4baa7638793ff9841cf70e23cb192e9b -> r16.pkl
+z19 g-1e-8-3-36019 #19: 21930 bytes sha256 1435456e5a7d6b4ec23adbfd739dfb5f84984969fe97eb88f44eb88a38a62fc1 -> z19.pkl
+v10 g-1e-8-3-38023 #4: 1350628 bytes sha256 98b2319d05c7687b5e8b716fab3c48afe90c2d86f3036e5a69b5cac93cb9249b -> v10.pkl
+r12 g-1e-7-0-33870 #18: 22333 bytes sha256 8c81902038239ce855fb4a8dbaedbe38af2658d242058c01239bcfc420a3b01a -> r12.pkl
+r23 g-1e-7-0-33961 #4: 1330872 bytes sha256 e8ae87ce0b072686e740ae7aa60f978cb4b6ee6833c8cb82475fd08c2b32af1d -> r23.pkl
+r27 g-1e-7-0-34026 #1: 1325444 bytes sha256 b4bfe3bd23e7bc8ce4db5de903eb5a670f14b79e02a0b48276954c29bd7079d4 -> r27.pkl
+r08 g-1e-7-1-10908 #13: 21931 bytes sha256 940c12ea1533145faecaa8cece6647fe5224ada756ad642780a75d973ca6720d -> r08.pkl
+r26 g-1e-7-1-14462 #5: 1371638 bytes sha256 49260c9647ee937f1e7c3618106b0aa71a191835d5f0ed379771d2c875e08032 -> r26.pkl
+z29 g-1e-7-1-14572 #9: 3359 bytes sha256 3ec164f2f793501d0832a773255ba80329380377f596ec4128b04dcb6e3f86f7 -> z29.pkl
+r09 g-1e-7-1-20466 #5: 3581 bytes sha256 a53ab159d17db0e1804db75b9049257f3e51ffa049e9910556a098c914967b6e -> r09.pkl
+z00 g-1e-7-1-2174 #1: 1366668 bytes sha256 1b870b17582834a0a066412b636919fa0951331e514a9118bc76dc18fa8c6114 -> z00.pkl
+r17 g-1e-7-1-2229 #3: 1358005 bytes sha256 b1fe5defaf113767dca1ec5597159ce963e145fd9e01dab95fb88090ba2c2ea3 -> r17.pkl
+v03 g-1e-7-1-34521 #4: 1345952 bytes sha256 138121d65b39c18bf71e20a53de58667bd8ad6623a29418b1ee92be1d86ba6ea -> v03.pkl
+r10 g-1e-7-1-35314 #7: 3444 bytes sha256 d38e2aeae634c83f1648f576579807075ea24c1dd49f6d14975658855c9ad1ed -> r10.pkl
+z10 g-1e-7-1-35332 #10: 3581 bytes sha256 39aa9fffe132dd9fadf1959616b0cadf9a07872dbe8bf0442329238c737646df -> z10.pkl
+z09 g-1e-7-1-35340 #18: 22413 bytes sha256 c41f141154c59ca46e2f8a5573335bd72102f385c034bb580b003a09c3608091 -> z09.pkl
+r29 g-1e-7-1-35525 #4: 1344844 bytes sha256 5e3120c4651568239b2e70310b7e1f3199bd408b3cffc918f11f0634344609a6 -> r29.pkl
+z06 g-1e-7-1-38737 #11: 3443 bytes sha256 67c7bd8f2e3fbc4d4220f7155c271941b7ea26af92c4a5a1aeb731aa336233a3 -> z06.pkl
+v00 g-1e-7-2-1380 #4: 1336307 bytes sha256 391fffe37be6529b8ab773a8da016cd0d8cad1cb25f450cfd43cec8d730fc5df -> v00.pkl
+z01 g-1e-7-2-1444 #4: 1320469 bytes sha256 e796b35ce21def7b9d12b2d5fc16b23d755b41438c78ffb37fbdcc28984d912f -> z01.pkl
+r02 g-1e-7-2-1517 #15: 22010 bytes sha256 f8c52760c4baedb89e4dc5641ff03d299039f28068a1b07ebc180e5ac895cdac -> r02.pkl
+z02 g-1e-7-2-1627 #3: 1352543 bytes sha256 71bc4ee8105e0692ca6e5ed1d8c167ca39b417430bb9ad77d83ef0c86d26b02f -> z02.pkl
+r13 g-1e-7-2-21527 #18: 22413 bytes sha256 af1ff16ead0eb53633aec8678630730cdb41ade5db723acd83adcc8a3e2ba75e -> r13.pkl
+r28 g-1e-7-2-21673 #3: 1317926 bytes sha256 b30b373f5de2800318a3d5868a09a778a4abb4b2eb03bc5afe6d151f91af6e77 -> r28.pkl
+r19 g-1e-7-2-21926 #0: 1327473 bytes sha256 acfdb9df7637d4804fc3487e307237b7baf266eb4f6ab30793df738fe80c3384 -> r19.pkl
+z05 g-1e-7-2-34485 #17: 22012 bytes sha256 866bec92d2876806f142f8ba56ad75362b4e0a3875c9f1910dd4b35eef0fb803 -> z05.pkl
+z28 g-1e-7-2-34708 #5: 3360 bytes sha256 d623ccd6a75b33ab0c4275cf06672c6178595d3b73c204e5da8c0867ca378210 -> z28.pkl
+z07 g-1e-7-2-34718 #11: 3360 bytes sha256 b2ff1d324638a91b18f9d8d605b6185674313c23a58bb9eba7acf099adc16996 -> z07.pkl
+r22 g-1e-7-2-36976 #0: 1358254 bytes sha256 1a7ff0f00b454e44e351580d2bf669708e79cd448dde15953acc804554cf14bb -> r22.pkl
+z04 g-1e-7-3-13510 #5: 3360 bytes sha256 715eee2f9fdf629ea1167be7b10209130007f7a21c5ca2c48f0fb054d93182fb -> z04.pkl
+r07 g-1e-7-3-14593 #21: 22011 bytes sha256 5f4f0c6bcb0964c816bc351c0f63b0cc04956e0157de704d3fc5c095f1704217 -> r07.pkl
+v05 g-1e-7-3-34090 #4: 1315261 bytes sha256 2df97939198a29a85dfe23887bb167dc6b36246fce44473e297293cc18cb0cd6 -> v05.pkl
+v02 g-1e-7-3-34212 #4: 1332073 bytes sha256 ce8c2086fd2fccb47e4ea373c37f0629c24e7e99bd5eef6e4835319a3999b9ad -> v02.pkl
+v04 g-1e-7-3-34296 #1: 1347901 bytes sha256 d4214dd3bd20eec47ac106f04d6f64d03934993bf67721ed1953480d12e2cb8e -> v04.pkl
+z03 g-1e-7-3-34370 #4: 1350283 bytes sha256 2dfc55d032fc25f80941a05b7d8aeedf9f76067ea35386849ba048050c3da9da -> z03.pkl
+r15 g-1e-7-3-34409 #2: 1350752 bytes sha256 dad5ef00a12e2be594180bbee63e25fd4a7b66781cd40cf221df7aa8c2befac2 -> r15.pkl
+r04 g-1e-7-3-34411 #13: 21931 bytes sha256 5447981d8f831d99c2b34b02ab6467f366ced5473d592379a90b4097680149f6 -> r04.pkl
+r21 g-1e-7-3-34449 #0: 1357825 bytes sha256 a0daf868c270b1124aa1e46db9c60df0094a599972508b2b846c766ec95799c7 -> r21.pkl
+r24 g-1e-7-3-34853 #1: 1391428 bytes sha256 f9db8b7439f7e0f4cf485cdea76293b149a72def70de6f6d1ecc4cc7cc863101 -> r24.pkl
+z11 g-1e-7-3-36020 #20: 22332 bytes sha256 06e7acc1106f122251ed48768bfbf1a8307806613f79c2b80b750f570ddd4c88 -> z11.pkl
+z08 g-1e-7-3-37319 #6: 3582 bytes sha256 01ab389af44fc91afef85bd0873584e9c2c1137a04b2892147a510b9550a9c76 -> z08.pkl
+r14 g-1e-7-3-504 #9: 3579 bytes sha256 ee971ef4fff0c7b74d3f3ef4e14b080e93367f022407ab06e5b7959b4ed4eea4 -> r14.pkl
+r33 g-1e-8-0-10552 #0: 3360 bytes sha256 6d511e1edaf3fa5aceca78ef6f2a7c5fa2f092d030586829478882b0d8b651bd -> r33.pkl
+v07 g-1e-8-0-12606 #5: 1329267 bytes sha256 ada770659d9a54d08a3e320d16818ee648daed85f19c8e02991e88371aa61987 -> v07.pkl
+v11 g-1e-8-0-12655 #3: 1333832 bytes sha256 fd0b16ebe9348ec8ff276e2fb023ccab79ac9d3501eb8ab1bbbf3f28930b4829 -> v11.pkl
+r43 g-1e-8-0-12662 #20: 22332 bytes sha256 80b194583779db7762cd3dfa7872616e9b164d938564ad68b5c52746e48b63a9 -> r43.pkl
+z20 g-1e-8-0-12932 #14: 22333 bytes sha256 42af8b9120348a8db62e010d3244889ed6c61e3174afa54d31191ae2f15258b4 -> z20.pkl
+r45 g-1e-8-0-13951 #3: 1368034 bytes sha256 0cedc78cce77855cd7a57e1dd602d6c4d5a211f1261a14647e12ea0300a1610c -> r45.pkl
+r59 g-1e-8-0-1823 #0: 1354084 bytes sha256 58bdc331d8f72f8065b1a606a0cc6f124ce2717977eb932900c4aececabd3915 -> r59.pkl
+z25 g-1e-8-0-33962 #12: 3582 bytes sha256 edb689af0bcf2d064a705eb2ca2a5f751898b99d7773e439629699a91af7191b -> z25.pkl
+r34 g-1e-8-0-33988 #21: 22011 bytes sha256 6478d88e19297be1f4104a7a2968f96e94296d2e13b66d107939da1f77a5d04b -> r34.pkl
+r54 g-1e-8-0-34014 #0: 1311670 bytes sha256 f76afa979e664409457234ffae18c340f5774585cfc6f8a512730774de4a5882 -> r54.pkl
+z26 g-1e-8-0-37212 #8: 3665 bytes sha256 b5e7f18f3f60e62923055a5e5b9cbb6e79d48df41fc9f125aa8d3842556ddf67 -> z26.pkl
+r56 g-1e-8-1-10794 #5: 1302207 bytes sha256 1a7c77a48ca537e96bc50505eb27fa0c4426ee30de57214c441d6b4017f6705c -> r56.pkl
+r48 g-1e-8-1-11031 #3: 1319058 bytes sha256 efff6324f8a6c066510b4ffd73ab4915c1c3ab2136868bb645a4b9461b601d6d -> r48.pkl
+r35 g-1e-8-1-11073 #20: 22413 bytes sha256 7d4bf1ce550fdf210d01331f802736066d8c899c2c1126d36a58741e1711c664 -> r35.pkl
+r39 g-1e-8-1-11154 #10: 3666 bytes sha256 eb3542a6e30bcc415b13c81660b0fe628d6a40be43d84a693d1a8d28c8a7916c -> r39.pkl
+r51 g-1e-8-1-14231 #1: 1361917 bytes sha256 7b13a18ec03eee72a96455f349f2a31075830ad07915afbd9ce843e5a2f8b4b7 -> r51.pkl
+z21 g-1e-8-1-14572 #8: 3581 bytes sha256 346ab66c0d844e7c66776866b02505520dfe36b0e1a279a6134e115418820351 -> z21.pkl
+r30 g-1e-8-1-1759 #14: 3665 bytes sha256 b055cd492ed6a070cc459fd1fa4ffe26b6211c7672345f316c9ef0e173b27c96 -> r30.pkl
+z12 g-1e-8-1-2174 #1: 1365228 bytes sha256 7b8792e57d4aa769dcd16dbaea2a107c17b139a0d4aea63d0dc2cf20cb7f4882 -> z12.pkl
+z18 g-1e-8-1-2368 #9: 3358 bytes sha256 5aac1f9ae961e8bef473b3c0658bd540d3ec8c8bcafd1639b0c22c0ce059abfc -> z18.pkl
+r37 g-1e-8-1-34613 #15: 22011 bytes sha256 2235e7f80b358813b56925ffde43085338cdef6e145b786fdb64f5f5384e1e64 -> r37.pkl
+r31 g-1e-8-1-35133 #22: 22413 bytes sha256 9e25f8a9762ef7d1d49f05495b83f1cacf9f9218c335f5ec5f0bdd26ad693a40 -> r31.pkl
+r32 g-1e-8-1-35282 #19: 21931 bytes sha256 764a37f4007af90b6b2144b51cb1528d04ce071d6bd0c6c7fdad763d98abf7c6 -> r32.pkl
+r38 g-1e-8-1-35413 #7: 3443 bytes sha256 e387be57e34678091a3cdd221ba8851668c515c3d27c884c7366139d6289aa81 -> r38.pkl
+v09 g-1e-8-1-35480 #2: 1348594 bytes sha256 60b5c2b5d24f19c041cd354cc47de405843f0135aeb62132984498ba391ed972 -> v09.pkl
+v06 g-1e-8-2-1380 #4: 1336307 bytes sha256 d52c514ea7a776850130895d0c3f56daad73873a936486bcf44a520ddffde913 -> v06.pkl
+z23 g-1e-8-2-1402 #12: 3581 bytes sha256 71050caaa92ef77d558712b5e444b39e166eb57c555ec8628590f19d958af0cf -> z23.pkl
+z15 g-1e-8-2-1549 #4: 1343410 bytes sha256 5091966329111c96bbf99eb71cd5097b2e8ec365ed168a5a5b39898b9775d1a7 -> z15.pkl
+z14 g-1e-8-2-1627 #3: 1352111 bytes sha256 aaeb30d83624d66a640aaadb344bcb356220b2cc07c12f304c6f48ee4376c118 -> z14.pkl
+r41 g-1e-8-2-1638 #13: 3443 bytes sha256 cdaafb561f88d7aaf76489db216d0338f0b9557069584bd96cd6a970dd3fd770 -> r41.pkl
+r36 g-1e-8-2-1673 #21: 22011 bytes sha256 baa5b18eaffd6699af9cd70c08db7f00e0828ce7964bb32146f9d808b57b2d34 -> r36.pkl
+r40 g-1e-8-2-21651 #21: 22012 bytes sha256 ef36fdfff5416cd6fde411db0500fa88c1bbae2ac80bb8a4650cc230641e97b3 -> r40.pkl
+r49 g-1e-8-2-21720 #1: 1319949 bytes sha256 9d1947abc35ec50d1b92b061f84ceae78fd865285617c76ae4214aa8963e3a8f -> r49.pkl
+z22 g-1e-8-2-21874 #12: 3666 bytes sha256 fcfa9c1b2d79a638bfde64bbf916f725101b0264128e09187de9b7a788eb16e5 -> z22.pkl
+r42 g-1e-8-2-33438 #16: 21930 bytes sha256 de9711f05c07e56f78999e661012db36317f6f725a61a60b636387b897aedf95 -> r42.pkl
+r55 g-1e-8-2-34671 #2: 1357309 bytes sha256 f0df8234e588c53168407d09ee8d8fbbbd7e3565ab8e605685bef9aecc20bd9e -> r55.pkl
+z16 g-1e-8-2-34708 #5: 3360 bytes sha256 2c75369688eaf56819829dea4881a668c8d2e559a2481da4f688f75643dc5742 -> z16.pkl
+z24 g-1e-8-2-34718 #5: 3359 bytes sha256 ba2301b6e77f5af46a229620e0e788aa1c440c1fe2240dd09fa061e8073ab9ef -> z24.pkl
+r44 g-1e-8-3-1045 #13: 21929 bytes sha256 69c46de7815ac85bb72950d663fbd3e1b3f18e6b42167a1bc122dee4e2776400 -> r44.pkl
+v08 g-1e-8-3-1192 #5: 1315905 bytes sha256 232cb8d535aa43850248cd9bea9a71b460529e09b995e10bbea93c1c7ed7b7d0 -> v08.pkl
+r46 g-1e-8-3-13481 #2: 1335228 bytes sha256 a957d1bec7a8a3c0939a1939e83ac8466711ee8ccb920d9f1ddc9ddce70de318 -> r46.pkl
+z17 g-1e-8-3-13913 #9: 3443 bytes sha256 b33212ea3644f5bb36eab341c752e289bb4a73d9bd068c3c855f9e21918bf6b5 -> z17.pkl
+r53 g-1e-8-3-14492 #4: 1376052 bytes sha256 5c63681acc1ecef820c7a8c922c81e78f3e1cfd058b9a06c309d6041aef687ea -> r53.pkl
+r47 g-1e-8-3-1916 #4: 1364169 bytes sha256 0970abec26bd7ae1486c79168432adf6763a47fac7701fefa43865d27f0f6ebc -> r47.pkl
+z13 g-1e-8-3-34220 #4: 1320661 bytes sha256 87535b09efb608d90bfa8b058ae74f4c2a5f246b692cd1f355980538e0da67fe -> z13.pkl
+r50 g-1e-8-3-34389 #3: 1344378 bytes sha256 f6be38e4d5afd2ec5c62c2cf52955eca3d45e9f13e54098c960e162d1357ee0e -> r50.pkl
+r57 g-1e-8-3-34394 #3: 1351981 bytes sha256 3c910e8238852a993acab484a594de63b1f48c84ba41d5848a681e20f6a2929b -> r57.pkl
+z27 g-1e-8-3-34419 #21: 22011 bytes sha256 59c0b72fcecd668b95fcc9e9b38425cd2be66d9068db7e1a5dc532957b3ec024 -> z27.pkl
+r58 g-1e-8-3-34453 #3: 1372098 bytes sha256 0fa56d129506b707624c90ec9cbf06e333de53abcb9807b3da24959e94852b0f -> r58.pkl
+r52 g-1e-8-3-34925 #1: 1382794 bytes sha256 096aecf73fd33901187a6c052ca6dd491351f6294d2114bbdc60f00c72b457a8 -> r52.pkl
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s01.pkl: sha256 7f162791c9b19f1cf15ef0b02ccd35910d0da83c8681aba7558642dfefbf8bb0 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s02.pkl: sha256 0100f98a9e46f4907547d3d6bb3e1e21fb16d1dc00d4e69ddb33db0d54f3a183 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s03.pkl: sha256 81cff8d83b285ca9f1851e5d56e964e5fdb05293b07202b0d3eb9799b1cf4892 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s08.pkl: sha256 861bc871a2ff585df2c688288c8e8953440edee13dbd427ed806fcce5188dc80 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s09.pkl: sha256 cbe9cb72607d7c19ae7d65a4b50726e9b0a0915998b5a3ca8f715e4a6d8285d3 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s10.pkl: sha256 08f40073cbfe11d70d1f4fec19ee6ebc1876c95145375eb0823533bfe0bbd5af EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s13.pkl: sha256 54bd746d5ac6a1fd51f31822e374a2fe60a1143fc04579a7f80cbbc4ddf96b56 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s14.pkl: sha256 9570b1794986758ad0413315bb300a9cec4f13715f14fa85d0a0ef2a017eb942 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s15.pkl: sha256 e9ca60604f8cb8cae4689d16362b97b438bd0e1ed103bff099f485756e786abd EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s22.pkl: sha256 ad6a6a065ead3616ef8dc96d162a7fa7f4ee902ca59d5f41580d72608b03e9b1 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s23.pkl: sha256 1ffb073daec0dbdb8c4961bf3508218f5c25d5ce1bbaa75f41954acee134d5ba EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s25.pkl: sha256 696768378bfba3f57e0b464b887933bb828315bfe31c1a2dd540da9064969c42 EQUALS 06i's inputs_SHA256SUMS.txt
+06i input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06e/census/references/inputs/s27.pkl: sha256 d5389183fa3d15c084d15d2939f4923c151541255ada9ce3fff26be7ee1fca1c EQUALS 06i's inputs_SHA256SUMS.txt
+102 captures sliced; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/inputs.json sha256 d6d2a978a2e4dad955ecd37ecdc883360de503ab88a32c7ccfc559467a4294ea
+# ----
+# end 2026-11-01T18:12:16Z
+# exit 0
+# status done
+# wall_s 0.581

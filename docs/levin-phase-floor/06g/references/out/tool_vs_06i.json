@@ -1,0 +1,2164 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: the Filon tool on 06i's 13, against 06i's readings",
+  "# written 2026-11-01T18:40:42Z on mps026298.phys.susx.ac.uk",
+  "# script compare06i.py sha256 7a1672ac24daa6f32b4fae75c110c5b64ca7307e35d857b90478d253c0bed471",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/scores.json sha256 4b262f2b2695cbbe86cb4e58c755cc1e39963d5b80b96d54f56603c3020191d1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z01-qawo-r1.json sha256 5f4582066e8d9524761e227fe85f02b711b045305c182d45292bdafc1d2f366e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s01-qawo-r1.json sha256 5d32e1f1d9c1367b2157b36aa27710b088d2c9932797be0b993cae86c3fcaf82",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z01-qawo-r2.json sha256 ea01e8b89c6f59835fda2f86fe54b3fece2c36b8664c285a9edf7f6b5e20d18c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s01-qawo-r2.json sha256 c3fc088358dcd9d9bbb4470945bf83dce8477599460acef811b32435fa0a5e0b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z01-fcc-r1.json sha256 6af556d3ad52f4890b35126f404b4b57501d1db946c4bc3373c296d590422942",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s01-fcc-r1-bound.json sha256 ed6f3b0008b804545a44eba1c3022a61388e7cc4497a01ac9ab87fa89455794b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z01-fcc-r2.json sha256 cc3ed474329f466ef2797d93f3ae9d178554038e66eddf303b22f3833a903b61",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s01-fcc-r2.json sha256 07691d230a0a5b2693432b11f85bef111e76076bbb3a97892b9f8ed5e7f097ae",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z02-qawo-r1.json sha256 623823e0f080697c7555b266f1dcdd0081db3ccaf03c665557d61b2301256a43",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s02-qawo-r1.json sha256 25fa7f6e39605aaedeca23e87e6b2470d854ada3a86f36f862bdbcfe7b793c15",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z02-qawo-r2.json sha256 354802a9d5a9c3306213c6d5a8ae1e70e62d981099f4c6f28f5297dcc1cd54b1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s02-qawo-r2.json sha256 52203618f543e757e5e119f888b690fe643b13421f1d1f47d835c2593f7464d6",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z02-fcc-r1.json sha256 cd0e3acad81e8e268163d76cce632db293a0090a614aad79e5a42b7d80972b87",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s02-fcc-r1-bound.json sha256 5fa32b384062fb439803a2a685722f58745b5f7a4489008fe9f21a4ab2aea15b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z02-fcc-r2.json sha256 3fcb2ee27c372314976815a35e499bafc1732d52e169f00b668cd5e326743720",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s02-fcc-r2.json sha256 dbf56da5b0ae4d78b15701d3da794a30b90da739ca302087a11384fcf33725f9",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z03-qawo-r1.json sha256 3b44490913f45e45e0c8177889c07df2e5b99c9ff3441a0772f40b3a8ac9156c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s03-qawo-r1.json sha256 5544f81348cd5f452a60955dae66244b8aff192b43bed4ae7ba9a9607ce674b8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z03-qawo-r2.json sha256 758646437a3d7ad6411161b8b68a1dab9240606462612a11901fb97fdb334f3f",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s03-qawo-r2.json sha256 7586c126ee615fcef4582ea6426986b2c5256f4c3706e771d5c8b2bbc0749782",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z03-fcc-r1.json sha256 6fafa6d57d0eabf3de28e4c3f98fe308f37116479e5a4d7c5e1396ab615d2f6c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s03-fcc-r1-bound.json sha256 fad494a690797bc67d1438acd5ecc2137abddf35e8466455445b1c3c99ead11c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z03-fcc-r2.json sha256 dbfc9c89b1f393686f84dfbf41d37c88823db3ac3c1a20dae7050a731c318a23",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s03-fcc-r2.json sha256 e6ecb1e75de70a16b2bab76a3b88ddcf48e8298292b1b9db6376c34d6ef7a7a2",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z08-qawo-r1.json sha256 b17097715df34050771162a8ac54f68ceb62cdd6eb756dd7cd5f8eaf760b538e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s08-qawo-r1.json sha256 fd259dd844206c903dd69f8be64e5eec0e4141c85fd97190a05670d040ba850c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z08-qawo-r2.json sha256 7f02f9665d6aea54f5c9c54821aef7de019812fe62b11eb2ccbac2a15447ff6c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s08-qawo-r2.json sha256 2ea485e99af17021746333bd1a171f31dad2fbeb8e7b8249a61b2677058ee338",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z08-fcc-r1.json sha256 51cd64ea4514a357d35ccf37d0d8c745cd401ce7dba174d0659601193ac5a3e5",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s08-fcc-r1.json sha256 7d91b507b56a877ed2950df598d981bcfab6825b9d132a7e2fc268cdfb35ebb1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z08-fcc-r2.json sha256 02d62099181087393a64fce06498f53c55cacad846f885acf9ab18d8fe3e8035",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s08-fcc-r2.json sha256 e333052439424272901b66eef34c6c9b1678ebaa1c33ebfc89e1f3eb6cf388a8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z09-qawo-r1.json sha256 e6abf306f0cd403fc58365492febf405309599232481bb4e00246e0ff0847082",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s09-qawo-r1.json sha256 743255f6b92b5f3971e6575228f073589119bbbbd3099e487e69fcbd16236c82",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z09-qawo-r2.json sha256 20ca4f2b2834252bb59f1092ba4aa2662f38928bb5f35476edac136ce31ac1c8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s09-qawo-r2.json sha256 dd1e5fcba7e63df35223dc414a759ce58d203cd459ab53357c569ff08523b8e2",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z09-fcc-r1.json sha256 f6147a0e8b387c8f3a2bf1581ef8468bb1e0d52649da0f97637c66efbe4cb3f9",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s09-fcc-r1.json sha256 ae5caacfef01cb1132a4a88f29f0f0545332ca1c00fae9023f72bd260dca3a1b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z09-fcc-r2.json sha256 2278260ee4581d7039656199584081ac7201b26c85615fe79ea3980662428ad7",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s09-fcc-r2.json sha256 025390cf0f1a60e5751ca2e45ae89ebaadbfa5d976da838511b2e7489218a134",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z10-qawo-r1.json sha256 94bf61bc30687ad3528e90bf32251f57022d0eaa1e3e385061f8188b0eb610d6",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s10-qawo-r1.json sha256 b0a18eb3756ce012860556ddfe1e478cb6663c481810dbbcde4fd94e151c4ff7",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z10-qawo-r2.json sha256 65ffdb01b87d9f4264e235181521938fcfe82015b81c48e63c52adce1e0eea07",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s10-qawo-r2.json sha256 cda8bc47a890d4f03e30a931220025ce10eb9652fd24456f4fea122ca7ffdfd0",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z10-fcc-r1.json sha256 68c54b456df910ef0fe6852c1306cc1bc1eecac36375c43808aa8d2085302899",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s10-fcc-r1.json sha256 83a1aa4c13b367bb1d9dbdfdcaa3c5aa56ed7fff60244c040afeddb9a22d60bb",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z10-fcc-r2.json sha256 f34afb4cd98fe28aee446b664f6ddfbb462e9198c7f44e894aaee815fcf786b4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s10-fcc-r2.json sha256 e01045e3eeae36618a3029772b00c59d792ed9611d6d8dd022d595c114b23f0c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z13-qawo-r1.json sha256 b7409f2afc25c34e0fd1fbcbd2048f5febc1575b98b946e164d9c22f16091c95",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s13-qawo-r1.json sha256 cc692cea46208493cb2dd1df5a28935cc2d5b778481c302c8850ab8192a7a5f7",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z13-qawo-r2.json sha256 4aa9ab47821c3f54ca8b92e192b4e20a77fdec415ceef096a9845ac0d08a947e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s13-qawo-r2.json sha256 1e2a6541cb2998e6f947d844f2e60e4e26bb876055db289fafa9062a43ba07f9",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z13-fcc-r1.json sha256 3bcbb8f1bb5e5ba82180aef86c5b83b766cc08b0af197018f3c9b09fea82ab81",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s13-fcc-r1-bound.json sha256 f4fe16e9282bf3656a38487c217ca55a0b826cb91fcda80bd6e660c40b0285ec",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z13-fcc-r2.json sha256 c0940aaf65a206eeadcfd618ea64fd05870b2812949fc008e622b12285f06e82",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s13-fcc-r2.json sha256 304aa7cf34e5feabb6b509f22a76c8fdf842c931ebf6541bf4b504287cacada5",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z14-qawo-r1.json sha256 8d84c405ea6970938cafe8c4e6db2997ccb9e0122fdf3f08bb381b5f2fc6ee60",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s14-qawo-r1.json sha256 04d817bdd2d618f9bcb33f1cce3d03a7198e0ef6ac288edbc631dd0c82c1fc9f",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z14-qawo-r2.json sha256 95e5a8f1b6bb8d7220d576981dd26fd0271a4d785f019d62b4a070ec519f70ca",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s14-qawo-r2.json sha256 232859528a702008e7084d3fef54a57d3394ff8bb495ba5ceec2d8b0b3c95827",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z14-fcc-r1.json sha256 14c0a87fed6158b40f42abc3e5301c9b9b4e3813919c16026acc10826e21d30a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s14-fcc-r1-bound.json sha256 06193462c5fda46363766420e59c7ac255ba65aae79c38996f41589f8069f3bb",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z14-fcc-r2.json sha256 bef41441b57fb11034ce696b2d3cc7325a9f5bf01fd261cef416b48ee3195398",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s14-fcc-r2.json sha256 148731f0f98daeed055c3b28c3dca6c930faa05a7e3146c586e34559249fd3cd",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z15-qawo-r1.json sha256 921bbf487dc359d1843100cffe78c22fbfe779ee9cac78ffbe106a1a9d5856bc",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s15-qawo-r1.json sha256 6cea6cac18e63ee4dfefbf9e27d0bd9f35906e486f54d91bfeed0e62a02f5db6",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z15-qawo-r2.json sha256 9d085abae1fde5b559d1df20cf57984b08d56db4e0d97de824fd531a6377c024",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s15-qawo-r2.json sha256 db03386fc200bcabe35374f6e595ad5075080a5759b3cbe78d291be7c353937e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z15-fcc-r1.json sha256 e4ad7432435cfaa0b4712baa4073f9f379d0fbb8a539e99a1eba607c4cda70d1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s15-fcc-r1-bound.json sha256 0288b05aa856f42b402cac6a85aed738af6b2126dedc9303a9e62d0c9a03a0fa",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z15-fcc-r2.json sha256 666bc4d8a32c153a2da57358327db0d0c6c3c1aab4608ee1646800f3cfb93208",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s15-fcc-r2.json sha256 7fe1657a54593656c0f5305a5dbbef3d8c8fef8144da7d1d3951eac9ef509876",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z22-qawo-r1.json sha256 98a05c0b8765f6e1620f143490520130ab5ac2321a6842404076aa91e4bb3b9d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s22-qawo-r1.json sha256 fab14bc46868a5baf9a82fd151f52a7dcdef1fb20cc96bcce48892debdd15e06",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z22-qawo-r2.json sha256 df9d01dc3efc3134a2c6bbaf6aeeb7b411401836ba11019f1c0c02a0b9a77153",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s22-qawo-r2.json sha256 eb82e847990250ab26d20e3fb95eb01f7fe993b0a123c523607e2ad01ae9751d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z22-fcc-r1.json sha256 0aae80ef8fa6dd1aced07cfa51d4b5cb4465c3a2ea43327a337821bee5e75d21",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s22-fcc-r1.json sha256 b31472adccdf653eafb3d24367ccdaaf4b4822fdb14f84a3a4661b319bf704c0",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z22-fcc-r2.json sha256 cb39b58ef5978b27a3b0f09fcffef4c05202a8dfb135e491b655b39ad5df25d8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s22-fcc-r2.json sha256 896a5685a05b745692ebd4bd41e4b97e966bd5e0dad934dc0f8e34c4f6317724",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z23-qawo-r1.json sha256 6f20fa6f5fd45e30d1b31b1934fbed8394534aac51f3e128528c955705974a6f",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s23-qawo-r1.json sha256 fbfdd733da9b7146d62dd9a3d44639c4de9928d98753db8482c7a83f2957521b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z23-qawo-r2.json sha256 ef66b7cae36d8d2247c714c6bc9bbe0ef49c4448f20c9d34cf306662fa7a466a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s23-qawo-r2.json sha256 c098a9c914c66f4e30b20fb5283903d89abfe39a2d021d4be012683a7b024578",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z23-fcc-r1.json sha256 386cdd9d2a2b6ef28c18f93de9a7591566d5153b82c4676608880e624d0467c3",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s23-fcc-r1.json sha256 83dd69f21f2d73b1b1fc6a76ab79767f1ead821d787be59c02928847e53c4646",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z23-fcc-r2.json sha256 2d9546e81758413928adcda5a72ff0ad7c1cb00963209d9aba64785d33ba04ed",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s23-fcc-r2.json sha256 694a786037aaae18414da9181d0cc56d72fc0d0d391131646114cd245f85480e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z25-qawo-r1.json sha256 aad5c63b0ac893bb58d792084931235bf008bdbf86e5b5c7b594d4c9792bb063",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s25-qawo-r1.json sha256 0cc364b1f6fac825da94adfff181a5dbe2edf9cfa0b4b467190f7dae5daec8b8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z25-qawo-r2.json sha256 3d5229a018fb12e9ed2579693c2d7be5ab75e1f0d69296fcff54c408ae028f17",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s25-qawo-r2.json sha256 09486745288f4f551510f1e23dd519d1992a399830634e03cf2081b1b499b358",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z25-fcc-r1.json sha256 b88607dd4a7fbc65c39be60230db44b33a2d8653b16ff59701a0a7bbc5ef3972",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s25-fcc-r1.json sha256 92d0b9f67e15d1ee5ca4aed4173972ac702c6fd7bddb366ed5e04861a2447c85",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z25-fcc-r2.json sha256 a2f40a5ec7e57ac978c857011bd3375c5c1a94c61c1ccbab5a30e9a89b355b6c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s25-fcc-r2.json sha256 6de342e7f6f1168871d837b2aa436ecc3b4c43cdb4926bbc85eaa6f6eece1cf2",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z27-qawo-r1.json sha256 b7d89a428d32c283f6c36a1d271ffac55f8661523b924f2e1916bc3fa35e74ae",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s27-qawo-r1.json sha256 0c74f967e281ce81a9716d202c3e62b8d17ec69bdda5e47f223511965daeec74",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z27-qawo-r2.json sha256 1a4f8544b25e4b4ae04beae611405925a0e27ba92b4f9c68737b602b1b35f104",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s27-qawo-r2.json sha256 836f2ecf0301db1e61df7a770f80c14dd0c71b99398dac5edf8f1420d90195be",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z27-fcc-r1.json sha256 7851cfbd9190aeb41e7ff5fdfd0cd026233c1657b37a822486b4c78282f49e57",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s27-fcc-r1.json sha256 fc7eb1a34fe5a2b2ca38d70362b3ab83fc5fd012a30887c587eb39ba8fdfdc42",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z27-fcc-r2.json sha256 abeffc6e79b4467415de3334bee71bbaf9aba60068879f4de4d6e598aec9a7ae",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/readings/s27-fcc-r2.json sha256 903a29b6b3246b73bb1ce0b096ffd3015151fa2aa9f46c7f2588275c13b08a5a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/cli/z25.json sha256 c5e407a3cdf7f39fbd73078feabe0bf343979a68ed8071695f6d25e6c5e79121",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/cli/z13.json sha256 c39ab2d230827227fd32aa36d2897e2179f9d67b55a198a143b77c09e8b2f14b"
+ ],
+ "rows": [
+  {
+   "sample": 1,
+   "route": "B",
+   "m_06i": 9.069994260877289e-36,
+   "scatter_tool": 9.157292541571731e-39,
+   "scatter_06i": 9.157292541571731e-39,
+   "allowance": 1.0901452769191636e-37,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "2.85350111017654053708481617308e-27",
+     "06i_value_30": "2.85350111017654053708481617308e-27",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 6.890597083140165,
+     "06i_wall_s": 7.818713903427124,
+     "structure": {
+      "n_segments": [
+       750,
+       750
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "2.85350111016765684054354688853e-27",
+     "06i_value_30": "2.85350111016765684054354688853e-27",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 9.971049790736288,
+     "06i_wall_s": 12.240353107452393,
+     "structure": {
+      "n_segments": [
+       750,
+       750
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "2.8535011101763075705929714732e-27",
+     "06i_value_30": "2.8535011101763075705929714732e-27",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 13.79501162469387,
+     "06i_wall_s": 15.78776478767395,
+     "structure": {
+      "n_segments": [
+       750,
+       750
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "2.85350111016738324454324444263e-27",
+     "06i_value_30": "2.85350111016738324454324444263e-27",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 51.715060791000724,
+     "06i_wall_s": 43.977691888809204,
+     "structure": {
+      "n_segments": [
+       750,
+       750
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.030657329055207974,
+   "sec8_06i": 0.030657329055207974,
+   "ref_06i_fcc_r2": "2.85350111016738324454324444263e-27",
+   "ref_tool_fcc_r2": "2.85350111016738324454324444263e-27"
+  },
+  {
+   "sample": 2,
+   "route": "B",
+   "m_06i": 4.6955315746778766e-35,
+   "scatter_tool": 4.63500190942397e-44,
+   "scatter_06i": 4.63500190942397e-44,
+   "allowance": 4.695532501678259e-37,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "-3.81074601746965326853267944608e-29",
+     "06i_value_30": "-3.81074601746965326853267944608e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 16.1754756658338,
+     "06i_wall_s": 17.369250059127808,
+     "structure": {
+      "n_segments": [
+       1726,
+       1726
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "-3.8107460174696577935730381084e-29",
+     "06i_value_30": "-3.8107460174696577935730381084e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 36.067413167096674,
+     "06i_wall_s": 57.34337306022644,
+     "structure": {
+      "n_segments": [
+       1726,
+       1726
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "-3.81074601746965338387540432368e-29",
+     "06i_value_30": "-3.81074601746965338387540432368e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 31.557420375291258,
+     "06i_wall_s": 35.230690002441406,
+     "structure": {
+      "n_segments": [
+       1726,
+       1726
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "-3.81074601746965790353458887005e-29",
+     "06i_value_30": "-3.81074601746965790353458887005e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 126.30329183395952,
+     "06i_wall_s": 110.63832592964172,
+     "structure": {
+      "n_segments": [
+       1726,
+       1726
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.024300678457187624,
+   "sec8_06i": 0.024300678457187624,
+   "ref_06i_fcc_r2": "-3.81074601746965790353458887005e-29",
+   "ref_tool_fcc_r2": "-3.81074601746965790353458887005e-29"
+  },
+  {
+   "sample": 3,
+   "route": "B",
+   "m_06i": 3.456085002833502e-34,
+   "scatter_tool": 8.264745999645713e-40,
+   "scatter_06i": 8.264745999645713e-40,
+   "allowance": 3.457737952033431e-36,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "3.70182533479908612136285019782e-27",
+     "06i_value_30": "3.70182533479908612136285019782e-27",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 28.908840750344098,
+     "06i_wall_s": 42.41636896133423,
+     "structure": {
+      "n_segments": [
+       1428,
+       1428
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "3.7018253347982668643561294198e-27",
+     "06i_value_30": "3.7018253347982668643561294198e-27",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 87.13538408279419,
+     "06i_wall_s": 160.45316410064697,
+     "structure": {
+      "n_segments": [
+       1428,
+       1428
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "3.70182533479907742664637349431e-27",
+     "06i_value_30": "3.70182533479907742664637349431e-27",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 24.81726558273658,
+     "06i_wall_s": 28.309386014938354,
+     "structure": {
+      "n_segments": [
+       1428,
+       1428
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "3.70182533479825964676288562651e-27",
+     "06i_value_30": "3.70182533479825964676288562651e-27",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 93.8913912079297,
+     "06i_wall_s": 78.68977093696594,
+     "structure": {
+      "n_segments": [
+       1428,
+       1428
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.008809925560091322,
+   "sec8_06i": 0.008809925560091322,
+   "ref_06i_fcc_r2": "3.70182533479825964676288562651e-27",
+   "ref_tool_fcc_r2": "3.70182533479825964676288562651e-27"
+  },
+  {
+   "sample": 8,
+   "route": "A",
+   "m_06i": 2.7684525371177896e-17,
+   "scatter_tool": 4.5563243507267e-25,
+   "scatter_06i": 4.5563243507267e-25,
+   "allowance": 2.768461649766491e-19,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "-0.00000000125635070016638939410469197096",
+     "06i_value_30": "-0.00000000125635070016638939410469197096",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 13.79150391696021,
+     "06i_wall_s": 19.8748836517334,
+     "structure": {
+      "n_panels": [
+       41372,
+       41372
+      ],
+      "K_exact": [
+       "7944154827683031/17179869184",
+       "7944154827683031/17179869184"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "-0.00000000125635070016638942611896818597",
+     "06i_value_30": "-0.00000000125635070016638942611896818597",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 99.89302395796403,
+     "06i_wall_s": 141.41082072257996,
+     "structure": {
+      "n_panels": [
+       327882,
+       327882
+      ],
+      "K_exact": [
+       "7944154827683031/17179869184",
+       "7944154827683031/17179869184"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "-0.00000000125635070016638984973712704363",
+     "06i_value_30": "-0.00000000125635070016638984973712704363",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 3.4688131250441074,
+     "06i_wall_s": 4.123676061630249,
+     "structure": {
+      "n_panels": [
+       70,
+       70
+      ],
+      "K_exact": [
+       "7944154827683031/17179869184",
+       "7944154827683031/17179869184"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "-0.00000000125635070016638978077003408775",
+     "06i_value_30": "-0.00000000125635070016638978077003408775",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 3.7889122921042144,
+     "06i_wall_s": 4.812779903411865,
+     "structure": {
+      "n_panels": [
+       103,
+       103
+      ],
+      "K_exact": [
+       "7944154827683031/17179869184",
+       "7944154827683031/17179869184"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 5.142322964499305,
+   "sec8_06i": 5.142322964499305,
+   "ref_06i_fcc_r2": "-0.00000000125635070016638978077003408775",
+   "ref_tool_fcc_r2": "-0.00000000125635070016638978077003408775"
+  },
+  {
+   "sample": 9,
+   "route": "A",
+   "m_06i": 4.211379725007191e-20,
+   "scatter_tool": 2.83673736945865e-25,
+   "scatter_06i": 4.01308796852593e-25,
+   "allowance": 4.2182295503451754e-22,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "1.88499097911362730370030102541e-10",
+     "06i_value_30": "1.88499097911362730370030102541e-10",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 2.6473196670413017,
+     "06i_wall_s": 3.551780939102173,
+     "structure": {
+      "n_panels": [
+       3904,
+       3904
+      ],
+      "K_exact": [
+       "20531358902281791/34359738368",
+       "20531358902281791/34359738368"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [
+        -11.005557301402536,
+        -10.76160108960848,
+        -10.555652009610261,
+        -10.311695797816206,
+        -10.105746717817986,
+        -9.861790506023931,
+        -9.655841426025713,
+        -9.411885214231656,
+        -9.205936134233438,
+        -8.961979922439383,
+        -8.756030842441163,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ],
+       [
+        -11.005557301402536,
+        -10.76160108960848,
+        -10.555652009610261,
+        -10.311695797816206,
+        -10.105746717817986,
+        -9.861790506023931,
+        -9.655841426025713,
+        -9.411885214231656,
+        -9.205936134233438,
+        -8.961979922439383,
+        -8.756030842441163,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ]
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "1.88499097911362667160606382028e-10",
+     "06i_value_30": "1.88499097911362667160606382028e-10",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 10.032507707830518,
+     "06i_wall_s": 13.949019193649292,
+     "structure": {
+      "n_panels": [
+       28663,
+       28663
+      ],
+      "K_exact": [
+       "20531358902281791/34359738368",
+       "20531358902281791/34359738368"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [
+        -11.005557301402536,
+        -10.76160108960848,
+        -10.555652009610261,
+        -10.311695797816206,
+        -10.105746717817986,
+        -9.861790506023931,
+        -9.655841426025713,
+        -9.411885214231656,
+        -9.205936134233438,
+        -8.961979922439383,
+        -8.756030842441163,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ],
+       [
+        -11.005557301402536,
+        -10.76160108960848,
+        -10.555652009610261,
+        -10.311695797816206,
+        -10.105746717817986,
+        -9.861790506023931,
+        -9.655841426025713,
+        -9.411885214231656,
+        -9.205936134233438,
+        -8.961979922439383,
+        -8.756030842441163,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ]
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "1.88499097911362950834343327893e-10",
+     "06i_value_30": "1.88499097911363068469403234621e-10",
+     "D": 1.17635059906728e-25,
+     "D_over_allowance": 0.0002788730639305819,
+     "D_over_m": 2.7932665204282223e-06,
+     "agrees": true,
+     "bit_identical_value_30": false,
+     "bit_identical_value_hex": false,
+     "tool_wall_s": 3.475608208216727,
+     "06i_wall_s": 3.9428091049194336,
+     "structure": {
+      "n_panels": [
+       57,
+       57
+      ],
+      "K_exact": [
+       "20531358902281791/34359738368",
+       "20531358902281791/34359738368"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [
+        -11.005557301402536,
+        -10.76160108960848,
+        -10.555652009610261,
+        -10.311695797816206,
+        -10.105746717817986,
+        -9.861790506023931,
+        -9.655841426025713,
+        -9.411885214231656,
+        -9.205936134233438,
+        -8.961979922439383,
+        -8.756030842441163,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ],
+       [
+        -11.005557301402536,
+        -10.76160108960848,
+        -10.555652009610261,
+        -10.311695797816206,
+        -10.105746717817986,
+        -9.861790506023931,
+        -9.655841426025713,
+        -9.411885214231656,
+        -9.205936134233438,
+        -8.961979922439383,
+        -8.756030842441163,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ]
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "1.88499097911362682907976793405e-10",
+     "06i_value_30": "1.8849909791136280054303670013e-10",
+     "D": 1.17635059906725e-25,
+     "D_over_allowance": 0.0002788730639305748,
+     "D_over_m": 2.793266520428151e-06,
+     "agrees": true,
+     "bit_identical_value_30": false,
+     "bit_identical_value_hex": false,
+     "tool_wall_s": 3.8409469588659704,
+     "06i_wall_s": 4.402780771255493,
+     "structure": {
+      "n_panels": [
+       91,
+       91
+      ],
+      "K_exact": [
+       "20531358902281791/34359738368",
+       "20531358902281791/34359738368"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [
+        -11.005557301402536,
+        -10.76160108960848,
+        -10.555652009610261,
+        -10.311695797816206,
+        -10.105746717817986,
+        -9.861790506023931,
+        -9.655841426025713,
+        -9.411885214231656,
+        -9.205936134233438,
+        -8.961979922439383,
+        -8.756030842441163,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ],
+       [
+        -11.005557301402536,
+        -10.76160108960848,
+        -10.555652009610261,
+        -10.311695797816206,
+        -10.105746717817986,
+        -9.861790506023931,
+        -9.655841426025713,
+        -9.411885214231656,
+        -9.205936134233438,
+        -8.961979922439383,
+        -8.756030842441163,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ]
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.05877499335008512,
+   "sec8_06i": 0.4978324158362789,
+   "ref_06i_fcc_r2": "1.8849909791136280054303670013e-10",
+   "ref_tool_fcc_r2": "1.88499097911362682907976793405e-10"
+  },
+  {
+   "sample": 10,
+   "route": "A",
+   "m_06i": 6.601750037991926e-24,
+   "scatter_tool": 3.34875789506446e-29,
+   "scatter_06i": 3.34875789506446e-29,
+   "allowance": 6.608447553782055e-26,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "7.54813704676627622554432578584e-14",
+     "06i_value_30": "7.54813704676627622554432578584e-14",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 16.577404000330716,
+     "06i_wall_s": 24.053262948989868,
+     "structure": {
+      "n_panels": [
+       50482,
+       50482
+      ],
+      "K_exact": [
+       "801824915507205/8388608",
+       "801824915507205/8388608"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "7.54813704676627287678643072138e-14",
+     "06i_value_30": "7.54813704676627287678643072138e-14",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 121.84513145918027,
+     "06i_wall_s": 166.58376026153564,
+     "structure": {
+      "n_panels": [
+       400661,
+       400661
+      ],
+      "K_exact": [
+       "801824915507205/8388608",
+       "801824915507205/8388608"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "7.54813704676627359212838475919e-14",
+     "06i_value_30": "7.54813704676627359212838475919e-14",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 3.538151458837092,
+     "06i_wall_s": 3.985046863555908,
+     "structure": {
+      "n_panels": [
+       76,
+       76
+      ],
+      "K_exact": [
+       "801824915507205/8388608",
+       "801824915507205/8388608"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "7.54813704676627301238587028342e-14",
+     "06i_value_30": "7.54813704676627301238587028342e-14",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 3.859320584218949,
+     "06i_wall_s": 4.515443801879883,
+     "structure": {
+      "n_panels": [
+       112,
+       112
+      ],
+      "K_exact": [
+       "801824915507205/8388608",
+       "801824915507205/8388608"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.04049245834161142,
+   "sec8_06i": 0.04049245834161142,
+   "ref_06i_fcc_r2": "7.54813704676627301238587028342e-14",
+   "ref_tool_fcc_r2": "7.54813704676627301238587028342e-14"
+  },
+  {
+   "sample": 13,
+   "route": "B",
+   "m_06i": 1.229097202195567e-37,
+   "scatter_tool": 5.58033940034111e-40,
+   "scatter_06i": 5.58033940034111e-40,
+   "allowance": 2.345165082263789e-39,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "9.78455015583833232094316959155e-29",
+     "06i_value_30": "9.78455015583833232094316959155e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 7.510098916944116,
+     "06i_wall_s": 9.591282844543457,
+     "structure": {
+      "n_segments": [
+       750,
+       750
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "9.78455015589413571494658068871e-29",
+     "06i_value_30": "9.78455015589413571494658068871e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 13.561571166850626,
+     "06i_wall_s": 15.36767292022705,
+     "structure": {
+      "n_segments": [
+       750,
+       750
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "9.78455015583837994485548228985e-29",
+     "06i_value_30": "9.78455015583837994485548228985e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 12.330560790840536,
+     "06i_wall_s": 14.17563509941101,
+     "structure": {
+      "n_segments": [
+       750,
+       750
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "9.78455015589311998142967568081e-29",
+     "06i_value_30": "9.78455015589311998142967568081e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 47.15603508288041,
+     "06i_wall_s": 36.76666975021362,
+     "structure": {
+      "n_segments": [
+       750,
+       750
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.018202002495456084,
+   "sec8_06i": 0.018202002495456084,
+   "ref_06i_fcc_r2": "9.78455015589311998142967568081e-29",
+   "ref_tool_fcc_r2": "9.78455015589311998142967568081e-29"
+  },
+  {
+   "sample": 14,
+   "route": "B",
+   "m_06i": 4.695531493772923e-35,
+   "scatter_tool": 4.63500190942397e-44,
+   "scatter_06i": 4.63500190942397e-44,
+   "allowance": 4.695532420773305e-37,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "-3.81074601746965326853267944608e-29",
+     "06i_value_30": "-3.81074601746965326853267944608e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 16.088784040883183,
+     "06i_wall_s": 18.086334943771362,
+     "structure": {
+      "n_segments": [
+       1726,
+       1726
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "-3.8107460174696577935730381084e-29",
+     "06i_value_30": "-3.8107460174696577935730381084e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 36.503380875103176,
+     "06i_wall_s": 57.76836109161377,
+     "structure": {
+      "n_segments": [
+       1726,
+       1726
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "-3.81074601746965338387540432368e-29",
+     "06i_value_30": "-3.81074601746965338387540432368e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 32.325621749740094,
+     "06i_wall_s": 36.67364978790283,
+     "structure": {
+      "n_segments": [
+       1726,
+       1726
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "-3.81074601746965790353458887005e-29",
+     "06i_value_30": "-3.81074601746965790353458887005e-29",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 127.37263562483713,
+     "06i_wall_s": 108.1082489490509,
+     "structure": {
+      "n_segments": [
+       1726,
+       1726
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.024300678457187624,
+   "sec8_06i": 0.024300678457187624,
+   "ref_06i_fcc_r2": "-3.81074601746965790353458887005e-29",
+   "ref_tool_fcc_r2": "-3.81074601746965790353458887005e-29"
+  },
+  {
+   "sample": 15,
+   "route": "B",
+   "m_06i": 1.9853904282636788e-35,
+   "scatter_tool": 6.842663153941034e-42,
+   "scatter_06i": 6.842663153941034e-42,
+   "allowance": 1.985527281526758e-37,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "-4.92256095640241948848107815941e-28",
+     "06i_value_30": "-4.92256095640241948848107815941e-28",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 33.15097120916471,
+     "06i_wall_s": 56.65871071815491,
+     "structure": {
+      "n_segments": [
+       1428,
+       1428
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "-4.92256095640248019028523719538e-28",
+     "06i_value_30": "-4.92256095640248019028523719538e-28",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 107.88321812497452,
+     "06i_wall_s": 203.1994481086731,
+     "structure": {
+      "n_segments": [
+       1428,
+       1428
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "-4.92256095640241176365369778505e-28",
+     "06i_value_30": "-4.92256095640241176365369778505e-28",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 24.983842125162482,
+     "06i_wall_s": 28.300218105316162,
+     "structure": {
+      "n_segments": [
+       1428,
+       1428
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "-4.9225609564024718468792503655e-28",
+     "06i_value_30": "-4.9225609564024718468792503655e-28",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 94.65630145790055,
+     "06i_wall_s": 80.52412915229797,
+     "structure": {
+      "n_segments": [
+       1428,
+       1428
+      ],
+      "n_tables": [
+       3,
+       3
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.13744906106860572,
+   "sec8_06i": 0.13744906106860572,
+   "ref_06i_fcc_r2": "-4.9225609564024718468792503655e-28",
+   "ref_tool_fcc_r2": "-4.9225609564024718468792503655e-28"
+  },
+  {
+   "sample": 22,
+   "route": "A",
+   "m_06i": 5.916346131682584e-25,
+   "scatter_tool": 1.78565568684187e-29,
+   "scatter_06i": 1.85843189966461e-29,
+   "allowance": 5.9527870075476484e-27,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "-1.72065656874532159216939260291e-14",
+     "06i_value_30": "-1.72065656874532159216939260291e-14",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 4.460161000024527,
+     "06i_wall_s": 6.054647922515869,
+     "structure": {
+      "n_panels": [
+       9951,
+       9951
+      ],
+      "K_exact": [
+       "502084670438287557/1073741824",
+       "502084670438287557/1073741824"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "-1.72065656874532336709160811146e-14",
+     "06i_value_30": "-1.72065656874532336709160811146e-14",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 24.82042312482372,
+     "06i_wall_s": 36.00989818572998,
+     "structure": {
+      "n_panels": [
+       77376,
+       77376
+      ],
+      "K_exact": [
+       "502084670438287557/1073741824",
+       "502084670438287557/1073741824"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "-1.72065656874532158143592126959e-14",
+     "06i_value_30": "-1.72065656874532229208198169959e-14",
+     "D": 7.1064606043e-30,
+     "D_over_allowance": 0.0011938039434788424,
+     "D_over_m": 1.2011570057140915e-05,
+     "agrees": true,
+     "bit_identical_value_30": false,
+     "bit_identical_value_hex": false,
+     "tool_wall_s": 3.4501659171655774,
+     "06i_wall_s": 3.6794209480285645,
+     "structure": {
+      "n_panels": [
+       55,
+       55
+      ],
+      "K_exact": [
+       "502084670438287557/1073741824",
+       "502084670438287557/1073741824"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "-1.72065656874532273995523183752e-14",
+     "06i_value_30": "-1.72065656874532345060129226752e-14",
+     "D": 7.1064606043e-30,
+     "D_over_allowance": 0.0011938039434788424,
+     "D_over_m": 1.2011570057140915e-05,
+     "agrees": true,
+     "bit_identical_value_30": false,
+     "bit_identical_value_hex": false,
+     "tool_wall_s": 3.734125042334199,
+     "06i_wall_s": 3.933337926864624,
+     "structure": {
+      "n_panels": [
+       81,
+       81
+      ],
+      "K_exact": [
+       "502084670438287557/1073741824",
+       "502084670438287557/1073741824"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.3533317521152628,
+   "sec8_06i": 0.047049771210471235,
+   "ref_06i_fcc_r2": "-1.72065656874532345060129226752e-14",
+   "ref_tool_fcc_r2": "-1.72065656874532273995523183752e-14"
+  },
+  {
+   "sample": 23,
+   "route": "A",
+   "m_06i": 1.3422858732055124e-24,
+   "scatter_tool": 3.0032296830621e-29,
+   "scatter_06i": 3.0032296830621e-29,
+   "allowance": 1.3482923325716365e-26,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "-2.4337083084024858223210609741e-13",
+     "06i_value_30": "-2.4337083084024858223210609741e-13",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 7.213106958195567,
+     "06i_wall_s": 10.301361083984375,
+     "structure": {
+      "n_panels": [
+       19529,
+       19529
+      ],
+      "K_exact": [
+       "-389316652155749/8388608",
+       "-389316652155749/8388608"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "-2.43370830840248601096743052125e-13",
+     "06i_value_30": "-2.43370830840248601096743052125e-13",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 47.38810241688043,
+     "06i_wall_s": 68.12985277175903,
+     "structure": {
+      "n_panels": [
+       152796,
+       152796
+      ],
+      "K_exact": [
+       "-389316652155749/8388608",
+       "-389316652155749/8388608"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "-2.43370830840248602754266118462e-13",
+     "06i_value_30": "-2.43370830840248602754266118462e-13",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 3.467232750263065,
+     "06i_wall_s": 3.9235379695892334,
+     "structure": {
+      "n_panels": [
+       80,
+       80
+      ],
+      "K_exact": [
+       "-389316652155749/8388608",
+       "-389316652155749/8388608"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "-2.43370830840248612264402928031e-13",
+     "06i_value_30": "-2.43370830840248612264402928031e-13",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 4.410316500347108,
+     "06i_wall_s": 4.53974723815918,
+     "structure": {
+      "n_panels": [
+       117,
+       117
+      ],
+      "K_exact": [
+       "-389316652155749/8388608",
+       "-389316652155749/8388608"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.5919891224365583,
+   "sec8_06i": 0.5919891224365583,
+   "ref_06i_fcc_r2": "-2.43370830840248612264402928031e-13",
+   "ref_tool_fcc_r2": "-2.43370830840248612264402928031e-13"
+  },
+  {
+   "sample": 25,
+   "route": "A",
+   "m_06i": 2.1119670233204138e-26,
+   "scatter_tool": 2.156934832555654e-29,
+   "scatter_06i": 2.1569348325556552e-29,
+   "allowance": 2.543353989831545e-28,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "-3.37775205824248195071213759019e-16",
+     "06i_value_30": "-3.37775205824248195071213759019e-16",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 1.695177333895117,
+     "06i_wall_s": 2.5646629333496094,
+     "structure": {
+      "n_panels": [
+       1001,
+       1001
+      ],
+      "K_exact": [
+       "-5945889239237309449/17179869184",
+       "-5945889239237309449/17179869184"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "-3.3777520582424370493040382421e-16",
+     "06i_value_30": "-3.3777520582424370493040382421e-16",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 3.4868028331547976,
+     "06i_wall_s": 4.656567096710205,
+     "structure": {
+      "n_panels": [
+       6775,
+       6775
+      ],
+      "K_exact": [
+       "-5945889239237309449/17179869184",
+       "-5945889239237309449/17179869184"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "-3.3777520582425914333114921387e-16",
+     "06i_value_30": "-3.37775205824258296029765706106e-16",
+     "D": 8.47301383507764e-31,
+     "D_over_allowance": 0.003331433166186527,
+     "D_over_m": 4.011906313648994e-05,
+     "agrees": true,
+     "bit_identical_value_30": false,
+     "bit_identical_value_hex": false,
+     "tool_wall_s": 1.289566459134221,
+     "06i_wall_s": 1.7369918823242188,
+     "structure": {
+      "n_panels": [
+       31,
+       31
+      ],
+      "K_exact": [
+       "-5945889239237309449/17179869184",
+       "-5945889239237309449/17179869184"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "-3.3777520582423757398282365733e-16",
+     "06i_value_30": "-3.37775205824236726681440149553e-16",
+     "D": 8.47301383507777e-31,
+     "D_over_allowance": 0.0033314331661865784,
+     "D_over_m": 4.0119063136490556e-05,
+     "agrees": true,
+     "bit_identical_value_30": false,
+     "bit_identical_value_hex": false,
+     "tool_wall_s": 3.0739292497746646,
+     "06i_wall_s": 3.521437406539917,
+     "structure": {
+      "n_panels": [
+       46,
+       46
+      ],
+      "K_exact": [
+       "-5945889239237309449/17179869184",
+       "-5945889239237309449/17179869184"
+      ],
+      "C_exact": [
+       "0.0",
+       "0.0"
+      ],
+      "u_breaks": [
+       [],
+       []
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.28424352408007614,
+   "sec8_06i": 0.323526184395958,
+   "ref_06i_fcc_r2": "-3.37775205824236726681440149553e-16",
+   "ref_tool_fcc_r2": "-3.3777520582423757398282365733e-16"
+  },
+  {
+   "sample": 27,
+   "route": "A",
+   "m_06i": 7.099000324045289e-23,
+   "scatter_tool": 2.3844282651077627e-26,
+   "scatter_06i": 2.2100718963068626e-26,
+   "allowance": 7.5584503401867515e-25,
+   "agrees": true,
+   "readings": {
+    "qawo_r1": {
+     "tool_value_30": "3.88738350691312868072749170224e-13",
+     "06i_value_30": "3.88738350691312868072749170224e-13",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 5.800469500012696,
+     "06i_wall_s": 9.171463966369629,
+     "structure": {
+      "n_panels": [
+       14346,
+       14346
+      ],
+      "K_exact": [
+       "134688718927004617/34359738368",
+       "134688718927004617/34359738368"
+      ],
+      "C_exact": [
+       "6.28318530717958647692528676656",
+       "6.28318530717958647692528676656"
+      ],
+      "u_breaks": [
+       [
+        -11.043564433198377,
+        -10.76160108960848,
+        -10.311695797816206,
+        -9.861790506023931,
+        -9.411885214231656,
+        -8.961979922439383,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ],
+       [
+        -11.043564433198377,
+        -10.76160108960848,
+        -10.311695797816206,
+        -9.861790506023931,
+        -9.411885214231656,
+        -8.961979922439383,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ]
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "qawo_r2": {
+     "tool_value_30": "3.88738350691298986607297366411e-13",
+     "06i_value_30": "3.88738350691298986607297366411e-13",
+     "D": 0.0,
+     "D_over_allowance": 0.0,
+     "D_over_m": 0.0,
+     "agrees": true,
+     "bit_identical_value_30": true,
+     "bit_identical_value_hex": true,
+     "tool_wall_s": 35.75051520904526,
+     "06i_wall_s": 49.63677501678467,
+     "structure": {
+      "n_panels": [
+       112258,
+       112258
+      ],
+      "K_exact": [
+       "134688718927004617/34359738368",
+       "134688718927004617/34359738368"
+      ],
+      "C_exact": [
+       "6.28318530717958647692528676656",
+       "6.28318530717958647692528676656"
+      ],
+      "u_breaks": [
+       [
+        -11.043564433198377,
+        -10.76160108960848,
+        -10.311695797816206,
+        -9.861790506023931,
+        -9.411885214231656,
+        -8.961979922439383,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ],
+       [
+        -11.043564433198377,
+        -10.76160108960848,
+        -10.311695797816206,
+        -9.861790506023931,
+        -9.411885214231656,
+        -8.961979922439383,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ]
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r1": {
+     "tool_value_30": "3.88738350691303834635147960779e-13",
+     "06i_value_30": "3.88738350691305578198835968695e-13",
+     "D": 1.743563688007916e-27,
+     "D_over_allowance": 0.00230677402051283,
+     "D_over_m": 2.4560693173970235e-05,
+     "agrees": true,
+     "bit_identical_value_30": false,
+     "bit_identical_value_hex": false,
+     "tool_wall_s": 3.457539207767695,
+     "06i_wall_s": 3.629343032836914,
+     "structure": {
+      "n_panels": [
+       58,
+       58
+      ],
+      "K_exact": [
+       "134688718927004617/34359738368",
+       "134688718927004617/34359738368"
+      ],
+      "C_exact": [
+       "6.28318530717958647692528676656",
+       "6.28318530717958647692528676656"
+      ],
+      "u_breaks": [
+       [
+        -11.043564433198377,
+        -10.76160108960848,
+        -10.311695797816206,
+        -9.861790506023931,
+        -9.411885214231656,
+        -8.961979922439383,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ],
+       [
+        -11.043564433198377,
+        -10.76160108960848,
+        -10.311695797816206,
+        -9.861790506023931,
+        -9.411885214231656,
+        -8.961979922439383,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ]
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    },
+    "fcc_r2": {
+     "tool_value_30": "3.88738350691289023790098092596e-13",
+     "06i_value_30": "3.88738350691290767353786101598e-13",
+     "D": 1.743563688009002e-27,
+     "D_over_allowance": 0.0023067740205142667,
+     "D_over_m": 2.4560693173985532e-05,
+     "agrees": true,
+     "bit_identical_value_30": false,
+     "bit_identical_value_hex": false,
+     "tool_wall_s": 3.7979885833337903,
+     "06i_wall_s": 4.112660884857178,
+     "structure": {
+      "n_panels": [
+       85,
+       85
+      ],
+      "K_exact": [
+       "134688718927004617/34359738368",
+       "134688718927004617/34359738368"
+      ],
+      "C_exact": [
+       "6.28318530717958647692528676656",
+       "6.28318530717958647692528676656"
+      ],
+      "u_breaks": [
+       [
+        -11.043564433198377,
+        -10.76160108960848,
+        -10.311695797816206,
+        -9.861790506023931,
+        -9.411885214231656,
+        -8.961979922439383,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ],
+       [
+        -11.043564433198377,
+        -10.76160108960848,
+        -10.311695797816206,
+        -9.861790506023931,
+        -9.411885214231656,
+        -8.961979922439383,
+        -8.512074630647108,
+        -8.062169338854833,
+        -7.612264047062559
+       ]
+      ]
+     },
+     "tool_ray_initialized": [
+      false,
+      false
+     ]
+    }
+   },
+   "sec8_tool": 0.6726704091312119,
+   "sec8_06i": 0.5549483154803896,
+   "ref_06i_fcc_r2": "3.88738350691290767353786101598e-13",
+   "ref_tool_fcc_r2": "3.88738350691289023790098092596e-13"
+  }
+ ],
+ "cli": [
+  {
+   "sample": 25,
+   "identical": true,
+   "readings": [
+    {
+     "impl": "qawo",
+     "res": 1,
+     "identical": true,
+     "cli_value_30": "-3.37775205824248195071213759019e-16",
+     "one_reading_value_30": "-3.37775205824248195071213759019e-16"
+    },
+    {
+     "impl": "qawo",
+     "res": 2,
+     "identical": true,
+     "cli_value_30": "-3.3777520582424370493040382421e-16",
+     "one_reading_value_30": "-3.3777520582424370493040382421e-16"
+    },
+    {
+     "impl": "fcc",
+     "res": 1,
+     "identical": true,
+     "cli_value_30": "-3.3777520582425914333114921387e-16",
+     "one_reading_value_30": "-3.3777520582425914333114921387e-16"
+    },
+    {
+     "impl": "fcc",
+     "res": 2,
+     "identical": true,
+     "cli_value_30": "-3.3777520582423757398282365733e-16",
+     "one_reading_value_30": "-3.3777520582423757398282365733e-16"
+    }
+   ],
+   "cli_scatter": 2.156934832555654e-29,
+   "cli_counts": true
+  },
+  {
+   "sample": 13,
+   "identical": true,
+   "readings": [
+    {
+     "impl": "qawo",
+     "res": 1,
+     "identical": true,
+     "cli_value_30": "9.78455015583833232094316959155e-29",
+     "one_reading_value_30": "9.78455015583833232094316959155e-29"
+    },
+    {
+     "impl": "qawo",
+     "res": 2,
+     "identical": true,
+     "cli_value_30": "9.78455015589413571494658068871e-29",
+     "one_reading_value_30": "9.78455015589413571494658068871e-29"
+    },
+    {
+     "impl": "fcc",
+     "res": 1,
+     "identical": true,
+     "cli_value_30": "9.78455015583837994485548228985e-29",
+     "one_reading_value_30": "9.78455015583837994485548228985e-29"
+    },
+    {
+     "impl": "fcc",
+     "res": 2,
+     "identical": true,
+     "cli_value_30": "9.78455015589311998142967568081e-29",
+     "one_reading_value_30": "9.78455015589311998142967568081e-29"
+    }
+   ],
+   "cli_scatter": 5.58033940034111e-40,
+   "cli_counts": true
+  }
+ ]
+}

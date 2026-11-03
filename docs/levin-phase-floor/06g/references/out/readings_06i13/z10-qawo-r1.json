@@ -1,0 +1,52 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading z10 qawo res 1 (tools.filon_reference)",
+  "# written 2026-11-01T18:24:03Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 8ec8c324732df55ba9685fbd7f5eedab95ae90b1f7a056fd10305708973a78f1",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z10.pkl sha256 39aa9fffe132dd9fadf1959616b0cadf9a07872dbe8bf0442329238c737646df",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py sha256 d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b"
+ ],
+ "sample": "z10",
+ "unit": "g-1e-7-1-35332",
+ "index": 10,
+ "rtol": "1e-7",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z10.pkl",
+ "pickle_sha256": "39aa9fffe132dd9fadf1959616b0cadf9a07872dbe8bf0442329238c737646df",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py",
+ "tool_sha256": "d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b",
+ "workers": 6,
+ "route_of": "A",
+ "route": "A",
+ "impl": "qawo",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "Pmax": 4096.0,
+  "epsrel": 1e-13
+ },
+ "value_hex": "0x1.53f0185fa4132p-44",
+ "value_30": "7.54813704676627622554432578584e-14",
+ "imag_30": "-2.21987214868017430486849652051e-13",
+ "wall_s": 16.577404000330716,
+ "n_panels": 50482,
+ "u_breaks": [],
+ "K_exact": "801824915507205/8388608",
+ "K_hat": 95584978.52172911,
+ "K_lo": 0.0,
+ "C_exact": "0.0",
+ "stats": {
+  "panels": 50482,
+  "neval": 1258830,
+  "ier_nonzero": 30879,
+  "max_last": 0,
+  "sum_quad_abserr": 1.4157045852630082e-26
+ },
+ "process_wall_s": 17.74063037522137,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

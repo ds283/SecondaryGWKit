@@ -1,0 +1,14 @@
+$ /bin/bash -c for\ t\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e\;\ do\ echo\ \"==\ \$t\"\;\ git\ --no-optional-locks\ -C\ \$t\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ \$t\ status\ --short\ \$\(\[\ \$t\ \!=\ /Users/ds283/Documents/Code/SecondaryGWKit\ \]\ \&\&\ echo\ --ignored\)\;\ done
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:19:23Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed
+4f4f9ed2a31fb7437fcfca01263d260eebaff842
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e
+1c5336e7e0ab8ed4495601a4033841f2df17ebdd
+# ----
+# end 2026-11-01T11:19:24Z
+# exit 0

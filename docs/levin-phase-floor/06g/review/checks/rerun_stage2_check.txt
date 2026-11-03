@@ -1,0 +1,10 @@
+== bit-for-bit re-reads
+  r09-fcc-r1.json vs readings/r09-fcc-r1.json: IDENTICAL 0x1.05491c0574658p-41 tool 5ed56fc2
+  r55-qawo-r2.json vs readings/r55-qawo-r2.json: IDENTICAL 0x1.78bca75e2b121p-105 tool 5ed56fc2
+  r56-fcc-r1.json vs readings/r56-fcc-r1.json: IDENTICAL -0x1.4a8872bca7ce2p-101 tool 5ed56fc2
+  z13-fcc-r1.json vs readings_06i13/z13-fcc-r1.json: IDENTICAL 0x1.f022b8fbb69b0p-94 tool 5ed56fc2
+  z13-qawo-r1.json vs readings_06i13/z13-qawo-r1.json: IDENTICAL 0x1.f022b8fbb6986p-94 tool 5ed56fc2
+  z25-qawo-r2.json vs readings_06i13/z25-qawo-r2.json: IDENTICAL -0x1.856da4f8bec44p-52 tool 5ed56fc2
+== the 56 stationary-point readings
+  usable by the rule (tool ff3e8394 [sha 5ed56fc2], direct_segments == non-monotone count): {True: 56}
+5ed56fc24e46eb03e49b33408bc73d73fbfae24c38ec26cf5fd6537b43c4d058  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839/tools/filon_reference.py

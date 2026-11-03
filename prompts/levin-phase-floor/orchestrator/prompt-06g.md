@@ -309,3 +309,153 @@ pushed.
 
 **The worktrees,** made by the laptop after this commit is pushed, detached, with no venv:
 `SecondaryGWKit-lpf06g-4f4f9ed` and `SecondaryGWKit-lpf06g-<this commit's short SHA>`.
+
+### B.3 Addendum, 2026-11-01: V1's twelve calls referenced, scored apart from V3
+
+R23 and R24 agree (`1b332ffa…`), and Gate V held. V1 fails on `total` in 12 of the 864 rows, at
+worst by 13,101×. In each of those rows the whole move is in a single group call (sub-interval 1,
+group `G+q+r`): the value shifts 0.1–3.4% while both codes declare an error near 1e-7. V1 holds on
+the analytic oracle, where the worst ratio is 0.4986. The user ruled, in these words: "Happy to
+have the Filon references added – that sounds like a good idea." The ruling went to the Part B
+session as follows:
+
+- **The calls.** The 12 calls are referenced by Route B under the unchanged count rule. A call
+  that cannot be counted is recorded with its four readings.
+- **Scoring.** They are scored apart from V3, in their own table: not part of V3's sample, and
+  they do not move its verdict.
+- **What each row records.** Each counted call records the reference, both codes' values and
+  declared errors, and |value − ref| / declared error for each code.
+- **The question they answer.** Which code is nearer the truth, and does that code's declared
+  error cover its distance from the reference?
+- **Stop rule.** If adding them would change how V3's own sample is drawn or scored, the session
+  stops and asks.
+
+### B.4 Addendum, 2026-11-01: the V8 stop, and the user's ruling to score the rest
+
+The census `levin-phase-floor-06g-census-20261101T114315` ran clean. All 18,560 units finished
+with exit 0, none in error and none over budget, in about 5 h 40 min against 06h's 2 h 33 min.
+
+V8 fails at both rtols. Outside the 720 stationary-point rows, convergence is lost to the
+slow-leaf rule (b) as follows:
+
+- at 1e-7, 801 calls in 470 rows;
+- at 1e-8, 827 calls in 474 rows, plus 3 calls lost to `node_limited`.
+
+Every lost call is a `G±q±r` group call. Every one still meets its request on abserr: the ratio
+of abserr to request has median 0.035 and maximum 0.987. Median regions per call rose from 7 to
+135. The Part B session stopped under §5 of this note (its `review/stop_v8.md`).
+
+The user ruled "(b) with the V8 sample, please". The ruling went to the Part B session as follows:
+
+- The stop and V8's failure stand in the record.
+- V2, V5–V7, the descriptive items and the references (V3, V4, and §B.3's V1 calls) are scored
+  for the record.
+- Twelve calls that V8 lost to (b) are also referenced:
+  - six at each rtol;
+  - all outside the stationary-point rows;
+  - chosen at evenly spaced quantiles of abserr/request;
+  - with the selection rule and the identities written down before any reference is computed.
+- These twelve are scored apart from V3, under Route B and the unchanged count rule. Each row
+  records:
+  - the reference;
+  - R23's value, declared error and converged flag;
+  - $g$'s value and declared error;
+  - each code's |value − ref| / declared error.
+- The question the sample answers: does the value that $g$ returns from untrusted slow leaves lie
+  within its declared error of the reference, and does R23's?
+- The session stops and asks if either added sample would change V3's own sample, or if the
+  references would cost more than the census did.
+
+### B.5 Addendum, 2026-11-01: a descriptive breakdown of the slow leaves
+
+The parent trusted a checked leaf at any $r < 1$ (06c's trust check, `4f4f9ed`). The value 1/2
+appears only in 06g's prompt, as the less conservative alternative to 1/4. The leaves that V8
+loses were therefore trusted anywhere in $1/4 \le r < 1$, and `v8.md` does not record their $r$.
+They were refined to depth 20 and still show $r \ge 1/4$, so refinement never brought them into
+the asymptotic regime that the basis for $r_{\rm trust}$ assumes. Two explanations remain open:
+
+- **(i)** a non-smooth point in the integrand or at a boundary, which gives algebraic convergence
+  at a steady ratio;
+- **(ii)** rounding noise above a $\phi_P$ that is too low.
+
+The user asked for a descriptive item to tell these apart. It was sent to the Part B session. It
+covers every returned untrusted (b) leaf of a lost call, outside the 720 rows, at both rtols, and
+is computed from the census records with nothing rerun:
+
+- $r$ binned into [1/4, 1/2), [1/2, 3/4) and [3/4, 1), with quantiles;
+- $\Delta_1/\phi_P$, overall and in each bin;
+- $r$ against depth, along each leaf's chain of ancestors where the records hold it, and across
+  leaves where they do not;
+- the depth-20 leaves' positions: clustered at a few points per call, or spread, and whether the
+  clusters sit at sub-interval or region endpoints;
+- everything split by group.
+
+Anything the records cannot give is reported as such, not rerun.
+
+### B.6 Addendum, 2026-11-01: the references' part 2, re-planned by the user
+
+**Part 1** passed every check:
+- all 102 captures equal the census bit for bit;
+- 06i's 13 groups equal 06i's;
+- the tool agrees with 06i's readings on all 13.
+
+**Part 2** stopped at the cost gate at 20.35 h. Of that, 15.5 h was 31 QAWO readings on Route A
+calls with phase spans up to $1.6\times10^{12}$ rad. They were predicted to pass §5's 30-minute
+cap, which would have killed them with no result. QAWO's panels are uniform in phase, so its time
+grows with the span. FCC's cost does not grow with the span.
+
+**06i's 13**, where FCC, QAWO and Levin all exist, give this comparison:
+- FCC and QAWO agree to between $10^{-17}$ and $10^{-13}$ relative, and match the closed forms on
+  s08, s10 and s22 to about $10^{-16}$;
+- 06e's Levin values sit $5\times10^{-14}$ to $1.2\times10^{-6}$ from them, at or below their
+  declared errors except s03, at 1.24×.
+
+**The user ruled:**
+- "Quibbling over ~8 hours of compute that only has to be run once strikes me as a false economy";
+- "A runtime that exceeds 30 minutes means that we should stop and check, not guillotine it
+  immediately";
+- "We are iteratively improving on our algorithm, and we don't know what to expect."
+
+**As sent to the Part B session:**
+- **Large-span calls.** QAWO r2 is not run on the 17 large-span calls. QAWO r1 is run where its
+  projection is under about 2 h: z20, r30, z19, z26, z05, z17, z11, z16, z28 and r07. FCC is run at
+  both resolutions on all 17. The projection is about 13 h of wall time, with the cheap readings
+  first.
+- **The 30-minute cap.** It becomes a check. A reading past it is reported with its progress and
+  projected finish. It finishes if that projection is reasonable, and is stopped only if the
+  projection is absurd, with a backstop recorded. One check is made at the projected end.
+- **Scoring.** Every reference is scored, whatever its number of readings, and its readings are
+  stated. Most weight goes to references with two independent implementations. An FCC-only
+  reference far from Levin's value, or with its two resolutions disagreeing, is a finding to stop
+  on, never a reason to drop the reference.
+
+### B.7 Addendum, 2026-11-03: the end of Part B, and the records
+
+**The rerun batch** `levin-phase-floor-06g-references-rerun-20261102T185324` ended at 06:47Z on
+3 November, exit 0: 64 readings done and 3 stopped. Stage 2's 56 stationary-point readings ran at
+`ff3e8394`.
+
+**The laptop's FCC batch** `levin-phase-floor-06g-fcc-laptop-20261102T233229` (32 of 32, at
+`b5626ecb`) re-read FCC on the 14 stationary-point samples, after four bit-for-bit checks against
+the Mac Studio's readings. The four readings of each of the 14 now agree.
+
+**The rescoring:**
+- V1's 12: R24 is honest on all 12, and R23 is $4.5\times10^3$–$6.0\times10^5$× out.
+- V3 holds as written, and fails on z12 alone under the broader readings. z12 is a stationary-point
+  row, converged at 1,681× its error.
+- V4 holds.
+
+**Stage 3.** r24's and r53's QAWO r1 readings landed. r47 r2, r53 r2 and r26 r1 were stopped by a
+projection that ignored the chunks in flight. None of them bears on a verdict, and their rerun is
+for the user.
+
+**The Mac Studio review** (`06g/review.md`) passed its ten checks.
+
+**The user's reading:** z12 and V1's 12 are stationary-point calls, where Levin's declared errors
+are not claimed valid. *"What needs to be true is that z12 works after 07."*
+
+**On the user's word, the records were committed.** They were copied back and checked by SHA-256
+(2,811 files; `review/checks/var_files_after.txt` brought over gzipped). The two issues the review
+proposed for V5, V6, V8 and V2 are opened, six issues are narrowed, and none is closed. The 71
+stray `.pyc` files of the laptop's slope survey in the `ff3e839` worktree, and the one in
+`references/scripts/__pycache__/`, were deleted.

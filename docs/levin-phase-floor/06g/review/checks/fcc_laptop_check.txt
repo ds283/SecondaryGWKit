@@ -1,0 +1,8 @@
+tool sha256 prefixes: {'d37e633bf54a1791': 32}
+pickle sha256 equal to the Mac's readings of the same sample: Counter({True: 32})
+check ('r55-fcc-r1.json', 'readings/r55-fcc-r1.json', True)
+check ('r55-fcc-r2.json', 'readings/r55-fcc-r2.json', True)
+check ('r55-qawo-r1.json', 'readings/r55-qawo-r1.json', True)
+check ('w06-qawo-r1.json', 'readings/w06-qawo-r1-rerun.json', True)
+FCC readings of the 14: (all_monotone, non-monotone count, direct_segments): {(False, 1, 3): 28}
+(every non-monotone segment direct, direct count matches tmap, every direct segment non-monotone or slope>2): {(True, True, True): 30}

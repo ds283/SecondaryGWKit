@@ -1,0 +1,16 @@
+all written: n 325 median 1.03 p90 20.5 max 1.697e+06
+projection >= 1 s: n 286 median 1.01 p90 1.61 max 101
+39 readings had projection < 1 s (Route A, tiny span: the rate model gives ~0 s and omits start-up); they took 1-2 s
+written readings more than 5x, projection >= 1 s:
+   101.0x  wall   2594 s  proj    26 s  r47 g-1e-8-3-1916#4 B qawo r1
+    56.8x  wall   1796 s  proj    32 s  r52 g-1e-8-3-34925#1 B qawo r1
+    30.7x  wall   1687 s  proj    55 s  r29 g-1e-7-1-35525#4 B qawo r2
+    26.2x  wall   1839 s  proj    70 s  r17 g-1e-7-1-2229#3 B qawo r2
+    20.5x  wall    422 s  proj    21 s  r29 g-1e-7-1-35525#4 B qawo r1
+    17.4x  wall    849 s  proj    49 s  r25 g-1e-7-0-1887#3 B qawo r2
+    17.4x  wall    455 s  proj    26 s  r17 g-1e-7-1-2229#3 B qawo r1
+    11.8x  wall    215 s  proj    18 s  r25 g-1e-7-0-1887#3 B qawo r1
+     7.2x  wall    299 s  proj    41 s  v06 g-1e-8-2-1380#4 B qawo r2
+     7.2x  wall    298 s  proj    41 s  v00 g-1e-7-2-1380#4 B qawo r2
+     5.0x  wall     78 s  proj    15 s  v06 g-1e-8-2-1380#4 B qawo r1
+     5.0x  wall     78 s  proj    15 s  v00 g-1e-7-2-1380#4 B qawo r1

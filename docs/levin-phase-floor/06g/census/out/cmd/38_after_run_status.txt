@@ -1,0 +1,107 @@
+$ /bin/bash -c date\ -u\;\ cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/status.json\;\ echo\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315\ \|\ head\ -60\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315\;\ echo\ stderr\ bytes\ \$\(wc\ -c\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/stderr.log\)\;\ tail\ -5\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/stdout.log\ \|\ cut\ -c1-600\;\ for\ f\ in\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/worker_\*_bye.json\;\ do\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -c\ \"import\ json\,sys\;\ m=json.load\(open\(sys.argv\[1\]\)\)\;\ print\(sys.argv\[1\].rsplit\(\'/\'\,1\)\[1\]\,\ \'ray\'\,\ m.get\(\'ray_initialized\'\)\,\ \'foreign\'\,\ m.get\(\'modules_foreign\'\)\)\"\ \$f\;\ done\;\ ps\ -Ao\ pid\,comm\ \|\ grep\ -c\ worker.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:23:59Z
+# ----
+Sun Nov  1 17:23:59 UTC 2026
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-01T17:22:36+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 51183,
+  "stage": "18560 units recorded; last g-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+total 4694704
+drwxr-xr-x 151 ds283 staff       4832 Nov  1 17:22 .
+drwxr-xr-x  72 ds283 staff       2304 Nov  1 11:43 ..
+-rw-r--r--   1 ds283 staff 2083192147 Nov  1 17:22 checkpoint.jsonl
+-rw-r--r--   1 ds283 staff     258443 Nov  1 13:27 events_1e-7-k0_101.jsonl
+-rw-r--r--   1 ds283 staff     269771 Nov  1 13:01 events_1e-7-k0_202.jsonl
+-rw-r--r--   1 ds283 staff     261127 Nov  1 13:23 events_1e-7-k1_102.jsonl
+-rw-r--r--   1 ds283 staff     272465 Nov  1 12:54 events_1e-7-k1_301.jsonl
+-rw-r--r--   1 ds283 staff     263879 Nov  1 13:16 events_1e-7-k2_2.jsonl
+-rw-r--r--   1 ds283 staff     275012 Nov  1 12:52 events_1e-7-k2_302.jsonl
+-rw-r--r--   1 ds283 staff     254978 Nov  1 14:29 events_1e-7-k3_1.jsonl
+-rw-r--r--   1 ds283 staff     266994 Nov  1 14:22 events_1e-7-k3_201.jsonl
+-rw-r--r--   1 ds283 staff     258428 Nov  1 16:24 events_1e-8-k0_101.jsonl
+-rw-r--r--   1 ds283 staff     269773 Nov  1 15:43 events_1e-8-k0_202.jsonl
+-rw-r--r--   1 ds283 staff     261120 Nov  1 16:21 events_1e-8-k1_102.jsonl
+-rw-r--r--   1 ds283 staff     272468 Nov  1 15:38 events_1e-8-k1_301.jsonl
+-rw-r--r--   1 ds283 staff     263858 Nov  1 16:07 events_1e-8-k2_2.jsonl
+-rw-r--r--   1 ds283 staff     275000 Nov  1 15:34 events_1e-8-k2_302.jsonl
+-rw-r--r--   1 ds283 staff     254963 Nov  1 17:21 events_1e-8-k3_1.jsonl
+-rw-r--r--   1 ds283 staff     266991 Nov  1 17:00 events_1e-8-k3_201.jsonl
+-rw-r--r--   1 ds283 staff       4785 Nov  1 11:43 manifest.json
+-rw-r--r--   1 ds283 staff  188970628 Nov  1 13:28 regions_1e-7-k0_101.pkl
+-rw-r--r--   1 ds283 staff  152670508 Nov  1 13:02 regions_1e-7-k0_202.pkl
+-rw-r--r--   1 ds283 staff  185440827 Nov  1 13:25 regions_1e-7-k1_102.pkl
+-rw-r--r--   1 ds283 staff  142880474 Nov  1 12:55 regions_1e-7-k1_301.pkl
+-rw-r--r--   1 ds283 staff  173791697 Nov  1 13:17 regions_1e-7-k2_2.pkl
+-rw-r--r--   1 ds283 staff  139570894 Nov  1 12:52 regions_1e-7-k2_302.pkl
+-rw-r--r--   1 ds283 staff  182139633 Nov  1 14:30 regions_1e-7-k3_1.pkl
+-rw-r--r--   1 ds283 staff  167186071 Nov  1 14:22 regions_1e-7-k3_201.pkl
+-rw-r--r--   1 ds283 staff  193178453 Nov  1 16:25 regions_1e-8-k0_101.pkl
+-rw-r--r--   1 ds283 staff  141675951 Nov  1 15:44 regions_1e-8-k0_202.pkl
+-rw-r--r--   1 ds283 staff  191345532 Nov  1 16:22 regions_1e-8-k1_102.pkl
+-rw-r--r--   1 ds283 staff  132581510 Nov  1 15:38 regions_1e-8-k1_301.pkl
+-rw-r--r--   1 ds283 staff  173177542 Nov  1 16:08 regions_1e-8-k2_2.pkl
+-rw-r--r--   1 ds283 staff  130429339 Nov  1 15:35 regions_1e-8-k2_302.pkl
+-rw-r--r--   1 ds283 staff  184381177 Nov  1 17:22 regions_1e-8-k3_1.pkl
+-rw-r--r--   1 ds283 staff  156357120 Nov  1 17:01 regions_1e-8-k3_201.pkl
+-rw-r--r--   1 ds283 staff     278428 Nov  1 11:43 spec_1e-7-k0_101.json
+-rw-r--r--   1 ds283 staff     278311 Nov  1 11:43 spec_1e-7-k0_202.json
+-rw-r--r--   1 ds283 staff     278339 Nov  1 11:43 spec_1e-7-k1_102.json
+-rw-r--r--   1 ds283 staff     278565 Nov  1 11:43 spec_1e-7-k1_301.json
+-rw-r--r--   1 ds283 staff     275715 Nov  1 11:43 spec_1e-7-k2_2.json
+-rw-r--r--   1 ds283 staff     277998 Nov  1 11:43 spec_1e-7-k2_302.json
+-rw-r--r--   1 ds283 staff     272787 Nov  1 12:52 spec_1e-7-k3_1.json
+-rw-r--r--   1 ds283 staff     275150 Nov  1 12:55 spec_1e-7-k3_201.json
+-rw-r--r--   1 ds283 staff     280748 Nov  1 14:30 spec_1e-8-k0_101.json
+-rw-r--r--   1 ds283 staff     280631 Nov  1 14:30 spec_1e-8-k0_202.json
+-rw-r--r--   1 ds283 staff     280659 Nov  1 14:30 spec_1e-8-k1_102.json
+-rw-r--r--   1 ds283 staff     280885 Nov  1 14:30 spec_1e-8-k1_301.json
+-rw-r--r--   1 ds283 staff     278035 Nov  1 14:30 spec_1e-8-k2_2.json
+-rw-r--r--   1 ds283 staff     280318 Nov  1 14:30 spec_1e-8-k2_302.json
+-rw-r--r--   1 ds283 staff     275107 Nov  1 15:35 spec_1e-8-k3_1.json
+-rw-r--r--   1 ds283 staff     277470 Nov  1 15:38 spec_1e-8-k3_201.json
+-rw-r--r--   1 ds283 staff        306 Nov  1 17:22 status.json
+-rw-r--r--   1 ds283 staff          0 Nov  1 11:43 stderr.log
+-rw-r--r--   1 ds283 staff       3284 Nov  1 17:22 stdout.log
+-rw-r--r--   1 ds283 staff      14102 Nov  1 13:28 worker_1e-7-k0_101_bye.json
+-rw-r--r--   1 ds283 staff        480 Nov  1 11:43 worker_1e-7-k0_101_context.json
+-rw-r--r--   1 ds283 staff       6127 Nov  1 11:43 worker_1e-7-k0_101_hello.json
+-rw-r--r--   1 ds283 staff        149 Nov  1 11:43 worker_1e-7-k0_101_levin_logging.json
+4.5G	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315
+stderr bytes 0
+# worker 1e-8-k0_101 exit 0
+# worker 1e-8-k3_201 exit 0
+# worker 1e-8-k3_1 exit 0
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+worker_1e-7-k0_101_bye.json ray False foreign []
+worker_1e-7-k0_202_bye.json ray False foreign []
+worker_1e-7-k1_102_bye.json ray False foreign []
+worker_1e-7-k1_301_bye.json ray False foreign []
+worker_1e-7-k2_2_bye.json ray False foreign []
+worker_1e-7-k2_302_bye.json ray False foreign []
+worker_1e-7-k3_1_bye.json ray False foreign []
+worker_1e-7-k3_201_bye.json ray False foreign []
+worker_1e-8-k0_101_bye.json ray False foreign []
+worker_1e-8-k0_202_bye.json ray False foreign []
+worker_1e-8-k1_102_bye.json ray False foreign []
+worker_1e-8-k1_301_bye.json ray False foreign []
+worker_1e-8-k2_2_bye.json ray False foreign []
+worker_1e-8-k2_302_bye.json ray False foreign []
+worker_1e-8-k3_1_bye.json ray False foreign []
+worker_1e-8-k3_201_bye.json ray False foreign []
+0
+# ----
+# end 2026-11-01T17:24:00Z
+# exit 1

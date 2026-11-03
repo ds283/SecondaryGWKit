@@ -1,0 +1,31 @@
+levin-phase-floor 06g references: the cost projection for part 2, from 06i's 13 (part 1's tool readings)
+06i's 13 (sum of four readings, s):
+  z01 B    82.4 s  segments 750
+  z02 B   210.1 s  segments 1726
+  z03 B   234.8 s  segments 1428
+  z08 A   120.9 s  phase span |K|(eta_b-eta_a) 1.476e+08 rad
+  z09 A    20.0 s  phase span |K|(eta_b-eta_a) 8.132e+06 rad
+  z10 A   145.8 s  phase span |K|(eta_b-eta_a) 1.457e+08 rad
+  z13 B    80.6 s  segments 750
+  z14 B   212.3 s  segments 1726
+  z15 B   260.7 s  segments 1428
+  z22 A    36.5 s  phase span |K|(eta_b-eta_a) 3.418e+07 rad
+  z23 A    62.5 s  phase span |K|(eta_b-eta_a) 5.37e+07 rad
+  z25 A     9.5 s  phase span |K|(eta_b-eta_a) 2.102e+06 rad
+  z27 A    48.8 s  phase span |K|(eta_b-eta_a) 5.335e+07 rad
+Route A: 7 samples, 444.1 s, mean 63.4 s, max 145.8 s; total phase span 4.448e+08 rad -> 9.983e-07 s/rad
+Route B: 6 samples, 1080.8 s, mean 180.1 s, max 260.7 s; 7808 segments -> 0.1384 s/segment
+part 2: V3's 77 + V8's 12 captured: 45 Route A, 44 Route B; V1's 12 (Route B, not yet captured)
+(1) by the mean per sample: 45 x 63.4 + (44 + 12) x 180.1 = 12942 s = 3.59 h
+(2) scaled: Route A by phase span 6.932e+12 rad x 9.983e-07 s/rad = 6920122 s; Route B by segments 53338 x 0.1384 = 7383 s; V1's 12 at the part-2 mean of 1212 segments = 2013 s; total 6929518 s = 1924.87 h
+(3) every sample at 06i's slowest of its route: 45 x 145.8 + 56 x 260.7 = 21160 s = 5.88 h
+Route B segments in part 2: min 204, median 1112, max 2418; 06i's: [750, 750, 1428, 1428, 1726, 1726]
+Route A phase spans in part 2: max 1.59e+12 rad; 06i's max 1.476e+08 rad
+the gate: 5 h 40 min = 20400 s
+
+(4) per reading, Route A: QAWO's panels are uniform in phase (at most 2^12 rad at res 1, 2^9 at res 2), so its time scales with the phase span; FCC's panels are uniform in u, so its time does not. Rates from 06i's 7 Route A samples:
+   QAWO r1 1.17e-07 s/rad, QAWO r2 7.72e-07 s/rad (sums over the 7 / their total span 4.448e+08 rad); FCC both resolutions 7.0 s per sample (mean)
+   part 2's 45 Route A calls, phase spans: r09:6.3, r33:6.6, r14:71, r11:1.2e+02, r42:1.9e+02, r01:1.2e+03, r08:1.5e+03, r13:2.1e+04, r12:2.7e+04, r43:5.6e+04, r40:5.9e+04, r44:9e+04, r35:1.3e+05, r03:2.1e+05, r34:5.3e+05, r05:5.9e+05, r31:7.4e+05, r02:8.5e+05, r32:5.2e+06, r39:5.8e+06, r41:6.8e+06, r04:1.3e+07, r06:4.1e+07, r10:1.3e+08, r38:6.9e+08, r36:7.6e+08, r00:1e+09, r37:1.4e+09, z20:4.7e+09, r30:1e+10, z19:1.5e+10, z26:1.5e+10, z05:1.7e+10, z17:2.2e+10, z11:4.7e+10, z16:5.4e+10, z28:5.4e+10, r07:5.6e+10, z04:1.1e+11, z07:1.1e+11, z06:9.5e+11, z21:1.3e+12, z29:1.3e+12, z18:1.3e+12, z24:1.6e+12
+   predicted over 30 min: QAWO r2 on 17, QAWO r1 on 14 (those references cannot count); Route A total, each reading capped at 1800 s: 63228 s = 17.56 h
+   Route B as (2): 7383 s, V1's 12: 2013 s
+   TOTAL (4): 72624 s = 20.17 h against the gate 20400 s = 5.67 h

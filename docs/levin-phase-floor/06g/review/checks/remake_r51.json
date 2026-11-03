@@ -1,0 +1,14 @@
+{
+ "route": "B",
+ "value_hex": "-0x1.bd83e8f875407p-80",
+ "value_30": "-1.43953748795618450931177427648e-24",
+ "imag_30": "-1.82811266353069163932238822796e-24",
+ "sample": "r51",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r51.pkl",
+ "pickle_sha256": "7b13a18ec03eee72a96455f349f2a31075830ad07915afbd9ce843e5a2f8b4b7",
+ "tool_sha256": "d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py",
+ "config": "res 3: Route B fit (28, 361), FCC pieces 5, N 64; Route A FCC du 0.085, N 64",
+ "wall_s": 242.56559801101685,
+ "all_monotone": true
+}

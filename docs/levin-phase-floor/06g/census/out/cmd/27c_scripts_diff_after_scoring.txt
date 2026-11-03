@@ -1,0 +1,10 @@
+$ /bin/bash -c diff\ -ruN\ state/scripts_06h_reference\ scripts\ \>\ out/scripts_diff_against_06h_final.txt\;\ grep\ -c\ \"\^diff\ -ruN\"\ out/scripts_diff_against_06h_final.txt\;\ wc\ -l\ out/scripts_diff_against_06h_final.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:45:36Z
+# ----
+19
+2917 out/scripts_diff_against_06h_final.txt
+# ----
+# end 2026-11-01T17:45:36Z
+# exit 0

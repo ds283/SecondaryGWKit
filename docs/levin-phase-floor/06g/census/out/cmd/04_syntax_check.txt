@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c import\ ast\,sys\,glob\;\ fs=sorted\(glob.glob\(\'scripts/\*.py\'\)\)\;\ \[ast.parse\(open\(f\).read\(\)\,\ f\)\ for\ f\ in\ fs\]\;\ print\(len\(fs\)\,\ \'scripts\ parse\'\)
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:18:56Z
+# ----
+69 scripts parse
+# ----
+# end 2026-11-01T11:18:56Z
+# exit 0

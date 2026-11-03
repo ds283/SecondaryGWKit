@@ -1,0 +1,47 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/make_part2_plan.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T20:11:51Z
+# ----
+# levin-phase-floor 06g: part 2's reading plan (addendum 3)
+# written 2026-11-01T20:11:51Z on mps026298.phys.susx.ac.uk
+# script make_part2_plan.py sha256 fc70405f60f3b1d2d8f0797400be2d9dae98d65c7b209d644da2c227f6777605
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/routes.json sha256 9302367356b7cc326d98a784270ee24e46ddaa5ce5441281bf326a5447e84028
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/tool_vs_06i.json sha256 9902e9bedfdf05f0edaa0b16bf22cfdb46fc6aef80ec96675e8e7efac25f9eac
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/selection.json sha256 f1d760077f8769a349f67689c6eed05832092ed1e6e980a01f2b5d1fcdfa5b95
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/out/v1_capture.json sha256 71e5b9da1ec4b9b4ee465c0cd0531a34d48ba46f26fb47bd4cf417af9a9ad19a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/out/v1_compare_groups.json sha256 46700ebfa0610807b7f7426ae6e49f1f767be9a9d3c5883469232b1ef7537c75
+{
+ "A_qawo_r1_s_per_rad": 1.1732363934377227e-07,
+ "A_qawo_r2_s_per_rad": 7.71625942101595e-07,
+ "A_fcc_r1_s": 3.163868160918355,
+ "A_fcc_r2_s": 3.7865056015684138,
+ "B_qawo_r1_s_per_segment": 0.01392479094086963,
+ "B_qawo_r2_s_per_segment": 0.03728509441695126,
+ "B_fcc_r1_s_per_segment": 0.017905958279772646,
+ "B_fcc_r2_s_per_segment": 0.0693000404711204,
+ "overhead_s": 1.6
+}
+stage v1: 48 readings, projected 2273 s (0.63 h)
+stage v8: 48 readings, projected 1929 s (0.54 h)
+stage ref: 274 readings, projected 9924 s (2.76 h)
+stage ref_long: 10 readings, projected 34544 s (9.60 h)
+   long: ref r00 qawo r2: projection 795 s, ceiling 4771 s
+   long: ref r37 qawo r2: projection 1083 s, ceiling 6497 s
+   long: ref_long z20 qawo r1: projection 554 s, ceiling 4154 s
+   long: ref_long r30 qawo r1: projection 1178 s, ceiling 7069 s
+   long: ref_long z19 qawo r1: projection 1740 s, ceiling 10443 s
+   long: ref_long z26 qawo r1: projection 1802 s, ceiling 10809 s
+   long: ref_long z05 qawo r1: projection 2002 s, ceiling 12013 s
+   long: ref_long z17 qawo r1: projection 2607 s, ceiling 15645 s
+   long: ref_long z11 qawo r1: projection 5466 s, ceiling 32796 s
+   long: ref_long z16 qawo r1: projection 6333 s, ceiling 37997 s
+   long: ref_long z28 qawo r1: projection 6333 s, ceiling 37997 s
+   long: ref_long r07 qawo r1: projection 6512 s, ceiling 39075 s
+total: 380 readings, projected 48670 s = 13.52 h; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/part2_plan.json sha256 abd1f6d30ed75b649fc1148cee0df0604162fe939503faa6092b1735f9107825
+# ----
+# end 2026-11-01T20:11:51Z
+# exit 0

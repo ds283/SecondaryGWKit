@@ -1,0 +1,24 @@
+$ /bin/bash -c $'R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-references-rerun-20261102T185324; cat $R/status.json; P=$(python3 -c "import json;print(json.load(open(\\"$R/status.json\\"))[\\"pid\\"])"); kill -0 $P && echo "driver pid $P answers kill -0"; echo "stderr bytes: $(wc -c < $R/stderr.log)"; python3 -c "\nimport json\nfor l in open(\\"$R/checkpoint.jsonl\\"):\n    r=json.loads(l); d=r[\\"data\\"]; print(r[\\"unit\\"], d[\\"status\\"], d.get(\\"bit_identical\\"), round(d[\\"driver_wall_s\\"],1), d.get(\\"tool_sha256\\",\\"\\")[:12])\n" 2>/dev/null'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-02T18:53:36Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-02T18:53:34+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 83838,
+  "stage": "reread r55-qawo-r2 running (estimate 3-17 s)",
+  "state": "running",
+  "units_done": 1,
+  "units_total": 67
+}
+driver pid 83838 answers kill -0
+stderr bytes: 0
+reread z13-qawo-r1 done True 9.3 5ed56fc24e46
+# ----
+# end 2026-11-02T18:53:36Z
+# exit 0

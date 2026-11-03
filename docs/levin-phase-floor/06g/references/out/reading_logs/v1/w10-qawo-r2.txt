@@ -1,0 +1,74 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/inputs/w10-g.pkl qawo 2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/w10-qawo-r2.json --sid w10 --unit R24 k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @  --index 1 --rtol 1e-7 --workers 6 --progress /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/progress/w10-qawo-r2.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-01T20:42:44Z
+# projection_s 52.6 ceiling_s 3652.6
+# ----
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py", line 1125, in _run_chunk
+    value, extra = _CHUNK_FUNCTIONS[kind](state, *args)
+                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py", line 1079, in _route_b_qawo_chunk
+    v, info = qawo_panel(
+              ~~~~~~~~~~^
+        gfun,
+        ^^^^^
+    ...<5 lines>...
+        cfg["epsrel"],
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py", line 366, in qawo_panel
+    out = integrate.quad(
+        fn,
+    ...<8 lines>...
+        full_output=1,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/scipy/integrate/_quadpack_py.py", line 467, in quad
+    retval = _quad_weight(func, a, b, args, full_output, epsabs, epsrel,
+                          limlst, limit, maxp1, weight, wvar, wopts)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/scipy/integrate/_quadpack_py.py", line 635, in _quad_weight
+    return _quadpack._qawoe(func, a, b, wvar, integr, args, full_output,
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            epsabs, epsrel, limit, maxp1,1)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py", line 364, in <lambda>
+    for part, fn in (("r", lambda s: G(s).real), ("i", lambda s: G(s).imag)):
+                                     ~^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py", line 352, in G
+    v = gfun_d(cf + s)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py", line 1063, in gfun
+    yn = min(1.0, max(-1.0, y - fval / dpy))
+                                ~~~~~^~~~~
+ZeroDivisionError: float division by zero
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py", line 170, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py", line 123, in main
+    r = F.reading(
+        call,
+    ...<5 lines>...
+        call_source=("tools.filon_reference", "_load_pickle", (pkl, "ray.cloudpickle")),
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/tools/filon_reference.py", line 1221, in reading
+    results = _run_jobs(jobs, state, workers, call_source, route, edges)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py", line 77, in run_jobs
+    for r in pool.imap(F._run_chunk, jobs, chunksize=1):
+             ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/pool.py", line 873, in next
+    raise value
+ZeroDivisionError: float division by zero
+# ----
+# end 2026-11-01T20:43:00Z
+# exit 1
+# status error
+# wall_s 15.333

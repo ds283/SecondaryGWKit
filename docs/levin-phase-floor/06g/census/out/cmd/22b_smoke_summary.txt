@@ -1,0 +1,28 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/smoke_summary.py state/smoke/ledger.jsonl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:42:06Z
+# ----
+g-1e-7-1-34599 done wall 5.63 1c5336e '' foreign []
+   calls 21 error_06g 0 abserr reassembles 21 value reassembles 21 budget parsed 21 node_limited 0 converged 20 max depth 20
+   checked leaves 595 returned 326 b-untrusted 132 trust_g != final 0 checked errors 0 premise checks 147 fired 80 split could meet 6 quarters 242
+   cc_floor leaves 146 reproduced 146 declared leaves 89 reproduced 89
+   analytic_06h h {'value': {'repr': '-8.104695026034786e-22', 'hex': '-0x1.e9e614bb8929cp-71'}, 'abserr': {'repr': '1.3050291179939613e-29', 'hex': '0x1.08b0fc63b7a0ep-96'}, 'converged': True} captured 1 counterfactual ok
+g-1e-7-3-13829 done wall 11.74 1c5336e '' foreign []
+   calls 21 error_06g 0 abserr reassembles 21 value reassembles 21 budget parsed 21 node_limited 0 converged 21 max depth 19
+   checked leaves 1164 returned 609 b-untrusted 305 trust_g != final 0 checked errors 0 premise checks 325 fired 198 split could meet 14 quarters 411
+   cc_floor leaves 329 reproduced 329 declared leaves 120 reproduced 120
+   analytic_06h h {'value': {'repr': '-5.606366636422582e-22', 'hex': '-0x1.52e2525968927p-71'}, 'abserr': {'repr': '3.360023954746895e-29', 'hex': '0x1.54bf358929608p-95'}, 'converged': True} captured 1 counterfactual ok
+g-1e-8-1-34599 done wall 6.07 1c5336e '' foreign []
+   calls 21 error_06g 0 abserr reassembles 21 value reassembles 21 budget parsed 21 node_limited 0 converged 20 max depth 20
+   checked leaves 653 returned 363 b-untrusted 132 trust_g != final 0 checked errors 0 premise checks 186 fired 93 split could meet 6 quarters 266
+   cc_floor leaves 155 reproduced 155 declared leaves 114 reproduced 114
+   analytic_06h h {'value': {'repr': '-8.104695026034803e-22', 'hex': '-0x1.e9e614bb892aep-71'}, 'abserr': {'repr': '1.9743521329880974e-30', 'hex': '0x1.405b610796b81p-99'}, 'converged': True} captured 1 counterfactual ok
+g-1e-8-3-13829 done wall 11.71 1c5336e '' foreign []
+   calls 21 error_06g 0 abserr reassembles 21 value reassembles 21 budget parsed 21 node_limited 0 converged 21 max depth 19
+   checked leaves 1102 returned 586 b-untrusted 313 trust_g != final 0 checked errors 0 premise checks 258 fired 170 split could meet 14 quarters 416
+   cc_floor leaves 355 reproduced 355 declared leaves 78 reproduced 78
+   analytic_06h h {'value': {'repr': '-5.606366636422582e-22', 'hex': '-0x1.52e2525968927p-71'}, 'abserr': {'repr': '4.150128037957343e-30', 'hex': '0x1.50b2c97f1fd22p-98'}, 'converged': True} captured 1 counterfactual ok
+# ----
+# end 2026-11-01T11:42:06Z
+# exit 0

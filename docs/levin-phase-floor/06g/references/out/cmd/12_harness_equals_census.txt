@@ -1,0 +1,21 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit-lpf06g-1c5336e/5dfa088e-5986-494e-9433-38e81a98b2a0/scratchpad/harness_eq.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:48:38Z
+# ----
+records 18560 distinct scripts_sha256 sets 1
+dispatch.py: census 14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b mine 14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b EQUAL
+harness.py: census 17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721 mine 17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721 EQUAL
+launch.py: census d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e mine d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e EQUAL
+prov.py: census 22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf mine 22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf EQUAL
+rebuild.py: census dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212 mine dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212 EQUAL
+rerun.py: census 6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e mine 6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e EQUAL
+run_census.py: census 5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2 mine 5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2 EQUAL
+spscan.py: census ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b mine ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b EQUAL
+worker.py: census 90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4 mine 90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4 EQUAL
+ALL EQUAL
+# ----
+# end 2026-11-01T17:48:50Z
+# exit 0
+bbb15ebde2d105ff2ea62b3ab5f4a5392b76b5635384b3ed078d9e51035f88df  scripts/harness_equals_census.py
+bbb15ebde2d105ff2ea62b3ab5f4a5392b76b5635384b3ed078d9e51035f88df  /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit-lpf06g-1c5336e/5dfa088e-5986-494e-9433-38e81a98b2a0/scratchpad/harness_eq.py

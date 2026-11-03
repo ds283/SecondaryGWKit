@@ -1,0 +1,14 @@
+2026-11-01T11:42:36.620+00:00 930ce6fd28ba6ff2 levin-phase-floor-06g/census/state/predictions.md
+2026-11-01T17:51:20.051+00:00 825b6f04f5a672c0 levin-phase-floor-06g/references/state/predictions_20261101T175120Z.md
+2026-11-01T11:23:00.175+00:00 72335a50dda2c257 levin-phase-floor-06g/references/state/predictions_draft_stage1.md
+2026-11-01T17:51:44.629+00:00 d03fde45a573dd63 levin-phase-floor-06g/references/state/v1_rule_20261101T175144Z.md
+2026-11-01T17:51:44.614+00:00 04bacdc502354c87 levin-phase-floor-06g/references/state/v8_rule_20261101T175144Z.md
+2026-11-01T20:13:47.668+00:00 c036412ac5c2a9a6 levin-phase-floor-06g/references/state/ruling_addendum3_20261101T201347Z.md
+2026-11-01T17:33:53.480+00:00 874e17db6e60afd3 levin-phase-floor-06g/review/v8_sample.json
+2026-11-01T17:34:13.301+00:00 c4dcd6dc7dca71f9 levin-phase-floor-06g/review/dispatch_references_addendum2.md
+== run manifests: created (UTC), git_head recorded by the registry (the main checkout's)
+2026-11-01T11:43:15+00:00 28ebaf0 5f21f0727c679c57 levin-phase-floor-06g-census-20261101T114315
+2026-11-01T11:06:41+00:00 4f4f9ed b0135218ede395a5 levin-phase-floor-06g-r23-parent-20261101T110641
+2026-11-01T11:12:15+00:00 1c5336e b0135218ede395a5 levin-phase-floor-06g-r24-leafvalues-20261101T111215
+2026-11-01T17:52:31+00:00 28ebaf0 685c3cf17b407374 levin-phase-floor-06g-references-20261101T175231
+2026-11-01T20:14:15+00:00 28ebaf0 68443f94f91c985d levin-phase-floor-06g-references-20261101T201415

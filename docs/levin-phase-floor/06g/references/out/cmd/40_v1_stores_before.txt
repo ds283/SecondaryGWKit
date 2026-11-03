@@ -1,0 +1,31 @@
+$ /bin/bash -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ shasum\ -a\ 256\ var/datastores/levin-phase-floor-06g-r2\[34\]\*.sqlite\ \>\ /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit-lpf06g-1c5336e/5dfa088e-5986-494e-9433-38e81a98b2a0/scratchpad/v1_before.txt\;\ cat\ /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit-lpf06g-1c5336e/5dfa088e-5986-494e-9433-38e81a98b2a0/scratchpad/v1_before.txt\;\ echo\ \'##\ against\ the\ baseline\ var/levin-phase-floor-06g/rehearsal/state/stores_sha256_final.txt\'\;\ grep\ -v\ \'\^var/datastores.\*\ \[0-9\]\*\ \[0-9\]\*\$\\\|journal\\\|none\'\ var/levin-phase-floor-06g/rehearsal/state/stores_sha256_final.txt\ \|\ diff\ -\ /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit-lpf06g-1c5336e/5dfa088e-5986-494e-9433-38e81a98b2a0/scratchpad/v1_before.txt\ \&\&\ echo\ EQUAL\;\ ls\ -la\ var/datastores\ \|\ grep\ -E\ \'06g-r2\[34\].\*\(journal\|wal\|shm\)\'\ \|\|\ echo\ \'journal/-wal/-shm:\ none\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T19:59:46Z
+# ----
+87dfa6dbaf57d8c9e26d91d3588a57059ca75284531ba1e5822e763aac3a60a7  var/datastores/levin-phase-floor-06g-r23-shard0000.sqlite
+acbd96521ba6040428d6e1972dfeede748a6a72d955f3d22bd0a23d502184168  var/datastores/levin-phase-floor-06g-r23-shard0001.sqlite
+4424d9c263ed36ebf493a045d29aac66df70d0933fddfa18416cfa84f3b981a0  var/datastores/levin-phase-floor-06g-r23-shard0002.sqlite
+aac7b8fcaf470b02336aed27fa0a8e4e9d0fc900410079328daf8eef8cce712d  var/datastores/levin-phase-floor-06g-r23-shard0003.sqlite
+88cc355f9a018e17816f13b8fb587017f0cde54e7fc3a07b8c4a6f2ed6c4944a  var/datastores/levin-phase-floor-06g-r23.sqlite
+c9e3b2ab01e75b4e58500ff8c97296a2b519c1056af1421d49d799ec23ad98c8  var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite
+b869b71f874738c8ec85acabdf91d42df113e67ef83af4bf172e6d31984a5385  var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite
+c8a98a8dad08900b0f191f21df6f4aeebda0fe9db0b798a6715eb4441350e964  var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite
+45c6f6e86eba5fcba1009df216f2d71615d6349e871893318eb362f578e47fc2  var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite
+6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a  var/datastores/levin-phase-floor-06g-r24.sqlite
+## against the baseline var/levin-phase-floor-06g/rehearsal/state/stores_sha256_final.txt
+11,20d10
+< var/datastores/levin-phase-floor-06g-r23-shard0000.sqlite 25022464 1793531475
+< var/datastores/levin-phase-floor-06g-r23-shard0001.sqlite 25243648 1793531475
+< var/datastores/levin-phase-floor-06g-r23-shard0002.sqlite 1077248 1793531214
+< var/datastores/levin-phase-floor-06g-r23-shard0003.sqlite 24436736 1793531475
+< var/datastores/levin-phase-floor-06g-r23.sqlite 36864 1793531214
+< var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite 25042944 1793532163
+< var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite 25264128 1793532163
+< var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite 1077248 1793531546
+< var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite 24489984 1793532163
+< var/datastores/levin-phase-floor-06g-r24.sqlite 36864 1793531546
+journal/-wal/-shm: none
+# ----
+# end 2026-11-01T19:59:47Z
+# exit 0

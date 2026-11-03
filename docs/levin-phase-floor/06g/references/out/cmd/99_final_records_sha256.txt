@@ -1,0 +1,17 @@
+$ /bin/bash -c shasum\ -a\ 256\ log.md\ verification.md\ issues.md\ KEPT_ON_MAC_STUDIO.txt\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references\ -name\ __pycache__\ \|\ wc\ -l
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T07:06:10Z
+# ----
+3109893a2a7919163a3c1c3d3d55578d184fee3b35637079ec531387d3f98630  log.md
+654cbb76a7e6c66918e81e3cb37004f9d16184b302e0a8a8d9f762c0aa4975d9  verification.md
+b51f0a8d6cf6e5d08709201b055a2fd84827c685dde71b51f38f60c759002b5f  issues.md
+284034e77f1b3ab74d545e339c79bc9856b6c90eca8abc0c09440d759cf1e550  KEPT_ON_MAC_STUDIO.txt
+1
+# ----
+# end 2026-11-03T07:06:10Z
+# exit 0
+d0fc4dc0b7444378d55bb59fe79bc9bdce1f451607abbfb9d4028be6ac866349  log.md
+e0565897409927729089790d5ed9e1cf6a61ed98b81f60e847dcfdbd0797e89e  verification.md
+9845888742b5405d7f1f88f89fe541ab2ddfc37149c12aca12839779da4c55fc  issues.md
+284034e77f1b3ab74d545e339c79bc9856b6c90eca8abc0c09440d759cf1e550  KEPT_ON_MAC_STUDIO.txt

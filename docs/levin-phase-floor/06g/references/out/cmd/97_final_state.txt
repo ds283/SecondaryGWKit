@@ -1,0 +1,41 @@
+$ /bin/bash -c for\ t\ in\ 1c5336e\ 4f4f9ed\ ff3e839\ b5626ec\;\ do\ d=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-\$t\;\ \[\ -d\ \$d\ \]\ \|\|\ continue\;\ echo\ \"==\ \$t\ HEAD\ \$\(git\ --no-optional-locks\ -C\ \$d\ rev-parse\ HEAD\)\ status\ --short\ --ignored\ lines:\ \$\(git\ --no-optional-locks\ -C\ \$d\ status\ --short\ --ignored\ \|\ wc\ -l\)\"\;\ git\ --no-optional-locks\ -C\ \$d\ status\ --short\ --ignored\;\ done\;\ echo\ \"==\ main\"\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\ \|\ wc\ -l\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ shasum\ -a\ 256\ var/datastores/levin-phase-floor-06g-r2\[34\]\*.sqlite\ \|\ diff\ -\ var/levin-phase-floor-06g/references/v1/state/stores_sha256_before.txt\ \&\&\ echo\ \"rehearsal\ stores\ EQUAL\ to\ before\"\;\ ls\ var/datastores\ \|\ grep\ -E\ \"06g.\*\(journal\|wal\|shm\)\"\ \|\|\ echo\ \"no\ journal/-wal/-shm\"\;\ find\ var/datastores\ -newer\ var/levin-phase-floor-06g/references/state/marker_stage2\ -maxdepth\ 1\ \|\ head\;\ ./venv/bin/python\ -B\ -m\ runregistrykit\ list\ \|\ grep\ -E\ \"06g\|run\\\(s\\\)\"\ \|\ cut\ -c1-110
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T07:02:12Z
+# ----
+== 1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd status --short --ignored lines: 0
+== 4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 status --short --ignored lines: 0
+== ff3e839 HEAD ff3e8394fa3cf81a3d27087708f6fc8acbc3fb63 status --short --ignored lines: 16
+!! AdaptiveLevin/__pycache__/
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+!! CosmologyModels/__pycache__/
+!! LiouvilleGreen/__pycache__/
+!! MetadataConcepts/__pycache__/
+!! Quadrature/__pycache__/
+!! Quadrature/integrators/__pycache__/
+!! Quadrature/supervisors/__pycache__/
+!! StoreFixtures/__pycache__/
+!! Units/__pycache__/
+!! __pycache__/
+!! config/__pycache__/
+!! tools/__pycache__/
+== b5626ec HEAD b5626ecbc78a8242581c3b413cbe431b4e339472 status --short --ignored lines: 0
+== main
+28ebaf0743e0555fb2c4512ce714884005a60eff
+0
+rehearsal stores EQUAL to before
+no journal/-wal/-shm
+   levin-phase-floor-06g-references-rerun-20261102T185324  done          67/67  12h 08m  levin-phase-floor pro
+   levin-phase-floor-06g-references-20261101T201415        done        380/380   1d 10h  [part 2 of 2: out/par
+   levin-phase-floor-06g-references-20261101T175231        done          60/60   1d 13h  [part 1 of 2: capture
+   levin-phase-floor-06g-census-20261101T114315            done      18560/18560   1d 19h  levin-phase-floor p
+   levin-phase-floor-06g-r24-leafvalues-20261101T111215    done              -   1d 19h  levin-phase-floor pro
+   levin-phase-floor-06g-r23-parent-20261101T110641        done              -   1d 19h  levin-phase-floor pro
+   levin-phase-floor-06h-census-20261101T005037            done      18560/18560   2d 06h  levin-phase-floor p
+46 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 46 finished; 0 with no host recorded.
+# ----
+# end 2026-11-03T07:02:13Z
+# exit 0

@@ -1,0 +1,14 @@
+$ /bin/bash -c shasum\ -a\ 256\ out/v8.md\ out/v8_calls.json\ state/predictions.md\;\ ls\ -l\ --time-style=full-iso\ out/v8.md\ out/v8_calls.json\ state/predictions.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:39:39Z
+# ----
+784ab5280b58abd9b0c9b56d3f86b0da513512e82dfb50d45ee38cfdf9724351  out/v8.md
+1e9a62b0f8d95deade4f265d1fa1a8b5bbd63f587f7c9761d78882db5367c42e  out/v8_calls.json
+930ce6fd28ba6ff2f6bfce03d87c75febc474394156ba3da1230dc99b92ada60  state/predictions.md
+-rw-r--r-- 1 ds283 staff 6934200 2026-11-01 17:26:38.690041954 +0000 out/v8_calls.json
+-rw-r--r-- 1 ds283 staff  372511 2026-11-01 17:27:20.727713516 +0000 out/v8.md
+-rw-r--r-- 1 ds283 staff    9415 2026-11-01 11:42:36.620888148 +0000 state/predictions.md
+# ----
+# end 2026-11-01T17:39:39Z
+# exit 0

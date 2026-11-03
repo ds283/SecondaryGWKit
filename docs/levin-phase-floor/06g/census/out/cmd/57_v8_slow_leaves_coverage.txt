@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/v8_slow_leaves_coverage.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:42:13Z
+# ----
+1e-7 lost calls 801 with a scoped leaf 578 without 223 ; of those without: node_limited 0 , untrusted returned >= 1 223 , n_b_untrusted_returned == 0 (their (b) leaves were all bisected or exempted floor-limited) 2
+1e-8 lost calls 830 with a scoped leaf 600 without 230 ; of those without: node_limited 3 , untrusted returned >= 1 227 , n_b_untrusted_returned == 0 (their (b) leaves were all bisected or exempted floor-limited) 2
+# ----
+# end 2026-11-01T17:42:13Z
+# exit 0

@@ -1,0 +1,11 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r42.pkl fcc 1 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r42-fcc-r1.json --sid r42 --unit g-1e-8-2-33438 --index 16 --rtol 1e-8 --workers 6 --progress /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/progress/r42-fcc-r1.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-02T05:28:40Z
+# projection_s 3.2 ceiling_s 3603.2
+# ----
+{"sample": "r42", "route": "A", "impl": "fcc", "res": 1, "value_hex": "0x1.bae3371ed8901p-46", "value_30": "2.45851983117195819586936518679e-14", "wall_s": 3.0878881248645484, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-02T05:28:44Z
+# exit 0
+# status done
+# wall_s 4.316

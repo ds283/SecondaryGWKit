@@ -1,0 +1,85 @@
+rows: R23 864, R24 864; same (k,q,r,z_response) set: True
+columns equal: True; 48 columns
+tolerances (log10 atol, log10 rtol) R23: [((-32.0, -7.0), 864)]; R24: [((-32.0, -7.0), 864)]
+tolerances equal row by row: True
+column kinds: timing: ['WKB_Levin_elapsed', 'analytic_compute_time', 'compute_time', 'numeric_quad_compute_time', 'numeric_quad_max_RHS_time', 'numeric_quad_mean_RHS_time', 'numeric_quad_min_RHS_time']; label: ['label']; identity: ['Tq_WKB_serial', 'Tq_numeric_serial', 'Tr_WKB_serial', 'Tr_numeric_serial', 'atol_serial', 'data_serial', 'k_wavenumber_exit_serial', 'model_serial', 'policy_serial', 'q_wavenumber_exit_serial', 'quad_policy_serial', 'r_wavenumber_exit_serial', 'rtol_serial', 'serial', 'source_serial', 'timestamp', 'z_response_serial', 'z_source_max_serial']; counter: ['WKB_Levin_SVD_errors', 'WKB_Levin_chebyshev_min_order', 'WKB_Levin_evaluations', 'WKB_Levin_max_depth', 'WKB_Levin_num_regions', 'WKB_Levin_order_changes', 'WKB_Levin_simple_regions', 'numeric_quad_RHS_evaluations', 'numeric_quad_compute_steps']; value: ['WKB_Levin', 'WKB_phase_spline_chunks', 'analytic_rad', 'b', 'eta_response', 'eta_source_max', 'numeric_quad', 'total', 'total_abserr', 'total_converged', 'total_phase_limited', 'version']
+tool: 864 rows differ, 0 identical, only_in_a 0, only_in_b 0, unmatched 0; its keys equal the stores' set: True
+cross-check of `total` against the tool: 0 mismatches
+
+06a census checkpoint /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+06a rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+06a's stationary-point rows: 720 (of A3 v2's 9280); rehearsal rows among them (physical key equal as floats): 0; rehearsal rows equal to any A3 v2 row: 0
+  rehearsal k [100000.0, 316227.7660168379, 1000000.0]; k shared with A3 v2 [100000.0]; z_response values: rehearsal 96, shared with A3 v2 0
+
+rows whose column/metadata field sets differ between R23 and R24: 0
+rows with a WKB Levin call: 573 (calls R23 3105, R24 3105; rows whose call count differs: 0); with none: 291
+
+== bit-identity (float.hex), every row
+  total bit-identical: 294/864 (rows with a Levin call 3/573, rows with none 291/291)
+  total_abserr bit-identical: 294/864
+  every value field (columns and metadata, timings/labels/identity/counters excluded) bit-identical: 208/864 (rows with a Levin call 0, rows with none 208)
+  rows with no Levin call whose value fields differ: 83
+  analytic_rad bit-identical: 228/864; max |d analytic_rad|/(analytic abserr23+24) 4.986e-01
+  value fields differing, by field (indices folded), rows: {'meta:WKB_Levin.subintervals[].groups[].value': 3098, 'meta:WKB_Levin.subintervals[].groups[].abserr': 2737, 'meta:WKB_Levin.subintervals[].value': 1292, 'meta:WKB_Levin.subintervals[].abserr': 1289, 'meta:WKB_Levin.subintervals[].groups[].phase_limited': 1005, 'col:analytic_rad': 636, 'meta:WKB_Levin.abserr': 570, 'col:total': 570, 'col:total_abserr': 570, 'col:WKB_Levin': 570, 'meta:analytic.abserr': 486, 'meta:WKB_Levin.subintervals[].phase_limited': 338, 'meta:WKB_Levin.phase_limited': 283, 'col:total_phase_limited': 283, 'meta:analytic.2pt5.Levin.J4_data.abserr': 267, 'meta:analytic.0pt5.Levin.Y2_data.abserr': 232, 'meta:analytic.0pt5.Levin.Y4_data.abserr': 228, 'meta:analytic.2pt5.Levin.Y4_data.abserr': 228, 'meta:analytic.2pt5.Levin.J1_data.abserr': 223, 'meta:analytic.0pt5.Levin.Y3_data.abserr': 218, 'meta:analytic.0pt5.Levin.J2_data.abserr': 213, 'meta:analytic.0pt5.Levin.J4_data.abserr': 211, 'meta:analytic.2pt5.Levin.Y1_data.abserr': 206, 'meta:analytic.0pt5.Levin.J1_data.abserr': 204, 'meta:analytic.0pt5.Levin.J3_data.abserr': 199, 'meta:analytic.2pt5.Levin.Y2_data.abserr': 177, 'meta:analytic.2pt5.Levin.J2_data.abserr': 158, 'meta:analytic.0pt5.Levin.Y1_data.abserr': 150, 'meta:analytic.2pt5.Levin.Y3_data.abserr': 148, 'meta:analytic.2pt5.Levin.J3_data.abserr': 124, 'meta:WKB_Levin.subintervals[].groups[].converged': 97, 'col:total_converged': 67, 'meta:WKB_Levin.converged': 67, 'meta:WKB_Levin.subintervals[].converged': 67, 'meta:analytic.2pt5.Levin.J1_data.phase_limited': 18, 'meta:analytic.2pt5.Levin.Y1_data.phase_limited': 16, 'meta:analytic.0pt5.Levin.Y1_data.phase_limited': 14, 'meta:analytic.2pt5.Levin.J2_data.phase_limited': 11, 'meta:analytic.2pt5.Levin.Y3_data.phase_limited': 11, 'meta:analytic.0pt5.Levin.J1_data.phase_limited': 11, 'meta:analytic.2pt5.Levin.Y2_data.phase_limited': 10, 'meta:analytic.2pt5.Levin.Y4_data.phase_limited': 9, 'meta:analytic.0pt5.Levin.J4_data.phase_limited': 9, 'meta:analytic.2pt5.Levin.J3_data.phase_limited': 8, 'meta:analytic.0pt5.Levin.J2_data.phase_limited': 8, 'meta:analytic.0pt5.Levin.J3_data.phase_limited': 7, 'meta:analytic.0pt5.Levin.Y4_data.phase_limited': 6, 'meta:analytic.0pt5.Levin.Y2_data.phase_limited': 6, 'meta:analytic.2pt5.Levin.J4_data.phase_limited': 3, 'meta:analytic.0pt5.Levin.Y3_data.phase_limited': 3}
+
+== V1: |total_24 - total_23| <= total_abserr_23 + total_abserr_24, rows outside 06a's 720 stationary-point rows with both finite
+  rows among 06a's stationary-point rows (tabulated, not scored): 0
+  rows scored (outside them, finite total_abserr in both): 864; violations: 12
+  rows outside them with a non-finite total_abserr, counted separately: none
+  largest |dT|/total_abserr_23 over the scored rows: 25486.2 at k=316228 q=316228 r=316228 z=434.65133 (total23 -0x1.bcb9578284e92p-64 total24 -0x1.bbf87768382dap-64 abserr23 0x1.eff7071a8f92ap-88 abserr24 0x1.e64ede7779d01p-88)
+  largest |dT|/total_abserr_24 over the scored rows: 27448.3 at k=100000 q=100000 r=100000 z=5236.553 (total23 -0x1.60d489de69402p-55 total24 -0x1.5ff6ede3f1fadp-55 abserr23 0x1.21b44281c283ep-78 abserr24 0x1.088f35de11bf5p-78)
+  |dT|/(abserr23+abserr24) over the finite rows: p0 0, p50 0.0191, p90 0.159, p99 1.9e+03, p100 1.31e+04
+  over the finite rows whose total moved: p0 1.45e-05, p50 0.051, p90 0.187, p99 4.07e+03, p100 1.31e+04
+    VIOLATION k=100000 q=100000 r=100000 z=3971.4126: total23 -0x1.620fef0efb626p-56 total24 -0x1.6264cbb02c333p-56 abserr23 0x1.53b4899ee9003p-79 abserr24 0x1.56ce16ca76decp-79 ratio 4074.3
+    VIOLATION k=100000 q=100000 r=100000 z=5236.553: total23 -0x1.60d489de69402p-55 total24 -0x1.5ff6ede3f1fadp-55 abserr23 0x1.21b44281c283ep-78 abserr24 0x1.088f35de11bf5p-78 ratio 13101.5
+    VIOLATION k=100000 q=100000 r=100000 z=6904.7189: total23 -0x1.856721d9b93e5p-55 total24 -0x1.85621fd5aeb33p-55 abserr23 0x1.729c4e92c90ebp-78 abserr24 0x1.6a4705e03b114p-78 ratio 223.906
+    VIOLATION k=316228 q=316228 r=316228 z=434.65133: total23 -0x1.bcb9578284e92p-64 total24 -0x1.bbf87768382dap-64 abserr23 0x1.eff7071a8f92ap-88 abserr24 0x1.e64ede7779d01p-88 ratio 12868.4
+    VIOLATION k=316228 q=316228 r=316228 z=573.11465: total23 0x1.01dcb4297e779p-63 total24 0x1.0163814429fcbp-63 abserr23 0x1.91a4ed615374dp-87 abserr24 0x1.7888456c4574ep-87 ratio 10207
+    VIOLATION k=316228 q=316228 r=316228 z=996.42016: total23 -0x1.2179faec40418p-62 total24 -0x1.21132816cf33ep-62 abserr23 0x1.b9223a4398a9cp-86 abserr24 0x1.b1c6747755c13p-86 ratio 7702.11
+    VIOLATION k=316228 q=316228 r=316228 z=6904.7189: total23 0x1.2b8433694421fp-60 total24 0x1.2b4c92dd0131bp-60 abserr23 0x1.3585cfdb5c416p-84 abserr24 0x1.2b3a0f49a3a98p-84 ratio 5988.64
+    VIOLATION k=1e+06 q=1e+06 r=1e+06 z=329.64046: total23 -0x1.a4001d0eea20ap-70 total24 -0x1.a4a7b36307b24p-70 abserr23 0x1.749052d5bed9ap-93 abserr24 0x1.50fe6c9753b0bp-93 ratio 7739.33
+    VIOLATION k=1e+06 q=1e+06 r=1e+06 z=573.11465: total23 -0x1.4b8ed0563fd6ep-68 total24 -0x1.4bb0ed52fd428p-68 abserr23 0x1.14f5d284d513dp-91 abserr24 0x1.f651f176a5f76p-92 ratio 2116.61
+    VIOLATION k=1e+06 q=1e+06 r=1e+06 z=996.42016: total23 -0x1.199b2af471ea1p-67 total24 -0x1.19b37534bf06bp-67 abserr23 0x1.a4df28a0efa98p-91 abserr24 0x1.d527ab2931c68p-91 ratio 1788.57
+    VIOLATION k=1e+06 q=1e+06 r=1e+06 z=1732.3814: total23 -0x1.e6ea7941509c2p-67 total24 -0x1.e712f5a4fc756p-67 abserr23 0x1.55e5071cf810ap-90 abserr24 0x1.637e2d61dc783p-90 ratio 1902.3
+    VIOLATION k=1e+06 q=1e+06 r=1e+06 z=6904.7189: total23 0x1.fb6aca7818b1ep-65 total24 0x1.fbac854c4b16cp-65 abserr23 0x1.0e8e346b764b8p-87 abserr24 0x1.d25b550ba8510p-88 ratio 2137.87
+
+== total_abserr and the totals, rows with a Levin call
+  abserr24/abserr23 (both finite, nonzero): p0 0.186, p50 0.955, p90 1.05, p99 1.4, p100 2.05
+  |dT|/abserr23: p0 0, p50 0.0957, p90 0.335, p99 8.19e+03, p100 2.55e+04
+  |dT|/abserr24: p0 0, p50 0.115, p90 0.446, p99 8.11e+03, p100 2.74e+04
+  |dT|/|T23|: p0 0, p50 1.2e-08, p90 4.14e-08, p99 0.000725, p100 0.00245
+  abserr24 > abserr23: 129; abserr24 < abserr23: 441
+
+== total_converged, R23 -> R24 (every row)
+  {(1, 0): 67, (1, 1): 797}
+  converged R23 864, R24 797 of 864; Levin calls unconverged R23 0, R24 97
+  total_phase_limited R23 -> R24: {(1, 1): 195, (0, 1): 283, (0, 0): 386}
+  Levin calls phase-limited R23 406, R24 1411
+
+== region counts and maximum depths (rows with a Levin call)
+  WKB_Levin_num_regions summed: R23 31216, R24 134011; evaluations R23 246623, R24 1068983
+  rows: regions equal 15, more in R24 558, fewer in R24 0
+  regions R24/R23 per row: p0 1, p50 3.88, p90 9.79, p99 18.7, p100 26.7
+  WKB_Levin_max_depth R23: {0: 4, 1: 1, 2: 4, 3: 6, 4: 4, 5: 23, 6: 145, 7: 247, 8: 75, 9: 33, 10: 12, 11: 8, 12: 1, 13: 2, 14: 1, 15: 2, 16: 2, 18: 2, 19: 1}
+  WKB_Levin_max_depth R24: {0: 4, 1: 1, 2: 1, 3: 9, 4: 2, 5: 7, 6: 26, 7: 42, 8: 23, 9: 23, 10: 15, 11: 11, 12: 20, 13: 32, 14: 57, 15: 64, 16: 56, 17: 53, 18: 31, 19: 20, 20: 76}
+  rows at depth_max (20): R23 0, R24 76
+  max depth: equal 79, deeper in R24 494, shallower 0
+  analytic-block regions summed: R23 24428, R24 29228 (of 10072 blocks); blocks phase-limited R23 3896, R24 3768; blocks unconverged R23 0, R24 0
+
+== by tolerance, rows with a Levin call
+  (log10 atol, log10 rtol) (-32.0, -7.0): rows 573; total moved 570; conv R23 573 R24 506; V1 violations 12; non-finite 0; regions R23 31216 R24 134011; depth20 R23 0 R24 76
+
+== V1 on the oracle: |rad_24 - rad_23| <= analytic.abserr_23 + analytic.abserr_24, rows outside 06a's 720 stationary-point rows with both finite
+  rows among 06a's stationary-point rows (tabulated, not scored): 0
+  rows scored: 864; violations: 0
+  rows outside them with a non-finite or absent oracle value or error, counted separately: none
+  analytic_rad bit-identical over the scored rows: 228/864; analytic.abserr bit-identical: 378/864
+  largest |d rad|/(abserr23+abserr24) over the scored rows: 0.498585 at k=316228 q=316228 r=316228 z=6904.7189 (rad23 0x1.4cc04d1a3a4fep-60 rad24 0x1.4cc04bc6b9c85p-60 abserr23 0x1.54771c151b0e5p-84 abserr24 0x1.54771bf48862cp-84)
+  largest |d rad|/analytic.abserr_23 over the scored rows: 0.997171
+  largest |d rad|/analytic.abserr_24 over the scored rows: 0.997171
+  |d rad|/(abserr23+abserr24) over the scored rows: p0 0, p50 0.0256, p90 0.407, p99 0.492, p100 0.499
+  over the scored rows whose analytic_rad moved: p0 1.81e-09, p50 0.106, p90 0.432, p99 0.494, p100 0.499
+  analytic.converged R23 -> R24: {('True', 'True'): 864}
+
+VERDICT V1 (oracle): holds (0 violations of 864 scored rows; 0 rows non-finite in either, counted separately; 0 stationary-point rows tabulated, not scored)
+VERDICT V1 (total): VIOLATED (12 violations of 864 scored rows (outside 06a's stationary-point rows, finite total_abserr in both); 0 rows non-finite in either, counted separately; 0 stationary-point rows tabulated, not scored)

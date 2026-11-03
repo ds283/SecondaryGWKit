@@ -1,0 +1,9 @@
+$ python3 -B scripts/static_names.py scripts/worker.py scripts/gate_v.py scripts/gate_v_clause1.py scripts/checks_after_06g.py scripts/prov.py scripts/launch.py scripts/harness.py scripts/run_census.py scripts/scripts_equal.py scripts/check_predictions.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:18:56Z
+# ----
+# ----
+# end 2026-11-01T11:18:56Z
+# exit 0
+# (04b's first attempt wrote static_names.py with its docstring only: a BSD sed '1i' error; it printed nothing and exited 0. Rewritten; re-run as 04c.)

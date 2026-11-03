@@ -1,0 +1,120 @@
+$ /bin/bash -c diff\ -u\ state/one_reading_part2.py\ scripts/one_reading.py\;\ shasum\ -a\ 256\ scripts/one_reading.py\ scripts/run_rerun.py\ scripts/launch_rerun.py\ scripts/make_rerun_plan.py\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839/tools/filon_reference.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-02T18:53:17Z
+# ----
+--- state/one_reading_part2.py	2026-11-01 20:10:07
++++ scripts/one_reading.py	2026-11-02 18:50:45
+@@ -31,6 +31,71 @@
+ sys.path.insert(0, str(HERE))
+ 
+ 
++def _indexed_chunk(ij):
++    """Addendum 4/5: one chunk, with its index, for the out-of-order progress count."""
++    import tools.filon_reference as F
++
++    i, job = ij
++    return i, F._run_chunk(job)
++
++
++def _install_progress_unordered(F, path):
++    """Addendum 4 section 2 and addendum 5 (the user's ruling, 2026-11-02): as
++    ``_install_progress``, but the chunks come back by ``pool.imap_unordered`` (``chunksize=1``),
++    each with its index, so that the count in PATH is every chunk finished, in any order; the
++    results are put back in chunk order before the tool sums them, so the tool sees the list
++    ``pool.map`` returns. Each chunk runs the tool's own ``_run_chunk`` in the tool's own
++    initialised worker. Checked bit for bit on the batch's re-reads before any other reading.
++    """
++    import multiprocessing
++
++    t0 = time.time()
++
++    def note(done, total):
++        tmp = path.with_suffix(".tmp")
++        tmp.write_text(
++            json.dumps(
++                {
++                    "done": done,
++                    "total": total,
++                    "elapsed_s": time.time() - t0,
++                    "start_unix": t0,
++                    "order": "unordered",
++                }
++            )
++        )
++        tmp.replace(path)
++
++    def run_jobs(jobs, state, workers, call_source, route, edges):
++        note(0, len(jobs))
++        if workers <= 1:
++            F._WORKER["state"] = state
++            out = []
++            for job in jobs:
++                out.append(F._run_chunk(job))
++                note(len(out), len(jobs))
++            return out
++        if call_source is None:
++            raise ValueError("workers > 1 needs call_source = (module, function, args)")
++        ctx = multiprocessing.get_context("spawn")
++        got = [None] * len(jobs)
++        n = 0
++        with ctx.Pool(
++            workers, initializer=F._worker_init, initargs=(call_source, route, edges)
++        ) as pool:
++            for i, r in pool.imap_unordered(
++                _indexed_chunk, list(enumerate(jobs)), chunksize=1
++            ):
++                got[i] = r
++                n += 1
++                note(n, len(jobs))
++        if n != len(jobs) or any(g is None for g in got):
++            raise RuntimeError("a chunk did not come back")
++        return got
++
++    F._run_jobs = run_jobs
++
++
+ def _install_progress(F, path):
+     """Addendum 3 (the user's ruling, 2026-11-01: a reading past 30 minutes is checked, with its
+     progress, not stopped): ``tools.filon_reference._run_jobs`` replaced, in this process only, by
+@@ -99,6 +164,12 @@
+     ap.add_argument(
+         "--progress", default=None
+     )  # addendum 3: chunks done, for the driver's check
++    ap.add_argument(
++        "--progress-order", choices=("ordered", "unordered"), default="ordered"
++    )  # addendum 4/5: count chunks finished out of order
++    ap.add_argument(
++        "--rerun", action="store_true"
++    )  # addendum 4/5: the rerun batch's marker
+     a = ap.parse_args()
+     if a.workers > 6:
+         raise SystemExit("at most six workers")
+@@ -115,7 +186,9 @@
+         f"levin-phase-floor 06g: Filon reading {a.sid} {a.impl} res {a.res} (tools.filon_reference)",
+         [Path(pkl), Path(F.__file__)],
+     )
+-    if a.progress:
++    if a.progress and a.progress_order == "unordered":
++        _install_progress_unordered(F, Path(a.progress))
++    elif a.progress:
+         _install_progress(F, Path(a.progress))
+     call = F._load_pickle(pkl, "ray.cloudpickle")
+     ray_after_load = ray.is_initialized()
+@@ -143,6 +216,8 @@
+         "route_of": route,
+         **{k: v for k, v in r.items() if k != "value_mp"},
+         "process_wall_s": time.perf_counter() - t_proc,
++        "rerun": bool(a.rerun),
++        "progress_order": a.progress_order if a.progress else None,
+         "ray_initialized": [ray_after_load, ray.is_initialized()],
+     }
+     out.parent.mkdir(parents=True, exist_ok=True)
+b00fec6a1b83ee2d0c4147895e7f24f53d001625a1f1ddbb15d82ec9eb35d1a0  scripts/one_reading.py
+d82ee38434e1d8d407697de65d38b91027f13c6c1b259b14bbf88dbbdf5316e8  scripts/run_rerun.py
+8fc5c5d24492f2b819bd7687367959a051c8b9b159585552dbadfc2e642c6524  scripts/launch_rerun.py
+ae82f413c3befecf034d0864da0d2c510af22edce848df880f80cd45f253c51d  scripts/make_rerun_plan.py
+5ed56fc24e46eb03e49b33408bc73d73fbfae24c38ec26cf5fd6537b43c4d058  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839/tools/filon_reference.py
+# ----
+# end 2026-11-02T18:53:17Z
+# exit 0

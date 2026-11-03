@@ -1,0 +1,33 @@
+$ /bin/bash -c diff\ -ruN\ state/scripts_06h_reference\ scripts\ \>\ out/scripts_diff_against_06h_at_prep.txt\;\ echo\ \"diff\ exit\ \$\?\ \(1\ =\ differences\)\"\;\ for\ p\ in\ \"gate_h.py\ gate_v.py\"\ \"gate_h_clause1.py\ gate_v_clause1.py\"\ \"checks_after_06h.py\ checks_after_06g.py\"\;\ do\ set\ --\ \$p\;\ echo\ \"===\ new\ \$2\ against\ its\ 06h\ source\ \$1\"\;\ diff\ -u\ state/scripts_06h_reference/\$1\ scripts/\$2\;\ done\ \>\ out/scripts_diff_new_files_against_06h_sources_at_prep.txt\;\ wc\ -l\ out/scripts_diff_against_06h_at_prep.txt\ out/scripts_diff_new_files_against_06h_sources_at_prep.txt\;\ diffstat\ -v\ \>/dev/null\ 2\>\&1\ \&\&\ diffstat\ out/scripts_diff_against_06h_at_prep.txt\;\ grep\ \"\^diff\ -ruN\"\ out/scripts_diff_against_06h_at_prep.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:16:43Z
+# ----
+diff exit 1 (1 = differences)
+  1628 out/scripts_diff_against_06h_at_prep.txt
+   487 out/scripts_diff_new_files_against_06h_sources_at_prep.txt
+  2115 total
+ check_predictions.py |    8 
+ checks_after_06g.py  |   75 +++++
+ gate_v.py            |  655 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ gate_v_clause1.py    |  119 +++++++++
+ harness.py           |    7 
+ launch.py            |   65 ++---
+ prov.py              |   44 +++
+ run_census.py        |    9 
+ scripts_equal.py     |    4 
+ worker.py            |  363 +++++++++++++++++++++++++++-
+ 10 files changed, 1302 insertions(+), 47 deletions(-)
+diff -ruN state/scripts_06h_reference/check_predictions.py scripts/check_predictions.py
+diff -ruN state/scripts_06h_reference/checks_after_06g.py scripts/checks_after_06g.py
+diff -ruN state/scripts_06h_reference/gate_v.py scripts/gate_v.py
+diff -ruN state/scripts_06h_reference/gate_v_clause1.py scripts/gate_v_clause1.py
+diff -ruN state/scripts_06h_reference/harness.py scripts/harness.py
+diff -ruN state/scripts_06h_reference/launch.py scripts/launch.py
+diff -ruN state/scripts_06h_reference/prov.py scripts/prov.py
+diff -ruN state/scripts_06h_reference/run_census.py scripts/run_census.py
+diff -ruN state/scripts_06h_reference/scripts_equal.py scripts/scripts_equal.py
+diff -ruN state/scripts_06h_reference/worker.py scripts/worker.py
+# ----
+# end 2026-11-01T11:16:43Z
+# exit 0

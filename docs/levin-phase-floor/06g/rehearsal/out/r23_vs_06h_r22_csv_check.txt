@@ -1,0 +1,36 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:26:56Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+./venv/bin/python -I -c "
+import csv
+C=\"/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06h/rehearsal/out/qsi_rows.csv\"
+N=\"var/levin-phase-floor-06g/rehearsal/out/qsi_rows.csv\"
+def load(p):
+    return {(float(r[\"k\"]),float(r[\"q\"]),float(r[\"r\"]),float(r[\"z_response\"])):r for r in csv.DictReader(open(p))}
+h=load(C); g=load(N)
+print(\"rows 06h\",len(h),\"06g\",len(g),\"same keys\",set(h)==set(g))
+pairs=[(\"total_R22\",\"total_R23\"),(\"total_abserr_R22_hex\",\"total_abserr_R23_hex\"),(\"total_converged_R22\",\"total_converged_R23\"),(\"WKB_Levin_num_regions_R22\",\"WKB_Levin_num_regions_R23\"),(\"WKB_Levin_max_depth_R22\",\"WKB_Levin_max_depth_R23\"),(\"WKB_Levin_evaluations_R22\",\"WKB_Levin_evaluations_R23\"),(\"analytic_rad_R22\",\"analytic_rad_R23\"),(\"analytic_regions_R22\",\"analytic_regions_R23\"),(\"analytic_abserr_R22\",\"analytic_abserr_R23\"),(\"total_phase_limited_R22\",\"total_phase_limited_R23\")]
+for a,b in pairs:
+    print(f\"06h {a} == 06g {b}: {sum(h[k][a]==g[k][b] for k in h)}/{len(h)}\")
+pairs2=[(\"total_R22\",\"total_R24\"),(\"total_abserr_R22_hex\",\"total_abserr_R24_hex\"),(\"analytic_rad_R22\",\"analytic_rad_R24\")]
+for a,b in pairs2:
+    print(f\"06h {a} == 06g {b}: {sum(h[k][a]==g[k][b] for k in h)}/{len(h)}\")
+"
+# output:
+rows 06h 864 06g 864 same keys True
+06h total_R22 == 06g total_R23: 864/864
+06h total_abserr_R22_hex == 06g total_abserr_R23_hex: 864/864
+06h total_converged_R22 == 06g total_converged_R23: 864/864
+06h WKB_Levin_num_regions_R22 == 06g WKB_Levin_num_regions_R23: 864/864
+06h WKB_Levin_max_depth_R22 == 06g WKB_Levin_max_depth_R23: 864/864
+06h WKB_Levin_evaluations_R22 == 06g WKB_Levin_evaluations_R23: 864/864
+06h analytic_rad_R22 == 06g analytic_rad_R23: 864/864
+06h analytic_regions_R22 == 06g analytic_regions_R23: 864/864
+06h analytic_abserr_R22 == 06g analytic_abserr_R23: 864/864
+06h total_phase_limited_R22 == 06g total_phase_limited_R23: 864/864
+06h total_R22 == 06g total_R24: 294/864
+06h total_abserr_R22_hex == 06g total_abserr_R24_hex: 294/864
+06h analytic_rad_R22 == 06g analytic_rad_R24: 228/864
+# exit: 0
+# end: 2026-11-01T11:26:56Z

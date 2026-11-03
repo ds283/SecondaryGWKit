@@ -1,0 +1,10 @@
+$ /bin/bash -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ shasum\ -a\ 256\ var/datastores/levin-phase-floor-06g-r2\[34\]\*.sqlite\ \|\ diff\ -\ var/levin-phase-floor-06g/references/v1/state/stores_sha256_before.txt\ \&\&\ echo\ \'EQUAL\ to\ before\ \(and\ so\ to\ the\ rehearsal\ baseline\)\'\;\ ls\ -la\ var/datastores\ \|\ grep\ -E\ \'06g-r2\[34\].\*\(journal\|wal\|shm\)\'\ \|\|\ echo\ \'journal/-wal/-shm:\ none\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T20:09:09Z
+# ----
+EQUAL to before (and so to the rehearsal baseline)
+journal/-wal/-shm: none
+# ----
+# end 2026-11-01T20:09:09Z
+# exit 0

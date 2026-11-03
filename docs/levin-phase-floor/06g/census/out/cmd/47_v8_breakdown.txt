@@ -1,0 +1,30 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/v8_breakdown.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:27:03Z
+# ----
+== 1e-7: 801 lost calls outside the 720, 470 rows
+   by kind: {'group': 801}
+   by block/group: {'G-q+r': 217, 'G+q+r': 213, 'G+q-r': 195, 'G-q-r': 174, 'G-r': 1, 'q+r': 1}
+   abserr_g <= request_g (budget met; unconverged by returned untrusted leaves): 801; above the request: 0
+   with num_untrusted_regions >= 1: 801
+   abserr_g / request_g: min 5.71e-09 median 0.035 max 0.987
+   abserr_06h / request_06h: min 5.65e-09 median 0.0459 max 0.999
+   untrusted leaves returned per call: min 1 median 6 max 469; regions g median 135, 06h median 7
+   classes: {'(b), refined to the depth cap': 801}
+== 1e-8: 830 lost calls outside the 720, 476 rows
+   by kind: {'group': 830}
+   by block/group: {'G-q+r': 224, 'G+q+r': 218, 'G+q-r': 202, 'G-q-r': 183, 'G-r': 2, 'q+r': 1}
+   abserr_g <= request_g (budget met; unconverged by returned untrusted leaves): 827; above the request: 3
+   with num_untrusted_regions >= 1: 827
+   abserr_g / request_g: min 5.71e-09 median 0.0524 max 1.04
+   abserr_06h / request_06h: min 5.65e-09 median 0.0762 max 0.999
+   untrusted leaves returned per call: min 0 median 6 max 469; regions g median 140, 06h median 9
+   classes: {'(b), refined to the depth cap': 827, 'node_limited': 3}
+   node_limited: g-1e-8-0-12783 call 4 group G+q-r: abserr 06h 8.5696e-34 -> g 8.9508e-34; request 8.5925e-34; e' sum 8.5638e-34, |sum E| 3.8692e-35, sum|E| 5.2380e-34; regions 463 -> 603; depth 14 -> 14; (b) leaves 304; at cap 0
+   node_limited: g-1e-8-0-33997 call 4 group G-q-r: abserr 06h 9.3457e-34 -> g 9.6567e-34; request 9.6450e-34; e' sum 9.6261e-34, |sum E| 3.0540e-36, sum|E| 6.2048e-35; regions 109 -> 286; depth 10 -> 19; (b) leaves 224; at cap 0
+   node_limited: g-1e-8-2-34662 call 2 group G-r: abserr 06h 3.2558e-34 -> g 3.3999e-34; request 3.3997e-34; e' sum 3.3997e-34, |sum E| 2.0823e-38, sum|E| 1.4211e-37; regions 43 -> 52; depth 9 -> 10; (b) leaves 9; at cap 0
+== gained: 1 {('1e-8', 'analytic', False): 1}
+# ----
+# end 2026-11-01T17:27:03Z
+# exit 0

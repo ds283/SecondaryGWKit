@@ -1,0 +1,15 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_progress_wrapper.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T20:10:27Z
+# ----
+z25 qawo r1: rc 0; progress {'done': 4, 'total': 4, 'elapsed_s': 1.6689529418945312, 'start_unix': 1793563828.294501}; identical to part 1: True
+z25 qawo r2: rc 0; progress {'done': 27, 'total': 27, 'elapsed_s': 3.629481077194214, 'start_unix': 1793563831.198787}; identical to part 1: True
+z25 fcc r1: rc 0; progress {'done': 4, 'total': 4, 'elapsed_s': 1.261376142501831, 'start_unix': 1793563836.040768}; identical to part 1: True
+z25 fcc r2: rc 0; progress {'done': 6, 'total': 6, 'elapsed_s': 3.0821619033813477, 'start_unix': 1793563838.5132082}; identical to part 1: True
+z13 qawo r1: rc 0; progress {'done': 47, 'total': 47, 'elapsed_s': 7.862317085266113, 'start_unix': 1793563842.76828}; identical to part 1: True
+z13 fcc r1: rc 0; progress {'done': 47, 'total': 47, 'elapsed_s': 12.8627450466156, 'start_unix': 1793563851.977366}; identical to part 1: True
+ALL IDENTICAL
+# ----
+# end 2026-11-01T20:11:05Z
+# exit 0

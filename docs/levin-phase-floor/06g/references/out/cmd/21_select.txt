@@ -1,0 +1,125 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/select_refs.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T17:52:19Z
+# ----
+# levin-phase-floor 06g: the references' selection (Z3's 30, the 60 drawn and addendum 2's V8 12), with both censuses' records
+# written 2026-11-01T17:52:19Z on mps026298.phys.susx.ac.uk
+# script select_refs.py sha256 d4d6dbb8f8f07d82c03a6c4639742fc27f96ab1a8c53377d7766749c5c5b59cc
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06c/depth20-tiling/results.json sha256 fdea89891ff0cccdb6fb4c8d1d4527bd20f74e7a3e6ec9432abe9afdba63d604
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/draw.json sha256 6e26e25335949afb6b137ed9634572a71ca95af9132f958596bf17d19c164caf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl sha256 03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl sha256 3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/docs/levin-phase-floor/06i/out/scores.json sha256 4b262f2b2695cbbe86cb4e58c755cc1e39963d5b80b96d54f56603c3020191d1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/review/v8_sample.json sha256 874e17db6e60afd37aba815043fb5783ffebab52c44273c7b0ba55a3c0dc9605
+g census run: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315
+V8 calls also among the 90 (captured once, under the V3 id): none
+z00 group    g-1e-7-1-2174 #1: g value 0x1.0c5f18f19d8ffp-86 abserr 0x1.74816ed63d016p-110 conv False regions 249 depth 20 | 06h value 0x1.0c5f181ecc5d9p-86 abserr 0x1.7587ea331e3e3p-110 | budget 300.0
+z01 group    g-1e-7-2-1444 #4: g value 0x1.c427c1baff762p-89 abserr 0x1.81cb7dded8c1ap-117 conv True regions 2 depth 1 | 06h value 0x1.c427c1ab41d00p-89 abserr 0x1.81cb7dded8c1ap-117 | budget 300.0
+z02 group    g-1e-7-2-1627 #3: g value -0x1.82749f7e8059ap-95 abserr 0x1.f35087217bd59p-115 conv True regions 7 depth 6 | 06h value -0x1.8274be9da55f4p-95 abserr 0x1.f35087217bd59p-115 | budget 300.0
+z03 group    g-1e-7-3-34370 #4: g value 0x1.2549f03c75d44p-88 abserr 0x1.3463be5348adfp-110 conv False regions 143 depth 20 | 06h value 0x1.2549f248a5a85p-88 abserr 0x1.cb647a7f43ea2p-112 | budget 300.0
+z04 analytic g-1e-7-3-13510 #5: g value -0x1.63f97fddb1749p-49 abserr 0x1.de68ca3069416p-75 conv True regions 6 depth 4 | 06h value -0x1.63f97fddc6e45p-49 abserr 0x1.de4c0bd65bf20p-75 | budget 300.0
+z05 analytic g-1e-7-2-34485 #17: g value -0x1.676baabe445bcp-54 abserr 0x1.4c271edfdae3fp-81 conv True regions 6 depth 4 | 06h value -0x1.676baac2277cep-54 abserr 0x1.4dd50db96cc5ep-81 | budget 300.0
+z06 analytic g-1e-7-1-38737 #11: g value 0x1.e0c5329370099p-46 abserr 0x1.0066fedfe62d3p-70 conv True regions 6 depth 4 | 06h value 0x1.e0c5329370184p-46 abserr 0x1.0066fedfe62d3p-70 | budget 300.0
+z07 analytic g-1e-7-2-34718 #11: g value -0x1.11ee760d4e820p-42 abserr 0x1.5f79ba33b4ed1p-72 conv True regions 3 depth 2 | 06h value -0x1.11ee760ebdd1ap-42 abserr 0x1.5f79ba33b4ed1p-72 | budget 300.0
+z08 analytic g-1e-7-3-37319 #6: g value -0x1.5957d22e32e64p-30 abserr 0x1.feb08315cac93p-56 conv True regions 3 depth 2 | 06h value -0x1.5957d1ae877cep-30 abserr 0x1.feb08315cac93p-56 | budget 300.0
+z09 analytic g-1e-7-1-35340 #18: g value 0x1.9e838ef297826p-33 abserr 0x1.8dac3234e3858p-65 conv True regions 10 depth 4 | 06h value 0x1.9e838ef109ff5p-33 abserr 0x1.8dad8b0e15e22p-65 | budget 300.0
+z10 analytic g-1e-7-1-35332 #10: g value 0x1.53f0185fa4186p-44 abserr 0x1.fed1bb4b79e30p-78 conv True regions 4 depth 2 | 06h value 0x1.53f0186022d17p-44 abserr 0x1.fed1bb4b79e30p-78 | budget 300.0
+z11 analytic g-1e-7-3-36020 #20: g value 0x1.714f485cc6c30p-52 abserr 0x1.eac5e021f5c1fp-77 conv True regions 3 depth 2 | 06h value 0x1.714f485cc6c32p-52 abserr 0x1.eac5e021f5c1fp-77 | budget 300.0
+z12 group    g-1e-8-1-2174 #1: g value 0x1.0c6c2cc40e857p-86 abserr 0x1.fdbb1bc1a92b8p-110 conv True regions 135 depth 18 | 06h value 0x1.0c6c2cd926acfp-86 abserr 0x1.febd253628d92p-110 | budget 300.0
+z13 group    g-1e-8-3-34220 #4: g value 0x1.f022b8f5ba5fep-94 abserr 0x1.4e9792d3061f5p-123 conv True regions 2 depth 1 | 06h value 0x1.f022b8fae2452p-94 abserr 0x1.4e9792d3061f5p-123 | budget 300.0
+z14 group    g-1e-8-2-1627 #3: g value -0x1.82749f7e805c1p-95 abserr 0x1.f350869124fbdp-115 conv True regions 4 depth 3 | 06h value -0x1.8274be9da55d8p-95 abserr 0x1.f350869124fbdp-115 | budget 300.0
+z15 group    g-1e-8-2-1549 #4: g value -0x1.38011e3b5d424p-91 abserr 0x1.0470c75399f11p-114 conv True regions 68 depth 15 | 06h value -0x1.38011d966319fp-91 abserr 0x1.a63eefc9a64b1p-116 | budget 300.0
+z16 analytic g-1e-8-2-34708 #5: g value -0x1.526e64d119dbbp-37 abserr 0x1.532d8d66287d8p-67 conv True regions 6 depth 4 | 06h value -0x1.526e64cfec47cp-37 abserr 0x1.532d8d66287d8p-67 | budget 300.0
+z17 analytic g-1e-8-3-13913 #9: g value 0x1.131542cc3192ap-37 abserr 0x1.8b73fe64efac3p-66 conv True regions 10 depth 4 | 06h value 0x1.131542d88b927p-37 abserr 0x1.8b73fe64efac3p-66 | budget 300.0
+z18 analytic g-1e-8-1-2368 #9: g value 0x1.88383b7f1db85p-41 abserr 0x1.e89f57597e297p-70 conv True regions 10 depth 5 | 06h value 0x1.88383b7f1dd60p-41 abserr 0x1.e89f5c9e259a7p-70 | budget 300.0
+z19 analytic g-1e-8-3-36019 #19: g value 0x1.6db5f5ed1c92fp-48 abserr 0x1.7cde92562d581p-75 conv True regions 6 depth 4 | 06h value 0x1.6db5f5ed1c9dep-48 abserr 0x1.7d08be3093f0cp-75 | budget 300.0
+z20 analytic g-1e-8-0-12932 #14: g value -0x1.986e911860fc9p-52 abserr 0x1.746340091c27ep-83 conv True regions 10 depth 4 | 06h value -0x1.986e911860fc5p-52 abserr 0x1.7a67042a196b8p-83 | budget 300.0
+z21 analytic g-1e-8-1-14572 #8: g value 0x1.0abac5abbf123p-42 abserr 0x1.e54c98ac1aaf8p-70 conv True regions 9 depth 5 | 06h value 0x1.0abac5abbf545p-42 abserr 0x1.e54c9e003ab70p-70 | budget 300.0
+z22 analytic g-1e-8-2-21874 #12: g value -0x1.35f747459d443p-46 abserr 0x1.6aeb411c2d8dep-81 conv True regions 6 depth 4 | 06h value -0x1.35f747459d330p-46 abserr 0x1.6af88459ea8fdp-81 | budget 300.0
+z23 analytic g-1e-8-2-1402 #12: g value -0x1.1202ddb9df5d4p-42 abserr 0x1.9f908c9228176p-80 conv True regions 7 depth 4 | 06h value -0x1.1202ddb9e5bd2p-42 abserr 0x1.9fbcb174c8ba0p-80 | budget 300.0
+z24 analytic g-1e-8-2-34718 #5: g value 0x1.7059b3f13f6e0p-48 abserr 0x1.20dde1ab373c8p-82 conv True regions 9 depth 5 | 06h value 0x1.7059b3f13e68ep-48 abserr 0x1.20e380c556c10p-82 | budget 300.0
+z25 analytic g-1e-8-0-33962 #12: g value -0x1.856da4f8bcdbbp-52 abserr 0x1.5c2b9c0db5a3ep-85 conv True regions 6 depth 3 | 06h value -0x1.856da4f8bcdffp-52 abserr 0x1.822b337dd0dccp-85 | budget 300.0
+z26 analytic g-1e-8-0-37212 #8: g value 0x1.dd62f5b58981ep-43 abserr 0x1.2487bea6c69d7p-71 conv True regions 8 depth 4 | 06h value 0x1.dd62f5b5897e1p-43 abserr 0x1.24aac95d0ccf7p-71 | budget 300.0
+z27 analytic g-1e-8-3-34419 #21: g value 0x1.b5ae3377a0de9p-42 abserr 0x1.b6a66334d00a2p-73 conv True regions 5 depth 4 | 06h value 0x1.b5ae33765564cp-42 abserr 0x1.b6b1fa5ccb198p-73 | budget 300.0
+z28 analytic g-1e-7-2-34708 #5: g value -0x1.526e64d119dbbp-37 abserr 0x1.532d8d66287d8p-67 conv True regions 6 depth 4 | 06h value -0x1.526e64cfec47cp-37 abserr 0x1.532d8d66287d8p-67 | budget 300.0
+z29 analytic g-1e-7-1-14572 #9: g value 0x1.88383b7f1fbccp-41 abserr 0x1.5de0a38c28adap-67 conv True regions 6 depth 3 | 06h value 0x1.88383b27a9b3bp-41 abserr 0x1.5de0a38c28adap-67 | budget 300.0
+r00 analytic g-1e-7-0-14053 #7: g value 0x1.109b5b37de997p-38 abserr 0x1.4397496a3ceafp-70 conv True regions 12 depth 4 | 06h value 0x1.109b5b392222dp-38 abserr 0x1.4397496a3ceafp-70 | budget 300.0
+r01 analytic g-1e-7-0-33650 #14: g value 0x1.ab410c895ccadp-42 abserr 0x1.ee68ad9b79209p-79 conv True regions 3 depth 2 | 06h value 0x1.ab410c894d93bp-42 abserr 0x1.ee68ad9b79209p-79 | budget 300.0
+r02 analytic g-1e-7-2-1517 #15: g value 0x1.2e4efaa959cfap-37 abserr 0x1.1231770bf2935p-64 conv True regions 1 depth 0 | 06h value 0x1.2e4efac97cb47p-37 abserr 0x1.1231770bf2935p-64 | budget 300.0
+r03 analytic g-1e-7-0-12758 #18: g value -0x1.856187b9c5c53p-34 abserr 0x1.3914797230469p-57 conv True regions 1 depth 0 | 06h value -0x1.85618a2beeb81p-34 abserr 0x1.3914797230469p-57 | budget 300.0
+r04 analytic g-1e-7-3-34411 #13: g value -0x1.74339439aeaa1p-35 abserr 0x1.ff5504a671c00p-61 conv True regions 1 depth 0 | 06h value -0x1.74339441800bfp-35 abserr 0x1.ff5504a671c00p-61 | budget 300.0
+r05 analytic g-1e-7-0-12625 #5: g value 0x1.4c359943a6063p-33 abserr 0x1.2f81936f4a538p-58 conv True regions 4 depth 3 | 06h value 0x1.4c3598abe6160p-33 abserr 0x1.2f81936f4a538p-58 | budget 300.0
+r06 analytic g-1e-7-0-12682 #14: g value 0x1.9e88aafd54a03p-44 abserr 0x1.7acd1289a3607p-68 conv True regions 1 depth 0 | 06h value 0x1.9e88aafd5488bp-44 abserr 0x1.7acd1289a3607p-68 | budget 300.0
+r07 analytic g-1e-7-3-14593 #21: g value 0x1.da1baff4f0f5ap-40 abserr 0x1.f7b0d15255cacp-68 conv True regions 5 depth 4 | 06h value 0x1.da1baff52abd4p-40 abserr 0x1.f7b8b400f2babp-68 | budget 300.0
+r08 analytic g-1e-7-1-10908 #13: g value -0x1.91004401a7a62p-40 abserr 0x1.516ded5126547p-79 conv True regions 2 depth 1 | 06h value -0x1.91004401a7a54p-40 abserr 0x1.ae394cdc4a6e4p-79 | budget 300.0
+r09 analytic g-1e-7-1-20466 #5: g value 0x1.05491c0574679p-41 abserr 0x1.fb8461913b1fdp-80 conv True regions 1 depth 0 | 06h value 0x1.05491c057464cp-41 abserr 0x1.fb293e93e93e9p-80 | budget 300.0
+r10 analytic g-1e-7-1-35314 #7: g value -0x1.6c10203d53ac3p-47 abserr 0x1.6e8c6bd64693ep-82 conv True regions 7 depth 3 | 06h value -0x1.6c10203d4ea55p-47 abserr 0x1.6e8c6bd64693ep-82 | budget 300.0
+r11 analytic g-1e-7-0-33732 #9: g value 0x1.f9301ae5f9527p-29 abserr 0x1.32ede00af610dp-62 conv True regions 1 depth 0 | 06h value 0x1.f9301ae55fdf2p-29 abserr 0x1.32ede00af610dp-62 | budget 300.0
+r12 analytic g-1e-7-0-33870 #18: g value -0x1.5046fae838a62p-42 abserr 0x1.de95e4682334dp-69 conv True regions 1 depth 0 | 06h value -0x1.5046faac65e9dp-42 abserr 0x1.de95e4682334dp-69 | budget 300.0
+r13 analytic g-1e-7-2-21527 #18: g value 0x1.c4f466625aa8dp-47 abserr 0x1.ab6389a31187cp-82 conv True regions 1 depth 0 | 06h value 0x1.c4f466622578fp-47 abserr 0x1.ab6389a31187cp-82 | budget 300.0
+r14 analytic g-1e-7-3-504 #9: g value 0x1.c8f5ecee81942p-43 abserr 0x1.f870d52edd799p-86 conv True regions 1 depth 0 | 06h value 0x1.c8f5ecee81942p-43 abserr 0x1.f870d52edd799p-86 | budget 300.0
+r15 group    g-1e-7-3-34409 #2: g value 0x1.033821205600bp-85 abserr 0x1.d64235ebba46ep-113 conv True regions 14 depth 6 | 06h value 0x1.03382113c6b05p-85 abserr 0x1.d1682d705ec0dp-113 | budget 300.0
+r16 group    g-1e-7-0-33822 #0: g value 0x1.f84d894140123p-93 abserr 0x1.adec0719fdf96p-109 conv True regions 8 depth 4 | 06h value 0x1.f84f12b5b5269p-93 abserr 0x1.ae6aa3537280cp-109 | budget 300.0
+r17 group    g-1e-7-1-2229 #3: g value -0x1.1d47b2be1acc4p-80 abserr 0x1.26e19d330ab0dp-105 conv True regions 146 depth 17 | 06h value -0x1.1d47b31779219p-80 abserr 0x1.23a8fdc3425e4p-105 | budget 300.0
+r18 group    g-1e-7-0-1786 #4: g value 0x1.a8b2de8b60436p-78 abserr 0x1.4dfe2634fbe33p-101 conv True regions 30 depth 9 | 06h value 0x1.a8b2df1c769bbp-78 abserr 0x1.4e45ca3fe2c64p-101 | budget 300.0
+r19 group    g-1e-7-2-21926 #0: g value -0x1.dd9fe0d96f5e8p-87 abserr 0x1.732a39b7c16d6p-108 conv True regions 9 depth 4 | 06h value -0x1.dd9fec51b3fb9p-87 abserr 0x1.732a39b731d54p-108 | budget 300.0
+r20 group    g-1e-7-0-12606 #1: g value 0x1.6d2ca0f7835c3p-95 abserr 0x1.ba248a5ef8c11p-111 conv True regions 13 depth 5 | 06h value 0x1.6d2b6a99535cdp-95 abserr 0x1.ba24882866b3ep-111 | budget 300.0
+r21 group    g-1e-7-3-34449 #0: g value 0x1.7136b85f4bac3p-82 abserr 0x1.01f9c37cd2856p-105 conv True regions 9 depth 7 | 06h value 0x1.7136b8d200e81p-82 abserr 0x1.01f9c3660a894p-105 | budget 300.0
+r22 group    g-1e-7-2-36976 #0: g value 0x1.0a486e135aa1ap-94 abserr 0x1.0f0141e8ec336p-115 conv True regions 9 depth 4 | 06h value 0x1.0a48764fa55e9p-94 abserr 0x1.12d7b6c16dc82p-115 | budget 300.0
+r23 group    g-1e-7-0-33961 #4: g value 0x1.9982faef9adfcp-94 abserr 0x1.a783afa8a93e4p-118 conv True regions 42 depth 11 | 06h value 0x1.9982fbe9eb139p-94 abserr 0x1.45265ee2efddfp-118 | budget 300.0
+r24 group    g-1e-7-3-34853 #1: g value 0x1.3a013cbe84d41p-92 abserr 0x1.6f1fdc0c2a9a3p-117 conv True regions 9 depth 6 | 06h value 0x1.3a013d1f7134dp-92 abserr 0x1.6f2cf75db5da6p-117 | budget 300.0
+r25 group    g-1e-7-0-1887 #3: g value -0x1.a04a1e92d82fdp-97 abserr 0x1.34dd56a6248dap-113 conv True regions 1 depth 0 | 06h value -0x1.a04a1e8bd5447p-97 abserr 0x1.34dd56a6248dap-113 | budget 300.0
+r26 group    g-1e-7-1-14462 #5: g value -0x1.bee6b2b95a34ep-102 abserr 0x1.d3741ed13d34dp-111 conv True regions 1 depth 0 | 06h value -0x1.bee6aee748731p-102 abserr 0x1.d3741ed13d34dp-111 | budget 300.0
+r27 group    g-1e-7-0-34026 #1: g value -0x1.2d5af6e533ca8p-94 abserr 0x1.6c26d8aafc1a1p-121 conv True regions 13 depth 7 | 06h value -0x1.2d5af711806a5p-94 abserr 0x1.22dcaec0a40a1p-120 | budget 300.0
+r28 group    g-1e-7-2-21673 #3: g value 0x1.037341088b725p-90 abserr 0x1.6d12c8ff0b914p-116 conv True regions 8 depth 4 | 06h value 0x1.0373415b1d4ebp-90 abserr 0x1.9ef72d35d5e7fp-116 | budget 300.0
+r29 group    g-1e-7-1-35525 #4: g value -0x1.2c2cc6f5bc5abp-103 abserr 0x1.77c558bb4311fp-119 conv True regions 1 depth 0 | 06h value -0x1.2c2cc6fa60268p-103 abserr 0x1.77c558bb4311fp-119 | budget 300.0
+r30 analytic g-1e-8-1-1759 #14: g value -0x1.03983a1569af6p-41 abserr 0x1.8eff00d729417p-70 conv True regions 7 depth 4 | 06h value -0x1.03983a21e180bp-41 abserr 0x1.8eff00d729417p-70 | budget 300.0
+r31 analytic g-1e-8-1-35133 #22: g value 0x1.349e019ba0bf3p-45 abserr 0x1.9bb9163b437b4p-76 conv True regions 1 depth 0 | 06h value 0x1.349e01990d31fp-45 abserr 0x1.9bb9163b437b4p-76 | budget 300.0
+r32 analytic g-1e-8-1-35282 #19: g value -0x1.1d3d417efc2b2p-39 abserr 0x1.de20ab6cf0f22p-67 conv True regions 1 depth 0 | 06h value -0x1.1d3d41851c203p-39 abserr 0x1.de20ab6cf0f22p-67 | budget 300.0
+r33 analytic g-1e-8-0-10552 #0: g value -0x1.f02e44a7d7074p-33 abserr 0x1.9121e0e6f4c7fp-75 conv True regions 1 depth 0 | 06h value -0x1.f02e44a7d7079p-33 abserr 0x1.8c0cccccccccap-75 | budget 300.0
+r34 analytic g-1e-8-0-33988 #21: g value 0x1.552d0007c2f9cp-42 abserr 0x1.558a07f03355cp-71 conv True regions 1 depth 0 | 06h value 0x1.552cfffd16b5bp-42 abserr 0x1.558a07f03355cp-71 | budget 300.0
+r35 analytic g-1e-8-1-11073 #20: g value 0x1.dcca57f373ad5p-46 abserr 0x1.bd9650b006945p-78 conv True regions 1 depth 0 | 06h value 0x1.dcca57f1b617dp-46 abserr 0x1.bd9650b006945p-78 | budget 300.0
+r36 analytic g-1e-8-2-1673 #21: g value -0x1.1781a7e248a21p-49 abserr 0x1.b617b268868c8p-79 conv True regions 4 depth 3 | 06h value -0x1.1781a7e23bc02p-49 abserr 0x1.b617b268868c8p-79 | budget 300.0
+r37 analytic g-1e-8-1-34613 #15: g value 0x1.a551ddf584007p-34 abserr 0x1.bd80d793972f5p-61 conv True regions 5 depth 4 | 06h value 0x1.a551de2c931fdp-34 abserr 0x1.bd811342c48aep-61 | budget 300.0
+r38 analytic g-1e-8-1-35413 #7: g value 0x1.1e47007f05949p-45 abserr 0x1.40b3f0bea08e9p-76 conv True regions 6 depth 4 | 06h value 0x1.1e47007f0596bp-45 abserr 0x1.40d7051fb1377p-76 | budget 300.0
+r39 analytic g-1e-8-1-11154 #10: g value -0x1.050f51dffb1b9p-41 abserr 0x1.50999fae23999p-70 conv True regions 6 depth 4 | 06h value -0x1.050f51ea7f7eap-41 abserr 0x1.5099b30d88dfap-70 | budget 300.0
+r40 analytic g-1e-8-2-21651 #21: g value -0x1.1f4e32109ce23p-49 abserr 0x1.b11f117d73301p-85 conv True regions 1 depth 0 | 06h value -0x1.1f4e32109ce1ap-49 abserr 0x1.b11f117d73301p-85 | budget 300.0
+r41 analytic g-1e-8-2-1638 #13: g value -0x1.39ccb7d58f830p-33 abserr 0x1.7347288f18c76p-62 conv True regions 2 depth 1 | 06h value -0x1.39ccb7c9fb1ccp-33 abserr 0x1.7347288f18c76p-62 | budget 300.0
+r42 analytic g-1e-8-2-33438 #16: g value 0x1.bae3371ed77b2p-46 abserr 0x1.9b1003b7c83b9p-85 conv True regions 1 depth 0 | 06h value 0x1.bae3371ed77b2p-46 abserr 0x1.9b1003b7c83b9p-85 | budget 300.0
+r43 analytic g-1e-8-0-12662 #20: g value 0x1.1972626a52608p-27 abserr 0x1.93e726a86eeedp-66 conv True regions 4 depth 3 | 06h value 0x1.1972626a5260ep-27 abserr 0x1.93e726a86eeedp-66 | budget 300.0
+r44 analytic g-1e-8-3-1045 #13: g value 0x1.82e4a7ba98761p-45 abserr 0x1.11ad7d9b7121ap-80 conv True regions 4 depth 3 | 06h value 0x1.82e4a7baaab7ap-45 abserr 0x1.13a189f063b5fp-80 | budget 300.0
+r45 group    g-1e-8-0-13951 #3: g value -0x1.6c25ff8fe18e8p-85 abserr 0x1.e858e58e6d646p-113 conv False regions 107 depth 20 | 06h value -0x1.6c25ffa750313p-85 abserr 0x1.8c2ae937e835fp-111 | budget 300.0
+r46 group    g-1e-8-3-13481 #2: g value -0x1.88ddf970e5764p-74 abserr 0x1.79d16197a1521p-101 conv False regions 162 depth 20 | 06h value -0x1.88ddf95ce5a26p-74 abserr 0x1.5809c4a71e63ap-101 | budget 300.0
+r47 group    g-1e-8-3-1916 #4: g value 0x1.e7212a00916c8p-93 abserr 0x1.a119a1a1370e7p-119 conv True regions 70 depth 17 | 06h value 0x1.e7212a4d7ccdfp-93 abserr 0x1.9b99608fd6d5ep-119 | budget 300.0
+r48 group    g-1e-8-1-11031 #3: g value -0x1.972ed83a26474p-91 abserr 0x1.30231ce931966p-115 conv True regions 1 depth 0 | 06h value -0x1.972ed8e997363p-91 abserr 0x1.30231ce931966p-115 | budget 300.0
+r49 group    g-1e-8-2-21720 #1: g value 0x1.ebfb39b8a8a30p-103 abserr 0x1.c369b73e114f6p-115 conv True regions 1 depth 0 | 06h value 0x1.ebdf032586b3cp-103 abserr 0x1.c369b73e114f6p-115 | budget 300.0
+r50 group    g-1e-8-3-34389 #3: g value 0x1.b8e18cbeec22bp-94 abserr 0x1.4793896440823p-116 conv True regions 1 depth 0 | 06h value 0x1.b8e187b877709p-94 abserr 0x1.4793896440823p-116 | budget 300.0
+r51 group    g-1e-8-1-14231 #1: g value -0x1.bd83e8f878596p-80 abserr 0x1.d06b9ae27889dp-107 conv True regions 52 depth 9 | 06h value -0x1.bd83e8fb7d3d5p-80 abserr 0x1.1b89dec108d76p-106 | budget 300.0
+r52 group    g-1e-8-3-34925 #1: g value -0x1.07d97b6fc5898p-89 abserr 0x1.a76e3da1e362ep-113 conv True regions 67 depth 15 | 06h value -0x1.07d97b36960a2p-89 abserr 0x1.29253942f72d7p-110 | budget 300.0
+r53 group    g-1e-8-3-14492 #4: g value 0x1.b2dd07322412fp-93 abserr 0x1.fe4b35dde3a05p-119 conv True regions 172 depth 17 | 06h value 0x1.b2dd07398175ep-93 abserr 0x1.a1423487c8269p-120 | budget 300.0
+r54 group    g-1e-8-0-34014 #0: g value -0x1.5937ad9f2365bp-93 abserr 0x1.a38c521dc0588p-109 conv True regions 9 depth 4 | 06h value -0x1.5939372fed83fp-93 abserr 0x1.a38ddc6b9e7abp-109 | budget 300.0
+r55 group    g-1e-8-2-34671 #2: g value 0x1.78bc9c8813d22p-105 abserr 0x1.968d686dbd9c6p-121 conv True regions 1 depth 0 | 06h value 0x1.78be2e213077fp-105 abserr 0x1.968d686dbd9c6p-121 | budget 300.0
+r56 group    g-1e-8-1-10794 #5: g value -0x1.4a8872ba99d84p-101 abserr 0x1.5bb82db66cd1ap-125 conv True regions 21 depth 6 | 06h value -0x1.4a8871cc0d542p-101 abserr 0x1.0543d71cef2b8p-125 | budget 300.0
+r57 group    g-1e-8-3-34394 #3: g value 0x1.e8e56105f63adp-100 abserr 0x1.1b4b10b4ed577p-111 conv True regions 1 depth 0 | 06h value 0x1.e8c1f84acbe0bp-100 abserr 0x1.1b4b10b4ed577p-111 | budget 300.0
+r58 group    g-1e-8-3-34453 #3: g value 0x1.15b28366b4aacp-86 abserr 0x1.c541484d9cca3p-112 conv True regions 26 depth 9 | 06h value 0x1.15b2835437cacp-86 abserr 0x1.d7660b4900221p-112 | budget 300.0
+r59 group    g-1e-8-0-1823 #0: g value -0x1.059a8543f12e9p-81 abserr 0x1.aa1334e4854f9p-109 conv True regions 28 depth 8 | 06h value -0x1.059a853cdebaep-81 abserr 0x1.c593db008733ap-109 | budget 300.0
+v00 group    g-1e-7-2-1380 #4: g value -0x1.e9ba0850f8170p-110 abserr 0x1.3dfe0749bb4b9p-137 conv False regions 76 depth 20 | 06h value -0x1.e9ba0858015a8p-110 abserr 0x1.1863dae6f89dep-136 | budget 300.0
+v01 group    g-1e-7-0-12617 #5: g value -0x1.47edd6b41f28ap-96 abserr 0x1.8f6db238179d3p-122 conv False regions 122 depth 20 | 06h value -0x1.47edd6593adb9p-96 abserr 0x1.7fb5fccd634d6p-122 | budget 300.0
+v02 group    g-1e-7-3-34212 #4: g value -0x1.0a6fe76a57daap-92 abserr 0x1.0d7130306c403p-116 conv False regions 400 depth 20 | 06h value -0x1.0a6fe76cc0a6fp-92 abserr 0x1.ae82fca4a1941p-118 | budget 300.0
+v03 group    g-1e-7-1-34521 #4: g value -0x1.44db86e35e156p-83 abserr 0x1.26e8c8089da5ap-109 conv False regions 120 depth 20 | 06h value -0x1.44db86b69f998p-83 abserr 0x1.301276a6bb4d2p-111 | budget 300.0
+v04 group    g-1e-7-3-34296 #1: g value 0x1.a31e66204b4c8p-86 abserr 0x1.4a0104a9ea1e0p-110 conv False regions 79 depth 20 | 06h value 0x1.a31e6675ccff2p-86 abserr 0x1.4f66719dcf92ap-110 | budget 300.0
+v05 group    g-1e-7-3-34090 #4: g value 0x1.e11c90375194cp-79 abserr 0x1.8e35bfbd0eda4p-102 conv False regions 207 depth 20 | 06h value 0x1.e11c8fd887df8p-79 abserr 0x1.17e0085312206p-102 | budget 300.0
+v06 group    g-1e-8-2-1380 #4: g value -0x1.e9ba0850f8170p-110 abserr 0x1.3dfe0749bb4b9p-137 conv False regions 76 depth 20 | 06h value -0x1.e9ba0858015a8p-110 abserr 0x1.1863dae6f89dep-136 | budget 300.0
+v07 group    g-1e-8-0-12606 #5: g value 0x1.a59b4411ebbc8p-96 abserr 0x1.88367c2b9c477p-122 conv False regions 116 depth 20 | 06h value 0x1.a59b44852f66ep-96 abserr 0x1.6eed469f642bep-121 | budget 300.0
+v08 group    g-1e-8-3-1192 #5: g value 0x1.565e4e359a9e2p-91 abserr 0x1.968fd44f1fb26p-117 conv False regions 206 depth 20 | 06h value 0x1.565e4de8a662fp-91 abserr 0x1.218ed2551a59dp-119 | budget 300.0
+v09 group    g-1e-8-1-35480 #2: g value -0x1.f912b4f680f74p-86 abserr 0x1.e1172e84c9ff5p-112 conv False regions 172 depth 20 | 06h value -0x1.f912b58029823p-86 abserr 0x1.b7af2106bed10p-110 | budget 300.0
+v10 group    g-1e-8-3-38023 #4: g value -0x1.51c04d54877a4p-79 abserr 0x1.6de3b7d10f287p-106 conv False regions 196 depth 20 | 06h value -0x1.51c04d405221ep-79 abserr 0x1.b0992c93a7f45p-106 | budget 300.0
+v11 group    g-1e-8-0-12655 #3: g value -0x1.11ab22e904a9bp-85 abserr 0x1.a3f78ff684b90p-110 conv False regions 142 depth 20 | 06h value -0x1.11ab236f7f7e7p-85 abserr 0x1.a1ff554c9db1dp-110 | budget 300.0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/sample/selection.json sha256 f1d760077f8769a349f67689c6eed05832092ed1e6e980a01f2b5d1fcdfa5b95
+# ----
+# end 2026-11-01T17:52:24Z
+# exit 0

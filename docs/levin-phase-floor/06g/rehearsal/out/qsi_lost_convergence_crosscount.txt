@@ -1,0 +1,23 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:31:46Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+./venv/bin/python -I -c "
+import csv
+from collections import Counter
+rows=list(csv.DictReader(open(\"var/levin-phase-floor-06g/rehearsal/out/qsi_rows.csv\")))
+v=[r for r in rows if r[\"V1\"]==\"VIOLATES\"]
+print(\"V1 violators:\", len(v), \"unconverged in R24:\", sum(r[\"total_converged_R24\"]==\"0\" for r in v), \"max depth 20 in R24:\", sum(r[\"WKB_Levin_max_depth_R24\"]==\"20\" for r in v))
+lost=[r for r in rows if r[\"total_converged_R23\"]==\"1\" and r[\"total_converged_R24\"]==\"0\"]
+print(\"rows converged in R23 and not in R24:\", len(lost), \"of which max depth 20 in R24:\", sum(r[\"WKB_Levin_max_depth_R24\"]==\"20\" for r in lost))
+d20=[r for r in rows if r[\"WKB_Levin_max_depth_R24\"]==\"20\"]
+print(\"rows at max depth 20 in R24:\", len(d20), \"of which converged in R24:\", sum(r[\"total_converged_R24\"]==\"1\" for r in d20))
+print(\"lost by k:\", dict(Counter(r[\"k\"] for r in lost)))
+"
+# output:
+V1 violators: 12 unconverged in R24: 10 max depth 20 in R24: 10
+rows converged in R23 and not in R24: 67 of which max depth 20 in R24: 67
+rows at max depth 20 in R24: 76 of which converged in R24: 9
+lost by k: {'100000.0': 17, '316227.7660168379': 25, '1000000.0': 25}
+# exit: 0
+# end: 2026-11-01T11:31:46Z

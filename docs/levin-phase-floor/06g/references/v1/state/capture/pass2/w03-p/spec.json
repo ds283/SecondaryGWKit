@@ -1,0 +1,30 @@
+{
+ "tree": "p",
+ "name": "P2-w03-p",
+ "units": [
+  {
+   "uid": "p-1e-7-0-20340",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "0-20340",
+   "names05": null,
+   "shard": 0,
+   "serial": 20340,
+   "k_key": "0:2",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=3.16e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=434.65, z in (5.421e+09, 434.65), regime Gqr, group G+q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/capture/pass2/w03-p",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/v1/state/capture/pass2/w03-p/emit.jsonl",
+ "rows_sha256": null,
+ "w2_capture_sha256": null
+}

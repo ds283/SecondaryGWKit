@@ -1,0 +1,12 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r09.pkl fcc 1 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/rereads/r09-fcc-r1.json --sid r09 --unit g-1e-7-1-20466 --index 5 --rtol 1e-7 --workers 6 --progress /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/progress_rerun/reread-r09-fcc-r1.json --progress-order unordered --rerun
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-02T18:54:09Z
+# estimate_s 3.4-16.8
+# ----
+{"sample": "r09", "route": "A", "impl": "fcc", "res": 1, "value_hex": "0x1.05491c0574658p-41", "value_30": "4.64136433857507414933307265454e-13", "wall_s": 3.3805351671762764, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-02T18:54:14Z
+# exit 0
+# status done
+# wall_s 4.615

@@ -1,0 +1,21 @@
+$ /bin/bash -c diff\ -ruN\ state/scripts_06h_reference\ scripts\ \>\ out/scripts_diff_against_06h_final.txt\;\ for\ p\ in\ \"gate_h.py\ gate_v.py\"\ \"gate_h_clause1.py\ gate_v_clause1.py\"\ \"checks_after_06h.py\ checks_after_06g.py\"\;\ do\ set\ --\ \$p\;\ echo\ \"===\ new\ \$2\ against\ its\ 06h\ source\ \$1\"\;\ diff\ -u\ state/scripts_06h_reference/\$1\ scripts/\$2\;\ done\ \>\ out/scripts_diff_new_files_against_06h_sources_final.txt\;\ grep\ \"\^diff\ -ruN\"\ out/scripts_diff_against_06h_final.txt\;\ wc\ -l\ out/scripts_diff_against_06h_final.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:42:54Z
+# ----
+diff -ruN state/scripts_06h_reference/check_predictions.py scripts/check_predictions.py
+diff -ruN state/scripts_06h_reference/checks_after_06g.py scripts/checks_after_06g.py
+diff -ruN state/scripts_06h_reference/gate_v.py scripts/gate_v.py
+diff -ruN state/scripts_06h_reference/gate_v_clause1.py scripts/gate_v_clause1.py
+diff -ruN state/scripts_06h_reference/harness.py scripts/harness.py
+diff -ruN state/scripts_06h_reference/launch.py scripts/launch.py
+diff -ruN state/scripts_06h_reference/prov.py scripts/prov.py
+diff -ruN state/scripts_06h_reference/run_census.py scripts/run_census.py
+diff -ruN state/scripts_06h_reference/scripts_equal.py scripts/scripts_equal.py
+diff -ruN state/scripts_06h_reference/smoke_summary.py scripts/smoke_summary.py
+diff -ruN state/scripts_06h_reference/static_names.py scripts/static_names.py
+diff -ruN state/scripts_06h_reference/worker.py scripts/worker.py
+1699 out/scripts_diff_against_06h_final.txt
+# ----
+# end 2026-11-01T11:42:54Z
+# exit 0

@@ -1,0 +1,5 @@
+example modules: {"counts_by_root": {"own tree": 102, "python": 265, "scripts": 8, "no file": 41, "venv": 1438}, "foreign": [], "n_own_tree": 102, "files": {"ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/__init__.py", "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/primitive_phase.py", "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/QuadSource.py", "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/QuadSourceIntegral.py", "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/Secon
+('mentions 1c5336e worktree', True) 18560
+('mentions main checkout code', False) 18560
+('mentions parent worktree', False) 18560
+('worker_tree', '"g"') 18560

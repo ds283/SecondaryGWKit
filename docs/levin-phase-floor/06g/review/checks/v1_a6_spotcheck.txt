@@ -1,0 +1,13 @@
+V1's 12, orchestrator's recomputation: call values from v1_capture.json; readings: laptop FCC r1, r2 (b5626ec) and stage-2 QAWO r1, r2 (ff3e839)
+w00: spread/tol 5.39e-05  |v24-ref|/e24 0.0054 (covered)  |v23-ref|/e23 8.874e+04  nearer R24
+w01: spread/tol 2.84e-04  |v24-ref|/e24 0.8174 (covered)  |v23-ref|/e23 2.439e+05  nearer R24
+w02: spread/tol 3.41e-05  |v24-ref|/e24 0.0032 (covered)  |v23-ref|/e23 4.485e+03  nearer R24
+w03: spread/tol 1.65e-04  |v24-ref|/e24 0.5732 (covered)  |v23-ref|/e23 5.970e+05  nearer R24
+w04: spread/tol 8.73e-05  |v24-ref|/e24 0.0018 (covered)  |v23-ref|/e23 3.961e+05  nearer R24
+w05: spread/tol 7.10e-05  |v24-ref|/e24 0.0587 (covered)  |v23-ref|/e23 2.829e+05  nearer R24
+w06: spread/tol 3.33e-06  |v24-ref|/e24 0.1162 (covered)  |v23-ref|/e23 8.580e+04  nearer R24
+w07: spread/tol 8.12e-05  |v24-ref|/e24 0.9424 (covered)  |v23-ref|/e23 1.638e+05  nearer R24
+w08: spread/tol 5.47e-05  |v24-ref|/e24 0.0103 (covered)  |v23-ref|/e23 7.476e+04  nearer R24
+w09: spread/tol 1.53e-05  |v24-ref|/e24 0.0618 (covered)  |v23-ref|/e23 2.615e+04  nearer R24
+w10: spread/tol 2.65e-05  |v24-ref|/e24 0.3912 (covered)  |v23-ref|/e23 4.284e+04  nearer R24
+w11: spread/tol 4.17e-05  |v24-ref|/e24 0.0472 (covered)  |v23-ref|/e23 3.628e+04  nearer R24

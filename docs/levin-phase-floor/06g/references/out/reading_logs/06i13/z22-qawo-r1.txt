@@ -1,0 +1,10 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/z22.pkl qawo 1 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings_06i13/z22-qawo-r1.json --sid z22 --unit g-1e-8-2-21874 --index 12 --rtol 1e-8 --workers 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# start 2026-11-01T18:36:10Z
+# ----
+{"sample": "z22", "route": "A", "impl": "qawo", "res": 1, "value_hex": "-0x1.35f747459d44fp-46", "value_30": "-1.72065656874532159216939260291e-14", "wall_s": 4.460161000024527, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-01T18:36:16Z
+# exit 0
+# status done
+# wall_s 6.108

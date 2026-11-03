@@ -1,0 +1,65 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/gate_v_clause1.py state/V/p_tree_modules.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T11:39:10Z
+# ----
+# levin-phase-floor 06g: Gate V, the git clauses
+# written 2026-11-01T11:39:10Z on mps026298.phys.susx.ac.uk
+# script gate_v_clause1.py sha256 279587afeeff8590c566d9db5937621a3efe63311ada3946f2a27cfd016c0627
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed HEAD 4f4f9ed2a31fb7437fcfca01263d260eebaff842 (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e HEAD 1c5336e7e0ab8ed4495601a4033841f2df17ebdd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/V/p_tree_modules.json sha256 e572de5e37083ffcc851d910905c5cae6ee27c6cc11f43831d43c7c70742fe2f
+
+the harness's imports from the parent tree (/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed): 102 modules
+  of them in a tests package: ['ComputeTargets.tests', 'ComputeTargets.tests.test_main_plumbing']
+  of them under AdaptiveLevin: ['AdaptiveLevin', 'AdaptiveLevin.levin_quadrature']
+  of them under tools: ['tools', 'tools.inventory_report']
+
+== clause 1, the integrand is 06h's: 06h's census tree c1ec3b2 against 06g's code commit 3ae6f3a
+
+$ git diff --stat c1ec3b2 3ae6f3a -- . ':!docs' ':!prompts'
+ AdaptiveLevin/levin_quadrature.py               |  730 +++++++++---
+ AdaptiveLevin/tests/test_levin_cc_floor.py      |    7 +
+ AdaptiveLevin/tests/test_levin_global_budget.py |   14 +-
+ AdaptiveLevin/tests/test_levin_leaf_values.py   |  626 +++++++++++
+ AdaptiveLevin/tests/test_levin_node_sum.py      |  182 +++
+ AdaptiveLevin/tests/test_levin_roundoff_exit.py |  174 +++
+ CLAUDE.md                                       |    5 +-
+ tools/filon_reference.py                        | 1345 +++++++++++++++++++++++
+ tools/tests/test_filon_reference.py             |  355 ++++++
+ 9 files changed, 3296 insertions(+), 142 deletions(-)
+
+9 files
+  M AdaptiveLevin/levin_quadrature.py: allowed (imported by the harness at the parent: True)
+  M AdaptiveLevin/tests/test_levin_cc_floor.py: allowed (imported by the harness at the parent: False)
+  M AdaptiveLevin/tests/test_levin_global_budget.py: allowed (imported by the harness at the parent: False)
+  A AdaptiveLevin/tests/test_levin_leaf_values.py: allowed (imported by the harness at the parent: False)
+  A AdaptiveLevin/tests/test_levin_node_sum.py: allowed (imported by the harness at the parent: False)
+  M AdaptiveLevin/tests/test_levin_roundoff_exit.py: allowed (imported by the harness at the parent: False)
+  M CLAUDE.md: allowed (imported by the harness at the parent: False)
+  A tools/filon_reference.py: allowed (imported by the harness at the parent: False)
+  A tools/tests/test_filon_reference.py: allowed (imported by the harness at the parent: False)
+   clause 1: HOLDS
+
+== clause 2, the parent's code is 06h's census's: c1ec3b2 against 06g's parent 4f4f9ed
+
+$ git diff --stat c1ec3b2 4f4f9ed -- . ':!docs' ':!prompts'
+ CLAUDE.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+1 files
+  M CLAUDE.md: CLAUDE.md -- allowed
+   clause 2: HOLDS
+
+== clause 3, the census tree's code is the code commit's: 3ae6f3a against 1c5336e
+
+$ git diff --stat 3ae6f3a 1c5336e -- . ':!docs' ':!prompts'
+
+0 files
+   clause 3: HOLDS
+
+== Gate V, the git clauses: HOLD
+# ----
+# end 2026-11-01T11:39:10Z
+# exit 0

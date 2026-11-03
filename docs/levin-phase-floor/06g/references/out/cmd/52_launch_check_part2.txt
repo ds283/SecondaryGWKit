@@ -1,0 +1,27 @@
+$ /bin/bash -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-references-20261101T201415\;\ cat\ \$R/status.json\;\ P=\$\(python3\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\)\[\\\"pid\\\"\]\)\"\)\;\ kill\ -0\ \$P\ \&\&\ echo\ \"driver\ pid\ \$P\ answers\ kill\ -0\"\;\ echo\ \"stderr\ bytes:\ \$\(wc\ -c\ \<\ \$R/stderr.log\)\"\;\ head\ -1\ \$R/checkpoint.jsonl\ 2\>/dev/null\ \|\ cut\ -c1-300\;\ ls\ out/progress\ \|\ head\ -3
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-01T20:14:41Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-01T20:14:38+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 14269,
+  "stage": "v1 w00 fcc r1 running (projection 20 s)",
+  "state": "running",
+  "units_done": 2,
+  "units_total": 380
+}
+driver pid 14269 answers kill -0
+stderr bytes: 0
+{"unit": "v1 w00 qawo r1", "recorded": "2026-11-01T20:14:25+00:00", "script_sha256": "68443f94f91c985d9fedab8bf1e73ed04ba9bed1dc1681aa821ea5f0e07cf60a", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"status": "done", "exit_code": 0, "driver_wall_s": 9.639786124
+w00-fcc-r1.json
+w00-qawo-r1.json
+w00-qawo-r2.json
+# ----
+# end 2026-11-01T20:14:41Z
+# exit 0

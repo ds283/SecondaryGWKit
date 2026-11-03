@@ -1,0 +1,65 @@
+# The rerun batch's plan (addenda 4 and 5)
+
+Tool: `/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839/tools/filon_reference.py` at `ff3e8394`. One reading at a time, six workers; progress counted out of order (`one_reading.py --progress-order unordered`). Written by `scripts/make_rerun_plan.py` (its docstring is the rule), before any of these readings.
+
+## 1. Bit-for-bit re-reads (each a stop if it does not reproduce)
+
+| Reading | Old reading | Old wall s | Why it is representative |
+|---|---|---|---|
+| z13 qawo r1 | `readings_06i13/z13-qawo-r1.json` | 7.5 | Route B QAWO r1, part 1 (06i's sample 13, a G+q-r census group, 750 segments) |
+| r55 qawo r2 | `readings/r55-qawo-r2.json` | 3.5 | Route B QAWO r2, part 2 (a drawn G-r group, 298 segments): the r2 QAWO path |
+| z13 fcc r1 | `readings_06i13/z13-fcc-r1.json` | 12.3 | Route B FCC r1, part 1 (the same call as the QAWO re-read) |
+| r56 fcc r1 | `readings/r56-fcc-r1.json` | 9.1 | Route B FCC r1, part 2 (a drawn G-q+r group, z_response 1.75e10, 204 segments) |
+| z25 qawo r2 | `readings_06i13/z25-qawo-r2.json` | 3.5 | Route A QAWO r2, part 1 (06i's sample 25, a Y4 analytic block) |
+| r09 fcc r1 | `readings/r09-fcc-r1.json` | 3.4 | Route A FCC r1, part 2 (a drawn Y2 analytic block) |
+
+## 2. The 14 stationary-point samples, all four readings (replacing the old ones)
+
+Estimates: low end the old tool's wall for that reading (its siblings' mean where it ended in error); high end that plus the laptop's z00 excess under the new tool (FCC r1 +129 s, r2 +615 s; QAWO r1 309 s, r2 1,023 s); z00 and z12 at the laptop's walls (low) and 1.5x (high).
+
+| Sample | Phase span (rad) | Old readings' all_monotone | Readings | Estimate s (low-high) |
+|---|---|---|---|---|
+| w00 | 7.66e+05 | False | 4 | 134-2210 |
+| w01 | 4.95e+05 | False | 4 | 133-2209 |
+| w02 | 3.61e+05 | False | 4 | 135-2211 |
+| w03 | 6.33e+07 | False | 4 | 168-2244 |
+| w04 | 4.63e+07 | False | 4 | 165-2241 |
+| w05 | 2.29e+07 | False | 4 | 156-2232 |
+| w06 | 1.14e+06 | False | 4 | 140-2216 |
+| w07 | 2.68e+08 | False | 4 | 240-2316 |
+| w08 | 1.46e+08 | False | 4 | 193-2269 |
+| w09 | 7.25e+07 | False | 4 | 175-2251 |
+| w10 | 3.19e+07 | False | 4 | 167-2243 |
+| w11 | 3.61e+06 | False | 4 | 146-2222 |
+| z00 | 4.23e+09 | False | 4 | 2227-3340 |
+| z12 | 4.23e+09 | False | 4 | 2227-3340 |
+
+## 3. The stopped QAWO readings
+
+Estimate: phase span x 0.06-0.10 us/rad (r1), x 0.24-0.40 us/rad (r2).
+
+| Reading | Phase span (rad) | Estimate s (low-high) | all_monotone (existing readings) | Existing spread / tolerance | Runs? |
+|---|---|---|---|---|---|
+| r47 qawo r2 | 4.585e+10 | 11004-18340 (3.1-5.1 h) | True | 0.00144 (fcc-r1, fcc-r2, qawo-r1) | **runs**: runs |
+| r26 qawo r1 | 8.621e+11 | 51728-86213 (14.4-23.9 h) | True | 1.1e-08 (fcc-r1, fcc-r2) | **runs**: runs (its high end, 86213 s, is under a day by 187 s) |
+| r26 qawo r2 | 8.621e+11 | 206910-344850 (57.5-95.8 h) | True | 1.1e-08 (fcc-r1, fcc-r2) | no: skip: estimated at a day or more |
+| r24 qawo r1 | 1.067e+11 | 6402-10669 (1.8-3.0 h) | True | 5.93e-05 (fcc-r1, fcc-r2) | **runs**: runs |
+| r53 qawo r1 | 1.356e+11 | 8136-13560 (2.3-3.8 h) | True | 0.00168 (fcc-r1, fcc-r2) | **runs**: runs |
+| r53 qawo r2 | 1.356e+11 | 32544-54240 (9.0-15.1 h) | True | 0.00168 (fcc-r1, fcc-r2) | **runs**: runs |
+| r52 qawo r2 | 3.179e+10 | 7628-12714 (2.1-3.5 h) | True | 4.38e-05 (fcc-r1, fcc-r2, qawo-r1) | no: skip: addenda 4 and 5 (three readings agree to 4.4e-5 of the tolerance) |
+| r24 qawo r2 | 1.067e+11 | 25606-42677 (7.1-11.9 h) | True | 5.93e-05 (fcc-r1, fcc-r2) | no: skip: addenda 4 and 5 ('about 2 days' from part 2's ordered progress) |
+
+Order of stage 3 (shortest low estimate first): r24-qawo-r1, r53-qawo-r1, r47-qawo-r2, r53-qawo-r2, r26-qawo-r1.
+
+## The batch's projected total
+
+| Stage | Readings | Estimate (low-high) |
+|---|---|---|
+| reread | 6 | 39-139 s (0.0-0.0 h) |
+| stationary | 56 | 6407-33546 s (1.8-9.3 h) |
+| stopped | 5 | 109813-183022 s (30.5-50.8 h) |
+| **total** | 67 | **116259-216707 s (32.3-60.2 h)** |
+
+## The backstop (addenda 4 and 5)
+
+No reading is stopped for passing 30 minutes or for a multiple of its estimate. From 30 minutes, every 5 minutes, its progress (chunks finished, counted out of order) and projected finish (start + elapsed x total / done; with no chunk back yet, its estimate's high end) go to the heartbeat and `out/rerun_monitor.log`. It is stopped only when its projected total is a day (86,400 s) or more, or when it has run 24 h.

@@ -1,0 +1,127 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-01T11:12:29Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=var/levin-phase-floor-06g/rehearsal; cat $R/state/lock.log; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > $R/out/r24_launch_registry_list.txt 2>&1; echo "list exit $?"; head -2 $R/out/r24_launch_registry_list.txt | cut -c1-200; tail -1 $R/out/r24_launch_registry_list.txt; D=$(ls -d var/runs/levin-phase-floor-06g-r24-leafvalues-*); echo "run dir: $D"; ls $D; echo "== status.json"; cat $D/status.json; echo; echo "== launch log head"; head -14 var/runs/levin-phase-floor-06g-r24.launch.log; echo "== Traceback count"; grep -c Traceback var/runs/levin-phase-floor-06g-r24.launch.log; echo "== kill -0"; kill -0 45379 && echo "45379 alive"; kill -0 45376 && echo "45376 alive"; echo "== cwd of driver"; lsof -a -d cwd -p 45379; echo "== manifest"; ./venv/bin/python -I -c "import json,sys; m=json.load(open(sys.argv[1]+\"/manifest.json\")); print(json.dumps({k:m[k] for k in m if k in (\"run_id\",\"cwd\",\"git_head\",\"git_dirty\",\"script\",\"script_sha256\",\"results\",\"argv\",\"campaign\",\"prompt\",\"created\",\"host\")}, indent=1))" $D; echo "== worktrees"; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed status --short --ignored; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e status --short --ignored; echo "== store files"; ls -la var/datastores | grep 06g; echo "== R23 store re-hashed at R24 launch"; shasum -a 256 var/datastores/levin-phase-floor-06g-r23* > $R/state/r23_store_sha256_at_r24_launch.txt; cat $R/state/r23_store_sha256_at_r24_launch.txt; head -5 $R/state/r23_store_sha256_after_build.txt | cmp - $R/state/r23_store_sha256_at_r24_launch.txt && echo "R23 store unchanged"
+# output:
+exit 0
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor prompt 06g section 4, rehearsals R23 (worktree 4f4f9ed, parent of 06g code commit 3ae6f3a, 06h's code) and R24 (worktree 1c5336e, code 06g 3ae6f3a) on the Mac Studio (mps026298), then the value comparison, V1 and readers
+exit 0
+recorded pid 44460 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+exit 0
+recorded pid 45379 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+== registry
+list exit 0
+   RUN                                                   STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-06g-r24-leafvalues-20261101T111215  running           -      14s  levin-phase-floor prompt 06g, R24 on the Mac Studio (mps026298; tree 1c5336e in the worktree /Users/ds283/Documen
+42 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 41 finished; 0 with no host recorded.
+run dir: var/runs/levin-phase-floor-06g-r24-leafvalues-20261101T111215
+manifest.json
+status.json
+stderr.log
+stdout.log
+== status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-01T11:12:28+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 45379,
+  "stage": "CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+== launch log head
+** quadsource_atol_sweep --build: registered as levin-phase-floor-06g-r24-leafvalues-20261101T111215
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r24-leafvalues-20261101T111215/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite', '--job-name', 'levin-phase-floor-06g', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-11-01 11:12:21,972	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite" with 4 shards
+
+== Traceback count
+0
+== kill -0
+45379 alive
+45376 alive
+== cwd of driver
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  45379 ds283  cwd    DIR   1,13     1120 1231244424 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e
+== manifest
+{
+ "argv": [
+  "RunDrivers/quadsource_atol_sweep.py",
+  "--build",
+  "--rehearsal",
+  "--database",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite",
+  "--job-name",
+  "levin-phase-floor-06g",
+  "--atol",
+  "1e-32",
+  "--rtol",
+  "1e-7",
+  "--cpus",
+  "6",
+  "--register",
+  "r24-leafvalues",
+  "--purpose",
+  "levin-phase-floor prompt 06g, R24 on the Mac Studio (mps026298; tree 1c5336e in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e, Part B's dispatch SHA, whose code is 06g's code commit 3ae6f3a (the trusted leaf returns its quarters sum, slow leaves untrusted at r >= 1/4, the Clenshaw-Curtis node errors carried signed with a node-limited stop, the round-off exit's premise without the declared term and with the budget clause); Python 3.13.16): rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R23/R24 value comparison (R23 at 4f4f9ed, 06h's code), and only QuadSourceIntegral is expected to differ",
+  "--campaign",
+  "levin-phase-floor",
+  "--prompt",
+  "06g"
+ ],
+ "campaign": "levin-phase-floor",
+ "created": "2026-11-01T11:12:15+00:00",
+ "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e",
+ "git_dirty": false,
+ "git_head": "1c5336e7e0ab8ed4495601a4033841f2df17ebdd",
+ "host": {
+  "id": "d120d1cf03551e6f",
+  "machine": "arm64",
+  "name": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16",
+  "release": "27.0.0",
+  "system": "Darwin"
+ },
+ "prompt": "06g",
+ "results": "var/datastores/levin-phase-floor-06g-r24.sqlite",
+ "run_id": "levin-phase-floor-06g-r24-leafvalues-20261101T111215",
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/RunDrivers/quadsource_atol_sweep.py",
+ "script_sha256": "b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19"
+}
+== worktrees
+== store files
+-rw-r--r--  1 ds283 staff  25022464 Nov  1 11:11 levin-phase-floor-06g-r23-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25243648 Nov  1 11:11 levin-phase-floor-06g-r23-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 11:06 levin-phase-floor-06g-r23-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24436736 Nov  1 11:11 levin-phase-floor-06g-r23-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 11:06 levin-phase-floor-06g-r23.sqlite
+-rw-r--r--  1 ds283 staff   1335296 Nov  1 11:12 levin-phase-floor-06g-r24-shard0000.sqlite
+-rw-r--r--  1 ds283 staff   1286144 Nov  1 11:12 levin-phase-floor-06g-r24-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 11:12 levin-phase-floor-06g-r24-shard0002.sqlite
+-rw-r--r--  1 ds283 staff   1388544 Nov  1 11:12 levin-phase-floor-06g-r24-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 11:12 levin-phase-floor-06g-r24.sqlite
+== R23 store re-hashed at R24 launch
+87dfa6dbaf57d8c9e26d91d3588a57059ca75284531ba1e5822e763aac3a60a7  var/datastores/levin-phase-floor-06g-r23-shard0000.sqlite
+acbd96521ba6040428d6e1972dfeede748a6a72d955f3d22bd0a23d502184168  var/datastores/levin-phase-floor-06g-r23-shard0001.sqlite
+4424d9c263ed36ebf493a045d29aac66df70d0933fddfa18416cfa84f3b981a0  var/datastores/levin-phase-floor-06g-r23-shard0002.sqlite
+aac7b8fcaf470b02336aed27fa0a8e4e9d0fc900410079328daf8eef8cce712d  var/datastores/levin-phase-floor-06g-r23-shard0003.sqlite
+88cc355f9a018e17816f13b8fb587017f0cde54e7fc3a07b8c4a6f2ed6c4944a  var/datastores/levin-phase-floor-06g-r23.sqlite
+R23 store unchanged
+# exit: 0
+# end: 2026-11-01T11:12:30Z

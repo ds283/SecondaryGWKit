@@ -1,0 +1,76 @@
+violating rows read from /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/rehearsal/out/qsi_rows.csv: 12
+
+== k=100000 q=100000 r=100000 z_response=3971.4125591760326: |dT| 1.7970e-20, ratio 4074.3
+   R23: total -0x1.620fef0efb626p-56 (-1.9193752571e-17) abserr 0x1.53b4899ee9003p-79 (2.1953e-24) converged 1 phase_limited 1 regions 75 max_depth 8 numeric_quad 0x0.0p+0
+   R24: total -0x1.6264cbb02c333p-56 (-1.9211722764e-17) abserr 0x1.56ce16ca76decp-79 (2.2153e-24) converged 0 phase_limited 1 regions 333 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (1.71262e+09, 3971.41) group 'G+q+r': |dv| 1.7970e-20 = 1.000 of |dT|; ratio 42269.1; v23 0x1.4d0cf4361bcb7p-59 v24 0x1.4a6610ee6fad8p-59 e23 0x1.f55c967465becp-83 e24 0x1.139be8c909148p-82; conv True>False pl False>True regions 2>141
+
+== k=100000 q=100000 r=100000 z_response=5236.5530126517315: |dT| 9.3855e-20, ratio 13101.5
+   R23: total -0x1.60d489de69402p-55 (-3.8253930049e-17) abserr 0x1.21b44281c283ep-78 (3.7443e-24) converged 1 phase_limited 1 regions 22 max_depth 8 numeric_quad 0x0.0p+0
+   R24: total -0x1.5ff6ede3f1fadp-55 (-3.8160074863e-17) abserr 0x1.088f35de11bf5p-78 (3.4194e-24) converged 1 phase_limited 1 regions 157 max_depth 15 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (1.71262e+09, 5236.55) group 'G+q+r': |dv| 9.3855e-20 = 1.000 of |dT|; ratio 229036; v23 0x1.482ce759249c8p-57 v24 0x1.4ba3565b9af3ap-57 e23 0x1.dc5de323ac890p-82 e24 0x1.eeb51d1f9229ep-86; conv True>True pl False>True regions 2>45
+
+== k=100000 q=100000 r=100000 z_response=6904.718924492998: |dT| 2.1209e-21, ratio 223.906
+   R23: total -0x1.856721d9b93e5p-55 (-4.2219142707e-17) abserr 0x1.729c4e92c90ebp-78 (4.7900e-24) converged 1 phase_limited 0 regions 30 max_depth 7 numeric_quad 0x0.0p+0
+   R24: total -0x1.85621fd5aeb33p-55 (-4.2217021790e-17) abserr 0x1.6a4705e03b114p-78 (4.6823e-24) converged 0 phase_limited 1 regions 178 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (1.71262e+09, 6904.72) group 'G+q+r': |dv| 2.1211e-21 = 1.000 of |dT|; ratio 2529.55; v23 0x1.d6831390e5863p-58 v24 0x1.d6ab246aa73cfp-58 e23 0x1.24b9aec9529acp-81 e24 0x1.c4953d030202bp-82; conv True>False pl False>True regions 7>84
+
+== k=316228 q=316228 r=316228 z_response=434.65132503921666: |dT| 1.5954e-22, ratio 12868.4
+   R23: total -0x1.bcb9578284e92p-64 (-9.4173968318e-20) abserr 0x1.eff7071a8f92ap-88 (6.2600e-27) converged 1 phase_limited 1 regions 56 max_depth 6 numeric_quad 0x0.0p+0
+   R24: total -0x1.bbf87768382dap-64 (-9.4014425525e-20) abserr 0x1.e64ede7779d01p-88 (6.1381e-27) converged 0 phase_limited 1 regions 492 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (5.42099e+09, 434.651) group 'G+q+r': |dv| 1.5955e-22 = 1.000 of |dT|; ratio 321063; v23 0x1.b3ce3f51b975ap-66 v24 0x1.b6d1c410fcf8fp-66 e23 0x1.52c962a9ee175p-92 e24 0x1.232633a21a36ep-92; conv True>False pl False>True regions 2>202
+
+== k=316228 q=316228 r=316228 z_response=573.1146466584687: |dT| 2.0051e-22, ratio 10207
+   R23: total 0x1.01dcb4297e779p-63 (1.0920885746e-19) abserr 0x1.91a4ed615374dp-87 (1.0139e-26) converged 1 phase_limited 1 regions 51 max_depth 6 numeric_quad 0x0.0p+0
+   R24: total 0x1.0163814429fcbp-63 (1.0900835085e-19) abserr 0x1.7888456c4574ep-87 (9.5050e-27) converged 0 phase_limited 1 regions 252 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (5.42099e+09, 573.115) group 'G+q+r': |dv| 2.0051e-22 = 1.000 of |dT|; ratio 195798; v23 -0x1.1091692e08decp-65 v24 -0x1.1276361261a5cp-65 e23 0x1.40d3a40591b70p-91 e24 0x1.483f2391ef15fp-91; conv True>False pl False>True regions 8>105
+
+== k=316228 q=316228 r=316228 z_response=996.4201622779478: |dT| 3.4021e-22, ratio 7702.11
+   R23: total -0x1.2179faec40418p-62 (-2.4519612027e-19) abserr 0x1.b9223a4398a9cp-86 (2.2272e-26) converged 1 phase_limited 1 regions 33 max_depth 7 numeric_quad 0x0.0p+0
+   R24: total -0x1.21132816cf33ep-62 (-2.4485590562e-19) abserr 0x1.b1c6747755c13p-86 (2.1900e-26) converged 0 phase_limited 1 regions 341 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (5.42099e+09, 996.42) group 'G+q+r': |dv| 3.4022e-22 = 1.000 of |dT|; ratio 156924; v23 0x1.d6e05e30a4c1ep-65 v24 0x1.da16f90a7e713p-65 e23 0x1.7d2524d51034bp-90 e24 0x1.31f161c648463p-90; conv True>False pl False>True regions 10>115
+
+== k=316228 q=316228 r=316228 z_response=6904.718924492998: |dT| 7.3622e-22, ratio 5988.64
+   R23: total 0x1.2b8433694421fp-60 (1.0148010683e-18) abserr 0x1.3585cfdb5c416p-84 (6.2508e-26) converged 1 phase_limited 1 regions 91 max_depth 8 numeric_quad 0x0.0p+0
+   R24: total 0x1.2b4c92dd0131bp-60 (1.0140648492e-18) abserr 0x1.2b3a0f49a3a98p-84 (6.0428e-26) converged 1 phase_limited 1 regions 311 max_depth 14 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (5.42099e+09, 6904.72) group 'G+q+r': |dv| 7.3622e-22 = 1.000 of |dT|; ratio 48155.8; v23 -0x1.0fae68c0011dap-63 v24 -0x1.116b6cd029a04p-63 e23 0x1.53ec322b5f463p-87 e24 0x1.09b4f6aa451e8p-87; conv True>True pl False>True regions 2>39
+
+== k=1e+06 q=1e+06 r=1e+06 z_response=329.64045755914753: |dT| 2.1660e-24, ratio 7739.33
+   R23: total -0x1.a4001d0eea20ap-70 (-1.3896648962e-21) abserr 0x1.749052d5bed9ap-93 (1.4695e-28) converged 1 phase_limited 1 regions 88 max_depth 7 numeric_quad 0x0.0p+0
+   R24: total -0x1.a4a7b36307b24p-70 (-1.3918309102e-21) abserr 0x1.50fe6c9753b0bp-93 (1.3292e-28) converged 0 phase_limited 1 regions 571 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (1.71592e+10, 329.64) group 'G+q+r': |dv| 2.1660e-24 = 1.000 of |dT|; ratio 131132; v23 0x1.502f790a3a6e2p-73 v24 0x1.4af2cdfcba0ddp-73 e23 0x1.0c3aec5dbef62p-96 e24 0x1.0b222bc7d699fp-98; conv True>False pl False>True regions 2>208
+
+== k=1e+06 q=1e+06 r=1e+06 z_response=573.1146466584687: |dT| 1.7636e-24, ratio 2116.61
+   R23: total -0x1.4b8ed0563fd6ep-68 (-4.3881318253e-21) abserr 0x1.14f5d284d513dp-91 (4.3697e-28) converged 1 phase_limited 1 regions 33 max_depth 6 numeric_quad 0x0.0p+0
+   R24: total -0x1.4bb0ed52fd428p-68 (-4.3898954381e-21) abserr 0x1.f651f176a5f76p-92 (3.9626e-28) converged 0 phase_limited 1 regions 331 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (1.71592e+10, 573.115) group 'G+q+r': |dv| 1.7637e-24 = 1.000 of |dT|; ratio 45220.6; v23 0x1.24d7f9228c98fp-70 v24 0x1.244f84477b190p-70 e23 0x1.de81b387e67f8p-96 e24 0x1.38885b0ca8f1bp-96; conv True>False pl False>True regions 12>176
+
+== k=1e+06 q=1e+06 r=1e+06 z_response=996.4201622779478: |dT| 2.5115e-24, ratio 1788.57
+   R23: total -0x1.199b2af471ea1p-67 (-7.4540520418e-21) abserr 0x1.a4df28a0efa98p-91 (6.6402e-28) converged 1 phase_limited 1 regions 46 max_depth 7 numeric_quad 0x0.0p+0
+   R24: total -0x1.19b37534bf06bp-67 (-7.4565635734e-21) abserr 0x1.d527ab2931c68p-91 (7.4020e-28) converged 0 phase_limited 1 regions 242 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (1.71592e+10, 996.42) group 'G+q+r': |dv| 2.5116e-24 = 1.000 of |dT|; ratio 10248.1; v23 0x1.005d537719008p-69 v24 0x1.fff852f4ea1f3p-70 e23 0x1.e70ab4200f6c6p-94 e24 0x1.79d659c94dd73p-93; conv True>False pl True>True regions 5>109
+
+== k=1e+06 q=1e+06 r=1e+06 z_response=1732.3813753196057: |dT| 4.1861e-24, ratio 1902.3
+   R23: total -0x1.e6ea7941509c2p-67 (-1.2888556894e-20) abserr 0x1.55e5071cf810ap-90 (1.0788e-27) converged 1 phase_limited 1 regions 38 max_depth 6 numeric_quad 0x0.0p+0
+   R24: total -0x1.e712f5a4fc756p-67 (-1.2892743037e-20) abserr 0x1.637e2d61dc783p-90 (1.1217e-27) converged 0 phase_limited 1 regions 585 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (1.71592e+10, 1732.38) group 'G+q+r': |dv| 4.1863e-24 = 1.000 of |dT|; ratio 21614.7; v23 0x1.bdbdaae023e47p-69 v24 0x1.bd1bb7a4fc4c4p-69 e23 0x1.ef8aca1232c8ap-94 e24 0x1.e68708d27f1bep-94; conv True>False pl False>True regions 3>137
+
+== k=1e+06 q=1e+06 r=1e+06 z_response=6904.718924492998: |dT| 2.7185e-23, ratio 2137.87
+   R23: total 0x1.fb6aca7818b1ep-65 (5.3724880711e-20) abserr 0x1.0e8e346b764b8p-87 (6.8298e-27) converged 1 phase_limited 0 regions 47 max_depth 6 numeric_quad 0x0.0p+0
+   R24: total 0x1.fbac854c4b16cp-65 (5.3752065919e-20) abserr 0x1.d25b550ba8510p-88 (5.8862e-27) converged 0 phase_limited 1 regions 381 max_depth 20 numeric_quad 0x0.0p+0
+   numeric_quad bit-identical: True
+   sub[1] regime [True, True, True] z (1.71592e+10, 6904.72) group 'G+q+r': |dv| 2.7185e-23 = 1.000 of |dT|; ratio 27311.7; v23 -0x1.aa1cfee9822a1p-67 v24 -0x1.a9161328411f6p-67 e23 0x1.dae9ad40fefb0p-91 e24 0x1.37f613bc74e3ap-92; conv True>False pl False>True regions 2>121
+
+groups in the violating rows: 60; violating at group level: 12
+violating groups by (converged 23, converged 24, phase_limited 23, phase_limited 24): {(True, False, False, True): 9, (True, True, False, True): 2, (True, False, True, True): 1}
