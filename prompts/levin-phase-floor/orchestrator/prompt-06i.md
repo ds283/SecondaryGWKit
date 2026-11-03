@@ -120,3 +120,7 @@ implementation check; the user: *"I accept sample 8."*
 `docs/levin-phase-floor/06i/`, the log, `VERIFICATION.md` §6i, the prompt's §9, the board and
 `docs/OPEN_ISSUES.md`. The scripts are `black`-clean, so `CLAUDE.md`'s formatting paragraph does not
 list them. The 17 never-referenced Z3 samples go to 06g.
+
+**The integrand worktree removed, 2026-11-03.** On the user's word (*"Please remove those
+worktress."*), the laptop removed `../SecondaryGWKit-lpf06i-6d81fad` with `git worktree remove`. It
+was clean with `--ignored`. `6d81fad` is in the history, so the tree can be remade.

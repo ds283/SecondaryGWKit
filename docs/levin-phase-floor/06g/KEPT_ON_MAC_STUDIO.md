@@ -27,6 +27,15 @@ with SHA-256 and sizes, is its `KEPT_ON_MAC_STUDIO.txt`:
   `references/state/capture/` and `references/state/inputs/`, V1's under
   `references/v1/state/inputs/`, and `references/out/compare13.json`.
 
+  > **The 403 pickles removed 2026-11-03, on the user's word** (*"06g's reference pickles [can]
+  > probably be removed"*). Each was checked against `references/KEPT_ON_MAC_STUDIO.txt` first, and
+  > all 403 were equal (215,207,593 bytes): the captures under `references/state/capture/` and
+  > `references/v1/state/capture/`, the inputs under `references/state/inputs/` and
+  > `references/v1/state/inputs/`, and one development pickle under `references/v1/state/dev/`. They
+  > can be recreated: each capture was checked against the census, or against R23's or R24's store,
+  > bit for bit (`check_captures.py`), and the census checkpoint, the scratch copy and both stores
+  > are still kept. `references/out/compare13.json` and the run directories stay.
+
 **Not on the list, brought over compressed:** `review/checks/var_files_after.txt` (9.2 MB, SHA-256
 `5e7c09e1…`) is in this directory as `review/checks/var_files_after.txt.gz`. Its uncompressed
 SHA-256 equals the Mac Studio's.
@@ -48,5 +57,7 @@ Studio's, each matched by SHA-256.
 **Worktrees** (`/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-…`). On the Mac Studio,
 `4f4f9ed`, `1c5336e`, `ff3e839` and `b5626ec` stay for the references' reproducibility until the
 user says otherwise. The 71 stray `.pyc` files the laptop's slope survey left in `ff3e839`, and the
-one in `references/scripts/__pycache__/`, were deleted on the user's word on 2026-11-03. The laptop
-keeps its `b5626ec` worktree.
+one in `references/scripts/__pycache__/`, were deleted on the user's word on 2026-11-03. The
+laptop's `b5626ec` worktree, clean with `--ignored`, was removed with `git worktree remove` on the
+user's word on 2026-11-03 (*"Please remove those worktress."*). The Mac Studio's four stay for now:
+*"if we are going to use the 06g worktrees again, they can stay."*
