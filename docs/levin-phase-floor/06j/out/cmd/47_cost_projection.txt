@@ -1,0 +1,54 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/cost_06j.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:30:32Z
+# ----
+# levin-phase-floor 06j: Part W's reading costs, projected from phase span
+# written 2026-11-03T09:30:32Z on mps026298.phys.susx.ac.uk
+# script cost_06j.py sha256 5064a77fc5769d59969abaefa244bcf582329c68d4b4f8892e5b52302e621164
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/w_prep_v2/summary.json sha256 919423f25dd5f0df8861216ff80aa945c84885972b77af5bd18aedc815c6631d
+# calibration files: 461 under /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out
+qawo r1: 66 readings (Mac Studio); us/rad over spans >= 1e7: [0.056506829675780246, 0.8437849765231379] (36); s/segment [0.00479364332851239, 3.5262802521359706]
+qawo r2: 61 readings (Mac Studio); us/rad over spans >= 1e7: [0.233393806135277, 1.2803906734464803] (30); s/segment [0.005586081666664945, 1.1428460545117303]
+fcc r1: 72 readings (Mac Studio); us/rad over spans >= 1e7: [3.758506774099558e-05, 2.2239199655419135] (41); s/segment [0.013673100706921746, 0.07756507884538015]
+fcc r2: 70 readings (Mac Studio); us/rad over spans >= 1e7: [0.00014119102687959158, 8.31165190693718] (40); s/segment [0.05215592337806055, 0.3513341837124568]
+   largest spans: readings/r26-fcc-r1.json span 8.621e+11 rad, 2220 segments, wall 32 s (0.0000 us/rad)
+   largest spans: readings/r26-fcc-r2.json span 8.621e+11 rad, 2220 segments, wall 122 s (0.0001 us/rad)
+   largest spans: readings/r53-fcc-r1.json span 1.356e+11 rad, 2204 segments, wall 30 s (0.0002 us/rad)
+   largest spans: readings/r53-fcc-r2.json span 1.356e+11 rad, 2204 segments, wall 115 s (0.0008 us/rad)
+   largest spans: readings/r53-qawo-r1-rerun.json span 1.356e+11 rad, 2204 segments, wall 7772 s (0.0573 us/rad)
+   largest spans: readings/r24-fcc-r1.json span 1.067e+11 rad, 2418 segments, wall 35 s (0.0003 us/rad)
+   largest spans: readings/r24-fcc-r2.json span 1.067e+11 rad, 2418 segments, wall 136 s (0.0013 us/rad)
+   largest spans: readings/r24-qawo-r1-rerun.json span 1.067e+11 rad, 2418 segments, wall 6098 s (0.0572 us/rad)
+   largest spans: readings/r47-fcc-r1.json span 4.585e+10 rad, 1844 segments, wall 27 s (0.0006 us/rad)
+   largest spans: readings/r47-fcc-r2.json span 4.585e+10 rad, 1844 segments, wall 102 s (0.0022 us/rad)
+   largest spans: readings/r47-qawo-r1.json span 4.585e+10 rad, 1844 segments, wall 2594 s (0.0566 us/rad)
+   largest spans: readings/r52-fcc-r1.json span 3.179e+10 rad, 2270 segments, wall 34 s (0.0011 us/rad)
+
+projected total (sequential, six workers each): 379776 s = 105.49 h
+   c04 fcc r2: span 1.419e+10 rad, 2122 segments -> 117958 s (low 111 s)
+   c00 fcc r2: span 1.031e+10 rad, 1854 segments -> 85664 s (low 97 s)
+   c04 fcc r1: span 1.419e+10 rad, 2122 segments -> 31562 s (low 29 s)
+   c00 fcc r1: span 1.031e+10 rad, 1854 segments -> 22921 s (low 25 s)
+   c04 qawo r2: span 1.419e+10 rad, 2122 segments -> 18171 s (low 3312 s)
+   c00 qawo r2: span 1.031e+10 rad, 1854 segments -> 13196 s (low 2405 s)
+   c04 qawo r1: span 1.419e+10 rad, 2122 segments -> 11975 s (low 802 s)
+   c00 qawo r1: span 1.031e+10 rad, 1854 segments -> 8696 s (low 582 s)
+   c07 fcc r2: span 1.038e+09 rad, 1640 segments -> 8628 s (low 86 s)
+   c07 qawo r1: span 1.038e+09 rad, 1640 segments -> 5783 s (low 59 s)
+   c06 qawo r1: span 1.714e+08 rad, 1376 segments -> 4852 s (low 10 s)
+   c02 qawo r1: span 4.514e+07 rad, 1110 segments -> 3914 s (low 5 s)
+   c10 qawo r1: span 2.776e+07 rad, 1086 segments -> 3830 s (low 5 s)
+   c09 qawo r1: span 1.271e+07 rad, 1076 segments -> 3794 s (low 5 s)
+   c07 fcc r1: span 1.038e+09 rad, 1640 segments -> 2309 s (low 22 s)
+   c03 qawo r1: span 2.209e+05 rad, 654 segments -> 2306 s (low 3 s)
+   c08 qawo r1: span 1.302e+04 rad, 562 segments -> 1982 s (low 3 s)
+   c07 qawo r2: span 1.038e+09 rad, 1640 segments -> 1874 s (low 242 s)
+   c06 qawo r2: span 1.714e+08 rad, 1376 segments -> 1573 s (low 40 s)
+   c06 fcc r2: span 1.714e+08 rad, 1376 segments -> 1425 s (low 72 s)
+wrote out/cost_projection.json sha256 c6f61424b73b737e13f9f1089fa1bb485a401955e3f2d4ae4cf99a13557a592c
+# ----
+# end 2026-11-03T09:30:34Z
+# exit 0

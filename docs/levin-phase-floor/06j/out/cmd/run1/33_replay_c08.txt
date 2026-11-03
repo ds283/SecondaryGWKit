@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/replay_06j.py c08 out/replay/c08.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:25:20Z
+# ----
+c08 g-1e-8-1-35136 #3: REPRODUCES the census bit for bit; 168 checked leaves, table sha256 044244dcad8efe1ed1d41a7a8b1cda80e3b419b34f83c735da9f1ad032b00f48; returned 90 sha256 9efb69e7805f9ba3da30406a0d2859ef95b397d09db018415d34ccb28403bcb6; 1.9 s; ray initialised False
+# ----
+# end 2026-11-03T09:25:24Z
+# exit 0

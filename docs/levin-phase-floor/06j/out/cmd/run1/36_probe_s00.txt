@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/probe_s.py s00 out/partS/s00.json.gz
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:25:31Z
+# ----
+s00 leaf [22.420771001754787, 22.420791534922884] seams 0 reproduces True r 0.4461 d1/phi 3.06; scatter i 2.246e-42 ii 2.092e-42 d1 8.380e-45; 0.5 s
+s00: 1 leaves, 215 solves, 1.5 s; seams 8478 ({'switch_mid': 2829, 'phase_knot': 1882, 'table_node': 2826, 'amp_knot': 941}); merged = production_edges: True; null20 1.798e-03; wrote out/partS/s00.json.gz sha256 7ad140604de6f267e448b758c38b4217677f5cf104c2ef9535192baba8f35221; ray initialised False
+# ----
+# end 2026-11-03T09:25:35Z
+# exit 0

@@ -1,0 +1,111 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/x1_capture.py out/sample/selection.json state/capture out/capture.json --workers 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:15:05Z
+# ----
+# levin-phase-floor 06g: the references' calls' inputs, captured at g (06c's X1 capture)
+# written 2026-11-03T09:15:05Z on mps026298.phys.susx.ac.uk
+# script x1_capture.py sha256 5ce00c1f7f17b795ea985e649bfcaf2574b33c7180d1e2fa278222073ea18cd2
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 35451
+C01: pid 35452
+C02: pid 35453
+C03: pid 35454
+C04: pid 35455
+C05: pid 35456
+C06: pid 35686
+C07: pid 35687
+C08: pid 35712
+C09: pid 35717
+C10: pid 35727
+C11: pid 35730
+C12: pid 35756
+C13: pid 35757
+C14: pid 35782
+C15: pid 35788
+C16: pid 35800
+C17: pid 35806
+C18: pid 35832
+C19: pid 35841
+C20: pid 35848
+C21: pid 35865
+C22: pid 35872
+C23: pid 35876
+C24: pid 35900
+C25: pid 35909
+C26: pid 35929
+C27: pid 35934
+C28: pid 35941
+C29: pid 35955
+C30: pid 35964
+C31: pid 35976
+C32: pid 35986
+C33: pid 35999
+C34: pid 36002
+C35: pid 36062
+C36: pid 36078
+C37: pid 36124
+C38: pid 36139
+C39: pid 36140
+C40: pid 36156
+C41: pid 36170
+C42: pid 36179
+C43: pid 36187
+C44: pid 36202
+C45: pid 36216
+exit codes {'C04': 0, 'C05': 0, 'C01': 0, 'C00': 0, 'C03': 0, 'C02': 0, 'C06': 0, 'C07': 0, 'C09': 0, 'C08': 0, 'C10': 0, 'C11': 0, 'C13': 0, 'C12': 0, 'C14': 0, 'C15': 0, 'C16': 0, 'C17': 0, 'C18': 0, 'C20': 0, 'C22': 0, 'C23': 0, 'C19': 0, 'C21': 0, 'C24': 0, 'C25': 0, 'C27': 0, 'C26': 0, 'C28': 0, 'C29': 0, 'C30': 0, 'C31': 0, 'C33': 0, 'C34': 0, 'C32': 0, 'C36': 0, 'C35': 0, 'C37': 0, 'C39': 0, 'C40': 0, 'C38': 0, 'C41': 0, 'C42': 0, 'C43': 0, 'C44': 0, 'C45': 0}
+captured and matching the census bit for bit: 46 of 46
+   g-1e-7-0-12727 4: matches True; error None; ray_initialized False
+   g-1e-7-0-12778 1: matches True; error None; ray_initialized False
+   g-1e-7-0-12935 2: matches True; error None; ray_initialized False
+   g-1e-7-0-12959 1: matches True; error None; ray_initialized False
+   g-1e-7-0-1873 1: matches True; error None; ray_initialized False
+   g-1e-7-0-2108 1: matches True; error None; ray_initialized False
+   g-1e-7-0-33730 1: matches True; error None; ray_initialized False
+   g-1e-7-0-33892 1: matches True; error None; ray_initialized False
+   g-1e-7-0-33997 3: matches True; error None; ray_initialized False
+   g-1e-7-0-37232 1: matches True; error None; ray_initialized False
+   g-1e-7-1-11233 4: matches True; error None; ray_initialized False
+   g-1e-7-1-14039 2: matches True; error None; ray_initialized False
+   g-1e-7-1-2142 5: matches True; error None; ray_initialized False
+   g-1e-7-1-35052 6: matches True; error None; ray_initialized False
+   g-1e-7-1-35492 3: matches True; error None; ray_initialized False
+   g-1e-7-1-35497 5: matches True; error None; ray_initialized False
+   g-1e-7-2-21857 6: matches True; error None; ray_initialized False
+   g-1e-7-2-21980 3: matches True; error None; ray_initialized False
+   g-1e-7-2-33416 6: matches True; error None; ray_initialized False
+   g-1e-7-3-1188 5: matches True; error None; ray_initialized False
+   g-1e-7-3-13481 4: matches True; error None; ray_initialized False
+   g-1e-7-3-34738 1: matches True; error None; ray_initialized False
+   g-1e-7-3-38477 4: matches True; error None; ray_initialized False
+   g-1e-8-0-12681 4: matches True; error None; ray_initialized False
+   g-1e-8-0-12778 1: matches True; error None; ray_initialized False
+   g-1e-8-0-12959 1: matches True; error None; ray_initialized False
+   g-1e-8-0-12965 4: matches True; error None; ray_initialized False
+   g-1e-8-0-1873 1: matches True; error None; ray_initialized False
+   g-1e-8-0-2108 1: matches True; error None; ray_initialized False
+   g-1e-8-0-33648 1: matches True; error None; ray_initialized False
+   g-1e-8-0-33730 1: matches True; error None; ray_initialized False
+   g-1e-8-0-33906 2: matches True; error None; ray_initialized False
+   g-1e-8-0-33945 3: matches True; error None; ray_initialized False
+   g-1e-8-0-34037 4: matches True; error None; ray_initialized False
+   g-1e-8-0-38451 3: matches True; error None; ray_initialized False
+   g-1e-8-1-14543 6: matches True; error None; ray_initialized False
+   g-1e-8-1-35136 3: matches True; error None; ray_initialized False
+   g-1e-8-1-35446 4: matches True; error None; ray_initialized False
+   g-1e-8-1-35480 2: matches True; error None; ray_initialized False
+   g-1e-8-2-1391 3: matches True; error None; ray_initialized False
+   g-1e-8-2-21692 5: matches True; error None; ray_initialized False
+   g-1e-8-3-14505 1: matches True; error None; ray_initialized False
+   g-1e-8-3-14589 3: matches True; error None; ray_initialized False
+   g-1e-8-3-2324 4: matches True; error None; ray_initialized False
+   g-1e-8-3-34272 4: matches True; error None; ray_initialized False
+   g-1e-8-3-37323 1: matches True; error None; ray_initialized False
+wrote out/capture.json sha256 9134fb0823e7779bb77000b5d7c9bc7df72e4585c169b7e9284e999e0d0fef57
+# ----
+# end 2026-11-03T09:24:40Z
+# exit 0

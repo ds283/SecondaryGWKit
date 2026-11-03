@@ -1,0 +1,18 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/probe_s.py s18 out/partS/s18.json.gz
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:25:46Z
+# ----
+s18 leaf [22.757987281622338, 22.757992794847645] seams 0 reproduces True r 0.4986 d1/phi 1.49; scatter i 1.534e-46 ii 1.698e-46 d1 2.747e-46; 0.5 s
+s18 leaf [22.757992794847645, 22.757998308072956] seams 0 reproduces True r 0.5978 d1/phi 3.62; scatter i 1.589e-46 ii 1.568e-46 d1 9.903e-49; 0.5 s
+s18 leaf [22.757998308072956, 22.758003821298264] seams 0 reproduces True r 0.5018 d1/phi 1.5; scatter i 1.639e-46 ii 1.298e-46 d1 2.944e-46; 0.5 s
+s18 leaf [22.758003821298264, 22.75800933452357] seams 0 reproduces True r 0.4988 d1/phi 1.49; scatter i 1.683e-46 ii 1.562e-46 d1 3.012e-46; 0.5 s
+s18 leaf [22.75800933452357, 22.75801484774888] seams 0 reproduces True r 0.5037 d1/phi 1.5; scatter i 1.722e-46 ii 1.993e-46 d1 3.095e-46; 0.5 s
+s18 leaf [22.75801484774888, 22.758020360974186] seams 0 reproduces True r 0.4973 d1/phi 1.5; scatter i 1.760e-46 ii 1.638e-46 d1 3.162e-46; 0.5 s
+s18 leaf [22.758020360974186, 22.758025874199493] seams 0 reproduces True r 0.5038 d1/phi 1.5; scatter i 1.788e-46 ii 1.674e-46 d1 3.209e-46; 0.5 s
+s18 leaf [22.758025874199493, 22.7580313874248] seams 0 reproduces True r 0.5004 d1/phi 1.5; scatter i 1.819e-46 ii 1.743e-46 d1 3.267e-46; 0.5 s
+s18: 8 leaves, 1720 solves, 4.9 s; seams 2580 ({'switch_mid': 777, 'phase_knot': 772, 'table_node': 774, 'amp_knot': 257}); merged = production_edges: True; null20 4.930e-04; wrote out/partS/s18.json.gz sha256 cb54e5ee5fcd23dc6ab4f373e8f1bca481e9212f6ab56f5eb24a26e210e2260e; ray initialised False
+# ----
+# end 2026-11-03T09:25:52Z
+# exit 0

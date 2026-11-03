@@ -1,0 +1,14 @@
+09:04:38 state/predictions_and_rules_20261103T0905Z.md
+09:04:52 log.md
+09:06:41 out/sample/s_sample.json
+09:06:41 out/sample/w_sample.json
+09:06:41 out/sample/selection.json
+09:33:15 state/readings_plan_20261103T0935Z.md
+09:35:37 state/plan_readings.json
+09:24:40 out/cmd/run1/30_capture.txt
+09:25:34 out/partS/s00.json.gz
+09:35:42 out/readings/c01-qawo-r1.json
+09:35:37 state/launch_readings.txt
+09:15:05 state/launch_run1.txt
+first reading start: 2026-11-03T09:35:37Z
+first probe start: 2026-11-03T09:25:31Z

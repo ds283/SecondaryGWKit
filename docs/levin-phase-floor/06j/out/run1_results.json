@@ -1,0 +1,387 @@
+{
+ "label": "run1",
+ "results": [
+  {
+   "name": "30_capture",
+   "exit": 0,
+   "wall_s": 575.0302078723907
+  },
+  {
+   "name": "31_check_captures",
+   "exit": 0,
+   "wall_s": 3.5601229667663574
+  },
+  {
+   "name": "32_slice",
+   "exit": 0,
+   "wall_s": 0.5038321018218994
+  },
+  {
+   "name": "33_replay_s03",
+   "exit": 0,
+   "wall_s": 3.5750651359558105
+  },
+  {
+   "name": "33_replay_s00",
+   "exit": 0,
+   "wall_s": 4.1210479736328125
+  },
+  {
+   "name": "33_replay_s01",
+   "exit": 0,
+   "wall_s": 5.127640962600708
+  },
+  {
+   "name": "33_replay_s04",
+   "exit": 0,
+   "wall_s": 6.122902154922485
+  },
+  {
+   "name": "33_replay_s06",
+   "exit": 0,
+   "wall_s": 3.5712809562683105
+  },
+  {
+   "name": "33_replay_s07",
+   "exit": 0,
+   "wall_s": 4.081324100494385
+  },
+  {
+   "name": "33_replay_s05",
+   "exit": 0,
+   "wall_s": 9.69300103187561
+  },
+  {
+   "name": "33_replay_s09",
+   "exit": 0,
+   "wall_s": 3.5751242637634277
+  },
+  {
+   "name": "33_replay_s02",
+   "exit": 0,
+   "wall_s": 12.76709794998169
+  },
+  {
+   "name": "33_replay_s10",
+   "exit": 0,
+   "wall_s": 4.589067220687866
+  },
+  {
+   "name": "33_replay_s08",
+   "exit": 0,
+   "wall_s": 7.657832860946655
+  },
+  {
+   "name": "33_replay_s12",
+   "exit": 0,
+   "wall_s": 3.0687599182128906
+  },
+  {
+   "name": "33_replay_s11",
+   "exit": 0,
+   "wall_s": 5.631376266479492
+  },
+  {
+   "name": "33_replay_s13",
+   "exit": 0,
+   "wall_s": 5.6371989250183105
+  },
+  {
+   "name": "33_replay_s15",
+   "exit": 0,
+   "wall_s": 3.5928549766540527
+  },
+  {
+   "name": "33_replay_s16",
+   "exit": 0,
+   "wall_s": 4.611328840255737
+  },
+  {
+   "name": "33_replay_s14",
+   "exit": 0,
+   "wall_s": 6.665356159210205
+  },
+  {
+   "name": "33_replay_s17",
+   "exit": 0,
+   "wall_s": 6.14331316947937
+  },
+  {
+   "name": "33_replay_s18",
+   "exit": 0,
+   "wall_s": 4.60821008682251
+  },
+  {
+   "name": "33_replay_s19",
+   "exit": 0,
+   "wall_s": 6.127833843231201
+  },
+  {
+   "name": "33_replay_s21",
+   "exit": 0,
+   "wall_s": 4.08017110824585
+  },
+  {
+   "name": "33_replay_f00",
+   "exit": 0,
+   "wall_s": 2.538808822631836
+  },
+  {
+   "name": "33_replay_s23",
+   "exit": 0,
+   "wall_s": 5.598068952560425
+  },
+  {
+   "name": "33_replay_f01",
+   "exit": 0,
+   "wall_s": 2.5472402572631836
+  },
+  {
+   "name": "33_replay_f02",
+   "exit": 0,
+   "wall_s": 2.5447983741760254
+  },
+  {
+   "name": "33_replay_f03",
+   "exit": 0,
+   "wall_s": 2.5426812171936035
+  },
+  {
+   "name": "33_replay_s20",
+   "exit": 0,
+   "wall_s": 9.711456060409546
+  },
+  {
+   "name": "33_replay_f04",
+   "exit": 0,
+   "wall_s": 2.5680439472198486
+  },
+  {
+   "name": "33_replay_f05",
+   "exit": 0,
+   "wall_s": 2.565391778945923
+  },
+  {
+   "name": "33_replay_f06",
+   "exit": 0,
+   "wall_s": 2.5638110637664795
+  },
+  {
+   "name": "33_replay_f07",
+   "exit": 0,
+   "wall_s": 2.5622148513793945
+  },
+  {
+   "name": "33_replay_s22",
+   "exit": 0,
+   "wall_s": 9.216495037078857
+  },
+  {
+   "name": "33_replay_f08",
+   "exit": 0,
+   "wall_s": 2.578267812728882
+  },
+  {
+   "name": "33_replay_f09",
+   "exit": 0,
+   "wall_s": 2.5718188285827637
+  },
+  {
+   "name": "33_replay_c01",
+   "exit": 0,
+   "wall_s": 2.5669498443603516
+  },
+  {
+   "name": "33_replay_c02",
+   "exit": 0,
+   "wall_s": 3.0816709995269775
+  },
+  {
+   "name": "33_replay_c03",
+   "exit": 0,
+   "wall_s": 3.5823631286621094
+  },
+  {
+   "name": "33_replay_c04",
+   "exit": 0,
+   "wall_s": 3.0697340965270996
+  },
+  {
+   "name": "33_replay_c00",
+   "exit": 0,
+   "wall_s": 4.624495267868042
+  },
+  {
+   "name": "33_replay_c05",
+   "exit": 0,
+   "wall_s": 2.0561728477478027
+  },
+  {
+   "name": "33_replay_c07",
+   "exit": 0,
+   "wall_s": 3.0749318599700928
+  },
+  {
+   "name": "33_replay_c09",
+   "exit": 0,
+   "wall_s": 3.076742172241211
+  },
+  {
+   "name": "33_replay_c10",
+   "exit": 0,
+   "wall_s": 2.563826084136963
+  },
+  {
+   "name": "33_replay_c06",
+   "exit": 0,
+   "wall_s": 5.121545076370239
+  },
+  {
+   "name": "33_replay_c11",
+   "exit": 0,
+   "wall_s": 2.559661865234375
+  },
+  {
+   "name": "33_replay_c08",
+   "exit": 0,
+   "wall_s": 4.1033618450164795
+  },
+  {
+   "name": "34_replay_s00_second",
+   "exit": 0,
+   "wall_s": 3.572395086288452
+  },
+  {
+   "name": "35_tool_reread_r51_qawo_r1",
+   "exit": 0,
+   "wall_s": 4.580307960510254
+  },
+  {
+   "name": "36_probe_s00",
+   "exit": 0,
+   "wall_s": 3.0915610790252686
+  },
+  {
+   "name": "36_probe_s03",
+   "exit": 0,
+   "wall_s": 3.586477756500244
+  },
+  {
+   "name": "36_probe_s04",
+   "exit": 0,
+   "wall_s": 4.087372064590454
+  },
+  {
+   "name": "36_probe_s01",
+   "exit": 0,
+   "wall_s": 4.61994481086731
+  },
+  {
+   "name": "36_probe_s06",
+   "exit": 0,
+   "wall_s": 2.557291030883789
+  },
+  {
+   "name": "36_probe_s05",
+   "exit": 0,
+   "wall_s": 7.159066200256348
+  },
+  {
+   "name": "36_probe_s07",
+   "exit": 0,
+   "wall_s": 3.079374074935913
+  },
+  {
+   "name": "36_probe_s02",
+   "exit": 0,
+   "wall_s": 7.693270206451416
+  },
+  {
+   "name": "36_probe_s09",
+   "exit": 0,
+   "wall_s": 3.584662914276123
+  },
+  {
+   "name": "36_probe_s08",
+   "exit": 0,
+   "wall_s": 6.143872976303101
+  },
+  {
+   "name": "36_probe_s10",
+   "exit": 0,
+   "wall_s": 4.09608006477356
+  },
+  {
+   "name": "36_probe_s12",
+   "exit": 0,
+   "wall_s": 3.067883014678955
+  },
+  {
+   "name": "36_probe_s15",
+   "exit": 0,
+   "wall_s": 2.544199228286743
+  },
+  {
+   "name": "36_probe_s11",
+   "exit": 0,
+   "wall_s": 7.146332263946533
+  },
+  {
+   "name": "36_probe_s13",
+   "exit": 0,
+   "wall_s": 7.1497979164123535
+  },
+  {
+   "name": "36_probe_s14",
+   "exit": 0,
+   "wall_s": 7.138322830200195
+  },
+  {
+   "name": "36_probe_s16",
+   "exit": 0,
+   "wall_s": 5.090580940246582
+  },
+  {
+   "name": "36_probe_s17",
+   "exit": 0,
+   "wall_s": 7.641005277633667
+  },
+  {
+   "name": "36_probe_s20",
+   "exit": 0,
+   "wall_s": 4.073578834533691
+  },
+  {
+   "name": "36_probe_s18",
+   "exit": 0,
+   "wall_s": 6.118120908737183
+  },
+  {
+   "name": "36_probe_s21",
+   "exit": 0,
+   "wall_s": 4.074887990951538
+  },
+  {
+   "name": "36_probe_s19",
+   "exit": 0,
+   "wall_s": 7.130867958068848
+  },
+  {
+   "name": "36_probe_s22",
+   "exit": 0,
+   "wall_s": 7.1272358894348145
+  },
+  {
+   "name": "36_probe_s23",
+   "exit": 0,
+   "wall_s": 7.114559888839722
+  },
+  {
+   "name": "37_w_prep",
+   "exit": 0,
+   "wall_s": 5.608591079711914
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-03T09:26:05Z"
+}

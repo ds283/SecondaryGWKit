@@ -1,0 +1,13 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json,sys; sys.path.insert(0,"scripts")\nimport run_06j as R\nsegs=json.load(open("out/w_segments.json"))["calls"]["c04"]; cp=json.load(open("out/cost_projection_v2.json")); f=cp["fits"]["qawo-r2"]\nmon={"a":f["s_per_segment"],"b":f["us_per_rad"]*1e-6}\nn=len(segs["chunks"]); jobs=[["route_b_qawo",[c[0],c[1],2]] for c in segs["chunks"]]\nfor done,el in ((0,600),(1,1200),(30,1800),(100,4000)):\n    prog={"jobs":jobs,"total":n,"done_indices":list(range(done))}\n    print(done, el, {k:(round(v) if isinstance(v,float) and v!=float("inf") else v) for k,v in R.projections(mon,prog,el,segs).items()})\nprog={"jobs":[["x",[0,17,2]]]+jobs[1:],"total":n,"done_indices":[]}\nprint("mismatch:", R.projections(mon,prog,10,segs))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:35:29Z
+# ----
+0 600 {'P_c': 16608, 'P_o': 8304, 'P_c_count': 26600, 'P_o_count': 13300, 'done': 0, 'in_flight': 6, 'total': 133, 'weight_done_fraction': 0}
+1 1200 {'P_c': 24067, 'P_o': 13045, 'P_c_count': 39900, 'P_o_count': 22800, 'done': 1, 'in_flight': 6, 'total': 133, 'weight_done_fraction': 0}
+30 1800 {'P_c': 2154, 'P_o': 2048, 'P_c_count': 7255, 'P_o_count': 6650, 'done': 30, 'in_flight': 6, 'total': 133, 'weight_done_fraction': 1}
+100 4000 {'P_c': 4005, 'P_o': 4004, 'P_c_count': 5165, 'P_o_count': 5019, 'done': 100, 'in_flight': 6, 'total': 133, 'weight_done_fraction': 1}
+mismatch: {'error': 'chunk 0 (0, 17) does not match out/w_segments.json'}
+# ----
+# end 2026-11-03T09:35:29Z
+# exit 0

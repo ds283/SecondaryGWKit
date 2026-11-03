@@ -1,0 +1,186 @@
+{
+ "header": [
+  "# levin-phase-floor 06j: J0 replay of f09 (g-1e-8-0-33730 #1)",
+  "# written 2026-11-03T09:25:16Z on mps026298.phys.susx.ac.uk",
+  "# script replay_06j.py sha256 3d451ab2528485d4308913292526f00072482bdedfca67b61cd7ebfb07625088",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/state/inputs/f09.pkl sha256 3c8b5b1059b423e18af343072e40ec71bec92846bab2561cd2ba4d16657014cb",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9/AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/worker.py sha256 90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+ ],
+ "sid": "f09",
+ "unit": "g-1e-8-0-33730",
+ "index": 1,
+ "replay": {
+  "value": "-0x1.ad8f83b4b94b8p-93",
+  "abserr": "0x1.9d96d77ade3b0p-112",
+  "num_regions": 16,
+  "max_depth": 7,
+  "converged": true
+ },
+ "census": {
+  "value": "-0x1.ad8f83b4b94b8p-93",
+  "abserr": "0x1.9d96d77ade3b0p-112",
+  "num_regions": 16,
+  "max_depth": 7,
+  "converged": true
+ },
+ "region_keys_differing": [],
+ "checked_keys_differing": [],
+ "n_made": 31,
+ "n_checked": 24,
+ "checked_table_sha256": "dbea37fb994aa9c1e830586dab91eecd1bb099c07bf63e710ab556ea42cf74c2",
+ "returned_leaves": [
+  {
+   "start": "0x1.78a11e65a7f80p+4",
+   "end": "0x1.797cc08538410p+4",
+   "depth": 6,
+   "value": "-0x1.212aa24509078p-95",
+   "value_own": "-0x1.212aa23b1ba8cp-95",
+   "r": "0x1.fe7698d915a0ap-4",
+   "trusted": true
+  },
+  {
+   "start": "0x1.797cc08538410p+4",
+   "end": "0x1.79ea919500658p+4",
+   "depth": 7,
+   "value": "0x1.39bac01fa97a8p-94",
+   "value_own": "0x1.39bac01f8a331p-94",
+   "r": "0x1.3673076d2fdacp-5",
+   "trusted": true
+  },
+  {
+   "start": "0x1.79ea919500658p+4",
+   "end": "0x1.7a5862a4c88a1p+4",
+   "depth": 7,
+   "value": "-0x1.a1a190dec09e2p-94",
+   "value_own": "-0x1.a1a190de40c1ep-94",
+   "r": "0x1.7d5ebfe500843p-8",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7a5862a4c88a1p+4",
+   "end": "0x1.7c0fa6e3e91c2p+4",
+   "depth": 5,
+   "value": "0x1.0c86c8da85d46p-95",
+   "value_own": "0x1.0c86f440af28ep-95",
+   "r": "0x1.750815af03de8p-12",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7c0fa6e3e91c2p+4",
+   "end": "0x1.7dc6eb2309ae2p+4",
+   "depth": 5,
+   "value": "0x1.b59edf75f6e4cp-96",
+   "value_own": "0x1.b59e8f3438baap-96",
+   "r": "0x1.7c1d3d978225dp-11",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7dc6eb2309ae2p+4",
+   "end": "0x1.7f7e2f622a403p+4",
+   "depth": 5,
+   "value": "0x1.fd0dbd9973e18p-95",
+   "value_own": "0x1.fd0dbe0bc963ep-95",
+   "r": "0x1.398acf0bffef0p-4",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7f7e2f622a403p+4",
+   "end": "0x1.813573a14ad24p+4",
+   "depth": 5,
+   "value": "-0x1.2fcfcfef874b4p-94",
+   "value_own": "-0x1.2fcfcfba91da5p-94",
+   "r": "0x1.cca95347f1292p-7",
+   "trusted": true
+  },
+  {
+   "start": "0x1.813573a14ad24p+4",
+   "end": "0x1.82ecb7e06b644p+4",
+   "depth": 5,
+   "value": "-0x1.f80bf3fbc8b95p-95",
+   "value_own": "-0x1.f80bed66ed862p-95",
+   "r": "0x1.31f2f391afd27p-11",
+   "trusted": true
+  },
+  {
+   "start": "0x1.82ecb7e06b644p+4",
+   "end": "0x1.84a3fc1f8bf65p+4",
+   "depth": 5,
+   "value": "-0x1.9e7dc6fa1f0d0p-97",
+   "value_own": "-0x1.9e7dc62025970p-97",
+   "r": "0x1.ed3f695713832p-7",
+   "trusted": true
+  },
+  {
+   "start": "0x1.84a3fc1f8bf65p+4",
+   "end": "0x1.865b405eac886p+4",
+   "depth": 5,
+   "value": "0x1.bc011298aba08p-96",
+   "value_own": "0x1.bc0112a0a0391p-96",
+   "r": "0x1.013487468cc72p-4",
+   "trusted": true
+  },
+  {
+   "start": "0x1.865b405eac886p+4",
+   "end": "0x1.89c9c8dcedac7p+4",
+   "depth": 4,
+   "value": "-0x1.b419a3985de86p-96",
+   "value_own": "-0x1.b4190687d234ap-96",
+   "r": "0x1.a67971f75df26p-10",
+   "trusted": true
+  },
+  {
+   "start": "0x1.89c9c8dcedac7p+4",
+   "end": "0x1.8d38515b2ed08p+4",
+   "depth": 4,
+   "value": "0x1.cf74d3c219ad6p-95",
+   "value_own": "0x1.cf74c339d7067p-95",
+   "r": "0x1.2da4e5558daf5p-9",
+   "trusted": true
+  },
+  {
+   "start": "0x1.8d38515b2ed08p+4",
+   "end": "0x1.94156257b118bp+4",
+   "depth": 3,
+   "value": "0x1.f806548ceb940p-98",
+   "value_own": "0x1.f80608b84bc92p-98",
+   "r": "0x1.dd992eec3d4d7p-8",
+   "trusted": true
+  },
+  {
+   "start": "0x1.94156257b118bp+4",
+   "end": "0x1.9af273543360ep+4",
+   "depth": 3,
+   "value": "0x1.05f3a69b8b7a8p-95",
+   "value_own": "0x1.05f3adb397f78p-95",
+   "r": "0x1.5a09cc29e15f0p-6",
+   "trusted": true
+  },
+  {
+   "start": "0x1.9af273543360ep+4",
+   "end": "0x1.a1cf8450b5a90p+4",
+   "depth": 3,
+   "value": "0x1.b877fef496d81p-94",
+   "value_own": "0x1.b877feef264ddp-94",
+   "r": "0x1.8e24d9b6b9e7dp-3",
+   "trusted": true
+  },
+  {
+   "start": "0x1.a1cf8450b5a90p+4",
+   "end": "0x1.af89a649ba396p+4",
+   "depth": 2,
+   "value": "-0x1.4e7576bfbb636p-92",
+   "value_own": "-0x1.4e7576d90daabp-92",
+   "r": "0x1.e66bdd413f16fp-8",
+   "trusted": true
+  }
+ ],
+ "returned_leaves_sha256": "3fa86ca378984c975e3662d916b1e4fb2f71958fa0abbcbe33a249bfa351086e",
+ "wall_s": 0.26188287464901805,
+ "problems": [],
+ "reproduces_census": true,
+ "ray_initialized": false
+}

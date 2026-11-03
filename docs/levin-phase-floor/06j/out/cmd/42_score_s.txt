@@ -1,0 +1,78 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_s.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:27:47Z
+# ----
+# levin-phase-floor 06j: Part S tabulated and scored (S1-S4)
+# written 2026-11-03T09:27:47Z on mps026298.phys.susx.ac.uk
+# script score_s.py sha256 5371c61ca78f10039f629e1d1a04a310a0a6c0df3834c736406e65d7c1a4d2a1
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s00.json.gz sha256 7ad140604de6f267e448b758c38b4217677f5cf104c2ef9535192baba8f35221
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s01.json.gz sha256 bfc0534b452589065ae506a61e0953b1be6a2421bf6be12a25f675798c8b45df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s02.json.gz sha256 87bfb94e3375e6867d474228f59f39581ee9bb1850ff4b61124e2a4adbcc2b0a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s03.json.gz sha256 3407a1f732f40e18ddd21df9b813121a974daf0208827b48693e0001b51dfe9f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s04.json.gz sha256 645481715d021032eecd4a70f127b867c7477b102e4b8ad956b810f9dab9556e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s05.json.gz sha256 4e6322c27b725cb012561b327d371f21e3921f44391371b566dead426ffc7234
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s06.json.gz sha256 0e1c905a2e2e6ad17b47c7e20441c41224ab3abb078c9da1983426964837b2a8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s07.json.gz sha256 981dcddadadd0b79698f410af55a8d1766471ce7bb5bc41887230d9d2cda5a39
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s08.json.gz sha256 a7badd96686006871821208f446966f26bd758b1ed62bd21e9cab24ce2816173
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s09.json.gz sha256 d0e79344c03adc1e0115c60460bbefddd3eb00013e460aae431871946300e9b5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s10.json.gz sha256 58784943a49de564eb08ab91b92c7e11e3fe517820de5fc5a033ca3090288264
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s11.json.gz sha256 b990bc08f4abf5c169e12755ea30d1c54cad3686198911ca6927d46503c7a660
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s12.json.gz sha256 fd411a86cb0af9f356f6760bdc2543b3689b7d82f03752c23abe5b472b43928b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s13.json.gz sha256 1f74343fc99f9f52411b43ef82a6046e72f259a2008a40c3607d9a61e5f9720a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s14.json.gz sha256 38afef56b80588c83fa0cb4a75f155e74c5227cb7eaee3be120a98fdaf4ef291
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s15.json.gz sha256 96781f85f2dd0ba541591654483b5e7de50137d069d8a24a241e47b6ac58680d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s16.json.gz sha256 6f40b4344fd92d66de6f25b8df64f610e9e85b8b5f6c07ce190236ae337ed260
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s17.json.gz sha256 cff1c2c4c7c167f1711decf1b640fafb149b34affb7dc99344e7a73f48b7850a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s18.json.gz sha256 cb54e5ee5fcd23dc6ab4f373e8f1bca481e9212f6ab56f5eb24a26e210e2260e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s19.json.gz sha256 eef7cfefcc26de21102e3b1e16d3207383a0b93466d87583316bb1bd889d7de4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s20.json.gz sha256 77d38a5375ef3b11436366f645cd98647c240b1d11327de50eaf0391f887499a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s21.json.gz sha256 88a7fef00138347be8940a20cc8e2d76d58f796cfb6e16a5ceadb9615f6cc577
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s22.json.gz sha256 6471a6fb3465189435b4574b7f5c6b643c3256b733b39cadb910466e896cd902
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s23.json.gz sha256 629ae01e48fc9fc72511c1f081a489a07ef53da990611da48578ed0bb67bf263
+
+Part S: 24 calls, 142 leaves; the probe reproduces the census numbers on 142; excluded 0
+S1: 1 of 142 hold a seam (0.0070); null 1.1885e-03 (x5.93); verdict fails
+   distance to the nearest seam (widths), from the nearer end: p0 7.007, p10 51.28, p25 120.9, p50 205.5, p75 368.6, p90 696, p100 1141
+   from the centre: p0 7.507, p10 51.78, p25 121.4, p50 206, p75 369.1, p90 696.5, p100 1141
+   comparison: the calls' trusted returned leaves at depth >= 15: 520, holding a seam 9 (0.01730769230769231); null at their depths 0.01559450626373291
+S2: seam leaves 1, excluded 0, r in [0.4, 0.6] at 21-24 on 0 of 1; verdict fails
+   s07 [18.88686723504442, 18.88688274229765] kinds amp_knot|phase_knot|table_node: seam branch r 21: 0.4938, 22: 0.1524, 23: 0.5714, 24: 0.07843; off-seam r 21: 0.4821, 22: 0.5171, 23: 1.466, 24: 0.1666
+   no-seam leaves, max branch, depth 20: r p10 0.3613, p50 0.4997, p90 0.8305; in [0.4, 0.6] 86 of 141
+   no-seam leaves, max branch, depth 21: r p10 0.1644, p50 0.4947, p90 0.6496; in [0.4, 0.6] 71 of 141; trusted under (b) 83 of 141
+   no-seam leaves, max branch, depth 22: r p10 0.1655, p50 0.4995, p90 1.478; in [0.4, 0.6] 69 of 141; trusted under (b) 86 of 141
+   no-seam leaves, max branch, depth 23: r p10 0.1669, p50 0.5011, p90 1.508; in [0.4, 0.6] 85 of 141; trusted under (b) 66 of 141
+   no-seam leaves, max branch, depth 24: r p10 0.1655, p50 0.4924, p90 1.5; in [0.4, 0.6] 47 of 141; trusted under (b) 100 of 141
+   no-seam leaves, max branch, depth 21: delta1/phi p10 0.4998, p50 1.495, p90 2.777
+   no-seam leaves, max branch, depth 22: delta1/phi p10 0.4944, p50 0.5082, p90 1.502
+   no-seam leaves, max branch, depth 23: delta1/phi p10 0.494, p50 0.5059, p90 1.501
+   no-seam leaves, max branch, depth 24: delta1/phi p10 0.4944, p50 1.487, p90 1.501
+   no-seam leaves, min branch, depth 20: r p10 0.3613, p50 0.4997, p90 0.8305; in [0.4, 0.6] 86 of 141
+   no-seam leaves, min branch, depth 21: r p10 0.3214, p50 0.5226, p90 2.505; in [0.4, 0.6] 57 of 141; trusted under (b) 46 of 141
+   no-seam leaves, min branch, depth 22: r p10 0.1638, p50 0.499, p90 1.619; in [0.4, 0.6] 46 of 141; trusted under (b) 73 of 141
+   no-seam leaves, min branch, depth 23: r p10 0.1495, p50 0.5556, p90 4.057; in [0.4, 0.6] 29 of 141; trusted under (b) 40 of 141
+   no-seam leaves, min branch, depth 24: r p10 0.1679, p50 0.5125, p90 6.163; in [0.4, 0.6] 46 of 141; trusted under (b) 54 of 141
+   no-seam leaves, min branch, depth 21: delta1/phi p10 0.4893, p50 1.505, p90 7.398
+   no-seam leaves, min branch, depth 22: delta1/phi p10 0.4923, p50 1.492, p90 4.2
+   no-seam leaves, min branch, depth 23: delta1/phi p10 0.4283, p50 1.828, p90 7.966
+   no-seam leaves, min branch, depth 24: delta1/phi p10 0.3246, p50 0.8733, p90 4.047
+   no-seam leaves with r in [0.4, 0.6] at every depth 21-24 on both branches: 0 of 141
+S3: delta1 > 10 x max scatter on 0 of 142; verdict fails
+   delta1_over_max_scatter: p0 0.001258, p10 0.003615, p25 0.008624, p50 0.03924, p75 1.698, p90 1.79, p100 1.806
+   max_scatter_over_phi: p0 0.8269, p10 0.8349, p25 0.8641, p50 124.6, p75 669.2, p90 1023, p100 1937
+   scatter_i_over_delta1: p0 0.5484, p10 0.5568, p25 0.5595, p50 24.8, p75 104.7, p90 251.3, p100 600
+   scatter_ii_over_delta1: p0 0.3412, p10 0.4656, p25 0.5796, p50 22.9, p75 98.56, p90 201.3, p100 794.9
+   scatter_halves_i_over_delta1: p0 0.4216, p10 0.4255, p25 0.4273, p50 18.79, p75 80.06, p90 191.6, p100 459.5
+   scatter_delta1_i_over_delta1: p0 0.5947, p10 0.6089, p25 0.7085, p50 34.34, p75 147.9, p90 355.9, p100 853.1
+   n_draws_changed_i: p0 16, p10 16, p25 16, p50 16, p75 16, p90 16, p100 16
+   n_draws_changed_ii: p0 16, p10 16, p25 16, p50 16, p75 16, p90 16, p100 16
+   delta1 > max scatter (factor 1): 68 of 142
+S4: both sides trusted on 0 of 1; verdict fails
+   s07 [18.88686723504442, 18.88688274229765]: [{"width": 1.3900788360388106e-06, "r": 20.363636363636363, "d1_over_phi": 0.16166286657069232, "trusted_b": false}, {"width": 1.4117174394812082e-05, "r": 2.419753086419753, "d1_over_phi": 2.6991859982165383, "trusted_b": false}]
+leaves: r p0 0.2575, p10 0.3613, p25 0.4836, p50 0.4997, p75 0.5446, p90 0.8228, p100 0.9954; delta1/phi p0 1.245, p10 1.485, p25 1.493, p50 1.519, p75 5.313, p90 11.18, p100 24.83; branch {'clenshaw_curtis': 142, 'levin': 0}
+wrote out/partS_leaves.csv sha256 761fc920adbb70fdaac929ece420cf2fadc9d69121d085d148132108982525b6; out/partS_summary.json sha256 55bc1b7d9d4ffda716b70f1bdab5606d9350f6e0012a7f3543733e366baffb22
+# ----
+# end 2026-11-03T09:27:48Z
+# exit 0

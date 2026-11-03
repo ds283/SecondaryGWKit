@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/dev_probe.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:11:42Z
+# ----
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v02.pkl sha256 ce8c2086fd2fccb47e4ea373c37f0629c24e7e99bd5eef6e4835319a3999b9ad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_slow_leaves.json sha256 b4643033a1249bb036524ec041fc9594471a56a932a1ded593101d1c486da9ba
+g-1e-7-3-34212 4 (13.174930820195774, 24.690936374721034) {'atol': 1.191610955391148e-33, 'rtol': 1e-07, 'chebyshev_order': 24, 'notify_label': 'k=9.7e+06/Mpc, q=3.09e+06/Mpc, r=9.7e+06/Mpc @ z_response=5.2699e+05, z in (5.2861e+10, 5.2699e+05), regime Gqr, group G+q-r'}
+seams 5070 tables 3 check {'equal': True, 'n_edges_tool': 1017, 'n_edges_mine': 1017, 'n_tables_tool': 3, 'n_tables_mine': 3} 0.04 s
+leaf [21.548486326915796, 21.548497309434524]: probe r 0.4960821638850768 d1 1.4837780161234356e-42 phi 9.87369276760657e-43; census r 0.4960821638850768 d1 1.4837780161234356e-42 phi 9.87369276760657e-43; equal True; is_direct True; 0.02 s
+  held seams [] distance (np.float64(129.2951307788197), np.float64(129.79513077865795))
+  S-c one draw: (i) dV_P 1.2878808698685272e-43 (ii) dV_P 1.2421197168929199e-43; 0.02 s
+leaf [21.548497309434524, 21.548508291953247]: probe r 0.8051575931232091 d1 7.641455688271268e-45 phi 2.1644535217143487e-45; census r 0.8051575931232091 d1 7.641455688271268e-45 phi 2.1644535217143487e-45; equal True; is_direct True; 0.02 s
+  held seams [] distance (np.float64(130.2951308209686), np.float64(130.7951308209686))
+  S-c one draw: (i) dV_P 1.350063489222941e-43 (ii) dV_P 3.2547346362794384e-43; 0.02 s
+solves 26 total 0.3 s
+null20 0.0009679794311523438
+# ----
+# end 2026-11-03T09:11:44Z
+# exit 0

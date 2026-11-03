@@ -1,0 +1,102 @@
+13a14,24
+> **The readings' monitor** (added for the ``readings`` run, marked "06j readings"; run 1's text is
+> state/run_06j_as_run1.py; state/readings_plan_20261103T0935Z.md section 5). A command with a ``monitor`` entry is a
+> reading whose progress file (one_reading.py --progress-order unordered) lists the tool's chunks and the indices
+> finished. Every 30 s the driver weights each chunk by w_c = a * (its segments) + b * (its phase span)
+> (out/w_segments.json; a, b the reading's fit), counts done (finished chunks) and in flight (the unfinished chunks
+> among the first finished + 6 in index order), and forms P_c = elapsed W / (done + in_flight / 2) and
+> P_o = elapsed W / (done + in_flight), with the plain chunk-count forms. Past 30 minutes or past the reading's
+> envelope projection it writes a report line to out/reading_monitor.log and the heartbeat, then every 10 minutes.
+> It stops the reading (SIGTERM to its process group, then SIGKILL after 30 s) only if P_o >= 86400 s, records it
+> as stopped, and goes on. Nothing else stops a reading.
+> 
+37a49,89
+> def utc_at(t):
+>     try:
+>         return datetime.datetime.fromtimestamp(t, datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+>     except (OverflowError, ValueError, OSError):
+>         return "never"
+> 
+> 
+> DAY_S = 86400.0  # 06j readings
+> REPORT_AFTER_S = 1800.0
+> REPORT_EVERY_S = 600.0
+> CHECK_EVERY_S = 30.0
+> WORKERS = 6
+> 
+> 
+> def projections(mon, prog, elapsed, segs):
+>     """06j readings: (P_c, P_o, count-based P_c, P_o, done, in flight, total) from a progress file."""
+>     jobs = prog.get("jobs")
+>     total = prog.get("total") or 0
+>     done_idx = set(prog.get("done_indices") or [])
+>     if not jobs or not total:
+>         return None
+>     chunks = segs["chunks"]
+>     w = []
+>     for i, (kind, args) in enumerate(jobs):
+>         i0, i1 = args[0], args[1]
+>         span = chunks[i][2] if i < len(chunks) and chunks[i][0] == i0 and chunks[i][1] == i1 else None
+>         if span is None:
+>             return {"error": f"chunk {i} ({i0}, {i1}) does not match out/w_segments.json"}
+>         w.append(mon["a"] * (i1 - i0) + mon["b"] * span)
+>     W = sum(w)
+>     first = sorted(set(range(total)) - done_idx)[:WORKERS]
+>     d = sum(w[i] for i in done_idx)
+>     f = sum(w[i] for i in first)
+>     nd, nf = len(done_idx), len(first)
+>     inf = float("inf")
+>     return {"P_c": elapsed * W / (d + f / 2) if d + f > 0 else inf, "P_o": elapsed * W / (d + f) if d + f > 0 else inf,
+>             "P_c_count": elapsed * total / (nd + nf / 2) if nd + nf > 0 else inf,
+>             "P_o_count": elapsed * total / (nd + nf) if nd + nf > 0 else inf,
+>             "done": nd, "in_flight": nf, "total": total, "weight_done_fraction": d / W if W else None}
+> 
+> 
+79a132,133
+>     mon_state, stopped = {}, set()  # 06j readings
+>     segs_all = json.loads((ROOT / "out" / "w_segments.json").read_text())["calls"] if (ROOT / "out" / "w_segments.json").exists() else {}
+130a185,225
+>                 job_ = rest[0]
+>                 mon = job_.get("monitor")  # 06j readings
+>                 if mon is not None and p.poll() is None and time.time() - mon_state.setdefault(name, {"check": 0.0, "report": 0.0})["check"] >= CHECK_EVERY_S:
+>                     ms = mon_state[name]
+>                     ms["check"] = time.time()
+>                     el = time.time() - rest[3]
+>                     try:
+>                         prog = json.loads((ROOT / mon["progress"]).read_text())
+>                         pr = projections(mon, prog, el, segs_all[mon["sid"]])
+>                     except Exception as exc_:
+>                         prog, pr = None, {"error": f"progress unreadable: {exc_}"}
+>                     if pr and "error" not in pr:
+>                         if (el > REPORT_AFTER_S or el > mon["envelope_s"]) and time.time() - ms["report"] >= REPORT_EVERY_S:
+>                             ms["report"] = time.time()
+>                             line = (f"{utc()} {name}: elapsed {el:.0f} s (envelope {mon['envelope_s']:.0f} s); chunks done "
+>                                     f"{pr['done']}/{pr['total']}, in flight {pr['in_flight']}; weighted done {pr['weight_done_fraction']:.4f}; "
+>                                     f"P_c {pr['P_c']:.0f} s (finish {utc_at(rest[3] + pr['P_c'])}), P_o {pr['P_o']:.0f} s; "
+>                                     f"by count P_c {pr['P_c_count']:.0f} s, P_o {pr['P_o_count']:.0f} s")
+>                             with open(ROOT / "out" / "reading_monitor.log", "a") as ml:
+>                                 ml.write(line + "\n")
+>                             run.heartbeat(stage=line[21:200])
+>                         if pr["P_o"] >= DAY_S:
+>                             line = f"{utc()} {name}: STOPPED by the backstop: P_o {pr['P_o']:.0f} s >= {DAY_S:.0f} s ({pr})"
+>                             with open(ROOT / "out" / "reading_monitor.log", "a") as ml:
+>                                 ml.write(line + "\n")
+>                             try:
+>                                 os.killpg(p.pid, signal.SIGTERM)
+>                                 for _ in range(60):
+>                                     if p.poll() is not None:
+>                                         break
+>                                     time.sleep(0.5)
+>                                 if p.poll() is None:
+>                                     os.killpg(p.pid, signal.SIGKILL)
+>                                     p.wait()
+>                             except Exception:
+>                                 pass
+>                             stopped.add(name)
+>                     elif pr and "error" in pr and not ms.get("error_logged"):
+>                         ms["error_logged"] = True
+>                         with open(ROOT / "out" / "reading_monitor.log", "a") as ml:
+>                             ml.write(f"{utc()} {name}: monitor: {pr['error']}\n")
+134a230,231
+>                     if name in stopped:  # 06j readings
+>                         results[-1]["stopped_by_backstop"] = True

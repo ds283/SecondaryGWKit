@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/state/inputs/c10.pkl fcc 1 out/readings/c10-fcc-r1.json --sid c10 --unit g-1e-8-0-12965 --index 4 --rtol 1e-8 --workers 6 --progress out/progress/c10-fcc-r1.json --progress-order unordered
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:43:03Z
+# ----
+{"sample": "c10", "route": "B", "impl": "fcc", "res": 1, "value_hex": "0x1.796aa65df061dp-78", "value_30": "4.87799523829673175411229883162e-24", "wall_s": 20.802228624932468, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-03T09:43:26Z
+# exit 0

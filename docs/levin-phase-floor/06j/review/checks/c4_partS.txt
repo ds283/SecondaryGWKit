@@ -1,0 +1,9 @@
+s07 g-1e-7-1-35492 #3 [18.88686723504442, 18.88688274229765] width 1.55073e-05: 1429 edges (3 tables); holds 1 edge(s) at ['18.886868625123256']; census leaf depth 20 trusted 0 r np.float64(0.6515986769570011)
+  s07 rule on the leaf: delta1 7.943610669641307e-44 delta2 5.176046202599793e-44 r 0.6515986769570011 phi 9.175283992942948e-45 is_direct True
+  S-b seam branch depth 21 [18.88686723504442, 18.886874988671035]: r 0.49378343757064275 d1/phi 0.49642 trusted_b True
+  S-b seam branch depth 22 [18.88686723504442, 18.88687111185773]: r 0.1523809523809524 d1/phi 3.71871 trusted_b True
+  S-d left of seam [18.88686723504442, 18.886868625123256] width 1.39008e-06: r 20.363636363636363 d1/phi 0.161663 trusted_b False
+  S-d right of seam [18.886868625123256, 18.88688274229765] width 1.41172e-05: r 2.419753086419753 d1/phi 2.69919 trusted_b False
+s08 g-1e-7-3-1188 #5 [20.285344640613594, 20.28534923130716] width 4.59069e-06: 419 edges (3 tables); holds no edge; nearest edge 1097.68 widths from its nearer end; census leaf depth 20 trusted 0 r np.float64(0.46411483253588515)
+s19 g-1e-8-0-38451 #3 [17.232905840347527, 17.23293268228719] width 2.68419e-05: 2495 edges (3 tables); holds no edge; nearest edge 161.772 widths from its nearer end; census leaf depth 20 trusted 0 r np.float64(0.49912437076419264)
+ray initialised: False

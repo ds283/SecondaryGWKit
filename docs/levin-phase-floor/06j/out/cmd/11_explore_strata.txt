@@ -1,0 +1,13 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json,collections\nV="/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/"\nd=json.load(open(V+"v8_calls.json")); L=json.load(open(V+"v8_slow_leaves.json"))\nlost=[x for x in d["lost"] if not x["stationary_point_row"]]\nprint("lost outside 720:", len(lost), collections.Counter(x["rtol"] for x in lost))\nprint("kinds", collections.Counter((x["rtol"], x["g"]["kind"], x["g"].get("group")) for x in lost))\nper=collections.defaultdict(list)\nfor e in L: per[(e["unit"],e["index"])].append(e)\ndef ncl(es):\n    a0,b0=es[0]["span"]; w=(b0-a0)*2.0**-20; es=sorted(es,key=lambda e:e["start"]); n=1\n    for p,q in zip(es,es[1:]):\n        if q["start"]-p["end"]>64*w: n+=1\n    return n\nfor rt in ("1e-7","1e-8"):\n    c=collections.Counter()\n    for (u,i),es in per.items():\n        if es[0]["rtol"]!=rt: continue\n        n=ncl([e for e in es if e["depth"]==20])\n        b="1" if n==1 else "2" if n==2 else "3-5" if n<=5 else "6+"\n        c[(es[0]["group"],b)]+=1\n    print(rt, sorted(c.items()))\nprint("depths", collections.Counter(e["depth"] for e in L))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:02:42Z
+# ----
+lost outside 720: 1631 Counter({'1e-8': 830, '1e-7': 801})
+kinds Counter({('1e-8', 'group', 'G-q+r'): 224, ('1e-8', 'group', 'G+q+r'): 218, ('1e-7', 'group', 'G-q+r'): 217, ('1e-7', 'group', 'G+q+r'): 213, ('1e-8', 'group', 'G+q-r'): 202, ('1e-7', 'group', 'G+q-r'): 195, ('1e-8', 'group', 'G-q-r'): 183, ('1e-7', 'group', 'G-q-r'): 174, ('1e-8', 'group', 'G-r'): 2, ('1e-7', 'group', 'G-r'): 1, ('1e-7', 'group', 'q+r'): 1, ('1e-8', 'group', 'q+r'): 1})
+1e-7 [(('G+q+r', '1'), 72), (('G+q+r', '2'), 27), (('G+q+r', '3-5'), 30), (('G+q+r', '6+'), 19), (('G+q-r', '1'), 58), (('G+q-r', '2'), 32), (('G+q-r', '3-5'), 31), (('G+q-r', '6+'), 21), (('G-q+r', '1'), 73), (('G-q+r', '2'), 33), (('G-q+r', '3-5'), 39), (('G-q+r', '6+'), 24), (('G-q-r', '1'), 60), (('G-q-r', '2'), 27), (('G-q-r', '3-5'), 27), (('G-q-r', '6+'), 4), (('q+r', '1'), 1)]
+1e-8 [(('G+q+r', '1'), 73), (('G+q+r', '2'), 27), (('G+q+r', '3-5'), 31), (('G+q+r', '6+'), 20), (('G+q-r', '1'), 62), (('G+q-r', '2'), 32), (('G+q-r', '3-5'), 32), (('G+q-r', '6+'), 21), (('G-q+r', '1'), 76), (('G-q+r', '2'), 34), (('G-q+r', '3-5'), 40), (('G-q+r', '6+'), 25), (('G-q-r', '1'), 62), (('G-q-r', '2'), 29), (('G-q-r', '3-5'), 29), (('G-q-r', '6+'), 6), (('q+r', '1'), 1)]
+depths Counter({20: 8820})
+# ----
+# end 2026-11-03T09:02:42Z
+# exit 0

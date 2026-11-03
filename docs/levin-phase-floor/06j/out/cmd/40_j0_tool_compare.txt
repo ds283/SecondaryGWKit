@@ -1,0 +1,18 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json\na=json.load(open("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/readings/r51-qawo-r1.json"))\nb=json.load(open("out/j0_tool/r51-qawo-r1.json"))\nfor k in ("value_hex","value_30","imag_30","n_segments","stats","tmap","tool_sha256","pickle_sha256","wall_s"):\n    print(k, a.get(k)==b.get(k), "|", str(a.get(k))[:90], "|", str(b.get(k))[:90])\nprint("BIT-IDENTICAL value/imag:", a["value_hex"]==b["value_hex"] and a["value_30"]==b["value_30"] and a["imag_30"]==b["imag_30"])\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:26:40Z
+# ----
+value_hex True | -0x1.bd83e8f875413p-80 | -0x1.bd83e8f875413p-80
+value_30 True | -1.43953748795618674403034022138e-24 | -1.43953748795618674403034022138e-24
+imag_30 True | -1.82811266353068970558595456795e-24 | -1.82811266353068970558595456795e-24
+n_segments True | 206 | 206
+stats False | {'panels': 229, 'neval': 3435, 'ier_nonzero': 387, 'max_last': 0, 'sum_quad_abserr': 2.403 | {'panels': 229, 'direct_panels': 0, 'neval': 3435, 'ier_nonzero': 387, 'ier_messages': {'T
+tmap False | {'max_sigma': 5.532047047493633e-15, 'max_branch_margin': 3.923562199838354e-06, 'all_mono | {'max_sigma': 5.532047047493633e-15, 'max_branch_margin': 3.923562199838354e-06, 'all_mono
+tool_sha256 False | d4bfa7c017c647230627b8a0223144d7072ca6ac71d7949ce482bc7376f52b9b | d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be
+pickle_sha256 True | 7b13a18ec03eee72a96455f349f2a31075830ad07915afbd9ce843e5a2f8b4b7 | 7b13a18ec03eee72a96455f349f2a31075830ad07915afbd9ce843e5a2f8b4b7
+wall_s False | 2.666024667210877 | 2.673515417147428
+BIT-IDENTICAL value/imag: True
+# ----
+# end 2026-11-03T09:26:40Z
+# exit 0

@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/probe_s.py s05 out/partS/s05.json.gz
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:25:31Z
+# ----
+s05 leaf [18.95272597860805, 18.952730569301615] seams 0 reproduces True r 0.2851 d1/phi 1.95; scatter i 5.958e-40 ii 8.076e-40 d1 1.278e-42; 0.5 s
+s05 leaf [18.952872880802033, 18.952877471495597] seams 0 reproduces True r 0.2675 d1/phi 7.57; scatter i 4.415e-40 ii 4.855e-40 d1 7.376e-42; 0.5 s
+s05 leaf [18.95501673469544, 18.955021325389005] seams 0 reproduces True r 0.5571 d1/phi 3.9; scatter i 4.798e-40 ii 4.523e-40 d1 3.924e-42; 0.5 s
+s05 leaf [18.95503509746969, 18.955039688163254] seams 0 reproduces True r 0.3098 d1/phi 3.46; scatter i 5.030e-40 ii 4.941e-40 d1 3.329e-42; 0.5 s
+s05 leaf [19.252406454329396, 19.25241104502296] seams 0 reproduces True r 0.5129 d1/phi 12.6; scatter i 4.386e-40 ii 4.992e-40 d1 6.098e-42; 0.5 s
+s05 leaf [19.283512993904885, 19.28351758459845] seams 0 reproduces True r 0.9819 d1/phi 1.84; scatter i 4.249e-40 ii 4.871e-40 d1 9.305e-43; 0.5 s
+s05 leaf [19.284688211456732, 19.284692802150296] seams 0 reproduces True r 0.2951 d1/phi 1.86; scatter i 4.226e-40 ii 2.404e-40 d1 1.026e-42; 0.5 s
+s05 leaf [19.28821386411228, 19.288218454805843] seams 0 reproduces True r 0.8221 d1/phi 2.73; scatter i 4.213e-40 ii 4.991e-40 d1 1.418e-42; 0.5 s
+s05 leaf [19.288232226886528, 19.288236817580092] seams 0 reproduces True r 0.4065 d1/phi 1.24; scatter i 4.136e-40 ii 5.480e-40 d1 6.894e-43; 0.5 s
+s05: 9 leaves, 1935 solves, 5.5 s; seams 2080 ({'switch_mid': 627, 'phase_knot': 622, 'table_node': 624, 'amp_knot': 207}); merged = production_edges: True; null20 3.977e-04; wrote out/partS/s05.json.gz sha256 4e6322c27b725cb012561b327d371f21e3921f44391371b566dead426ffc7234; ray initialised False
+# ----
+# end 2026-11-03T09:25:39Z
+# exit 0

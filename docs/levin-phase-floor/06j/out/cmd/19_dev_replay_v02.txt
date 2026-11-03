@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport sys, json, time\nsys.argv=["x"]\nimport refs_common as RC, replay_06j as R\nimport ray.cloudpickle as cp\nimport AdaptiveLevin.levin_quadrature as LQ\nimport worker as WK\nrec=cp.loads(open("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v02.pkl","rb").read())\nmade=[]; UI=LQ.used_interval; oi=UI.__dict__["__init__"]\ndef w(self,*a,**k):\n    oi(self,*a,**k); made.append(self)\nUI.__init__=w\nt=time.perf_counter()\ntry: res=LQ.adaptive_levin_sincos(rec["x_span"], rec["f"], rec["theta"], **rec["kw"])\nfinally: UI.__init__=oi\nprint("wall", time.perf_counter()-t, "value", float(res["value"]).hex(), rec["value"], "abserr", float(res["abserr"]).hex(), rec["abserr"], res["num_regions"], rec["num_regions"])\ncall={"index":rec["index"],"notify_label":rec["notify_label"],"result":res,"made":made}\narr=WK._region_arrays_06g(call); chk,_=WK._checked_leaves_06g(call)\nk,rows=R.leaf_table(chk); print("checked", len(rows), "keys", k[:6])\nfound=RC.scan_checkpoint(RC.census_run_06g()/"checkpoint.jsonl", {(RC.rest_of(rec["unit"]), rec["index"])})\nx=[v for v in found[(RC.rest_of(rec["unit"]), rec["index"])] if v[1]=="done"][0]; data=x[4]\nprec=R.census_pickle({"g_pickle":[data["pickle"],data["pickle_offset"],data["pickle_length"],data["pickle_record_sha256"]]})\ngr=[y for y in prec["regions"] if y["index"]==rec["index"]][0]; gc=[y for y in prec["checked_leaves_06g"] if y is not None and y["index"]==rec["index"]][0]\nprint("region diff", sorted(kk for kk in set(arr)|set(gr) if kk not in ("index","regime","group","x_span") and (kk not in arr or kk not in gr or not R.same(arr[kk],gr[kk]))))\nprint("checked diff", sorted(kk for kk in set(chk)|set(gc) if kk not in chk or kk not in gc or not R.same(chk[kk],gc[kk])))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:14:41Z
+# ----
+wall 9.400638584047556 value -0x1.0a6fe76a57daap-92 -0x1.0a6fe76a57daap-92 abserr 0x1.0d7130306c403p-116 0x1.0d7130306c403p-116 400 400
+checked 799 keys ['abserr', 'budget_err', 'convergence_ratio', 'declared_resolution', 'delta1', 'delta2']
+region diff []
+checked diff []
+# ----
+# end 2026-11-03T09:14:53Z
+# exit 0

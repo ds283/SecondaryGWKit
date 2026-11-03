@@ -1,0 +1,127 @@
+# levin-phase-floor 06j: scripts/ against 06g's copies (state/scripts_06g_reference/references/, = docs/levin-phase-floor/06g/references/scripts/ at dfa19d98); written 2026-11-03T12:16:44Z
+# diff -r (files only in scripts/ are 06j's own)
+diff -r state/scripts_06g_reference/references/check_captures.py scripts/check_captures.py
+1c1,7
+< """levin-phase-floor prompt 06g section 5, the references: every capture against the g census, bit for
+---
+> """levin-phase-floor prompt 06j: copied from 06g's references scripts/check_captures.py (a record, not edited; its
+> copy is in state/scripts_06g_reference/), changed only where marked "prompt 06j": the harness check compares
+> worker.py's SCRIPTS hashes file by file, every one equal to the census record's except prov.py, which 06j
+> changes in its tree and its paths (out/scripts_diff_against_06g.txt); prov.py's two hashes are recorded.
+> 06g's text follows.
+> 
+> levin-phase-floor prompt 06g section 5, the references: every capture against the g census, bit for
+134,135c140,143
+<             row["scripts_sha256_equal"] = cu.get("scripts_sha256") == gu.get(
+<                 "scripts_sha256"
+---
+>             # prompt 06j: every SCRIPTS file equal except prov.py (06j's tree and paths)
+>             cs_, gs_ = cu.get("scripts_sha256") or {}, gu.get("scripts_sha256") or {}
+>             row["scripts_sha256_differing"] = sorted(
+>                 k for k in set(cs_) | set(gs_) if cs_.get(k) != gs_.get(k)
+136a145,146
+>             row["prov_py_sha256"] = [cs_.get("prov.py"), gs_.get("prov.py")]
+>             row["scripts_sha256_equal"] = row["scripts_sha256_differing"] in ([], ["prov.py"])
+Only in scripts: cost_06j.py
+Only in scripts: cost_06j_v2.py
+Only in scripts: dev_probe.py
+Only in scripts: draw_06j.py
+Only in scripts: launch_06j.py
+diff -r state/scripts_06g_reference/references/one_reading.py scripts/one_reading.py
+1c1,8
+< """levin-phase-floor prompt 06g section 5, the references: one reading of one captured call by
+---
+> """levin-phase-floor prompt 06j: copied from 06g's references scripts/one_reading.py (a record, not edited; its copy is
+> in state/scripts_06g_reference/), changed only where marked "prompt 06j": with ``--progress-order unordered`` the
+> progress file also holds the job list (each chunk's kind and arguments, e.g. Route B's (i0, i1, res)) and the
+> indices of the chunks finished, so that the driver can weight progress by each chunk's phase span and count the
+> chunks in flight (state/readings_plan_20261103T0935Z.md section 5). No value changes: the chunks, their order,
+> the function each runs and the results list are the tool's own. 06g's text follows.
+> 
+> levin-phase-floor prompt 06g section 5, the references: one reading of one captured call by
+52a60
+>     extra = {"jobs": None, "done_indices": []}  # prompt 06j
+63a72,73
+>                     "jobs": extra["jobs"],  # prompt 06j
+>                     "done_indices": extra["done_indices"],  # prompt 06j
+69a80
+>         extra["jobs"] = [[job[0], list(job[1])] for job in jobs]  # prompt 06j
+75a87
+>                 extra["done_indices"].append(len(out) - 1)  # prompt 06j
+90a103
+>                 extra["done_indices"].append(i)  # prompt 06j
+Only in scripts: probe_s.py
+Only in scripts: probe_s_nodes.py
+diff -r state/scripts_06g_reference/references/prov.py scripts/prov.py
+1c1,18
+< """levin-phase-floor prompt 06g section 5 (06h's census re-run at 06g's code: the trusted leaf's
+---
+> """levin-phase-floor prompt 06j (the slow leaves and V2's rows, a measurement; on the Mac Studio):
+> provenance shared by every script. Copied from prompt 06g's references ``scripts/prov.py``
+> (docs/levin-phase-floor/06g/references/scripts/prov.py, itself the census agent's, a record, not
+> edited; its copy is kept unchanged in state/scripts_06g_reference/); changed here only in its tree
+> and its paths, each change marked "prompt 06j":
+> - one tree, ``g``: 06j's dispatch SHA ``dfa19d98`` (the worktree
+>   ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9``), whose production code is
+>   ``1c5336e``'s (06g's code ``3ae6f3a``) and whose ``tools/filon_reference.py`` is ``b5626ecb``'s
+>   (``git diff --stat 1c5336e dfa19d98 -- . ':!docs' ':!prompts'`` shows only CLAUDE.md and the tool
+>   with its test). The key keeps the name ``g``, so the census's unit names
+>   ``g-<rtol>-<shard>-<serial>`` are reused unchanged. 06g's two trees are kept below by name, for
+>   the record, and are not used (nothing runs from 06g's worktrees);
+> - the records directory is var/levin-phase-floor-06j/ (one level shallower than 06g's
+>   var/levin-phase-floor-06g/references/, so the main-checkout assertion counts one level fewer).
+> 
+> (06g's text follows, unchanged.)
+> 
+> levin-phase-floor prompt 06g section 5 (06h's census re-run at 06g's code: the trusted leaf's
+163c180
+< WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census
+---
+> WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census; prompt 06j: var/levin-phase-floor-06j
+165c182
+< assert HERE.parents[3] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's
+---
+> assert HERE.parents[2] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's; prompt 06j: var/levin-phase-floor-06j/scripts, one shallower again
+220a238,243
+> # prompt 06j: 06g's trees are kept above, by name, for the record (not used); the one tree of 06j
+> P06G_TREE, P06G_SHA = P_TREE, P_SHA  # 06g's parent tree (4f4f9ed), not used
+> G06G_TREE, G06G_SHA = G_TREE, G_SHA  # 06g's census tree (1c5336e), not used: its code equals 06j's tree's
+> G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9")  # prompt 06j
+> G_SHA = "dfa19d98f45b8501f8c9d314059f7c6e0678c6b8"  # prompt 06j: 06j's dispatch SHA; code = 1c5336e's, tool = b5626ecb's
+> TREES = {"g": (G_TREE, G_SHA)}  # prompt 06j: one tree
+diff -r state/scripts_06g_reference/references/refs_common.py scripts/refs_common.py
+1c1,8
+< """levin-phase-floor prompt 06g section 5, the references: paths and helpers shared by the references
+---
+> """levin-phase-floor prompt 06j: copied from prompt 06g's references scripts/refs_common.py (a record,
+> not edited; its copy is in state/scripts_06g_reference/), changed only where marked "prompt 06j": ROOT
+> is var/levin-phase-floor-06j/ (one level shallower, so the main-checkout assertion counts one level
+> fewer), and G_TREE/G_SHA are 06j's tree (the worktree at 06j's dispatch SHA dfa19d98, production
+> code 1c5336e's, tool b5626ecb's). Every input it names (06g's rows.json, 06h's census, 06a's census,
+> the scratch copy) is read only, as in 06g. 06g's text follows.
+> 
+> levin-phase-floor prompt 06g section 5, the references: paths and helpers shared by the references
+22c29
+< ROOT = HERE.parent  # var/levin-phase-floor-06g/references
+---
+> ROOT = HERE.parent  # var/levin-phase-floor-06g/references; prompt 06j: var/levin-phase-floor-06j
+24c31
+< assert HERE.parents[3] == MAIN, HERE
+---
+> assert HERE.parents[2] == MAIN, HERE  # prompt 06j: one level shallower than 06g's
+27,28c34,35
+< G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e")
+< G_SHA = "1c5336e7e0ab8ed4495601a4033841f2df17ebdd"
+---
+> G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9")  # prompt 06j (06g: -lpf06g-1c5336e)
+> G_SHA = "dfa19d98f45b8501f8c9d314059f7c6e0678c6b8"  # prompt 06j (06g: 1c5336e7e0ab8ed4495601a4033841f2df17ebdd)
+Only in scripts: replay_06j.py
+Only in scripts: run_06j.py
+Only in scripts: score_s.py
+Only in scripts: score_w.py
+Only in scripts: se_control.py
+Only in scripts: seams_06j.py
+Only in scripts: slice_06j.py
+Only in scripts: w_prep.py
+Only in scripts: w_segments.py
+# exit 1

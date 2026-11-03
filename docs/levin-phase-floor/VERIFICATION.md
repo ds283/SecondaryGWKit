@@ -2872,3 +2872,124 @@ The orchestrator's checks, on the laptop:
 
 **Issues.** Narrowed: `[05a-t-phase-abscissa-rounding-remains]`. Opened and closed: none.
 
+
+## 6j. Where 06g's slow leaves come from, and which code is right on V2's rows
+
+*Prompt 06j, a measurement. It ran on the Mac Studio on 2026-11-03, Ray-free, with no lock, no
+store built and no code changed. The records are under [`06j/`](06j/). What was kept on the Mac
+Studio, and its removal, is in [`06j/KEPT_ON_MAC_STUDIO.md`](06j/KEPT_ON_MAC_STUDIO.md).*
+
+### 6j.1 The harness and Gate J0
+
+**The setup:**
+- The tree was the worktree at `dfa19d98`. Its production code is 06g's (`1c5336e`, code
+  `3ae6f3a`), and its `tools/filon_reference.py` is `b5626ecb`'s. It was clean throughout, with
+  `--ignored`, and no bytecode was written in it.
+- The store was the certified scratch copy of A3 v2, opened read-only, with fingerprint `0e32f24a…`.
+  Its five files were EQUAL to their certification by SHA-256 before and after.
+- 06g's census checkpoint (`03adcbba…`), its 16 region pickles, 06h's (`3104c18e…`), and
+  `v8_calls.json` and `v8_slow_leaves.json` were unchanged.
+
+**The samples** were drawn by `draw_06j.py`, seed 20261103, after the rules and the predictions were
+written (`06j/state/predictions_and_rules_20261103T0905Z.md`, read-only, `b41740de…`):
+- **Part S:** 24 of V8's lost calls, 12 at each rtol, over the four `G±q±r` groups and three strata
+  of cluster count, one call per row. They hold 142 scoped slow leaves.
+- **Part W:**
+  - W-5 is the five V2 rows at each rtol, call index 1 (`G+r`). The 1e-8 calls share their 1e-7
+    twins' references: the integrands are equal by 06g's criterion and a 65-point check.
+  - W-12 is 12 calls of the call-level set at evenly spaced quantiles of the ratio.
+
+**The runs:**
+- `levin-phase-floor-06j-run1-20261103T091504` did the captures, J0, Part S and Part W's
+  preparation: 76 of 76, 11 minutes.
+- `levin-phase-floor-06j-readings-20261103T093537` did the 68 reference readings: 68 of 68 in
+  2 h 38 min, none stopped. The longest was c04 QAWO r2 at 3,538 s. The orchestrator checked the
+  readings plan before launch, under 06g's backstop rules.
+
+**J0 holds, with no replacement:**
+- All 46 captures and replays equal 06g's census bit for bit: value, abserr, regions, region arrays
+  and checked leaves.
+- 06g's r51 QAWO r1 re-read at the tree is bit-identical.
+- s00, replayed twice in fresh processes, gives identical checked and returned leaves.
+
+### 6j.2 Part S: the slow leaves
+
+| | Rule | Numbers | Verdict |
+|---|---|---|---|
+| **S1** | ≥ 80 % hold a seam, and ≥ 5× the null | 1 of 142 (0.70 %); null 0.119 % | **fails** |
+| **S2** | ≥ 80 % of seam leaves keep $r \in [0.4, 0.6]$ at depths 21–24 on the seam branch | s07 alone: 0.494, 0.152, 0.571, 0.078 | **fails** (n = 1) |
+| **S3** | ≥ 80 % have $\Delta_1$ > 10× the larger scatter | 0 of 142; median ratio 0.039, max 1.81 | **fails** |
+| **S4** | ≥ 80 % of seam leaves trusted on both sides of the split | s07: $r$ = 20.4 and 2.42, neither trusted | **fails** (n = 1) |
+
+**The reading: explanation (N), not (J).** The slow leaves are rounding committed per node that
+scales with the leaf's width.
+- **Seams.** 141 of 142 hold no representation seam, at a median of 206 leaf widths from the
+  nearest. The calls' trusted deep leaves hold one at 1.7 % against a null of 1.6 %.
+- **Depths 21–24.** $r$ has a median of 0.49–0.52 on both branches, wandering widely (p10–p90 0.16–1.5).
+- **Scatter.** A few-ulp perturbation of the nodes or of the integrand's inputs moves $V_P$ by
+  0.34–795× $\Delta_1$.
+- **s07's seam.** It is a table node of `tau`, `cs_tau` and `friction_F` coinciding with spline
+  knots. The integrand has no jump there, and `theta_mod_2pi` steps by about $10^{-12}$ rad, below
+  the stencil noise (the board's note to the slow-leaves issue).
+
+**Two populations, measured after the scoring** (`06j/out/partS_nodes.json`):
+- **75 leaves with $\Delta_1/\phi_P < 2$.**
+  - $\Delta_1 = |E_P - (E_L + E_R)|$ to 0.6 %, the difference of three solves' node errors.
+  - Correcting each solve by $-E$ removes 99.8 % of it.
+  - $r$ is 0.489–0.506, and $\phi_P$ is 99.9 % node term.
+  - Rule (b)'s noise clause compares $\Delta_1$ with $\phi_P$, which carries only $|E_P|$.
+- **67 leaves with $\Delta_1/\phi_P \ge 2$.** The node errors explain about half of $\Delta_1$, and
+  the rest is inside the integrand's input sensitivity at the nodes.
+
+### 6j.3 Part W: V2's rows
+
+| | Rule | Numbers | Verdict |
+|---|---|---|---|
+| **W1** | every call's four readings within min$(e_g, e_{06h})/100$ | 22 of 22; spread/tolerance at most $8.2\times10^{-3}$ | **holds** |
+| **W2** | every W-5 call within $e_g$ | 10 of 10; worst 0.0463 | **holds** |
+| **W3** | every W-5 call outside $e_{06h}$ | 10 of 10; 10.6–20.3 | **holds** |
+| **W4** | W-12: $g$ within on ≥ 11, 06h outside on ≥ 6 | 12 of 12 and 12 of 12 (06h 2.40–18.4) | **holds** |
+
+Every reading is Route B, `all_monotone`, with no direct segment.
+
+**Where 06h's error sits.** 06h's leaf values were rebuilt exactly (summed in the code's order they
+give 06h's value bit for bit on all 22 calls).
+- On every call one 06h leaf carries 97.6–100 % of $v_g - v_{06h}$; on c06 it carries 116.7 %,
+  offset by its other cells.
+- On the `G+r` calls it is the depth-1 leaf $[23.539, 25.255]$, carrying $7.04$–$7.21\times10^{-33}$.
+  06g's 11–13 trusted leaves inside it sum to the reference within $1.3\times10^{-35}$.
+- 06h trusted each carrying leaf at $0.258 \le r \le 0.671$ with $\Delta_1/\phi_P$ from 5.8 to
+  $1.2\times10^7$, and 06g's rule (b) would trust none of them.
+- This is `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`'s mechanism under 06h's $r < 1$
+  test, corrected by 06g.
+
+### 6j.4 The review
+
+**The Mac Studio review** (`06j/review.md`) passed checks 1–6:
+- **scope:** nothing outside `var/levin-phase-floor-06j/` and the two runs; the copy and the inputs
+  unchanged; no Ray;
+- **J0, with s17 re-run by the orchestrator:** value, abserr, 172 regions and one depth-20 leaf's
+  $r$ equal;
+- **the samples:** drawn before any probe;
+- **Part S:** three leaves' seams recomputed, and s07's leaf, S-b halvings and S-d split re-run;
+- **Part W:** f01, f06 and c04 re-scored from the readings and both checkpoints, and every reading
+  usable;
+- **the predictions:** verbatim and before the numbers, and re-scored.
+
+It stopped on check 7 alone, on three record findings that change no number or verdict:
+- provenance missing on 44 Part W preparation files;
+- the readings' header line naming 06g;
+- deviation 19 overstating its evidence.
+
+The user accepted them as they stand. They are the log's deviations 21–23.
+
+**On the laptop:**
+- The 961 files copied back match by SHA-256.
+- S1, S3 and W1–W4 were re-scored from `partS_leaves.csv` and `w_calls.csv` by the orchestrator's
+  own reader, with the same verdicts and numbers.
+
+**Issues:**
+- Closed: `[06g-g-plus-r-rows-move-past-both-errors]`.
+- Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]` and
+  `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`.
+- Opened: none.

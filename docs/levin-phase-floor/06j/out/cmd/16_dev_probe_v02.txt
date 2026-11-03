@@ -1,0 +1,14 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/dev_probe.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:11:34Z
+# ----
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/v00.pkl sha256 391fffe37be6529b8ab773a8da016cd0d8cad1cb25f450cfd43cec8d730fc5df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_slow_leaves.json sha256 b4643033a1249bb036524ec041fc9594471a56a932a1ded593101d1c486da9ba
+g-1e-7-2-1380 4 (12.069397939504983, 24.690936374721034) {'atol': 1.2488602448621787e-33, 'rtol': 1e-07, 'chebyshev_order': 24, 'notify_label': 'k=3e+08/Mpc, q=3.09e+06/Mpc, r=3e+08/Mpc @ z_response=1.7445e+05, z in (5.2861e+10, 1.7445e+05), regime Gqr, group G+q-r'}
+seams 5550 tables 3 check {'equal': True, 'n_edges_tool': 1113, 'n_edges_mine': 1113, 'n_tables_tool': 3, 'n_tables_mine': 3} 0.04 s
+solves 0 total 0.2 s
+null20 0.0010595321655273438
+# ----
+# end 2026-11-03T09:11:36Z
+# exit 0

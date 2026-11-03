@@ -1,0 +1,27 @@
+f01 reading f01-qawo-r1: unit g-1e-7-0-12959 #1 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value -2.12628634250857894916936615129e-28
+f01 reading f01-qawo-r2: unit g-1e-7-0-12959 #1 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value -2.12628634250858367322164461412e-28
+f01 reading f01-fcc-r1: unit g-1e-7-0-12959 #1 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value -2.1262863425085811703066025979e-28
+f01 reading f01-fcc-r2: unit g-1e-7-0-12959 #1 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value -2.12628634250858201946467020368e-28
+f01 g-1e-7-0-12959 #1: spread of four readings 4.7241e-43, tolerance min(e)/100 5.4664e-36, spread/tol 8.642e-8
+  ref qawo-r1: |v_g-ref|/e_g 0.0203 (06g regions 12 depth 5 conv True); |v_06h-ref|/e_06h 13.0504 (06h regions 2 depth 1 conv True)
+  ref qawo-r2: |v_g-ref|/e_g 0.0203 (06g regions 12 depth 5 conv True); |v_06h-ref|/e_06h 13.0504 (06h regions 2 depth 1 conv True)
+  ref fcc-r1: |v_g-ref|/e_g 0.0203 (06g regions 12 depth 5 conv True); |v_06h-ref|/e_06h 13.0504 (06h regions 2 depth 1 conv True)
+  ref fcc-r2: |v_g-ref|/e_g 0.0203 (06g regions 12 depth 5 conv True); |v_06h-ref|/e_06h 13.0504 (06h regions 2 depth 1 conv True)
+f06 reading f01-qawo-r1: unit g-1e-7-0-12959 #1 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value -2.12628634250857894916936615129e-28
+f06 reading f01-qawo-r2: unit g-1e-7-0-12959 #1 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value -2.12628634250858367322164461412e-28
+f06 reading f01-fcc-r1: unit g-1e-7-0-12959 #1 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value -2.1262863425085811703066025979e-28
+f06 reading f01-fcc-r2: unit g-1e-7-0-12959 #1 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value -2.12628634250858201946467020368e-28
+f06 g-1e-8-0-12959 #1: spread of four readings 4.7241e-43, tolerance min(e)/100 5.4664e-36, spread/tol 8.642e-8
+  ref qawo-r1: |v_g-ref|/e_g 0.0203 (06g regions 12 depth 5 conv True); |v_06h-ref|/e_06h 13.0504 (06h regions 2 depth 1 conv True)
+  ref qawo-r2: |v_g-ref|/e_g 0.0203 (06g regions 12 depth 5 conv True); |v_06h-ref|/e_06h 13.0504 (06h regions 2 depth 1 conv True)
+  ref fcc-r1: |v_g-ref|/e_g 0.0203 (06g regions 12 depth 5 conv True); |v_06h-ref|/e_06h 13.0504 (06h regions 2 depth 1 conv True)
+  ref fcc-r2: |v_g-ref|/e_g 0.0203 (06g regions 12 depth 5 conv True); |v_06h-ref|/e_06h 13.0504 (06h regions 2 depth 1 conv True)
+c04 reading c04-qawo-r1: unit g-1e-7-1-35052 #6 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value 7.09196484670944107751159905806e-26
+c04 reading c04-qawo-r2: unit g-1e-7-1-35052 #6 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value 7.09196484670776422540566649533e-26
+c04 reading c04-fcc-r1: unit g-1e-7-1-35052 #6 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value 7.09196484670949080981171535423e-26
+c04 reading c04-fcc-r2: unit g-1e-7-1-35052 #6 route B all_monotone True direct_segments 0 non-monotone segments 0 -> usable True; value 7.09196484670780590152114341917e-26
+c04 g-1e-7-1-35052 #6: spread of four readings 1.7266e-38, tolerance min(e)/100 2.2690e-35, spread/tol 7.610e-4
+  ref qawo-r1: |v_g-ref|/e_g 0.0154 (06g regions 59 depth 15 conv True); |v_06h-ref|/e_06h 5.3006 (06h regions 6 depth 4 conv True)
+  ref qawo-r2: |v_g-ref|/e_g 0.0154 (06g regions 59 depth 15 conv True); |v_06h-ref|/e_06h 5.3006 (06h regions 6 depth 4 conv True)
+  ref fcc-r1: |v_g-ref|/e_g 0.0154 (06g regions 59 depth 15 conv True); |v_06h-ref|/e_06h 5.3006 (06h regions 6 depth 4 conv True)
+  ref fcc-r2: |v_g-ref|/e_g 0.0154 (06g regions 59 depth 15 conv True); |v_06h-ref|/e_06h 5.3006 (06h regions 6 depth 4 conv True)

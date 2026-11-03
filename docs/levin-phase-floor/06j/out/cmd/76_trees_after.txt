@@ -1,0 +1,16 @@
+$ sh -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9\ status\ --short\ --ignored\;\ echo\ \'\(end\ worktree\ status\)\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'\(end\ main\ status\)\'\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs\ \|\ diff\ state/var_runs_listing_before_run1.txt\ -\;\ ls\ -d\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07\*\ 2\>/dev/null
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T12:16:36Z
+# ----
+dfa19d98f45b8501f8c9d314059f7c6e0678c6b8
+(end worktree status)
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end main status)
+63a64,65
+> levin-phase-floor-06j-readings-20261103T093537
+> levin-phase-floor-06j-run1-20261103T091504
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07-leaves
+# ----
+# end 2026-11-03T12:16:36Z
+# exit 0

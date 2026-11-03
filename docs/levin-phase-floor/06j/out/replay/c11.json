@@ -1,0 +1,168 @@
+{
+ "header": [
+  "# levin-phase-floor 06j: J0 replay of c11 (g-1e-8-0-33648 #1)",
+  "# written 2026-11-03T09:25:22Z on mps026298.phys.susx.ac.uk",
+  "# script replay_06j.py sha256 3d451ab2528485d4308913292526f00072482bdedfca67b61cd7ebfb07625088",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/state/inputs/c11.pkl sha256 4ea66e929f09013a9ae79ddbc2199184773cd00e82cbcf9a8e850e1c0666b1f6",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9/AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/worker.py sha256 90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+ ],
+ "sid": "c11",
+ "unit": "g-1e-8-0-33648",
+ "index": 1,
+ "replay": {
+  "value": "-0x1.bf753907ebf45p-93",
+  "abserr": "0x1.cdf89c07ae75fp-111",
+  "num_regions": 14,
+  "max_depth": 5,
+  "converged": true
+ },
+ "census": {
+  "value": "-0x1.bf753907ebf45p-93",
+  "abserr": "0x1.cdf89c07ae75fp-111",
+  "num_regions": 14,
+  "max_depth": 5,
+  "converged": true
+ },
+ "region_keys_differing": [],
+ "checked_keys_differing": [],
+ "n_made": 27,
+ "n_checked": 22,
+ "checked_table_sha256": "04169e147f3e14352bec7b0cc39be41e48d7aa249ac13340bca9437d477d0419",
+ "returned_leaves": [
+  {
+   "start": "0x1.78a11e65a7f80p+4",
+   "end": "0x1.7a5862a4c88a1p+4",
+   "depth": 5,
+   "value": "-0x1.e64149a01bb48p-95",
+   "value_own": "-0x1.e64044bacff53p-95",
+   "r": "0x1.b2859770d6908p-13",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7a5862a4c88a1p+4",
+   "end": "0x1.7c0fa6e3e91c2p+4",
+   "depth": 5,
+   "value": "0x1.f69f373abb50cp-96",
+   "value_own": "0x1.f69f8554360ecp-96",
+   "r": "0x1.b8b9a8b1e13d0p-12",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7c0fa6e3e91c2p+4",
+   "end": "0x1.7dc6eb2309ae2p+4",
+   "depth": 5,
+   "value": "0x1.8c2de72cfbf81p-96",
+   "value_own": "0x1.8c2d964092a66p-96",
+   "r": "0x1.78221cd67d4e0p-11",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7dc6eb2309ae2p+4",
+   "end": "0x1.7f7e2f622a403p+4",
+   "depth": 5,
+   "value": "0x1.0603d228c4326p-94",
+   "value_own": "0x1.0603d2d7b8449p-94",
+   "r": "0x1.cb647071ac264p-6",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7f7e2f622a403p+4",
+   "end": "0x1.813573a14ad24p+4",
+   "depth": 5,
+   "value": "-0x1.2b19d5cbde2b1p-94",
+   "value_own": "-0x1.2b19d59edd47bp-94",
+   "r": "0x1.fb464f05ff285p-7",
+   "trusted": true
+  },
+  {
+   "start": "0x1.813573a14ad24p+4",
+   "end": "0x1.82ecb7e06b644p+4",
+   "depth": 5,
+   "value": "-0x1.0548b630f138cp-94",
+   "value_own": "-0x1.0548b2dc92980p-94",
+   "r": "0x1.574ee64b423c9p-11",
+   "trusted": true
+  },
+  {
+   "start": "0x1.82ecb7e06b644p+4",
+   "end": "0x1.84a3fc1f8bf65p+4",
+   "depth": 5,
+   "value": "-0x1.d8a3f7b5522a0p-97",
+   "value_own": "-0x1.d8a3f6dfcd678p-97",
+   "r": "0x1.165fbb9ec46b6p-6",
+   "trusted": true
+  },
+  {
+   "start": "0x1.84a3fc1f8bf65p+4",
+   "end": "0x1.865b405eac886p+4",
+   "depth": 5,
+   "value": "0x1.1b0d18ba74fecp-95",
+   "value_own": "0x1.1b0d18bd53cd0p-95",
+   "r": "0x1.a0df2e328cc02p-4",
+   "trusted": true
+  },
+  {
+   "start": "0x1.865b405eac886p+4",
+   "end": "0x1.89c9c8dcedac7p+4",
+   "depth": 4,
+   "value": "-0x1.f305c759af4c6p-96",
+   "value_own": "-0x1.f3052d724e4cep-96",
+   "r": "0x1.af5f201fc78afp-10",
+   "trusted": true
+  },
+  {
+   "start": "0x1.89c9c8dcedac7p+4",
+   "end": "0x1.8d38515b2ed08p+4",
+   "depth": 4,
+   "value": "0x1.117305863ff49p-94",
+   "value_own": "0x1.1172fd09a6652p-94",
+   "r": "0x1.285b5118f999dp-9",
+   "trusted": true
+  },
+  {
+   "start": "0x1.8d38515b2ed08p+4",
+   "end": "0x1.94156257b118bp+4",
+   "depth": 3,
+   "value": "-0x1.1bf6d061234a0p-97",
+   "value_own": "-0x1.1bf6f26b7225ep-97",
+   "r": "0x1.1eb90756dfb3fp-8",
+   "trusted": true
+  },
+  {
+   "start": "0x1.94156257b118bp+4",
+   "end": "0x1.9af273543360ep+4",
+   "depth": 3,
+   "value": "0x1.2a2a5da4e01a9p-95",
+   "value_own": "0x1.2a2a64fb7658cp-95",
+   "r": "0x1.46a0fcbb28d02p-6",
+   "trusted": true
+  },
+  {
+   "start": "0x1.9af273543360ep+4",
+   "end": "0x1.a1cf8450b5a90p+4",
+   "depth": 3,
+   "value": "0x1.d94a0e1116224p-94",
+   "value_own": "0x1.d94a0e0b81690p-94",
+   "r": "0x1.8bfdd5f5bc66dp-3",
+   "trusted": true
+  },
+  {
+   "start": "0x1.a1cf8450b5a90p+4",
+   "end": "0x1.af89a649ba396p+4",
+   "depth": 2,
+   "value": "-0x1.5d0897bcdcb44p-92",
+   "value_own": "-0x1.5d0897d61b897p-92",
+   "r": "0x1.146a379cd9075p-7",
+   "trusted": true
+  }
+ ],
+ "returned_leaves_sha256": "7ebbb1b7b10ea8b716be1dd27ea69c9c1675b5cef52b5f6aa8fb56f8893d179a",
+ "wall_s": 0.2219128329306841,
+ "problems": [],
+ "reproduces_census": true,
+ "ray_initialized": false
+}

@@ -1,0 +1,150 @@
+{
+ "header": [
+  "# levin-phase-floor 06j: J0 replay of f06 (g-1e-8-0-12959 #1)",
+  "# written 2026-11-03T09:25:13Z on mps026298.phys.susx.ac.uk",
+  "# script replay_06j.py sha256 3d451ab2528485d4308913292526f00072482bdedfca67b61cd7ebfb07625088",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/state/inputs/f06.pkl sha256 c34739afc02fde769d8e7a883d9df66d28c0591a93f3046da26af5a97b875d41",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9/AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/worker.py sha256 90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+ ],
+ "sid": "f06",
+ "unit": "g-1e-8-0-12959",
+ "index": 1,
+ "replay": {
+  "value": "-0x1.0d89eec6d647cp-92",
+  "abserr": "0x1.a19bf7b51b5c9p-111",
+  "num_regions": 12,
+  "max_depth": 5,
+  "converged": true
+ },
+ "census": {
+  "value": "-0x1.0d89eec6d647cp-92",
+  "abserr": "0x1.a19bf7b51b5c9p-111",
+  "num_regions": 12,
+  "max_depth": 5,
+  "converged": true
+ },
+ "region_keys_differing": [],
+ "checked_keys_differing": [],
+ "n_made": 23,
+ "n_checked": 17,
+ "checked_table_sha256": "0e5f7e0966c8046b4128460d66bd8360cce876609ed5acdcc3682d1fac71e97f",
+ "returned_leaves": [
+  {
+   "start": "0x1.78a11e65a7f80p+4",
+   "end": "0x1.7a5862a4c88a1p+4",
+   "depth": 5,
+   "value": "-0x1.807a55f06a607p-95",
+   "value_own": "-0x1.80795a980600ep-95",
+   "r": "0x1.0b502ba6769b3p-11",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7a5862a4c88a1p+4",
+   "end": "0x1.7c0fa6e3e91c2p+4",
+   "depth": 5,
+   "value": "0x1.e30b5e3815630p-97",
+   "value_own": "0x1.e30b7c92eb088p-97",
+   "r": "0x1.7948476d9af5bp-9",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7c0fa6e3e91c2p+4",
+   "end": "0x1.7dc6eb2309ae2p+4",
+   "depth": 5,
+   "value": "0x1.7ba440e40a4a4p-98",
+   "value_own": "0x1.7ba2ff89eb214p-98",
+   "r": "0x1.5d94811702cbep-11",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7dc6eb2309ae2p+4",
+   "end": "0x1.7f7e2f622a403p+4",
+   "depth": 5,
+   "value": "0x1.27b17f034f846p-94",
+   "value_own": "0x1.27b182b997303p-94",
+   "r": "0x1.d0fe1fa564aa9p-8",
+   "trusted": true
+  },
+  {
+   "start": "0x1.7f7e2f622a403p+4",
+   "end": "0x1.813573a14ad24p+4",
+   "depth": 5,
+   "value": "-0x1.f216ffa4e6d5fp-95",
+   "value_own": "-0x1.f216ffbab267ep-95",
+   "r": "0x1.d68f65e385097p-6",
+   "trusted": true
+  },
+  {
+   "start": "0x1.813573a14ad24p+4",
+   "end": "0x1.82ecb7e06b644p+4",
+   "depth": 5,
+   "value": "-0x1.32d6ff9d3d42ap-94",
+   "value_own": "-0x1.32d6fc3b8cb29p-94",
+   "r": "0x1.250c8d9849e53p-10",
+   "trusted": true
+  },
+  {
+   "start": "0x1.82ecb7e06b644p+4",
+   "end": "0x1.84a3fc1f8bf65p+4",
+   "depth": 5,
+   "value": "-0x1.9faf74a84c390p-96",
+   "value_own": "-0x1.9faf74530d77cp-96",
+   "r": "0x1.152e12a8992cep-5",
+   "trusted": true
+  },
+  {
+   "start": "0x1.84a3fc1f8bf65p+4",
+   "end": "0x1.865b405eac886p+4",
+   "depth": 5,
+   "value": "0x1.5077af268ad90p-94",
+   "value_own": "0x1.5077af24313a8p-94",
+   "r": "0x1.646b72384c8bcp-3",
+   "trusted": true
+  },
+  {
+   "start": "0x1.865b405eac886p+4",
+   "end": "0x1.89c9c8dcedac7p+4",
+   "depth": 4,
+   "value": "-0x1.bbfc6e7344eaap-95",
+   "value_own": "-0x1.bbfc30d5f28eep-95",
+   "r": "0x1.fb1748744e4e4p-10",
+   "trusted": true
+  },
+  {
+   "start": "0x1.89c9c8dcedac7p+4",
+   "end": "0x1.8d38515b2ed08p+4",
+   "depth": 4,
+   "value": "0x1.0b759131543f6p-93",
+   "value_own": "0x1.0b758c7a28cecp-93",
+   "r": "0x1.096a41219cbffp-9",
+   "trusted": true
+  },
+  {
+   "start": "0x1.8d38515b2ed08p+4",
+   "end": "0x1.94156257b118bp+4",
+   "depth": 3,
+   "value": "-0x1.e07c5fb8ecc5bp-94",
+   "value_own": "-0x1.e07c607abdcc0p-94",
+   "r": "0x1.13f064d5a3d19p-3",
+   "trusted": true
+  },
+  {
+   "start": "0x1.94156257b118bp+4",
+   "end": "0x1.af89a649ba396p+4",
+   "depth": 1,
+   "value": "-0x1.8368ce7c4b928p-93",
+   "value_own": "-0x1.8368d20a73206p-93",
+   "r": "0x1.89c2709b5a5d8p-3",
+   "trusted": true
+  }
+ ],
+ "returned_leaves_sha256": "a98f05b15769e055a311cbb5dc611f8e52514063cb260c9a86717ca99aab6b47",
+ "wall_s": 0.1877599167637527,
+ "problems": [],
+ "reproduces_census": true,
+ "ray_initialized": false
+}

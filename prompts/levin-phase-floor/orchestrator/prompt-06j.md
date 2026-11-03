@@ -118,3 +118,78 @@ Write `var/levin-phase-floor-06j/review.md`, with the verdict in its first line,
 ## 5. Stop and ask the user
 
 As 06f's note §5, with prompt 06j's §7. **Never touch 07's stashes or saved work.**
+
+## B.5 Addendum, 2026-11-03: the run, the review and the records
+
+**Dispatched** 2026-11-03 on the user's word: *"Dispatch prompt 06j in `prompts/levin-phase-floor`,
+following `orchestrator/prompt-06j.md`, and carry out the review of the agent's work when it is
+finished."* The laptop pushed `fdc3a2bd` and `dfa19d98`, and checked on both hosts that
+`git diff --stat 1c5336e dfa19d98 -- . ':!docs' ':!prompts'` shows only `CLAUDE.md` and the tool and
+its test. Both registries showed nothing `running` or stale, the lock was free, and the Mac Studio's
+main checkout was clean at `28ebaf07`. The laptop fetched there without moving the checkout, made
+the worktree `SecondaryGWKit-lpf06j-dfa19d9` detached at `dfa19d98`, and started a Mac Studio
+orchestrator session in it.
+
+**The run and the review on the Mac Studio.**
+- **§B.1's preflight passed.** The marker was set at 08:51:24 UTC.
+- **The run.** One Opus agent was dispatched (`06j/review/dispatch.md`). Its gate and samples took
+  08:58–09:06. Run 1, `levin-phase-floor-06j-run1-20261103T091504`, ran 09:15–09:26: 76 of 76,
+  exit 0.
+- **The readings plan** was checked before launch (§B.2):
+  - the projection was by span, cross-checked against a pure-span bound;
+  - the backstop stops a reading only at a projected day or more, with the chunks in flight
+    counted;
+  - the fit's per-segment term is the log's deviation 10.
+- **The readings.** `levin-phase-floor-06j-readings-20261103T093537` ran 09:35–12:13: 68 of 68,
+  none stopped. The longest was c04 QAWO r2, at 3,538 s.
+- **The waits.** Each run was waited on by a background `kill -0` loop on its pid, and the agent was
+  resumed after each. There was no §7 stop, and the agent asked nothing.
+- **The review** (`docs/levin-phase-floor/06j/review.md`) passed checks 1–6. It re-ran s17's replay
+  and three leaves' seams, s07's leaf, its S-b halvings and its S-d split, and f01, f06 and c04's
+  ratios, each with its own scripts.
+- **It stopped on check 7 alone:** 44 Part W preparation files without provenance, the readings'
+  header line naming 06g, and deviation 19 overstating its evidence. None changes a number.
+
+**The results:**
+- J0 holds with no replacement.
+- **S1–S4 fail.** The slow leaves are rounding that scales with the leaf (N), not seams (J).
+- **W1–W4 hold.** 06g is honest on all 22 W calls and 06h is out on all 22, each time carried by a
+  pre-asymptotic leaf that 06h's $r < 1$ trusted and that rule (b) refines.
+
+`VERIFICATION.md` §6j has the numbers.
+
+**The user's rulings** (Decisions, **06j results**):
+- (a)–(c) are accepted as they stand: *"(a)-(c) are fine and just need to be recorded, but then we
+  can move on."* They are the log's deviations 21–23.
+- J1 and J3: *"fine"*.
+- On J2, the user asked whether the V2 issue should stay open as a hook for a fix. Nothing is left
+  to fix: 06g's code is the honest one, and 06h's mechanism belongs to
+  `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`, already corrected by rule (b). The user: *"J2: close"*.
+
+**The laptop's checks.**
+- **The copy.** The records were copied back by `rsync` without pickles or files over 2 MB: 961
+  files, each equal to the Mac Studio's by SHA-256. The two run directories' 10 files were copied
+  to `var/runs/` and checked the same way.
+- **The re-scoring.** S1, S3 and W1–W4 were re-scored from `partS_leaves.csv` and `w_calls.csv` by
+  the orchestrator's own reader, with the same verdicts and numbers.
+- **The CSV tables.** The three tables were added past the laptop's `*.csv` exclusion.
+
+**Housekeeping, on the user's word** (*"Please remove the worktree on the Mac Studio. If we don't
+need the pickles they can also be cleaned up."*):
+- The worktree `SecondaryGWKit-lpf06j-dfa19d9` was removed with `git worktree remove`; it was clean
+  with `--ignored`.
+- The 138 pickles were checked against `KEPT_ON_MAC_STUDIO.txt` (all equal) and deleted. All are
+  reproducible: J0 showed every capture reproduces 06g's census bit for bit, from inputs still
+  kept.
+- The run directories are kept.
+
+**Issues:**
+- Closed: `[06g-g-plus-r-rows-move-past-both-errors]`.
+- Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]` and
+  `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`.
+- Opened: none.
+
+`docs/OPEN_ISSUES.md` goes from 127 to 126 open.
+
+**For the user:** whether a remedy prompt (06k) is written for the slow leaves, and what it does.
+07 resumes after that.

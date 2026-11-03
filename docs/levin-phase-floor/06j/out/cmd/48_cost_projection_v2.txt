@@ -1,0 +1,122 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/cost_06j_v2.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:30:59Z
+# ----
+# levin-phase-floor 06j: Part W's reading costs from phase span (two-term fit)
+# written 2026-11-03T09:31:00Z on mps026298.phys.susx.ac.uk
+# script cost_06j_v2.py sha256 48711c933270f13a9c0e0eecaa615fff8597b659d209272e9b17130807d68b1d
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/cost_projection.json sha256 c6f61424b73b737e13f9f1089fa1bb485a401955e3f2d4ae4cf99a13557a592c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/w_prep_v2/summary.json sha256 919423f25dd5f0df8861216ff80aa945c84885972b77af5bd18aedc815c6631d
+qawo r1: n 66; wall = 0.00555 s/segment x n + 0.05707 us/rad x span; observed/fitted min 0.864 median 1.14 max 2.62
+     worst ratio 2.62: readings/r56-qawo-r1.json span 1.091e+03 nseg 204 wall 3.0 s
+     worst ratio 2.33: readings/r51-qawo-r1.json span 1.014e+02 nseg 206 wall 2.7 s
+     worst ratio 1.88: readings/r55-qawo-r1.json span 1.269e+03 nseg 298 wall 3.1 s
+qawo r2: n 61; wall = 0.008698 s/segment x n + 0.2327 us/rad x span; observed/fitted min 0.642 median 1.01 max 1.93
+     worst ratio 1.93: readings/r56-qawo-r2.json span 1.091e+03 nseg 204 wall 3.4 s
+     worst ratio 1.64: readings/r51-qawo-r2.json span 1.014e+02 nseg 206 wall 2.9 s
+     worst ratio 1.46: readings/v08-qawo-r2.json span 1.363e+05 nseg 514 wall 6.6 s
+fcc r1: n 72; wall = 0.02177 s/segment x n + 0 us/rad x span; observed/fitted min 0.628 median 0.891 max 3.56
+     worst ratio 3.56: readings/z12-fcc-r1-rerun.json span 4.232e+09 nseg 2024 wall 157.0 s
+     worst ratio 3.54: readings/z00-fcc-r1-rerun.json span 4.232e+09 nseg 2024 wall 156.0 s
+     worst ratio 2.05: readings/r56-fcc-r1.json span 1.091e+03 nseg 204 wall 9.1 s
+fcc r2: n 70; wall = 0.08676 s/segment x n + 0 us/rad x span; observed/fitted min 0.601 median 0.854 max 4.05
+     worst ratio 4.05: readings/z12-fcc-r2-rerun.json span 4.232e+09 nseg 2024 wall 711.1 s
+     worst ratio 4.02: readings/z00-fcc-r2-rerun.json span 4.232e+09 nseg 2024 wall 705.9 s
+     worst ratio 1.5: readings/r51-fcc-r2.json span 1.014e+02 nseg 206 wall 26.7 s
+
+projected total, readings one after another: fit 9362 s (2.60 h); envelope 22533 s (6.26 h)
+   c04 g-1e-7-1-35052 #6 qawo r2: span 1.419e+10 rad, 2122 segments: fit 3320 s, envelope 6413 s
+   c00 g-1e-7-1-2142 #5 qawo r2: span 1.031e+10 rad, 1854 segments: fit 2414 s, envelope 4663 s
+   c04 g-1e-7-1-35052 #6 qawo r1: span 1.419e+10 rad, 2122 segments: fit 822 s, envelope 2155 s
+   c00 g-1e-7-1-2142 #5 qawo r1: span 1.031e+10 rad, 1854 segments: fit 598 s, envelope 1570 s
+   c04 g-1e-7-1-35052 #6 fcc r2: span 1.419e+10 rad, 2122 segments: fit 184 s, envelope 746 s
+   c00 g-1e-7-1-2142 #5 fcc r2: span 1.031e+10 rad, 1854 segments: fit 161 s, envelope 651 s
+   c07 g-1e-8-3-37323 #1 fcc r2: span 1.038e+09 rad, 1640 segments: fit 142 s, envelope 576 s
+   c07 g-1e-8-3-37323 #1 qawo r2: span 1.038e+09 rad, 1640 segments: fit 256 s, envelope 494 s
+   c06 g-1e-8-3-34272 #4 fcc r2: span 1.714e+08 rad, 1376 segments: fit 119 s, envelope 483 s
+   c02 g-1e-7-1-35497 #5 fcc r2: span 4.514e+07 rad, 1110 segments: fit 96 s, envelope 390 s
+   c10 g-1e-8-0-12965 #4 fcc r2: span 2.776e+07 rad, 1086 segments: fit 94 s, envelope 382 s
+   c09 g-1e-8-1-35446 #4 fcc r2: span 1.271e+07 rad, 1076 segments: fit 93 s, envelope 378 s
+   c03 g-1e-7-0-12727 #4 fcc r2: span 2.209e+05 rad, 654 segments: fit 57 s, envelope 230 s
+   c08 g-1e-8-1-35136 #3 fcc r2: span 1.302e+04 rad, 562 segments: fit 49 s, envelope 197 s
+   c07 g-1e-8-3-37323 #1 qawo r1: span 1.038e+09 rad, 1640 segments: fit 68 s, envelope 179 s
+   c04 g-1e-7-1-35052 #6 fcc r1: span 1.419e+10 rad, 2122 segments: fit 46 s, envelope 165 s
+   c00 g-1e-7-1-2142 #5 fcc r1: span 1.031e+10 rad, 1854 segments: fit 40 s, envelope 144 s
+   c07 g-1e-8-3-37323 #1 fcc r1: span 1.038e+09 rad, 1640 segments: fit 36 s, envelope 127 s
+   f00 g-1e-7-0-12778 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f01 g-1e-7-0-12959 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f02 g-1e-7-0-1873 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f03 g-1e-7-0-2108 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f04 g-1e-7-0-33730 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f05 g-1e-8-0-12778 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f06 g-1e-8-0-12959 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f07 g-1e-8-0-1873 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f08 g-1e-8-0-2108 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   f09 g-1e-8-0-33730 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   c05 g-1e-7-0-33892 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   c11 g-1e-8-0-33648 #1 fcc r2: span 345.5 rad, 306 segments: fit 27 s, envelope 108 s
+   c06 g-1e-8-3-34272 #4 fcc r1: span 1.714e+08 rad, 1376 segments: fit 30 s, envelope 107 s
+   c06 g-1e-8-3-34272 #4 qawo r2: span 1.714e+08 rad, 1376 segments: fit 52 s, envelope 100 s
+   c02 g-1e-7-1-35497 #5 fcc r1: span 4.514e+07 rad, 1110 segments: fit 24 s, envelope 86 s
+   c10 g-1e-8-0-12965 #4 fcc r1: span 2.776e+07 rad, 1086 segments: fit 24 s, envelope 84 s
+   c09 g-1e-8-1-35446 #4 fcc r1: span 1.271e+07 rad, 1076 segments: fit 23 s, envelope 83 s
+   c01 g-1e-7-2-33416 #6 fcc r2: span 2067 rad, 234 segments: fit 20 s, envelope 82 s
+   c03 g-1e-7-0-12727 #4 fcc r1: span 2.209e+05 rad, 654 segments: fit 14 s, envelope 51 s
+   c06 g-1e-8-3-34272 #4 qawo r1: span 1.714e+08 rad, 1376 segments: fit 17 s, envelope 46 s
+   c08 g-1e-8-1-35136 #3 fcc r1: span 1.302e+04 rad, 562 segments: fit 12 s, envelope 44 s
+   c02 g-1e-7-1-35497 #5 qawo r2: span 4.514e+07 rad, 1110 segments: fit 20 s, envelope 39 s
+   c10 g-1e-8-0-12965 #4 qawo r2: span 2.776e+07 rad, 1086 segments: fit 16 s, envelope 31 s
+   c09 g-1e-8-1-35446 #4 qawo r2: span 1.271e+07 rad, 1076 segments: fit 12 s, envelope 24 s
+   f00 g-1e-7-0-12778 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f01 g-1e-7-0-12959 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f02 g-1e-7-0-1873 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f03 g-1e-7-0-2108 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f04 g-1e-7-0-33730 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f05 g-1e-8-0-12778 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f06 g-1e-8-0-12959 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f07 g-1e-8-0-1873 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f08 g-1e-8-0-2108 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   f09 g-1e-8-0-33730 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   c05 g-1e-7-0-33892 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   c11 g-1e-8-0-33648 #1 fcc r1: span 345.5 rad, 306 segments: fit 7 s, envelope 24 s
+   c02 g-1e-7-1-35497 #5 qawo r1: span 4.514e+07 rad, 1110 segments: fit 9 s, envelope 23 s
+   c10 g-1e-8-0-12965 #4 qawo r1: span 2.776e+07 rad, 1086 segments: fit 8 s, envelope 20 s
+   c01 g-1e-7-2-33416 #6 fcc r1: span 2067 rad, 234 segments: fit 5 s, envelope 18 s
+   c09 g-1e-8-1-35446 #4 qawo r1: span 1.271e+07 rad, 1076 segments: fit 7 s, envelope 18 s
+   c03 g-1e-7-0-12727 #4 qawo r2: span 2.209e+05 rad, 654 segments: fit 6 s, envelope 11 s
+   c03 g-1e-7-0-12727 #4 qawo r1: span 2.209e+05 rad, 654 segments: fit 4 s, envelope 10 s
+   c08 g-1e-8-1-35136 #3 qawo r2: span 1.302e+04 rad, 562 segments: fit 5 s, envelope 9 s
+   c08 g-1e-8-1-35136 #3 qawo r1: span 1.302e+04 rad, 562 segments: fit 3 s, envelope 8 s
+   f03 g-1e-7-0-2108 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f08 g-1e-8-0-2108 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f01 g-1e-7-0-12959 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f06 g-1e-8-0-12959 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f00 g-1e-7-0-12778 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f04 g-1e-7-0-33730 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f05 g-1e-8-0-12778 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f09 g-1e-8-0-33730 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   c05 g-1e-7-0-33892 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   c11 g-1e-8-0-33648 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f02 g-1e-7-0-1873 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f07 g-1e-8-0-1873 #1 qawo r2: span 345.5 rad, 306 segments: fit 3 s, envelope 5 s
+   f03 g-1e-7-0-2108 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f08 g-1e-8-0-2108 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f01 g-1e-7-0-12959 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f06 g-1e-8-0-12959 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f00 g-1e-7-0-12778 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f04 g-1e-7-0-33730 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f05 g-1e-8-0-12778 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f09 g-1e-8-0-33730 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   c05 g-1e-7-0-33892 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   c11 g-1e-8-0-33648 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f02 g-1e-7-0-1873 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   f07 g-1e-8-0-1873 #1 qawo r1: span 345.5 rad, 306 segments: fit 2 s, envelope 4 s
+   c01 g-1e-7-2-33416 #6 qawo r2: span 2067 rad, 234 segments: fit 2 s, envelope 4 s
+   c01 g-1e-7-2-33416 #6 qawo r1: span 2067 rad, 234 segments: fit 1 s, envelope 3 s
+wrote out/cost_projection_v2.json sha256 eb414822a69e8fde9a31f8bd98f63934ee046cafabbe1108a356725a718087ca
+# ----
+# end 2026-11-03T09:31:00Z
+# exit 0

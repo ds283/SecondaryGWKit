@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json\na=json.load(open("out/replay/s00.json")); b=json.load(open("out/replay_det/s00-second.json"))\nprint("checked table", a["checked_table_sha256"]==b["checked_table_sha256"], a["checked_table_sha256"])\nprint("returned leaves", a["returned_leaves"]==b["returned_leaves"], a["returned_leaves_sha256"]==b["returned_leaves_sha256"], len(a["returned_leaves"]))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:26:40Z
+# ----
+checked table True 38414af3141bbf68ebcd85bf95bb8ad100a51ac2ba3b6f7e6158e868a1bec9af
+returned leaves True True 83
+# ----
+# end 2026-11-03T09:26:40Z
+# exit 0

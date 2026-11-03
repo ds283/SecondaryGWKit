@@ -1,0 +1,12 @@
+W calls 22 parts {'W-5': 10, 'W-12': 12}
+W1 four usable and spread<=tol: 22 of 22 max spread/tol 0.008187579881657832
+W2 06g within on W-5: 10 of 10 max 0.04628732582690491
+W3 06h outside on W-5: 10 of 10 range 10.607463399605495 20.281761909709356
+W4 06g within on W-12: 12 06h outside: 12 of 12 06h range 2.401606218387491 18.404700918995854 06g max 0.07079718728439524
+ratio recomputed in float, max abs diff from table: 6.892697435034734e-08
+S leaves 142 calls 24 reproduce census 142
+S1 seam fraction 0.007042253521126761 (rule >=0.8 and >=5x null)
+S2 s07 seam_branch [0.49378343757064275, 0.1523809523809524, 0.5714285714285714, 0.0784313725490196] False
+S4 s07 False
+S3 delta1>10*max scatter: 0 of 142 median 0.039809609634492975 max 1.8062113821610182
+S3 recomputed delta1/max(scatter_i,scatter_ii) max diff: 0.0

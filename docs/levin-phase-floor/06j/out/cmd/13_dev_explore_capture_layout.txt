@@ -1,0 +1,38 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport ray.cloudpickle as cp, numpy as np\nc=cp.loads(open("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/state/inputs/r51.pkl","rb").read())\nprint(sorted(c.keys())); print(c["x_span"], c["kw"])\nf0=c["f"][0]; print(f0, f0.__code__.co_freevars)\nta=f0.__closure__[2].cell_contents; print("ta", ta, ta.__wrapped__.__code__.co_freevars)\ncl=dict(zip(ta.__wrapped__.__code__.co_freevars,[x.cell_contents for x in ta.__wrapped__.__closure__]))\nfor k,v in cl.items(): print("  cl", k, type(v).__name__)\nth=c["theta"]; print(sorted(th.keys()))\nact=th["theta"].__closure__[0].cell_contents; print("active", [(s, type(fac).__name__) for s,fac in act])\nfor s,fac in act:\n    ph=fac.phase; print("  fac", s, type(ph).__name__, [a for a in vars(ph)][:20]); print("   spline k", ph._spline.k, len(ph._spline.t)); lt=ph._leading._table; print("   table", type(lt).__name__, lt._label, len(lt._u_asc), lt._breaks)\n    print("   leading", type(ph._leading).__name__, [a for a in vars(ph._leading)][:20])\nfor name in ("q_factor","r_factor"):\n    f=cl[name]; print(name, type(f).__name__, hasattr(f,"_f") and type(f._f).__name__, hasattr(f,"_f") and hasattr(f._f,"_friction_F"))\n    if hasattr(f,"_f") and hasattr(f._f,"_friction_F"): t=f._f._friction_F._table; print("   friction table", t._label, len(t._u_asc), t._breaks)\nG=cl["G_factor"]; print("G", type(G).__name__, hasattr(G,"_Gk"), [a for a in vars(G)][:20])\nif hasattr(G,"_Gk"): print("  Gk", type(G._Gk).__name__, [a for a in vars(G._Gk)][:30]); sa=G._Gk.sin_amplitude; print("  sin_amp", type(sa).__name__, sa._spline.k, len(sa._spline.t))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:08:30Z
+# ----
+Traceback (most recent call last):
+  File "<string>", line 18, in <module>
+    if hasattr(G,"_Gk"): print("  Gk", type(G._Gk).__name__, [a for a in vars(G._Gk)][:30]); sa=G._Gk.sin_amplitude; print("  sin_amp", type(sa).__name__, sa._spline.k, len(sa._spline.t))
+                                                                         ~~~~^^^^^^^
+TypeError: vars() argument must have __dict__ attribute
+['abserr', 'atol', 'converged', 'f', 'index', 'kw', 'max_depth', 'notify_label', 'num_regions', 'rtol', 'theta', 'tree', 'unit', 'value', 'x_span']
+(21.25916615456479, 23.53933562955308) {'atol': 3.0885312845290336e-34, 'rtol': 1e-08, 'chebyshev_order': 24, 'notify_label': 'k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=0.52504, z in (1.6711e+10, 1.709e+09), regime Gr, group G+r'}
+<function _component.<locals>.component at 0x109b8b4c0> ('index', 'slot', 'terms_at')
+ta <functools._lru_cache_wrapper object at 0x113cfaa30> ('G_factor', 'Hubble', 'q_factor', 'r_factor', 'regime', 'w_background')
+  cl G_factor _OscillatoryG
+  cl Hubble method
+  cl q_factor _SmoothT
+  cl r_factor _OscillatoryT
+  cl regime tuple
+  cl w_background method
+['theta', 'theta_deriv', 'theta_mod_2pi']
+active [(1, '_OscillatoryG'), (1, '_OscillatoryT')]
+  fac 1 PrimitivePhase ['_label', '_sign', '_k', '_leading', '_z_anchor', '_Hubble', '_rate', '_z_points', '_phi_points', '_u_points', '_spline', '_spline_deriv', '_spline_order', 'min_log_x', 'max_log_x', 'min_x', 'max_x', '_exact_remainder', '_node_constants', '_anchor_node']
+   spline k 3 1672
+   table CumulativeTable tau 1740 []
+   leading TablePrimitive ['_table', '_label']
+  fac 1 PrimitivePhase ['_label', '_sign', '_k', '_leading', '_z_anchor', '_Hubble', '_rate', '_z_points', '_phi_points', '_u_points', '_spline', '_spline_deriv', '_spline_order', 'min_log_x', 'max_log_x', 'min_x', 'max_x', '_exact_remainder', '_node_constants', '_anchor_node']
+   spline k 3 1131
+   table CumulativeTable cs_tau 1740 []
+   leading TablePrimitive ['_table', '_label']
+q_factor _SmoothT TkSourceFunctions True
+   friction table friction_F 1740 []
+r_factor _OscillatoryT TkSourceFunctions True
+   friction table friction_F 1740 []
+G _OscillatoryG True ['_Gk', 'phase']
+# ----
+# end 2026-11-03T09:08:33Z
+# exit 1

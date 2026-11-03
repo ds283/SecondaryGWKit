@@ -1,0 +1,22 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json,csv,math\nrows=json.load(open("out/partS_nodes.json"))["rows"]\nS={(r["sid"],r["start"]):r for r in csv.DictReader(l for l in open("out/partS_leaves.csv") if not l.startswith("#"))}\ndef q(v):\n    v=sorted(v); n=len(v)\n    return "n %d: p10 %.3g p50 %.3g p90 %.3g"%(n,v[int(.1*(n-1))],v[n//2],v[int(.9*(n-1))]) if v else "none"\nfor lab,cond in (("d1/phi<2",lambda r:r["delta1"]/r["phi"]<2),("d1/phi>=2",lambda r:r["delta1"]/r["phi"]>=2)):\n    R=[r for r in rows if cond(r)]\n    print("==",lab, len(R))\n    print(" d1corr/d1", q([r["delta1_corr_over_delta1"] for r in R]))\n    print(" |dE|/d1", q([r["E_diff_over_delta1"] for r in R]))\n    print(" r", q([r["r"] for r in R]))\n    print(" scatter_i/d1", q([float(S[(r["sid"],repr(r["start"]) if False else str(r["start"]))]["scatter_i"])/r["delta1"] for r in R if (r["sid"],str(r["start"])) in S]))\n    print(" phi_less_node/phi", q([r["phi_less_node"]/r["phi"] for r in R]))\n    print(" groups", sorted(set((r["sid"],r["group"],r["rtol"]) for r in R))[:40])\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:29:00Z
+# ----
+== d1/phi<2 75
+ d1corr/d1 n 75: p10 0.000333 p50 0.00219 p90 0.00642
+ |dE|/d1 n 75: p10 0.994 p50 1 p90 1
+ r n 75: p10 0.489 p50 0.499 p90 0.506
+ scatter_i/d1 n 75: p10 0.556 p50 0.56 p90 0.589
+ phi_less_node/phi n 75: p10 0.00109 p50 0.00149 p90 0.0466
+ groups [('s02', 'G+q+r', '1e-7'), ('s04', 'G+q-r', '1e-7'), ('s05', 'G+q-r', '1e-7'), ('s08', 'G-q+r', '1e-7'), ('s09', 'G-q-r', '1e-7'), ('s11', 'G-q-r', '1e-7'), ('s13', 'G+q+r', '1e-8'), ('s14', 'G+q+r', '1e-8'), ('s16', 'G+q-r', '1e-8'), ('s18', 'G-q+r', '1e-8'), ('s19', 'G-q+r', '1e-8'), ('s20', 'G-q+r', '1e-8'), ('s21', 'G-q-r', '1e-8'), ('s22', 'G-q-r', '1e-8'), ('s23', 'G-q-r', '1e-8')]
+== d1/phi>=2 67
+ d1corr/d1 n 67: p10 0.156 p50 0.646 p90 1.06
+ |dE|/d1 n 67: p10 0.029 p50 0.462 p90 0.951
+ r n 67: p10 0.302 p50 0.557 p90 0.923
+ scatter_i/d1 n 67: p10 30.9 p50 91.4 p90 278
+ phi_less_node/phi n 67: p10 0.545 p50 0.899 p90 0.983
+ groups [('s00', 'G+q+r', '1e-7'), ('s01', 'G+q+r', '1e-7'), ('s02', 'G+q+r', '1e-7'), ('s03', 'G+q-r', '1e-7'), ('s05', 'G+q-r', '1e-7'), ('s06', 'G-q+r', '1e-7'), ('s07', 'G-q+r', '1e-7'), ('s08', 'G-q+r', '1e-7'), ('s10', 'G-q-r', '1e-7'), ('s11', 'G-q-r', '1e-7'), ('s12', 'G+q+r', '1e-8'), ('s14', 'G+q+r', '1e-8'), ('s15', 'G+q-r', '1e-8'), ('s16', 'G+q-r', '1e-8'), ('s17', 'G+q-r', '1e-8'), ('s18', 'G-q+r', '1e-8'), ('s19', 'G-q+r', '1e-8'), ('s20', 'G-q+r', '1e-8'), ('s22', 'G-q-r', '1e-8'), ('s23', 'G-q-r', '1e-8')]
+# ----
+# end 2026-11-03T09:29:00Z
+# exit 0

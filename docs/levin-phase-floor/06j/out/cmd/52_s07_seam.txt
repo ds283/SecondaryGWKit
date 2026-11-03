@@ -1,0 +1,5 @@
+seam 18.886868625123256 z 1.59391e+08 [['amp_knot', 'G amplitude spline (_OscillatoryG)'], ['phase_knot', 'phase Gk WKB phase (sign 1, factor _OscillatoryG)'], ['phase_knot', 'phase T_k WKB phase (sign -1, factor _OscillatoryT)'], ['phase_knot', 'phase T_k WKB phase (sign 1, factor _OscillatoryT)'], ['table_node', 'table cs_tau [leading table of phase T_k WKB phase (sign -1, factor _OscillatoryT); leading table of phase T_k WKB phase (sign 1, factor _OscillatoryT)]'], ['table_node', 'table friction_F [friction table of q_factor (_OscillatoryT); friction table of r_factor (_OscillatoryT)]'], ['table_node', 'table tau [leading table of phase Gk WKB phase (sign 1, factor _OscillatoryG)]']]
+  h=w*2^-2 F jump 1.613e-31 -1.016e-27 2.147e-20  | tm2pi jump 6.217e-15 ctrl nan |F| 5.194e-26
+  h=w*2^-4 F jump 2.521e-33 -1.580e-29 5.368e-21  | tm2pi jump 1.066e-12 ctrl nan |F| 5.194e-26
+  h=w*2^-6 F jump 3.933e-35 7.625e-32 1.342e-21  | tm2pi jump -1.076e-12 ctrl nan |F| 5.194e-26
+  h=w*2^-8 F jump 5.842e-37 -1.575e-30 3.356e-22  | tm2pi jump -5.347e-13 ctrl nan |F| 5.194e-26

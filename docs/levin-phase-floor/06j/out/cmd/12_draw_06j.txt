@@ -1,0 +1,122 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/draw_06j.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:06:04Z
+# ----
+# levin-phase-floor 06j: Part S's and Part W's samples, and the capture selection
+# written 2026-11-03T09:06:05Z on mps026298.phys.susx.ac.uk
+# script draw_06j.py sha256 7cb0fdd57ce12685efa0997448676403b8f364a43e6faf2a088d6f2634612bb3
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_calls.json sha256 1e9a62b0f8d95deade4f265d1fa1a8b5bbd63f587f7c9761d78882db5367c42e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_slow_leaves.json sha256 b4643033a1249bb036524ec041fc9594471a56a932a1ded593101d1c486da9ba
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v2_rows.csv.gz sha256 49bce90e92c31186fc98dab13718a3423e08b7584f8f13469240398d0bba68b2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl sha256 03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl sha256 3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/state/predictions_and_rules_20261103T0905Z.md sha256 b41740de989c9f72f86efe6f936707d808a8f60f9e3909fade69877816f6c80b
+call-level set: {'1e-7': 62, '1e-8': 80} (expected 62 at 1e-7, 80 at 1e-8)
+
+== Part S
+s00 g-1e-7-0-37232 #1 G+q+r cell ['1e-7', 'G+q+r', 'c=1'] (from c=1): clusters 1, scoped leaves 1, sampled 1
+s01 g-1e-7-2-21980 #3 G+q+r cell ['1e-7', 'G+q+r', 'c in {2,3}'] (from c in {2,3}): clusters 3, scoped leaves 4, sampled 4
+s02 g-1e-7-3-34738 #1 G+q+r cell ['1e-7', 'G+q+r', 'c>=4'] (from c>=4): clusters 12, scoped leaves 22, sampled 10
+s03 g-1e-7-0-12935 #2 G+q-r cell ['1e-7', 'G+q-r', 'c=1'] (from c=1): clusters 1, scoped leaves 2, sampled 2
+s04 g-1e-7-1-14039 #2 G+q-r cell ['1e-7', 'G+q-r', 'c in {2,3}'] (from c in {2,3}): clusters 3, scoped leaves 3, sampled 3
+s05 g-1e-7-1-11233 #4 G+q-r cell ['1e-7', 'G+q-r', 'c>=4'] (from c>=4): clusters 6, scoped leaves 9, sampled 9
+s06 g-1e-7-0-33997 #3 G-q+r cell ['1e-7', 'G-q+r', 'c=1'] (from c=1): clusters 1, scoped leaves 1, sampled 1
+s07 g-1e-7-1-35492 #3 G-q+r cell ['1e-7', 'G-q+r', 'c in {2,3}'] (from c in {2,3}): clusters 2, scoped leaves 2, sampled 2
+s08 g-1e-7-3-1188 #5 G-q+r cell ['1e-7', 'G-q+r', 'c>=4'] (from c>=4): clusters 8, scoped leaves 8, sampled 8
+s09 g-1e-7-3-13481 #4 G-q-r cell ['1e-7', 'G-q-r', 'c=1'] (from c=1): clusters 1, scoped leaves 3, sampled 3
+s10 g-1e-7-3-38477 #4 G-q-r cell ['1e-7', 'G-q-r', 'c in {2,3}'] (from c in {2,3}): clusters 2, scoped leaves 4, sampled 4
+s11 g-1e-7-2-21857 #6 G-q-r cell ['1e-7', 'G-q-r', 'c>=4'] (from c>=4): clusters 6, scoped leaves 18, sampled 10
+s12 g-1e-8-3-14505 #1 G+q+r cell ['1e-8', 'G+q+r', 'c=1'] (from c=1): clusters 1, scoped leaves 2, sampled 2
+s13 g-1e-8-3-14589 #3 G+q+r cell ['1e-8', 'G+q+r', 'c in {2,3}'] (from c in {2,3}): clusters 2, scoped leaves 16, sampled 10
+s14 g-1e-8-2-1391 #3 G+q+r cell ['1e-8', 'G+q+r', 'c>=4'] (from c>=4): clusters 6, scoped leaves 28, sampled 10
+s15 g-1e-8-3-2324 #4 G+q-r cell ['1e-8', 'G+q-r', 'c=1'] (from c=1): clusters 1, scoped leaves 1, sampled 1
+s16 g-1e-8-0-33906 #2 G+q-r cell ['1e-8', 'G+q-r', 'c in {2,3}'] (from c in {2,3}): clusters 2, scoped leaves 6, sampled 6
+s17 g-1e-8-1-35480 #2 G+q-r cell ['1e-8', 'G+q-r', 'c>=4'] (from c>=4): clusters 4, scoped leaves 12, sampled 10
+s18 g-1e-8-2-21692 #5 G-q+r cell ['1e-8', 'G-q+r', 'c=1'] (from c=1): clusters 1, scoped leaves 8, sampled 8
+s19 g-1e-8-0-38451 #3 G-q+r cell ['1e-8', 'G-q+r', 'c in {2,3}'] (from c in {2,3}): clusters 3, scoped leaves 20, sampled 10
+s20 g-1e-8-0-33945 #3 G-q+r cell ['1e-8', 'G-q+r', 'c>=4'] (from c>=4): clusters 4, scoped leaves 4, sampled 4
+s21 g-1e-8-1-14543 #6 G-q-r cell ['1e-8', 'G-q-r', 'c=1'] (from c=1): clusters 1, scoped leaves 4, sampled 4
+s22 g-1e-8-0-34037 #4 G-q-r cell ['1e-8', 'G-q-r', 'c in {2,3}'] (from c in {2,3}): clusters 2, scoped leaves 12, sampled 10
+s23 g-1e-8-0-12681 #4 G-q-r cell ['1e-8', 'G-q-r', 'c>=4'] (from c>=4): clusters 4, scoped leaves 11, sampled 10
+Part S: 24 calls, 142 leaves
+
+== W-5
+f00 1e-7 0-12778 #1: V2 total ratio 2.076; call ratio 8.305529563067957
+f01 1e-7 0-12959 #1: V2 total ratio 2.164; call ratio 6.082293127866441
+f02 1e-7 0-1873 #1: V2 total ratio 1.813; call ratio 11.07894343199033
+f03 1e-7 0-2108 #1: V2 total ratio 1.16; call ratio 10.261657020352509
+f04 1e-7 0-33730 #1: V2 total ratio 1.777; call ratio 7.23357429366307
+f05 1e-8 0-12778 #1: V2 total ratio 2.076; call ratio 8.305529563067957
+f06 1e-8 0-12959 #1: V2 total ratio 2.164; call ratio 6.082293127866441
+f07 1e-8 0-1873 #1: V2 total ratio 1.813; call ratio 11.07894343199033
+f08 1e-8 0-2108 #1: V2 total ratio 1.16; call ratio 10.261657020352509
+f09 1e-8 0-33730 #1: V2 total ratio 1.777; call ratio 7.23357429366307
+
+== W-12
+c00 1e-7 1-2142 #5 G-q+r: ratio 1.043 (rank 5 of 57, target 4.67)
+c01 1e-7 2-33416 #6 G-q-r: ratio 1.097 (rank 14 of 57, target 14.00)
+c02 1e-7 1-35497 #5 G-q+r: ratio 1.14 (rank 23 of 57, target 23.33)
+c03 1e-7 0-12727 #4 G+q-r: ratio 1.367 (rank 33 of 57, target 32.67)
+c04 1e-7 1-35052 #6 G-q-r: ratio 1.867 (rank 42 of 57, target 42.00)
+c05 1e-7 0-33892 #1 G+r: ratio 5.147 (rank 51 of 57, target 51.33)
+c06 1e-8 3-34272 #4 G-q-r: ratio 1.052 (rank 6 of 72, target 5.92)
+c07 1e-8 3-37323 #1 G+q+r: ratio 1.123 (rank 18 of 72, target 17.75)
+c08 1e-8 1-35136 #3 G+q+r: ratio 1.335 (rank 30 of 72, target 29.58)
+c09 1e-8 1-35446 #4 G-q-r: ratio 1.78 (rank 41 of 72, target 41.42)
+c10 1e-8 0-12965 #4 G+q-r: ratio 2.58 (rank 52 of 72, target 53.25)
+c11 1e-8 0-33648 #1 G+r: ratio 6.196 (rank 66 of 72, target 65.08)
+s00 g-1e-7-0-37232 #1 group: g 0x1.abdb8fec93636p-92 e 0x1.49b24bdcc1c0ep-115 conv False regions 83 depth 20 | 06h 0x1.abdb917b4717ap-92 e 0x1.8f3b7ce21ff42p-113 conv True regions 5 depth 4 | budget 300.0
+s01 g-1e-7-2-21980 #3 group: g -0x1.7782e0e0cb992p-87 e 0x1.5792fbb58365dp-111 conv False regions 107 depth 20 | 06h -0x1.7782e222a4070p-87 e 0x1.5365e0cca86d0p-111 conv True regions 14 depth 5 | budget 300.0
+s02 g-1e-7-3-34738 #1 group: g 0x1.751ad413bfb8ap-86 e 0x1.7e932ff790220p-110 conv False regions 406 depth 20 | 06h 0x1.751ad4737adcap-86 e 0x1.35f6b7de10619p-111 conv True regions 10 depth 5 | budget 300.0
+s03 g-1e-7-0-12935 #2 group: g 0x1.400fd621f6497p-84 e 0x1.9b494d6b15ca3p-109 conv False regions 60 depth 20 | 06h 0x1.400fd5725579ap-84 e 0x1.9b4833638fe5ep-109 conv True regions 6 depth 4 | budget 300.0
+s04 g-1e-7-1-14039 #2 group: g -0x1.e211eb78f2d71p-88 e 0x1.47257b442092fp-113 conv False regions 181 depth 20 | 06h -0x1.e211ec74a0585p-88 e 0x1.0a6068f808ab4p-111 conv True regions 9 depth 8 | budget 300.0
+s05 g-1e-7-1-11233 #4 group: g 0x1.d22d99ef45a15p-83 e 0x1.780cb0faf34fcp-109 conv False regions 287 depth 20 | 06h 0x1.d22d9a16f2044p-83 e 0x1.4ada1f0af93f9p-107 conv True regions 1 depth 0 | budget 300.0
+s06 g-1e-7-0-33997 #3 group: g 0x1.d8e8028f1e180p-81 e 0x1.7187f7ce71934p-104 conv False regions 71 depth 20 | 06h 0x1.d8e801b3de9a8p-81 e 0x1.d96736e4bb145p-105 conv True regions 11 depth 6 | budget 300.0
+s07 g-1e-7-1-35492 #3 group: g -0x1.7ed24b0d765d4p-86 e 0x1.850f55f1d7c1ep-111 conv False regions 96 depth 20 | 06h -0x1.7ed24baba2f1ep-86 e 0x1.095a2dfd58542p-110 conv True regions 8 depth 4 | budget 300.0
+s08 g-1e-7-3-1188 #5 group: g 0x1.a17ed6ebf3434p-91 e 0x1.3ea17472d5c55p-116 conv False regions 240 depth 20 | 06h 0x1.a17ed6b64b190p-91 e 0x1.db8663a70641bp-113 conv True regions 8 depth 4 | budget 300.0
+s09 g-1e-7-3-13481 #4 group: g 0x1.56ccc05b9f38fp-76 e 0x1.ddf6a25efb9b4p-101 conv False regions 83 depth 20 | 06h 0x1.56ccbfffb9033p-76 e 0x1.34bf5b4e1286ap-100 conv True regions 14 depth 6 | budget 300.0
+s10 g-1e-7-3-38477 #4 group: g -0x1.88b7de910dd3dp-89 e 0x1.eea2243d1c405p-114 conv False regions 128 depth 20 | 06h -0x1.88b7decd0abbep-89 e 0x1.d00c2eaea1189p-112 conv True regions 12 depth 6 | budget 300.0
+s11 g-1e-7-2-21857 #6 group: g -0x1.f543959943e38p-108 e 0x1.9677498a9e952p-134 conv False regions 165 depth 20 | 06h -0x1.f5439542a2bf2p-108 e 0x1.7bd6e819c1206p-136 conv True regions 2 depth 1 | budget 300.0
+s12 g-1e-8-3-14505 #1 group: g 0x1.d655086e02709p-90 e 0x1.872a96a87dac5p-113 conv False regions 82 depth 20 | 06h 0x1.d655099156d8fp-90 e 0x1.83daeb0f4d521p-115 conv True regions 10 depth 5 | budget 300.0
+s13 g-1e-8-3-14589 #3 group: g -0x1.0be8f09efb244p-93 e 0x1.a623c9c4d8352p-119 conv False regions 182 depth 20 | 06h -0x1.0be8f09882e37p-93 e 0x1.7a5adeb675256p-119 conv True regions 4 depth 2 | budget 300.0
+s14 g-1e-8-2-1391 #3 group: g -0x1.bd34cf2ec03dep-86 e 0x1.48134ea65153cp-112 conv False regions 206 depth 20 | 06h -0x1.bd34ced6e3930p-86 e 0x1.b7addd5653cc9p-114 conv True regions 2 depth 1 | budget 300.0
+s15 g-1e-8-3-2324 #4 group: g 0x1.a2f1a1ce3b17cp-93 e 0x1.45e6c84c879c8p-116 conv False regions 87 depth 20 | 06h 0x1.a2f1a04116cefp-93 e 0x1.791d02b7f85b4p-119 conv True regions 6 depth 4 | budget 300.0
+s16 g-1e-8-0-33906 #2 group: g -0x1.5632013fe8520p-78 e 0x1.a1c8d91a9684ap-105 conv False regions 121 depth 20 | 06h -0x1.5632014cc9832p-78 e 0x1.92ddd7fb4d0eap-105 conv True regions 22 depth 6 | budget 300.0
+s17 g-1e-8-1-35480 #2 group: g -0x1.f912b4f680f74p-86 e 0x1.e1172e84c9ff5p-112 conv False regions 172 depth 20 | 06h -0x1.f912b58029823p-86 e 0x1.b7af2106bed10p-110 conv True regions 4 depth 2 | budget 300.0
+s18 g-1e-8-2-21692 #5 group: g 0x1.942a7aa00e924p-106 e 0x1.0a1cf7a88faadp-129 conv False regions 111 depth 20 | 06h 0x1.942a7bd87bc83p-106 e 0x1.3f729850473e4p-131 conv True regions 4 depth 3 | budget 300.0
+s19 g-1e-8-0-38451 #3 group: g 0x1.1372d5acf5c3bp-90 e 0x1.eeae93ede7c4ep-118 conv False regions 189 depth 20 | 06h 0x1.1372d5ed70522p-90 e 0x1.243f05ae34856p-115 conv True regions 3 depth 2 | budget 300.0
+s20 g-1e-8-0-33945 #3 group: g 0x1.68ca046cb2f08p-80 e 0x1.cd6b847e7c030p-107 conv False regions 303 depth 20 | 06h 0x1.68ca0480416f8p-80 e 0x1.c16f83e8f9a47p-107 conv True regions 42 depth 9 | budget 300.0
+s21 g-1e-8-1-14543 #6 group: g -0x1.26c5005029233p-83 e 0x1.9ae5c8de14dbbp-110 conv False regions 101 depth 20 | 06h -0x1.26c5003cc745fp-83 e 0x1.b22435429bd3ep-110 conv True regions 23 depth 8 | budget 300.0
+s22 g-1e-8-0-34037 #4 group: g -0x1.725844a7948f6p-99 e 0x1.757f7759eba31p-122 conv False regions 288 depth 20 | 06h -0x1.7258468ed1679p-99 e 0x1.ad952f181b743p-121 conv True regions 10 depth 6 | budget 300.0
+s23 g-1e-8-0-12681 #4 group: g -0x1.53f790286462ep-84 e 0x1.46ad14d11a065p-110 conv False regions 146 depth 20 | 06h -0x1.53f79038e1a34p-84 e 0x1.5351910a8731fp-110 conv True regions 20 depth 7 | budget 300.0
+f00 g-1e-7-0-12778 #1 group: g 0x1.b594b65e79b90p-93 e 0x1.996656296465fp-112 conv True regions 16 depth 7 | 06h 0x1.b599533eb880cp-93 e 0x1.6c04a1294b852p-111 conv True regions 2 depth 1 | budget 300.0
+f01 g-1e-7-0-12959 #1 group: g -0x1.0d89eec6d647cp-92 e 0x1.a19bf7b51b5c9p-111 conv True regions 12 depth 5 | 06h -0x1.0d8c407ef6bb4p-92 e 0x1.6b4e45fc03e2ep-111 conv True regions 2 depth 1 | budget 300.0
+f02 g-1e-7-0-1873 #1 group: g 0x1.d3f3da516a02fp-93 e 0x1.87e5b15d032bdp-112 conv True regions 15 depth 6 | 06h 0x1.d3f88668ada5cp-93 e 0x1.d7c9e4761b461p-112 conv True regions 2 depth 1 | budget 300.0
+f03 g-1e-7-0-2108 #1 group: g -0x1.0755e747b9a40p-92 e 0x1.673aaac4cd8fap-112 conv True regions 14 depth 6 | 06h -0x1.07583df36ebbep-92 e 0x1.1f1c1dca387b0p-111 conv True regions 2 depth 1 | budget 300.0
+f04 g-1e-7-0-33730 #1 group: g -0x1.ad8f83b4b94b8p-93 e 0x1.9d96d77ade3b0p-112 conv True regions 16 depth 7 | 06h -0x1.ad941b71763b2p-93 e 0x1.bb5c6b7197427p-111 conv True regions 2 depth 1 | budget 300.0
+f05 g-1e-8-0-12778 #1 group: g 0x1.b594b65e79b90p-93 e 0x1.996656296465fp-112 conv True regions 16 depth 7 | 06h 0x1.b599533eb880cp-93 e 0x1.6c04a1294b852p-111 conv True regions 2 depth 1 | budget 300.0
+f06 g-1e-8-0-12959 #1 group: g -0x1.0d89eec6d647cp-92 e 0x1.a19bf7b51b5c9p-111 conv True regions 12 depth 5 | 06h -0x1.0d8c407ef6bb4p-92 e 0x1.6b4e45fc03e2ep-111 conv True regions 2 depth 1 | budget 300.0
+f07 g-1e-8-0-1873 #1 group: g 0x1.d3f3da516a02fp-93 e 0x1.87e5b15d032bdp-112 conv True regions 15 depth 6 | 06h 0x1.d3f88668ada5cp-93 e 0x1.d7c9e4761b461p-112 conv True regions 2 depth 1 | budget 300.0
+f08 g-1e-8-0-2108 #1 group: g -0x1.0755e747b9a40p-92 e 0x1.673aaac4cd8fap-112 conv True regions 14 depth 6 | 06h -0x1.07583df36ebbep-92 e 0x1.1f1c1dca387b0p-111 conv True regions 2 depth 1 | budget 300.0
+f09 g-1e-8-0-33730 #1 group: g -0x1.ad8f83b4b94b8p-93 e 0x1.9d96d77ade3b0p-112 conv True regions 16 depth 7 | 06h -0x1.ad941b71763b2p-93 e 0x1.bb5c6b7197427p-111 conv True regions 2 depth 1 | budget 300.0
+c00 g-1e-7-1-2142 #5 group: g 0x1.8d7cf99ae8254p-82 e 0x1.05ced17b1ea83p-105 conv True regions 122 depth 16 | 06h 0x1.8d7cf69476931p-82 e 0x1.b5e9acc222033p-107 conv True regions 9 depth 5 | budget 300.0
+c01 g-1e-7-2-33416 #6 group: g 0x1.adb3a64d5ced1p-108 e 0x1.612a5bc356688p-132 conv True regions 23 depth 6 | 06h 0x1.adb3a866df1edp-108 e 0x1.1176ede621252p-133 conv True regions 1 depth 0 | budget 300.0
+c02 g-1e-7-1-35497 #5 group: g 0x1.5d193cfac62dap-82 e 0x1.c1952f299be70p-106 conv True regions 69 depth 15 | 06h 0x1.5d193a63aed7cp-82 e 0x1.084b8680e59bcp-107 conv True regions 8 depth 4 | budget 300.0
+c03 g-1e-7-0-12727 #4 group: g 0x1.2aa3400340c5fp-78 e 0x1.1dfbcef43e8dcp-102 conv True regions 74 depth 14 | 06h 0x1.2aa341a90c4aep-78 e 0x1.694ff081f87d1p-106 conv True regions 2 depth 1 | budget 300.0
+c04 g-1e-7-1-35052 #6 group: g 0x1.5f2d55b9bafccp-84 e 0x1.5d6a9261ed46bp-108 conv True regions 59 depth 15 | 06h 0x1.5f2d59a6448e0p-84 e 0x1.78ff2e544735ap-109 conv True regions 6 depth 4 | budget 300.0
+c05 g-1e-7-0-33892 #1 group: g -0x1.13b092b55d3b9p-92 e 0x1.90400cccd7acbp-111 conv True regions 13 depth 5 | 06h -0x1.13b2dbbc941b2p-92 e 0x1.fd08a186be3f2p-111 conv True regions 2 depth 1 | budget 300.0
+c06 g-1e-8-3-34272 #4 group: g 0x1.131807ccedfd2p-82 e 0x1.c94a6b5f08ffbp-110 conv True regions 144 depth 15 | 06h 0x1.131808032f9dep-82 e 0x1.6fbb2188680cep-110 conv True regions 14 depth 7 | budget 300.0
+c07 g-1e-8-3-37323 #1 group: g -0x1.2b3bfe1f83d86p-82 e 0x1.0e9d45fb5cbb6p-109 conv True regions 42 depth 11 | 06h -0x1.2b3bfe55ac2bap-82 e 0x1.ccbf70a4d880bp-111 conv True regions 3 depth 2 | budget 300.0
+c08 g-1e-8-1-35136 #3 group: g 0x1.105f95517f07ep-80 e 0x1.2e3bfb7a8bd2ep-107 conv True regions 90 depth 15 | 06h 0x1.105f9517d60d1p-80 e 0x1.59762a28d3d91p-110 conv True regions 1 depth 0 | budget 300.0
+c09 g-1e-8-1-35446 #4 group: g 0x1.7fc2d9a2290acp-84 e 0x1.561f68e442eeap-110 conv True regions 52 depth 12 | 06h 0x1.7fc2dae1ce6b0p-84 e 0x1.782ea3e71fdfdp-110 conv True regions 5 depth 3 | budget 300.0
+c10 g-1e-8-0-12965 #4 group: g 0x1.796aa6626bbd6p-78 e 0x1.fa3847f54f9a2p-105 conv True regions 26 depth 10 | 06h 0x1.796aa78eefa8ap-78 e 0x1.a98c32d81aa00p-105 conv True regions 7 depth 3 | budget 300.0
+c11 g-1e-8-0-33648 #1 group: g -0x1.bf753907ebf45p-93 e 0x1.cdf89c07ae75fp-111 conv True regions 14 depth 5 | 06h -0x1.bf79dba3bb9b4p-93 e 0x1.301bddd29fec7p-111 conv True regions 2 depth 1 | budget 300.0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/sample/s_sample.json sha256 87899e85fc19b914c17a87ca269850e713b8013f3b40438646fd552483e1ff73
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/sample/w_sample.json sha256 9674e83935f9b22679397d4f2acc8956b3456db153004af6d4aa9a8da3da78f7
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4
+# ----
+# end 2026-11-03T09:06:42Z
+# exit 0

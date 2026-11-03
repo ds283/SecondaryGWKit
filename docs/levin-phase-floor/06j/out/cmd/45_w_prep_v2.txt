@@ -1,0 +1,47 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w_prep.py w_prep_v2
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:29:42Z
+# ----
+# levin-phase-floor 06j: Part W's preparation (no reading)
+# written 2026-11-03T09:29:44Z on mps026298.phys.susx.ac.uk
+# script w_prep.py sha256 22d4d42776ba045438b5badf75fad68e10c2f5aa6ed931816030fa65e6fc735a
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/sample/w_sample.json sha256 9674e83935f9b22679397d4f2acc8956b3456db153004af6d4aa9a8da3da78f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9/AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/seams_06j.py sha256 a88482040d369370fcfbec07097dbccfdda0a75207ac98fa76459bd5734d3bfa
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/compare13.py sha256 fe079eb0d4fbb90a3aa0b2c7b28f6a7c51e54bb8ab552d2cba0b9d4e36347e56
+f00 g-1e-7-0-12778 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok False ascending ok True; 06h recomputed ok True; move -7.1071e-33 localised True; 0.7 s
+f01 g-1e-7-0-12959 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 7.1466e-33 localised True; 0.0 s
+f02 g-1e-7-0-1873 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move -7.1987e-33 localised True; 0.1 s
+f03 g-1e-7-0-2108 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 7.2062e-33 localised True; 0.1 s
+f04 g-1e-7-0-33730 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 7.0762e-33 localised True; 0.0 s
+f05 g-1e-8-0-12778 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok False ascending ok True; 06h recomputed ok True; move -7.1071e-33 localised True; 0.0 s
+f06 g-1e-8-0-12959 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 7.1466e-33 localised True; 0.0 s
+f07 g-1e-8-0-1873 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move -7.1987e-33 localised True; 0.0 s
+f08 g-1e-8-0-2108 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 7.2062e-33 localised True; 0.0 s
+f09 g-1e-8-0-33730 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 7.0762e-33 localised True; 0.0 s
+c00 g-1e-7-1-2142 #5 route B: segments 1854 phase net 1.031e+10 sum 1.031e+10 sign-change segments 0; g fsum ok False ascending ok True; 06h recomputed ok True; move 3.7288e-32 localised True; 0.3 s
+c01 g-1e-7-2-33416 #6 route B: segments 234 phase net 2067 sum 2067 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move -3.8564e-40 localised True; 0.0 s
+c02 g-1e-7-1-35497 #5 route B: segments 1110 phase net 4.514e+07 sum 4.514e+07 sign-change segments 0; g fsum ok False ascending ok True; 06h recomputed ok True; move 3.1927e-32 localised True; 0.2 s
+c03 g-1e-7-0-12727 #4 route B: segments 654 phase net 2.209e+05 sum 2.209e+05 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move -3.2494e-31 localised True; 0.1 s
+c04 g-1e-7-1-35052 #6 route B: segments 2122 phase net 1.419e+10 sum 1.419e+10 sign-change segments 0; g fsum ok False ascending ok True; 06h recomputed ok True; move -1.2092e-32 localised True; 0.3 s
+c05 g-1e-7-0-33892 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 7.0420e-33 localised True; 0.0 s
+c06 g-1e-8-3-34272 #4 route B: segments 1376 phase net 1.714e+08 sum 1.714e+08 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move -2.6123e-33 localised True; 0.2 s
+c07 g-1e-8-3-37323 #1 route B: segments 1640 phase net 1.038e+09 sum 1.038e+09 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 2.6076e-33 localised True; 0.3 s
+c08 g-1e-8-1-35136 #3 route B: segments 562 phase net 1.302e+04 sum 1.302e+04 sign-change segments 0; g fsum ok False ascending ok True; 06h recomputed ok True; move 1.1105e-32 localised True; 0.1 s
+c09 g-1e-8-1-35446 #4 route B: segments 1076 phase net 1.271e+07 sum 1.271e+07 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move -3.8476e-33 localised True; 0.2 s
+c10 g-1e-8-0-12965 #4 route B: segments 1086 phase net 2.776e+07 sum 2.776e+07 sign-change segments 0; g fsum ok False ascending ok True; 06h recomputed ok True; move -2.3151e-31 localised True; 0.2 s
+c11 g-1e-8-0-33648 #1 route B: segments 306 phase net 345.5 sum 345.5 sign-change segments 0; g fsum ok True ascending ok True; 06h recomputed ok True; move 7.1416e-33 localised True; 0.0 s
+W-5 row 0-12778: f00 vs f05: criterion True, integrand True, descriptive False ['/kw/rtol: 0x1.ad7f29abcaf48p-24 vs 0x1.5798ee2308c3ap-27']
+W-5 row 0-12959: f01 vs f06: criterion True, integrand True, descriptive False ['/kw/rtol: 0x1.ad7f29abcaf48p-24 vs 0x1.5798ee2308c3ap-27']
+W-5 row 0-1873: f02 vs f07: criterion True, integrand True, descriptive False ['/kw/rtol: 0x1.ad7f29abcaf48p-24 vs 0x1.5798ee2308c3ap-27']
+W-5 row 0-2108: f03 vs f08: criterion True, integrand True, descriptive False ['/kw/rtol: 0x1.ad7f29abcaf48p-24 vs 0x1.5798ee2308c3ap-27']
+W-5 row 0-33730: f04 vs f09: criterion True, integrand True, descriptive False ['/kw/rtol: 0x1.ad7f29abcaf48p-24 vs 0x1.5798ee2308c3ap-27']
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/w_prep_v2/summary.json sha256 919423f25dd5f0df8861216ff80aa945c84885972b77af5bd18aedc815c6631d; 4.4 s; ray initialised False
+# ----
+# end 2026-11-03T09:29:48Z
+# exit 0

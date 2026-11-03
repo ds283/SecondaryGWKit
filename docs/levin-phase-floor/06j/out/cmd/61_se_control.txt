@@ -1,0 +1,42 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/se_control.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T12:15:46Z
+# ----
+# levin-phase-floor 06j: S-e's control stencil with a per-h window
+# written 2026-11-03T12:15:47Z on mps026298.phys.susx.ac.uk
+# script se_control.py sha256 b5e57bdfaf7047fb1178d58040ba61fa7c429cccabbdf77fbafda018ed1f5ffb
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s00.json.gz sha256 7ad140604de6f267e448b758c38b4217677f5cf104c2ef9535192baba8f35221
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s01.json.gz sha256 bfc0534b452589065ae506a61e0953b1be6a2421bf6be12a25f675798c8b45df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s02.json.gz sha256 87bfb94e3375e6867d474228f59f39581ee9bb1850ff4b61124e2a4adbcc2b0a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s03.json.gz sha256 3407a1f732f40e18ddd21df9b813121a974daf0208827b48693e0001b51dfe9f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s04.json.gz sha256 645481715d021032eecd4a70f127b867c7477b102e4b8ad956b810f9dab9556e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s05.json.gz sha256 4e6322c27b725cb012561b327d371f21e3921f44391371b566dead426ffc7234
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s06.json.gz sha256 0e1c905a2e2e6ad17b47c7e20441c41224ab3abb078c9da1983426964837b2a8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s07.json.gz sha256 981dcddadadd0b79698f410af55a8d1766471ce7bb5bc41887230d9d2cda5a39
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s08.json.gz sha256 a7badd96686006871821208f446966f26bd758b1ed62bd21e9cab24ce2816173
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s09.json.gz sha256 d0e79344c03adc1e0115c60460bbefddd3eb00013e460aae431871946300e9b5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s10.json.gz sha256 58784943a49de564eb08ab91b92c7e11e3fe517820de5fc5a033ca3090288264
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s11.json.gz sha256 b990bc08f4abf5c169e12755ea30d1c54cad3686198911ca6927d46503c7a660
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s12.json.gz sha256 fd411a86cb0af9f356f6760bdc2543b3689b7d82f03752c23abe5b472b43928b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s13.json.gz sha256 1f74343fc99f9f52411b43ef82a6046e72f259a2008a40c3607d9a61e5f9720a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s14.json.gz sha256 38afef56b80588c83fa0cb4a75f155e74c5227cb7eaee3be120a98fdaf4ef291
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s15.json.gz sha256 96781f85f2dd0ba541591654483b5e7de50137d069d8a24a241e47b6ac58680d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s16.json.gz sha256 6f40b4344fd92d66de6f25b8df64f610e9e85b8b5f6c07ce190236ae337ed260
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s17.json.gz sha256 cff1c2c4c7c167f1711decf1b640fafb149b34affb7dc99344e7a73f48b7850a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s18.json.gz sha256 cb54e5ee5fcd23dc6ab4f373e8f1bca481e9212f6ab56f5eb24a26e210e2260e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s19.json.gz sha256 eef7cfefcc26de21102e3b1e16d3207383a0b93466d87583316bb1bd889d7de4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s20.json.gz sha256 77d38a5375ef3b11436366f645cd98647c240b1d11327de50eaf0391f887499a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s21.json.gz sha256 88a7fef00138347be8940a20cc8e2d76d58f796cfb6e16a5ceadb9615f6cc577
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s22.json.gz sha256 6471a6fb3465189435b4574b7f5c6b643c3256b733b39cadb910466e896cd902
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s23.json.gz sha256 629ae01e48fc9fc72511c1f081a489a07ef53da990611da48578ed0bb67bf263
+s07 seam 18.886868625123256 h=w*2^-2: F jump 1.613e-31 (d1 -1.016e-27, d2 2.147e-20); no control; theta_mod_2pi jump 6.217e-15; |F| at seam 5.194e-26; equals run 1 True
+s07 seam 18.886868625123256 h=w*2^-4: F jump 2.521e-33 (d1 -1.580e-29, d2 5.368e-21); control 2.566e-33 (d1 -1.543e-29, d2 5.463e-21); theta_mod_2pi jump 1.066e-12 control -1.073e-12; |F| at seam 5.194e-26; equals run 1 True
+s07 seam 18.886868625123256 h=w*2^-6: F jump 3.933e-35 (d1 7.625e-32, d2 1.342e-21); control 4.009e-35 (d1 -2.391e-31, d2 1.366e-21); theta_mod_2pi jump -1.076e-12 control 2.665e-15; |F| at seam 5.194e-26; equals run 1 True
+s07 seam 18.886868625123256 h=w*2^-8: F jump 5.842e-37 (d1 -1.575e-30, d2 3.356e-22); control 6.264e-37 (d1 1.050e-30, d2 3.414e-22); theta_mod_2pi jump -5.347e-13 control -3.553e-15; |F| at seam 5.194e-26; equals run 1 True
+wrote out/partS_se_control.json sha256 b115df6347cce94d6d3fa349c5aaa1432f7a99a00c43f77419b72656fd2a5298
+# ----
+# end 2026-11-03T12:15:49Z
+# exit 0

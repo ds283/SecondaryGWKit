@@ -1,0 +1,11 @@
+value: replay -0x1.f912b4f680f74p-86 census -0x1.f912b4f680f74p-86 -> EQUAL
+abserr: replay 0x1.e1172e84c9ff5p-112 census 0x1.e1172e84c9ff5p-112 -> EQUAL
+num_regions: replay 172 census 172 -> EQUAL
+converged: replay False census False -> EQUAL
+regions start: 172 vs 172 -> EQUAL
+regions end: 172 vs 172 -> EQUAL
+regions value: 172 vs 172 -> EQUAL
+regions depth: 172 vs 172 -> EQUAL
+regions convergence_ratio: EQUAL
+one returned leaf: #135 [19.358464120978212, 19.35848015534389] depth 20 trusted False r replay 0x1.0249249249249p+4 census 0x1.0249249249249p+4
+ray initialised: False

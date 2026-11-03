@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/state/inputs/c01.pkl qawo 1 out/readings/c01-qawo-r1.json --sid c01 --unit g-1e-7-2-33416 --index 6 --rtol 1e-7 --workers 6 --progress out/progress/c01-qawo-r1.json --progress-order unordered
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:35:37Z
+# ----
+{"sample": "c01", "route": "B", "impl": "qawo", "res": 1, "value_hex": "0x1.adb3a64cdfdf6p-108", "value_30": "5.17234674747963826257273917534e-33", "wall_s": 3.296371209435165, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-03T09:35:42Z
+# exit 0

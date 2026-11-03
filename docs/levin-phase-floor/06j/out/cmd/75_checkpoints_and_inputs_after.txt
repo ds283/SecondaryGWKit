@@ -1,0 +1,14 @@
+$ sh -c shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_calls.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_slow_leaves.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores\ \|\ diff\ -\ state/datastores_listing_before.txt\ \&\&\ echo\ \'var/datastores\ listing\ unchanged\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T12:16:16Z
+# ----
+03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl
+3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06h-census-20261101T005037/checkpoint.jsonl
+1e9a62b0f8d95deade4f265d1fa1a8b5bbd63f587f7c9761d78882db5367c42e  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_calls.json
+b4643033a1249bb036524ec041fc9594471a56a932a1ded593101d1c486da9ba  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_slow_leaves.json
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json
+var/datastores listing unchanged
+# ----
+# end 2026-11-03T12:16:28Z
+# exit 0

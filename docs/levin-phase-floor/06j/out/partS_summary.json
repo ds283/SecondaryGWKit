@@ -1,0 +1,209 @@
+{
+ "header": [
+  "# levin-phase-floor 06j: Part S tabulated and scored (S1-S4)",
+  "# written 2026-11-03T09:27:47Z on mps026298.phys.susx.ac.uk",
+  "# script score_s.py sha256 5371c61ca78f10039f629e1d1a04a310a0a6c0df3834c736406e65d7c1a4d2a1",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s00.json.gz sha256 7ad140604de6f267e448b758c38b4217677f5cf104c2ef9535192baba8f35221",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s01.json.gz sha256 bfc0534b452589065ae506a61e0953b1be6a2421bf6be12a25f675798c8b45df",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s02.json.gz sha256 87bfb94e3375e6867d474228f59f39581ee9bb1850ff4b61124e2a4adbcc2b0a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s03.json.gz sha256 3407a1f732f40e18ddd21df9b813121a974daf0208827b48693e0001b51dfe9f",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s04.json.gz sha256 645481715d021032eecd4a70f127b867c7477b102e4b8ad956b810f9dab9556e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s05.json.gz sha256 4e6322c27b725cb012561b327d371f21e3921f44391371b566dead426ffc7234",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s06.json.gz sha256 0e1c905a2e2e6ad17b47c7e20441c41224ab3abb078c9da1983426964837b2a8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s07.json.gz sha256 981dcddadadd0b79698f410af55a8d1766471ce7bb5bc41887230d9d2cda5a39",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s08.json.gz sha256 a7badd96686006871821208f446966f26bd758b1ed62bd21e9cab24ce2816173",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s09.json.gz sha256 d0e79344c03adc1e0115c60460bbefddd3eb00013e460aae431871946300e9b5",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s10.json.gz sha256 58784943a49de564eb08ab91b92c7e11e3fe517820de5fc5a033ca3090288264",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s11.json.gz sha256 b990bc08f4abf5c169e12755ea30d1c54cad3686198911ca6927d46503c7a660",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s12.json.gz sha256 fd411a86cb0af9f356f6760bdc2543b3689b7d82f03752c23abe5b472b43928b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s13.json.gz sha256 1f74343fc99f9f52411b43ef82a6046e72f259a2008a40c3607d9a61e5f9720a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s14.json.gz sha256 38afef56b80588c83fa0cb4a75f155e74c5227cb7eaee3be120a98fdaf4ef291",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s15.json.gz sha256 96781f85f2dd0ba541591654483b5e7de50137d069d8a24a241e47b6ac58680d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s16.json.gz sha256 6f40b4344fd92d66de6f25b8df64f610e9e85b8b5f6c07ce190236ae337ed260",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s17.json.gz sha256 cff1c2c4c7c167f1711decf1b640fafb149b34affb7dc99344e7a73f48b7850a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s18.json.gz sha256 cb54e5ee5fcd23dc6ab4f373e8f1bca481e9212f6ab56f5eb24a26e210e2260e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s19.json.gz sha256 eef7cfefcc26de21102e3b1e16d3207383a0b93466d87583316bb1bd889d7de4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s20.json.gz sha256 77d38a5375ef3b11436366f645cd98647c240b1d11327de50eaf0391f887499a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s21.json.gz sha256 88a7fef00138347be8940a20cc8e2d76d58f796cfb6e16a5ceadb9615f6cc577",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s22.json.gz sha256 6471a6fb3465189435b4574b7f5c6b643c3256b733b39cadb910466e896cd902",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/partS/s23.json.gz sha256 629ae01e48fc9fc72511c1f081a489a07ef53da990611da48578ed0bb67bf263"
+ ],
+ "n_calls": 24,
+ "n_leaves": 142,
+ "n_reproduce": 142,
+ "S1": {
+  "n": 142,
+  "n_hold_seam": 1,
+  "fraction": 0.007042253521126761,
+  "null_weighted": 0.0011885199748294453,
+  "fraction_over_null": 5.9252294200081375,
+  "verdict": "fails"
+ },
+ "S1_comparison_trusted_depth_ge_15": {
+  "n": 520,
+  "n_hold_seam": 9,
+  "fraction": 0.01730769230769231,
+  "null_weighted": 0.01559450626373291,
+  "by_depth": {
+   "15": [
+    115,
+    4
+   ],
+   "16": [
+    83,
+    3
+   ],
+   "17": [
+    111,
+    2
+   ],
+   "18": [
+    64,
+    0
+   ],
+   "19": [
+    24,
+    0
+   ],
+   "20": [
+    123,
+    0
+   ]
+  }
+ },
+ "S2": {
+  "n_seam_leaves": 1,
+  "excluded_branch_ended": 0,
+  "n": 1,
+  "n_within": 0,
+  "seam_leaves": [
+   {
+    "sid": "s07",
+    "start": 18.88686723504442,
+    "end": 18.88688274229765,
+    "seam_kinds": "amp_knot|phase_knot|table_node",
+    "r": 0.6515986769570011,
+    "A_r21": 0.49378343757064275,
+    "A_r22": 0.1523809523809524,
+    "A_r23": 0.5714285714285714,
+    "A_r24": 0.0784313725490196,
+    "B_r21": 0.4821267539588068,
+    "B_r22": 0.5171296121810576,
+    "B_r23": 1.466043270993766,
+    "B_r24": 0.16655230490923836,
+    "A_ended_at": null,
+    "B_ended_at": null
+   }
+  ],
+  "verdict": "fails"
+ },
+ "S_b_noseam": {
+  "max_20": {
+   "r_quantiles": "p0 0.2575, p10 0.3613, p25 0.4836, p50 0.4997, p75 0.5446, p90 0.8305, p100 0.9954",
+   "n_in_04_06": 86,
+   "n": 141,
+   "n_trusted": null
+  },
+  "max_21": {
+   "r_quantiles": "p0 0.06433, p10 0.1644, p25 0.168, p50 0.4947, p75 0.5017, p90 0.6496, p100 3.278",
+   "n_in_04_06": 71,
+   "n": 141,
+   "n_trusted": 83
+  },
+  "max_22": {
+   "r_quantiles": "p0 0.1635, p10 0.1655, p25 0.1685, p50 0.4995, p75 0.5137, p90 1.478, p100 1.52",
+   "n_in_04_06": 69,
+   "n": 141,
+   "n_trusted": 86
+  },
+  "max_23": {
+   "r_quantiles": "p0 0.1533, p10 0.1669, p25 0.4945, p50 0.5011, p75 1.449, p90 1.508, p100 1.584",
+   "n_in_04_06": 85,
+   "n": 141,
+   "n_trusted": 66
+  },
+  "max_24": {
+   "r_quantiles": "p0 0.162, p10 0.1655, p25 0.1667, p50 0.4924, p75 0.5114, p90 1.5, p100 1.55",
+   "n_in_04_06": 47,
+   "n": 141,
+   "n_trusted": 100
+  },
+  "min_20": {
+   "r_quantiles": "p0 0.2575, p10 0.3613, p25 0.4836, p50 0.4997, p75 0.5446, p90 0.8305, p100 0.9954",
+   "n_in_04_06": 86,
+   "n": 141,
+   "n_trusted": null
+  },
+  "min_21": {
+   "r_quantiles": "p0 0.04268, p10 0.3214, p25 0.4977, p50 0.5226, p75 1.247, p90 2.505, p100 inf",
+   "n_in_04_06": 57,
+   "n": 141,
+   "n_trusted": 46
+  },
+  "min_22": {
+   "r_quantiles": "p0 0.004132, p10 0.1638, p25 0.1676, p50 0.499, p75 0.7903, p90 1.619, p100 22.21",
+   "n_in_04_06": 46,
+   "n": 141,
+   "n_trusted": 73
+  },
+  "min_23": {
+   "r_quantiles": "p0 0, p10 0.1495, p25 0.3101, p50 0.5556, p75 1.539, p90 4.057, p100 27.03",
+   "n_in_04_06": 29,
+   "n": 141,
+   "n_trusted": 40
+  },
+  "min_24": {
+   "r_quantiles": "p0 0, p10 0.1679, p25 0.452, p50 0.5125, p75 2.25, p90 6.163, p100 249",
+   "n_in_04_06": 46,
+   "n": 141,
+   "n_trusted": 54
+  }
+ },
+ "S_b_noseam_both_branches_in_04_06_all_depths": 0,
+ "S3": {
+  "n": 142,
+  "n_delta1_gt_10x_scatter": 0,
+  "delta1_over_max_scatter": "p0 0.001258, p10 0.003615, p25 0.008624, p50 0.03924, p75 1.698, p90 1.79, p100 1.806",
+  "max_scatter_over_phi": "p0 0.8269, p10 0.8349, p25 0.8641, p50 124.6, p75 669.2, p90 1023, p100 1937",
+  "scatter_i_over_delta1": "p0 0.5484, p10 0.5568, p25 0.5595, p50 24.8, p75 104.7, p90 251.3, p100 600",
+  "scatter_ii_over_delta1": "p0 0.3412, p10 0.4656, p25 0.5796, p50 22.9, p75 98.56, p90 201.3, p100 794.9",
+  "scatter_halves_i_over_delta1": "p0 0.4216, p10 0.4255, p25 0.4273, p50 18.79, p75 80.06, p90 191.6, p100 459.5",
+  "scatter_delta1_i_over_delta1": "p0 0.5947, p10 0.6089, p25 0.7085, p50 34.34, p75 147.9, p90 355.9, p100 853.1",
+  "n_draws_changed_i": "p0 16, p10 16, p25 16, p50 16, p75 16, p90 16, p100 16",
+  "n_draws_changed_ii": "p0 16, p10 16, p25 16, p50 16, p75 16, p90 16, p100 16",
+  "n_delta1_gt_max_scatter": 68,
+  "verdict": "fails"
+ },
+ "S4": {
+  "n": 1,
+  "n_all_trusted": 0,
+  "detail": [
+   {
+    "sid": "s07",
+    "sub": [
+     {
+      "width": 1.3900788360388106e-06,
+      "r": 20.363636363636363,
+      "d1_over_phi": 0.16166286657069232,
+      "trusted_b": false
+     },
+     {
+      "width": 1.4117174394812082e-05,
+      "r": 2.419753086419753,
+      "d1_over_phi": 2.6991859982165383,
+      "trusted_b": false
+     }
+    ]
+   }
+  ],
+  "verdict": "fails"
+ },
+ "leaves_r": "p0 0.2575, p10 0.3613, p25 0.4836, p50 0.4997, p75 0.5446, p90 0.8228, p100 0.9954",
+ "leaves_d1_over_phi": "p0 1.245, p10 1.485, p25 1.493, p50 1.519, p75 5.313, p90 11.18, p100 24.83",
+ "leaves_branch": {
+  "clenshaw_curtis": 142,
+  "levin": 0
+ }
+}

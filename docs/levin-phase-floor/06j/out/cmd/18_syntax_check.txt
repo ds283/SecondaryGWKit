@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport ast,sys\nfor f in ["draw_06j.py","replay_06j.py","slice_06j.py","seams_06j.py","probe_s.py","dev_probe.py","w_prep.py","run_06j.py","launch_06j.py","prov.py","refs_common.py","check_captures.py"]:\n    ast.parse(open("scripts/"+f).read()); print("ok", f)\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:14:29Z
+# ----
+ok draw_06j.py
+ok replay_06j.py
+ok slice_06j.py
+ok seams_06j.py
+ok probe_s.py
+ok dev_probe.py
+ok w_prep.py
+ok run_06j.py
+ok launch_06j.py
+ok prov.py
+ok refs_common.py
+ok check_captures.py
+# ----
+# end 2026-11-03T09:14:29Z
+# exit 0

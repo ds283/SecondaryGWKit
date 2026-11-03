@@ -1,0 +1,23 @@
+$ sh -c echo\ \'==\ worktree\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9\ status\ --short\ --ignored\;\ echo\ \'==\ fdc3a2b\ on\ origin/handover-remedial\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9\ merge-base\ --is-ancestor\ fdc3a2b\ origin/handover-remedial\ \&\&\ echo\ \'fdc3a2b\ is\ an\ ancestor\ of\ origin/handover-remedial\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9\ rev-parse\ origin/handover-remedial\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9\ merge-base\ --is-ancestor\ dfa19d98\ origin/handover-remedial\ \&\&\ echo\ \'dfa19d98\ is\ an\ ancestor\ of\ origin/handover-remedial\'\;\ echo\ \'==\ diff\ 1c5336e..dfa19d98\ outside\ docs\ and\ prompts\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9\ diff\ --stat\ 1c5336e\ dfa19d98\ --\ .\ \':\!docs\'\ \':\!prompts\'\;\ echo\ \'==\ main\ checkout\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ --abbrev-ref\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'\(end\ of\ main\ status\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T08:58:26Z
+# ----
+== worktree
+dfa19d98f45b8501f8c9d314059f7c6e0678c6b8
+== fdc3a2b on origin/handover-remedial
+fdc3a2b is an ancestor of origin/handover-remedial
+dfa19d98f45b8501f8c9d314059f7c6e0678c6b8
+dfa19d98 is an ancestor of origin/handover-remedial
+== diff 1c5336e..dfa19d98 outside docs and prompts
+ CLAUDE.md                           |   8 +-
+ tools/filon_reference.py            | 245 ++++++++++++++++++++++++++++++++----
+ tools/tests/test_filon_reference.py |  88 +++++++++++++
+ 3 files changed, 318 insertions(+), 23 deletions(-)
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+(end of main status)
+# ----
+# end 2026-11-03T08:58:27Z
+# exit 0

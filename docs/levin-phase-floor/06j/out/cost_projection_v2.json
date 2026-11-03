@@ -1,0 +1,1108 @@
+{
+ "header": [
+  "# levin-phase-floor 06j: Part W's reading costs from phase span (two-term fit)",
+  "# written 2026-11-03T09:31:00Z on mps026298.phys.susx.ac.uk",
+  "# script cost_06j_v2.py sha256 48711c933270f13a9c0e0eecaa615fff8597b659d209272e9b17130807d68b1d",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 HEAD dfa19d98f45b8501f8c9d314059f7c6e0678c6b8 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/cost_projection.json sha256 c6f61424b73b737e13f9f1089fa1bb485a401955e3f2d4ae4cf99a13557a592c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/out/w_prep_v2/summary.json sha256 919423f25dd5f0df8861216ff80aa945c84885972b77af5bd18aedc815c6631d"
+ ],
+ "fits": {
+  "qawo-r1": {
+   "n": 66,
+   "s_per_segment": 0.00555020254901578,
+   "us_per_rad": 0.05706721072432649,
+   "ratio_min": 0.8636879903415449,
+   "ratio_max": 2.6229139473675724,
+   "ratio_median": 1.1359072003258355,
+   "largest_spans": [
+    [
+     "readings/r24-qawo-r1-rerun.json",
+     106692116866.94316,
+     2418,
+     6097.579227041919
+    ],
+    [
+     "readings/r47-qawo-r1.json",
+     45850430634.96038,
+     1844,
+     2594.3232611250132
+    ],
+    [
+     "readings/r52-qawo-r1.json",
+     31785269682.093273,
+     2270,
+     1796.0848201247863
+    ],
+    [
+     "readings/r53-qawo-r1-rerun.json",
+     135600464026.19946,
+     2204,
+     7771.921675707679
+    ]
+   ]
+  },
+  "qawo-r2": {
+   "n": 61,
+   "s_per_segment": 0.008698466453683107,
+   "us_per_rad": 0.2326592985696926,
+   "ratio_min": 0.6421910302243806,
+   "ratio_max": 1.9314150613743435,
+   "ratio_median": 1.0088400815655443,
+   "largest_spans": []
+  },
+  "fcc-r1": {
+   "n": 72,
+   "s_per_segment": 0.021772508444846343,
+   "us_per_rad": 0.0,
+   "ratio_min": 0.6279984110034061,
+   "ratio_max": 3.5625237689936533,
+   "ratio_median": 0.8909640002692838,
+   "largest_spans": [
+    [
+     "readings/r24-fcc-r1.json",
+     106692116866.94316,
+     2418,
+     35.480890499893576
+    ],
+    [
+     "readings/r26-fcc-r1.json",
+     862125868459.6815,
+     2220,
+     32.40305916732177
+    ],
+    [
+     "readings/r47-fcc-r1.json",
+     45850430634.96038,
+     1844,
+     27.09429591661319
+    ],
+    [
+     "readings/r52-fcc-r1.json",
+     31785269682.093273,
+     2270,
+     33.75894970819354
+    ],
+    [
+     "readings/r53-fcc-r1.json",
+     135600464026.19946,
+     2204,
+     30.135513958055526
+    ]
+   ]
+  },
+  "fcc-r2": {
+   "n": 70,
+   "s_per_segment": 0.08676027006274616,
+   "us_per_rad": 0.0,
+   "ratio_min": 0.6011498505057754,
+   "ratio_max": 4.049482366276261,
+   "ratio_median": 0.8540200934947209,
+   "largest_spans": [
+    [
+     "readings/r24-fcc-r2.json",
+     106692116866.94316,
+     2418,
+     135.68915970809758
+    ],
+    [
+     "readings/r26-fcc-r2.json",
+     862125868459.6815,
+     2220,
+     121.72443666728213
+    ],
+    [
+     "readings/r47-fcc-r2.json",
+     45850430634.96038,
+     1844,
+     102.02839666604996
+    ],
+    [
+     "readings/r52-fcc-r2.json",
+     31785269682.093273,
+     2270,
+     127.88263250002638
+    ],
+    [
+     "readings/r53-fcc-r2.json",
+     135600464026.19946,
+     2204,
+     114.95165512524545
+    ]
+   ]
+  }
+ },
+ "projection": [
+  {
+   "sid": "f00",
+   "unit": "g-1e-7-0-12778",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253329537809,
+   "n_segments": 306,
+   "fit_s": 1.6983816981658149,
+   "projected_s": 4.454709044072938
+  },
+  {
+   "sid": "f00",
+   "unit": "g-1e-7-0-12778",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253329537809,
+   "n_segments": 306,
+   "fit_s": 2.6618111245086338,
+   "projected_s": 5.141062096409753
+  },
+  {
+   "sid": "f00",
+   "unit": "g-1e-7-0-12778",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253329537809,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f00",
+   "unit": "g-1e-7-0-12778",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253329537809,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f01",
+   "unit": "g-1e-7-0-12959",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253329575062,
+   "n_segments": 306,
+   "fit_s": 1.698381698165815,
+   "projected_s": 4.454709044072939
+  },
+  {
+   "sid": "f01",
+   "unit": "g-1e-7-0-12959",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253329575062,
+   "n_segments": 306,
+   "fit_s": 2.6618111245086347,
+   "projected_s": 5.141062096409755
+  },
+  {
+   "sid": "f01",
+   "unit": "g-1e-7-0-12959",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253329575062,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f01",
+   "unit": "g-1e-7-0-12959",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253329575062,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f02",
+   "unit": "g-1e-7-0-1873",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253314971924,
+   "n_segments": 306,
+   "fit_s": 1.6983816981657316,
+   "projected_s": 4.45470904407272
+  },
+  {
+   "sid": "f02",
+   "unit": "g-1e-7-0-1873",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253314971924,
+   "n_segments": 306,
+   "fit_s": 2.661811124508295,
+   "projected_s": 5.141062096409098
+  },
+  {
+   "sid": "f02",
+   "unit": "g-1e-7-0-1873",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253314971924,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f02",
+   "unit": "g-1e-7-0-1873",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253314971924,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f03",
+   "unit": "g-1e-7-0-2108",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253372192383,
+   "n_segments": 306,
+   "fit_s": 1.6983816981660582,
+   "projected_s": 4.454709044073577
+  },
+  {
+   "sid": "f03",
+   "unit": "g-1e-7-0-2108",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253372192383,
+   "n_segments": 306,
+   "fit_s": 2.6618111245096263,
+   "projected_s": 5.1410620964116704
+  },
+  {
+   "sid": "f03",
+   "unit": "g-1e-7-0-2108",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253372192383,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f03",
+   "unit": "g-1e-7-0-2108",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253372192383,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f04",
+   "unit": "g-1e-7-0-33730",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 1.6983816981658149,
+   "projected_s": 4.454709044072938
+  },
+  {
+   "sid": "f04",
+   "unit": "g-1e-7-0-33730",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 2.6618111245086338,
+   "projected_s": 5.141062096409753
+  },
+  {
+   "sid": "f04",
+   "unit": "g-1e-7-0-33730",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f04",
+   "unit": "g-1e-7-0-33730",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f05",
+   "unit": "g-1e-8-0-12778",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253329537809,
+   "n_segments": 306,
+   "fit_s": 1.6983816981658149,
+   "projected_s": 4.454709044072938
+  },
+  {
+   "sid": "f05",
+   "unit": "g-1e-8-0-12778",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253329537809,
+   "n_segments": 306,
+   "fit_s": 2.6618111245086338,
+   "projected_s": 5.141062096409753
+  },
+  {
+   "sid": "f05",
+   "unit": "g-1e-8-0-12778",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253329537809,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f05",
+   "unit": "g-1e-8-0-12778",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253329537809,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f06",
+   "unit": "g-1e-8-0-12959",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253329575062,
+   "n_segments": 306,
+   "fit_s": 1.698381698165815,
+   "projected_s": 4.454709044072939
+  },
+  {
+   "sid": "f06",
+   "unit": "g-1e-8-0-12959",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253329575062,
+   "n_segments": 306,
+   "fit_s": 2.6618111245086347,
+   "projected_s": 5.141062096409755
+  },
+  {
+   "sid": "f06",
+   "unit": "g-1e-8-0-12959",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253329575062,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f06",
+   "unit": "g-1e-8-0-12959",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253329575062,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f07",
+   "unit": "g-1e-8-0-1873",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253314971924,
+   "n_segments": 306,
+   "fit_s": 1.6983816981657316,
+   "projected_s": 4.45470904407272
+  },
+  {
+   "sid": "f07",
+   "unit": "g-1e-8-0-1873",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253314971924,
+   "n_segments": 306,
+   "fit_s": 2.661811124508295,
+   "projected_s": 5.141062096409098
+  },
+  {
+   "sid": "f07",
+   "unit": "g-1e-8-0-1873",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253314971924,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f07",
+   "unit": "g-1e-8-0-1873",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253314971924,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f08",
+   "unit": "g-1e-8-0-2108",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253372192383,
+   "n_segments": 306,
+   "fit_s": 1.6983816981660582,
+   "projected_s": 4.454709044073577
+  },
+  {
+   "sid": "f08",
+   "unit": "g-1e-8-0-2108",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253372192383,
+   "n_segments": 306,
+   "fit_s": 2.6618111245096263,
+   "projected_s": 5.1410620964116704
+  },
+  {
+   "sid": "f08",
+   "unit": "g-1e-8-0-2108",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253372192383,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f08",
+   "unit": "g-1e-8-0-2108",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253372192383,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "f09",
+   "unit": "g-1e-8-0-33730",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 1.6983816981658149,
+   "projected_s": 4.454709044072938
+  },
+  {
+   "sid": "f09",
+   "unit": "g-1e-8-0-33730",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 2.6618111245086338,
+   "projected_s": 5.141062096409753
+  },
+  {
+   "sid": "f09",
+   "unit": "g-1e-8-0-33730",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "f09",
+   "unit": "g-1e-8-0-33730",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "c00",
+   "unit": "g-1e-7-1-2142",
+   "index": 5,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 10306525093.941433,
+   "n_segments": 1854,
+   "fit_s": 598.4547148973899,
+   "projected_s": 1569.695218572248
+  },
+  {
+   "sid": "c00",
+   "unit": "g-1e-7-1-2142",
+   "index": 5,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 10306525093.941433,
+   "n_segments": 1854,
+   "fit_s": 2414.035855852477,
+   "projected_s": 4662.505210691178
+  },
+  {
+   "sid": "c00",
+   "unit": "g-1e-7-1-2142",
+   "index": 5,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 10306525093.941433,
+   "n_segments": 1854,
+   "fit_s": 40.366230656745124,
+   "projected_s": 143.8056561793348
+  },
+  {
+   "sid": "c00",
+   "unit": "g-1e-7-1-2142",
+   "index": 5,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 10306525093.941433,
+   "n_segments": 1854,
+   "fit_s": 160.85354069633138,
+   "projected_s": 651.3735766028949
+  },
+  {
+   "sid": "c01",
+   "unit": "g-1e-7-2-33416",
+   "index": 6,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 2067.1746393111052,
+   "n_segments": 234,
+   "fit_s": 1.298865364360438,
+   "projected_s": 3.4068120799336565
+  },
+  {
+   "sid": "c01",
+   "unit": "g-1e-7-2-33416",
+   "index": 6,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 2067.1746393111052,
+   "n_segments": 234,
+   "fit_s": 2.03592209756345,
+   "projected_s": 3.932210603018893
+  },
+  {
+   "sid": "c01",
+   "unit": "g-1e-7-2-33416",
+   "index": 6,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 2067.1746393111052,
+   "n_segments": 234,
+   "fit_s": 5.094766976094045,
+   "projected_s": 18.150228449818954
+  },
+  {
+   "sid": "c01",
+   "unit": "g-1e-7-2-33416",
+   "index": 6,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 2067.1746393111052,
+   "n_segments": 234,
+   "fit_s": 20.301903194682602,
+   "projected_s": 82.21219898871489
+  },
+  {
+   "sid": "c02",
+   "unit": "g-1e-7-1-35497",
+   "index": 5,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 45143731.06094126,
+   "n_segments": 1110,
+   "fit_s": 8.736951642744572,
+   "projected_s": 22.91627232123076
+  },
+  {
+   "sid": "c02",
+   "unit": "g-1e-7-1-35497",
+   "index": 5,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 45143731.06094126,
+   "n_segments": 1110,
+   "fit_s": 20.158406567045684,
+   "projected_s": 38.93425005689951
+  },
+  {
+   "sid": "c02",
+   "unit": "g-1e-7-1-35497",
+   "index": 5,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 45143731.06094126,
+   "n_segments": 1110,
+   "fit_s": 24.16748437377944,
+   "projected_s": 86.09723751837195
+  },
+  {
+   "sid": "c02",
+   "unit": "g-1e-7-1-35497",
+   "index": 5,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 45143731.06094126,
+   "n_segments": 1110,
+   "fit_s": 96.30389976964824,
+   "projected_s": 389.98094392082703
+  },
+  {
+   "sid": "c03",
+   "unit": "g-1e-7-0-12727",
+   "index": 4,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 220919.12557300212,
+   "n_segments": 654,
+   "fit_s": 3.642439705348428,
+   "projected_s": 9.553805905603824
+  },
+  {
+   "sid": "c03",
+   "unit": "g-1e-7-0-12727",
+   "index": 4,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 220919.12557300212,
+   "n_segments": 654,
+   "fit_s": 5.740195949505196,
+   "projected_s": 11.086700912114337
+  },
+  {
+   "sid": "c03",
+   "unit": "g-1e-7-0-12727",
+   "index": 4,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 220919.12557300212,
+   "n_segments": 654,
+   "fit_s": 14.239220522929509,
+   "projected_s": 50.72756156487861
+  },
+  {
+   "sid": "c03",
+   "unit": "g-1e-7-0-12727",
+   "index": 4,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 220919.12557300212,
+   "n_segments": 654,
+   "fit_s": 56.74121662103599,
+   "projected_s": 229.77255614794674
+  },
+  {
+   "sid": "c04",
+   "unit": "g-1e-7-1-35052",
+   "index": 6,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 14191942966.293072,
+   "n_segments": 2122,
+   "fit_s": 821.6721296540813,
+   "projected_s": 2155.175289032906
+  },
+  {
+   "sid": "c04",
+   "unit": "g-1e-7-1-35052",
+   "index": 6,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 14191942966.293072,
+   "n_segments": 2122,
+   "fit_s": 3320.3456416935437,
+   "projected_s": 6412.965581335569
+  },
+  {
+   "sid": "c04",
+   "unit": "g-1e-7-1-35052",
+   "index": 6,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 14191942966.293072,
+   "n_segments": 2122,
+   "fit_s": 46.20126291996394,
+   "projected_s": 164.59309730989665
+  },
+  {
+   "sid": "c04",
+   "unit": "g-1e-7-1-35052",
+   "index": 6,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 14191942966.293072,
+   "n_segments": 2122,
+   "fit_s": 184.10529307314735,
+   "projected_s": 745.5311378378333
+  },
+  {
+   "sid": "c05",
+   "unit": "g-1e-7-0-33892",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 1.6983816981658149,
+   "projected_s": 4.454709044072938
+  },
+  {
+   "sid": "c05",
+   "unit": "g-1e-7-0-33892",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 2.6618111245086338,
+   "projected_s": 5.141062096409753
+  },
+  {
+   "sid": "c05",
+   "unit": "g-1e-7-0-33892",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "c05",
+   "unit": "g-1e-7-0-33892",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.52533295346075,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  },
+  {
+   "sid": "c06",
+   "unit": "g-1e-8-3-34272",
+   "index": 4,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 171391954.70004302,
+   "n_segments": 1376,
+   "fit_s": 17.417939502767286,
+   "projected_s": 45.685756456212914
+  },
+  {
+   "sid": "c06",
+   "unit": "g-1e-8-3-34272",
+   "index": 4,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 171391954.70004302,
+   "n_segments": 1376,
+   "fit_s": 51.845021801268494,
+   "projected_s": 100.13425596425117
+  },
+  {
+   "sid": "c06",
+   "unit": "g-1e-8-3-34272",
+   "index": 4,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 171391954.70004302,
+   "n_segments": 1376,
+   "fit_s": 29.958971620108567,
+   "projected_s": 106.72954849124307
+  },
+  {
+   "sid": "c06",
+   "unit": "g-1e-8-3-34272",
+   "index": 4,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 171391954.70004302,
+   "n_segments": 1376,
+   "fit_s": 119.38213160633872,
+   "projected_s": 483.4358367883405
+  },
+  {
+   "sid": "c07",
+   "unit": "g-1e-8-3-37323",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 1038078587.2465917,
+   "n_segments": 1640,
+   "fit_s": 68.34258166719826,
+   "projected_s": 179.25671065400167
+  },
+  {
+   "sid": "c07",
+   "unit": "g-1e-8-3-37323",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 1038078587.2465917,
+   "n_segments": 1640,
+   "fit_s": 255.78412095304975,
+   "projected_s": 494.0253036691171
+  },
+  {
+   "sid": "c07",
+   "unit": "g-1e-8-3-37323",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 1038078587.2465917,
+   "n_segments": 1640,
+   "fit_s": 35.706913849548,
+   "projected_s": 127.20672930642343
+  },
+  {
+   "sid": "c07",
+   "unit": "g-1e-8-3-37323",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 1038078587.2465917,
+   "n_segments": 1640,
+   "fit_s": 142.2868429029037,
+   "projected_s": 576.188061288429
+  },
+  {
+   "sid": "c08",
+   "unit": "g-1e-8-1-35136",
+   "index": 3,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 13021.370983044413,
+   "n_segments": 562,
+   "fit_s": 3.119956925868677,
+   "projected_s": 8.183378536047009
+  },
+  {
+   "sid": "c08",
+   "unit": "g-1e-8-1-35136",
+   "index": 3,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 13021.370983044413,
+   "n_segments": 562,
+   "fit_s": 4.891567690009237,
+   "projected_s": 9.447647510215946
+  },
+  {
+   "sid": "c08",
+   "unit": "g-1e-8-1-35136",
+   "index": 3,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 13021.370983044413,
+   "n_segments": 562,
+   "fit_s": 12.236149746003646,
+   "projected_s": 43.59157431110364
+  },
+  {
+   "sid": "c08",
+   "unit": "g-1e-8-1-35136",
+   "index": 3,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 13021.370983044413,
+   "n_segments": 562,
+   "fit_s": 48.759271775263336,
+   "projected_s": 197.44981124640069
+  },
+  {
+   "sid": "c09",
+   "unit": "g-1e-8-1-35446",
+   "index": 4,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 12705455.086713057,
+   "n_segments": 1076,
+   "fit_s": 6.697082825522899,
+   "projected_s": 17.565871949739844
+  },
+  {
+   "sid": "c09",
+   "unit": "g-1e-8-1-35446",
+   "index": 4,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 12705455.086713057,
+   "n_segments": 1076,
+   "fit_s": 12.315592172646415,
+   "projected_s": 23.78652021199326
+  },
+  {
+   "sid": "c09",
+   "unit": "g-1e-8-1-35446",
+   "index": 4,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 12705455.086713057,
+   "n_segments": 1076,
+   "fit_s": 23.427219086654667,
+   "projected_s": 83.46002483762904
+  },
+  {
+   "sid": "c09",
+   "unit": "g-1e-8-1-35446",
+   "index": 4,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 12705455.086713057,
+   "n_segments": 1076,
+   "fit_s": 93.35405058751486,
+   "projected_s": 378.03558167460346
+  },
+  {
+   "sid": "c10",
+   "unit": "g-1e-8-0-12965",
+   "index": 4,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 27755242.307149164,
+   "n_segments": 1086,
+   "fit_s": 7.611434229677959,
+   "projected_s": 19.964137000493274
+  },
+  {
+   "sid": "c10",
+   "unit": "g-1e-8-0-12965",
+   "index": 4,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 27755242.307149164,
+   "n_segments": 1086,
+   "fit_s": 15.904049775513034,
+   "projected_s": 30.71732127327312
+  },
+  {
+   "sid": "c10",
+   "unit": "g-1e-8-0-12965",
+   "index": 4,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 27755242.307149164,
+   "n_segments": 1086,
+   "fit_s": 23.64494417110313,
+   "projected_s": 84.23567562608284
+  },
+  {
+   "sid": "c10",
+   "unit": "g-1e-8-0-12965",
+   "index": 4,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 27755242.307149164,
+   "n_segments": 1086,
+   "fit_s": 94.22165328814232,
+   "projected_s": 381.54892351172805
+  },
+  {
+   "sid": "c11",
+   "unit": "g-1e-8-0-33648",
+   "index": 1,
+   "impl": "qawo",
+   "res": 1,
+   "phase_span": 345.5253329534564,
+   "n_segments": 306,
+   "fit_s": 1.6983816981658149,
+   "projected_s": 4.454709044072938
+  },
+  {
+   "sid": "c11",
+   "unit": "g-1e-8-0-33648",
+   "index": 1,
+   "impl": "qawo",
+   "res": 2,
+   "phase_span": 345.5253329534564,
+   "n_segments": 306,
+   "fit_s": 2.6618111245086338,
+   "projected_s": 5.141062096409753
+  },
+  {
+   "sid": "c11",
+   "unit": "g-1e-8-0-33648",
+   "index": 1,
+   "impl": "fcc",
+   "res": 1,
+   "phase_span": 345.5253329534564,
+   "n_segments": 306,
+   "fit_s": 6.662387584122981,
+   "projected_s": 23.734914126686323
+  },
+  {
+   "sid": "c11",
+   "unit": "g-1e-8-0-33648",
+   "index": 1,
+   "impl": "fcc",
+   "res": 2,
+   "phase_span": 345.5253329534564,
+   "n_segments": 306,
+   "fit_s": 26.548642639200324,
+   "projected_s": 107.50826021601176
+  }
+ ],
+ "total_fit_s": 9362.258114957496,
+ "total_envelope_s": 22533.131562136718
+}

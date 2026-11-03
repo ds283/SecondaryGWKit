@@ -1,0 +1,22 @@
+1c1,8
+< """levin-phase-floor prompt 06g section 5, the references: one reading of one captured call by
+---
+> """levin-phase-floor prompt 06j: copied from 06g's references scripts/one_reading.py (a record, not edited; its copy is
+> in state/scripts_06g_reference/), changed only where marked "prompt 06j": with ``--progress-order unordered`` the
+> progress file also holds the job list (each chunk's kind and arguments, e.g. Route B's (i0, i1, res)) and the
+> indices of the chunks finished, so that the driver can weight progress by each chunk's phase span and count the
+> chunks in flight (state/readings_plan_20261103T0935Z.md section 5). No value changes: the chunks, their order,
+> the function each runs and the results list are the tool's own. 06g's text follows.
+> 
+> levin-phase-floor prompt 06g section 5, the references: one reading of one captured call by
+52a60
+>     extra = {"jobs": None, "done_indices": []}  # prompt 06j
+63a72,73
+>                     "jobs": extra["jobs"],  # prompt 06j
+>                     "done_indices": extra["done_indices"],  # prompt 06j
+69a80
+>         extra["jobs"] = [[job[0], list(job[1])] for job in jobs]  # prompt 06j
+75a87
+>                 extra["done_indices"].append(len(out) - 1)  # prompt 06j
+90a103
+>                 extra["done_indices"].append(i)  # prompt 06j

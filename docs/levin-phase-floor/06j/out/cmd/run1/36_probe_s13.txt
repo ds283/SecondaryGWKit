@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts/probe_s.py s13 out/partS/s13.json.gz
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06j
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-03T09:25:40Z
+# ----
+s13 leaf [19.5787542290673, 19.57877430663284] seams 0 reproduces True r 0.5056 d1/phi 1.5; scatter i 1.304e-40 ii 1.076e-40 d1 2.343e-40; 0.5 s
+s13 leaf [19.57877430663284, 19.578794384198382] seams 0 reproduces True r 0.5007 d1/phi 1.49; scatter i 1.340e-40 ii 1.469e-40 d1 2.400e-40; 0.5 s
+s13 leaf [19.581364312587596, 19.581384390153136] seams 0 reproduces True r 0.5062 d1/phi 1.51; scatter i 1.084e-40 ii 1.341e-40 d1 1.958e-40; 0.5 s
+s13 leaf [19.581404467718677, 19.581424545284218] seams 0 reproduces True r 0.501 d1/phi 1.5; scatter i 1.243e-40 ii 1.212e-40 d1 2.239e-40; 0.5 s
+s13 leaf [19.581424545284218, 19.58144462284976] seams 0 reproduces True r 0.4929 d1/phi 1.49; scatter i 1.296e-40 ii 1.203e-40 d1 2.324e-40; 0.5 s
+s13 leaf [19.58150485554638, 19.581524933111922] seams 0 reproduces True r 0.5 d1/phi 1.5; scatter i 1.333e-40 ii 1.558e-40 d1 2.379e-40; 0.5 s
+s13 leaf [19.581565088243003, 19.581585165808544] seams 0 reproduces True r 0.4978 d1/phi 1.48; scatter i 1.164e-40 ii 9.000e-41 d1 2.062e-40; 0.5 s
+s13 leaf [19.581585165808544, 19.581605243374085] seams 0 reproduces True r 0.5083 d1/phi 1.51; scatter i 1.076e-40 ii 1.156e-40 d1 1.930e-40; 0.5 s
+s13 leaf [19.581605243374085, 19.581625320939626] seams 0 reproduces True r 0.4927 d1/phi 1.49; scatter i 9.717e-41 ii 1.015e-40 d1 1.724e-40; 0.5 s
+s13 leaf [19.581625320939626, 19.581645398505167] seams 0 reproduces True r 0.5092 d1/phi 1.52; scatter i 8.545e-41 ii 9.847e-41 d1 1.532e-40; 0.5 s
+s13: 10 leaves, 2150 solves, 6.1 s; seams 8875 ({'switch_mid': 2961, 'phase_knot': 1971, 'table_node': 2958, 'amp_knot': 985}); merged = production_edges: True; null20 1.882e-03; wrote out/partS/s13.json.gz sha256 1f74343fc99f9f52411b43ef82a6046e72f259a2008a40c3607d9a61e5f9720a; ray initialised False
+# ----
+# end 2026-11-03T09:25:47Z
+# exit 0

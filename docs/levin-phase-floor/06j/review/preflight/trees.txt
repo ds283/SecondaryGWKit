@@ -1,0 +1,20 @@
+## main
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+## worktree
+dfa19d98f45b8501f8c9d314059f7c6e0678c6b8
+## diff
+ CLAUDE.md                           |   8 +-
+ tools/filon_reference.py            | 245 ++++++++++++++++++++++++++++++++----
+ tools/tests/test_filon_reference.py |  88 +++++++++++++
+ 3 files changed, 318 insertions(+), 23 deletions(-)
+## origin
+  origin/handover-remedial
+fdc3a2b ancestor of dfa19d9
+## worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e 1c5336e7 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed 4f4f9ed2 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-b5626ec b5626ecb (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839 ff3e8394 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06j-dfa19d9 dfa19d98 (detached HEAD)
