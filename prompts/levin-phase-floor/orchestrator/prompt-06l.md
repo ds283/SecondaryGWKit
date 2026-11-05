@@ -216,3 +216,11 @@ have caught it. L2 is scored as written; it does not separate B from route 1 or 
 - 06l's pickles and large files (0.4 GB).
 
 07 resumes after that.
+
+**The user's decisions, 2026-11-05.** On 06m: *"I think B as measured is the right choice, as far as
+I can see."* On the Mac Studio: *"yes, please clean up. Remove the worktree. For now keep the census
+run directory. Remove the pickles and other large files."* The laptop removed the worktree
+`SecondaryGWKit-lpf06l-af4c4dc` (clean with `--ignored`; 06g's four worktrees untouched), and deleted
+the 183 pickles and large files under `var/levin-phase-floor-06l/`, each first checked against its
+SHA-256 (`docs/levin-phase-floor/06l/KEPT_ON_MAC_STUDIO.md`). Route B's census run directory and the
+two small runs are kept.

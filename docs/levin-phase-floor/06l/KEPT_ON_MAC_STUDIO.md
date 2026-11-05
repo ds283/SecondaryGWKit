@@ -5,6 +5,19 @@ These are kept in the Mac Studio's main checkout,
 06l's records also stay) and `var/runs/`. They were left out of this directory as 06k's were:
 every pickle and every file over 2 MB.
 
+> **Mostly removed 2026-11-05, on the user's word** (*"yes, please clean up. Remove the worktree. For
+> now keep the census run directory. Remove the pickles and other large files."*). The 183 files
+> listed below under `var/levin-phase-floor-06l/` (the 178 in `KEPT_ON_MAC_STUDIO.txt`'s first
+> section and the review's five pickles) were checked against their SHA-256, all 183 equal, and
+> deleted, with the directories they left empty: 479,656 KB down to 62,428 KB. What remains under
+> `var/levin-phase-floor-06l/` is the 824 files committed here.
+>
+> **Still kept:** route B's census run directory in full (4.4 GB, checkpoint `5cb3d3c0…`), and the
+> two small runs (`k0partL` and `partL`). Everything deleted can be recreated from 06g's census, the
+> scratch copy and the variant under `scripts/variants/`, all still kept; route B's compact extract
+> `state/extract/routeB.pkl` from the census checkpoint by `scripts/extract_census.py`. The worktree
+> was removed the same day.
+
 **Under `var/levin-phase-floor-06l/`: 183 files, never copied to the laptop.**
 - **178 are listed with SHA-256 and size** in [`KEPT_ON_MAC_STUDIO.txt`](KEPT_ON_MAC_STUDIO.txt)
   (SHA-256 `8ee0abb0…`, written by `scripts/kept_list_06l.py`), 426,383,808 bytes in all:
