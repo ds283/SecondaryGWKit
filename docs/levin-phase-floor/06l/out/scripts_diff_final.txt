@@ -1,0 +1,684 @@
+# levin-phase-floor 06l: scripts/ against 06k copies (state/scripts_06k_reference/ = docs/levin-phase-floor/06k/scripts/ without variants), final, 2026-11-05T15:16:04Z
+Only in scripts: against_a_06l.py
+Only in scripts: analyse_c_06l.py
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/ast_check_variants.py scripts/ast_check_variants.py
+--- state/scripts_06k_reference/ast_check_variants.py	2026-11-05 02:22:29
++++ scripts/ast_check_variants.py	2026-11-05 09:13:30
+@@ -1,4 +1,8 @@
+-"""levin-phase-floor prompt 06k section 1 ("The diff is confined"): an AST comparison of each variant
++"""levin-phase-floor prompt 06l section 1: copied from 06k's scripts/ast_check_variants.py (a record; its copy is in
++state/scripts_06k_reference/), changed only where marked "prompt 06l": the names a variant binds must end in
++``_06l`` (06k: ``_06k``), and the title names 06l. 06k's text follows.
++
++levin-phase-floor prompt 06k section 1 ("The diff is confined"): an AST comparison of each variant
+ with the tree's ``AdaptiveLevin/levin_quadrature.py``. New in 06k.
+ 
+ For each variant it shows:
+@@ -93,7 +97,7 @@
+     tree_file = Path(sys.argv[1])
+     t_src = tree_file.read_text()
+     t_mod = ast.parse(t_src)
+-    print("# levin-phase-floor 06k: the variants' AST comparison with the tree's module")
++    print("# levin-phase-floor 06l: the variants' AST comparison with the tree's module")  # prompt 06l
+     print(f"# script ast_check_variants.py sha256 {hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}")
+     print(f"# input {tree_file} sha256 {hashlib.sha256(tree_file.read_bytes()).hexdigest()}")
+     ok_all = True
+@@ -126,9 +130,9 @@
+                 print("   + " + s.replace("\n", "\n     "))
+         # 3. new names
+         new_names = sorted(bound_names(f_v) - bound_names(f_t))
+-        bad = [n for n in new_names if not n.endswith("_06k")]
++        bad = [n for n in new_names if not n.endswith("_06l")]  # prompt 06l (06k: _06k)
+         print(f"names bound in the variant's _adaptive_levin and not the tree's: {new_names}")
+-        print(f"of them, not ending in _06k: {bad}")
++        print(f"of them, not ending in _06l: {bad}")  # prompt 06l
+         ok = only_adaptive and same_sig and not bad
+         if vf.name.endswith("_identity.py"):
+             ok = ok and not out and not differing_top and v_src == t_src
+Only in scripts/calibration: lg_compare_06l.py
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/calibration/lg_seeded_draws.py scripts/calibration/lg_seeded_draws.py
+--- state/scripts_06k_reference/calibration/lg_seeded_draws.py	2026-11-05 02:22:29
++++ scripts/calibration/lg_seeded_draws.py	2026-11-05 09:16:27
+@@ -1,4 +1,11 @@
+-"""levin-phase-floor prompt 06k, Part L ("The LiouvilleGreen draws"): 06g's test 9 harness
++"""levin-phase-floor prompt 06l, Part L ("The LiouvilleGreen draws"): 06k's copy of this harness
++(docs/levin-phase-floor/06k/scripts/calibration/lg_seeded_draws.py, a record; its copy is in
++state/scripts_06k_reference/calibration/), changed only where marked "prompt 06l": the mode ``routeB`` (06l's
++variant, loaded as 06k loads its routes), and each call's record also keeps route B's record summarised under
++``route_06l``. Its working directory is var/levin-phase-floor-06l/state/lg_cwd/ by the same relative path. 06k's
++text follows.
++
++levin-phase-floor prompt 06k, Part L ("The LiouvilleGreen draws"): 06g's test 9 harness
+ (docs/levin-phase-floor/06g/calibration/scripts/lg_seeded_draws.py, a record, not edited; its copy is in
+ state/scripts_06g_calibration_reference/), changed only where marked "prompt 06k":
+ - the modes are ``tree`` (the tree's module, 06g's code, the baseline) and the variants ``identity``,
+@@ -94,6 +101,7 @@
+ 
+ SEEDS = list(range(20))
+ MODES = ("tree", "identity", "route1", "route2", "route3", "route2lit")  # prompt 06k (06g: ("parent", "new")); route2lit after stop 1
++MODES = ("tree", "identity", "routeB")  # prompt 06l
+ # most expensive first, so the pool's tail is short
+ TESTS = ("test_YJJ_log_singularity", "test_JJJ", "test_YJJ", "test_abserr_bounds_truth")
+ 
+@@ -144,7 +152,22 @@
+         ),
+         # prompt 06k: the route's firings (None under the tree and the identity variant)
+         "route_06k": _route_summary_06k(data.get("route_06k")),
++        # prompt 06l: route B's record (None under the tree and the identity variant)
++        "route_06l": _route_summary_06l(data.get("route_06l")),
+     }
++
++
++def _route_summary_06l(r):
++    """prompt 06l: route B's record without its per-leaf list, plus each fired or withdrawn leaf's numbers."""
++    if r is None:
++        return None
++    out = {k: v for k, v in r.items() if k != "records"}
++    out["fired_or_withdrawn"] = [
++        {k: f[k] for k in ("kind", "depth", "is_direct", "is_direct_L", "is_direct_R", "r", "delta1", "phi_P", "nu1", "nuB")}
++        for f in r.get("records", [])
++        if f["kind"] in ("fired", "withdrawn")
++    ]
++    return out
+ 
+ 
+ def _route_summary_06k(r):
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/calibration/prov.py scripts/calibration/prov.py
+--- state/scripts_06k_reference/calibration/prov.py	2026-11-05 02:22:29
++++ scripts/calibration/prov.py	2026-11-05 09:10:27
+@@ -1,4 +1,9 @@
+-"""levin-phase-floor prompt 06k: 06g's calibration prov.py (docs/levin-phase-floor/06g/calibration/scripts/prov.py,
++"""levin-phase-floor prompt 06l: 06k's calibration prov.py (docs/levin-phase-floor/06k/scripts/calibration/prov.py,
++a record; its copy is in state/scripts_06k_reference/calibration/), changed only where marked "prompt 06l": REPO is
++06l's worktree, OUT is var/levin-phase-floor-06l/out/lg_draws/ (by its relative path, unchanged), and the title
++names 06l. 06k's text follows.
++
++levin-phase-floor prompt 06k: 06g's calibration prov.py (docs/levin-phase-floor/06g/calibration/scripts/prov.py,
+ a record, not edited; its copy is in state/scripts_06g_calibration_reference/), changed only where marked
+ "prompt 06k": REPO is 06k's worktree (this copy is not inside a tree), OUT is
+ var/levin-phase-floor-06k/out/lg_draws/, every git command is read with --no-optional-locks, and the title
+@@ -24,7 +29,7 @@
+ HERE = Path(__file__).resolve().parent
+ CALIBRATION = HERE.parent
+ OUT = HERE.parents[1] / "out" / "lg_draws"  # prompt 06k (06g: CALIBRATION / "out")
+-REPO = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060")  # prompt 06k (06g: HERE.parents[4])
++REPO = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc")  # prompt 06l (06k: -lpf06k-8937060; 06g: HERE.parents[4])
+ assert (REPO / "AdaptiveLevin" / "levin_quadrature.py").is_file(), REPO
+ 
+ LEVIN = REPO / "AdaptiveLevin" / "levin_quadrature.py"
+@@ -53,7 +58,7 @@
+     """The provenance lines every output opens with, each prefixed '# '."""
+     status = git("status", "--short")
+     lines = [
+-        f"levin-phase-floor 06k: {title}",  # prompt 06k (06g: 06g)
++        f"levin-phase-floor 06l: {title}",  # prompt 06l (06k: 06k; 06g: 06g)
+         f"written {datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')}"
+         f" on {socket.gethostname()}",
+         f"python {platform.python_version()} ({sys.executable})",
+Only in scripts: census_projection_06l.py
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/check_captures.py scripts/check_captures.py
+--- state/scripts_06k_reference/check_captures.py	2026-11-05 02:22:29
++++ scripts/check_captures.py	2026-11-05 09:54:01
+@@ -1,4 +1,11 @@
+-"""levin-phase-floor prompt 06k: copied from 06j's scripts/check_captures.py (a record, not edited; its copy is in
++"""levin-phase-floor prompt 06l: copied from 06k's scripts/check_captures.py (a record; its copy is in
++state/scripts_06k_reference/), changed only where marked "prompt 06l": the call record's new key ``route_06l`` is
++not compared, as ``route_06k`` is not; and (after run levin-phase-floor-06l-k0partL-20261105T091942, where it
++failed every capture on this alone) the harness check also allows ``run_census.py``, which worker.py hashes in SCRIPTS
++but does not import, and which 06k changed (``--variant`` and the backstop) after its own captures ran; its two
++hashes are recorded with the others'. 06k's text follows.
++
++levin-phase-floor prompt 06k: copied from 06j's scripts/check_captures.py (a record, not edited; its copy is in
+ state/scripts_06j_reference/), changed only where marked "prompt 06k": the harness check allows the SCRIPTS files
+ 06k changes or adds (prov.py, its tree and paths; worker.py, the variant loading and the route record;
+ variant_loader.py, new), each one's two hashes recorded; and the call record's new key ``route_06k`` (None when no
+@@ -45,7 +52,7 @@
+ import refs_common as RC  # noqa: E402
+ from prov import header  # noqa: E402
+ 
+-VOLATILE_CALL_KEYS = {"elapsed", "route_06k"}  # prompt 06k: route_06k, the new key
++VOLATILE_CALL_KEYS = {"elapsed", "route_06k", "route_06l"}  # prompt 06k: route_06k, the new key; prompt 06l: route_06l
+ 
+ 
+ def load_blob(path, offset, length, sha):
+@@ -149,7 +156,7 @@
+                 k for k in set(cs_) | set(gs_) if cs_.get(k) != gs_.get(k)
+             )
+             row["prov_py_sha256"] = [cs_.get("prov.py"), gs_.get("prov.py")]
+-            row["scripts_sha256_equal"] = set(row["scripts_sha256_differing"]) <= {"prov.py", "worker.py", "variant_loader.py"}  # prompt 06k
++            row["scripts_sha256_equal"] = set(row["scripts_sha256_differing"]) <= {"prov.py", "worker.py", "variant_loader.py", "run_census.py"}  # prompt 06k; prompt 06l: run_census.py
+             row["changed_scripts_sha256_06k"] = {k: [cs_.get(k), gs_.get(k)] for k in row["scripts_sha256_differing"]}  # prompt 06k
+             if not row["scripts_sha256_equal"]:
+                 problems.append(
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/compare_k0.py scripts/compare_k0.py
+--- state/scripts_06k_reference/compare_k0.py	2026-11-05 02:22:29
++++ scripts/compare_k0.py	2026-11-05 09:14:50
+@@ -1,4 +1,9 @@
+-"""levin-phase-floor prompt 06k, Gate K0: a variant's unit records against 06g's census records, bit for
++"""levin-phase-floor prompt 06l, Gate K0: copied from 06k's scripts/compare_k0.py (a record; its copy is in
++state/scripts_06k_reference/), changed only where marked "prompt 06l": route B's key ``route_06l`` is excluded and
++skipped as ``route_06k`` is, a call's firing count is read from ``route_06l`` where the call has one (route B), and
++the title names 06l. 06k's text follows.
++
++levin-phase-floor prompt 06k, Gate K0: a variant's unit records against 06g's census records, bit for
+ bit. New in 06k. Read only. The comparison is state/predictions_and_rules_20261104T0915Z.md section 3's.
+ 
+ For each unit of RUN_DIR/units.jsonl (run_k0.py's output) it loads 06g's checkpoint record (by the
+@@ -36,6 +41,7 @@
+ EXCLUDED = {"wall_s", "rebuild_s", "seconds", "elapsed", "compute_time", "tree_head", "tree_status_short",
+             "scripts_sha256", "worker", "worker_pid", "worker_tree", "pickle", "pickle_offset", "pickle_length",
+             "pickle_record_sha256", "modules", "rows_sha256", "w2_capture_sha256", "route_06k",
++            "route_06l",  # prompt 06l
+             "cache_built"}  # cache_built: state/k0_comparison_correction_20261104T0911Z.md
+ 
+ 
+@@ -100,6 +106,8 @@
+ 
+ 
+ def firings(call):
++    if call.get("route_06l") is not None:  # prompt 06l: route B's record
++        return int(call["route_06l"]["n_firings"])
+     r = call.get("route_06k")
+     if r is None:
+         return None
+@@ -112,7 +120,7 @@
+         raise SystemExit("MODE is identity or route")
+     run06g = RC.census_run_06g()
+     ck = run06g / "checkpoint.jsonl"
+-    hdr = header(Path(__file__).resolve(), f"levin-phase-floor 06k: Gate K0, {run_dir.name} against 06g's census ({mode})",
++    hdr = header(Path(__file__).resolve(), f"levin-phase-floor 06l: Gate K0, {run_dir.name} against 06g's census ({mode})",
+                  [run_dir / "units.jsonl", INDEX])
+     for l in hdr:
+         print(l)
+@@ -168,7 +176,7 @@
+                         b_ = [e for e in ((g.get(key) or {}).get("lines") or []) if e.get("index") == i]
+                         diff(a_, b_, f"call[{i}].data.{key}.lines", out)
+                     for key in sorted(set(prec) | set(grec)):
+-                        if key == "route_06k":
++                        if key in ("route_06k", "route_06l"):  # prompt 06l: route_06l too
+                             continue
+                         a_, b_ = prec.get(key), grec.get(key)
+                         if isinstance(a_, list) or isinstance(b_, list):
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/extract_census.py scripts/extract_census.py
+--- state/scripts_06k_reference/extract_census.py	2026-11-05 02:22:29
++++ scripts/extract_census.py	2026-11-05 15:09:33
+@@ -1,4 +1,8 @@
+-"""levin-phase-floor prompt 06k, Part C: a compact extract of one census checkpoint, for the comparisons. New in
++"""levin-phase-floor prompt 06l, Part C: copied from 06k's extract_census.py (a record; in state/scripts_06k_reference/),
++changed only where marked "prompt 06l": each call also keeps route B's record (result key ``route_06l``) compactly,
++``routeB``: n_firings, n_withdrawn, n_untrusted_recorded and per record the tuple RB_FIELDS. 06k's text follows.
++
++levin-phase-floor prompt 06k, Part C: a compact extract of one census checkpoint, for the comparisons. New in
+ 06k (its per-call fields follow 06g's v8_06g.py ``slim_call``). Read only.
+ 
+ One pass over RUN_DIR/checkpoint.jsonl. Per unit: uid, rtol, row, status, wall_s, rebuild_s, the record's
+@@ -34,6 +38,21 @@
+             num(f.get("phi_P")), num(f.get("D")), num(f.get("cap")), f.get("is_direct"), f.get("trusted_g"))
+ 
+ 
++RB_FIELDS = ("kind", "depth", "at_depth_max", "start", "end", "is_direct", "is_direct_L", "is_direct_R", "r", "delta1",
++             "delta2", "phi_P", "phi_L", "phi_R", "phim_L", "phim_R", "E_P", "E_L", "E_R", "nu1", "nuB", "trusted_g",
++             "trusted_r1", "residual")  # prompt 06l
++
++
++def routeB_06l(r):
++    """prompt 06l: route B's record, compactly (floats as numbers; non-finite ones were kept as strings)."""
++    if r is None:
++        return None
++    conv = lambda v: float(v) if isinstance(v, str) else v  # noqa: E731
++    return {"n_firings": r.get("n_firings"), "n_withdrawn": r.get("n_withdrawn"),
++            "n_untrusted_recorded": r.get("n_untrusted_recorded"),
++            "records": [tuple(conv(x.get(k)) if k not in ("kind",) else x.get(k) for k in RB_FIELDS) for x in r.get("records", [])]}
++
++
+ def slim(kind, c):
+     ck = c.get("checked_06g") if isinstance(c.get("checked_06g"), dict) else {}
+     r = c.get("route_06k")
+@@ -49,7 +68,8 @@
+             "num_regions": c.get("num_regions"), "max_depth": c.get("max_depth"), "n_at_depth_max": c.get("n_at_depth_max"),
+             "depth_max": c.get("depth_max"), "num_untrusted_regions": c.get("num_untrusted_regions"),
+             "node_limited": c.get("node_limited"), "n_b_untrusted": ck.get("n_b_untrusted"), "n_checked": ck.get("n_checked"),
+-            "x_span": [h(c["x_span"][0]), h(c["x_span"][1])], "atol": c.get("atol"), "rtol": c.get("rtol"), "route": route}
++            "x_span": [h(c["x_span"][0]), h(c["x_span"][1])], "atol": c.get("atol"), "rtol": c.get("rtol"), "route": route,
++            "routeB": routeB_06l(c.get("route_06l"))}  # prompt 06l
+ 
+ 
+ def main():
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/index_06g.py scripts/index_06g.py
+--- state/scripts_06k_reference/index_06g.py	2026-11-05 02:22:29
++++ scripts/index_06g.py	2026-11-05 09:17:36
+@@ -24,7 +24,7 @@
+     out_p = Path(sys.argv[1])
+     run = RC.census_run_06g()
+     ck = run / "checkpoint.jsonl"
+-    hdr = header(Path(__file__).resolve(), "levin-phase-floor 06k: an index of 06g's census checkpoint", [ck])
++    hdr = header(Path(__file__).resolve(), "levin-phase-floor 06l: an index of 06g's census checkpoint", [ck])  # prompt 06l: the title (06k: 06k)
+     for l in hdr:
+         print(l)
+     if RC.sha256(ck) != CHECKPOINT06G_SHA256:
+Only in scripts: k0_summary_06l.py
+Only in scripts: kept_list_06l.py
+Only in scripts: l2_account_06l.py
+Only in scripts: launch_06l.py
+Only in scripts: launch_census_06l.py
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/make_variants.py scripts/make_variants.py
+--- state/scripts_06k_reference/make_variants.py	2026-11-05 02:22:29
++++ scripts/make_variants.py	2026-11-05 09:14:10
+@@ -1,4 +1,22 @@
+-"""levin-phase-floor prompt 06k section 1 ("The variants"): writes the identity variant and the three
++"""levin-phase-floor prompt 06l section 1 ("The variants"): copied from 06k's scripts/make_variants.py (a record,
++not edited; its copy is in state/scripts_06k_reference/), extended only where marked "prompt 06l": route B
++(prompt 06l section 0.2), and ``main`` writes only the identity variant and route B into OUT_DIR, printing the
++SHA-256 of 06k's four route variants as rebuilt in memory (not written) beside 06k's recorded ones. Route B:
++
++- route B: a checked leaf is trusted if r < 1/4, or if r < 1 and delta1 <= nu_B, with
++  nu_B = phi_P + sum over the Levin halves of phi_h + sum over the Clenshaw-Curtis halves of phi^-_h
++  + |sum over the Clenshaw-Curtis halves of E_h|, where phi^-_h is the half's "phase_err_less_node" and E_h its
++  "node_error_signed"; on a Levin parent the Clenshaw-Curtis halves contribute nothing. Summed as
++  ((phi_P + the Levin halves' phi, left first) + the Clenshaw-Curtis halves' phi^-, left first) + |E_L + E_R| (or
++  |E_h| for one), so that on Levin halves it is (phi_P + phi_L) + phi_R, route 1's nu1, bit for bit. Every firing
++  (a leaf B trusts that 06g's rule (b) does not) is recorded, and so, for the comparison with route 1, is every
++  leaf B leaves untrusted that route 1's yardstick would trust or that sits at depth_max (kind "untrusted"), and
++  any leaf 06g's rule trusts that B does not (kind "withdrawn", which a NaN floor alone could give; expected
++  never), under the new result key ``route_06l``; n_firings counts the firings alone.
++
++06k's text follows.
++
++levin-phase-floor prompt 06k section 1 ("The variants"): writes the identity variant and the three
+ route variants of the tree's ``AdaptiveLevin/levin_quadrature.py`` into ``variants/``. New in 06k.
+ 
+ Each route variant is the tree's file with exact text replacements, every one inside
+@@ -364,6 +382,110 @@
+         }"""
+ 
+ 
++# ---------------------------------------------------------------------------------- route B (prompt 06l)
++COUNTERS_NEW_ROUTEB = """    num_untrusted_found = 0
++    # prompt 06l, route B: every firing in this call (a leaf trusted that 06g's rule (b) finds untrusted),
++    # and every leaf left untrusted that route 1's yardstick would trust or that sits at depth_max, reported
++    # under the result key "route_06l"
++    route_records_06l = []
++
++    def _solve(span, description):
++"""
++
++TRUST_NEW_ROUTEB = """        residual = region.abserr
++        trusted_g_06l = ratio < _LEVIN_TRUST_MAX_RATIO or (
++            ratio < 1.0 and delta1 <= region.phase_err
++        )
++        # prompt 06l, route B: the noise yardstick nu_B = phi_P + the Levin halves' phi + the Clenshaw-Curtis
++        # halves' phi^- (phase_err_less_node) + |the Clenshaw-Curtis halves' E summed signed|; on a Levin parent a
++        # Clenshaw-Curtis half contributes nothing. On Levin halves it is route 1's nu1, (phi_P + phi_L) + phi_R.
++        parent_direct_06l = bool(leaf.is_direct)
++        halves_06l = (dataL, dataR)
++        half_direct_06l = [bool(h_06l.get("is_direct", False)) for h_06l in halves_06l]
++        phi_h_06l = [h_06l.get("phase_err", 0.0) or 0.0 for h_06l in halves_06l]
++        phim_h_06l = [h_06l.get("phase_err_less_node") for h_06l in halves_06l]
++        E_h_06l = [h_06l.get("node_error_signed") for h_06l in halves_06l]
++        nuB_06l = region.phase_err
++        for k_06l in (0, 1):
++            if not half_direct_06l[k_06l]:
++                nuB_06l = nuB_06l + phi_h_06l[k_06l]
++        if parent_direct_06l and any(half_direct_06l):
++            cc_06l = [k_06l for k_06l in (0, 1) if half_direct_06l[k_06l]]
++            for k_06l in cc_06l:
++                if phim_h_06l[k_06l] is None or E_h_06l[k_06l] is None:
++                    raise RuntimeError(
++                        "prompt 06l, route B: a Clenshaw-Curtis half has no phase_err_less_node or node_error_signed"
++                    )
++                nuB_06l = nuB_06l + phim_h_06l[k_06l]
++            E_cc_06l = E_h_06l[cc_06l[0]] if len(cc_06l) == 1 else E_h_06l[0] + E_h_06l[1]
++            nuB_06l = nuB_06l + abs(E_cc_06l)
++        nu1_06l = (region.phase_err + phi_h_06l[0]) + phi_h_06l[1]
++        trusted_r1_06l = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= nu1_06l)
++        trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= nuB_06l)
++        if (
++            (trusted and not trusted_g_06l)
++            or (trusted_g_06l and not trusted)
++            or (not trusted and (trusted_r1_06l or leaf.depth >= depth_max))
++        ):
++
++            def _f_06l(x_06l):
++                return None if x_06l is None else float(x_06l)
++
++            route_records_06l.append(
++                {
++                    "kind": (
++                        "fired"
++                        if trusted and not trusted_g_06l
++                        else ("withdrawn" if trusted_g_06l and not trusted else "untrusted")
++                    ),
++                    "depth": int(leaf.depth),
++                    "at_depth_max": bool(leaf.depth >= depth_max),
++                    "start": float(a),
++                    "end": float(b),
++                    "is_direct": parent_direct_06l,
++                    "is_direct_L": half_direct_06l[0],
++                    "is_direct_R": half_direct_06l[1],
++                    "r": float(ratio),
++                    "delta1": float(delta1),
++                    "delta2": float(delta2),
++                    "phi_P": float(region.phase_err),
++                    "phi_L": float(phi_h_06l[0]),
++                    "phi_R": float(phi_h_06l[1]),
++                    "phim_L": _f_06l(phim_h_06l[0]),
++                    "phim_R": _f_06l(phim_h_06l[1]),
++                    "E_P": _f_06l(region.node_error_signed),
++                    "E_L": _f_06l(E_h_06l[0]),
++                    "E_R": _f_06l(E_h_06l[1]),
++                    "nu1": float(nu1_06l),
++                    "nuB": float(nuB_06l),
++                    "trusted_g": bool(trusted_g_06l),
++                    "trusted_r1": bool(trusted_r1_06l),
++                    "residual": float(residual),
++                }
++            )
++"""
++
++ROUTEB_RETURN = """        "chebyshev_min_order": chebyshev_min_order,
++        "max_depth": max_depth,
++        # prompt 06l: route B's records in this call (a new key; the comparison with 06g ignores it)
++        "route_06l": {
++            "route": "B",
++            "n_firings": sum(1 for rec_06l in route_records_06l if rec_06l["kind"] == "fired"),
++            "n_withdrawn": sum(1 for rec_06l in route_records_06l if rec_06l["kind"] == "withdrawn"),
++            "n_untrusted_recorded": sum(1 for rec_06l in route_records_06l if rec_06l["kind"] == "untrusted"),
++            "records": route_records_06l,
++        },
++    }
++"""
++
++
++def routeB(src):
++    s = replace_once(src, COUNTERS_OLD, COUNTERS_NEW_ROUTEB, "counters")
++    s = replace_once(s, TRUST_OLD, TRUST_NEW_ROUTEB, "trust test")
++    s = replace_once(s, RETURN_OLD, ROUTEB_RETURN, "return")
++    return s
++
++
+ def replace_once(text, old, new, what):
+     n = text.count(old)
+     if n != 1:
+@@ -523,15 +645,23 @@
+     tree_file, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
+     src_bytes = tree_file.read_bytes()
+     src = src_bytes.decode()
+-    print(f"# levin-phase-floor 06k: the variants of {tree_file}")
++    print(f"# levin-phase-floor 06l: the variants of {tree_file}")  # prompt 06l (06k: 06k)
+     print(f"# script make_variants.py sha256 {hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}")
+     print(f"# input {tree_file} sha256 {hashlib.sha256(src_bytes).hexdigest()}")
+-    outs = {
++    # prompt 06l: 06k's four routes rebuilt in memory and hashed, beside 06k's recorded SHA-256 (not written)
++    recorded_06k = {
++        "route1": "23cd69e4",
++        "route2": "017fae1c",
++        "route2lit": "2fd10b78",
++        "route3": "e139ec71",
++    }
++    for name, build in (("route1", route1), ("route2", route2), ("route2lit", route2lit), ("route3", route3)):
++        h = hashlib.sha256(build(src).encode()).hexdigest()
++        print(f"06k {name} rebuilt in memory: sha256 {h} (06k recorded {recorded_06k[name]}...: "
++              f"{'equal' if h.startswith(recorded_06k[name]) else 'DIFFERENT'}); not written")
++    outs = {  # prompt 06l: only the identity variant and route B are written
+         "identity": src_bytes,
+-        "route1": route1(src).encode(),
+-        "route2": route2(src).encode(),
+-        "route3": route3(src).encode(),
+-        "route2lit": route2lit(src).encode(),  # prompt 06k, after stop 1 (the user's Q1 ruling)
++        "routeB": routeB(src).encode(),
+     }
+     for name, data in outs.items():
+         p = out_dir / f"levin_quadrature_{name}.py"
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/probe_l.py scripts/probe_l.py
+--- state/scripts_06k_reference/probe_l.py	2026-11-05 02:22:29
++++ scripts/probe_l.py	2026-11-05 09:16:14
+@@ -1,4 +1,12 @@
+-"""levin-phase-floor prompt 06k, Part L: the three routes' trust decisions at leaf level, each evaluated in
++"""levin-phase-floor prompt 06l, Part L: copied from 06k's scripts/probe_l.py (a record; its copy is in
++state/scripts_06k_reference/), changed only where marked "prompt 06l": route B's numbers are added to each leaf,
++from the same seven solves, beside 06k's: phi^- (``phase_err_less_node``) of P, L and R, nu_B as the variant
++forms it (``nu_B_variant``: ((phi_P + the Levin halves' phi) + the Clenshaw-Curtis halves' phi^-) + |E_L + E_R|,
++a Clenshaw-Curtis half contributing nothing on a Levin parent) and exactly (``nu_B_exact``, math.fsum of the same
++terms with the E sum exact), |E_L + E_R| / (|E_L| + |E_R|) where both halves are Clenshaw-Curtis, delta1/nu_B,
++and the decision ``routeB`` (rule (b) with nu_B_variant); and the title names 06l. 06k's text follows.
++
++levin-phase-floor prompt 06k, Part L: the three routes' trust decisions at leaf level, each evaluated in
+ isolation on a leaf's own span in 06g's code (the tree's ``AdaptiveLevin.levin_quadrature``), as 06j's
+ probe_s.py evaluated rule (b). New in 06k (its solve and rule are probe_s.py's).
+ 
+@@ -120,6 +128,29 @@
+         d2c = float(np.fabs(halves_c - quarters_c))
+         rc = ratio_of(d1c, d2c)
+         D = max(residual, d1) / (1.0 - r) if r < 1.0 else max(residual, d1 + d2)
++        # prompt 06l: route B's yardstick, from the same solves, as the variant forms it and exactly
++        dirP_06l, dirL_06l, dirR_06l = (bool(d.get("is_direct", False)) for d in (P, L, R))
++        nuB = phiP
++        terms_06l = [phiP]
++        for h_06l, dir_06l in ((L, dirL_06l), (R, dirR_06l)):
++            if not dir_06l:
++                nuB = nuB + phi(h_06l)
++                terms_06l.append(phi(h_06l))
++        cc_06l = [h_06l for h_06l, dir_06l in ((L, dirL_06l), (R, dirR_06l)) if dir_06l] if dirP_06l else []
++        for h_06l in cc_06l:
++            nuB = nuB + h_06l["phase_err_less_node"]
++            terms_06l.append(h_06l["phase_err_less_node"])
++        if cc_06l:
++            E_cc = cc_06l[0]["node_error_signed"] if len(cc_06l) == 1 else cc_06l[0]["node_error_signed"] + cc_06l[1]["node_error_signed"]
++            nuB = nuB + abs(E_cc)
++            terms_06l.append(abs(math.fsum(h_06l["node_error_signed"] for h_06l in cc_06l)))
++        nuB_exact = math.fsum(terms_06l)
++        if dirL_06l and dirR_06l:
++            sum_abs_06l = abs(L["node_error_signed"]) + abs(R["node_error_signed"])
++            cancel_06l = abs(L["node_error_signed"] + R["node_error_signed"]) / sum_abs_06l if sum_abs_06l > 0 else None
++        else:
++            cancel_06l = None
++        rB = rule_b(r, d1, nuB)
+         g = rule_b(r, d1, phiP)
+         r1 = rule_b(r, d1, nu1)
+         r2l = rule_b(rc, d1c, phiP)
+@@ -138,7 +169,13 @@
+             "delta1c": d1c, "delta2c": d2c, "r_c": rc, "d1c_over_phiP": d1c / phiP if phiP > 0 else math.inf,
+             "D": D, "request": request, "D_over_request": D / request, "D_over_eta_request": D / (ETA * request),
+             "decision": {"g": dec(g), "route1": dec(r1), "route2_literal": dec(r2l), "route2": dec(g or r2l),
+-                         "route3": dec(g, r3_left)},
++                         "route3": dec(g, r3_left), "routeB": dec(rB)},  # prompt 06l: routeB
++            # prompt 06l: route B's numbers
++            "phim": {k: d.get("phase_err_less_node") for k, d in (("P", P), ("L", L), ("R", R))},
++            "nu_B_variant": nuB, "nu_B_exact": nuB_exact, "nu_B_terms": terms_06l,
++            "d1_over_nuB": d1 / nuB if nuB > 0 else math.inf,
++            "cancellation_LR": cancel_06l,
++            "nu_B_hex": fx(nuB), "nu1_hex": fx(nu1),
+             "declared_g_formula": max(residual, d1) / (1.0 - r) if r < 1.0 else None,
+             "declared_route2_literal": max(residual, d1c) / (1.0 - rc) if (r2l and rc < 1.0) else None,
+             "hex": {"delta1": fx(d1), "delta2": fx(d2), "r": fx(r), "phi": fx(phiP)},
+@@ -174,7 +211,7 @@
+         inputs.append(SSAM)
+     else:
+         inputs.append(WPREP / f"{sid}.json")
+-    hdr = header(Path(__file__).resolve(), f"levin-phase-floor 06k: Part L probes of {sid} ({sel['unit']} #{sel['index']})", inputs)
++    hdr = header(Path(__file__).resolve(), f"levin-phase-floor 06l: Part L probes of {sid} ({sel['unit']} #{sel['index']})", inputs)
+     rec = cp.loads(pkl.read_bytes())
+     if rec["unit"] != sel["unit"] or rec["index"] != sel["index"]:
+         raise SystemExit("capture is not the selection's call")
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/prov.py scripts/prov.py
+--- state/scripts_06k_reference/prov.py	2026-11-05 02:22:29
++++ scripts/prov.py	2026-11-05 09:10:27
+@@ -1,4 +1,16 @@
+-"""levin-phase-floor prompt 06k (three ways to stop refining the slow leaves, a measurement; on the
++"""levin-phase-floor prompt 06l (the trust yardstick with the halves' node errors signed, a measurement;
++on the Mac Studio): copied from 06k's ``scripts/prov.py`` (docs/levin-phase-floor/06k/scripts/prov.py, a
++record, not edited; its copy is kept unchanged in state/scripts_06k_reference/); changed here only in its
++tree and its paths, each change marked "prompt 06l":
++- one tree, ``g``: 06l's dispatch SHA ``af4c4dc1`` (the worktree
++  ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc``), whose production code is ``1c5336e``'s
++  (``git diff --stat 1c5336e af4c4dc1 -- . ':!docs' ':!prompts'`` shows only CLAUDE.md and
++  ``tools/filon_reference.py`` with its test). 06k's tree (removed 2026-11-05) is kept below by name;
++- the records directory is var/levin-phase-floor-06l/ (the same depth as 06k's).
++
++(06k's text follows, unchanged.)
++
++levin-phase-floor prompt 06k (three ways to stop refining the slow leaves, a measurement; on the
+ Mac Studio): provenance shared by every script. Copied from prompt 06j's ``scripts/prov.py``
+ (docs/levin-phase-floor/06j/scripts/prov.py, a record, not edited; its copy is kept unchanged in
+ state/scripts_06j_reference/); changed here only in its tree and its paths, each change marked
+@@ -192,7 +204,7 @@
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k
++WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+ assert HERE.parents[2] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's; prompt 06j: var/levin-phase-floor-06j/scripts, one shallower again
+ 
+@@ -261,6 +273,11 @@
+ G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060")  # prompt 06k
+ G_SHA = "89370609a64d58993289dcfe991350a420ea698d"  # prompt 06k: 06k's dispatch SHA; code = 1c5336e's
+ TREES = {"g": (G_TREE, G_SHA)}  # prompt 06k: one tree
++# prompt 06l: 06k's tree (removed 2026-11-05) is kept above, by name, for the record (not used); the one tree of 06l
++G06K_TREE, G06K_SHA = G_TREE, G_SHA  # 06k's tree (89370609), not used
++G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc")  # prompt 06l
++G_SHA = "af4c4dc17995f6576213f80257f9617df459d1fd"  # prompt 06l: 06l's dispatch SHA; code = 1c5336e's
++TREES = {"g": (G_TREE, G_SHA)}  # prompt 06l: one tree
+ # prompt 06g: 06h's census run (the "before") and its records, read only
+ RUN06H = MAIN / "var" / "runs" / "levin-phase-floor-06h-census-20261101T005037"
+ CHECKPOINT06H_SHA256 = "3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372"
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/refs_common.py scripts/refs_common.py
+--- state/scripts_06k_reference/refs_common.py	2026-11-05 02:22:29
++++ scripts/refs_common.py	2026-11-05 09:10:27
+@@ -1,4 +1,9 @@
+-"""levin-phase-floor prompt 06k: copied from 06j's scripts/refs_common.py (a record, not edited; its
++"""levin-phase-floor prompt 06l: copied from 06k's scripts/refs_common.py (a record, not edited; its
++copy is in state/scripts_06k_reference/), changed only where marked "prompt 06l": ROOT is
++var/levin-phase-floor-06l/ (the same depth as 06k's), and G_TREE/G_SHA are 06l's tree (the worktree
++at 06l's dispatch SHA af4c4dc1, production code 1c5336e's). 06k's text follows.
++
++levin-phase-floor prompt 06k: copied from 06j's scripts/refs_common.py (a record, not edited; its
+ copy is in state/scripts_06j_reference/), changed only where marked "prompt 06k": ROOT is
+ var/levin-phase-floor-06k/ (the same depth as 06j's), and G_TREE/G_SHA are 06k's tree (the worktree
+ at 06k's dispatch SHA 89370609, production code 1c5336e's). 06j's text follows.
+@@ -31,13 +36,13 @@
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-ROOT = HERE.parent  # var/levin-phase-floor-06g/references; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k
++ROOT = HERE.parent  # var/levin-phase-floor-06g/references; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l
+ MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+ assert HERE.parents[2] == MAIN, HERE  # prompt 06j: one level shallower than 06g's
+ PYTHON = MAIN / "venv" / "bin" / "python"
+ 
+-G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060")  # prompt 06k (06j: -lpf06j-dfa19d9; 06g: -lpf06g-1c5336e)
+-G_SHA = "89370609a64d58993289dcfe991350a420ea698d"  # prompt 06k (06j: dfa19d98...; 06g: 1c5336e7e0ab8ed4495601a4033841f2df17ebdd)
++G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc")  # prompt 06l (06k: -lpf06k-8937060; 06j: -lpf06j-dfa19d9; 06g: -lpf06g-1c5336e)
++G_SHA = "af4c4dc17995f6576213f80257f9617df459d1fd"  # prompt 06l (06k: 89370609...; 06j: dfa19d98...; 06g: 1c5336e7e0ab8ed4495601a4033841f2df17ebdd)
+ 
+ # 06h's census, the "before" (read only)
+ RUN06H = MAIN / "var" / "runs" / "levin-phase-floor-06h-census-20261101T005037"
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/run_census.py scripts/run_census.py
+--- state/scripts_06k_reference/run_census.py	2026-11-05 02:22:29
++++ scripts/run_census.py	2026-11-05 09:58:55
+@@ -1,4 +1,9 @@
+ """
++levin-phase-floor prompt 06l section 3 (Part C): 06k's run_census.py (a record; its copy is in
++state/scripts_06k_reference/), changed only where marked "prompt 06l": ``--variant`` also accepts ``routeB``. The
++backstop is 06k's, unchanged: it counts the units in flight, one per running worker, and stops the run only at a
++projected wall of a day or more. 06k's text follows.
++
+ levin-phase-floor prompt 06k section 3 (Part C): 06g's census re-run at the tree with one route's variant of
+ AdaptiveLevin/levin_quadrature.py loaded in its place. Copied from 06g's census scripts/run_census.py (06j's copy is
+ byte-identical; both kept in state/), changed only where marked "prompt 06k":
+@@ -198,7 +203,7 @@
+     parser.add_argument("--max-workers", type=int, default=6)
+     parser.add_argument("--skip-recorded-in", default=None)
+     parser.add_argument("--tree", default="g", choices=sorted(TREES))  # prompt 06b; prompt 06c: g
+-    parser.add_argument("--variant", default=None, choices=("identity", "route1", "route2", "route3", "route2lit"))  # prompt 06k (route2lit after stop 1)
++    parser.add_argument("--variant", default=None, choices=("identity", "route1", "route2", "route3", "route2lit", "routeB"))  # prompt 06k (route2lit after stop 1); prompt 06l: routeB
+     parser.add_argument("--projection-s", type=float, default=None)  # prompt 06k: the backstop's projection
+     args = parser.parse_args()
+     variant = None  # prompt 06k
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/run_k0.py scripts/run_k0.py
+--- state/scripts_06k_reference/run_k0.py	2026-11-05 02:22:29
++++ scripts/run_k0.py	2026-11-05 09:14:50
+@@ -1,4 +1,8 @@
+-"""levin-phase-floor prompt 06k, Gate K0: run a list of census units at the tree with one variant of
++"""levin-phase-floor prompt 06l, Gate K0: copied from 06k's scripts/run_k0.py (a record; its copy is in
++state/scripts_06k_reference/), changed only where marked "prompt 06l": the variant ``routeB`` is accepted (06k's
++route variants are not in this directory), and the title names 06l. 06k's text follows.
++
++levin-phase-floor prompt 06k, Gate K0: run a list of census units at the tree with one variant of
+ ``AdaptiveLevin/levin_quadrature.py`` loaded (or with the tree's own module), in 06g's census worker.
+ New in 06k (after 06c's x1_capture.py and 06g's run_census.py).
+ 
+@@ -29,6 +33,7 @@
+ import run_census as RCN  # noqa: E402
+ 
+ VARIANTS = ("tree", "identity", "route1", "route2", "route3", "route2lit")  # prompt 06k: route2lit after stop 1
++VARIANTS = ("tree", "identity", "routeB")  # prompt 06l
+ 
+ 
+ def variant_spec(name):
+@@ -51,7 +56,7 @@
+         raise SystemExit("PYTHONPATH must be the tree g")
+     vspec = variant_spec(args.variant)
+     inputs = [Path(args.units_json), RC.ROWS] + ([Path(vspec["path"])] if vspec else [])
+-    for l in header(Path(__file__).resolve(), f"levin-phase-floor 06k: census units under the variant {args.variant}", inputs):
++    for l in header(Path(__file__).resolve(), f"levin-phase-floor 06l: census units under the variant {args.variant}", inputs):
+         print(l)
+     if sha256(RC.ROWS) != RC.ROWS_SHA256:
+         raise SystemExit("rows.json sha256 differs")
+Only in scripts: score_h1_06l.py
+Only in scripts: score_l_06l.py
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/slice_06j.py scripts/slice_06j.py
+--- state/scripts_06k_reference/slice_06j.py	2026-11-05 02:22:29
++++ scripts/slice_06j.py	2026-11-05 09:54:01
+@@ -4,7 +4,10 @@
+ the census (x1_capture.py's ``capture_matches_census`` and check_captures.py's ``reproduces_census``) are sliced.
+ Nothing is unpickled. Writes state/inputs/<sid>.pkl (refusing to overwrite) and out/inputs.json.
+ 
+-Usage: python -B slice_06j.py CAPTURE_JSON CHECK_JSON SELECTION_JSON
++Usage: python -B slice_06j.py CAPTURE_JSON CHECK_JSON SELECTION_JSON [OUT_JSON]
++
++prompt 06l: the optional OUT_JSON (default out/inputs.json) names the output, so that a second slicing does not
++overwrite the first run's record.
+ """
+ 
+ import hashlib
+@@ -21,7 +24,7 @@
+ def main():
+     cap_p, chk_p, sel_p = (Path(a) for a in sys.argv[1:4])
+     out_dir = RC.ROOT / "state" / "inputs"
+-    out_json = RC.ROOT / "out" / "inputs.json"
++    out_json = Path(sys.argv[4]) if len(sys.argv) > 4 else RC.ROOT / "out" / "inputs.json"  # prompt 06l: OUT_JSON
+     if out_json.exists():
+         raise SystemExit(f"{out_json} exists; not overwritten")
+     for l in header(Path(__file__).resolve(), "levin-phase-floor 06j: the captured calls, one file each",
+diff -ru -x variants -x __pycache__ state/scripts_06k_reference/worker.py scripts/worker.py
+--- state/scripts_06k_reference/worker.py	2026-11-05 02:22:29
++++ scripts/worker.py	2026-11-05 09:14:50
+@@ -1,4 +1,10 @@
+ """
++levin-phase-floor prompt 06l section 1: 06k's census worker (docs/levin-phase-floor/06k/scripts/worker.py, a record;
++its copy is in state/scripts_06k_reference/), changed only where marked "prompt 06l": route B's result key
++``route_06l`` is kept in each call's summary under ``route_06l`` (as 06k keeps ``route_06k``) and in the unit's
++pickle record under ``route_06l`` as returned. No computed value changes, and no key 06g or 06k recorded changes.
++06k's text follows.
++
+ levin-phase-floor prompt 06k section 1 (06g's census worker, run at the tree with a variant of
+ ``AdaptiveLevin/levin_quadrature.py`` loaded in its place; copied from 06j's copy of 06g's census
+ scripts/worker.py, docs/levin-phase-floor/06j/scripts/worker.py, which is byte-identical to
+@@ -1645,6 +1651,7 @@
+     except Exception:
+         out["error_06g"] = traceback.format_exc()[-2000:]
+     out["route_06k"] = _json_safe_06k(call["result"].get("route_06k"))  # prompt 06k
++    out["route_06l"] = _json_safe_06k(call["result"].get("route_06l"))  # prompt 06l
+     return out
+ 
+ 
+@@ -2443,6 +2450,8 @@
+                             "premise_06g": [{"index": c["index"], "checks": prem_06g.get(c["index"])} for c in calls],
+                             # prompt 06k: each call's route record, as the variant returned it
+                             "route_06k": [{"index": c["index"], "route_06k": c["result"].get("route_06k")} for c in calls],
++                            # prompt 06l: each call's route B record, as the variant returned it
++                            "route_06l": [{"index": c["index"], "route_06l": c["result"].get("route_06l")} for c in calls],
+                         }
+                         import io as _io
+ 

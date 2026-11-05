@@ -1,0 +1,24 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_h1_06l.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:13:21Z
+# ----
+# levin-phase-floor 06l: route B and route 1 against the references, H1
+# written 2026-11-05T15:13:22Z on mps026298.phys.susx.ac.uk
+# script score_h1_06l.py sha256 52cb48f874a431b5d7464dda2a4e401880b8ec4e64d97ed12d61650544cb4ba7
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json sha256 73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06j/out/w_calls.csv sha256 0a8549bd6fee58bd8d9037e7aa15ee2fab0c4b14c7478ca4cfd90d2582e172f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/g.pkl sha256 3942209a1141fad4822a2b962a068d6d8ad743cdaf93247c130d94e9c8e51eea
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route1.pkl sha256 adaf96e2433b3c2ad92aec44031b514604c22cdfca1b4cd5927cea0c7af9db93
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/extract/routeB.pkl sha256 e73280047215dd0d938c3c8a7333902e555d286a29ad76fb9d9f2da2e000ab2d
+references 124; unmatched 0; 06g ratio reproduces the source's on {'matches': 124, 'of': 124}; V1's 12 unscored (no census call)
+route1: H1 on the matched references outside the 720 holds: 115 scored, within own error 114, worst 1.185; violations []
+   in the 720: [('z00', 0.0183, 0.0183), ('z07', 0.0, 0.0), ('z12', 1681.3313, 1681.3492), ('z16', 0.0, 0.0), ('z18', 0.0, 0.0), ('z21', 0.0, 0.0), ('z24', 0.0021, 0.0021), ('z28', 0.0, 0.0), ('z29', 0.0, 0.0)]
+routeB: H1 on the matched references outside the 720 holds: 115 scored, within own error 114, worst 1.182; violations []
+   in the 720: [('z00', 0.0183, 0.0183), ('z07', 0.0, 0.0), ('z12', 1681.2987, 1681.3492), ('z16', 0.0, 0.0), ('z18', 0.0, 0.0), ('z21', 0.0, 0.0), ('z24', 0.0021, 0.0021), ('z28', 0.0, 0.0), ('z29', 0.0, 0.0)]
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partC/h1.json sha256 6102032f5fc5dbe13ca314d4117f73690bcf8a2b96eb515e21bf5246a0bd59da; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partC/h1_calls.csv sha256 641d497a3451ea24f614a9ce5a598cd382c8a646b65ca42df9561acccc764270
+# ----
+# end 2026-11-05T15:13:25Z
+# exit 0

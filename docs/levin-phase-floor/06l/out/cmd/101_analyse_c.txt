@@ -1,0 +1,400 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse_c_06l.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:11:25Z
+# ----
+{
+ "checkpoint_sha256": {
+  "routeB": "5cb3d3c0e6e628720aa122a1d23d4a90f140b116ef9e58e2f66a3bffb9dd0d39",
+  "g": "03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa",
+  "route1": "36e3dd4c9125f6ea620b80e1bc15d656827b5dd2e449c983d479d1577c6bed38"
+ },
+ "status": {
+  "exit_code": 0,
+  "heartbeat": "2026-11-05T15:07:06+00:00",
+  "host": {
+   "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+   "id": "d120d1cf03551e6f"
+  },
+  "pid": 54726,
+  "stage": "18560 units recorded; last g-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+ },
+ "units": 18560,
+ "units_not_done": [],
+ "cost": {
+  "06g": {
+   "census_wall_s": 20361.0,
+   "created": "2026-11-01T11:43:15+00:00",
+   "last_heartbeat": "2026-11-01T17:22:36+00:00",
+   "per_rtol": {
+    "1e-7": {
+     "unit_wall_s": 27418.835901966784,
+     "group_call_regions": 1124662
+    },
+    "1e-8": {
+     "unit_wall_s": 31116.086612707935,
+     "group_call_regions": 1255648
+    }
+   },
+   "unit_wall_s": 58534.92251467472,
+   "group_call_regions": 2380310,
+   "unit_wall_ratio_to_06g": 1.0,
+   "regions_ratio_to_06g": 1.0
+  },
+  "route1": {
+   "census_wall_s": 16758.0,
+   "created": "2026-11-04T10:30:09+00:00",
+   "last_heartbeat": "2026-11-04T15:09:27+00:00",
+   "per_rtol": {
+    "1e-7": {
+     "unit_wall_s": 21895.888079292607,
+     "group_call_regions": 868722
+    },
+    "1e-8": {
+     "unit_wall_s": 23907.470858053304,
+     "group_call_regions": 978440
+    }
+   },
+   "unit_wall_s": 45803.35893734591,
+   "group_call_regions": 1847162,
+   "unit_wall_ratio_to_06g": 0.7824962769167927,
+   "regions_ratio_to_06g": 0.7760174094970823
+  },
+  "routeB": {
+   "census_wall_s": 18340.0,
+   "created": "2026-11-05T10:01:26+00:00",
+   "last_heartbeat": "2026-11-05T15:07:06+00:00",
+   "per_rtol": {
+    "1e-7": {
+     "unit_wall_s": 24062.776977971196,
+     "group_call_regions": 939882
+    },
+    "1e-8": {
+     "unit_wall_s": 26431.862233581487,
+     "group_call_regions": 1053755
+    }
+   },
+   "unit_wall_s": 50494.63921155268,
+   "group_call_regions": 1993637,
+   "unit_wall_ratio_to_06g": 0.8626412582829278,
+   "regions_ratio_to_06g": 0.8375535119375207
+  },
+  "06h": {
+   "census_wall_s": 9193.0,
+   "per_rtol": {
+    "1e-7": {
+     "unit_wall_s": 8002.617340714671,
+     "group_call_regions": 227373,
+     "group_calls_at_depth_max_outside_720": 0,
+     "group_calls_at_depth_max_in_720": 11
+    },
+    "1e-8": {
+     "unit_wall_s": 10506.742085973732,
+     "group_call_regions": 329525,
+     "group_calls_at_depth_max_outside_720": 1,
+     "group_calls_at_depth_max_in_720": 17
+    }
+   },
+   "unit_wall_s": 18509.359426688403,
+   "group_call_regions": 556898,
+   "source": "06k's committed out/partC/summary.json baselines.h",
+   "unit_wall_ratio_to_06g": 0.31621053947834477,
+   "regions_ratio_to_06g": 0.23396028248421424
+  }
+ },
+ "C1_detail": {
+  "1e-7/outside_720": {
+   "lost_under_g": 801,
+   "converge_under_B": 749,
+   "fraction": 0.9350811485642946,
+   "held_back": {
+    "untrusted leaf": 51,
+    "node_limited": 1
+   },
+   "converge_under_route1": 792
+  },
+  "1e-7/in_720": {
+   "lost_under_g": 316,
+   "converge_under_B": 181,
+   "fraction": 0.5727848101265823,
+   "held_back": {
+    "untrusted leaf": 135
+   },
+   "converge_under_route1": 213
+  },
+  "1e-8/outside_720": {
+   "lost_under_g": 830,
+   "converge_under_B": 773,
+   "fraction": 0.9313253012048193,
+   "held_back": {
+    "untrusted leaf": 53,
+    "node_limited": 4
+   },
+   "converge_under_route1": 818
+  },
+  "1e-8/in_720": {
+   "lost_under_g": 340,
+   "converge_under_B": 188,
+   "fraction": 0.5529411764705883,
+   "held_back": {
+    "untrusted leaf": 151,
+    "node_limited": 1
+   },
+   "converge_under_route1": 218
+  }
+ },
+ "C1": "holds",
+ "C2": "holds",
+ "gained_against_06g": {
+  "outside_720": 1522,
+  "in_720": 369
+ },
+ "S1": "holds",
+ "depth": {
+  "routeB": {
+   "1e-7": {
+    "outside_720": 72,
+    "in_720": 155
+   },
+   "1e-8": {
+    "outside_720": 76,
+    "in_720": 176
+   }
+  },
+  "06g": {
+   "1e-7": {
+    "outside_720": 966,
+    "in_720": 357
+   },
+   "1e-8": {
+    "outside_720": 996,
+    "in_720": 385
+   }
+  },
+  "route1": {
+   "1e-7": {
+    "outside_720": 14,
+    "in_720": 118
+   },
+   "1e-8": {
+    "outside_720": 16,
+    "in_720": 139
+   }
+  }
+ },
+ "firings": {
+  "outside_720": {
+   "by_depth": {
+    "0": 14,
+    "1": 66,
+    "10": 18365,
+    "11": 29138,
+    "12": 49765,
+    "13": 42520,
+    "14": 35292,
+    "15": 18461,
+    "16": 8427,
+    "17": 2835,
+    "18": 710,
+    "19": 173,
+    "2": 161,
+    "20": 68,
+    "3": 479,
+    "4": 629,
+    "5": 615,
+    "6": 1581,
+    "7": 4128,
+    "8": 7558,
+    "9": 11796
+   },
+   "by_kinds": {
+    "CC parent / CC+CC": 222942,
+    "Levin parent / CC+Levin": 6,
+    "Levin parent / Levin+Levin": 9833
+   },
+   "by_d1_over_phiP": {
+    "<100": 14148,
+    "<1000": 2220,
+    "<2": 100745,
+    "<25": 48501,
+    "<5.8": 67167
+   },
+   "by_d1_over_nuB": {
+    "<0.5": 6275,
+    "<0.9": 56244,
+    "<1": 170262
+   },
+   "by_r": {
+    "<0.5": 88939,
+    "<0.75": 91949,
+    "<1": 51893
+   },
+   "cc_cc_by_d1_over_EP_plus_ELR": {
+    "<0.5": 4229,
+    "<1": 148959,
+    "<1.01": 52169,
+    "<100": 12,
+    "<2": 17011,
+    "<25": 78,
+    "<5.8": 464,
+    ">=100": 20
+   },
+   "levin_parent_by_d1_over_phiP": {
+    "<2": 7391,
+    "<5.8": 2448
+   }
+  },
+  "in_720": {
+   "by_depth": {
+    "10": 1846,
+    "11": 1923,
+    "12": 4877,
+    "13": 7570,
+    "14": 7839,
+    "15": 5547,
+    "16": 2995,
+    "17": 1559,
+    "18": 832,
+    "19": 671,
+    "2": 6,
+    "20": 710,
+    "3": 94,
+    "4": 137,
+    "5": 106,
+    "6": 100,
+    "7": 116,
+    "8": 272,
+    "9": 1049
+   },
+   "by_kinds": {
+    "CC parent / CC+CC": 36348,
+    "Levin parent / Levin+Levin": 1901
+   },
+   "by_d1_over_phiP": {
+    "<100": 2231,
+    "<1000": 340,
+    "<2": 16569,
+    "<25": 8213,
+    "<5.8": 10896
+   },
+   "by_d1_over_nuB": {
+    "<0.1": 2,
+    "<0.5": 1271,
+    "<0.9": 9518,
+    "<1": 27458
+   },
+   "by_r": {
+    "<0.5": 14571,
+    "<0.75": 15060,
+    "<1": 8618
+   },
+   "cc_cc_by_d1_over_EP_plus_ELR": {
+    "<0.5": 925,
+    "<1": 25062,
+    "<1.01": 7784,
+    "<2": 2519,
+    "<25": 13,
+    "<5.8": 45
+   },
+   "levin_parent_by_d1_over_phiP": {
+    "<2": 1459,
+    "<5.8": 442
+   }
+  }
+ },
+ "n_withdrawn": 0,
+ "n_fired_not_trusted_by_route1_yardstick": 0,
+ "K1": "holds",
+ "n_unmatched": 0,
+ "unmatched": [],
+ "C2_detail": {
+  "lost_outside_720": 4,
+  "lost_in_720": 1,
+  "by_rtol_kind": {
+   "1e-8/group": 4
+  },
+  "holdback": {
+   "node_limited": 4
+  },
+  "holdback_in_720": {
+   "node_limited": 1
+  }
+ },
+ "S1_detail": {
+  "units_outside": 0,
+  "rows_outside_shard_serial": 0,
+  "units_in_720": 2,
+  "rows_in_720_shard_serial": 1,
+  "max_ratio_outside": null,
+  "row_totals_moving_outside_720": [],
+  "row_totals_moving_in_720": [
+   {
+    "unit": "g-1e-8-0-2316",
+    "rtol": "1e-8",
+    "row": "0-2316",
+    "in_720": true,
+    "ratio": 289.543717284159
+   },
+   {
+    "unit": "g-1e-7-0-2316",
+    "rtol": "1e-7",
+    "row": "0-2316",
+    "in_720": true,
+    "ratio": 48.46031046864633
+   }
+  ]
+ },
+ "K1_detail": {
+  "levin_parent_firings_outside_720": 9839,
+  "of_them_ge_5.8_outside": 0,
+  "levin_parent_firings_in_720": 1901,
+  "of_them_ge_5.8_in_720": 0,
+  "max_d1_over_phiP_levin_parent": 2.853576056650047,
+  "max_d1_over_phiP_cc_parent": 862.4512045349469
+ },
+ "against_route1": {
+  "route1_converges_B_not": {
+   "outside_720_by_rtol": {
+    "1e-7": 43,
+    "1e-8": 48
+   },
+   "in_720": 66,
+   "outside_by_class": {
+    "withheld on both kinds": 87,
+    "withheld only on CC parents": 2,
+    "withheld only on Levin parents": 2
+   },
+   "outside_by_holdback_B": {
+    "untrusted leaf": 87,
+    "node_limited": 4
+   },
+   "in_720_by_class": {
+    "withheld on both kinds": 51,
+    "withheld only on CC parents": 14,
+    "withheld only on Levin parents": 1
+   }
+  },
+  "B_converges_route1_not": {
+   "outside_720_by_rtol": {
+    "1e-7": 0,
+    "1e-8": 6
+   },
+   "in_720": 3,
+   "outside_by_holdback_route1": {
+    "node_limited": 6
+   }
+  },
+  "moves_vs_route1": {
+   "units_outside": 0,
+   "rows_outside_shard_serial": 0,
+   "max_ratio_outside": null
+  }
+ }
+}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partC/routeB.json sha256 66786f1814cb5fb75807d4f0bd560bfc9367d8792984a1d196105e8d6fb1f943; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partC/summary.json sha256 252ed1e9b02bd1bbfb883947e6d6378b00afbcd123102b7d5e949252b70b36e6
+# ----
+# end 2026-11-05T15:11:34Z
+# exit 0

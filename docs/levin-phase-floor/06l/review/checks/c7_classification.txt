@@ -1,0 +1,22 @@
+1 ['UNINTENDED DRIFT'] **`runregistrykit list` was run twice for Gate check 01** (`out/commands.log` holds both; the cmd file holds t
+2 ['UNINTENDED DRIFT'] **A file list was written to `/tmp/x` while the scripts were copied**, then removed. It was not a record. **UN
+3 ['STRUCTURALLY REQUIRED'] **The copied scripts' changes,** each marked "prompt 06l". The diffs are `out/scripts_diff_at_stop1.txt` and `
+4 ['UNINTENDED DRIFT'] **Route B was built three times before any scored run** (`out/cmd/10`, `10b`, `10c`). The first build failed t
+5 ['IMPLEMENTATION CHOICE'] **The third build added the record kind `withdrawn`:** a leaf 06g's rule trusts that B does not, which only a 
+6 ['IMPLEMENTATION CHOICE'] **B's record also holds the kind `untrusted`:** a leaf B leaves untrusted that route 1's yardstick would trust
+7 ['IMPLEMENTATION CHOICE'] **`make_variants.py` writes only the identity variant and route B.** 06k's four routes are rebuilt in memory a
+8 ['IMPLEMENTATION CHOICE'] **K0 has no tree-module control** (06k's deviation 6). The identity variant is the tree's file byte for byte. 
+9 ['UNINTENDED DRIFT'] **`state/index_06g.json` was rebuilt** after a provenance comment was added to `index_06g.py` (`out/cmd/13`, `
+10 ['IMPLEMENTATION CHOICE'] **A development unit was run outside the scored set:** `g-1e-7-2-1449` under route B (`out/cmd/14`, `15`). Its
+11 ['UNINTENDED DRIFT'] **Run `k0partL`'s capture check refused all 46 captures** (`out/cmd/k0partL/31_check_captures.txt`). - **The c
+12 ['IMPLEMENTATION CHOICE'] **K0 and the draws were scored from run `k0partL`,** whose commands for them exited 0. Only its capture check,
+13 ['IMPLEMENTATION CHOICE'] **New scoring scripts:** `k0_summary_06l.py`, `score_l_06l.py`, `l2_account_06l.py`, `calibration/lg_compare_0
+14 ['IMPLEMENTATION CHOICE'] **`score_l_06l.py` compares this run's 06k columns with 06k's committed `partL_leaves.csv`,** as text, on all 
+15 ['IMPLEMENTATION CHOICE'] **The census projection** (`out/census_projection.json`): - It is 06k's form, P = 06h + (06g − 06h)·ρ. Here ρ 
+16 ['IMPLEMENTATION CHOICE'] **Part C reads compact extracts:** - route B's, made here by `extract_census.py` (extended; `out/cmd/100`); - 
+17 ['STRUCTURALLY REQUIRED'] **06h's cost** (census wall, unit wall, group-call regions) is taken from 06k's committed `out/partC/summary.j
+18 ['IMPLEMENTATION CHOICE'] **`movers_c.py` was not run.** S1 has no mover outside the 720. The 720's one moving call, `0-2316` #1 at both
+19 ['IMPLEMENTATION CHOICE'] **A's difference is inferred, not measured** (§0.3: no census of A). A's decision is computed for each of rout
+20 ['IMPLEMENTATION CHOICE'] **The scopes the rules leave open:** - C2 and S1 count group and analytic calls alike. - K1 counts B's `fired`
+21 ['UNINTENDED DRIFT'] **Labels in two JSON tallies.** `out/k0/summary.json` and `out/partC/summary.json` label the top band of Δ1/ν_
+21 items

@@ -1,0 +1,25 @@
+== L-a s02 (g-1e-7-3-34738 #1) depth 20 [21.631259243407015, 21.631281276524497] kinds ['CC', 'CC', 'CC']
+   r 0.842857; delta1/phi_P 1.26912; nu_B 9.796985e-43 = phi_P 1.5458e-43 + phim_L 8.8768e-44 + phim_R 8.9312e-44 + |E_L+E_R| 6.4704e-43; delta1/nu_B 0.200247; delta1/nu1 0.00598835
+   decisions recomputed: g untrusted, route1 trusted, routeB trusted; vs table: {'delta1': True, 'r': True, 'phi_P': True, 'nu_B_rel': 0.0, 'dec_routeB': True, 'dec_route1': True, 'dec_g': True, 'kinds': True}
+   B's census: no trust record at this span (B's census records only firings, withdrawals and untrusted-vs-route-1/depth_max leaves; its refinement may not reach this span)
+== L-a s04 (g-1e-7-1-14039 #2) depth 20 [18.676703122171347, 18.676726714300276] kinds ['CC', 'CC', 'CC']
+   r 0.497884; delta1/phi_P 1.49812; nu_B 1.750784e-42 = phi_P 1.1683e-42 + phim_L 3.1639e-46 + phim_R 6.6738e-46 + |E_L+E_R| 5.8153e-43; delta1/nu_B 0.99967; delta1/nu1 0.999655
+   decisions recomputed: g untrusted, route1 trusted, routeB trusted; vs table: {'delta1': True, 'r': True, 'phi_P': True, 'nu_B_rel': 0.0, 'dec_routeB': True, 'dec_route1': True, 'dec_g': True, 'kinds': True}
+   B's census: no trust record at this span (B's census records only firings, withdrawals and untrusted-vs-route-1/depth_max leaves; its refinement may not reach this span)
+== L-a s09 (g-1e-7-3-13481 #4) depth 20 [17.231277191877613, 17.231290744046063] kinds ['CC', 'CC', 'CC']
+   r 0.49104; delta1/phi_P 1.49219; nu_B 1.428309e-37 = phi_P 9.6109e-38 + phim_L 8.0468e-41 + phim_R 5.0515e-41 + |E_L+E_R| 4.6590e-38; delta1/nu_B 1.00408; delta1/nu1 1.00408
+   decisions recomputed: g untrusted, route1 untrusted, routeB untrusted; vs table: {'delta1': True, 'r': True, 'phi_P': True, 'nu_B_rel': 0.0, 'dec_routeB': True, 'dec_route1': True, 'dec_g': True, 'kinds': True}
+   B's census: no trust record at this span (B's census records only firings, withdrawals and untrusted-vs-route-1/depth_max leaves; its refinement may not reach this span)
+== L-a s01 (g-1e-7-2-21980 #3) depth 20 [18.057677229894743, 18.05768208416879] kinds ['CC', 'CC', 'CC']
+   r 0.653386; delta1/phi_P 3.94275; nu_B 7.649625e-43 = phi_P 1.3381e-43 + phim_L 9.1570e-44 + phim_R 9.2156e-44 + |E_L+E_R| 4.4742e-43; delta1/nu_B 0.689692; delta1/nu1 0.00354898
+   decisions recomputed: g untrusted, route1 trusted, routeB trusted; vs table: {'delta1': True, 'r': True, 'phi_P': True, 'nu_B_rel': 0.0, 'dec_routeB': True, 'dec_route1': True, 'dec_g': True, 'kinds': True}
+   B's census: no trust record at this span (B's census records only firings, withdrawals and untrusted-vs-route-1/depth_max leaves; its refinement may not reach this span)
+== L-a s01 (g-1e-7-2-21980 #3) depth 20 [18.061094638824407, 18.061099493098453] kinds ['CC', 'CC', 'CC']
+   r 0.940464; delta1/phi_P 7.26086; nu_B 1.373171e-42 = phi_P 1.9126e-43 + phim_L 1.0850e-43 + phim_R 1.0894e-43 + |E_L+E_R| 9.6448e-43; delta1/nu_B 1.0113; delta1/nu1 0.0125006
+   decisions recomputed: g untrusted, route1 trusted, routeB untrusted; vs table: {'delta1': True, 'r': True, 'phi_P': True, 'nu_B_rel': 0.0, 'dec_routeB': True, 'dec_route1': True, 'dec_g': True, 'kinds': True}
+   B's census: no trust record at this span (B's census records only firings, withdrawals and untrusted-vs-route-1/depth_max leaves; its refinement may not reach this span)
+== L-b f02 (g-1e-7-0-1873 #1) depth 1 [23.53933562955308, 25.255220739885356] kinds ['Levin', 'Levin', 'Levin']
+   r 0.267411; delta1/phi_P 9.81957e+06; nu_B 4.829807e-41 = phi_P 2.3256e-41 + terms [np.float64(2.325560355212719e-41), np.float64(8.3427889219017e-42), np.float64(1.6699678822495635e-41)]; delta1/nu_B 4.72814e+06; delta1/nu1 4.72814e+06
+   decisions recomputed: g untrusted, route1 untrusted, routeB untrusted; vs table: {'delta1': np.True_, 'r': np.True_, 'phi_P': np.True_, 'nu_B_rel': 0.0, 'dec_routeB': True, 'dec_route1': True, 'dec_g': True, 'kinds': True}
+   B's census: no trust record at this span (B's census records only firings, withdrawals and untrusted-vs-route-1/depth_max leaves; its refinement may not reach this span)
+ALL AGREE: True

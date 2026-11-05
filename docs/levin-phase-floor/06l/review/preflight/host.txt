@@ -1,0 +1,5 @@
+mps026298.phys.susx.ac.uk
+Thu Nov  5 09:05:52 UTC 2026
+10
+/dev/disk3s3s1  927G  842G   85G  91% /
+ 9:05  up 28 days, 23:42, 2 users, load averages: 15.00 11.38 7.94

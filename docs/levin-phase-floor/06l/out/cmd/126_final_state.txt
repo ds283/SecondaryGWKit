@@ -1,0 +1,22 @@
+$ sh -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ status\ --short\ --ignored\;\ echo\ \'\(end\ worktree\ status\)\'\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l\ -name\ __pycache__\;\ echo\ \'\(end\ pycache\)\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'\(end\ main\ status\)\'\;\ shasum\ -a\ 256\ log.md\ verification.md\ issues.md\ KEPT_ON_MAC_STUDIO.txt\ out/results.md\ predictions.md\ out/partC/summary.json\ out/partC/routeB.json\ out/partC/h1.json\ out/partC/against_A.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:20:32Z
+# ----
+af4c4dc17995f6576213f80257f9617df459d1fd
+(end worktree status)
+(end pycache)
+(end main status)
+cd7cb18ecd1b7fc7e8f5c4382474bef3569c96e13c30458d319e174322e2e035  log.md
+859597e09ceb41929016b2083ae20f02e11f53fa3c02704733efd5ca5e81b14f  verification.md
+bd3d3160e60c44b11b2d2768a124eacc840b8648c7a7a3eb4bccf112537e5d5c  issues.md
+8ee0abb0cc03c8118d2f582fcb7c5e3044a79db79893d9ac304c9df1665e462d  KEPT_ON_MAC_STUDIO.txt
+11bd2c2e73f7c111c2e66f793b8370430c80ecaed9cc52eb2749a3016e907191  out/results.md
+be2e6544e3ab5bb7f970e9dafa0d962aea458120dd3679019b5944f4b399df6d  predictions.md
+252ed1e9b02bd1bbfb883947e6d6378b00afbcd123102b7d5e949252b70b36e6  out/partC/summary.json
+66786f1814cb5fb75807d4f0bd560bfc9367d8792984a1d196105e8d6fb1f943  out/partC/routeB.json
+6102032f5fc5dbe13ca314d4117f73690bcf8a2b96eb515e21bf5246a0bd59da  out/partC/h1.json
+f9096abd51244bc0db9807c3408cb1e1405cbda66d8b6b18476a238c5c97cda9  out/partC/against_A.json
+# ----
+# end 2026-11-05T15:20:33Z
+# exit 0

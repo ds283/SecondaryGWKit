@@ -1,0 +1,19 @@
+$ sh -c echo\ \'==\ identity\ vs\ tree\'\;\ diff\ -u\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py\ scripts/variants/levin_quadrature_identity.py\ \>\ out/variant_identity_diff.txt\;\ echo\ \"diff\ exit\ \$\?\"\;\ wc\ -c\ out/variant_identity_diff.txt\;\ echo\ \'==\ routeB\ vs\ tree\'\;\ diff\ -u\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py\ scripts/variants/levin_quadrature_routeB.py\ \>\ out/variant_routeB_diff.txt\;\ echo\ \"diff\ exit\ \$\?\"\;\ wc\ -l\ out/variant_routeB_diff.txt\;\ shasum\ -a\ 256\ out/variant_routeB_diff.txt\;\ echo\ \'==\ routeB\ vs\ 06k\ route\ 1\ \(docs/levin-phase-floor/06k/scripts/variants\)\'\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06k/scripts/variants/levin_quadrature_route1.py\;\ diff\ -u\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06k/scripts/variants/levin_quadrature_route1.py\ scripts/variants/levin_quadrature_routeB.py\ \>\ out/variant_routeB_vs_route1_diff.txt\;\ echo\ \"diff\ exit\ \$\?\"\;\ wc\ -l\ out/variant_routeB_vs_route1_diff.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:13:49Z
+# ----
+== identity vs tree
+diff exit 0
+0 out/variant_identity_diff.txt
+== routeB vs tree
+diff exit 1
+99 out/variant_routeB_diff.txt
+575b893e397b25dfd78b8666e8d0c0441b5657606848fcb5664be7c36db9235e  out/variant_routeB_diff.txt
+== routeB vs 06k route 1 (docs/levin-phase-floor/06k/scripts/variants)
+23cd69e4a87a3a19e8a7e744cf3bac7712c26f342864fb299959a279d80a5cb2  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06k/scripts/variants/levin_quadrature_route1.py
+diff exit 1
+115 out/variant_routeB_vs_route1_diff.txt
+# ----
+# end 2026-11-05T09:13:49Z
+# exit 0

@@ -1,0 +1,9 @@
+720 from 06a's scan: 720 rows; v8 flags agree: True
+06g: 18560 records, 18560 units
+B: 18560 records, 18560 units
+route 1: 18560 records, 18560 units
+C1 holds: 1e-7 749/801 (93.5 %), 1e-8 773/830 (93.1 %)
+C2 holds: 4 converged under 06g and not B; causes {'node_limited': 4}; by rtol {'1e-8': 4}
+S1 holds: 0 calls in 0 census units, 0 shard-serial rows
+route 1 converges, B does not (outside the 720): {'1e-7': 43, '1e-8': 48}; B converges, route 1 does not: {'1e-8': 6}
+K1 holds: firings outside the 720 by (parent, d1/phi_P >= 5.8): {('CC', False): 158073, ('CC', True): 64869, ('Levin', False): 9839}; largest Levin-parent d1/phi_P 2.854

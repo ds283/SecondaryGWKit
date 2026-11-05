@@ -1,0 +1,3360 @@
+[
+ {
+  "sid": "c03",
+  "unit": "g-1e-7-0-12727",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 74,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.3647007499821484,
+   1.2292621252126992
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f00",
+  "unit": "g-1e-7-0-12778",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 16,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.2964247497729957,
+   0.2797202500514686
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s03",
+  "unit": "g-1e-7-0-12935",
+  "index": 2,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 60,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.287688999902457,
+   1.1985564171336591
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f01",
+  "unit": "g-1e-7-0-12959",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 12,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.21368891699239612,
+   0.2020542500540614
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f02",
+  "unit": "g-1e-7-0-1873",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 15,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.2770416671410203,
+   0.2666145828552544
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f03",
+  "unit": "g-1e-7-0-2108",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 14,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.2627896247431636,
+   0.2445777077227831
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f04",
+  "unit": "g-1e-7-0-33730",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 16,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.31607166724279523,
+   0.27134850015863776
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c05",
+  "unit": "g-1e-7-0-33892",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 13,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.24759737495332956,
+   0.21562487492337823
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s06",
+  "unit": "g-1e-7-0-33997",
+  "index": 3,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 71,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.605941042304039,
+   1.4480812498368323
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s00",
+  "unit": "g-1e-7-0-37232",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 83,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.7837844579480588,
+   1.6597885000519454
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s05",
+  "unit": "g-1e-7-1-11233",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 287,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   8.263044707942754,
+   7.46988937491551
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s04",
+  "unit": "g-1e-7-1-14039",
+  "index": 2,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 181,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   4.261524042114615,
+   3.9635698748752475
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c00",
+  "unit": "g-1e-7-1-2142",
+  "index": 5,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 122,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   2.8211133340373635,
+   2.3926551658660173
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c04",
+  "unit": "g-1e-7-1-35052",
+  "index": 6,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 59,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.374223249964416,
+   1.1730256252922118
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s07",
+  "unit": "g-1e-7-1-35492",
+  "index": 3,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 96,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   2.401108833961189,
+   2.176598791964352
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c02",
+  "unit": "g-1e-7-1-35497",
+  "index": 5,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 69,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.249688958749175,
+   1.086683874949813
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s11",
+  "unit": "g-1e-7-2-21857",
+  "index": 6,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 165,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   4.324897957965732,
+   3.619257999584079
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s01",
+  "unit": "g-1e-7-2-21980",
+  "index": 3,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 107,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   2.984119249973446,
+   2.514694542158395
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c01",
+  "unit": "g-1e-7-2-33416",
+  "index": 6,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 23,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.24160629231482744,
+   0.20721116615459323
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s08",
+  "unit": "g-1e-7-3-1188",
+  "index": 5,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 240,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   6.7524006250314415,
+   5.695395540911704
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s09",
+  "unit": "g-1e-7-3-13481",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 83,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.5414558751508594,
+   1.3756432076916099
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s02",
+  "unit": "g-1e-7-3-34738",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 406,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   11.776839917059988,
+   10.138185082934797
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s10",
+  "unit": "g-1e-7-3-38477",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 128,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   2.8033720003440976,
+   2.624260999727994
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s23",
+  "unit": "g-1e-8-0-12681",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 146,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   3.940889624878764,
+   3.406770874746144
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f05",
+  "unit": "g-1e-8-0-12778",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 16,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.3252783748321235,
+   0.27476599998772144
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f06",
+  "unit": "g-1e-8-0-12959",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 12,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.23176491586491466,
+   0.2005733330734074
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c10",
+  "unit": "g-1e-8-0-12965",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 26,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.5253832498565316,
+   0.4538433328270912
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f07",
+  "unit": "g-1e-8-0-1873",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 15,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.3769080829806626,
+   0.2640910833142698
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f08",
+  "unit": "g-1e-8-0-2108",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 14,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.29667341709136963,
+   0.23985249968245625
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c11",
+  "unit": "g-1e-8-0-33648",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 14,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.26853379188105464,
+   0.22875029128044844
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "f09",
+  "unit": "g-1e-8-0-33730",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 16,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.3049487918615341,
+   0.2743685422465205
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s16",
+  "unit": "g-1e-8-0-33906",
+  "index": 2,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 121,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   2.823174915742129,
+   2.4493024172261357
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s20",
+  "unit": "g-1e-8-0-33945",
+  "index": 3,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 303,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   8.503600833006203,
+   7.705958125181496
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s22",
+  "unit": "g-1e-8-0-34037",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 288,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   7.663741250056773,
+   6.838865667115897
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s19",
+  "unit": "g-1e-8-0-38451",
+  "index": 3,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 189,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   4.788189208135009,
+   4.39651562506333
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s21",
+  "unit": "g-1e-8-1-14543",
+  "index": 6,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 101,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   2.474297875072807,
+   2.0005687908269465
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c08",
+  "unit": "g-1e-8-1-35136",
+  "index": 3,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 90,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   2.5731249172240496,
+   2.005250375252217
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c09",
+  "unit": "g-1e-8-1-35446",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 52,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.8969376659952104,
+   0.7532416670583189
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s17",
+  "unit": "g-1e-8-1-35480",
+  "index": 2,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 172,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   5.486978792119771,
+   4.446270332671702
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s14",
+  "unit": "g-1e-8-2-1391",
+  "index": 3,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 206,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   6.288040791172534,
+   4.928640250116587
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s18",
+  "unit": "g-1e-8-2-21692",
+  "index": 5,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 111,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   3.2891983748413622,
+   2.3616005000658333
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s12",
+  "unit": "g-1e-8-3-14505",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 82,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.7972114169970155,
+   1.473653458058834
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s13",
+  "unit": "g-1e-8-3-14589",
+  "index": 3,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 182,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   4.927718709222972,
+   3.8944964157417417
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "s15",
+  "unit": "g-1e-8-3-2324",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 87,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   1.7300725420936942,
+   1.5846057501621544
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c06",
+  "unit": "g-1e-8-3-34272",
+  "index": 4,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 144,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   2.7679609996266663,
+   2.7208738327026367
+  ],
+  "problems": [],
+  "reproduces_census": true
+ },
+ {
+  "sid": "c07",
+  "unit": "g-1e-8-3-37323",
+  "index": 1,
+  "kind": "group",
+  "scripts_sha256_differing": [
+   "prov.py",
+   "run_census.py",
+   "variant_loader.py",
+   "worker.py"
+  ],
+  "prov_py_sha256": [
+   "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+   "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+  ],
+  "scripts_sha256_equal": true,
+  "changed_scripts_sha256_06k": {
+   "prov.py": [
+    "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f",
+    "22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf"
+   ],
+   "run_census.py": [
+    "c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6",
+    "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2"
+   ],
+   "variant_loader.py": [
+    "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f",
+    null
+   ],
+   "worker.py": [
+    "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1",
+    "90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4"
+   ]
+  },
+  "region_keys_compared": [
+   "abserr",
+   "abserr_truncation",
+   "budget_err",
+   "convergence_ratio",
+   "declared_resolution",
+   "delta1",
+   "delta2",
+   "depth",
+   "end",
+   "group",
+   "index",
+   "node_error_signed",
+   "phase_err",
+   "phase_err_declared",
+   "phase_err_less_node",
+   "phase_err_roundoff",
+   "phase_limited",
+   "regime",
+   "relerr",
+   "start",
+   "total_err",
+   "trusted",
+   "type",
+   "value",
+   "value_kind",
+   "value_own",
+   "x_span"
+  ],
+  "region_keys_differing": [],
+  "n_regions": 42,
+  "call_keys_differing": [],
+  "call_elapsed": [
+   0.8563025407493114,
+   0.828709667082876
+  ],
+  "problems": [],
+  "reproduces_census": true
+ }
+]

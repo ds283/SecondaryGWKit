@@ -149,3 +149,70 @@ Write `var/levin-phase-floor-06l/review.md`, with the verdict in its first line,
 ## 5. Stop and ask the user
 
 As 06k's note §5, with prompt 06l's §7. **Never touch 07's stashes or saved work.**
+
+## B.5 Addendum, 2026-11-05: the run, the review and the records
+
+**Dispatched** 2026-11-05 on the user's word: *"Yes, please push and dispatch"*. The laptop pushed
+`af4c4dc1` and made the worktree `SecondaryGWKit-lpf06l-af4c4dc`, detached at `af4c4dc1`, on the Mac
+Studio, whose main checkout was clean at `28ebaf07`. The orchestrator session could not start until
+the user trusted the worktree's folder in the app; it then started in the worktree.
+
+**The run and the review on the Mac Studio.**
+- **§B.1's preflight passed.** The marker was set at 09:06:04Z; 85 GB were free.
+- **The first run failed.** `levin-phase-floor-06l-k0partL-20261105T091942` ended `failed` (exit 2):
+  its capture check refused all 46 captures because `run_census.py`, 06k's edited copy, was not on
+  its allowed list of harness hashes. Every capture's values equalled 06g's census, which the
+  orchestrator checked itself, so it was not a §7 stop. The agent fixed the list and re-ran the
+  check, slicing and probes as `levin-phase-floor-06l-partL-20261105T095407`, 48 of 48 (log
+  deviation 11). K0 and the draws were scored from the first run, whose commands for them exited 0.
+- **Planned stop 1** (`review/stop1.md`): the orchestrator's AST comparison, $\nu_B$ read against
+  §0.2, K0 and Gate L3 recomputed by its own reader all held. L2 was found to fail, 63 of 75, as a
+  scored prediction, not a stop. The census plan (17,347 s) was accepted.
+- **The census** `levin-phase-floor-06l-census-routeB-20261105T100126` was waited on by a background
+  `kill -0` loop on its pid. It was `done`, 18,560 of 18,560, exit 0, with stderr empty, in
+  18,340 s. The backstop reported twice and stopped nothing. Planned stop 2 passed.
+- **The agent asked no question**, and no §7 stop arose.
+- **The review** (`docs/levin-phase-floor/06l/review/review.md`) passed all seven checks. It re-ran two
+  K0 units and one recovered call, re-made the seven solves of six Part L leaves, re-counted C1, C2,
+  S1, K1 and the comparison with route 1 from the raw checkpoints, and recomputed five reference
+  ratios, each with its own scripts. Its two observations change no verdict: twelve harness outputs
+  carry no header of their own (the log's deviation 22), and the agent's final report miscounted
+  its deviations by class.
+
+**The results:** Gates K0 and L3 hold. L1, C1, C2, H1, S1 and K1 hold; L2 fails, so by prompt §4's
+rule B does not pass as a candidate remedy. `VERIFICATION.md` §6l has the numbers.
+
+**The orchestrator's error in L2.** L2 asked B to trust all 75 first-population slow leaves, on
+§0.2's triangle-inequality argument. 06k's committed table already had route 1 trusting 63 of them,
+and Gate L3, set by the same prompt, makes route 1's trust an upper bound for B's. B trusts exactly
+those 63. The argument is first-order only: where $E_P$ and $E_L + E_R$ have opposite signs, it is
+tight, and $\Delta_1$ exceeds it by 0.2–0.6 %. Checking L2 against 06k's table before dispatch would
+have caught it. L2 is scored as written; it does not separate B from route 1 or A.
+
+**The laptop's checks.**
+- **The copy.** `var/levin-phase-floor-06l/` was copied back by `rsync` without pickles or files over
+  2 MB: 824 files, each equal to the Mac Studio's by SHA-256. The three run directories' small files
+  (143) were copied to `var/runs/` and checked the same way.
+- **The re-scoring**, by the orchestrator's own reader from the copied tables:
+  - L1, L2 and L3: $\nu_B$ and B's decision recomputed from each leaf's numbers on all 2,046 Part L
+    leaves, with no disagreement, and B's 63 checked equal to route 1's;
+  - H1 from `h1_calls.csv`;
+  - C1, C2, S1 and K1 from `out/partC/summary.json`, equal to the review's count from the raw
+    checkpoints.
+
+  Every verdict and number is the same.
+- **The CSV tables.** Two were added past the laptop's `*.csv` exclusion.
+
+**Issues:**
+- Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`.
+- Opened: none.
+
+`docs/OPEN_ISSUES.md` stays at 126 open.
+
+**For the user:**
+- whether 06m implements B, B with a margin, A, or none;
+- the worktree `SecondaryGWKit-lpf06l-af4c4dc`;
+- route B's census run directory (4.4 GB);
+- 06l's pickles and large files (0.4 GB).
+
+07 resumes after that.

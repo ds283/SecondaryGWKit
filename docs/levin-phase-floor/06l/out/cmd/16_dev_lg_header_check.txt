@@ -1,0 +1,22 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/calibration PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c import\ prov\,\ lg_seeded_draws\ as\ L\;\ print\(L.MODES\)\;\ print\(prov.OUT\)\;\ print\(\'\\n\'.join\(prov.header\(L.__file__\,\ \'dev\ header\ check\'\,\ L.INPUTS\)\)\)
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:19:31Z
+# ----
+('tree', 'identity', 'routeB')
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/lg_draws
+# levin-phase-floor 06l: dev header check
+# written 2026-11-05T09:19:31+00:00 on mps026298.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script lg_seeded_draws.py sha256 b2db4030b63a6aaf12104f84fdeb92886f287d0018fc8f54c0c09083476b64df
+# prov.py sha256 41575e270b7e044b9d246b306070c1f022f37930b05cb03ad20fca7e51f5242b
+# AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# input LiouvilleGreen/tests/test_3bessel_analytic.py sha256 3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c
+# input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+# input LiouvilleGreen/bessel_phase.py sha256 bdee05b578d2f2da61ba2b09ed541cf1fe0b37a7c11ec1d7ae56e439c75210e8
+# HEAD af4c4dc17995f6576213f80257f9617df459d1fd
+# tree dirty: no (git status --short empty)
+# uptime at start: 9:19  up 28 days, 23:56, 2 users, load averages: 10.51 10.71 9.70
+# ----
+# end 2026-11-05T09:19:31Z
+# exit 0

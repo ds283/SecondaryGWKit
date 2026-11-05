@@ -1,0 +1,5 @@
+units ['g-1e-7-0-1873', 'g-1e-8-2-1626'] found in 06g checkpoint 2
+identity g-1e-7-0-1873: status done; calls 23, firings 0, calls differing 0; region pickle differences (timing, route_06k aside) 0
+identity g-1e-8-2-1626: status done; calls 21, firings 0, calls differing 0; region pickle differences (timing, route_06k aside) 0
+routeB g-1e-7-0-1873: status done; calls 23, firings 0, calls differing 0; region pickle differences (timing, route_06k aside) 0
+routeB g-1e-8-2-1626: status done; calls 21, firings 0, calls differing 0; region pickle differences (timing, route_06k aside) 0

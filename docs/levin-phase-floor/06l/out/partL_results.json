@@ -1,0 +1,247 @@
+{
+ "label": "partL",
+ "results": [
+  {
+   "name": "31b_check_captures",
+   "exit": 0,
+   "wall_s": 5.539353847503662
+  },
+  {
+   "name": "32b_slice",
+   "exit": 0,
+   "wall_s": 0.5108799934387207
+  },
+  {
+   "name": "60_probe_l_s03",
+   "exit": 0,
+   "wall_s": 5.560617923736572
+  },
+  {
+   "name": "60_probe_l_s00",
+   "exit": 0,
+   "wall_s": 6.100364923477173
+  },
+  {
+   "name": "60_probe_l_s01",
+   "exit": 0,
+   "wall_s": 6.082327127456665
+  },
+  {
+   "name": "60_probe_l_s04",
+   "exit": 0,
+   "wall_s": 6.579124927520752
+  },
+  {
+   "name": "60_probe_l_s05",
+   "exit": 0,
+   "wall_s": 7.590203046798706
+  },
+  {
+   "name": "60_probe_l_s02",
+   "exit": 0,
+   "wall_s": 9.131760835647583
+  },
+  {
+   "name": "60_probe_l_s06",
+   "exit": 0,
+   "wall_s": 4.582043170928955
+  },
+  {
+   "name": "60_probe_l_s07",
+   "exit": 0,
+   "wall_s": 5.088314771652222
+  },
+  {
+   "name": "60_probe_l_s09",
+   "exit": 0,
+   "wall_s": 4.576907634735107
+  },
+  {
+   "name": "60_probe_l_s08",
+   "exit": 0,
+   "wall_s": 6.615332126617432
+  },
+  {
+   "name": "60_probe_l_s10",
+   "exit": 0,
+   "wall_s": 5.089339971542358
+  },
+  {
+   "name": "60_probe_l_s11",
+   "exit": 0,
+   "wall_s": 4.073890209197998
+  },
+  {
+   "name": "60_probe_l_s12",
+   "exit": 0,
+   "wall_s": 4.0780041217803955
+  },
+  {
+   "name": "60_probe_l_s14",
+   "exit": 0,
+   "wall_s": 4.574639081954956
+  },
+  {
+   "name": "60_probe_l_s13",
+   "exit": 0,
+   "wall_s": 6.109165906906128
+  },
+  {
+   "name": "60_probe_l_s15",
+   "exit": 0,
+   "wall_s": 5.094406843185425
+  },
+  {
+   "name": "60_probe_l_s16",
+   "exit": 0,
+   "wall_s": 5.0923168659210205
+  },
+  {
+   "name": "60_probe_l_s17",
+   "exit": 0,
+   "wall_s": 5.095090866088867
+  },
+  {
+   "name": "60_probe_l_s18",
+   "exit": 0,
+   "wall_s": 4.590162992477417
+  },
+  {
+   "name": "60_probe_l_s19",
+   "exit": 0,
+   "wall_s": 5.089875221252441
+  },
+  {
+   "name": "60_probe_l_s21",
+   "exit": 0,
+   "wall_s": 5.088344097137451
+  },
+  {
+   "name": "60_probe_l_f00",
+   "exit": 0,
+   "wall_s": 3.5546910762786865
+  },
+  {
+   "name": "60_probe_l_s23",
+   "exit": 0,
+   "wall_s": 5.593459129333496
+  },
+  {
+   "name": "60_probe_l_s20",
+   "exit": 0,
+   "wall_s": 7.639700889587402
+  },
+  {
+   "name": "60_probe_l_s22",
+   "exit": 0,
+   "wall_s": 7.63453221321106
+  },
+  {
+   "name": "60_probe_l_f01",
+   "exit": 0,
+   "wall_s": 4.081449031829834
+  },
+  {
+   "name": "60_probe_l_f02",
+   "exit": 0,
+   "wall_s": 5.07198166847229
+  },
+  {
+   "name": "60_probe_l_f03",
+   "exit": 0,
+   "wall_s": 5.071193218231201
+  },
+  {
+   "name": "60_probe_l_f04",
+   "exit": 0,
+   "wall_s": 4.562378883361816
+  },
+  {
+   "name": "60_probe_l_f05",
+   "exit": 0,
+   "wall_s": 4.564303874969482
+  },
+  {
+   "name": "60_probe_l_f06",
+   "exit": 0,
+   "wall_s": 4.5619120597839355
+  },
+  {
+   "name": "60_probe_l_f07",
+   "exit": 0,
+   "wall_s": 4.559834957122803
+  },
+  {
+   "name": "60_probe_l_f08",
+   "exit": 0,
+   "wall_s": 4.058195114135742
+  },
+  {
+   "name": "60_probe_l_f09",
+   "exit": 0,
+   "wall_s": 4.056972026824951
+  },
+  {
+   "name": "60_probe_l_c00",
+   "exit": 0,
+   "wall_s": 3.5474488735198975
+  },
+  {
+   "name": "60_probe_l_c01",
+   "exit": 0,
+   "wall_s": 3.588947057723999
+  },
+  {
+   "name": "60_probe_l_c03",
+   "exit": 0,
+   "wall_s": 3.5869858264923096
+  },
+  {
+   "name": "60_probe_l_c02",
+   "exit": 0,
+   "wall_s": 4.099923849105835
+  },
+  {
+   "name": "60_probe_l_c04",
+   "exit": 0,
+   "wall_s": 4.594549179077148
+  },
+  {
+   "name": "60_probe_l_c05",
+   "exit": 0,
+   "wall_s": 4.5848472118377686
+  },
+  {
+   "name": "60_probe_l_c06",
+   "exit": 0,
+   "wall_s": 4.570643186569214
+  },
+  {
+   "name": "60_probe_l_c07",
+   "exit": 0,
+   "wall_s": 4.065254211425781
+  },
+  {
+   "name": "60_probe_l_c08",
+   "exit": 0,
+   "wall_s": 4.06163215637207
+  },
+  {
+   "name": "60_probe_l_c09",
+   "exit": 0,
+   "wall_s": 3.553534746170044
+  },
+  {
+   "name": "60_probe_l_c10",
+   "exit": 0,
+   "wall_s": 5.06735897064209
+  },
+  {
+   "name": "60_probe_l_c11",
+   "exit": 0,
+   "wall_s": 5.068771839141846
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-05T09:55:01Z"
+}

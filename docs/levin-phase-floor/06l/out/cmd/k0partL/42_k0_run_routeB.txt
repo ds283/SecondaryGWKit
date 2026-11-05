@@ -1,0 +1,68 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/run_k0.py routeB out/k0/units.json state/k0/routeB --workers 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:39:05Z
+# ----
+# levin-phase-floor 06l: census units under the variant routeB
+# written 2026-11-05T09:39:05Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 a9ecc2fc58f335b670687b5ca9cf1d887189dea0dc36d3f5a4ee71a7e76c16eb
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/variants/levin_quadrature_routeB.py sha256 5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f
+# variant {"name": "routeB", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/variants/levin_quadrature_routeB.py", "sha256": "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"}
+# 100 units in 15 workers: routeB-1e-7-k0_101 (5), routeB-1e-7-k0_202 (8), routeB-1e-7-k1_102 (10), routeB-1e-7-k1_301 (3), routeB-1e-7-k2_2 (4), routeB-1e-7-k2_302 (6), routeB-1e-7-k3_1 (10), routeB-1e-7-k3_201 (4), routeB-1e-8-k0_101 (14), routeB-1e-8-k0_202 (8), routeB-1e-8-k1_102 (9), routeB-1e-8-k2_2 (3), routeB-1e-8-k2_302 (4), routeB-1e-8-k3_1 (6), routeB-1e-8-k3_201 (6)
+routeB-1e-7-k0_101: pid 52122 (5 units)
+routeB-1e-7-k0_202: pid 52123 (8 units)
+routeB-1e-7-k1_102: pid 52124 (10 units)
+routeB-1e-7-k1_301: pid 52125 (3 units)
+routeB-1e-7-k2_2: pid 52126 (4 units)
+routeB-1e-7-k2_302: pid 52127 (6 units)
+routeB-1e-7-k1_301: exit 0 after 102.1 s
+routeB-1e-7-k3_1: pid 52252 (10 units)
+routeB-1e-7-k2_2: exit 0 after 106.1 s
+routeB-1e-7-k3_201: pid 52265 (4 units)
+routeB-1e-7-k2_302: exit 0 after 109.2 s
+routeB-1e-8-k0_101: pid 52276 (14 units)
+routeB-1e-7-k0_101: exit 0 after 112.3 s
+routeB-1e-8-k0_202: pid 52284 (8 units)
+routeB-1e-7-k0_202: exit 0 after 112.8 s
+routeB-1e-8-k1_102: pid 52287 (9 units)
+routeB-1e-7-k1_102: exit 0 after 181.4 s
+routeB-1e-8-k2_2: pid 52344 (3 units)
+routeB-1e-7-k3_201: exit 0 after 106.2 s
+routeB-1e-8-k2_302: pid 52409 (4 units)
+routeB-1e-8-k0_202: exit 0 after 124.0 s
+routeB-1e-8-k3_1: pid 52475 (6 units)
+routeB-1e-8-k2_2: exit 0 after 87.4 s
+routeB-1e-8-k3_201: pid 52545 (6 units)
+routeB-1e-8-k1_102: exit 0 after 163.0 s
+routeB-1e-7-k3_1: exit 0 after 175.8 s
+routeB-1e-8-k2_302: exit 0 after 115.7 s
+routeB-1e-8-k0_101: exit 0 after 222.9 s
+routeB-1e-8-k3_1: exit 0 after 124.8 s
+routeB-1e-8-k3_201: exit 0 after 110.6 s
+exit codes {routeB-1e-7-k0_101: 0, routeB-1e-7-k0_202: 0, routeB-1e-7-k1_102: 0, routeB-1e-7-k1_301: 0, routeB-1e-7-k2_2: 0, routeB-1e-7-k2_302: 0, routeB-1e-7-k3_1: 0, routeB-1e-7-k3_201: 0, routeB-1e-8-k0_101: 0, routeB-1e-8-k0_202: 0, routeB-1e-8-k1_102: 0, routeB-1e-8-k2_2: 0, routeB-1e-8-k2_302: 0, routeB-1e-8-k3_1: 0, routeB-1e-8-k3_201: 0}
+refused: []
+bye routeB-1e-7-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-7-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-7-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-7-k1_301: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-7-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-7-k2_302: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-7-k3_1: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-7-k3_201: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-8-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-8-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-8-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-8-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-8-k2_302: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-8-k3_1: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-8-k3_201: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 100 of 100; not done []; wall 381 s
+wrote state/k0/routeB/units.jsonl sha256 0de0673ad869d0c0d19a233aff9e2531f2350f97b47c0682c52b90f8c1deea12
+# ----
+# end 2026-11-05T09:45:27Z
+# exit 0

@@ -1,0 +1,27 @@
+$ sh -c echo\ \'==\ worktree\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ status\ --short\ --ignored\;\ echo\ \'\(end\ of\ worktree\ status\)\'\;\ echo\ \'==\ 34437951\ and\ af4c4dc1\ on\ origin/handover-remedial\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ rev-parse\ origin/handover-remedial\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ merge-base\ --is-ancestor\ 34437951\ origin/handover-remedial\ \&\&\ echo\ \'34437951\ is\ an\ ancestor\ of\ origin/handover-remedial\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ merge-base\ --is-ancestor\ af4c4dc1\ origin/handover-remedial\ \&\&\ echo\ \'af4c4dc1\ is\ an\ ancestor\ of\ origin/handover-remedial\'\;\ echo\ \'==\ diff\ 1c5336e..af4c4dc1\ outside\ docs\ and\ prompts\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ diff\ --stat\ 1c5336e\ af4c4dc1\ --\ .\ \':\!docs\'\ \':\!prompts\'\;\ echo\ \'==\ AdaptiveLevin/levin_quadrature.py\ at\ 1c5336e\ vs\ af4c4dc1\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ diff\ --stat\ 1c5336e\ af4c4dc1\ --\ AdaptiveLevin/levin_quadrature.py\;\ echo\ \'\(no\ diff\ above\ means\ equal\)\'\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py\;\ echo\ \'==\ main\ checkout\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ --abbrev-ref\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'\(end\ of\ main\ status\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:09:41Z
+# ----
+== worktree
+af4c4dc17995f6576213f80257f9617df459d1fd
+(end of worktree status)
+== 34437951 and af4c4dc1 on origin/handover-remedial
+af4c4dc17995f6576213f80257f9617df459d1fd
+34437951 is an ancestor of origin/handover-remedial
+af4c4dc1 is an ancestor of origin/handover-remedial
+== diff 1c5336e..af4c4dc1 outside docs and prompts
+ CLAUDE.md                           |  17 ++-
+ tools/filon_reference.py            | 245 ++++++++++++++++++++++++++++++++----
+ tools/tests/test_filon_reference.py |  88 +++++++++++++
+ 3 files changed, 325 insertions(+), 25 deletions(-)
+== AdaptiveLevin/levin_quadrature.py at 1c5336e vs af4c4dc1
+(no diff above means equal)
+d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+(end of main status)
+# ----
+# end 2026-11-05T09:09:41Z
+# exit 0

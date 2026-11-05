@@ -1,0 +1,13 @@
+65 outputs with a provenance header; 12 without:
+   capture.json
+   check_captures.json
+   check_captures_b.json
+   commands.log
+   inputs.json
+   inputs_b.json
+   k0partL_results.json
+   partL_results.json
+   sample/selection.json
+   variant_identity_diff.txt
+   variant_routeB_diff.txt
+   variant_routeB_vs_route1_diff.txt

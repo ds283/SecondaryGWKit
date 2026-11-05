@@ -1,0 +1,64 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/check_captures.py out/capture.json out/sample/selection.json out/check_captures_b.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:54:08Z
+# ----
+# levin-phase-floor 06g: the references' captures against the g census, bit for bit (regions)
+# written 2026-11-05T09:54:08Z on mps026298.phys.susx.ac.uk
+# script check_captures.py sha256 b6ede154054a9344a2afd34c31435818418c51513d37bf09f315168f2ebbe2d1
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input out/capture.json sha256 eeac973ead37896d6722fe7bffce7b097476a43d7c7b51ead481ddbd9e5d0ace
+# input out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl sha256 03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa
+c03 g-1e-7-0-12727 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f00 g-1e-7-0-12778 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s03 g-1e-7-0-12935 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f01 g-1e-7-0-12959 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f02 g-1e-7-0-1873 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f03 g-1e-7-0-2108 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f04 g-1e-7-0-33730 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c05 g-1e-7-0-33892 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s06 g-1e-7-0-33997 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s00 g-1e-7-0-37232 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s05 g-1e-7-1-11233 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s04 g-1e-7-1-14039 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c00 g-1e-7-1-2142 #5 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c04 g-1e-7-1-35052 #6 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s07 g-1e-7-1-35492 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c02 g-1e-7-1-35497 #5 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s11 g-1e-7-2-21857 #6 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s01 g-1e-7-2-21980 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c01 g-1e-7-2-33416 #6 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s08 g-1e-7-3-1188 #5 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s09 g-1e-7-3-13481 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s02 g-1e-7-3-34738 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s10 g-1e-7-3-38477 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s23 g-1e-8-0-12681 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f05 g-1e-8-0-12778 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f06 g-1e-8-0-12959 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c10 g-1e-8-0-12965 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f07 g-1e-8-0-1873 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f08 g-1e-8-0-2108 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c11 g-1e-8-0-33648 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+f09 g-1e-8-0-33730 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s16 g-1e-8-0-33906 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s20 g-1e-8-0-33945 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s22 g-1e-8-0-34037 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s19 g-1e-8-0-38451 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s21 g-1e-8-1-14543 #6 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c08 g-1e-8-1-35136 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c09 g-1e-8-1-35446 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s17 g-1e-8-1-35480 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s14 g-1e-8-2-1391 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s18 g-1e-8-2-21692 #5 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s12 g-1e-8-3-14505 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s13 g-1e-8-3-14589 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+s15 g-1e-8-3-2324 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c06 g-1e-8-3-34272 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+c07 g-1e-8-3-37323 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+46 of 46 captures reproduce the g census bit for bit; wrote out/check_captures_b.json sha256 00d4d6bd99b2afd340b3c5e39c801d330b13dcccb419be753b0fc0dcd51be30c
+# ----
+# end 2026-11-05T09:54:13Z
+# exit 0

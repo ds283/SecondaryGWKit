@@ -1,0 +1,20 @@
+# levin-phase-floor 06l: census units under the variant identity
+# written 2026-11-05T15:22:06Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 a9ecc2fc58f335b670687b5ca9cf1d887189dea0dc36d3f5a4ee71a7e76c16eb
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input review/checks/k0rerun/units.json sha256 bf9f50a6a0fc972bc73116d77643256432cad140feec902c453d1a5b1a84a3cd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/variants/levin_quadrature_identity.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# variant {"name": "identity", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/variants/levin_quadrature_identity.py", "sha256": "d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59"}
+# 2 units in 2 workers: identity-1e-7-k0_202 (1), identity-1e-8-k2_2 (1)
+identity-1e-7-k0_202: pid 7484 (1 units)
+identity-1e-8-k2_2: pid 7486 (1 units)
+identity-1e-8-k2_2: exit 0 after 57.0 s
+identity-1e-7-k0_202: exit 0 after 58.6 s
+exit codes {identity-1e-7-k0_202: 0, identity-1e-8-k2_2: 0}
+refused: []
+bye identity-1e-7-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye identity-1e-8-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 2 of 2; not done []; wall 59 s
+wrote review/checks/k0rerun/identity/units.jsonl sha256 d41891d0411d44348640b170407dfcd1d36ffc5a2751367243e646f3ac9cda2c

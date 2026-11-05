@@ -1,0 +1,64 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/slice_06j.py out/capture.json out/check_captures.json out/sample/selection.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:31:34Z
+# ----
+# levin-phase-floor 06j: the captured calls, one file each
+# written 2026-11-05T09:31:35Z on mps026298.phys.susx.ac.uk
+# script slice_06j.py sha256 c2187490d85c560904462cf77296c0893d2beb21b13f92d23f35550e7d204507
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input out/capture.json sha256 eeac973ead37896d6722fe7bffce7b097476a43d7c7b51ead481ddbd9e5d0ace
+# input out/check_captures.json sha256 26d704a3dc88c87b53b18c12d64641196855a545df567d8ab683341fd1107c9d
+# input out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4
+c03: not sliced (does not reproduce the census)
+f00: not sliced (does not reproduce the census)
+s03: not sliced (does not reproduce the census)
+f01: not sliced (does not reproduce the census)
+f02: not sliced (does not reproduce the census)
+f03: not sliced (does not reproduce the census)
+f04: not sliced (does not reproduce the census)
+c05: not sliced (does not reproduce the census)
+s06: not sliced (does not reproduce the census)
+s00: not sliced (does not reproduce the census)
+s05: not sliced (does not reproduce the census)
+s04: not sliced (does not reproduce the census)
+c00: not sliced (does not reproduce the census)
+c04: not sliced (does not reproduce the census)
+s07: not sliced (does not reproduce the census)
+c02: not sliced (does not reproduce the census)
+s11: not sliced (does not reproduce the census)
+s01: not sliced (does not reproduce the census)
+c01: not sliced (does not reproduce the census)
+s08: not sliced (does not reproduce the census)
+s09: not sliced (does not reproduce the census)
+s02: not sliced (does not reproduce the census)
+s10: not sliced (does not reproduce the census)
+s23: not sliced (does not reproduce the census)
+f05: not sliced (does not reproduce the census)
+f06: not sliced (does not reproduce the census)
+c10: not sliced (does not reproduce the census)
+f07: not sliced (does not reproduce the census)
+f08: not sliced (does not reproduce the census)
+c11: not sliced (does not reproduce the census)
+f09: not sliced (does not reproduce the census)
+s16: not sliced (does not reproduce the census)
+s20: not sliced (does not reproduce the census)
+s22: not sliced (does not reproduce the census)
+s19: not sliced (does not reproduce the census)
+s21: not sliced (does not reproduce the census)
+c08: not sliced (does not reproduce the census)
+c09: not sliced (does not reproduce the census)
+s17: not sliced (does not reproduce the census)
+s14: not sliced (does not reproduce the census)
+s18: not sliced (does not reproduce the census)
+s12: not sliced (does not reproduce the census)
+s13: not sliced (does not reproduce the census)
+s15: not sliced (does not reproduce the census)
+c06: not sliced (does not reproduce the census)
+c07: not sliced (does not reproduce the census)
+0 captures sliced, 46 not; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/inputs.json sha256 26486accecfe877ce8f3f9af985f37fa6fa606fb7bf2c908b1df16fad4277865
+# ----
+# end 2026-11-05T09:31:35Z
+# exit 1

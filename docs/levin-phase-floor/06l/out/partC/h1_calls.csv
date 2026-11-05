@@ -1,0 +1,135 @@
+# levin-phase-floor 06l: route B and route 1 against the references, H1
+# written 2026-11-05T15:13:22Z on mps026298.phys.susx.ac.uk
+# script score_h1_06l.py sha256 52cb48f874a431b5d7464dda2a4e401880b8ec4e64d97ed12d61650544cb4ba7
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json sha256 73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06j/out/w_calls.csv sha256 0a8549bd6fee58bd8d9037e7aa15ee2fab0c4b14c7478ca4cfd90d2582e172f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/g.pkl sha256 3942209a1141fad4822a2b962a068d6d8ad743cdaf93247c130d94e9c8e51eea
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route1.pkl sha256 adaf96e2433b3c2ad92aec44031b514604c22cdfca1b4cd5927cea0c7af9db93
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/extract/routeB.pkl sha256 e73280047215dd0d938c3c8a7333902e555d286a29ad76fb9d9f2da2e000ab2d
+rid,source,class,unit,index,kind,group,in_720,ratio_g,route1_ratio,route1_ok,route1_converged,route1_regions,routeB_ratio,routeB_ok,routeB_converged,routeB_regions
+z00,06g z3,two implementations,g-1e-7-1-2174,1,group,G+q+r,True,0.018305971708825496,0.018279769044658684,True,False,217,0.018276897852472537,True,False,225
+z01,06g z3,two implementations,g-1e-7-2-1444,4,group,G+q-r,False,0.32026343068761387,0.32026343068761387,True,True,2,0.32026343068761387,True,True,2
+z02,06g z3,two implementations,g-1e-7-2-1627,3,group,G-q+r,False,0.0012148894674724063,0.0012148894674724063,True,True,7,0.0012148894674724063,True,True,7
+z03,06g z3,two implementations,g-1e-7-3-34370,4,group,G-q-r,False,0.03724229890956636,0.03722812215886922,True,True,83,0.03722952971916218,True,True,85
+z04,06g z3,FCC only,g-1e-7-3-13510,5,analytic,analytic J1,False,0.00018610588114030313,0.00018610588114030313,True,True,6,0.00018610588114030313,True,True,6
+z05,06g z3,two implementations,g-1e-7-2-34485,17,analytic,analytic J2,False,0.09031385123103339,0.09031385123103339,True,True,6,0.09031385123103339,True,True,6
+z06,06g z3,FCC only,g-1e-7-1-38737,11,analytic,analytic J3,False,2.4663116967148526e-05,2.4663116967148526e-05,True,True,6,2.4663116967148526e-05,True,True,6
+z07,06g z3,FCC only,g-1e-7-2-34718,11,analytic,analytic J4,True,1.5252941358856738e-06,1.5252941358856738e-06,True,True,3,1.5252941358856738e-06,True,True,3
+z08,06g z3,two implementations,g-1e-7-3-37319,6,analytic,analytic Y1,False,2.092718439121327e-07,2.092718439121327e-07,True,True,3,2.092718439121327e-07,True,True,3
+z09,06g z3,two implementations,g-1e-7-1-35340,18,analytic,analytic Y2,False,0.0001438159726790712,0.0001438159726790712,True,True,10,0.0001438159726790712,True,True,10
+z10,06g z3,two implementations,g-1e-7-1-35332,10,analytic,analytic Y3,False,0.0001653138270348607,0.0001653138270348607,True,True,4,0.0001653138270348607,True,True,4
+z11,06g z3,two implementations,g-1e-7-3-36020,20,analytic,analytic Y4,False,0.0001349587158119725,0.0001349587158119725,True,True,3,0.0001349587158119725,True,True,3
+z12,06g z3,two implementations,g-1e-8-1-2174,1,group,G+q+r,True,1681.3491886571235,1681.3313021643833,True,True,104,1681.2986886703777,True,True,112
+z13,06g z3,two implementations,g-1e-8-3-34220,4,group,G+q-r,False,0.5768787097279511,0.5768787097279511,True,True,2,0.5768787097279511,True,True,2
+z14,06g z3,two implementations,g-1e-8-2-1627,3,group,G-q+r,False,0.001214894143949744,0.001214894143949744,True,True,4,0.001214894143949744,True,True,4
+z15,06g z3,two implementations,g-1e-8-2-1549,4,group,G-q-r,False,3.948870792894434e-06,5.560034673457876e-06,True,True,57,5.5435667812191565e-06,True,True,59
+z16,06g z3,two implementations,g-1e-8-2-34708,5,analytic,analytic J1,True,6.54272046022541e-06,6.54272046022541e-06,True,True,6,6.54272046022541e-06,True,True,6
+z17,06g z3,two implementations,g-1e-8-3-13913,9,analytic,analytic J2,False,1.1884879208770234e-06,1.1884879208770234e-06,True,True,10,1.1884879208770234e-06,True,True,10
+z18,06g z3,FCC only,g-1e-8-1-2368,9,analytic,analytic J3,True,7.388080329901019e-07,7.388080329901019e-07,True,True,10,7.388080329901019e-07,True,True,10
+z19,06g z3,two implementations,g-1e-8-3-36019,19,analytic,analytic J4,False,1.5810749192552097e-06,1.5810749192552097e-06,True,True,6,1.5810749192552097e-06,True,True,6
+z20,06g z3,two implementations,g-1e-8-0-12932,14,analytic,analytic Y1,False,0.0017008869749435957,0.0017008869749435957,True,True,10,0.0017008869749435957,True,True,10
+z21,06g z3,FCC only,g-1e-8-1-14572,8,analytic,analytic Y2,True,3.4823508870732897e-07,3.4823508870732897e-07,True,True,9,3.4823508870732897e-07,True,True,9
+z22,06g z3,two implementations,g-1e-8-2-21874,12,analytic,analytic Y3,False,9.873038126917958e-05,9.873038126917958e-05,True,True,6,9.873038126917958e-05,True,True,6
+z23,06g z3,two implementations,g-1e-8-2-1402,12,analytic,analytic Y4,False,0.00014772436355032438,0.00014772436355032438,True,True,7,0.00014772436355032438,True,True,7
+z24,06g z3,FCC only,g-1e-8-2-34718,5,analytic,analytic J1,True,0.0020735211170224395,0.0020735211170224395,True,True,9,0.0020735211170224395,True,True,9
+z25,06g z3,two implementations,g-1e-8-0-33962,12,analytic,analytic Y4,False,0.010764456912488871,0.010764456912488871,True,True,6,0.010764456912488871,True,True,6
+z26,06g z3,two implementations,g-1e-8-0-37212,8,analytic,analytic Y1,False,1.6810168441607366e-05,1.6810168441607366e-05,True,True,8,1.6810168441607366e-05,True,True,8
+z27,06g z3,two implementations,g-1e-8-3-34419,21,analytic,analytic J4,False,0.0040601511905427705,0.0040601511905427705,True,True,5,0.0040601511905427705,True,True,5
+z28,06g z3,two implementations,g-1e-7-2-34708,5,analytic,analytic J1,True,6.54272046022541e-06,6.54272046022541e-06,True,True,6,6.54272046022541e-06,True,True,6
+z29,06g z3,FCC only,g-1e-7-1-14572,9,analytic,analytic J3,True,2.3415003178312134e-07,2.3415003178312134e-07,True,True,6,2.3415003178312134e-07,True,True,6
+r00,06g draw,two implementations,g-1e-7-0-14053,7,analytic,analytic J2,False,3.4616159212603085e-05,3.4616159212603085e-05,True,True,12,3.4616159212603085e-05,True,True,12
+r01,06g draw,two implementations,g-1e-7-0-33650,14,analytic,analytic Y4,False,0.0006575909789187441,0.0006575909789187441,True,True,3,0.0006575909789187441,True,True,3
+r02,06g draw,two implementations,g-1e-7-2-1517,15,analytic,analytic J1,False,1.013003246838605e-05,1.013003246838605e-05,True,True,1,1.013003246838605e-05,True,True,1
+r03,06g draw,two implementations,g-1e-7-0-12758,18,analytic,analytic Y3,False,4.138449126568269e-08,4.138449126568269e-08,True,True,1,4.138449126568269e-08,True,True,1
+r04,06g draw,two implementations,g-1e-7-3-34411,13,analytic,analytic J1,False,1.091324328403941e-06,1.091324328403941e-06,True,True,1,1.091324328403941e-06,True,True,1
+r05,06g draw,two implementations,g-1e-7-0-12625,5,analytic,analytic J1,False,9.470802793334451e-07,9.470802793334451e-07,True,True,4,9.470802793334451e-07,True,True,4
+r06,06g draw,two implementations,g-1e-7-0-12682,14,analytic,analytic Y1,False,3.3801140628369845e-07,3.3801140628369845e-07,True,True,1,3.3801140628369845e-07,True,True,1
+r07,06g draw,two implementations,g-1e-7-3-14593,21,analytic,analytic J4,False,0.00022119297525301408,0.00022119297525301408,True,True,5,0.00022119297525301408,True,True,5
+r08,06g draw,two implementations,g-1e-7-1-10908,13,analytic,analytic J1,False,0.008065167602270187,0.008065167602270187,True,True,2,0.008065167602270187,True,True,2
+r09,06g draw,two implementations,g-1e-7-1-20466,5,analytic,analytic Y2,False,0.002032293673346838,0.002032293673346838,True,True,1,0.002032293673346838,True,True,1
+r10,06g draw,two implementations,g-1e-7-1-35314,7,analytic,analytic J1,False,0.12281634521443648,0.12281634521443648,True,True,7,0.12281634521443648,True,True,7
+r11,06g draw,two implementations,g-1e-7-0-33732,9,analytic,analytic J3,False,8.432446608124658e-06,8.432446608124658e-06,True,True,1,8.432446608124658e-06,True,True,1
+r12,06g draw,two implementations,g-1e-7-0-33870,18,analytic,analytic Y3,False,6.96661400415353e-07,6.96661400415353e-07,True,True,1,6.96661400415353e-07,True,True,1
+r13,06g draw,two implementations,g-1e-7-2-21527,18,analytic,analytic Y2,False,2.3739177044570554e-05,2.3739177044570554e-05,True,True,1,2.3739177044570554e-05,True,True,1
+r14,06g draw,two implementations,g-1e-7-3-504,9,analytic,analytic Y4,False,0.024681379590511872,0.024681379590511872,True,True,1,0.024681379590511872,True,True,1
+r15,06g draw,two implementations,g-1e-7-3-34409,2,group,G+q-r,False,0.0012748189635059248,0.0012748189635059248,True,True,14,0.0012748189635059248,True,True,14
+r16,06g draw,two implementations,g-1e-7-0-33822,0,group,G,False,0.008810099049911231,0.008810099049911231,True,True,8,0.008810099049911231,True,True,8
+r17,06g draw,two implementations,g-1e-7-1-2229,3,group,G+q+r,False,0.5457973941514865,0.5455291833059401,True,True,102,0.5454221710728253,True,True,119
+r18,06g draw,two implementations,g-1e-7-0-1786,4,group,G+q-r,False,0.017464569283539712,0.017464564342734457,True,True,29,0.017464564342734457,True,True,29
+r19,06g draw,two implementations,g-1e-7-2-21926,0,group,G,False,0.0007163123421074576,0.0007163123421074576,True,True,9,0.0007163123421074576,True,True,9
+r20,06g draw,two implementations,g-1e-7-0-12606,1,group,G+r,False,0.00043273681212115106,0.00043273681212115106,True,True,13,0.00043273681212115106,True,True,13
+r21,06g draw,two implementations,g-1e-7-3-34449,0,group,G,False,0.001328947376520954,0.001328947376520954,True,True,9,0.001328947376520954,True,True,9
+r22,06g draw,two implementations,g-1e-7-2-36976,0,group,G,False,0.009327233325731243,0.009327233325731243,True,True,9,0.009327233325731243,True,True,9
+r23,06g draw,two implementations,g-1e-7-0-33961,4,group,G-q-r,False,0.0003014571447229969,0.00030308861406504715,True,True,41,0.00030190882464069274,True,True,42
+r24,06g draw,two implementations,g-1e-7-3-34853,1,group,G+q+r,False,0.30743023748880455,0.30743023748880455,True,True,9,0.30743023748880455,True,True,9
+r25,06g draw,two implementations,g-1e-7-0-1887,3,group,G+q+r,False,0.00010939792242076067,0.00010939792242076067,True,True,1,0.00010939792242076067,True,True,1
+r26,06g draw,FCC only,g-1e-7-1-14462,5,group,G-q+r,False,2.662537806838343e-05,2.662537806838343e-05,True,True,1,2.662537806838343e-05,True,True,1
+r27,06g draw,two implementations,g-1e-7-0-34026,1,group,G+q+r,False,0.05213333395937945,0.05213333395937945,True,True,13,0.05213333395937945,True,True,13
+r28,06g draw,two implementations,g-1e-7-2-21673,3,group,G-q+r,False,0.0399040552779451,0.0399040552779451,True,True,8,0.0399040552779451,True,True,8
+r29,06g draw,two implementations,g-1e-7-1-35525,4,group,G+q-r,False,0.0007855754401161561,0.0007855754401161561,True,True,1,0.0007855754401161561,True,True,1
+r30,06g draw,two implementations,g-1e-8-1-1759,14,analytic,analytic Y4,False,1.0065503976849921e-06,1.0065503976849921e-06,True,True,7,1.0065503976849921e-06,True,True,7
+r31,06g draw,two implementations,g-1e-8-1-35133,22,analytic,analytic Y4,False,8.573619262001178e-06,8.573619262001178e-06,True,True,1,8.573619262001178e-06,True,True,1
+r32,06g draw,two implementations,g-1e-8-1-35282,19,analytic,analytic J4,False,1.8185692843234296e-06,1.8185692843234296e-06,True,True,1,1.8185692843234296e-06,True,True,1
+r33,06g draw,two implementations,g-1e-8-0-10552,0,analytic,analytic J1,False,0.00822366915723169,0.00822366915723169,True,True,1,0.00822366915723169,True,True,1
+r34,06g draw,two implementations,g-1e-8-0-33988,21,analytic,analytic J4,False,6.360231995272666e-06,6.360231995272666e-06,True,True,1,6.360231995272666e-06,True,True,1
+r35,06g draw,two implementations,g-1e-8-1-11073,20,analytic,analytic Y3,False,0.0005374506636265444,0.0005374506636265444,True,True,1,0.0005374506636265444,True,True,1
+r36,06g draw,two implementations,g-1e-8-2-1673,21,analytic,analytic J4,False,8.902995062669839e-05,8.902995062669839e-05,True,True,4,8.902995062669839e-05,True,True,4
+r37,06g draw,two implementations,g-1e-8-1-34613,15,analytic,analytic J1,False,5.893487883380724e-05,5.893487883380724e-05,True,True,5,5.893487883380724e-05,True,True,5
+r38,06g draw,two implementations,g-1e-8-1-35413,7,analytic,analytic J1,False,7.2014774996654e-05,7.2014774996654e-05,True,True,6,7.2014774996654e-05,True,True,6
+r39,06g draw,two implementations,g-1e-8-1-11154,10,analytic,analytic Y2,False,4.626371942940676e-07,4.626371942940676e-07,True,True,6,4.626371942940676e-07,True,True,6
+r40,06g draw,two implementations,g-1e-8-2-21651,21,analytic,analytic J4,False,0.029662896169413873,0.029662896169413873,True,True,1,0.029662896169413873,True,True,1
+r41,06g draw,two implementations,g-1e-8-2-1638,13,analytic,analytic J4,False,1.8415720539303368e-06,1.8415720539303368e-06,True,True,2,1.8415720539303368e-06,True,True,2
+r42,06g draw,two implementations,g-1e-8-2-33438,16,analytic,analytic J4,False,0.3349746853037482,0.3349746853037482,True,True,1,0.3349746853037482,True,True,1
+r43,06g draw,two implementations,g-1e-8-0-12662,20,analytic,analytic Y4,False,0.0007419094900340607,0.0007419094900340607,True,True,4,0.0007419094900340607,True,True,4
+r44,06g draw,two implementations,g-1e-8-3-1045,13,analytic,analytic J1,False,0.009829231880182475,0.009829231880182475,True,True,4,0.009829231880182475,True,True,4
+r45,06g draw,two implementations,g-1e-8-0-13951,3,group,G-q+r,False,0.011781607997180133,0.011782779148428783,True,True,60,0.011782960915184769,True,True,63
+r46,06g draw,two implementations,g-1e-8-3-13481,2,group,G+q-r,False,0.0054103811176264985,0.005405162220928495,True,True,101,0.005405409083663853,True,True,105
+r47,06g draw,two implementations,g-1e-8-3-1916,4,group,G+q-r,False,0.1644455503021033,0.16406314840491815,True,True,51,0.1641682994836177,True,True,62
+r48,06g draw,two implementations,g-1e-8-1-11031,3,group,G-q+r,False,0.03670123073505184,0.03670123073505184,True,True,1,0.03670123073505184,True,True,1
+r49,06g draw,two implementations,g-1e-8-2-21720,1,group,G+r,False,0.07836801011053318,0.07836801011053318,True,True,1,0.07836801011053318,True,True,1
+r50,06g draw,two implementations,g-1e-8-3-34389,3,group,G-q+r,False,0.0901590498799955,0.0901590498799955,True,True,1,0.0901590498799955,True,True,1
+r51,06g draw,two implementations,g-1e-8-1-14231,1,group,G+r,False,0.00020808302491771532,0.00020808302491771532,True,True,52,0.00020808302491771532,True,True,52
+r52,06g draw,two implementations,g-1e-8-3-34925,1,group,G+q+r,False,0.0007832834710848742,0.0007824557334484126,True,True,59,0.0007824557334484126,True,True,59
+r53,06g draw,two implementations,g-1e-8-3-14492,4,group,G+q-r,False,0.021853234823222056,0.02153308523848644,True,True,88,0.02161406676621046,True,True,133
+r54,06g draw,two implementations,g-1e-8-0-34014,0,group,G,False,0.0018387626143940652,0.0018387626143940652,True,True,9,0.0018387626143940652,True,True,9
+r55,06g draw,two implementations,g-1e-8-2-34671,2,group,G-r,False,0.02665411139137664,0.02665411139137664,True,True,1,0.02665411139137664,True,True,1
+r56,06g draw,two implementations,g-1e-8-1-10794,5,group,G-q+r,False,0.005908823669838441,0.005908823669838441,True,True,21,0.005908823669838441,True,True,21
+r57,06g draw,two implementations,g-1e-8-3-34394,3,group,G-q+r,False,0.00010604595054138709,0.00010604595054138709,True,True,1,0.00010604595054138709,True,True,1
+r58,06g draw,two implementations,g-1e-8-3-34453,3,group,G-q+r,False,0.09145761738935611,0.09145761738935611,True,True,26,0.09145761738935611,True,True,26
+r59,06g draw,two implementations,g-1e-8-0-1823,0,group,G,False,0.0013031575457235817,0.0013031575457235817,True,True,28,0.0013031575457235817,True,True,28
+v00,06g v8,two implementations,g-1e-7-2-1380,4,group,G+q-r,False,0.07515709920855397,0.041347586472106505,True,True,38,0.06333809469334244,True,True,49
+v01,06g v8,two implementations,g-1e-7-0-12617,5,group,G-q+r,False,0.3663467456364639,0.36593680071755946,True,True,87,0.3661861966110338,True,True,101
+v02,06g v8,two implementations,g-1e-7-3-34212,4,group,G+q-r,False,0.005333959814265858,0.005320936798926563,True,True,112,0.005329419525294585,True,True,133
+v03,06g v8,two implementations,g-1e-7-1-34521,4,group,G+q-r,False,1.2026759847435293,1.1853788367296947,True,True,64,1.1818301238174125,True,True,71
+v04,06g v8,two implementations,g-1e-7-3-34296,1,group,G+q+r,False,0.0001951173324364131,0.00019561720464273842,True,True,65,0.00019543810190213984,True,True,66
+v05,06g v8,two implementations,g-1e-7-3-34090,4,group,G-q-r,False,0.004496936507802074,0.004507326377876716,True,True,113,0.004513602083501712,True,True,149
+v06,06g v8,two implementations,g-1e-8-2-1380,4,group,G+q-r,False,0.07515709920855397,0.041347586472106505,True,True,38,0.06333809469334244,True,True,49
+v07,06g v8,two implementations,g-1e-8-0-12606,5,group,G-q+r,False,0.0429677338449927,0.042965914320719084,True,True,73,0.04278868604150697,True,True,75
+v08,06g v8,two implementations,g-1e-8-3-1192,5,group,G-q+r,False,0.00728391733364179,0.007502264996202705,True,True,127,0.007362188483229689,True,True,134
+v09,06g v8,two implementations,g-1e-8-1-35480,2,group,G+q-r,False,0.00612473785716462,0.006125067391915184,True,True,91,0.00612533285312739,True,True,108
+v10,06g v8,two implementations,g-1e-8-3-38023,4,group,G-q-r,False,0.0010727747887354336,0.0010716412791860717,True,False,108,0.0010718335763990757,True,False,145
+v11,06g v8,two implementations,g-1e-8-0-12655,3,group,G-q+r,False,0.4285289529086898,0.42853180681168296,True,True,73,0.42852308862857974,True,True,96
+f00,06j W-5,four readings agree,g-1e-7-0-12778,1,group,G+r,False,6.28578731681913e-05,6.28578731681913e-05,True,True,16,6.28578731681913e-05,True,True,16
+f01,06j W-5,four readings agree,g-1e-7-0-12959,1,group,G+r,False,0.020263485192387257,0.020263485192387257,True,True,12,0.020263485192387257,True,True,12
+f02,06j W-5,four readings agree,g-1e-7-0-1873,1,group,G+r,False,5.637100736554222e-05,5.637100736554222e-05,True,True,15,5.637100736554222e-05,True,True,15
+f03,06j W-5,four readings agree,g-1e-7-0-2108,1,group,G+r,False,0.04628732582690491,0.04628732582690491,True,True,14,0.04628732582690491,True,True,14
+f04,06j W-5,four readings agree,g-1e-7-0-33730,1,group,G+r,False,6.430551320554477e-05,6.430551320554477e-05,True,True,16,6.430551320554477e-05,True,True,16
+f05,06j W-5,four readings agree,g-1e-8-0-12778,1,group,G+r,False,6.28578731681913e-05,6.28578731681913e-05,True,True,16,6.28578731681913e-05,True,True,16
+f06,06j W-5,four readings agree,g-1e-8-0-12959,1,group,G+r,False,0.020263485192387257,0.020263485192387257,True,True,12,0.020263485192387257,True,True,12
+f07,06j W-5,four readings agree,g-1e-8-0-1873,1,group,G+r,False,5.637100736554222e-05,5.637100736554222e-05,True,True,15,5.637100736554222e-05,True,True,15
+f08,06j W-5,four readings agree,g-1e-8-0-2108,1,group,G+r,False,0.04628732582690491,0.04628732582690491,True,True,14,0.04628732582690491,True,True,14
+f09,06j W-5,four readings agree,g-1e-8-0-33730,1,group,G+r,False,6.430551320554477e-05,6.430551320554477e-05,True,True,16,6.430551320554477e-05,True,True,16
+c00,06j W-12,four readings agree,g-1e-7-1-2142,5,group,G-q+r,False,0.004965927936960493,0.005008017043792807,True,True,100,0.00496454426394268,True,True,115
+c01,06j W-12,four readings agree,g-1e-7-2-33416,6,group,G-q-r,False,0.0013820509113013255,0.0013820509113013255,True,True,23,0.0013820509113013255,True,True,23
+c02,06j W-12,four readings agree,g-1e-7-1-35497,5,group,G-q+r,False,0.001184225620416361,0.0011754957877553364,True,True,56,0.0011754353575682988,True,True,58
+c03,06j W-12,four readings agree,g-1e-7-0-12727,4,group,G+q-r,False,0.021608712047467372,0.021589242556344233,True,True,63,0.021577533464292534,True,True,66
+c04,06j W-12,four readings agree,g-1e-7-1-35052,6,group,G-q-r,False,0.015378905493171446,0.015280300394579688,True,True,52,0.015271586390843968,True,True,58
+c05,06j W-12,four readings agree,g-1e-7-0-33892,1,group,G+r,False,0.02146634510679625,0.02146634510679625,True,True,13,0.02146634510679625,True,True,13
+c06,06j W-12,four readings agree,g-1e-8-3-34272,4,group,G-q-r,False,0.03289650027433246,0.03293365423690544,True,True,110,0.032886268378590065,True,True,138
+c07,06j W-12,four readings agree,g-1e-8-3-37323,1,group,G+q+r,False,0.013245018499087133,0.01324539514115133,True,True,42,0.01324539514115133,True,True,42
+c08,06j W-12,four readings agree,g-1e-8-1-35136,3,group,G+q+r,False,0.0004549195526983844,0.0004422919981113254,True,True,69,0.0004510564510573222,True,True,71
+c09,06j W-12,four readings agree,g-1e-8-1-35446,4,group,G-q-r,False,0.004044396376639611,0.004020224662921489,True,True,50,0.004044371717429641,True,True,50
+c10,06j W-12,four readings agree,g-1e-8-0-12965,4,group,G+q-r,False,0.07079718728439524,0.09838030284677132,True,True,30,0.0707500010897363,True,True,25
+c11,06j W-12,four readings agree,g-1e-8-0-33648,1,group,G+r,False,4.171516774086542e-05,4.171516774086542e-05,True,True,14,4.171516774086542e-05,True,True,14

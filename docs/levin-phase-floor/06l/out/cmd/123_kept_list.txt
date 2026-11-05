@@ -1,0 +1,18 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/kept_list_06l.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:20:21Z
+# ----
+# levin-phase-floor 06l: files kept on the Mac Studio only (mps026298), not copied to the laptop.
+# sha256  size_bytes  path (relative to var/levin-phase-floor-06l/, or to var/runs/). Written by scripts/kept_list_06l.py.
+## pickles, and files over 2 MB, under var/levin-phase-floor-06l/ (review/ excluded)
+# 178 files, 426383808 bytes
+## run directory var/runs/levin-phase-floor-06l-census-routeB-20261105T100126/ (every file)
+# 150 files, 4771509464 bytes
+## run directory var/runs/levin-phase-floor-06l-k0partL-20261105T091942/ (every file)
+# 5 files, 21796 bytes
+## run directory var/runs/levin-phase-floor-06l-partL-20261105T095407/ (every file)
+# 5 files, 18721 bytes
+# ----
+# end 2026-11-05T15:20:25Z
+# exit 0

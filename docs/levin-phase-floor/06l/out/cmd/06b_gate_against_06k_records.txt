@@ -1,0 +1,31 @@
+$ sh -c echo\ \'==\ 06g\ region\ pickles\ and\ checkpoint\ against\ 06k\ out/cmd/06\'\;\ grep\ -oE\ \'\^\[0-9a-f\]\{64\}\ \ \\S\*\(regions_\[\^\ \]\*pkl\|06g-census\[\^\ \]\*checkpoint.jsonl\|v8_calls.json\)\'\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06k/out/cmd/06_gate_checkpoints_and_inputs.txt\ \|\ sort\ \>\ /dev/stdout\ \|\ head\ -0\;\ a=\$\(grep\ -oE\ \'\^\[0-9a-f\]\{64\}\ \ \\S\*06g-census\\S\*\'\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06k/out/cmd/06_gate_checkpoints_and_inputs.txt\ \|\ sort\)\;\ b=\$\(grep\ -oE\ \'\^\[0-9a-f\]\{64\}\ \ \\S\*06g-census\\S\*\'\ out/cmd/06_gate_checkpoints_and_inputs.txt\ \|\ sort\)\;\ echo\ \"\$a\"\ \|\ wc\ -l\;\ \[\ \"\$a\"\ =\ \"\$b\"\ \]\ \&\&\ echo\ EQUAL\ \|\|\ echo\ DIFFER\;\ echo\ \'==\ route\ 1\ run\ files\ and\ extracts\ against\ 06k\ KEPT_ON_MAC_STUDIO.txt\'\;\ for\ f\ in\ \$\(grep\ -oE\ \'\^\[0-9a-f\]\{64\}\ \ \\S\*\(census-route1\\S\*\(checkpoint.jsonl\|regions_\\S\*pkl\)\)\'\ out/cmd/06_gate_checkpoints_and_inputs.txt\ \|\ awk\ \'\{print\ \$1\":\"\$2\}\'\)\;\ do\ h=\$\{f%%:\*\}\;\ p=\$\{f#\*:\}\;\ n=\$\(basename\ \$p\)\;\ grep\ -q\ \"\^\$h\ .\*census-route1.\*/\$n\"\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06k/KEPT_ON_MAC_STUDIO.txt\ \&\&\ echo\ \"match\ \$n\"\ \|\|\ echo\ \"NO\ MATCH\ \$n\"\;\ done\;\ for\ n\ in\ g.pkl\ route1.pkl\;\ do\ h=\$\(shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/\$n\ \|\ cut\ -c1-64\)\;\ grep\ -q\ \"\^\$h\ .\*state/extract/\$n\"\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06k/KEPT_ON_MAC_STUDIO.txt\ \&\&\ echo\ \"match\ extract\ \$n\"\ \|\|\ echo\ \"NO\ MATCH\ extract\ \$n\"\;\ done
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:11:52Z
+# ----
+== 06g region pickles and checkpoint against 06k out/cmd/06
+17
+EQUAL
+== route 1 run files and extracts against 06k KEPT_ON_MAC_STUDIO.txt
+match checkpoint.jsonl
+match regions_1e-7-k0_101.pkl
+match regions_1e-7-k0_202.pkl
+match regions_1e-7-k1_102.pkl
+match regions_1e-7-k1_301.pkl
+match regions_1e-7-k2_2.pkl
+match regions_1e-7-k2_302.pkl
+match regions_1e-7-k3_1.pkl
+match regions_1e-7-k3_201.pkl
+match regions_1e-8-k0_101.pkl
+match regions_1e-8-k0_202.pkl
+match regions_1e-8-k1_102.pkl
+match regions_1e-8-k1_301.pkl
+match regions_1e-8-k2_2.pkl
+match regions_1e-8-k2_302.pkl
+match regions_1e-8-k3_1.pkl
+match regions_1e-8-k3_201.pkl
+match extract g.pkl
+match extract route1.pkl
+# ----
+# end 2026-11-05T09:11:53Z
+# exit 0

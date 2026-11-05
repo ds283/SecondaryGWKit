@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "identity-1e-8-k2_2",
+ "units": [
+  {
+   "uid": "g-1e-8-2-1626",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "2-1626",
+   "names05": null,
+   "shard": 2,
+   "serial": 1626,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "review/checks/k0rerun/identity/identity-1e-8-k2_2",
+ "emit_fd": null,
+ "emit_file": "review/checks/k0rerun/identity/identity-1e-8-k2_2/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": {
+  "name": "identity",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/variants/levin_quadrature_identity.py",
+  "sha256": "d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59"
+ }
+}

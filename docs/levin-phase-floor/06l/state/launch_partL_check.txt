@@ -1,0 +1,17 @@
+# one check, 2026-11-05T09:54:12Z
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-05T09:54:08+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 53437,
+  "stage": "31b_check_captures started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 48
+}
+
+== kill -0 sh 53434: alive
+== status pid 53437: alive

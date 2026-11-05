@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_k0.py route state/dev/routeB_1449 state/dev/compare_routeB_1449.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:19:17Z
+# ----
+# levin-phase-floor 06l: Gate K0, routeB_1449 against 06g's census (route)
+# written 2026-11-05T09:19:17Z on mps026298.phys.susx.ac.uk
+# script compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev/routeB_1449/units.jsonl sha256 2174f8158e5707901415f3f186f3762ca23bbf2ef671fbd66a7691ecb274b300
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/index_06g.json sha256 1f41a6ca0f33dd1436982d66b16ae6e08424225e17a9a3bca3fffd138184ebc9
+# 06g's checkpoint /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl (each record's line checked by its SHA-256 in the index)
+g-1e-7-2-1449 (routeB-1e-7-k2_2): EQUAL; firings {0: 0, 1: 0, 2: 4, 3: 4, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 0}; excluded keys differing 57
+units 1; failing 0; units compared whole 0; calls with no firing compared 19; calls with a firing 2
+excluded keys that differ (path tail: units): {'summary.elapsed': 19, 'summary.route_06k': 19, 'summary.route_06l': 19}
+wrote state/dev/compare_routeB_1449.json sha256 04c4ca5df403167dfa26fb01f0aa4793be50a412ca9bd5fa1f12e03534c5bf71
+# ----
+# end 2026-11-05T09:19:20Z
+# exit 0

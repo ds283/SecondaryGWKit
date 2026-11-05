@@ -1,0 +1,66 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/ast_check_variants.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py scripts/variants/levin_quadrature_identity.py scripts/variants/levin_quadrature_routeB.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:13:41Z
+# ----
+# levin-phase-floor 06l: the variants' AST comparison with the tree's module
+# script ast_check_variants.py sha256 d2bfbc3262a33af5bdcd02b7b210f73567a2dc1e3ad1ba6c686054f8eb664369
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+
+== levin_quadrature_identity.py (sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59)
+top-level statements: tree 84, variant 84; differing: []
+only _adaptive_levin differs at top level: True
+_adaptive_levin's signature and docstring unchanged: True
+differing statement groups inside _adaptive_levin: 0
+names bound in the variant's _adaptive_levin and not the tree's: []
+of them, not ending in _06l: []
+identity: no difference at all: True
+CONFINED: True
+
+== levin_quadrature_routeB.py (sha256 24e7995fc3bda9172ecb43de6a74d409fd3b770010205523b1f469eb599a5d99)
+top-level statements: tree 84, variant 84; differing: ['_adaptive_levin']
+only _adaptive_levin differs at top level: True
+_adaptive_levin's signature and docstring unchanged: True
+differing statement groups inside _adaptive_levin: 3
+-- [1] at _adaptive_levin: insert; tree lines [], variant lines [3000]
+   + route_records_06l = []
+-- [2] at _adaptive_levin > FunctionDef _check_leaf.body: replace; tree lines [3380], variant lines [3384, 3390, 3391, 3392, 3393, 3394, 3395, 3396, 3397, 3400, 3410, 3411, 3412, 3413]
+   - trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= region.phase_err)
+   + trusted_g_06l = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= region.phase_err)
+   + parent_direct_06l = bool(leaf.is_direct)
+   + halves_06l = (dataL, dataR)
+   + half_direct_06l = [bool(h_06l.get('is_direct', False)) for h_06l in halves_06l]
+   + phi_h_06l = [h_06l.get('phase_err', 0.0) or 0.0 for h_06l in halves_06l]
+   + phim_h_06l = [h_06l.get('phase_err_less_node') for h_06l in halves_06l]
+   + E_h_06l = [h_06l.get('node_error_signed') for h_06l in halves_06l]
+   + nuB_06l = region.phase_err
+   + for k_06l in (0, 1):
+         if not half_direct_06l[k_06l]:
+             nuB_06l = nuB_06l + phi_h_06l[k_06l]
+   + if parent_direct_06l and any(half_direct_06l):
+         cc_06l = [k_06l for k_06l in (0, 1) if half_direct_06l[k_06l]]
+         for k_06l in cc_06l:
+             if phim_h_06l[k_06l] is None or E_h_06l[k_06l] is None:
+                 raise RuntimeError('prompt 06l, route B: a Clenshaw-Curtis half has no phase_err_less_node or node_error_signed')
+             nuB_06l = nuB_06l + phim_h_06l[k_06l]
+         E_cc_06l = E_h_06l[cc_06l[0]] if len(cc_06l) == 1 else E_h_06l[0] + E_h_06l[1]
+         nuB_06l = nuB_06l + abs(E_cc_06l)
+   + nu1_06l = region.phase_err + phi_h_06l[0] + phi_h_06l[1]
+   + trusted_r1_06l = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= nu1_06l)
+   + trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= nuB_06l)
+   + if trusted and (not trusted_g_06l) or (not trusted and (trusted_r1_06l or leaf.depth >= depth_max)):
+     
+         def _f_06l(x_06l):
+             return None if x_06l is None else float(x_06l)
+         route_records_06l.append({'kind': 'fired' if trusted else 'untrusted', 'depth': int(leaf.depth), 'at_depth_max': bool(leaf.depth >= depth_max), 'start': float(a), 'end': float(b), 'is_direct': parent_direct_06l, 'is_direct_L': half_direct_06l[0], 'is_direct_R': half_direct_06l[1], 'r': float(ratio), 'delta1': float(delta1), 'delta2': float(delta2), 'phi_P': float(region.phase_err), 'phi_L': float(phi_h_06l[0]), 'phi_R': float(phi_h_06l[1]), 'phim_L': _f_06l(phim_h_06l[0]), 'phim_R': _f_06l(phim_h_06l[1]), 'E_P': _f_06l(region.node_error_signed), 'E_L': _f_06l(E_h_06l[0]), 'E_R': _f_06l(E_h_06l[1]), 'nu1': float(nu1_06l), 'nuB': float(nuB_06l), 'trusted_g': bool(trusted_g_06l), 'trusted_r1': bool(trusted_r1_06l), 'residual': float(residual)})
+-- [3] at _adaptive_levin: replace; tree lines [3865], variant lines [3930]
+   - return {'value': float(val), 'abserr': float(abserr_total), 'relerr': float(relerr_total), 'abserr_resolution': float(abserr_resolution_total), 'abserr_roundoff': float(abserr_roundoff_total), 'abserr_fallback': float(abserr_fallback_total), 'abserr_truncation': float(abserr_truncation_total), 'node_error_signed_sum': float(node_error_signed_sum), 'node_error_abs_sum': float(node_error_abs_sum), 'abserr_node_signed': abserr_node_signed, 'node_limited': bool(node_limited), 'converged': bool(converged), 'phase_limited': num_phase_limited > 0, 'num_phase_limited_regions': num_phase_limited, 'num_untrusted_regions': num_untrusted, 'p_points': p_points, 'num_regions': num_used_regions, 'regions': used_regions, 'num_simple_regions': num_simple_regions, 'evaluations': int(num_evaluations), 'num_subregion_solves': int(num_evaluations), 'elapsed': float(elapsed), 'num_SVD_errors': num_SVD_errors, 'num_order_changes': num_order_changes, 'num_direct_solves': num_direct_solves, 'num_solves_direct': num_solves_direct, 'num_solves_lstsq': num_solves_lstsq, 'num_solves_pinv': num_solves_pinv, 'num_solves_total': num_solves_direct + num_solves_lstsq + num_solves_pinv, 'chebyshev_min_order': chebyshev_min_order, 'max_depth': max_depth}
+   + return {'value': float(val), 'abserr': float(abserr_total), 'relerr': float(relerr_total), 'abserr_resolution': float(abserr_resolution_total), 'abserr_roundoff': float(abserr_roundoff_total), 'abserr_fallback': float(abserr_fallback_total), 'abserr_truncation': float(abserr_truncation_total), 'node_error_signed_sum': float(node_error_signed_sum), 'node_error_abs_sum': float(node_error_abs_sum), 'abserr_node_signed': abserr_node_signed, 'node_limited': bool(node_limited), 'converged': bool(converged), 'phase_limited': num_phase_limited > 0, 'num_phase_limited_regions': num_phase_limited, 'num_untrusted_regions': num_untrusted, 'p_points': p_points, 'num_regions': num_used_regions, 'regions': used_regions, 'num_simple_regions': num_simple_regions, 'evaluations': int(num_evaluations), 'num_subregion_solves': int(num_evaluations), 'elapsed': float(elapsed), 'num_SVD_errors': num_SVD_errors, 'num_order_changes': num_order_changes, 'num_direct_solves': num_direct_solves, 'num_solves_direct': num_solves_direct, 'num_solves_lstsq': num_solves_lstsq, 'num_solves_pinv': num_solves_pinv, 'num_solves_total': num_solves_direct + num_solves_lstsq + num_solves_pinv, 'chebyshev_min_order': chebyshev_min_order, 'max_depth': max_depth, 'route_06l': {'route': 'B', 'n_firings': sum((1 for rec_06l in route_records_06l if rec_06l['kind'] == 'fired')), 'n_untrusted_recorded': sum((1 for rec_06l in route_records_06l if rec_06l['kind'] == 'untrusted')), 'records': route_records_06l}}
+names bound in the variant's _adaptive_levin and not the tree's: ['E_cc_06l', 'E_h_06l', '_f_06l', 'cc_06l', 'h_06l', 'half_direct_06l', 'halves_06l', 'k_06l', 'nu1_06l', 'nuB_06l', 'parent_direct_06l', 'phi_h_06l', 'phim_h_06l', 'rec_06l', 'route_records_06l', 'trusted_g_06l', 'trusted_r1_06l', 'x_06l']
+of them, not ending in _06l: []
+CONFINED: True
+
+ALL CONFINED: True
+# ----
+# end 2026-11-05T09:13:42Z
+# exit 0

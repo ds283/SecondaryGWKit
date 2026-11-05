@@ -1,0 +1,15 @@
+- **L1 — B does not trust 06h's kind of leaf.** **Rule:** of the 17 06h carrying leaves (L-b), B
+  trusts none.
+- **L2 — B trusts every first-population slow leaf.** **Rule:** B trusts all 75 of 06j's sampled slow
+  leaves with $\Delta_1/\phi_P < 2$.
+- **C1 — convergence comes back.** **Rule:** at least 90 % of V8's lost calls outside the 720, at
+  each rtol, converge under B.
+- **C2 — nothing converged is lost but to the node-limited stop.** **Rule:** every call outside the
+  720 that 06g converges and B does not ends `node_limited`.
+- **H1 — no referenced call gets worse.** **Rule:** on every one of the 115 matched references
+  outside the 720, $|v_B - {\rm ref}|/e_B \le \max(1,\ |v_g - {\rm ref}|/e_g)$.
+- **S1 — no move past both errors.** **Rule:** no call outside the 720 moves by more than $e_B + e_g$
+  against 06g's census.
+- **K1 — B trusts Levin parents only at noise level.** **Rule:** every trust firing on a Levin
+  parent, outside the 720, has $\Delta_1/\phi_P < 5.8$.
+

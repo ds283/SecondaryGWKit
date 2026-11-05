@@ -1,0 +1,17 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/make_variants.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py scripts/variants
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:13:16Z
+# ----
+# levin-phase-floor 06l: the variants of /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py
+# script make_variants.py sha256 c990dc494b2a757eb84d61c5a96bb3c704a0e3781c743e2beeff8543ee241917
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+06k route1 rebuilt in memory: sha256 23cd69e4a87a3a19e8a7e744cf3bac7712c26f342864fb299959a279d80a5cb2 (06k recorded 23cd69e4...: equal); not written
+06k route2 rebuilt in memory: sha256 017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635 (06k recorded 017fae1c...: equal); not written
+06k route2lit rebuilt in memory: sha256 2fd10b78955d7607ad97a03d99cd1191fb932b3a7dee2f5b8bf4dbd7ddd02dff (06k recorded 2fd10b78...: equal); not written
+06k route3 rebuilt in memory: sha256 e139ec7188f45e154c78c50ff5c2b086f84cbcf08ae1c045b098e210634fdd49 (06k recorded e139ec71...: equal); not written
+identity: scripts/variants/levin_quadrature_identity.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59 (226551 bytes)
+routeB: scripts/variants/levin_quadrature_routeB.py sha256 f08a5df2ded88d5ffba48888fb72b1d2eaf844ffbdb356adc4bd37f8aed8b4d0 (230489 bytes)
+# ----
+# end 2026-11-05T09:13:16Z
+# exit 0

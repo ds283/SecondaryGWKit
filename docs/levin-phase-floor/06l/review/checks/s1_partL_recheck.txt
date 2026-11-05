@@ -1,0 +1,22 @@
+rows 2046 Counter({'L-c': 1882, 'L-a': 142, 'L-b': 22})
+kinds Counter({('direct', 'direct', 'direct'): 1015, ('Levin', 'Levin', 'Levin'): 901, ('Levin', 'direct', 'direct'): 112, ('Levin', 'Levin', 'direct'): 18})
+mismatches {'nuB rel diff > 1e-15': 0, 'dec_routeB disagrees': 0, 'dec_route1 disagrees': 0}
+L3 {'nuB > nu1(1+1e-12)': 0, 'B trusts, route 1 not': 0} max nuB/nu1 1.0000000000000002
+decisions {('L-a', '', False): 57, ('L-c', '', True): 1882, ('L-a', '', True): 85, ('L-b', '', False): 22}
+example dec values Counter({'trusted': 1967, 'untrusted': 79})
+--- L2 (L-a with delta1/phi_P < 2)
+first 75 trusted 63 | second 67 trusted 22
+   s09    4 r=0.4910 d1/phiP=1.4922 d1/nuB=1.00408 opp_sign=True d1/|EP-(EL+ER)|=1.00613 kinds=direct,direct,direct
+   s11    6 r=0.4953 d1/phiP=1.4946 d1/nuB=1.00078 opp_sign=True d1/|EP-(EL+ER)|=1.00273 kinds=direct,direct,direct
+   s11    6 r=0.4939 d1/phiP=1.4914 d1/nuB=1.00122 opp_sign=True d1/|EP-(EL+ER)|=1.00397 kinds=direct,direct,direct
+   s13    3 r=0.4927 d1/phiP=1.4884 d1/nuB=1.00315 opp_sign=True d1/|EP-(EL+ER)|=1.00573 kinds=direct,direct,direct
+   s14    3 r=0.4998 d1/phiP=1.5005 d1/nuB=1.00055 opp_sign=True d1/|EP-(EL+ER)|=1.00206 kinds=direct,direct,direct
+   s18    5 r=0.4973 d1/phiP=1.4993 d1/nuB=1.00112 opp_sign=True d1/|EP-(EL+ER)|=1.00258 kinds=direct,direct,direct
+   s19    3 r=0.4978 d1/phiP=1.4931 d1/nuB=1.00193 opp_sign=True d1/|EP-(EL+ER)|=1.00344 kinds=direct,direct,direct
+   s19    3 r=0.4944 d1/phiP=1.5018 d1/nuB=1.00260 opp_sign=True d1/|EP-(EL+ER)|=1.00397 kinds=direct,direct,direct
+   s22    4 r=0.4976 d1/phiP=1.5029 d1/nuB=1.00156 opp_sign=True d1/|EP-(EL+ER)|=1.00291 kinds=direct,direct,direct
+   s22    4 r=0.5006 d1/phiP=1.5017 d1/nuB=1.00127 opp_sign=True d1/|EP-(EL+ER)|=1.00293 kinds=direct,direct,direct
+   s22    4 r=0.5014 d1/phiP=1.5015 d1/nuB=1.00041 opp_sign=True d1/|EP-(EL+ER)|=1.00197 kinds=direct,direct,direct
+   s23    4 r=0.5010 d1/phiP=1.5013 d1/nuB=1.00127 opp_sign=True d1/|EP-(EL+ER)|=1.00255 kinds=direct,direct,direct
+--- phim vs phi - |E| on CC halves (is phim the half's own phase_err_less_node, not phi-|E|?)
+  n 1127 max rel diff 3.2702027918606686e-16 n exactly equal 218

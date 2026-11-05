@@ -1,0 +1,63 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/against_a_06l.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:12:53Z
+# ----
+# levin-phase-floor 06l: route 1's recoveries B does not make, against A
+# written 2026-11-05T15:12:53Z on mps026298.phys.susx.ac.uk
+# script against_a_06l.py sha256 2739b5e252a9a38e02a7fd91845512865881a458d0e2642d689fb34fdbfac7a7
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partC/routeB.json sha256 66786f1814cb5fb75807d4f0bd560bfc9367d8792984a1d196105e8d6fb1f943
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/extract/routeB.pkl sha256 e73280047215dd0d938c3c8a7333902e555d286a29ad76fb9d9f2da2e000ab2d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/checkpoint.jsonl (SHA-256 checked in the pass below against 36e3dd4c9125f6ea620b80e1bc15d656827b5dd2e449c983d479d1577c6bed38)
+{
+ "outside_720": {
+  "calls": 91,
+  "by_class": {
+   "both": 75,
+   "only through CC parents (or Levin parents A keeps)": 2,
+   "only through Levin parents with a CC half": 14
+  },
+  "by_class_and_rtol": {
+   "1e-7/both": 35,
+   "1e-7/only through CC parents (or Levin parents A keeps)": 1,
+   "1e-7/only through Levin parents with a CC half": 7,
+   "1e-8/both": 40,
+   "1e-8/only through CC parents (or Levin parents A keeps)": 1,
+   "1e-8/only through Levin parents with a CC half": 7
+  },
+  "matched_firings_A_withholds": 409,
+  "matched_firings_A_keeps": 231,
+  "A_keeps_by_parent": {
+   "CC": 231
+  },
+  "route1_firings_unreached_by_B": 2134
+ },
+ "in_720": {
+  "calls": 66,
+  "by_class": {
+   "only through CC parents (or Levin parents A keeps)": 14,
+   "both": 41,
+   "only through Levin parents with a CC half": 11
+  },
+  "by_class_and_rtol": {
+   "1e-7/only through CC parents (or Levin parents A keeps)": 7,
+   "1e-7/both": 20,
+   "1e-7/only through Levin parents with a CC half": 5,
+   "1e-8/only through CC parents (or Levin parents A keeps)": 7,
+   "1e-8/both": 21,
+   "1e-8/only through Levin parents with a CC half": 6
+  },
+  "matched_firings_A_withholds": 222,
+  "matched_firings_A_keeps": 150,
+  "A_keeps_by_parent": {
+   "CC": 150
+  },
+  "route1_firings_unreached_by_B": 1204
+ }
+}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partC/against_A.json sha256 f9096abd51244bc0db9807c3408cb1e1405cbda66d8b6b18476a238c5c97cda9
+# ----
+# end 2026-11-05T15:13:00Z
+# exit 0

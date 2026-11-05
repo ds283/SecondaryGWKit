@@ -1,0 +1,20 @@
+main /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+status (non-ignored):
+worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc
+af4c4dc17995f6576213f80257f9617df459d1fd
+status --ignored:
+diff-stat
+ CLAUDE.md                           |  17 ++-
+ tools/filon_reference.py            | 245 ++++++++++++++++++++++++++++++++----
+ tools/tests/test_filon_reference.py |  88 +++++++++++++
+ 3 files changed, 325 insertions(+), 25 deletions(-)
+  origin/handover-remedial
+  origin/handover-remedial
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e 1c5336e7 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed 4f4f9ed2 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-b5626ec b5626ecb (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839 ff3e8394 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc af4c4dc1 (detached HEAD)

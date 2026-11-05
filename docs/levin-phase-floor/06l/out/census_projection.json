@@ -1,0 +1,39 @@
+{
+ "header": [
+  "# levin-phase-floor 06l: the census's cost projection",
+  "# written 2026-11-05T09:58:34Z on mps026298.phys.susx.ac.uk",
+  "# script census_projection_06l.py sha256 7f854a11b6517f4caa00afb2088f6ffe49ecda790355de77ec45514026a56c22",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/k0/identity/units.jsonl sha256 6648c545a508fb79b3ebdafe2c8c996ae8404fc831b2fe12781a1b3a4c14cd9c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/k0/routeB/units.jsonl sha256 0de0673ad869d0c0d19a233aff9e2531f2350f97b47c0682c52b90f8c1deea12",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699"
+ ],
+ "k0_unit_wall_sum_s": {
+  "identity": 875.277909909375,
+  "routeB": 639.086436462123,
+  "06g_census_same_units": 787.4418962844647
+ },
+ "k0_unit_wall_by_rtol_s": {
+  "1e-7": {
+   "identity": 423.5153820780106,
+   "routeB": 293.3900044593029,
+   "06g_census": 376.95070499554276
+  },
+  "1e-8": {
+   "identity": 451.7625278313644,
+   "routeB": 345.6964320028201,
+   "06g_census": 410.491191288922
+  }
+ },
+ "rho_routeB_over_identity": 0.7301525940809965,
+ "identity_over_06g_census_same_units": 1.1115460252234017,
+ "P_06k_form_s": 17347.344170696568,
+ "P_g_s": 14866.63696808317,
+ "bracket_s": [
+  16758.0,
+  20361.0
+ ],
+ "projection_s": 17347,
+ "one_day_s": 86400.0
+}

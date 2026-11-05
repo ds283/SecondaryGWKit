@@ -1,0 +1,10 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_runs_after.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06l-census-routeB-20261105T100126
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:15:02Z
+# ----
+levin-phase-floor-06l-census-routeB-20261105T100126: workers 16 hello / 16 bye; ray initialised 0; with foreign modules 0; evidence failing 0; variants [('routeB', '5aa6178a2298')]; OK
+ALL OK
+# ----
+# end 2026-11-05T15:15:02Z
+# exit 0

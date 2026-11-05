@@ -1,0 +1,120 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/compare_k0.py identity state/k0/identity out/k0/compare_identity.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:45:28Z
+# ----
+# levin-phase-floor 06l: Gate K0, identity against 06g's census (identity)
+# written 2026-11-05T09:45:28Z on mps026298.phys.susx.ac.uk
+# script compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/k0/identity/units.jsonl sha256 6648c545a508fb79b3ebdafe2c8c996ae8404fc831b2fe12781a1b3a4c14cd9c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/index_06g.json sha256 1f41a6ca0f33dd1436982d66b16ae6e08424225e17a9a3bca3fffd138184ebc9
+# 06g's checkpoint /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl (each record's line checked by its SHA-256 in the index)
+g-1e-7-0-33997 (identity-1e-7-k0_101): EQUAL; excluded keys differing 121
+g-1e-7-0-12727 (identity-1e-7-k0_101): EQUAL; excluded keys differing 131
+g-1e-7-0-12935 (identity-1e-7-k0_101): EQUAL; excluded keys differing 121
+g-1e-7-0-1814 (identity-1e-7-k0_101): EQUAL; excluded keys differing 121
+g-1e-7-0-37232 (identity-1e-7-k0_101): EQUAL; excluded keys differing 121
+g-1e-7-0-33892 (identity-1e-7-k0_202): EQUAL; excluded keys differing 131
+g-1e-7-0-33730 (identity-1e-7-k0_202): EQUAL; excluded keys differing 131
+g-1e-7-0-12778 (identity-1e-7-k0_202): EQUAL; excluded keys differing 131
+g-1e-7-0-12959 (identity-1e-7-k0_202): EQUAL; excluded keys differing 131
+g-1e-7-0-37211 (identity-1e-7-k0_202): EQUAL; excluded keys differing 121
+g-1e-7-0-1873 (identity-1e-7-k0_202): EQUAL; excluded keys differing 131
+g-1e-7-0-2108 (identity-1e-7-k0_202): EQUAL; excluded keys differing 131
+g-1e-7-0-14529 (identity-1e-7-k0_202): EQUAL; excluded keys differing 121
+g-1e-7-1-10963 (identity-1e-7-k1_102): EQUAL; excluded keys differing 121
+g-1e-7-1-11233 (identity-1e-7-k1_102): EQUAL; excluded keys differing 131
+g-1e-7-1-11199 (identity-1e-7-k1_102): EQUAL; excluded keys differing 121
+g-1e-7-1-35492 (identity-1e-7-k1_102): EQUAL; excluded keys differing 121
+g-1e-7-1-35497 (identity-1e-7-k1_102): EQUAL; excluded keys differing 131
+g-1e-7-1-1849 (identity-1e-7-k1_102): EQUAL; excluded keys differing 121
+g-1e-7-1-37614 (identity-1e-7-k1_102): EQUAL; excluded keys differing 121
+g-1e-7-1-14039 (identity-1e-7-k1_102): EQUAL; excluded keys differing 121
+g-1e-7-1-2142 (identity-1e-7-k1_102): EQUAL; excluded keys differing 130
+g-1e-7-1-35052 (identity-1e-7-k1_102): EQUAL; excluded keys differing 131
+g-1e-7-1-20582 (identity-1e-7-k1_301): EQUAL; excluded keys differing 87
+g-1e-7-1-10846 (identity-1e-7-k1_301): EQUAL; excluded keys differing 131
+g-1e-7-1-11214 (identity-1e-7-k1_301): EQUAL; excluded keys differing 131
+g-1e-7-2-21980 (identity-1e-7-k2_2): EQUAL; excluded keys differing 131
+g-1e-7-2-1427 (identity-1e-7-k2_2): EQUAL; excluded keys differing 131
+g-1e-7-2-1448 (identity-1e-7-k2_2): EQUAL; excluded keys differing 131
+g-1e-7-2-35010 (identity-1e-7-k2_2): EQUAL; excluded keys differing 131
+g-1e-7-2-33416 (identity-1e-7-k2_302): EQUAL; excluded keys differing 131
+g-1e-7-2-21696 (identity-1e-7-k2_302): EQUAL; excluded keys differing 131
+g-1e-7-2-21857 (identity-1e-7-k2_302): EQUAL; excluded keys differing 131
+g-1e-7-2-1458 (identity-1e-7-k2_302): EQUAL; excluded keys differing 131
+g-1e-7-2-1634 (identity-1e-7-k2_302): EQUAL; excluded keys differing 131
+g-1e-7-2-2078 (identity-1e-7-k2_302): EQUAL; excluded keys differing 121
+g-1e-7-3-1040 (identity-1e-7-k3_1): EQUAL; excluded keys differing 106
+g-1e-7-3-34254 (identity-1e-7-k3_1): EQUAL; excluded keys differing 121
+g-1e-7-3-34298 (identity-1e-7-k3_1): EQUAL; excluded keys differing 120
+g-1e-7-3-13481 (identity-1e-7-k3_1): EQUAL; excluded keys differing 121
+g-1e-7-3-34748 (identity-1e-7-k3_1): EQUAL; excluded keys differing 121
+g-1e-7-3-34738 (identity-1e-7-k3_1): EQUAL; excluded keys differing 121
+g-1e-7-3-13829 (identity-1e-7-k3_1): EQUAL; excluded keys differing 121
+g-1e-7-3-34950 (identity-1e-7-k3_1): EQUAL; excluded keys differing 121
+g-1e-7-3-34969 (identity-1e-7-k3_1): EQUAL; excluded keys differing 120
+g-1e-7-3-38477 (identity-1e-7-k3_1): EQUAL; excluded keys differing 121
+g-1e-7-3-761 (identity-1e-7-k3_201): EQUAL; excluded keys differing 121
+g-1e-7-3-1188 (identity-1e-7-k3_201): EQUAL; excluded keys differing 131
+g-1e-7-3-13606 (identity-1e-7-k3_201): EQUAL; excluded keys differing 131
+g-1e-7-3-35986 (identity-1e-7-k3_201): EQUAL; excluded keys differing 121
+g-1e-8-0-10209 (identity-1e-8-k0_101): EQUAL; excluded keys differing 46
+g-1e-8-0-10193 (identity-1e-8-k0_101): EQUAL; excluded keys differing 46
+g-1e-8-0-33945 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-34019 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-33906 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-33980 (identity-1e-8-k0_101): EQUAL; excluded keys differing 121
+g-1e-8-0-12681 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-12965 (identity-1e-8-k0_101): EQUAL; excluded keys differing 121
+g-1e-8-0-13954 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-2106 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-14054 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-13772 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-38451 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-35102 (identity-1e-8-k0_101): EQUAL; excluded keys differing 114
+g-1e-8-0-33648 (identity-1e-8-k0_202): EQUAL; excluded keys differing 122
+g-1e-8-0-33730 (identity-1e-8-k0_202): EQUAL; excluded keys differing 122
+g-1e-8-0-34037 (identity-1e-8-k0_202): EQUAL; excluded keys differing 114
+g-1e-8-0-12778 (identity-1e-8-k0_202): EQUAL; excluded keys differing 122
+g-1e-8-0-12617 (identity-1e-8-k0_202): EQUAL; excluded keys differing 122
+g-1e-8-0-12959 (identity-1e-8-k0_202): EQUAL; excluded keys differing 122
+g-1e-8-0-1873 (identity-1e-8-k0_202): EQUAL; excluded keys differing 122
+g-1e-8-0-2108 (identity-1e-8-k0_202): EQUAL; excluded keys differing 122
+g-1e-8-1-20299 (identity-1e-8-k1_102): EQUAL; excluded keys differing 46
+g-1e-8-1-35136 (identity-1e-8-k1_102): EQUAL; excluded keys differing 122
+g-1e-8-1-35446 (identity-1e-8-k1_102): EQUAL; excluded keys differing 114
+g-1e-8-1-35480 (identity-1e-8-k1_102): EQUAL; excluded keys differing 114
+g-1e-8-1-37676 (identity-1e-8-k1_102): EQUAL; excluded keys differing 114
+g-1e-8-1-34781 (identity-1e-8-k1_102): EQUAL; excluded keys differing 114
+g-1e-8-1-2177 (identity-1e-8-k1_102): EQUAL; excluded keys differing 114
+g-1e-8-1-2158 (identity-1e-8-k1_102): EQUAL; excluded keys differing 114
+g-1e-8-1-14543 (identity-1e-8-k1_102): EQUAL; excluded keys differing 122
+g-1e-8-2-1391 (identity-1e-8-k2_2): EQUAL; excluded keys differing 122
+g-1e-8-2-1626 (identity-1e-8-k2_2): EQUAL; excluded keys differing 114
+g-1e-8-2-13642 (identity-1e-8-k2_2): EQUAL; excluded keys differing 114
+g-1e-8-2-21692 (identity-1e-8-k2_302): EQUAL; excluded keys differing 122
+g-1e-8-2-21897 (identity-1e-8-k2_302): EQUAL; excluded keys differing 114
+g-1e-8-2-34906 (identity-1e-8-k2_302): EQUAL; excluded keys differing 114
+g-1e-8-2-39047 (identity-1e-8-k2_302): EQUAL; excluded keys differing 114
+g-1e-8-3-34272 (identity-1e-8-k3_1): EQUAL; excluded keys differing 114
+g-1e-8-3-34298 (identity-1e-8-k3_1): EQUAL; excluded keys differing 114
+g-1e-8-3-37338 (identity-1e-8-k3_1): EQUAL; excluded keys differing 114
+g-1e-8-3-37323 (identity-1e-8-k3_1): EQUAL; excluded keys differing 114
+g-1e-8-3-34739 (identity-1e-8-k3_1): EQUAL; excluded keys differing 114
+g-1e-8-3-14505 (identity-1e-8-k3_1): EQUAL; excluded keys differing 114
+g-1e-8-3-1264 (identity-1e-8-k3_201): EQUAL; excluded keys differing 122
+g-1e-8-3-13600 (identity-1e-8-k3_201): EQUAL; excluded keys differing 122
+g-1e-8-3-13606 (identity-1e-8-k3_201): EQUAL; excluded keys differing 122
+g-1e-8-3-13830 (identity-1e-8-k3_201): EQUAL; excluded keys differing 122
+g-1e-8-3-14589 (identity-1e-8-k3_201): EQUAL; excluded keys differing 122
+g-1e-8-3-2324 (identity-1e-8-k3_201): EQUAL; excluded keys differing 122
+units 100; failing 0; units compared whole 100
+excluded keys that differ (path tail: units): {'analytic_06h.seconds': 100, 'data.cache_built': 95, 'calls.elapsed': 566, 'calls.route_06k': 566, 'calls.route_06l': 566, 'data.cc_floor_s': 100, 'data.checked_06g_s': 100, 'data.declared_06h_s': 100, 'deep_lines.seconds': 100, 'counts_by_root.own tree': 100, 'counts_by_root.scripts': 100, 'counts_by_root.variant': 100, 'AdaptiveLevin.levin_quadrature': 100, "files.BesselPhaseGroup (QuadSourceIntegral's)": 100, 'files.ComputeTargets': 100, 'ComputeTargets.GkSource': 100, 'ComputeTargets.GkSourcePolicyData': 100, 'ComputeTargets.GkWKBIntegration': 100, 'ComputeTargets.QuadSource': 100, 'ComputeTargets.QuadSourceIntegral': 100, 'ComputeTargets.TkSourceFunctions': 100, 'ComputeTargets.TkWKBIntegration': 100, 'ComputeTargets.primitive_phase': 100, 'LiouvilleGreen.bessel_phase': 100, 'LiouvilleGreen.three_bessel_integrals': 100, 'integrators.WKB_phase_function': 100, 'files.StoreFixtures': 100, "files.WKB_phase_function (the producers' remote's function)": 100, 'main.py': 100, 'theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)': 100, 'modules.n_own_tree': 100, 'other_calls.elapsed': 1544, 'other_calls.route_06k': 1544, 'other_calls.route_06l': 1544, 'data.pickle': 100, 'data.pickle_length': 100, 'data.pickle_offset': 100, 'data.pickle_record_sha256': 100, 'data.rebuild_s': 100, 'result.compute_time': 100, 'data.scan_s': 50, 'prov.py': 100, 'run_census.py': 100, 'variant_loader.py': 100, 'worker.py': 100, 'data.tree_head': 100, 'w3.seconds': 50, 'data.wall_s': 100, 'data.worker': 100, 'data.worker_pid': 100, 'data.worker_tree': 100, 'groups.elapsed': 566, 'result_full.compute_time': 100, 'pickle.route_06k': 100, 'pickle.route_06l': 100, 'scan.seconds': 293}
+wrote out/k0/compare_identity.json sha256 bdc5c646ad7438de801891f3aaad1402bf60ef8ce1a31427c81b324ada389a3e
+# ----
+# end 2026-11-05T09:45:32Z
+# exit 0

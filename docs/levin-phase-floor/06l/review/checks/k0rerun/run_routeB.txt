@@ -1,0 +1,20 @@
+# levin-phase-floor 06l: census units under the variant routeB
+# written 2026-11-05T15:23:05Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 a9ecc2fc58f335b670687b5ca9cf1d887189dea0dc36d3f5a4ee71a7e76c16eb
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input review/checks/k0rerun/units.json sha256 bf9f50a6a0fc972bc73116d77643256432cad140feec902c453d1a5b1a84a3cd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/variants/levin_quadrature_routeB.py sha256 5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f
+# variant {"name": "routeB", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/variants/levin_quadrature_routeB.py", "sha256": "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"}
+# 2 units in 2 workers: routeB-1e-7-k0_202 (1), routeB-1e-8-k2_2 (1)
+routeB-1e-7-k0_202: pid 7548 (1 units)
+routeB-1e-8-k2_2: pid 7549 (1 units)
+routeB-1e-8-k2_2: exit 0 after 56.4 s
+routeB-1e-7-k0_202: exit 0 after 57.5 s
+exit codes {routeB-1e-7-k0_202: 0, routeB-1e-8-k2_2: 0}
+refused: []
+bye routeB-1e-7-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye routeB-1e-8-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 2 of 2; not done []; wall 58 s
+wrote review/checks/k0rerun/routeB/units.jsonl sha256 333017d2837d820573bf0836ecfa4c47db4a2cce70b098b51ef6f9edf0aa3d37

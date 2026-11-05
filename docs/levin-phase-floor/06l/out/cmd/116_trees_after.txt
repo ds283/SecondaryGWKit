@@ -1,0 +1,15 @@
+$ sh -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ status\ --short\ --ignored\;\ echo\ \'\(end\ of\ worktree\ status\)\'\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc\ -name\ __pycache__\;\ echo\ \'\(end\ of\ pycache\ list\)\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'\(end\ of\ main\ status\)\'\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores\ \|\ md5\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores\ \|\ wc\ -l
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:14:50Z
+# ----
+af4c4dc17995f6576213f80257f9617df459d1fd
+(end of worktree status)
+(end of pycache list)
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end of main status)
+3eb83380c7bdf83fa44c92078f7eda5b
+51
+# ----
+# end 2026-11-05T15:14:50Z
+# exit 0

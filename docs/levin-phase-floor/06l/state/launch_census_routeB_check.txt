@@ -1,0 +1,36 @@
+# one check, 2026-11-05T10:01:31Z
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-05T10:01:26+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 54726,
+  "stage": "started worker 1e-7-k2_302 (1160 units)",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 18560
+}
+
+manifest.json
+spec_1e-7-k0_101.json
+spec_1e-7-k0_202.json
+spec_1e-7-k1_102.json
+spec_1e-7-k1_301.json
+spec_1e-7-k2_2.json
+spec_1e-7-k2_302.json
+status.json
+stderr.log
+stdout.log
+worker_1e-7-k0_101.log
+worker_1e-7-k0_202.log
+worker_1e-7-k1_102.log
+worker_1e-7-k1_301.log
+worker_1e-7-k2_2.log
+worker_1e-7-k2_302.log
+== kill -0 sh 54724: alive
+== status pid 54726: alive
+== stderr:
+== stdout (head):
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/run_census.py", "script_sha256": "280fe637728998dddf349a3aa12e40cc6cc417b231fc92bf0948b41a03b31362", "scripts_sha256": {"run_census.py": "280fe637728998dddf349a3aa12e40cc6cc417b231fc92bf0948b41a03b31362", "worker.py": "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "6297af7503d4e305602551ed881cfd03b0aeb4c885de808b58a4880d0085ca7f", "launch.py": "d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b", "variant_loader.py": "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f"}, "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417", "w2_capture_sha256": null, "tree": "g", "trees": {"g": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc", "af4c4dc17995f6576213f80257f9617df459d1fd"]}, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 54726, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-pha

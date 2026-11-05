@@ -1,0 +1,113 @@
+{
+ "header": [
+  "# levin-phase-floor 06l: the LiouvilleGreen draws, each variant against the tree",
+  "# written 2026-11-05T09:55:53+00:00 on mps026298.phys.susx.ac.uk",
+  "# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "# script lg_compare_06l.py sha256 8ebe37d1aa91c1a20dff15801f6602bc9fe5c92c093dbb31800ff8c03519e477",
+  "# prov.py sha256 41575e270b7e044b9d246b306070c1f022f37930b05cb03ad20fca7e51f5242b",
+  "# AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59",
+  "# HEAD af4c4dc17995f6576213f80257f9617df459d1fd",
+  "# tree dirty: no (git status --short empty)",
+  "# uptime at start: 9:55  up 29 days, 32 mins, 2 users, load averages: 14.82 15.05 15.15",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/lg_draws/lg_seeded_draws.jsonl sha256 fb34a3429ec72624ae13f9bdedc6d9148483323466258e0c018ee61459516f45"
+ ],
+ "n_records": 240,
+ "variants": {
+  "identity": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [],
+    "T->F": []
+   },
+   "calls_value_or_abserr_differ": 0,
+   "calls_regions_differ": 0,
+   "calls_fired": 0,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 432,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 432,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 0
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 0
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  },
+  "routeB": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [],
+    "T->F": []
+   },
+   "calls_value_or_abserr_differ": 121,
+   "calls_regions_differ": 121,
+   "calls_fired": 122,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 432,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 432,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 3
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 13
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  }
+ }
+}

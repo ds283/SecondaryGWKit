@@ -1,0 +1,277 @@
+{
+ "label": "k0partL",
+ "results": [
+  {
+   "name": "30_capture",
+   "exit": 0,
+   "wall_s": 706.3912949562073
+  },
+  {
+   "name": "31_check_captures",
+   "exit": 1,
+   "wall_s": 5.034995794296265
+  },
+  {
+   "name": "32_slice",
+   "exit": 1,
+   "wall_s": 0.5109140872955322
+  },
+  {
+   "name": "41_k0_run_identity",
+   "exit": 0,
+   "wall_s": 449.29970479011536
+  },
+  {
+   "name": "42_k0_run_routeB",
+   "exit": 0,
+   "wall_s": 381.8252522945404
+  },
+  {
+   "name": "52_k0_compare_routeB",
+   "exit": 0,
+   "wall_s": 4.063981056213379
+  },
+  {
+   "name": "51_k0_compare_identity",
+   "exit": 0,
+   "wall_s": 4.580157995223999
+  },
+  {
+   "name": "60_probe_l_s00",
+   "exit": null,
+   "skipped": "state/inputs/s00.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s01",
+   "exit": null,
+   "skipped": "state/inputs/s01.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s02",
+   "exit": null,
+   "skipped": "state/inputs/s02.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s03",
+   "exit": null,
+   "skipped": "state/inputs/s03.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s04",
+   "exit": null,
+   "skipped": "state/inputs/s04.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s05",
+   "exit": null,
+   "skipped": "state/inputs/s05.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s06",
+   "exit": null,
+   "skipped": "state/inputs/s06.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s07",
+   "exit": null,
+   "skipped": "state/inputs/s07.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s08",
+   "exit": null,
+   "skipped": "state/inputs/s08.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s09",
+   "exit": null,
+   "skipped": "state/inputs/s09.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s10",
+   "exit": null,
+   "skipped": "state/inputs/s10.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s11",
+   "exit": null,
+   "skipped": "state/inputs/s11.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s12",
+   "exit": null,
+   "skipped": "state/inputs/s12.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s13",
+   "exit": null,
+   "skipped": "state/inputs/s13.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s14",
+   "exit": null,
+   "skipped": "state/inputs/s14.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s15",
+   "exit": null,
+   "skipped": "state/inputs/s15.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s16",
+   "exit": null,
+   "skipped": "state/inputs/s16.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s17",
+   "exit": null,
+   "skipped": "state/inputs/s17.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s18",
+   "exit": null,
+   "skipped": "state/inputs/s18.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s19",
+   "exit": null,
+   "skipped": "state/inputs/s19.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s20",
+   "exit": null,
+   "skipped": "state/inputs/s20.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s21",
+   "exit": null,
+   "skipped": "state/inputs/s21.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s22",
+   "exit": null,
+   "skipped": "state/inputs/s22.pkl absent"
+  },
+  {
+   "name": "60_probe_l_s23",
+   "exit": null,
+   "skipped": "state/inputs/s23.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f00",
+   "exit": null,
+   "skipped": "state/inputs/f00.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f01",
+   "exit": null,
+   "skipped": "state/inputs/f01.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f02",
+   "exit": null,
+   "skipped": "state/inputs/f02.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f03",
+   "exit": null,
+   "skipped": "state/inputs/f03.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f04",
+   "exit": null,
+   "skipped": "state/inputs/f04.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f05",
+   "exit": null,
+   "skipped": "state/inputs/f05.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f06",
+   "exit": null,
+   "skipped": "state/inputs/f06.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f07",
+   "exit": null,
+   "skipped": "state/inputs/f07.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f08",
+   "exit": null,
+   "skipped": "state/inputs/f08.pkl absent"
+  },
+  {
+   "name": "60_probe_l_f09",
+   "exit": null,
+   "skipped": "state/inputs/f09.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c00",
+   "exit": null,
+   "skipped": "state/inputs/c00.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c01",
+   "exit": null,
+   "skipped": "state/inputs/c01.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c02",
+   "exit": null,
+   "skipped": "state/inputs/c02.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c03",
+   "exit": null,
+   "skipped": "state/inputs/c03.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c04",
+   "exit": null,
+   "skipped": "state/inputs/c04.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c05",
+   "exit": null,
+   "skipped": "state/inputs/c05.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c06",
+   "exit": null,
+   "skipped": "state/inputs/c06.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c07",
+   "exit": null,
+   "skipped": "state/inputs/c07.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c08",
+   "exit": null,
+   "skipped": "state/inputs/c08.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c09",
+   "exit": null,
+   "skipped": "state/inputs/c09.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c10",
+   "exit": null,
+   "skipped": "state/inputs/c10.pkl absent"
+  },
+  {
+   "name": "60_probe_l_c11",
+   "exit": null,
+   "skipped": "state/inputs/c11.pkl absent"
+  },
+  {
+   "name": "70_lg_draws",
+   "exit": 0,
+   "wall_s": 384.98446106910706
+  }
+ ],
+ "ok": false,
+ "ended": "2026-11-05T09:51:59Z"
+}

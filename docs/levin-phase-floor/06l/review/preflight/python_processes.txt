@@ -1,0 +1,23 @@
+ 1096     1 28-23:39:40   0.0  11664 /usr/local/munki/Python.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /usr/local/munki/app_usage_monitor
+18484     1    07:03:39   0.0  18016 /Applications/Dropbox.app/Contents/MacOS/Dropbox -type:crashpad-handler --no-upload-gzip --no-rate-limit --capture-python --no-identify-client-via-url --database=/
+18485 18470    07:03:39   0.0  22528 /Applications/Dropbox.app/Contents/MacOS/Dropbox -type:exit-monitor -method:collectupload -python-version:3.11.14 -process-type:main -session-token:d5e765d7-5a7c-4
+20870     1 20-17:50:32   0.0   3824 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.resource_tracker import main;mai
+20871     1 20-17:50:32   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+20872     1 20-17:50:32   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+20873     1 20-17:50:32   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+20874     1 20-17:50:32   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+20875     1 20-17:50:32   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+20876     1 20-17:50:32   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+20877     1 20-17:50:32   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+20878     1 20-17:50:32   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+47946 45495       00:01   2.4   2656 /bin/zsh -c source /Users/ds283/.claude/shell-snapshots/snapshot-zsh-1793869424678-qq4p0w.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/de
+47963 47946       00:00   0.0   1920 /bin/zsh -c source /Users/ds283/.claude/shell-snapshots/snapshot-zsh-1793869424678-qq4p0w.sh 2>/dev/null || true && setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/de
+96360     1 20-15:06:12   0.0   3824 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.resource_tracker import main;mai
+96471     1 20-15:06:04   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+96472     1 20-15:06:04   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+96473     1 20-15:06:03   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+96474     1 20-15:06:03   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+96475     1 20-15:06:03   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+96476     1 20-15:06:03   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+96477     1 20-15:06:03   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m
+96478     1 20-15:06:03   0.0   3856 /opt/local/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c from multiprocessing.spawn import spawn_main; spawn_m

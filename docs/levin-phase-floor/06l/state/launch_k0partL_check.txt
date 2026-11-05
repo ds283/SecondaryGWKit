@@ -1,0 +1,26 @@
+# one check, 2026-11-05T09:19:47Z
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-05T09:19:42+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 50457,
+  "stage": "30_capture started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 54
+}
+
+total 8
+drwxr-xr-x  6 ds283 staff  192 Nov  5 09:19 .
+drwxr-xr-x 85 ds283 staff 2720 Nov  5 09:19 ..
+-rw-r--r--  1 ds283 staff 4068 Nov  5 09:19 manifest.json
+-rw-r--r--  1 ds283 staff  277 Nov  5 09:19 status.json
+-rw-r--r--  1 ds283 staff    0 Nov  5 09:19 stderr.log
+-rw-r--r--  1 ds283 staff    0 Nov  5 09:19 stdout.log
+== kill -0 sh 50449: alive
+== status pid 50457: alive
+  PID  PPID COMMAND
+50457 50449 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts/run_

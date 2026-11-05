@@ -1,0 +1,6 @@
+v03 (06g scores.json rows; g-1e-7-1-34521 #4; in_720 False): 06g 1.202675985 (agent 1.202675985); route 1 1.185378837 (agent 1.185378837); B 1.181830124 (agent 1.181830124); H1 bound max(1, g) 1.20268: holds; agrees True
+z01 (06g scores.json rows; g-1e-7-2-1444 #4; in_720 False): 06g 0.3202634307 (agent 0.3202634307); route 1 0.3202634307 (agent 0.3202634307); B 0.3202634307 (agent 0.3202634307); H1 bound max(1, g) 1: holds; agrees True
+c01 (06j w_calls.csv; g-1e-7-2-33416 #6; in_720 False): 06g 0.001382050911 (agent 0.001382050911); route 1 0.001382050911 (agent 0.001382050911); B 0.001382050911 (agent 0.001382050911); H1 bound max(1, g) 1: holds; agrees True
+r17 (06g scores.json rows; g-1e-7-1-2229 #3; in_720 False): 06g 0.5457973942 (agent 0.5457973942); route 1 0.5455291833 (agent 0.5455291833); B 0.5454221711 (agent 0.5454221711); H1 bound max(1, g) 1: holds; agrees True
+z15 (06g scores.json rows; g-1e-8-2-1549 #4; in_720 False): 06g 3.948870793e-06 (agent 3.948870793e-06); route 1 5.560034673e-06 (agent 5.560034673e-06); B 5.543566781e-06 (agent 5.543566781e-06); H1 bound max(1, g) 1: holds; agrees True
+ALL AGREE: True

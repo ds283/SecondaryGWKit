@@ -1,0 +1,6 @@
+re-run   {'value': '0x1.32cd3d792ae78p-97', 'abserr': '0x1.1f25b6709afb5p-119', 'num_regions': 61, 'converged': True, 'n_firings': 15, 'node_limited': False, 'n_at_depth_max': 0}
+B census {'value': '0x1.32cd3d792ae78p-97', 'abserr': '0x1.1f25b6709afb5p-119', 'num_regions': 61, 'converged': True, 'n_firings': 15, 'node_limited': False, 'n_at_depth_max': 0}
+06g      {'value': '0x1.32cd3d7929aacp-97', 'abserr': '0x1.0db73a5c67c78p-119', 'num_regions': 85, 'converged': False, 'n_firings': None, 'node_limited': False, 'n_at_depth_max': 8}
+re-run equals B's census on these: True
+whole call record (but elapsed) equal to B's census: True
+|v_B - v_g| / (e_B + e_g): 2.16984294494445e-06

@@ -1,0 +1,63 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/calibration/lg_compare_06l.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:55:53Z
+# ----
+# levin-phase-floor 06l: the LiouvilleGreen draws, each variant against the tree
+# written 2026-11-05T09:55:53+00:00 on mps026298.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script lg_compare_06l.py sha256 8ebe37d1aa91c1a20dff15801f6602bc9fe5c92c093dbb31800ff8c03519e477
+# prov.py sha256 41575e270b7e044b9d246b306070c1f022f37930b05cb03ad20fca7e51f5242b
+# AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# HEAD af4c4dc17995f6576213f80257f9617df459d1fd
+# tree dirty: no (git status --short empty)
+# uptime at start: 9:55  up 29 days, 32 mins, 2 users, load averages: 14.82 15.05 15.15
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/lg_draws/lg_seeded_draws.jsonl sha256 fb34a3429ec72624ae13f9bdedc6d9148483323466258e0c018ee61459516f45
+# the run's header:
+#   # levin-phase-floor 06l: section 2 test 9, the LiouvilleGreen seeded draws (run)
+#   # written 2026-11-05T09:45:34+00:00 on mps026298.phys.susx.ac.uk
+#   # python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+#   # script lg_seeded_draws.py sha256 b2db4030b63a6aaf12104f84fdeb92886f287d0018fc8f54c0c09083476b64df
+#   # prov.py sha256 41575e270b7e044b9d246b306070c1f022f37930b05cb03ad20fca7e51f5242b
+#   # AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+#   # input LiouvilleGreen/tests/test_3bessel_analytic.py sha256 3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c
+#   # input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+#   # input LiouvilleGreen/bessel_phase.py sha256 bdee05b578d2f2da61ba2b09ed541cf1fe0b37a7c11ec1d7ae56e439c75210e8
+#   # HEAD af4c4dc17995f6576213f80257f9617df459d1fd
+#   # tree dirty: no (git status --short empty)
+#   # uptime at start: 9:45  up 29 days, 22 mins, 2 users, load averages: 13.90 15.94 14.74
+#   # units 240: seeds 0-19 x modes ('tree', 'identity', 'routeB') x tests ('test_YJJ_log_singularity', 'test_JJJ', 'test_YJJ', 'test_abserr_bounds_truth'); processes 6; no parent mode (prompt 06k)
+#   # wall time 384.3 s; uptime at end: 9:51  up 29 days, 28 mins, 2 users, load averages: 16.89 17.37 15.96
+records 240; seeds 0-19; tests ['test_YJJ_log_singularity', 'test_JJJ', 'test_YJJ', 'test_abserr_bounds_truth']; modes ['identity', 'routeB', 'tree']
+
+== identity against tree
+outcomes (tree->identity): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 0; value or abserr differ 0; regions differ 0
+convergence changes: unconverged->converged 0, converged->unconverged 0
+   F->T by test: {}
+   T->F by test: {}
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> identity 432; dishonest and converged 432 -> 432; converged 560 -> 560; true error changed 0
+   honest->dishonest: 0
+   dishonest->honest: 0
+every other case: 520 cases; dishonest tree 0 -> identity 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 0
+   honest->dishonest: 0
+   dishonest->honest: 0
+
+== routeB against tree
+outcomes (tree->routeB): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 122; value or abserr differ 121; regions differ 121
+convergence changes: unconverged->converged 0, converged->unconverged 0
+   F->T by test: {}
+   T->F by test: {}
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> routeB 432; dishonest and converged 432 -> 432; converged 560 -> 560; true error changed 3
+   honest->dishonest: 0
+   dishonest->honest: 0
+every other case: 520 cases; dishonest tree 0 -> routeB 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 13
+   honest->dishonest: 0
+   dishonest->honest: 0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/lg_draws/compare.json sha256 b80ae0a04df0780a485cad465dcad1670f764a9a511eec4fdccdfcf28398b7cc; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/lg_draws/compare.txt sha256 d5af50d1fe4a3fc25e10deaea1b50266626d0707da9fb7cd3e1ed499fe538968
+# ----
+# end 2026-11-05T09:55:53Z
+# exit 0

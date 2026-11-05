@@ -1,0 +1,5 @@
+prompt section 4 block ( 14 lines ) verbatim in predictions.md: True
+verbatim in log.md: False
+prompt block verbatim in log.md once the blockquote prefix is stripped: True
+log blockquote equals predictions.md's section 4 body (stripped): True
+predictions.md mtime 2026-11-05T09:07:47Z; earliest out/cmd file 00_gate_trees.txt 09:09:41Z; first numeric result (dev unit, out/cmd/14) later; K0 units.jsonl 09:39:04Z

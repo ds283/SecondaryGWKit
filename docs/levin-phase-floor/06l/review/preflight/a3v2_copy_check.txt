@@ -1,0 +1,5 @@
+handover-A3-v2-lambdacdm.sqlite: OK
+handover-A3-v2-lambdacdm-shard0000.sqlite: OK
+handover-A3-v2-lambdacdm-shard0001.sqlite: OK
+handover-A3-v2-lambdacdm-shard0002.sqlite: OK
+handover-A3-v2-lambdacdm-shard0003.sqlite: OK

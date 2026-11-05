@@ -1,0 +1,17 @@
+checkpoint.jsonl: OK
+regions_1e-7-k0_101.pkl: OK
+regions_1e-7-k0_202.pkl: OK
+regions_1e-7-k1_102.pkl: OK
+regions_1e-7-k1_301.pkl: OK
+regions_1e-7-k2_2.pkl: OK
+regions_1e-7-k2_302.pkl: OK
+regions_1e-7-k3_1.pkl: OK
+regions_1e-7-k3_201.pkl: OK
+regions_1e-8-k0_101.pkl: OK
+regions_1e-8-k0_202.pkl: OK
+regions_1e-8-k1_102.pkl: OK
+regions_1e-8-k1_301.pkl: OK
+regions_1e-8-k2_2.pkl: OK
+regions_1e-8-k2_302.pkl: OK
+regions_1e-8-k3_1.pkl: OK
+regions_1e-8-k3_201.pkl: OK

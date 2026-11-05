@@ -1,0 +1,106 @@
+--- /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/AdaptiveLevin/levin_quadrature.py	2026-11-05 02:22:26
++++ scripts/variants/levin_quadrature_routeB.py	2026-11-05 09:14:10
+@@ -2994,6 +2994,10 @@
+     num_checks = 0
+     num_check_passes = 0
+     num_untrusted_found = 0
++    # prompt 06l, route B: every firing in this call (a leaf trusted that 06g's rule (b) finds untrusted),
++    # and every leaf left untrusted that route 1's yardstick would trust or that sits at depth_max, reported
++    # under the result key "route_06l"
++    route_records_06l = []
+ 
+     def _solve(span, description):
+         nonlocal num_evaluations, num_solves_direct, num_solves_lstsq, num_solves_pinv
+@@ -3377,9 +3381,76 @@
+             ratio = delta2 / delta1
+ 
+         residual = region.abserr
+-        trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
++        trusted_g_06l = ratio < _LEVIN_TRUST_MAX_RATIO or (
+             ratio < 1.0 and delta1 <= region.phase_err
+         )
++        # prompt 06l, route B: the noise yardstick nu_B = phi_P + the Levin halves' phi + the Clenshaw-Curtis
++        # halves' phi^- (phase_err_less_node) + |the Clenshaw-Curtis halves' E summed signed|; on a Levin parent a
++        # Clenshaw-Curtis half contributes nothing. On Levin halves it is route 1's nu1, (phi_P + phi_L) + phi_R.
++        parent_direct_06l = bool(leaf.is_direct)
++        halves_06l = (dataL, dataR)
++        half_direct_06l = [bool(h_06l.get("is_direct", False)) for h_06l in halves_06l]
++        phi_h_06l = [h_06l.get("phase_err", 0.0) or 0.0 for h_06l in halves_06l]
++        phim_h_06l = [h_06l.get("phase_err_less_node") for h_06l in halves_06l]
++        E_h_06l = [h_06l.get("node_error_signed") for h_06l in halves_06l]
++        nuB_06l = region.phase_err
++        for k_06l in (0, 1):
++            if not half_direct_06l[k_06l]:
++                nuB_06l = nuB_06l + phi_h_06l[k_06l]
++        if parent_direct_06l and any(half_direct_06l):
++            cc_06l = [k_06l for k_06l in (0, 1) if half_direct_06l[k_06l]]
++            for k_06l in cc_06l:
++                if phim_h_06l[k_06l] is None or E_h_06l[k_06l] is None:
++                    raise RuntimeError(
++                        "prompt 06l, route B: a Clenshaw-Curtis half has no phase_err_less_node or node_error_signed"
++                    )
++                nuB_06l = nuB_06l + phim_h_06l[k_06l]
++            E_cc_06l = E_h_06l[cc_06l[0]] if len(cc_06l) == 1 else E_h_06l[0] + E_h_06l[1]
++            nuB_06l = nuB_06l + abs(E_cc_06l)
++        nu1_06l = (region.phase_err + phi_h_06l[0]) + phi_h_06l[1]
++        trusted_r1_06l = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= nu1_06l)
++        trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= nuB_06l)
++        if (
++            (trusted and not trusted_g_06l)
++            or (trusted_g_06l and not trusted)
++            or (not trusted and (trusted_r1_06l or leaf.depth >= depth_max))
++        ):
++
++            def _f_06l(x_06l):
++                return None if x_06l is None else float(x_06l)
++
++            route_records_06l.append(
++                {
++                    "kind": (
++                        "fired"
++                        if trusted and not trusted_g_06l
++                        else ("withdrawn" if trusted_g_06l and not trusted else "untrusted")
++                    ),
++                    "depth": int(leaf.depth),
++                    "at_depth_max": bool(leaf.depth >= depth_max),
++                    "start": float(a),
++                    "end": float(b),
++                    "is_direct": parent_direct_06l,
++                    "is_direct_L": half_direct_06l[0],
++                    "is_direct_R": half_direct_06l[1],
++                    "r": float(ratio),
++                    "delta1": float(delta1),
++                    "delta2": float(delta2),
++                    "phi_P": float(region.phase_err),
++                    "phi_L": float(phi_h_06l[0]),
++                    "phi_R": float(phi_h_06l[1]),
++                    "phim_L": _f_06l(phim_h_06l[0]),
++                    "phim_R": _f_06l(phim_h_06l[1]),
++                    "E_P": _f_06l(region.node_error_signed),
++                    "E_L": _f_06l(E_h_06l[0]),
++                    "E_R": _f_06l(E_h_06l[1]),
++                    "nu1": float(nu1_06l),
++                    "nuB": float(nuB_06l),
++                    "trusted_g": bool(trusted_g_06l),
++                    "trusted_r1": bool(trusted_r1_06l),
++                    "residual": float(residual),
++                }
++            )
+         _remove_error(leaf)
+         region._delta1 = delta1
+         region._delta2 = delta2
+@@ -3934,6 +4005,14 @@
+         "num_solves_total": num_solves_direct + num_solves_lstsq + num_solves_pinv,
+         "chebyshev_min_order": chebyshev_min_order,
+         "max_depth": max_depth,
++        # prompt 06l: route B's records in this call (a new key; the comparison with 06g ignores it)
++        "route_06l": {
++            "route": "B",
++            "n_firings": sum(1 for rec_06l in route_records_06l if rec_06l["kind"] == "fired"),
++            "n_withdrawn": sum(1 for rec_06l in route_records_06l if rec_06l["kind"] == "withdrawn"),
++            "n_untrusted_recorded": sum(1 for rec_06l in route_records_06l if rec_06l["kind"] == "untrusted"),
++            "records": route_records_06l,
++        },
+     }
+ 
+ 

@@ -1,0 +1,894 @@
+{
+ "header": [
+  "# levin-phase-floor 06l: Part L tabulated for route B; L1, L2 and Gate L3",
+  "# written 2026-11-05T09:57:27Z on mps026298.phys.susx.ac.uk",
+  "# script score_l_06l.py sha256 c7eebd64aeca84391896e41e29afcfbe48040e7a22a22c58ed75877fb9efec42",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s00.json sha256 04fb5399a1cb67fe528a2f7dd373f4894414c1bed511f2310f816f91ab718f26",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s01.json sha256 4b3a0be26cd501a8abe02095b6961f3b3916579671f058d261f02a37dff833de",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s02.json sha256 1fb546e2f2e0f6197a612e106784ae1a12dcb696abc6ff6a62073c67d11a54e4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s03.json sha256 8f92f7db412acf18dcacca84082c503f6565eff4be7422dd06092e031a331c82",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s04.json sha256 109ad33983111367df8b3003fdc9d7da9056336f70c9d0af97ecf0d0f7d23054",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s05.json sha256 3bad964a15866a8e7d411cc8adaf1a0450f4c4fdbe2a3c275d8a0f2dc5308195",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s06.json sha256 449b814290192962fe521c7af8c9370b0c05bd7d9b75f7178fee6cfc34f09d34",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s07.json sha256 8abf37f92e1a94d00f03ad7ae72355b2873da2f4acee0f6576eba31c61b398e0",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s08.json sha256 4366ef6954a5f34d3ebf71bc671d2ddf94a9b1916fe246121ff15714900d8780",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s09.json sha256 3b1beccd3af6c98f23a620c97612d7bd87d19ac7433ef07cb71a15fde987f205",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s10.json sha256 5e66dea8c7db1332be6c73e8ad6f66c2fd47cc1d51fd9f4513716326c2150068",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s11.json sha256 90bd2f04b0d05eb4ca77b6ae0c80122bc6e230f5caf6580ac29c1f96a4f4f761",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s12.json sha256 a8607a8b70b7d36330ff1ebbbc76050f3923750237297b4e6a627ef1a6b0bdc8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s13.json sha256 0c510f21c5e4e298cd69381772b12ef01e9ea9b5aec056d9650dae20244a5095",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s14.json sha256 51eb34cf3ffe6ea5c4905d74caaa90f45c552dd9de75f606ace2335ee4516b40",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s15.json sha256 3515abdda67f93ef10852b5f4c083084cab083c4f9a9072ce88a09f74bc84fae",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s16.json sha256 fdc03619e00e427a557ecc0ed62194b5f4b1a28bd458e765ce8cd9880a3e4d57",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s17.json sha256 a189b6d11e96a5ee3609441c58058d365905b938b537f63ca1ef16aba7dfb8ac",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s18.json sha256 1be85c8572ca211056378c3f2baebfccd1c37ba16993ae9b1d37b5535863f7ce",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s19.json sha256 180ddd53a91569ae290aa8c016134efc71f682bc106e757056b091b5e97d3aad",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s20.json sha256 376734bfc24e528b1620e25a2f337a4f4635c33a2e558ecd01655297b0db674e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s21.json sha256 f5b57d4296cf54d95e097ceb61a2fc27c7c8db92dcc97753b422a689b8b508d2",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s22.json sha256 564933b1b75d8c35680e1fec2bdba91c25f2d0e382a79601820c583a780b1284",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s23.json sha256 4114151deeb99e08a3fd07ca2b51a6c88160a44789b2cf53d810d10cacaa39a8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f00.json sha256 74d8b35765bc1e9497bd77417ae167bc9f13056e489c890c712ae3157ada7600",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f01.json sha256 47ca15e6d73dbfa6b72ea9d9ddb183e95ec0cc7d2ca19f7ba6b8606cabd1a15d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f02.json sha256 5b8bf9cf01521dce2e5c4c3e80f1a9a96e9a60bbe660a5584fefc613b2603fd7",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f03.json sha256 843435917953e5f8a250c106c9a94838e347633aa735ddea9de2faa8e25d93bb",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f04.json sha256 5610e4d6798d25265ca630bd11b6a6687ff5db845fa3878f489486bd344ab545",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f05.json sha256 5826861b17670cd83d0e929736949dde177c4c15e7892f5e7139ac727523d357",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f06.json sha256 da0926bd7b8e26a6507295ddf0fbbc41a0c3bd8d6308427830c7626be051f27f",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f07.json sha256 4ca1051b48308e8321dbd78ca808e0bdf503fc57f14dfb0063e936a50bc58c24",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f08.json sha256 d6397e493566ef71ca2ae181c424afea1fc3bba4d3702588fe87302eb52d172b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/f09.json sha256 7a41808bc7558468ff7cc8adafc68537c904983073d953ff835cd2deba08c439",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c00.json sha256 52da69c19e41de51faff4e47c1617f07d442efd20d4b327e81e948a91fd5e0b8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c01.json sha256 f06d058737d804be224f81b1a4340f9084e6f91cd3319c28744cd13ee30c235a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c02.json sha256 ec711b9e9e632abaf5e217add1c80d83bce03a8c90b0cd75a1f221c4579f7ceb",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c03.json sha256 7eeefcd52d2b5fb9a9eb18025ee280070b8d7f74da797cd9d3adf63087df9aaf",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c04.json sha256 328178c06bff87c12cf4e3cecc25fd4f9a496ebcfd6c51cb66e8fa575f966d7f",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c05.json sha256 d9156b304c984689ecb10e014a8d3246bfb84cdca7b4bd9609b30cfbe52934ad",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c06.json sha256 375f071e95be90a3192a62a9748aa630ae491dbc48f57deee64bebe35b68ce4c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c07.json sha256 a1cb8aede2e2a7b0a298d54c2e345ae8e3b0837e281edf2d44152c496e8e7c38",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c08.json sha256 169f3b87a431c35952b1e348b84967486c062b4c8c8d53b08be4448e452eb131",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c09.json sha256 d62e698b009f13e32d105594081cb29d024373c96d65fa15c2f1b2e55ec30968",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c10.json sha256 089c6e1a37d570a91b64c781eaa2ae937c9ff59597101ec8bc4ef180cc6950e0",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/c11.json sha256 fcca30a2f476fd68484ae8da5334d365af59db70c38daa801d7339d65805d69c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc/docs/levin-phase-floor/06k/out/partL_leaves.csv sha256 2e009ffb28b11755fb913ad908bd1ad0e85c0757f6ce0019adbfc8cc4a8c8f38"
+ ],
+ "n": {
+  "L-a": 142,
+  "L-b": 22,
+  "L-c": 1882
+ },
+ "reproduces_census": {
+  "L-a": 142,
+  "L-b": 0,
+  "L-c": 1882
+ },
+ "against_06k_table": {
+  "rows": 2046,
+  "rows_of_06k": 2046,
+  "shared_columns": 42,
+  "rows_equal_on_every_shared_column": 2046,
+  "mismatches": []
+ },
+ "L1": {
+  "rule": "of the 17 06h carrying leaves (L-b), B trusts none",
+  "distinct": 17,
+  "distinct_trusted": 0,
+  "evaluations_trusted": [],
+  "verdict": "holds"
+ },
+ "L2": {
+  "rule": "B trusts all 75 of 06j's sampled slow leaves with delta1/phi_P < 2",
+  "n_first_population": 75,
+  "trusted": 63,
+  "not_trusted": [
+   {
+    "sid": "s09",
+    "start": "0x1.13b34fb676cd1p+4",
+    "end": "0x1.13b35dec58b9cp+4",
+    "r": 0.4910400720396218,
+    "d1_over_phiP": 1.4921946346313186,
+    "d1_over_nuB": 1.004082412927266,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s11",
+    "start": "0x1.7f4be5e796647p+4",
+    "end": "0x1.7f4befd4d90d2p+4",
+    "r": 0.49532250123092075,
+    "d1_over_phiP": 1.4945737339331755,
+    "d1_over_nuB": 1.000780058810454,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s11",
+    "start": "0x1.80611c9616debp+4",
+    "end": "0x1.8061268359876p+4",
+    "r": 0.4938858525071771,
+    "d1_over_phiP": 1.4913508413785688,
+    "d1_over_nuB": 1.0012195249863145,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s13",
+    "start": "0x1.394e414cb794cp+4",
+    "end": "0x1.394e565a3f611p+4",
+    "r": 0.49268058750375926,
+    "d1_over_phiP": 1.4884177980434106,
+    "d1_over_nuB": 1.0031521182139185,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s14",
+    "start": "0x1.30b4a8a1c6f11p+4",
+    "end": "0x1.30b4b1d25b976p+4",
+    "r": 0.4998241057848503,
+    "d1_over_phiP": 1.5005337382468138,
+    "d1_over_nuB": 1.0005500745464981,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s18",
+    "start": "0x1.6c20d42d4f6bfp+4",
+    "end": "0x1.6c20d9f541614p+4",
+    "r": 0.49729265911175546,
+    "d1_over_phiP": 1.4993077639036,
+    "d1_over_nuB": 1.0011175422780973,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s19",
+    "start": "0x1.0ca293cc59f72p+4",
+    "end": "0x1.0ca2aff1ae037p+4",
+    "r": 0.4978046223076587,
+    "d1_over_phiP": 1.4931151085125953,
+    "d1_over_nuB": 1.0019257895045757,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s19",
+    "start": "0x1.13b9c32ecd581p+4",
+    "end": "0x1.13b9df5421646p+4",
+    "r": 0.4944074713978173,
+    "d1_over_phiP": 1.501754815572705,
+    "d1_over_nuB": 1.0026005779964287,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s22",
+    "start": "0x1.73560e0d8bfc2p+4",
+    "end": "0x1.7356188850de7p+4",
+    "r": 0.4976081613885573,
+    "d1_over_phiP": 1.5028996930826128,
+    "d1_over_nuB": 1.001556866451827,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s22",
+    "start": "0x1.78598e633b43fp+4",
+    "end": "0x1.785998de00264p+4",
+    "r": 0.5005902782544237,
+    "d1_over_phiP": 1.5017387858146911,
+    "d1_over_nuB": 1.0012718887365604,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s22",
+    "start": "0x1.7859a358c508ap+4",
+    "end": "0x1.7859add389eafp+4",
+    "r": 0.5013635309998773,
+    "d1_over_phiP": 1.5014642569502867,
+    "d1_over_nuB": 1.0004143845106537,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   },
+   {
+    "sid": "s23",
+    "start": "0x1.3b12cc25d8d01p+4",
+    "end": "0x1.3b12d7a9f1c0cp+4",
+    "r": 0.500987988808692,
+    "d1_over_phiP": 1.5012831864104659,
+    "d1_over_nuB": 1.0012700131652477,
+    "P_type": "direct",
+    "L_type": "direct",
+    "R_type": "direct"
+   }
+  ],
+  "verdict": "fails"
+ },
+ "L3": {
+  "rule": "on every Part L leaf nu_B <= nu1 (1 + 1e-12), and B trusts only where route 1 does unless delta1 is within 1e-12 nu1 of nu1",
+  "leaves": 2046,
+  "nuB_le_nu1_fails": [],
+  "inclusion_fails": [],
+  "B_trusts_route1_not_within_rounding": [],
+  "nuB_gt_nu1_count": 78,
+  "nuB_over_nu1_max": 1.0000000000000002,
+  "nuB_variant_vs_exact_rel_max": 2.2167817835692682e-16,
+  "verdict": "holds"
+ },
+ "L-a": {
+  "trusted_B": 85,
+  "trusted_route1": 114,
+  "first_population": [
+   63,
+   75
+  ],
+  "second_population_trusted": [
+   22,
+   67
+  ],
+  "second_population_trusted_route1": 51,
+  "trusted_B_at_d1_over_phiP_ge_5.8": 7,
+  "trusted_route1_at_d1_over_phiP_ge_5.8": 30,
+  "kinds": [
+   [
+    "direct",
+    "direct",
+    "direct"
+   ]
+  ],
+  "second_population_trusted_list": [
+   {
+    "sid": "s01",
+    "start": "0x1.20ec3ef581f2ep+4",
+    "r": 0.6533864541832669,
+    "d1_over_phiP": 3.9427472108386055,
+    "d1_over_nuB": 0.6896924434119532,
+    "d1_over_nu1": 0.003548977658371798,
+    "E_LR_cancellation": 0.003016166825808838,
+    "d1_over_EP_plus_ELR": 1.1279142285020922
+   },
+   {
+    "sid": "s01",
+    "start": "0x1.20faf0864e6d0p+4",
+    "r": 0.3924731182795699,
+    "d1_over_phiP": 7.526129199797529,
+    "d1_over_nuB": 0.9539814446270892,
+    "d1_over_nu1": 0.021408287863519275,
+    "E_LR_cancellation": 0.016643748552435268,
+    "d1_over_EP_plus_ELR": 1.237650991609435
+   },
+   {
+    "sid": "s02",
+    "start": "0x1.51340ed5089e4p+4",
+    "r": 0.8484848484848485,
+    "d1_over_phiP": 2.0493236822662344,
+    "d1_over_nuB": 0.22217948720462166,
+    "d1_over_nu1": 0.002767185600873384,
+    "E_LR_cancellation": 0.009368455030840009,
+    "d1_over_EP_plus_ELR": 0.29522086918486856
+   },
+   {
+    "sid": "s02",
+    "start": "0x1.584e01af76cf6p+4",
+    "r": 0.7069351230425056,
+    "d1_over_phiP": 5.833921783680461,
+    "d1_over_nuB": 0.9677318332338556,
+    "d1_over_nu1": 0.009832558149195206,
+    "E_LR_cancellation": 0.0063831993571261516,
+    "d1_over_EP_plus_ELR": 1.540663340644017
+   },
+   {
+    "sid": "s02",
+    "start": "0x1.59eafad5e6768p+4",
+    "r": 0.3736654804270463,
+    "d1_over_phiP": 5.79757788610978,
+    "d1_over_nuB": 0.9496171108984646,
+    "d1_over_nu1": 0.017034888337990575,
+    "E_LR_cancellation": 0.011612860641715964,
+    "d1_over_EP_plus_ELR": 1.4710064663263738
+   },
+   {
+    "sid": "s03",
+    "start": "0x1.16f10ff6b4706p+4",
+    "r": 0.7142857142857143,
+    "d1_over_phiP": 9.36168358214629,
+    "d1_over_nuB": 0.8998491054682093,
+    "d1_over_nu1": 0.027125886476121214,
+    "E_LR_cancellation": 0.0242296895172904,
+    "d1_over_EP_plus_ELR": 1.0886431373119156
+   },
+   {
+    "sid": "s10",
+    "start": "0x1.717599dee0566p+4",
+    "r": 0.6339285714285714,
+    "d1_over_phiP": 2.9190188279795914,
+    "d1_over_nuB": 0.6282595678844268,
+    "d1_over_nu1": 0.010075037609343876,
+    "E_LR_cancellation": 0.008891914132850754,
+    "d1_over_EP_plus_ELR": 1.1004954877456639
+   },
+   {
+    "sid": "s10",
+    "start": "0x1.7175b450d1478p+4",
+    "r": 0.47368421052631576,
+    "d1_over_phiP": 2.5474282680399343,
+    "d1_over_nuB": 0.5514597055224737,
+    "d1_over_nu1": 0.008247479753269064,
+    "E_LR_cancellation": 0.00822864576001052,
+    "d1_over_EP_plus_ELR": 0.9730688117667435
+   },
+   {
+    "sid": "s10",
+    "start": "0x1.717f84993ac04p+4",
+    "r": 0.38764044943820225,
+    "d1_over_phiP": 2.4975498790195076,
+    "d1_over_nuB": 0.6307100364452787,
+    "d1_over_nu1": 0.0029595169180109166,
+    "E_LR_cancellation": 0.0019325005509568587,
+    "d1_over_EP_plus_ELR": 1.4808075415792494
+   },
+   {
+    "sid": "s12",
+    "start": "0x1.52a2c669a1562p+4",
+    "r": 0.834403080872914,
+    "d1_over_phiP": 11.175438937349758,
+    "d1_over_nuB": 0.9076566196038796,
+    "d1_over_nu1": 0.037392478185835513,
+    "E_LR_cancellation": 0.03669963491095441,
+    "d1_over_EP_plus_ELR": 0.9568216828700513
+   },
+   {
+    "sid": "s14",
+    "start": "0x1.31600895dccf8p+4",
+    "r": 0.925531914893617,
+    "d1_over_phiP": 4.958363046534357,
+    "d1_over_nuB": 0.8516592567138542,
+    "d1_over_nu1": 0.03348808982838292,
+    "E_LR_cancellation": 0.025033948741840534,
+    "d1_over_EP_plus_ELR": 1.3199893865508614
+   },
+   {
+    "sid": "s17",
+    "start": "0x1.2147129c63a10p+4",
+    "r": 0.9315254237288135,
+    "d1_over_phiP": 17.244460281760134,
+    "d1_over_nuB": 0.8278865158014539,
+    "d1_over_nu1": 0.026907248655045162,
+    "E_LR_cancellation": 0.0290206719997208,
+    "d1_over_EP_plus_ELR": 0.9167797431293593
+   },
+   {
+    "sid": "s17",
+    "start": "0x1.2147236c94d92p+4",
+    "r": 0.6460905349794238,
+    "d1_over_phiP": 16.145893353283462,
+    "d1_over_nuB": 0.7568133272640867,
+    "d1_over_nu1": 0.030205935919732772,
+    "E_LR_cancellation": 0.03583773109073232,
+    "d1_over_EP_plus_ELR": 0.8339395011471941
+   },
+   {
+    "sid": "s17",
+    "start": "0x1.2bbc846a59500p+4",
+    "r": 0.36923076923076925,
+    "d1_over_phiP": 4.813784669106111,
+    "d1_over_nuB": 0.536521602671349,
+    "d1_over_nu1": 0.005121230662940749,
+    "E_LR_cancellation": 0.006866949593099178,
+    "d1_over_EP_plus_ELR": 0.7367638138048083
+   },
+   {
+    "sid": "s17",
+    "start": "0x1.2bc0a7a6761eap+4",
+    "r": 0.9954441913439636,
+    "d1_over_phiP": 6.736835907034949,
+    "d1_over_nuB": 0.9737430346157184,
+    "d1_over_nu1": 0.005299392319444946,
+    "E_LR_cancellation": 0.003308756780860175,
+    "d1_over_EP_plus_ELR": 1.5813823966054343
+   },
+   {
+    "sid": "s17",
+    "start": "0x1.35bc55aff778ep+4",
+    "r": 0.9244186046511628,
+    "d1_over_phiP": 4.531088179574091,
+    "d1_over_nuB": 0.8921962507774264,
+    "d1_over_nu1": 0.009717932660437419,
+    "E_LR_cancellation": 0.005947453295395093,
+    "d1_over_EP_plus_ELR": 1.6179083228088047
+   },
+   {
+    "sid": "s18",
+    "start": "0x1.6c20bd0d8796ap+4",
+    "r": 0.5978407557354926,
+    "d1_over_phiP": 3.6229175297660676,
+    "d1_over_nuB": 0.4845517966209403,
+    "d1_over_nu1": 0.005194540434989987,
+    "E_LR_cancellation": 0.007881972889811609,
+    "d1_over_EP_plus_ELR": 0.6102841110979353
+   },
+   {
+    "sid": "s20",
+    "start": "0x1.1dfaf97527cfcp+4",
+    "r": 0.30864197530864196,
+    "d1_over_phiP": 3.1245319377510996,
+    "d1_over_nuB": 0.9860757270315157,
+    "d1_over_nu1": 0.002913011007484689,
+    "E_LR_cancellation": 0.0006635804648315856,
+    "d1_over_EP_plus_ELR": 4.208656005224615
+   },
+   {
+    "sid": "s20",
+    "start": "0x1.1eb6abc4a4348p+4",
+    "r": 0.7226277372262774,
+    "d1_over_phiP": 3.2047091038420032,
+    "d1_over_nuB": 0.9339237733375072,
+    "d1_over_nu1": 0.006795774770112556,
+    "E_LR_cancellation": 0.002560528145840291,
+    "d1_over_EP_plus_ELR": 2.5507389210732256
+   },
+   {
+    "sid": "s22",
+    "start": "0x1.7355d9a7b3908p+4",
+    "r": 0.40857787810383744,
+    "d1_over_phiP": 2.7897614954412955,
+    "d1_over_nuB": 0.9032938898080917,
+    "d1_over_nu1": 0.0033261455757935183,
+    "E_LR_cancellation": 0.0011586684423251297,
+    "d1_over_EP_plus_ELR": 2.1627769192545667
+   },
+   {
+    "sid": "s22",
+    "start": "0x1.785998de00264p+4",
+    "r": 0.3779527559055118,
+    "d1_over_phiP": 2.406332874067923,
+    "d1_over_nuB": 0.8054129314210023,
+    "d1_over_nu1": 0.00260579578615972,
+    "E_LR_cancellation": 0.000816211972416726,
+    "d1_over_EP_plus_ELR": 2.405032622273387
+   },
+   {
+    "sid": "s23",
+    "start": "0x1.3b7a42f5eadcap+4",
+    "r": 0.831918505942275,
+    "d1_over_phiP": 2.8069153047055186,
+    "d1_over_nuB": 0.476823663088337,
+    "d1_over_nu1": 0.0017835660331894626,
+    "E_LR_cancellation": 0.002000366594039615,
+    "d1_over_EP_plus_ELR": 0.8590499760074244
+   }
+  ]
+ },
+ "L-b": [
+  {
+   "sid": "f00",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.5832878027680167,
+   "d1_over_phiP": 8933401.736932123,
+   "d1_over_nu1": 4301448.144595528,
+   "d1_over_nuB": 4301448.144595528,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f01",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.45329194335198886,
+   "d1_over_phiP": 12079811.298349021,
+   "d1_over_nu1": 5816449.704879347,
+   "d1_over_nuB": 5816449.704879347,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f02",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.2674111377274824,
+   "d1_over_phiP": 9819571.521998592,
+   "d1_over_nu1": 4728140.404724401,
+   "d1_over_nuB": 4728140.404724401,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f03",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.31807028386475655,
+   "d1_over_phiP": 11653409.166503245,
+   "d1_over_nu1": 5611136.352486724,
+   "d1_over_nuB": 5611136.352486724,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f04",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.6714102238219657,
+   "d1_over_phiP": 8703857.830415364,
+   "d1_over_nu1": 4190922.3628311437,
+   "d1_over_nuB": 4190922.3628311437,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f05",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.5832878027680167,
+   "d1_over_phiP": 8933401.736932123,
+   "d1_over_nu1": 4301448.144595528,
+   "d1_over_nuB": 4301448.144595528,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f06",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.45329194335198886,
+   "d1_over_phiP": 12079811.298349021,
+   "d1_over_nu1": 5816449.704879347,
+   "d1_over_nuB": 5816449.704879347,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f07",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.2674111377274824,
+   "d1_over_phiP": 9819571.521998592,
+   "d1_over_nu1": 4728140.404724401,
+   "d1_over_nuB": 4728140.404724401,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f08",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.31807028386475655,
+   "d1_over_phiP": 11653409.166503245,
+   "d1_over_nu1": 5611136.352486724,
+   "d1_over_nuB": 5611136.352486724,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "f09",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.6714102238219657,
+   "d1_over_phiP": 8703857.830415364,
+   "d1_over_nu1": 4190922.3628311437,
+   "d1_over_nuB": 4190922.3628311437,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c00",
+   "group": "G-q+r",
+   "depth": 3,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.322736340287145,
+   "d1_over_phiP": 25864.688049938068,
+   "d1_over_nu1": 18974.86864571988,
+   "d1_over_nuB": 18974.86864571988,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c01",
+   "group": "G-q-r",
+   "depth": 0,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.5499293180751705,
+   "d1_over_phiP": 12643.566364816777,
+   "d1_over_nu1": 9619.263330945658,
+   "d1_over_nuB": 9619.263330945658,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c02",
+   "group": "G-q+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.6496594330330223,
+   "d1_over_phiP": 77.73003713050659,
+   "d1_over_nu1": 74.61740935402207,
+   "d1_over_nuB": 74.61740935402207,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c03",
+   "group": "G+q-r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.2769966358938232,
+   "d1_over_phiP": 1029.3487079027593,
+   "d1_over_nu1": 886.0838830072566,
+   "d1_over_nuB": 886.0838830072566,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c04",
+   "group": "G-q-r",
+   "depth": 3,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.49520915818958927,
+   "d1_over_phiP": 10215.062875944566,
+   "d1_over_nu1": 7896.229317346268,
+   "d1_over_nuB": 7896.229317346268,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c05",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.6034991953312954,
+   "d1_over_phiP": 12532753.358163247,
+   "d1_over_nu1": 6034542.077770465,
+   "d1_over_nuB": 6034542.077770465,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c06",
+   "group": "G-q-r",
+   "depth": 3,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.48416325312597047,
+   "d1_over_phiP": 12285.52895614807,
+   "d1_over_nu1": 8193.765204250309,
+   "d1_over_nuB": 8193.765204250309,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c07",
+   "group": "G+q+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.31233471349761344,
+   "d1_over_phiP": 5.798585452110237,
+   "d1_over_nu1": 5.744850895572281,
+   "d1_over_nuB": 5.744850895572281,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c08",
+   "group": "G+q+r",
+   "depth": 0,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.25795222025027487,
+   "d1_over_phiP": 77.31058027768526,
+   "d1_over_nu1": 74.32709505216015,
+   "d1_over_nuB": 74.32709505216015,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c09",
+   "group": "G-q-r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.3214903560450209,
+   "d1_over_phiP": 348.8370834942678,
+   "d1_over_nu1": 333.12471884407694,
+   "d1_over_nuB": 333.12471884407694,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c10",
+   "group": "G+q-r",
+   "depth": 3,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.6039078185718796,
+   "d1_over_phiP": 18463.318900559112,
+   "d1_over_nu1": 9137.883143409632,
+   "d1_over_nuB": 9137.883143409632,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  },
+  {
+   "sid": "c11",
+   "group": "G+r",
+   "depth": 1,
+   "P_type": "Levin",
+   "L_type": "Levin",
+   "R_type": "Levin",
+   "r": 0.47781198481743364,
+   "d1_over_phiP": 9218466.3978116,
+   "d1_over_nu1": 4438707.264104337,
+   "d1_over_nuB": 4438707.264104337,
+   "dec_route1": "untrusted",
+   "dec_routeB": "untrusted"
+  }
+ ],
+ "L-c": {
+  "changed_from_trusted_under_B": [],
+  "kinds": {
+   "Levin/Levin+Levin": 879,
+   "Levin/Levin+direct": 18,
+   "Levin/direct+direct": 112,
+   "direct/direct+direct": 873
+  }
+ },
+ "L-a_distributions": {
+  "r (first)": {
+   "0.0": 0.2850877192982456,
+   "0.1": 0.489043609671848,
+   "0.5": 0.4991959822878463,
+   "0.9": 0.5079931468040904,
+   "1.0": 0.9819277108433735
+  },
+  "d1_over_phiP (first)": {
+   "0.0": 1.244814334146215,
+   "0.1": 1.4706287123342532,
+   "0.5": 1.493756538138176,
+   "0.9": 1.5110369593442263,
+   "1.0": 1.9454784884921512
+  },
+  "d1_over_nu1 (first)": {
+   "0.0": 0.005988350014725196,
+   "0.1": 0.9554476056908339,
+   "0.5": 0.9966529976948603,
+   "0.9": 1.0011175422780973,
+   "1.0": 1.004082412927266
+  },
+  "d1_over_nuB (first)": {
+   "0.0": 0.2002470932339264,
+   "0.1": 0.9554476056908339,
+   "0.5": 0.9966529976948603,
+   "0.9": 1.0012195249863145,
+   "1.0": 1.004082412927266
+  },
+  "E_LR_cancellation (first)": {
+   "0.0": 0.016216970723828574,
+   "0.1": 0.9982246005067147,
+   "0.5": 1.0,
+   "0.9": 1.0,
+   "1.0": 1.0
+  },
+  "nuB_over_nu1 (first)": {
+   "0.0": 0.029904803700344717,
+   "0.1": 0.9994194217159805,
+   "0.5": 1.0,
+   "0.9": 1.0000000000000002,
+   "1.0": 1.0000000000000002
+  },
+  "d1_over_EP_plus_ELR (first)": {
+   "0.0": 0.30210286977110296,
+   "0.1": 0.9952720474727624,
+   "0.5": 0.9997591418694204,
+   "0.9": 1.0061313007934152,
+   "1.0": 11.461186747214414
+  },
+  "r (second)": {
+   "0.0": 0.25747931253978357,
+   "0.1": 0.3024026512013256,
+   "0.5": 0.5571428571428572,
+   "0.9": 0.9244186046511628,
+   "1.0": 0.9954441913439636
+  },
+  "d1_over_phiP (second)": {
+   "0.0": 2.0493236822662344,
+   "0.1": 2.8023541163109553,
+   "0.5": 5.833921783680461,
+   "0.9": 16.39901013487057,
+   "1.0": 24.827843477408784
+  },
+  "d1_over_nu1 (second)": {
+   "0.0": 0.0017835660331894626,
+   "0.1": 0.003548977658371798,
+   "0.5": 0.016771706631589618,
+   "0.9": 2.2208565975163874,
+   "1.0": 6.5086059907302865
+  },
+  "d1_over_nuB (second)": {
+   "0.0": 0.22217948720462166,
+   "0.1": 0.6307100364452787,
+   "0.5": 1.2229798068132371,
+   "0.9": 3.485376549948805,
+   "1.0": 6.900700758467222
+  },
+  "E_LR_cancellation (second)": {
+   "0.0": 2.0635414374520785e-05,
+   "0.1": 0.0006853707417562514,
+   "0.5": 0.009368455030840009,
+   "0.9": 1.0,
+   "1.0": 1.0
+  },
+  "nuB_over_nu1 (second)": {
+   "0.0": 0.0015099440197546413,
+   "0.1": 0.002954145333496874,
+   "0.5": 0.013773064554004663,
+   "0.9": 1.0,
+   "1.0": 1.0000000000000002
+  },
+  "d1_over_EP_plus_ELR (second)": {
+   "0.0": 0.29522086918486856,
+   "0.1": 0.9568216828700513,
+   "0.5": 2.1627769192545667,
+   "0.9": 17.238920362945255,
+   "1.0": 498.2331949340546
+  }
+ }
+}

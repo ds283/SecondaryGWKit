@@ -1,0 +1,120 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/l2_account_06l.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T09:57:52Z
+# ----
+# levin-phase-floor 06l: L2's untrusted first-population leaves, accounted
+# written 2026-11-05T09:57:52Z on mps026298.phys.susx.ac.uk
+# script l2_account_06l.py sha256 e11ad0a55f26099a984231cac5d79843af9fad92456ab2018b58857a21002410
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s00.json sha256 04fb5399a1cb67fe528a2f7dd373f4894414c1bed511f2310f816f91ab718f26
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s01.json sha256 4b3a0be26cd501a8abe02095b6961f3b3916579671f058d261f02a37dff833de
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s02.json sha256 1fb546e2f2e0f6197a612e106784ae1a12dcb696abc6ff6a62073c67d11a54e4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s03.json sha256 8f92f7db412acf18dcacca84082c503f6565eff4be7422dd06092e031a331c82
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s04.json sha256 109ad33983111367df8b3003fdc9d7da9056336f70c9d0af97ecf0d0f7d23054
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s05.json sha256 3bad964a15866a8e7d411cc8adaf1a0450f4c4fdbe2a3c275d8a0f2dc5308195
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s06.json sha256 449b814290192962fe521c7af8c9370b0c05bd7d9b75f7178fee6cfc34f09d34
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s07.json sha256 8abf37f92e1a94d00f03ad7ae72355b2873da2f4acee0f6576eba31c61b398e0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s08.json sha256 4366ef6954a5f34d3ebf71bc671d2ddf94a9b1916fe246121ff15714900d8780
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s09.json sha256 3b1beccd3af6c98f23a620c97612d7bd87d19ac7433ef07cb71a15fde987f205
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s10.json sha256 5e66dea8c7db1332be6c73e8ad6f66c2fd47cc1d51fd9f4513716326c2150068
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s11.json sha256 90bd2f04b0d05eb4ca77b6ae0c80122bc6e230f5caf6580ac29c1f96a4f4f761
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s12.json sha256 a8607a8b70b7d36330ff1ebbbc76050f3923750237297b4e6a627ef1a6b0bdc8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s13.json sha256 0c510f21c5e4e298cd69381772b12ef01e9ea9b5aec056d9650dae20244a5095
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s14.json sha256 51eb34cf3ffe6ea5c4905d74caaa90f45c552dd9de75f606ace2335ee4516b40
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s15.json sha256 3515abdda67f93ef10852b5f4c083084cab083c4f9a9072ce88a09f74bc84fae
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s16.json sha256 fdc03619e00e427a557ecc0ed62194b5f4b1a28bd458e765ce8cd9880a3e4d57
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s17.json sha256 a189b6d11e96a5ee3609441c58058d365905b938b537f63ca1ef16aba7dfb8ac
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s18.json sha256 1be85c8572ca211056378c3f2baebfccd1c37ba16993ae9b1d37b5535863f7ce
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s19.json sha256 180ddd53a91569ae290aa8c016134efc71f682bc106e757056b091b5e97d3aad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s20.json sha256 376734bfc24e528b1620e25a2f337a4f4635c33a2e558ecd01655297b0db674e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s21.json sha256 f5b57d4296cf54d95e097ceb61a2fc27c7c8db92dcc97753b422a689b8b508d2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s22.json sha256 564933b1b75d8c35680e1fec2bdba91c25f2d0e382a79601820c583a780b1284
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s23.json sha256 4114151deeb99e08a3fd07ca2b51a6c88160a44789b2cf53d810d10cacaa39a8
+{
+ "untrusted": {
+  "r": [
+   0.4910400720396218,
+   0.4976081613885573,
+   0.5013635309998773
+  ],
+  "d1_over_phiP": [
+   1.4884177980434106,
+   1.5005337382468138,
+   1.5028996930826128
+  ],
+  "d1_over_nuB": [
+   1.0004143845106537,
+   1.0012718887365604,
+   1.004082412927266
+  ],
+  "d1_over_node_difference": [
+   1.001967518368905,
+   1.0029255243107322,
+   1.0061313007934152
+  ],
+  "d1_over_EP_plus_ELR": [
+   1.0019675183689052,
+   1.0029255243107322,
+   1.0061313007934152
+  ],
+  "node_difference_over_triangle_bound": [
+   1.0,
+   1.0,
+   1.0000000000000002
+  ],
+  "signs_opposite": 12,
+  "n": 12
+ },
+ "trusted": {
+  "r": [
+   0.2850877192982456,
+   0.49936688667770046,
+   0.9819277108433735
+  ],
+  "d1_over_phiP": [
+   1.244814334146215,
+   1.4934806460542216,
+   1.9454784884921512
+  ],
+  "d1_over_nuB": [
+   0.2002470932339264,
+   0.9958499079445322,
+   0.9999887864490297
+  ],
+  "d1_over_node_difference": [
+   0.3043045539429447,
+   0.9988905522256598,
+   25.5618259457247
+  ],
+  "d1_over_EP_plus_ELR": [
+   0.30210286977110296,
+   0.9988905522256598,
+   11.461186747214414
+  ],
+  "node_difference_over_triangle_bound": [
+   0.4483699531826777,
+   1.0,
+   1.0000000000000002
+  ],
+  "signs_opposite": 56,
+  "n": 63
+ }
+}
+s09 0x1.13b34fb676cd1p+4 r 0.4910 d1/phiP 1.4922 d1/nuB 1.00408 d1/|EP-(EL+ER)| 1.00613 d1/(|EP|+|EL+ER|) 1.00613 opposite True terms {'|E_P|': 0.67177, 'phi_P - |E_P|': 0.00112, 'phi-_L + phi-_R': 0.00092, '|E_L + E_R|': 0.32619}
+s11 0x1.7f4be5e796647p+4 r 0.4953 d1/phiP 1.4946 d1/nuB 1.00078 d1/|EP-(EL+ER)| 1.00273 d1/(|EP|+|EL+ER|) 1.00273 opposite True terms {'|E_P|': 0.66852, 'phi_P - |E_P|': 0.00109, 'phi-_L + phi-_R': 0.00086, '|E_L + E_R|': 0.32953}
+s11 0x1.80611c9616debp+4 r 0.4939 d1/phiP 1.4914 d1/nuB 1.00122 d1/|EP-(EL+ER)| 1.00397 d1/(|EP|+|EL+ER|) 1.00397 opposite True terms {'|E_P|': 0.66983, 'phi_P - |E_P|': 0.00153, 'phi-_L + phi-_R': 0.00122, '|E_L + E_R|': 0.32743}
+s13 0x1.394e414cb794cp+4 r 0.4927 d1/phiP 1.4884 d1/nuB 1.00315 d1/|EP-(EL+ER)| 1.00573 d1/(|EP|+|EL+ER|) 1.00573 opposite True terms {'|E_P|': 0.67258, 'phi_P - |E_P|': 0.00139, 'phi-_L + phi-_R': 0.00116, '|E_L + E_R|': 0.32486}
+s14 0x1.30b4a8a1c6f11p+4 r 0.4998 d1/phiP 1.5005 d1/nuB 1.00055 d1/|EP-(EL+ER)| 1.00206 d1/(|EP|+|EL+ER|) 1.00206 opposite True terms {'|E_P|': 0.66594, 'phi_P - |E_P|': 0.00086, 'phi-_L + phi-_R': 0.00065, '|E_L + E_R|': 0.33255}
+s18 0x1.6c20d42d4f6bfp+4 r 0.4973 d1/phiP 1.4993 d1/nuB 1.00112 d1/|EP-(EL+ER)| 1.00258 d1/(|EP|+|EL+ER|) 1.00258 opposite True terms {'|E_P|': 0.6669, 'phi_P - |E_P|': 0.00082, 'phi-_L + phi-_R': 0.00064, '|E_L + E_R|': 0.33164}
+s19 0x1.0ca293cc59f72p+4 r 0.4978 d1/phiP 1.4931 d1/nuB 1.00193 d1/|EP-(EL+ER)| 1.00344 d1/(|EP|+|EL+ER|) 1.00344 opposite True terms {'|E_P|': 0.67019, 'phi_P - |E_P|': 0.00084, 'phi-_L + phi-_R': 0.00067, '|E_L + E_R|': 0.3283}
+s19 0x1.13b9c32ecd581p+4 r 0.4944 d1/phiP 1.5018 d1/nuB 1.00260 d1/|EP-(EL+ER)| 1.00397 d1/(|EP|+|EL+ER|) 1.00397 opposite True terms {'|E_P|': 0.66686, 'phi_P - |E_P|': 0.00076, 'phi-_L + phi-_R': 0.0006, '|E_L + E_R|': 0.33178}
+s22 0x1.73560e0d8bfc2p+4 r 0.4976 d1/phiP 1.5029 d1/nuB 1.00156 d1/|EP-(EL+ER)| 1.00291 d1/(|EP|+|EL+ER|) 1.00291 opposite True terms {'|E_P|': 0.66565, 'phi_P - |E_P|': 0.00077, 'phi-_L + phi-_R': 0.00058, '|E_L + E_R|': 0.333}
+s22 0x1.78598e633b43fp+4 r 0.5006 d1/phiP 1.5017 d1/nuB 1.00127 d1/|EP-(EL+ER)| 1.00293 d1/(|EP|+|EL+ER|) 1.00293 opposite True terms {'|E_P|': 0.66582, 'phi_P - |E_P|': 0.00092, 'phi-_L + phi-_R': 0.00073, '|E_L + E_R|': 0.33253}
+s22 0x1.7859a358c508ap+4 r 0.5014 d1/phiP 1.5015 d1/nuB 1.00041 d1/|EP-(EL+ER)| 1.00197 d1/(|EP|+|EL+ER|) 1.00197 opposite True terms {'|E_P|': 0.66542, 'phi_P - |E_P|': 0.00087, 'phi-_L + phi-_R': 0.00068, '|E_L + E_R|': 0.33303}
+s23 0x1.3b12cc25d8d01p+4 r 0.5010 d1/phiP 1.5013 d1/nuB 1.00127 d1/|EP-(EL+ER)| 1.00255 d1/(|EP|+|EL+ER|) 1.00255 opposite True terms {'|E_P|': 0.66621, 'phi_P - |E_P|': 0.00074, 'phi-_L + phi-_R': 0.00054, '|E_L + E_R|': 0.33251}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL_l2/account.json sha256 f5b636324f1656e4c7a84c7b24b3f86c11177db8c3351245323324c66a33ce2b
+# ----
+# end 2026-11-05T09:57:52Z
+# exit 0

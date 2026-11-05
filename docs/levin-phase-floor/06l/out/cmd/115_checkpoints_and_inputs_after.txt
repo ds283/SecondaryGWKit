@@ -1,0 +1,47 @@
+$ sh -c shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_calls.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_slow_leaves.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/checkpoint.jsonl\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/g.pkl\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route1.pkl\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_\*.pkl\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_\*.pkl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:14:10Z
+# ----
+03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl
+1e9a62b0f8d95deade4f265d1fa1a8b5bbd63f587f7c9761d78882db5367c42e  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_calls.json
+b4643033a1249bb036524ec041fc9594471a56a932a1ded593101d1c486da9ba  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_slow_leaves.json
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json
+36e3dd4c9125f6ea620b80e1bc15d656827b5dd2e449c983d479d1577c6bed38  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/checkpoint.jsonl
+3942209a1141fad4822a2b962a068d6d8ad743cdaf93247c130d94e9c8e51eea  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/g.pkl
+adaf96e2433b3c2ad92aec44031b514604c22cdfca1b4cd5927cea0c7af9db93  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route1.pkl
+e2cdc55e8592987b58b22e97a858e42de781cb3467465526f14d0a2905a77ea2  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-7-k0_101.pkl
+66210fc8d876db2a716253aa78639cee4bd3c4ba0b3ae403824437fddacb6140  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-7-k0_202.pkl
+f3c03a593e2e6629874d8cf468b6fbb10871f9ba417810957dc984a87216c5f5  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-7-k1_102.pkl
+9cd28c1b9926fe434bd5d55f9d765ca1ac7d04aad5def4510236059c85c26d37  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-7-k1_301.pkl
+d6100c46638020b12baa09d66d4b471d79a078877cc407bf88d6a44e4ac38587  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-7-k2_2.pkl
+aa6c3b9b0289fc316fa9f2420cab50727f91802f6d21ba2e3c7cfe5b97072288  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-7-k2_302.pkl
+165d4673e90760f00b5fd37ba7b090f553275633a65481a03df974c17df036f4  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-7-k3_1.pkl
+74905d542a0fa21d465a3f1da9eb3e98a8fee1a45329ba43c78d2e5e0326c298  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-7-k3_201.pkl
+b2aefbae6c5868789bdf0d3be6e26e8a8c6cc2e95f1712217332a982d1c44dfa  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-8-k0_101.pkl
+93c22771d3c7c6764f37ac033eee79266b8ed3b983df417111a6d204076da660  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-8-k0_202.pkl
+a9ffe67198397c8d79201977c33565f38696062413e72bb2a3c6b2940019944a  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-8-k1_102.pkl
+4fc645ec655aa474e4776f8ad46d89b3cd0a672dab83b9354fa1f596f30c9d04  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-8-k1_301.pkl
+8b246452c6ec958bd03871444deae7eb7d00baaaacb585f272d78a2a2002566a  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-8-k2_2.pkl
+126ffc19de2edb9e60ee6dbd018c03ac10f7539cd0f1c60374ffe2d33b5adfd7  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-8-k2_302.pkl
+430d61b50633f1e71f1e2373001c3e060e29d338dcf64cecb1c32db94955e666  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-8-k3_1.pkl
+a388ca343bd2d9b22665729308a50cd1d0017f3e35c9bc4f6c4468ddf35030a3  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/regions_1e-8-k3_201.pkl
+1dfb70e43d66152bdb03c83741ba86d4dcc4ae8ed3296940c7a51dd28f8bc612  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-7-k0_101.pkl
+b22ea70c80248bd38deed05af45078f80e82a5d5c83a20ea9c1480c669166b10  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-7-k0_202.pkl
+af8b457b7b8d95263964e065132cdde407f8f2b4338581366f8d9e3e5478ca79  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-7-k1_102.pkl
+1187a077515752d41dd56130da7733e07d1c843555caa5bb1dd65028482b1c96  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-7-k1_301.pkl
+5d51a66f00ff53518cd20f9025101042e7be6a788cff17469d80ff8a3ceea167  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-7-k2_2.pkl
+61221f23bb1025de166a161d582301de9f7defdc6b28a6f27e984fa2608a5d23  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-7-k2_302.pkl
+ab28af57af7a1164285db00657e59d0ed42c3acb1b289de87e86d444dcb6aa34  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-7-k3_1.pkl
+dc77746fdb7872367e8b52d325a5edee7f4dfce20897138259116626442d50b5  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-7-k3_201.pkl
+6dadda242edf5cc6cf23a01f57aea8b504169fb120a9202afc8cb09bfd43fe42  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-8-k0_101.pkl
+e443068d1994a5356eeb4687ea777701e5efd230fef7024c68f970f2ec01cf59  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-8-k0_202.pkl
+9ac5e0194902510656fe1f258dc188c621d4dd4fa1fd7570e29831a62bd46781  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-8-k1_102.pkl
+09953221dbcdc22639287ce3f12b7cc0a4f3a76795c6583f1f0279f6e36f503f  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-8-k1_301.pkl
+c884133c9d30958505a16aed3dcea9d720537727bc8b74218f5051751d859c96  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-8-k2_2.pkl
+71dfb3fb58ba61dc46de04863169c5bd3a6538da164557938dbca016d0a8ee20  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-8-k2_302.pkl
+d94afcf78fc0843f4ee670ad3491baf2226f64fecdc85d08d088dbccbe648991  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-8-k3_1.pkl
+a6419d2a6f3122c5747563b782ea4b7d914a613314d0938e1659003ba725e8ed  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009/regions_1e-8-k3_201.pkl
+# ----
+# end 2026-11-05T15:14:40Z
+# exit 0

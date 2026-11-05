@@ -1,0 +1,2 @@
+KEPT_ON_MAC_STUDIO.txt: 338 entries, 338 match by SHA-256 and size; mismatches []
+pickles or files > 2 MB not listed: []

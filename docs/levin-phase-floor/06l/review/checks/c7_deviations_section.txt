@@ -1,0 +1,105 @@
+## Deviations from the prompt
+
+1. **`runregistrykit list` was run twice for Gate check 01** (`out/commands.log` holds both; the cmd file holds the
+   second). **UNINTENDED DRIFT** (cosmetic).
+2. **A file list was written to `/tmp/x` while the scripts were copied**, then removed. It was not a record.
+   **UNINTENDED DRIFT.**
+3. **The copied scripts' changes,** each marked "prompt 06l". The diffs are `out/scripts_diff_at_stop1.txt` and
+   `out/scripts_diff_final.txt`. **STRUCTURALLY REQUIRED.**
+   - `prov.py`, `refs_common.py` and `calibration/prov.py`: the tree and the records directory.
+   - `worker.py`: route B's result key `route_06l`, kept in the call summary and the pickle record.
+   - `check_captures.py` and `compare_k0.py`: `route_06l` excluded as `route_06k` is, and `compare_k0.py` reads the
+     firing count from it.
+   - `run_k0.py`, `run_census.py` and `calibration/lg_seeded_draws.py`: the `routeB` variant or mode.
+   - `probe_l.py`: B's numbers from the same seven solves.
+   - `ast_check_variants.py`: the `_06l` suffix.
+   - `index_06g.py`: the title.
+   - `extract_census.py`: route B's record.
+   - `slice_06j.py`: an optional output path (deviation 11).
+4. **Route B was built three times before any scored run** (`out/cmd/10`, `10b`, `10c`). The first build failed the
+   AST check's name rule, on a comprehension variable `h`, and was rebuilt with `h_06l` and `x_06l`. The first build's
+   script and variant are `state/make_variants_as_first_run.py` and `state/levin_quadrature_routeB_first_build.py`.
+   **UNINTENDED DRIFT** (a failed attempt).
+5. **The third build added the record kind `withdrawn`:** a leaf 06g's rule trusts that B does not, which only a NaN
+   floor could produce. It was recorded so that any such case would be seen. It occurred 0 times in K0, the draws and
+   the census. The second build's script is `state/make_variants_as_second_run.py`. **IMPLEMENTATION CHOICE.**
+6. **B's record also holds the kind `untrusted`:** a leaf B leaves untrusted that route 1's yardstick would trust, or
+   that sits at `depth_max`, with every field of a firing. It is there for §3's comparison with route 1, which needs
+   the halves' kinds of those leaves, and route 1's census does not record them. `n_firings` counts only `fired`. The
+   value returned is unchanged, and the AST check places the record inside `_check_leaf`'s trust statement.
+   **IMPLEMENTATION CHOICE.**
+7. **`make_variants.py` writes only the identity variant and route B.** 06k's four routes are rebuilt in memory and
+   hashed beside 06k's recorded SHA-256 (all equal), not written. **IMPLEMENTATION CHOICE.**
+8. **K0 has no tree-module control** (06k's deviation 6). The identity variant is the tree's file byte for byte.
+   **IMPLEMENTATION CHOICE.**
+9. **`state/index_06g.json` was rebuilt** after a provenance comment was added to `index_06g.py` (`out/cmd/13`,
+   `13b`). The two builds' units are equal; the first is kept as `state/index_06g_first_build_superseded.json`.
+   **UNINTENDED DRIFT.**
+10. **A development unit was run outside the scored set:** `g-1e-7-2-1449` under route B (`out/cmd/14`, `15`). Its
+    19 calls with no firing are equal to 06g's, and 2 calls fire. It also exercised the draws' header
+    (`out/cmd/16`). None of it is scored. **IMPLEMENTATION CHOICE.**
+11. **Run `k0partL`'s capture check refused all 46 captures** (`out/cmd/k0partL/31_check_captures.txt`).
+    - **The cause:** the check refused them on the harness-script hashes alone. `run_census.py` was not on its allowed
+      list. It is 06k's final copy, changed after 06k's own captures had run; worker.py hashes it and does not import
+      it. Every capture's region arrays and call record equalled 06g's census.
+    - **What followed:** `32_slice` sliced none, and the 46 probes were skipped.
+    - **The fix:** `check_captures.py` now allows `run_census.py`, with its two hashes recorded, and `slice_06j.py`
+      takes an output path.
+    - **The re-run:** the check, slicing and probes alone, as the registered run `partL` (`out/cmd/partL/`): 46 of 46
+      reproduce, all sliced and probed.
+    - The failed run's records are left as written.
+
+    **UNINTENDED DRIFT** (a failed attempt).
+12. **K0 and the draws were scored from run `k0partL`,** whose commands for them exited 0. Only its capture check,
+    slicing and probes were re-run (06k's deviation 8 is the precedent). The orchestrator checked and accepted this at
+    planned stop 1. **IMPLEMENTATION CHOICE.**
+13. **New scoring scripts:** `k0_summary_06l.py`, `score_l_06l.py`, `l2_account_06l.py`,
+    `calibration/lg_compare_06l.py`, `census_projection_06l.py`, `analyse_c_06l.py`, `against_a_06l.py` and
+    `score_h1_06l.py` (the last copied from 06k's `score_h1.py` with its routes changed). They stand in for 06k's
+    `k0_summary.py`, `score_l.py`, `lg_compare_06k.py`, `analyse_c.py` and `score_h1.py`:
+    - each applies 06k's comparisons rule for rule to B;
+    - each adds what §2–§4 ask of 06l;
+    - they compare with 06g's census or route 1's, since 06l has no tree control and 06k's other routes' extracts are
+      deleted.
+
+    **IMPLEMENTATION CHOICE.**
+14. **`score_l_06l.py` compares this run's 06k columns with 06k's committed `partL_leaves.csv`,** as text, on all
+    2,046 rows. All are equal. **IMPLEMENTATION CHOICE.**
+15. **The census projection** (`out/census_projection.json`):
+    - It is 06k's form, P = 06h + (06g − 06h)·ρ. Here ρ = route B / identity on K0, today, in one run (0.730), which
+      gives 17,347 s, inside §3's bracket (16,758–20,361 s).
+    - The census took 18,340 s, 5.7 % more. The backstop reported twice and stopped nothing.
+    - Today's identity run took 1.11× 06g's census walls on the same units (host load about 15).
+
+    **IMPLEMENTATION CHOICE** (recorded for the cost).
+16. **Part C reads compact extracts:**
+    - route B's, made here by `extract_census.py` (extended; `out/cmd/100`);
+    - 06k's of 06g's census and route 1's (`var/levin-phase-floor-06k/state/extract/g.pkl` and `route1.pkl`, read only;
+      each records its checkpoint's SHA-256, which `analyse_c_06l.py` checks against `03adcbba…` and `36e3dd4c…`).
+
+    `against_a_06l.py` reads route 1's checkpoint itself, hashing it in the same pass. **IMPLEMENTATION CHOICE.**
+17. **06h's cost** (census wall, unit wall, group-call regions) is taken from 06k's committed `out/partC/summary.json`.
+    06h's extract was deleted on 2026-11-05, and the cost needs nothing else of 06h's. **STRUCTURALLY REQUIRED.**
+18. **`movers_c.py` was not run.** S1 has no mover outside the 720. The 720's one moving call, `0-2316` #1 at both
+    rtols, is reported from `routeB.json` without its carrying cells: it is a stationary-point row, reported apart and
+    not scored. **IMPLEMENTATION CHOICE.**
+19. **A's difference is inferred, not measured** (§0.3: no census of A). A's decision is computed for each of route 1's
+    firings in the calls route 1 converges and B does not:
+    - **matching:** the firing is matched by its exact span to a leaf B withheld trust from, which gives the halves'
+      kinds;
+    - **A's decision:** from route 1's own numbers, φ_P plus the Levin halves' φ on a Levin parent, and route 1's
+      decision on a Clenshaw–Curtis parent;
+    - **classes:** each call is classed by what A would withhold.
+
+    It shows what route 1's recovery rests on. It does not say A's outcome on the 75 calls where A withholds part of
+    route 1's trust. **IMPLEMENTATION CHOICE.**
+20. **The scopes the rules leave open:**
+    - C2 and S1 count group and analytic calls alike.
+    - K1 counts B's `fired` records whose parent is a Levin solve; the 6 with a Clenshaw–Curtis half are included.
+    - H1's 22 from 06j include the 1e-8 twins f05–f09, each scored as its own call, as 06j and 06k did.
+
+    **IMPLEMENTATION CHOICE.**
+21. **Labels in two JSON tallies.** `out/k0/summary.json` and `out/partC/summary.json` label the top band of Δ1/ν_B
+    "<1", where its edge is 1 + 10⁻¹². `results.md` states the intervals. **UNINTENDED DRIFT** (cosmetic).
+
+## Verification performed

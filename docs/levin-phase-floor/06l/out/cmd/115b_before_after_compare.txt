@@ -1,0 +1,10 @@
+$ sh -c diff\ \<\(grep\ -oE\ \'\^\[0-9a-f\]\{64\}\ \ \\S+\'\ out/cmd/06_gate_checkpoints_and_inputs.txt\ \|\ sort\)\ \<\(grep\ -oE\ \'\^\[0-9a-f\]\{64\}\ \ \\S+\'\ out/cmd/115_checkpoints_and_inputs_after.txt\ \|\ sort\)\ \&\&\ echo\ \'EQUAL:\ 39\ files\ \(06g\ checkpoint\,\ 16\ pickles\,\ v8_calls\,\ v8_slow_leaves\,\ rows.json\;\ route\ 1\ checkpoint\,\ 16\ pickles\;\ both\ extracts\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T15:14:50Z
+# ----
+sh: -c: line 0: syntax error near unexpected token `('
+sh: -c: line 0: `diff <(grep -oE '^[0-9a-f]{64}  \S+' out/cmd/06_gate_checkpoints_and_inputs.txt | sort) <(grep -oE '^[0-9a-f]{64}  \S+' out/cmd/115_checkpoints_and_inputs_after.txt | sort) && echo 'EQUAL: 39 files (06g checkpoint, 16 pickles, v8_calls, v8_slow_leaves, rows.json; route 1 checkpoint, 16 pickles; both extracts)''
+# ----
+# end 2026-11-05T15:14:50Z
+# exit 2

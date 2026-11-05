@@ -3138,3 +3138,143 @@ deviations 29 and 30.
 - Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`.
 - Opened: none. The two the agent proposed describe variants not in the tree, and are recorded under
   the slow-leaves issue as constraints on a remedy.
+
+## 6l. The trust yardstick with the halves' node errors signed
+
+*Prompt 06l, a measurement. It ran on the Mac Studio on 2026-11-05, Ray-free, with no lock, no store
+built and no change to the tree. The records are under [`06l/`](06l/). What is kept on the Mac
+Studio is in [`06l/KEPT_ON_MAC_STUDIO.md`](06l/KEPT_ON_MAC_STUDIO.md).*
+
+### 6l.1 Route B, the harness and Gate K0
+
+**Route B** is a scratch variant of `AdaptiveLevin/levin_quadrature.py`,
+`06l/scripts/variants/levin_quadrature_routeB.py` (`5aa6178a…`). It changes only rule (b)'s noise
+clause. A checked leaf is trusted if $r < 1/4$, or if $r < 1$ and $\Delta_1 \le \nu_B$, where
+$$\nu_B = \phi_P + \sum_{\rm Levin\ halves}\phi_h + \sum_{\rm CC\ halves}\phi^-_h
++ \Big|\sum_{\rm CC\ halves} E_h\Big|,$$
+$\phi^-_h$ is a Clenshaw–Curtis half's `phase_err_less_node` and $E_h$ its `node_error_signed`. On a
+Levin parent a Clenshaw–Curtis half contributes nothing (the user's modification, A). The agent's
+and the orchestrator's AST checks both show that the variant differs from the tree only inside
+`_adaptive_levin`: `_check_leaf`'s trust statement, B's firing record and one new return key,
+`route_06l`. The identity variant is the tree's file byte for byte.
+
+**The setup.** The tree was the worktree `SecondaryGWKit-lpf06l-af4c4dc` at `af4c4dc1`. Its
+production code is 06g's (`1c5336e`). It was clean throughout, with `--ignored`. The store was the
+certified scratch copy of A3 v2, read-only, fingerprint `0e32f24a…`, EQUAL to its certification
+before and after. 06g's census (`03adcbba…`) and route 1's (`36e3dd4c…`) were unchanged.
+
+**Gate K0 holds**, on 06k's 100 units:
+- the identity variant: 100 of 100 equal to 06g's census on every key;
+- route B on its 1,862 calls with no firing: all equal. B fires in 248 of 2,110 calls, and withdraws
+  trust from no leaf 06g trusts.
+
+The Mac Studio orchestrator re-ran two units under the identity variant and under B, and found them
+equal.
+
+**Gate L3 holds** on all 2,046 Part L leaves: $\nu_B \le \nu_1(1 + 10^{-12})$, the largest
+$\nu_B/\nu_1$ being $1 + 2.2\times10^{-16}$, and B trusts no leaf route 1 does not.
+
+**A failed run.** The first run, `levin-phase-floor-06l-k0partL-20261105T091942`, ended `failed`: its
+capture check refused all 46 captures on one harness-script hash (`run_census.py`, 06k's edited
+copy), though every capture equalled 06g's census. K0 and the draws were scored from it; the check,
+slicing and probes were re-run as `levin-phase-floor-06l-partL-20261105T095407`, 48 of 48 (log
+deviation 11).
+
+### 6l.2 Part L: the leaves, and the LiouvilleGreen draws
+
+The probes reproduce 06g's census on all 46 captures and on every leaf. Every one of 06k's 42 columns
+equals 06k's committed table on all 2,046 rows.
+
+| | 06h's carrying leaves trusted (17 distinct, 22 evaluations) | slow leaves trusted (of 142) | first population, $\Delta_1/\phi_P < 2$ (of 75) | second population (of 67) | slow leaves trusted at $\Delta_1/\phi_P \ge 5.8$ | 06g-trusted leaves whose decision changes (of 1,882) |
+|---|---|---|---|---|---|---|
+| route 1 (06k) | 0 | 114 | 63 | 51 | 30 | 0 |
+| route B | 0 | 85 | 63 | 22 | 7 | 0 |
+
+- **The 12 first-population leaves B does not trust** are the 12 route 1 does not trust. All are
+  Clenshaw–Curtis over Clenshaw–Curtis, with $r$ 0.491–0.501, and B misses them by $\Delta_1/\nu_B$
+  1.0004–1.0041. On each, $E_P$ and $E_L + E_R$ have opposite signs, so the triangle inequality of
+  prompt §0.2 is tight. $\Delta_1$ exceeds $|E_P - (E_L+E_R)|$ by 0.20–0.61 %, which no floor
+  declares. §0.2's guarantee holds to first order only.
+- **The second population.** B trusts 22 of 67. On them $\Delta_1/\nu_B$ is 0.22–0.986, where route
+  1's $\Delta_1/\nu_1$ is 0.002–0.037.
+- **The orchestrator's estimate** from 06k's table was 85 trusted, 7 of them at $\Delta_1/\phi_P \ge
+  5.8$. Both match; its split, 75 and 10, does not.
+
+**The LiouvilleGreen draws** (06g's 20 seeded draws, 240 units). Every test passes under both
+variants, and the identity variant equals the tree on all 4,320 Levin calls. Under B, 122 calls fire
+and no convergence or honesty changes.
+
+### 6l.3 Part C: the census under B
+
+| | run | census wall | unit wall / group-call regions against 06g | calls at `depth_max` outside the 720 (1e-7 / 1e-8) |
+|---|---|---|---|---|
+| 06g | `levin-phase-floor-06g-census-20261101T114315` | 20,361 s | 1 / 1 | 966 / 996 |
+| route 1 | `levin-phase-floor-06k-census-route1-20261104T103009` | 16,758 s | 0.78 / 0.78 | 14 / 16 |
+| route B | `levin-phase-floor-06l-census-routeB-20261105T100126` | 18,340 s | 0.86 / 0.84 | 72 / 76 |
+
+The census finished `done`, 18,560 of 18,560 units, exit 0. Its projection was 17,347 s. The host was
+loaded (an identity run on K0 took 1.11× 06g's walls on the same units), so the region ratio is the
+better measure of cost.
+
+**Against route 1:** route 1 converges 43 calls at 1e-7 and 48 at 1e-8 outside the 720 that B does
+not; B converges 6 at 1e-8 that route 1 does not (route 1's `node_limited`). No call moves by more
+than $e_B + e_{\rm route\,1}$.
+- B's 91 are held by 87 untrusted leaves at `depth_max`, all Clenshaw–Curtis over Clenshaw–Curtis at
+  depth 20, most with $r \ge 1$. Route 1 trusted an ancestor of each and never made them.
+- **A, inferred from route 1's census** (no census of A was run): of the 91, route 1 recovered 14 only
+  through Levin parents with a Clenshaw–Curtis half, which A removes; 2 only through Clenshaw–Curtis
+  parents; and 75 through both. So A recovers at most 77 of them.
+
+### 6l.4 The predictions
+
+| | Rule | route B |
+|---|---|---|
+| **L1** | of the 17 06h carrying leaves, B trusts none | **holds** (0) |
+| **L2** | B trusts all 75 first-population slow leaves | **fails** (63; route 1 trusts the same 63) |
+| **C1** | ≥ 90 % of V8's lost calls outside the 720 converge, at each rtol | **holds** (749/801, 93.5 %; 773/830, 93.1 %) |
+| **C2** | every call outside the 720 that 06g converges and B does not ends `node_limited` | **holds** (4, all 1e-8, abserr 1.001–1.032× 06g's) |
+| **H1** | on the 115 matched references outside the 720, $\|v_B - {\rm ref}\|/e_B \le \max(1, {\rm 06g's})$ | **holds** (115 of 115; worst v03 1.182, 06g 1.203) |
+| **S1** | no call outside the 720 moves by more than $e_B + e_g$ | **holds** (0 calls, 0 rows) |
+| **K1** | every trust firing on a Levin parent outside the 720 has $\Delta_1/\phi_P < 5.8$ | **holds** (9,839 firings, max 2.85) |
+
+B passes as a candidate remedy if L1, L2, C2, H1, S1 and K1 hold. **It does not, on L2 alone.**
+
+**L2 was wrong when it was written.** 06k's committed table already had route 1 trusting 63 of the
+75, and Gate L3 makes B's trust a subset of route 1's. So no yardstick at most $\nu_1$ could pass L2.
+The error is the orchestrator's (log, "Recorded by the orchestrator"). L2 does not separate B from
+route 1 or A.
+
+**Descriptive.** On Clenshaw–Curtis parents outside the 720, B fires 222,948 times; 64,869 of them are
+at $\Delta_1/\phi_P \ge 5.8$, up to 862. On the Clenshaw–Curtis-over-Clenshaw–Curtis firings,
+$\Delta_1 \le |E_P| + |E_L + E_R|$ on 69 %, and within 1 % of it on 92 %.
+
+### 6l.5 The review
+
+**The Mac Studio review** (`06l/review/review.md`) passed all seven checks:
+- **scope:** nothing outside 06l's directory and runs; the copy, 06g's census and route 1's census
+  unchanged; no Ray; nothing new in `var/datastores/`;
+- **the variant and K0:** its own AST comparison, and two K0 units re-run under the identity variant
+  and B;
+- **the predictions:** verbatim and before the first number;
+- **Part L:** the seven solves of six leaves re-made from the captured calls, with $\nu_B$ formed in
+  exact arithmetic and every decision equal to the agent's;
+- **Part C:** C1, C2, S1, K1 and the comparison with route 1 re-counted from the three raw
+  checkpoints by its own reader, and one recovered call (`g-1e-8-3-825` #0) re-run under B, equal to
+  its census record;
+- **the references:** five ratios recomputed from each reference's source, equal to $10^{-12}$;
+- **the records:** every §5.1 heading; 21 deviations, each classified once; 338 kept files checked.
+
+It recorded two observations that change no verdict: twelve harness outputs carry no provenance
+header of their own (the log's deviation 22), and the agent's final report miscounted its deviations
+by class, which no record carries.
+
+**On the laptop:**
+- The 824 files copied back, and the run directories' 143 small files, match by SHA-256.
+- L1, L2 and L3 were re-scored by recomputing $\nu_B$ and B's decision from each leaf's numbers on all
+  2,046 Part L leaves, with no disagreement. H1 was re-scored from `h1_calls.csv`. C1, C2, S1 and K1
+  agree with `out/partC/summary.json` and with the review's count from the raw checkpoints. Every
+  verdict and number is the same.
+
+**Issues:**
+- Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`.
+- Opened: none.

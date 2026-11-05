@@ -1,0 +1,323 @@
+{
+ "header": [
+  "# levin-phase-floor 06l: L2's untrusted first-population leaves, accounted",
+  "# written 2026-11-05T09:57:52Z on mps026298.phys.susx.ac.uk",
+  "# script l2_account_06l.py sha256 e11ad0a55f26099a984231cac5d79843af9fad92456ab2018b58857a21002410",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc HEAD af4c4dc17995f6576213f80257f9617df459d1fd (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s00.json sha256 04fb5399a1cb67fe528a2f7dd373f4894414c1bed511f2310f816f91ab718f26",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s01.json sha256 4b3a0be26cd501a8abe02095b6961f3b3916579671f058d261f02a37dff833de",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s02.json sha256 1fb546e2f2e0f6197a612e106784ae1a12dcb696abc6ff6a62073c67d11a54e4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s03.json sha256 8f92f7db412acf18dcacca84082c503f6565eff4be7422dd06092e031a331c82",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s04.json sha256 109ad33983111367df8b3003fdc9d7da9056336f70c9d0af97ecf0d0f7d23054",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s05.json sha256 3bad964a15866a8e7d411cc8adaf1a0450f4c4fdbe2a3c275d8a0f2dc5308195",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s06.json sha256 449b814290192962fe521c7af8c9370b0c05bd7d9b75f7178fee6cfc34f09d34",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s07.json sha256 8abf37f92e1a94d00f03ad7ae72355b2873da2f4acee0f6576eba31c61b398e0",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s08.json sha256 4366ef6954a5f34d3ebf71bc671d2ddf94a9b1916fe246121ff15714900d8780",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s09.json sha256 3b1beccd3af6c98f23a620c97612d7bd87d19ac7433ef07cb71a15fde987f205",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s10.json sha256 5e66dea8c7db1332be6c73e8ad6f66c2fd47cc1d51fd9f4513716326c2150068",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s11.json sha256 90bd2f04b0d05eb4ca77b6ae0c80122bc6e230f5caf6580ac29c1f96a4f4f761",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s12.json sha256 a8607a8b70b7d36330ff1ebbbc76050f3923750237297b4e6a627ef1a6b0bdc8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s13.json sha256 0c510f21c5e4e298cd69381772b12ef01e9ea9b5aec056d9650dae20244a5095",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s14.json sha256 51eb34cf3ffe6ea5c4905d74caaa90f45c552dd9de75f606ace2335ee4516b40",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s15.json sha256 3515abdda67f93ef10852b5f4c083084cab083c4f9a9072ce88a09f74bc84fae",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s16.json sha256 fdc03619e00e427a557ecc0ed62194b5f4b1a28bd458e765ce8cd9880a3e4d57",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s17.json sha256 a189b6d11e96a5ee3609441c58058d365905b938b537f63ca1ef16aba7dfb8ac",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s18.json sha256 1be85c8572ca211056378c3f2baebfccd1c37ba16993ae9b1d37b5535863f7ce",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s19.json sha256 180ddd53a91569ae290aa8c016134efc71f682bc106e757056b091b5e97d3aad",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s20.json sha256 376734bfc24e528b1620e25a2f337a4f4635c33a2e558ecd01655297b0db674e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s21.json sha256 f5b57d4296cf54d95e097ceb61a2fc27c7c8db92dcc97753b422a689b8b508d2",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s22.json sha256 564933b1b75d8c35680e1fec2bdba91c25f2d0e382a79601820c583a780b1284",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/out/partL/s23.json sha256 4114151deeb99e08a3fd07ca2b51a6c88160a44789b2cf53d810d10cacaa39a8"
+ ],
+ "n_first_population": 75,
+ "n_untrusted": 12,
+ "untrusted": [
+  {
+   "sid": "s09",
+   "start": "0x1.13b34fb676cd1p+4",
+   "trusted_B": false,
+   "r": 0.4910400720396218,
+   "d1_over_phiP": 1.4921946346313186,
+   "d1_over_nuB": 1.004082412927266,
+   "d1_over_node_difference": 1.0061313007934152,
+   "d1_over_EP_plus_ELR": 1.0061313007934152,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.671770357277929,
+    "phi_P - |E_P|": 0.0011193513594083373,
+    "phi-_L + phi-_R": 0.0009170507130979312,
+    "|E_L + E_R|": 0.3261932406495648
+   }
+  },
+  {
+   "sid": "s11",
+   "start": "0x1.7f4be5e796647p+4",
+   "trusted_B": false,
+   "r": 0.49532250123092075,
+   "d1_over_phiP": 1.4945737339331755,
+   "d1_over_nuB": 1.000780058810454,
+   "d1_over_node_difference": 1.0027307111827595,
+   "d1_over_EP_plus_ELR": 1.0027307111827595,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6685215518349069,
+    "phi_P - |E_P|": 0.001087471854251755,
+    "phi-_L + phi-_R": 0.0008578683557877001,
+    "|E_L + E_R|": 0.3295331079550536
+   }
+  },
+  {
+   "sid": "s11",
+   "start": "0x1.80611c9616debp+4",
+   "trusted_B": false,
+   "r": 0.4938858525071771,
+   "d1_over_phiP": 1.4913508413785688,
+   "d1_over_nuB": 1.0012195249863145,
+   "d1_over_node_difference": 1.0039739535383616,
+   "d1_over_EP_plus_ELR": 1.0039739535383616,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6698256867321025,
+    "phi_P - |E_P|": 0.001525076084252156,
+    "phi-_L + phi-_R": 0.0012184498233069822,
+    "|E_L + E_R|": 0.3274307873603384
+   }
+  },
+  {
+   "sid": "s13",
+   "start": "0x1.394e414cb794cp+4",
+   "trusted_B": false,
+   "r": 0.49268058750375926,
+   "d1_over_phiP": 1.4884177980434106,
+   "d1_over_nuB": 1.0031521182139185,
+   "d1_over_node_difference": 1.0057256973314568,
+   "d1_over_EP_plus_ELR": 1.0057256973314568,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6725774085571851,
+    "phi_P - |E_P|": 0.0013947244908107208,
+    "phi-_L + phi-_R": 0.0011642029825220798,
+    "|E_L + E_R|": 0.32486366396948224
+   }
+  },
+  {
+   "sid": "s14",
+   "start": "0x1.30b4a8a1c6f11p+4",
+   "trusted_B": false,
+   "r": 0.4998241057848503,
+   "d1_over_phiP": 1.5005337382468138,
+   "d1_over_nuB": 1.0005500745464981,
+   "d1_over_node_difference": 1.0020617241664573,
+   "d1_over_EP_plus_ELR": 1.0020617241664573,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6659375776743998,
+    "phi_P - |E_P|": 0.0008585422952289886,
+    "phi-_L + phi-_R": 0.0006499971325358512,
+    "|E_L + E_R|": 0.3325538828978354
+   }
+  },
+  {
+   "sid": "s18",
+   "start": "0x1.6c20d42d4f6bfp+4",
+   "trusted_B": false,
+   "r": 0.49729265911175546,
+   "d1_over_phiP": 1.4993077639036,
+   "d1_over_nuB": 1.0011175422780973,
+   "d1_over_node_difference": 1.0025838098164113,
+   "d1_over_EP_plus_ELR": 1.0025838098164115,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0000000000000002,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6669021615998995,
+    "phi_P - |E_P|": 0.000817679769817704,
+    "phi-_L + phi-_R": 0.0006448089757193733,
+    "|E_L + E_R|": 0.3316353496545635
+   }
+  },
+  {
+   "sid": "s19",
+   "start": "0x1.0ca293cc59f72p+4",
+   "trusted_B": false,
+   "r": 0.4978046223076587,
+   "d1_over_phiP": 1.4931151085125953,
+   "d1_over_nuB": 1.0019257895045757,
+   "d1_over_node_difference": 1.0034391345542362,
+   "d1_over_EP_plus_ELR": 1.0034391345542362,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6701936060577208,
+    "phi_P - |E_P|": 0.0008369017660661363,
+    "phi-_L + phi-_R": 0.0006712565243046675,
+    "|E_L + E_R|": 0.3282982356519083
+   }
+  },
+  {
+   "sid": "s19",
+   "start": "0x1.13b9c32ecd581p+4",
+   "trusted_B": false,
+   "r": 0.4944074713978173,
+   "d1_over_phiP": 1.501754815572705,
+   "d1_over_nuB": 1.0026005779964287,
+   "d1_over_node_difference": 1.0039673523007515,
+   "d1_over_EP_plus_ELR": 1.0039673523007515,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6668619708240937,
+    "phi_P - |E_P|": 0.0007573819489352486,
+    "phi-_L + phi-_R": 0.0006039913080640315,
+    "|E_L + E_R|": 0.331776655918907
+   }
+  },
+  {
+   "sid": "s22",
+   "start": "0x1.73560e0d8bfc2p+4",
+   "trusted_B": false,
+   "r": 0.4976081613885573,
+   "d1_over_phiP": 1.5028996930826128,
+   "d1_over_nuB": 1.001556866451827,
+   "d1_over_node_difference": 1.0029129672705814,
+   "d1_over_EP_plus_ELR": 1.0029129672705814,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.665648504648828,
+    "phi_P - |E_P|": 0.0007678044779132613,
+    "phi-_L + phi-_R": 0.0005843575371467476,
+    "|E_L + E_R|": 0.332999333336112
+   }
+  },
+  {
+   "sid": "s22",
+   "start": "0x1.78598e633b43fp+4",
+   "trusted_B": false,
+   "r": 0.5005902782544237,
+   "d1_over_phiP": 1.5017387858146911,
+   "d1_over_nuB": 1.0012718887365604,
+   "d1_over_node_difference": 1.0029255243107322,
+   "d1_over_EP_plus_ELR": 1.0029255243107322,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.665823553654458,
+    "phi_P - |E_P|": 0.0009181581495504645,
+    "phi-_L + phi-_R": 0.0007306537852224066,
+    "|E_L + E_R|": 0.33252763441076916
+   }
+  },
+  {
+   "sid": "s22",
+   "start": "0x1.7859a358c508ap+4",
+   "trusted_B": false,
+   "r": 0.5013635309998773,
+   "d1_over_phiP": 1.5014642569502867,
+   "d1_over_nuB": 1.0004143845106537,
+   "d1_over_node_difference": 1.001967518368905,
+   "d1_over_EP_plus_ELR": 1.0019675183689052,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0000000000000002,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6654244230288788,
+    "phi_P - |E_P|": 0.000868084354983064,
+    "phi-_L + phi-_R": 0.0006819996844471629,
+    "|E_L + E_R|": 0.33302549293169076
+   }
+  },
+  {
+   "sid": "s23",
+   "start": "0x1.3b12cc25d8d01p+4",
+   "trusted_B": false,
+   "r": 0.500987988808692,
+   "d1_over_phiP": 1.5012831864104659,
+   "d1_over_nuB": 1.0012700131652477,
+   "d1_over_node_difference": 1.00255196196304,
+   "d1_over_EP_plus_ELR": 1.00255196196304,
+   "signs_EP_ELR_opposite": true,
+   "node_difference_over_triangle_bound": 1.0,
+   "nuB_terms_over_nuB": {
+    "|E_P|": 0.6662070974785382,
+    "phi_P - |E_P|": 0.0007357033392486236,
+    "phi-_L + phi-_R": 0.0005429823014260501,
+    "|E_L + E_R|": 0.33251421688078703
+   }
+  }
+ ],
+ "summary": {
+  "untrusted": {
+   "r": [
+    0.4910400720396218,
+    0.4976081613885573,
+    0.5013635309998773
+   ],
+   "d1_over_phiP": [
+    1.4884177980434106,
+    1.5005337382468138,
+    1.5028996930826128
+   ],
+   "d1_over_nuB": [
+    1.0004143845106537,
+    1.0012718887365604,
+    1.004082412927266
+   ],
+   "d1_over_node_difference": [
+    1.001967518368905,
+    1.0029255243107322,
+    1.0061313007934152
+   ],
+   "d1_over_EP_plus_ELR": [
+    1.0019675183689052,
+    1.0029255243107322,
+    1.0061313007934152
+   ],
+   "node_difference_over_triangle_bound": [
+    1.0,
+    1.0,
+    1.0000000000000002
+   ],
+   "signs_opposite": 12,
+   "n": 12
+  },
+  "trusted": {
+   "r": [
+    0.2850877192982456,
+    0.49936688667770046,
+    0.9819277108433735
+   ],
+   "d1_over_phiP": [
+    1.244814334146215,
+    1.4934806460542216,
+    1.9454784884921512
+   ],
+   "d1_over_nuB": [
+    0.2002470932339264,
+    0.9958499079445322,
+    0.9999887864490297
+   ],
+   "d1_over_node_difference": [
+    0.3043045539429447,
+    0.9988905522256598,
+    25.5618259457247
+   ],
+   "d1_over_EP_plus_ELR": [
+    0.30210286977110296,
+    0.9988905522256598,
+    11.461186747214414
+   ],
+   "node_difference_over_triangle_bound": [
+    0.4483699531826777,
+    1.0,
+    1.0000000000000002
+   ],
+   "signs_opposite": 56,
+   "n": 63
+  }
+ }
+}
