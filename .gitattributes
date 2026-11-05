@@ -1,0 +1,3 @@
+# Records copied from a run are committed byte for byte: Python's csv module ends rows
+# with CRLF, and core.autocrlf=input would otherwise rewrite them to LF.
+docs/**/*.csv -text
