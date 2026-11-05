@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_k0.py route state/dev/route3_1449 state/dev/compare_route3_1449.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:10:46Z
+# ----
+# levin-phase-floor 06k: Gate K0, route3_1449 against 06g's census (route)
+# written 2026-11-04T09:10:46Z on mps026298.phys.susx.ac.uk
+# script compare_k0.py sha256 409a096a03cf95e69723de2330cbf48c60a19da5ae828b2cc60a911e5015bbf8
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev/route3_1449/units.jsonl sha256 c17ea251587460b96aa1fae028136e7bad43f83a049915b36f6e0df5594e65fe
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/index_06g.json sha256 349e37cd9c1648bdba393818c072a0514f63b477fa8136efd0cd97e781bcbd2c
+# 06g's checkpoint /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl (each record's line checked by its SHA-256 in the index)
+g-1e-7-2-1449 (route3-1e-7-k2_2): EQUAL; firings {0: 0, 1: 0, 2: 2, 3: 2, 4: 0, 5: 2, 6: 0, 7: 0, 8: 1, 9: 0, 10: 1, 11: 0, 12: 0, 13: 2, 14: 1, 15: 1, 16: 1, 17: 1, 18: 1, 19: 2, 20: 2}; excluded keys differing 16
+units 1; failing 0; units compared whole 0; calls with no firing compared 8; calls with a firing 13
+excluded keys that differ (path tail: units): {'summary.elapsed': 8, 'summary.route_06k': 8}
+wrote state/dev/compare_route3_1449.json sha256 9442af0a95642889a3a5729a9e3f1ee0fd36fe2f9f2b361db9ce18ee6339babb
+# ----
+# end 2026-11-04T09:10:47Z
+# exit 0

@@ -1,0 +1,68 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_k0.py route3 out/k0/units.json state/k0/route3 --workers 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:49:22Z
+# ----
+# levin-phase-floor 06k: census units under the variant route3
+# written 2026-11-04T09:49:22Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 af36be27fb135f9b5a51491ec9dcb75f192b31a174d6daede34e9f3f8824fcb5
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route3.py sha256 e139ec7188f45e154c78c50ff5c2b086f84cbcf08ae1c045b098e210634fdd49
+# variant {"name": "route3", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route3.py", "sha256": "e139ec7188f45e154c78c50ff5c2b086f84cbcf08ae1c045b098e210634fdd49"}
+# 100 units in 15 workers: route3-1e-7-k0_101 (5), route3-1e-7-k0_202 (8), route3-1e-7-k1_102 (10), route3-1e-7-k1_301 (3), route3-1e-7-k2_2 (4), route3-1e-7-k2_302 (6), route3-1e-7-k3_1 (10), route3-1e-7-k3_201 (4), route3-1e-8-k0_101 (14), route3-1e-8-k0_202 (8), route3-1e-8-k1_102 (9), route3-1e-8-k2_2 (3), route3-1e-8-k2_302 (4), route3-1e-8-k3_1 (6), route3-1e-8-k3_201 (6)
+route3-1e-7-k0_101: pid 18220 (5 units)
+route3-1e-7-k0_202: pid 18221 (8 units)
+route3-1e-7-k1_102: pid 18222 (10 units)
+route3-1e-7-k1_301: pid 18223 (3 units)
+route3-1e-7-k2_2: pid 18224 (4 units)
+route3-1e-7-k2_302: pid 18225 (6 units)
+route3-1e-7-k1_301: exit 0 after 63.7 s
+route3-1e-7-k3_1: pid 18311 (10 units)
+route3-1e-7-k2_302: exit 0 after 70.3 s
+route3-1e-7-k3_201: pid 18342 (4 units)
+route3-1e-7-k2_2: exit 0 after 72.3 s
+route3-1e-8-k0_101: pid 18355 (14 units)
+route3-1e-7-k0_101: exit 0 after 76.4 s
+route3-1e-7-k0_202: exit 0 after 76.4 s
+route3-1e-8-k0_202: pid 18369 (8 units)
+route3-1e-8-k1_102: pid 18370 (9 units)
+route3-1e-7-k1_102: exit 0 after 87.6 s
+route3-1e-8-k2_2: pid 18389 (3 units)
+route3-1e-7-k3_201: exit 0 after 66.8 s
+route3-1e-8-k2_302: pid 18446 (4 units)
+route3-1e-7-k3_1: exit 0 after 82.5 s
+route3-1e-8-k3_1: pid 18476 (6 units)
+route3-1e-8-k0_202: exit 0 after 75.4 s
+route3-1e-8-k3_201: pid 18494 (6 units)
+route3-1e-8-k2_2: exit 0 after 67.2 s
+route3-1e-8-k1_102: exit 0 after 94.7 s
+route3-1e-8-k2_302: exit 0 after 65.6 s
+route3-1e-8-k0_101: exit 0 after 137.0 s
+route3-1e-8-k3_1: exit 0 after 76.8 s
+route3-1e-8-k3_201: exit 0 after 73.3 s
+exit codes {route3-1e-7-k0_101: 0, route3-1e-7-k0_202: 0, route3-1e-7-k1_102: 0, route3-1e-7-k1_301: 0, route3-1e-7-k2_2: 0, route3-1e-7-k2_302: 0, route3-1e-7-k3_1: 0, route3-1e-7-k3_201: 0, route3-1e-8-k0_101: 0, route3-1e-8-k0_202: 0, route3-1e-8-k1_102: 0, route3-1e-8-k2_2: 0, route3-1e-8-k2_302: 0, route3-1e-8-k3_1: 0, route3-1e-8-k3_201: 0}
+refused: []
+bye route3-1e-7-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-7-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-7-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-7-k1_301: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-7-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-7-k2_302: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-7-k3_1: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-7-k3_201: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-8-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-8-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-8-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-8-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-8-k2_302: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-8-k3_1: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye route3-1e-8-k3_201: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 100 of 100; not done []; wall 227 s
+wrote state/k0/route3/units.jsonl sha256 a8ff1c173aaff86a589c7c920b87267f23edd867de00ee07f049d4183c647461
+# ----
+# end 2026-11-04T09:53:09Z
+# exit 0

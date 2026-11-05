@@ -1,0 +1,20 @@
+== provenance: first bytes of each out/ record
+out/partC/h1.json json header with script sha256: True
+out/partC/movers_route2.json json header with script sha256: True
+out/partC/movers_route2lit.json json header with script sha256: True
+out/partC/movers_route3.json json header with script sha256: True
+out/partC/route1.json json header with script sha256: False
+out/partC/route2.json json header with script sha256: False
+out/partC/route2lit.json json header with script sha256: False
+out/partC/route3.json json header with script sha256: False
+out/partC/summary.json json header with script sha256: True
+out/partC/h1_calls.csv header lines with sha256 in first 4000 chars: 8 | written: True
+out/k0/summary.json json header with script sha256: True
+out/partL_summary.json json header with script sha256: True
+out/partL_leaves.csv header lines with sha256 in first 4000 chars: 22 | written: True
+out/partL_route2lit_withdrawals.csv header lines with sha256 in first 4000 chars: 22 | written: True
+out/partL_route2lit_by_solve_kind.json json header with script sha256: True
+out/lg_draws/compare.json json header with script sha256: True
+out/lg_draws/compare.txt header lines with sha256 in first 4000 chars: 17 | written: True
+verification.md header lines with sha256 in first 4000 chars: 0 | written: True
+issues.md header lines with sha256 in first 4000 chars: 0 | written: False

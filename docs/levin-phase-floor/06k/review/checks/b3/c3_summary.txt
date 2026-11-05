@@ -1,0 +1,12 @@
+Orchestrator's review §B.3 check 3 (the samples and predictions), 2026-11-05.
+- state/predictions_and_rules_20261104T0915Z.md: mode r--r--r--, mtime 2026-11-04T08:59:36Z,
+  sha256 e315d74d6f5bd38e064f7ff98c110498a9bf12abad2fd4dbad1660bd53473951 (as log.md records).
+  It contains prompt 06k's §4 byte for byte, heading included (c3_verbatim.txt), and K0's draw rule
+  and seed (its §2: PCG64, seed = 20261104*100 + 10*s + t).
+- log.md "Predictions and verdicts" contains §4's body byte for byte (its "## 4." heading line is
+  replaced by the log's own heading); verdicts are below the marker line, the block above unedited.
+- Every out/cmd record before 08:59:36Z is a Gate check (00-07b, 08:54:49Z-08:56:05Z); the first
+  command producing any number of 06k is 10_make_variants (09:02:09Z), then 12_index_06g
+  (09:05:32Z), 13_draw_k0 (09:06:25Z) and the first K0 unit (09:07:05Z).
+- The file's name says 0915Z although written at 08:59:36Z: a name only, earlier than its name.
+Verdict: passes.

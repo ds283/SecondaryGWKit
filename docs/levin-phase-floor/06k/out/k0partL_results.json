@@ -1,0 +1,307 @@
+{
+ "label": "k0partL",
+ "results": [
+  {
+   "name": "30_capture",
+   "exit": 0,
+   "wall_s": 572.3604669570923
+  },
+  {
+   "name": "31_check_captures",
+   "exit": 0,
+   "wall_s": 3.5712571144104004
+  },
+  {
+   "name": "32_slice",
+   "exit": 0,
+   "wall_s": 0.5120761394500732
+  },
+  {
+   "name": "40_k0_run_tree",
+   "exit": 0,
+   "wall_s": 401.54419898986816
+  },
+  {
+   "name": "41_k0_run_identity",
+   "exit": 0,
+   "wall_s": 385.199982881546
+  },
+  {
+   "name": "42_k0_run_route1",
+   "exit": 0,
+   "wall_s": 315.2831177711487
+  },
+  {
+   "name": "43_k0_run_route2",
+   "exit": 0,
+   "wall_s": 279.7483580112457
+  },
+  {
+   "name": "44_k0_run_route3",
+   "exit": 0,
+   "wall_s": 227.43631410598755
+  },
+  {
+   "name": "54_k0_compare_route3",
+   "exit": 0,
+   "wall_s": 2.5440869331359863
+  },
+  {
+   "name": "52_k0_compare_route1",
+   "exit": 0,
+   "wall_s": 3.060786247253418
+  },
+  {
+   "name": "53_k0_compare_route2",
+   "exit": 0,
+   "wall_s": 3.059666395187378
+  },
+  {
+   "name": "50_k0_compare_tree",
+   "exit": 0,
+   "wall_s": 3.6025378704071045
+  },
+  {
+   "name": "51_k0_compare_identity",
+   "exit": 0,
+   "wall_s": 3.589431047439575
+  },
+  {
+   "name": "60_probe_l_s03",
+   "exit": 0,
+   "wall_s": 3.0701968669891357
+  },
+  {
+   "name": "60_probe_l_s00",
+   "exit": 0,
+   "wall_s": 3.6089580059051514
+  },
+  {
+   "name": "60_probe_l_s01",
+   "exit": 0,
+   "wall_s": 4.117790937423706
+  },
+  {
+   "name": "60_probe_l_s04",
+   "exit": 0,
+   "wall_s": 4.106491804122925
+  },
+  {
+   "name": "60_probe_l_s05",
+   "exit": 0,
+   "wall_s": 5.130537986755371
+  },
+  {
+   "name": "60_probe_l_s02",
+   "exit": 0,
+   "wall_s": 6.1642889976501465
+  },
+  {
+   "name": "60_probe_l_s06",
+   "exit": 0,
+   "wall_s": 3.090955972671509
+  },
+  {
+   "name": "60_probe_l_s07",
+   "exit": 0,
+   "wall_s": 3.0899710655212402
+  },
+  {
+   "name": "60_probe_l_s09",
+   "exit": 0,
+   "wall_s": 3.0782830715179443
+  },
+  {
+   "name": "60_probe_l_s08",
+   "exit": 0,
+   "wall_s": 4.61322808265686
+  },
+  {
+   "name": "60_probe_l_s10",
+   "exit": 0,
+   "wall_s": 3.5892930030822754
+  },
+  {
+   "name": "60_probe_l_s11",
+   "exit": 0,
+   "wall_s": 3.0812768936157227
+  },
+  {
+   "name": "60_probe_l_s12",
+   "exit": 0,
+   "wall_s": 3.081444025039673
+  },
+  {
+   "name": "60_probe_l_s14",
+   "exit": 0,
+   "wall_s": 3.569913148880005
+  },
+  {
+   "name": "60_probe_l_s13",
+   "exit": 0,
+   "wall_s": 4.6016929149627686
+  },
+  {
+   "name": "60_probe_l_s16",
+   "exit": 0,
+   "wall_s": 3.065397024154663
+  },
+  {
+   "name": "60_probe_l_s15",
+   "exit": 0,
+   "wall_s": 3.5758562088012695
+  },
+  {
+   "name": "60_probe_l_s18",
+   "exit": 0,
+   "wall_s": 2.5518972873687744
+  },
+  {
+   "name": "60_probe_l_s17",
+   "exit": 0,
+   "wall_s": 3.5750842094421387
+  },
+  {
+   "name": "60_probe_l_s19",
+   "exit": 0,
+   "wall_s": 3.588758945465088
+  },
+  {
+   "name": "60_probe_l_f00",
+   "exit": 0,
+   "wall_s": 2.0477898120880127
+  },
+  {
+   "name": "60_probe_l_s21",
+   "exit": 0,
+   "wall_s": 3.59800386428833
+  },
+  {
+   "name": "60_probe_l_s20",
+   "exit": 0,
+   "wall_s": 4.619463920593262
+  },
+  {
+   "name": "60_probe_l_s23",
+   "exit": 0,
+   "wall_s": 3.5961499214172363
+  },
+  {
+   "name": "60_probe_l_f01",
+   "exit": 0,
+   "wall_s": 2.0621941089630127
+  },
+  {
+   "name": "60_probe_l_s22",
+   "exit": 0,
+   "wall_s": 5.1444878578186035
+  },
+  {
+   "name": "60_probe_l_f02",
+   "exit": 0,
+   "wall_s": 2.064389944076538
+  },
+  {
+   "name": "60_probe_l_f03",
+   "exit": 0,
+   "wall_s": 2.0681209564208984
+  },
+  {
+   "name": "60_probe_l_f04",
+   "exit": 0,
+   "wall_s": 2.0679538249969482
+  },
+  {
+   "name": "60_probe_l_f05",
+   "exit": 0,
+   "wall_s": 2.0664241313934326
+  },
+  {
+   "name": "60_probe_l_f06",
+   "exit": 0,
+   "wall_s": 2.0614736080169678
+  },
+  {
+   "name": "60_probe_l_f07",
+   "exit": 0,
+   "wall_s": 2.059353828430176
+  },
+  {
+   "name": "60_probe_l_f08",
+   "exit": 0,
+   "wall_s": 2.05770206451416
+  },
+  {
+   "name": "60_probe_l_f09",
+   "exit": 0,
+   "wall_s": 2.0533480644226074
+  },
+  {
+   "name": "60_probe_l_c00",
+   "exit": 0,
+   "wall_s": 2.059412956237793
+  },
+  {
+   "name": "60_probe_l_c01",
+   "exit": 0,
+   "wall_s": 2.0586740970611572
+  },
+  {
+   "name": "60_probe_l_c02",
+   "exit": 0,
+   "wall_s": 2.050934076309204
+  },
+  {
+   "name": "60_probe_l_c03",
+   "exit": 0,
+   "wall_s": 2.5699288845062256
+  },
+  {
+   "name": "60_probe_l_c04",
+   "exit": 0,
+   "wall_s": 2.5681169033050537
+  },
+  {
+   "name": "60_probe_l_c05",
+   "exit": 0,
+   "wall_s": 2.054704189300537
+  },
+  {
+   "name": "60_probe_l_c06",
+   "exit": 0,
+   "wall_s": 2.568828821182251
+  },
+  {
+   "name": "60_probe_l_c07",
+   "exit": 0,
+   "wall_s": 2.566887855529785
+  },
+  {
+   "name": "60_probe_l_c08",
+   "exit": 0,
+   "wall_s": 2.0535409450531006
+  },
+  {
+   "name": "60_probe_l_c09",
+   "exit": 0,
+   "wall_s": 2.055253028869629
+  },
+  {
+   "name": "60_probe_l_c10",
+   "exit": 0,
+   "wall_s": 2.051673173904419
+  },
+  {
+   "name": "60_probe_l_c11",
+   "exit": 0,
+   "wall_s": 2.047420024871826
+  },
+  {
+   "name": "70_lg_draws",
+   "exit": 1,
+   "wall_s": 0.5145840644836426
+  }
+ ],
+ "ok": false,
+ "ended": "2026-11-04T09:53:43Z"
+}

@@ -1,0 +1,2 @@
+K0 units 100 found in 06g checkpoint 100
+route2lit: calls 2110, fired 1078, compared 1032, differing 0; units with no firing 3: result equal 0, region-pickle record hash equal 0

@@ -1,0 +1,7649 @@
+{
+ "header": [
+  "# levin-phase-floor 06k: the routes against the references, H1",
+  "# written 2026-11-05T01:08:28Z on mps026298.phys.susx.ac.uk",
+  "# script score_h1.py sha256 df0b78fec5676699cdc8477538391f03895615063f486463012cc0b08452a556",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json sha256 73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/docs/levin-phase-floor/06j/out/w_calls.csv sha256 0a8549bd6fee58bd8d9037e7aa15ee2fab0c4b14c7478ca4cfd90d2582e172f7",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/g.pkl sha256 3942209a1141fad4822a2b962a068d6d8ad743cdaf93247c130d94e9c8e51eea",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route1.pkl sha256 adaf96e2433b3c2ad92aec44031b514604c22cdfca1b4cd5927cea0c7af9db93",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route2.pkl sha256 d43b10dbfec1f623119f305d554fb6e7affacc5a1085a4569df48c91568f93b1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route2lit.pkl sha256 f8939a8728592f521af3dcedbfc7ece4fc2c9dfe0dacaf40c4858d7a43e40654",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route3.pkl sha256 0994837e3a69393e5edc514ab3c7e480399cc9ec8322b7a4f03b652bf3c0d651"
+ ],
+ "n_refs": 124,
+ "n_unmatched": 0,
+ "V1_unscored": [
+  {
+   "wid": "w00",
+   "k": 100000.0,
+   "z_response": 3971.4125591760326,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w01",
+   "k": 100000.0,
+   "z_response": 5236.5530126517315,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w02",
+   "k": 100000.0,
+   "z_response": 6904.718924492998,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w03",
+   "k": 316227.7660168379,
+   "z_response": 434.65132503921666,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w04",
+   "k": 316227.7660168379,
+   "z_response": 573.1146466584687,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w05",
+   "k": 316227.7660168379,
+   "z_response": 996.4201622779478,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w06",
+   "k": 316227.7660168379,
+   "z_response": 6904.718924492998,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w07",
+   "k": 1000000.0,
+   "z_response": 329.64045755914753,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w08",
+   "k": 1000000.0,
+   "z_response": 573.1146466584687,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w09",
+   "k": 1000000.0,
+   "z_response": 996.4201622779478,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w10",
+   "k": 1000000.0,
+   "z_response": 1732.3813753196057,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  },
+  {
+   "wid": "w11",
+   "k": 1000000.0,
+   "z_response": 6904.718924492998,
+   "unscored": "a call of 06g's rehearsal store R24, not of A3 v2's census: no census unit to match"
+  }
+ ],
+ "g_ratio_check": {
+  "matches": 124,
+  "of": 124
+ },
+ "verdicts": {
+  "route1": {
+   "scored_outside_720": 115,
+   "violations": [],
+   "worst_ratio_outside": 1.1853788367296947,
+   "within_own_error_outside": 114,
+   "H1_on_matched_references": "holds",
+   "in_720": [
+    [
+     "z00",
+     0.0183,
+     0.0183
+    ],
+    [
+     "z07",
+     0.0,
+     0.0
+    ],
+    [
+     "z12",
+     1681.3313,
+     1681.3492
+    ],
+    [
+     "z16",
+     0.0,
+     0.0
+    ],
+    [
+     "z18",
+     0.0,
+     0.0
+    ],
+    [
+     "z21",
+     0.0,
+     0.0
+    ],
+    [
+     "z24",
+     0.0021,
+     0.0021
+    ],
+    [
+     "z28",
+     0.0,
+     0.0
+    ],
+    [
+     "z29",
+     0.0,
+     0.0
+    ]
+   ]
+  },
+  "route2": {
+   "scored_outside_720": 115,
+   "violations": [],
+   "worst_ratio_outside": 1.202381756489186,
+   "within_own_error_outside": 114,
+   "H1_on_matched_references": "holds",
+   "in_720": [
+    [
+     "z00",
+     0.0183,
+     0.0183
+    ],
+    [
+     "z07",
+     0.0,
+     0.0
+    ],
+    [
+     "z12",
+     1681.4359,
+     1681.3492
+    ],
+    [
+     "z16",
+     0.0,
+     0.0
+    ],
+    [
+     "z18",
+     0.0,
+     0.0
+    ],
+    [
+     "z21",
+     0.0,
+     0.0
+    ],
+    [
+     "z24",
+     0.0021,
+     0.0021
+    ],
+    [
+     "z28",
+     0.0,
+     0.0
+    ],
+    [
+     "z29",
+     0.0,
+     0.0
+    ]
+   ]
+  },
+  "route2lit": {
+   "scored_outside_720": 115,
+   "violations": [],
+   "worst_ratio_outside": 1.2002978930292556,
+   "within_own_error_outside": 114,
+   "H1_on_matched_references": "holds",
+   "in_720": [
+    [
+     "z00",
+     0.0183,
+     0.0183
+    ],
+    [
+     "z07",
+     0.0,
+     0.0
+    ],
+    [
+     "z12",
+     1681.4928,
+     1681.3492
+    ],
+    [
+     "z16",
+     0.0,
+     0.0
+    ],
+    [
+     "z18",
+     0.0,
+     0.0
+    ],
+    [
+     "z21",
+     0.0,
+     0.0
+    ],
+    [
+     "z24",
+     0.0021,
+     0.0021
+    ],
+    [
+     "z28",
+     0.0,
+     0.0
+    ],
+    [
+     "z29",
+     0.0,
+     0.0
+    ]
+   ]
+  },
+  "route3": {
+   "scored_outside_720": 115,
+   "violations": [
+    [
+     "r56",
+     "g-1e-8-1-10794",
+     5,
+     "G-q+r",
+     1.4917,
+     0.0059
+    ],
+    [
+     "c01",
+     "g-1e-7-2-33416",
+     6,
+     "G-q-r",
+     3.9347,
+     0.0014
+    ]
+   ],
+   "worst_ratio_outside": 3.9346718230788746,
+   "within_own_error_outside": 112,
+   "H1_on_matched_references": "fails",
+   "in_720": [
+    [
+     "z00",
+     1681.0295,
+     0.0183
+    ],
+    [
+     "z07",
+     0.0,
+     0.0
+    ],
+    [
+     "z12",
+     1681.0295,
+     1681.3492
+    ],
+    [
+     "z16",
+     0.0,
+     0.0
+    ],
+    [
+     "z18",
+     0.0,
+     0.0
+    ],
+    [
+     "z21",
+     0.0,
+     0.0
+    ],
+    [
+     "z24",
+     0.0014,
+     0.0021
+    ],
+    [
+     "z28",
+     0.0,
+     0.0
+    ],
+    [
+     "z29",
+     0.0,
+     0.0
+    ]
+   ]
+  }
+ },
+ "calls": [
+  {
+   "rid": "z00",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-2174",
+   "index": 1,
+   "kind": "group",
+   "label": "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r",
+   "ref_30": "1.35492969293828029382601756914e-26",
+   "source_ratio_g": 0.018305971708825496,
+   "in_720": true,
+   "group": "G+q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.018305971708825496,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.0c5f18f19d8ffp-86",
+    "0x1.74816ed63d016p-110",
+    false,
+    249,
+    20
+   ],
+   "route1": {
+    "ratio": 0.018279769044658684,
+    "bound": 1.0,
+    "ok": true,
+    "converged": false,
+    "regions": 217,
+    "depth": 20,
+    "n_firings": 23
+   },
+   "route2": {
+    "ratio": 0.018300762698198542,
+    "bound": 1.0,
+    "ok": true,
+    "converged": false,
+    "regions": 214,
+    "depth": 20,
+    "n_firings": 32
+   },
+   "route2lit": {
+    "ratio": 0.018295698397301278,
+    "bound": 1.0,
+    "ok": true,
+    "converged": false,
+    "regions": 218,
+    "depth": 20,
+    "n_firings": 153
+   },
+   "route3": {
+    "ratio": 1681.0295353672673,
+    "bound": 1.0,
+    "ok": false,
+    "converged": true,
+    "regions": 29,
+    "depth": 9,
+    "n_firings": 12
+   }
+  },
+  {
+   "rid": "z01",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-1444",
+   "index": 4,
+   "kind": "group",
+   "label": "k=3.09e+06/Mpc, q=1e+05/Mpc, r=3.09e+06/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r",
+   "ref_30": "2.85350111016738324454324444263e-27",
+   "source_ratio_g": 0.32026343068761387,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.32026343068761387,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.c427c1baff762p-89",
+    "0x1.81cb7dded8c1ap-117",
+    true,
+    2,
+    1
+   ],
+   "route1": {
+    "ratio": 0.32026343068761387,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.32026343068761387,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.32026343068761387,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.32026343068761387,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "z02",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-1627",
+   "index": 3,
+   "kind": "group",
+   "label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=14500, z in (5.1721e+12, 14500), regime Gqr, group G-q+r",
+   "ref_30": "-3.81074601746965790353458887005e-29",
+   "source_ratio_g": 0.0012148894674724063,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.0012148894674724063,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.82749f7e8059ap-95",
+    "0x1.f35087217bd59p-115",
+    true,
+    7,
+    6
+   ],
+   "route1": {
+    "ratio": 0.0012148894674724063,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0012148894674724063,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0012148894671815597,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 6,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.00121484300425499,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z03",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-34370",
+   "index": 4,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14500, z in (1.6721e+11, 14500), regime Gqr, group G-q-r",
+   "ref_30": "3.70182533479825964676288562651e-27",
+   "source_ratio_g": 0.03724229890956636,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.03724229890956636,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.2549f03c75d44p-88",
+    "0x1.3463be5348adfp-110",
+    false,
+    143,
+    20
+   ],
+   "route1": {
+    "ratio": 0.03722812215886922,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 83,
+    "depth": 15,
+    "n_firings": 23
+   },
+   "route2": {
+    "ratio": 0.03723338108407803,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 57,
+    "depth": 11,
+    "n_firings": 7
+   },
+   "route2lit": {
+    "ratio": 0.03723471921548475,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 57,
+    "depth": 11,
+    "n_firings": 24
+   },
+   "route3": {
+    "ratio": 0.03660328499270857,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 8,
+    "n_firings": 3
+   }
+  },
+  {
+   "rid": "z04",
+   "source": "06g z3",
+   "class": "FCC only",
+   "unit": "g-1e-7-3-13510",
+   "index": 5,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "-2.47007003275818420539305452672e-15",
+   "source_ratio_g": 0.00018610588114030313,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-7",
+   "ratio_g": 0.00018610588114030313,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.63f97fddb1749p-49",
+    "0x1.de68ca3069416p-75",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 0.00018610588114030313,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.00018610588114030313,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.00018610588114030313,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.0002590601517788395,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z05",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-34485",
+   "index": 17,
+   "kind": "analytic",
+   "label": "analytic J2",
+   "ref_30": "-7.79369135002400079222970946042e-17",
+   "source_ratio_g": 0.09031385123103339,
+   "in_720": false,
+   "group": "analytic J2",
+   "rtol": "1e-7",
+   "ratio_g": 0.09031385123103339,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.676baabe445bcp-54",
+    "0x1.4c271edfdae3fp-81",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 0.09031385123103339,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.09031385123103339,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.09031385123103339,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.07353048268736447,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 2,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z06",
+   "source": "06g z3",
+   "class": "FCC only",
+   "unit": "g-1e-7-1-38737",
+   "index": 11,
+   "kind": "analytic",
+   "label": "analytic J3",
+   "ref_30": "2.6688112996098220899779438914e-14",
+   "source_ratio_g": 2.4663116967148526e-05,
+   "in_720": false,
+   "group": "analytic J3",
+   "rtol": "1e-7",
+   "ratio_g": 2.4663116967148526e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.e0c5329370099p-46",
+    "0x1.0066fedfe62d3p-70",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 2.4663116967148526e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 2.4663116967148526e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 2.4663116967148526e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 1.2337492887592601e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z07",
+   "source": "06g z3",
+   "class": "FCC only",
+   "unit": "g-1e-7-2-34718",
+   "index": 11,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "-2.43300036855353312931541569192e-13",
+   "source_ratio_g": 1.5252941358856738e-06,
+   "in_720": true,
+   "group": "analytic J4",
+   "rtol": "1e-7",
+   "ratio_g": 1.5252941358856738e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.11ee760d4e820p-42",
+    "0x1.5f79ba33b4ed1p-72",
+    true,
+    3,
+    2
+   ],
+   "route1": {
+    "ratio": 1.5252941358856738e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.5252941358856738e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.5252888383774355e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 1.5252941358856738e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "z08",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-37319",
+   "index": 6,
+   "kind": "analytic",
+   "label": "analytic Y1",
+   "ref_30": "-0.00000000125635070016638978077003408775",
+   "source_ratio_g": 2.092718439121327e-07,
+   "in_720": false,
+   "group": "analytic Y1",
+   "rtol": "1e-7",
+   "ratio_g": 2.092718439121327e-07,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.5957d22e32e64p-30",
+    "0x1.feb08315cac93p-56",
+    true,
+    3,
+    2
+   ],
+   "route1": {
+    "ratio": 2.092718439121327e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 2.092718439121327e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 2.092718439121327e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 5.953781960835323e-08,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z09",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-35340",
+   "index": 18,
+   "kind": "analytic",
+   "label": "analytic Y2",
+   "ref_30": "1.8849909791136280054303670013e-10",
+   "source_ratio_g": 0.0001438159726790712,
+   "in_720": false,
+   "group": "analytic Y2",
+   "rtol": "1e-7",
+   "ratio_g": 0.0001438159726790712,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.9e838ef297826p-33",
+    "0x1.8dac3234e3858p-65",
+    true,
+    10,
+    4
+   ],
+   "route1": {
+    "ratio": 0.0001438159726790712,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0001438159726790712,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.00014380519574309485,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.00013951943110592107,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "z10",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-35332",
+   "index": 10,
+   "kind": "analytic",
+   "label": "analytic Y3",
+   "ref_30": "7.54813704676627301238587028342e-14",
+   "source_ratio_g": 0.0001653138270348607,
+   "in_720": false,
+   "group": "analytic Y3",
+   "rtol": "1e-7",
+   "ratio_g": 0.0001653138270348607,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.53f0185fa4186p-44",
+    "0x1.fed1bb4b79e30p-78",
+    true,
+    4,
+    2
+   ],
+   "route1": {
+    "ratio": 0.0001653138270348607,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0001653138270348607,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.00016531477501214236,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 2,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 4.9883893425807975e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z11",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-36020",
+   "index": 20,
+   "kind": "analytic",
+   "label": "analytic Y4",
+   "ref_30": "3.20325101435834949507188268328e-16",
+   "source_ratio_g": 0.0001349587158119725,
+   "in_720": false,
+   "group": "analytic Y4",
+   "rtol": "1e-7",
+   "ratio_g": 0.0001349587158119725,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.714f485cc6c30p-52",
+    "0x1.eac5e021f5c1fp-77",
+    true,
+    3,
+    2
+   ],
+   "route1": {
+    "ratio": 0.0001349587158119725,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0001349587158119725,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0001349587158119725,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 6.917766952705285e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z12",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-2174",
+   "index": 1,
+   "kind": "group",
+   "label": "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r",
+   "ref_30": "1.35492969293828029382601756914e-26",
+   "source_ratio_g": 1681.3491886571235,
+   "in_720": true,
+   "group": "G+q+r",
+   "rtol": "1e-8",
+   "ratio_g": 1681.3491886571235,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.0c6c2cc40e857p-86",
+    "0x1.fdbb1bc1a92b8p-110",
+    true,
+    135,
+    18
+   ],
+   "route1": {
+    "ratio": 1681.3313021643833,
+    "bound": 1681.3491886571235,
+    "ok": true,
+    "converged": true,
+    "regions": 104,
+    "depth": 17,
+    "n_firings": 18
+   },
+   "route2": {
+    "ratio": 1681.4359214890092,
+    "bound": 1681.3491886571235,
+    "ok": false,
+    "converged": true,
+    "regions": 103,
+    "depth": 16,
+    "n_firings": 20
+   },
+   "route2lit": {
+    "ratio": 1681.4927715380231,
+    "bound": 1681.3491886571235,
+    "ok": false,
+    "converged": true,
+    "regions": 106,
+    "depth": 16,
+    "n_firings": 65
+   },
+   "route3": {
+    "ratio": 1681.0295357638306,
+    "bound": 1681.3491886571235,
+    "ok": true,
+    "converged": true,
+    "regions": 29,
+    "depth": 9,
+    "n_firings": 11
+   }
+  },
+  {
+   "rid": "z13",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-34220",
+   "index": 4,
+   "kind": "group",
+   "label": "k=9.7e+06/Mpc, q=1e+05/Mpc, r=9.7e+06/Mpc @ z_response=3.032e+05, z in (1.709e+09, 3.032e+05), regime Gqr, group G+q-r",
+   "ref_30": "9.78455015589311998142967568081e-29",
+   "source_ratio_g": 0.5768787097279511,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.5768787097279511,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.f022b8f5ba5fep-94",
+    "0x1.4e9792d3061f5p-123",
+    true,
+    2,
+    1
+   ],
+   "route1": {
+    "ratio": 0.5768787097279511,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.5768787097279511,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.5768787097279511,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.006670202758704505,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z14",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-1627",
+   "index": 3,
+   "kind": "group",
+   "label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=14500, z in (5.1721e+12, 14500), regime Gqr, group G-q+r",
+   "ref_30": "-3.81074601746965790353458887005e-29",
+   "source_ratio_g": 0.001214894143949744,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.001214894143949744,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.82749f7e805c1p-95",
+    "0x1.f350869124fbdp-115",
+    true,
+    4,
+    3
+   ],
+   "route1": {
+    "ratio": 0.001214894143949744,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.001214894143949744,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0012148941436588964,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.00121484300425499,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z15",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-1549",
+   "index": 4,
+   "kind": "group",
+   "label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14500, z in (1.6721e+11, 14500), regime Gqr, group G-q-r",
+   "ref_30": "-4.9225609564024718468792503655e-28",
+   "source_ratio_g": 3.948870792894434e-06,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-8",
+   "ratio_g": 3.948870792894434e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.38011e3b5d424p-91",
+    "0x1.0470c75399f11p-114",
+    true,
+    68,
+    15
+   ],
+   "route1": {
+    "ratio": 5.560034673457876e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 57,
+    "depth": 14,
+    "n_firings": 4
+   },
+   "route2": {
+    "ratio": 6.90275328509236e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 65,
+    "depth": 15,
+    "n_firings": 6
+   },
+   "route2lit": {
+    "ratio": 6.902713831463606e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 65,
+    "depth": 15,
+    "n_firings": 25
+   },
+   "route3": {
+    "ratio": 0.04611197989655327,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 6,
+    "n_firings": 3
+   }
+  },
+  {
+   "rid": "z16",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-34708",
+   "index": 5,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "-9.61879396306527625900057167987e-12",
+   "source_ratio_g": 6.54272046022541e-06,
+   "in_720": true,
+   "group": "analytic J1",
+   "rtol": "1e-8",
+   "ratio_g": 6.54272046022541e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.526e64d119dbbp-37",
+    "0x1.532d8d66287d8p-67",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 6.54272046022541e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 6.54272046022541e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 6.542766381208872e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 6.715156005873097e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z17",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-13913",
+   "index": 9,
+   "kind": "analytic",
+   "label": "analytic J2",
+   "ref_30": "7.81833053056768081905446758779e-12",
+   "source_ratio_g": 1.1884879208770234e-06,
+   "in_720": false,
+   "group": "analytic J2",
+   "rtol": "1e-8",
+   "ratio_g": 1.1884879208770234e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.131542cc3192ap-37",
+    "0x1.8b73fe64efac3p-66",
+    true,
+    10,
+    4
+   ],
+   "route1": {
+    "ratio": 1.1884879208770234e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.1884879208770234e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.1884884711835416e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 8.333981019723987e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z18",
+   "source": "06g z3",
+   "class": "FCC only",
+   "unit": "g-1e-8-1-2368",
+   "index": 9,
+   "kind": "analytic",
+   "label": "analytic J3",
+   "ref_30": "6.96722071760660138066780213709e-13",
+   "source_ratio_g": 7.388080329901019e-07,
+   "in_720": true,
+   "group": "analytic J3",
+   "rtol": "1e-8",
+   "ratio_g": 7.388080329901019e-07,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.88383b7f1db85p-41",
+    "0x1.e89f57597e297p-70",
+    true,
+    10,
+    5
+   ],
+   "route1": {
+    "ratio": 7.388080329901019e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.3633716318700041e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 5,
+    "n_firings": 1
+   },
+   "route2lit": {
+    "ratio": 1.3633716318700041e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 5,
+    "n_firings": 2
+   },
+   "route3": {
+    "ratio": 7.384733441700728e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "z19",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-36019",
+   "index": 19,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "5.07525665641548478753204008807e-15",
+   "source_ratio_g": 1.5810749192552097e-06,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-8",
+   "ratio_g": 1.5810749192552097e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.6db5f5ed1c92fp-48",
+    "0x1.7cde92562d581p-75",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 1.5810749192552097e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.5810749192552097e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.5810749192552097e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 1.5654545447474767e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z20",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-12932",
+   "index": 14,
+   "kind": "analytic",
+   "label": "analytic Y1",
+   "ref_30": "-3.54258203915183039618178447483e-16",
+   "source_ratio_g": 0.0017008869749435957,
+   "in_720": false,
+   "group": "analytic Y1",
+   "rtol": "1e-8",
+   "ratio_g": 0.0017008869749435957,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.986e911860fc9p-52",
+    "0x1.746340091c27ep-83",
+    true,
+    10,
+    4
+   ],
+   "route1": {
+    "ratio": 0.0017008869749435957,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0017008869749435957,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0017008869749435957,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.00105437033909682,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 2,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "z21",
+   "source": "06g z3",
+   "class": "FCC only",
+   "unit": "g-1e-8-1-14572",
+   "index": 8,
+   "kind": "analytic",
+   "label": "analytic Y2",
+   "ref_30": "2.36903455713323060203002940589e-13",
+   "source_ratio_g": 3.4823508870732897e-07,
+   "in_720": true,
+   "group": "analytic Y2",
+   "rtol": "1e-8",
+   "ratio_g": 3.4823508870732897e-07,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.0abac5abbf123p-42",
+    "0x1.e54c98ac1aaf8p-70",
+    true,
+    9,
+    5
+   ],
+   "route1": {
+    "ratio": 3.4823508870732897e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 5.006995495269135e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 5,
+    "n_firings": 1
+   },
+   "route2lit": {
+    "ratio": 5.006995495269135e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 5,
+    "n_firings": 2
+   },
+   "route3": {
+    "ratio": 5.05218221745412e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "z22",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-21874",
+   "index": 12,
+   "kind": "analytic",
+   "label": "analytic Y3",
+   "ref_30": "-1.72065656874532345060129226752e-14",
+   "source_ratio_g": 9.873038126917958e-05,
+   "in_720": false,
+   "group": "analytic Y3",
+   "rtol": "1e-8",
+   "ratio_g": 9.873038126917958e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.35f747459d443p-46",
+    "0x1.6aeb411c2d8dep-81",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 9.873038126917958e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 9.873038126917958e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 9.873038126917958e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 4.711554480255979e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z23",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-1402",
+   "index": 12,
+   "kind": "analytic",
+   "label": "analytic Y4",
+   "ref_30": "-2.43370830840248612264402928031e-13",
+   "source_ratio_g": 0.00014772436355032438,
+   "in_720": false,
+   "group": "analytic Y4",
+   "rtol": "1e-8",
+   "ratio_g": 0.00014772436355032438,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.1202ddb9df5d4p-42",
+    "0x1.9f908c9228176p-80",
+    true,
+    7,
+    4
+   ],
+   "route1": {
+    "ratio": 0.00014772436355032438,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.00014772436355032438,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.00014776882922191815,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 4,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 4.231470657586288e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z24",
+   "source": "06g z3",
+   "class": "FCC only",
+   "unit": "g-1e-8-2-34718",
+   "index": 5,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "5.11188871722363405508901445155e-15",
+   "source_ratio_g": 0.0020735211170224395,
+   "in_720": true,
+   "group": "analytic J1",
+   "rtol": "1e-8",
+   "ratio_g": 0.0020735211170224395,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.7059b3f13f6e0p-48",
+    "0x1.20dde1ab373c8p-82",
+    true,
+    9,
+    5
+   ],
+   "route1": {
+    "ratio": 0.0020735211170224395,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0020735211170224395,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0020735211170224395,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 5,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.001375900951185428,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 3,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z25",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-33962",
+   "index": 12,
+   "kind": "analytic",
+   "label": "analytic Y4",
+   "ref_30": "-3.37775205824236726681440149553e-16",
+   "source_ratio_g": 0.010764456912488871,
+   "in_720": false,
+   "group": "analytic Y4",
+   "rtol": "1e-8",
+   "ratio_g": 0.010764456912488871,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.856da4f8bcdbbp-52",
+    "0x1.5c2b9c0db5a3ep-85",
+    true,
+    6,
+    3
+   ],
+   "route1": {
+    "ratio": 0.010764456912488871,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.010764456912488871,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.010764456912488871,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.0019121453278218182,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "z26",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-37212",
+   "index": 8,
+   "kind": "analytic",
+   "label": "analytic Y1",
+   "ref_30": "2.12002220988942110135695773469e-13",
+   "source_ratio_g": 1.6810168441607366e-05,
+   "in_720": false,
+   "group": "analytic Y1",
+   "rtol": "1e-8",
+   "ratio_g": 1.6810168441607366e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.dd62f5b58981ep-43",
+    "0x1.2487bea6c69d7p-71",
+    true,
+    8,
+    4
+   ],
+   "route1": {
+    "ratio": 1.6810168441607366e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.6810168441607366e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.6810168441607366e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 8.78254797298783e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z27",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-34419",
+   "index": 21,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "3.88738350691290767353786101598e-13",
+   "source_ratio_g": 0.0040601511905427705,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-8",
+   "ratio_g": 0.0040601511905427705,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.b5ae3377a0de9p-42",
+    "0x1.b6a66334d00a2p-73",
+    true,
+    5,
+    4
+   ],
+   "route1": {
+    "ratio": 0.0040601511905427705,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0040601511905427705,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0040601511905427705,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.004028986274054311,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z28",
+   "source": "06g z3",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-34708",
+   "index": 5,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "-9.61879396306527625900057167987e-12",
+   "source_ratio_g": 6.54272046022541e-06,
+   "in_720": true,
+   "group": "analytic J1",
+   "rtol": "1e-7",
+   "ratio_g": 6.54272046022541e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.526e64d119dbbp-37",
+    "0x1.532d8d66287d8p-67",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 6.54272046022541e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 6.54272046022541e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 6.542766381208872e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 6.715156005873097e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "z29",
+   "source": "06g z3",
+   "class": "FCC only",
+   "unit": "g-1e-7-1-14572",
+   "index": 9,
+   "kind": "analytic",
+   "label": "analytic J3",
+   "ref_30": "6.96722071761497850795639140249e-13",
+   "source_ratio_g": 2.3415003178312134e-07,
+   "in_720": true,
+   "group": "analytic J3",
+   "rtol": "1e-7",
+   "ratio_g": 2.3415003178312134e-07,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.88383b7f1fbccp-41",
+    "0x1.5de0a38c28adap-67",
+    true,
+    6,
+    3
+   ],
+   "route1": {
+    "ratio": 2.3415003178312134e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 2.3415003178312134e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 2.3415011092473466e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 3,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 2.7389016404192235e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r00",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-14053",
+   "index": 7,
+   "kind": "analytic",
+   "label": "analytic J2",
+   "ref_30": "3.87397649077862376407215430551e-12",
+   "source_ratio_g": 3.4616159212603085e-05,
+   "in_720": false,
+   "group": "analytic J2",
+   "rtol": "1e-7",
+   "ratio_g": 3.4616159212603085e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.109b5b37de997p-38",
+    "0x1.4397496a3ceafp-70",
+    true,
+    12,
+    4
+   ],
+   "route1": {
+    "ratio": 3.4616159212603085e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 3.4616159212603085e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 3.461644650388037e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 4,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 5.694971811956823e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r01",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-33650",
+   "index": 14,
+   "kind": "analytic",
+   "label": "analytic Y4",
+   "ref_30": "3.79477869166062826511906576384e-13",
+   "source_ratio_g": 0.0006575909789187441,
+   "in_720": false,
+   "group": "analytic Y4",
+   "rtol": "1e-7",
+   "ratio_g": 0.0006575909789187441,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.ab410c895ccadp-42",
+    "0x1.ee68ad9b79209p-79",
+    true,
+    3,
+    2
+   ],
+   "route1": {
+    "ratio": 0.0006575909789187441,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0006575909789187441,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0006584258196525142,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.0007425621895572763,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r02",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-1517",
+   "index": 15,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "8.59212469468337894209866554415e-12",
+   "source_ratio_g": 1.013003246838605e-05,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-7",
+   "ratio_g": 1.013003246838605e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.2e4efaa959cfap-37",
+    "0x1.1231770bf2935p-64",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 1.013003246838605e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.013003246838605e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.013003246838605e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 1.013003246838605e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r03",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-12758",
+   "index": 18,
+   "kind": "analytic",
+   "label": "analytic Y3",
+   "ref_30": "-8.85349839471544426686012229472e-11",
+   "source_ratio_g": 4.138449126568269e-08,
+   "in_720": false,
+   "group": "analytic Y3",
+   "rtol": "1e-7",
+   "ratio_g": 4.138449126568269e-08,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.856187b9c5c53p-34",
+    "0x1.3914797230469p-57",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 4.138449126568269e-08,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 4.138449126568269e-08,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 4.138449126568269e-08,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 4.138449126568269e-08,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r04",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-34411",
+   "index": 13,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "-4.23144093120873651347721989829e-11",
+   "source_ratio_g": 1.091324328403941e-06,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-7",
+   "ratio_g": 1.091324328403941e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.74339439aeaa1p-35",
+    "0x1.ff5504a671c00p-61",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 1.091324328403941e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.091324328403941e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.091324328403941e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 1.091324328403941e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r05",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-12625",
+   "index": 5,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "1.5107133089117483463119898244e-10",
+   "source_ratio_g": 9.470802793334451e-07,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-7",
+   "ratio_g": 9.470802793334451e-07,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.4c359943a6063p-33",
+    "0x1.2f81936f4a538p-58",
+    true,
+    4,
+    3
+   ],
+   "route1": {
+    "ratio": 9.470802793334451e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 9.470802793334451e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 9.470786366182069e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 9.403984603286303e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r06",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-12682",
+   "index": 14,
+   "kind": "analytic",
+   "label": "analytic Y1",
+   "ref_30": "9.20450069705339902091689443477e-14",
+   "source_ratio_g": 3.3801140628369845e-07,
+   "in_720": false,
+   "group": "analytic Y1",
+   "rtol": "1e-7",
+   "ratio_g": 3.3801140628369845e-07,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.9e88aafd54a03p-44",
+    "0x1.7acd1289a3607p-68",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 3.3801140628369845e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 3.3801140628369845e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 3.3801140628369845e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 3.3801140628369845e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r07",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-14593",
+   "index": 21,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "1.68437052265810992901301853595e-12",
+   "source_ratio_g": 0.00022119297525301408,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-7",
+   "ratio_g": 0.00022119297525301408,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.da1baff4f0f5ap-40",
+    "0x1.f7b0d15255cacp-68",
+    true,
+    5,
+    4
+   ],
+   "route1": {
+    "ratio": 0.00022119297525301408,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.00022119297525301408,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.00022119297525301408,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 1.162748664468583e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r08",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-10908",
+   "index": 13,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "-1.42464187183680391452702209159e-12",
+   "source_ratio_g": 0.008065167602270187,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-7",
+   "ratio_g": 0.008065167602270187,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.91004401a7a62p-40",
+    "0x1.516ded5126547p-79",
+    true,
+    2,
+    1
+   ],
+   "route1": {
+    "ratio": 0.008065167602270187,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.008065167602270187,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.008065167602270187,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.005308689408261291,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r09",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-20466",
+   "index": 5,
+   "kind": "analytic",
+   "label": "analytic Y2",
+   "ref_30": "4.64136433857507387900043293845e-13",
+   "source_ratio_g": 0.002032293673346838,
+   "in_720": false,
+   "group": "analytic Y2",
+   "rtol": "1e-7",
+   "ratio_g": 0.002032293673346838,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.05491c0574679p-41",
+    "0x1.fb8461913b1fdp-80",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.002032293673346838,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.002032293673346838,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0039716010850659135,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.002032293673346838,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r10",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-35314",
+   "index": 7,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "-1.01047779015124483055999196882e-14",
+   "source_ratio_g": 0.12281634521443648,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-7",
+   "ratio_g": 0.12281634521443648,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.6c10203d53ac3p-47",
+    "0x1.6e8c6bd64693ep-82",
+    true,
+    7,
+    3
+   ],
+   "route1": {
+    "ratio": 0.12281634521443648,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.12281634521443648,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.12281634521443648,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 6.572964859416218e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r11",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-33732",
+   "index": 9,
+   "kind": "analytic",
+   "label": "analytic J3",
+   "ref_30": "0.00000000367572582353044262421971938393",
+   "source_ratio_g": 8.432446608124658e-06,
+   "in_720": false,
+   "group": "analytic J3",
+   "rtol": "1e-7",
+   "ratio_g": 8.432446608124658e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.f9301ae5f9527p-29",
+    "0x1.32ede00af610dp-62",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 8.432446608124658e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 8.432446608124658e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 8.432822257702663e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 8.432446608124658e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r12",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-33870",
+   "index": 18,
+   "kind": "analytic",
+   "label": "analytic Y3",
+   "ref_30": "-2.98674210731358100393941909593e-13",
+   "source_ratio_g": 6.96661400415353e-07,
+   "in_720": false,
+   "group": "analytic Y3",
+   "rtol": "1e-7",
+   "ratio_g": 6.96661400415353e-07,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.5046fae838a62p-42",
+    "0x1.de95e4682334dp-69",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 6.96661400415353e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 6.96661400415353e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 6.96661400415353e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 6.96661400415353e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r13",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-21527",
+   "index": 18,
+   "kind": "analytic",
+   "label": "analytic Y2",
+   "ref_30": "1.25720180726665062352583894791e-14",
+   "source_ratio_g": 2.3739177044570554e-05,
+   "in_720": false,
+   "group": "analytic Y2",
+   "rtol": "1e-7",
+   "ratio_g": 2.3739177044570554e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.c4f466625aa8dp-47",
+    "0x1.ab6389a31187cp-82",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 2.3739177044570554e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 2.3739177044570554e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 2.3739177044570554e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 2.3739177044570554e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r14",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-504",
+   "index": 9,
+   "kind": "analytic",
+   "label": "analytic Y4",
+   "ref_30": "2.02931292454653575201967327389e-13",
+   "source_ratio_g": 0.024681379590511872,
+   "in_720": false,
+   "group": "analytic Y4",
+   "rtol": "1e-7",
+   "ratio_g": 0.024681379590511872,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.c8f5ecee81942p-43",
+    "0x1.f870d52edd799p-86",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.024681379590511872,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.2746600180409941,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   },
+   "route2lit": {
+    "ratio": 0.2746600180409941,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.024681379590511872,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r15",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-34409",
+   "index": 2,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=1.0037e+05, z in (1.6351e+12, 1.0037e+05), regime Gqr, group G+q-r",
+   "ref_30": "2.61744558741731065708453897068e-26",
+   "source_ratio_g": 0.0012748189635059248,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.0012748189635059248,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.033821205600bp-85",
+    "0x1.d64235ebba46ep-113",
+    true,
+    14,
+    6
+   ],
+   "route1": {
+    "ratio": 0.0012748189635059248,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0012748189635059248,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0012748183607845345,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 4
+   },
+   "route3": {
+    "ratio": 0.0015749096661002667,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r16",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-33822",
+   "index": 0,
+   "kind": "group",
+   "label": "k=3.05e+07/Mpc, q=9.7e+06/Mpc, r=3.05e+07/Mpc @ z_response=1.7477e+08, z in (1.6391e+16, 5.169e+11), regime G, group G",
+   "ref_30": "1.98912434269174192830294460803e-28",
+   "source_ratio_g": 0.008810099049911231,
+   "in_720": false,
+   "group": "G",
+   "rtol": "1e-7",
+   "ratio_g": 0.008810099049911231,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.f84d894140123p-93",
+    "0x1.adec0719fdf96p-109",
+    true,
+    8,
+    4
+   ],
+   "route1": {
+    "ratio": 0.008810099049911231,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.008810099049911231,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.008810099037247896,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 8
+   },
+   "route3": {
+    "ratio": 0.008569817560892708,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r17",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-2229",
+   "index": 3,
+   "kind": "group",
+   "label": "k=9.85e+05/Mpc, q=3.14e+05/Mpc, r=9.85e+05/Mpc @ z_response=2.091, z in (5.406e+09, 2.091), regime Gqr, group G+q+r",
+   "ref_30": "-9.21789640496014268046556704263e-25",
+   "source_ratio_g": 0.5457973941514865,
+   "in_720": false,
+   "group": "G+q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.5457973941514865,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.1d47b2be1acc4p-80",
+    "0x1.26e19d330ab0dp-105",
+    true,
+    146,
+    17
+   ],
+   "route1": {
+    "ratio": 0.5455291833059401,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 102,
+    "depth": 15,
+    "n_firings": 44
+   },
+   "route2": {
+    "ratio": 0.5458370869621876,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 59,
+    "depth": 15,
+    "n_firings": 30
+   },
+   "route2lit": {
+    "ratio": 0.5458506787747291,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 59,
+    "depth": 15,
+    "n_firings": 40
+   },
+   "route3": {
+    "ratio": 0.5460818743024309,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 8,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r18",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-1786",
+   "index": 4,
+   "kind": "group",
+   "label": "k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=693.47, z in (1.709e+09, 693.47), regime Gqr, group G+q-r",
+   "ref_30": "5.48910215973493320563937176406e-24",
+   "source_ratio_g": 0.017464569283539712,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.017464569283539712,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.a8b2de8b60436p-78",
+    "0x1.4dfe2634fbe33p-101",
+    true,
+    30,
+    9
+   ],
+   "route1": {
+    "ratio": 0.017464564342734457,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 29,
+    "depth": 9,
+    "n_firings": 1
+   },
+   "route2": {
+    "ratio": 0.017464569283539712,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 30,
+    "depth": 9,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.01746519637223037,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 30,
+    "depth": 9,
+    "n_firings": 6
+   },
+   "route3": {
+    "ratio": 0.017436243022495815,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 8,
+    "n_firings": 5
+   }
+  },
+  {
+   "rid": "r19",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-21926",
+   "index": 0,
+   "kind": "group",
+   "label": "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=6.34e+06, z in (1.6391e+16, 5.169e+11), regime G, group G",
+   "ref_30": "-1.20569380798064742911653105356e-26",
+   "source_ratio_g": 0.0007163123421074576,
+   "in_720": false,
+   "group": "G",
+   "rtol": "1e-7",
+   "ratio_g": 0.0007163123421074576,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.dd9fe0d96f5e8p-87",
+    "0x1.732a39b7c16d6p-108",
+    true,
+    9,
+    4
+   ],
+   "route1": {
+    "ratio": 0.0007163123421074576,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0007163123421074576,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0007163123388159724,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 9
+   },
+   "route3": {
+    "ratio": 0.0007388206367490008,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r20",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-12606",
+   "index": 1,
+   "kind": "group",
+   "label": "k=3.05e+07/Mpc, q=9.85e+05/Mpc, r=3.05e+07/Mpc @ z_response=9.1593e+05, z in (5.169e+11, 1.6711e+10), regime Gr, group G+r",
+   "ref_30": "3.60089694680972748546756872841e-29",
+   "source_ratio_g": 0.00043273681212115106,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.00043273681212115106,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.6d2ca0f7835c3p-95",
+    "0x1.ba248a5ef8c11p-111",
+    true,
+    13,
+    5
+   ],
+   "route1": {
+    "ratio": 0.00043273681212115106,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.00043273681212115106,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0004327366452012663,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 5,
+    "n_firings": 13
+   },
+   "route3": {
+    "ratio": 0.00043273681212115106,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 5,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r21",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-34449",
+   "index": 0,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=3641, z in (1.6391e+16, 5.169e+11), regime G, group G",
+   "ref_30": "2.98248492755150849855802119152e-25",
+   "source_ratio_g": 0.001328947376520954,
+   "in_720": false,
+   "group": "G",
+   "rtol": "1e-7",
+   "ratio_g": 0.001328947376520954,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.7136b85f4bac3p-82",
+    "0x1.01f9c37cd2856p-105",
+    true,
+    9,
+    7
+   ],
+   "route1": {
+    "ratio": 0.001328947376520954,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.001328947376520954,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0013289469776595138,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 7,
+    "n_firings": 9
+   },
+   "route3": {
+    "ratio": 0.001328947376520954,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 7,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r22",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-36976",
+   "index": 0,
+   "kind": "group",
+   "label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=2094.9, z in (1.6391e+16, 5.1721e+12), regime G, group G",
+   "ref_30": "5.25150479886041280339991295444e-29",
+   "source_ratio_g": 0.009327233325731243,
+   "in_720": false,
+   "group": "G",
+   "rtol": "1e-7",
+   "ratio_g": 0.009327233325731243,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.0a486e135aa1ap-94",
+    "0x1.0f0141e8ec336p-115",
+    true,
+    9,
+    4
+   ],
+   "route1": {
+    "ratio": 0.009327233325731243,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.009327233325731243,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.00932723340981271,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 9
+   },
+   "route3": {
+    "ratio": 0.0047095403246410405,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 3
+   }
+  },
+  {
+   "rid": "r23",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-33961",
+   "index": 4,
+   "kind": "group",
+   "label": "k=3.14e+05/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=7.6274e+07, z in (1.6351e+12, 7.6274e+07), regime Gqr, group G-q-r",
+   "ref_30": "8.07619310503848550715989378967e-29",
+   "source_ratio_g": 0.0003014571447229969,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.0003014571447229969,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.9982faef9adfcp-94",
+    "0x1.a783afa8a93e4p-118",
+    true,
+    42,
+    11
+   ],
+   "route1": {
+    "ratio": 0.00030308861406504715,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 41,
+    "depth": 11,
+    "n_firings": 3
+   },
+   "route2": {
+    "ratio": 0.00029910679182627,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 37,
+    "depth": 9,
+    "n_firings": 3
+   },
+   "route2lit": {
+    "ratio": 0.00029910339468020307,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 37,
+    "depth": 9,
+    "n_firings": 23
+   },
+   "route3": {
+    "ratio": 0.1769201075233098,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 5,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r24",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-34853",
+   "index": 1,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=1.5861, z in (1.6351e+12, 1.5861), regime Gqr, group G+q+r",
+   "ref_30": "2.47706139562638752160277481871e-28",
+   "source_ratio_g": 0.30743023748880455,
+   "in_720": false,
+   "group": "G+q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.30743023748880455,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.3a013cbe84d41p-92",
+    "0x1.6f1fdc0c2a9a3p-117",
+    true,
+    9,
+    6
+   ],
+   "route1": {
+    "ratio": 0.30743023748880455,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.30743023748880455,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.30743023748880455,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.3072013323765948,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r25",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-1887",
+   "index": 3,
+   "kind": "group",
+   "label": "k=3.05e+07/Mpc, q=3.14e+05/Mpc, r=3.05e+07/Mpc @ z_response=1589, z in (5.406e+09, 1589), regime Gqr, group G+q+r",
+   "ref_30": "-1.02623292218917884017150559329e-29",
+   "source_ratio_g": 0.00010939792242076067,
+   "in_720": false,
+   "group": "G+q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.00010939792242076067,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.a04a1e92d82fdp-97",
+    "0x1.34dd56a6248dap-113",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.00010939792242076067,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.00010939792242076067,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.00010939792242076067,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.00010939792242076067,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r26",
+   "source": "06g draw",
+   "class": "FCC only",
+   "unit": "g-1e-7-1-14462",
+   "index": 5,
+   "kind": "group",
+   "label": "k=9.56e+07/Mpc, q=9.7e+06/Mpc, r=9.56e+07/Mpc @ z_response=1.5861, z in (1.6721e+11, 1.5861), regime Gqr, group G-q+r",
+   "ref_30": "-3.4428015277020799621717042135e-31",
+   "source_ratio_g": 2.662537806838343e-05,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-7",
+   "ratio_g": 2.662537806838343e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.bee6b2b95a34ep-102",
+    "0x1.d3741ed13d34dp-111",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 2.662537806838343e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 2.662537806838343e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 2.662537806838343e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 2.662537806838343e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r27",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-34026",
+   "index": 1,
+   "kind": "group",
+   "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1.9152e+07, z in (5.169e+11, 1.9152e+07), regime Gqr, group G+q+r",
+   "ref_30": "-5.94318595415665088620177018827e-29",
+   "source_ratio_g": 0.05213333395937945,
+   "in_720": false,
+   "group": "G+q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.05213333395937945,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.2d5af6e533ca8p-94",
+    "0x1.6c26d8aafc1a1p-121",
+    true,
+    13,
+    7
+   ],
+   "route1": {
+    "ratio": 0.05213333395937945,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.05213333395937945,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.052133220888025855,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 7,
+    "n_firings": 9
+   },
+   "route3": {
+    "ratio": 0.9645200922515368,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r28",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-21673",
+   "index": 3,
+   "kind": "group",
+   "label": "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=3.6545e+09, z in (5.169e+11, 3.6545e+09), regime Gqr, group G-q+r",
+   "ref_30": "8.18680514176258523897014113121e-28",
+   "source_ratio_g": 0.0399040552779451,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.0399040552779451,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.037341088b725p-90",
+    "0x1.6d12c8ff0b914p-116",
+    true,
+    8,
+    4
+   ],
+   "route1": {
+    "ratio": 0.0399040552779451,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0399040552779451,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.03990417936839425,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 8,
+    "depth": 4,
+    "n_firings": 7
+   },
+   "route3": {
+    "ratio": 0.016468767132342334,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r29",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-35525",
+   "index": 4,
+   "kind": "group",
+   "label": "k=9.56e+07/Mpc, q=9.7e+06/Mpc, r=9.56e+07/Mpc @ z_response=8342.9, z in (1.6721e+11, 8342.9), regime Gqr, group G+q-r",
+   "ref_30": "-1.15623171621304485964869401609e-31",
+   "source_ratio_g": 0.0007855754401161561,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.0007855754401161561,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.2c2cc6f5bc5abp-103",
+    "0x1.77c558bb4311fp-119",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.0007855754401161561,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0007855754401161561,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0007855754401161561,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.0007855754401161561,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r30",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-1759",
+   "index": 14,
+   "kind": "analytic",
+   "label": "analytic Y4",
+   "ref_30": "-4.61132707638382004156560177548e-13",
+   "source_ratio_g": 1.0065503976849921e-06,
+   "in_720": false,
+   "group": "analytic Y4",
+   "rtol": "1e-8",
+   "ratio_g": 1.0065503976849921e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.03983a1569af6p-41",
+    "0x1.8eff00d729417p-70",
+    true,
+    7,
+    4
+   ],
+   "route1": {
+    "ratio": 1.0065503976849921e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.0065503976849921e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.0065503976849921e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 7,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 6.909370703629423e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r31",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-35133",
+   "index": 22,
+   "kind": "analytic",
+   "label": "analytic Y4",
+   "ref_30": "3.4263393459681149960928304763e-14",
+   "source_ratio_g": 8.573619262001178e-06,
+   "in_720": false,
+   "group": "analytic Y4",
+   "rtol": "1e-8",
+   "ratio_g": 8.573619262001178e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.349e019ba0bf3p-45",
+    "0x1.9bb9163b437b4p-76",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 8.573619262001178e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 8.573619262001178e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 8.573619262001178e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 8.573619262001178e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r32",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-35282",
+   "index": 19,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "-2.02674698812323645945422457882e-12",
+   "source_ratio_g": 1.8185692843234296e-06,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-8",
+   "ratio_g": 1.8185692843234296e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.1d3d417efc2b2p-39",
+    "0x1.de20ab6cf0f22p-67",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 1.8185692843234296e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.8185692843234296e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.8185692843234296e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 1.8185692843234296e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r33",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-10552",
+   "index": 0,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "-2.25636874848394818244175402265e-10",
+   "source_ratio_g": 0.00822366915723169,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-8",
+   "ratio_g": 0.00822366915723169,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.f02e44a7d7074p-33",
+    "0x1.9121e0e6f4c7fp-75",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.00822366915723169,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.00822366915723169,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.028020216603388493,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.00822366915723169,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r34",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-33988",
+   "index": 21,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "3.03024966641473943725303669147e-13",
+   "source_ratio_g": 6.360231995272666e-06,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-8",
+   "ratio_g": 6.360231995272666e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.552d0007c2f9cp-42",
+    "0x1.558a07f03355cp-71",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 6.360231995272666e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 6.360231995272666e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 6.360231995272666e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 6.360231995272666e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r35",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-11073",
+   "index": 20,
+   "kind": "analytic",
+   "label": "analytic Y3",
+   "ref_30": "2.64671842512312919961547029361e-14",
+   "source_ratio_g": 0.0005374506636265444,
+   "in_720": false,
+   "group": "analytic Y3",
+   "rtol": "1e-8",
+   "ratio_g": 0.0005374506636265444,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.dcca57f373ad5p-46",
+    "0x1.bd9650b006945p-78",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.0005374506636265444,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0005374506636265444,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0005374506636265444,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.0005374506636265444,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r36",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-1673",
+   "index": 21,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "-1.93946572659765859967566768788e-15",
+   "source_ratio_g": 8.902995062669839e-05,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-8",
+   "ratio_g": 8.902995062669839e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.1781a7e248a21p-49",
+    "0x1.b617b268868c8p-79",
+    true,
+    4,
+    3
+   ],
+   "route1": {
+    "ratio": 8.902995062669839e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 8.902995062669839e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 8.902995062669839e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 7.342294805964285e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r37",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-34613",
+   "index": 15,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "9.57970298887745333137599659476e-11",
+   "source_ratio_g": 5.893487883380724e-05,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-8",
+   "ratio_g": 5.893487883380724e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.a551ddf584007p-34",
+    "0x1.bd80d793972f5p-61",
+    true,
+    5,
+    4
+   ],
+   "route1": {
+    "ratio": 5.893487883380724e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 5.893487883380724e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 5.893487883380724e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 5,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 5.802280610314255e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r38",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-35413",
+   "index": 7,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "3.17831706865390096870383672515e-14",
+   "source_ratio_g": 7.2014774996654e-05,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-8",
+   "ratio_g": 7.2014774996654e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.1e47007f05949p-45",
+    "0x1.40b3f0bea08e9p-76",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 7.2014774996654e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 7.2014774996654e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 7.2014774996654e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 1.410518288532153e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r39",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-11154",
+   "index": 10,
+   "kind": "analytic",
+   "label": "analytic Y2",
+   "ref_30": "-4.63735437716322879309033742894e-13",
+   "source_ratio_g": 4.626371942940676e-07,
+   "in_720": false,
+   "group": "analytic Y2",
+   "rtol": "1e-8",
+   "ratio_g": 4.626371942940676e-07,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.050f51dffb1b9p-41",
+    "0x1.50999fae23999p-70",
+    true,
+    6,
+    4
+   ],
+   "route1": {
+    "ratio": 4.626371942940676e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 4.626371942940676e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 4.626371942940676e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 3.7115538423005e-07,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r40",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-21651",
+   "index": 21,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "-1.99358204548324827502097917036e-15",
+   "source_ratio_g": 0.029662896169413873,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-8",
+   "ratio_g": 0.029662896169413873,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.1f4e32109ce23p-49",
+    "0x1.b11f117d73301p-85",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.029662896169413873,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.029662896169413873,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.029662896169413873,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.029662896169413873,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r41",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-1638",
+   "index": 13,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "-1.42699573228856218952720927027e-10",
+   "source_ratio_g": 1.8415720539303368e-06,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-8",
+   "ratio_g": 1.8415720539303368e-06,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.39ccb7d58f830p-33",
+    "0x1.7347288f18c76p-62",
+    true,
+    2,
+    1
+   ],
+   "route1": {
+    "ratio": 1.8415720539303368e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.8415720539303368e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 1.841569025869484e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 1.8415720539303368e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r42",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-33438",
+   "index": 16,
+   "kind": "analytic",
+   "label": "analytic J4",
+   "ref_30": "2.4585198311719503729271194685e-14",
+   "source_ratio_g": 0.3349746853037482,
+   "in_720": false,
+   "group": "analytic J4",
+   "rtol": "1e-8",
+   "ratio_g": 0.3349746853037482,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.bae3371ed77b2p-46",
+    "0x1.9b1003b7c83b9p-85",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.3349746853037482,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.3349746853037482,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.3349746853037482,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.3349746853037482,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r43",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-12662",
+   "index": 20,
+   "kind": "analytic",
+   "label": "analytic Y4",
+   "ref_30": "0.00000000819118036302388078569306205515",
+   "source_ratio_g": 0.0007419094900340607,
+   "in_720": false,
+   "group": "analytic Y4",
+   "rtol": "1e-8",
+   "ratio_g": 0.0007419094900340607,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.1972626a52608p-27",
+    "0x1.93e726a86eeedp-66",
+    true,
+    4,
+    3
+   ],
+   "route1": {
+    "ratio": 0.0007419094900340607,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 1.672630017219426e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   },
+   "route2lit": {
+    "ratio": 1.672630017219426e-06,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 3,
+    "depth": 2,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.0007419094900340607,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r44",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-1045",
+   "index": 13,
+   "kind": "analytic",
+   "label": "analytic J1",
+   "ref_30": "4.2953772132460576048623148635e-14",
+   "source_ratio_g": 0.009829231880182475,
+   "in_720": false,
+   "group": "analytic J1",
+   "rtol": "1e-8",
+   "ratio_g": 0.009829231880182475,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.82e4a7ba98761p-45",
+    "0x1.11ad7d9b7121ap-80",
+    true,
+    4,
+    3
+   ],
+   "route1": {
+    "ratio": 0.009829231880182475,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.009829231880182475,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.009829231880182475,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 4,
+    "depth": 3,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.007769691830347291,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r45",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-13951",
+   "index": 3,
+   "kind": "group",
+   "label": "k=3.14e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=174.13, z in (5.169e+11, 174.13), regime Gqr, group G-q+r",
+   "ref_30": "-3.67695949806296129267146647353e-26",
+   "source_ratio_g": 0.011781607997180133,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.011781607997180133,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.6c25ff8fe18e8p-85",
+    "0x1.e858e58e6d646p-113",
+    false,
+    107,
+    20
+   ],
+   "route1": {
+    "ratio": 0.011782779148428783,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 60,
+    "depth": 14,
+    "n_firings": 6
+   },
+   "route2": {
+    "ratio": 0.011783522473217345,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 60,
+    "depth": 15,
+    "n_firings": 6
+   },
+   "route2lit": {
+    "ratio": 0.011784144727293142,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 62,
+    "depth": 15,
+    "n_firings": 34
+   },
+   "route3": {
+    "ratio": 0.011141723834147056,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 17,
+    "depth": 7,
+    "n_firings": 5
+   }
+  },
+  {
+   "rid": "r46",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-13481",
+   "index": 2,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=3641, z in (5.406e+09, 3641), regime Gqr, group G+q-r",
+   "ref_30": "-8.12430095086577160535688875696e-23",
+   "source_ratio_g": 0.0054103811176264985,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.0054103811176264985,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.88ddf970e5764p-74",
+    "0x1.79d16197a1521p-101",
+    false,
+    162,
+    20
+   ],
+   "route1": {
+    "ratio": 0.005405162220928495,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 101,
+    "depth": 17,
+    "n_firings": 12
+   },
+   "route2": {
+    "ratio": 0.005414349723468974,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 80,
+    "depth": 13,
+    "n_firings": 7
+   },
+   "route2lit": {
+    "ratio": 0.0054152779870442385,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 80,
+    "depth": 13,
+    "n_firings": 39
+   },
+   "route3": {
+    "ratio": 0.005166021905333958,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 31,
+    "depth": 8,
+    "n_firings": 4
+   }
+  },
+  {
+   "rid": "r47",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-1916",
+   "index": 4,
+   "kind": "group",
+   "label": "k=9.7e+06/Mpc, q=9.85e+05/Mpc, r=9.7e+06/Mpc @ z_response=10.979, z in (1.6711e+10, 10.979), regime Gqr, group G+q-r",
+   "ref_30": "1.92138727360371156942944112332e-28",
+   "source_ratio_g": 0.1644455503021033,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.1644455503021033,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.e7212a00916c8p-93",
+    "0x1.a119a1a1370e7p-119",
+    true,
+    70,
+    17
+   ],
+   "route1": {
+    "ratio": 0.16406314840491815,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 51,
+    "depth": 17,
+    "n_firings": 11
+   },
+   "route2": {
+    "ratio": 0.16461719379733053,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 40,
+    "depth": 16,
+    "n_firings": 10
+   },
+   "route2lit": {
+    "ratio": 0.1646301316201735,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 40,
+    "depth": 16,
+    "n_firings": 14
+   },
+   "route3": {
+    "ratio": 0.19109144318716498,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r48",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-11031",
+   "index": 3,
+   "kind": "group",
+   "label": "k=9.85e+05/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=1.104e+10, z in (1.6351e+12, 1.104e+10), regime Gqr, group G-q+r",
+   "ref_30": "-6.4242147816723327492714222624e-28",
+   "source_ratio_g": 0.03670123073505184,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.03670123073505184,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.972ed83a26474p-91",
+    "0x1.30231ce931966p-115",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.03670123073505184,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.03670123073505184,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.03670122864406394,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.03670123073505184,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r49",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-21720",
+   "index": 1,
+   "kind": "group",
+   "label": "k=3e+08/Mpc, q=9.7e+06/Mpc, r=3e+08/Mpc @ z_response=1.3257e+08, z in (5.1721e+12, 1.6721e+11), regime Gr, group G+r",
+   "ref_30": "1.89507649393843219458244672979e-31",
+   "source_ratio_g": 0.07836801011053318,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.07836801011053318,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.ebfb39b8a8a30p-103",
+    "0x1.c369b73e114f6p-115",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.07836801011053318,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.07836801011053318,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.07836801010006023,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   },
+   "route3": {
+    "ratio": 0.07836801011053318,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r50",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-34389",
+   "index": 3,
+   "kind": "group",
+   "label": "k=9.7e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=57749, z in (5.169e+11, 57749), regime Gqr, group G-q+r",
+   "ref_30": "8.69484554220829967532123513716e-29",
+   "source_ratio_g": 0.0901590498799955,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.0901590498799955,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.b8e18cbeec22bp-94",
+    "0x1.4793896440823p-116",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.0901590498799955,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0901590498799955,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0901590498799955,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.0901590498799955,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r51",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-14231",
+   "index": 1,
+   "kind": "group",
+   "label": "k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=0.52504, z in (1.6711e+10, 1.709e+09), regime Gr, group G+r",
+   "ref_30": "-1.43953748795618834491646173728e-24",
+   "source_ratio_g": 0.00020808302491771532,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.00020808302491771532,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.bd83e8f878596p-80",
+    "0x1.d06b9ae27889dp-107",
+    true,
+    52,
+    9
+   ],
+   "route1": {
+    "ratio": 0.00020808302491771532,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 52,
+    "depth": 9,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.00020930172256029405,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 49,
+    "depth": 8,
+    "n_firings": 1
+   },
+   "route2lit": {
+    "ratio": 0.00021299187672527606,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 49,
+    "depth": 8,
+    "n_firings": 48
+   },
+   "route3": {
+    "ratio": 0.00020791543848068904,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 50,
+    "depth": 8,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "r52",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-34925",
+   "index": 1,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (5.169e+11, 2.7567), regime Gqr, group G+q+r",
+   "ref_30": "-1.66512469423626980553050523677e-27",
+   "source_ratio_g": 0.0007832834710848742,
+   "in_720": false,
+   "group": "G+q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.0007832834710848742,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.07d97b6fc5898p-89",
+    "0x1.a76e3da1e362ep-113",
+    true,
+    67,
+    15
+   ],
+   "route1": {
+    "ratio": 0.0007824557334484126,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 59,
+    "depth": 15,
+    "n_firings": 7
+   },
+   "route2": {
+    "ratio": 0.0007751111451119328,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 60,
+    "depth": 14,
+    "n_firings": 4
+   },
+   "route2lit": {
+    "ratio": 0.0007750776399980982,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 60,
+    "depth": 14,
+    "n_firings": 22
+   },
+   "route3": {
+    "ratio": 0.005655869894036905,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 8,
+    "n_firings": 5
+   }
+  },
+  {
+   "rid": "r53",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-14492",
+   "index": 4,
+   "kind": "group",
+   "label": "k=9.7e+06/Mpc, q=9.85e+05/Mpc, r=9.7e+06/Mpc @ z_response=0.17381, z in (1.6711e+10, 0.17381), regime Gqr, group G+q-r",
+   "ref_30": "1.71523364221195018628239517076e-28",
+   "source_ratio_g": 0.021853234823222056,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.021853234823222056,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.b2dd07322412fp-93",
+    "0x1.fe4b35dde3a05p-119",
+    true,
+    172,
+    17
+   ],
+   "route1": {
+    "ratio": 0.02153308523848644,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 88,
+    "depth": 15,
+    "n_firings": 30
+   },
+   "route2": {
+    "ratio": 0.021852374197558,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 72,
+    "depth": 12,
+    "n_firings": 14
+   },
+   "route2lit": {
+    "ratio": 0.02184850166609226,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 72,
+    "depth": 12,
+    "n_firings": 26
+   },
+   "route3": {
+    "ratio": 0.01735842987101166,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 2,
+    "depth": 1,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r54",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-34014",
+   "index": 0,
+   "kind": "group",
+   "label": "k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=4.809e+06, z in (1.6391e+16, 5.169e+11), regime G, group G",
+   "ref_30": "-1.36164296658368779767894913815e-28",
+   "source_ratio_g": 0.0018387626143940652,
+   "in_720": false,
+   "group": "G",
+   "rtol": "1e-8",
+   "ratio_g": 0.0018387626143940652,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.5937ad9f2365bp-93",
+    "0x1.a38c521dc0588p-109",
+    true,
+    9,
+    4
+   ],
+   "route1": {
+    "ratio": 0.0018387626143940652,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0018387626143940652,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0018387626062860733,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 4,
+    "n_firings": 9
+   },
+   "route3": {
+    "ratio": 0.0018216839734911652,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 6,
+    "depth": 4,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r55",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-34671",
+   "index": 2,
+   "kind": "group",
+   "label": "k=3e+08/Mpc, q=9.7e+06/Mpc, r=3e+08/Mpc @ z_response=174.13, z in (5.1721e+12, 1.6721e+11), regime Gr, group G-r",
+   "ref_30": "3.62784466195704796875915872652e-32",
+   "source_ratio_g": 0.02665411139137664,
+   "in_720": false,
+   "group": "G-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.02665411139137664,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.78bc9c8813d22p-105",
+    "0x1.968d686dbd9c6p-121",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.02665411139137664,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.02665411139137664,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.02665411139137664,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.02665411139137664,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r56",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-10794",
+   "index": 5,
+   "kind": "group",
+   "label": "k=9.56e+07/Mpc, q=9.7e+06/Mpc, r=9.56e+07/Mpc @ z_response=1.7499e+10, z in (1.6721e+11, 1.7499e+10), regime Gqr, group G-q+r",
+   "ref_30": "-5.0926672299699248495415539051e-31",
+   "source_ratio_g": 0.005908823669838441,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.005908823669838441,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.4a8872ba99d84p-101",
+    "0x1.5bb82db66cd1ap-125",
+    true,
+    21,
+    6
+   ],
+   "route1": {
+    "ratio": 0.005908823669838441,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 21,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.005908823669838441,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 21,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.005908709975672652,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 21,
+    "depth": 6,
+    "n_firings": 19
+   },
+   "route3": {
+    "ratio": 1.491724979305445,
+    "bound": 1.0,
+    "ok": false,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "r57",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-34394",
+   "index": 3,
+   "kind": "group",
+   "label": "k=9.7e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=8342.9, z in (5.1721e+12, 8342.9), regime Gqr, group G-q+r",
+   "ref_30": "1.50652710462122842218302645047e-30",
+   "source_ratio_g": 0.00010604595054138709,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.00010604595054138709,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.e8e56105f63adp-100",
+    "0x1.1b4b10b4ed577p-111",
+    true,
+    1,
+    0
+   ],
+   "route1": {
+    "ratio": 0.00010604595054138709,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.00010604595054138709,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.00010604595054138709,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   },
+   "route3": {
+    "ratio": 0.00010604595054138709,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "r58",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-34453",
+   "index": 3,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=398.99, z in (1.6351e+12, 398.99), regime Gqr, group G-q+r",
+   "ref_30": "1.40201316346520934154856941543e-26",
+   "source_ratio_g": 0.09145761738935611,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.09145761738935611,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.15b28366b4aacp-86",
+    "0x1.c541484d9cca3p-112",
+    true,
+    26,
+    9
+   ],
+   "route1": {
+    "ratio": 0.09145761738935611,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 26,
+    "depth": 9,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.09145761738935611,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 26,
+    "depth": 9,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.09145760718769841,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 26,
+    "depth": 9,
+    "n_firings": 18
+   },
+   "route3": {
+    "ratio": 0.09275736121875511,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 7,
+    "n_firings": 3
+   }
+  },
+  {
+   "rid": "r59",
+   "source": "06g draw",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-1823",
+   "index": 0,
+   "kind": "group",
+   "label": "k=3.14e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=1589, z in (1.6391e+16, 1.6721e+11), regime G, group G",
+   "ref_30": "-4.22643403830276211732924945531e-25",
+   "source_ratio_g": 0.0013031575457235817,
+   "in_720": false,
+   "group": "G",
+   "rtol": "1e-8",
+   "ratio_g": 0.0013031575457235817,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.059a8543f12e9p-81",
+    "0x1.aa1334e4854f9p-109",
+    true,
+    28,
+    8
+   ],
+   "route1": {
+    "ratio": 0.0013031575457235817,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 28,
+    "depth": 8,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0013031575457235817,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 28,
+    "depth": 8,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0013031458092947212,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 28,
+    "depth": 8,
+    "n_firings": 28
+   },
+   "route3": {
+    "ratio": 0.001329285331368208,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 21,
+    "depth": 8,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "v00",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-7-2-1380",
+   "index": 4,
+   "kind": "group",
+   "label": "k=3e+08/Mpc, q=3.09e+06/Mpc, r=3e+08/Mpc @ z_response=1.7445e+05, z in (5.2861e+10, 1.7445e+05), regime Gqr, group G+q-r",
+   "ref_30": "-1.47371765002684931758088594801e-33",
+   "source_ratio_g": 0.07515709920855397,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.07515709920855397,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.e9ba0850f8170p-110",
+    "0x1.3dfe0749bb4b9p-137",
+    false,
+    76,
+    20
+   ],
+   "route1": {
+    "ratio": 0.041347586472106505,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 38,
+    "depth": 14,
+    "n_firings": 6
+   },
+   "route2": {
+    "ratio": 0.053696549781952194,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 46,
+    "depth": 15,
+    "n_firings": 14
+   },
+   "route2lit": {
+    "ratio": 0.04486652730614042,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 46,
+    "depth": 15,
+    "n_firings": 19
+   },
+   "route3": {
+    "ratio": 5.828409964378563e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "v01",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-7-0-12617",
+   "index": 5,
+   "kind": "group",
+   "label": "k=3.05e+07/Mpc, q=3.09e+06/Mpc, r=3.05e+07/Mpc @ z_response=3.032e+05, z in (5.2861e+10, 3.032e+05), regime Gqr, group G-q+r",
+   "ref_30": "-1.61681507076670230273765702533e-29",
+   "source_ratio_g": 0.3663467456364639,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.3663467456364639,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.47edd6b41f28ap-96",
+    "0x1.8f6db238179d3p-122",
+    false,
+    122,
+    20
+   ],
+   "route1": {
+    "ratio": 0.36593680071755946,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 87,
+    "depth": 14,
+    "n_firings": 14
+   },
+   "route2": {
+    "ratio": 0.3663794929587891,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 71,
+    "depth": 14,
+    "n_firings": 14
+   },
+   "route2lit": {
+    "ratio": 0.36642415338913426,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 71,
+    "depth": 14,
+    "n_firings": 26
+   },
+   "route3": {
+    "ratio": 0.07133561614861374,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "v02",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-34212",
+   "index": 4,
+   "kind": "group",
+   "label": "k=9.7e+06/Mpc, q=3.09e+06/Mpc, r=9.7e+06/Mpc @ z_response=5.2699e+05, z in (5.2861e+10, 5.2699e+05), regime Gqr, group G+q-r",
+   "ref_30": "-2.10181831576078318175322813977e-28",
+   "source_ratio_g": 0.005333959814265858,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.005333959814265858,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.0a6fe76a57daap-92",
+    "0x1.0d7130306c403p-116",
+    false,
+    400,
+    20
+   ],
+   "route1": {
+    "ratio": 0.005320936798926563,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 112,
+    "depth": 16,
+    "n_firings": 44
+   },
+   "route2": {
+    "ratio": 0.005253893038223285,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 60,
+    "depth": 15,
+    "n_firings": 17
+   },
+   "route2lit": {
+    "ratio": 0.005228505608295382,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 62,
+    "depth": 15,
+    "n_firings": 35
+   },
+   "route3": {
+    "ratio": 0.009590807948489323,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 6,
+    "n_firings": 2
+   }
+  },
+  {
+   "rid": "v03",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-7-1-34521",
+   "index": 4,
+   "kind": "group",
+   "label": "k=9.85e+05/Mpc, q=1e+05/Mpc, r=9.85e+05/Mpc @ z_response=229.56, z in (1.709e+09, 229.56), regime Gqr, group G+q-r",
+   "ref_30": "-1.31208908099569328002424767244e-25",
+   "source_ratio_g": 1.2026759847435293,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-7",
+   "ratio_g": 1.2026759847435293,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.44db86e35e156p-83",
+    "0x1.26e8c8089da5ap-109",
+    false,
+    120,
+    20
+   ],
+   "route1": {
+    "ratio": 1.1853788367296947,
+    "bound": 1.2026759847435293,
+    "ok": true,
+    "converged": true,
+    "regions": 64,
+    "depth": 13,
+    "n_firings": 17
+   },
+   "route2": {
+    "ratio": 1.202381756489186,
+    "bound": 1.2026759847435293,
+    "ok": true,
+    "converged": true,
+    "regions": 59,
+    "depth": 14,
+    "n_firings": 14
+   },
+   "route2lit": {
+    "ratio": 1.2002978930292556,
+    "bound": 1.2026759847435293,
+    "ok": true,
+    "converged": true,
+    "regions": 65,
+    "depth": 15,
+    "n_firings": 33
+   },
+   "route3": {
+    "ratio": 1.1827985422560876,
+    "bound": 1.2026759847435293,
+    "ok": true,
+    "converged": true,
+    "regions": 10,
+    "depth": 7,
+    "n_firings": 7
+   }
+  },
+  {
+   "rid": "v04",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-34296",
+   "index": 1,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=10999, z in (1.6721e+11, 10999), regime Gqr, group G+q+r",
+   "ref_30": "2.1160089166125406761265664855e-26",
+   "source_ratio_g": 0.0001951173324364131,
+   "in_720": false,
+   "group": "G+q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.0001951173324364131,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.a31e66204b4c8p-86",
+    "0x1.4a0104a9ea1e0p-110",
+    false,
+    79,
+    20
+   ],
+   "route1": {
+    "ratio": 0.00019561720464273842,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 65,
+    "depth": 15,
+    "n_firings": 6
+   },
+   "route2": {
+    "ratio": 0.00020098614856203518,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 56,
+    "depth": 11,
+    "n_firings": 4
+   },
+   "route2lit": {
+    "ratio": 0.00020454167873877163,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 57,
+    "depth": 11,
+    "n_firings": 33
+   },
+   "route3": {
+    "ratio": 0.0005204715632695588,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 25,
+    "depth": 8,
+    "n_firings": 6
+   }
+  },
+  {
+   "rid": "v05",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-7-3-34090",
+   "index": 4,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=1.2075e+06, z in (5.406e+09, 1.2075e+06), regime Gqr, group G-q-r",
+   "ref_30": "3.10911068440525095317994622187e-24",
+   "source_ratio_g": 0.004496936507802074,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.004496936507802074,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.e11c90375194cp-79",
+    "0x1.8e35bfbd0eda4p-102",
+    false,
+    207,
+    20
+   ],
+   "route1": {
+    "ratio": 0.004507326377876716,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 113,
+    "depth": 14,
+    "n_firings": 34
+   },
+   "route2": {
+    "ratio": 0.004515725150772237,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 67,
+    "depth": 13,
+    "n_firings": 19
+   },
+   "route2lit": {
+    "ratio": 0.004509567530653432,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 67,
+    "depth": 13,
+    "n_firings": 42
+   },
+   "route3": {
+    "ratio": 0.0041524081425962775,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 29,
+    "depth": 7,
+    "n_firings": 6
+   }
+  },
+  {
+   "rid": "v06",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-8-2-1380",
+   "index": 4,
+   "kind": "group",
+   "label": "k=3e+08/Mpc, q=3.09e+06/Mpc, r=3e+08/Mpc @ z_response=1.7445e+05, z in (5.2861e+10, 1.7445e+05), regime Gqr, group G+q-r",
+   "ref_30": "-1.47371765002684931758088594801e-33",
+   "source_ratio_g": 0.07515709920855397,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.07515709920855397,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.e9ba0850f8170p-110",
+    "0x1.3dfe0749bb4b9p-137",
+    false,
+    76,
+    20
+   ],
+   "route1": {
+    "ratio": 0.041347586472106505,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 38,
+    "depth": 14,
+    "n_firings": 6
+   },
+   "route2": {
+    "ratio": 0.053696549781952194,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 46,
+    "depth": 15,
+    "n_firings": 14
+   },
+   "route2lit": {
+    "ratio": 0.04486652730614042,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 46,
+    "depth": 15,
+    "n_firings": 19
+   },
+   "route3": {
+    "ratio": 5.828409964378563e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "v07",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-12606",
+   "index": 5,
+   "kind": "group",
+   "label": "k=3.05e+07/Mpc, q=9.85e+05/Mpc, r=3.05e+07/Mpc @ z_response=9.1593e+05, z in (1.6711e+10, 9.1593e+05), regime Gqr, group G-q+r",
+   "ref_30": "2.07868057053259123959074984225e-29",
+   "source_ratio_g": 0.0429677338449927,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.0429677338449927,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.a59b4411ebbc8p-96",
+    "0x1.88367c2b9c477p-122",
+    false,
+    116,
+    20
+   ],
+   "route1": {
+    "ratio": 0.042965914320719084,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 73,
+    "depth": 16,
+    "n_firings": 16
+   },
+   "route2": {
+    "ratio": 0.042871669164020014,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 59,
+    "depth": 13,
+    "n_firings": 11
+   },
+   "route2lit": {
+    "ratio": 0.04289050770746908,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 59,
+    "depth": 13,
+    "n_firings": 20
+   },
+   "route3": {
+    "ratio": 0.0965476929522231,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "v08",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-1192",
+   "index": 5,
+   "kind": "group",
+   "label": "k=9.7e+06/Mpc, q=3.14e+05/Mpc, r=9.7e+06/Mpc @ z_response=1.4527e+07, z in (5.406e+09, 1.4527e+07), regime Gqr, group G-q+r",
+   "ref_30": "5.40162061790654448858057431532e-28",
+   "source_ratio_g": 0.00728391733364179,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.00728391733364179,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.565e4e359a9e2p-91",
+    "0x1.968fd44f1fb26p-117",
+    false,
+    206,
+    20
+   ],
+   "route1": {
+    "ratio": 0.007502264996202705,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 127,
+    "depth": 13,
+    "n_firings": 47
+   },
+   "route2": {
+    "ratio": 0.007486547325721725,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 57,
+    "depth": 12,
+    "n_firings": 16
+   },
+   "route2lit": {
+    "ratio": 0.007488787657616251,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 57,
+    "depth": 12,
+    "n_firings": 25
+   },
+   "route3": {
+    "ratio": 0.0003151009124055397,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 6,
+    "n_firings": 3
+   }
+  },
+  {
+   "rid": "v09",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-8-1-35480",
+   "index": 2,
+   "kind": "group",
+   "label": "k=9.85e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=8342.9, z in (1.6721e+11, 8342.9), regime Gqr, group G+q-r",
+   "ref_30": "-2.54996737417846407867424096565e-26",
+   "source_ratio_g": 0.00612473785716462,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.00612473785716462,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.f912b4f680f74p-86",
+    "0x1.e1172e84c9ff5p-112",
+    false,
+    172,
+    20
+   ],
+   "route1": {
+    "ratio": 0.006125067391915184,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 91,
+    "depth": 17,
+    "n_firings": 26
+   },
+   "route2": {
+    "ratio": 0.006123054687127154,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 65,
+    "depth": 15,
+    "n_firings": 18
+   },
+   "route2lit": {
+    "ratio": 0.006123439557000723,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 66,
+    "depth": 15,
+    "n_firings": 38
+   },
+   "route3": {
+    "ratio": 0.006420906244177657,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 17,
+    "depth": 7,
+    "n_firings": 3
+   }
+  },
+  {
+   "rid": "v10",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-8-3-38023",
+   "index": 4,
+   "kind": "group",
+   "label": "k=1e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=132.08, z in (1.6711e+10, 132.08), regime Gqr, group G-q-r",
+   "ref_30": "-2.1826658432157268256554886147e-24",
+   "source_ratio_g": 0.0010727747887354336,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.0010727747887354336,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.51c04d54877a4p-79",
+    "0x1.6de3b7d10f287p-106",
+    false,
+    196,
+    20
+   ],
+   "route1": {
+    "ratio": 0.0010716412791860717,
+    "bound": 1.0,
+    "ok": true,
+    "converged": false,
+    "regions": 108,
+    "depth": 20,
+    "n_firings": 23
+   },
+   "route2": {
+    "ratio": 0.0010397123250422834,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 89,
+    "depth": 17,
+    "n_firings": 24
+   },
+   "route2lit": {
+    "ratio": 0.0010405425775542301,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 89,
+    "depth": 17,
+    "n_firings": 48
+   },
+   "route3": {
+    "ratio": 0.0010341282236319886,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 34,
+    "depth": 9,
+    "n_firings": 9
+   }
+  },
+  {
+   "rid": "v11",
+   "source": "06g v8",
+   "class": "two implementations",
+   "unit": "g-1e-8-0-12655",
+   "index": 3,
+   "kind": "group",
+   "label": "k=3.14e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=1.2075e+06, z in (1.6721e+11, 1.2075e+06), regime Gqr, group G-q+r",
+   "ref_30": "-2.76334563255896750138638697212e-26",
+   "source_ratio_g": 0.4285289529086898,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.4285289529086898,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.11ab22e904a9bp-85",
+    "0x1.a3f78ff684b90p-110",
+    false,
+    142,
+    20
+   ],
+   "route1": {
+    "ratio": 0.42853180681168296,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 73,
+    "depth": 16,
+    "n_firings": 14
+   },
+   "route2": {
+    "ratio": 0.4285311871940501,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 72,
+    "depth": 13,
+    "n_firings": 15
+   },
+   "route2lit": {
+    "ratio": 0.42853174069179467,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 72,
+    "depth": 13,
+    "n_firings": 26
+   },
+   "route3": {
+    "ratio": 0.42794660929254646,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 9,
+    "depth": 7,
+    "n_firings": 4
+   }
+  },
+  {
+   "rid": "f00",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-7-0-12778",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "1.72595235509330346633458680448e-28",
+   "source_ratio_g": 6.28578731681913e-05,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-7",
+   "ratio_g": 6.28578731681913e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.b594b65e79b90p-93",
+    "0x1.996656296465fp-112",
+    true,
+    16,
+    7
+   ],
+   "route1": {
+    "ratio": 6.28578731681913e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 6.28578731681913e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 6.285811784792678e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 16
+   },
+   "route3": {
+    "ratio": 6.28578731681913e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "f01",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-7-0-12959",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-2.12628634250858201946467020368e-28",
+   "source_ratio_g": 0.020263485192387257,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.020263485192387257,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.0d89eec6d647cp-92",
+    "0x1.a19bf7b51b5c9p-111",
+    true,
+    12,
+    5
+   ],
+   "route1": {
+    "ratio": 0.020263485192387257,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.020263485192387257,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.02026347734467743,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 5,
+    "n_firings": 12
+   },
+   "route3": {
+    "ratio": 0.020263485192387257,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 5,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "f02",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-7-0-1873",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "1.84574736120726118007488452227e-28",
+   "source_ratio_g": 5.637100736554222e-05,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-7",
+   "ratio_g": 5.637100736554222e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.d3f3da516a02fp-93",
+    "0x1.87e5b15d032bdp-112",
+    true,
+    15,
+    6
+   ],
+   "route1": {
+    "ratio": 5.637100736554222e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 5.637100736554222e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 5.63708517021098e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 6,
+    "n_firings": 15
+   },
+   "route3": {
+    "ratio": 5.637100736554222e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 6,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "f03",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-7-0-2108",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-2.07735140988755179525785682775e-28",
+   "source_ratio_g": 0.04628732582690491,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.04628732582690491,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.0755e747b9a40p-92",
+    "0x1.673aaac4cd8fap-112",
+    true,
+    14,
+    6
+   ],
+   "route1": {
+    "ratio": 0.04628732582690491,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.04628732582690491,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.04628742222873799,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 14
+   },
+   "route3": {
+    "ratio": 0.046305936965123966,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 6,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "f04",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-7-0-33730",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-1.69431783251920886882017784954e-28",
+   "source_ratio_g": 6.430551320554477e-05,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-7",
+   "ratio_g": 6.430551320554477e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.ad8f83b4b94b8p-93",
+    "0x1.9d96d77ade3b0p-112",
+    true,
+    16,
+    7
+   ],
+   "route1": {
+    "ratio": 6.430551320554477e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 6.430551320554477e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 6.430572874184007e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 16
+   },
+   "route3": {
+    "ratio": 6.430551320554477e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "f05",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-8-0-12778",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "1.72595235509330346633458680448e-28",
+   "source_ratio_g": 6.28578731681913e-05,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-8",
+   "ratio_g": 6.28578731681913e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.b594b65e79b90p-93",
+    "0x1.996656296465fp-112",
+    true,
+    16,
+    7
+   ],
+   "route1": {
+    "ratio": 6.28578731681913e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 6.28578731681913e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 6.285811784792678e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 16
+   },
+   "route3": {
+    "ratio": 6.28578731681913e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "f06",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-8-0-12959",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-2.12628634250858201946467020368e-28",
+   "source_ratio_g": 0.020263485192387257,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.020263485192387257,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.0d89eec6d647cp-92",
+    "0x1.a19bf7b51b5c9p-111",
+    true,
+    12,
+    5
+   ],
+   "route1": {
+    "ratio": 0.020263485192387257,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.020263485192387257,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.02026347734467743,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 5,
+    "n_firings": 12
+   },
+   "route3": {
+    "ratio": 0.020263485192387257,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 12,
+    "depth": 5,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "f07",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-8-0-1873",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "1.84574736120726118007488452227e-28",
+   "source_ratio_g": 5.637100736554222e-05,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-8",
+   "ratio_g": 5.637100736554222e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.d3f3da516a02fp-93",
+    "0x1.87e5b15d032bdp-112",
+    true,
+    15,
+    6
+   ],
+   "route1": {
+    "ratio": 5.637100736554222e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 5.637100736554222e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 5.63708517021098e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 6,
+    "n_firings": 15
+   },
+   "route3": {
+    "ratio": 5.637100736554222e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 15,
+    "depth": 6,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "f08",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-8-0-2108",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-2.07735140988755179525785682775e-28",
+   "source_ratio_g": 0.04628732582690491,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.04628732582690491,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.0755e747b9a40p-92",
+    "0x1.673aaac4cd8fap-112",
+    true,
+    14,
+    6
+   ],
+   "route1": {
+    "ratio": 0.04628732582690491,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.04628732582690491,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.04628742222873799,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 6,
+    "n_firings": 14
+   },
+   "route3": {
+    "ratio": 0.046305936965123966,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 6,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "f09",
+   "source": "06j W-5",
+   "class": "four readings agree",
+   "unit": "g-1e-8-0-33730",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-1.69431783251920886882017784954e-28",
+   "source_ratio_g": 6.430551320554477e-05,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-8",
+   "ratio_g": 6.430551320554477e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.ad8f83b4b94b8p-93",
+    "0x1.9d96d77ade3b0p-112",
+    true,
+    16,
+    7
+   ],
+   "route1": {
+    "ratio": 6.430551320554477e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 6.430551320554477e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 6.430572874184007e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 16
+   },
+   "route3": {
+    "ratio": 6.430551320554477e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 16,
+    "depth": 7,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "c00",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-7-1-2142",
+   "index": 5,
+   "kind": "group",
+   "label": null,
+   "ref_30": "3.21088397832325401600277685456e-25",
+   "source_ratio_g": 0.004965927936960493,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.004965927936960493,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.8d7cf99ae8254p-82",
+    "0x1.05ced17b1ea83p-105",
+    true,
+    122,
+    16
+   ],
+   "route1": {
+    "ratio": 0.005008017043792807,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 100,
+    "depth": 14,
+    "n_firings": 6
+   },
+   "route2": {
+    "ratio": 0.005028925880520047,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 80,
+    "depth": 16,
+    "n_firings": 10
+   },
+   "route2lit": {
+    "ratio": 0.005027074026620819,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 86,
+    "depth": 16,
+    "n_firings": 50
+   },
+   "route3": {
+    "ratio": 0.005306045404500383,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 33,
+    "depth": 9,
+    "n_firings": 10
+   }
+  },
+  {
+   "rid": "c01",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-7-2-33416",
+   "index": 6,
+   "kind": "group",
+   "label": null,
+   "ref_30": "5.17234674747992371164070349416e-33",
+   "source_ratio_g": 0.0013820509113013255,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.0013820509113013255,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.adb3a64d5ced1p-108",
+    "0x1.612a5bc356688p-132",
+    true,
+    23,
+    6
+   ],
+   "route1": {
+    "ratio": 0.0013820509113013255,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 23,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.0013820509113013255,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 23,
+    "depth": 6,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.0013820792316014143,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 23,
+    "depth": 6,
+    "n_firings": 17
+   },
+   "route3": {
+    "ratio": 3.9346718230788746,
+    "bound": 1.0,
+    "ok": false,
+    "converged": true,
+    "regions": 1,
+    "depth": 0,
+    "n_firings": 1
+   }
+  },
+  {
+   "rid": "c02",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-7-1-35497",
+   "index": 5,
+   "kind": "group",
+   "label": null,
+   "ref_30": "2.81999592611854878699969141963e-25",
+   "source_ratio_g": 0.001184225620416361,
+   "in_720": false,
+   "group": "G-q+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.001184225620416361,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.5d193cfac62dap-82",
+    "0x1.c1952f299be70p-106",
+    true,
+    69,
+    15
+   ],
+   "route1": {
+    "ratio": 0.0011754957877553364,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 56,
+    "depth": 10,
+    "n_firings": 3
+   },
+   "route2": {
+    "ratio": 0.00118503894796548,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 56,
+    "depth": 11,
+    "n_firings": 2
+   },
+   "route2lit": {
+    "ratio": 0.001185059610359727,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 56,
+    "depth": 11,
+    "n_firings": 18
+   },
+   "route3": {
+    "ratio": 0.0012497412275332413,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 27,
+    "depth": 8,
+    "n_firings": 7
+   }
+  },
+  {
+   "rid": "c03",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-7-0-12727",
+   "index": 4,
+   "kind": "group",
+   "label": null,
+   "ref_30": "3.85980175320451677448117079666e-24",
+   "source_ratio_g": 0.021608712047467372,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.021608712047467372,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.2aa3400340c5fp-78",
+    "0x1.1dfbcef43e8dcp-102",
+    true,
+    74,
+    14
+   ],
+   "route1": {
+    "ratio": 0.021589242556344233,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 63,
+    "depth": 14,
+    "n_firings": 12
+   },
+   "route2": {
+    "ratio": 0.021601182884520384,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 50,
+    "depth": 14,
+    "n_firings": 4
+   },
+   "route2lit": {
+    "ratio": 0.021602362639799255,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 50,
+    "depth": 14,
+    "n_firings": 15
+   },
+   "route3": {
+    "ratio": 0.021588862501294416,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 20,
+    "depth": 7,
+    "n_firings": 5
+   }
+  },
+  {
+   "rid": "c04",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-7-1-35052",
+   "index": 6,
+   "kind": "group",
+   "label": null,
+   "ref_30": "7.09196484670780590152114341917e-26",
+   "source_ratio_g": 0.015378905493171446,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-7",
+   "ratio_g": 0.015378905493171446,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.5f2d55b9bafccp-84",
+    "0x1.5d6a9261ed46bp-108",
+    true,
+    59,
+    15
+   ],
+   "route1": {
+    "ratio": 0.015280300394579688,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 52,
+    "depth": 14,
+    "n_firings": 12
+   },
+   "route2": {
+    "ratio": 0.015312276348898205,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 36,
+    "depth": 10,
+    "n_firings": 3
+   },
+   "route2lit": {
+    "ratio": 0.015312550434401448,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 36,
+    "depth": 10,
+    "n_firings": 20
+   },
+   "route3": {
+    "ratio": 0.015054751485606189,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 27,
+    "depth": 9,
+    "n_firings": 6
+   }
+  },
+  {
+   "rid": "c05",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-7-0-33892",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-2.17480869674562743527788321413e-28",
+   "source_ratio_g": 0.02146634510679625,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-7",
+   "ratio_g": 0.02146634510679625,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.13b092b55d3b9p-92",
+    "0x1.90400cccd7acbp-111",
+    true,
+    13,
+    5
+   ],
+   "route1": {
+    "ratio": 0.02146634510679625,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 0.02146634510679625,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 0.021466344391891663,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 5,
+    "n_firings": 14
+   },
+   "route3": {
+    "ratio": 0.02146634510679625,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 13,
+    "depth": 5,
+    "n_firings": 0
+   }
+  },
+  {
+   "rid": "c06",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-8-3-34272",
+   "index": 4,
+   "kind": "group",
+   "label": null,
+   "ref_30": "2.22219057660533904192134311266e-25",
+   "source_ratio_g": 0.03289650027433246,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.03289650027433246,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.131807ccedfd2p-82",
+    "0x1.c94a6b5f08ffbp-110",
+    true,
+    144,
+    15
+   ],
+   "route1": {
+    "ratio": 0.03293365423690544,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 110,
+    "depth": 12,
+    "n_firings": 27
+   },
+   "route2": {
+    "ratio": 0.03292215090466566,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 102,
+    "depth": 12,
+    "n_firings": 14
+   },
+   "route2lit": {
+    "ratio": 0.03302825752488321,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 104,
+    "depth": 13,
+    "n_firings": 57
+   },
+   "route3": {
+    "ratio": 0.03197563218273719,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 37,
+    "depth": 9,
+    "n_firings": 9
+   }
+  },
+  {
+   "rid": "c07",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-8-3-37323",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-2.41719579978119127799496635118e-25",
+   "source_ratio_g": 0.013245018499087133,
+   "in_720": false,
+   "group": "G+q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.013245018499087133,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.2b3bfe1f83d86p-82",
+    "0x1.0e9d45fb5cbb6p-109",
+    true,
+    42,
+    11
+   ],
+   "route1": {
+    "ratio": 0.01324539514115133,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 42,
+    "depth": 11,
+    "n_firings": 3
+   },
+   "route2": {
+    "ratio": 0.013241498376247215,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 36,
+    "depth": 9,
+    "n_firings": 2
+   },
+   "route2lit": {
+    "ratio": 0.013237652363197818,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 36,
+    "depth": 9,
+    "n_firings": 29
+   },
+   "route3": {
+    "ratio": 0.013752022372639037,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 32,
+    "depth": 9,
+    "n_firings": 6
+   }
+  },
+  {
+   "rid": "c08",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-8-1-35136",
+   "index": 3,
+   "kind": "group",
+   "label": null,
+   "ref_30": "8.80085831379617592692031599168e-25",
+   "source_ratio_g": 0.0004549195526983844,
+   "in_720": false,
+   "group": "G+q+r",
+   "rtol": "1e-8",
+   "ratio_g": 0.0004549195526983844,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.105f95517f07ep-80",
+    "0x1.2e3bfb7a8bd2ep-107",
+    true,
+    90,
+    15
+   ],
+   "route1": {
+    "ratio": 0.0004422919981113254,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 69,
+    "depth": 14,
+    "n_firings": 12
+   },
+   "route2": {
+    "ratio": 0.0005162580598977452,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 53,
+    "depth": 11,
+    "n_firings": 7
+   },
+   "route2lit": {
+    "ratio": 0.0005157049575272646,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 53,
+    "depth": 11,
+    "n_firings": 43
+   },
+   "route3": {
+    "ratio": 0.0004909849370363969,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 41,
+    "depth": 7,
+    "n_firings": 7
+   }
+  },
+  {
+   "rid": "c09",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-8-1-35446",
+   "index": 4,
+   "kind": "group",
+   "label": null,
+   "ref_30": "7.7499943681369327033156402352e-26",
+   "source_ratio_g": 0.004044396376639611,
+   "in_720": false,
+   "group": "G-q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.004044396376639611,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.7fc2d9a2290acp-84",
+    "0x1.561f68e442eeap-110",
+    true,
+    52,
+    12
+   ],
+   "route1": {
+    "ratio": 0.004020224662921489,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 50,
+    "depth": 12,
+    "n_firings": 3
+   },
+   "route2": {
+    "ratio": 0.004021381648038402,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 49,
+    "depth": 9,
+    "n_firings": 1
+   },
+   "route2lit": {
+    "ratio": 0.004027357519353894,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 49,
+    "depth": 9,
+    "n_firings": 23
+   },
+   "route3": {
+    "ratio": 0.003872032270071315,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 30,
+    "depth": 8,
+    "n_firings": 5
+   }
+  },
+  {
+   "rid": "c10",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-8-0-12965",
+   "index": 4,
+   "kind": "group",
+   "label": null,
+   "ref_30": "4.87799523829827146886486126622e-24",
+   "source_ratio_g": 0.07079718728439524,
+   "in_720": false,
+   "group": "G+q-r",
+   "rtol": "1e-8",
+   "ratio_g": 0.07079718728439524,
+   "ratio_g_matches_source": true,
+   "g": [
+    "0x1.796aa6626bbd6p-78",
+    "0x1.fa3847f54f9a2p-105",
+    true,
+    26,
+    10
+   ],
+   "route1": {
+    "ratio": 0.09838030284677132,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 30,
+    "depth": 9,
+    "n_firings": 6
+   },
+   "route2": {
+    "ratio": 0.09787858950794907,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 23,
+    "depth": 8,
+    "n_firings": 6
+   },
+   "route2lit": {
+    "ratio": 0.09808715224433977,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 23,
+    "depth": 8,
+    "n_firings": 17
+   },
+   "route3": {
+    "ratio": 0.10030475182892908,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 25,
+    "depth": 9,
+    "n_firings": 10
+   }
+  },
+  {
+   "rid": "c11",
+   "source": "06j W-12",
+   "class": "four readings agree",
+   "unit": "g-1e-8-0-33648",
+   "index": 1,
+   "kind": "group",
+   "label": null,
+   "ref_30": "-1.76491022631196405139959409819e-28",
+   "source_ratio_g": 4.171516774086542e-05,
+   "in_720": false,
+   "group": "G+r",
+   "rtol": "1e-8",
+   "ratio_g": 4.171516774086542e-05,
+   "ratio_g_matches_source": true,
+   "g": [
+    "-0x1.bf753907ebf45p-93",
+    "0x1.cdf89c07ae75fp-111",
+    true,
+    14,
+    5
+   ],
+   "route1": {
+    "ratio": 4.171516774086542e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2": {
+    "ratio": 4.171516774086542e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 5,
+    "n_firings": 0
+   },
+   "route2lit": {
+    "ratio": 4.171515983259239e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 5,
+    "n_firings": 14
+   },
+   "route3": {
+    "ratio": 4.171516774086542e-05,
+    "bound": 1.0,
+    "ok": true,
+    "converged": true,
+    "regions": 14,
+    "depth": 5,
+    "n_firings": 0
+   }
+  }
+ ]
+}

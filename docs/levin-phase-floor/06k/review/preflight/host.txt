@@ -1,0 +1,4 @@
+mps026298.phys.susx.ac.uk
+Wed Nov  4 08:47:42 UTC 2026
+10
+/dev/disk3s3s1  927G  838G   89G  91% /

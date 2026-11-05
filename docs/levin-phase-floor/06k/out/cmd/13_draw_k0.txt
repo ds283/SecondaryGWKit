@@ -1,0 +1,118 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/draw_k0.py out/k0/units.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:06:25Z
+# ----
+# levin-phase-floor 06k: Gate K0's 100 units
+# written 2026-11-04T09:06:25Z on mps026298.phys.susx.ac.uk
+# script draw_k0.py sha256 d41eac82b9f6d53eb96c90281a667c204d07a44b5cc5f501fa4239a8e8f611c9
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/docs/levin-phase-floor/06j/out/sample/selection.json sha256 ae39b182b2af901d259143eef5cea2520be9d9ca8d9d7a02eafd94d0169158d4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/out/v8_calls.json sha256 1e9a62b0f8d95deade4f265d1fa1a8b5bbd63f587f7c9761d78882db5367c42e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/index_06g.json sha256 349e37cd9c1648bdba393818c072a0514f63b477fa8136efd0cd97e781bcbd2c
+strata candidates {'1e-7/V8out': 455, '1e-7/SP720': 720, '1e-7/rest': 8082, '1e-8/V8out': 463, '1e-8/SP720': 720, '1e-8/rest': 8074}
+    g-1e-7-0-37232 U46 s00 k 0:101 wall_06g 4.63 group calls 5 unconverged 1 720 False
+    g-1e-7-2-21980 U46 s01 k 2:2 wall_06g 10.22 group calls 7 unconverged 3 720 False
+    g-1e-7-3-34738 U46 s02 k 3:1 wall_06g 31.26 group calls 5 unconverged 4 720 False
+    g-1e-7-0-12935 U46 s03 k 0:101 wall_06g 8.45 group calls 5 unconverged 3 720 False
+    g-1e-7-1-14039 U46 s04 k 1:102 wall_06g 11.05 group calls 5 unconverged 2 720 False
+    g-1e-7-1-11233 U46 s05 k 1:102 wall_06g 8.58 group calls 7 unconverged 1 720 False
+    g-1e-7-0-33997 U46 s06 k 0:101 wall_06g 6.96 group calls 5 unconverged 2 720 False
+    g-1e-7-1-35492 U46 s07 k 1:102 wall_06g 5.92 group calls 5 unconverged 2 720 False
+     g-1e-7-3-1188 U46 s08 k 3:201 wall_06g 25.40 group calls 7 unconverged 3 720 False
+    g-1e-7-3-13481 U46 s09 k 3:1 wall_06g 2.24 group calls 5 unconverged 1 720 False
+    g-1e-7-3-38477 U46 s10 k 3:1 wall_06g 4.63 group calls 5 unconverged 1 720 False
+    g-1e-7-2-21857 U46 s11 k 2:302 wall_06g 11.31 group calls 7 unconverged 2 720 False
+    g-1e-8-3-14505 U46 s12 k 3:1 wall_06g 9.22 group calls 5 unconverged 2 720 False
+    g-1e-8-3-14589 U46 s13 k 3:201 wall_06g 6.98 group calls 7 unconverged 1 720 False
+     g-1e-8-2-1391 U46 s14 k 2:2 wall_06g 10.71 group calls 7 unconverged 1 720 False
+     g-1e-8-3-2324 U46 s15 k 3:201 wall_06g 6.49 group calls 7 unconverged 1 720 False
+    g-1e-8-0-33906 U46 s16 k 0:101 wall_06g 10.53 group calls 5 unconverged 3 720 False
+    g-1e-8-1-35480 U46 s17 k 1:102 wall_06g 18.39 group calls 5 unconverged 3 720 False
+    g-1e-8-2-21692 U46 s18 k 2:302 wall_06g 9.43 group calls 7 unconverged 1 720 False
+    g-1e-8-0-38451 U46 s19 k 0:101 wall_06g 10.46 group calls 5 unconverged 2 720 False
+    g-1e-8-0-33945 U46 s20 k 0:101 wall_06g 25.78 group calls 5 unconverged 3 720 False
+    g-1e-8-1-14543 U46 s21 k 1:102 wall_06g 16.73 group calls 7 unconverged 2 720 False
+    g-1e-8-0-34037 U46 s22 k 0:202 wall_06g 9.53 group calls 5 unconverged 1 720 False
+    g-1e-8-0-12681 U46 s23 k 0:101 wall_06g 6.16 group calls 5 unconverged 1 720 False
+    g-1e-7-0-12778 U46 f00 k 0:202 wall_06g 4.74 group calls 7 unconverged 0 720 False
+    g-1e-7-0-12959 U46 f01 k 0:202 wall_06g 7.40 group calls 7 unconverged 1 720 False
+     g-1e-7-0-1873 U46 f02 k 0:202 wall_06g 1.38 group calls 7 unconverged 0 720 False
+     g-1e-7-0-2108 U46 f03 k 0:202 wall_06g 1.50 group calls 7 unconverged 0 720 False
+    g-1e-7-0-33730 U46 f04 k 0:202 wall_06g 2.69 group calls 7 unconverged 0 720 False
+    g-1e-8-0-12778 U46 f05 k 0:202 wall_06g 5.00 group calls 7 unconverged 0 720 False
+    g-1e-8-0-12959 U46 f06 k 0:202 wall_06g 7.09 group calls 7 unconverged 1 720 False
+     g-1e-8-0-1873 U46 f07 k 0:202 wall_06g 1.73 group calls 7 unconverged 0 720 False
+     g-1e-8-0-2108 U46 f08 k 0:202 wall_06g 1.75 group calls 7 unconverged 0 720 False
+    g-1e-8-0-33730 U46 f09 k 0:202 wall_06g 2.80 group calls 7 unconverged 0 720 False
+     g-1e-7-1-2142 U46 c00 k 1:102 wall_06g 8.47 group calls 7 unconverged 0 720 False
+    g-1e-7-2-33416 U46 c01 k 2:302 wall_06g 1.35 group calls 7 unconverged 0 720 False
+    g-1e-7-1-35497 U46 c02 k 1:102 wall_06g 15.36 group calls 7 unconverged 3 720 False
+    g-1e-7-0-12727 U46 c03 k 0:101 wall_06g 5.64 group calls 7 unconverged 0 720 False
+    g-1e-7-1-35052 U46 c04 k 1:102 wall_06g 6.39 group calls 7 unconverged 1 720 False
+    g-1e-7-0-33892 U46 c05 k 0:202 wall_06g 3.23 group calls 7 unconverged 0 720 False
+    g-1e-8-3-34272 U46 c06 k 3:1 wall_06g 5.44 group calls 5 unconverged 0 720 False
+    g-1e-8-3-37323 U46 c07 k 3:1 wall_06g 6.64 group calls 5 unconverged 0 720 False
+    g-1e-8-1-35136 U46 c08 k 1:102 wall_06g 8.19 group calls 7 unconverged 0 720 False
+    g-1e-8-1-35446 U46 c09 k 1:102 wall_06g 3.48 group calls 5 unconverged 0 720 False
+    g-1e-8-0-12965 U46 c10 k 0:101 wall_06g 8.78 group calls 7 unconverged 0 720 False
+    g-1e-8-0-33648 U46 c11 k 0:202 wall_06g 5.87 group calls 7 unconverged 0 720 False
+    g-1e-7-3-13606 U54 V8out k 3:201 wall_06g 5.80 group calls 7 unconverged 2 720 False
+      g-1e-7-3-761 U54 V8out k 3:201 wall_06g 5.24 group calls 5 unconverged 1 720 False
+    g-1e-7-3-34748 U54 V8out k 3:1 wall_06g 13.43 group calls 5 unconverged 3 720 False
+     g-1e-7-2-1427 U54 V8out k 2:2 wall_06g 5.13 group calls 7 unconverged 1 720 False
+    g-1e-7-2-21696 U54 V8out k 2:302 wall_06g 10.60 group calls 7 unconverged 2 720 False
+    g-1e-7-1-11214 U54 V8out k 1:301 wall_06g 10.88 group calls 7 unconverged 1 720 False
+    g-1e-7-2-35010 U54 V8out k 2:2 wall_06g 10.45 group calls 7 unconverged 2 720 False
+     g-1e-7-2-1448 U54 V8out k 2:2 wall_06g 7.61 group calls 7 unconverged 1 720 False
+    g-1e-7-3-34254 U54 V8out k 3:1 wall_06g 3.74 group calls 5 unconverged 1 720 False
+     g-1e-7-1-1849 U54 SP720 k 1:102 wall_06g 7.23 group calls 5 unconverged 0 720 True
+     g-1e-7-2-2078 U54 SP720 k 2:302 wall_06g 2.92 group calls 5 unconverged 1 720 True
+    g-1e-7-3-34950 U54 SP720 k 3:1 wall_06g 6.00 group calls 5 unconverged 0 720 True
+     g-1e-7-0-1814 U54 SP720 k 0:101 wall_06g 6.35 group calls 5 unconverged 0 720 True
+    g-1e-7-3-34298 U54 SP720 k 3:1 wall_06g 5.08 group calls 5 unconverged 0 720 True
+    g-1e-7-0-14529 U54 SP720 k 0:202 wall_06g 1.82 group calls 5 unconverged 0 720 True
+    g-1e-7-3-34969 U54 SP720 k 3:1 wall_06g 9.79 group calls 5 unconverged 0 720 True
+    g-1e-7-0-37211 U54 SP720 k 0:202 wall_06g 2.17 group calls 5 unconverged 0 720 True
+    g-1e-7-1-37614 U54 SP720 k 1:102 wall_06g 27.92 group calls 5 unconverged 4 720 True
+    g-1e-7-1-10846 U54 rest k 1:301 wall_06g 13.48 group calls 7 unconverged 0 720 False
+     g-1e-7-2-1458 U54 rest k 2:302 wall_06g 5.61 group calls 7 unconverged 0 720 False
+    g-1e-7-3-13829 U54 rest k 3:1 wall_06g 12.35 group calls 5 unconverged 0 720 False
+     g-1e-7-2-1634 U54 rest k 2:302 wall_06g 1.60 group calls 7 unconverged 0 720 False
+     g-1e-7-3-1040 U54 rest k 3:1 wall_06g 0.51 group calls 2 unconverged 0 720 False
+    g-1e-7-3-35986 U54 rest k 3:201 wall_06g 0.88 group calls 5 unconverged 0 720 False
+    g-1e-7-1-10963 U54 rest k 1:102 wall_06g 3.89 group calls 5 unconverged 0 720 False
+    g-1e-7-1-11199 U54 rest k 1:102 wall_06g 7.08 group calls 5 unconverged 0 720 False
+    g-1e-7-1-20582 U54 rest k 1:301 wall_06g 0.60 group calls 3 unconverged 0 720 False
+     g-1e-8-1-2177 U54 V8out k 1:102 wall_06g 7.49 group calls 5 unconverged 2 720 False
+    g-1e-8-0-13772 U54 V8out k 0:101 wall_06g 11.93 group calls 5 unconverged 2 720 False
+    g-1e-8-3-13830 U54 V8out k 3:201 wall_06g 13.69 group calls 7 unconverged 3 720 False
+    g-1e-8-0-34019 U54 V8out k 0:101 wall_06g 8.75 group calls 5 unconverged 1 720 False
+    g-1e-8-0-12617 U54 V8out k 0:202 wall_06g 5.46 group calls 7 unconverged 1 720 False
+    g-1e-8-3-13606 U54 V8out k 3:201 wall_06g 6.46 group calls 7 unconverged 2 720 False
+     g-1e-8-3-1264 U54 V8out k 3:201 wall_06g 8.13 group calls 7 unconverged 4 720 False
+    g-1e-8-0-13954 U54 V8out k 0:101 wall_06g 9.11 group calls 5 unconverged 1 720 False
+    g-1e-8-0-33980 U54 V8out k 0:101 wall_06g 11.16 group calls 7 unconverged 1 720 False
+    g-1e-8-2-39047 U54 SP720 k 2:302 wall_06g 13.13 group calls 5 unconverged 0 720 True
+    g-1e-8-2-34906 U54 SP720 k 2:302 wall_06g 11.94 group calls 5 unconverged 3 720 True
+     g-1e-8-0-2106 U54 SP720 k 0:101 wall_06g 25.02 group calls 5 unconverged 1 720 True
+     g-1e-8-1-2158 U54 SP720 k 1:102 wall_06g 2.83 group calls 5 unconverged 0 720 True
+    g-1e-8-0-14054 U54 SP720 k 0:101 wall_06g 13.91 group calls 5 unconverged 1 720 True
+    g-1e-8-3-34739 U54 SP720 k 3:1 wall_06g 8.53 group calls 5 unconverged 1 720 True
+    g-1e-8-3-34298 U54 SP720 k 3:1 wall_06g 8.49 group calls 5 unconverged 0 720 True
+    g-1e-8-1-37676 U54 SP720 k 1:102 wall_06g 7.27 group calls 5 unconverged 1 720 True
+    g-1e-8-1-34781 U54 SP720 k 1:102 wall_06g 13.80 group calls 5 unconverged 2 720 True
+    g-1e-8-2-21897 U54 rest k 2:302 wall_06g 5.17 group calls 5 unconverged 0 720 False
+    g-1e-8-3-13600 U54 rest k 3:201 wall_06g 2.44 group calls 7 unconverged 0 720 False
+    g-1e-8-3-37338 U54 rest k 3:1 wall_06g 13.09 group calls 5 unconverged 0 720 False
+     g-1e-8-2-1626 U54 rest k 2:2 wall_06g 1.38 group calls 5 unconverged 0 720 False
+    g-1e-8-2-13642 U54 rest k 2:2 wall_06g 1.35 group calls 5 unconverged 0 720 False
+    g-1e-8-1-20299 U54 rest k 1:102 wall_06g 0.07 group calls 0 unconverged 0 720 False
+    g-1e-8-0-10193 U54 rest k 0:101 wall_06g 0.07 group calls 0 unconverged 0 720 False
+    g-1e-8-0-35102 U54 rest k 0:101 wall_06g 2.56 group calls 5 unconverged 0 720 False
+    g-1e-8-0-10209 U54 rest k 0:101 wall_06g 0.08 group calls 0 unconverged 0 720 False
+wrote out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699
+# ----
+# end 2026-11-04T09:06:26Z
+# exit 0

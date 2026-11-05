@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "route2lit-1e-7-k2_2",
+ "units": [
+  {
+   "uid": "g-1e-7-2-1449",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-1449",
+   "names05": null,
+   "shard": 2,
+   "serial": 1449,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/dev/route2lit_1449/route2lit-1e-7-k2_2",
+ "emit_fd": null,
+ "emit_file": "state/dev/route2lit_1449/route2lit-1e-7-k2_2/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": {
+  "name": "route2lit",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route2lit.py",
+  "sha256": "2fd10b78955d7607ad97a03d99cd1191fb932b3a7dee2f5b8bf4dbd7ddd02dff"
+ }
+}

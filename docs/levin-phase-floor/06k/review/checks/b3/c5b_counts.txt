@@ -1,0 +1,6 @@
+720 from 06a's scan: 720 rows; v8 lost entries' stationary_point_row agree: True
+06g: 18560 records, 18560 units
+route1: 18560 records; C1 holds 1e-7 792/801 (98.9 %), 1e-8 818/830 (98.6 %); C2 fails: 7 lost ({'1e-8': 7}); S1 holds: 0 calls in 0 rows; S1 census units (rtol, row) 0
+route2: 18560 records; C1 holds 1e-7 801/801 (100.0 %), 1e-8 828/830 (99.8 %); C2 fails: 5 lost ({'1e-8': 5}); S1 fails: 10 calls in 5 rows, worst 1.3234 (('g-1e-7-3-662', 3)); S1 census units (rtol, row) 10
+route2lit: 18560 records; C1 holds 1e-7 794/801 (99.1 %), 1e-8 821/830 (98.9 %); C2 fails: 53 lost ({'1e-7': 25, '1e-8': 28}); S1 fails: 10 calls in 5 rows, worst 1.3234 (('g-1e-7-3-662', 3)); S1 census units (rtol, row) 10
+route3: 18560 records; C1 holds 1e-7 801/801 (100.0 %), 1e-8 829/830 (99.9 %); C2 fails: 1 lost ({'1e-8': 1}); S1 fails: 46 calls in 22 rows, worst 1.6452 (('g-1e-7-1-10767', 5)); S1 census units (rtol, row) 44

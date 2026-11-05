@@ -1,0 +1,12 @@
+$ sh -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060\ status\ --short\ --ignored\;\ echo\ \'\(end\ of\ worktree\ status\)\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ \'\(end\ of\ main\ status\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T01:17:00Z
+# ----
+89370609a64d58993289dcfe991350a420ea698d
+(end of worktree status)
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end of main status)
+# ----
+# end 2026-11-05T01:17:00Z
+# exit 0

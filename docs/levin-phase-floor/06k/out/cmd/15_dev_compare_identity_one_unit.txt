@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_k0.py identity state/dev/identity_1449 state/dev/compare_identity_1449.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:09:01Z
+# ----
+# levin-phase-floor 06k: Gate K0, identity_1449 against 06g's census (identity)
+# written 2026-11-04T09:09:01Z on mps026298.phys.susx.ac.uk
+# script compare_k0.py sha256 ebc48d817d8ef3df86ed0a12ee9e85ff88916a9ddb4f6244d535b2255d686aec
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev/identity_1449/units.jsonl sha256 1d57350cac1507c5178bd44a9096b7681a0d3d41268c7be89f57b4ad3b131c5d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/index_06g.json sha256 349e37cd9c1648bdba393818c072a0514f63b477fa8136efd0cd97e781bcbd2c
+# 06g's checkpoint /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl (each record's line checked by its SHA-256 in the index)
+g-1e-7-2-1449 (identity-1e-7-k2_2): DIFFERS; differing ['data.cache_built']; excluded keys differing 97
+units 1; failing 1; units compared whole 1
+excluded keys that differ (path tail: units): {'analytic_06h.seconds': 1, 'calls.elapsed': 5, 'calls.route_06k': 5, 'data.cc_floor_s': 1, 'data.checked_06g_s': 1, 'data.declared_06h_s': 1, 'deep_lines.seconds': 1, 'counts_by_root.own tree': 1, 'counts_by_root.scripts': 1, 'counts_by_root.variant': 1, 'AdaptiveLevin.levin_quadrature': 1, "files.BesselPhaseGroup (QuadSourceIntegral's)": 1, 'files.ComputeTargets': 1, 'ComputeTargets.GkSource': 1, 'ComputeTargets.GkSourcePolicyData': 1, 'ComputeTargets.GkWKBIntegration': 1, 'ComputeTargets.QuadSource': 1, 'ComputeTargets.QuadSourceIntegral': 1, 'ComputeTargets.TkSourceFunctions': 1, 'ComputeTargets.TkWKBIntegration': 1, 'ComputeTargets.primitive_phase': 1, 'LiouvilleGreen.bessel_phase': 1, 'LiouvilleGreen.three_bessel_integrals': 1, 'integrators.WKB_phase_function': 1, 'files.StoreFixtures': 1, "files.WKB_phase_function (the producers' remote's function)": 1, 'main.py': 1, 'theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)': 1, 'modules.n_own_tree': 1, 'other_calls.elapsed': 16, 'other_calls.route_06k': 16, 'data.pickle': 1, 'data.pickle_length': 1, 'data.pickle_offset': 1, 'data.pickle_record_sha256': 1, 'data.rebuild_s': 1, 'result.compute_time': 1, 'data.scan_s': 1, 'prov.py': 1, 'variant_loader.py': 1, 'worker.py': 1, 'data.tree_head': 1, 'w3.seconds': 1, 'data.wall_s': 1, 'data.worker': 1, 'data.worker_pid': 1, 'data.worker_tree': 1, 'groups.elapsed': 5, 'result_full.compute_time': 1, 'pickle.route_06k': 1, 'scan.seconds': 5}
+wrote state/dev/compare_identity_1449.json sha256 63a5cf92235e04bf2bf53b396c317bdaf7f40253eb8ea2b8272db43e66ae9525
+# ----
+# end 2026-11-04T09:09:02Z
+# exit 1

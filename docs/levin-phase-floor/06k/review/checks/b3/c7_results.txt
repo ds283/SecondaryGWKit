@@ -1,0 +1,22 @@
+Q1 full quote occurrences in log.md: 0
+== results.md: code fences, diffs, proposals
+code fences: 0
+11:in those files. This file proposes no code. -->
+41:  counter, solves by purpose, the budget record, dispatcher counts, scans, deep lines and the floor's terms.
+211:user's ruling (*"(a) as recommended, please"*).
+240:## What each route would do as a remedy (no code is proposed)
+== results.md head
+# levin-phase-floor 06k — results
+
+<!-- provenance: written 2026-11-05 by the 06k agent on mps026298 from out/k0/summary.json (k0_summary.py, out/cmd/96),
+out/k0/compare_*.json (compare_k0.py, out/cmd/k0partL/50-54, out/cmd/route2lit/55), out/partL_summary.json (score_l.py,
+out/cmd/80b), out/partL_route2lit_withdrawals.csv and out/partL_route2lit_by_solve_kind.json (withdrawals_l.py,
+out/cmd/98), out/lg_draws/compare.txt (lg_compare_06k.py, out/cmd/97), out/partC/summary.json and out/partC/<route>.json
+(analyse_c.py, out/cmd/101), out/partC/movers_*.json (movers_c.py, out/cmd/102), out/partC/h1.json (score_h1.py,
+out/cmd/103) and out/cmd/122 (eta_route3.py). Tree 89370609 (production code 1c5336e's, 06g's); scratch copy fingerprint
+0e32f24a… before and after; 06g census checkpoint 03adcbba…, 06h's 3104c18e…; the four 06k census checkpoints
+36e3dd4c… (route 1), 8363ae82… (route 2), 7fb9c41e… (route 2 literal), 89afd6da… (route 3). Every number below is
+in those files. This file proposes no code. -->
+
+Q1 verbatim (whitespace-normalised): True
+e orchestrator, 2026-11-04): - on Q1 (route 2): *"OK, so this isn't really a contradiction, it's just that the note said that trust would be preserved if the leaf had `r < 1/4`, and it might not be. We had better run that fourth census."*; - on Q2 (route 3): *"stick with what has been built."* As the orchestr

@@ -1,0 +1,13 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport sys, json; sys.path.insert(0, \'/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/calibration\')\nimport lg_seeded_draws as L\nr = L.run_unit((0, \'tree\', \'test_abserr_bounds_truth\'))\nprint(r[\'outcome\'], r[\'num_calls\'], r[\'elapsed_s\'], r[\'driver_module\'], json.dumps(r[\'variant_06k\'])[:300])\nfor c in r[\'calls\'][:4]: print(c[\'index\'], c[\'converged\'], c[\'num_regions\'], c[\'value\'], c[\'abserr\'], json.dumps(c[\'route_06k\'])[:200])\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:15:24Z
+# ----
+pass 28 6.179345749784261 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py null
+0 True 27 0.37035945010204646 2.7701310568569514e-11 null
+1 True 19 0.37036706774083467 3.154775048385086e-11 null
+2 True 25 0.37036561676144114 1.6178964834175464e-11 null
+3 True 19 -0.3703641657827794 1.1786787657852724e-11 null
+# ----
+# end 2026-11-04T09:15:30Z
+# exit 0

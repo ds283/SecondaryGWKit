@@ -1,0 +1,530 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_l.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:55:36Z
+# ----
+# levin-phase-floor 06k: Part L tabulated, L1 and L2 scored
+# written 2026-11-04T09:55:36Z on mps026298.phys.susx.ac.uk
+# script score_l.py sha256 6af1a69373ee294d9a7ca3351957bfbb5df61cbe4cb5bb47aeb3353e8e1c3cb7
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s00.json sha256 8d8aedc881c92f92a91720d942daa1fbc63bd87fb562af0d5d036542a328f350
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s01.json sha256 ee810088fc464977ca8bc3bb88d4013faf4c08382d9648a1e2b683940b820b49
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s02.json sha256 151927fa00c1fb771f813d348ab57f235baf9b81b8a740707b6cbf4b456a8587
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s03.json sha256 cc7069c692e1dc50928f311f6d813326515c599151091709ee31140fdb302b81
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s04.json sha256 cdda6c2e840bdb5c943dae8633251d088783b35becee7f89b652fb0833fac9c3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s05.json sha256 f506aa5462d8d7d6819fb76df3a8226c859154380e863a70595e59e484cf3649
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s06.json sha256 1f87b62680a66e6dfdfe66305e2f53d9954dc4cd24f46050d25e4ec46d3239c9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s07.json sha256 79d0e9cc0183c39650e203c6e0ecfe760c501a3a14a896b62056464453724f4b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s08.json sha256 c5942a765f54307e2172b08a119e08a425c15c6b160fb67c0a743d0c40cae93f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s09.json sha256 30a21577188d64d6bb83bdf228b3d44a1215c1d9b8ba1736049e13aa8f5486a9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s10.json sha256 4c8abca44f094c9fd3ba4a199d04459fd96cded04d00a868a46489bf0c4e73b5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s11.json sha256 4b740c02c57178479f60d322bf7da2023a523d66aa8af1bf626242d917899716
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s12.json sha256 df0a47961c5d419235b1f6968dd4b6f2f4ae12a317d7519531472379fbbbeedb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s13.json sha256 6abaf2597f7ab3bfb7fd2df16736678e52e5a0d9c269ac0f6534e925471fdb6c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s14.json sha256 f2efdbc2f8b6af98178b4ab9efb362565782babddbff0c09c681bb647878ab48
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s15.json sha256 b3bbbbd1f08eb001739825c88a8a4f73dc43b1faa0a4b498e6b9dd9640769f25
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s16.json sha256 0e645fc1f6d880eefac5ba95078266a2b0cec01758218435cd0b02da50dffc26
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s17.json sha256 aead1ca55f29618c1dec67abf6db9ace112cf76b771fd7c44c4b77b2d362ed39
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s18.json sha256 e66e04971d7c990ece4ae53894e648ef9de8192a888f9a243593bdf312e8128e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s19.json sha256 85b3b2ce01f8f5a3d5d34a65b26944bdcb45e21c497ffe59c3426409d38ef73d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s20.json sha256 a798d2cf297bd9eca3226c1e2d0d450aa52cac145cd0eeb8a611ac33734e317c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s21.json sha256 128962361be01c47b40607349caac5ef373d6e4381607e543c040f9447120e2a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s22.json sha256 e30627a57f22c0e6379733ad2f7973ee8681b667071f7de1b096f65522a3d3d9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/s23.json sha256 d59ee77dc0cb9876e8403cc4d561bd3f4d0c524d2bb55dfac27b4f0568f11bd3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f00.json sha256 5893720f3495efe5a98e10c99aa4679073dfd180fac4da28fdbc875a91eaca8e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f01.json sha256 d2e5b461be0a874c57b3283e962a977867dca64b3ce4d5f92daca872177b1a5c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f02.json sha256 0cab7ff54ee66505187ad510d536106db16d29782e9e1aa291251127407cea0c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f03.json sha256 9cfbb9da8fca5390ecb16608f55b3688dfd54683afcd3a8a76a4c31253033043
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f04.json sha256 6c296bdb10140e3090db50e74a5bb578fa8446b7a725914d5be09446524ccf51
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f05.json sha256 5d1c94c82484bd93f30ed3b9b46cfd93ebebab6537c9a48f026c2e77303c9f8a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f06.json sha256 392902d4e166d4817cad38873d652d7bd274b679905f04d0936991b0d97c4465
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f07.json sha256 dce1e750e2445d1c4c7559d4825745464fed0ffca6977ee37c71699f5e716785
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f08.json sha256 a80993f07634dd72c1e54a3b0910b947f54d44e5be1788300246d5a6e0a3e4b1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/f09.json sha256 02c04e30fd3b3f855bb3b9f18989cfc9038c17f0b5ecc70960bd44b20b34fc8a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c00.json sha256 802c5da05f330278761d138b3354fc28e19b7bb4f67a4e905594386379703a97
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c01.json sha256 07653a1851d2e8ccce9c8dc4f91c6f9d4c18989f72728b65e835e97b2dd9a524
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c02.json sha256 07424aab0a35f0e37bf1c7ce75b0ab2b9d210338b3e810e68a89226ce99977f8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c03.json sha256 72eeb5592663b127ad0d84be9c3c602456531b79b5ccd3d19cc66d965c0e4d30
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c04.json sha256 a83fd8794b959c8c4c94551df8ffd14924933f1bfabbcde50c1f4f111520a6eb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c05.json sha256 2b34546a52d0a89a63c46268325c3db769afcd9bbd1a1de79049ec3358525f0f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c06.json sha256 e6c2405c141a35a811801ee80f6ecfde145ec0ee3a8d589ead164a93fb0e820b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c07.json sha256 6a8ea9fee317c984680214a801fa71a9f379e272d541a01eb1bd1d7ac1d13a99
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c08.json sha256 1a18111d2da18fa3c22c29c54fd1788ff6d097b375a5c39d6a55a668b8830fde
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c09.json sha256 6de54afe31f0844d3c6617cb749f426e6751419c5037b2f93218c06303d48772
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c10.json sha256 580fb7b237f242f22610ee5415d59e3177276bc1ca4851c921bd7c4614305dcb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL/c11.json sha256 f83dd88ad19d96725fa10ce20b05283f9d44229ede4406f0f2ef144d4aa4d390
+{
+ "n": {
+  "L-a": 142,
+  "L-b": 22,
+  "L-c": 1882
+ },
+ "reproduces_census": {
+  "L-a": 142,
+  "L-b": 0,
+  "L-c": 1882
+ },
+ "L-b_distinct": 17,
+ "verdicts": {
+  "g": {
+   "L1_distinct_trusted_or_left": 0,
+   "L1_evaluations_trusted_or_left": [],
+   "L1": "holds",
+   "L2_trusted_or_left": 0,
+   "L2_fraction": 0.0,
+   "L2": "fails",
+   "L2_by_d1_over_phiP": {
+    "<2": [
+     0,
+     75
+    ],
+    ">=2": [
+     0,
+     67
+    ]
+   },
+   "L-a_accepted_with_d1_over_phiP_ge_5.8": 0,
+   "L-a_accepted_max_d1_over_phiP": null,
+   "L-c_changed": 0,
+   "L-c_changed_list": [],
+   "L-a_decisions": {
+    "trusted": 0,
+    "left": 0,
+    "untrusted": 142
+   }
+  },
+  "route1": {
+   "L1_distinct_trusted_or_left": 0,
+   "L1_evaluations_trusted_or_left": [],
+   "L1": "holds",
+   "L2_trusted_or_left": 114,
+   "L2_fraction": 0.8028169014084507,
+   "L2": "holds",
+   "L2_by_d1_over_phiP": {
+    "<2": [
+     63,
+     75
+    ],
+    ">=2": [
+     51,
+     67
+    ]
+   },
+   "L-a_accepted_with_d1_over_phiP_ge_5.8": 30,
+   "L-a_accepted_max_d1_over_phiP": 24.827843477408784,
+   "L-c_changed": 0,
+   "L-c_changed_list": [],
+   "L-a_decisions": {
+    "trusted": 114,
+    "left": 0,
+    "untrusted": 28
+   }
+  },
+  "route2": {
+   "L1_distinct_trusted_or_left": 0,
+   "L1_evaluations_trusted_or_left": [],
+   "L1": "holds",
+   "L2_trusted_or_left": 57,
+   "L2_fraction": 0.4014084507042254,
+   "L2": "fails",
+   "L2_by_d1_over_phiP": {
+    "<2": [
+     45,
+     75
+    ],
+    ">=2": [
+     12,
+     67
+    ]
+   },
+   "L-a_accepted_with_d1_over_phiP_ge_5.8": 6,
+   "L-a_accepted_max_d1_over_phiP": 14.104921168275727,
+   "L-c_changed": 0,
+   "L-c_changed_list": [],
+   "L-a_decisions": {
+    "trusted": 57,
+    "left": 0,
+    "untrusted": 85
+   }
+  },
+  "route2_literal": {
+   "L1_distinct_trusted_or_left": 0,
+   "L1_evaluations_trusted_or_left": [],
+   "L1": "holds",
+   "L2_trusted_or_left": 57,
+   "L2_fraction": 0.4014084507042254,
+   "L2": "fails",
+   "L2_by_d1_over_phiP": {
+    "<2": [
+     45,
+     75
+    ],
+    ">=2": [
+     12,
+     67
+    ]
+   },
+   "L-a_accepted_with_d1_over_phiP_ge_5.8": 6,
+   "L-a_accepted_max_d1_over_phiP": 14.104921168275727,
+   "L-c_changed": 326,
+   "L-c_changed_list": [
+    [
+     "s00",
+     "0x1.73fdfe681d180p+4",
+     "untrusted"
+    ],
+    [
+     "s00",
+     "0x1.6ec718ecf1af2p+4",
+     "untrusted"
+    ],
+    [
+     "s00",
+     "0x1.668e7b827ecaep+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.214cadd2f4920p+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.21450b3c3254ap+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.214a224b5e7d9p+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.20ec9a94930dcp+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.20ecec0585d05p+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.20f8b1589beeep+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.20f902c98eb17p+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.21aa86fab2c47p+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.21a9507c153ebp+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.21a9d4d39fbadp+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.20ec258236160p+4",
+     "untrusted"
+    ],
+    [
+     "s01",
+     "0x1.21a94136e7ba3p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5f63e4e2bf510p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.58b63e1c3e11ap+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.589f23a3f036dp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5a39397b56229p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5caecac99fad0p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.59cb7bbfe4534p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.59e29638322e1p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5859d43b06a66p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.582b9f4a6af0cp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5bf5f70730d68p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5a61a7cdde618p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.4a2e987347763p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.58939667c9496p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.49e3826c4a6f1p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.490240575359bp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.4a2bb5243dbaep+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.4a2c6df80029bp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5130b801a55dbp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5a1c5864f4d12p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.4b41ab9ba66b5p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.513229a92a3b6p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.4924e80bc821ep+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5149fcf53a850p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.514719a630c9ap+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.525dc8f15be8fp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5d06dfb4487f2p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5d0798880aedfp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5a1a2de9ad84ap+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5abf83569aaa5p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5a4b462952f58p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5858629381c8bp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.59e9ce7dca827p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5a5a6f88460d1p+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5bf4855fabf8dp+4",
+     "untrusted"
+    ],
+    [
+     "s02",
+     "0x1.5d056e0cc3a17p+4",
+     "untrusted"
+    ]
+   ],
+   "L-a_decisions": {
+    "trusted": 57,
+    "left": 0,
+    "untrusted": 85
+   }
+  },
+  "route3": {
+   "L1_distinct_trusted_or_left": 1,
+   "L1_evaluations_trusted_or_left": [
+    "c01"
+   ],
+   "L1": "fails",
+   "L2_trusted_or_left": 142,
+   "L2_fraction": 1.0,
+   "L2": "holds",
+   "L2_by_d1_over_phiP": {
+    "<2": [
+     75,
+     75
+    ],
+    ">=2": [
+     67,
+     67
+    ]
+   },
+   "L-a_accepted_with_d1_over_phiP_ge_5.8": 34,
+   "L-a_accepted_max_d1_over_phiP": 24.827843477408784,
+   "L-c_changed": 0,
+   "L-c_changed_list": [],
+   "L-a_decisions": {
+    "trusted": 0,
+    "left": 142,
+    "untrusted": 0
+   }
+  }
+ },
+ "L-a_distributions": {
+  "r": {
+   "0.0": 0.25747931253978357,
+   "0.1": 0.36127167630057805,
+   "0.5": 0.4998241057848503,
+   "0.9": 0.8304668304668305,
+   "1.0": 0.9954441913439636
+  },
+  "d1_over_phiP": {
+   "0.0": 1.244814334146215,
+   "0.1": 1.4848345215943068,
+   "0.5": 1.774043405684738,
+   "0.9": 11.557540987374951,
+   "1.0": 24.827843477408784
+  },
+  "d1_over_nu1": {
+   "0.0": 0.0017835660331894626,
+   "0.1": 0.0057983364416218045,
+   "0.5": 0.9945287119317224,
+   "0.9": 1.360228686397591,
+   "1.0": 6.5086059907302865
+  },
+  "r_c": {
+   "0.0": 0.0017035775127768314,
+   "0.1": 0.14492753623188406,
+   "0.5": 0.6146496815286624,
+   "0.9": 2.6666666666666665,
+   "1.0": 96.93333333333334
+  },
+  "d1c_over_phiP": {
+   "0.0": 6.750539032655088e-05,
+   "0.1": 0.001423546648421715,
+   "0.5": 0.5499534557622688,
+   "0.9": 6.931710273486546,
+   "1.0": 23.33995041525195
+  },
+  "D_over_eta_request": {
+   "0.0": 2.750775657741003e-12,
+   "0.1": 7.223249192427453e-10,
+   "0.5": 4.859552479191173e-07,
+   "0.9": 0.000592869045859836,
+   "1.0": 0.046927353115256795
+  }
+ }
+}
+L-b:
+   {'sid': 'f00', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.5832878027680167, 'd1_over_phiP': 8933401.736932123, 'd1_over_nu1': 4301448.144595528, 'r_c': 0.5832878027680167, 'd1c_over_phiP': 8933401.736932123, 'D_over_eta_request': 669.8631083412653, 'h06_r': 0.5832878027680167, 'h06_d1_over_phi': 8933401.736932123, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f01', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.45329194335198886, 'd1_over_phiP': 12079811.298349021, 'd1_over_nu1': 5816449.704879347, 'r_c': 0.45329194335198886, 'd1c_over_phiP': 12079811.298349021, 'D_over_eta_request': 781.4581230047705, 'h06_r': 0.45329194335198886, 'h06_d1_over_phi': 12079811.298349021, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f02', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.2674111377274824, 'd1_over_phiP': 9819571.521998592, 'd1_over_nu1': 4728140.404724401, 'r_c': 0.2674111377274824, 'd1c_over_phiP': 9819571.521998592, 'D_over_eta_request': 554.3753214947857, 'h06_r': 0.2674111377274824, 'h06_d1_over_phi': 9819571.521998592, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f03', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.31807028386475655, 'd1_over_phiP': 11653409.166503245, 'd1_over_nu1': 5611136.352486724, 'r_c': 0.31807028386475655, 'd1c_over_phiP': 11653409.166503245, 'D_over_eta_request': 751.4407839427221, 'h06_r': 0.31807028386475655, 'h06_d1_over_phi': 11653409.166503245, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f04', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.6714102238219657, 'd1_over_phiP': 8703857.830415364, 'd1_over_nu1': 4190922.3628311437, 'r_c': 0.6714102238219657, 'd1c_over_phiP': 8703857.830415364, 'D_over_eta_request': 639.1585139889713, 'h06_r': 0.6714102238219657, 'h06_d1_over_phi': 8703857.830415364, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f05', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.5832878027680167, 'd1_over_phiP': 8933401.736932123, 'd1_over_nu1': 4301448.144595528, 'r_c': 0.5832878027680167, 'd1c_over_phiP': 8933401.736932123, 'D_over_eta_request': 669.8631083412653, 'h06_r': 0.5832878027680167, 'h06_d1_over_phi': 8933401.736932123, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f06', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.45329194335198886, 'd1_over_phiP': 12079811.298349021, 'd1_over_nu1': 5816449.704879347, 'r_c': 0.45329194335198886, 'd1c_over_phiP': 12079811.298349021, 'D_over_eta_request': 781.4581230047705, 'h06_r': 0.45329194335198886, 'h06_d1_over_phi': 12079811.298349021, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f07', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.2674111377274824, 'd1_over_phiP': 9819571.521998592, 'd1_over_nu1': 4728140.404724401, 'r_c': 0.2674111377274824, 'd1c_over_phiP': 9819571.521998592, 'D_over_eta_request': 554.3753214947857, 'h06_r': 0.2674111377274824, 'h06_d1_over_phi': 9819571.521998592, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f08', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.31807028386475655, 'd1_over_phiP': 11653409.166503245, 'd1_over_nu1': 5611136.352486724, 'r_c': 0.31807028386475655, 'd1c_over_phiP': 11653409.166503245, 'D_over_eta_request': 751.4407839427221, 'h06_r': 0.31807028386475655, 'h06_d1_over_phi': 11653409.166503245, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'f09', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.6714102238219657, 'd1_over_phiP': 8703857.830415364, 'd1_over_nu1': 4190922.3628311437, 'r_c': 0.6714102238219657, 'd1c_over_phiP': 8703857.830415364, 'D_over_eta_request': 639.1585139889713, 'h06_r': 0.6714102238219657, 'h06_d1_over_phi': 8703857.830415364, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c00', 'group': 'G-q+r', 'depth': 3, 'P_type': 'Levin', 'r': 0.322736340287145, 'd1_over_phiP': 25864.688049938068, 'd1_over_nu1': 18974.86864571988, 'r_c': 0.322736340287145, 'd1c_over_phiP': 25864.688049938068, 'D_over_eta_request': 314.2538825667945, 'h06_r': 0.322736340287145, 'h06_d1_over_phi': 25864.688049938068, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c01', 'group': 'G-q-r', 'depth': 0, 'P_type': 'Levin', 'r': 0.5499293180751705, 'd1_over_phiP': 12643.566364816777, 'd1_over_nu1': 9619.263330945658, 'r_c': 0.5499293180751705, 'd1c_over_phiP': 12643.566364816777, 'D_over_eta_request': 0.00017339491110359635, 'h06_r': 0.5499293180751705, 'h06_d1_over_phi': 12643.566364816777, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'left'}
+   {'sid': 'c02', 'group': 'G-q+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.6496594330330223, 'd1_over_phiP': 77.73003713050659, 'd1_over_nu1': 74.61740935402207, 'r_c': 0.6496594330330223, 'd1c_over_phiP': 77.73003713050659, 'D_over_eta_request': 225.62140966670557, 'h06_r': 0.6496594330330223, 'h06_d1_over_phi': 77.73003713050659, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c03', 'group': 'G+q-r', 'depth': 1, 'P_type': 'Levin', 'r': 0.2769966358938232, 'd1_over_phiP': 1029.3487079027593, 'd1_over_nu1': 886.0838830072566, 'r_c': 0.2769966358938232, 'd1c_over_phiP': 1029.3487079027593, 'D_over_eta_request': 44.96358600771585, 'h06_r': 0.2769966358938232, 'h06_d1_over_phi': 1029.3487079027593, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c04', 'group': 'G-q-r', 'depth': 3, 'P_type': 'Levin', 'r': 0.49520915818958927, 'd1_over_phiP': 10215.062875944566, 'd1_over_nu1': 7896.229317346268, 'r_c': 0.49520915818958927, 'd1c_over_phiP': 10215.062875944566, 'D_over_eta_request': 317.831037723796, 'h06_r': 0.49520915818958927, 'h06_d1_over_phi': 10215.062875944566, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c05', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.6034991953312954, 'd1_over_phiP': 12532753.358163247, 'd1_over_nu1': 6034542.077770465, 'r_c': 0.6034991953312954, 'd1c_over_phiP': 12532753.358163247, 'D_over_eta_request': 727.178868886041, 'h06_r': 0.6034991953312954, 'h06_d1_over_phi': 12532753.358163247, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c06', 'group': 'G-q-r', 'depth': 3, 'P_type': 'Levin', 'r': 0.48416325312597047, 'd1_over_phiP': 12285.52895614807, 'd1_over_nu1': 8193.765204250309, 'r_c': 0.48416325312597047, 'd1c_over_phiP': 12285.52895614807, 'D_over_eta_request': 121.21488728728029, 'h06_r': 0.48416325312597047, 'h06_d1_over_phi': 12285.52895614807, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c07', 'group': 'G+q+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.31233471349761344, 'd1_over_phiP': 5.798585452110237, 'd1_over_nu1': 5.744850895572281, 'r_c': 0.31233471349761344, 'd1c_over_phiP': 5.798585452110237, 'D_over_eta_request': 286.63829369944125, 'h06_r': 0.31233471349761344, 'h06_d1_over_phi': 5.798585452110237, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c08', 'group': 'G+q+r', 'depth': 0, 'P_type': 'Levin', 'r': 0.25795222025027487, 'd1_over_phiP': 77.31058027768526, 'd1_over_nu1': 74.32709505216015, 'r_c': 0.25795222025027487, 'd1c_over_phiP': 77.31058027768526, 'D_over_eta_request': 118.12320944003548, 'h06_r': 0.25795222025027487, 'h06_d1_over_phi': 77.31058027768526, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c09', 'group': 'G-q-r', 'depth': 1, 'P_type': 'Levin', 'r': 0.3214903560450209, 'd1_over_phiP': 348.8370834942678, 'd1_over_nu1': 333.12471884407694, 'r_c': 0.3214903560450209, 'd1c_over_phiP': 348.8370834942678, 'D_over_eta_request': 960.6602098003111, 'h06_r': 0.3214903560450209, 'h06_d1_over_phi': 348.8370834942678, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c10', 'group': 'G+q-r', 'depth': 3, 'P_type': 'Levin', 'r': 0.6039078185718796, 'd1_over_phiP': 18463.318900559112, 'd1_over_nu1': 9137.883143409632, 'r_c': 0.6039078185718796, 'd1c_over_phiP': 18463.318900559112, 'D_over_eta_request': 663.3822819558728, 'h06_r': 0.6039078185718796, 'h06_d1_over_phi': 18463.318900559112, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+   {'sid': 'c11', 'group': 'G+r', 'depth': 1, 'P_type': 'Levin', 'r': 0.47781198481743364, 'd1_over_phiP': 9218466.3978116, 'd1_over_nu1': 4438707.264104337, 'r_c': 0.47781198481743364, 'd1c_over_phiP': 9218466.3978116, 'D_over_eta_request': 353.23290170752347, 'h06_r': 0.47781198481743364, 'h06_d1_over_phi': 9218466.3978116, 'dec_g': 'untrusted', 'dec_route1': 'untrusted', 'dec_route2': 'untrusted', 'dec_route2_literal': 'untrusted', 'dec_route3': 'untrusted'}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL_leaves.csv sha256 ccfa305cb3b299233cf89258ef1494332dd80070d18d8bc57269e9ff33f6878a; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partL_summary.json sha256 f56b76fd10117ae3fbeec1d57143cf3a6acc10c63dcc5c2d12b095a55c33109d
+# ----
+# end 2026-11-04T09:55:36Z
+# exit 0

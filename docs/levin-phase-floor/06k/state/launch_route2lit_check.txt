@@ -1,0 +1,14 @@
+2026-11-04T10:19:36Z
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-04T10:19:30+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 21930,
+  "stage": "45_k0_run_route2lit started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 3
+}

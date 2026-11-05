@@ -137,3 +137,86 @@ Write `var/levin-phase-floor-06k/review.md`, with the verdict in its first line,
 ## 5. Stop and ask the user
 
 As 06j's note §5, with prompt 06k's §7. **Never touch 07's stashes or saved work.**
+
+## B.5 Addendum, 2026-11-05: the run, the review and the records
+
+**Dispatched** 2026-11-04 on the user's word: *"Yes, please push and dispatch on the Mac Studio"*.
+The laptop pushed `89370609` and made the worktree `SecondaryGWKit-lpf06k-8937060`, detached at
+`89370609`, on the Mac Studio, whose main checkout was clean at `28ebaf0`. It then started a Mac
+Studio orchestrator session in the worktree.
+
+**The run and the review on the Mac Studio.**
+- **§B.1's preflight passed.** The marker was set at 08:48:43Z; 89 GB were free.
+- **Planned stop 1** (after Gate K0 and Part L, 09:16–10:10Z):
+  - The orchestrator's AST comparison and its K0 checks held, and the census plan was accepted.
+  - It asked the user two questions. **Q1** was whether route 2 should also be measured as §0.2 reads
+    literally. The user: *"Q1: I don't actually see why the literal reading cannot hold. It just
+    says every leaf is decided and declared on the corrected numbers. That seems perfectly
+    reasonable."* Told that the literal reading withdraws trust from 326 leaves, 265 of them at
+    $r < 1/4$: *"OK, so this isn't really a contradiction, it's just that the note said that trust
+    would be preserved if the leaf had `r < 1/4`, and it might not be. We had better run that
+    fourth census."* **Q2** was whether route 3 should also rank an untrusted leaf at `depth_max`:
+    *"Q2: stick with what has been built."*
+  - So a fourth variant, route 2 literal, was built, checked as at stop 1 (its K0 and draws in run
+    `levin-phase-floor-06k-route2lit-20261104T101930`), and given a fourth census.
+- **The censuses**, one at a time, each cleared by the orchestrator (planned stop 2) and waited on by
+  a background `kill -0` loop on its pid:
+
+  | Route | Run | Wall | Projection |
+  |---|---|---|---|
+  | 1 | `levin-phase-floor-06k-census-route1-20261104T103009` | 16,758 s | 16,183 s |
+  | 2 | `levin-phase-floor-06k-census-route2-20261104T151120` | 13,621 s | 14,332 s |
+  | 2 literal | `levin-phase-floor-06k-census-route2lit-20261104T185927` | 13,968 s | 15,037 s |
+  | 3 | `levin-phase-floor-06k-census-route3-20261104T225339` | 7,626 s | 11,866 s |
+
+  Each was `done`, 18,560 of 18,560, exit 0, with stderr empty. The backstop reported once (route 1)
+  and stopped nothing.
+- **A §7 stop, "a reference cannot be matched to its call."** V1's 12 references are calls of 06g's
+  rehearsal store R24, not of A3 v2's census. Listing them in prompt 06k §3 was this orchestrator's
+  error: 06g's `VERIFICATION.md` §6g.4 records them as captured at R24's tree. The agent offered (a),
+  scoring H1 on the 124 matched references, or (b), re-running V1's calls on R24 under each variant.
+  The orchestrator recommended (a), with V1 dropped as a prompt error so that H1 is scored, not left
+  undecided. The user: *"(a) as recommended, please"*. It is the log's deviation 24, and nothing more
+  was computed.
+- **The review** (`docs/levin-phase-floor/06k/review.md`) passed all seven checks. It re-ran two K0
+  units and one recovered call, recomputed Part L on five leaves, re-counted C1, C2 and S1 from the
+  raw checkpoints and recomputed eight reference ratios, each with its own scripts. Its three
+  observations change no verdict: S1's "rows" are census units; the four `out/partC/<route>.json`
+  have no header of their own; and its check 4 did not re-solve the children. The first two are the
+  log's deviations 29 and 30.
+
+**The results:** K0 holds, and no route passes as a candidate remedy. Route 1 fails only C2 (7 calls
+`node_limited` at `1e-8`) and K1. Routes 2 and 2 literal fail L2, C2, S1 and K1. Route 3 fails L1,
+C2, H1 and S1. `VERIFICATION.md` §6k has the numbers.
+
+**The laptop's checks.**
+- **The copy.** `var/levin-phase-floor-06k/` was copied back by `rsync` without pickles or files over
+  2 MB: 1,154 files, each equal to the Mac Studio's by SHA-256. The seven run directories'
+  manifests, statuses and logs, and the three small runs' checkpoints, were copied to `var/runs/`
+  and checked the same way (31 files).
+- **The re-scoring**, by the orchestrator's own reader from the copied tables:
+  - L1 and L2: each route's decision recomputed from the leaf's numbers on all 2,046 Part L leaves,
+    with no disagreement with the probes;
+  - H1 from `h1_calls.csv`, with 06g's ratio checked against 06g's `scores.json` and 06j's
+    `w_calls.csv` on all 124 references;
+  - C1, C2, S1 and K1 from `out/partC/<route>.json`.
+
+  Every verdict and number is the same, with S1's rows counted shard-serial (5, 5 and 22).
+- **The CSV tables.** Three were added past the laptop's `*.csv` exclusion.
+
+**Issues:**
+- Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`.
+- Opened: none. The agent proposed `[06k-route3-left-leaf-declaration-understates]` and
+  `[06k-route2-corrected-declaration-omits-the-node-error-of-q]`. Both describe scratch variants
+  that are not in the tree, so they are recorded under the slow-leaves issue as constraints on a
+  remedy.
+
+`docs/OPEN_ISSUES.md` stays at 126 open.
+
+**For the user:**
+- whether a remedy prompt implements a route, and which;
+- the worktree `SecondaryGWKit-lpf06k-8937060`;
+- the four census run directories (17.1 GB in all);
+- 06k's pickles and large files (1.1 GB).
+
+07 resumes after that.

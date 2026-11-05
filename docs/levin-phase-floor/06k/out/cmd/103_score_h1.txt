@@ -1,0 +1,30 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_h1.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T01:08:28Z
+# ----
+# levin-phase-floor 06k: the routes against the references, H1
+# written 2026-11-05T01:08:28Z on mps026298.phys.susx.ac.uk
+# script score_h1.py sha256 df0b78fec5676699cdc8477538391f03895615063f486463012cc0b08452a556
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json sha256 73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/docs/levin-phase-floor/06j/out/w_calls.csv sha256 0a8549bd6fee58bd8d9037e7aa15ee2fab0c4b14c7478ca4cfd90d2582e172f7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/g.pkl sha256 3942209a1141fad4822a2b962a068d6d8ad743cdaf93247c130d94e9c8e51eea
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route1.pkl sha256 adaf96e2433b3c2ad92aec44031b514604c22cdfca1b4cd5927cea0c7af9db93
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route2.pkl sha256 d43b10dbfec1f623119f305d554fb6e7affacc5a1085a4569df48c91568f93b1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route2lit.pkl sha256 f8939a8728592f521af3dcedbfc7ece4fc2c9dfe0dacaf40c4858d7a43e40654
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route3.pkl sha256 0994837e3a69393e5edc514ab3c7e480399cc9ec8322b7a4f03b652bf3c0d651
+references 124; unmatched 0; 06g ratio reproduces the source's on {'matches': 124, 'of': 124}; V1's 12 unscored (no census call)
+route1: H1 on the matched references outside the 720 holds: 115 scored, within own error 114, worst 1.185; violations []
+   in the 720: [('z00', 0.0183, 0.0183), ('z07', 0.0, 0.0), ('z12', 1681.3313, 1681.3492), ('z16', 0.0, 0.0), ('z18', 0.0, 0.0), ('z21', 0.0, 0.0), ('z24', 0.0021, 0.0021), ('z28', 0.0, 0.0), ('z29', 0.0, 0.0)]
+route2: H1 on the matched references outside the 720 holds: 115 scored, within own error 114, worst 1.202; violations []
+   in the 720: [('z00', 0.0183, 0.0183), ('z07', 0.0, 0.0), ('z12', 1681.4359, 1681.3492), ('z16', 0.0, 0.0), ('z18', 0.0, 0.0), ('z21', 0.0, 0.0), ('z24', 0.0021, 0.0021), ('z28', 0.0, 0.0), ('z29', 0.0, 0.0)]
+route2lit: H1 on the matched references outside the 720 holds: 115 scored, within own error 114, worst 1.2; violations []
+   in the 720: [('z00', 0.0183, 0.0183), ('z07', 0.0, 0.0), ('z12', 1681.4928, 1681.3492), ('z16', 0.0, 0.0), ('z18', 0.0, 0.0), ('z21', 0.0, 0.0), ('z24', 0.0021, 0.0021), ('z28', 0.0, 0.0), ('z29', 0.0, 0.0)]
+route3: H1 on the matched references outside the 720 fails: 115 scored, within own error 112, worst 3.935; violations [('r56', 'g-1e-8-1-10794', 5, 'G-q+r', 1.4917, 0.0059), ('c01', 'g-1e-7-2-33416', 6, 'G-q-r', 3.9347, 0.0014)]
+   in the 720: [('z00', 1681.0295, 0.0183), ('z07', 0.0, 0.0), ('z12', 1681.0295, 1681.3492), ('z16', 0.0, 0.0), ('z18', 0.0, 0.0), ('z21', 0.0, 0.0), ('z24', 0.0014, 0.0021), ('z28', 0.0, 0.0), ('z29', 0.0, 0.0)]
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partC/h1.json sha256 1ba4786bb899bc85385ef8b49422ccb40f65ccbb94364f043698ec36b9695f27; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partC/h1_calls.csv sha256 5061390542fdff096e9b30e9c62fa4df48ae4a46f5c42743250874cae2142d30
+# ----
+# end 2026-11-05T01:08:34Z
+# exit 0

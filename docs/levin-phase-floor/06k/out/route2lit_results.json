@@ -1,0 +1,22 @@
+{
+ "label": "route2lit",
+ "results": [
+  {
+   "name": "45_k0_run_route2lit",
+   "exit": 0,
+   "wall_s": 325.23865604400635
+  },
+  {
+   "name": "55_k0_compare_route2lit",
+   "exit": 0,
+   "wall_s": 3.0307059288024902
+  },
+  {
+   "name": "72_lg_draws_route2lit",
+   "exit": 0,
+   "wall_s": 128.64740180969238
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-04T10:27:08Z"
+}

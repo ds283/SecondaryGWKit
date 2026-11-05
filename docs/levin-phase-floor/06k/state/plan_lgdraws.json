@@ -1,0 +1,23 @@
+{
+ "label": "lgdraws",
+ "stages": [
+  {
+   "name": "lg_draws",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "71_lg_draws",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/calibration/lg_seeded_draws.py",
+      "run",
+      "--processes",
+      "6"
+     ]
+    }
+   ]
+  }
+ ]
+}

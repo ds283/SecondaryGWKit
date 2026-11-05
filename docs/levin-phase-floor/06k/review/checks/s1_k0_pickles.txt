@@ -1,0 +1,4 @@
+identity: units compared 100, region pickles equal (timing and route_06k aside) 100
+route1: units compared 16, region pickles equal (timing and route_06k aside) 16
+route2: units compared 16, region pickles equal (timing and route_06k aside) 16
+route3: units compared 3, region pickles equal (timing and route_06k aside) 3

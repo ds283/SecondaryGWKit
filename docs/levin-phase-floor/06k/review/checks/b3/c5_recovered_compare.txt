@@ -1,0 +1,8 @@
+value: re-run 0x1.32cd3d792ae78p-97  census 0x1.32cd3d792ae78p-97  equal True  (06g 0x1.32cd3d7929aacp-97)
+abserr: re-run 0x1.1f25b6709afb5p-119  census 0x1.1f25b6709afb5p-119  equal True  (06g 0x1.0db73a5c67c78p-119)
+num_regions: re-run 61  census 61  equal True  (06g 85)
+converged: re-run True  census True  equal True  (06g False)
+max_depth: re-run 13  census 13  equal True  (06g 20)
+num_untrusted_regions: re-run 0  census 0  equal True  (06g 2)
+n_firings: re-run 15  census 15  equal True; firing records equal True
+unit g-1e-7-3-825: 10 call records, differing from route 1's census record (elapsed aside) 0; result equal (compute_time aside) True

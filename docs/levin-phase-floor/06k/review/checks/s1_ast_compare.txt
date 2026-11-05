@@ -1,0 +1,11 @@
+tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+identity: sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59; top-level statements differing: none
+route1: sha256 23cd69e4a87a3a19e8a7e744cf3bac7712c26f342864fb299959a279d80a5cb2; top-level statements differing: ['_adaptive_levin']
+   nested defs added: [] removed: [] changed: ['_check_leaf']
+   signature equal: True decorators equal: True
+route2: sha256 017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635; top-level statements differing: ['_adaptive_levin']
+   nested defs added: [] removed: [] changed: ['_check_leaf']
+   signature equal: True decorators equal: True
+route3: sha256 e139ec7188f45e154c78c50ff5c2b086f84cbcf08ae1c045b098e210634fdd49; top-level statements differing: ['_adaptive_levin']
+   nested defs added: ['_declaration_06k', '_relevel_06k'] removed: [] changed: ['_push_candidate']
+   signature equal: True decorators equal: True

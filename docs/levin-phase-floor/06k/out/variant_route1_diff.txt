@@ -1,0 +1,60 @@
+--- /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py	2026-11-04 08:45:16
++++ scripts/variants/levin_quadrature_route1.py	2026-11-04 09:03:01
+@@ -2994,6 +2994,9 @@
+     num_checks = 0
+     num_check_passes = 0
+     num_untrusted_found = 0
++    # prompt 06k, route 1: every firing of the route in this call (a leaf trusted or left that
++    # 06g's rule (b) finds untrusted), reported under the result key "route_06k"
++    route_firings_06k = []
+ 
+     def _solve(span, description):
+         nonlocal num_evaluations, num_solves_direct, num_solves_lstsq, num_solves_pinv
+@@ -3377,9 +3380,33 @@
+             ratio = delta2 / delta1
+ 
+         residual = region.abserr
+-        trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
++        trusted_g_06k = ratio < _LEVIN_TRUST_MAX_RATIO or (
+             ratio < 1.0 and delta1 <= region.phase_err
+         )
++        # prompt 06k, route 1: the noise yardstick covers the three solves delta1 is a difference
++        # of, nu1 = phi_P + phi_L + phi_R, each the solve's own whole floor ("phase_err", |E| included)
++        nu1_06k = (region.phase_err + (dataL.get("phase_err", 0.0) or 0.0)) + (
++            dataR.get("phase_err", 0.0) or 0.0
++        )
++        trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= nu1_06k)
++        if trusted and not trusted_g_06k:
++            route_firings_06k.append(
++                {
++                    "depth": int(leaf.depth),
++                    "at_depth_max": bool(leaf.depth >= depth_max),
++                    "start": float(a),
++                    "end": float(b),
++                    "is_direct": bool(leaf.is_direct),
++                    "r": float(ratio),
++                    "delta1": float(delta1),
++                    "delta2": float(delta2),
++                    "phi_P": float(region.phase_err),
++                    "phi_L": float(dataL.get("phase_err", 0.0) or 0.0),
++                    "phi_R": float(dataR.get("phase_err", 0.0) or 0.0),
++                    "nu1": float(nu1_06k),
++                    "residual": float(residual),
++                }
++            )
+         _remove_error(leaf)
+         region._delta1 = delta1
+         region._delta2 = delta2
+@@ -3934,6 +3961,12 @@
+         "num_solves_total": num_solves_direct + num_solves_lstsq + num_solves_pinv,
+         "chebyshev_min_order": chebyshev_min_order,
+         "max_depth": max_depth,
++        # prompt 06k: the route's firings in this call (a new key; the comparison with 06g ignores it)
++        "route_06k": {
++            "route": "1",
++            "n_firings": len(route_firings_06k),
++            "firings": route_firings_06k,
++        },
+     }
+ 
+ 

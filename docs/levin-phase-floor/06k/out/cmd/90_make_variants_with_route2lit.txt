@@ -1,0 +1,16 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/make_variants.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py scripts/variants
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T10:17:23Z
+# ----
+# levin-phase-floor 06k: the variants of /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py
+# script make_variants.py sha256 6e39ef900ba55cc240bd1d6e6489f9beafcfb606672e4d0588b2211e465fc4d8
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+identity: scripts/variants/levin_quadrature_identity.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59 (226551 bytes)
+route1: scripts/variants/levin_quadrature_route1.py sha256 23cd69e4a87a3a19e8a7e744cf3bac7712c26f342864fb299959a279d80a5cb2 (228234 bytes)
+route2: scripts/variants/levin_quadrature_route2.py sha256 017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635 (230004 bytes)
+route3: scripts/variants/levin_quadrature_route3.py sha256 e139ec7188f45e154c78c50ff5c2b086f84cbcf08ae1c045b098e210634fdd49 (232711 bytes)
+route2lit: scripts/variants/levin_quadrature_route2lit.py sha256 2fd10b78955d7607ad97a03d99cd1191fb932b3a7dee2f5b8bf4dbd7ddd02dff (230648 bytes)
+# ----
+# end 2026-11-04T10:17:23Z
+# exit 0

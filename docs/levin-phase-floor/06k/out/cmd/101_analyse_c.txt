@@ -1,0 +1,29 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/analyse_c.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T01:06:25Z
+# ----
+route1: C1 holds {"1e-7/outside_720": [792, 801, {"node_limited": 1, "untrusted leaf": 8}], "1e-7/in_720": [213, 316, {"untrusted leaf": 103}], "1e-8/outside_720": [818, 830, {"node_limited": 3, "untrusted leaf": 9}], "1e-8/in_720": [218, 340, {"untrusted leaf": 119, "node_limited": 3}]}
+   C2 fails {"lost_outside_720": 7, "lost_in_720": 0, "by_rtol_kind": {"1e-8/group": 7}, "holdback": {"node_limited": 7}}
+   S1 holds calls 0 rows 0 max None; row totals 0
+   K1 fails 229338 / ge5.8 89171
+   wall 16758.0; per rtol {"1e-7": {"unit_wall_s": 21895.888079292607, "group_call_regions": 868722, "depth_max": {"outside_720": 14, "in_720": 118}, "depth_max_converged": {"outside_720": 6, "in_720": 6}}, "1e-8": {"unit_wall_s": 23907.470858053304, "group_call_regions": 978440, "depth_max": {"outside_720": 16, "in_720": 139}, "depth_max_converged": {"outside_720": 6, "in_720": 6}}}; unmatched 0
+route2: C1 holds {"1e-7/outside_720": [801, 801, {}], "1e-7/in_720": [227, 316, {"untrusted leaf": 89}], "1e-8/outside_720": [828, 830, {"node_limited": 2}], "1e-8/in_720": [239, 340, {"untrusted leaf": 101}]}
+   C2 fails {"lost_outside_720": 5, "lost_in_720": 1, "by_rtol_kind": {"1e-8/group": 5}, "holdback": {"node_limited": 5}}
+   S1 fails calls 10 rows 10 max 1.3234227559061083; row totals 0
+   K1 fails 167281 / ge5.8 82565
+   wall 13621.0; per rtol {"1e-7": {"unit_wall_s": 16176.649313585833, "group_call_regions": 734596, "depth_max": {"outside_720": 2, "in_720": 105}, "depth_max_converged": {"outside_720": 2, "in_720": 7}}, "1e-8": {"unit_wall_s": 18808.933671294246, "group_call_regions": 823159, "depth_max": {"outside_720": 2, "in_720": 122}, "depth_max_converged": {"outside_720": 2, "in_720": 7}}}; unmatched 0
+route2lit: C1 holds {"1e-7/outside_720": [794, 801, {"untrusted leaf": 7}], "1e-7/in_720": [203, 316, {"untrusted leaf": 113}], "1e-8/outside_720": [821, 830, {"node_limited": 2, "untrusted leaf": 7}], "1e-8/in_720": [212, 340, {"untrusted leaf": 128}]}
+   C2 fails {"lost_outside_720": 53, "lost_in_720": 30, "by_rtol_kind": {"1e-7/group": 25, "1e-8/group": 28}, "holdback": {"untrusted leaf": 51, "node_limited": 2}}
+   S1 fails calls 10 rows 10 max 1.3234227559061083; row totals 0
+   K1 fails 191623 / ge5.8 88186
+   wall 13968.0; per rtol {"1e-7": {"unit_wall_s": 16652.38239970198, "group_call_regions": 749618, "depth_max": {"outside_720": 42, "in_720": 144}, "depth_max_converged": {"outside_720": 10, "in_720": 8}}, "1e-8": {"unit_wall_s": 19395.034978490323, "group_call_regions": 840165, "depth_max": {"outside_720": 43, "in_720": 166}, "depth_max_converged": {"outside_720": 10, "in_720": 9}}}; unmatched 0
+route3: C1 holds {"1e-7/outside_720": [801, 801, {}], "1e-7/in_720": [316, 316, {}], "1e-8/outside_720": [829, 830, {"node_limited": 1}], "1e-8/in_720": [339, 340, {"untrusted leaf": 1}]}
+   C2 fails {"lost_outside_720": 1, "lost_in_720": 0, "by_rtol_kind": {"1e-8/group": 1}, "holdback": {"node_limited": 1}}
+   S1 fails calls 46 rows 44 max 1.6452022060432399; row totals 0
+   K1 not scored (route 3) null / ge5.8 null
+   wall 7626.0; per rtol {"1e-7": {"unit_wall_s": 7346.069423368666, "group_call_regions": 256908, "depth_max": {"outside_720": 0, "in_720": 0}, "depth_max_converged": {"outside_720": 0, "in_720": 0}}, "1e-8": {"unit_wall_s": 10227.198528647888, "group_call_regions": 387421, "depth_max": {"outside_720": 0, "in_720": 1}, "depth_max_converged": {"outside_720": 0, "in_720": 0}}}; unmatched 0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partC/summary.json sha256 ef7bfe87a037b2d6fdbdfd375734d022a4bf22c5cd9460c7977999dcc7fbbb99
+# ----
+# end 2026-11-05T01:06:41Z
+# exit 0

@@ -243,10 +243,14 @@ RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
   `scripts_06h_census_reference/`, `scripts_06h_phase_reference/` and `scripts_06i_reference/`),
   `references/v1/scripts/`, `review/scripts/` and `fcc-laptop/scripts/` under
   `docs/levin-phase-floor/06g/`, and 06j's `scripts/`, `state/` (with its
-  `scripts_06g_reference/`) and `review/checks/` under `docs/levin-phase-floor/06j/`.
+  `scripts_06g_reference/`) and `review/checks/` under `docs/levin-phase-floor/06j/`, and 06k's
+  `scripts/` (with its `calibration/` and `variants/`), `state/` (with its
+  `scripts_06g_calibration_reference/`, `scripts_06g_census_reference/`,
+  `scripts_06j_reference/` and `variants_before_route2lit/`) and `review/checks/` (with its `b3/`)
+  under `docs/levin-phase-floor/06k/`.
   Each is byte-identical to the run it records; the outputs of the first four, of 05's and 05a's
-  `scripts/`, of A4's, of 06's, of 06a's, of B2's, of 06b's, of 06d's, of 06f's and of 06j's
-  record its SHA-256.
+  `scripts/`, of A4's, of 06's, of 06a's, of B2's, of 06b's, of 06d's, of 06f's, of 06j's and of
+  06k's record its SHA-256.
 - **`main.py` cannot be imported** — it parses `sys.argv`, opens a Ray connection and a
   `ShardedPool` at module scope, then runs the pipeline. To exercise it, use
   `RunDrivers/scoped_pipeline_run.py`; to extract one of its functions

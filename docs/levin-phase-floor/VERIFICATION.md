@@ -2993,3 +2993,148 @@ The user accepted them as they stand. They are the log's deviations 21–23.
 - Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]` and
   `[06c-budget-can-stop-on-a-pre-asymptotic-residual]`.
 - Opened: none.
+
+## 6k. Three ways to stop refining the slow leaves
+
+*Prompt 06k, a measurement. It ran on the Mac Studio on 2026-11-04 and 2026-11-05, Ray-free, with no
+lock, no store built and no change to the tree. The records are under [`06k/`](06k/). What is kept
+on the Mac Studio is in [`06k/KEPT_ON_MAC_STUDIO.md`](06k/KEPT_ON_MAC_STUDIO.md).*
+
+### 6k.1 The routes, the harness and Gate K0
+
+**The routes.** Each is a scratch variant of `AdaptiveLevin/levin_quadrature.py` under
+`06k/scripts/variants/`, loaded in place of the tree's module. AST checks, the agent's and the
+orchestrator's, show that each differs from the tree only inside `_adaptive_levin`.
+- **Route 1:** the noise clause of rule (b) compares $\Delta_1$ with
+  $\nu_1 = \phi_P + \phi_L + \phi_R$ in place of $\phi_P$.
+- **Route 2, as built:** where rule (b) finds a leaf untrusted, the rule is applied again to values
+  corrected by $-E$ ($\Delta_{1c}$, $\Delta_{2c}$, $r_c$). A firing declares
+  $\max({\rm res}, \Delta_{1c})/(1 - r_c)$.
+- **Route 2, literal:** every checked leaf is decided and declared on the corrected values, so trust
+  at $r < 1/4$ can be withdrawn. It was added on the user's ruling at planned stop 1 (*"We had better
+  run that fourth census."*).
+- **Route 3:** at each stop test, the longest prefix of untrusted refinable leaves, ranked by their
+  declarations $D$, whose $D$ sum to at most $\eta = 10^{-3}$ of the call's request, is left
+  unrefined. It stays as built, on the user's ruling (*"stick with what has been built."*).
+
+**The setup:**
+- The tree was the worktree `SecondaryGWKit-lpf06k-8937060` at `89370609`. Its production code is
+  06g's (`1c5336e`, code `3ae6f3a`). It was clean throughout, with `--ignored`.
+- The store was the certified scratch copy of A3 v2, opened read-only, fingerprint `0e32f24a…`. It
+  was EQUAL to its certification before and after.
+- 06g's census checkpoint (`03adcbba…`), its 16 region pickles, 06h's (`3104c18e…`) and
+  `v8_calls.json` were unchanged.
+
+**Gate K0 holds.** On 100 units (06j's 46 calls' units and 54 drawn, seeded, by a rule written
+before any unit ran), compared with 06g's census on every key with floats by bit pattern:
+- the tree's own module and the identity variant: 100 of 100 equal;
+- each route on its calls with no firing: route 1's 1,855, route 2's 1,837, route 2 literal's 1,032
+  and route 3's 683, all equal.
+
+The Mac Studio orchestrator re-ran two units under the identity variant and route 2, and found them
+equal.
+
+### 6k.2 Part L: the leaves, and the LiouvilleGreen draws
+
+Each route's rule was probed in isolation on each leaf's own span, in 06g's code. The probes
+reproduce the census's $\Delta_1$, $\Delta_2$, $r$ and $\phi_P$ on every leaf.
+
+| | 06h's carrying leaves trusted or left (17 distinct, 22 evaluations) | 06j's slow leaves trusted or left (of 142) | 06g-trusted leaves whose decision changes (of 1,882) |
+|---|---|---|---|
+| route 1 | 0 | 114 (80.3 %) | 0 |
+| route 2 | 0 | 57 (40.1 %) | 0 |
+| route 2 literal | 0 | 57 (40.1 %) | 326 withdrawn (265 at $r < 1/4$) |
+| route 3 | 1 (c01) | 142 (all left) | 0 |
+
+- **c01 under route 3.** It is 06h's carrying leaf on `2-33416` #6: depth 0, $r = 0.55$,
+  $\Delta_1/\phi_P = 1.26\times10^4$. It is left because its call's request is set by atol, far
+  above the call's error, so its $D$ is $1.7\times10^{-4}$ of $\eta$ times the request.
+- **Route 2 literal's withdrawals.** 300 of the 326 have $r_c \ge 1$: with $-E$ removed,
+  $\Delta_{1c}$ is tiny.
+
+**The LiouvilleGreen draws** (06g's 20 seeded draws). Every test passes under every variant, and the
+identity variant equals the tree on all 4,320 Levin calls.
+- **Route 1:** 2 calls gain convergence, and no honesty changes.
+- **Route 2:** 6 near-singular cases go from dishonest to honest.
+- **Route 2 literal:** 10 near-singular cases go from dishonest to honest, and 2 from honest to
+  dishonest (true over reported error 1.05 and 1.09).
+- **Route 3:** 2 calls lose convergence, and 1 near-singular case goes from honest to dishonest
+  (2.21, flagged converged).
+
+### 6k.3 Part C: a census per route
+
+Each census re-ran 06g's census at the variant. Each finished `done`, 18,560 of 18,560 units, exit 0,
+and every call matched its 06g call.
+
+| | run | census wall | unit wall against 06g | calls at `depth_max` outside the 720 (1e-7 / 1e-8) |
+|---|---|---|---|---|
+| 06g | `levin-phase-floor-06g-census-20261101T114315` | 20,361 s | 1 | 966 / 996 |
+| 06h | — | 9,193 s | 0.32 | 0 / 1 |
+| route 1 | `levin-phase-floor-06k-census-route1-20261104T103009` | 16,758 s | 0.78 | 14 / 16 |
+| route 2 | `levin-phase-floor-06k-census-route2-20261104T151120` | 13,621 s | 0.60 | 2 / 2 |
+| route 2 literal | `levin-phase-floor-06k-census-route2lit-20261104T185927` | 13,968 s | 0.62 | 42 / 43 |
+| route 3 | `levin-phase-floor-06k-census-route3-20261104T225339` | 7,626 s | 0.30 | 0 / 0 |
+
+**The references.** 124 are matched to census calls (06g's 102 and 06j's 22), 115 of them outside the
+720. 06g's own ratio is reproduced on all 124. **V1's 12 are not scored:** they are calls of 06g's
+rehearsal store R24, not of A3 v2's census, and listing them in the prompt was the prompt's error.
+The user: *"(a) as recommended, please"* (log deviation 24).
+
+### 6k.4 The predictions
+
+| | Rule | route 1 | route 2 | route 2 literal | route 3 |
+|---|---|---|---|---|---|
+| **L1** | none of 06h's 17 carrying leaves trusted or left | **holds** | **holds** | **holds** | **fails** (c01) |
+| **L2** | ≥ 80 % of the 142 slow leaves trusted or left | **holds** (80.3 %) | **fails** (40.1 %) | **fails** (40.1 %) | **holds** (100 %) |
+| **C1** | ≥ 90 % of V8's lost calls outside the 720 converge, at each rtol | **holds** (792/801, 818/830) | **holds** (801/801, 828/830) | **holds** (794/801, 821/830) | **holds** (801/801, 829/830) |
+| **C2** | no call outside the 720 that 06g converges is lost | **fails** (7, all 1e-8, `node_limited`) | **fails** (5, `node_limited`) | **fails** (53: 51 untrusted leaf, 2 `node_limited`) | **fails** (1, `node_limited`) |
+| **H1** | every referenced call outside the 720 at ≤ max(1, 06g's ratio) | **holds** (worst v03 1.185, 06g 1.203) | **holds** (1.202) | **holds** (1.200) | **fails** (c01 3.935, 06g 0.0014; r56 1.492, 06g 0.0059) |
+| **S1** | no call outside the 720 moves past $e_{\rm route} + e_g$ | **holds** (0) | **fails** (10 calls in 5 rows, worst 1.323) | **fails** (the same 10) | **fails** (46 calls in 22 rows, worst 1.645) |
+| **K1** | every trust firing at $\Delta_1/\phi_P < 5.8$ | **fails** (89,171 of 229,338; max $1.1\times10^4$) | **fails** (82,565 of 167,281; max $3.7\times10^5$) | **fails** (88,186 of 191,623) | not scored |
+
+A route passes as a candidate remedy if L1, C2, H1 and S1 hold, and K1 for routes 1 and 2. **None
+does.** Route 1 fails only C2 and K1.
+
+**What the failures are:**
+- **C2 under routes 1, 2 and 3** is the node-limited stop: in each lost call $\sum e'$ meets the
+  request while $|\sum E|$ holds the call above it. Route 1's 7 have abserr 1.00–1.08× 06g's.
+- **K1 under route 1:** when a Levin parent's halves are Clenshaw–Curtis solves, $\phi_L + \phi_R$ can
+  be hundreds of times $\phi_P$. So $\nu_1$ passes leaves far above the parent's noise level, though
+  no value moves past both errors and no reference is worse.
+- **S1 under routes 2 and 2 literal:** a leaf trusted on $r_c$ returns $Q$ uncorrected, while its
+  declaration, built on $\Delta_{1c}$, leaves out the node error by which $Q$ differs from $V_P$.
+  Eight of the 10 movers are single-region analytic J1, Y1 and J2 calls.
+- **S1 and H1 under route 3:** each mover is carried by one depth-0 or depth-1 leaf left at
+  $D \le \eta$ times the request, where 06g refined the span into 7–200 leaves. $D$ understated that
+  leaf's error by $10^3$ or more. In the 720, z00 goes from 0.018 to 1,681× its error.
+
+### 6k.5 The review
+
+**The Mac Studio review** (`06k/review.md`) passed all seven checks:
+- **scope:** nothing outside 06k's directory and runs; the copy and 06g's census unchanged; no Ray;
+  nothing new in `var/datastores/`;
+- **the variants and K0:** its own AST comparison, and two K0 units re-run;
+- **the predictions:** verbatim and before the first number;
+- **Part L:** every route's decision recomputed on five leaves (three slow, c01 and c07), the parents'
+  numbers matched to 06g's census by hex;
+- **Part C:** C1, C2 and S1 re-counted from the raw checkpoints by its own reader, and one recovered
+  call (`g-1e-7-3-825` #0, route 1) re-run bit-equal to its census record;
+- **the references:** eight ratios recomputed from each reference's source, equal to $10^{-12}$;
+- **the records.**
+
+It recorded three observations that change no verdict: S1's "rows" in the agent's records are census
+units (5, 5 and 22 shard-serial rows, not 10, 10 and 44); the four `out/partC/<route>.json` carry no
+header of their own; and its check 4 did not re-solve the children. The first two are the log's
+deviations 29 and 30.
+
+**On the laptop:**
+- The 1,154 files copied back, and the run directories' 31 small files, match by SHA-256.
+- Every verdict was re-scored by the orchestrator's own reader from the copied tables, with the same
+  verdicts and numbers. L1 and L2 were scored by recomputing each route's decision from the leaf's
+  numbers on all 2,046 Part L leaves. H1's 06g ratios were checked against 06g's and 06j's committed
+  references.
+
+**Issues:**
+- Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`.
+- Opened: none. The two the agent proposed describe variants not in the tree, and are recorded under
+  the slow-leaves issue as constraints on a remedy.

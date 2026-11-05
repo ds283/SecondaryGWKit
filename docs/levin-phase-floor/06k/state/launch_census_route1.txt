@@ -1,0 +1,8 @@
+run id      levin-phase-floor-06k-census-route1-20261104T103009
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009
+expected    18560 units
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_census.py sha256 c19d9327d3d28f4be1800b152ce8953d908468c16936564320a7308a9e0d80a6
+variant     /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route1.py sha256 23cd69e4a87a3a19e8a7e744cf3bac7712c26f342864fb299959a279d80a5cb2
+sh pid      23281
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_census.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009 --variant route1 --projection-s 16183.0; exit $?
+launcher    pid 23276, exiting without waiting

@@ -1,0 +1,6 @@
+run id      levin-phase-floor-06k-k0partL-20261104T091640
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-k0partL-20261104T091640
+plan        /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/plan_k0partL.json (60 commands)
+sh pid      15083
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_06j.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-k0partL-20261104T091640 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/plan_k0partL.json; exit $?
+launcher    pid 15079, exiting without waiting

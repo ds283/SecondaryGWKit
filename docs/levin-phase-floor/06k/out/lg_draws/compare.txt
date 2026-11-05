@@ -1,0 +1,135 @@
+# levin-phase-floor 06k: the LiouvilleGreen draws, each variant against the tree
+# written 2026-11-04T10:27:59+00:00 on mps026298.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script lg_compare_06k.py sha256 1db4ae4f67bd3e38fd5a341a904792f9ce3087a1eb2075d69572719cf387e599
+# prov.py sha256 fcf68023cde46964f908d416d83faadcd64472b8123a73e6d6ec1bffd09a524b
+# AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+# HEAD 89370609a64d58993289dcfe991350a420ea698d
+# tree dirty: no (git status --short empty)
+# uptime at start: 10:27  up 28 days,  1:04, 2 users, load averages: 14.01 14.10 13.84
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/lg_draws/lg_seeded_draws.jsonl sha256 ca0037991890c6e0de9805a08bde0e9badaaecd4ffde9a6ab43471fb21274476
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/lg_draws/lg_seeded_draws_route2lit.jsonl sha256 f78722eeb88461db3955c274b6c3101df862a1b8be66a40e9f7e574ed78f0508
+# the run's header:
+#   # levin-phase-floor 06k: section 2 test 9, the LiouvilleGreen seeded draws (run)
+#   # written 2026-11-04T09:59:04+00:00 on mps026298.phys.susx.ac.uk
+#   # python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+#   # script lg_seeded_draws.py sha256 960b4d0835d99c519540cb19b4dde65d9dbeb7ccf583dff8c11a227478a451af
+#   # prov.py sha256 fcf68023cde46964f908d416d83faadcd64472b8123a73e6d6ec1bffd09a524b
+#   # AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+#   # input LiouvilleGreen/tests/test_3bessel_analytic.py sha256 3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c
+#   # input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+#   # input LiouvilleGreen/bessel_phase.py sha256 bdee05b578d2f2da61ba2b09ed541cf1fe0b37a7c11ec1d7ae56e439c75210e8
+#   # HEAD 89370609a64d58993289dcfe991350a420ea698d
+#   # tree dirty: no (git status --short empty)
+#   # uptime at start: 9:59  up 28 days, 35 mins, 2 users, load averages: 14.25 12.25 10.87
+#   # units 400: seeds 0-19 x modes ('tree', 'identity', 'route1', 'route2', 'route3') x tests ('test_YJJ_log_singularity', 'test_JJJ', 'test_YJJ', 'test_abserr_bounds_truth'); processes 6; no parent mode (prompt 06k)
+#   # wall time 631.6 s; uptime at end: 10:09  up 28 days, 46 mins, 2 users, load averages: 31.28 24.67 17.66
+#   (route2lit's run)
+#   # levin-phase-floor 06k: section 2 test 9, the LiouvilleGreen seeded draws (run)
+#   # written 2026-11-04T10:24:59+00:00 on mps026298.phys.susx.ac.uk
+#   # python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+#   # script lg_seeded_draws.py sha256 4bf315e0d9a94a7080fdd8f60edc600778ec406651148fc46e877d739c9e80ce
+#   # prov.py sha256 fcf68023cde46964f908d416d83faadcd64472b8123a73e6d6ec1bffd09a524b
+#   # AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+#   # input LiouvilleGreen/tests/test_3bessel_analytic.py sha256 3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c
+#   # input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+#   # input LiouvilleGreen/bessel_phase.py sha256 bdee05b578d2f2da61ba2b09ed541cf1fe0b37a7c11ec1d7ae56e439c75210e8
+#   # HEAD 89370609a64d58993289dcfe991350a420ea698d
+#   # tree dirty: no (git status --short empty)
+#   # uptime at start: 10:25  up 28 days,  1:01, 2 users, load averages: 11.78 13.11 13.47
+#   # units 80: seeds 0-19 x modes ('route2lit',) x tests ('test_YJJ_log_singularity', 'test_JJJ', 'test_YJJ', 'test_abserr_bounds_truth'); processes 6; no parent mode (prompt 06k)
+#   # wall time 128.2 s; uptime at end: 10:27  up 28 days,  1:03, 2 users, load averages: 16.90 14.56 13.98
+records 480; seeds 0-19; tests ['test_YJJ_log_singularity', 'test_JJJ', 'test_YJJ', 'test_abserr_bounds_truth']; modes ['identity', 'route1', 'route2', 'route2lit', 'route3', 'tree']
+
+== identity against tree
+outcomes (tree->identity): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 0; value or abserr differ 0; regions differ 0
+convergence changes: unconverged->converged 0, converged->unconverged 0
+   F->T by test: {}
+   T->F by test: {}
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> identity 432; dishonest and converged 432 -> 432; converged 560 -> 560; true error changed 0
+   honest->dishonest: 0
+   dishonest->honest: 0
+every other case: 520 cases; dishonest tree 0 -> identity 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 0
+   honest->dishonest: 0
+   dishonest->honest: 0
+
+== route1 against tree
+outcomes (tree->route1): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 290; value or abserr differ 202; regions differ 202
+convergence changes: unconverged->converged 2, converged->unconverged 0
+   F->T by test: {'test_JJJ': 1, 'test_YJJ': 1}
+   F->T seed 14 test_JJJ #9 phase2: tree value -0.0165599 abserr 2.07e-12 regions 43 depth 9 | route value -0.0165599 abserr 1.62e-12 regions 14 depth 7; firings 1
+   F->T seed 14 test_YJJ #6 phase3: tree value -0.0298992 abserr 3.53e-12 regions 44 depth 9 | route value -0.0298992 abserr 2.81e-12 regions 14 depth 8; firings 1
+   T->F by test: {}
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> route1 432; dishonest and converged 432 -> 432; converged 560 -> 560; true error changed 4
+   honest->dishonest: 0
+   dishonest->honest: 0
+every other case: 520 cases; dishonest tree 0 -> route1 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 31
+   honest->dishonest: 0
+   dishonest->honest: 0
+
+== route2 against tree
+outcomes (tree->route2): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 2294; value or abserr differ 2108; regions differ 2260
+convergence changes: unconverged->converged 0, converged->unconverged 0
+   F->T by test: {}
+   T->F by test: {}
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> route2 426; dishonest and converged 432 -> 426; converged 560 -> 560; true error changed 0
+   honest->dishonest: 0
+   dishonest->honest: 6
+      seed 2 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=0.0001 lo: tree true 8.625e-08 reported 6.611e-08 conv True | route2 true 8.625e-08 reported 1.246e-07 conv True (true/reported 0.692)
+      seed 2 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 hi: tree true 6.053e-08 reported 4.184e-08 conv True | route2 true 6.053e-08 reported 7.397e-08 conv True (true/reported 0.818)
+      seed 3 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 hi: tree true 3.618e-10 reported 2.032e-10 conv True | route2 true 3.618e-10 reported 6.668e-10 conv True (true/reported 0.543)
+      seed 7 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 hi: tree true 1.878e-09 reported 1.535e-09 conv True | route2 true 1.878e-09 reported 2.619e-09 conv True (true/reported 0.717)
+      seed 15 test_YJJ_log_singularity @@ (Y0,J0,J0) eps=1e-05 hi: tree true 2.780e-09 reported 2.348e-09 conv True | route2 true 2.780e-09 reported 9.935e-09 conv True (true/reported 0.28)
+      seed 19 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 lo: tree true 3.461e-08 reported 3.154e-08 conv True | route2 true 3.461e-08 reported 3.907e-08 conv True (true/reported 0.886)
+every other case: 520 cases; dishonest tree 0 -> route2 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 212
+   honest->dishonest: 0
+   dishonest->honest: 0
+
+== route3 against tree
+outcomes (tree->route3): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 3379; value or abserr differ 2875; regions differ 3379
+convergence changes: unconverged->converged 0, converged->unconverged 2
+   F->T by test: {}
+   T->F by test: {'test_JJJ': 2}
+   T->F seed 13 test_JJJ #5 phase2: tree value -0.0496712 abserr 4.87e-12 regions 31 depth 9 | route value -0.0496712 abserr 5e-12 regions 39 depth 10; firings 2
+   T->F seed 13 test_JJJ #6 phase3: tree value 0.0320242 abserr 3.12e-12 regions 26 depth 9 | route value 0.0320242 abserr 3.25e-12 regions 35 depth 9; firings 4
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> route3 433; dishonest and converged 432 -> 433; converged 560 -> 560; true error changed 35
+   honest->dishonest: 1
+      seed 4 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=0.0001 lo: tree true 1.124e-09 reported 4.094e-09 conv True | route3 true 1.124e-09 reported 5.083e-10 conv True (true/reported 2.21)
+   dishonest->honest: 0
+every other case: 520 cases; dishonest tree 0 -> route3 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 216
+   honest->dishonest: 0
+   dishonest->honest: 0
+
+== route2lit against tree
+outcomes (tree->route2lit): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 3761; value or abserr differ 3718; regions differ 2843
+convergence changes: unconverged->converged 0, converged->unconverged 0
+   F->T by test: {}
+   T->F by test: {}
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> route2lit 424; dishonest and converged 432 -> 424; converged 560 -> 560; true error changed 1
+   honest->dishonest: 2
+      seed 1 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 lo: tree true 8.101e-10 reported 1.075e-09 conv True | route2lit true 8.101e-10 reported 7.731e-10 conv True (true/reported 1.05)
+      seed 2 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 lo: tree true 3.894e-07 reported 4.652e-07 conv True | route2lit true 3.894e-07 reported 3.583e-07 conv True (true/reported 1.09)
+   dishonest->honest: 10
+      seed 2 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=0.0001 lo: tree true 8.625e-08 reported 6.611e-08 conv True | route2lit true 8.625e-08 reported 1.210e-07 conv True (true/reported 0.713)
+      seed 2 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 hi: tree true 6.053e-08 reported 4.184e-08 conv True | route2lit true 6.053e-08 reported 7.158e-08 conv True (true/reported 0.846)
+      seed 3 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 hi: tree true 3.618e-10 reported 2.032e-10 conv True | route2lit true 3.618e-10 reported 6.580e-10 conv True (true/reported 0.55)
+      seed 7 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 hi: tree true 1.878e-09 reported 1.535e-09 conv True | route2lit true 1.878e-09 reported 2.597e-09 conv True (true/reported 0.723)
+      seed 9 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 lo: tree true 8.715e-10 reported 8.330e-10 conv True | route2lit true 8.715e-10 reported 2.029e-09 conv True (true/reported 0.43)
+      seed 15 test_YJJ_log_singularity @@ (Y0,J0,J0) eps=1e-05 hi: tree true 2.780e-09 reported 2.348e-09 conv True | route2lit true 2.780e-09 reported 9.935e-09 conv True (true/reported 0.28)
+      seed 15 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 lo: tree true 1.145e-09 reported 3.229e-10 conv True | route2lit true 1.145e-09 reported 1.803e-09 conv True (true/reported 0.635)
+      seed 15 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 hi: tree true 7.100e-10 reported 1.217e-10 conv True | route2lit true 7.100e-10 reported 1.005e-09 conv True (true/reported 0.706)
+      seed 16 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 hi: tree true 4.829e-10 reported 3.068e-10 conv True | route2lit true 4.829e-10 reported 6.391e-10 conv True (true/reported 0.756)
+      seed 19 test_YJJ_log_singularity @@ (Y0,J2,J2) eps=1e-05 lo: tree true 3.461e-08 reported 3.154e-08 conv True | route2lit true 3.461e-08 reported 3.857e-08 conv True (true/reported 0.897)
+every other case: 520 cases; dishonest tree 0 -> route2lit 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 278
+   honest->dishonest: 0
+   dishonest->honest: 0

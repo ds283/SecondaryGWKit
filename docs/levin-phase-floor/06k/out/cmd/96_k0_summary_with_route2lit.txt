@@ -1,0 +1,326 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/k0_summary.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T10:27:51Z
+# ----
+# levin-phase-floor 06k: Gate K0 summarised
+# written 2026-11-04T10:27:51Z on mps026298.phys.susx.ac.uk
+# script k0_summary.py sha256 9fa50ea2a5ccda90dcad9b0e23933855d0c4f4ab77025e974a0c3a55a45e00bf
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/k0/compare_tree.json sha256 aed6be4bfd5fa7f82d9135c4cd5ffb01d3278c134aadf8257aeeeca532c7b9c4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/k0/compare_identity.json sha256 5655f5c8246b31db9a285b5d6b79bbcb7cb41670956265135c166c7c711784b7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/k0/compare_route1.json sha256 5da983252ae28b8680d2a24eccd972c702acf02a84ea0735da3c17b57fb5e084
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/k0/compare_route2.json sha256 c7826e27573f5b6ff66a373c8640e976e2eee394d2da496799cce213f3444b89
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/k0/compare_route3.json sha256 6dec4ab6161be3ff308430cc9e609ee01df5aad7d662c01d0be5e0b2dc1b59c9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/k0/compare_route2lit.json sha256 fca2c7016e4a981e4c484be715cdf386f0b07388560e58427a08fdd00972bee1
+{
+ "gate": {
+  "tree": {
+   "mode": "identity",
+   "n_units": 100,
+   "n_fail": 0,
+   "n_calls_compared_clause2": 0,
+   "n_calls_fired": 0,
+   "n_units_compared_whole": 100,
+   "excluded_non_provenance_keys_differing": {
+    "data.cache_built": 95
+   }
+  },
+  "identity": {
+   "mode": "identity",
+   "n_units": 100,
+   "n_fail": 0,
+   "n_calls_compared_clause2": 0,
+   "n_calls_fired": 0,
+   "n_units_compared_whole": 100,
+   "excluded_non_provenance_keys_differing": {
+    "data.cache_built": 95
+   }
+  },
+  "route1": {
+   "mode": "route",
+   "n_units": 100,
+   "n_fail": 0,
+   "n_calls_compared_clause2": 1855,
+   "n_calls_fired": 255,
+   "n_units_compared_whole": 16,
+   "excluded_non_provenance_keys_differing": {
+    "data.cache_built": 16
+   }
+  },
+  "route2": {
+   "mode": "route",
+   "n_units": 100,
+   "n_fail": 0,
+   "n_calls_compared_clause2": 1837,
+   "n_calls_fired": 273,
+   "n_units_compared_whole": 16,
+   "excluded_non_provenance_keys_differing": {
+    "data.cache_built": 16
+   }
+  },
+  "route3": {
+   "mode": "route",
+   "n_units": 100,
+   "n_fail": 0,
+   "n_calls_compared_clause2": 683,
+   "n_calls_fired": 1427,
+   "n_units_compared_whole": 3,
+   "excluded_non_provenance_keys_differing": {
+    "data.cache_built": 3
+   }
+  },
+  "route2lit": {
+   "mode": "route",
+   "n_units": 100,
+   "n_fail": 0,
+   "n_calls_compared_clause2": 1032,
+   "n_calls_fired": 1078,
+   "n_units_compared_whole": 3,
+   "excluded_non_provenance_keys_differing": {
+    "data.cache_built": 3
+   }
+  }
+ },
+ "routes": {
+  "route1": {
+   "n_firings": 4226,
+   "n_firings_group_calls": 4225,
+   "by_depth": {
+    "3": 3,
+    "4": 14,
+    "5": 6,
+    "6": 25,
+    "7": 67,
+    "8": 157,
+    "9": 322,
+    "10": 348,
+    "11": 582,
+    "12": 573,
+    "13": 733,
+    "14": 603,
+    "15": 300,
+    "16": 218,
+    "17": 193,
+    "18": 62,
+    "19": 14,
+    "20": 6
+   },
+   "at_depth_max": 6,
+   "by_d1_over_phiP": {
+    "<2": 1730,
+    "<25": 728,
+    "<5.8": 913,
+    "<1000": 855
+   },
+   "n_d1_over_phiP_ge_5.8": 1583,
+   "max_d1_over_phiP": 977.4258470427527,
+   "by_r": {
+    "<0.5": 1637,
+    "<1": 952,
+    "<0.75": 1637
+   },
+   "group_calls_converged_tree_to_route": {
+    "False->False": 9,
+    "False->True": 88,
+    "True->True": 469
+   },
+   "group_call_regions": {
+    "group_tree": 32986,
+    "group_route": 22910
+   }
+  },
+  "route2": {
+   "n_firings": 2745,
+   "n_firings_group_calls": 2717,
+   "by_depth": {
+    "0": 2,
+    "1": 1,
+    "2": 8,
+    "3": 11,
+    "4": 5,
+    "5": 9,
+    "6": 59,
+    "7": 128,
+    "8": 258,
+    "9": 264,
+    "10": 454,
+    "11": 292,
+    "12": 307,
+    "13": 469,
+    "14": 257,
+    "15": 102,
+    "16": 45,
+    "17": 22,
+    "18": 26,
+    "19": 18,
+    "20": 8
+   },
+   "at_depth_max": 8,
+   "by_d1_over_phiP": {
+    "<25": 440,
+    "<5.8": 443,
+    "<1000": 906,
+    "<1": 467,
+    "<2": 478,
+    "<1e+07": 11
+   },
+   "n_d1_over_phiP_ge_5.8": 1357,
+   "max_d1_over_phiP": 3718.913869758306,
+   "by_r": {
+    "<0.75": 332,
+    ">=1": 1722,
+    "<0.5": 476,
+    "<1": 215
+   },
+   "group_calls_converged_tree_to_route": {
+    "False->False": 4,
+    "False->True": 93,
+    "True->True": 469
+   },
+   "group_call_regions": {
+    "group_tree": 32986,
+    "group_route": 18457
+   }
+  },
+  "route3": {
+   "n_firings": 3050,
+   "n_firings_group_calls": 1689,
+   "by_depth": {
+    "0": 109,
+    "1": 997,
+    "2": 618,
+    "3": 171,
+    "4": 94,
+    "5": 77,
+    "6": 109,
+    "7": 178,
+    "8": 208,
+    "9": 163,
+    "10": 119,
+    "11": 65,
+    "12": 45,
+    "13": 37,
+    "14": 22,
+    "15": 2,
+    "16": 5,
+    "17": 11,
+    "18": 3,
+    "19": 17
+   },
+   "at_depth_max": 0,
+   "by_d1_over_phiP": {
+    "<1e+07": 323,
+    "<1000": 376,
+    "<5.8": 178,
+    "<2": 216,
+    "<25": 191,
+    "<1": 1764,
+    ">=1e+07": 2
+   },
+   "n_d1_over_phiP_ge_5.8": 892,
+   "max_d1_over_phiP": 55541209.45554516,
+   "by_r": {
+    ">=1": 2406,
+    "<0.75": 239,
+    "<0.5": 352,
+    "<1": 53
+   },
+   "group_calls_converged_tree_to_route": {
+    "False->False": 1,
+    "False->True": 96,
+    "True->True": 469
+   },
+   "group_call_regions": {
+    "group_tree": 32986,
+    "group_route": 8668
+   },
+   "by_D_over_cap": {
+    "<1e-06": 627,
+    "<0.1": 917,
+    "<1.0001": 669,
+    "<0.001": 837
+   }
+  },
+  "route2lit": {
+   "n_firings": 12091,
+   "n_firings_group_calls": 11426,
+   "by_depth": {
+    "0": 42,
+    "1": 209,
+    "2": 499,
+    "3": 475,
+    "4": 1022,
+    "5": 1041,
+    "6": 1482,
+    "7": 1632,
+    "8": 1422,
+    "9": 1073,
+    "10": 660,
+    "11": 396,
+    "12": 496,
+    "13": 636,
+    "14": 408,
+    "15": 186,
+    "16": 108,
+    "17": 69,
+    "18": 75,
+    "19": 59,
+    "20": 101
+   },
+   "at_depth_max": 101,
+   "by_d1_over_phiP": {
+    "<1e+07": 5647,
+    "<1000": 3050,
+    "<25": 820,
+    "<5.8": 681,
+    "<1": 989,
+    "<2": 765,
+    ">=1e+07": 139
+   },
+   "n_d1_over_phiP_ge_5.8": 9656,
+   "max_d1_over_phiP": 3970267714110.0405,
+   "by_r": {
+    "<0.25": 8638,
+    "<0.75": 470,
+    ">=1": 1992,
+    "<0.5": 630,
+    "<1": 361
+   },
+   "group_calls_converged_tree_to_route": {
+    "False->False": 4,
+    "False->True": 93,
+    "True->False": 1,
+    "True->True": 468
+   },
+   "group_call_regions": {
+    "group_tree": 32986,
+    "group_route": 18849
+   },
+   "by_kind": {
+    "declaration_changed": 8549,
+    "trust_added": 3135,
+    "trust_withdrawn": 360,
+    "declaration_changed_untrusted": 47
+   },
+   "by_kind_and_parent": {
+    "declaration_changed|CC parent": 3544,
+    "declaration_changed|Levin parent": 5005,
+    "trust_added|CC parent": 2106,
+    "trust_added|Levin parent": 1029,
+    "trust_withdrawn|CC parent": 252,
+    "trust_withdrawn|Levin parent": 108,
+    "declaration_changed_untrusted|CC parent": 45,
+    "declaration_changed_untrusted|Levin parent": 2
+   },
+   "withdrawn_r_lt_quarter": 258,
+   "trust_added_d1_over_phiP_ge_5.8": 1466,
+   "trust_added_max_d1_over_phiP": 3718.913869758306
+  }
+ }
+}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/k0/summary.json sha256 aac52b816032c701119efb24f39e9090c979daba21ccfa8e9f15732c302a5531
+# ----
+# end 2026-11-04T10:27:52Z
+# exit 0

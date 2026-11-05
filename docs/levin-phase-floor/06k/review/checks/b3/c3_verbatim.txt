@@ -1,0 +1,4 @@
+state/predictions_and_rules_20261104T0915Z.md prompt §4 contained verbatim: True chars 2209
+log.md prompt §4 contained verbatim: False chars 2209
+log.md: prompt §4 body (heading line dropped) contained verbatim: True chars 2168
+predictions file sha256 e315d74d6f5bd38e064f7ff98c110498a9bf12abad2fd4dbad1660bd53473951

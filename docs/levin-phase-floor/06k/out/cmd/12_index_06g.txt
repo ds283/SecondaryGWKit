@@ -1,0 +1,17 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060: PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/index_06g.py state/index_06g.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:05:32Z
+# ----
+# levin-phase-floor 06k: an index of 06g's census checkpoint
+# written 2026-11-04T09:05:32Z on mps026298.phys.susx.ac.uk
+# script index_06g.py sha256 3415bb0caa412bb54ff39e94d236a0bb67346a4ce35cb1c8dd1bf73785f0863d
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl sha256 03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa
+units 18560; statuses {'done': 18560}; wall_s max 47.1 p99 16.9 median 1.60 sum 58535
+rebuild_s max 59.5 p99 0.28 median 0.044 sum 2055
+wrote state/index_06g.json sha256 349e37cd9c1648bdba393818c072a0514f63b477fa8136efd0cd97e781bcbd2c
+# ----
+# end 2026-11-04T09:05:49Z
+# exit 0

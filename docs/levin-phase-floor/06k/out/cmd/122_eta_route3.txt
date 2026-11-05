@@ -1,0 +1,14 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/eta_route3.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T01:17:55Z
+# ----
+route 3 calls returning left leaves: 173207; eta_min p10 3.06e-11 median 6.65e-08 p90 0.000411 p99 0.000959 max 0.001
+  calls with eta_min > 0.0001 (whose left set would not be accepted at that eta on this partition): 26699
+  calls with eta_min > 1e-05 (whose left set would not be accepted at that eta on this partition): 39169
+  calls with eta_min > 1e-06 (whose left set would not be accepted at that eta on this partition): 56786
+  calls with eta_min > 1e-07 (whose left set would not be accepted at that eta on this partition): 81480
+  calls where the depth_max reading differs: 1; calls with an untrusted leaf at depth_max not left: 1
+# ----
+# end 2026-11-05T01:17:57Z
+# exit 0

@@ -1,0 +1,9 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/extract_census.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315 state/extract/g.pkl
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T01:03:25Z
+# ----
+levin-phase-floor-06g-census-20261101T114315: 18560 units, 289482 calls; checkpoint sha256 03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa; 18 s; wrote state/extract/g.pkl sha256 3942209a1141fad4822a2b962a068d6d8ad743cdaf93247c130d94e9c8e51eea
+# ----
+# end 2026-11-05T01:03:44Z
+# exit 0

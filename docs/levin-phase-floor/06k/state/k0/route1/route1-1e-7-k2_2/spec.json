@@ -1,0 +1,72 @@
+{
+ "tree": "g",
+ "name": "route1-1e-7-k2_2",
+ "units": [
+  {
+   "uid": "g-1e-7-2-21980",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-21980",
+   "names05": null,
+   "shard": 2,
+   "serial": 21980,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-7-2-1427",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-1427",
+   "names05": null,
+   "shard": 2,
+   "serial": 1427,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-7-2-1448",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-1448",
+   "names05": null,
+   "shard": 2,
+   "serial": 1448,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-7-2-35010",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-35010",
+   "names05": null,
+   "shard": 2,
+   "serial": 35010,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/k0/route1/route1-1e-7-k2_2",
+ "emit_fd": null,
+ "emit_file": "state/k0/route1/route1-1e-7-k2_2/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": {
+  "name": "route1",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route1.py",
+  "sha256": "23cd69e4a87a3a19e8a7e744cf3bac7712c26f342864fb299959a279d80a5cb2"
+ }
+}

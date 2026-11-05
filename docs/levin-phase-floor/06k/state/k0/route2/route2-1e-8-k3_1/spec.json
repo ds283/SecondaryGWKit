@@ -1,0 +1,100 @@
+{
+ "tree": "g",
+ "name": "route2-1e-8-k3_1",
+ "units": [
+  {
+   "uid": "g-1e-8-3-34272",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "3-34272",
+   "names05": null,
+   "shard": 3,
+   "serial": 34272,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-8-3-34298",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "3-34298",
+   "names05": null,
+   "shard": 3,
+   "serial": 34298,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-8-3-37338",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "3-37338",
+   "names05": null,
+   "shard": 3,
+   "serial": 37338,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-8-3-37323",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "3-37323",
+   "names05": null,
+   "shard": 3,
+   "serial": 37323,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-8-3-34739",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "3-34739",
+   "names05": null,
+   "shard": 3,
+   "serial": 34739,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-8-3-14505",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "3-14505",
+   "names05": null,
+   "shard": 3,
+   "serial": 14505,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/k0/route2/route2-1e-8-k3_1",
+ "emit_fd": null,
+ "emit_file": "state/k0/route2/route2-1e-8-k3_1/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": {
+  "name": "route2",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route2.py",
+  "sha256": "017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635"
+ }
+}

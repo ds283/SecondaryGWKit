@@ -1,0 +1,736 @@
+{
+ "header": [
+  "# levin-phase-floor 06k: the leaves carrying route2's S1 moves",
+  "# written 2026-11-05T01:07:41Z on mps026298.phys.susx.ac.uk",
+  "# script movers_c.py sha256 14857656199194dc47fa0d71c2e08ca67f1e8788ba878e68b3a1af82ec488ed2",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/partC/route2.json sha256 81c0f97bb10e91fdc8bc0127c6204a54a79f3e5bb1b45a53a5c16a086b527144",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/g.pkl sha256 3942209a1141fad4822a2b962a068d6d8ad743cdaf93247c130d94e9c8e51eea",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/extract/route2.pkl sha256 d43b10dbfec1f623119f305d554fb6e7affacc5a1085a4569df48c91568f93b1"
+ ],
+ "route": "route2",
+ "n": 10,
+ "movers": [
+  {
+   "unit": "g-1e-7-3-662",
+   "rtol": "1e-7",
+   "row": "3-662",
+   "kind": "analytic",
+   "index": 3,
+   "group": "analytic J1",
+   "ratio": 1.3234227559061083,
+   "dv": 7.447856687245034e-25,
+   "abserr": [
+    "0x1.5c56d49ebac91p-82",
+    "0x1.5c56d49ebac91p-82"
+   ],
+   "regions": [
+    1,
+    1
+   ],
+   "depth": [
+    0,
+    0
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 1,
+   "n_cells": 1,
+   "move_exact": -7.447856687245034e-25,
+   "carrying_cell": {
+    "start": -11.656766501196119,
+    "end": -11.35649653637811,
+    "diff": -7.447856687245034e-25,
+    "share_of_move": 1.0,
+    "g_leaves": [
+     {
+      "start": -11.656766501196119,
+      "end": -11.35649653637811,
+      "depth": 0,
+      "type": 0,
+      "value": 2.323542566109182e-12,
+      "value_own": 2.323542566109182e-12,
+      "value_kind": 0,
+      "abserr": 2.3426013441443167e-26,
+      "budget_err": 2.813861501930163e-25,
+      "trusted": -1,
+      "r": 30.79310344827586,
+      "delta1": 2.3426013441443167e-26,
+      "declared_resolution": NaN,
+      "phase_err": 2.813861501930163e-25
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": -11.656766501196119,
+      "end": -11.35649653637811,
+      "depth": 0,
+      "type": 0,
+      "value": 2.323542566108437e-12,
+      "value_own": 2.323542566109182e-12,
+      "value_kind": 1,
+      "abserr": 2.3426013441443167e-26,
+      "budget_err": 2.813861501930163e-25,
+      "trusted": 1,
+      "r": 30.79310344827586,
+      "delta1": 2.3426013441443167e-26,
+      "declared_resolution": 2.9537147382689207e-26,
+      "phase_err": 2.813861501930163e-25
+     }
+    ]
+   },
+   "second_cell_share": null
+  },
+  {
+   "unit": "g-1e-8-3-662",
+   "rtol": "1e-8",
+   "row": "3-662",
+   "kind": "analytic",
+   "index": 3,
+   "group": "analytic J1",
+   "ratio": 1.3234227559061083,
+   "dv": 7.447856687245034e-25,
+   "abserr": [
+    "0x1.5c56d49ebac91p-82",
+    "0x1.5c56d49ebac91p-82"
+   ],
+   "regions": [
+    1,
+    1
+   ],
+   "depth": [
+    0,
+    0
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 1,
+   "n_cells": 1,
+   "move_exact": -7.447856687245034e-25,
+   "carrying_cell": {
+    "start": -11.656766501196119,
+    "end": -11.35649653637811,
+    "diff": -7.447856687245034e-25,
+    "share_of_move": 1.0,
+    "g_leaves": [
+     {
+      "start": -11.656766501196119,
+      "end": -11.35649653637811,
+      "depth": 0,
+      "type": 0,
+      "value": 2.323542566109182e-12,
+      "value_own": 2.323542566109182e-12,
+      "value_kind": 0,
+      "abserr": 2.3426013441443167e-26,
+      "budget_err": 2.813861501930163e-25,
+      "trusted": -1,
+      "r": 30.79310344827586,
+      "delta1": 2.3426013441443167e-26,
+      "declared_resolution": NaN,
+      "phase_err": 2.813861501930163e-25
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": -11.656766501196119,
+      "end": -11.35649653637811,
+      "depth": 0,
+      "type": 0,
+      "value": 2.323542566108437e-12,
+      "value_own": 2.323542566109182e-12,
+      "value_kind": 1,
+      "abserr": 2.3426013441443167e-26,
+      "budget_err": 2.813861501930163e-25,
+      "trusted": 1,
+      "r": 30.79310344827586,
+      "delta1": 2.3426013441443167e-26,
+      "declared_resolution": 2.9537147382689207e-26,
+      "phase_err": 2.813861501930163e-25
+     }
+    ]
+   },
+   "second_cell_share": null
+  },
+  {
+   "unit": "g-1e-7-3-754",
+   "rtol": "1e-7",
+   "row": "3-754",
+   "kind": "analytic",
+   "index": 3,
+   "group": "analytic Y1",
+   "ratio": 1.2988599080536576,
+   "dv": 1.3813269994782005e-24,
+   "abserr": [
+    "0x1.9c23a367c3f74p-82",
+    "0x1.c433333333333p-81"
+   ],
+   "regions": [
+    1,
+    1
+   ],
+   "depth": [
+    0,
+    0
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 1,
+   "n_cells": 1,
+   "move_exact": -1.3813269994782005e-24,
+   "carrying_cell": {
+    "start": -11.656766501196119,
+    "end": -11.35649653637811,
+    "diff": -1.3813269994782005e-24,
+    "share_of_move": 1.0,
+    "g_leaves": [
+     {
+      "start": -11.656766501196119,
+      "end": -11.35649653637811,
+      "depth": 0,
+      "type": 0,
+      "value": -1.907609114706539e-12,
+      "value_own": -1.907609114706539e-12,
+      "value_kind": 0,
+      "abserr": 2.4031858616652904e-25,
+      "budget_err": 3.3292340423485784e-25,
+      "trusted": -1,
+      "r": 6.7478991596638656,
+      "delta1": 2.4031858616652904e-25,
+      "declared_resolution": NaN,
+      "phase_err": 3.3292340423485784e-25
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": -11.656766501196119,
+      "end": -11.35649653637811,
+      "depth": 0,
+      "type": 0,
+      "value": -1.9076091147079204e-12,
+      "value_own": -1.907609114706539e-12,
+      "value_kind": 1,
+      "abserr": 2.4031858616652904e-25,
+      "budget_err": 7.3056850194624825e-25,
+      "trusted": 1,
+      "r": 6.7478991596638656,
+      "delta1": 2.4031858616652904e-25,
+      "declared_resolution": 7.3056850194624825e-25,
+      "phase_err": 3.3292340423485784e-25
+     }
+    ]
+   },
+   "second_cell_share": null
+  },
+  {
+   "unit": "g-1e-8-3-754",
+   "rtol": "1e-8",
+   "row": "3-754",
+   "kind": "analytic",
+   "index": 3,
+   "group": "analytic Y1",
+   "ratio": 1.2988599080536576,
+   "dv": 1.3813269994782005e-24,
+   "abserr": [
+    "0x1.9c23a367c3f74p-82",
+    "0x1.c433333333333p-81"
+   ],
+   "regions": [
+    1,
+    1
+   ],
+   "depth": [
+    0,
+    0
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 1,
+   "n_cells": 1,
+   "move_exact": -1.3813269994782005e-24,
+   "carrying_cell": {
+    "start": -11.656766501196119,
+    "end": -11.35649653637811,
+    "diff": -1.3813269994782005e-24,
+    "share_of_move": 1.0,
+    "g_leaves": [
+     {
+      "start": -11.656766501196119,
+      "end": -11.35649653637811,
+      "depth": 0,
+      "type": 0,
+      "value": -1.907609114706539e-12,
+      "value_own": -1.907609114706539e-12,
+      "value_kind": 0,
+      "abserr": 2.4031858616652904e-25,
+      "budget_err": 3.3292340423485784e-25,
+      "trusted": -1,
+      "r": 6.7478991596638656,
+      "delta1": 2.4031858616652904e-25,
+      "declared_resolution": NaN,
+      "phase_err": 3.3292340423485784e-25
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": -11.656766501196119,
+      "end": -11.35649653637811,
+      "depth": 0,
+      "type": 0,
+      "value": -1.9076091147079204e-12,
+      "value_own": -1.907609114706539e-12,
+      "value_kind": 1,
+      "abserr": 2.4031858616652904e-25,
+      "budget_err": 7.3056850194624825e-25,
+      "trusted": 1,
+      "r": 6.7478991596638656,
+      "delta1": 2.4031858616652904e-25,
+      "declared_resolution": 7.3056850194624825e-25,
+      "phase_err": 3.3292340423485784e-25
+     }
+    ]
+   },
+   "second_cell_share": null
+  },
+  {
+   "unit": "g-1e-7-2-33231",
+   "rtol": "1e-7",
+   "row": "2-33231",
+   "kind": "analytic",
+   "index": 3,
+   "group": "analytic J1",
+   "ratio": 1.261510391100468,
+   "dv": 4.990334086428121e-27,
+   "abserr": [
+    "0x1.3969fafbcf02ap-89",
+    "0x1.3969fafbcf02ap-89"
+   ],
+   "regions": [
+    1,
+    1
+   ],
+   "depth": [
+    0,
+    0
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 1,
+   "n_cells": 1,
+   "move_exact": -4.990334086428121e-27,
+   "carrying_cell": {
+    "start": -16.231833682710548,
+    "end": -15.421647145838753,
+    "diff": -4.990334086428121e-27,
+    "share_of_move": 1.0,
+    "g_leaves": [
+     {
+      "start": -16.231833682710548,
+      "end": -15.421647145838753,
+      "depth": 0,
+      "type": 0,
+      "value": 8.885674097130998e-15,
+      "value_own": 8.885674097130998e-15,
+      "value_kind": 0,
+      "abserr": 1.4199496293978212e-28,
+      "budget_err": 1.9779203253628553e-27,
+      "trusted": -1,
+      "r": 34.144444444444446,
+      "delta1": 1.4199496293978212e-28,
+      "declared_resolution": NaN,
+      "phase_err": 1.9779203253628553e-27
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": -16.231833682710548,
+      "end": -15.421647145838753,
+      "depth": 0,
+      "type": 0,
+      "value": 8.885674097126008e-15,
+      "value_own": 8.885674097130998e-15,
+      "value_kind": 1,
+      "abserr": 1.4199496293978212e-28,
+      "budget_err": 1.9779203253628553e-27,
+      "trusted": 1,
+      "r": 34.144444444444446,
+      "delta1": 1.4199496293978212e-28,
+      "declared_resolution": 2.662405555120915e-28,
+      "phase_err": 1.9779203253628553e-27
+     }
+    ]
+   },
+   "second_cell_share": null
+  },
+  {
+   "unit": "g-1e-8-2-33231",
+   "rtol": "1e-8",
+   "row": "2-33231",
+   "kind": "analytic",
+   "index": 3,
+   "group": "analytic J1",
+   "ratio": 1.261510391100468,
+   "dv": 4.990334086428121e-27,
+   "abserr": [
+    "0x1.3969fafbcf02ap-89",
+    "0x1.3969fafbcf02ap-89"
+   ],
+   "regions": [
+    1,
+    1
+   ],
+   "depth": [
+    0,
+    0
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 1,
+   "n_cells": 1,
+   "move_exact": -4.990334086428121e-27,
+   "carrying_cell": {
+    "start": -16.231833682710548,
+    "end": -15.421647145838753,
+    "diff": -4.990334086428121e-27,
+    "share_of_move": 1.0,
+    "g_leaves": [
+     {
+      "start": -16.231833682710548,
+      "end": -15.421647145838753,
+      "depth": 0,
+      "type": 0,
+      "value": 8.885674097130998e-15,
+      "value_own": 8.885674097130998e-15,
+      "value_kind": 0,
+      "abserr": 1.4199496293978212e-28,
+      "budget_err": 1.9779203253628553e-27,
+      "trusted": -1,
+      "r": 34.144444444444446,
+      "delta1": 1.4199496293978212e-28,
+      "declared_resolution": NaN,
+      "phase_err": 1.9779203253628553e-27
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": -16.231833682710548,
+      "end": -15.421647145838753,
+      "depth": 0,
+      "type": 0,
+      "value": 8.885674097126008e-15,
+      "value_own": 8.885674097130998e-15,
+      "value_kind": 1,
+      "abserr": 1.4199496293978212e-28,
+      "budget_err": 1.9779203253628553e-27,
+      "trusted": 1,
+      "r": 34.144444444444446,
+      "delta1": 1.4199496293978212e-28,
+      "declared_resolution": 2.662405555120915e-28,
+      "phase_err": 1.9779203253628553e-27
+     }
+    ]
+   },
+   "second_cell_share": null
+  },
+  {
+   "unit": "g-1e-7-2-21787",
+   "rtol": "1e-7",
+   "row": "2-21787",
+   "kind": "group",
+   "index": 3,
+   "group": "G+q+r",
+   "ratio": 1.2260791619531521,
+   "dv": 3.955775246723875e-42,
+   "abserr": [
+    "0x1.199585c902f7ep-139",
+    "0x1.2604a54319588p-139"
+   ],
+   "regions": [
+    32,
+    32
+   ],
+   "depth": [
+    11,
+    11
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 3,
+   "n_cells": 32,
+   "move_exact": -3.955774049325285e-42,
+   "carrying_cell": {
+    "start": 22.13702555446595,
+    "end": 22.13816141066889,
+    "diff": -2.977533612584469e-42,
+    "share_of_move": 0.7527056842623079,
+    "g_leaves": [
+     {
+      "start": 22.13702555446595,
+      "end": 22.13816141066889,
+      "depth": 11,
+      "type": 1,
+      "value": 1.4158832053319299e-34,
+      "value_own": 1.4158832053319299e-34,
+      "value_kind": 0,
+      "abserr": 2.255984472259259e-44,
+      "budget_err": 2.255984472259259e-44,
+      "trusted": -1,
+      "r": 2.9537123033868267,
+      "delta1": 7.530981983777262e-43,
+      "declared_resolution": NaN,
+      "phase_err": 8.963812266880202e-43
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": 22.13702555446595,
+      "end": 22.13816141066889,
+      "depth": 11,
+      "type": 1,
+      "value": 1.4158831755565937e-34,
+      "value_own": 1.4158832053319299e-34,
+      "value_kind": 1,
+      "abserr": 2.255984472259259e-44,
+      "budget_err": 2.521442725463144e-44,
+      "trusted": 1,
+      "r": 2.9537123033868267,
+      "delta1": 7.530981983777262e-43,
+      "declared_resolution": 2.521442725463144e-44,
+      "phase_err": 8.963812266880202e-43
+     }
+    ]
+   },
+   "second_cell_share": 0.5907665228671352
+  },
+  {
+   "unit": "g-1e-8-2-21787",
+   "rtol": "1e-8",
+   "row": "2-21787",
+   "kind": "group",
+   "index": 3,
+   "group": "G+q+r",
+   "ratio": 1.2260791619531521,
+   "dv": 3.955775246723875e-42,
+   "abserr": [
+    "0x1.199585c902f7ep-139",
+    "0x1.2604a54319588p-139"
+   ],
+   "regions": [
+    32,
+    32
+   ],
+   "depth": [
+    11,
+    11
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 3,
+   "n_cells": 32,
+   "move_exact": -3.955774049325285e-42,
+   "carrying_cell": {
+    "start": 22.13702555446595,
+    "end": 22.13816141066889,
+    "diff": -2.977533612584469e-42,
+    "share_of_move": 0.7527056842623079,
+    "g_leaves": [
+     {
+      "start": 22.13702555446595,
+      "end": 22.13816141066889,
+      "depth": 11,
+      "type": 1,
+      "value": 1.4158832053319299e-34,
+      "value_own": 1.4158832053319299e-34,
+      "value_kind": 0,
+      "abserr": 2.255984472259259e-44,
+      "budget_err": 2.255984472259259e-44,
+      "trusted": -1,
+      "r": 2.9537123033868267,
+      "delta1": 7.530981983777262e-43,
+      "declared_resolution": NaN,
+      "phase_err": 8.963812266880202e-43
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": 22.13702555446595,
+      "end": 22.13816141066889,
+      "depth": 11,
+      "type": 1,
+      "value": 1.4158831755565937e-34,
+      "value_own": 1.4158832053319299e-34,
+      "value_kind": 1,
+      "abserr": 2.255984472259259e-44,
+      "budget_err": 2.521442725463144e-44,
+      "trusted": 1,
+      "r": 2.9537123033868267,
+      "delta1": 7.530981983777262e-43,
+      "declared_resolution": 2.521442725463144e-44,
+      "phase_err": 8.963812266880202e-43
+     }
+    ]
+   },
+   "second_cell_share": 0.5907665228671352
+  },
+  {
+   "unit": "g-1e-7-1-20532",
+   "rtol": "1e-7",
+   "row": "1-20532",
+   "kind": "analytic",
+   "index": 5,
+   "group": "analytic J2",
+   "ratio": 1.0058308547597772,
+   "dv": 3.600361171428698e-26,
+   "abserr": [
+    "0x1.627ed85225883p-86",
+    "0x1.627ed85225883p-86"
+   ],
+   "regions": [
+    1,
+    1
+   ],
+   "depth": [
+    0,
+    0
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 1,
+   "n_cells": 1,
+   "move_exact": -3.600361171428698e-26,
+   "carrying_cell": {
+    "start": -12.800533296574725,
+    "end": -12.381421185831552,
+    "diff": -3.600361171428698e-26,
+    "share_of_move": 1.0,
+    "g_leaves": [
+     {
+      "start": -12.800533296574725,
+      "end": -12.381421185831552,
+      "depth": 0,
+      "type": 0,
+      "value": -1.6643336575225594e-14,
+      "value_own": -1.6643336575225594e-14,
+      "value_kind": 0,
+      "abserr": 3.7865323450608567e-28,
+      "budget_err": 1.789744843474986e-26,
+      "trusted": -1,
+      "r": 94.08333333333333,
+      "delta1": 3.7865323450608567e-28,
+      "declared_resolution": NaN,
+      "phase_err": 1.789744843474986e-26
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": -12.800533296574725,
+      "end": -12.381421185831552,
+      "depth": 0,
+      "type": 0,
+      "value": -1.6643336575261598e-14,
+      "value_own": -1.6643336575225594e-14,
+      "value_kind": 1,
+      "abserr": 3.7865323450608567e-28,
+      "budget_err": 1.789744843474986e-26,
+      "trusted": 1,
+      "r": 94.08333333333333,
+      "delta1": 3.7865323450608567e-28,
+      "declared_resolution": 5.048709793414476e-28,
+      "phase_err": 1.789744843474986e-26
+     }
+    ]
+   },
+   "second_cell_share": null
+  },
+  {
+   "unit": "g-1e-8-1-20532",
+   "rtol": "1e-8",
+   "row": "1-20532",
+   "kind": "analytic",
+   "index": 5,
+   "group": "analytic J2",
+   "ratio": 1.0058308547597772,
+   "dv": 3.600361171428698e-26,
+   "abserr": [
+    "0x1.627ed85225883p-86",
+    "0x1.627ed85225883p-86"
+   ],
+   "regions": [
+    1,
+    1
+   ],
+   "depth": [
+    0,
+    0
+   ],
+   "converged": [
+    true,
+    true
+   ],
+   "n_firings": 1,
+   "n_cells": 1,
+   "move_exact": -3.600361171428698e-26,
+   "carrying_cell": {
+    "start": -12.800533296574725,
+    "end": -12.381421185831552,
+    "diff": -3.600361171428698e-26,
+    "share_of_move": 1.0,
+    "g_leaves": [
+     {
+      "start": -12.800533296574725,
+      "end": -12.381421185831552,
+      "depth": 0,
+      "type": 0,
+      "value": -1.6643336575225594e-14,
+      "value_own": -1.6643336575225594e-14,
+      "value_kind": 0,
+      "abserr": 3.7865323450608567e-28,
+      "budget_err": 1.789744843474986e-26,
+      "trusted": -1,
+      "r": 94.08333333333333,
+      "delta1": 3.7865323450608567e-28,
+      "declared_resolution": NaN,
+      "phase_err": 1.789744843474986e-26
+     }
+    ],
+    "route_leaves": [
+     {
+      "start": -12.800533296574725,
+      "end": -12.381421185831552,
+      "depth": 0,
+      "type": 0,
+      "value": -1.6643336575261598e-14,
+      "value_own": -1.6643336575225594e-14,
+      "value_kind": 1,
+      "abserr": 3.7865323450608567e-28,
+      "budget_err": 1.789744843474986e-26,
+      "trusted": 1,
+      "r": 94.08333333333333,
+      "delta1": 3.7865323450608567e-28,
+      "declared_resolution": 5.048709793414476e-28,
+      "phase_err": 1.789744843474986e-26
+     }
+    ]
+   },
+   "second_cell_share": null
+  }
+ ]
+}

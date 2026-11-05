@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py f08 out/partL/f08.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:53:33Z
+# ----
+f08 (W-5): 1 leaves ({'L-a': 0, 'L-b': 1, 'L-c': 0}); reproduce the census 0 of 0; 7 solves; 0.9 s; wrote out/partL/f08.json sha256 a80993f07634dd72c1e54a3b0910b947f54d44e5be1788300246d5a6e0a3e4b1; ray initialised False
+# ----
+# end 2026-11-04T09:53:35Z
+# exit 0

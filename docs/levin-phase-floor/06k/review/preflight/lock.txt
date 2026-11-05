@@ -1,0 +1,6 @@
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+exit 0
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  1 11:30 .
+drwxr-x--- 159 ds283 staff 5088 Nov  4 08:47 ..

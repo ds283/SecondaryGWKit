@@ -1,0 +1,25 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/run_k0.py route2 state/dev_units.json state/dev/route2_1449 --workers 1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:09:17Z
+# ----
+# levin-phase-floor 06k: census units under the variant route2
+# written 2026-11-04T09:09:17Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 af36be27fb135f9b5a51491ec9dcb75f192b31a174d6daede34e9f3f8824fcb5
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev_units.json sha256 daabd3eed4459fe101e038ff15a318618d2fd5c130cb9f13f22b6fc0a9b96a18
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route2.py sha256 017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635
+# variant {"name": "route2", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route2.py", "sha256": "017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635"}
+# 1 units in 1 workers: route2-1e-7-k2_2 (1)
+route2-1e-7-k2_2: pid 14188 (1 units)
+route2-1e-7-k2_2: exit 0 after 59.5 s
+exit codes {route2-1e-7-k2_2: 0}
+refused: []
+bye route2-1e-7-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 1 of 1; not done []; wall 60 s
+wrote state/dev/route2_1449/units.jsonl sha256 58e02dd1f02709d6695ebc3fcd1b22e10c0dc8410c85b16d791efb4276c53385
+# ----
+# end 2026-11-04T09:10:18Z
+# exit 0

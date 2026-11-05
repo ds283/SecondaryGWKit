@@ -1,0 +1,6 @@
+k0 tree workers 15 bad 0
+k0 identity workers 15 bad 0
+k0 route1 workers 15 bad 0
+k0 route2 workers 15 bad 0
+k0 route3 workers 15 bad 0
+k0 route2lit workers 15 bad 0

@@ -1,0 +1,287 @@
+{
+ "header": [
+  "# levin-phase-floor 06k: Gate K0, route1_1449 against 06g's census (route)",
+  "# written 2026-11-04T09:10:44Z on mps026298.phys.susx.ac.uk",
+  "# script compare_k0.py sha256 409a096a03cf95e69723de2330cbf48c60a19da5ae828b2cc60a911e5015bbf8",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input state/dev/route1_1449/units.jsonl sha256 3f6610e45e93645ccf7248d4a527089b1d994cd5a4648d9d77d358e77754c1aa",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/index_06g.json sha256 349e37cd9c1648bdba393818c072a0514f63b477fa8136efd0cd97e781bcbd2c"
+ ],
+ "mode": "route",
+ "run_dir": "state/dev/route1_1449",
+ "n_units": 1,
+ "n_fail": 0,
+ "n_calls_compared_clause2": 19,
+ "n_calls_fired": 2,
+ "n_units_compared_whole": 0,
+ "excluded_keys_differing_count": {
+  "summary.elapsed": 19,
+  "summary.route_06k": 19
+ },
+ "units": [
+  {
+   "unit": "g-1e-7-2-1449",
+   "worker": "route1-1e-7-k2_2",
+   "status": "done",
+   "firings_by_call": {
+    "0": 0,
+    "1": 0,
+    "2": 3,
+    "3": 3,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+    "9": 0,
+    "10": 0,
+    "11": 0,
+    "12": 0,
+    "13": 0,
+    "14": 0,
+    "15": 0,
+    "16": 0,
+    "17": 0,
+    "18": 0,
+    "19": 0,
+    "20": 0
+   },
+   "compared_whole": false,
+   "differing": [],
+   "differing_excluded": [
+    "call[0].summary.elapsed",
+    "call[0].summary.route_06k",
+    "call[10].summary.elapsed",
+    "call[10].summary.route_06k",
+    "call[11].summary.elapsed",
+    "call[11].summary.route_06k",
+    "call[12].summary.elapsed",
+    "call[12].summary.route_06k",
+    "call[13].summary.elapsed",
+    "call[13].summary.route_06k",
+    "call[14].summary.elapsed",
+    "call[14].summary.route_06k",
+    "call[15].summary.elapsed",
+    "call[15].summary.route_06k",
+    "call[16].summary.elapsed",
+    "call[16].summary.route_06k",
+    "call[17].summary.elapsed",
+    "call[17].summary.route_06k",
+    "call[18].summary.elapsed",
+    "call[18].summary.route_06k",
+    "call[19].summary.elapsed",
+    "call[19].summary.route_06k",
+    "call[1].summary.elapsed",
+    "call[1].summary.route_06k",
+    "call[20].summary.elapsed",
+    "call[20].summary.route_06k",
+    "call[4].summary.elapsed",
+    "call[4].summary.route_06k",
+    "call[5].summary.elapsed",
+    "call[5].summary.route_06k",
+    "call[6].summary.elapsed",
+    "call[6].summary.route_06k",
+    "call[7].summary.elapsed",
+    "call[7].summary.route_06k",
+    "call[8].summary.elapsed",
+    "call[8].summary.route_06k",
+    "call[9].summary.elapsed",
+    "call[9].summary.route_06k"
+   ],
+   "detail": [
+    [
+     "call[0].summary.elapsed",
+     true,
+     "0.16167333303019404 vs 0.16837524995207787"
+    ],
+    [
+     "call[0].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[1].summary.elapsed",
+     true,
+     "0.008478958159685135 vs 0.008745125029236078"
+    ],
+    [
+     "call[1].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[4].summary.elapsed",
+     true,
+     "0.0021726670674979687 vs 0.0022121667861938477"
+    ],
+    [
+     "call[4].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[5].summary.elapsed",
+     true,
+     "0.09307879116386175 vs 0.09347787499427795"
+    ],
+    [
+     "call[5].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[6].summary.elapsed",
+     true,
+     "0.022771958261728287 vs 0.023200249765068293"
+    ],
+    [
+     "call[6].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[7].summary.elapsed",
+     true,
+     "0.023580667097121477 vs 0.023319582920521498"
+    ],
+    [
+     "call[7].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[8].summary.elapsed",
+     true,
+     "0.04455591691657901 vs 0.04553199978545308"
+    ],
+    [
+     "call[8].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[9].summary.elapsed",
+     true,
+     "0.023172957822680473 vs 0.022639958187937737"
+    ],
+    [
+     "call[9].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[10].summary.elapsed",
+     true,
+     "0.044530542101711035 vs 0.044509375002235174"
+    ],
+    [
+     "call[10].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[11].summary.elapsed",
+     true,
+     "0.02727779233828187 vs 0.03381595900282264"
+    ],
+    [
+     "call[11].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[12].summary.elapsed",
+     true,
+     "0.05071983300149441 vs 0.0508607910014689"
+    ],
+    [
+     "call[12].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[13].summary.elapsed",
+     true,
+     "0.12867650017142296 vs 0.12870287522673607"
+    ],
+    [
+     "call[13].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[14].summary.elapsed",
+     true,
+     "0.08381245890632272 vs 0.08489312510937452"
+    ],
+    [
+     "call[14].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[15].summary.elapsed",
+     true,
+     "0.09406462498009205 vs 0.0931205409578979"
+    ],
+    [
+     "call[15].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[16].summary.elapsed",
+     true,
+     "0.06003924971446395 vs 0.06058383313938975"
+    ],
+    [
+     "call[16].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[17].summary.elapsed",
+     true,
+     "0.09251333307474852 vs 0.09276970801874995"
+    ],
+    [
+     "call[17].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[18].summary.elapsed",
+     true,
+     "0.06071933312341571 vs 0.06078050006181002"
+    ],
+    [
+     "call[18].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[19].summary.elapsed",
+     true,
+     "0.13249379210174084 vs 0.133651124779135"
+    ],
+    [
+     "call[19].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[20].summary.elapsed",
+     true,
+     "0.09992112498730421 vs 0.10157483303919435"
+    ],
+    [
+     "call[20].summary.route_06k",
+     true,
+     "key in one record only"
+    ]
+   ],
+   "ok": true
+  }
+ ]
+}

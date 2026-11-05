@@ -1,0 +1,66 @@
+{
+ "label": "route2lit",
+ "stages": [
+  {
+   "name": "k0_route2lit",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "45_k0_run_route2lit",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_k0.py",
+      "route2lit",
+      "out/k0/units.json",
+      "state/k0/route2lit",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_compare_route2lit",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "55_k0_compare_route2lit",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/k0/route2lit/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/compare_k0.py",
+      "route",
+      "state/k0/route2lit",
+      "out/k0/compare_route2lit.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "lg_draws_route2lit",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "72_lg_draws_route2lit",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/calibration/lg_seeded_draws.py",
+      "run",
+      "--processes",
+      "6",
+      "--modes",
+      "route2lit",
+      "--out",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/lg_draws/lg_seeded_draws_route2lit.jsonl"
+     ]
+    }
+   ]
+  }
+ ]
+}

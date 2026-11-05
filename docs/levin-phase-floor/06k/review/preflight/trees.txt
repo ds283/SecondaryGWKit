@@ -1,0 +1,12 @@
+worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060
+89370609a64d58993289dcfe991350a420ea698d
+main /Users/ds283/Documents/Code/SecondaryGWKit
+handover-remedial
+28ebaf0743e0555fb2c4512ce714884005a60eff
+diff-stat
+ CLAUDE.md                           |  13 +-
+ tools/filon_reference.py            | 245 ++++++++++++++++++++++++++++++++----
+ tools/tests/test_filon_reference.py |  88 +++++++++++++
+ 3 files changed, 321 insertions(+), 25 deletions(-)
+  origin/handover-remedial
+  origin/handover-remedial

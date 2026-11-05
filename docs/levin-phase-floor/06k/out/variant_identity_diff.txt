@@ -1,0 +1,1 @@
+identity: cmp reports no difference (byte-identical)

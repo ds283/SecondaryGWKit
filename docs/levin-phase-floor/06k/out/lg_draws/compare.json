@@ -1,0 +1,738 @@
+{
+ "header": [
+  "# levin-phase-floor 06k: the LiouvilleGreen draws, each variant against the tree",
+  "# written 2026-11-04T10:27:59+00:00 on mps026298.phys.susx.ac.uk",
+  "# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "# script lg_compare_06k.py sha256 1db4ae4f67bd3e38fd5a341a904792f9ce3087a1eb2075d69572719cf387e599",
+  "# prov.py sha256 fcf68023cde46964f908d416d83faadcd64472b8123a73e6d6ec1bffd09a524b",
+  "# AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59",
+  "# HEAD 89370609a64d58993289dcfe991350a420ea698d",
+  "# tree dirty: no (git status --short empty)",
+  "# uptime at start: 10:27  up 28 days,  1:04, 2 users, load averages: 14.01 14.10 13.84",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/lg_draws/lg_seeded_draws.jsonl sha256 ca0037991890c6e0de9805a08bde0e9badaaecd4ffde9a6ab43471fb21274476",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/lg_draws/lg_seeded_draws_route2lit.jsonl sha256 f78722eeb88461db3955c274b6c3101df862a1b8be66a40e9f7e574ed78f0508"
+ ],
+ "n_records": 480,
+ "variants": {
+  "identity": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [],
+    "T->F": []
+   },
+   "calls_value_or_abserr_differ": 0,
+   "calls_regions_differ": 0,
+   "calls_fired": 0,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 432,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 432,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 0
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 0
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  },
+  "route1": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [
+     {
+      "seed": 14,
+      "test": "test_JJJ",
+      "index": 9,
+      "label": "phase2",
+      "tree": [
+       -0.01655990392827349,
+       2.0743976561200064e-12,
+       43,
+       9
+      ],
+      "route": [
+       -0.01655990392827371,
+       1.6193766272282868e-12,
+       14,
+       7
+      ],
+      "firings": 1,
+      "route_06k": {
+       "route": "1",
+       "n_firings": 1,
+       "firings_depth_r_d1_phi": [
+        [
+         5,
+         0.4046327360982226,
+         1.4581044704975454e-13,
+         9.006156563431862e-14
+        ]
+       ]
+      }
+     },
+     {
+      "seed": 14,
+      "test": "test_YJJ",
+      "index": 6,
+      "label": "phase3",
+      "tree": [
+       -0.029899206792967384,
+       3.5338322144146284e-12,
+       44,
+       9
+      ],
+      "route": [
+       -0.02989920679296744,
+       2.8082387055396676e-12,
+       14,
+       8
+      ],
+      "firings": 1,
+      "route_06k": {
+       "route": "1",
+       "n_firings": 1,
+       "firings_depth_r_d1_phi": [
+        [
+         5,
+         0.5122175779945084,
+         2.1290781637706147e-13,
+         1.3832728086684437e-13
+        ]
+       ]
+      }
+     }
+    ],
+    "T->F": []
+   },
+   "calls_value_or_abserr_differ": 202,
+   "calls_regions_differ": 202,
+   "calls_fired": 290,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 432,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 432,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 4
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 31
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  },
+  "route2": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [],
+    "T->F": []
+   },
+   "calls_value_or_abserr_differ": 2108,
+   "calls_regions_differ": 2260,
+   "calls_fired": 2294,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 426,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 426,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 0
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 212
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [],
+     "dishonest->honest": [
+      {
+       "seed": 2,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=0.0001 lo",
+       "tree": [
+        8.6245e-08,
+        6.6106e-08,
+        true
+       ],
+       "route": [
+        8.6245e-08,
+        1.2456e-07,
+        true
+       ],
+       "ratio_route": 0.6923972382787412
+      },
+      {
+       "seed": 2,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 hi",
+       "tree": [
+        6.0526e-08,
+        4.1842e-08,
+        true
+       ],
+       "route": [
+        6.0526e-08,
+        7.3971e-08,
+        true
+       ],
+       "ratio_route": 0.8182395803760933
+      },
+      {
+       "seed": 3,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 hi",
+       "tree": [
+        3.6179e-10,
+        2.0324e-10,
+        true
+       ],
+       "route": [
+        3.6179e-10,
+        6.6678e-10,
+        true
+       ],
+       "ratio_route": 0.5425927592309308
+      },
+      {
+       "seed": 7,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 hi",
+       "tree": [
+        1.8778e-09,
+        1.5353e-09,
+        true
+       ],
+       "route": [
+        1.8778e-09,
+        2.6188e-09,
+        true
+       ],
+       "ratio_route": 0.7170459752558422
+      },
+      {
+       "seed": 15,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J0,J0) eps=1e-05 hi",
+       "tree": [
+        2.7796e-09,
+        2.3484e-09,
+        true
+       ],
+       "route": [
+        2.7796e-09,
+        9.9345e-09,
+        true
+       ],
+       "ratio_route": 0.279792641803815
+      },
+      {
+       "seed": 19,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 lo",
+       "tree": [
+        3.4607e-08,
+        3.1541e-08,
+        true
+       ],
+       "route": [
+        3.4607e-08,
+        3.9066e-08,
+        true
+       ],
+       "ratio_route": 0.8858598269595044
+      }
+     ]
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  },
+  "route3": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [],
+    "T->F": [
+     {
+      "seed": 13,
+      "test": "test_JJJ",
+      "index": 5,
+      "label": "phase2",
+      "tree": [
+       -0.049671191279931845,
+       4.872725321486933e-12,
+       31,
+       9
+      ],
+      "route": [
+       -0.04967119127993194,
+       5.004499310487412e-12,
+       39,
+       10
+      ],
+      "firings": 2,
+      "route_06k": {
+       "route": "3",
+       "eta": 0.001,
+       "n_firings": 2,
+       "n_unleft": 0,
+       "request": 4.9671191279931945e-12,
+       "n_left_returned": 2,
+       "left_D_sum": 1.0581847770883957e-16,
+       "eta_min": 2.1303792999946056e-05,
+       "n_untrusted_not_left": 0,
+       "n_untrusted_at_depth_max_not_left": 0,
+       "untrusted_at_depth_max_D_sum": 0.0,
+       "eta_min_with_depth_max": 2.1303792999946056e-05,
+       "budget_met": false,
+       "firings_depth_r_d1_phi": [
+        [
+         2,
+         34.79156908665105,
+         9.657979886410155e-24,
+         1.386643517464702e-13
+        ],
+        [
+         8,
+         3.0,
+         1.734723475976807e-18,
+         2.4044653120574697e-13
+        ]
+       ]
+      }
+     },
+     {
+      "seed": 13,
+      "test": "test_JJJ",
+      "index": 6,
+      "label": "phase3",
+      "tree": [
+       0.032024206800296724,
+       3.1224022605298886e-12,
+       26,
+       9
+      ],
+      "route": [
+       0.032024206800296794,
+       3.2525301801320924e-12,
+       35,
+       9
+      ],
+      "firings": 4,
+      "route_06k": {
+       "route": "3",
+       "eta": 0.001,
+       "n_firings": 4,
+       "n_unleft": 0,
+       "request": 3.2024206800296794e-12,
+       "n_left_returned": 4,
+       "left_D_sum": 7.528702684937923e-16,
+       "eta_min": 0.00023509411901712264,
+       "n_untrusted_not_left": 0,
+       "n_untrusted_at_depth_max_not_left": 0,
+       "untrusted_at_depth_max_D_sum": 0.0,
+       "eta_min_with_depth_max": 0.00023509411901712264,
+       "budget_met": false,
+       "firings_depth_r_d1_phi": [
+        [
+         2,
+         34.842366570128256,
+         7.809748205236984e-24,
+         1.3866435174633986e-13
+        ],
+        [
+         7,
+         2.0,
+         1.734723475976807e-18,
+         5.850112491841752e-13
+        ],
+        [
+         7,
+         Infinity,
+         0.0,
+         5.220501617005302e-13
+        ],
+        [
+         7,
+         1.0,
+         1.3877787807814457e-17,
+         5.47599185322446e-13
+        ]
+       ]
+      }
+     }
+    ]
+   },
+   "calls_value_or_abserr_differ": 2875,
+   "calls_regions_differ": 3379,
+   "calls_fired": 3379,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 433,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 433,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 35
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 216
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [
+      {
+       "seed": 4,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=0.0001 lo",
+       "tree": [
+        1.1243e-09,
+        4.094e-09,
+        true
+       ],
+       "route": [
+        1.1243e-09,
+        5.0831e-10,
+        true
+       ],
+       "ratio_route": 2.211839231964746
+      }
+     ],
+     "dishonest->honest": []
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  },
+  "route2lit": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [],
+    "T->F": []
+   },
+   "calls_value_or_abserr_differ": 3718,
+   "calls_regions_differ": 2843,
+   "calls_fired": 3761,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 424,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 424,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 1
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 278
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [
+      {
+       "seed": 1,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 lo",
+       "tree": [
+        8.1009e-10,
+        1.0751e-09,
+        true
+       ],
+       "route": [
+        8.1009e-10,
+        7.7307e-10,
+        true
+       ],
+       "ratio_route": 1.0478869960029493
+      },
+      {
+       "seed": 2,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 lo",
+       "tree": [
+        3.8944e-07,
+        4.6524e-07,
+        true
+       ],
+       "route": [
+        3.8944e-07,
+        3.583e-07,
+        true
+       ],
+       "ratio_route": 1.0869104102707228
+      }
+     ],
+     "dishonest->honest": [
+      {
+       "seed": 2,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=0.0001 lo",
+       "tree": [
+        8.6245e-08,
+        6.6106e-08,
+        true
+       ],
+       "route": [
+        8.6245e-08,
+        1.2096e-07,
+        true
+       ],
+       "ratio_route": 0.713004298941799
+      },
+      {
+       "seed": 2,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 hi",
+       "tree": [
+        6.0526e-08,
+        4.1842e-08,
+        true
+       ],
+       "route": [
+        6.0526e-08,
+        7.1579e-08,
+        true
+       ],
+       "ratio_route": 0.8455832017770575
+      },
+      {
+       "seed": 3,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 hi",
+       "tree": [
+        3.6179e-10,
+        2.0324e-10,
+        true
+       ],
+       "route": [
+        3.6179e-10,
+        6.5798e-10,
+        true
+       ],
+       "ratio_route": 0.5498495394996809
+      },
+      {
+       "seed": 7,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 hi",
+       "tree": [
+        1.8778e-09,
+        1.5353e-09,
+        true
+       ],
+       "route": [
+        1.8778e-09,
+        2.5972e-09,
+        true
+       ],
+       "ratio_route": 0.7230093947327891
+      },
+      {
+       "seed": 9,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 lo",
+       "tree": [
+        8.7152e-10,
+        8.33e-10,
+        true
+       ],
+       "route": [
+        8.7149e-10,
+        2.0287e-09,
+        true
+       ],
+       "ratio_route": 0.4295805195445359
+      },
+      {
+       "seed": 15,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J0,J0) eps=1e-05 hi",
+       "tree": [
+        2.7796e-09,
+        2.3484e-09,
+        true
+       ],
+       "route": [
+        2.7796e-09,
+        9.9345e-09,
+        true
+       ],
+       "ratio_route": 0.279792641803815
+      },
+      {
+       "seed": 15,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 lo",
+       "tree": [
+        1.1449e-09,
+        3.2293e-10,
+        true
+       ],
+       "route": [
+        1.1449e-09,
+        1.8027e-09,
+        true
+       ],
+       "ratio_route": 0.63510290120375
+      },
+      {
+       "seed": 15,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 hi",
+       "tree": [
+        7.1e-10,
+        1.217e-10,
+        true
+       ],
+       "route": [
+        7.1e-10,
+        1.005e-09,
+        true
+       ],
+       "ratio_route": 0.7064676616915424
+      },
+      {
+       "seed": 16,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 hi",
+       "tree": [
+        4.8295e-10,
+        3.0684e-10,
+        true
+       ],
+       "route": [
+        4.8295e-10,
+        6.3906e-10,
+        true
+       ],
+       "ratio_route": 0.7557193377773604
+      },
+      {
+       "seed": 19,
+       "test": "test_YJJ_log_singularity",
+       "label": "@@ (Y0,J2,J2) eps=1e-05 lo",
+       "tree": [
+        3.4607e-08,
+        3.1541e-08,
+        true
+       ],
+       "route": [
+        3.4607e-08,
+        3.8574e-08,
+        true
+       ],
+       "ratio_route": 0.8971587079379894
+      }
+     ]
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  }
+ }
+}

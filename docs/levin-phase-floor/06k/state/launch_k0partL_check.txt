@@ -1,0 +1,5 @@
+# the one check after launch, 2026-11-04T09:16:52Z (as observed; transcribed from the check's output)
+status.json: state running, pid 15090, heartbeat 2026-11-04T09:16:40+00:00, stage "30_capture started", units 0/60,
+host id d120d1cf03551e6f, boot C58A0F92-923F-471F-B32E-B1B9F5D0A848
+ps: 15083 (ppid 1) sh -c .../run_06j.py --run-dir .../levin-phase-floor-06k-k0partL-20261104T091640 ...; 15090 (ppid 15083) Python -B .../run_06j.py
+run dir: manifest.json status.json stderr.log stdout.log

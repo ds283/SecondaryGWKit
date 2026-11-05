@@ -1,0 +1,189 @@
+--- /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py	2026-11-04 08:45:16
++++ scripts/variants/levin_quadrature_route3.py	2026-11-04 09:03:01
+@@ -2994,6 +2994,9 @@
+     num_checks = 0
+     num_check_passes = 0
+     num_untrusted_found = 0
++    # prompt 06k, route 3: every firing of the route in this call (a leaf trusted or left that
++    # 06g's rule (b) finds untrusted), reported under the result key "route_06k"
++    route_firings_06k = []
+ 
+     def _solve(span, description):
+         nonlocal num_evaluations, num_solves_direct, num_solves_lstsq, num_solves_pinv
+@@ -3198,6 +3201,11 @@
+     leaves = {}
+     candidates = []
+     untrusted_refinable = set()
++    # prompt 06k, route 3: the leaves left at the last stop test (by sequence number), and eta. A left
++    # leaf is untrusted and refinable, declares D, is not a candidate and does not block the stop.
++    left_06k = set()
++    route3_eta_06k = 1e-3
++    route3_unleft_06k = [0]
+ 
+     # Running sums over the leaves, held exactly (_ExactSum): the finite errors e'_i, the count of
+     # errors that are not finite (+inf, or NaN read as +inf -- see _error_for_ordering()), the
+@@ -3239,6 +3247,9 @@
+ 
+     def _push_candidate(leaf: _levin_leaf) -> None:
+         leaf.version += 1
++        if leaf.seq in left_06k:  # prompt 06k, route 3: a left leaf is not a candidate
++            untrusted_refinable.discard(leaf.seq)
++            return
+         if _refinable(leaf):
+             untrusted = leaf.region._trusted is False
+             if untrusted:
+@@ -3469,6 +3480,80 @@
+             node_sum.total_with(*node_terms)
+         )
+         return recomputed <= request
++
++    def _declaration_06k(leaf: _levin_leaf) -> float:
++        # prompt 06k, route 3: D, what the code declares today for an untrusted leaf at depth_max
++        region = leaf.region
++        ratio = region._convergence_ratio
++        residual = region.abserr
++        delta1 = region._delta1
++        delta2 = region._delta2
++        return (
++            max(residual, delta1) / (1.0 - ratio)
++            if ratio < 1.0
++            else max(residual, delta1 + delta2)
++        )
++
++    def _relevel_06k(request: float) -> bool:
++        # prompt 06k, route 3: at a stop test, rank every untrusted refinable leaf (those left before
++        # included) by D, smallest first (ties: start, then sequence number), and leave the longest
++        # prefix whose D sum (correctly rounded) is at most eta * request. Returns True if the left
++        # set changed (the caller then re-tests the budget, which now carries the new D).
++        pool_06k = [leaves[seq] for seq in (untrusted_refinable | left_06k)]
++        ranked_06k = sorted(
++            pool_06k,
++            key=lambda leaf: (_error_for_ordering(_declaration_06k(leaf)), leaf.start, leaf.seq),
++        )
++        cap_06k = route3_eta_06k * request
++        chosen_06k = []
++        terms_06k = []
++        for leaf in ranked_06k:
++            d_leaf_06k = _error_for_ordering(_declaration_06k(leaf))
++            if not np.isfinite(d_leaf_06k) or math.fsum(terms_06k + [d_leaf_06k]) > cap_06k:
++                break
++            terms_06k.append(d_leaf_06k)
++            chosen_06k.append(leaf)
++        chosen_seqs_06k = {leaf.seq for leaf in chosen_06k}
++        if chosen_seqs_06k == left_06k:
++            return False
++        for seq in sorted(left_06k - chosen_seqs_06k):
++            leaf = leaves[seq]
++            _remove_error(leaf)
++            leaf.region._declared_resolution = None
++            _restore_error(leaf)
++            left_06k.discard(seq)
++            _push_candidate(leaf)
++            route3_unleft_06k[0] += 1
++        for rank_06k, leaf in enumerate(chosen_06k):
++            if leaf.seq in left_06k:
++                continue
++            d_leaf_06k = _declaration_06k(leaf)
++            _remove_error(leaf)
++            leaf.region._declared_resolution = d_leaf_06k
++            _restore_error(leaf)
++            left_06k.add(leaf.seq)
++            _push_candidate(leaf)
++            region = leaf.region
++            route_firings_06k.append(
++                {
++                    "depth": int(leaf.depth),
++                    "at_depth_max": bool(leaf.depth >= depth_max),
++                    "start": float(leaf.start),
++                    "end": float(leaf.end),
++                    "is_direct": bool(leaf.is_direct),
++                    "r": float(region._convergence_ratio),
++                    "delta1": float(region._delta1),
++                    "delta2": float(region._delta2),
++                    "phi_P": float(region.phase_err),
++                    "residual": float(region.abserr),
++                    "D": float(d_leaf_06k),
++                    "request": float(request),
++                    "cap": float(cap_06k),
++                    "rank": int(rank_06k),
++                    "n_ranked": len(ranked_06k),
++                }
++            )
++        return True
+ 
+     _add_leaf(_make_leaf(x_span[0], x_span[1], 0, None, {}, {}, {}))
+ 
+@@ -3556,6 +3641,8 @@
+                     num_check_passes += 1
+                     for candidate in unchecked:
+                         _check_leaf(candidate)
++                    continue
++                if _relevel_06k(check_request):  # prompt 06k, route 3
+                     continue
+                 if not untrusted_refinable:
+                     if not (check_eprime + np.fabs(check_node) <= check_request):
+@@ -3746,7 +3833,22 @@
+     # |sum E| holds the call above it.
+     requested_total = max(atol, rtol * np.fabs(val))
+     budget_met = abserr_total <= requested_total
+-    converged = budget_met and num_untrusted == 0
++    # prompt 06k, route 3: a left leaf is returned untrusted and does not hold the call unconverged
++    left_returned_06k = [
++        (i_06k, leaf) for i_06k, leaf in enumerate(leaves_ascending) if leaf.seq in left_06k
++    ]
++    converged = budget_met and num_untrusted - len(left_returned_06k) == 0
++    untrusted_cap_06k = [
++        leaf
++        for leaf in leaves_ascending
++        if leaf.region.trusted is False and leaf.seq not in left_06k
++    ]
++    left_D_sum_06k = math.fsum(
++        leaf.region.declared_resolution for _, leaf in left_returned_06k
++    )
++    cap_D_sum_06k = math.fsum(
++        _declaration_06k(leaf) for leaf in untrusted_cap_06k if leaf.depth >= depth_max
++    )
+ 
+     _logger.debug(
+         "adaptive_levin (%s): global budget | %d leaves, %d bisections, %d floor-limited, "
+@@ -3934,6 +4036,40 @@
+         "num_solves_total": num_solves_direct + num_solves_lstsq + num_solves_pinv,
+         "chebyshev_min_order": chebyshev_min_order,
+         "max_depth": max_depth,
++        # prompt 06k: the route's firings in this call (a new key; the comparison with 06g ignores it)
++        "route_06k": {
++            "route": "3",
++            "eta": route3_eta_06k,
++            "n_firings": len(route_firings_06k),
++            "n_unleft": route3_unleft_06k[0],
++            "firings": route_firings_06k,
++            "request": float(requested_total),
++            "n_left_returned": len(left_returned_06k),
++            "left_returned": [
++                {
++                    "region_index": int(i_06k),
++                    "depth": int(leaf.depth),
++                    "start": float(leaf.start),
++                    "end": float(leaf.end),
++                    "D": float(leaf.region.declared_resolution),
++                    "r": float(leaf.region.convergence_ratio),
++                    "delta1": float(leaf.region.delta1),
++                    "phi_P": float(leaf.region.phase_err),
++                }
++                for i_06k, leaf in left_returned_06k
++            ],
++            "left_D_sum": float(left_D_sum_06k),
++            "eta_min": float(left_D_sum_06k / requested_total),
++            "n_untrusted_not_left": len(untrusted_cap_06k),
++            "n_untrusted_at_depth_max_not_left": sum(
++                1 for leaf in untrusted_cap_06k if leaf.depth >= depth_max
++            ),
++            "untrusted_at_depth_max_D_sum": float(cap_D_sum_06k),
++            "eta_min_with_depth_max": float(
++                math.fsum([left_D_sum_06k, cap_D_sum_06k]) / requested_total
++            ),
++            "budget_met": bool(budget_met),
++        },
+     }
+ 
+ 

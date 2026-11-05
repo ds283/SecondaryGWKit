@@ -1,0 +1,159 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/ast_check_variants.py /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py scripts/variants/levin_quadrature_identity.py scripts/variants/levin_quadrature_route1.py scripts/variants/levin_quadrature_route2.py scripts/variants/levin_quadrature_route3.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:02:42Z
+# ----
+# levin-phase-floor 06k: the variants' AST comparison with the tree's module
+# script ast_check_variants.py sha256 ddf2985bfca79c38b599206ae9f6d3bdafe06903d836f4005b4fa55f14e08b57
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/AdaptiveLevin/levin_quadrature.py sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59
+
+== levin_quadrature_identity.py (sha256 d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59)
+top-level statements: tree 84, variant 84; differing: []
+only _adaptive_levin differs at top level: True
+_adaptive_levin's signature and docstring unchanged: True
+differing statement groups inside _adaptive_levin: 0
+names bound in the variant's _adaptive_levin and not the tree's: []
+of them, not ending in _06k: []
+identity: no difference at all: True
+CONFINED: True
+
+== levin_quadrature_route1.py (sha256 23cd69e4a87a3a19e8a7e744cf3bac7712c26f342864fb299959a279d80a5cb2)
+top-level statements: tree 84, variant 84; differing: ['_adaptive_levin']
+only _adaptive_levin differs at top level: True
+_adaptive_levin's signature and docstring unchanged: True
+differing statement groups inside _adaptive_levin: 3
+-- [1] at _adaptive_levin: insert; tree lines [], variant lines [2999]
+   + route_firings_06k = []
+-- [2] at _adaptive_levin > FunctionDef _check_leaf.body: replace; tree lines [3380], variant lines [3383, 3388, 3391, 3392]
+   - trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= region.phase_err)
+   + trusted_g_06k = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= region.phase_err)
+   + nu1_06k = region.phase_err + (dataL.get('phase_err', 0.0) or 0.0) + (dataR.get('phase_err', 0.0) or 0.0)
+   + trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= nu1_06k)
+   + if trusted and (not trusted_g_06k):
+         route_firings_06k.append({'depth': int(leaf.depth), 'at_depth_max': bool(leaf.depth >= depth_max), 'start': float(a), 'end': float(b), 'is_direct': bool(leaf.is_direct), 'r': float(ratio), 'delta1': float(delta1), 'delta2': float(delta2), 'phi_P': float(region.phase_err), 'phi_L': float(dataL.get('phase_err', 0.0) or 0.0), 'phi_R': float(dataR.get('phase_err', 0.0) or 0.0), 'nu1': float(nu1_06k), 'residual': float(residual)})
+-- [3] at _adaptive_levin: replace; tree lines [3865], variant lines [3892]
+   - return {'value': float(val), 'abserr': float(abserr_total), 'relerr': float(relerr_total), 'abserr_resolution': float(abserr_resolution_total), 'abserr_roundoff': float(abserr_roundoff_total), 'abserr_fallback': float(abserr_fallback_total), 'abserr_truncation': float(abserr_truncation_total), 'node_error_signed_sum': float(node_error_signed_sum), 'node_error_abs_sum': float(node_error_abs_sum), 'abserr_node_signed': abserr_node_signed, 'node_limited': bool(node_limited), 'converged': bool(converged), 'phase_limited': num_phase_limited > 0, 'num_phase_limited_regions': num_phase_limited, 'num_untrusted_regions': num_untrusted, 'p_points': p_points, 'num_regions': num_used_regions, 'regions': used_regions, 'num_simple_regions': num_simple_regions, 'evaluations': int(num_evaluations), 'num_subregion_solves': int(num_evaluations), 'elapsed': float(elapsed), 'num_SVD_errors': num_SVD_errors, 'num_order_changes': num_order_changes, 'num_direct_solves': num_direct_solves, 'num_solves_direct': num_solves_direct, 'num_solves_lstsq': num_solves_lstsq, 'num_solves_pinv': num_solves_pinv, 'num_solves_total': num_solves_direct + num_solves_lstsq + num_solves_pinv, 'chebyshev_min_order': chebyshev_min_order, 'max_depth': max_depth}
+   + return {'value': float(val), 'abserr': float(abserr_total), 'relerr': float(relerr_total), 'abserr_resolution': float(abserr_resolution_total), 'abserr_roundoff': float(abserr_roundoff_total), 'abserr_fallback': float(abserr_fallback_total), 'abserr_truncation': float(abserr_truncation_total), 'node_error_signed_sum': float(node_error_signed_sum), 'node_error_abs_sum': float(node_error_abs_sum), 'abserr_node_signed': abserr_node_signed, 'node_limited': bool(node_limited), 'converged': bool(converged), 'phase_limited': num_phase_limited > 0, 'num_phase_limited_regions': num_phase_limited, 'num_untrusted_regions': num_untrusted, 'p_points': p_points, 'num_regions': num_used_regions, 'regions': used_regions, 'num_simple_regions': num_simple_regions, 'evaluations': int(num_evaluations), 'num_subregion_solves': int(num_evaluations), 'elapsed': float(elapsed), 'num_SVD_errors': num_SVD_errors, 'num_order_changes': num_order_changes, 'num_direct_solves': num_direct_solves, 'num_solves_direct': num_solves_direct, 'num_solves_lstsq': num_solves_lstsq, 'num_solves_pinv': num_solves_pinv, 'num_solves_total': num_solves_direct + num_solves_lstsq + num_solves_pinv, 'chebyshev_min_order': chebyshev_min_order, 'max_depth': max_depth, 'route_06k': {'route': '1', 'n_firings': len(route_firings_06k), 'firings': route_firings_06k}}
+names bound in the variant's _adaptive_levin and not the tree's: ['nu1_06k', 'route_firings_06k', 'trusted_g_06k']
+of them, not ending in _06k: []
+CONFINED: True
+
+== levin_quadrature_route2.py (sha256 017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635)
+top-level statements: tree 84, variant 84; differing: ['_adaptive_levin']
+only _adaptive_levin differs at top level: True
+_adaptive_levin's signature and docstring unchanged: True
+differing statement groups inside _adaptive_levin: 4
+-- [1] at _adaptive_levin: insert; tree lines [], variant lines [2999]
+   + route_firings_06k = []
+-- [2] at _adaptive_levin > FunctionDef _check_leaf.body: insert; tree lines [], variant lines [3390, 3391]
+   + declared_06k = None
+   + if not trusted:
+     
+         def _node_06k(solve_data):
+             node = solve_data.get('node_error_signed')
+             return 0.0 if node is None else node
+         node_P_06k = region.node_error_signed
+         own_c_06k = own_value - (0.0 if node_P_06k is None else node_P_06k)
+         halves_c_06k = dataL['value'] - _node_06k(dataL) + (dataR['value'] - _node_06k(dataR))
+         quarters_c_06k = LL['value'] - _node_06k(LL) + (LR['value'] - _node_06k(LR)) + (RL['value'] - _node_06k(RL) + (RR['value'] - _node_06k(RR)))
+         delta1c_06k = float(np.fabs(own_c_06k - halves_c_06k))
+         delta2c_06k = float(np.fabs(halves_c_06k - quarters_c_06k))
+         if not (np.isfinite(delta1c_06k) and np.isfinite(delta2c_06k)):
+             ratio_c_06k = float('inf')
+         elif delta1c_06k == 0.0:
+             ratio_c_06k = 0.0 if delta2c_06k == 0.0 else float('inf')
+         else:
+             ratio_c_06k = delta2c_06k / delta1c_06k
+         if ratio_c_06k < _LEVIN_TRUST_MAX_RATIO or (ratio_c_06k < 1.0 and delta1c_06k <= region.phase_err):
+             trusted = True
+             declared_06k = max(residual, delta1c_06k) / (1.0 - ratio_c_06k)
+             route_firings_06k.append({'depth': int(leaf.depth), 'at_depth_max': bool(leaf.depth >= depth_max), 'start': float(a), 'end': float(b), 'is_direct': bool(leaf.is_direct), 'r': float(ratio), 'delta1': float(delta1), 'delta2': float(delta2), 'phi_P': float(region.phase_err), 'delta1c': float(delta1c_06k), 'delta2c': float(delta2c_06k), 'r_c': float(ratio_c_06k), 'residual': float(residual), 'declared': float(declared_06k), 'declared_g_formula': float(max(residual, delta1) / (1.0 - ratio) if ratio < 1.0 else max(residual, delta1 + delta2))})
+-- [3] at _adaptive_levin > FunctionDef _check_leaf.body > If (line 3445).body: replace; tree lines [3389], variant lines [3447]
+   - region._declared_resolution = max(residual, delta1) / (1.0 - ratio)
+   + region._declared_resolution = max(residual, delta1) / (1.0 - ratio) if declared_06k is None else declared_06k
+-- [4] at _adaptive_levin: replace; tree lines [3865], variant lines [3927]
+   - return {'value': float(val), 'abserr': float(abserr_total), 'relerr': float(relerr_total), 'abserr_resolution': float(abserr_resolution_total), 'abserr_roundoff': float(abserr_roundoff_total), 'abserr_fallback': float(abserr_fallback_total), 'abserr_truncation': float(abserr_truncation_total), 'node_error_signed_sum': float(node_error_signed_sum), 'node_error_abs_sum': float(node_error_abs_sum), 'abserr_node_signed': abserr_node_signed, 'node_limited': bool(node_limited), 'converged': bool(converged), 'phase_limited': num_phase_limited > 0, 'num_phase_limited_regions': num_phase_limited, 'num_untrusted_regions': num_untrusted, 'p_points': p_points, 'num_regions': num_used_regions, 'regions': used_regions, 'num_simple_regions': num_simple_regions, 'evaluations': int(num_evaluations), 'num_subregion_solves': int(num_evaluations), 'elapsed': float(elapsed), 'num_SVD_errors': num_SVD_errors, 'num_order_changes': num_order_changes, 'num_direct_solves': num_direct_solves, 'num_solves_direct': num_solves_direct, 'num_solves_lstsq': num_solves_lstsq, 'num_solves_pinv': num_solves_pinv, 'num_solves_total': num_solves_direct + num_solves_lstsq + num_solves_pinv, 'chebyshev_min_order': chebyshev_min_order, 'max_depth': max_depth}
+   + return {'value': float(val), 'abserr': float(abserr_total), 'relerr': float(relerr_total), 'abserr_resolution': float(abserr_resolution_total), 'abserr_roundoff': float(abserr_roundoff_total), 'abserr_fallback': float(abserr_fallback_total), 'abserr_truncation': float(abserr_truncation_total), 'node_error_signed_sum': float(node_error_signed_sum), 'node_error_abs_sum': float(node_error_abs_sum), 'abserr_node_signed': abserr_node_signed, 'node_limited': bool(node_limited), 'converged': bool(converged), 'phase_limited': num_phase_limited > 0, 'num_phase_limited_regions': num_phase_limited, 'num_untrusted_regions': num_untrusted, 'p_points': p_points, 'num_regions': num_used_regions, 'regions': used_regions, 'num_simple_regions': num_simple_regions, 'evaluations': int(num_evaluations), 'num_subregion_solves': int(num_evaluations), 'elapsed': float(elapsed), 'num_SVD_errors': num_SVD_errors, 'num_order_changes': num_order_changes, 'num_direct_solves': num_direct_solves, 'num_solves_direct': num_solves_direct, 'num_solves_lstsq': num_solves_lstsq, 'num_solves_pinv': num_solves_pinv, 'num_solves_total': num_solves_direct + num_solves_lstsq + num_solves_pinv, 'chebyshev_min_order': chebyshev_min_order, 'max_depth': max_depth, 'route_06k': {'route': '2', 'n_firings': len(route_firings_06k), 'firings': route_firings_06k}}
+names bound in the variant's _adaptive_levin and not the tree's: ['_node_06k', 'declared_06k', 'delta1c_06k', 'delta2c_06k', 'halves_c_06k', 'node_P_06k', 'own_c_06k', 'quarters_c_06k', 'ratio_c_06k', 'route_firings_06k']
+of them, not ending in _06k: []
+CONFINED: True
+
+== levin_quadrature_route3.py (sha256 166e0817bcf756e7cae9f9e4814b7d734fa6f04b1f00ab7c9e5e81d42a43a021)
+top-level statements: tree 84, variant 84; differing: ['_adaptive_levin']
+only _adaptive_levin differs at top level: True
+_adaptive_levin's signature and docstring unchanged: True
+differing statement groups inside _adaptive_levin: 7
+-- [1] at _adaptive_levin: insert; tree lines [], variant lines [2999]
+   + route_firings_06k = []
+-- [2] at _adaptive_levin: insert; tree lines [], variant lines [3206, 3207, 3208]
+   + left_06k = set()
+   + route3_eta_06k = 0.001
+   + route3_unleft_06k = [0]
+-- [3] at _adaptive_levin > FunctionDef _push_candidate.body: insert; tree lines [], variant lines [3250]
+   + if leaf.seq in left_06k:
+         untrusted_refinable.discard(leaf.seq)
+         return
+-- [4] at _adaptive_levin: insert; tree lines [], variant lines [3484, 3497]
+   + def _declaration_06k(leaf: _levin_leaf) -> float:
+         region = leaf.region
+         ratio = region._convergence_ratio
+         residual = region.abserr
+         delta1 = region._delta1
+         delta2 = region._delta2
+         return max(residual, delta1) / (1.0 - ratio) if ratio < 1.0 else max(residual, delta1 + delta2)
+   + def _relevel_06k(request: float) -> bool:
+         pool = [leaves[seq] for seq in untrusted_refinable | left_06k]
+         ranked = sorted(pool, key=lambda leaf: (_error_for_ordering(_declaration_06k(leaf)), leaf.start, leaf.seq))
+         cap = route3_eta_06k * request
+         chosen = []
+         terms = []
+         for leaf in ranked:
+             d_leaf = _error_for_ordering(_declaration_06k(leaf))
+             if not np.isfinite(d_leaf) or math.fsum(terms + [d_leaf]) > cap:
+                 break
+             terms.append(d_leaf)
+             chosen.append(leaf)
+         chosen_seqs = {leaf.seq for leaf in chosen}
+         if chosen_seqs == left_06k:
+             return False
+         for seq in sorted(left_06k - chosen_seqs):
+             leaf = leaves[seq]
+             _remove_error(leaf)
+             leaf.region._declared_resolution = None
+             _restore_error(leaf)
+             left_06k.discard(seq)
+             _push_candidate(leaf)
+             route3_unleft_06k[0] += 1
+         for rank, leaf in enumerate(chosen):
+             if leaf.seq in left_06k:
+                 continue
+             d_leaf = _declaration_06k(leaf)
+             _remove_error(leaf)
+             leaf.region._declared_resolution = d_leaf
+             _restore_error(leaf)
+             left_06k.add(leaf.seq)
+             _push_candidate(leaf)
+             region = leaf.region
+             route_firings_06k.append({'depth': int(leaf.depth), 'at_depth_max': bool(leaf.depth >= depth_max), 'start': float(leaf.start), 'end': float(leaf.end), 'is_direct': bool(leaf.is_direct), 'r': float(region._convergence_ratio), 'delta1': float(region._delta1), 'delta2': float(region._delta2), 'phi_P': float(region.phase_err), 'residual': float(region.abserr), 'D': float(d_leaf), 'request': float(request), 'cap': float(cap), 'rank': int(rank), 'n_ranked': len(ranked)})
+         return True
+-- [5] at _adaptive_levin > While (line 3563).body > If (line 3629).body > If (line 3634).body: insert; tree lines [], variant lines [3645]
+   + if _relevel_06k(check_request):
+         continue
+-- [6] at _adaptive_levin: replace; tree lines [3749], variant lines [3837, 3840, 3841, 3846, 3849]
+   - converged = budget_met and num_untrusted == 0
+   + left_returned_06k = [(i_06k, leaf) for i_06k, leaf in enumerate(leaves_ascending) if leaf.seq in left_06k]
+   + converged = budget_met and num_untrusted - len(left_returned_06k) == 0
+   + untrusted_cap_06k = [leaf for leaf in leaves_ascending if leaf.region.trusted is False and leaf.seq not in left_06k]
+   + left_D_sum_06k = math.fsum((leaf.region.declared_resolution for _, leaf in left_returned_06k))
+   + cap_D_sum_06k = math.fsum((_declaration_06k(leaf) for leaf in untrusted_cap_06k if leaf.depth >= depth_max))
+-- [7] at _adaptive_levin: replace; tree lines [3865], variant lines [3967]
+   - return {'value': float(val), 'abserr': float(abserr_total), 'relerr': float(relerr_total), 'abserr_resolution': float(abserr_resolution_total), 'abserr_roundoff': float(abserr_roundoff_total), 'abserr_fallback': float(abserr_fallback_total), 'abserr_truncation': float(abserr_truncation_total), 'node_error_signed_sum': float(node_error_signed_sum), 'node_error_abs_sum': float(node_error_abs_sum), 'abserr_node_signed': abserr_node_signed, 'node_limited': bool(node_limited), 'converged': bool(converged), 'phase_limited': num_phase_limited > 0, 'num_phase_limited_regions': num_phase_limited, 'num_untrusted_regions': num_untrusted, 'p_points': p_points, 'num_regions': num_used_regions, 'regions': used_regions, 'num_simple_regions': num_simple_regions, 'evaluations': int(num_evaluations), 'num_subregion_solves': int(num_evaluations), 'elapsed': float(elapsed), 'num_SVD_errors': num_SVD_errors, 'num_order_changes': num_order_changes, 'num_direct_solves': num_direct_solves, 'num_solves_direct': num_solves_direct, 'num_solves_lstsq': num_solves_lstsq, 'num_solves_pinv': num_solves_pinv, 'num_solves_total': num_solves_direct + num_solves_lstsq + num_solves_pinv, 'chebyshev_min_order': chebyshev_min_order, 'max_depth': max_depth}
+   + return {'value': float(val), 'abserr': float(abserr_total), 'relerr': float(relerr_total), 'abserr_resolution': float(abserr_resolution_total), 'abserr_roundoff': float(abserr_roundoff_total), 'abserr_fallback': float(abserr_fallback_total), 'abserr_truncation': float(abserr_truncation_total), 'node_error_signed_sum': float(node_error_signed_sum), 'node_error_abs_sum': float(node_error_abs_sum), 'abserr_node_signed': abserr_node_signed, 'node_limited': bool(node_limited), 'converged': bool(converged), 'phase_limited': num_phase_limited > 0, 'num_phase_limited_regions': num_phase_limited, 'num_untrusted_regions': num_untrusted, 'p_points': p_points, 'num_regions': num_used_regions, 'regions': used_regions, 'num_simple_regions': num_simple_regions, 'evaluations': int(num_evaluations), 'num_subregion_solves': int(num_evaluations), 'elapsed': float(elapsed), 'num_SVD_errors': num_SVD_errors, 'num_order_changes': num_order_changes, 'num_direct_solves': num_direct_solves, 'num_solves_direct': num_solves_direct, 'num_solves_lstsq': num_solves_lstsq, 'num_solves_pinv': num_solves_pinv, 'num_solves_total': num_solves_direct + num_solves_lstsq + num_solves_pinv, 'chebyshev_min_order': chebyshev_min_order, 'max_depth': max_depth, 'route_06k': {'route': '3', 'eta': route3_eta_06k, 'n_firings': len(route_firings_06k), 'n_unleft': route3_unleft_06k[0], 'firings': route_firings_06k, 'request': float(requested_total), 'n_left_returned': len(left_returned_06k), 'left_returned': [{'region_index': int(i_06k), 'depth': int(leaf.depth), 'start': float(leaf.start), 'end': float(leaf.end), 'D': float(leaf.region.declared_resolution), 'r': float(leaf.region.convergence_ratio), 'delta1': float(leaf.region.delta1), 'phi_P': float(leaf.region.phase_err)} for i_06k, leaf in left_returned_06k], 'left_D_sum': float(left_D_sum_06k), 'eta_min': float(left_D_sum_06k / requested_total), 'n_untrusted_not_left': len(untrusted_cap_06k), 'n_untrusted_at_depth_max_not_left': sum((1 for leaf in untrusted_cap_06k if leaf.depth >= depth_max)), 'untrusted_at_depth_max_D_sum': float(cap_D_sum_06k), 'eta_min_with_depth_max': float(math.fsum([left_D_sum_06k, cap_D_sum_06k]) / requested_total), 'budget_met': bool(budget_met)}}
+names bound in the variant's _adaptive_levin and not the tree's: ['_declaration_06k', '_relevel_06k', 'cap', 'cap_D_sum_06k', 'chosen', 'chosen_seqs', 'd_leaf', 'i_06k', 'left_06k', 'left_D_sum_06k', 'left_returned_06k', 'pool', 'rank', 'ranked', 'route3_eta_06k', 'route3_unleft_06k', 'route_firings_06k', 'terms', 'untrusted_cap_06k']
+of them, not ending in _06k: ['cap', 'chosen', 'chosen_seqs', 'd_leaf', 'pool', 'rank', 'ranked', 'terms']
+CONFINED: False
+
+ALL CONFINED: False
+# ----
+# end 2026-11-04T09:02:42Z
+# exit 1

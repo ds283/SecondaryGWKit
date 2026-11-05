@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/calibration/lg_compare_06k.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T10:10:53Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/calibration/lg_compare_06k.py", line 148, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/calibration/lg_compare_06k.py", line 40, in main
+    hdr = prov.header(__file__, "the LiouvilleGreen draws, each variant against the tree", [RUN])
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/calibration/prov.py", line 66, in header
+    f"input {Path(path).resolve().relative_to(REPO)} sha256 {sha256(path)}"
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 385, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/out/lg_draws/lg_seeded_draws.jsonl' is not in the subpath of '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060'
+# ----
+# end 2026-11-04T10:10:53Z
+# exit 1

@@ -1,0 +1,810 @@
+{
+ "label": "k0partL",
+ "stages": [
+  {
+   "name": "capture",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "30_capture",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/x1_capture.py",
+      "out/sample/selection.json",
+      "state/capture",
+      "out/capture.json",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "check",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "31_check_captures",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "out/capture.json",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/check_captures.py",
+      "out/capture.json",
+      "out/sample/selection.json",
+      "out/check_captures.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "slice",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "32_slice",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "out/check_captures.json",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/slice_06j.py",
+      "out/capture.json",
+      "out/check_captures.json",
+      "out/sample/selection.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_tree",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "40_k0_run_tree",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_k0.py",
+      "tree",
+      "out/k0/units.json",
+      "state/k0/tree",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_identity",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "41_k0_run_identity",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_k0.py",
+      "identity",
+      "out/k0/units.json",
+      "state/k0/identity",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_route1",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "42_k0_run_route1",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_k0.py",
+      "route1",
+      "out/k0/units.json",
+      "state/k0/route1",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_route2",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "43_k0_run_route2",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_k0.py",
+      "route2",
+      "out/k0/units.json",
+      "state/k0/route2",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_route3",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "44_k0_run_route3",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/run_k0.py",
+      "route3",
+      "out/k0/units.json",
+      "state/k0/route3",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_compare",
+   "max_parallel": 5,
+   "jobs": [
+    {
+     "name": "50_k0_compare_tree",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/k0/tree/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/compare_k0.py",
+      "identity",
+      "state/k0/tree",
+      "out/k0/compare_tree.json"
+     ]
+    },
+    {
+     "name": "51_k0_compare_identity",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/k0/identity/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/compare_k0.py",
+      "identity",
+      "state/k0/identity",
+      "out/k0/compare_identity.json"
+     ]
+    },
+    {
+     "name": "52_k0_compare_route1",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/k0/route1/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/compare_k0.py",
+      "route",
+      "state/k0/route1",
+      "out/k0/compare_route1.json"
+     ]
+    },
+    {
+     "name": "53_k0_compare_route2",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/k0/route2/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/compare_k0.py",
+      "route",
+      "state/k0/route2",
+      "out/k0/compare_route2.json"
+     ]
+    },
+    {
+     "name": "54_k0_compare_route3",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/k0/route3/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/compare_k0.py",
+      "route",
+      "state/k0/route3",
+      "out/k0/compare_route3.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "partL",
+   "max_parallel": 6,
+   "jobs": [
+    {
+     "name": "60_probe_l_s00",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s00.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s00",
+      "out/partL/s00.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s01",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s01.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s01",
+      "out/partL/s01.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s02",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s02.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s02",
+      "out/partL/s02.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s03",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s03.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s03",
+      "out/partL/s03.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s04",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s04.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s04",
+      "out/partL/s04.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s05",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s05.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s05",
+      "out/partL/s05.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s06",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s06.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s06",
+      "out/partL/s06.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s07",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s07.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s07",
+      "out/partL/s07.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s08",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s08.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s08",
+      "out/partL/s08.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s09",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s09.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s09",
+      "out/partL/s09.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s10",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s10.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s10",
+      "out/partL/s10.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s11",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s11.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s11",
+      "out/partL/s11.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s12",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s12.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s12",
+      "out/partL/s12.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s13",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s13.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s13",
+      "out/partL/s13.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s14",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s14.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s14",
+      "out/partL/s14.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s15",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s15.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s15",
+      "out/partL/s15.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s16",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s16.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s16",
+      "out/partL/s16.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s17",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s17.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s17",
+      "out/partL/s17.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s18",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s18.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s18",
+      "out/partL/s18.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s19",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s19.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s19",
+      "out/partL/s19.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s20",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s20.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s20",
+      "out/partL/s20.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s21",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s21.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s21",
+      "out/partL/s21.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s22",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s22.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s22",
+      "out/partL/s22.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_s23",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/s23.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "s23",
+      "out/partL/s23.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f00",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f00.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f00",
+      "out/partL/f00.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f01",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f01.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f01",
+      "out/partL/f01.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f02",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f02.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f02",
+      "out/partL/f02.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f03",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f03.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f03",
+      "out/partL/f03.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f04",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f04.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f04",
+      "out/partL/f04.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f05",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f05.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f05",
+      "out/partL/f05.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f06",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f06.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f06",
+      "out/partL/f06.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f07",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f07.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f07",
+      "out/partL/f07.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f08",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f08.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f08",
+      "out/partL/f08.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_f09",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/f09.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "f09",
+      "out/partL/f09.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c00",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c00.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c00",
+      "out/partL/c00.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c01",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c01.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c01",
+      "out/partL/c01.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c02",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c02.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c02",
+      "out/partL/c02.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c03",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c03.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c03",
+      "out/partL/c03.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c04",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c04.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c04",
+      "out/partL/c04.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c05",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c05.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c05",
+      "out/partL/c05.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c06",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c06.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c06",
+      "out/partL/c06.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c07",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c07.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c07",
+      "out/partL/c07.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c08",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c08.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c08",
+      "out/partL/c08.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c09",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c09.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c09",
+      "out/partL/c09.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c10",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c10.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c10",
+      "out/partL/c10.json"
+     ]
+    },
+    {
+     "name": "60_probe_l_c11",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts",
+     "requires": "state/inputs/c11.pkl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/probe_l.py",
+      "c11",
+      "out/partL/c11.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "lg_draws",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "70_lg_draws",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/calibration/lg_seeded_draws.py",
+      "run",
+      "--processes",
+      "6"
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x1_capture.py state/dev_selection.json state/dev/capture state/dev/capture.json --workers 2
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:13:00Z
+# ----
+# levin-phase-floor 06g: the references' calls' inputs, captured at g (06c's X1 capture)
+# written 2026-11-04T09:13:00Z on mps026298.phys.susx.ac.uk
+# script x1_capture.py sha256 5ce00c1f7f17b795ea985e649bfcaf2574b33c7180d1e2fa278222073ea18cd2
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev_selection.json sha256 730d2e79d5b866b9cf64e7db9e06b698c9a82bf8825fc9557a28aff3dfeb3688
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 14566
+C01: pid 14567
+exit codes {'C01': 0, 'C00': 0}
+captured and matching the census bit for bit: 2 of 2
+   g-1e-7-0-12778 1: matches True; error None; ray_initialized False
+   g-1e-7-0-37232 1: matches True; error None; ray_initialized False
+wrote state/dev/capture.json sha256 de8cf268ca728253ccb3189a810bc243dc6023d54c3927dc9b1c59cdc9dd7175
+# ----
+# end 2026-11-04T09:14:05Z
+# exit 0

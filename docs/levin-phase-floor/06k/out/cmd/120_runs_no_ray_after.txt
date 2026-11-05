@@ -1,0 +1,13 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_runs_after.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route1-20261104T103009 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route2-20261104T151120 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route2lit-20261104T185927 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06k-census-route3-20261104T225339
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T01:17:21Z
+# ----
+levin-phase-floor-06k-census-route1-20261104T103009: workers 16 hello / 16 bye; ray initialised 0; with foreign modules 0; evidence failing 0; variants [('route1', '23cd69e4a87a')]; OK
+levin-phase-floor-06k-census-route2-20261104T151120: workers 16 hello / 16 bye; ray initialised 0; with foreign modules 0; evidence failing 0; variants [('route2', '017fae1caef6')]; OK
+levin-phase-floor-06k-census-route2lit-20261104T185927: workers 16 hello / 16 bye; ray initialised 0; with foreign modules 0; evidence failing 0; variants [('route2lit', '2fd10b78955d')]; OK
+levin-phase-floor-06k-census-route3-20261104T225339: workers 16 hello / 16 bye; ray initialised 0; with foreign modules 0; evidence failing 0; variants [('route3', 'e139ec7188f4')]; OK
+ALL OK
+# ----
+# end 2026-11-05T01:17:21Z
+# exit 0

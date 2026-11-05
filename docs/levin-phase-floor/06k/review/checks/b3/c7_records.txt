@@ -1,0 +1,18 @@
+== log.md headings
+7:## Predictions and verdicts
+70:## Result
+87:## What shipped
+131:## The stages, in order
+150:## Deviations from the prompt
+319:## Verification performed
+345:## Observations not acted on
+367:## State handed on
+== deviations: numbered entries and classifications
+0
+     14 IMPLEMENTATION CHOICE
+      6 STRUCTURALLY REQUIRED
+      8 UNINTENDED DRIFT
+numbered deviations 28 numbers True
+each has exactly one classification: True
+deviation 17 quotes: ['stick with what has been built', 'We had better run that fourth census']
+deviation 24 quotes: ['(a) as recommended, please']

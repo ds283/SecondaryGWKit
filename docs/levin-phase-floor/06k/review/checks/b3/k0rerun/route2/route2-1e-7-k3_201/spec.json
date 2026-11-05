@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "route2-1e-7-k3_201",
+ "units": [
+  {
+   "uid": "g-1e-7-3-35986",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "3-35986",
+   "names05": null,
+   "shard": 3,
+   "serial": 35986,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  }
+ ],
+ "out_dir": "review/checks/b3/k0rerun/route2/route2-1e-7-k3_201",
+ "emit_fd": null,
+ "emit_file": "review/checks/b3/k0rerun/route2/route2-1e-7-k3_201/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": {
+  "name": "route2",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route2.py",
+  "sha256": "017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635"
+ }
+}

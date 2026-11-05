@@ -1,0 +1,25 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/run_k0.py route2lit state/dev_units.json state/dev/route2lit_1449 --workers 1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T10:18:17Z
+# ----
+# levin-phase-floor 06k: census units under the variant route2lit
+# written 2026-11-04T10:18:17Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 d0776d1a2107b81afdb658c50a2801d69b53cc60730f915fd01ab780ae188786
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev_units.json sha256 daabd3eed4459fe101e038ff15a318618d2fd5c130cb9f13f22b6fc0a9b96a18
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route2lit.py sha256 2fd10b78955d7607ad97a03d99cd1191fb932b3a7dee2f5b8bf4dbd7ddd02dff
+# variant {"name": "route2lit", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route2lit.py", "sha256": "2fd10b78955d7607ad97a03d99cd1191fb932b3a7dee2f5b8bf4dbd7ddd02dff"}
+# 1 units in 1 workers: route2lit-1e-7-k2_2 (1)
+route2lit-1e-7-k2_2: pid 21821 (1 units)
+route2lit-1e-7-k2_2: exit 0 after 62.5 s
+exit codes {route2lit-1e-7-k2_2: 0}
+refused: []
+bye route2lit-1e-7-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 1 of 1; not done []; wall 63 s
+wrote state/dev/route2lit_1449/units.jsonl sha256 f42452948953ac20daf6bd555003e4de0ec58e899201c7e8ad2363b8b0073323
+# ----
+# end 2026-11-04T10:19:20Z
+# exit 0

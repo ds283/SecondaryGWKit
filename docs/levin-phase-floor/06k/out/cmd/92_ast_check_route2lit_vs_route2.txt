@@ -1,0 +1,94 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/ast_check_variants.py scripts/variants/levin_quadrature_route2.py scripts/variants/levin_quadrature_route2lit.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T10:17:34Z
+# ----
+# levin-phase-floor 06k: the variants' AST comparison with the tree's module
+# script ast_check_variants.py sha256 ddf2985bfca79c38b599206ae9f6d3bdafe06903d836f4005b4fa55f14e08b57
+# input scripts/variants/levin_quadrature_route2.py sha256 017fae1caef6def71a0451cbf0d08c138ee4370988c1ead5899fcfa66ed8a635
+
+== levin_quadrature_route2lit.py (sha256 2fd10b78955d7607ad97a03d99cd1191fb932b3a7dee2f5b8bf4dbd7ddd02dff)
+top-level statements: tree 84, variant 84; differing: ['_adaptive_levin']
+only _adaptive_levin differs at top level: True
+_adaptive_levin's signature and docstring unchanged: True
+differing statement groups inside _adaptive_levin: 3
+-- [1] at _adaptive_levin > FunctionDef _check_leaf.body: replace; tree lines [3383, 3390, 3391], variant lines [3383, 3393, 3397, 3398, 3399, 3402, 3405, 3406, 3407, 3413, 3416, 3422, 3428, 3441]
+   - trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= region.phase_err)
+   - declared_06k = None
+   - if not trusted:
+     
+         def _node_06k(solve_data):
+             node = solve_data.get('node_error_signed')
+             return 0.0 if node is None else node
+         node_P_06k = region.node_error_signed
+         own_c_06k = own_value - (0.0 if node_P_06k is None else node_P_06k)
+         halves_c_06k = dataL['value'] - _node_06k(dataL) + (dataR['value'] - _node_06k(dataR))
+         quarters_c_06k = LL['value'] - _node_06k(LL) + (LR['value'] - _node_06k(LR)) + (RL['value'] - _node_06k(RL) + (RR['value'] - _node_06k(RR)))
+         delta1c_06k = float(np.fabs(own_c_06k - halves_c_06k))
+         delta2c_06k = float(np.fabs(halves_c_06k - quarters_c_06k))
+         if not (np.isfinite(delta1c_06k) and np.isfinite(delta2c_06k)):
+             ratio_c_06k = float('inf')
+         elif delta1c_06k == 0.0:
+             ratio_c_06k = 0.0 if delta2c_06k == 0.0 else float('inf')
+         else:
+             ratio_c_06k = delta2c_06k / delta1c_06k
+         if ratio_c_06k < _LEVIN_TRUST_MAX_RATIO or (ratio_c_06k < 1.0 and delta1c_06k <= region.phase_err):
+             trusted = True
+             declared_06k = max(residual, delta1c_06k) / (1.0 - ratio_c_06k)
+             route_firings_06k.append({'depth': int(leaf.depth), 'at_depth_max': bool(leaf.depth >= depth_max), 'start': float(a), 'end': float(b), 'is_direct': bool(leaf.is_direct), 'r': float(ratio), 'delta1': float(delta1), 'delta2': float(delta2), 'phi_P': float(region.phase_err), 'delta1c': float(delta1c_06k), 'delta2c': float(delta2c_06k), 'r_c': float(ratio_c_06k), 'residual': float(residual), 'declared': float(declared_06k), 'declared_g_formula': float(max(residual, delta1) / (1.0 - ratio) if ratio < 1.0 else max(residual, delta1 + delta2))})
+   + trusted_g_06k = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= region.phase_err)
+   + def _node_06k(solve_data):
+         node = solve_data.get('node_error_signed')
+         return 0.0 if node is None else node
+   + node_P_06k = region.node_error_signed
+   + own_c_06k = own_value - (0.0 if node_P_06k is None else node_P_06k)
+   + halves_c_06k = dataL['value'] - _node_06k(dataL) + (dataR['value'] - _node_06k(dataR))
+   + quarters_c_06k = LL['value'] - _node_06k(LL) + (LR['value'] - _node_06k(LR)) + (RL['value'] - _node_06k(RL) + (RR['value'] - _node_06k(RR)))
+   + delta1c_06k = float(np.fabs(own_c_06k - halves_c_06k))
+   + delta2c_06k = float(np.fabs(halves_c_06k - quarters_c_06k))
+   + if not (np.isfinite(delta1c_06k) and np.isfinite(delta2c_06k)):
+         ratio_c_06k = float('inf')
+     elif delta1c_06k == 0.0:
+         ratio_c_06k = 0.0 if delta2c_06k == 0.0 else float('inf')
+     else:
+         ratio_c_06k = delta2c_06k / delta1c_06k
+   + trusted = ratio_c_06k < _LEVIN_TRUST_MAX_RATIO or (ratio_c_06k < 1.0 and delta1c_06k <= region.phase_err)
+   + if trusted or (leaf.depth >= depth_max and ratio_c_06k < 1.0):
+         declared_06k = max(residual, delta1c_06k) / (1.0 - ratio_c_06k)
+     elif leaf.depth >= depth_max:
+         declared_06k = max(residual, delta1c_06k + delta2c_06k)
+     else:
+         declared_06k = None
+   + if trusted_g_06k or (leaf.depth >= depth_max and ratio < 1.0):
+         declared_g_06k = max(residual, delta1) / (1.0 - ratio)
+     elif leaf.depth >= depth_max:
+         declared_g_06k = max(residual, delta1 + delta2)
+     else:
+         declared_g_06k = None
+   + if trusted and (not trusted_g_06k):
+         kind_06k = 'trust_added'
+     elif trusted_g_06k and (not trusted):
+         kind_06k = 'trust_withdrawn'
+     elif (declared_06k is None) != (declared_g_06k is None) or (declared_06k is not None and float(declared_06k).hex() != float(declared_g_06k).hex()):
+         kind_06k = 'declaration_changed' if trusted else 'declaration_changed_untrusted'
+     else:
+         kind_06k = None
+   + if kind_06k is not None:
+         route_firings_06k.append({'kind': kind_06k, 'depth': int(leaf.depth), 'at_depth_max': bool(leaf.depth >= depth_max), 'start': float(a), 'end': float(b), 'is_direct': bool(leaf.is_direct), 'r': float(ratio), 'delta1': float(delta1), 'delta2': float(delta2), 'phi_P': float(region.phase_err), 'delta1c': float(delta1c_06k), 'delta2c': float(delta2c_06k), 'r_c': float(ratio_c_06k), 'residual': float(residual), 'trusted_g': bool(trusted_g_06k), 'trusted': bool(trusted), 'declared': None if declared_06k is None else float(declared_06k), 'declared_g_formula': None if declared_g_06k is None else float(declared_g_06k)})
+-- [2] at _adaptive_levin > FunctionDef _check_leaf.body > If (line 3468).body: replace; tree lines [3447], variant lines [3470]
+   - region._declared_resolution = max(residual, delta1) / (1.0 - ratio) if declared_06k is None else declared_06k
+   + region._declared_resolution = declared_06k
+-- [3] at _adaptive_levin > FunctionDef _check_leaf.body > If (line 3468).orelse: replace; tree lines [3455], variant lines [3474]
+   - if leaf.depth >= depth_max:
+         region._declared_resolution = max(residual, delta1) / (1.0 - ratio) if ratio < 1.0 else max(residual, delta1 + delta2)
+     else:
+         region._declared_resolution = None
+   + region._declared_resolution = declared_06k
+names bound in the variant's _adaptive_levin and not the tree's: ['declared_g_06k', 'kind_06k', 'trusted_g_06k']
+of them, not ending in _06k: []
+CONFINED: True
+
+ALL CONFINED: True
+# ----
+# end 2026-11-04T10:17:34Z
+# exit 0

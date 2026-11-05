@@ -1,0 +1,167 @@
+--- scripts/variants/levin_quadrature_route2.py	2026-11-04 10:17:23
++++ scripts/variants/levin_quadrature_route2lit.py	2026-11-04 10:17:23
+@@ -3380,86 +3380,98 @@
+             ratio = delta2 / delta1
+ 
+         residual = region.abserr
+-        trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
++        trusted_g_06k = ratio < _LEVIN_TRUST_MAX_RATIO or (
+             ratio < 1.0 and delta1 <= region.phase_err
+         )
+-        # prompt 06k, route 2: where 06g's rule (b) finds the leaf untrusted, rule (b) as written on
+-        # the differences of the seven solves' values each corrected by -E (its node_error_signed; a
+-        # solve without one, by 0). If that trusts, the leaf is trusted and declares
+-        # max(residual, delta1c) / (1 - r_c); it returns Q, uncorrected, as any trusted leaf.
+-        declared_06k = None
+-        if not trusted:
++        # prompt 06k, route 2 literal: rule (b) as written on the differences of the seven solves' values
++        # each corrected by -E (its node_error_signed; a solve without one, by 0), on every checked leaf.
++        # A trusted leaf declares max(residual, delta1c) / (1 - r_c); an untrusted one at depth_max
++        # max(residual, delta1c) / (1 - r_c) if r_c < 1, else max(residual, delta1c + delta2c). It returns
++        # Q (uncorrected) if trusted, V_P if not. Every leaf whose decision or declaration differs from
++        # 06g's is a firing, by kind.
+ 
+-            def _node_06k(solve_data):
+-                node = solve_data.get("node_error_signed")
+-                return 0.0 if node is None else node
++        def _node_06k(solve_data):
++            node = solve_data.get("node_error_signed")
++            return 0.0 if node is None else node
+ 
+-            node_P_06k = region.node_error_signed
+-            own_c_06k = own_value - (0.0 if node_P_06k is None else node_P_06k)
+-            halves_c_06k = (dataL["value"] - _node_06k(dataL)) + (
+-                dataR["value"] - _node_06k(dataR)
++        node_P_06k = region.node_error_signed
++        own_c_06k = own_value - (0.0 if node_P_06k is None else node_P_06k)
++        halves_c_06k = (dataL["value"] - _node_06k(dataL)) + (
++            dataR["value"] - _node_06k(dataR)
++        )
++        quarters_c_06k = (
++            (LL["value"] - _node_06k(LL)) + (LR["value"] - _node_06k(LR))
++        ) + ((RL["value"] - _node_06k(RL)) + (RR["value"] - _node_06k(RR)))
++        delta1c_06k = float(np.fabs(own_c_06k - halves_c_06k))
++        delta2c_06k = float(np.fabs(halves_c_06k - quarters_c_06k))
++        if not (np.isfinite(delta1c_06k) and np.isfinite(delta2c_06k)):
++            ratio_c_06k = float("inf")
++        elif delta1c_06k == 0.0:
++            ratio_c_06k = 0.0 if delta2c_06k == 0.0 else float("inf")
++        else:
++            ratio_c_06k = delta2c_06k / delta1c_06k
++        trusted = ratio_c_06k < _LEVIN_TRUST_MAX_RATIO or (
++            ratio_c_06k < 1.0 and delta1c_06k <= region.phase_err
++        )
++        if trusted or (leaf.depth >= depth_max and ratio_c_06k < 1.0):
++            declared_06k = max(residual, delta1c_06k) / (1.0 - ratio_c_06k)
++        elif leaf.depth >= depth_max:
++            declared_06k = max(residual, delta1c_06k + delta2c_06k)
++        else:
++            declared_06k = None
++        if trusted_g_06k or (leaf.depth >= depth_max and ratio < 1.0):
++            declared_g_06k = max(residual, delta1) / (1.0 - ratio)
++        elif leaf.depth >= depth_max:
++            declared_g_06k = max(residual, delta1 + delta2)
++        else:
++            declared_g_06k = None
++        if trusted and not trusted_g_06k:
++            kind_06k = "trust_added"
++        elif trusted_g_06k and not trusted:
++            kind_06k = "trust_withdrawn"
++        elif (declared_06k is None) != (declared_g_06k is None) or (
++            declared_06k is not None
++            and float(declared_06k).hex() != float(declared_g_06k).hex()
++        ):
++            kind_06k = (
++                "declaration_changed" if trusted else "declaration_changed_untrusted"
+             )
+-            quarters_c_06k = (
+-                (LL["value"] - _node_06k(LL)) + (LR["value"] - _node_06k(LR))
+-            ) + ((RL["value"] - _node_06k(RL)) + (RR["value"] - _node_06k(RR)))
+-            delta1c_06k = float(np.fabs(own_c_06k - halves_c_06k))
+-            delta2c_06k = float(np.fabs(halves_c_06k - quarters_c_06k))
+-            if not (np.isfinite(delta1c_06k) and np.isfinite(delta2c_06k)):
+-                ratio_c_06k = float("inf")
+-            elif delta1c_06k == 0.0:
+-                ratio_c_06k = 0.0 if delta2c_06k == 0.0 else float("inf")
+-            else:
+-                ratio_c_06k = delta2c_06k / delta1c_06k
+-            if ratio_c_06k < _LEVIN_TRUST_MAX_RATIO or (
+-                ratio_c_06k < 1.0 and delta1c_06k <= region.phase_err
+-            ):
+-                trusted = True
+-                declared_06k = max(residual, delta1c_06k) / (1.0 - ratio_c_06k)
+-                route_firings_06k.append(
+-                    {
+-                        "depth": int(leaf.depth),
+-                        "at_depth_max": bool(leaf.depth >= depth_max),
+-                        "start": float(a),
+-                        "end": float(b),
+-                        "is_direct": bool(leaf.is_direct),
+-                        "r": float(ratio),
+-                        "delta1": float(delta1),
+-                        "delta2": float(delta2),
+-                        "phi_P": float(region.phase_err),
+-                        "delta1c": float(delta1c_06k),
+-                        "delta2c": float(delta2c_06k),
+-                        "r_c": float(ratio_c_06k),
+-                        "residual": float(residual),
+-                        "declared": float(declared_06k),
+-                        "declared_g_formula": float(
+-                            max(residual, delta1) / (1.0 - ratio)
+-                            if ratio < 1.0
+-                            else max(residual, delta1 + delta2)
+-                        ),
+-                    }
+-                )
++        else:
++            kind_06k = None
++        if kind_06k is not None:
++            route_firings_06k.append(
++                {
++                    "kind": kind_06k,
++                    "depth": int(leaf.depth),
++                    "at_depth_max": bool(leaf.depth >= depth_max),
++                    "start": float(a),
++                    "end": float(b),
++                    "is_direct": bool(leaf.is_direct),
++                    "r": float(ratio),
++                    "delta1": float(delta1),
++                    "delta2": float(delta2),
++                    "phi_P": float(region.phase_err),
++                    "delta1c": float(delta1c_06k),
++                    "delta2c": float(delta2c_06k),
++                    "r_c": float(ratio_c_06k),
++                    "residual": float(residual),
++                    "trusted_g": bool(trusted_g_06k),
++                    "trusted": bool(trusted),
++                    "declared": None if declared_06k is None else float(declared_06k),
++                    "declared_g_formula": None if declared_g_06k is None else float(declared_g_06k),
++                }
++            )
+         _remove_error(leaf)
+         region._delta1 = delta1
+         region._delta2 = delta2
+         region._convergence_ratio = ratio
+         if trusted:
+             region._trusted = True
+-            region._declared_resolution = (
+-                max(residual, delta1) / (1.0 - ratio)
+-                if declared_06k is None
+-                else declared_06k  # prompt 06k, route 2: a firing declares on the corrected numbers
+-            )
++            region._declared_resolution = declared_06k  # prompt 06k, route 2 literal
+         else:
+             region._trusted = False
+             num_untrusted_found += 1
+-            if leaf.depth >= depth_max:
+-                region._declared_resolution = (
+-                    max(residual, delta1) / (1.0 - ratio)
+-                    if ratio < 1.0
+-                    else max(residual, delta1 + delta2)
+-                )
+-            else:
+-                region._declared_resolution = None
++            region._declared_resolution = declared_06k  # prompt 06k, route 2 literal (None below depth_max)
+         _restore_error(leaf)
+         if trusted:
+             _set_value(leaf, quarters_sum, "quarters")

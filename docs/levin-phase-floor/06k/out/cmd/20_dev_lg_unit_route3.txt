@@ -1,0 +1,13 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport sys, json; sys.path.insert(0, \'/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/calibration\')\nimport lg_seeded_draws as L\nr = L.run_unit((0, \'route3\', \'test_abserr_bounds_truth\'))\nprint(r[\'outcome\'], r[\'num_calls\'], r[\'elapsed_s\'], r[\'driver_module\'], json.dumps(r[\'variant_06k\'])[:300])\nfor c in r[\'calls\'][:4]: print(c[\'index\'], c[\'converged\'], c[\'num_regions\'], c[\'value\'], c[\'abserr\'], json.dumps(c[\'route_06k\'])[:200])\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-04T09:15:30Z
+# ----
+pass 28 5.764708624687046 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route3.py {"name": "route3", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route3.py", "sha256": "e139ec7188f45e154c78c50ff5c2b086f84cbcf08ae1c045b098e210634fdd49", "sha256_now": "e139ec7188f45e154c78c50ff5c2b086f84cbcf08ae1c045b098e210634fdd49
+0 True 15 0.3703594501020419 2.716239864171296e-11 {"route": "3", "eta": 0.001, "n_firings": 4, "n_unleft": 0, "request": 3.703594501020419e-11, "n_left_returned": 4, "left_D_sum": 3.405565759950768e-14, "eta_min": 0.0009195298672715013, "n_untrusted_
+1 True 17 0.3703670677408347 3.1551685810817875e-11 {"route": "3", "eta": 0.001, "n_firings": 3, "n_unleft": 0, "request": 3.7036706774083476e-11, "n_left_returned": 3, "left_D_sum": 5.678617298610078e-15, "eta_min": 0.00015332403426817915, "n_untruste
+2 True 24 0.37036561676144114 1.6181942122283434e-11 {"route": "3", "eta": 0.001, "n_firings": 3, "n_unleft": 0, "request": 3.7036561676144116e-11, "n_left_returned": 3, "left_D_sum": 4.0570845294407576e-15, "eta_min": 0.00010954268824727311, "n_untrust
+3 True 18 -0.37036416578277936 1.1786827050367256e-11 {"route": "3", "eta": 0.001, "n_firings": 4, "n_unleft": 0, "request": 3.7036416578277935e-11, "n_left_returned": 4, "left_D_sum": 2.288967626551397e-15, "eta_min": 6.180316126733193e-05, "n_untrusted
+# ----
+# end 2026-11-04T09:15:37Z
+# exit 0

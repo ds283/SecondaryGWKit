@@ -1,0 +1,14 @@
+entries 873
+OK  state/inputs/s02.pkl
+OK  levin-phase-floor-06k-census-route3-20261104T225339/worker_1e-7-k0_202_hello.json
+OK  state/k0/identity/identity-1e-7-k0_202/regions_identity-1e-7-k0_202.pkl
+OK  levin-phase-floor-06k-census-route2lit-20261104T185927/worker_1e-8-k1_102_hello.json
+OK  state/dev/inputs/f00.pkl
+OK  levin-phase-floor-06k-census-route2-20261104T151120/spec_1e-8-k3_201.json
+OK  levin-phase-floor-06k-census-route2lit-20261104T185927/worker_1e-8-k2_2_bye.json
+OK  levin-phase-floor-06k-census-route2lit-20261104T185927/worker_1e-8-k3_201_context.json
+OK  state/k0/route1/route1-1e-7-k2_2/regions_route1-1e-7-k2_2.pkl
+OK  levin-phase-floor-06k-census-route2-20261104T151120/worker_1e-7-k0_202_hello.json
+OK  levin-phase-floor-06k-census-route1-20261104T103009/worker_1e-7-k1_102.log
+OK  state/k0/route1/route1-1e-7-k2_302/regions_route1-1e-7-k2_302.pkl
+sample of 12 (seed 20261105, files under 50 MB): 12 match sha256 and size

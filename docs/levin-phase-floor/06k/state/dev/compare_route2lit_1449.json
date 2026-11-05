@@ -1,0 +1,131 @@
+{
+ "header": [
+  "# levin-phase-floor 06k: Gate K0, route2lit_1449 against 06g's census (route)",
+  "# written 2026-11-04T10:19:21Z on mps026298.phys.susx.ac.uk",
+  "# script compare_k0.py sha256 409a096a03cf95e69723de2330cbf48c60a19da5ae828b2cc60a911e5015bbf8",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input state/dev/route2lit_1449/units.jsonl sha256 f42452948953ac20daf6bd555003e4de0ec58e899201c7e8ad2363b8b0073323",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/index_06g.json sha256 349e37cd9c1648bdba393818c072a0514f63b477fa8136efd0cd97e781bcbd2c"
+ ],
+ "mode": "route",
+ "run_dir": "state/dev/route2lit_1449",
+ "n_units": 1,
+ "n_fail": 0,
+ "n_calls_compared_clause2": 6,
+ "n_calls_fired": 15,
+ "n_units_compared_whole": 0,
+ "excluded_keys_differing_count": {
+  "summary.elapsed": 6,
+  "summary.route_06k": 6
+ },
+ "units": [
+  {
+   "unit": "g-1e-7-2-1449",
+   "worker": "route2lit-1e-7-k2_2",
+   "status": "done",
+   "firings_by_call": {
+    "0": 15,
+    "1": 0,
+    "2": 16,
+    "3": 16,
+    "4": 0,
+    "5": 1,
+    "6": 1,
+    "7": 1,
+    "8": 1,
+    "9": 1,
+    "10": 1,
+    "11": 1,
+    "12": 2,
+    "13": 1,
+    "14": 1,
+    "15": 0,
+    "16": 0,
+    "17": 0,
+    "18": 0,
+    "19": 2,
+    "20": 1
+   },
+   "compared_whole": false,
+   "differing": [],
+   "differing_excluded": [
+    "call[15].summary.elapsed",
+    "call[15].summary.route_06k",
+    "call[16].summary.elapsed",
+    "call[16].summary.route_06k",
+    "call[17].summary.elapsed",
+    "call[17].summary.route_06k",
+    "call[18].summary.elapsed",
+    "call[18].summary.route_06k",
+    "call[1].summary.elapsed",
+    "call[1].summary.route_06k",
+    "call[4].summary.elapsed",
+    "call[4].summary.route_06k"
+   ],
+   "detail": [
+    [
+     "call[1].summary.elapsed",
+     true,
+     "0.008738999720662832 vs 0.008745125029236078"
+    ],
+    [
+     "call[1].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[4].summary.elapsed",
+     true,
+     "0.0023256251588463783 vs 0.0022121667861938477"
+    ],
+    [
+     "call[4].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[15].summary.elapsed",
+     true,
+     "0.09624850004911423 vs 0.0931205409578979"
+    ],
+    [
+     "call[15].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[16].summary.elapsed",
+     true,
+     "0.06038758438080549 vs 0.06058383313938975"
+    ],
+    [
+     "call[16].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[17].summary.elapsed",
+     true,
+     "0.09224516665562987 vs 0.09276970801874995"
+    ],
+    [
+     "call[17].summary.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "call[18].summary.elapsed",
+     true,
+     "0.061255082953721285 vs 0.06078050006181002"
+    ],
+    [
+     "call[18].summary.route_06k",
+     true,
+     "key in one record only"
+    ]
+   ],
+   "ok": true
+  }
+ ]
+}

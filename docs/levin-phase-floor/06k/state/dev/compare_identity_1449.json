@@ -1,0 +1,673 @@
+{
+ "header": [
+  "# levin-phase-floor 06k: Gate K0, identity_1449 against 06g's census (identity)",
+  "# written 2026-11-04T09:09:01Z on mps026298.phys.susx.ac.uk",
+  "# script compare_k0.py sha256 ebc48d817d8ef3df86ed0a12ee9e85ff88916a9ddb4f6244d535b2255d686aec",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060 HEAD 89370609a64d58993289dcfe991350a420ea698d (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input state/dev/identity_1449/units.jsonl sha256 1d57350cac1507c5178bd44a9096b7681a0d3d41268c7be89f57b4ad3b131c5d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/state/index_06g.json sha256 349e37cd9c1648bdba393818c072a0514f63b477fa8136efd0cd97e781bcbd2c"
+ ],
+ "mode": "identity",
+ "run_dir": "state/dev/identity_1449",
+ "n_units": 1,
+ "n_fail": 1,
+ "n_calls_compared_clause2": 0,
+ "n_calls_fired": 0,
+ "n_units_compared_whole": 1,
+ "excluded_keys_differing_count": {
+  "analytic_06h.seconds": 1,
+  "calls.elapsed": 5,
+  "calls.route_06k": 5,
+  "data.cc_floor_s": 1,
+  "data.checked_06g_s": 1,
+  "data.declared_06h_s": 1,
+  "deep_lines.seconds": 1,
+  "counts_by_root.own tree": 1,
+  "counts_by_root.scripts": 1,
+  "counts_by_root.variant": 1,
+  "AdaptiveLevin.levin_quadrature": 1,
+  "files.BesselPhaseGroup (QuadSourceIntegral's)": 1,
+  "files.ComputeTargets": 1,
+  "ComputeTargets.GkSource": 1,
+  "ComputeTargets.GkSourcePolicyData": 1,
+  "ComputeTargets.GkWKBIntegration": 1,
+  "ComputeTargets.QuadSource": 1,
+  "ComputeTargets.QuadSourceIntegral": 1,
+  "ComputeTargets.TkSourceFunctions": 1,
+  "ComputeTargets.TkWKBIntegration": 1,
+  "ComputeTargets.primitive_phase": 1,
+  "LiouvilleGreen.bessel_phase": 1,
+  "LiouvilleGreen.three_bessel_integrals": 1,
+  "integrators.WKB_phase_function": 1,
+  "files.StoreFixtures": 1,
+  "files.WKB_phase_function (the producers' remote's function)": 1,
+  "main.py": 1,
+  "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": 1,
+  "modules.n_own_tree": 1,
+  "other_calls.elapsed": 16,
+  "other_calls.route_06k": 16,
+  "data.pickle": 1,
+  "data.pickle_length": 1,
+  "data.pickle_offset": 1,
+  "data.pickle_record_sha256": 1,
+  "data.rebuild_s": 1,
+  "result.compute_time": 1,
+  "data.scan_s": 1,
+  "prov.py": 1,
+  "variant_loader.py": 1,
+  "worker.py": 1,
+  "data.tree_head": 1,
+  "w3.seconds": 1,
+  "data.wall_s": 1,
+  "data.worker": 1,
+  "data.worker_pid": 1,
+  "data.worker_tree": 1,
+  "groups.elapsed": 5,
+  "result_full.compute_time": 1,
+  "pickle.route_06k": 1,
+  "scan.seconds": 5
+ },
+ "units": [
+  {
+   "unit": "g-1e-7-2-1449",
+   "worker": "identity-1e-7-k2_2",
+   "status": "done",
+   "differing": [
+    "data.cache_built"
+   ],
+   "differing_excluded": [
+    "data.analytic_06h.seconds",
+    "data.calls[0].elapsed",
+    "data.calls[0].route_06k",
+    "data.calls[1].elapsed",
+    "data.calls[1].route_06k",
+    "data.calls[2].elapsed",
+    "data.calls[2].route_06k",
+    "data.calls[3].elapsed",
+    "data.calls[3].route_06k",
+    "data.calls[4].elapsed",
+    "data.calls[4].route_06k",
+    "data.cc_floor_s",
+    "data.checked_06g_s",
+    "data.declared_06h_s",
+    "data.deep_lines.seconds",
+    "data.modules.counts_by_root.own tree",
+    "data.modules.counts_by_root.scripts",
+    "data.modules.counts_by_root.variant",
+    "data.modules.files.AdaptiveLevin.levin_quadrature",
+    "data.modules.files.BesselPhaseGroup (QuadSourceIntegral's)",
+    "data.modules.files.ComputeTargets",
+    "data.modules.files.ComputeTargets.GkSource",
+    "data.modules.files.ComputeTargets.GkSourcePolicyData",
+    "data.modules.files.ComputeTargets.GkWKBIntegration",
+    "data.modules.files.ComputeTargets.QuadSource",
+    "data.modules.files.ComputeTargets.QuadSourceIntegral",
+    "data.modules.files.ComputeTargets.TkSourceFunctions",
+    "data.modules.files.ComputeTargets.TkWKBIntegration",
+    "data.modules.files.ComputeTargets.primitive_phase",
+    "data.modules.files.LiouvilleGreen.bessel_phase",
+    "data.modules.files.LiouvilleGreen.three_bessel_integrals",
+    "data.modules.files.Quadrature.integrators.WKB_phase_function",
+    "data.modules.files.StoreFixtures",
+    "data.modules.files.WKB_phase_function (the producers' remote's function)",
+    "data.modules.files.main.py",
+    "data.modules.files.theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)",
+    "data.modules.n_own_tree",
+    "data.other_calls[0].elapsed",
+    "data.other_calls[0].route_06k",
+    "data.other_calls[1].elapsed",
+    "data.other_calls[1].route_06k",
+    "data.other_calls[2].elapsed",
+    "data.other_calls[2].route_06k",
+    "data.other_calls[3].elapsed",
+    "data.other_calls[3].route_06k",
+    "data.other_calls[4].elapsed",
+    "data.other_calls[4].route_06k",
+    "data.other_calls[5].elapsed",
+    "data.other_calls[5].route_06k",
+    "data.other_calls[6].elapsed",
+    "data.other_calls[6].route_06k",
+    "data.other_calls[7].elapsed",
+    "data.other_calls[7].route_06k",
+    "data.other_calls[8].elapsed",
+    "data.other_calls[8].route_06k",
+    "data.other_calls[9].elapsed",
+    "data.other_calls[9].route_06k",
+    "data.other_calls[10].elapsed",
+    "data.other_calls[10].route_06k",
+    "data.other_calls[11].elapsed",
+    "data.other_calls[11].route_06k",
+    "data.other_calls[12].elapsed",
+    "data.other_calls[12].route_06k",
+    "data.other_calls[13].elapsed",
+    "data.other_calls[13].route_06k",
+    "data.other_calls[14].elapsed",
+    "data.other_calls[14].route_06k",
+    "data.other_calls[15].elapsed",
+    "data.other_calls[15].route_06k",
+    "data.pickle",
+    "data.pickle_length",
+    "data.pickle_offset",
+    "data.pickle_record_sha256",
+    "data.rebuild_s",
+    "data.result.compute_time",
+    "data.scan_s",
+    "data.scripts_sha256.prov.py",
+    "data.scripts_sha256.variant_loader.py",
+    "data.scripts_sha256.worker.py",
+    "data.tree_head",
+    "data.w3.seconds",
+    "data.wall_s",
+    "data.worker",
+    "data.worker_pid",
+    "data.worker_tree",
+    "pickle.result_full.WKB_Levin_subintervals[0].groups[0].elapsed",
+    "pickle.result_full.WKB_Levin_subintervals[1].groups[0].elapsed",
+    "pickle.result_full.WKB_Levin_subintervals[1].groups[1].elapsed",
+    "pickle.result_full.WKB_Levin_subintervals[1].groups[2].elapsed",
+    "pickle.result_full.WKB_Levin_subintervals[1].groups[3].elapsed",
+    "pickle.result_full.compute_time",
+    "pickle.route_06k",
+    "pickle.scan[0].seconds",
+    "pickle.scan[1].seconds",
+    "pickle.scan[2].seconds",
+    "pickle.scan[3].seconds",
+    "pickle.scan[4].seconds"
+   ],
+   "detail": [
+    [
+     "data.analytic_06h.seconds",
+     true,
+     "1.028647833969444 vs 0.9956987500190735"
+    ],
+    [
+     "data.cache_built",
+     false,
+     "length 4 vs 0"
+    ],
+    [
+     "data.calls[0].elapsed",
+     true,
+     "0.15866333385929465 vs 0.16837524995207787"
+    ],
+    [
+     "data.calls[0].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.calls[1].elapsed",
+     true,
+     "0.010792874731123447 vs 0.008745125029236078"
+    ],
+    [
+     "data.calls[1].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.calls[2].elapsed",
+     true,
+     "0.8698418750427663 vs 0.9406994581222534"
+    ],
+    [
+     "data.calls[2].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.calls[3].elapsed",
+     true,
+     "0.3829809590242803 vs 0.42611779225990176"
+    ],
+    [
+     "data.calls[3].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.calls[4].elapsed",
+     true,
+     "0.0020812503062188625 vs 0.0022121667861938477"
+    ],
+    [
+     "data.calls[4].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.cc_floor_s",
+     true,
+     "0.0766141670756042 vs 0.07445804215967655"
+    ],
+    [
+     "data.checked_06g_s",
+     true,
+     "0.0020046248100697994 vs 0.002107915934175253"
+    ],
+    [
+     "data.declared_06h_s",
+     true,
+     "0.17253241688013077 vs 0.16709120897576213"
+    ],
+    [
+     "data.deep_lines.seconds",
+     true,
+     "0.1639348748140037 vs 0.16225795773789287"
+    ],
+    [
+     "data.modules.counts_by_root.own tree",
+     true,
+     "'101' vs '102'"
+    ],
+    [
+     "data.modules.counts_by_root.scripts",
+     true,
+     "'9' vs '8'"
+    ],
+    [
+     "data.modules.counts_by_root.variant",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.modules.files.AdaptiveLevin.levin_quadrature",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/var' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/AdaptiveLevin/levin_qu'"
+    ],
+    [
+     "data.modules.files.BesselPhaseGroup (QuadSourceIntegral's)",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/LiouvilleGreen/three_b' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/LiouvilleGreen/three_b'"
+    ],
+    [
+     "data.modules.files.ComputeTargets",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/__init_' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/__init_'"
+    ],
+    [
+     "data.modules.files.ComputeTargets.GkSource",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/GkSourc' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/GkSourc'"
+    ],
+    [
+     "data.modules.files.ComputeTargets.GkSourcePolicyData",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/GkSourc' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/GkSourc'"
+    ],
+    [
+     "data.modules.files.ComputeTargets.GkWKBIntegration",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/GkWKBIn' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/GkWKBIn'"
+    ],
+    [
+     "data.modules.files.ComputeTargets.QuadSource",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/QuadSou' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/QuadSou'"
+    ],
+    [
+     "data.modules.files.ComputeTargets.QuadSourceIntegral",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/QuadSou' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/QuadSou'"
+    ],
+    [
+     "data.modules.files.ComputeTargets.TkSourceFunctions",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/TkSourc' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/TkSourc'"
+    ],
+    [
+     "data.modules.files.ComputeTargets.TkWKBIntegration",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/TkWKBIn' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/TkWKBIn'"
+    ],
+    [
+     "data.modules.files.ComputeTargets.primitive_phase",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/primiti' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/primiti'"
+    ],
+    [
+     "data.modules.files.LiouvilleGreen.bessel_phase",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/LiouvilleGreen/bessel_' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/LiouvilleGreen/bessel_'"
+    ],
+    [
+     "data.modules.files.LiouvilleGreen.three_bessel_integrals",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/LiouvilleGreen/three_b' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/LiouvilleGreen/three_b'"
+    ],
+    [
+     "data.modules.files.Quadrature.integrators.WKB_phase_function",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/Quadrature/integrators' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/Quadrature/integrators'"
+    ],
+    [
+     "data.modules.files.StoreFixtures",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/StoreFixtures/__init__' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/StoreFixtures/__init__'"
+    ],
+    [
+     "data.modules.files.WKB_phase_function (the producers' remote's function)",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/Quadrature/integrators' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/Quadrature/integrators'"
+    ],
+    [
+     "data.modules.files.main.py",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/main.py' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/main.py'"
+    ],
+    [
+     "data.modules.files.theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)",
+     true,
+     "'/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060/ComputeTargets/primiti' vs '/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e/ComputeTargets/primiti'"
+    ],
+    [
+     "data.modules.n_own_tree",
+     true,
+     "'101' vs '102'"
+    ],
+    [
+     "data.other_calls[0].elapsed",
+     true,
+     "0.08825941570103168 vs 0.09347787499427795"
+    ],
+    [
+     "data.other_calls[0].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[1].elapsed",
+     true,
+     "0.022142333909869194 vs 0.023200249765068293"
+    ],
+    [
+     "data.other_calls[1].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[2].elapsed",
+     true,
+     "0.022094374988228083 vs 0.023319582920521498"
+    ],
+    [
+     "data.other_calls[2].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[3].elapsed",
+     true,
+     "0.04252887470647693 vs 0.04553199978545308"
+    ],
+    [
+     "data.other_calls[3].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[4].elapsed",
+     true,
+     "0.02233670884743333 vs 0.022639958187937737"
+    ],
+    [
+     "data.other_calls[4].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[5].elapsed",
+     true,
+     "0.04299220768734813 vs 0.044509375002235174"
+    ],
+    [
+     "data.other_calls[5].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[6].elapsed",
+     true,
+     "0.02620120905339718 vs 0.03381595900282264"
+    ],
+    [
+     "data.other_calls[6].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[7].elapsed",
+     true,
+     "0.048211750108748674 vs 0.0508607910014689"
+    ],
+    [
+     "data.other_calls[7].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[8].elapsed",
+     true,
+     "0.12047304073348641 vs 0.12870287522673607"
+    ],
+    [
+     "data.other_calls[8].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[9].elapsed",
+     true,
+     "0.08039279142394662 vs 0.08489312510937452"
+    ],
+    [
+     "data.other_calls[9].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[10].elapsed",
+     true,
+     "0.08850716706365347 vs 0.0931205409578979"
+    ],
+    [
+     "data.other_calls[10].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[11].elapsed",
+     true,
+     "0.05728879198431969 vs 0.06058383313938975"
+    ],
+    [
+     "data.other_calls[11].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[12].elapsed",
+     true,
+     "0.08991141663864255 vs 0.09276970801874995"
+    ],
+    [
+     "data.other_calls[12].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[13].elapsed",
+     true,
+     "0.05732083413749933 vs 0.06078050006181002"
+    ],
+    [
+     "data.other_calls[13].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[14].elapsed",
+     true,
+     "0.12577366596087813 vs 0.133651124779135"
+    ],
+    [
+     "data.other_calls[14].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.other_calls[15].elapsed",
+     true,
+     "0.09555937489494681 vs 0.10157483303919435"
+    ],
+    [
+     "data.other_calls[15].route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.pickle",
+     true,
+     "'regions_identity-1e-7-k2_2.pkl' vs 'regions_1e-7-k2_2.pkl'"
+    ],
+    [
+     "data.pickle_length",
+     true,
+     "'193123' vs '192813'"
+    ],
+    [
+     "data.pickle_offset",
+     true,
+     "'0' vs '73946626'"
+    ],
+    [
+     "data.pickle_record_sha256",
+     true,
+     "'155ab760d3d19ad5bf5c5d85705a3b83d48f0dfbe92a3393c3e84c9df8c56010' vs 'ef3d72be2954602943a4fe36863d8b3cba4aca9b3bc400f17608cbccce419831'"
+    ],
+    [
+     "data.rebuild_s",
+     true,
+     "46.203804791904986 vs 0.042174375150352716"
+    ],
+    [
+     "data.result.compute_time",
+     true,
+     "2.480620958842337 vs 2.665616082958877"
+    ],
+    [
+     "data.scan_s",
+     true,
+     "0.12878529215231538 vs 0.13573579210788012"
+    ],
+    [
+     "data.scripts_sha256.prov.py",
+     true,
+     "'f80815c2dbb27f520725d94c7c82faeb3955104c48f331a0b394e2052501a358' vs '22dfde41ce581d8296beec6d2625425958d26c6624d4300ff42af5dee4915ecf'"
+    ],
+    [
+     "data.scripts_sha256.variant_loader.py",
+     true,
+     "key in one record only"
+    ],
+    [
+     "data.scripts_sha256.worker.py",
+     true,
+     "'6907a9327c55dcfa22556a6e5f257aac473f7f63d490247f2dfba62617459e0e' vs '90578b628775a03ffb885a41b089bfab2c9dd3fa6d1183021e63e69a27161ad4'"
+    ],
+    [
+     "data.tree_head",
+     true,
+     "'89370609a64d58993289dcfe991350a420ea698d' vs '1c5336e7e0ab8ed4495601a4033841f2df17ebdd'"
+    ],
+    [
+     "data.w3.seconds",
+     true,
+     "0.18862533336505294 vs 0.19413337484002113"
+    ],
+    [
+     "data.wall_s",
+     true,
+     "2.5378637090325356 vs 2.731054250150919"
+    ],
+    [
+     "data.worker",
+     true,
+     "'identity-1e-7-k2_2' vs '1e-7-k2_2'"
+    ],
+    [
+     "data.worker_pid",
+     true,
+     "'13980' vs '51192'"
+    ],
+    [
+     "data.worker_tree",
+     true,
+     "key in one record only"
+    ],
+    [
+     "pickle.result_full.WKB_Levin_subintervals[0].groups[0].elapsed",
+     true,
+     "0.15866333385929465 vs 0.16837524995207787"
+    ],
+    [
+     "pickle.result_full.WKB_Levin_subintervals[1].groups[0].elapsed",
+     true,
+     "0.010792874731123447 vs 0.008745125029236078"
+    ],
+    [
+     "pickle.result_full.WKB_Levin_subintervals[1].groups[1].elapsed",
+     true,
+     "0.8698418750427663 vs 0.9406994581222534"
+    ],
+    [
+     "pickle.result_full.WKB_Levin_subintervals[1].groups[2].elapsed",
+     true,
+     "0.3829809590242803 vs 0.42611779225990176"
+    ],
+    [
+     "pickle.result_full.WKB_Levin_subintervals[1].groups[3].elapsed",
+     true,
+     "0.0020812503062188625 vs 0.0022121667861938477"
+    ],
+    [
+     "pickle.result_full.compute_time",
+     true,
+     "2.480620958842337 vs 2.665616082958877"
+    ],
+    [
+     "pickle.route_06k",
+     true,
+     "key in one record only"
+    ],
+    [
+     "pickle.scan[0].seconds",
+     true,
+     "0.013806457631289959 vs 0.01579883322119713"
+    ],
+    [
+     "pickle.scan[1].seconds",
+     true,
+     "0.02715245820581913 vs 0.02971191704273224"
+    ],
+    [
+     "pickle.scan[2].seconds",
+     true,
+     "0.031088542193174362 vs 0.030774916987866163"
+    ],
+    [
+     "pickle.scan[3].seconds",
+     true,
+     "0.02894012490287423 vs 0.03055983269587159"
+    ],
+    [
+     "pickle.scan[4].seconds",
+     true,
+     "0.027769250329583883 vs 0.028862041886895895"
+    ]
+   ],
+   "ok": false
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+g-1e-8-0-33806 # 3 06g unit wall 1.81 route1 converged True regions 34 firings 3 k_key 0:202
+g-1e-8-3-825 # 0 06g unit wall 1.91 route1 converged True regions 61 firings 15 k_key 3:1
+g-1e-7-0-33806 # 3 06g unit wall 1.92 route1 converged True regions 34 firings 3 k_key 0:202
+g-1e-7-3-825 # 0 06g unit wall 1.93 route1 converged True regions 61 firings 15 k_key 3:1
+g-1e-7-3-857 # 4 06g unit wall 2.14 route1 converged True regions 37 firings 9 k_key 3:201
+g-1e-8-3-857 # 4 06g unit wall 2.21 route1 converged True regions 37 firings 9 k_key 3:201
+g-1e-7-3-13481 # 4 06g unit wall 2.24 route1 converged True regions 76 firings 4 k_key 3:1
+g-1e-7-1-10834 # 6 06g unit wall 2.47 route1 converged True regions 12 firings 1 k_key 1:301

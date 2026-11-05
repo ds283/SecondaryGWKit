@@ -1,0 +1,26 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/kept_list_06k.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-05T01:22:40Z
+# ----
+# levin-phase-floor 06k: files kept on the Mac Studio only (mps026298), not copied to the laptop.
+# sha256  size_bytes  path (relative to var/levin-phase-floor-06k/, or to var/runs/). Written by scripts/kept_list_06k.py.
+## pickles, and files over 2 MB, under var/levin-phase-floor-06k/ (review/ excluded)
+# 261 files, 1100872852 bytes
+## run directory var/runs/levin-phase-floor-06k-census-route1-20261104T103009/ (every file)
+# 150 files, 4442324735 bytes
+## run directory var/runs/levin-phase-floor-06k-census-route2-20261104T151120/ (every file)
+# 149 files, 4193782343 bytes
+## run directory var/runs/levin-phase-floor-06k-census-route2lit-20261104T185927/ (every file)
+# 149 files, 4858051010 bytes
+## run directory var/runs/levin-phase-floor-06k-census-route3-20261104T225339/ (every file)
+# 149 files, 3570599114 bytes
+## run directory var/runs/levin-phase-floor-06k-k0partL-20261104T091640/ (every file)
+# 5 files, 23030 bytes
+## run directory var/runs/levin-phase-floor-06k-lgdraws-20261104T095904/ (every file)
+# 5 files, 4044 bytes
+## run directory var/runs/levin-phase-floor-06k-route2lit-20261104T101930/ (every file)
+# 5 files, 4913 bytes
+# ----
+# end 2026-11-05T01:22:51Z
+# exit 0

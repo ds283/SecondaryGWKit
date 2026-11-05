@@ -1,0 +1,86 @@
+{
+ "tree": "g",
+ "name": "route2lit-1e-7-k0_101",
+ "units": [
+  {
+   "uid": "g-1e-7-0-33997",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-33997",
+   "names05": null,
+   "shard": 0,
+   "serial": 33997,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-7-0-12727",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-12727",
+   "names05": null,
+   "shard": 0,
+   "serial": 12727,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-7-0-12935",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-12935",
+   "names05": null,
+   "shard": 0,
+   "serial": 12935,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-7-0-1814",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1814",
+   "names05": null,
+   "shard": 0,
+   "serial": 1814,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "g-1e-7-0-37232",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-37232",
+   "names05": null,
+   "shard": 0,
+   "serial": 37232,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/k0/route2lit/route2lit-1e-7-k0_101",
+ "emit_fd": null,
+ "emit_file": "state/k0/route2lit/route2lit-1e-7-k0_101/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": {
+  "name": "route2lit",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06k/scripts/variants/levin_quadrature_route2lit.py",
+  "sha256": "2fd10b78955d7607ad97a03d99cd1191fb932b3a7dee2f5b8bf4dbd7ddd02dff"
+ }
+}

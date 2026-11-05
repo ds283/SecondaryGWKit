@@ -1,0 +1,9 @@
+route1 v03 (06g scores.json rows; g-1e-7-1-34521 #4): |v_g-ref|/e_g 1.202675985 (agent 1.202675985); |v_route-ref|/e_route 1.185378837 (agent 1.185378837); bound max(1, g) 1.20268; H1 on this call holds; agrees with agent True
+route1 z01 (06g scores.json rows; g-1e-7-2-1444 #4): |v_g-ref|/e_g 0.3202634307 (agent 0.3202634307); |v_route-ref|/e_route 0.3202634307 (agent 0.3202634307); bound max(1, g) 1; H1 on this call holds; agrees with agent True
+route2 v03 (06g scores.json rows; g-1e-7-1-34521 #4): |v_g-ref|/e_g 1.202675985 (agent 1.202675985); |v_route-ref|/e_route 1.202381756 (agent 1.202381756); bound max(1, g) 1.20268; H1 on this call holds; agrees with agent True
+route2 r56 (06g scores.json rows; g-1e-8-1-10794 #5): |v_g-ref|/e_g 0.00590882367 (agent 0.00590882367); |v_route-ref|/e_route 0.00590882367 (agent 0.00590882367); bound max(1, g) 1; H1 on this call holds; agrees with agent True
+route2lit v03 (06g scores.json rows; g-1e-7-1-34521 #4): |v_g-ref|/e_g 1.202675985 (agent 1.202675985); |v_route-ref|/e_route 1.200297893 (agent 1.200297893); bound max(1, g) 1.20268; H1 on this call holds; agrees with agent True
+route2lit c01 (06j w_calls.csv; g-1e-7-2-33416 #6): |v_g-ref|/e_g 0.001382050911 (agent 0.001382050911); |v_route-ref|/e_route 0.001382079232 (agent 0.001382079232); bound max(1, g) 1; H1 on this call holds; agrees with agent True
+route3 c01 (06j w_calls.csv; g-1e-7-2-33416 #6): |v_g-ref|/e_g 0.001382050911 (agent 0.001382050911); |v_route-ref|/e_route 3.934671823 (agent 3.934671823); bound max(1, g) 1; H1 on this call fails; agrees with agent True
+route3 r56 (06g scores.json rows; g-1e-8-1-10794 #5): |v_g-ref|/e_g 0.00590882367 (agent 0.00590882367); |v_route-ref|/e_route 1.491724979 (agent 1.491724979); bound max(1, g) 1; H1 on this call fails; agrees with agent True
+ALL AGREE: True

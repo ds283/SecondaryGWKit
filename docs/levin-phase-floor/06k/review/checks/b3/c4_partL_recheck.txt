@@ -1,0 +1,62 @@
+== s02 leaf 3: unit g-1e-7-3-34738 call 1 population L-a depth 20 span [0x1.583a3e0a8c354p+4, 0x1.583a552504832p+4]
+   request: recomputed 1.883698e-33 (06g census value 1.883698e-26); probe 1.883698e-33; equal True
+   r 0.3067, delta1/phi_P 10.51; nu1 4.474010e-41 (probe 4.474010e-41, equal True), delta1/nu1 0.03289
+   delta1c 7.314778e-43 (probe 7.314778e-43, rel diff 0.00e+00); delta2c 9.528830e-44 (probe 9.809089e-44); r_c 0.130268 (probe 0.1341); delta1c/phi_P 5.223
+   D 2.122159e-42 (probe 2.122159e-42, equal True); D/(eta*request) 1.127e-06
+   decisions recomputed {'g': 'untrusted', 'route1': 'trusted', 'route2': 'trusted', 'route2_literal': 'trusted', 'route3': 'left'}
+   decisions of probe   {'g': 'untrusted', 'route1': 'trusted', 'route2_literal': 'trusted', 'route2': 'trusted', 'route3': 'left'}  -> equal True
+   (a) 06g census checked leaf: equal by hex {'delta1': True, 'delta2': True, 'r': True, 'phi_P': True, 'V_P': True, 'E_P': True}; trusted_final 0
+   (b) route1 census: no firing at this span (n_firings in call 75)
+   (b) route2 census: no firing at this span (n_firings in call 31)
+   (b) route2lit census: no firing at this span (n_firings in call 73)
+   (b) route3 census: no firing at this span (n_firings in call 9)
+== s01 leaf 1: unit g-1e-7-2-21980 call 3 population L-a depth 20 span [0x1.20fa3e5f3b636p+4, 0x1.20fa43764a8f8p+4]
+   request: recomputed 9.479236e-34 (06g census value -9.479236e-27); probe 9.479236e-34; equal True
+   r 0.9405, delta1/phi_P 7.261; nu1 1.110893e-40 (probe 1.110893e-40, equal True), delta1/nu1 0.0125
+   delta1c 4.680337e-43 (probe 4.666324e-43, rel diff 3.00e-03); delta2c 5.899467e-43 (probe 5.857428e-43); r_c 1.26048 (probe 1.25526); delta1c/phi_P 2.447
+   D 2.332523e-41 (probe 2.332523e-41, equal True); D/(eta*request) 2.461e-05
+   decisions recomputed {'g': 'untrusted', 'route1': 'trusted', 'route2': 'untrusted', 'route2_literal': 'untrusted', 'route3': 'left'}
+   decisions of probe   {'g': 'untrusted', 'route1': 'trusted', 'route2_literal': 'untrusted', 'route2': 'untrusted', 'route3': 'left'}  -> equal True
+   (a) 06g census checked leaf: equal by hex {'delta1': True, 'delta2': True, 'r': True, 'phi_P': True, 'V_P': True, 'E_P': True}; trusted_final 0
+   (b) route1 census: no firing at this span (n_firings in call 8)
+   (b) route2 census: no firing at this span (n_firings in call 8)
+   (b) route2lit census: no firing at this span (n_firings in call 35)
+   (b) route3 census: no firing at this span (n_firings in call 1)
+== s05 leaf 1: unit g-1e-7-1-11233 call 4 population L-a depth 20 span [0x1.2f3ef7a244a40p+4, 0x1.2f3efc7292b34p+4]
+   request: recomputed 1.882878e-32 (06g census value 1.882878e-25); probe 1.882878e-32; equal True
+   r 0.2675, delta1/phi_P 7.568; nu1 2.068651e-42 (probe 2.068651e-42, equal True), delta1/nu1 3.566
+   delta1c 7.578222e-42 (probe 7.589432e-42, rel diff 1.48e-03); delta2c 1.334036e-42 (probe 1.356457e-42); r_c 0.176036 (probe 0.17873); delta1c/phi_P 7.775
+   D 1.006991e-41 (probe 1.006991e-41, equal True); D/(eta*request) 5.348e-07
+   decisions recomputed {'g': 'untrusted', 'route1': 'untrusted', 'route2': 'trusted', 'route2_literal': 'trusted', 'route3': 'left'}
+   decisions of probe   {'g': 'untrusted', 'route1': 'untrusted', 'route2_literal': 'trusted', 'route2': 'trusted', 'route3': 'left'}  -> equal True
+   (a) 06g census checked leaf: equal by hex {'delta1': True, 'delta2': True, 'r': True, 'phi_P': True, 'V_P': True, 'E_P': True}; trusted_final 0
+   (b) route1 census: no firing at this span (n_firings in call 46)
+   (b) route2 census: no firing at this span (n_firings in call 10)
+   (b) route2lit census: no firing at this span (n_firings in call 24)
+   (b) route3 census: no firing at this span (n_firings in call 1)
+== c01 leaf 0: unit g-1e-7-2-33416 call 6 population L-b depth 0 span [0x1.96d8ed7a5c86fp+4, 0x1.c1f69b30e5acep+4]
+   request: recomputed 5.657640e-34 (06g census value 5.172347e-33); probe 5.657640e-34; equal True
+   r 0.5499, delta1/phi_P 1.264e+04; nu1 4.589978e-45 (probe 4.589978e-45, equal True), delta1/nu1 9619
+   delta1c 4.415221e-41 (probe 4.415221e-41, rel diff 0.00e+00); delta2c 2.428059e-41 (probe 2.428059e-41); r_c 0.549929 (probe 0.549929); delta1c/phi_P 1.264e+04
+   D 9.810060e-41 (probe 9.810060e-41, equal True); D/(eta*request) 0.0001734
+   decisions recomputed {'g': 'untrusted', 'route1': 'untrusted', 'route2': 'untrusted', 'route2_literal': 'untrusted', 'route3': 'left'}
+   decisions of probe   {'g': 'untrusted', 'route1': 'untrusted', 'route2_literal': 'untrusted', 'route2': 'untrusted', 'route3': 'left'}  -> equal True
+   (a) 06g census checked leaf: equal by hex {'delta1': True, 'delta2': True, 'r': True, 'phi_P': True, 'V_P': True, 'E_P': True}; trusted_final 0
+   (b) route1 census: no firing at this span (n_firings in call 0)
+   (b) route2 census: no firing at this span (n_firings in call 0)
+   (b) route2lit census: no firing at this span (n_firings in call 17)
+   (b) route3 census firing: {'delta1': 4.4152205068922483e-41, 'r': 0.5499293180751705, 'phi_P': 3.492068914336126e-45, 'D': 9.810060251002254e-41, 'request': 5.6576402320949e-34}
+       D vs recomputed: equal True; D/(eta*request) 0.0001734
+== c07 leaf 0: unit g-1e-8-3-37323 call 1 population L-b depth 1 span [0x1.eaeb071cea246p+3, 0x1.8b0e134cd0b2cp+4]
+   request: recomputed 2.417196e-33 (06g census value -2.417196e-25); probe 2.417196e-33; equal True
+   r 0.3123, delta1/phi_P 5.799; nu1 8.293625e-35 (probe 8.293625e-35, equal True), delta1/nu1 5.745
+   delta1c 4.764564e-34 (probe 4.764564e-34, rel diff 0.00e+00); delta2c 1.488139e-34 (probe 1.488139e-34); r_c 0.312335 (probe 0.312335); delta1c/phi_P 5.799
+   D 6.928609e-34 (probe 6.928609e-34, equal True); D/(eta*request) 286.6
+   decisions recomputed {'g': 'untrusted', 'route1': 'untrusted', 'route2': 'untrusted', 'route2_literal': 'untrusted', 'route3': 'untrusted'}
+   decisions of probe   {'g': 'untrusted', 'route1': 'untrusted', 'route2_literal': 'untrusted', 'route2': 'untrusted', 'route3': 'untrusted'}  -> equal True
+   (a) 06g census checked leaf: equal by hex {'delta1': True, 'delta2': True, 'r': True, 'phi_P': True, 'V_P': True, 'E_P': True}; trusted_final 0
+   (b) route1 census: no firing at this span (n_firings in call 3)
+   (b) route2 census: no firing at this span (n_firings in call 2)
+   (b) route2lit census: no firing at this span (n_firings in call 29)
+   (b) route3 census: no firing at this span (n_firings in call 6)
+ALL DECISIONS AND CENSUS NUMBERS AGREE: True
