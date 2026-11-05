@@ -220,3 +220,16 @@ C2, H1 and S1. `VERIFICATION.md` §6k has the numbers.
 - 06k's pickles and large files (1.1 GB).
 
 07 resumes after that.
+
+**Housekeeping, 2026-11-05, on the user's word** (*"Clean up the Mac Studio: worktrees yes."*, and
+on the large files *"If that seems possible, we should return that census and any supporting
+files, but clean out the others."*):
+- The worktree `SecondaryGWKit-lpf06k-8937060` was removed with `git worktree remove`; it was clean
+  with `--ignored`. 06g's four worktrees stay, on the user's earlier word.
+- Route 1's census is kept in full, with the checkpoint extracts of route 1 and 06g. A remedy built
+  on route 1 should equal it on every call where its change does not bite.
+- 315 files were checked against their SHA-256 (all equal) and deleted: 06k's other pickles and
+  large files, the review's five re-run pickles, and the checkpoints and region pickles of the
+  route 2, route 2 literal and route 3 censuses. Those run directories keep their small files.
+  `docs/levin-phase-floor/06k/KEPT_ON_MAC_STUDIO.md` lists what was deleted and what is kept.
+- The Mac Studio had 87 GB free afterwards, and its registry shows 55 runs, all finished.

@@ -5,6 +5,26 @@ These are kept in the Mac Studio's main checkout,
 06k's records also stay) and `var/runs/`. They were left out of this directory as 06j's were:
 every pickle and every file over 2 MB.
 
+> **Mostly removed 2026-11-05, on the user's word** (*"I assume the census runs, pickles, and other
+> large files have no value now, unless we're likely to need to revisit the route 1 census for
+> comparison purposes. If that seems possible, we should return that census and any supporting
+> files, but clean out the others."*). It is possible: a remedy built on route 1 should equal route
+> 1's census on every call where its change does not bite, so route 1's census is kept as the
+> reference for that comparison. 315 files were checked against their SHA-256 (all 315 equal) and
+> deleted:
+> - every file under `var/levin-phase-floor-06k/` listed below except the two checkpoint extracts
+>   `state/extract/route1.pkl` and `state/extract/g.pkl` (06g's), which are kept: 259 files;
+> - the review's five re-run pickles under `review/checks/b3/`;
+> - the `checkpoint.jsonl` and 16 `regions_*.pkl` of each of the censuses of route 2, route 2
+>   literal and route 3: 51 files. Each of those run directories keeps its manifest, status,
+>   logs, events, specs and worker records (17 MB each), which are the registry's record of the run.
+>
+> **Still kept:** route 1's census run directory in full (4.1 GB, checkpoint `36e3dd4c…`), the two
+> extracts, and the small records under `var/levin-phase-floor-06k/` that are also committed here.
+> The other three runs are kept whole. Everything deleted can be recreated from 06g's census, the
+> scratch copy and the variants under `scripts/variants/`, all still kept. The worktree was removed
+> the same day.
+
 **Under `var/levin-phase-floor-06k/`: 266 files, never copied to the laptop.**
 - **261 are listed with SHA-256 and size** in [`KEPT_ON_MAC_STUDIO.txt`](KEPT_ON_MAC_STUDIO.txt)
   (SHA-256 `963ea70b…`, written by `scripts/kept_list_06k.py`), 1,100,872,852 bytes in all:
@@ -80,4 +100,5 @@ each is still kept until the user says otherwise (`06g/KEPT_ON_MAC_STUDIO.md`,
   Every verdict and count is the same.
 
 **The worktree** `/Users/ds283/Documents/Code/SecondaryGWKit-lpf06k-8937060` (detached at
-`89370609`, clean with `--ignored`) is kept until the user says otherwise.
+`89370609`, clean with `--ignored`) was removed on 2026-11-05 with `git worktree remove`, on the
+user's word (*"Clean up the Mac Studio: worktrees yes."*).
