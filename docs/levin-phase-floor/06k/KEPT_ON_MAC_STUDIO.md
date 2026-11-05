@@ -21,7 +21,7 @@ every pickle and every file over 2 MB.
 >
 > **Still kept:** route 1's census run directory in full (4.1 GB, checkpoint `36e3dd4c…`), the two
 > extracts, and the small records under `var/levin-phase-floor-06k/` that are also committed here.
-> The other three runs are kept whole. Everything deleted can be recreated from 06g's census, the
+> The three small runs (`k0partL`, `lgdraws` and `route2lit`) are kept whole. Everything deleted can be recreated from 06g's census, the
 > scratch copy and the variants under `scripts/variants/`, all still kept. The worktree was removed
 > the same day.
 
