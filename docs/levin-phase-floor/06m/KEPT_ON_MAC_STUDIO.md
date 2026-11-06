@@ -45,3 +45,8 @@ census (`5cb3d3c0…`) and 06g's census (`03adcbba…`).
 **Worktrees** (`/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-…`). On the Mac Studio,
 `5ff8a5e` (R25) and `38f6a82` (R26, K0 and the census) stay until the user says otherwise. Both are
 clean with `--ignored`. 06g's four worktrees are unchanged.
+
+> **Both worktrees removed 2026-11-06, on the user's word** (*"the 06m worktrees (and any other
+> stale worktrees) on the Mac Studio can be cleaned up"*), with 06g's four. Each was clean with
+> `--ignored` and was removed with `git worktree remove`. The Mac Studio now has no worktree beside
+> its main checkout. The R25 and R26 stores and the census run directory stay.

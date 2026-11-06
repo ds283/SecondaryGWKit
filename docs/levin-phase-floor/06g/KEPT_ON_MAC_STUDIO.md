@@ -61,3 +61,8 @@ one in `references/scripts/__pycache__/`, were deleted on the user's word on 202
 laptop's `b5626ec` worktree, clean with `--ignored`, was removed with `git worktree remove` on the
 user's word on 2026-11-03 (*"Please remove those worktress."*). The Mac Studio's four stay for now:
 *"if we are going to use the 06g worktrees again, they can stay."*
+
+> **The Mac Studio's four worktrees removed 2026-11-06, on the user's word** (*"the 06m worktrees
+> (and any other stale worktrees) on the Mac Studio can be cleaned up"*). Each was clean with
+> `--ignored` and was removed with `git worktree remove`. Each is a pushed commit and can be made
+> again.

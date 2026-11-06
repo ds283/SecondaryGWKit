@@ -380,3 +380,8 @@ by the Mac Studio orchestrator. The unintended drifts had no effect. One was a n
 
 **Left as it is, until the user says otherwise:** the R25 and R26 stores, the census run directory
 (07's "before"), and both 06m worktrees on the Mac Studio.
+
+**After landing (2026-11-06).** `a84ffcb0` was pushed on the user's word. On the user's word
+(*"the 06m worktrees (and any other stale worktrees) on the Mac Studio can be cleaned up"*), both
+06m worktrees and 06g's four were removed from the Mac Studio, each clean with `--ignored`. The
+R25 and R26 stores and the census run directory stay.
