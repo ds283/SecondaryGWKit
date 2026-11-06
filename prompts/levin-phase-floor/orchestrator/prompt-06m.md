@@ -162,3 +162,95 @@ Part B must carry.
 
 As 06g's note §5, with prompt 06m's §7 in place of 06g's. Also stop if a single call of the census
 differs from route B's, before scoring anything else. **Never touch 07's stashes or saved work.**
+
+## A.5 Addendum, 2026-11-06: the review, the rulings and the landing
+
+**Dispatched** at `5ff8a5e4` on the user's word (*"Dispatch prompt 06m … and carry out the review of
+the agent's work when it is finished"*). The prompt commit was pushed first, as §A.1 says, and is the
+dispatch SHA. The seven roots were taken there by the orchestrator, each on its own: 82 / 780 / 39 /
+156 (1 skipped) / 280 / 127 / 64, all OK. tools is 64, not 06g's 63, from `ff3e8394` and
+`b5626ecb`. The agent asked no question and stopped nowhere. It committed **`48cf87c0`**, not
+pushed.
+
+**The review of `48cf87c0`**, the nine checks of §A.3, run by the orchestrator:
+1. **Scope:**
+   - 18 paths, all §A.2's: the module, the new test module, the records under
+     `docs/levin-phase-floor/06m/calibration/`, the log and the board's 06m row;
+   - the checkout is clean;
+   - the four stashes and `var/levin-phase-floor-07/wip/` (9 files) are unchanged by SHA-256;
+   - nothing under `var/` is newer than the marker.
+2. **By AST without docstrings:** outside tests only `levin_quadrature.py` changes. In it, the new
+   `_trust_noise_yardstick` and, in `_check_leaf`, the new `noise_yardstick` assignment and the
+   changed `trusted` statement; nothing else moved, nothing removed.
+3. **The construction**, read against prompt §0.1, then line by line beside the variant's hunk 2:
+   - the four cases;
+   - a Clenshaw–Curtis half adds nothing on a Levin parent;
+   - $\phi^-$ is `phase_err_less_node`;
+   - the signed sum is over the Clenshaw–Curtis halves only, the one half's $E$ or $E_L + E_R$;
+   - the order is $\phi_P$, the Levin halves' $\phi$ in L, R, the Clenshaw–Curtis halves' $\phi^-$
+     in L, R, then $|S|$;
+   - a `None` Levin $\phi_h$ reads 0.0 (`or 0.0`, as the variant);
+   - the raise is checked per half before its $\phi^-$ is added, as the variant.
+
+   The variant converts the parent's flag with `bool()`; the commit uses its truth value, the same
+   test. The commit returns `float(nu)`, exact (deviation 2). The comment above
+   `_LEVIN_TRUST_MAX_RATIO` covers all §1 item 3 asks.
+4. **The roots,** each on its own: AdaptiveLevin 91 (+9, the new module), the other six equal, all
+   OK; the known flake did not occur.
+5. **The tests:**
+   - tests 1–5 run within AdaptiveLevin's root, 9 tests OK;
+   - **test 2, independently,** on cells of the orchestrator's own, through
+     `adaptive_levin_sincos` under the commit and under the variant (SHA-256 checked). The checks
+     were every result key but `elapsed` (30 keys) and every public attribute of every returned
+     region (50), floats compared as hex:
+     - a Clenshaw–Curtis-parent firing: $\int_2^{40}[((1024 + \sin(0.3x)/x) - 1024)\sin\theta +
+       ((1024 + 1/(1+x)) - 1024)\cos\theta]\,dx$, $\theta = 35x + x^2/2$, atol $10^{-12}$, rtol
+       $10^{-30}$, `depth_max` 16. It has 256 regions and 53 firings, all on Clenshaw–Curtis
+       parents, and is bit-identical;
+     - a Levin-parent firing: $\int_{1.5}^{50}[((200 + 2/x) - 200)\sin\theta + ((200 + \cos(x/2)) -
+       200)\cos\theta]\,dx$, $\theta = 70x + 0.8x^2$, the same tolerances. It has 18 regions and
+       1 firing, on a Levin parent, and is bit-identical;
+     - six more cells of the same families and a far-from-origin cell were also bit-identical,
+       with or without firings;
+   - no existing assertion changed (no existing test file in the commit);
+   - **the LiouvilleGreen draws** were re-run in a throwaway worktree at `48cf87c0`, in modes
+     `commit` and `routeB`, 160 units, all pass:
+     - the commit equals the variant on all 80 unit pairs: outcome, results, stdout and all 4,320
+       Levin calls, every field but `route_06l`;
+     - 122 calls fire;
+     - each mode equals the agent's committed record unit for unit.
+6. **The breakages:** (i), (ii) and (iii) were re-applied in a throwaway worktree, each built
+   independently of the agent's `breakages.py`:
+   - (i): $|E_L| + |E_R|$ in place of the signed sum, caught by test 1 (3 tests);
+   - (ii): a Clenshaw–Curtis half's $\phi^-$ added on a Levin parent, caught by tests 1, 2 and 4;
+   - (iii): the $|S|$ term dropped, caught by tests 1, 2 and 3.
+
+   The module's hash was `beaf0e23…` after each revert. (iv) and (v) are caught by test 1, from the
+   record.
+7. **Determinism:** the Clenshaw–Curtis-firing cell of check 5, run twice in fresh processes. The
+   SHA-256 of its whole result, every key but `elapsed` and every region attribute, was identical.
+8. **The records:**
+   - README §5.1's six headings, 9 deviations classified (8 `IMPLEMENTATION CHOICE`, 1
+     `UNINTENDED DRIFT`: `git stash list` run once, read-only; the stash hashes confirm nothing
+     changed);
+   - R1, M0 and M copied verbatim and marked not yet scored;
+   - `black` clean on the two files outside `calibration/scripts/`;
+   - the commit message as `CLAUDE.md`.
+9. `5ff8a5e4..HEAD` held only `48cf87c0`.
+
+**One slip, not a finding:** `calibration/scripts/lg_seeded_draws.py`'s run header still titles
+itself 06g's "section 2 test 9" (line 378), a label kept from the copy; 06m's test is 6.
+
+**The agent's observations, and the rulings.** On the user's word (*"We should record obs 1 and
+obs 3 as open issues. Obs 3 and obs 6 can be fixed in a simple follow-up commit. Obs 1 can be kept
+open for a while and we will see whether it is reproduced."*):
+- observation 1 is opened as
+  `[06m-levin-floor-misses-node-rounding-far-from-the-origin]`, kept open to see whether it is
+  reproduced;
+- observation 3 is opened as `[06m-leaf-values-test-restates-06g-trust-rule]` and fixed in the
+  follow-up commit;
+- observation 6 is fixed in the same follow-up. It is narrower than the log says: 06g's
+  `calibration/scripts/` is already in `CLAUDE.md`'s list, and only 06m's is missing.
+
+**Landed:** `48cf87c0` pushed on the user's word (*"Yes, please proceed: push. Then write, commit,
+and push the Part B dispatch addendum."*).
