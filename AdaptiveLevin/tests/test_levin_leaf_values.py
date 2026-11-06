@@ -6,7 +6,9 @@ section 2 tests 1-3).
 r = delta2 / delta1, and declares max(residual, delta1) / (1 - r). Since 06g:
   (a) a trusted leaf returns Q = (V_LL + V_LR) + (V_RL + V_RR), the finest value computed, in place
       of V_P, with the same declared error; the running value sum follows exactly;
-  (b) a leaf is trusted only if r < 1/4, or r < 1 with delta1 at most its own round-off floor.
+  (b) a leaf is trusted only if r < 1/4, or r < 1 with delta1 at most its own round-off floor
+      (since prompts/levin-phase-floor/06m-signed-yardstick-in-the-driver.md, at most the noise
+      yardstick nu_B, which adds the halves' floors; trust_test() restates the current rule).
 
 The parent is the dispatch commit's module (PARENT_SHA, read with `git show` and executed under
 another name). References are closed forms evaluated with mpmath; each reference's own error is its
@@ -182,10 +184,33 @@ def ascending_value(data):
     return total
 
 
-def trust_test(region):
-    """06g's trust test, restated: r < 1/4, or r < 1 with delta1 at most the leaf's floor."""
+def trust_test(region, f, theta, kwargs):
+    """
+    The driver's trust test, restated: r < 1/4, or r < 1 with delta1 at most the noise yardstick
+    nu_B of _trust_noise_yardstick() (since prompts/levin-phase-floor/06m-signed-yardstick-in-the-
+    driver.md; from 06g to 06m it was the leaf's own floor). nu_B is formed from the leaf's halves,
+    solved afresh as the driver solves them, at its break point (end + start) / 2.
+    """
     r = region.convergence_ratio
-    return r < 0.25 or (r < 1.0 and region.delta1 <= region.phase_err)
+    if r < 0.25:
+        return True
+    if not r < 1.0:
+        return False
+    basis = lq._Basis_SinCos(theta)
+    order = kwargs.get("chebyshev_order", lq.DEFAULT_LEVIN_CHEBSHEV_ORDER)
+    rtol = kwargs.get("rtol", lq.DEFAULT_LEVIN_RELTOL)
+    a, b = region.start, region.end
+    c = (b + a) / 2.0
+
+    def solve(span):
+        return lq._adaptive_levin_subregion(
+            span, f, basis, None, chebyshev_order=order, rtol=rtol
+        )
+
+    nu_B = lq._trust_noise_yardstick(
+        region.phase_err, region.type == "direct", solve((a, c)), solve((c, b))
+    )
+    return region.delta1 <= nu_B
 
 
 def r_class(region):
@@ -586,7 +611,7 @@ class TestSlowLeaves(_HonestyMixin, unittest.TestCase):
         # every checked leaf, returned or not, is trusted exactly when the trust test says so
         for r in made:
             if r.delta1 is not None and not r.phase_limited:
-                self.assertEqual(r.trusted, trust_test(r), r)
+                self.assertEqual(r.trusted, trust_test(r, f, theta, kwargs), r)
 
     def test_noise_leaf_trusted(self):
         """

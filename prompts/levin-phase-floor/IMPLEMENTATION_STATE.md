@@ -1446,19 +1446,6 @@ regions harder.
   $|x|\,\theta'\,\varepsilon$ above their floor. If production reaches it, a node term for the Levin
   branch beside 06e's.
 
-- **[06m-leaf-values-test-restates-06g-trust-rule]** *(opened 2026-11-06 by the orchestrator on
-  the user's word, from prompt 06m's code agent, its Observation 3)* — 06g's
-  `AdaptiveLevin/tests/test_levin_leaf_values.py` keeps its own `trust_test()`, which restates 06g's
-  noise clause, $\Delta_1 \le \phi_P$. `TestSlowLeaves.test_slow_leaf_untrusted_and_refined` asserts
-  every checked leaf's trust equal to it. Under 06m the driver compares $\Delta_1$ with $\nu_B$, so
-  the test passes only because route B never fires on its cell.
-
-  **Impact:** none on any result; the test would fail on a cell where B fires, and its docstrings
-  describe the rule before 06m.
-
-  **Next step:** restate `trust_test()` with $\nu_B$ from the halves' own solves, in a follow-up
-  commit after 06m's code (the user, 2026-11-06).
-
 - **[06-time-integrals-must-reach-late-resonances]** *(opened 2026-10-27 by the orchestrator,
   from the user's decision on 06's P1, Decisions **06 P1** and **07 scope**)* — the time integrals
   must run late enough to include the QCD crossover and $e^+e^-$ annihilation, for the
@@ -1573,6 +1560,28 @@ regions harder.
 01 confirms whether it reaches A3 v2, and narrows it there.
 
 ## 4. Resolved issues
+
+- **[06m-leaf-values-test-restates-06g-trust-rule]** *(opened 2026-11-06 by the orchestrator on
+  the user's word, from prompt 06m's code agent, its Observation 3)* — 06g's
+  `AdaptiveLevin/tests/test_levin_leaf_values.py` keeps its own `trust_test()`, which restates 06g's
+  noise clause, $\Delta_1 \le \phi_P$. `TestSlowLeaves.test_slow_leaf_untrusted_and_refined` asserts
+  every checked leaf's trust equal to it. Under 06m the driver compares $\Delta_1$ with $\nu_B$, so
+  the test passes only because route B never fires on its cell.
+
+  **Impact:** none on any result; the test would fail on a cell where B fires, and its docstrings
+  describe the rule before 06m.
+
+  **Next step:** restate `trust_test()` with $\nu_B$ from the halves' own solves, in a follow-up
+  commit after 06m's code (the user, 2026-11-06).
+
+  **Closed 2026-11-06 by the orchestrator's follow-up commit, on the user's word** (Decisions,
+  **06m Part A lands**). `trust_test()` now takes the cell's `f`, `theta` and `kwargs`. It solves
+  the leaf's halves afresh at its break point, as the driver solves them, and compares $\Delta_1$
+  with `_trust_noise_yardstick()`'s $\nu_B$. The test and the module docstring name the rule since
+  06m. Test 3's cell passes as before. On three cells where B fires (`far(3e5)`, `noisy(512)` and
+  `noisy(128)` from `test_levin_trust_yardstick`), the restated test agrees with the driver on every
+  checked leaf: 203, 126 and 10 leaves. 06g's restatement disagrees on 40, 5 and 1, which are B's
+  firings.
 
 - **[06g-g-plus-r-rows-move-past-both-errors]** *(opened 2026-11-03 by the orchestrator, from 06g's
   census C3)* — V2 fails. Outside the stationary-point rows, 5 rows at each rtol move on `total`
