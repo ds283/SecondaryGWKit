@@ -1,0 +1,18 @@
+$ bash -c T=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82\;\ echo\ \"==\ git\ diff\ --stat\ af4c4dc1\ \(06l\ tree\,\ route\ B\ census\)\ 38f6a828\ --\ .\ :\!docs\ :\!prompts\"\;\ git\ --no-optional-locks\ -C\ \$T\ diff\ --stat\ af4c4dc17995f6576213f80257f9617df459d1fd\ 38f6a828d17b41893574f7344a543ebfb1e01e85\ --\ .\ \":\!docs\"\ \":\!prompts\"\;\ echo\ \"==\ route\ B\ variant\ \(committed\)\ sha256\"\;\ shasum\ -a\ 256\ \$T/docs/levin-phase-floor/06l/scripts/variants/levin_quadrature_routeB.py\ \$T/docs/levin-phase-floor/06l/scripts/variants/levin_quadrature_identity.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:04:35Z
+# ----
+== git diff --stat af4c4dc1 (06l tree, route B census) 38f6a828 -- . :!docs :!prompts
+ .gitattributes                                    |   3 +
+ AdaptiveLevin/levin_quadrature.py                 | 145 ++++-
+ AdaptiveLevin/tests/test_levin_leaf_values.py     |  35 +-
+ AdaptiveLevin/tests/test_levin_trust_yardstick.py | 653 ++++++++++++++++++++++
+ CLAUDE.md                                         |   8 +-
+ 5 files changed, 825 insertions(+), 19 deletions(-)
+== route B variant (committed) sha256
+5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/scripts/variants/levin_quadrature_routeB.py
+d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/scripts/variants/levin_quadrature_identity.py
+# ----
+# end 2026-11-06T10:04:35Z
+# exit 0

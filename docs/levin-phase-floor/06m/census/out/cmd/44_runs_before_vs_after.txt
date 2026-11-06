@@ -1,0 +1,10 @@
+$ bash -c diff\ \<\(grep\ -E\ \'\^\[0-9a-f\]\{64\}\ \'\ out/runs_hashed_before.txt\)\ \<\(grep\ -E\ \'\^\[0-9a-f\]\{64\}\ \'\ out/runs_hashed_after.txt\)\ \&\&\ echo\ EQUAL\;\ grep\ -cE\ \'\^\[0-9a-f\]\{64\}\ \'\ out/runs_hashed_after.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T15:36:06Z
+# ----
+EQUAL
+299
+# ----
+# end 2026-11-06T15:36:06Z
+# exit 0

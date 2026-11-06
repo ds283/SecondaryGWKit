@@ -1,0 +1,15 @@
+$ bash -c uptime\;\ sysctl\ -n\ hw.ncpu\;\ df\ -h\ /Users/ds283/Documents/Code/SecondaryGWKit/var\ \|\ tail\ -1\;\ ls\ -la\ ~/.raypoolkit/\ 2\>\&1\;\ ls\ -la\ ~/ScienceData/.rehearsal-lock\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:04:51Z
+# ----
+10:04  up 30 days, 41 mins, 2 users, load averages: 5.59 8.98 13.62
+10
+/dev/disk3s3s1  927G  795G  132G  86% /
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  6 09:57 .
+drwxr-x--- 159 ds283 staff 5088 Nov  6 09:35 ..
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+# ----
+# end 2026-11-06T10:04:51Z
+# exit 2

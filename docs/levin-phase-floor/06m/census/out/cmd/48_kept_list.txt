@@ -1,0 +1,16 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/kept_list_06m.py KEPT_ON_MAC_STUDIO.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T15:39:04Z
+# ----
+# levin-phase-floor 06m census agent: files kept on the Mac Studio only (mps026298), not copied to the laptop.
+# sha256  size_bytes  path. Written by scripts/kept_list_06m.py (sha256 65b5baa5486571eb9d1aecb4abf174202fa5664c4c5fdf2f6f65c4076db0b3df).
+## pickles, and files over 2 MB, under var/levin-phase-floor-06m/census/
+# 19 files, 98205893 bytes
+## run directory var/runs/levin-phase-floor-06m-census-20261106T102153/ (every file)
+# 150 files, 4413262193 bytes
+## run directory var/runs/levin-phase-floor-06m-k0-20261106T101118/ (every file)
+# 5 files, 4629 bytes
+# ----
+# end 2026-11-06T15:39:06Z
+# exit 0

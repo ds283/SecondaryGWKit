@@ -1,0 +1,624 @@
+{
+ "header": [
+  "# levin-phase-floor 06m: Gate M, levin-phase-floor-06m-census-20261106T102153 against route B's census (levin-phase-floor-06l-census-routeB-20261105T100126)",
+  "# written 2026-11-06T15:31:18Z on mps026298.phys.susx.ac.uk",
+  "# script compare_06m.py sha256 5dd1eaf4e92cb57ce28a1e81c42d1c89489a9c14101bcc9c2cc11c94f974b104",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl sha256 ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/state/index_routeB.json sha256 c44fe3fc22a0a00761770bb5c00c52e291beebcd50c9d0aa69e4301b324d6a99",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "census",
+ "run_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153",
+ "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl",
+ "source_sha256": "ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e",
+ "routeB_run": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06l-census-routeB-20261105T100126",
+ "routeB_checkpoint_sha256": "5cb3d3c0e6e628720aa122a1d23d4a90f140b116ef9e58e2f66a3bffb9dd0d39",
+ "excluded_keys_compare_k0": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "n_units": 18560,
+ "n_units_equal": 18560,
+ "n_units_differing": 0,
+ "statuses": {
+  "done": 18560
+ },
+ "totals": {
+  "n_calls": 289482,
+  "n_group_calls": 74650,
+  "n_regions": 289482,
+  "n_regions_returned": 2871152,
+  "n_calls_B_fired": 21264,
+  "n_firings_B": 271030
+ },
+ "unit_evidence_true_false": {
+  "lq_file_is_tree": [
+   18560,
+   0
+  ],
+  "all_in_tree": [
+   18560,
+   0
+  ],
+  "no_foreign": [
+   18560,
+   0
+  ],
+  "no_variant_root": [
+   18560,
+   0
+  ],
+  "B_had_variant_root": [
+   18560,
+   0
+  ],
+  "route_06l_none_at_m": [
+   18560,
+   0
+  ]
+ },
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "1e-7-k0_101": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-7-k0_202": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-7-k1_102": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-7-k1_301": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-7-k2_2": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-7-k2_302": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-7-k3_1": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-7-k3_201": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-8-k0_101": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-8-k0_202": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-8-k1_102": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-8-k1_301": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-8-k2_2": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-8-k2_302": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-8-k3_1": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  },
+  "1e-8-k3_201": {
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  }
+ },
+ "routeB_worker_variants": {
+  "worker_1e-7-k0_101_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-7-k0_202_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-7-k1_102_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-7-k1_301_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-7-k2_2_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-7-k2_302_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-7-k3_1_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-7-k3_201_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-8-k0_101_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-8-k0_202_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-8-k1_102_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-8-k1_301_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-8-k2_2_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-8-k2_302_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-8-k3_1_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ],
+  "worker_1e-8-k3_201_hello.json": [
+   "routeB",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f",
+   "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"
+  ]
+ },
+ "excluded_keys_inventory_units_present_differing": {
+  "data.analytic_06h.seconds": [
+   18560,
+   18560
+  ],
+  "data.budget_s": [
+   18560,
+   0
+  ],
+  "data.cache_built": [
+   18560,
+   0
+  ],
+  "data.cache_built[].mode_serial": [
+   0,
+   7
+  ],
+  "data.calls[].elapsed": [
+   13582,
+   13582
+  ],
+  "data.calls[].route_06k": [
+   13582,
+   0
+  ],
+  "data.calls[].route_06l": [
+   13582,
+   13582
+  ],
+  "data.cc_floor_s": [
+   18560,
+   18508
+  ],
+  "data.checked_06g_s": [
+   18560,
+   18179
+  ],
+  "data.declared_06h_s": [
+   18560,
+   18496
+  ],
+  "data.deep_lines.seconds": [
+   18560,
+   18438
+  ],
+  "data.modules": [
+   18560,
+   0
+  ],
+  "data.modules.counts_by_root.own tree": [
+   0,
+   18560
+  ],
+  "data.modules.counts_by_root.variant": [
+   0,
+   18560
+  ],
+  "data.modules.files.AdaptiveLevin.levin_quadrature": [
+   0,
+   18560
+  ],
+  "data.modules.files.BesselPhaseGroup (QuadSourceIntegral's)": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets.GkSource": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets.GkSourcePolicyData": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets.GkWKBIntegration": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets.QuadSource": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets.QuadSourceIntegral": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets.TkSourceFunctions": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets.TkWKBIntegration": [
+   0,
+   18560
+  ],
+  "data.modules.files.ComputeTargets.primitive_phase": [
+   0,
+   18560
+  ],
+  "data.modules.files.LiouvilleGreen.bessel_phase": [
+   0,
+   18560
+  ],
+  "data.modules.files.LiouvilleGreen.three_bessel_integrals": [
+   0,
+   18560
+  ],
+  "data.modules.files.Quadrature.integrators.WKB_phase_function": [
+   0,
+   18560
+  ],
+  "data.modules.files.StoreFixtures": [
+   0,
+   18560
+  ],
+  "data.modules.files.WKB_phase_function (the producers' remote's function)": [
+   0,
+   18560
+  ],
+  "data.modules.files.main.py": [
+   0,
+   18560
+  ],
+  "data.modules.files.theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": [
+   0,
+   18560
+  ],
+  "data.modules.n_own_tree": [
+   0,
+   18560
+  ],
+  "data.other_calls[].elapsed": [
+   13810,
+   13810
+  ],
+  "data.other_calls[].route_06k": [
+   13810,
+   0
+  ],
+  "data.other_calls[].route_06l": [
+   13810,
+   13810
+  ],
+  "data.pickle": [
+   18560,
+   0
+  ],
+  "data.pickle_length": [
+   18560,
+   14130
+  ],
+  "data.pickle_offset": [
+   18560,
+   15036
+  ],
+  "data.pickle_record_sha256": [
+   18560,
+   18560
+  ],
+  "data.rebuild_s": [
+   18560,
+   18560
+  ],
+  "data.result.compute_time": [
+   18560,
+   18560
+  ],
+  "data.rows_sha256": [
+   18560,
+   0
+  ],
+  "data.scan_s": [
+   18560,
+   9151
+  ],
+  "data.scripts_sha256": [
+   18560,
+   0
+  ],
+  "data.scripts_sha256.prov.py": [
+   0,
+   18560
+  ],
+  "data.stored.compute_time": [
+   18560,
+   0
+  ],
+  "data.tree_head": [
+   18560,
+   18560
+  ],
+  "data.tree_status_short": [
+   18560,
+   0
+  ],
+  "data.w2_capture_sha256": [
+   18560,
+   0
+  ],
+  "data.w3.seconds": [
+   9280,
+   9035
+  ],
+  "data.wall_s": [
+   18560,
+   18560
+  ],
+  "data.worker": [
+   18560,
+   0
+  ],
+  "data.worker_pid": [
+   18560,
+   18560
+  ],
+  "data.worker_tree": [
+   18560,
+   0
+  ],
+  "pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed": [
+   13582,
+   13582
+  ],
+  "pickle.result_full.compute_time": [
+   18560,
+   18560
+  ],
+  "pickle.route_06k": [
+   18560,
+   0
+  ],
+  "pickle.route_06k[].route_06k": [
+   14130,
+   0
+  ],
+  "pickle.route_06l": [
+   18560,
+   0
+  ],
+  "pickle.route_06l[].route_06l": [
+   14130,
+   14130
+  ],
+  "pickle.scan[].seconds": [
+   6791,
+   6791
+  ]
+ },
+ "first_differing_units": [],
+ "summary_header": [
+  "# levin-phase-floor 06m: Gate M's comparison, summarised",
+  "# written 2026-11-06T15:36:37Z on mps026298.phys.susx.ac.uk",
+  "# script gate_m_summary_06m.py sha256 2e553e4802afc988a21c4a4a5fb29a6bec4fb0ce1d4120ebb83af6f8f30223c9",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input out/gate_m/compare_m.json sha256 5275c92167a7d2e0e6f89aca0520eba5d2c350280a533982a20adaa8ae760219"
+ ],
+ "n_units_rows": 18560,
+ "n_units_ok": 18560,
+ "units_by_rtol": {
+  "1e-7": 9280,
+  "1e-8": 9280
+ }
+}

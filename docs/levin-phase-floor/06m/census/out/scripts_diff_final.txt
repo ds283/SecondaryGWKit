@@ -1,0 +1,96 @@
+$ diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/scripts /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T15:37:09Z
+# ----
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: census_projection_06m.py
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: compare_06m.py
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: descriptive_06m.py
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: gate_m_summary_06m.py
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: hash_runs_06m.py
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: index_routeB_06m.py
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: kept_list_06m.py
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: launch_06m.py
+Only in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts: launch_census_06m.py
+diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/scripts/prov.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/prov.py
+1c1,16
+< """levin-phase-floor prompt 06l (the trust yardstick with the halves' node errors signed, a measurement;
+---
+> """levin-phase-floor prompt 06m section 5 (the census at the code commit, Ray-free, on the Mac Studio): copied
+> from 06l's ``scripts/prov.py`` (docs/levin-phase-floor/06l/scripts/prov.py, a record, not edited); changed
+> here only in its tree and its paths, each change marked "prompt 06m":
+> - one tree, ``g``: Part B's dispatch SHA ``38f6a828`` (the worktree
+>   ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82``), whose code is 06m's code commit
+>   ``48cf87c0``'s (``git diff --stat 5ff8a5e4 38f6a828 -- . ':!docs' ':!prompts'`` touches only
+>   AdaptiveLevin/levin_quadrature.py, two AdaptiveLevin test modules and CLAUDE.md). The key keeps the name
+>   ``g``, so the units are ``g-<rtol>-<shard>-<serial>`` as in route B's census. No variant is installed: the
+>   tree's own module runs. 06l's tree (removed 2026-11-05) is kept below by name, not used;
+> - the records directory is var/levin-phase-floor-06m/census/ (one level deeper than 06l's, so the
+>   main-checkout assertion counts one level more);
+> - route B's census (the "before") and 06g's census, by run directory and checkpoint SHA-256, read only.
+> 
+> (06l's text follows, unchanged.)
+> 
+> levin-phase-floor prompt 06l (the trust yardstick with the halves' node errors signed, a measurement;
+207c222
+< WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l
+---
+> WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l; prompt 06m: var/levin-phase-floor-06m/census
+209c224
+< assert HERE.parents[2] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's; prompt 06j: var/levin-phase-floor-06j/scripts, one shallower again
+---
+> assert HERE.parents[3] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's; prompt 06j: var/levin-phase-floor-06j/scripts, one shallower again; prompt 06m: var/levin-phase-floor-06m/census/scripts, one deeper (parents[2] in 06l)
+280a296,307
+> # prompt 06m: 06l's tree (removed 2026-11-05) is kept above, by name, for the record (not used); the one tree of 06m
+> G06L_TREE, G06L_SHA = G_TREE, G_SHA  # prompt 06m: 06l's tree (af4c4dc1), not used
+> G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82")  # prompt 06m
+> G_SHA = "38f6a828d17b41893574f7344a543ebfb1e01e85"  # prompt 06m: Part B's dispatch SHA; code = 48cf87c0's
+> CODE_SHA_06M = "48cf87c0"  # prompt 06m: 06m's code commit (short), for the record
+> LQ_SHA256_06M = "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6"  # prompt 06m: the tree's module
+> TREES = {"g": (G_TREE, G_SHA)}  # prompt 06m: one tree
+> # prompt 06m: route B's census (06l, the "before") and 06g's census, read only
+> RUN06L_B = MAIN / "var" / "runs" / "levin-phase-floor-06l-census-routeB-20261105T100126"
+> CHECKPOINT06L_B_SHA256 = "5cb3d3c0e6e628720aa122a1d23d4a90f140b116ef9e58e2f66a3bffb9dd0d39"
+> RUN06G = MAIN / "var" / "runs" / "levin-phase-floor-06g-census-20261101T114315"
+> CHECKPOINT06G_SHA256 = "03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa"
+diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/scripts/refs_common.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/refs_common.py
+1c1,7
+< """levin-phase-floor prompt 06l: copied from 06k's scripts/refs_common.py (a record, not edited; its
+---
+> """levin-phase-floor prompt 06m section 5: copied from 06l's scripts/refs_common.py (a record, not edited;
+> docs/levin-phase-floor/06l/scripts/refs_common.py), changed only where marked "prompt 06m": ROOT is
+> var/levin-phase-floor-06m/census/ (one level deeper than 06l's, so the main-checkout assertion counts one level
+> more), and G_TREE/G_SHA are 06m's tree (the worktree at Part B's dispatch SHA 38f6a828, code 06m's code commit
+> 48cf87c0's). ROWS stays 06g's rows.json (aa523d28...), read only, as in 06l. 06l's text follows.
+> 
+> levin-phase-floor prompt 06l: copied from 06k's scripts/refs_common.py (a record, not edited; its
+39c45
+< ROOT = HERE.parent  # var/levin-phase-floor-06g/references; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l
+---
+> ROOT = HERE.parent  # var/levin-phase-floor-06g/references; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l; prompt 06m: var/levin-phase-floor-06m/census
+41c47
+< assert HERE.parents[2] == MAIN, HERE  # prompt 06j: one level shallower than 06g's
+---
+> assert HERE.parents[3] == MAIN, HERE  # prompt 06j: one level shallower than 06g's; prompt 06m: one level deeper than 06l's (parents[2])
+44,45c50,51
+< G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc")  # prompt 06l (06k: -lpf06k-8937060; 06j: -lpf06j-dfa19d9; 06g: -lpf06g-1c5336e)
+< G_SHA = "af4c4dc17995f6576213f80257f9617df459d1fd"  # prompt 06l (06k: 89370609...; 06j: dfa19d98...; 06g: 1c5336e7e0ab8ed4495601a4033841f2df17ebdd)
+---
+> G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82")  # prompt 06m (06l: -lpf06l-af4c4dc; 06k: -lpf06k-8937060; 06j: -lpf06j-dfa19d9; 06g: -lpf06g-1c5336e)
+> G_SHA = "38f6a828d17b41893574f7344a543ebfb1e01e85"  # prompt 06m (06l: af4c4dc1...; 06k: 89370609...; 06j: dfa19d98...; 06g: 1c5336e7e0ab8ed4495601a4033841f2df17ebdd)
+diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/scripts/run_k0.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_k0.py
+1c1,5
+< """levin-phase-floor prompt 06l, Gate K0: copied from 06k's scripts/run_k0.py (a record; its copy is in
+---
+> """levin-phase-floor prompt 06m section 5, Gate M0: copied from 06l's scripts/run_k0.py (a record, not edited), changed
+> only where marked "prompt 06m": the title names 06m. It is run with VARIANT ``tree`` only (no variant installed: the
+> tree's own AdaptiveLevin/levin_quadrature.py, 06m's code). 06l's text follows.
+> 
+> levin-phase-floor prompt 06l, Gate K0: copied from 06k's scripts/run_k0.py (a record; its copy is in
+59c63
+<     for l in header(Path(__file__).resolve(), f"levin-phase-floor 06l: census units under the variant {args.variant}", inputs):
+---
+>     for l in header(Path(__file__).resolve(), f"levin-phase-floor 06m: census units under the variant {args.variant}", inputs):  # prompt 06m: the title (06l: 06l)
+# ----
+# end 2026-11-06T15:37:09Z
+# exit 1

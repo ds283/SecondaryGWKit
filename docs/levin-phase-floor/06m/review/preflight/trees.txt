@@ -1,0 +1,48 @@
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+0
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e
+5ff8a5e44be775df299af0f1754123578905b86e
+0
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82
+38f6a828d17b41893574f7344a543ebfb1e01e85
+0
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e 1c5336e7 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed 4f4f9ed2 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-b5626ec b5626ecb (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839 ff3e8394 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 38f6a828 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e 5ff8a5e4 (detached HEAD)
+== diff 1c5336e 5ff8a5e4
+ .gitattributes                      |   3 +
+ CLAUDE.md                           |  19 ++-
+ tools/filon_reference.py            | 245 ++++++++++++++++++++++++++++++++----
+ tools/tests/test_filon_reference.py |  88 +++++++++++++
+ 4 files changed, 330 insertions(+), 25 deletions(-)
+== diff 5ff8a5e4 38f6a828
+ AdaptiveLevin/levin_quadrature.py                 | 145 ++++-
+ AdaptiveLevin/tests/test_levin_leaf_values.py     |  35 +-
+ AdaptiveLevin/tests/test_levin_trust_yardstick.py | 653 ++++++++++++++++++++++
+ CLAUDE.md                                         |   4 +-
+ 4 files changed, 819 insertions(+), 18 deletions(-)
+== log 5ff8a5e4..38f6a828
+38f6a828 Write levin-phase-floor 06m's Part B dispatch addendum
+56efc6b9 Restate the leaf-values trust test with 06m's noise yardstick
+427e88c2 Record the review of levin-phase-floor 06m's code and open two issues
+48cf87c0 Compare a slow leaf's delta1 with the signed trust yardstick
+== diff 48cf87c0 38f6a828 code
+ AdaptiveLevin/tests/test_levin_leaf_values.py | 35 +++++++++++++++++++++++----
+ CLAUDE.md                                     |  4 +--
+ 2 files changed, 32 insertions(+), 7 deletions(-)
+5ff8a5e44be775df299af0f1754123578905b86e

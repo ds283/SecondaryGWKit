@@ -1,0 +1,33 @@
+$ bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/status.json\;\ echo\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153\ \|\ wc\ -l\;\ du\ -sk\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153\;\ wc\ -l\ \<\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl\;\ tail\ -2\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/stdout.log\ \|\ cut\ -c1-300\;\ cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/monitor.log\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/regions_\*.pkl\ \|\ wc\ -l\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/worker_\*_bye.json\ \|\ wc\ -l\;\ uptime\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82\ status\ --short\ --ignored\ \|\ wc\ -l
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T15:31:13Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-06T15:29:38+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 62309,
+  "stage": "18560 units recorded; last g-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+150
+4320320	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153
+18560
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+2026-11-06T15:15:55.464712+00:00 past the projection 17640 s: elapsed 17642 s; units 18466/18560 recorded, 1 in flight; P_o 17731 s (finish 2026-11-06T15:17:24.309876+00:00)
+2026-11-06T15:25:55.567498+00:00 past the projection 17640 s: elapsed 18242 s; units 18538/18560 recorded, 1 in flight; P_o 18263 s (finish 2026-11-06T15:26:16.231102+00:00)
+16
+16
+15:31  up 30 days,  6:07, 1 user, load averages: 24.75 17.89 11.37
+0
+# ----
+# end 2026-11-06T15:31:14Z
+# exit 0

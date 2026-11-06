@@ -305,3 +305,87 @@ SHA-256 of the committed module `beaf0e23aabc…`, of the test module `7b5ddd335
 - The board's 06m row records Part A. `docs/OPEN_ISSUES.md` and the board's §3 are unchanged (no
   issue opened).
 - Nothing was written under `var/`; no store, run or lock was touched.
+
+## Part B: the Mac Studio record (appended by the orchestrator, 2026-11-06)
+
+Part B ran on 2026-11-06 on the Mac Studio (`mps026298`), from two worktrees the laptop made:
+- R25 at `5ff8a5e4`, the code commit's parent, whose production code is R24's;
+- R26, Gate M0's K0 run and the census at `38f6a828`, Part B's dispatch addendum, whose code is
+  `48cf87c0`'s.
+
+The Mac Studio orchestrator dispatched a rehearsal agent, then a census agent. It held each at the
+note's three planned stops and checked each with readers of its own. **Every gate holds; no §7 stop
+fired.** The records are in `docs/levin-phase-floor/06m/`:
+- `rehearsal/` and `census/`: each agent's log, verification, issues, scripts and outputs;
+- `review/`: the orchestrator's dispatch briefs, stop records, scripts and before/after hashes.
+
+What stays on the Mac Studio is in `06m/KEPT_ON_MAC_STUDIO.md`; `VERIFICATION.md` §6m is the
+summary.
+
+**The verdicts on the predictions above:**
+
+| | Verdict | Numbers |
+|---|---|---|
+| §4, R1 | **holds** | 864 rows, 0 violations on `total` (largest $4.93\times10^{-6}$ of $e_{25}+e_{26}$) and 0 on the oracle (largest $6.68\times10^{-8}$); no stationary-point row, no non-finite error |
+| §5, Gate M0 | **holds** | 100 of 100 K0 units equal route B's census, 2,110 calls with 0 differences |
+| §5, Gate M | **holds** | 18,560 of 18,560 units `done` and equal to route B's census, 289,482 calls and every region record with 0 differences |
+
+**§4.**
+- **The runs.** R25 `levin-phase-floor-06m-r25-parent-20261106T092420` and R26
+  `levin-phase-floor-06m-r26-signedyardstick-20261106T093937`, both `done`, both `1b332ffa…`. Wall
+  about 12 and 10 min.
+- **R25 against R24:** every value identical, in all seven value tables and all 864
+  `QuadSourceIntegral` rows. The rehearsal is reproducible.
+- **R26 against R25:** outside `QuadSourceIntegral` the seven value tables are identical, with 0
+  differences unclassified. Inside it 48 rows go from unconverged to converged and none goes the
+  other way. Rows at depth 20 fall from 76 to 23, and unconverged Levin calls from 97 to 20.
+  Regions fall from 134,011 to 114,826, in 442 rows, and rise in none.
+- The readers ran on R26 and left it unchanged; the lock was released; the stores are kept.
+
+**§5.**
+- **K0:** `levin-phase-floor-06m-k0-20261106T101118`, six workers, 330 s.
+- **The census:** `levin-phase-floor-06m-census-20261106T102153`, checkpoint `ea5bc3ab…`, 18,465 s
+  (route B 18,340 s, 06g 20,361 s). No unit in error or over budget.
+- **Gate M** included the 21,264 calls in which route B fired. The only excluded key that differs,
+  apart from timing, provenance and `route_06l`, is `cache_built`, the same producer builds listed
+  in another order in 7 units.
+- **So 06l's verdicts are the code's,** by identity (`VERIFICATION.md` §6l): L1, C1, C2, H1, S1 and
+  K1 hold, and L2 fails as scored.
+- **The flag's cost** (descriptive): outside the 720, 114 unconverged group calls in 84 units, 104
+  within their request (each with an untrusted leaf at `depth_max`), 10 `node_limited` at most
+  1.048× over, largest share of a row's `total_abserr` 4.73 %. 06g's census has 1,632 in 946 units.
+  Group-call regions 1,993,637, route B's exactly and 0.838 of 06g's.
+- **Levin leaves with $\Delta_1/\phi_P > 10$:** outside the 720 none is trusted on the noise clause
+  and none is returned untrusted. The records cannot separate node rounding from resolution, so
+  `[06m-levin-floor-misses-node-rounding-far-from-the-origin]` stays with 07.
+
+**Deviations in Part B.** The rehearsal agent logged 8 and the census agent 15, in their own logs;
+the Mac Studio orchestrator accepted each:
+- `STRUCTURALLY REQUIRED`: the job-name prefix normalised for R25 against R24, and the census
+  harness's tree, paths, route B index, comparison and launchers;
+- `UNINTENDED DRIFT`, none with an effect: a file read in two parts; a `<( )` check re-run under
+  `sh`; one name-only `ls -d var/levin-phase-floor-07*`, which opened nothing; a broken line caught
+  by `ast.parse` before launch; three log times corrected; `descriptive_06m.py` changed after its
+  first run, with the first output kept in `census/state/superseded/` and everything recomputed, not
+  re-stamped;
+- the rest `IMPLEMENTATION CHOICE`.
+
+**Observations not acted on** (both agents' `issues.md`; neither opened an issue):
+- 05's `classify_non_qsi.py` reads label differences as `label` only when the two runs share a job
+  name;
+- the readers' `random.sample` is unseeded, as 06g recorded;
+- the census harness's producer cache lists builds in completion order (`cache_built`, 7 units);
+- `budget_s` is excluded from the comparison only because its name ends in `_s`. It is 300
+  everywhere.
+
+**The load.** System services (WindowServer, ChronoSync, fileproviderd, Spotlight) held the load
+average at about 27 during R25 and 25–37 at the census's end. No unit went over budget. The cost
+table uses regions, which the load cannot move.
+
+**On the laptop:** the 393 files copied back and the K0, R25 and R26 run directories match by
+SHA-256. R1 was re-scored exactly from `qsi_rows.csv`, and the flag table outside the 720 was
+re-counted exactly from the descriptive CSVs, with every figure the same.
+
+**The user's rulings at the records commit** (the board's Decisions, **06m results**):
+`[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]` closes, and
+`[06m-calls-flagged-unconverged-within-their-request]` is opened and assigned to prompt 08.

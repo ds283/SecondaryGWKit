@@ -320,3 +320,63 @@ pushed, detached and with no venv: `SecondaryGWKit-lpf06m-5ff8a5e` and
 which moves no working tree. Then the Mac Studio orchestrator session is started in the code
 worktree, through the saved `MacStudio` connection, with this note as its brief. Its folder must be
 trusted in the app first.
+
+### B.2 Addendum, 2026-11-06: Part B's run, review and landing
+
+**Dispatch.** On the user's word (*"Please go ahead with Part B on the Mac Studio"*), the laptop
+checked the Mac Studio, made the worktrees `SecondaryGWKit-lpf06m-5ff8a5e` and
+`SecondaryGWKit-lpf06m-38f6a82` (detached, no venv, after a fetch that moved no working tree), and
+started an orchestrator session in the second through the saved `MacStudio` connection, with this
+note as its brief.
+- **What the laptop checked:**
+  - the lock was free, with no Ray process;
+  - no run was `running` or stale;
+  - there was no `var/levin-phase-floor-06m*`;
+  - 79 GiB was free.
+- **The load** was about 8 on 10 cores at dispatch and peaked at about 27 during R25. It came from
+  system services (WindowServer, ChronoSync, fileproviderd, Spotlight), not from a job. It was
+  relayed to the user, and was not a stop. It was 6.1 at the census's launch and 25–37 at its end.
+  No unit went over budget.
+
+**The run.** One rehearsal agent, then one census agent, each held at the planned stops:
+- **Stop 1, after R25, R26 and the value comparisons.**
+  - R25 `levin-phase-floor-06m-r25-parent-20261106T092420` and R26
+    `-r26-signedyardstick-20261106T093937`, both `done` and `1b332ffa…`.
+  - The orchestrator's own whole-row comparison found R25 equal to R24 in all 143,831 fields.
+  - 05's classifier found R26 equal to R25 outside `QuadSourceIntegral`.
+  - R1, re-scored in exact arithmetic: 0 of 864 on `total` (largest 4.93e-6) and on the oracle
+    (6.68e-8).
+  - The readers then ran on R26, and the lock was released at 10:02 with no Ray process left.
+- **Stop 2, after Gate M0.** `-k0-20261106T101118`: 100 of 100 units equal route B's census. The
+  orchestrator re-ran two units in which route B fired heavily, on both parent kinds
+  (`g-1e-7-3-34738`, `g-1e-8-2-34906`). Its own comparator, `gate_m_orchestrator.py`, found them and
+  the agent's whole K0 output equal to route B's.
+- **Stop 3, after the census.** `-census-20261106T102153`: `done`, 18,560 of 18,560 units, none in
+  error or over budget, 18,465 s, checkpoint `ea5bc3ab…`. Then Gate M was scored, first and alone.
+  The orchestrator's comparator found all 18,560 units and 289,482 calls equal to route B's. Its own
+  flag-cost reader agreed with the agent's table in every figure.
+- **The inputs:** the scratch copy, R23's and R24's stores and run directories, route B's census and
+  06g's census were byte-identical before and after.
+
+**The review on the laptop.**
+- The 393 files of `var/levin-phase-floor-06m/` without pickles, files over 2 MB or the readers'
+  extract were copied back, as were the K0, R25 and R26 run directories. All match the Mac Studio's
+  SHA-256.
+- R1 was re-scored exactly from `qsi_rows.csv`'s hex columns, and the flag table outside the 720 was
+  re-counted exactly from the descriptive CSVs. Every figure is the same.
+- The records are in `docs/levin-phase-floor/06m/{rehearsal,census,review}/`, with
+  `KEPT_ON_MAC_STUDIO.md`, `VERIFICATION.md` §6m, and the log's Part B record.
+
+**Deviations.** The rehearsal agent logged 8 and the census agent 15, each classified and accepted
+by the Mac Studio orchestrator. The unintended drifts had no effect. One was a name-only
+`ls -d var/levin-phase-floor-07*`, which opened nothing in 07's saved work; no stash was touched.
+
+**The rulings** (the board's Decisions, **06m results**):
+- *"`[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]` - yes close this"*: closed
+  (board §4).
+- *"`[06m-calls-flagged-unconverged-within-their-request]` - yes open, this; … if that is prompt 08,
+  we can look at it there."*: opened (board §3) and assigned to 08, whose charter already holds
+  what `total_converged` means.
+
+**Left as it is, until the user says otherwise:** the R25 and R26 stores, the census run directory
+(07's "before"), and both 06m worktrees on the Mac Studio.

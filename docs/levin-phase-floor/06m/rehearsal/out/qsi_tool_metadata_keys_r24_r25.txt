@@ -1,0 +1,5 @@
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/rehearsal/out/store_value_diff_r24_r25.json d9445335767a0348b9ca99927f5572de32bf198d13fedb198c2d7b72360d64f4
+tool identical flag: False not_compared: []
+QSI rows: identical 0 differ 864 columns_only_in_a [] columns_only_in_b []
+example metadata entry fields: ['keys', 'kind']
+leaf names of differing metadata keys (count): {'elapsed': 13177, 'compute_time': 1728}

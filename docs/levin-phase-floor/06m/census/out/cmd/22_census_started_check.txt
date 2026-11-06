@@ -1,0 +1,83 @@
+$ bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/status.json\;\ echo\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153\;\ echo\ \'==\ ps\'\;\ ps\ -o\ pid\,ppid\,etime\,command\ -g\ \$\(ps\ -o\ pgid=\ -p\ 62304\ \|\ tr\ -d\ \'\ \'\)\ \|\ cut\ -c1-200\;\ echo\ \'==\ stdout\ head\'\;\ head\ -c\ 1500\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/stdout.log\;\ echo\;\ grep\ -o\ \'\"variant\":\ \[\^\,\]\*\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/stdout.log\ \|\ head\ -2\;\ cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/worker_\*_hello.json\ 2\>/dev/null\ \|\ grep\ -o\ \'\"levin_quadrature_sha256\":\ \"\[0-9a-f\]\*\"\\\|\"variant_06k\":\ null\'\ \|\ sort\ \|\ uniq\ -c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:21:57Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-06T10:21:53+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 62309,
+  "stage": "started worker 1e-7-k2_302 (1160 units)",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 18560
+}
+
+manifest.json
+regions_1e-7-k0_101.pkl
+regions_1e-7-k0_202.pkl
+regions_1e-7-k1_102.pkl
+regions_1e-7-k1_301.pkl
+regions_1e-7-k2_2.pkl
+regions_1e-7-k2_302.pkl
+spec_1e-7-k0_101.json
+spec_1e-7-k0_202.json
+spec_1e-7-k1_102.json
+spec_1e-7-k1_301.json
+spec_1e-7-k2_2.json
+spec_1e-7-k2_302.json
+status.json
+stderr.log
+stdout.log
+worker_1e-7-k0_101_context.json
+worker_1e-7-k0_101_hello.json
+worker_1e-7-k0_101_levin_logging.json
+worker_1e-7-k0_101_store.json
+worker_1e-7-k0_101.log
+worker_1e-7-k0_202_context.json
+worker_1e-7-k0_202_hello.json
+worker_1e-7-k0_202_levin_logging.json
+worker_1e-7-k0_202_store.json
+worker_1e-7-k0_202.log
+worker_1e-7-k1_102_context.json
+worker_1e-7-k1_102_hello.json
+worker_1e-7-k1_102_levin_logging.json
+worker_1e-7-k1_102_store.json
+worker_1e-7-k1_102.log
+worker_1e-7-k1_301_context.json
+worker_1e-7-k1_301_hello.json
+worker_1e-7-k1_301_levin_logging.json
+worker_1e-7-k1_301_store.json
+worker_1e-7-k1_301.log
+worker_1e-7-k2_2_context.json
+worker_1e-7-k2_2_hello.json
+worker_1e-7-k2_2_levin_logging.json
+worker_1e-7-k2_2_store.json
+worker_1e-7-k2_2.log
+worker_1e-7-k2_302_context.json
+worker_1e-7-k2_302_hello.json
+worker_1e-7-k2_302_levin_logging.json
+worker_1e-7-k2_302_store.json
+worker_1e-7-k2_302.log
+== ps
+  PID  PPID ELAPSED COMMAND
+62304     1   00:04 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_census.py --run-dir /Use
+62309 62304   00:04 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/cens
+62314 62309   00:04 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/cens
+62315 62309   00:04 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/cens
+62316 62309   00:04 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/cens
+62317 62309   00:04 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/cens
+62318 62309   00:04 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/cens
+62319 62309   00:04 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/cens
+== stdout head
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_census.py", "script_sha256": "280fe637728998dddf349a3aa12e40cc6cc417b231fc92bf0948b41a03b31362", "scripts_sha256": {"run_census.py": "280fe637728998dddf349a3aa12e40cc6cc417b231fc92bf0948b41a03b31362", "worker.py": "5da8e1718b7d14111ee5787338d43499a9fca0ec07a75d88d1a986c2e0fb57d1", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "0460f9775f123c74a26d82ac8fe157ca299fe10a7182161cd7e8ef7b1a8503c6", "launch.py": "d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b", "variant_loader.py": "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f"}, "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417", "w2_capture_sha256": null, "tree": "g", "trees": {"g": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82", "38f6a828d17b41893574f7344a543ebfb1e01e85"]}, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 62309, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/le
+"variant": null
+      6 "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6"
+      6 "variant_06k": null
+# ----
+# end 2026-11-06T10:21:58Z
+# exit 0

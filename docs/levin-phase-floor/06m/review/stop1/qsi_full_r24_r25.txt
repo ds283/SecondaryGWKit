@@ -1,0 +1,5 @@
+# qsi_full_compare.py sha256 34eded4d480595f9001e3ad27f8bc69de804a0113af63bb8e934f9126f3b9f29
+# A var/datastores/levin-phase-floor-06g-r24.sqlite
+# B var/datastores/levin-phase-floor-06m-r25.sqlite
+rows A 864 B 864; in one only 0
+fields compared 143831; differing 0; rows with any difference 0; rows whose field sets differ 0

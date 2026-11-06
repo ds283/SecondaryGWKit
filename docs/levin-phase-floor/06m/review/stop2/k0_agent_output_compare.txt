@@ -1,0 +1,58 @@
+# gate_m_orchestrator.py sha256 9f5d1c2049c5001d4e0667a66af69e1b11fa02696c509b3c5383f445d8457866
+units_compared 100
+calls_compared 2110
+unit_pickle_records_compared 100
+units_differing 0
+not done 0 missing 0 no tree-module evidence 0
+differing paths (not excluded): {}
+excluded differences by class: {'timing': 15, 'provenance': 31, 'instrument': 3}
+  excluded instrument      566  data.calls[].route_06l
+  excluded instrument     1544  data.other_calls[].route_06l
+  excluded instrument     2110  pickle.route_06l[].route_06l
+  excluded provenance       95  data.cache_built
+  excluded provenance      100  data.modules.counts_by_root.own tree
+  excluded provenance      100  data.modules.counts_by_root.variant
+  excluded provenance      100  data.modules.files.AdaptiveLevin.levin_quadrature
+  excluded provenance      100  data.modules.files.BesselPhaseGroup (QuadSourceIntegral's)
+  excluded provenance      100  data.modules.files.ComputeTargets
+  excluded provenance      100  data.modules.files.ComputeTargets.GkSource
+  excluded provenance      100  data.modules.files.ComputeTargets.GkSourcePolicyData
+  excluded provenance      100  data.modules.files.ComputeTargets.GkWKBIntegration
+  excluded provenance      100  data.modules.files.ComputeTargets.QuadSource
+  excluded provenance      100  data.modules.files.ComputeTargets.QuadSourceIntegral
+  excluded provenance      100  data.modules.files.ComputeTargets.TkSourceFunctions
+  excluded provenance      100  data.modules.files.ComputeTargets.TkWKBIntegration
+  excluded provenance      100  data.modules.files.ComputeTargets.primitive_phase
+  excluded provenance      100  data.modules.files.LiouvilleGreen.bessel_phase
+  excluded provenance      100  data.modules.files.LiouvilleGreen.three_bessel_integrals
+  excluded provenance      100  data.modules.files.Quadrature.integrators.WKB_phase_function
+  excluded provenance      100  data.modules.files.StoreFixtures
+  excluded provenance      100  data.modules.files.WKB_phase_function (the producers' remote's function)
+  excluded provenance      100  data.modules.files.main.py
+  excluded provenance      100  data.modules.files.theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)
+  excluded provenance      100  data.modules.n_own_tree
+  excluded provenance      100  data.pickle
+  excluded provenance       97  data.pickle_length
+  excluded provenance      100  data.pickle_offset
+  excluded provenance      100  data.pickle_record_sha256
+  excluded provenance      100  data.scripts_sha256.prov.py
+  excluded provenance      100  data.tree_head
+  excluded provenance      100  data.worker
+  excluded provenance      100  data.worker_pid
+  excluded provenance      100  data.worker_tree
+  excluded timing          100  data.analytic_06h.seconds
+  excluded timing          566  data.calls[].elapsed
+  excluded timing          100  data.cc_floor_s
+  excluded timing          100  data.checked_06g_s
+  excluded timing          100  data.declared_06h_s
+  excluded timing           99  data.deep_lines.seconds
+  excluded timing         1544  data.other_calls[].elapsed
+  excluded timing          100  data.rebuild_s
+  excluded timing          100  data.result.compute_time
+  excluded timing           50  data.scan_s
+  excluded timing           50  data.w3.seconds
+  excluded timing          100  data.wall_s
+  excluded timing          566  pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed
+  excluded timing          100  pickle.result_full.compute_time
+  excluded timing          293  pickle.scan[].seconds
+VERDICT ALL EQUAL

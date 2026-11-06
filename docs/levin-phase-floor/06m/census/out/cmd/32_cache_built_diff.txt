@@ -1,0 +1,50 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B state/cache_built_diff_06m.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T15:32:48Z
+# ----
+g-1e-7-2-32814 worker 1e-7-k2_302
+   m: {'kind': 'producers_T', 'mode_serial': 1}
+   B: {'kind': 'producers_T', 'mode_serial': 302}
+   m: {'kind': 'producers_T', 'mode_serial': 302}
+   B: {'kind': 'producers_T', 'mode_serial': 1}
+   lengths 5 5
+g-1e-7-1-20254 worker 1e-7-k1_102
+   m: {'kind': 'producers_T', 'mode_serial': 1}
+   B: {'kind': 'producers_T', 'mode_serial': 102}
+   m: {'kind': 'producers_T', 'mode_serial': 102}
+   B: {'kind': 'producers_T', 'mode_serial': 1}
+   lengths 5 5
+g-1e-7-0-10168 worker 1e-7-k0_202
+   m: {'kind': 'producers_T', 'mode_serial': 202}
+   B: {'kind': 'producers_T', 'mode_serial': 1}
+   m: {'kind': 'producers_T', 'mode_serial': 1}
+   B: {'kind': 'producers_T', 'mode_serial': 202}
+   lengths 5 5
+g-1e-8-2-32862 worker 1e-8-k2_2
+   m: {'kind': 'producers_T', 'mode_serial': 2}
+   B: {'kind': 'producers_T', 'mode_serial': 1}
+   m: {'kind': 'producers_T', 'mode_serial': 1}
+   B: {'kind': 'producers_T', 'mode_serial': 2}
+   lengths 5 5
+g-1e-8-2-32814 worker 1e-8-k2_302
+   m: {'kind': 'producers_T', 'mode_serial': 1}
+   B: {'kind': 'producers_T', 'mode_serial': 302}
+   m: {'kind': 'producers_T', 'mode_serial': 302}
+   B: {'kind': 'producers_T', 'mode_serial': 1}
+   lengths 5 5
+g-1e-8-1-20254 worker 1e-8-k1_102
+   m: {'kind': 'producers_T', 'mode_serial': 102}
+   B: {'kind': 'producers_T', 'mode_serial': 1}
+   m: {'kind': 'producers_T', 'mode_serial': 1}
+   B: {'kind': 'producers_T', 'mode_serial': 102}
+   lengths 5 5
+g-1e-8-1-20086 worker 1e-8-k1_301
+   m: {'kind': 'producers_T', 'mode_serial': 1}
+   B: {'kind': 'producers_T', 'mode_serial': 301}
+   m: {'kind': 'producers_T', 'mode_serial': 301}
+   B: {'kind': 'producers_T', 'mode_serial': 1}
+   lengths 5 5
+# ----
+# end 2026-11-06T15:32:49Z
+# exit 0

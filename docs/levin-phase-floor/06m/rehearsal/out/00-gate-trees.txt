@@ -1,0 +1,120 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-06T09:23:37Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e; C=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82; for t in $M $P $C; do echo "== $t"; git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t rev-parse --abbrev-ref HEAD; echo "-- status --short --ignored:"; git --no-optional-locks -C $t status --short --ignored; done; echo "== main status --short:"; git --no-optional-locks -C $M status --short; echo "== worktree list"; git --no-optional-locks -C $M worktree list; echo "== 48cf87c0^"; git --no-optional-locks -C $M rev-parse 48cf87c0^; echo "== log 5ff8a5e4..38f6a828"; git --no-optional-locks -C $M log --oneline 5ff8a5e4..38f6a828; echo "== diff --stat 5ff8a5e4 38f6a828 outside docs/prompts"; git --no-optional-locks -C $M diff --stat 5ff8a5e4 38f6a828 -- . ":!docs" ":!prompts"; echo "== diff --stat 1c5336e 5ff8a5e4 outside docs/prompts"; git --no-optional-locks -C $M diff --stat 1c5336e 5ff8a5e4 -- . ":!docs" ":!prompts"; echo "== file hashes P then C"; for f in RunDrivers/quadsource_atol_sweep.py main.py ComputeTargets/QuadSourceIntegral.py LiouvilleGreen/three_bessel_integrals.py AdaptiveLevin/levin_quadrature.py tools/store_value_diff.py; do shasum -a 256 $P/$f $C/$f; done
+# output:
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+handover-remedial
+-- status --short --ignored:
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+!! CosmologyModels/__pycache__/
+!! Datastore/
+!! GkSource-out/
+!! LiouvilleGreen/.DS_Store
+!! LiouvilleGreen/__pycache__/
+!! LiouvilleGreen/tests/.DS_Store
+!! LiouvilleGreen/tests/__pycache__/
+!! LiouvilleGreen/tests/test_3bessel_analytic/
+!! LiouvilleGreen/tests/three_bessel_debug/
+!! MetadataConcepts/__pycache__/
+!! ObjectFactories/__pycache__/
+!! Omega_GW_sensitivity.pdf
+!! Omega_GW_sensitivity.png
+!! Quadrature/__pycache__/
+!! Quadrature/integrators/__pycache__/
+!! Quadrature/supervisors/__pycache__/
+!! RayTools/
+!! StoreFixtures/__pycache__/
+!! Units/__pycache__/
+!! __pycache__/
+!! config/__pycache__/
+!! docs/handover/a3-v2/findings/__pycache__/
+!! profile-db.sqlite
+!! test-db-qcd-shard0000.sqlite
+!! test-db-qcd-shard0001.sqlite
+!! test-db-qcd-shard0002.sqlite
+!! test-db-qcd-shard0003.sqlite
+!! test-db-qcd-shard0004.sqlite
+!! test-db-qcd-shard0005.sqlite
+!! test-db-qcd-shard0006.sqlite
+!! test-db-qcd-shard0007.sqlite
+!! test-db-qcd-shard0008.sqlite
+!! test-db-qcd-shard0009.sqlite
+!! test-db-qcd-shard0010.sqlite
+!! test-db-qcd-shard0011.sqlite
+!! test-db-qcd-shard0012.sqlite
+!! test-db-qcd-shard0013.sqlite
+!! test-db-qcd-shard0014.sqlite
+!! test-db-qcd-shard0015.sqlite
+!! test-db-qcd-shard0016.sqlite
+!! test-db-qcd-shard0017.sqlite
+!! test-db-qcd-shard0018.sqlite
+!! test-db-qcd-shard0019.sqlite
+!! test-db-qcd.sqlite
+!! thirdparty/__pycache__/
+!! three_bessel_debug/
+!! tools/__pycache__/
+!! var/
+!! venv/
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e
+5ff8a5e44be775df299af0f1754123578905b86e
+HEAD
+-- status --short --ignored:
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82
+38f6a828d17b41893574f7344a543ebfb1e01e85
+HEAD
+-- status --short --ignored:
+== main status --short:
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-1c5336e 1c5336e7 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-4f4f9ed 4f4f9ed2 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-b5626ec b5626ecb (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06g-ff3e839 ff3e8394 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 38f6a828 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e 5ff8a5e4 (detached HEAD)
+== 48cf87c0^
+5ff8a5e44be775df299af0f1754123578905b86e
+== log 5ff8a5e4..38f6a828
+38f6a828 Write levin-phase-floor 06m's Part B dispatch addendum
+56efc6b9 Restate the leaf-values trust test with 06m's noise yardstick
+427e88c2 Record the review of levin-phase-floor 06m's code and open two issues
+48cf87c0 Compare a slow leaf's delta1 with the signed trust yardstick
+== diff --stat 5ff8a5e4 38f6a828 outside docs/prompts
+ AdaptiveLevin/levin_quadrature.py                 | 145 ++++-
+ AdaptiveLevin/tests/test_levin_leaf_values.py     |  35 +-
+ AdaptiveLevin/tests/test_levin_trust_yardstick.py | 653 ++++++++++++++++++++++
+ CLAUDE.md                                         |   4 +-
+ 4 files changed, 819 insertions(+), 18 deletions(-)
+== diff --stat 1c5336e 5ff8a5e4 outside docs/prompts
+ .gitattributes                      |   3 +
+ CLAUDE.md                           |  19 ++-
+ tools/filon_reference.py            | 245 ++++++++++++++++++++++++++++++++----
+ tools/tests/test_filon_reference.py |  88 +++++++++++++
+ 4 files changed, 330 insertions(+), 25 deletions(-)
+== file hashes P then C
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e/RunDrivers/quadsource_atol_sweep.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/RunDrivers/quadsource_atol_sweep.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e/main.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/main.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e/ComputeTargets/QuadSourceIntegral.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/ComputeTargets/QuadSourceIntegral.py
+fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e/LiouvilleGreen/three_bessel_integrals.py
+fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/LiouvilleGreen/three_bessel_integrals.py
+d89c959e1cd81055aaf0f9f68a5fc4d488a246e53fbc972123a2a0d55efe1e59  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e/AdaptiveLevin/levin_quadrature.py
+beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/AdaptiveLevin/levin_quadrature.py
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e/tools/store_value_diff.py
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/tools/store_value_diff.py
+# exit: 0
+# end: 2026-11-06T09:23:41Z

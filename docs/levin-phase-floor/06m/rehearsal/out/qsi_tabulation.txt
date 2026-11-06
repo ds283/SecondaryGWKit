@@ -1,0 +1,141 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/rehearsal/scripts/tabulate_qsi_signedyardstick.py sha256 3a4d8748e6f911a5480e4f7189a482037a985f19ebd5f3b3fa7b92b877a2a3d5
+# store file var/datastores/levin-phase-floor-06m-r25-shard0000.sqlite sha256 bc18fba07e524b426d12ad2389265c1a4e9577f0d26f3bd94e396ac6778083b5
+# store file var/datastores/levin-phase-floor-06m-r25-shard0001.sqlite sha256 8385fc50d613374d787c05253585895b2eb6615092ae1186f4533ce351bffa5c
+# store file var/datastores/levin-phase-floor-06m-r25-shard0002.sqlite sha256 d89767a2bfaffaeec039103d7573596d90c80fcb9f2f0c7f2ca8ecc1fd9e0947
+# store file var/datastores/levin-phase-floor-06m-r25-shard0003.sqlite sha256 e558fb4469bd5c5d9a2e17907938a5c41828b7faff536e39a9df840c8ad00e88
+# store file var/datastores/levin-phase-floor-06m-r25.sqlite sha256 d74ac31d60326e2f9f294eec3a2581606747f8d31ccc52f2a4fbf76ce012a6fb
+# store file var/datastores/levin-phase-floor-06m-r26-shard0000.sqlite sha256 abca59fcb601585049e7f8eeea023fa714f0375804b7793149217204f06e097b
+# store file var/datastores/levin-phase-floor-06m-r26-shard0001.sqlite sha256 6753c62af4d19affe40152c17a500cdcc673612d764795032d20560d54909ede
+# store file var/datastores/levin-phase-floor-06m-r26-shard0002.sqlite sha256 bdfcf92688e3b87add4f4d94b86bfd149d4a15b6e2628e4883336fa9e9b81e01
+# store file var/datastores/levin-phase-floor-06m-r26-shard0003.sqlite sha256 0cbf7425df82429940b46bdf86395c7751dad58c19699372bb0e5ddd8a332666
+# store file var/datastores/levin-phase-floor-06m-r26.sqlite sha256 e90e26c2e23cdba61500c5c391fc39288016d13540423b66247f9473a939e272
+# store_value_diff JSON /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/rehearsal/out/store_value_diff.json sha256 d67e696f3bd6ed78b69ca03eb7e44ca4dee6ccb0d7cd01bbc3b64239811d21dc
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e HEAD 5ff8a5e44be775df299af0f1754123578905b86e
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85
+# R25 run levin-phase-floor-06m-r25-parent-20261106T092420: state done, exit 0, fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+# R26 run levin-phase-floor-06m-r26-signedyardstick-20261106T093937: state done, exit 0, fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+
+rows: R25 864, R26 864; same (k,q,r,z_response) set: True
+columns equal: True; 48 columns
+tolerances (log10 atol, log10 rtol) R25: [((-32.0, -7.0), 864)]; R26: [((-32.0, -7.0), 864)]
+tolerances equal row by row: True
+column kinds: timing: ['WKB_Levin_elapsed', 'analytic_compute_time', 'compute_time', 'numeric_quad_compute_time', 'numeric_quad_max_RHS_time', 'numeric_quad_mean_RHS_time', 'numeric_quad_min_RHS_time']; label: ['label']; identity: ['Tq_WKB_serial', 'Tq_numeric_serial', 'Tr_WKB_serial', 'Tr_numeric_serial', 'atol_serial', 'data_serial', 'k_wavenumber_exit_serial', 'model_serial', 'policy_serial', 'q_wavenumber_exit_serial', 'quad_policy_serial', 'r_wavenumber_exit_serial', 'rtol_serial', 'serial', 'source_serial', 'timestamp', 'z_response_serial', 'z_source_max_serial']; counter: ['WKB_Levin_SVD_errors', 'WKB_Levin_chebyshev_min_order', 'WKB_Levin_evaluations', 'WKB_Levin_max_depth', 'WKB_Levin_num_regions', 'WKB_Levin_order_changes', 'WKB_Levin_simple_regions', 'numeric_quad_RHS_evaluations', 'numeric_quad_compute_steps']; value: ['WKB_Levin', 'WKB_phase_spline_chunks', 'analytic_rad', 'b', 'eta_response', 'eta_source_max', 'numeric_quad', 'total', 'total_abserr', 'total_converged', 'total_phase_limited', 'version']
+tool: 864 rows differ, 0 identical, only_in_a 0, only_in_b 0, unmatched 0; its keys equal the stores' set: True
+cross-check of `total` against the tool: 0 mismatches
+
+06a census checkpoint /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl sha256 c13685b4afaf1dad3609fc4c5f56f1a2936ab98f25115ceda1020a300453427a
+06a rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06a/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+06a's stationary-point rows: 720 (of A3 v2's 9280); rehearsal rows among them (physical key equal as floats): 0; rehearsal rows equal to any A3 v2 row: 0
+  rehearsal k [100000.0, 316227.7660168379, 1000000.0]; k shared with A3 v2 [100000.0]; z_response values: rehearsal 96, shared with A3 v2 0
+
+rows whose column/metadata field sets differ between R25 and R26: 0
+rows with a WKB Levin call: 573 (calls R25 3105, R26 3105; rows whose call count differs: 0); with none: 291
+
+== bit-identity (float.hex), every row
+  total bit-identical: 413/864 (rows with a Levin call 122/573, rows with none 291/291)
+  total_abserr bit-identical: 403/864
+  every value field (columns and metadata, timings/labels/identity/counters excluded) bit-identical: 402/864 (rows with a Levin call 111, rows with none 291)
+  rows with no Levin call whose value fields differ: 0
+  analytic_rad bit-identical: 860/864; max |d analytic_rad|/(analytic abserr25+26) 6.677e-08
+  value fields differing, by field (indices folded), rows: {'meta:WKB_Levin.subintervals[].groups[].abserr': 1256, 'meta:WKB_Levin.subintervals[].groups[].value': 1241, 'meta:WKB_Levin.subintervals[].abserr': 526, 'meta:WKB_Levin.subintervals[].value': 518, 'col:total_abserr': 461, 'meta:WKB_Levin.abserr': 461, 'col:total': 451, 'col:WKB_Levin': 451, 'meta:WKB_Levin.subintervals[].groups[].phase_limited': 89, 'meta:WKB_Levin.subintervals[].groups[].converged': 77, 'col:total_converged': 48, 'meta:WKB_Levin.subintervals[].converged': 48, 'meta:WKB_Levin.converged': 48, 'meta:WKB_Levin.subintervals[].phase_limited': 41, 'meta:analytic.abserr': 16, 'meta:WKB_Levin.phase_limited': 14, 'col:total_phase_limited': 14, 'meta:analytic.2pt5.Levin.J2_data.abserr': 5, 'meta:analytic.2pt5.Levin.J3_data.abserr': 4, 'meta:analytic.2pt5.Levin.Y1_data.abserr': 4, 'col:analytic_rad': 4, 'meta:analytic.2pt5.Levin.J2_data.phase_limited': 3, 'meta:analytic.2pt5.Levin.J4_data.abserr': 3, 'meta:analytic.2pt5.Levin.J3_data.phase_limited': 2, 'meta:analytic.0pt5.Levin.Y4_data.abserr': 1, 'meta:analytic.2pt5.Levin.Y2_data.phase_limited': 1, 'meta:analytic.2pt5.Levin.Y2_data.abserr': 1, 'meta:analytic.0pt5.Levin.Y2_data.abserr': 1, 'meta:analytic.0pt5.Levin.J3_data.abserr': 1, 'meta:analytic.2pt5.Levin.Y3_data.abserr': 1, 'meta:analytic.0pt5.Levin.J1_data.abserr': 1}
+
+== R1: |total_26 - total_25| <= total_abserr_25 + total_abserr_26, rows outside 06a's 720 stationary-point rows with both finite
+  rows among 06a's stationary-point rows (tabulated, not scored): 0
+  rows scored (outside them, finite total_abserr in both): 864; violations: 0
+  rows outside them with a non-finite total_abserr, counted separately: none
+  largest |dT|/total_abserr_25 over the scored rows: 9.87047e-06 at k=1e+06 q=100000 r=1e+06 z=573.11465 (total25 0x1.570fd96dfd9b4p-69 total26 0x1.570fd96dff072p-69 abserr25 0x1.1941f1bdc138fp-92 abserr26 0x1.194b57be74495p-92)
+  largest |dT|/total_abserr_26 over the scored rows: 9.86919e-06 at k=1e+06 q=100000 r=1e+06 z=573.11465 (total25 0x1.570fd96dfd9b4p-69 total26 0x1.570fd96dff072p-69 abserr25 0x1.1941f1bdc138fp-92 abserr26 0x1.194b57be74495p-92)
+  |dT|/(abserr25+abserr26) over the finite rows: p0 0, p50 3.3e-09, p90 2.86e-07, p99 2.2e-06, p100 4.93e-06
+  over the finite rows whose total moved: p0 9.04e-10, p50 8.68e-08, p90 5.11e-07, p99 2.68e-06, p100 4.93e-06
+
+== total_abserr and the totals, rows with a Levin call
+  abserr26/abserr25 (both finite, nonzero): p0 1, p50 1, p90 1, p99 1, p100 1
+  |dT|/abserr25: p0 0, p50 9.39e-08, p90 8.88e-07, p99 4.75e-06, p100 9.87e-06
+  |dT|/abserr26: p0 0, p50 9.39e-08, p90 8.88e-07, p99 4.75e-06, p100 9.87e-06
+  |dT|/|T25|: p0 0, p50 7.77e-15, p90 1.32e-13, p99 1.04e-12, p100 2.29e-10
+  abserr26 > abserr25: 445; abserr26 < abserr25: 16
+
+== total_converged, R25 -> R26 (every row)
+  {(0, 1): 48, (0, 0): 19, (1, 1): 797}
+  converged R25 797, R26 845 of 864; Levin calls unconverged R25 97, R26 20
+  rows whose total_converged went converged -> unconverged: 0
+  rows whose total_converged went unconverged -> converged: 48
+    k=100000 q=100000 r=100000 z=250 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 235 -> 167; max depth 20 -> 18; total -0x1.1ef6b184b605fp-59 -> -0x1.1ef6b184b605ap-59; abserr 0x1.3452db7046574p-82 -> 0x1.3452eb79b1c13p-82; R1 holds ratio 3.866e-09
+    k=100000 q=100000 r=100000 z=6904.7189 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 178 -> 159; max depth 20 -> 17; total -0x1.85621fd5aeb33p-55 -> -0x1.85621fd5aeb1cp-55; abserr 0x1.6a4705e03b114p-78 -> 0x1.6a48930b78d09p-78; R1 holds ratio 1.514e-08
+    k=100000 q=316228 r=316228 z=329.64046 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 3 -> 0; regions 268 -> 225; max depth 20 -> 16; total 0x1.a261273149ce2p-62 -> 0x1.a261273149cdcp-62; abserr 0x1.32e291bec17d2p-85 -> 0x1.32e2a69fbbbfdp-85; R1 holds ratio 4.661e-09
+    k=100000 q=316228 r=316228 z=434.65133 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 313 -> 295; max depth 20 -> 18; total 0x1.1c079e986b626p-63 -> 0x1.1c079e986b7a4p-63; abserr 0x1.596c0535bdefbp-86 -> 0x1.596c81c740b5cp-86; R1 holds ratio 2.637e-07
+    k=100000 q=316228 r=316228 z=996.42016 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 206 -> 162; max depth 20 -> 15; total 0x1.0962361f050c0p-60 -> 0x1.0962361f050a9p-60; abserr 0x1.dc9a789b37e46p-84 -> 0x1.dc9ac2cede4a3p-84; R1 holds ratio 2.301e-08
+    k=100000 q=316228 r=316228 z=3994454.7 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 3 -> 0; regions 297 -> 245; max depth 20 -> 14; total -0x1.03f1efc38c20ep-48 -> -0x1.03f1efc38c23dp-48; abserr 0x1.dd2474c89b918p-72 -> 0x1.dd249f22a0bd4p-72; R1 holds ratio 4.697e-08
+    k=100000 q=316228 r=316228 z=5266935.4 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 234 -> 197; max depth 20 -> 17; total -0x1.5c4539a755fe6p-48 -> -0x1.5c4539a755f96p-48; abserr 0x1.2b1167e424967p-71 -> 0x1.2b7ac451a318fp-71; R1 holds ratio 6.373e-08
+    k=100000 q=316228 r=316228 z=9157121.9 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 218 -> 154; max depth 20 -> 15; total -0x1.110c2fc10a5b2p-46 -> -0x1.110c2fc10a5a5p-46; abserr 0x1.1b85b7a49bc4fp-70 -> 0x1.1b85bc97821c3p-70; R1 holds ratio 2.186e-08
+    k=100000 q=1e+06 r=1e+06 z=63088.471 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 415 -> 342; max depth 20 -> 19; total 0x1.5bdcf23c3bf95p-56 -> 0x1.5bdcf23c3bfbep-56; abserr 0x1.dc1f2d3023d4cp-82 -> 0x1.dc20d5e59205ap-82; R1 holds ratio 1.642e-07
+    k=100000 q=1e+06 r=1e+06 z=83186.05 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 768 -> 415; max depth 20 -> 17; total -0x1.5e64c3060fe2ep-59 -> -0x1.5e64c306101a5p-59; abserr 0x1.6bc545e797503p-82 -> 0x1.6bca94f0fac24p-82; R1 holds ratio 5.813e-07
+    k=100000 q=1e+06 r=1e+06 z=3029402.6 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 239 -> 182; max depth 20 -> 16; total -0x1.f911a6d139af6p-51 -> -0x1.f911a6d139b2bp-51; abserr 0x1.84787bc168e6bp-76 -> 0x1.84791f690b492p-76; R1 holds ratio 1.301e-07
+    k=100000 q=1e+06 r=1e+06 z=83668694 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 389 -> 152; max depth 20 -> 15; total -0x1.67a2ec530b501p-48 -> -0x1.67a2ec530b482p-48; abserr 0x1.b852d6aceb7cfp-72 -> 0x1.b853bded377eep-72; R1 holds ratio 1.375e-07
+    k=316228 q=100000 r=316228 z=250 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 429 -> 362; max depth 20 -> 19; total -0x1.607d2ad7de3d9p-65 -> -0x1.607d2ad7de45cp-65; abserr 0x1.29a276550800dp-88 -> 0x1.29a4159ec5a8ap-88; R1 holds ratio 1.049e-07
+    k=316228 q=100000 r=316228 z=3011.9274 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 681 -> 309; max depth 20 -> 14; total -0x1.f331af457f038p-63 -> -0x1.f331af457f8a6p-63; abserr 0x1.21d2c7ae5e13ap-84 -> 0x1.21d60ecd74976p-84; R1 holds ratio 4.438e-07
+    k=316228 q=100000 r=316228 z=6904.7189 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 359 -> 316; max depth 20 -> 16; total 0x1.047e772f3e104p-62 -> 0x1.047e772f3da04p-62; abserr 0x1.9340ee5bbb1e4p-83 -> 0x1.9344ff5a0dc0bp-83; R1 holds ratio 2.649e-07
+    k=316228 q=100000 r=316228 z=9104.2988 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 268 -> 234; max depth 20 -> 16; total -0x1.b34f4c85cb138p-62 -> -0x1.b34f4c85cb82cp-62; abserr 0x1.088f8adab4581p-82 -> 0x1.0890ad44a473ap-82; R1 holds ratio 2.005e-07
+    k=316228 q=100000 r=316228 z=36286.828 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 279 -> 223; max depth 20 -> 16; total 0x1.4689348624ebep-58 -> 0x1.4689348624e8cp-58; abserr 0x1.eeab590058339p-81 -> 0x1.eeadd57096a6dp-81; R1 holds ratio 2.41e-08
+    k=316228 q=100000 r=316228 z=437173.17 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 612 -> 480; max depth 20 -> 15; total 0x1.49a3154df2469p-54 -> 0x1.49a3154df218cp-54; abserr 0x1.00c0bed2cd2c2p-77 -> 0x1.00c3ea3971077p-77; R1 holds ratio 6.806e-07
+    k=316228 q=100000 r=316228 z=12074231 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 226 -> 214; max depth 20 -> 20; total -0x1.022a3fe116abfp-49 -> -0x1.022a3fe116b29p-49; abserr 0x1.abdce11e6047dp-73 -> 0x1.abdd312733dfbp-73; R1 holds ratio 1.181e-07
+    k=316228 q=316228 r=316228 z=3011.9274 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 702 -> 565; max depth 20 -> 18; total -0x1.5b7f55366144dp-62 -> -0x1.5b7f5536612fdp-62; abserr 0x1.ec62a29d9c8fep-86 -> 0x1.ec64f0302679dp-86; R1 holds ratio 3.254e-07
+    k=316228 q=316228 r=316228 z=3971.4126 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 331 -> 292; max depth 20 -> 20; total 0x1.1dccaba1bc8f4p-60 -> 0x1.1dccaba1bc91ap-60; abserr 0x1.60adc8e760384p-84 -> 0x1.60ae5d08fb707p-84; R1 holds ratio 5.138e-08
+    k=316228 q=316228 r=316228 z=20871.228 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 256 -> 235; max depth 20 -> 17; total -0x1.34af567faf825p-58 -> -0x1.34af567faf7fdp-58; abserr 0x1.fd97c7d501488p-82 -> 0x1.fd981733e4853p-82; R1 holds ratio 3.743e-08
+    k=316228 q=316228 r=316228 z=27520.005 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 312 -> 282; max depth 20 -> 13; total 0x1.3b9b5839b3264p-59 -> 0x1.3b9b5839b31edp-59; abserr 0x1.908e828e9f6d3p-83 -> 0x1.908f9782ab459p-83; R1 holds ratio 1.417e-07
+    k=316228 q=316228 r=316228 z=3994454.7 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 4 -> 0; regions 807 -> 559; max depth 20 -> 15; total -0x1.3f24b70e868b7p-54 -> -0x1.3f24b70e85d01p-54; abserr 0x1.38472fa03a052p-77 -> 0x1.385bf9f2b23dep-77; R1 holds ratio 2.289e-06
+    k=316228 q=1e+06 r=1e+06 z=27520.005 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 3 -> 0; regions 460 -> 363; max depth 20 -> 14; total 0x1.695e3df8aff33p-60 -> 0x1.695e3df8afedep-60; abserr 0x1.ab8a8918cb45fp-84 -> 0x1.ab8ab803d62c1p-84; R1 holds ratio 9.48e-08
+    k=316228 q=1e+06 r=1e+06 z=83186.05 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 3 -> 0; regions 758 -> 488; max depth 20 -> 18; total -0x1.3f3a0e3b2b813p-59 -> -0x1.3f3a0e3b2b82bp-59; abserr 0x1.7f102d08327ffp-84 -> 0x1.7f11195a70521p-84; R1 holds ratio 5.975e-08
+    k=316228 q=1e+06 r=1e+06 z=2297505.2 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 347 -> 267; max depth 20 -> 13; total -0x1.0f038b849a53fp-53 -> -0x1.0f038b849a533p-53; abserr 0x1.3ab736d5f66b5p-77 -> 0x1.3ab7e537ab921p-77; R1 holds ratio 1.818e-08
+    k=316228 q=1e+06 r=1e+06 z=3994454.7 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 259 -> 224; max depth 20 -> 15; total -0x1.4e02c5ebde720p-53 -> -0x1.4e02c5ebde7c6p-53; abserr 0x1.cb4eaa470e3efp-79 -> 0x1.cb4ea213026cep-79; R1 holds ratio 6.893e-07
+    k=316228 q=1e+06 r=1e+06 z=20992323 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 534 -> 406; max depth 20 -> 15; total 0x1.04e74f83a6d83p-51 -> 0x1.04e74f83a6bfep-51; abserr 0x1.7c8c35cc8a1c0p-76 -> 0x1.7c8dedb6128d4p-76; R1 holds ratio 9.748e-07
+    k=316228 q=1e+06 r=1e+06 z=83668694 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 213 -> 150; max depth 20 -> 11; total 0x1.c244b90930342p-50 -> 0x1.c244b9093042cp-50; abserr 0x1.6668484ece36ap-73 -> 0x1.6669cdf067053p-73; R1 holds ratio 1.557e-07
+    k=1e+06 q=100000 r=1e+06 z=755.6871 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 494 -> 449; max depth 20 -> 15; total -0x1.0bd24c1c5ec47p-68 -> -0x1.0bd24c1c5e3b5p-68; abserr 0x1.dac356b5cc742p-92 -> 0x1.dad516359b7ddp-92; R1 holds ratio 2.203e-06
+    k=1e+06 q=100000 r=1e+06 z=3011.9274 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 429 -> 330; max depth 20 -> 14; total 0x1.13b06cc89c716p-66 -> 0x1.13b06cc89c561p-66; abserr 0x1.06e0039ca4c82p-89 -> 0x1.06e524084092cp-89; R1 holds ratio 3.963e-07
+    k=1e+06 q=100000 r=1e+06 z=6904.7189 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 328 -> 310; max depth 20 -> 14; total -0x1.c2e51b93d75e3p-66 -> -0x1.c2e51b93d9185p-66; abserr 0x1.34419d4460b90p-88 -> 0x1.3445a9e5f25bep-88; R1 holds ratio 2.736e-06
+    k=1e+06 q=100000 r=1e+06 z=36286.828 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 333 -> 280; max depth 20 -> 16; total 0x1.2273ec635b8cep-64 -> 0x1.2273ec635b59bp-64; abserr 0x1.b50ae2a1d29d7p-87 -> 0x1.b50ff32554b07p-87; R1 holds ratio 4.468e-07
+    k=1e+06 q=100000 r=1e+06 z=144627.71 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 333 -> 281; max depth 20 -> 16; total 0x1.548b54fa61f10p-63 -> 0x1.548b54fa616e7p-63; abserr 0x1.59a463113f51fp-84 -> 0x1.59c793cd8551fp-84; R1 holds ratio 3.602e-07
+    k=1e+06 q=100000 r=1e+06 z=437173.17 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 197 -> 169; max depth 20 -> 13; total 0x1.bbd3abb2f18d0p-61 -> 0x1.bbd3abb2f16f0p-61; abserr 0x1.67fd68e20e452p-83 -> 0x1.681575f9c853ep-83; R1 holds ratio 1.589e-07
+    k=1e+06 q=100000 r=1e+06 z=576439.85 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 468 -> 401; max depth 20 -> 13; total -0x1.3dfe88f2e41ddp-59 -> -0x1.3dfe88f2e38b2p-59; abserr 0x1.2693bef6dc97bp-82 -> 0x1.269dabd7e8cd2p-82; R1 holds ratio 1.899e-06
+    k=1e+06 q=100000 r=1e+06 z=12074231 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 459 -> 418; max depth 20 -> 17; total 0x1.a13c36141ccc8p-63 -> 0x1.a13c3615b6550p-63; abserr 0x1.45db048d26b66p-78 -> 0x1.45e6b3f1a9611p-78; R1 holds ratio 4.794e-06
+    k=1e+06 q=316228 r=1e+06 z=329.64046 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 192 -> 164; max depth 20 -> 15; total -0x1.140d35da0ef5dp-71 -> -0x1.140d35da0ea86p-71; abserr 0x1.ee9a1f3e74ddep-93 -> 0x1.ee9b2641e199fp-93; R1 holds ratio 2.986e-07
+    k=1e+06 q=316228 r=1e+06 z=996.42016 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 454 -> 310; max depth 20 -> 15; total 0x1.61ded052c7c6ep-68 -> 0x1.61ded052c7cd1p-68; abserr 0x1.2945e17615dc5p-91 -> 0x1.29478e4dee464p-91; R1 holds ratio 7.94e-08
+    k=1e+06 q=316228 r=1e+06 z=1313.8416 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 334 -> 285; max depth 20 -> 16; total 0x1.f626e28dbe7bfp-68 -> 0x1.f626e28dbeac8p-68; abserr 0x1.b74df51ce05d6p-91 -> 0x1.b75a39ef6cbadp-91; R1 holds ratio 4.217e-07
+    k=1e+06 q=316228 r=1e+06 z=3994454.7 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 439 -> 352; max depth 20 -> 16; total 0x1.57b55d60a9e15p-56 -> 0x1.57b55d60a97d9p-56; abserr 0x1.1bfac3bea4c58p-79 -> 0x1.1c0c4b44f22c9p-79; R1 holds ratio 1.34e-06
+    k=1e+06 q=316228 r=1e+06 z=9157121.9 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 385 -> 339; max depth 20 -> 15; total -0x1.dafa4a6f00f17p-56 -> -0x1.dafa4a6f00b68p-56; abserr 0x1.0cb8672ed3da0p-78 -> 0x1.0cba81f64b94cp-78; R1 holds ratio 4.183e-07
+    k=1e+06 q=1e+06 r=1e+06 z=3971.4126 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 904 -> 730; max depth 20 -> 18; total -0x1.859709cf52dbcp-66 -> -0x1.859709cf52cf0p-66; abserr 0x1.55db90ccf71dap-89 -> 0x1.55e05e9cfa6f2p-89; R1 holds ratio 1.423e-07
+    k=1e+06 q=1e+06 r=1e+06 z=27520.005 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 257 -> 242; max depth 20 -> 14; total -0x1.f10e844fa3ddfp-63 -> -0x1.f10e844fa3eb4p-63; abserr 0x1.80bfe1ca7423fp-86 -> 0x1.80bfff42ed2d6p-86; R1 holds ratio 1.32e-07
+    k=1e+06 q=1e+06 r=1e+06 z=144627.71 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 392 -> 317; max depth 20 -> 16; total -0x1.1cd3124bc2c1bp-60 -> -0x1.1cd3124bc2cd0p-60; abserr 0x1.f5a9a21932211p-84 -> 0x1.f5ab38c2f203ap-84; R1 holds ratio 1.72e-07
+    k=1e+06 q=1e+06 r=1e+06 z=1002201.4 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 1 -> 0; regions 748 -> 558; max depth 20 -> 17; total -0x1.b0a97a5e1b222p-59 -> -0x1.b0a97a5e1b578p-59; abserr 0x1.880ac956a76e0p-82 -> 0x1.880fff963be8ap-82; R1 holds ratio 5.193e-07
+    k=1e+06 q=1e+06 r=1e+06 z=83668694 (log10 atol, rtol) (-32.0, -7.0): Levin calls unconverged 2 -> 0; regions 519 -> 200; max depth 20 -> 15; total 0x1.bb2f32117882ep-55 -> 0x1.bb2f3211783eap-55; abserr 0x1.2394ee3b1bcc3p-76 -> 0x1.2395427bc135bp-76; R1 holds ratio 2.232e-07
+  total_phase_limited R25 -> R26: {(1, 1): 464, (0, 0): 386, (1, 0): 14}
+  Levin calls phase-limited R25 1411, R26 1322
+
+== region counts and maximum depths (rows with a Levin call)
+  WKB_Levin_num_regions summed: R25 134011, R26 114826; evaluations R25 1068983, R26 915503
+  rows: regions equal 131, more in R26 0, fewer in R26 442
+  regions R26/R25 per row: p0 0.385, p50 0.929, p90 1, p99 1, p100 1
+  WKB_Levin_max_depth R25: {0: 4, 1: 1, 2: 1, 3: 9, 4: 2, 5: 7, 6: 26, 7: 42, 8: 23, 9: 23, 10: 15, 11: 11, 12: 20, 13: 32, 14: 57, 15: 64, 16: 56, 17: 53, 18: 31, 19: 20, 20: 76}
+  WKB_Levin_max_depth R26: {0: 4, 1: 1, 2: 1, 3: 9, 4: 2, 5: 7, 6: 26, 7: 46, 8: 28, 9: 22, 10: 25, 11: 23, 12: 30, 13: 60, 14: 87, 15: 82, 16: 53, 17: 23, 18: 14, 19: 7, 20: 23}
+  rows at depth_max (20): R25 76, R26 23
+  max depth: equal 298, deeper in R26 0, shallower 275
+  analytic-block regions summed: R25 29228, R26 29199 (of 10072 blocks); blocks phase-limited R25 3768, R26 3762; blocks unconverged R25 0, R26 0
+
+== by tolerance, rows with a Levin call
+  (log10 atol, log10 rtol) (-32.0, -7.0): rows 573; total moved 451; conv R25 506 R26 554; R1 violations 0; non-finite 0; regions R25 134011 R26 114826; depth20 R25 76 R26 23
+
+== R1 on the oracle: |rad_26 - rad_25| <= analytic.abserr_25 + analytic.abserr_26, rows outside 06a's 720 stationary-point rows with both finite
+  rows among 06a's stationary-point rows (tabulated, not scored): 0
+  rows scored: 864; violations: 0
+  rows outside them with a non-finite or absent oracle value or error, counted separately: none
+  analytic_rad bit-identical over the scored rows: 860/864; analytic.abserr bit-identical: 848/864
+  largest |d rad|/(abserr25+abserr26) over the scored rows: 6.67731e-08 at k=1e+06 q=1e+06 r=1e+06 z=996.42016 (rad25 -0x1.b497f0c217becp-67 rad26 -0x1.b497f0c217c0bp-67 abserr25 0x1.bac05c053b652p-92 abserr26 0x1.bac05e6bcc796p-92)
+  largest |d rad|/analytic.abserr_25 over the scored rows: 1.33546e-07
+  largest |d rad|/analytic.abserr_26 over the scored rows: 1.33546e-07
+  |d rad|/(abserr25+abserr26) over the scored rows: p0 0, p50 0, p90 0, p99 0, p100 6.68e-08
+  over the scored rows whose analytic_rad moved: p0 9e-09, p50 4.22e-08, p90 6.68e-08, p99 6.68e-08, p100 6.68e-08
+  analytic.converged R25 -> R26: {('True', 'True'): 864}
+
+VERDICT R1 (oracle): holds (0 violations of 864 scored rows; 0 rows non-finite in either, counted separately; 0 stationary-point rows tabulated, not scored)
+VERDICT R1 (total): holds (0 violations of 864 scored rows (outside 06a's stationary-point rows, finite total_abserr in both); 0 rows non-finite in either, counted separately; 0 stationary-point rows tabulated, not scored)

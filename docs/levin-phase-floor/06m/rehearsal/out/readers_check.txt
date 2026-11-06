@@ -1,0 +1,46 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-06T09:57:25Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=var/levin-phase-floor-06m/rehearsal; echo "== reader exits"; grep -c "^exit 0;" $R/out/readers.txt; grep "^exit" $R/out/readers.txt; echo "== store-identical lines"; grep -c "store files: identical before and after" $R/out/readers.txt; echo "== R26 before vs after reads"; cmp $R/state/r26_store_sha256_before_reads.txt $R/state/r26_store_sha256_after_reads.txt && echo "R26 identical before and after the readers"; echo "== Ray processes lines"; grep "Ray processes" $R/out/readers.txt; echo "== Traceback in reader logs"; grep -c Traceback $R/extract/*.log; echo "== WARNING lines"; grep -h "!! WARNING" $R/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | sort | uniq -c | cut -c1-220; echo "== extract size"; du -sh $R/extract; find $R/extract -type f | wc -l; find $R/extract -type f -size +2M | wc -l; echo "== worktrees"; for T in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82; do git --no-optional-locks -C $T rev-parse HEAD; git --no-optional-locks -C $T status --short --ignored; find $T -newer $R/state/r25_launch_marker -not -path "*/.git/*" | head; done; echo "== main"; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short
+# output:
+== reader exits
+6
+exit 0; wall 30 s; files written 450
+exit 0; wall 51 s; files written 2436
+exit 0; wall 22 s; files written 152
+exit 0; wall 17 s; files written 27
+exit 0; wall 16 s; files written 27
+exit 0; wall 19 s; files written 73
+exit 0
+== store-identical lines
+6
+== R26 before vs after reads
+R26 identical before and after the readers
+== Ray processes lines
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+Ray processes from this checkout's venv after: 0
+== Traceback in reader logs
+var/levin-phase-floor-06m/rehearsal/extract/extract_GkSource_data.log:0
+var/levin-phase-floor-06m/rehearsal/extract/extract_GkWKB_data.log:0
+var/levin-phase-floor-06m/rehearsal/extract/extract_Gk_data.log:0
+var/levin-phase-floor-06m/rehearsal/extract/extract_QuadSourceIntegral_data.log:0
+var/levin-phase-floor-06m/rehearsal/extract/extract_TkWKB_data.log:0
+var/levin-phase-floor-06m/rehearsal/extract/extract_tensor_source_data.log:0
+== WARNING lines
+      6 !! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+== extract size
+179M	var/levin-phase-floor-06m/rehearsal/extract
+3171
+0
+== worktrees
+5ff8a5e44be775df299af0f1754123578905b86e
+38f6a828d17b41893574f7344a543ebfb1e01e85
+== main
+28ebaf0743e0555fb2c4512ce714884005a60eff
+# exit: 0
+# end: 2026-11-06T09:57:26Z

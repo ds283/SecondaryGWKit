@@ -1,0 +1,11 @@
+# sha256  size_bytes  mtime_ns  path
+41b5adea57b964b58ecb402752e14b9b72d53ed946ade1f5e831f5926ec104a7  4909  1793531202272544708  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r23-parent-20261101T110641/manifest.json
+dad368d775f472a13ea1b7ba0fd84cd0ff6d1f8c6153355911824ac50aca2245  10324  1793531477365873351  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r23-parent-20261101T110641/status.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  0  1793531202273468624  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r23-parent-20261101T110641/stderr.log
+6f4ecacede501e6609f0a928421033477f9f20e1eefd7067cb74c26eb2874ced  8021  1793531477382870636  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r23-parent-20261101T110641/stdout.log
+e9a5b832d9da779790260d950009522f092952539aecd359d1c6db92c017460a  8122  1793531478989665948  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r23.launch.log
+c25a336ce3282d2238b932696abce91348f954f59642192fd7ee7bbffd5350ab  5289  1793531536797269523  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r24-leafvalues-20261101T111215/manifest.json
+ba07d65c73028dfc04351984bc719dd4710abf06fd346bcd3dc593d5e8d16268  10328  1793532165314355680  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r24-leafvalues-20261101T111215/status.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  0  1793531536798078980  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r24-leafvalues-20261101T111215/stderr.log
+86bffba7e0a50637d11f901ec2cca1781204c4532c118c79f860bd8173ad40af  8696  1793532165335474004  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r24-leafvalues-20261101T111215/stdout.log
+5fef73d5454e645047f99d7de0a11aacd09dbf525fd8a3b15cd93c05db206e47  8797  1793532166977448343  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-r24.launch.log

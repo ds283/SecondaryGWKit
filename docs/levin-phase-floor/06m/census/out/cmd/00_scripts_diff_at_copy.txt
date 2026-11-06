@@ -1,0 +1,8 @@
+$ diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/scripts /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:04:14Z
+# ----
+# ----
+# end 2026-11-06T10:04:14Z
+# exit 0

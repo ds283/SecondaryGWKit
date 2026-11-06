@@ -1,0 +1,40 @@
+$ bash -c $'\n{ echo \'# levin-phase-floor 06m §5 — Gates M0 and M, copied before any census number\';\n  echo;\n  echo "Copied verbatim at $(date -u +%Y-%m-%dT%H:%M:%SZ) on $(hostname), before Gate M0\'s first unit, from the code log";\n  echo \'`prompts/levin-phase-floor/logs/06m-signed-yardstick-in-the-driver.md` at 38f6a828 (lines 124-135 of its\';\n  echo "\\"Predictions and verdicts\\"; file SHA-256 $(shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/prompts/levin-phase-floor/logs/06m-signed-yardstick-in-the-driver.md | cut -c1-64)), by \\`sed -n 124,135p\\`. Not to be rewritten: a";\n  echo \'correction is a new file and a deviation. The comparison "above" is prompt 06m §5\'"\'"\'s, quoted below the copy for\';\n  echo \'reference (lines 290-293 of the prompt).\';\n  echo;\n  sed -n 124,135p /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/prompts/levin-phase-floor/logs/06m-signed-yardstick-in-the-driver.md;\n  echo;\n  echo \'---\';\n  echo;\n  echo \'Prompt 06m §5, "The comparison" (prompts/levin-phase-floor/06m-signed-yardstick-in-the-driver.md lines 290-293, SHA-256\';\n  echo "$(shasum -a 256 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/prompts/levin-phase-floor/06m-signed-yardstick-in-the-driver.md | cut -c1-64)):";\n  echo;\n  sed -n 290,293p /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/prompts/levin-phase-floor/06m-signed-yardstick-in-the-driver.md | sed \'s/^/> /\';\n} > predictions.md; cat predictions.md; shasum -a 256 predictions.md; /usr/bin/stat -f \'%Sm\' -t \'%Y-%m-%dT%H:%M:%S\' predictions.md'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:07:44Z
+# ----
+# levin-phase-floor 06m §5 — Gates M0 and M, copied before any census number
+
+Copied verbatim at 2026-11-06T10:07:44Z on mps026298.phys.susx.ac.uk, before Gate M0's first unit, from the code log
+`prompts/levin-phase-floor/logs/06m-signed-yardstick-in-the-driver.md` at 38f6a828 (lines 124-135 of its
+"Predictions and verdicts"; file SHA-256 df470dc870a2751f5a5f14fc627afab078e8d0dd355eb6e357ced3737b1ebec6), by `sed -n 124,135p`. Not to be rewritten: a
+correction is a new file and a deviation. The comparison "above" is prompt 06m §5's, quoted below the copy for
+reference (lines 290-293 of the prompt).
+
+- **§5, Gate M0** — copied verbatim, **not yet scored**:
+
+  > **Gate M0 — K0 first.** At $m$ the harness reproduces route B's census on 06k's 100 K0 units
+  > (`docs/levin-phase-floor/06l/out/k0/units.json`), bit for bit by the comparison above. It is one
+  > registered run with slug `k0`. **Holds** if all 100 are equal. A failure is a stop: the code is not
+  > what 06l measured.
+
+- **§5, Gate M** — copied verbatim, **not yet scored**:
+
+  > **Gate M — the census is route B's.** **Rule:** all 18,560 units are `done`, and each equals route
+  > B's census by the comparison above. **Holds** if all are equal. A failure is a stop, with the first
+  > differing units and fields reported.
+
+---
+
+Prompt 06m §5, "The comparison" (prompts/levin-phase-floor/06m-signed-yardstick-in-the-driver.md lines 290-293, SHA-256
+df32554390d8a000b193fa5bb664fcef5fefa6c3a11cff9df3b7460f2abe29b3):
+
+> **The comparison** is made call by call, every call matched by unit, kind, index, label and span:
+> - in each call record, every key but `route_06l` (the variant's, absent at $m$) and the timing
+>   fields `compare_k0.py` already excludes;
+> - in each unit's region records, every field, timing aside.
+a57843d59a32b52bf5b52940a1be81b41384041d5cbaf3180021cb06f3f27674  predictions.md
+2026-11-06T10:07:44
+# ----
+# end 2026-11-06T10:07:44Z
+# exit 0

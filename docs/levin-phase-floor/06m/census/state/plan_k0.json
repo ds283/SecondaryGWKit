@@ -1,0 +1,44 @@
+{
+ "label": "k0",
+ "stages": [
+  {
+   "name": "k0_run",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "41_k0_run_tree",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_k0.py",
+      "tree",
+      "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/out/k0/units.json",
+      "state/k0/tree",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_compare",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "51_k0_compare_routeB",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts",
+     "requires": "state/k0/tree/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/compare_06m.py",
+      "k0",
+      "state/k0/tree",
+      "out/k0/compare_m0.json"
+     ]
+    }
+   ]
+  }
+ ]
+}

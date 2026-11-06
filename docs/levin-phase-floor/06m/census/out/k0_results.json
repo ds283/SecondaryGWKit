@@ -1,0 +1,17 @@
+{
+ "label": "k0",
+ "results": [
+  {
+   "name": "41_k0_run_tree",
+   "exit": 0,
+   "wall_s": 330.1660249233246
+  },
+  {
+   "name": "51_k0_compare_routeB",
+   "exit": 0,
+   "wall_s": 3.5642881393432617
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-06T10:16:53Z"
+}

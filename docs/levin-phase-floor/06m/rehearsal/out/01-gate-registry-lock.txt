@@ -1,0 +1,37 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-06T09:23:47Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+./venv/bin/python -B -m runregistrykit list > var/levin-phase-floor-06m/rehearsal/out/01-registry-list.txt 2>&1; echo "list exit $?"; tail -1 var/levin-phase-floor-06m/rehearsal/out/01-registry-list.txt; echo "== state tally"; awk "NR>1 && NF>2 {print \$2}" var/levin-phase-floor-06m/rehearsal/out/01-registry-list.txt | sort | uniq -c; echo "== lock dirs"; ls -la ~/.raypoolkit; ls -la ~/ScienceData/.rehearsal-lock 2>&1; echo "== auth token"; ls -l ~/.ray/auth_token; echo "== disk"; df -h /Users/ds283/Documents/Code/SecondaryGWKit/var; echo "== load"; uptime; echo "== venv"; ./venv/bin/python -I -c "import sys,ray,sqlalchemy; print(sys.version); print(ray.__version__, sqlalchemy.__version__)"; echo "== no 06m store or run"; ls var/datastores | grep 06m; ls var/runs | grep 06m; echo "== R24 store files present"; ls -la var/datastores | grep 06g-r24
+# output:
+list exit 0
+58 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 58 finished; 0 with no host recorded.
+== state tally
+     50 done
+      4 failed
+      4 killed
+      1 run(s)
+== lock dirs
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  1 11:30 .
+drwxr-x--- 159 ds283 staff 5088 Nov  6 09:21 ..
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+== auth token
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+== disk
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  849G   78G  92% /
+== load
+ 9:23  up 30 days, 0 sec, 2 users, load averages: 17.82 22.02 15.95
+== venv
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+2.59.0 2.0.55
+== no 06m store or run
+== R24 store files present
+-rw-r--r--  1 ds283 staff  25042944 Nov  1 11:22 levin-phase-floor-06g-r24-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25264128 Nov  1 11:22 levin-phase-floor-06g-r24-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  1 11:12 levin-phase-floor-06g-r24-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24489984 Nov  1 11:22 levin-phase-floor-06g-r24-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  1 11:12 levin-phase-floor-06g-r24.sqlite
+# exit: 0
+# end: 2026-11-06T09:23:50Z

@@ -1,0 +1,31 @@
+{
+ "header": [
+  "# levin-phase-floor 06m: the census projection",
+  "# written 2026-11-06T10:17:44Z on mps026298.phys.susx.ac.uk",
+  "# script census_projection_06m.py sha256 3c233b6206dd4d67ca05a0c4f625f8ff5bed5f7fbb8281c47859dacb5ed9e212",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input state/k0/tree/units.jsonl sha256 c5fcc76b663e07f94ce1b9654bff41e1c7c9781a12b63712ed746bcc38e410b5",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/state/index_routeB.json sha256 c44fe3fc22a0a00761770bb5c00c52e291beebcd50c9d0aa69e4301b324d6a99"
+ ],
+ "n_units": 100,
+ "sum_wall_m": 571.4056403292343,
+ "sum_wall_routeB_census": 594.0993078746833,
+ "rho": 0.9618015586878349,
+ "by_rtol": {
+  "1e-7": {
+   "m": 259.5685295849107,
+   "routeB": 272.6851298767142,
+   "rho": 0.9518983660834981
+  },
+  "1e-8": {
+   "m": 311.8371107443236,
+   "routeB": 321.4141779979691,
+   "rho": 0.9702033453741856
+  }
+ },
+ "routeB_census_wall_s": 18340.0,
+ "g06_census_wall_s": 20361.0,
+ "projection_s": 17639.44058633489,
+ "projection_from_06g_s": 17639.44058633489
+}

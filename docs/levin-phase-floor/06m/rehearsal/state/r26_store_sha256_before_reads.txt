@@ -1,0 +1,12 @@
+abca59fcb601585049e7f8eeea023fa714f0375804b7793149217204f06e097b  var/datastores/levin-phase-floor-06m-r26-shard0000.sqlite
+6753c62af4d19affe40152c17a500cdcc673612d764795032d20560d54909ede  var/datastores/levin-phase-floor-06m-r26-shard0001.sqlite
+bdfcf92688e3b87add4f4d94b86bfd149d4a15b6e2628e4883336fa9e9b81e01  var/datastores/levin-phase-floor-06m-r26-shard0002.sqlite
+0cbf7425df82429940b46bdf86395c7751dad58c19699372bb0e5ddd8a332666  var/datastores/levin-phase-floor-06m-r26-shard0003.sqlite
+e90e26c2e23cdba61500c5c391fc39288016d13540423b66247f9473a939e272  var/datastores/levin-phase-floor-06m-r26.sqlite
+var/datastores/levin-phase-floor-06m-r26-shard0000.sqlite 25006080 1793958561
+var/datastores/levin-phase-floor-06m-r26-shard0001.sqlite 25284608 1793958561
+var/datastores/levin-phase-floor-06m-r26-shard0002.sqlite 1077248 1793957991
+var/datastores/levin-phase-floor-06m-r26-shard0003.sqlite 24420352 1793958561
+var/datastores/levin-phase-floor-06m-r26.sqlite 36864 1793957991
+journal/wal/shm:
+none

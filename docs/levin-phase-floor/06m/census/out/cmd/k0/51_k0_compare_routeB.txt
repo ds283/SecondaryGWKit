@@ -1,0 +1,105 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/compare_06m.py k0 state/k0/tree out/k0/compare_m0.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:16:49Z
+# ----
+# levin-phase-floor 06m: Gate M0, tree against route B's census (levin-phase-floor-06l-census-routeB-20261105T100126)
+# written 2026-11-06T10:16:49Z on mps026298.phys.susx.ac.uk
+# script compare_06m.py sha256 5dd1eaf4e92cb57ce28a1e81c42d1c89489a9c14101bcc9c2cc11c94f974b104
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/state/k0/tree/units.jsonl sha256 c5fcc76b663e07f94ce1b9654bff41e1c7c9781a12b63712ed746bcc38e410b5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/state/index_routeB.json sha256 c44fe3fc22a0a00761770bb5c00c52e291beebcd50c9d0aa69e4301b324d6a99
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+# 100 units to compare, 1 process(es); EXCLUDED (compare_k0.py's) = ['cache_built', 'compute_time', 'elapsed', 'modules', 'pickle', 'pickle_length', 'pickle_offset', 'pickle_record_sha256', 'rebuild_s', 'route_06k', 'route_06l', 'rows_sha256', 'scripts_sha256', 'seconds', 'tree_head', 'tree_status_short', 'w2_capture_sha256', 'wall_s', 'worker', 'worker_pid', 'worker_tree'] and every key ending _s
+g-1e-7-0-33997: EQUAL; calls 21; region records 21; excluded keys differing 49
+g-1e-7-0-33892: EQUAL; calls 23; region records 23; excluded keys differing 49
+g-1e-7-0-1873: EQUAL; calls 23; region records 23; excluded keys differing 49
+g-1e-7-1-11199: EQUAL; calls 21; region records 21; excluded keys differing 49
+g-1e-7-1-14039: EQUAL; calls 21; region records 21; excluded keys differing 49
+g-1e-7-1-11214: EQUAL; calls 23; region records 23; excluded keys differing 49
+g-1e-7-2-33416: EQUAL; calls 23; region records 23; excluded keys differing 49
+g-1e-7-2-2078: EQUAL; calls 21; region records 21; excluded keys differing 49
+g-1e-7-3-34748: EQUAL; calls 21; region records 21; excluded keys differing 49
+g-1e-7-3-38477: EQUAL; calls 21; region records 21; excluded keys differing 49
+g-1e-8-0-10209: EQUAL; calls 0; region records 0; excluded keys differing 39
+g-1e-8-0-33980: EQUAL; calls 23; region records 23; excluded keys differing 45
+g-1e-8-0-14054: EQUAL; calls 21; region records 21; excluded keys differing 46
+g-1e-8-0-33730: EQUAL; calls 23; region records 23; excluded keys differing 46
+g-1e-8-0-1873: EQUAL; calls 23; region records 23; excluded keys differing 46
+g-1e-8-1-35480: EQUAL; calls 21; region records 21; excluded keys differing 46
+g-1e-8-1-14543: EQUAL; calls 23; region records 23; excluded keys differing 46
+g-1e-8-2-21897: EQUAL; calls 21; region records 21; excluded keys differing 46
+g-1e-8-3-37338: EQUAL; calls 21; region records 21; excluded keys differing 46
+g-1e-8-3-13600: EQUAL; calls 23; region records 23; excluded keys differing 46
+units 100; equal 100; differing 0; statuses {'done': 100}
+totals {'n_calls': 2110, 'n_group_calls': 566, 'n_regions': 2110, 'n_regions_returned': 32518, 'n_calls_B_fired': 248, 'n_firings_B': 4393}
+unit evidence (true, false): {'lq_file_is_tree': [100, 0], 'all_in_tree': [100, 0], 'no_foreign': [100, 0], 'no_variant_root': [100, 0], 'B_had_variant_root': [100, 0], 'route_06l_none_at_m': [100, 0]}
+worker evidence: 15 workers, all hold True; levin_quadrature sha256 ['beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6']
+excluded keys (path: units present, units differing):
+  data.analytic_06h.seconds: 100, 100
+  data.budget_s: 100, 0
+  data.cache_built: 100, 95
+  data.calls[].elapsed: 97, 97
+  data.calls[].route_06k: 97, 0
+  data.calls[].route_06l: 97, 97
+  data.cc_floor_s: 100, 100
+  data.checked_06g_s: 100, 100
+  data.declared_06h_s: 100, 100
+  data.deep_lines.seconds: 100, 99
+  data.modules: 100, 0
+  data.modules.counts_by_root.own tree: 0, 100
+  data.modules.counts_by_root.variant: 0, 100
+  data.modules.files.AdaptiveLevin.levin_quadrature: 0, 100
+  data.modules.files.BesselPhaseGroup (QuadSourceIntegral's): 0, 100
+  data.modules.files.ComputeTargets: 0, 100
+  data.modules.files.ComputeTargets.GkSource: 0, 100
+  data.modules.files.ComputeTargets.GkSourcePolicyData: 0, 100
+  data.modules.files.ComputeTargets.GkWKBIntegration: 0, 100
+  data.modules.files.ComputeTargets.QuadSource: 0, 100
+  data.modules.files.ComputeTargets.QuadSourceIntegral: 0, 100
+  data.modules.files.ComputeTargets.TkSourceFunctions: 0, 100
+  data.modules.files.ComputeTargets.TkWKBIntegration: 0, 100
+  data.modules.files.ComputeTargets.primitive_phase: 0, 100
+  data.modules.files.LiouvilleGreen.bessel_phase: 0, 100
+  data.modules.files.LiouvilleGreen.three_bessel_integrals: 0, 100
+  data.modules.files.Quadrature.integrators.WKB_phase_function: 0, 100
+  data.modules.files.StoreFixtures: 0, 100
+  data.modules.files.WKB_phase_function (the producers' remote's function): 0, 100
+  data.modules.files.main.py: 0, 100
+  data.modules.files.theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI): 0, 100
+  data.modules.n_own_tree: 0, 100
+  data.other_calls[].elapsed: 97, 97
+  data.other_calls[].route_06k: 97, 0
+  data.other_calls[].route_06l: 97, 97
+  data.pickle: 100, 100
+  data.pickle_length: 100, 97
+  data.pickle_offset: 100, 100
+  data.pickle_record_sha256: 100, 100
+  data.rebuild_s: 100, 100
+  data.result.compute_time: 100, 100
+  data.rows_sha256: 100, 0
+  data.scan_s: 100, 50
+  data.scripts_sha256: 100, 0
+  data.scripts_sha256.prov.py: 0, 100
+  data.stored.compute_time: 100, 0
+  data.tree_head: 100, 100
+  data.tree_status_short: 100, 0
+  data.w2_capture_sha256: 100, 0
+  data.w3.seconds: 50, 50
+  data.wall_s: 100, 100
+  data.worker: 100, 100
+  data.worker_pid: 100, 100
+  data.worker_tree: 100, 100
+  pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed: 97, 97
+  pickle.result_full.compute_time: 100, 100
+  pickle.route_06k: 100, 0
+  pickle.route_06k[].route_06k: 97, 0
+  pickle.route_06l: 100, 0
+  pickle.route_06l[].route_06l: 97, 97
+  pickle.scan[].seconds: 50, 50
+wrote out/k0/compare_m0.json sha256 5bd49e0028fe51fdb599e7df2a7e4115e043022a05bc82fb2b7ae8b7ad90607d
+# ----
+# end 2026-11-06T10:16:52Z
+# exit 0

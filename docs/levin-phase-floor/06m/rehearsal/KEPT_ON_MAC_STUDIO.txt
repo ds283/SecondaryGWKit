@@ -1,0 +1,30 @@
+Kept on the Mac Studio (mps026298), not copied back: every pickle (none made), every run directory
+and every file over 2 MB made by the 06m rehearsal agent, with SHA-256 and size in bytes. Paths are
+relative to the main checkout /Users/ds283/Documents/Code/SecondaryGWKit.
+
+Records directory:
+d67e696f3bd6ed78b69ca03eb7e44ca4dee6ccb0d7cd01bbc3b64239811d21dc  41099401  var/levin-phase-floor-06m/rehearsal/out/store_value_diff.json  (R25 against R26)
+d9445335767a0348b9ca99927f5572de32bf198d13fedb198c2d7b72360d64f4  40126552  var/levin-phase-floor-06m/rehearsal/out/store_value_diff_r24_r25.json  (R24 against R25)
+117f09911953412f85f665bd5a17ec5ac30fab5e9750d7498219534aa99cb6ac  26870301  var/levin-phase-floor-06m/rehearsal/out/store_value_diff_r24_r25.labels_normalised.json  (the same, job-name prefix of the labels normalised)
+var/levin-phase-floor-06m/rehearsal/extract/  (the readers' output on R26: 3,171 files, 179 MB in all; no single file over 2 MB; unseeded random subsamples, not reproducible file for file)
+
+The stores (kept until the user says otherwise; prompt 06m section 4):
+bc18fba07e524b426d12ad2389265c1a4e9577f0d26f3bd94e396ac6778083b5  24985600  var/datastores/levin-phase-floor-06m-r25-shard0000.sqlite
+8385fc50d613374d787c05253585895b2eb6615092ae1186f4533ce351bffa5c  25284608  var/datastores/levin-phase-floor-06m-r25-shard0001.sqlite
+d89767a2bfaffaeec039103d7573596d90c80fcb9f2f0c7f2ca8ecc1fd9e0947   1077248  var/datastores/levin-phase-floor-06m-r25-shard0002.sqlite
+e558fb4469bd5c5d9a2e17907938a5c41828b7faff536e39a9df840c8ad00e88  24588288  var/datastores/levin-phase-floor-06m-r25-shard0003.sqlite
+d74ac31d60326e2f9f294eec3a2581606747f8d31ccc52f2a4fbf76ce012a6fb     36864  var/datastores/levin-phase-floor-06m-r25.sqlite
+abca59fcb601585049e7f8eeea023fa714f0375804b7793149217204f06e097b  25006080  var/datastores/levin-phase-floor-06m-r26-shard0000.sqlite
+6753c62af4d19affe40152c17a500cdcc673612d764795032d20560d54909ede  25284608  var/datastores/levin-phase-floor-06m-r26-shard0001.sqlite
+bdfcf92688e3b87add4f4d94b86bfd149d4a15b6e2628e4883336fa9e9b81e01   1077248  var/datastores/levin-phase-floor-06m-r26-shard0002.sqlite
+0cbf7425df82429940b46bdf86395c7751dad58c19699372bb0e5ddd8a332666  24420352  var/datastores/levin-phase-floor-06m-r26-shard0003.sqlite
+e90e26c2e23cdba61500c5c391fc39288016d13540423b66247f9473a939e272     36864  var/datastores/levin-phase-floor-06m-r26.sqlite
+
+The run directories (each under 2 MB; recorded in the registry) and launch logs:
+var/runs/levin-phase-floor-06m-r25-parent-20261106T092420/
+var/runs/levin-phase-floor-06m-r26-signedyardstick-20261106T093937/
+var/runs/levin-phase-floor-06m-r25.launch.log
+var/runs/levin-phase-floor-06m-r26.launch.log
+
+Read only, unchanged (06g's, kept by 06g): var/datastores/levin-phase-floor-06g-r24* (five files),
+equal to docs/levin-phase-floor/06g/rehearsal/state/stores_sha256_final.txt before and after.

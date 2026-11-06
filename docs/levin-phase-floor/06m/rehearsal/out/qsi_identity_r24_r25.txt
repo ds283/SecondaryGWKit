@@ -1,0 +1,62 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/rehearsal/scripts/qsi_identity_r24_r25.py sha256 e63aae0cf2fb36de1a3835129e15b802c6550d46b17eac3c83007157ede0579e
+# input var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite sha256 c9e3b2ab01e75b4e58500ff8c97296a2b519c1056af1421d49d799ec23ad98c8
+# input var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite sha256 b869b71f874738c8ec85acabdf91d42df113e67ef83af4bf172e6d31984a5385
+# input var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite sha256 c8a98a8dad08900b0f191f21df6f4aeebda0fe9db0b798a6715eb4441350e964
+# input var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite sha256 45c6f6e86eba5fcba1009df216f2d71615d6349e871893318eb362f578e47fc2
+# input var/datastores/levin-phase-floor-06g-r24.sqlite sha256 6e4815c8c7c75c6a3ceea24820f93548b16c085209874cf2a61f40652070756a
+# input var/datastores/levin-phase-floor-06m-r25-shard0000.sqlite sha256 bc18fba07e524b426d12ad2389265c1a4e9577f0d26f3bd94e396ac6778083b5
+# input var/datastores/levin-phase-floor-06m-r25-shard0001.sqlite sha256 8385fc50d613374d787c05253585895b2eb6615092ae1186f4533ce351bffa5c
+# input var/datastores/levin-phase-floor-06m-r25-shard0002.sqlite sha256 d89767a2bfaffaeec039103d7573596d90c80fcb9f2f0c7f2ca8ecc1fd9e0947
+# input var/datastores/levin-phase-floor-06m-r25-shard0003.sqlite sha256 e558fb4469bd5c5d9a2e17907938a5c41828b7faff536e39a9df840c8ad00e88
+# input var/datastores/levin-phase-floor-06m-r25.sqlite sha256 d74ac31d60326e2f9f294eec3a2581606747f8d31ccc52f2a4fbf76ce012a6fb
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+A = R24 var/datastores/levin-phase-floor-06g-r24.sqlite: 864 rows, 48 columns
+B = R25 var/datastores/levin-phase-floor-06m-r25.sqlite: 864 rows, 48 columns
+columns equal: True
+key sets equal: True; only in A 0, only in B 0
+rows compared: 864; tolerance mismatches 0; field-set mismatches 0
+fields compared, by kind: {'identity': 15552, 'value': 118776, 'counter': 27163, 'timing': 20953, 'label': 864}
+field differences, by kind: {'timing': 18733, 'label': 864, 'identity': 5325}
+differing fields (kind, path with indices folded): count of row-field differences
+  identity col:atol_serial: 864
+  identity col:data_serial: 813
+  identity col:k_wavenumber_exit_serial: 576
+  identity col:q_wavenumber_exit_serial: 576
+  identity col:r_wavenumber_exit_serial: 768
+  identity col:serial: 864
+  identity col:timestamp: 864
+  label    col:label: 864
+  timing   col:WKB_Levin_elapsed: 573
+  timing   col:analytic_compute_time: 864
+  timing   col:compute_time: 864
+  timing   col:numeric_quad_compute_time: 396
+  timing   col:numeric_quad_max_RHS_time: 394
+  timing   col:numeric_quad_mean_RHS_time: 396
+  timing   col:numeric_quad_min_RHS_time: 341
+  timing   meta:WKB_Levin.subintervals[i].groups[i].elapsed: 3105
+  timing   meta:analytic.0pt5.Levin.J1_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.J2_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.J3_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.J4_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.Y1_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.Y2_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.Y3_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.Y4_data.elapsed: 659
+  timing   meta:analytic.0pt5.compute_time: 864
+  timing   meta:analytic.2pt5.Levin.J1_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.J2_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.J3_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.J4_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.Y1_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.Y2_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.Y3_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.Y4_data.elapsed: 600
+  timing   meta:analytic.2pt5.compute_time: 864
+rows with every value field bit-identical: 864 / 864
+rows with every counter field bit-identical: 864 / 864
+col:total bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+col:total_abserr bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+col:analytic_rad bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+meta:analytic.abserr bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+col:total_converged bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+VERDICT: R25 IS value-identical to R24 in QuadSourceIntegral (every value and counter field, every row, by bit pattern)

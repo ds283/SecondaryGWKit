@@ -1,0 +1,122 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-06T09:39:51Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+cat var/levin-phase-floor-06m/rehearsal/state/lock.log; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > var/levin-phase-floor-06m/rehearsal/out/r26_launch_registry_list.txt 2>&1; echo "list exit $?"; grep 06m var/levin-phase-floor-06m/rehearsal/out/r26_launch_registry_list.txt | cut -c1-140; tail -1 var/levin-phase-floor-06m/rehearsal/out/r26_launch_registry_list.txt; D=$(ls -d var/runs/levin-phase-floor-06m-r26-signedyardstick-*); echo "run dir: $D"; ls $D; echo "== status.json"; cat $D/status.json; echo; echo "== launch log head"; head -14 var/runs/levin-phase-floor-06m-r26.launch.log; echo "== Traceback count"; grep -c Traceback var/runs/levin-phase-floor-06m-r26.launch.log; echo "== kill -0"; kill -0 57112 && echo "57112 alive"; kill -0 57109 && echo "57109 alive"; echo "== cwd of driver"; lsof -a -d cwd -p 57112; echo "== manifest"; ./venv/bin/python -I -c "import json,sys; m=json.load(open(sys.argv[1]+\"/manifest.json\")); print(json.dumps({k:m[k] for k in m if k in (\"run_id\",\"cwd\",\"git_head\",\"git_dirty\",\"script\",\"script_sha256\",\"results\",\"argv\",\"campaign\",\"prompt\",\"created\",\"host\")}, indent=1))" $D; echo "== worktrees"; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e status --short --ignored; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 status --short --ignored; echo "== store files"; ls -la var/datastores | grep 06m; echo "== R25 store re-hashed"; shasum -a 256 var/datastores/levin-phase-floor-06m-r25*.sqlite > var/levin-phase-floor-06m/rehearsal/state/r25_store_sha256_at_r26_launch.txt; head -5 var/levin-phase-floor-06m/rehearsal/state/r24_r25_store_sha256_after_diff.txt | cmp - var/levin-phase-floor-06m/rehearsal/state/r25_store_sha256_at_r26_launch.txt && echo "R25 unchanged since the comparison"
+# output:
+exit 0
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor prompt 06m section 4, rehearsals R25 (worktree 5ff8a5e4, parent of 06m code commit 48cf87c0, production code R24's) and R26 (worktree 38f6a828, code 06m 48cf87c0) on the Mac Studio (mps026298), then the value comparisons, R1 and the readers
+exit 0
+recorded pid 55646 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+exit 0
+recorded pid 57112 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+== registry
+list exit 0
+   levin-phase-floor-06m-r26-signedyardstick-20261106T093937  running           -      15s  levin-phase-floor prompt 06m, R26 on the Mac Stu
+   levin-phase-floor-06m-r25-parent-20261106T092420           done              -      16m  levin-phase-floor prompt 06m, R25 on the Mac Stu
+60 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 59 finished; 0 with no host recorded.
+run dir: var/runs/levin-phase-floor-06m-r26-signedyardstick-20261106T093937
+manifest.json
+status.json
+stderr.log
+stdout.log
+== status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-06T09:39:51+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 57112,
+  "stage": "CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+== launch log head
+** quadsource_atol_sweep --build: registered as levin-phase-floor-06m-r26-signedyardstick-20261106T093937
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-r26-signedyardstick-20261106T093937/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.sqlite', '--job-name', 'levin-phase-floor-06m', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-11-06 09:39:46,254	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.sqlite" with 4 shards
+
+== Traceback count
+0
+== kill -0
+57112 alive
+57109 alive
+== cwd of driver
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  57112 ds283  cwd    DIR   1,13     1152 1234816559 /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82
+== manifest
+{
+ "argv": [
+  "RunDrivers/quadsource_atol_sweep.py",
+  "--build",
+  "--rehearsal",
+  "--database",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.sqlite",
+  "--job-name",
+  "levin-phase-floor-06m",
+  "--atol",
+  "1e-32",
+  "--rtol",
+  "1e-7",
+  "--cpus",
+  "6",
+  "--register",
+  "r26-signedyardstick",
+  "--purpose",
+  "levin-phase-floor prompt 06m, R26 on the Mac Studio (mps026298; tree 38f6a828 in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82, Part B's dispatch SHA, whose code is 06m's code commit 48cf87c0 (route B's signed trust yardstick in _check_leaf, levin_quadrature.py beaf0e23); Python 3.13.16): rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal R8's 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (handover-12-r8-reference-20261025T210551); its values are the after side of the R25/R26 value comparison (R25 at 5ff8a5e4, R24's production code, value-identical to R24), and only QuadSourceIntegral is expected to differ",
+  "--campaign",
+  "levin-phase-floor",
+  "--prompt",
+  "06m"
+ ],
+ "campaign": "levin-phase-floor",
+ "created": "2026-11-06T09:39:37+00:00",
+ "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82",
+ "git_dirty": false,
+ "git_head": "38f6a828d17b41893574f7344a543ebfb1e01e85",
+ "host": {
+  "id": "d120d1cf03551e6f",
+  "machine": "arm64",
+  "name": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16",
+  "release": "27.0.0",
+  "system": "Darwin"
+ },
+ "prompt": "06m",
+ "results": "var/datastores/levin-phase-floor-06m-r26.sqlite",
+ "run_id": "levin-phase-floor-06m-r26-signedyardstick-20261106T093937",
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/RunDrivers/quadsource_atol_sweep.py",
+ "script_sha256": "b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19"
+}
+== worktrees
+== store files
+-rw-r--r--  1 ds283 staff  24985600 Nov  6 09:36 levin-phase-floor-06m-r25-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25284608 Nov  6 09:36 levin-phase-floor-06m-r25-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  6 09:24 levin-phase-floor-06m-r25-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24588288 Nov  6 09:36 levin-phase-floor-06m-r25-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  6 09:24 levin-phase-floor-06m-r25.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  6 09:39 levin-phase-floor-06m-r26-shard0000.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  6 09:39 levin-phase-floor-06m-r26-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  6 09:39 levin-phase-floor-06m-r26-shard0002.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  6 09:39 levin-phase-floor-06m-r26-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  6 09:39 levin-phase-floor-06m-r26.sqlite
+== R25 store re-hashed
+R25 unchanged since the comparison
+# exit: 0
+# end: 2026-11-06T09:39:52Z

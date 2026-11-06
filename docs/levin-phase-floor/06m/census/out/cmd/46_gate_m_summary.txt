@@ -1,0 +1,10 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/gate_m_summary_06m.py out/gate_m/compare_m.json out/gate_m/summary.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T15:36:37Z
+# ----
+{"n_units": 18560, "n_units_equal": 18560, "n_units_differing": 0, "statuses": {"done": 18560}, "totals": {"n_calls": 289482, "n_group_calls": 74650, "n_regions": 289482, "n_regions_returned": 2871152, "n_calls_B_fired": 21264, "n_firings_B": 271030}, "worker_evidence_all_hold": true, "units_by_rtol": {"1e-7": 9280, "1e-8": 9280}}
+wrote out/gate_m/summary.json sha256 35582cd7ebabbb9c4020cb778de0e43b51f4aafd9aa710cad237cf3321e13350
+# ----
+# end 2026-11-06T15:36:37Z
+# exit 0

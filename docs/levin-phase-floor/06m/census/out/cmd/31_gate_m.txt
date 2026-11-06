@@ -1,0 +1,105 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_06m.py census /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153 out/gate_m/compare_m.json --processes 5
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T15:31:18Z
+# ----
+# levin-phase-floor 06m: Gate M, levin-phase-floor-06m-census-20261106T102153 against route B's census (levin-phase-floor-06l-census-routeB-20261105T100126)
+# written 2026-11-06T15:31:18Z on mps026298.phys.susx.ac.uk
+# script compare_06m.py sha256 5dd1eaf4e92cb57ce28a1e81c42d1c89489a9c14101bcc9c2cc11c94f974b104
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl sha256 ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/state/index_routeB.json sha256 c44fe3fc22a0a00761770bb5c00c52e291beebcd50c9d0aa69e4301b324d6a99
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+# 18560 units to compare, 5 process(es); EXCLUDED (compare_k0.py's) = ['cache_built', 'compute_time', 'elapsed', 'modules', 'pickle', 'pickle_length', 'pickle_offset', 'pickle_record_sha256', 'rebuild_s', 'route_06k', 'route_06l', 'rows_sha256', 'scripts_sha256', 'seconds', 'tree_head', 'tree_status_short', 'w2_capture_sha256', 'wall_s', 'worker', 'worker_pid', 'worker_tree'] and every key ending _s
+g-1e-7-2-32862: EQUAL; calls 0; region records 0; excluded keys differing 36
+g-1e-7-2-33203: EQUAL; calls 0; region records 0; excluded keys differing 37
+g-1e-7-1-20681: EQUAL; calls 10; region records 10; excluded keys differing 45
+g-1e-7-0-33601: EQUAL; calls 21; region records 21; excluded keys differing 45
+g-1e-7-1-11207: EQUAL; calls 21; region records 21; excluded keys differing 45
+g-1e-7-2-1579: EQUAL; calls 23; region records 23; excluded keys differing 45
+g-1e-7-2-34475: EQUAL; calls 21; region records 21; excluded keys differing 45
+g-1e-7-3-185: EQUAL; calls 0; region records 0; excluded keys differing 35
+g-1e-7-3-707: EQUAL; calls 3; region records 3; excluded keys differing 43
+g-1e-7-3-34287: EQUAL; calls 21; region records 21; excluded keys differing 45
+g-1e-8-2-32862: EQUAL; calls 0; region records 0; excluded keys differing 35
+g-1e-8-1-20177: EQUAL; calls 0; region records 0; excluded keys differing 34
+g-1e-8-1-20566: EQUAL; calls 1; region records 1; excluded keys differing 40
+g-1e-8-0-33792: EQUAL; calls 21; region records 21; excluded keys differing 42
+g-1e-8-2-21922: EQUAL; calls 23; region records 23; excluded keys differing 42
+g-1e-8-0-12864: EQUAL; calls 21; region records 21; excluded keys differing 42
+g-1e-8-0-1782: EQUAL; calls 23; region records 23; excluded keys differing 42
+g-1e-8-3-138: EQUAL; calls 0; region records 0; excluded keys differing 34
+g-1e-8-3-953: EQUAL; calls 21; region records 21; excluded keys differing 42
+g-1e-8-3-34211: EQUAL; calls 21; region records 21; excluded keys differing 42
+units 18560; equal 18560; differing 0; statuses {'done': 18560}
+totals {'n_calls': 289482, 'n_group_calls': 74650, 'n_regions': 289482, 'n_regions_returned': 2871152, 'n_calls_B_fired': 21264, 'n_firings_B': 271030}
+unit evidence (true, false): {'lq_file_is_tree': [18560, 0], 'all_in_tree': [18560, 0], 'no_foreign': [18560, 0], 'no_variant_root': [18560, 0], 'B_had_variant_root': [18560, 0], 'route_06l_none_at_m': [18560, 0]}
+worker evidence: 16 workers, all hold True; levin_quadrature sha256 ['beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6']
+excluded keys (path: units present, units differing):
+  data.analytic_06h.seconds: 18560, 18560
+  data.budget_s: 18560, 0
+  data.cache_built: 18560, 0
+  data.cache_built[].mode_serial: 0, 7
+  data.calls[].elapsed: 13582, 13582
+  data.calls[].route_06k: 13582, 0
+  data.calls[].route_06l: 13582, 13582
+  data.cc_floor_s: 18560, 18508
+  data.checked_06g_s: 18560, 18179
+  data.declared_06h_s: 18560, 18496
+  data.deep_lines.seconds: 18560, 18438
+  data.modules: 18560, 0
+  data.modules.counts_by_root.own tree: 0, 18560
+  data.modules.counts_by_root.variant: 0, 18560
+  data.modules.files.AdaptiveLevin.levin_quadrature: 0, 18560
+  data.modules.files.BesselPhaseGroup (QuadSourceIntegral's): 0, 18560
+  data.modules.files.ComputeTargets: 0, 18560
+  data.modules.files.ComputeTargets.GkSource: 0, 18560
+  data.modules.files.ComputeTargets.GkSourcePolicyData: 0, 18560
+  data.modules.files.ComputeTargets.GkWKBIntegration: 0, 18560
+  data.modules.files.ComputeTargets.QuadSource: 0, 18560
+  data.modules.files.ComputeTargets.QuadSourceIntegral: 0, 18560
+  data.modules.files.ComputeTargets.TkSourceFunctions: 0, 18560
+  data.modules.files.ComputeTargets.TkWKBIntegration: 0, 18560
+  data.modules.files.ComputeTargets.primitive_phase: 0, 18560
+  data.modules.files.LiouvilleGreen.bessel_phase: 0, 18560
+  data.modules.files.LiouvilleGreen.three_bessel_integrals: 0, 18560
+  data.modules.files.Quadrature.integrators.WKB_phase_function: 0, 18560
+  data.modules.files.StoreFixtures: 0, 18560
+  data.modules.files.WKB_phase_function (the producers' remote's function): 0, 18560
+  data.modules.files.main.py: 0, 18560
+  data.modules.files.theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI): 0, 18560
+  data.modules.n_own_tree: 0, 18560
+  data.other_calls[].elapsed: 13810, 13810
+  data.other_calls[].route_06k: 13810, 0
+  data.other_calls[].route_06l: 13810, 13810
+  data.pickle: 18560, 0
+  data.pickle_length: 18560, 14130
+  data.pickle_offset: 18560, 15036
+  data.pickle_record_sha256: 18560, 18560
+  data.rebuild_s: 18560, 18560
+  data.result.compute_time: 18560, 18560
+  data.rows_sha256: 18560, 0
+  data.scan_s: 18560, 9151
+  data.scripts_sha256: 18560, 0
+  data.scripts_sha256.prov.py: 0, 18560
+  data.stored.compute_time: 18560, 0
+  data.tree_head: 18560, 18560
+  data.tree_status_short: 18560, 0
+  data.w2_capture_sha256: 18560, 0
+  data.w3.seconds: 9280, 9035
+  data.wall_s: 18560, 18560
+  data.worker: 18560, 0
+  data.worker_pid: 18560, 18560
+  data.worker_tree: 18560, 0
+  pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed: 13582, 13582
+  pickle.result_full.compute_time: 18560, 18560
+  pickle.route_06k: 18560, 0
+  pickle.route_06k[].route_06k: 14130, 0
+  pickle.route_06l: 18560, 0
+  pickle.route_06l[].route_06l: 14130, 14130
+  pickle.scan[].seconds: 6791, 6791
+wrote out/gate_m/compare_m.json sha256 5275c92167a7d2e0e6f89aca0520eba5d2c350280a533982a20adaa8ae760219
+# ----
+# end 2026-11-06T15:32:38Z
+# exit 0

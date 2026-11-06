@@ -1,0 +1,21 @@
+$ bash -c for\ d\ in\ /Users/ds283/Documents/Code/SecondaryGWKit\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82\;\ do\ echo\ \"==\ \$d\ \$\(git\ --no-optional-locks\ -C\ \$d\ rev-parse\ HEAD\)\ status:\ \[\$\(git\ --no-optional-locks\ -C\ \$d\ status\ --short\ \|\ tr\ \'\\n\'\ \'\;\'\)\]\"\;\ done\;\ echo\ \"ignored\ in\ code\ tree:\ \[\$\(git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82\ status\ --short\ --ignored\ \|\ tr\ \'\\n\'\ \'\;\'\)\]\"\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82\ -name\ __pycache__\ -not\ -path\ \'\*/.git/\*\'\ \|\ wc\ -l\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -m\ runregistrykit\ list\ \|\ grep\ -E\ \'06m\|run\\\(s\\\)\'\ \|\ cut\ -c1-110\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -m\ raypoolkit.rehearsal_lock\ status\ --ray-temp-dir\ /tmp/ray-sgk\ --ray-address\ in-process\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores\ \|\ grep\ -c\ 06m\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T15:36:15Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit 28ebaf0743e0555fb2c4512ce714884005a60eff status: []
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 38f6a828d17b41893574f7344a543ebfb1e01e85 status: []
+ignored in code tree: []
+0
+   levin-phase-floor-06m-census-20261106T102153               done      18560/18560   5h 14m  levin-phase-floo
+   levin-phase-floor-06m-k0-20261106T101118                   done            2/2   5h 24m  levin-phase-floor 
+   levin-phase-floor-06m-r26-signedyardstick-20261106T093937  done              -   5h 56m  levin-phase-floor 
+   levin-phase-floor-06m-r25-parent-20261106T092420           done              -   6h 11m  levin-phase-floor 
+62 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 62 finished; 0 with no host recorded.
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+10
+15:36  up 30 days,  6:12, 1 user, load averages: 9.97 24.81 18.20
+# ----
+# end 2026-11-06T15:36:17Z
+# exit 0

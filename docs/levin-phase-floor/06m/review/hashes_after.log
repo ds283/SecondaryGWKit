@@ -1,0 +1,13 @@
+5 files, 427167744 bytes -> /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/review/hashes_after/a3v2_copy.sha256
+10 files, 151728128 bytes -> /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/review/hashes_after/r23_r24_stores.sha256
+10 files, 64486 bytes -> /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/review/hashes_after/r23_r24_rundirs.sha256
+150 files, 4771509464 bytes -> /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/review/hashes_after/census_routeB.sha256
+149 files, 4736223095 bytes -> /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/review/hashes_after/census_06g.sha256
+journal/wal/shm lines: 0
+exit 0
+ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl
+da8bd91056a30d0fdb206c5caf4465f484f172c4183c4cd3e0f50bd02512e483  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118/checkpoint.jsonl
+c5e01255a26b13ca0e6a7f14a2e7fbfb0291997d98d63d30a30f6f6b7f07dcb8  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118/manifest.json
+410846d999ab1712f6aa67216ded53ac5de4c4f191c697a0e8ffb954a46c2835  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118/status.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118/stderr.log
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118/stdout.log

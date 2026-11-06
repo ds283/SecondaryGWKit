@@ -1,0 +1,14 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/launch_06m.py k0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:11:18Z
+# ----
+run id      levin-phase-floor-06m-k0-20261106T101118
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118
+plan        /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/state/plan_k0.json (2 commands)
+sh pid      61227
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_06j.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/state/plan_k0.json; exit $?
+launcher    pid 61223, exiting without waiting
+# ----
+# end 2026-11-06T10:11:18Z
+# exit 0

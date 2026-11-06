@@ -1,0 +1,25 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_runs_06m.py before out/runs_hashed_before.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:07:22Z
+# ----
+# levin-phase-floor 06m: route B's and 06g's census run directories, before
+# written 2026-11-06T10:07:22Z on mps026298.phys.susx.ac.uk
+# script hash_runs_06m.py sha256 57306292b0f119f1f72987101c96653db802de0841e965b585383614e3661a36
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/KEPT_ON_MAC_STUDIO.txt sha256 8ee0abb0cc03c8118d2f582fcb7c5e3044a79db79893d9ac304c9df1665e462d
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06g/census/KEPT_ON_MAC_STUDIO.txt sha256 c8e24de6257b73cd1b9f85b72ae966476b3d0aae42fc47a4ba1b86cde78b9088
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06l-census-routeB-20261105T100126: 150 files, 4771509464 bytes
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315: 149 files, 4736223095 bytes
+# levin-phase-floor-06l-census-routeB-20261105T100126: checkpoint sha256 5cb3d3c0e6e628720aa122a1d23d4a90f140b116ef9e58e2f66a3bffb9dd0d39 EQUAL 5cb3d3c0e6e628720aa122a1d23d4a90f140b116ef9e58e2f66a3bffb9dd0d39
+# levin-phase-floor-06l-census-routeB-20261105T100126: 16 region pickles
+# levin-phase-floor-06l-census-routeB-20261105T100126: against 06l's KEPT_ON_MAC_STUDIO.txt: 150 listed, 150 present, 0 differing or missing [], 0 not listed []
+# levin-phase-floor-06g-census-20261101T114315: checkpoint sha256 03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa EQUAL 03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa
+# levin-phase-floor-06g-census-20261101T114315: 16 region pickles
+# levin-phase-floor-06g-census-20261101T114315: against 06g's census KEPT_ON_MAC_STUDIO.txt (checkpoint and region pickles): 17 listed, 0 differing or missing []; 149 files hashed
+# verdict: ALL HOLD
+wrote out/runs_hashed_before.txt sha256 996619a22b523d79a1bd394fa0f99179e73853cc3fdcba2c0fdd0cf48b553255
+# ----
+# end 2026-11-06T10:07:28Z
+# exit 0

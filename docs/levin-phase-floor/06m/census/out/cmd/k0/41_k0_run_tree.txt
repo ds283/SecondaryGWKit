@@ -1,0 +1,67 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_k0.py tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/out/k0/units.json state/k0/tree --workers 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:11:18Z
+# ----
+# levin-phase-floor 06m: census units under the variant tree
+# written 2026-11-06T10:11:18Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 19f2680e8ce423cc20b0d6b2637f7b6173f100377932ea3bfa96272959c39d86
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# variant null
+# 100 units in 15 workers: tree-1e-7-k0_101 (5), tree-1e-7-k0_202 (8), tree-1e-7-k1_102 (10), tree-1e-7-k1_301 (3), tree-1e-7-k2_2 (4), tree-1e-7-k2_302 (6), tree-1e-7-k3_1 (10), tree-1e-7-k3_201 (4), tree-1e-8-k0_101 (14), tree-1e-8-k0_202 (8), tree-1e-8-k1_102 (9), tree-1e-8-k2_2 (3), tree-1e-8-k2_302 (4), tree-1e-8-k3_1 (6), tree-1e-8-k3_201 (6)
+tree-1e-7-k0_101: pid 61242 (5 units)
+tree-1e-7-k0_202: pid 61243 (8 units)
+tree-1e-7-k1_102: pid 61244 (10 units)
+tree-1e-7-k1_301: pid 61245 (3 units)
+tree-1e-7-k2_2: pid 61246 (4 units)
+tree-1e-7-k2_302: pid 61248 (6 units)
+tree-1e-7-k1_301: exit 0 after 87.6 s
+tree-1e-7-k3_1: pid 61480 (10 units)
+tree-1e-7-k2_2: exit 0 after 91.1 s
+tree-1e-7-k3_201: pid 61493 (4 units)
+tree-1e-7-k2_302: exit 0 after 94.7 s
+tree-1e-8-k0_101: pid 61506 (14 units)
+tree-1e-7-k0_101: exit 0 after 96.2 s
+tree-1e-8-k0_202: pid 61513 (8 units)
+tree-1e-7-k0_202: exit 0 after 96.7 s
+tree-1e-8-k1_102: pid 61516 (9 units)
+tree-1e-7-k1_102: exit 0 after 157.7 s
+tree-1e-8-k2_2: pid 61572 (3 units)
+tree-1e-7-k3_201: exit 0 after 90.0 s
+tree-1e-8-k2_302: pid 61615 (4 units)
+tree-1e-8-k0_202: exit 0 after 103.7 s
+tree-1e-8-k3_1: pid 61641 (6 units)
+tree-1e-8-k2_2: exit 0 after 70.3 s
+tree-1e-8-k3_201: pid 61679 (6 units)
+tree-1e-8-k1_102: exit 0 after 137.4 s
+tree-1e-7-k3_1: exit 0 after 150.1 s
+tree-1e-8-k2_302: exit 0 after 99.3 s
+tree-1e-8-k0_101: exit 0 after 194.9 s
+tree-1e-8-k3_1: exit 0 after 111.0 s
+tree-1e-8-k3_201: exit 0 after 99.8 s
+exit codes {tree-1e-7-k0_101: 0, tree-1e-7-k0_202: 0, tree-1e-7-k1_102: 0, tree-1e-7-k1_301: 0, tree-1e-7-k2_2: 0, tree-1e-7-k2_302: 0, tree-1e-7-k3_1: 0, tree-1e-7-k3_201: 0, tree-1e-8-k0_101: 0, tree-1e-8-k0_202: 0, tree-1e-8-k1_102: 0, tree-1e-8-k2_2: 0, tree-1e-8-k2_302: 0, tree-1e-8-k3_1: 0, tree-1e-8-k3_201: 0}
+refused: []
+bye tree-1e-7-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-7-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-7-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-7-k1_301: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-7-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-7-k2_302: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-7-k3_1: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-7-k3_201: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-8-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-8-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-8-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-8-k2_2: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-8-k2_302: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-8-k3_1: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-8-k3_201: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 100 of 100; not done []; wall 329 s
+wrote state/k0/tree/units.jsonl sha256 c5fcc76b663e07f94ce1b9654bff41e1c7c9781a12b63712ed746bcc38e410b5
+# ----
+# end 2026-11-06T10:16:48Z
+# exit 0

@@ -3278,3 +3278,147 @@ by class, which no record carries.
 **Issues:**
 - Narrowed: `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`.
 - Opened: none.
+
+## 6m. The signed trust yardstick in the driver
+
+*Prompt 06m: the code on the laptop (`48cf87c0`); the rehearsals and the census on the Mac Studio on
+2026-11-06, through an orchestrator session there, from the worktrees `SecondaryGWKit-lpf06m-5ff8a5e`
+(R25) and `SecondaryGWKit-lpf06m-38f6a82` (R26, K0 and the census). The records are under
+[`06m/`](06m/). What stays on the Mac Studio is in
+[`06m/KEPT_ON_MAC_STUDIO.md`](06m/KEPT_ON_MAC_STUDIO.md).*
+
+### 6m.1 The code
+
+Route B (§6l) in the driver. `_trust_noise_yardstick` returns
+$$\nu_B = \phi_P + \sum_{\rm Levin\ halves}\phi_h
++ \Big[\text{CC parent only:}\ \sum_{\rm CC\ halves}\phi^-_h + \Big|\sum_{\rm CC\ halves}E_h\Big|\Big]$$
+in 06l's arithmetic and order, and `_check_leaf` trusts a checked leaf iff $r < 1/4$, or $r < 1$ and
+$\Delta_1 \le \nu_B$. Nothing else in the driver changes. The tests, the breakages and the
+LiouvilleGreen draws are in
+[`logs/06m-signed-yardstick-in-the-driver.md`](../../prompts/levin-phase-floor/logs/06m-signed-yardstick-in-the-driver.md),
+and the calibration records in [`06m/calibration/`](06m/calibration/):
+- **the commit is 06l's variant bit for bit**: on nine cells, with firings on both parent kinds,
+  and on the 20 LiouvilleGreen draws, all 4,320 Levin calls;
+- tests 1–5 (`AdaptiveLevin/tests/test_levin_trust_yardstick.py`, 9 tests) and breakages (i)–(v)
+  caught; no existing assertion changed; AdaptiveLevin 82 → 91, the other six roots equal.
+
+The laptop orchestrator's review passed nine checks (the orchestrator note's §A.5), with test 2
+re-made on cells of its own.
+
+### 6m.2 Rehearsals R25 and R26 (prompt 06m §4)
+
+The agent's record is [`06m/rehearsal/verification.md`](06m/rehearsal/verification.md).
+- **The runs.** R25 `levin-phase-floor-06m-r25-parent-20261106T092420` at `5ff8a5e4` (R24's
+  production code) and R26 `levin-phase-floor-06m-r26-signedyardstick-20261106T093937` at
+  `38f6a828` (`48cf87c0`'s code), both `done`, both fingerprinted `1b332ffa…`.
+- **R25 equals R24 in every value:** the seven value tables (360,462 rows), and all 864
+  `QuadSourceIntegral` rows in every value field (118,776) and counter field (27,163). The
+  rehearsal is reproducible. The two runs' job names differ, so 05's classifier read every label
+  difference as unclassified. All 6,012 differ only by that prefix and the stamp (the rehearsal
+  log's deviation 1).
+- **Outside `QuadSourceIntegral`, R26 equals R25:** the seven value tables identical, 0 differences
+  unclassified, no row in one store only.
+- **Inside it:**
+
+  | | R25 | R26 |
+  |---|---|---|
+  | rows `total_converged` | 797 | 845 |
+  | WKB Levin calls unconverged (of 3,105) | 97 | 20 |
+  | rows at `WKB_Levin_max_depth` = 20 | 76 | 23 |
+  | `WKB_Levin_num_regions`, summed | 134,011 | 114,826 |
+
+  48 rows go from unconverged to converged, all at depth 20 under R25, and none goes the other way.
+  Regions fall in 442 rows and rise in none; the maximum depth falls in 275 and rises in none.
+  `total` is bit-identical in 413 rows, and `total_abserr` moves by at most 0.14 % in any row.
+
+**R1 holds** on 864 rows each, none of them a stationary-point row, none with a non-finite error:
+
+| | violations | largest $\lvert\Delta\rvert/(e_{25}+e_{26})$ |
+|---|---|---|
+| `total` against `total_abserr` | 0 | $4.93\times10^{-6}$ |
+| `analytic_rad` against `analytic.abserr` | 0 | $6.68\times10^{-8}$ |
+
+The readers ran on R26 (six of six exit 0, the store unchanged), and the lock was released with no
+Ray process left. The stores are kept.
+
+### 6m.3 The census: route B's census re-run at the code (prompt 06m §5)
+
+The agent's record is [`06m/census/verification.md`](06m/census/verification.md). 06l's harness ran
+with no variant installed, on 06's certified scratch copy of A3 v2, read-only. Gates M0 and M were
+copied into [`06m/census/predictions.md`](06m/census/predictions.md) before the first unit ran.
+- **Gate M0 holds.** `levin-phase-floor-06m-k0-20261106T101118`: all 100 of 06k's K0 units equal
+  route B's census, 2,110 calls with 0 differences, among them the 248 calls in which route B fired.
+- **Gate M holds.** `levin-phase-floor-06m-census-20261106T102153`, checkpoint `ea5bc3ab…`: 18,560 of
+  18,560 units `done`, none in error or over budget. Every unit equals route B's census: 289,482
+  calls (74,650 group, 214,832 analytic) with 0 differences, among them the 21,264 calls in which
+  route B fired. The comparison is every key of every call and region record, floats by
+  `float.hex`; it excludes only route B's instrument `route_06l`, timing and provenance. Of the
+  excluded keys, `cache_built` lists the same producer builds in another order in 7 units.
+- **So 06l's verdicts are the code's,** by identity and not re-scored (§6l.4): L1, C1, C2, H1, S1
+  and K1 hold, and L2 fails as scored.
+
+**Descriptive.** The cost:
+
+| | census wall | unit wall | group-call regions |
+|---|---|---|---|
+| 06m | 18,465 s | 51,040 s | 1,993,637 |
+| route B | 18,340 s | 50,495 s | 1,993,637 |
+| 06g | 20,361 s | 58,535 s | 2,380,310 |
+
+The host was loaded by system services (a load average of 25–37 at the end), so the regions, route
+B's exactly and 0.838 of 06g's, are the measure of cost.
+
+**The flag's cost.** Every unconverged call, with its `abserr` against its request
+$\max(\texttt{atol}, \texttt{rtol}\,|v|)$ and its share of its unit's `total_abserr`. No analytic
+call is unconverged in either census.
+
+| census | rows | unconverged group calls (units) | within their request | `node_limited` | worst over the request | largest share |
+|---|---|---|---|---|---|---|
+| 06m | outside the 720 | 114 (84) | 104 | 10 | 1.048× | 4.73 % |
+| 06m | in the 720 | 311 (285) | 309 | 2 | 1.004× | 53.0 % |
+| 06g | outside the 720 | 1,632 (946) | 1,628 | 4 | 1.071× | 34.2 % |
+| 06g | in the 720 | 679 (461) | 677 | 2 | 1.000× | 53.0 % |
+
+Each of 06m's 104 calls within their request outside the 720 holds an untrusted leaf at
+`depth_max`, and none is `node_limited`. The 10 over their request are all `node_limited`.
+
+**Levin leaves with $\Delta_1/\phi_P > 10$** (for
+`[06m-levin-floor-misses-node-rounding-far-from-the-origin]`): outside the 720, none is trusted on
+the noise clause and none is returned untrusted. All 471,378 with $1/4 \le r < 1$ were refined. The
+records cannot separate node rounding from resolution, so the issue is left to 07's census.
+
+**Read only and unchanged**, hashed before and after: the scratch copy, R23's and R24's stores and
+run directories, route B's census and 06g's census.
+
+### 6m.4 The review, and the user's rulings
+
+**The Mac Studio orchestrator** held each agent at three planned stops and checked each one with
+readers of its own ([`06m/review/stop1.md`](06m/review/stop1.md),
+[`stop2.md`](06m/review/stop2.md), [`stop3.md`](06m/review/stop3.md)):
+- **stop 1:** R25 against R24 by its own whole-row comparison, 143,831 fields, 0 differing; R26
+  outside `QuadSourceIntegral` by 05's classifier; R1 re-scored in exact rational arithmetic, with
+  the agent's figures;
+- **stop 2:** two K0 units in which route B fired heavily (`g-1e-7-3-34738`, 257 firings, and
+  `g-1e-8-2-34906`, 81, on both parent kinds) re-run at the tree. These, and the agent's whole K0
+  output, were compared with route B's census by its own comparator (`gate_m_orchestrator.py`),
+  with 0 differences;
+- **stop 3:** the census `done`, 18,560 of 18,560, before Gate M was scored. Gate M was re-scored
+  by the same comparator over every unit, call and region record, and the flag-cost table by its own
+  reader, with the agent's figures.
+
+The rehearsal agent logged 8 deviations and the census agent 15, each classified and accepted. The
+unintended drifts had no effect: a file read in two parts, a `sh` re-run, a name-only `ls` of
+`var/levin-phase-floor-07*`, a broken line caught by `ast.parse` before launch, three log times, and
+a descriptive script changed after its first run, its first output kept in
+`06m/census/state/superseded/` and everything recomputed.
+
+**On the laptop:** the 393 files copied back, and the K0, R25 and R26 run directories, match by
+SHA-256. R1 was re-scored in exact arithmetic from `rehearsal/out/qsi_rows.csv`'s hex columns: 0 of
+864 on both, largest ratios $4.93\times10^{-6}$ and $6.68\times10^{-8}$, 48 rows converged and none
+lost. The flag-cost table's lines outside the 720 were re-counted exactly from
+`census/out/descriptive/unconverged_outside_720_{m,06g}.csv`: every figure the same.
+
+**The user's rulings** (the board's Decisions, **06m results**):
+- `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]` closes;
+- `[06m-calls-flagged-unconverged-within-their-request]` is opened and assigned to prompt 08, with
+  its question of what `total_converged` means.

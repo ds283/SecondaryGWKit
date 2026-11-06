@@ -1,0 +1,38 @@
+# flag_cost_orchestrator.py sha256 f0e7ce48eb449aa086bc90309f853b90530adbe7618ca83163abf8e023b235e9; 06a checkpoint /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06a-census-20261027T023143/checkpoint.jsonl
+
+## /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl
+units 18560; status {'done': 18560}
+rtol  rows     kind      unconverged  units  within-request  node_limited  max abserr/request  max share
+1e-7  in720    group             144    133             144             0              0.9738  0.3008
+1e-7  outside  group              52     38              51             1               1.006  0.04735
+1e-8  in720    group             167    152             165             2               1.004  0.5299
+1e-8  outside  group              62     46              53             9               1.048  0.04722
+both  outside  group             114     84             104            10               1.048  0.04735
+both  outside  analytic            0      0               0             0                   0  0
+both  in720    group             311    285             309             2               1.004  0.5299
+both  in720    analytic            0      0               0             0                   0  0
+
+## /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06g-census-20261101T114315/checkpoint.jsonl
+units 18560; status {'done': 18560}
+rtol  rows     kind      unconverged  units  within-request  node_limited  max abserr/request  max share
+1e-7  in720    group             325    220             325             0              0.9967  0.3009
+1e-7  outside  group             801    470             801             0              0.9867  0.3422
+1e-8  in720    group             354    241             352             2                   1  0.5299
+1e-8  outside  group             831    476             827             4               1.071  0.1481
+both  outside  group            1632    946            1628             4               1.071  0.3422
+both  outside  analytic            0      0               0             0                   0  0
+both  in720    group             679    461             677             2                   1  0.5299
+both  in720    analytic            0      0               0             0                   0  0
+
+## /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06l-census-routeB-20261105T100126/checkpoint.jsonl
+units 18560; status {'done': 18560}
+rtol  rows     kind      unconverged  units  within-request  node_limited  max abserr/request  max share
+1e-7  in720    group             144    133             144             0              0.9738  0.3008
+1e-7  outside  group              52     38              51             1               1.006  0.04735
+1e-8  in720    group             167    152             165             2               1.004  0.5299
+1e-8  outside  group              62     46              53             9               1.048  0.04722
+both  outside  group             114     84             104            10               1.048  0.04735
+both  outside  analytic            0      0               0             0                   0  0
+both  in720    group             311    285             309             2               1.004  0.5299
+both  in720    analytic            0      0               0             0                   0  0
+exit 0

@@ -1,0 +1,14 @@
+$ bash -c S=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json\;\ cp\ -p\ \$S\ state/rows.json\ \&\&\ shasum\ -a\ 256\ \$S\ state/rows.json\ \&\&\ cmp\ \$S\ state/rows.json\ \&\&\ echo\ \"cmp:\ identical\"\;\ ls\ -la\ \$S\ state/rows.json\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/rows.json\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:07:33Z
+# ----
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json
+aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417  state/rows.json
+cmp: identical
+-rw-r--r-- 1 ds283 staff 7796457 Oct 27 02:17 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json
+-rw-r--r-- 1 ds283 staff 7796457 Oct 27 02:17 state/rows.json
+ls: cannot access '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06l/state/rows.json': No such file or directory
+# ----
+# end 2026-11-06T10:07:33Z
+# exit 2

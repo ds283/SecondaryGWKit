@@ -1,0 +1,60 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-06T09:49:57Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+D=var/runs/levin-phase-floor-06m-r26-signedyardstick-20261106T093937; ./venv/bin/python -I -c "
+import json,sys
+s=json.load(open(sys.argv[1]+\"/status.json\"))
+print({k:v for k,v in s.items() if k!=\"fingerprint\"})
+f=s[\"fingerprint\"]
+print(\"digest:\", f[\"digest\"], f[\"digest\"]==\"1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7\")
+print({k:f[k] for k in f if k not in (\"classes\",)})
+for name,p in ((\"R25\",sys.argv[2]),(\"R24\",sys.argv[3]),(\"R23\",sys.argv[4])):
+    o=json.load(open(p))[\"fingerprint\"]
+    print(\"classes equal\", name, o[\"classes\"]==f[\"classes\"], \"digest equal\", o[\"digest\"]==f[\"digest\"])
+print(\"n classes\", len(f[\"classes\"]))
+print(\"QuadSourceIntegral class:\", f[\"classes\"].get(\"QuadSourceIntegral\"))
+" $D var/runs/levin-phase-floor-06m-r25-parent-20261106T092420/status.json var/runs/levin-phase-floor-06g-r24-leafvalues-20261101T111215/status.json var/runs/levin-phase-floor-06g-r23-parent-20261101T110641/status.json; echo "== kill -0"; kill -0 57112 2>&1 || echo "57112 gone"; kill -0 57109 2>&1 || echo "57109 gone"; echo "== launch log tail"; tail -1 var/runs/levin-phase-floor-06m-r26.launch.log; echo "== Traceback / WARNING counts"; for f in var/runs/levin-phase-floor-06m-r25.launch.log var/runs/levin-phase-floor-06m-r26.launch.log $D/stdout.log $D/stderr.log; do echo "$f: $(grep -c Traceback $f) $(grep -c "!! WARNING" $f) size $(wc -c < $f)"; done; echo "== trees"; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-5ff8a5e /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82; do git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short --ignored; find $t -newer var/levin-phase-floor-06m/rehearsal/state/r25_launch_marker -not -path "*/.git/*" | head -3; done; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > var/levin-phase-floor-06m/rehearsal/out/r26_end_registry_list.txt 2>&1; echo "list exit $?"; grep 06m var/levin-phase-floor-06m/rehearsal/out/r26_end_registry_list.txt | cut -c1-120; tail -1 var/levin-phase-floor-06m/rehearsal/out/r26_end_registry_list.txt; echo "== store files"; ls -la var/datastores | grep 06m
+# output:
+{'exit_code': 0, 'fingerprint_sidecar': 'not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.manifest.json is not a problem-free registry sidecar (there is none)', 'heartbeat': '2026-11-06T09:49:23+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 57112, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete', 'state': 'done', 'units_done': 0, 'units_total': None}
+digest: 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 True
+{'digest': '1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7', 'encoding_format': 1, 'fingerprint_format': 6, 'problems': {}, 'taken': {'git_dirty': False, 'git_head': '38f6a828d17b41893574f7344a543ebfb1e01e85', 'run_id': 'levin-phase-floor-06m-r26-signedyardstick-20261106T093937', 'when': '2026-11-06T09:49:21+00:00'}}
+classes equal R25 True digest equal True
+classes equal R24 True digest equal True
+classes equal R23 True digest equal True
+n classes 21
+QuadSourceIntegral class: {'count': 864, 'digest': '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', 'tag_sets': [{'count': 864, 'digest': '8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86', 'tags': ['GkOneLoopDensity', 'LargestSourceRedshift_6.8788e+13', 'ResponseRedshiftGrid_97_d128e5d7', 'ResponseSparsenessZ_12', 'Run_default', 'SmallestSourceRedshift_250', 'SourceGridConstruction_2', 'SourceRedshiftGrid_1159_7139cb9c', 'TkOneLoopDensity']}]}
+== kill -0
+sh: line 12: kill: (57112) - No such process
+57112 gone
+sh: line 12: kill: (57109) - No such process
+57109 gone
+== launch log tail
+** driver exit status 0
+== Traceback / WARNING counts
+var/runs/levin-phase-floor-06m-r25.launch.log: 0 0 size 8398
+var/runs/levin-phase-floor-06m-r26.launch.log: 0 0 size 8430
+var/runs/levin-phase-floor-06m-r26-signedyardstick-20261106T093937/stdout.log: 0 0 size 8329
+var/runs/levin-phase-floor-06m-r26-signedyardstick-20261106T093937/stderr.log: 0 0 size 0
+== trees
+5ff8a5e44be775df299af0f1754123578905b86e
+38f6a828d17b41893574f7344a543ebfb1e01e85
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== registry
+list exit 0
+   levin-phase-floor-06m-r26-signedyardstick-20261106T093937  done              -      10m  levin-phase-floor prompt 06m
+   levin-phase-floor-06m-r25-parent-20261106T092420           done              -      26m  levin-phase-floor prompt 06m
+60 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 60 finished; 0 with no host recorded.
+== store files
+-rw-r--r--  1 ds283 staff  24985600 Nov  6 09:36 levin-phase-floor-06m-r25-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25284608 Nov  6 09:36 levin-phase-floor-06m-r25-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  6 09:24 levin-phase-floor-06m-r25-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24588288 Nov  6 09:36 levin-phase-floor-06m-r25-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  6 09:24 levin-phase-floor-06m-r25.sqlite
+-rw-r--r--  1 ds283 staff  25006080 Nov  6 09:49 levin-phase-floor-06m-r26-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25284608 Nov  6 09:49 levin-phase-floor-06m-r26-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  6 09:39 levin-phase-floor-06m-r26-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24420352 Nov  6 09:49 levin-phase-floor-06m-r26-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  6 09:39 levin-phase-floor-06m-r26.sqlite
+# exit: 0
+# end: 2026-11-06T09:49:58Z

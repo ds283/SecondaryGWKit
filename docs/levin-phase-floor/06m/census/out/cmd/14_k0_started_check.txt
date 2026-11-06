@@ -1,0 +1,49 @@
+$ bash -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118/status.json\;\ echo\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118\;\ echo\ \'==\ ps\ of\ the\ sh\ and\ its\ children\'\;\ ps\ -o\ pid\,ppid\,etime\,command\ -p\ 61227\;\ ps\ -o\ pid\,ppid\,etime\,command\ -g\ \$\(ps\ -o\ pgid=\ -p\ 61227\ \|\ tr\ -d\ \'\ \'\)\ \|\ cut\ -c1-220\;\ echo\ \'==\ out/cmd/k0\'\;\ ls\ out/cmd/k0\ 2\>\&1\;\ head\ -12\ out/cmd/k0/41_k0_run_tree.txt\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:11:23Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-06T10:11:18+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 61231,
+  "stage": "41_k0_run_tree started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 2
+}
+
+total 8
+drwxr-xr-x  6 ds283 staff  192 Nov  6 10:11 .
+drwxr-xr-x 92 ds283 staff 2944 Nov  6 10:11 ..
+-rw-r--r--  1 ds283 staff 3729 Nov  6 10:11 manifest.json
+-rw-r--r--  1 ds283 staff  280 Nov  6 10:11 status.json
+-rw-r--r--  1 ds283 staff    0 Nov  6 10:11 stderr.log
+-rw-r--r--  1 ds283 staff    0 Nov  6 10:11 stdout.log
+== ps of the sh and its children
+  PID  PPID ELAPSED COMMAND
+61227     1   00:05 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_06j.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-k0-20261106T101118 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/state/plan_k0.json; exit $?
+  PID  PPID ELAPSED COMMAND
+61227     1   00:05 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_06j.py --run-dir /Users/ds283/Documents/Code
+61231 61227   00:05 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_06j.p
+== out/cmd/k0
+41_k0_run_tree.txt
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census/scripts/run_k0.py tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/out/k0/units.json state/k0/tree --workers 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06m/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-06T10:11:18Z
+# ----
+# levin-phase-floor 06m: census units under the variant tree
+# written 2026-11-06T10:11:18Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 19f2680e8ce423cc20b0d6b2637f7b6173f100377932ea3bfa96272959c39d86
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 HEAD 38f6a828d17b41893574f7344a543ebfb1e01e85 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82/docs/levin-phase-floor/06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699
+# ----
+# end 2026-11-06T10:11:23Z
+# exit 0
