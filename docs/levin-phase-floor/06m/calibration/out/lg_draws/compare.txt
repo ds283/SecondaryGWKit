@@ -1,0 +1,65 @@
+# levin-phase-floor 06m: the LiouvilleGreen draws, the commit and the variant against the parent, and the commit against the variant
+# written 2026-11-06T01:05:13+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script lg_compare_06m.py sha256 70753f3a6a31b69ac8a2e393ae6885790c5a23abe9d8cb1b4f1ee1b8236de4bb
+# prov.py sha256 09478c2b5024cf42c79d9628c3ea5795d3ca27f124ad71a9322e5208977639b5
+# AdaptiveLevin/levin_quadrature.py sha256 beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6
+# HEAD 5ff8a5e44be775df299af0f1754123578905b86e
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#     ?? AdaptiveLevin/tests/test_levin_trust_yardstick.py
+#     ?? docs/levin-phase-floor/06m/
+# uptime at start: 1:05  up 6 days,  3:25, 1 user, load averages: 108.23 67.86 41.79
+# the run's header:
+#   # levin-phase-floor 06m: section 2 test 9, the LiouvilleGreen seeded draws (run)
+#   # written 2026-11-06T00:58:51+00:00 on mps026088.phys.susx.ac.uk
+#   # python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+#   # script lg_seeded_draws.py sha256 4334d863e9cdfac6c9212bc36f00b8b48b86b6df24136f72c786f804c6c74da5
+#   # prov.py sha256 09478c2b5024cf42c79d9628c3ea5795d3ca27f124ad71a9322e5208977639b5
+#   # AdaptiveLevin/levin_quadrature.py sha256 beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6
+#   # input LiouvilleGreen/tests/test_3bessel_analytic.py sha256 3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c
+#   # input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+#   # input LiouvilleGreen/bessel_phase.py sha256 bdee05b578d2f2da61ba2b09ed541cf1fe0b37a7c11ec1d7ae56e439c75210e8
+#   # HEAD 5ff8a5e44be775df299af0f1754123578905b86e
+#   # tree dirty: yes; git status --short:
+#   #      M AdaptiveLevin/levin_quadrature.py
+#   #     ?? AdaptiveLevin/tests/test_levin_trust_yardstick.py
+#   #     ?? docs/levin-phase-floor/06m/
+#   # uptime at start: 0:58  up 6 days,  3:19, 1 user, load averages: 6.57 15.30 19.24
+#   # units 240: seeds 0-19 x modes ('parent', 'commit', 'routeB') x tests ('test_YJJ_log_singularity', 'test_JJJ', 'test_YJJ', 'test_abserr_bounds_truth'); processes 8; parent 5ff8a5e44be775df299af0f1754123578905b86e; variant /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/06l/scripts/variants/levin_quadrature_routeB.py sha256 5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f
+#   # wall time 381.0 s; uptime at end: 1:05  up 6 days,  3:25, 1 user, load averages: 108.23 67.86 41.79
+records 240; seeds 0-19; tests ['test_YJJ_log_singularity', 'test_JJJ', 'test_YJJ', 'test_abserr_bounds_truth']; modes ['commit', 'parent', 'routeB']
+
+== commit against parent
+outcomes (parent->commit): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 0; value or abserr differ 121; regions differ 121
+convergence changes: unconverged->converged 0, converged->unconverged 0
+   F->T by test: {}
+   T->F by test: {}
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> commit 432; dishonest and converged 432 -> 432; converged 560 -> 560; true error changed 3
+   honest->dishonest: 0
+   dishonest->honest: 0
+every other case: 520 cases; dishonest tree 0 -> commit 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 13
+   honest->dishonest: 0
+   dishonest->honest: 0
+
+== routeB against parent
+outcomes (parent->routeB): {'pass->pass': 80}; changed: []
+call or case sequences that do not match: [] []
+Levin calls 4320; with a firing 122; value or abserr differ 121; regions differ 121
+convergence changes: unconverged->converged 0, converged->unconverged 0
+   F->T by test: {}
+   T->F by test: {}
+near-singular test_YJJ_log_singularity cases (eps <= 1e-4): 560 cases; dishonest tree 432 -> routeB 432; dishonest and converged 432 -> 432; converged 560 -> 560; true error changed 3
+   honest->dishonest: 0
+   dishonest->honest: 0
+every other case: 520 cases; dishonest tree 0 -> routeB 0; dishonest and converged 0 -> 0; converged 284 -> 284; true error changed 13
+   honest->dishonest: 0
+   dishonest->honest: 0
+
+== commit against routeB, bit for bit (prompt 06m)
+units 80; units that differ (outcome, printed cases, three-Bessel results, stdout, call count): []
+Levin calls 4320; calls that differ in any compared key: 0 []
+keys compared per call: ['abserr', 'atol', 'checked_classes', 'converged', 'depth_max', 'evaluations', 'index', 'max_depth', 'node_error_abs_sum', 'node_error_signed_sum', 'node_limited', 'notify_label', 'num_phase_limited_regions', 'num_quarters_regions', 'num_regions', 'num_untrusted_regions', 'regions_full_sha256', 'regions_sha256', 'result_sha256', 'rtol', 'value', 'x_span']
+routeB's calls with a firing 122; firings on a Clenshaw-Curtis parent 222, on a Levin parent 68; withdrawn 0

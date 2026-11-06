@@ -1,0 +1,104 @@
+# levin-phase-floor 06m: section 2 tests 2-5, the cells and leaves
+# written 2026-11-06T00:58:53+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script cells.py sha256 3b08f2a119de214d66e0b3a32dd54895d070d7e9db0cfe473c17a76a9869c155
+# prov.py sha256 09478c2b5024cf42c79d9628c3ea5795d3ca27f124ad71a9322e5208977639b5
+# AdaptiveLevin/levin_quadrature.py sha256 beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6
+# input AdaptiveLevin/tests/test_levin_trust_yardstick.py sha256 7b5ddd335df63d823d003348b129df8c649e27033063c12f784f3c59f246f9ee
+# input docs/levin-phase-floor/06l/scripts/variants/levin_quadrature_routeB.py sha256 5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f
+# HEAD 5ff8a5e44be775df299af0f1754123578905b86e
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#     ?? AdaptiveLevin/tests/test_levin_trust_yardstick.py
+#     ?? docs/levin-phase-floor/06m/
+# uptime at start: 0:58  up 6 days,  3:19, 1 user, load averages: 6.57 15.30 19.24
+# parent: git show 5ff8a5e44be775df299af0f1754123578905b86e:AdaptiveLevin/levin_quadrature.py
+# variant: /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/06l/scripts/variants/levin_quadrature_routeB.py (sha256 checked 5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f)
+
+== Test 2: each cell under the commit (new), the variant (var) and the parent (old)
+exp_sin_1e3: new regions 1 (fallback 0) depth 0 converged True value 0.00074181606367542 abserr 2.1495939317213676e-16; old regions 1 (fallback 0) depth 0 converged True value 0.00074181606367542 abserr 2.1495939317213676e-16
+   new == var bit for bit: True; new == old bit for bit: True; variant firings 0 (Clenshaw-Curtis parent 0, Levin parent 0); withdrawn 0
+si_1000_exp: new regions 3 (fallback 0) depth 2 converged True value 0.0005632048276857771 abserr 2.2177940294688426e-11; old regions 3 (fallback 0) depth 2 converged True value 0.0005632048276857771 abserr 2.2177940294688426e-11
+   new == var bit for bit: True; new == old bit for bit: True; variant firings 0 (Clenshaw-Curtis parent 0, Levin parent 0); withdrawn 0
+gaussian_bump: new regions 10 (fallback 0) depth 5 converged True value -1.2394789310049392e-13 abserr 8.564133450449753e-11; old regions 10 (fallback 0) depth 5 converged True value -1.2394789310049392e-13 abserr 8.564133450449753e-11
+   new == var bit for bit: True; new == old bit for bit: True; variant firings 0 (Clenshaw-Curtis parent 0, Levin parent 0); withdrawn 0
+sqrt_fallback: new regions 5 (fallback 5) depth 4 converged True value 0.5423702304948848 abserr 3.240781932896429e-11; old regions 5 (fallback 5) depth 4 converged True value 0.5423702304948848 abserr 3.240781932896429e-11
+   new == var bit for bit: True; new == old bit for bit: True; variant firings 0 (Clenshaw-Curtis parent 0, Levin parent 0); withdrawn 0
+runge_fallback: new regions 11 (fallback 11) depth 5 converged True value 0.12608727072036166 abserr 3.6123788104415806e-11; old regions 11 (fallback 11) depth 5 converged True value 0.12608727072036166 abserr 3.6123788104415806e-11
+   new == var bit for bit: True; new == old bit for bit: True; variant firings 0 (Clenshaw-Curtis parent 0, Levin parent 0); withdrawn 0
+sinc_12b: new regions 17 (fallback 8) depth 12 converged True value 0.008666078496903562 abserr 2.0738702565843038e-13; old regions 17 (fallback 8) depth 12 converged True value 0.008666078496903562 abserr 2.0738702565843038e-13
+   new == var bit for bit: True; new == old bit for bit: True; variant firings 0 (Clenshaw-Curtis parent 0, Levin parent 0); withdrawn 0
+noisy(A=128,k=60): new regions 17 (fallback 0) depth 6 converged True value 0.006548902749835732 abserr 4.810933400237279e-13; old regions 25 (fallback 7) depth 10 converged True value 0.006548902749835226 abserr 1.6672228075152377e-13
+   new == var bit for bit: True; new == old bit for bit: False; variant firings 1 (Clenshaw-Curtis parent 0, Levin parent 1); withdrawn 0
+      fired [2.84375, 3.765625] depth 6 parent Levin halves Levin+Levin r 0.9366 delta1 1.2577e-15 phi_P 5.0708e-16 nu1 1.4096e-15 nuB 1.4096e-15 delta1/phi_P 2.48
+noisy(A=512,k=60): new regions 114 (fallback 87) depth 10 converged True value 0.006548902749833253 abserr 9.083308234651921e-13; old regions 149 (fallback 119) depth 11 converged True value 0.006548902749831765 abserr 9.546111166397443e-13
+   new == var bit for bit: True; new == old bit for bit: False; variant firings 5 (Clenshaw-Curtis parent 3, Levin parent 2); withdrawn 0
+      fired [30.5, 34.1875] depth 4 parent Levin halves Levin+Levin r 0.9130 delta1 8.5695e-16 phi_P 5.9185e-16 nu1 1.3552e-15 nuB 1.3552e-15 delta1/phi_P 1.45
+      fired [1.23046875, 1.345703125] depth 9 parent CC halves CC+CC r 0.2804 delta1 1.9984e-15 phi_P 1.4191e-15 nu1 2.8652e-15 nuB 2.8054e-15 delta1/phi_P 1.41
+      fired [1.4033203125, 1.4609375] depth 10 parent CC halves CC+CC r 0.7002 delta1 8.2746e-16 phi_P 6.1051e-16 nu1 1.2188e-15 nuB 1.2107e-15 delta1/phi_P 1.36
+      fired [19.4375, 20.359375] depth 6 parent Levin halves Levin+Levin r 0.5226 delta1 6.9042e-16 phi_P 2.9342e-16 nu1 6.9961e-16 nuB 6.9961e-16 delta1/phi_P 2.35
+      fired [1.2880859375, 1.345703125] depth 10 parent CC halves CC+CC r 0.3736 delta1 7.8930e-16 phi_P 7.0051e-16 nu1 1.3796e-15 nuB 1.3751e-15 delta1/phi_P 1.13
+far(3e5): new regions 107 (fallback 106) depth 8 converged True value 9.096625522667598 abserr 8.764324550834244e-06; old regions 146 (fallback 145) depth 9 converged True value 9.09662552224942 abserr 9.055881734774094e-06
+   new == var bit for bit: True; new == old bit for bit: False; variant firings 40 (Clenshaw-Curtis parent 40, Levin parent 0); withdrawn 0
+      fired [300002.4375, 300002.453125] depth 8 parent CC halves CC+CC r 0.4290 delta1 1.4982e-09 phi_P 1.1076e-09 nu1 1.7475e-09 nuB 1.7475e-09 delta1/phi_P 1.35
+      fired [300002.453125, 300002.46875] depth 8 parent CC halves CC+CC r 0.4283 delta1 1.7207e-09 phi_P 1.2599e-09 nu1 1.9704e-09 nuB 1.9704e-09 delta1/phi_P 1.37
+      fired [300003.9375, 300003.953125] depth 8 parent CC halves CC+CC r 0.4249 delta1 1.0565e-09 phi_P 7.7950e-10 nu1 5.1088e-09 nuB 1.2185e-09 delta1/phi_P 1.36
+      fired [300003.953125, 300003.96875] depth 8 parent CC halves CC+CC r 0.4229 delta1 4.8990e-09 phi_P 3.4086e-09 nu1 7.3601e-09 nuB 5.0589e-09 delta1/phi_P 1.44
+      fired [300003.78125, 300003.796875] depth 8 parent CC halves CC+CC r 0.4219 delta1 2.3695e-09 phi_P 1.6877e-09 nu1 5.6910e-09 nuB 2.5516e-09 delta1/phi_P 1.4
+      fired [300003.796875, 300003.8125] depth 8 parent CC halves CC+CC r 0.4254 delta1 1.2288e-09 phi_P 9.0308e-10 nu1 5.0098e-09 nuB 1.4089e-09 delta1/phi_P 1.36
+      fired [300003.90625, 300003.921875] depth 8 parent CC halves CC+CC r 0.4223 delta1 6.3807e-09 phi_P 4.4270e-09 nu1 7.9680e-09 nuB 6.5470e-09 delta1/phi_P 1.44
+      fired [300003.921875, 300003.9375] depth 8 parent CC halves CC+CC r 0.4218 delta1 2.8637e-09 phi_P 2.0202e-09 nu1 6.2026e-09 nuB 3.0280e-09 delta1/phi_P 1.42
+      fired [300003.625, 300003.640625] depth 8 parent CC halves CC+CC r 0.4229 delta1 3.8294e-09 phi_P 2.6912e-09 nu1 6.2205e-09 nuB 4.0293e-09 delta1/phi_P 1.42
+      fired [300003.640625, 300003.65625] depth 8 parent CC halves CC+CC r 0.4190 delta1 7.1628e-10 phi_P 5.6286e-10 nu1 4.4035e-09 nuB 9.1454e-10 delta1/phi_P 1.27
+      fired [300003.65625, 300003.671875] depth 8 parent CC halves CC+CC r 0.4249 delta1 2.5355e-09 phi_P 1.8015e-09 nu1 5.5648e-09 nuB 2.7319e-09 delta1/phi_P 1.41
+      fired [300003.671875, 300003.6875] depth 8 parent CC halves CC+CC r 0.4240 delta1 5.5793e-09 phi_P 3.8823e-09 nu1 7.1760e-09 nuB 5.7741e-09 delta1/phi_P 1.44
+      fired [300003.8125, 300003.828125] depth 8 parent CC halves CC+CC r 0.4236 delta1 4.7444e-09 phi_P 3.3074e-09 nu1 7.0569e-09 nuB 4.9226e-09 delta1/phi_P 1.43
+      fired [300003.828125, 300003.84375] depth 8 parent CC halves CC+CC r 0.4232 delta1 7.7634e-09 phi_P 5.3724e-09 nu1 8.3339e-09 nuB 7.9397e-09 delta1/phi_P 1.45
+      fired [300003.46875, 300003.484375] depth 8 parent CC halves CC+CC r 0.4234 delta1 3.7179e-09 phi_P 2.6192e-09 nu1 5.8149e-09 nuB 3.9333e-09 delta1/phi_P 1.42
+      fired [300003.484375, 300003.5] depth 8 parent CC halves CC+CC r 0.4207 delta1 1.0245e-09 phi_P 7.7894e-10 nu1 4.2865e-09 nuB 1.2384e-09 delta1/phi_P 1.32
+      fired [300003.5, 300003.515625] depth 8 parent CC halves CC+CC r 0.4261 delta1 1.8337e-09 phi_P 1.3265e-09 nu1 4.8254e-09 nuB 2.0461e-09 delta1/phi_P 1.38
+      fired [300003.515625, 300003.53125] depth 8 parent CC halves CC+CC r 0.4248 delta1 4.5795e-09 phi_P 3.2024e-09 nu1 6.3618e-09 nuB 4.7904e-09 delta1/phi_P 1.43
+      fired [300003.3125, 300003.328125] depth 8 parent CC halves CC+CC r 0.4233 delta1 2.4148e-09 phi_P 1.7330e-09 nu1 4.7308e-09 nuB 2.6432e-09 delta1/phi_P 1.39
+      fired [300003.75, 300003.765625] depth 8 parent CC halves CC+CC r 0.4230 delta1 8.2248e-09 phi_P 5.6924e-09 nu1 8.4106e-09 nuB 8.4106e-09 delta1/phi_P 1.44
+      fired [300003.765625, 300003.78125] depth 8 parent CC halves CC+CC r 0.4228 delta1 5.6404e-09 phi_P 3.9250e-09 nu1 7.3881e-09 nuB 5.8244e-09 delta1/phi_P 1.44
+      fired [300003.34375, 300003.359375] depth 8 parent CC halves CC+CC r 0.4263 delta1 2.3887e-09 phi_P 1.7093e-09 nu1 4.7966e-09 nuB 2.6146e-09 delta1/phi_P 1.4
+      fired [300003.359375, 300003.375] depth 8 parent CC halves CC+CC r 0.4254 delta1 4.6823e-09 phi_P 3.2756e-09 nu1 6.0089e-09 nuB 4.9069e-09 delta1/phi_P 1.43
+      fired [300003.171875, 300003.1875] depth 8 parent CC halves CC+CC r 0.4277 delta1 1.7570e-09 phi_P 1.2812e-09 nu1 3.9948e-09 nuB 1.9947e-09 delta1/phi_P 1.37
+      fired [300003.96875, 300003.984375] depth 8 parent CC halves CC+CC r 0.4226 delta1 8.1780e-09 phi_P 5.6526e-09 nu1 8.7370e-09 nuB 8.3359e-09 delta1/phi_P 1.45
+      fired [300003.984375, 300004.0] depth 8 parent CC halves CC+CC r 0.4225 delta1 1.0465e-08 phi_P 7.2180e-09 nu1 1.0621e-08 nuB 1.0621e-08 delta1/phi_P 1.45
+      fired [300003.125, 300003.140625] depth 8 parent CC halves CC+CC r 0.4246 delta1 3.8423e-09 phi_P 2.7099e-09 nu1 4.9408e-09 nuB 4.0827e-09 delta1/phi_P 1.42
+      fired [300003.140625, 300003.15625] depth 8 parent CC halves CC+CC r 0.4236 delta1 2.1604e-09 phi_P 1.5625e-09 nu1 4.1410e-09 nuB 2.3999e-09 delta1/phi_P 1.38
+      fired [300002.96875, 300002.984375] depth 8 parent CC halves CC+CC r 0.4209 delta1 8.6076e-10 phi_P 6.7830e-10 nu1 2.9037e-09 nuB 1.1081e-09 delta1/phi_P 1.27
+      fired [300002.984375, 300003.0] depth 8 parent CC halves CC+CC r 0.4327 delta1 6.6648e-10 phi_P 5.3964e-10 nu1 2.8220e-09 nuB 9.1316e-10 delta1/phi_P 1.24
+      fired [300003.4375, 300003.453125] depth 8 parent CC halves CC+CC r 0.4241 delta1 7.6604e-09 phi_P 5.3119e-09 nu1 7.8786e-09 nuB 7.8786e-09 delta1/phi_P 1.44
+      fired [300003.453125, 300003.46875] depth 8 parent CC halves CC+CC r 0.4239 delta1 5.9967e-09 phi_P 4.1758e-09 nu1 6.7794e-09 nuB 6.2135e-09 delta1/phi_P 1.44
+      fired [300003.53125, 300003.546875] depth 8 parent CC halves CC+CC r 0.4244 delta1 6.9353e-09 phi_P 4.8123e-09 nu1 7.3236e-09 nuB 7.1448e-09 delta1/phi_P 1.44
+      fired [300003.546875, 300003.5625] depth 8 parent CC halves CC+CC r 0.4242 delta1 8.6515e-09 phi_P 5.9853e-09 nu1 8.8593e-09 nuB 8.8593e-09 delta1/phi_P 1.45
+      fired [300003.875, 300003.890625] depth 8 parent CC halves CC+CC r 0.4227 delta1 1.0646e-08 phi_P 7.3453e-09 nu1 1.0817e-08 nuB 1.0817e-08 delta1/phi_P 1.45
+      fired [300003.890625, 300003.90625] depth 8 parent CC halves CC+CC r 0.4226 delta1 9.0768e-09 phi_P 6.2718e-09 nu1 9.2451e-09 nuB 9.2451e-09 delta1/phi_P 1.45
+      fired [300002.9375, 300002.953125] depth 8 parent CC halves CC+CC r 0.4252 delta1 3.4473e-09 phi_P 2.4416e-09 nu1 4.1598e-09 nuB 3.6956e-09 delta1/phi_P 1.41
+      fired [300002.953125, 300002.96875] depth 8 parent CC halves CC+CC r 0.4243 delta1 2.2618e-09 phi_P 1.6336e-09 nu1 3.6639e-09 nuB 2.5097e-09 delta1/phi_P 1.38
+      fired [300003.84375, 300003.859375] depth 8 parent CC halves CC+CC r 0.4230 delta1 9.9170e-09 phi_P 6.8458e-09 nu1 1.0091e-08 nuB 1.0091e-08 delta1/phi_P 1.45
+      fired [300003.859375, 300003.875] depth 8 parent CC halves CC+CC r 0.4229 delta1 1.0927e-08 phi_P 7.5374e-09 nu1 1.1100e-08 nuB 1.1100e-08 delta1/phi_P 1.45
+
+== Tests 3-5: the leaves
+test 3: far(3e5) leaf [300003.640625, 300003.65625] depth 8
+   kinds: parent CC, halves CC+CC
+   r 0.4190426886494521 delta1 7.162842541319492e-10 delta2 3.001536796887194e-10 phi_P 5.628566166584259e-10 (parent's: r 0.4190426886494521 delta1 7.162842541319492e-10 phi_P 5.628566166584259e-10)
+   E_P 4.918693180013573e-10 E_L -1.9689439110582745e-09 E_R 1.7444628979638921e-09; phi_L 2.0326848423921783e-09 phi_R 1.8079290613594218e-09; phi^-_L 6.374093133390376e-11 phi^-_R 6.34661633955297e-11
+   |E_L + E_R| 2.2448e-10; |E_L| + |E_R| 3.7134e-09; ratio 0.06045
+   nu_1 4.403470520410026e-09 nu_B 9.145447244822417e-10; delta1/phi_P 1.273 delta1/nu_B 0.7832 delta1/nu_1 0.1627
+   trusted: commit True (returned True, value_kind quarters); parent False (returned False); the call's regions: commit 107 converged True, parent 146 converged True
+test 4: noisy(A=512,k=60) leaf [22.89453125, 23.125] depth 8
+   kinds: parent Levin, halves CC+CC
+   r 0.48561872909698994 delta1 6.483528991463317e-16 delta2 3.148523108897905e-16 phi_P np.float64(1.6448606802096032e-16) (parent's: r 0.48561872909698994 delta1 6.483528991463317e-16 phi_P np.float64(1.6448606802096032e-16))
+   E_P None E_L -1.172097861520228e-16 E_R -1.0741422269315105e-16; phi_L 1.5362691354183068e-14 phi_R 1.3016818188422571e-14; phi^-_L 1.5245481568031046e-14 phi^-_R 1.290940396572942e-14
+   |E_L + E_R| 2.2462e-16; |E_L| + |E_R| 2.2462e-16; ratio 1
+   nu_1 np.float64(2.85439956106266e-14) nu_B 1.6448606802096032e-16; delta1/phi_P 3.942 delta1/nu_B 3.942 delta1/nu_1 0.02271
+   trusted: commit False (returned False, value_kind own); parent False (returned False); the call's regions: commit 114 converged True, parent 149 converged True
+test 5: far(3e5) leaf [300002.0, 300002.5] depth 3
+   kinds: parent Levin, halves Levin+Levin
+   r 0.6329737798720324 delta1 1.1587419912473251e-10 delta2 7.334532980962649e-11 phi_P np.float64(3.0499416765602976e-14) (parent's: r 0.6329737798720324 delta1 1.1587419912473251e-10 phi_P np.float64(3.0499416765602976e-14))
+   E_P None E_L None E_R None; phi_L np.float64(2.4788553138900734e-14) phi_R np.float64(2.5844637214492055e-14); phi^-_L None phi^-_R None
+   nu_1 np.float64(8.113260711899576e-14) nu_B 8.113260711899576e-14; delta1/phi_P 3799 delta1/nu_B 1428 delta1/nu_1 1428
+   trusted: commit False (returned False, value_kind own); parent False (returned False); the call's regions: commit 107 converged True, parent 146 converged True

@@ -1,0 +1,149 @@
+{
+ "header": [
+  "# levin-phase-floor 06m: the LiouvilleGreen draws, the commit and the variant against the parent, and the commit against the variant",
+  "# written 2026-11-06T01:05:13+00:00 on mps026088.phys.susx.ac.uk",
+  "# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "# script lg_compare_06m.py sha256 70753f3a6a31b69ac8a2e393ae6885790c5a23abe9d8cb1b4f1ee1b8236de4bb",
+  "# prov.py sha256 09478c2b5024cf42c79d9628c3ea5795d3ca27f124ad71a9322e5208977639b5",
+  "# AdaptiveLevin/levin_quadrature.py sha256 beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+  "# HEAD 5ff8a5e44be775df299af0f1754123578905b86e",
+  "# tree dirty: yes; git status --short:",
+  "#      M AdaptiveLevin/levin_quadrature.py",
+  "#     ?? AdaptiveLevin/tests/test_levin_trust_yardstick.py",
+  "#     ?? docs/levin-phase-floor/06m/",
+  "# uptime at start: 1:05  up 6 days,  3:25, 1 user, load averages: 108.23 67.86 41.79"
+ ],
+ "n_records": 240,
+ "variants": {
+  "commit": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [],
+    "T->F": []
+   },
+   "calls_value_or_abserr_differ": 121,
+   "calls_regions_differ": 121,
+   "calls_fired": 0,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 432,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 432,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 3
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 13
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  },
+  "routeB": {
+   "outcomes": {
+    "pass->pass": 80
+   },
+   "outcome_changes": [],
+   "sequence_mismatch": [],
+   "calls": 4320,
+   "conv_changes": {
+    "F->T": [],
+    "T->F": []
+   },
+   "calls_value_or_abserr_differ": 121,
+   "calls_regions_differ": 121,
+   "calls_fired": 122,
+   "cases": {
+    "ns": {
+     "n": 560,
+     "dishonest_tree": 432,
+     "dishonest_route": 432,
+     "dishonest_and_converged_tree": 432,
+     "dishonest_and_converged_route": 432,
+     "converged_tree": 560,
+     "converged_route": 560,
+     "true_error_changed": 3
+    },
+    "rest": {
+     "n": 520,
+     "dishonest_tree": 0,
+     "dishonest_route": 0,
+     "dishonest_and_converged_tree": 0,
+     "dishonest_and_converged_route": 0,
+     "converged_tree": 284,
+     "converged_route": 284,
+     "true_error_changed": 13
+    }
+   },
+   "moves": {
+    "ns": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    },
+    "rest": {
+     "honest->dishonest": [],
+     "dishonest->honest": []
+    }
+   },
+   "case_mismatch": []
+  }
+ },
+ "commit_vs_routeB": {
+  "units": 80,
+  "units_differ": [],
+  "calls": 4320,
+  "calls_differ": [],
+  "keys_compared": [
+   "abserr",
+   "atol",
+   "checked_classes",
+   "converged",
+   "depth_max",
+   "evaluations",
+   "index",
+   "max_depth",
+   "node_error_abs_sum",
+   "node_error_signed_sum",
+   "node_limited",
+   "notify_label",
+   "num_phase_limited_regions",
+   "num_quarters_regions",
+   "num_regions",
+   "num_untrusted_regions",
+   "regions_full_sha256",
+   "regions_sha256",
+   "result_sha256",
+   "rtol",
+   "value",
+   "x_span"
+  ],
+  "calls_with_firing": 122,
+  "firings_cc_parent": 222,
+  "firings_levin_parent": 68,
+  "withdrawn": 0
+ }
+}

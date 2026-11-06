@@ -1,0 +1,128 @@
+# levin-phase-floor 06m: breakages (i)-(v), each applied, the test module run, then reverted
+# written 2026-11-06T00:50:22+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script breakages.py sha256 b6ea1ab5b43831f7f95ce2985e7e99daee52f95ff764786f6da5af5993a2334c
+# prov.py sha256 09478c2b5024cf42c79d9628c3ea5795d3ca27f124ad71a9322e5208977639b5
+# AdaptiveLevin/levin_quadrature.py sha256 beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6
+# input AdaptiveLevin/levin_quadrature.py sha256 beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6
+# input AdaptiveLevin/tests/test_levin_trust_yardstick.py sha256 7b5ddd335df63d823d003348b129df8c649e27033063c12f784f3c59f246f9ee
+# HEAD 5ff8a5e44be775df299af0f1754123578905b86e
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#     ?? AdaptiveLevin/tests/test_levin_trust_yardstick.py
+#     ?? docs/levin-phase-floor/06m/
+# uptime at start: 0:50  up 6 days,  3:11, 1 user, load averages: 50.57 48.33 27.81
+# clean AdaptiveLevin/levin_quadrature.py sha256 beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6
+
+== (i) |E_L| + |E_R| in place of |E_L + E_R|: 1 replacement(s); exit 1
+   test 1 test_cases_bit_for_bit: FAIL
+   test 1 test_levin_half_without_a_floor_reads_zero: ok
+   test 1 test_order_matters_and_is_kept: FAIL
+   test 1 test_raises_on_a_cc_parent_whose_cc_half_lacks_its_parts: ok
+   test 1 test_signed_sum_is_below_the_absolute_sum: FAIL
+   test 2 test_bit_identical_to_the_variant: ok
+   test 3 test_trusted_on_cancelling_node_errors: ok
+   test 4 test_levin_parent_keeps_cc_halves_out: ok
+   test 5 test_levin_over_levin_far_above_noise_stays_untrusted: ok
+   Ran 9 tests in 2.523s
+   FAILED (failures=3)
+   | AssertionError: '0x1.ef834e95b37e4p-29' != '0x1.41a327af3434ep-31'
+   | AssertionError: '0x1.ef834e95b37e4p-29' != '0x1.41a327af3434ep-31'
+   | AssertionError: 3.6053309876182936e-09 not less than 3.6053309876182936e-09
+   required [1]; failing tests [1]; CAUGHT
+
+== (ii) a Clenshaw-Curtis half's phi^- counted on a Levin parent: 1 replacement(s); exit 1
+   test 1 test_cases_bit_for_bit: FAIL
+   test 1 test_levin_half_without_a_floor_reads_zero: ok
+   test 1 test_order_matters_and_is_kept: ok
+   test 1 test_raises_on_a_cc_parent_whose_cc_half_lacks_its_parts: ERROR
+   test 1 test_signed_sum_is_below_the_absolute_sum: ok
+   test 2 test_bit_identical_to_the_variant: FAIL
+   test 3 test_trusted_on_cancelling_node_errors: ok
+   test 4 test_levin_parent_keeps_cc_halves_out: FAIL
+   test 5 test_levin_over_levin_far_above_noise_stays_untrusted: ok
+   Ran 9 tests in 2.510s
+   FAILED (failures=10, errors=4)
+   | KeyError: 'phase_err_less_node'
+   | TypeError: unsupported operand type(s) for +: 'float' and 'NoneType'
+   | KeyError: 'phase_err_less_node'
+   | TypeError: unsupported operand type(s) for +: 'float' and 'NoneType'
+   | AssertionError: {'val[16 chars]dd48537p-7', 'abserr': '0x1.cbb2684f751a6p-43'[8257 chars]': 9} != {'val[16 chars]dd4852dp-7', 'abserr': '0x1.d2fe7b179c76fp-43'[13744 chars]: 12}
+   | AssertionError: {'val[15 chars]b229d014p-8', 'abserr': '0x1.db3a62cbfd301p-41[64236 chars]: 10} != {'val[15 chars]b229daa8p-8', 'abserr': '0x1.ff5844782dc6ep-41[88515 chars]: 10}
+   | AssertionError: 2.8319371601781427e-14 != np.float64(1.6448606802096032e-16)
+   | AssertionError: '0x1.e253472ae05a4p-34' != '0x1.946de51d8509cp-34'
+   | AssertionError: '0x1.07b4397c48639p-33' != '0x1.c707f16784154p-34'
+   | AssertionError: '0x1.cad0fceb6d731p-34' != '0x1.348b194d0570cp-34'
+   | AssertionError: '0x1.d055dd67bc11cp-34' != '0x1.348b194d0570cp-34'
+   | AssertionError: '0x1.d055dd67bc11cp-34' != '0x1.348b194d0570cp-34'
+   required [1, 4]; failing tests [1, 2, 4]; CAUGHT
+
+== (iii) the |sum E| term dropped: 1 replacement(s); exit 1
+   test 1 test_cases_bit_for_bit: FAIL
+   test 1 test_levin_half_without_a_floor_reads_zero: ok
+   test 1 test_order_matters_and_is_kept: FAIL
+   test 1 test_raises_on_a_cc_parent_whose_cc_half_lacks_its_parts: ok
+   test 1 test_signed_sum_is_below_the_absolute_sum: ok
+   test 2 test_bit_identical_to_the_variant: FAIL
+   test 3 test_trusted_on_cancelling_node_errors: FAIL
+   test 4 test_levin_parent_keeps_cc_halves_out: ok
+   test 5 test_levin_over_levin_far_above_noise_stays_untrusted: ok
+   Ran 9 tests in 3.078s
+   FAILED (failures=7)
+   | AssertionError: {'val[13 chars]78e6839be7p+3', 'abserr': '0x1.2fd07653060edp-[114773 chars]': 9} != {'val[13 chars]78e687a1eap+3', 'abserr': '0x1.2614f981a9517p-[84878 chars]': 8}
+   | AssertionError: 7.162842541319492e-10 not less than or equal to 6.900637113878593e-10
+   | AssertionError: '0x1.cad0fceb6d731p-34' != '0x1.41a327af3434ep-31'
+   | AssertionError: '0x1.cad0fceb6d731p-34' != '0x1.49315c0783e26p-29'
+   | AssertionError: '0x1.e253472ae05a4p-34' != '0x1.20b21e92bbdcfp-29'
+   | AssertionError: '0x1.07b4397c48639p-33' != '0x1.c0110bd96f7d7p-30'
+   | AssertionError: '0x1.cad0fceb6d731p-34' != '0x1.41a327af3434ep-31'
+   required [1, 3]; failing tests [1, 2, 3]; CAUGHT
+
+== (iv) a Clenshaw-Curtis half's full phi_h in place of phi^-_h: 1 replacement(s); exit 1
+   test 1 test_cases_bit_for_bit: FAIL
+   test 1 test_levin_half_without_a_floor_reads_zero: ok
+   test 1 test_order_matters_and_is_kept: FAIL
+   test 1 test_raises_on_a_cc_parent_whose_cc_half_lacks_its_parts: ok
+   test 1 test_signed_sum_is_below_the_absolute_sum: FAIL
+   test 2 test_bit_identical_to_the_variant: ok
+   test 3 test_trusted_on_cancelling_node_errors: ok
+   test 4 test_levin_parent_keeps_cc_halves_out: ok
+   test 5 test_levin_over_levin_far_above_noise_stays_untrusted: ok
+   Ran 9 tests in 2.457s
+   FAILED (failures=6)
+   | AssertionError: '0x1.1937da9e66acap-28' != '0x1.41a327af3434ep-31'
+   | AssertionError: '0x1.42732a652a493p-28' != '0x1.49315c0783e26p-29'
+   | AssertionError: '0x1.195f5a9eba69ep-28' != '0x1.20b21e92bbdcfp-29'
+   | AssertionError: '0x1.b002da92ff13ep-29' != '0x1.c0110bd96f7d7p-30'
+   | AssertionError: '0x1.18cac84d128ffp-28' != '0x1.41a327af3434ep-31'
+   | AssertionError: 4.086063110323332e-09 not less than 3.6053309876182936e-09
+   required [1]; failing tests [1]; CAUGHT
+
+== (v) the |sum E| term added before the phi^- terms: 1 replacement(s); exit 1
+   test 1 test_cases_bit_for_bit: FAIL
+   test 1 test_levin_half_without_a_floor_reads_zero: ok
+   test 1 test_order_matters_and_is_kept: FAIL
+   test 1 test_raises_on_a_cc_parent_whose_cc_half_lacks_its_parts: ERROR
+   test 1 test_signed_sum_is_below_the_absolute_sum: ok
+   test 2 test_bit_identical_to_the_variant: ok
+   test 3 test_trusted_on_cancelling_node_errors: ok
+   test 4 test_levin_parent_keeps_cc_halves_out: ok
+   test 5 test_levin_over_levin_far_above_noise_stays_untrusted: ok
+   Ran 9 tests in 2.672s
+   FAILED (failures=3, errors=4)
+   | KeyError: 'node_error_signed'
+   | TypeError: unsupported operand type(s) for +: 'NoneType' and 'float'
+   | KeyError: 'node_error_signed'
+   | TypeError: unsupported operand type(s) for +: 'float' and 'NoneType'
+   | AssertionError: '0x1.41a327af3434fp-31' != '0x1.41a327af3434ep-31'
+   | AssertionError: '0x1.49315c0783e25p-29' != '0x1.49315c0783e26p-29'
+   | AssertionError: '0x1.41a327af3434fp-31' != '0x1.41a327af3434ep-31'
+   required [1]; failing tests [1]; CAUGHT
+   test 2 (the comparison with the variant) under (v): ok
+
+(i) |E_L| + |E_R| in place of |E_L + E_R|: CAUGHT (failing tests [1])
+(ii) a Clenshaw-Curtis half's phi^- counted on a Levin parent: CAUGHT (failing tests [1, 2, 4])
+(iii) the |sum E| term dropped: CAUGHT (failing tests [1, 2, 3])
+(iv) a Clenshaw-Curtis half's full phi_h in place of phi^-_h: CAUGHT (failing tests [1])
+(v) the |sum E| term added before the phi^- terms: CAUGHT (failing tests [1])
+module restored: True (sha256 beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6)

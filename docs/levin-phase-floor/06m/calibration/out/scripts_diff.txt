@@ -1,0 +1,329 @@
+# levin-phase-floor 06m, section 2 test 6: the LiouvilleGreen harness copied from 06l, and its diff (diff -u, 06l's file first).
+# written 2026-11-06T00:51:05+00:00 at HEAD 5ff8a5e44be775df299af0f1754123578905b86e (tree dirty: the uncommitted 06m change)
+# docs/levin-phase-floor/06l/scripts/calibration/prov.py sha256 41575e270b7e044b9d246b306070c1f022f37930b05cb03ad20fca7e51f5242b -> docs/levin-phase-floor/06m/calibration/scripts/prov.py sha256 09478c2b5024cf42c79d9628c3ea5795d3ca27f124ad71a9322e5208977639b5
+# docs/levin-phase-floor/06l/scripts/calibration/lg_seeded_draws.py sha256 b2db4030b63a6aaf12104f84fdeb92886f287d0018fc8f54c0c09083476b64df -> docs/levin-phase-floor/06m/calibration/scripts/lg_seeded_draws.py sha256 4334d863e9cdfac6c9212bc36f00b8b48b86b6df24136f72c786f804c6c74da5
+# docs/levin-phase-floor/06l/scripts/calibration/lg_compare_06l.py sha256 8ebe37d1aa91c1a20dff15801f6602bc9fe5c92c093dbb31800ff8c03519e477 -> docs/levin-phase-floor/06m/calibration/scripts/lg_compare_06m.py sha256 70753f3a6a31b69ac8a2e393ae6885790c5a23abe9d8cb1b4f1ee1b8236de4bb
+# docs/levin-phase-floor/06l/scripts/variant_loader.py sha256 1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f -> docs/levin-phase-floor/06m/calibration/scripts/variant_loader.py sha256 1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f
+# new in 06m, no 06l counterpart: docs/levin-phase-floor/06m/calibration/scripts/cells.py sha256 3b08f2a119de214d66e0b3a32dd54895d070d7e9db0cfe473c17a76a9869c155
+# new in 06m, no 06l counterpart: docs/levin-phase-floor/06m/calibration/scripts/breakages.py sha256 b6ea1ab5b43831f7f95ce2985e7e99daee52f95ff764786f6da5af5993a2334c
+# ---- diff -u docs/levin-phase-floor/06l/scripts/calibration/prov.py docs/levin-phase-floor/06m/calibration/scripts/prov.py (exit 1; 0 = identical)
+--- docs/levin-phase-floor/06l/scripts/calibration/prov.py	2026-11-05 09:10:27
++++ docs/levin-phase-floor/06m/calibration/scripts/prov.py	2026-11-06 00:42:51
+@@ -1,4 +1,10 @@
+-"""levin-phase-floor prompt 06l: 06k's calibration prov.py (docs/levin-phase-floor/06k/scripts/calibration/prov.py,
++"""levin-phase-floor prompt 06m, section 2 test 6: 06l's calibration prov.py
++(docs/levin-phase-floor/06l/scripts/calibration/prov.py, a record, not edited), changed only where marked
++"prompt 06m": REPO is the repository this copy sits in (the main checkout), OUT is
++docs/levin-phase-floor/06m/calibration/out/lg_draws/, PARENT_SHA is 06m's dispatch commit, and the title names
++06m. 06l's text follows.
++
++levin-phase-floor prompt 06l: 06k's calibration prov.py (docs/levin-phase-floor/06k/scripts/calibration/prov.py,
+ a record; its copy is in state/scripts_06k_reference/calibration/), changed only where marked "prompt 06l": REPO is
+ 06l's worktree, OUT is var/levin-phase-floor-06l/out/lg_draws/ (by its relative path, unchanged), and the title
+ names 06l. 06k's text follows.
+@@ -28,14 +34,15 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ CALIBRATION = HERE.parent
+-OUT = HERE.parents[1] / "out" / "lg_draws"  # prompt 06k (06g: CALIBRATION / "out")
+-REPO = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06l-af4c4dc")  # prompt 06l (06k: -lpf06k-8937060; 06g: HERE.parents[4])
++OUT = CALIBRATION / "out" / "lg_draws"  # prompt 06m (06l, 06k: HERE.parents[1] / "out" / "lg_draws"; 06g: CALIBRATION / "out")
++REPO = HERE.parents[4]  # prompt 06m (06l: the worktree SecondaryGWKit-lpf06l-af4c4dc; 06k: -lpf06k-8937060; 06g: HERE.parents[4])
+ assert (REPO / "AdaptiveLevin" / "levin_quadrature.py").is_file(), REPO
+ 
+ LEVIN = REPO / "AdaptiveLevin" / "levin_quadrature.py"
+ 
+-#: 06g's dispatch commit, whose AdaptiveLevin/levin_quadrature.py is 06e's code (f4d8e17).
+-PARENT_SHA = "4f4f9ed2a31fb7437fcfca01263d260eebaff842"
++#: prompt 06m: 06m's dispatch commit, whose AdaptiveLevin/levin_quadrature.py is 06g's code (3ae6f3a4)
++#: (06g: 06g's dispatch commit 4f4f9ed2a31fb7437fcfca01263d260eebaff842, 06e's code).
++PARENT_SHA = "5ff8a5e44be775df299af0f1754123578905b86e"
+ 
+ 
+ def sha256(path) -> str:
+@@ -58,7 +65,7 @@
+     """The provenance lines every output opens with, each prefixed '# '."""
+     status = git("status", "--short")
+     lines = [
+-        f"levin-phase-floor 06l: {title}",  # prompt 06l (06k: 06k; 06g: 06g)
++        f"levin-phase-floor 06m: {title}",  # prompt 06m (06l: 06l; 06k: 06k; 06g: 06g)
+         f"written {datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')}"
+         f" on {socket.gethostname()}",
+         f"python {platform.python_version()} ({sys.executable})",
+# ---- diff -u docs/levin-phase-floor/06l/scripts/calibration/lg_seeded_draws.py docs/levin-phase-floor/06m/calibration/scripts/lg_seeded_draws.py (exit 1; 0 = identical)
+--- docs/levin-phase-floor/06l/scripts/calibration/lg_seeded_draws.py	2026-11-05 09:16:27
++++ docs/levin-phase-floor/06m/calibration/scripts/lg_seeded_draws.py	2026-11-06 00:50:13
+@@ -1,4 +1,21 @@
+-"""levin-phase-floor prompt 06l, Part L ("The LiouvilleGreen draws"): 06k's copy of this harness
++"""levin-phase-floor prompt 06m, section 2 test 6 ("The LiouvilleGreen draws"): 06l's harness
++(docs/levin-phase-floor/06l/scripts/calibration/lg_seeded_draws.py, a record, not edited), changed only where
++marked "prompt 06m":
++- the modes are ``parent`` (the dispatch commit's AdaptiveLevin/levin_quadrature.py, 06g's code, read with
++  ``git show`` into a temporary file outside the repository and installed by ``variant_loader.install`` as 06l
++  installs a variant), ``commit`` (the working tree's module, 06m's code, as 06l's ``tree``) and ``routeB``
++  (06l's variant, docs/levin-phase-floor/06l/scripts/variants/levin_quadrature_routeB.py, SHA-256 checked);
++- ``variant_loader.py`` is a copy of 06l's (docs/levin-phase-floor/06l/scripts/variant_loader.py), in this
++  directory;
++- each unit's working directory is a temporary directory outside the repository;
++- each call's record also keeps ``regions_full_sha256`` (every returned region's value, value_kind, value_own,
++  trusted, delta1, delta2, convergence_ratio, declared_resolution, total_err, budget_err, node_error_signed and
++  phase_err_less_node, as float hex) and ``result_sha256`` (every result key but ``elapsed``, ``regions`` and
++  ``route_06l``, canonicalised with floats as hex), so that the comparison is bit for bit on the driver's whole
++  result.
++06l's text follows.
++
++levin-phase-floor prompt 06l, Part L ("The LiouvilleGreen draws"): 06k's copy of this harness
+ (docs/levin-phase-floor/06k/scripts/calibration/lg_seeded_draws.py, a record; its copy is in
+ state/scripts_06k_reference/calibration/), changed only where marked "prompt 06l": the mode ``routeB`` (06l's
+ variant, loaded as 06k loads its routes), and each call's record also keeps route B's record summarised under
+@@ -102,6 +119,9 @@
+ SEEDS = list(range(20))
+ MODES = ("tree", "identity", "route1", "route2", "route3", "route2lit")  # prompt 06k (06g: ("parent", "new")); route2lit after stop 1
+ MODES = ("tree", "identity", "routeB")  # prompt 06l
++MODES = ("parent", "commit", "routeB")  # prompt 06m
++VARIANT_06M = HERE.parents[2] / "06l" / "scripts" / "variants" / "levin_quadrature_routeB.py"  # prompt 06m
++VARIANT_06M_SHA256 = "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"  # prompt 06m
+ # most expensive first, so the pool's tail is short
+ TESTS = ("test_YJJ_log_singularity", "test_JJJ", "test_YJJ", "test_abserr_bounds_truth")
+ 
+@@ -124,12 +144,58 @@
+     ]
+ 
+ 
++def _canon_06m(x):
++    """prompt 06m: a value canonicalised for a bit-for-bit digest: floats as hex, arrays and sequences as lists."""
++    import numpy as np
++
++    if isinstance(x, (bool, np.bool_)):
++        return bool(x)
++    if isinstance(x, (int, np.integer)):
++        return int(x)
++    if isinstance(x, (float, np.floating)):
++        return float(x).hex()
++    if isinstance(x, np.ndarray):
++        return [_canon_06m(v) for v in x.tolist()]
++    if isinstance(x, (list, tuple)):
++        return [_canon_06m(v) for v in x]
++    if isinstance(x, dict):
++        return {str(k): _canon_06m(v) for k, v in sorted(x.items(), key=lambda kv: str(kv[0]))}
++    if x is None or isinstance(x, str):
++        return x
++    return repr(x)
++
++
++REGION_FIELDS_06M = (  # prompt 06m
++    "start", "end", "depth", "type", "abserr", "relerr", "phase_err", "phase_limited", "value", "value_kind",
++    "value_own", "trusted", "delta1", "delta2", "convergence_ratio", "declared_resolution", "total_err",
++    "budget_err", "node_error_signed", "phase_err_less_node", "phase_err_roundoff", "phase_err_declared",
++    "abserr_truncation",
++)
++
++
++def _region_full_06m(region):  # prompt 06m
++    return [_canon_06m(getattr(region, name)) for name in REGION_FIELDS_06M] + [_canon_06m(list(region.p_ratios))]
++
++
+ def _call_record(index, args, kwargs, data):
+     regions = [_region_record(r) for r in data["regions"]]
+     digest = hashlib.sha256(
+         json.dumps(regions, sort_keys=True, default=repr).encode()
+     ).hexdigest()
++    # prompt 06m: the whole result, bit for bit, timing and the variant's instrument aside
++    full_06m = hashlib.sha256(
++        json.dumps([_region_full_06m(r) for r in data["regions"]], sort_keys=True).encode()
++    ).hexdigest()
++    result_06m = hashlib.sha256(
++        json.dumps(
++            _canon_06m({k: v for k, v in data.items() if k not in ("elapsed", "regions", "route_06l")}),
++            sort_keys=True,
++        ).encode()
++    ).hexdigest()
+     return {
++        "regions_full_sha256": full_06m,  # prompt 06m
++        "result_sha256": result_06m,  # prompt 06m
++        "result_keys": sorted(data.keys()),  # prompt 06m
+         "index": index,
+         "x_span": [float(args[0][0]), float(args[0][1])],
+         "atol": kwargs.get("atol"),
+@@ -182,18 +248,24 @@
+ def run_unit(unit):
+     """One (seed, mode, test), in a fresh worker process (maxtasksperchild=1)."""
+     seed, mode, test = unit
+-    cwd_06k = HERE.parents[1] / "state" / "lg_cwd"  # prompt 06k: not the tree
+-    cwd_06k.mkdir(parents=True, exist_ok=True)
++    import tempfile  # prompt 06m
++
++    cwd_06k = Path(tempfile.mkdtemp(prefix="lpf06m-lg-cwd-"))  # prompt 06m: outside the repository (06k: state/lg_cwd)
+     os.chdir(cwd_06k)
+     if str(REPO) not in sys.path:
+         sys.path.insert(0, str(REPO))
+     variant_06k = None
+-    if mode != "tree":  # prompt 06k: the variant, before anything imports AdaptiveLevin
+-        sys.path.insert(1, str(HERE.parent))
+-        import variant_loader
++    if mode != "commit":  # prompt 06m (06k: mode != "tree"): the parent or the variant, before anything imports AdaptiveLevin
++        import variant_loader  # prompt 06m: this directory's copy
+ 
+-        vpath = HERE.parent / "variants" / f"levin_quadrature_{mode}.py"
+-        variant_loader.install(vpath, prov.sha256(vpath), mode)
++        if mode == "routeB":  # prompt 06m
++            vpath = VARIANT_06M
++            variant_loader.install(vpath, VARIANT_06M_SHA256, mode)
++        else:  # prompt 06m: the parent, from git show into a temporary file
++            source = prov.git("show", f"{prov.PARENT_SHA}:AdaptiveLevin/levin_quadrature.py")
++            vpath = Path(tempfile.mkdtemp(prefix="lpf06m-parent-")) / "levin_quadrature_parent_5ff8a5e.py"
++            vpath.write_text(source)
++            variant_loader.install(vpath, prov.sha256(vpath), mode)
+         variant_06k = variant_loader.evidence()
+ 
+     import random
+@@ -201,7 +273,7 @@
+ 
+     import AdaptiveLevin.levin_quadrature as lq
+ 
+-    driver_module, parent_sha = lq, None  # prompt 06k: every mode's own loaded module
++    driver_module, parent_sha = lq, (variant_06k or {}).get("sha256") if mode == "parent" else None  # prompt 06m
+     driver = driver_module._adaptive_levin
+ 
+     # every leaf the driver makes, so that every checked leaf is seen
+@@ -307,7 +379,7 @@
+     )
+     header.append(
+         f"# units {len(units)}: seeds {SEEDS[0]}-{SEEDS[-1]} x modes {tuple(modes)} x tests {TESTS};"
+-        f" processes {processes}; no parent mode (prompt 06k)"
++        f" processes {processes}; parent {prov.PARENT_SHA}; variant {VARIANT_06M} sha256 {prov.sha256(VARIANT_06M)}"  # prompt 06m
+     )
+     start = time.perf_counter()
+     records = []
+@@ -400,6 +472,11 @@
+         __file__, "section 2 test 9, the LiouvilleGreen seeded draws (report)", INPUTS
+     )
+     lines.append(f"# input {RUN_OUT.relative_to(REPO)} sha256 {prov.sha256(RUN_OUT)}")
++    lines.append(  # prompt 06m
++        "# prompt 06m: in this report \"parent\" is the dispatch commit's module (06g's code), and \"new\" and"
++        " \"06g\" mean the commit (06m's code, mode commit); the variant (mode routeB) is compared in"
++        " lg_compare_06m.py"
++    )
+     lines.append("# the run's own header:")
+     lines += [f"#   {line[2:]}" for line in run_header]
+     lines.append("")
+@@ -422,7 +499,7 @@
+     for test in TESTS:
+         for seed in SEEDS:
+             parent = by_key.get((seed, "parent", test))
+-            new = by_key.get((seed, "new", test))
++            new = by_key.get((seed, "commit", test))  # prompt 06m (06g: "new")
+             if parent is None or new is None:
+                 continue
+             outcome_rows.append((test, seed, parent, new))
+# ---- diff -u docs/levin-phase-floor/06l/scripts/calibration/lg_compare_06l.py docs/levin-phase-floor/06m/calibration/scripts/lg_compare_06m.py (exit 1; 0 = identical)
+--- docs/levin-phase-floor/06l/scripts/calibration/lg_compare_06l.py	2026-11-05 09:55:53
++++ docs/levin-phase-floor/06m/calibration/scripts/lg_compare_06m.py	2026-11-06 00:49:58
+@@ -1,4 +1,13 @@
+-"""levin-phase-floor prompt 06l, Part L: copied from 06k's lg_compare_06k.py (a record; in
++"""levin-phase-floor prompt 06m, section 2 test 6: copied from 06l's lg_compare_06l.py
++(docs/levin-phase-floor/06l/scripts/calibration/lg_compare_06l.py, a record, not edited), changed only where marked
++"prompt 06m": the base mode is ``parent`` (06l: ``tree``) and the modes compared with it are ``commit`` and
++``routeB``; the output names the base ``parent``; and a section of its own compares ``commit`` with ``routeB`` bit
++for bit: per unit the outcome, the printed cases and the three-Bessel results; per Levin call every key of the
++call record but ``route_06l`` and ``route_06k`` (the variant's instruments), with the whole result's digest
++(``result_sha256``, every result key but ``elapsed``, ``regions`` and ``route_06l``) and every returned region's
++(``regions_full_sha256``). Usage: python -B lg_compare_06m.py. 06l's text follows.
++
++levin-phase-floor prompt 06l, Part L: copied from 06k's lg_compare_06k.py (a record; in
+ state/scripts_06k_reference/calibration/), changed only where marked "prompt 06l": the variants are identity and routeB,
+ read from the one run file (06k's second file, route 2 literal's, is not read), a call's firings are route B's
+ ``route_06l`` count where it has one, and each convergence change keeps its route B record. 06k's text follows.
+@@ -30,7 +39,8 @@
+ import lg_seeded_draws as L  # noqa: E402
+ 
+ RUN = prov.OUT / "lg_seeded_draws.jsonl"
+-VARIANTS = ("identity", "routeB")  # prompt 06l (06k: identity, route1, route2, route3, route2lit)
++VARIANTS = ("commit", "routeB")  # prompt 06m (06l: identity, routeB; 06k: identity, route1, route2, route3, route2lit)
++BASE = "parent"  # prompt 06m (06l: "tree")
+ CALL_KEYS = ("x_span", "atol", "rtol", "notify_label")
+ 
+ 
+@@ -43,7 +53,7 @@
+     run_header = json.loads(lines[0])["header"]
+     recs = [json.loads(l) for l in lines[1:]]
+     # prov.header names inputs relative to the tree; this input is in the records directory
+-    hdr = prov.header(__file__, "the LiouvilleGreen draws, each variant against the tree") + [f"# input {RUN} sha256 {prov.sha256(RUN)}"]  # prompt 06l: one run file
++    hdr = prov.header(__file__, "the LiouvilleGreen draws, the commit and the variant against the parent, and the commit against the variant")  # prompt 06m + [f"# input {RUN} sha256 {prov.sha256(RUN)}"]  # prompt 06l: one run file
+     out_lines = list(hdr) + ["# the run's header:"] + [f"#   {h}" for h in run_header]
+     by = {(r["seed"], r["mode"], r["test"]): r for r in recs}
+     seeds = sorted({r["seed"] for r in recs})
+@@ -61,7 +71,7 @@
+                "case_mismatch": []}
+         for t in tests:
+             for s in seeds:
+-                a, b = by.get((s, "tree", t)), by.get((s, v, t))
++                a, b = by.get((s, BASE, t)), by.get((s, v, t))  # prompt 06m (06l: "tree")
+                 if a is None or b is None:
+                     res["sequence_mismatch"].append([s, t, "unit missing"])
+                     continue
+@@ -114,8 +124,8 @@
+         res["outcomes"] = dict(res["outcomes"])
+         res["cases"] = {g: dict(c) for g, c in res["cases"].items()}
+         doc["variants"][v] = res
+-        out_lines.append(f"\n== {v} against tree")
+-        out_lines.append(f"outcomes (tree->{v}): {res['outcomes']}; changed: {res['outcome_changes']}")
++        out_lines.append(f"\n== {v} against {BASE}")  # prompt 06m
++        out_lines.append(f"outcomes ({BASE}->{v}): {res['outcomes']}; changed: {res['outcome_changes']}")  # prompt 06m
+         out_lines.append(f"call or case sequences that do not match: {res['sequence_mismatch']} {res['case_mismatch']}")
+         out_lines.append(f"Levin calls {res['calls']}; with a firing {res['calls_fired']}; value or abserr differ "
+                          f"{res['calls_value_or_abserr_differ']}; regions differ {res['calls_regions_differ']}")
+@@ -142,6 +152,51 @@
+                     out_lines.append(f"      seed {m['seed']} {m['test']} {m['label']}: tree true {m['tree'][0]:.3e} reported "
+                                      f"{m['tree'][1]:.3e} conv {m['tree'][2]} | {v} true {m['route'][0]:.3e} reported "
+                                      f"{m['route'][1]:.3e} conv {m['route'][2]} (true/reported {m['ratio_route']:.3g})")
++    # prompt 06m: the commit against the variant, bit for bit
++    strict = {"units": 0, "units_differ": [], "calls": 0, "calls_differ": [], "keys_compared": None,
++              "calls_with_firing": 0, "firings_cc_parent": 0, "firings_levin_parent": 0, "withdrawn": 0}
++    for t in tests:
++        for s in seeds:
++            a, b = by.get((s, "commit", t)), by.get((s, "routeB", t))
++            if a is None or b is None:
++                strict["units_differ"].append([s, t, "unit missing"])
++                continue
++            strict["units"] += 1
++            why = []
++            if a["outcome"] != b["outcome"]:
++                why.append("outcome")
++            if json.dumps(a["results"], sort_keys=True) != json.dumps(b["results"], sort_keys=True):
++                why.append("three-Bessel results")
++            if L._printed_cases(a["stdout"]) != L._printed_cases(b["stdout"]):
++                why.append("printed cases")
++            if a["stdout"] != b["stdout"]:
++                why.append("stdout")
++            if len(a["calls"]) != len(b["calls"]):
++                why.append("call count")
++            if why:
++                strict["units_differ"].append([s, t, why])
++            for x, y in zip(a["calls"], b["calls"]):
++                strict["calls"] += 1
++                keys = sorted(set(x) - {"route_06l", "route_06k", "result_keys"})  # result_keys: compared as sets below
++                strict["keys_compared"] = keys
++                rb = y.get("route_06l") or {}
++                strict["calls_with_firing"] += (rb.get("n_firings") or 0) > 0
++                strict["withdrawn"] += rb.get("n_withdrawn") or 0
++                for fw in rb.get("fired_or_withdrawn", []):
++                    if fw["kind"] == "fired":
++                        strict["firings_cc_parent" if fw["is_direct"] else "firings_levin_parent"] += 1
++                diff = [k for k in keys if json.dumps(x.get(k), sort_keys=True, default=repr) != json.dumps(y.get(k), sort_keys=True, default=repr)]
++                diff += [k for k in sorted(set(y) - set(x) - {"route_06l", "route_06k", "result_keys"})]
++                if set(x["result_keys"]) != set(y["result_keys"]) - {"route_06l"}:
++                    diff.append("result_keys")
++                if diff:
++                    strict["calls_differ"].append([s, t, x["index"], diff])
++    doc["commit_vs_routeB"] = strict
++    out_lines.append("\n== commit against routeB, bit for bit (prompt 06m)")
++    out_lines.append(f"units {strict['units']}; units that differ (outcome, printed cases, three-Bessel results, stdout, call count): {strict['units_differ']}")
++    out_lines.append(f"Levin calls {strict['calls']}; calls that differ in any compared key: {len(strict['calls_differ'])} {strict['calls_differ'][:20]}")
++    out_lines.append(f"keys compared per call: {strict['keys_compared']}")
++    out_lines.append(f"routeB's calls with a firing {strict['calls_with_firing']}; firings on a Clenshaw-Curtis parent {strict['firings_cc_parent']}, on a Levin parent {strict['firings_levin_parent']}; withdrawn {strict['withdrawn']}")
+     oj, ot = prov.OUT / "compare.json", prov.OUT / "compare.txt"
+     oj.write_text(json.dumps(doc, indent=1, default=str))
+     ot.write_text("\n".join(out_lines) + "\n")
+# ---- diff -u docs/levin-phase-floor/06l/scripts/variant_loader.py docs/levin-phase-floor/06m/calibration/scripts/variant_loader.py (exit 0; 0 = identical)
+

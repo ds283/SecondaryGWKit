@@ -314,9 +314,37 @@ _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 0.5
 # The trust check's cut-off on the observed convergence ratio r = delta2 / delta1
 # (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (b)). A checked leaf is
 # trusted -- its error bounded by max(residual, delta1) / (1 - r), the geometric tail from here on --
-# only if r < this, or if r < 1 and delta1 is at most the leaf's own round-off floor (then delta1
-# and delta2 are differences of rounding noise, r means nothing, and the floor bounds them).
-# Otherwise it is untrusted, and refined whatever the budget says.
+# only if r < this, or if r < 1 and delta1 <= nu_B, the noise yardstick of _trust_noise_yardstick()
+# (then delta1 and delta2 are differences of rounding noise, r means nothing, and the rounding of
+# the solves they are formed from bounds them). Otherwise it is untrusted, and refined whatever the
+# budget says.
+#
+# The noise clause (since prompts/levin-phase-floor/06m-signed-yardstick-in-the-driver.md; from 06g
+# to 06m it compared delta1 with the leaf's own floor phi_P alone).
+#   * Why phi_P alone was too small (06j, [06g-slow-leaves-at-half-cost-convergence-outside-
+#     stationary-points]). delta1 = |V_P - (V_L + V_R)| is a difference of three solves, and phi_P
+#     declares the rounding of one. On 75 of 06j's 142 sampled slow leaves (r ~ 1/2, delta1 / phi_P
+#     median 1.49) delta1 was the difference of the three solves' signed Clenshaw-Curtis node
+#     errors, |E_P - (E_L + E_R)|, to 0.6 %, which each scale with their solve's width and so fix r
+#     at 1/2: rounding noise the clause did not recognise, refined to depth_max and returned
+#     untrusted, leaving calls that met their request flagged unconverged.
+#   * Why the halves' node errors are combined signed (06k, 06l). Adding the halves' full floors
+#     (06k's route 1, nu_1 = phi_P + phi_L + phi_R) passed leaves far above noise: the halves' E
+#     can be hundreds to 1e6 times the parent's and nearly equal and opposite, cancelling in
+#     V_L + V_R, so |E_L| + |E_R| covered delta1 on a term that is not in it. nu_B carries them as
+#     |E_L + E_R|, as the call's own error carries E (06g, section 0.2 (c)), and the floors less
+#     their node terms beside it; then |E_P - (E_L + E_R)| <= |E_P| + |E_L + E_R| <= nu_B.
+#   * Why a Levin parent's test leaves its Clenshaw-Curtis halves out (06k, 06l; the user's
+#     modification of route 1). A Clenshaw-Curtis half's floor can be hundreds of times a Levin
+#     parent's; carried into its test it passed leaves up to delta1 / phi_P = 1.1e4. Without it a
+#     Levin parent's firings reach delta1 / phi_P = 2.85 at most (06l's census).
+# 06l measured this yardstick as a scratch variant on A3 v2's census (route B; docs/levin-phase-
+# floor/VERIFICATION.md, section 6l): it trusts none of 06h's wrongly trusted carrying leaves, moves
+# no value past both errors, and trusts no leaf route 1 does not. It does not reach every slow leaf:
+# on 12 of the 75, delta1 exceeds the first-order node-error difference by 0.2-0.6 %, and no margin
+# is added for that remainder (prompt 06m, section 0.4).
+#
+# The cut-off 1/4 below is unchanged by 06m.
 #
 # Why 1/4.
 #   * Every rule here converges, in its asymptotic regime, by far more than 4x per halving: a Levin
@@ -902,6 +930,88 @@ def _solve_floor_in_budget(data: dict) -> float:
     return data.get("phase_err", 0.0) or 0.0
 
 
+def _trust_noise_yardstick(
+    phi_P: float, parent_is_direct: bool, data_L: dict, data_R: dict
+) -> float:
+    """
+    The trust check's noise yardstick nu_B (prompts/levin-phase-floor/
+    06m-signed-yardstick-in-the-driver.md, section 0.1; route B as
+    prompts/levin-phase-floor/06l-signed-trust-yardstick.md measured it). A checked leaf with
+    r < 1 is trusted on its noise clause if delta1 <= nu_B: its delta1 is then within the rounding
+    of the three solves it is the difference of, V_P, V_L and V_R. Pure: it reads the parent's
+    floor, whether the parent is a Clenshaw-Curtis solve, and the halves' solve dicts.
+
+        nu_B = phi_P + sum over Levin halves of phi_h
+                     + [Clenshaw-Curtis parent only: sum over Clenshaw-Curtis halves of phi^-_h
+                                                     + |sum over Clenshaw-Curtis halves of E_h|]
+
+    phi_P is the parent region's "phase_err"; phi_h a Levin half's "phase_err" (None read as 0.0);
+    for a Clenshaw-Curtis half (its dict's "is_direct" true), phi^-_h is its "phase_err_less_node",
+    its floor with |E| taken out of the node term, and E_h its "node_error_signed". The four cases:
+
+        parent           halves                    nu_B
+        Levin            Levin + Levin             phi_P + phi_L + phi_R
+        Levin            one or two CC             phi_P + the Levin half's phi, if any
+        CC               CC + CC                   phi_P + phi^-_L + phi^-_R + |E_L + E_R|
+        CC               one CC, one Levin         phi_P + phi_Levin + phi^-_CC + |E_CC|
+
+    On a Levin parent a Clenshaw-Curtis half adds nothing (the user's modification of route 1,
+    prompts/levin-phase-floor/IMPLEMENTATION_STATE.md, Decisions 06k results and 06l).
+
+    The basis (docs/levin-phase-floor/VERIFICATION.md, section 6l). On a Levin parent nu_B holds
+    only Levin floors: a Clenshaw-Curtis half's floor can be hundreds of times a Levin parent's, and
+    carried into its test (route 1, 06k) it passed leaves up to delta1 / phi_P = 1.1e4, which no
+    noise level covers; under nu_B a Levin parent's firings reach 2.85 at most. On a
+    Clenshaw-Curtis parent it holds the declared floors less the node term, plus the halves' node
+    errors combined signed, as the call's own error combines them
+    (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (c)): the halves' E can
+    be large and nearly equal and opposite, cancelling in V_L + V_R, and their absolute values
+    would pass a leaf on a term that is not in delta1. Where delta1 is the node-error difference
+    |E_P - (E_L + E_R)|, the triangle inequality bounds it by |E_P| + |E_L + E_R|, both in nu_B
+    (|E_P| through phi_P). nu_B <= phi_P + phi_L + phi_R to the rounding of the sum, so this
+    yardstick trusts no leaf route 1's would not.
+
+    The order is fixed: nu = phi_P; then each Levin half's phi in the order L, R; then, on a
+    Clenshaw-Curtis parent with a Clenshaw-Curtis half, each such half's phi^- in the order L, R;
+    then |S|, S the one half's E or E_L + E_R. It is the order 06l's variant summed in, whose
+    census certifies this code by bit identity (prompt 06m, Gates M0 and M); floating-point
+    addition is not associative, so another order can move the sum's last bit and with it a leaf's
+    trust.
+
+    A Clenshaw-Curtis half of a Clenshaw-Curtis parent without "phase_err_less_node" or
+    "node_error_signed" raises RuntimeError. Every Clenshaw-Curtis solve returns both
+    (_adaptive_levin_subregion_cc()), so this guards an internal inconsistency; it is not a path.
+    """
+    halves = (data_L, data_R)
+    half_is_direct = [bool(half.get("is_direct", False)) for half in halves]
+    nu = phi_P
+    for half, is_direct in zip(halves, half_is_direct):
+        if not is_direct:
+            nu = nu + (half.get("phase_err", 0.0) or 0.0)
+    if parent_is_direct and any(half_is_direct):
+        cc_halves = [
+            half for half, is_direct in zip(halves, half_is_direct) if is_direct
+        ]
+        for half in cc_halves:
+            if (
+                half.get("phase_err_less_node") is None
+                or half.get("node_error_signed") is None
+            ):
+                raise RuntimeError(
+                    "levin_quadrature: a Clenshaw-Curtis half of a Clenshaw-Curtis parent has no "
+                    "phase_err_less_node or node_error_signed (_trust_noise_yardstick())"
+                )
+            nu = nu + half["phase_err_less_node"]
+        if len(cc_halves) == 1:
+            node_sum = cc_halves[0]["node_error_signed"]
+        else:
+            node_sum = (
+                cc_halves[0]["node_error_signed"] + cc_halves[1]["node_error_signed"]
+            )
+        nu = nu + abs(node_sum)
+    return float(nu)
+
+
 class _ExactSum:
     """
     A running sum of floats held exactly, as a list of non-overlapping partials (Shewchuk's
@@ -998,8 +1108,9 @@ class used_interval:
         # delta2 = |(V_L + V_R) - (V_LL + V_LR + V_RL + V_RR)|, convergence_ratio = delta2 /
         # delta1, all None until the check is taken. trusted is None until then (and for a
         # floor-limited region, which is exempt), True if the trust test passes (convergence_ratio
-        # < _LEVIN_TRUST_MAX_RATIO, or convergence_ratio < 1 with delta1 at most phase_err; since
-        # 06g), False otherwise. declared_resolution, when set, replaces abserr in total_err:
+        # < _LEVIN_TRUST_MAX_RATIO, or convergence_ratio < 1 with delta1 at most the noise
+        # yardstick of _trust_noise_yardstick(); since 06g, the yardstick since 06m, phase_err
+        # alone before it), False otherwise. declared_resolution, when set, replaces abserr in total_err:
         # max(abserr, delta1) / (1 - r) for a trusted region and for an untrusted one at depth_max
         # with r < 1, max(abserr, delta1 + delta2) for an untrusted one at depth_max with r >= 1.
         # abserr itself stays the raw estimate (the step-(4) residual, or the nested pair), as do
@@ -1140,8 +1251,10 @@ class used_interval:
     def trusted(self) -> Optional[bool]:
         """
         Whether this region's error estimate passed the trust check one level down: r <
-        _LEVIN_TRUST_MAX_RATIO, or r < 1 with delta1 at most phase_err (since
-        prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md; until then r < 1). None if the
+        _LEVIN_TRUST_MAX_RATIO, or r < 1 with delta1 at most the noise yardstick of
+        _trust_noise_yardstick() (since prompts/levin-phase-floor/
+        06m-signed-yardstick-in-the-driver.md; from prompts/levin-phase-floor/
+        06g-leaf-values-and-node-sum.md to then, at most phase_err; before 06g, r < 1). None if the
         check was not taken on it: a floor-limited region is exempt, and a region at depth_max
         returned by a call whose budget was never met need not have been checked. A region
         returned with trusted False is at depth_max, and declares max(abserr, delta1) / (1 - r) as
@@ -2850,7 +2963,11 @@ def _adaptive_levin(
     error falls from this level on at least as fast as observed, the leaf's error is at most
     delta1 / (1 - r), so:
       * a leaf is trusted if r < _LEVIN_TRUST_MAX_RATIO = 1/4, or if r < 1 and delta1 is at most
-        its own round-off floor (then delta1 and delta2 are rounding noise, which the floor
+        the noise yardstick nu_B (_trust_noise_yardstick(); since prompts/levin-phase-floor/
+        06m-signed-yardstick-in-the-driver.md, in place of the leaf's own floor alone): its own
+        round-off floor, plus its Levin halves' floors, plus, on a Clenshaw-Curtis leaf, its
+        Clenshaw-Curtis halves' floors less their node terms and the absolute value of those
+        halves' node errors summed signed (then delta1 and delta2 are rounding noise, which nu_B
         bounds). A trusted leaf declares max(residual, delta1) / (1 - r) as its resolution error
         and returns Q, the finest value computed, in place of V_P; the declaration bounds Q's
         error under the same assumption that makes it bound V_P's, and is not tightened;
@@ -3334,8 +3451,11 @@ def _adaptive_levin(
         If the error falls from this level on at least as fast as observed, the leaf's error is at
         most delta1 (1 + r + r^2 + ...) = delta1 / (1 - r). The leaf is trusted if r <
         _LEVIN_TRUST_MAX_RATIO (1/4; that constant's comment gives the basis), or if r < 1 and
-        delta1 is at most the leaf's own round-off floor phase_err, where delta1 and delta2 are
-        differences of rounding noise, r means nothing, and the floor bounds them. A trusted leaf
+        delta1 is at most the noise yardstick nu_B of _trust_noise_yardstick(), formed from the
+        leaf's own floor phase_err, whether it is a Clenshaw-Curtis solve, and its halves' solves
+        (since prompts/levin-phase-floor/06m-signed-yardstick-in-the-driver.md; from 06g to 06m,
+        phase_err alone): there delta1 and delta2 are differences of rounding noise, r means
+        nothing, and the rounding of the solves they are formed from bounds them. A trusted leaf
         declares max(abserr, delta1) / (1 - r) as its resolution error and returns Q, the finest
         value computed, in place of V_P: under the assumption that makes delta1 / (1 - r) a bound
         on V_P's error it bounds Q's too, and the declaration is not tightened (06e's leaf
@@ -3377,8 +3497,11 @@ def _adaptive_levin(
             ratio = delta2 / delta1
 
         residual = region.abserr
+        noise_yardstick = _trust_noise_yardstick(
+            region.phase_err, leaf.is_direct, dataL, dataR
+        )
         trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
-            ratio < 1.0 and delta1 <= region.phase_err
+            ratio < 1.0 and delta1 <= noise_yardstick
         )
         _remove_error(leaf)
         region._delta1 = delta1
