@@ -254,3 +254,69 @@ open for a while and we will see whether it is reproduced."*):
 
 **Landed:** `48cf87c0` pushed on the user's word (*"Yes, please proceed: push. Then write, commit,
 and push the Part B dispatch addendum."*).
+
+### B.1 Addendum, 2026-11-06: Part B's dispatch
+
+**Part A** is the code commit **`48cf87c0`**, whose parent is **`5ff8a5e4`**, reviewed (§A.5) and
+pushed. Two commits followed it: `427e88c2` (the review's record and two issues) and `56efc6b9`
+(the follow-up). The follow-up restates `test_levin_leaf_values.trust_test()` with $\nu_B$ and
+adds 06m's `calibration/scripts/` to `CLAUDE.md`'s `black` list. Neither touches production code.
+
+**The trees, by SHA:**
+- **R25** at **`5ff8a5e4`**, in the worktree `SecondaryGWKit-lpf06m-5ff8a5e`. Its production code
+  is R24's. `git diff --stat 1c5336e 5ff8a5e4 -- . ':!docs' ':!prompts'` touches only
+  `.gitattributes`, `CLAUDE.md`, `tools/filon_reference.py` and its test, and nothing the pipeline
+  imports (checked on the laptop). So prompt §4's R25-against-R24 comparison is a reproducibility
+  check, as written.
+- **R26, Gate M0 and the census $m$** at **this addendum's commit**, in the worktree
+  `SecondaryGWKit-lpf06m-<this commit's short SHA>`. Its code is `48cf87c0`'s.
+  `git diff --stat 5ff8a5e4 <this commit> -- . ':!docs' ':!prompts'` touches
+  `AdaptiveLevin/levin_quadrature.py`, two test modules (`test_levin_trust_yardstick.py`, new, and
+  `test_levin_leaf_values.py`) and `CLAUDE.md`, and nothing else.
+- **R24** is `levin-phase-floor-06g-r24-leafvalues-20261101T111215`, its store
+  `var/datastores/levin-phase-floor-06g-r24*.sqlite` (five files), kept on the Mac Studio. **R23 and
+  R24 are read only.**
+- **The "before"** is route B's census, `levin-phase-floor-06l-census-routeB-20261105T100126`,
+  checkpoint `5cb3d3c0e6e628720aa122a1d23d4a90f140b116ef9e58e2f66a3bffb9dd0d39`. **06g's census**
+  `levin-phase-floor-06g-census-20261101T114315`, checkpoint
+  `03adcbba8a78d82d9d6b899b8eee8b9ae1659763f52deb066d2840af3d82c0fa`, is read for the descriptive
+  tables. Both are hashed before and after.
+- **K0's 100 units** are `docs/levin-phase-floor/06l/out/k0/units.json`; 06l's harness is
+  `docs/levin-phase-floor/06l/scripts/`.
+
+**What Part B must carry:**
+- **The harness runs with no variant installed.** 06l's `variant_loader` and its `--variant` mode
+  are not used at $m$; the tree's own module is the code. The call records at $m$ have no
+  `route_06l` key, and prompt §5's comparison excludes it. Each harness change is a deviation, its
+  diff saved.
+- **The firings are not recorded at $m$.** Route B's census holds them, under `route_06l`. Gate M
+  makes the firings at $m$ route B's by identity. Any firing count the descriptive tables need is
+  read from route B's census.
+- **The agent's test-2 families**, `noisy` and `far` in `test_levin_trust_yardstick.py`, show that
+  B fires only at noise level. The rehearsals' `QuadSourceIntegral` rows are where R26 can differ
+  from R25, and nowhere else.
+- **The open issue `[06m-levin-floor-misses-node-rounding-far-from-the-origin]`** is not measured
+  here. If the census reader can count Levin leaves with $\Delta_1/\phi_P > 10$ at no extra cost,
+  it reports the count as descriptive. Otherwise it is left for 07's census.
+
+**§B.0, checked read-only on the Mac Studio at 02:04 UTC, 2026-11-06:**
+- the main checkout is `handover-remedial` at `28ebaf07`, and `git status --short` is empty;
+- `git worktree list` shows the main checkout and 06g's four worktrees
+  (`SecondaryGWKit-lpf06g-{1c5336e,4f4f9ed,b5626ec,ff3e839}`), which stay;
+- the registry holds 58 runs, all finished, nothing `running` or stale;
+- the lock is free (`~/.raypoolkit/rehearsal-lock` does not exist), and
+  `ray-processes --ray-temp-dir /tmp/ray-sgk` lists none;
+- the load is about 4.5 and 79 GiB is free (92 % used). That is enough for two rehearsal stores
+  and a census of route B's 4.4 GB. Recheck before the census;
+- the scratch copy's five files match 06e's certified SHA-256s
+  (`06e/review/checks/a3v2_copy_after.sha256`), with no `-wal` or `-shm`;
+- route B's and 06g's census checkpoints are `5cb3d3c0…` and `03adcbba…`;
+- R23's and R24's stores (ten files) and run directories are present;
+- there is no `var/levin-phase-floor-06m*` and no 06m store.
+
+**The worktrees** are made by the laptop on the user's word to dispatch, after this commit is
+pushed, detached and with no venv: `SecondaryGWKit-lpf06m-5ff8a5e` and
+`SecondaryGWKit-lpf06m-<this commit's short SHA>`. The Mac Studio's main checkout fetches first,
+which moves no working tree. Then the Mac Studio orchestrator session is started in the code
+worktree, through the saved `MacStudio` connection, with this note as its brief. Its folder must be
+trusted in the app first.
