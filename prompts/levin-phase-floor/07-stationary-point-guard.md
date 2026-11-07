@@ -1,9 +1,15 @@
 # Prompt 07 — the stationary-point guard: locate them first, integrate their windows directly
 
 **Campaign:** [`README.md`](README.md) · **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
-**Written:** 2026-10-27, after 06a landed and G2 was answered, on the user's decision the same day.
-Its charter is G2's Q4 (i) and (ii) (the board's Decisions, **06 P1**, **G2 Q4 (i)–(ii)** and
-**07 scope**):
+**Written:** 2026-10-27, after 06a landed and G2 was answered. **Rewritten 2026-11-07,** after 06m,
+for the driver as it now stands (the board's Decisions, **07 rewritten**). The user: *"As far as I
+can see, there is now no reason why we should not make another attempt at the long-delayed prompt
+07"*, then *"Please draft a rewritten 07 and orchestration note"*. The text before the rewrite is
+`50277f3e`'s, with its amendments in its §9. **This text replaces it. Where the two differ, this one
+holds.**
+
+**The charter is unchanged:** G2's Q4 (i) and (ii) (the board's Decisions, **06 P1**, **G2 Q4
+(i)–(ii)**, **07 scope** and **07 (α)–(γ), (ii)**):
 - *"We are supposed to deliver a function Levin integrator, and this is needed whether or not we
   plan to use the integrator as part of the 1-loop machinery. So we should fix this now,
   generically."*
@@ -12,69 +18,97 @@ Its charter is G2's Q4 (i) and (ii) (the board's Decisions, **06 P1**, **G2 Q4 (
 The late-time range of the integrals is physics, and is a separate prompt
 (`[06-time-integrals-must-reach-late-resonances]`).
 
-**Where it runs:** in three parts, as 05, 05a and 06 did.
-- **§1–§4, the code:** on the laptop, by a fresh-context subagent, in the main checkout at `HEAD`.
-  **§2 is a planned stop:** the agent reports its two measurements to the user before the tests
-  are written. One commit.
-- **§5, rehearsals R15 and R16:** on the Mac Studio, after the code commit is pushed, under the
-  lock. Both run from worktrees: R15 at the code commit's parent, R16 at the code commit.
-- **§6, the re-measurement:** on the Mac Studio, Ray-free and with no lock. 06a's census is
-  re-run at the code commit, on 06's certified scratch copy of A3 v2, against 06a's run as the
-  "before".
+**Why it was rewritten.** Part A of the first text stopped four times, each time on a defect in the
+driver beneath it, and each defect was fixed first by its own prompt:
+- 06b, the round-off exit's premise;
+- 06c, global error control;
+- 06d, a round-off floor for the Clenshaw–Curtis rule;
+- 06e, exact end nodes and a node term that measures the displacement.
 
-The records of §5 and §6 are committed on the laptop afterwards, in 07's records commit.
+06h, 06g and 06m followed, on what 06e's census found. The loop the first text was written for has
+gone: there is no region list, no per-region `resolved` test and no `_local_atol`. Since the work was
+last set aside, `AdaptiveLevin/levin_quadrature.py` has gained about 1,150 lines and lost about 200,
+in 06e, 06g and 06m. **So §1 is built afresh on the current driver.** The set-aside work is a
+reference, not a base (§0.5).
 
-**Closes, when §5 and §6 hold:** `[06-levin-accepts-a-region-across-a-stationary-point]`.
+**Where it runs:** in two parts, as 06g and 06m did.
+- **Part A, §1–§4, the code:** on the laptop, by a fresh-context subagent, in the main checkout at
+  `HEAD`. **§2 is a planned stop:** the agent reports its measurements to the user before any test
+  is written. One commit.
+- **Part B, §5 and §6:** on the Mac Studio, after the code commit is pushed.
+  - **§5, rehearsals R27 and R28,** under the lock, each in a worktree: R27 at the code commit's
+    parent, R28 at the code commit.
+  - **§6, the census:** Ray-free, with no lock, on 06's certified scratch copy of A3 v2, against
+    06m's census as the "before". Then references for a sample of stationary-point calls.
+
+The records of Part B are committed on the laptop afterwards, in 07's records commit.
+
+**Closes, in its records commit, on the user's word:** `[06-levin-accepts-a-region-across-a-stationary-point]`,
+if §5 and §6 hold. It also answers two of the user's questions, from 06g's Part B:
+- *"What needs to be true is that z12 works after 07."* (§2.3, §6 V4);
+- on V1's twelve rehearsal rows: *"V1 succeeds but we think that could be accidental; 07 should
+  decide that"* (§2.3, §5 S1).
 
 **Recommended model:** **Opus**.
 
-**Amended 2026-10-28, before §2 runs (§9).** 06b, the round-off-limited exit's premise, lands
-first. §2's reference and its $\omega$ are settled by the user. **Amended again the same day, after
-§2 stopped on its rule (§9 point 6):** 06c, global error control, lands first; the rehearsals
-become R19 and R20, and §6's "before" is 06c's census. **And again (§9 point 7):** 06d, a
-round-off floor for the Clenshaw–Curtis rule, lands before 06c's Part B and before §2 is re-run.
-**And again (§9 point 8):** 06e, exact end nodes and a tighter node term, lands first; window
-leaves get QUADPACK's rule, written after §2 is re-run on 06e; the rehearsals become R21 and R22.
-
 **Read first:**
-1. The board's §3 entry `[06-levin-accepts-a-region-across-a-stationary-point]`, with its 06a
-   measurement. Then [`docs/levin-phase-floor/06/p1/report.md`](../../docs/levin-phase-floor/06/p1/report.md)
-   in full: the mechanism; the reference method (its §5), whose window this prompt adopts; and the
-   root diagnosis (its §6). Its scripts are in `docs/levin-phase-floor/06/p1/scripts/`, among them
-   `reference.py`.
-2. `docs/levin-phase-floor/VERIFICATION.md` §6.3 and §6a, then
-   [`docs/levin-phase-floor/06a/issues.md`](../../docs/levin-phase-floor/06a/issues.md) X1 and
-   X2. 06a's scan is `docs/levin-phase-floor/06a/scripts/spscan.py`.
-3. The board's §2.3, Q4 (i) and (ii), and its Decisions for **06 P1**, **G2** and **07 scope**.
-4. `AdaptiveLevin/levin_quadrature.py`:
-   - the module docstring, in particular its paragraph on the total-variation gate;
-   - `_levin_G0_G1`, `_roundoff_floor` and the constants above them;
-   - `_adaptive_levin_subregion_impl` (the gate at `phase_span < SIX_PI`) and
-     `_adaptive_levin_subregion_cc`;
-   - `_adaptive_levin`, the generic bisection loop, written for a basis of any number of
-     components: the seeding of `regions`, both acceptance branches (`resolved`,
-     `phase_limited`, `depth_max`), and the aggregate `converged`;
-   - the basis interface it uses: `build_Levin_data`, `eval_basis`, `theta_abserr_at` and
-     `supports_complexified_solve`;
-   - `_Basis_SinCos`, for how `theta`, `theta_mod_2pi` and `theta_deriv` are held;
-   - `adaptive_levin_sincos`, the public facade that builds a `_Basis_SinCos` and calls
-     `_adaptive_levin`: its docstring and result dict.
-5. `AdaptiveLevin/tests/test_levin_quadrature.py`, in particular:
-   - `test_stationary_phase_gate_uses_total_variation`,
-     `test_fallback_region_bisects_on_missed_tolerance` and the two `test_roundoff_floor_G0_*`
-     tests;
-   - `_TwoIndependentSinCosBasis` and `test_generic_m_component_basis_two_decoupled_phases`: the
-     generic path, driven through `_adaptive_levin` directly.
-6. `ComputeTargets/phase_groups.py`, for `theta_deriv`: the closed-form sum each group hands to the
-   integrator. Then `ComputeTargets/QuadSourceIntegral.py`, `phase_group_Levin_integral`, for what a
-   group's record stores.
-7. The other production caller, which this prompt must not move unless one of its phases has a
-   stationary point: `LiouvilleGreen/three_bessel_integrals.py` (and, through it,
-   `QuadSourceIntegral`'s analytic columns).
+1. **The board's §3 entry** `[06-levin-accepts-a-region-across-a-stationary-point]`, with every
+   narrowing: 06a's scan, 06c's Y1, 06e's D5 and 06g's references. Then
+   [`docs/levin-phase-floor/06/p1/report.md`](../../docs/levin-phase-floor/06/p1/report.md) in full:
+   the mechanism; the reference method (its §5), whose window this prompt adopts; and the root
+   diagnosis (its §6).
+2. **The board's Decisions** for **06 P1**, **G2**, **07 scope**, **07 (α)–(γ), (ii)**, **07 §2
+   reference**, **07 LG stop**, **07 §2 stop**, **06c stall withdrawn**, **07 third stop**, **07
+   fourth stop**, **06g Part B** and **07 rewritten**.
+3. **`AdaptiveLevin/levin_quadrature.py`**, the whole of `_adaptive_levin`'s docstring first. Then:
+   - **the loop in `_adaptive_levin`:**
+     - the root leaf;
+     - `_refinable`;
+     - the candidate heap and its ordering;
+     - the stop test and its confirming re-sum;
+     - the floor-limited exit with `_roundoff_exit_premise_holds` and `_split_could_meet_budget`;
+     - an infinite eq. (151) floor taken first;
+     - the `node_limited` stop;
+     - the final `converged`;
+   - `_check_leaf` and `_trust_noise_yardstick`;
+   - `_adaptive_levin_subregion_impl` (the C2 gate at `phase_span < SIX_PI`) and
+     `_adaptive_levin_subregion_cc` and their result dicts;
+   - `_roundoff_floor`, `_levin_G0_G1`, `_cc_roundoff_floor` and the constants above them;
+   - `used_interval` and its region types, and `_sample_vectorized`;
+   - `_Basis_SinCos` and every basis method the driver calls;
+   - `adaptive_levin_sincos`, the facade, and its result dict;
+   - the test-only switch `_test_only_bypass_roundoff_premise`, the precedent for §3's.
+4. **`AdaptiveLevin/tests/`:**
+   - `test_levin_quadrature.py`'s `_TwoIndependentSinCosBasis`, which has no Clenshaw–Curtis methods,
+     and `test_generic_m_component_basis_two_decoupled_phases`;
+   - the existing tests that put a stationary point in a call:
+     - `test_stationary_phase_gate_uses_total_variation`;
+     - `test_levin_cc_floor.py`'s `TestFloorDoesNotGrow.test_nested_leaves_round_a_stationary_point`,
+       its `TestNoInverseThetaPrime` and its `TestStationaryPhaseOracle`;
+     - `test_levin_end_nodes.py`'s `TestStationaryPhaseOracle`;
+     - `test_levin_global_budget.py`'s test 6 and test 12c
+       (`test_trust_check_stationary_point_line`, which supplies `theta_deriv`).
+5. **The callers.**
+   - `ComputeTargets/QuadSourceIntegral.py`: `phase_group_Levin_integral` and its per-group record,
+     and the analytic blocks' Levin calls and what is recorded of them.
+   - `ComputeTargets/phase_groups.py`, for `theta_deriv`, the closed-form sum each group hands to
+     the integrator.
+   - `LiouvilleGreen/three_bessel_integrals.py`, whose `levin_theta` also supplies `theta_deriv`, so
+     location runs there too.
+6. **The earlier attempts' records** (§0.5): their log, and §2's tables at stops 2–4, from
+   `var/levin-phase-floor-07/wip/07-part-a-rebased-on-06d-untracked.tar.gz`.
+7. **The references this prompt scores against:**
+   - 06g's, `docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json` (`V1` for w00–w11,
+     `rows` for z00, z12 and Z3's others), with its `report.md`;
+   - 06c's Y1 references, `docs/levin-phase-floor/06c/y1-references/results.json`;
+   - `tools/filon_reference.py` and its tests.
 
 **Gate:**
 - the main checkout's `git status --short` is empty;
 - `runregistrykit list` shows nothing `running` or stale on the laptop;
+- `git stash list` shows 07's four stashes, and `var/levin-phase-floor-07/wip/` matches its
+  `SHA256SUMS.txt`;
+- the 14 captures in `var/levin-phase-floor-06g-fcc-laptop/inputs/` are present (§2.3);
 - the seven roots' counts are taken at the dispatch `HEAD` (`CLAUDE.md`).
 
 ---
@@ -83,122 +117,178 @@ leaves get QUADPACK's rule, written after §2 is re-run on 06e; the rehearsals b
 
 ### 0.1 The defect
 
-`adaptive_levin_sincos` accepts a Levin region that contains an interior stationary point of its
-phase, with an error estimate far too small (P1).
-- **Why the estimate cannot see it.** The step-(4) residual compares a region's estimate with its
-  two halves'. Near a stationary point the Levin antiderivative $p \sim f/(i\theta')$ is singular.
-  The parent and the half that holds the point both lack the stationary-phase term, so the
-  residual is blind to it. On 06's two R14 rows it was about $10^5$ smaller than the true error.
-- **The relative test can still pass.** Another part of the region can dominate its denominator.
-- **So can the round-off-limited exit.** At tighter `rtol` the eq. (151) floor, with a small but
-  finite $G_0 = \min|\theta'|$, accepts the region as phase-limited instead. Tightening `rtol`
-  cannot fix it.
-- **The total-variation gate does not catch it.** That gate (C2) routes a region to the nested
-  Clenshaw–Curtis fallback only when its phase varies by less than $6\pi$. Its regression test puts
-  the stationary point at $x = 1/2$, the first bisection point, where bisection exposes it by
-  construction.
+`adaptive_levin_sincos` returns a Levin leaf that contains an interior stationary point of its phase,
+with an error estimate far too small (06's P1).
+- **Why the estimate cannot see it.** The step-(4) residual compares a leaf's estimate with its two
+  halves'. Near a stationary point the Levin antiderivative $p \sim f/(i\theta')$ is singular. The
+  parent and the half that holds the point both lack the stationary-phase term, so the residual is
+  blind to it. On 06's two R14 rows it was about $10^5$ smaller than the true error. 06g's trust
+  check one level down (Δ1, Δ2, $r$) is built from the same solves, and is blind in the same way.
+- **The round-off floor can admit it.** The eq. (151) floor carries $1/G_0$, $G_0 = \min|\theta'|$
+  on the leaf's nodes. When a node falls near the point, $G_0$ is at noise and the floor is
+  infinite; the loop then chooses that leaf first and bisects it. That is the only stationary-point
+  handling in the driver today, and it works only when a node falls close enough.
+- **The C2 total-variation gate does not catch it.** It routes a leaf to the Clenshaw–Curtis rule
+  only when its phase varies by less than $6\pi$. Its regression test puts the stationary point at
+  $x = 1/2$, the first bisection point, where bisection exposes it by construction.
 
-**How far it reaches** (06a, at the current code, `1e-7`):
-- 720 of A3 v2's 9,280 rows hold a call with an interior sign change of $\theta'$, all in group
-  `G+q+r`.
-- Every one of those calls accepts a region across the point, 623 of them as a single region of
-  the whole call.
-- Every A3 v2 row deeper than 11 is one of them.
+**How far it reaches:**
+- **06a's scan** (at 06a's code, `1e-7`): 720 of A3 v2's 9,280 rows hold a call with an interior
+  sign change of $\theta'$, all in group `G+q+r`. In every one a region was accepted across the
+  point, 623 of them a single region of the whole call. Every A3 v2 row deeper than 11 was one of
+  them.
+- **06c's Y1:** 12 equilateral rehearsal rows hold the point of `G+q+r` at $z \approx 10211$, where
+  $c_s = 1/2$. On each, 06b's or 06c's code reported converged while wrong by
+  $4.5\times10^3$–$1.6\times10^6$× its declared error.
+- **06g's references:**
+  - **z12** (`g-1e-8-1-2174` call 1) is reported converged at depth 18 and is 1,681× its declared
+    error from the reference. That is unchanged under 06m (1,681.30). z00, the same integrand at
+    `1e-7`, is unconverged at depth 20 and 0.018 from it.
+  - **V1's twelve** (w00–w11, R24's rows): 06h's code was $4.5\times10^3$–$6.0\times10^5$× its error
+    out. 06g's is within on all twelve (at most 0.942), but not by design.
+- **06m's census, in the 720:** 311 group calls unconverged, 309 of them within their request and
+  holding a leaf at `depth_max`. Their largest share of a row's `total_abserr` is 53 %.
 
 The stationary point is the Kohri–Terada resonance, where the signal is expected to come from. A
 stored `total_abserr` on such a group is not trustworthy.
 
 ### 0.2 The remedy, and the user's decisions on it
 
-All of it lives in `AdaptiveLevin/levin_quadrature.py`, in the generic code: `_adaptive_levin`, the
-bisection loop, which is written for a basis of any number of components. That covers every caller
-of `adaptive_levin_sincos`, and any future basis.
+All of it lives in `AdaptiveLevin/levin_quadrature.py`, in the generic code `_adaptive_levin`, which
+is written for a basis of any number of components. That covers every caller of
+`adaptive_levin_sincos`, and any future basis.
 - **The basis supplies what is basis-specific** through two new methods of the basis interface: its
-  independent phases, and their rates.
-  - `_Basis_SinCos` implements them from `theta` and `theta_deriv`. It has one phase.
-  - A basis with several independent phases, such as the tests' `_TwoIndependentSinCosBasis`,
-    reports each of them.
-  - A basis that cannot supply rates reports none. Then there is no location, and the nodal guard
-    of step 4 is the only protection.
+  independent phases, and their rates. `_Basis_SinCos` has one phase. A basis with several, such as
+  the tests' `_TwoIndependentSinCosBasis`, reports each of them. A basis that cannot supply rates
+  reports none; then there is no location, and the nodal guard of step 4 is the only protection.
 - **A stationary point** is a zero of any of the basis's phase rates.
 - **`adaptive_levin_sincos` stays a facade.** Only its docstring changes. The user, 2026-10-27: it
   *"is just a facade that sets up the basis functions used by the Levin step. It seems the wrong
   place for the stationary phase check, which is generic and does not depend on the basis."*
 
-The steps, each generic:
+**The four steps, each generic:**
 1. **Locate** the points before integrating, from the basis's closed-form phase rates. For
    `_Basis_SinCos` that is the caller's `theta["theta_deriv"]`. Two kinds of point are located:
    - every sign change of $\theta'$, which is a stationary point;
    - every interior local minimum of $|\theta'|$ deep enough to act as a nearly coalescing pair.
      That covers the QCD and $e^+e^-$ caustics and any like them.
 2. **Carve out a window** round each located point. The window is where the phase stays within
-   $\Phi_w$ of its value at the point. It is integrated directly, in pieces, by a rule that
-   resolves the phase.
-3. **Hand the rest to Levin as it stands.** The ranges between windows go to the existing bisection
-   loop, which bisects them as it needs to.
-4. **Guard what the location missed.** A region whose $\theta'$ changes sign among its own Chebyshev
-   nodes is never accepted by the Levin rule.
+   $\Phi_w$ of its value at the point. It is integrated directly, in pieces, by the Clenshaw–Curtis
+   rule.
+3. **Hand the rest to the loop as it stands.** The ranges between windows are leaves of the same
+   loop, with the window pieces, in one budget for the call.
+4. **Guard what the location missed.** A leaf whose $\theta'$ changes sign among its own Chebyshev
+   nodes is never returned as a Levin leaf.
 
-**The decisions** (board §2.3, (α)–(γ) and (ii); the user, 2026-10-27):
+**The decisions** (the board's §2.3 and Decisions; the user, 2026-10-27):
 - **(α) The location uses `theta_deriv` and lives in the integrator's generic code, not in any
   caller and not in the facade.** *"From `theta_deriv` is the right way to locate stationary phase
-  points, not by injecting physics knowledge. We want all callers to be protected."*
-  - `QuadSourceIntegral` already supplies `theta_deriv` (`LEVIN_USE_THETA_DERIV = True`). Its only
-    change is to record the integrator's new diagnostics in each group's record.
-  - **Without `theta_deriv`** there is no location. The nodal guard is then the only protection,
-    and the docstring says what it misses.
+  points, not by injecting physics knowledge. We want all callers to be protected."* So it runs for
+  `QuadSourceIntegral`'s group calls and for the analytic blocks (`LiouvilleGreen`'s `levin_theta`
+  supplies `theta_deriv` too). Without `theta_deriv` there is no location; the nodal guard is then
+  the only protection, and the docstring says what it misses.
 - **(β) An explicit window of phase half-width $\Phi_w$, not a bisection cascade.** The user's
   argument:
-  - bisection to $6\pi$ builds a logarithmically dense cascade of regions round the point;
-  - $6\pi$ is a criterion for a different question, whether a generic region is weakly
-    oscillatory, and may be too wide or too narrow for the stationary region;
-  - and the width wanted is known.
+  - bisection to $6\pi$ builds a logarithmically dense cascade of leaves round the point;
+  - $6\pi$ answers a different question, whether a generic leaf is weakly oscillatory;
+  - the width wanted is known.
 
   **What fixes the width.** For a simple root, $\theta' \approx \theta''(x - x_s)$. At the window's
   edge the parameter $\theta'^2/|\theta''|$, which governs whether Levin's non-oscillatory solution
-  exists, equals $2\Phi_w$ whatever $\theta''$ is. So one dimensionless number sets how well
-  conditioned the Levin regions next to the window are. The width in $x$ follows from it.
+  exists, equals $2\Phi_w$ whatever $\theta''$ is. One dimensionless number sets how well
+  conditioned the Levin leaves next to the window are. P1's reference used this construction (P1
+  report §5) and agreed to about $10^{-12}$ relative for $\Phi$ from $10^3$ to $3\times10^4$.
+  $\Phi_w$ is measured in §2.
+- **(γ) A minimum of $|\theta'|$ counts as a nearly coalescing pair by its Airy parameter.** Near a
+  local minimum $x_m$, $\theta' \approx a + \tfrac12\theta'''(x_m)(x - x_m)^2$. The pair matters when
+  the phase accumulated across its slow zone is small:
+  $\lambda = |\theta'(x_m)|^{3/2}/\sqrt{|\theta'''(x_m)|/2}$. A minimum is located when
+  $\lambda < \Lambda_c$, and then gets a window like a root. $\Lambda_c$ is measured in §2. The
+  user: *"I'd like to see how this works out numerically."* *Rejected:* a threshold on
+  $\min|\theta'|/\max|\theta'|$, since $|\theta'|$ spans many decades along calls with no stationary
+  point at all.
+- **(ii) The round-off-limited exit is barred** in every window piece and every guarded leaf. In
+  today's loop that is the floor-limited exit: such a leaf is never marked floor-limited, and stays
+  refinable until `depth_max`. At `depth_max` a guarded leaf does not keep a Levin estimate (§1.4).
+  Reaching the cap there is the case in which the user said the layer-2 question reopens (Decisions,
+  **G2 L2, decided**).
+- **A stopping rule for window leaves whose error does not fall** (Decisions, **07 fourth stop**;
+  the user, *"Let's go for (b)"*). If window leaves are still chased to `depth_max` on a flat error,
+  the rule is 07's, written after §2 measures them. Its basis is QUADPACK's own (§2.5). The driver's
+  general stall rule stays withdrawn: *"Let's remeasure the stall question after 07"* (Decisions,
+  **06c stall withdrawn**). It is not this prompt's.
 
-  **Why not the cascade.**
-  - It leaves $\theta'^2/\theta'' \approx 4\pi$ at its innermost Levin region, by accident rather
-    than by design.
-  - It spends about $\log_2(L\sqrt{\theta''/12\pi})$ levels of bisection depth, so the cap is
-    reached first where $\theta''$ is largest. A window costs no depth.
+### 0.3 The driver it lands in
 
-  **What already validates it.** P1's reference used this construction (P1 report §5) and agreed to
-  about $10^{-12}$ relative for $\Phi$ from $10^3$ to $3\times10^4$. $\Phi_w$ is measured in §2.
-- **(γ) A minimum of $|\theta'|$ counts as a nearly coalescing pair by its Airy parameter.**
-  - Near a local minimum $x_m$, $\theta' \approx a + \tfrac12\theta'''(x_m)(x - x_m)^2$. The pair
-    matters when the phase accumulated across its slow zone is small. That phase is
-    $\lambda = |\theta'(x_m)|^{3/2}/\sqrt{|\theta'''(x_m)|/2}$.
-  - A minimum is located when $\lambda < \Lambda_c$, and then gets a window like a root.
-  - $\Lambda_c$ is measured in §2 by a rule fixed here. The user will see the numbers before it is
-    fixed: *"I'd like to see how this works out numerically."*
-  - *Rejected:* a threshold on $\min|\theta'|/\max|\theta'|$. $|\theta'|$ spans many decades along
-    calls with no stationary point at all; P1's control groups run from 27 to $1.5\times10^8$.
-- **(ii) The round-off-limited exit is barred** in every window piece and every guarded region.
-  - **At `depth_max`, a guarded region does not get the Levin estimate.** It is integrated by the
-    nested Clenshaw–Curtis pair whatever its span, and flagged. Its call is reported not
-    converged.
-  - Reaching the cap there is the case in which the user said the layer-2 question reopens
-    (Decisions, **G2 L2, decided**).
+Read the code; this is a map, not a substitute.
+- **One loop, one budget.** The call starts from one root leaf over `x_span`. Each leaf carries a
+  budget error $e'_i$. The loop stops when $\sum e'_i \le \max(\texttt{atol}, \texttt{rtol}|\sum
+  v_i|)$, confirmed by an ascending re-sum. While the sum is above the request it pops the
+  refinable leaf from a heap ordered untrusted first, then by largest $e'$, and bisects it.
+- **Refinable** means below `depth_max` and not floor-limited. A leaf is found floor-limited only
+  when popped: its eq. (151) or Clenshaw–Curtis floor is finite, its residual is at most that floor,
+  and 06b's premise holds as 06g states it (the halves' floors less their declared terms sum to at
+  least half its own, and replacing it by its halves could not meet the budget). A Levin leaf whose
+  $G_0$ is at noise has an infinite floor, and is taken first.
+- **The trust check** (06c, 06g, 06m) runs once the budget is met: each leaf is solved one level
+  down. It is trusted iff $r < 1/4$, or $r < 1$ and $\Delta_1 \le \nu_B$. A trusted leaf returns its
+  quarters sum $Q$; an untrusted one is refined first.
+- **The node errors** of Clenshaw–Curtis leaves are carried as a signed sum $\sum E$. The call stops
+  `node_limited` when $\sum e'$ meets the request, every leaf has been checked, no untrusted leaf is
+  refinable, and $\sum e' + |\sum E|$ is still above the request.
+- **`converged`** means the budget is met with $\sum e' + |\sum E|$, and no returned leaf is
+  untrusted.
+- **No stall rule.** A leaf whose error does not fall with $h$ is chased to `depth_max` if it holds
+  the total back.
+- **Leaf types:** `used_interval` has `INTERVAL_TYPE_LEVIN` and `INTERVAL_TYPE_DIRECT`. No path
+  forces a Clenshaw–Curtis solve on a span of $6\pi$ or more. `theta_prime_Cheb` is a local of the
+  Levin solve; leaves keep no sample of $\theta'$.
 
-### 0.3 What this changes, and what it does not
+### 0.4 What this changes, and what it does not
 
-- **It changes** `AdaptiveLevin/levin_quadrature.py`, and `QuadSourceIntegral`'s per-group record,
-  which gains the integrator's diagnostic counts. A row's values change only where a point is
-  located or a region is guarded.
+- **It changes** `AdaptiveLevin/levin_quadrature.py`, and `QuadSourceIntegral`'s records of Levin
+  calls, which gain the integrator's four counts (§1.6). A call's result changes only where a point
+  is located or a leaf is guarded.
 - **It does not change:**
-  - `phase_groups.py`, the partition, or the physics range of any integral;
-  - the eq. (151) floor's formula or the per-region `resolved` test;
-  - `_local_atol`, `DEFAULT_LEVIN_MAX_DEPTH` or `rtol`;
-  - what `total_converged` means.
+  - `phase_groups.py`, the partition, the physics range of any integral, or `LiouvilleGreen/`;
+  - the eq. (151) formula, `_cc_roundoff_floor`, the trust rule, $\nu_B$ or the `node_limited`
+    stop;
+  - `DEFAULT_LEVIN_MAX_DEPTH` or `rtol`;
+  - what `total_converged` means. That is 08's (`[06m-calls-flagged-unconverged-within-their-request]`).
+- **A call in which nothing is located and no leaf is guarded takes exactly today's path**, and its
+  result is bit-identical (§3 test 8, §5, §6 V1).
 
-  Those belong to G3 (08) or to the separate physics prompt.
-- **A call in which nothing is located and no region is guarded takes exactly today's path**, and
-  its result is bit-identical (§3 test 8, §5, §6 V1).
+### 0.5 The set-aside work, and the earlier records
+
+07's Part A was set aside four times. **It stays exactly as it is**, until the user decides its
+fate after 07's records commit.
+- **The stashes,** newest first:
+  - `stash@{0}`: rebased on 06d at the fourth stop (base `f5def2f`, onto `e5764a6`);
+  - `stash@{1}`: rebased on 06c at the third stop;
+  - `stash@{2}`: rebased on 06b, §2 run;
+  - `stash@{3}`: §1 uncommitted, before 06b.
+- **The tarballs and patches** are in `var/levin-phase-floor-07/wip/`, listed in its
+  `SHA256SUMS.txt`.
+
+**How the agent uses them:**
+- **Read only.** `git stash list` and `git stash show -p stash@{N}` are allowed. No other `git
+  stash` subcommand is run: no `apply`, `pop`, `drop`, `clear` or `push`.
+- **The tarballs** are extracted only into the session scratchpad, never into the tree.
+- **Code may be taken from them by hand.** §2's references, families and harness
+  (`calibration/scripts/reference.py`, `calibrate.py`, `validate_reference*.py`, `lg_location.py`,
+  `parent_compare.py`) are the obvious candidates. Each piece taken is named in the log, with the
+  file it came from. The construction is the agent's, on today's driver.
+
+**The earlier records are kept.** The latest tarball's `docs/levin-phase-floor/07/calibration/`
+(stops 1–3 and the fourth stop's `out/` and `scripts/`) and its
+`prompts/levin-phase-floor/logs/07-stationary-point-guard.md` are copied byte for byte into
+`docs/levin-phase-floor/07/earlier-attempts/`, the log renamed `log-parts-a-1-to-4.md`. Each file
+is checked against the tarball by SHA-256, with the list saved. They are records of the trees they
+ran on, and are not edited (`CLAUDE.md` rule 6).
 
 ## 1. The code
+
+Every change is in `AdaptiveLevin/levin_quadrature.py`, except §1.6's.
 
 ### 1.0 The basis interface
 
@@ -208,17 +298,16 @@ the agent's choice, recorded in the log.
 - **Their rates:** $d\theta_i/dx$ at $x$, in closed form, or a statement that the basis cannot
   supply them.
 
-What each basis does:
-- **`_Basis_SinCos`** has one phase. Its phase is `theta["theta"]`, and its rate is
+**What each basis does:**
+- **`_Basis_SinCos`** has one phase. Its phase is `theta["theta"]`. Its rate is
   `theta["theta_deriv"]` when supplied, and "cannot" otherwise.
-- **The tests' `_TwoIndependentSinCosBasis`** gains both methods, for its two phases.
-- **Any other basis** that does not implement them is treated as unable to supply rates. Its
-  behaviour is then unchanged except for the nodal guard of §1.3.
+- **The tests' `_TwoIndependentSinCosBasis`** gains both methods for its two phases (§3 test 9).
+- **Any other basis** without them is treated as unable to supply rates. Its behaviour is then
+  unchanged except for the nodal guard of §1.4.
 
-Everything below runs in `_adaptive_levin` and the generic subregion functions, once for each
-independent phase the basis reports.
+Everything below runs once for each independent phase the basis reports.
 
-### 1.1 Location (in `_adaptive_levin`, when the basis supplies its rates)
+### 1.1 Location (in `_adaptive_levin`, before the loop, when the basis supplies its rates)
 
 1. **Scan.** Sample each rate $\theta_i'$ on $N_{\rm scan} = 4097$ points uniform in $x$ over
    `x_span`, endpoints included. This is 06a's grid. Sample through `_sample_vectorized`, so that a
@@ -232,98 +321,149 @@ independent phase the basis reports.
      and its stencil are the agent's choice, recorded with their error in the log.
    - The minimum is located if $\lambda < \Lambda_c$.
 4. **Ends and merging.**
-   - A point within half a scan spacing of an end of `x_span` is treated as at that end.
+   - A point within half a scan spacing of an end of `x_span` is treated as at that end, and recorded
+     as kind `end`.
    - Points within $4\varepsilon|x|$ of one another are merged.
    - Each point records which phase it belongs to.
 
 ### 1.2 Windows
 
 1. **The edges.** Round each located point $x_*$ of phase $i$, the window is the largest interval
-   containing it on which $|\theta_i(x) - \theta_i(x_*)| \le \Phi_w$, clipped to `x_span`. Each
-   edge is found by `brentq` on the basis's phase $\theta_i$; for `_Basis_SinCos` that is
-   `theta["theta"]`, the raw phase. Its precision of about ${\rm ulp}(|\theta|)$ is negligible
-   against $\Phi_w$; the log states the size.
+   containing it on which $|\theta_i(x) - \theta_i(x_*)| \le \Phi_w$, clipped to `x_span`. Each edge
+   is found by `brentq` on the basis's phase $\theta_i$; for `_Basis_SinCos` that is
+   `theta["theta"]`. Its precision, about ${\rm ulp}(|\theta|)$, is negligible against $\Phi_w$; the
+   log states the size.
    - **For a root,** $\theta - \theta(x_*)$ has one sign on both sides, so each edge is where it
      first reaches $\Phi_w$ in magnitude.
    - **For a minimum,** $\theta$ is monotone through $x_*$, so the edges are where it has changed
      by $\Phi_w$ either way.
 2. **Overlap.** Windows that overlap or touch are merged into one.
-3. **Inside a window.** The window is cut into pieces whose phase span is at most
-   $\Delta\phi_w = 2\pi$. The span is $\int|\theta_i'|\,dx$, estimated on the scan, taking the
-   largest over the basis's phases. Each piece is integrated by the existing
-   nested Clenshaw–Curtis pair. A piece whose nested-pair estimate misses its tolerance is bisected,
-   as C7 bisects a fallback region now. `phase_limited` is barred in every piece.
-4. **Seeding the loop.** The initial region list is `x_span` with every window removed, each
-   remaining range at depth 0. The window pieces enter the same accumulation, carrying their own
-   region type, so that `num_regions`, `abserr` and the per-source breakdowns cover them. With
-   nothing located, the list is today's single region, unchanged.
-5. **Tolerance.** `_local_atol` applies to window pieces and Levin regions alike, by length share,
-   unchanged.
+3. **Pieces.** Each window is cut into pieces whose phase span is at most $\Delta\phi_w = 2\pi$. The
+   span is $\int|\theta_i'|\,dx$, estimated on the scan, taking the largest over the basis's phases.
+4. **Each piece is a Clenshaw–Curtis leaf** of the loop, solved by `_adaptive_levin_subregion_cc`
+   **whatever the C2 gate's own span estimate says**. That needs a path that forces the
+   Clenshaw–Curtis solve; the agent adds it, and the log describes it. A window leaf's halves are
+   window leaves too.
+5. **Seeding.** With windows, the root leaf is replaced by:
+   - one leaf for each range of `x_span` between windows, at depth 0, an ordinary leaf of today's
+     loop;
+   - the window pieces, at depth 0, marked as window leaves.
 
-### 1.3 The guard: the safety net
+   All of them are in the one budget, the one heap, the trust check and the node sum, so that
+   `num_regions`, `abserr` and the per-source breakdowns cover them. **With nothing located the
+   root leaf is today's, unchanged.**
+6. **Window leaves in the loop:**
+   - they are never floor-limited (§0.2 (ii)), and stay refinable until `depth_max`;
+   - their trust check, node errors and declared terms are a Clenshaw–Curtis leaf's, unchanged;
+   - **at `depth_max`** a window leaf keeps its Clenshaw–Curtis estimate, as any leaf there does.
 
-A region of the bisection loop is *guarded* if any phase rate changes sign on its own Chebyshev
-nodes: `theta_prime_Cheb`, or the basis's equivalent for each of its phases. That means the
-location missed a point, or the basis could not supply its rates. A guarded region:
-- **is never accepted on the Levin branch.** While its phase span is at least $6\pi$ it is bisected.
-- **goes to the nested Clenshaw–Curtis fallback** once its span is below $6\pi$, as any region does
-  now. There it is accepted only on nested-pair resolution, with **`phase_limited` barred**.
-- **at `depth_max`** is integrated by the nested Clenshaw–Curtis pair whatever its span. Its abserr
-  is that pair's estimate. It is flagged `guard_at_depth_max`, and the call's `converged` is False.
+### 1.3 The stopping rule for window leaves — not written yet
 
-An unguarded region outside every window behaves exactly as now.
+§0.2's last decision. Whether one is needed, and its form, come from §2.5's measurement, after the
+user has seen it. **Nothing of it is built before §2's stop.** If the user rules one in, it is
+written as an amendment to this prompt and shown to the user before any test of §3 is written.
 
-### 1.4 What the result reports
+### 1.4 The guard: the safety net
+
+A Levin leaf is *guarded* if any phase rate changes sign on its own Chebyshev nodes: on
+`theta_prime_Cheb`, or the basis's equivalent for each of its phases. That means the location missed
+a point, or the basis could not supply its rates. The Levin solve already holds those samples; the
+guard is computed there and carried in the leaf's result dict.
+
+**A guarded leaf:**
+- **is never returned as a Levin leaf.** It is never trusted, never floor-limited, and is chosen and
+  bisected before any unguarded leaf, while it is refinable. Below $6\pi$ the C2 gate sends its
+  halves to the Clenshaw–Curtis rule, as now. Treating its $e'$ as infinite, as the loop already
+  does for a Levin leaf whose $G_0$ is at noise, is one way to do this; the mechanism is the agent's
+  choice, and the log names it.
+- **at `depth_max`, if still a Levin leaf,** is re-solved by the Clenshaw–Curtis rule whatever its
+  span (§1.2 item 4's path). Its errors are that solve's. It is flagged `guard_at_depth_max`, and
+  the call's `converged` is False.
+
+An unguarded leaf outside every window behaves exactly as now.
+
+### 1.5 What the result reports
 
 - **`stationary_points`:** one entry per located point, giving:
-  - its $x$ and its kind (`root`, `minimum` or `end`);
+  - its $x$, its phase, and its kind (`root`, `minimum` or `end`);
   - $\theta'$ there, and $\lambda$ for a minimum;
   - its window's edges and number of pieces.
 - **Counts:**
-  - `num_window_pieces`;
+  - `num_window_pieces`, the window leaves returned;
   - `num_guarded_regions`, which with `theta_deriv` supplied is expected to be 0;
   - `num_guard_at_depth_max`.
-- **`used_interval`** gains a region type for window pieces, and a `guarded` flag.
+- **`used_interval`** gains a window flag and a `guarded` flag, read by the census's region records
+  (§6).
 - **The result comes from `_adaptive_levin`.** `adaptive_levin_sincos` returns it unchanged, as it
   returns everything else.
-- **Docstrings.** Those of the module, `_roundoff_floor`, `_adaptive_levin`,
-  `_adaptive_levin_subregion_impl` and the basis interface say what the location, the windows and
-  the guard do, and where the C2 gate's account of a stationary point was incomplete.
-  `adaptive_levin_sincos`'s docstring says that `theta_deriv` now also drives the location.
+- **Docstrings:**
+  - the module docstring's account of stationary points, which calls gate-and-bisect "the correct
+    structural response", is corrected;
+  - `_roundoff_floor`, `_adaptive_levin`, `_adaptive_levin_subregion_impl` and the basis interface
+    say what the location, the windows and the guard do, and where the C2 gate's account of a
+    stationary point was incomplete;
+  - `adaptive_levin_sincos`'s docstring says that `theta_deriv` now also drives the location.
 
-### 1.5 `QuadSourceIntegral`
+### 1.6 `QuadSourceIntegral`
 
-`phase_group_Levin_integral`'s per-group record gains four counts: `stationary_points`,
-`window_pieces`, `guarded_regions` and `guard_at_depth_max`. Nothing else in `QuadSourceIntegral`
-changes, and no schema changes.
+Each record `QuadSourceIntegral` keeps of a Levin call gains four counts: `stationary_points` (the
+number located), `window_pieces`, `guarded_regions` and `guard_at_depth_max`.
+- **The group calls:** `phase_group_Levin_integral`'s per-group record.
+- **The analytic blocks:** the record `QuadSourceIntegral` keeps of each three-Bessel Levin call, if
+  it keeps one per call. If it keeps none that the counts can join without touching `LiouvilleGreen/`,
+  that is reported at §2's stop with what §5's rule would then have to read instead. It is not a
+  stop.
 
-## 2. $\Lambda_c$ and $\Phi_w$, measured — a planned stop
+Nothing else in `QuadSourceIntegral` changes, and no schema changes.
 
-**Run on §1's code, before §3's tests are written.** Both rules are fixed here, before any number
+## 2. The measurement — a planned stop
+
+**Run on §1's code, before §3's tests are written.** The rules are fixed here, before any number
 exists (README §5 rule 3).
+
+### 2.1 The families and their references
 
 **The two families,** on $x \in [0, 1]$, with smooth amplitudes $f_{\sin} = e^{-x}$ and
 $f_{\cos} = \cos 3x$:
-- **(R), a simple root:** $\theta(x) = \omega x + \tfrac{c}{2}(x - x_s)^2$. Here $\omega = 0$ puts
-  the root at $x_s$, and $\omega \ne 0$ moves it to $x_s - \omega/c$.
+- **(R), a simple root:** $\theta(x) = \omega x + \tfrac{c}{2}(x - x_s)^2$, with:
   - $c \in \{10^4, 10^6, 10^8\}$;
   - $x_s \in \{0.3819660112501051, 0.7236067977499790\}$, neither of them dyadic.
+
+  Every case runs at $\omega = 0$. A few run also at $\omega = 1$, chosen by the agent and
+  recorded; their root lies at $x_s - 1/c$, and the location must find it there, not at $x_s$. The
+  user: *"we should have some cases where `omega` is zero, and some where it is not … A few cases
+  with `omega=1` seem sufficient."*
 - **(C), a nearly coalescing pair:** $\theta(x) = a(x - x_0) + \tfrac{b}{3}(x - x_0)^3$, with
-  $x_0 = 0.3819660112501051$ and $\lambda = a^{3/2}/b^{1/2}$.
+  $x_0 = 0.3819660112501051$ and $\lambda = a^{3/2}/b^{1/2}$:
   - $b \in \{10^4, 10^8\}$;
   - $a$ chosen so that $\lambda \in \{0.25, 1, 4, 16, 64, 256, 1024\}$.
 
-**The reference:** `mpmath.quad` at 30 digits, split at every zero of $\theta'$ and at $x_0$.
+**The references** (the user, 2026-10-28: *"we can compute the integral by any acceptable method"*,
+and *"Testing (R) using contour integration also: yes, please … It is the science-critical step."*):
+- **Family (R)** is computed twice, by the closed form in the complex error function and by contour
+  integration. The two must agree, to well below the precision the rules need. The log records the
+  largest disagreement, and a case where they disagree is a stop.
+- **Family (C)** is computed by contour integration.
+- Both are validated against `mpmath.quad`, subdivided until it converges, where that takes
+  minutes.
+
+The earlier attempts' `reference.py` and `validate_reference*.py` did this (§0.5). They may be
+reused, re-validated on this tree.
 
 **The runs:** every case at `rtol` $10^{-10}$, with `atol` $10^{-14}$ times the reference.
 **"Honest"** means $|{\rm value} - {\rm ref}| \le$ `abserr`. **"Converged"** means the call reports
 `converged`.
 
+### 2.2 The two constants
+
 **$\Phi_w$** first, on family (R).
 - **The ladder:** $\Phi_w \in \{2\pi, 8\pi, 32\pi, 128\pi, 512\pi\}$.
-- **The rule:** $\Phi_w$ is the smallest rung on which every case of (R) is honest and converged.
-- **Also recorded,** for every case and rung: the true error, abserr, regions, window pieces,
-  maximum depth, and $\theta'^2/|\theta''|$ at the window's edges.
+- **The rule:** $\Phi_w$ is the smallest rung on which every case of (R) is honest and converged,
+  those at $\omega = 1$ included.
+- **Also recorded,** for every case and rung:
+  - the true error, abserr, regions, window pieces and maximum depth;
+  - $\theta'^2/|\theta''|$ at the window's edges;
+  - whether the call ended `node_limited`.
 
 **$\Lambda_c$** next, on family (C), with that $\Phi_w$.
 - **The runs:** every case with no minimum located, as if $\Lambda_c = 0$.
@@ -332,200 +472,316 @@ $f_{\cos} = \cos 3x$:
 - **The check:** the cases with $\lambda < L$ are re-run with their minimum located. They must be
   honest and converged.
 
-**Then stop and report.** Report both tables, the rung each rule picks, and the check, to the
-orchestrator for the user. The agent continues to §3 only on the user's word, with the two
-constants as the user settles them. **If no rung qualifies under either rule, stop and ask.**
-
 Each constant becomes a named module constant, whose comment cites the measurement.
+
+### 2.3 The real calls: z00, z12 and V1's twelve
+
+The 14 captures in `var/levin-phase-floor-06g-fcc-laptop/inputs/` (`z00`, `z12`, `w00`–`w11`) are
+06g's captured inputs of these calls: their span, integrand, phase and arguments, checked bit for bit
+against 06g's census or R24's store when they were made. Their references are 06g's
+(`scores_stage3/scores.json`; FCC at resolution 2, with four readings agreeing). Each is
+replayed through `adaptive_levin_sincos` with the captured arguments, in its own process, at the
+parent and at §1's code with each rung of $\Phi_w$.
+- **First, the replay check.** In a scratch worktree at `3ae6f3a4` (06g's code), each replay
+  reproduces its 06g record bit for bit: value and abserr in `float.hex`, regions, maximum depth and
+  `converged` (`scores.json`: `V1`'s `R24` for the w calls, `rows`' `g` for z00 and z12). At the
+  parent, z00 and z12 are compared with route B's records in
+  `docs/levin-phase-floor/06l/out/partC/h1_calls.csv`, which 06m's census equals. A replay that
+  does not reproduce is a stop. The integrand has not changed since 06g's tree: 06m changed only
+  the driver.
+- **Recorded for each call and rung:** value, abserr, $|v - {\rm ref}|/{\rm abserr}$, `converged`,
+  `node_limited`, regions, maximum depth, the located points and their windows.
+- **The rule, at the chosen $\Phi_w$:** all 14 are honest. **z12 is the user's own test**: *"What
+  needs to be true is that z12 works after 07."* z12 not honest at the chosen rung is reported at
+  the stop as a failure, with the rung at which it would be.
+
+`r55.pkl` in the same directory is not a stationary-point call; it may be replayed as a control,
+where nothing should be located.
+
+### 2.4 The LiouvilleGreen draws
+
+06g's 20 seeded draws of `test_3bessel_analytic.py`, seeds 0–19, run by 06m's calibration harness
+(`docs/levin-phase-floor/06m/calibration/scripts/`, copied into this prompt's
+`calibration/scripts/` with the diff recorded), in two modes: the parent and §1's code.
+- no test fails under the code that passes under the parent;
+- every Levin call in which nothing is located and no leaf is guarded is bit-identical to the
+  parent's;
+- **what location does on these calls is recorded:** every call that locates a point, with the
+  point's kind, $\lambda$ for a minimum, and the call's value and abserr under both codes. Location
+  may fire here, where $K$ and the residual phase terms have opposite signs.
+
+### 2.5 What still does not finish
+
+For every call of §2.1–§2.4 that does not converge, or reaches `depth_max`:
+- which leaves hold the unmet error: window, guarded, or ordinary Levin or Clenshaw–Curtis leaves;
+- each such leaf's error over its ancestry, depth by depth, and whether it falls with $h$;
+- for each window leaf chased to `depth_max`: whether today's floor-limited exit would have fired on
+  it if it were not barred, and whether the call ended `node_limited`;
+- what QUADPACK's counters would have said along that ancestry. `dqage`'s `iroff1` counts a
+  bisection whose halves change the value by at most $10^{-5}$ relatively while their summed error
+  is at least 0.99 of the parent's, and gives `ier = 2` at 6 such. `iroff2` counts a rise in error
+  after 10 subintervals and gives up at 20. QUADPACK stops the whole call; it does not mark a leaf.
+
+**This is evidence for §1.3, not a rule.** If no window leaf is chased to `depth_max` on a flat
+error, the report says so, and §1.3 may need nothing.
+
+### 2.6 Stop and report
+
+Report to the orchestrator for the user:
+- both tables of §2.2, the rung each rule picks, and the check on (C)'s cases below $L$;
+- §2.3's table at every rung, and the chosen rung's verdict on all 14, z12 first;
+- §2.4's results, and what location did there;
+- §2.5's account, and the agent's reading of what it implies for §1.3, stated as a reading;
+- §1.6's analytic-block finding;
+- every deviation so far, numbered and classified.
+
+**The agent continues to §3 only on the user's word,** with the two constants as the user settles
+them, and §1.3 as the user rules it. **If no rung qualifies under either rule, stop and ask.**
 
 ## 3. Tests
 
 A new module, `AdaptiveLevin/tests/test_levin_stationary.py`, with no Ray and no datastore.
-References are closed forms or `mpmath.quad` at 30 digits, split at every stationary point. Every
-test asserts both that the value is within its declared `abserr` of the reference, and that
-`abserr` is at least the true error.
+References are closed forms, contour integrals or `mpmath.quad` subdivided to convergence, split at
+every stationary point. Every test asserts both that the value is within its declared `abserr` of
+the reference, and that `abserr` is at least the true error.
 1. **One stationary point, off every bisection point, of P1's shape.**
    - The phase has total variation of at least $10^5$ rad and one interior root at a non-dyadic
      $x_s$.
-   - The parameters are chosen so that **the parent code accepts the whole span as one Levin
-     region**, wrong beyond its abserr. The agent shows this at the parent, and records the
-     parent's value, abserr and region count in the test's comment.
+   - The parameters are chosen so that **the parent returns a Levin leaf across the point, wrong
+     beyond its abserr**. The agent shows this at the parent, and records the parent's value,
+     abserr, region count and `converged` in the test's comment.
    - Under the new code: the point is located within $4\varepsilon|x_s|$, it has one window, and
      the value is honest.
-2. **Two stationary points between two adjacent Chebyshev nodes** of the root region, so that
+2. **Two stationary points between two adjacent Chebyshev nodes** of the root leaf, so that
    $\theta'$ has no sign change on the root's nodes. Both are located by the scan, and the value is
    honest.
 3. **The nearly coalescing pair,** §2's family (C) at $\lambda = \Lambda_c/4$, at both values of
    $b$. The minimum is located and windowed, and the value is honest.
-4. **No `theta_deriv`.** Test 1's problem with `theta` only. Nothing is located, the nodal guard
-   fires, and the value is honest.
-5. **The round-off-limited exit is barred.** A case built like P1's row 1 at `rtol` $10^{-11}$,
-   where the parent accepts the root as phase-limited across the point. Under the new code no
-   window piece or guarded region is phase-limited, and the value is honest.
-6. **The cap.** Test 4 with `depth_max` small enough that a guarded region reaches it. Assert:
+4. **No `theta_deriv`.** Test 1's problem with `theta` only. Nothing is located, the guard fires,
+   and the value is honest.
+5. **The floor-limited exit is barred.** A case where the parent marks a leaf across the point
+   floor-limited (P1's row 1 at tight `rtol` is the model). Under the new code no window leaf or
+   guarded leaf is floor-limited, and the value is honest. If no such case can be built on today's
+   driver, the agent says why at §2's stop; the test then asserts the bar directly on a window leaf
+   whose floor the exit's other conditions would accept.
+6. **The cap.** Test 4 with `depth_max` small enough that a guarded leaf reaches it. Assert:
    - the flag is set;
    - `converged` is False;
-   - the region's abserr is its nested pair's.
+   - the leaf is a Clenshaw–Curtis leaf, and its abserr is that solve's.
 7. **The window's edges.** In test 1, $|\theta - \theta(x_s)|$ at each edge equals $\Phi_w$ to
    within the precision §1.2 states. Every piece's phase span is at most $\Delta\phi_w$.
 8. **Nothing else moves.**
    - Run every problem in `test_levin_quadrature.py` that has no stationary point, with a
-     closed-form `theta_deriv` where one exists. Nothing is located and no region is guarded.
-   - Value, abserr and region list are bit-identical to the same call with location bypassed. That
-     needs a private switch in the integrator: test-only, named as such, and off by default.
-9. **The generic path.** `_TwoIndependentSinCosBasis`, or a subclass of it in the new module, with
-   one phase linear and the other quadratic, $\theta_2 = \tfrac{c}{2}(x - x_s)^2$ at a non-dyadic
-   $x_s$, driven through `_adaptive_levin` directly.
+     closed-form `theta_deriv` where one exists. Nothing is located and no leaf is guarded.
+   - Value, abserr and every returned leaf are bit-identical to the same call with location
+     bypassed. That needs a private switch in the integrator: test-only, named as such, off by
+     default, and read nowhere but the location (as `_test_only_bypass_roundoff_premise` is).
+9. **The generic path.** A subclass of `_TwoIndependentSinCosBasis` in the new module, with the
+   Clenshaw–Curtis methods the driver calls (`eval_basis_and_arguments`, `theta_prime_on_fine_grid`
+   and `basis_derivative`) and §1.0's two. One phase is linear and the other quadratic,
+   $\theta_2 = \tfrac{c}{2}(x - x_s)^2$ at a non-dyadic $x_s$. It is driven through
+   `_adaptive_levin` directly.
    - The point is located on phase 2 and windowed, and the value is honest against the closed form
      (a Fresnel integral and an elementary one).
    - Phase 1 locates nothing.
-10. **Existing tests.** Every test in `AdaptiveLevin/tests/` and `LiouvilleGreen/tests/` passes
-   unchanged. That includes C2's stationary-point tests, which supply no `theta_deriv` and so
-   exercise the guard.
+10. **§1.3's rule,** if the user rules one in: tests of its own, written with it, one of which shows
+    it does not fire on test 1's window leaves where they converge.
+11. **The records of `QuadSourceIntegral`.** A test in `ComputeTargets/tests/` that runs a group
+    call through `phase_group_Levin_integral` on a stand-in, as the module's existing tests do, and
+    asserts that the group record carries the four counts. No existing test pins the record's key
+    set; this one does.
+12. **Existing tests.** Every test in the seven roots passes.
+    - **An existing assertion may change** only in a test whose problem holds a stationary point and
+      supplies `theta_deriv`, so that location now fires: `test_levin_global_budget.py`'s test 12c
+      is one. Only its asserted value, abserr, region, depth or solve counts may change, and each
+      change is listed with its numbers under both codes.
+    - An honesty assertion that would fail is a stop. A convergence assertion that would go from
+      converged to unconverged is a stop.
+    - The tests that put a stationary point in a call without `theta_deriv` exercise the guard; they
+      pass unchanged.
 
 **Deliberate breakages,** each recorded in the log with the test that catches it, then reverted:
 - **(i)** location, windows and guard all off: test 1 must fail;
-- **(ii)** location off, leaving only the nodal guard: test 2 must fail;
-- **(iii)** `phase_limited` allowed in window pieces and guarded regions: test 5 must fail;
+- **(ii)** location off, leaving only the guard: test 2 must fail;
+- **(iii)** the floor-limited exit allowed on window and guarded leaves: test 5 must fail;
 - **(iv)** minima never located ($\Lambda_c = 0$): test 3 must fail;
-- **(v)** the Levin estimate kept at `depth_max` in a guarded region: test 6 must fail;
-- **(vi)** the window replaced by a plain split at $x_s$, with the Levin regions on either side
-  accepted unguarded: test 1 or test 7 must fail;
-- **(vii)** location done only for the first phase a basis reports: test 9 must fail.
-
-**`ComputeTargets/tests/`:** a test that pins a group record's exact key set gains the four counts
-of §1.5. That is the only existing assertion that may change; any other change is a stop.
+- **(v)** a guarded leaf at `depth_max` returned as a Levin leaf: test 6 must fail;
+- **(vi)** the window replaced by a plain split at $x_s$, with the leaves on either side unguarded:
+  test 1 or test 7 must fail;
+- **(vii)** location done only for the first phase a basis reports: test 9 must fail;
+- **(viii)** the four counts left out of the group record: test 11 must fail.
 
 **The seven roots,** before and after. A fall is a stop. A rise equals the tests added.
 
 ## 4. Records of the code
 
-- `black` on the files changed.
+- `black` on the files changed, outside `calibration/scripts/` and `earlier-attempts/`.
+- **§2's records** in `docs/levin-phase-floor/07/calibration/`: its scripts in `scripts/`, formatted
+  by `black` before the run that is recorded, and its outputs in `out/`. Each output records the
+  SHA-256 of its script and of `AdaptiveLevin/levin_quadrature.py` as it was measured, the `HEAD`,
+  and that the tree was dirty. **If `levin_quadrature.py` changes after §2's recorded run** in
+  anything but the two constants' values, their comments and §1.3's rule, §2 is re-run on the final
+  code. A rung that then moves is a stop.
+- **The earlier attempts' records,** copied as §0.5 says.
 - `logs/07-stationary-point-guard.md`, in README §5.1's form. Its **Predictions and verdicts**
   holds:
-  - §2's two rules, with their tables and the constants as the user settled them;
-  - §6's predictions, copied before §6 runs and marked not yet scored.
+  - §2's rules, with their tables and the constants as the user settled them, and §2.3's verdict;
+  - §5's rules S0–S2 and §6's V0–V5, copied before Part B runs and marked not yet scored.
 - The board's 07 row.
-- **One commit.** The header's issue moves only in 07's records commit, after §5 and §6.
+- **One commit.** The header's issue moves only in 07's records commit, after Part B.
 
-## 5. Rehearsals R15 and R16 — on the Mac Studio, after the code commit is pushed
+## 5. Rehearsals R27 and R28 — on the Mac Studio, after the code commit is pushed
 
-As 06 §5. Records go under `var/levin-phase-floor-07/rehearsal/`.
+As 06m §4, with records under `var/levin-phase-floor-07/rehearsal/`, slugs `r27-parent` and
+`r28-guard`, `--prompt 07`, and both fingerprints `1b332ffa…`.
 1. **The lock:** `acquire`, then `set-pid` at each launch, and `release` after the readers. Each
    lock command is a shell command of its own (`CLAUDE.md`).
-2. **R15** runs at the code commit's parent and **R16** at the code commit, each in a worktree.
-   - Each runs `RunDrivers/quadsource_atol_sweep.py --build --rehearsal` as R13 and R14 ran it.
-   - Each is registered with `--campaign levin-phase-floor --prompt 07`, with slugs `r15-parent` and
-     `r16-guard`.
-   - **Both fingerprints must equal `1b332ffa…`.**
-3. **The value comparison** is `tools.store_value_diff` on R15 and R16, with `--json`, with 05's
-   `classify_non_qsi.py` copied unchanged.
-   - **Outside `QuadSourceIntegral`:** every value table is identical, every other difference is of
-     the four volatile kinds of `[05-store-value-diff-compares-volatile-columns]`, and no row is in
-     one store only.
-   - **Inside `QuadSourceIntegral`, per row:** group records are compared with the four new counts
-     set aside.
-     - **A row in which R16 located nothing and guarded nothing is bit-identical** in `total`,
-       `total_abserr`, the analytic columns and every group record.
-     - **Any other row is tabulated:** the change against R15's and R16's `total_abserr`, the
-       points located, the window pieces, the guarded regions and the depth.
-4. **P1's two rows**, R14's rows at $z_{\rm response} = 250$: $(k,q,r) = (3.162\times10^5)^3$ and
-   $(10^5, 3.162\times10^5, 3.162\times10^5)$.
-   - **The rule:** under R16, $|{\rm total} - {\rm ref}| \le$ `total_abserr`.
-   - **The references** are the totals P1 corrected on R14's integrand:
-     $5.918585406\times10^{-20}$ and $-3.3961904975\times10^{-19}$.
-   - **The location:** each row's `G+q+r` group locates its point, at $z = 10211.3$ and $275.0$.
-5. **The readers** (`docs/dk-and-rpk-migration/rehearsal/run_readers.sh`) run on R16. Every one
-   exits 0, and the store is byte-identical before and after.
-6. **Release the lock.** `ray-processes --ray-temp-dir /tmp/ray-sgk` lists nothing.
-7. **The stores are kept** until the user says otherwise.
+2. **R27** runs at the code commit's parent and **R28** at the code commit, each in a worktree, with
+   06m's command line.
+3. **S0 — R27 against 06m's R26.** R26 (`var/datastores/levin-phase-floor-06m-r26*`, kept on the
+   Mac Studio) was built at 06m's code, the parent's. `tools.store_value_diff` on R26 and R27: every
+   value table identical, every `QuadSourceIntegral` value field identical, and every other
+   difference of the four volatile kinds. **Holds** if so. A difference is a finding for the user,
+   reported before R28 is scored.
+4. **R28 against R27.** `tools.store_value_diff` with `--json`, with 05's `classify_non_qsi.py`.
+   - **Outside `QuadSourceIntegral`:** every value table identical, every other difference of the
+     four volatile kinds, no row in one store only.
+   - **Inside it, each row is classed** by R28's four counts in every Levin record of the row,
+     group and analytic (or as §2's stop settled for the analytic blocks):
+     - **a row in which nothing was located or guarded is bit-identical** in `total`,
+       `total_abserr`, the analytic columns and every Levin record, with the four counts set
+       aside;
+     - **any other row is tabulated:** the change against R27's and R28's `total_abserr`, the
+       located points (kind, $z$), window pieces, regions, maximum depth and `total_converged` in
+       each.
+   - **The stationary-point rows'** convergence in each store, and the rows whose `total_converged`
+     changes, in each direction.
+5. **S1 — V1's twelve.** w00–w11 are R24's rows, so R27's and R28's too. Each w call, the `G+q+r`
+   group of its row's sub-interval 1, is read from R28's group record. **Rule:** each locates its
+   point at $z \approx 10211$, and $|v_{28} - {\rm ref}| \le {\rm abserr}_{28}$ against 06g's
+   reference (`scores.json`, `V1`). **Holds** if all twelve do. A violation is a finding for the
+   user, not by itself a stop.
+6. **S2 — P1's two rows.** P1's row 1, $(3.162\times10^5)^3$ at $z_{\rm response} = 250$, and row 2,
+   $(10^5, 3.162\times10^5, 3.162\times10^5)$, each hold a point of `G+q+r`, at $z_* = 10211.3$ and
+   $275.0$.
+   - **The rule, location:** each locates its point within one scan spacing.
+   - **The rule, honesty:** each `G+q+r` call is within its abserr of a reference. P1's references
+     were made at 06's tree, whose integrand differs from today's by more than these errors. So the
+     reference is taken afresh: the call is captured at R27's tree, as 06g's `v1/` captured R24's,
+     and referenced by `tools/filon_reference.py` with four readings. A call that is one of
+     w00–w11 is scored by S1 instead.
+   - **Holds** if both hold on both rows. A violation is a finding, not by itself a stop.
+7. **The readers** run on R28, exit 0, and the store is byte-identical before and after.
+8. **The lock** is released, and `ray-processes --ray-temp-dir /tmp/ray-sgk` lists nothing.
+9. **The stores are kept** until the user says otherwise.
 
-## 6. The re-measurement — on the Mac Studio, Ray-free, on A3 v2's scratch copy
+## 6. The census — on the Mac Studio, Ray-free, on A3 v2's scratch copy
 
-06a's census, re-run at the code commit, against 06a's run as the "before".
-- **The harness** is 06a's, from `docs/levin-phase-floor/06a/scripts/`, copied into
+06m's census re-run at the code commit, against 06m's run as the "before".
+- **The harness** is 06m's, from `docs/levin-phase-floor/06m/census/scripts/`, copied into
   `var/levin-phase-floor-07/census/scripts/`. Change only:
-  - the tree and its paths;
-  - the diagnostics §1.4 adds, recorded per call;
-  - the reference for V4.
+  - the tree and its paths (`prov.py`, `refs_common.py`);
+  - the diagnostics §1.5 adds, recorded per call and per returned leaf;
+  - the scan: run on every group call at both rtols, and on every analytic call at `1e-7`, against
+    the returned leaves;
+  - the comparison with 06m's census, which sets the new keys aside;
+  - V4's references.
 
-  Save the diff against 06a's copy, and record each change as a deviation.
+  Save the diff against 06m's copy, and record each change as a deviation.
 - **The tree** $g$ is a worktree at Part B's dispatch SHA, whose code is the code commit's.
 - **The store** is `var/levin-phase-floor-06/wider/state/a3v2_copy/`, re-checked against its
-  certification and fingerprint, read-only, and hashed before and after.
-- **The units:** every row at `1e-7` and at `1e-8`, as in 06a, in one registered, detached run
-  with slug `census`.
-- **The budget:** 300 s per unit, with 06a's over-budget pass.
+  certification, read-only, and hashed before and after. **06m's census**
+  (`levin-phase-floor-06m-census-20261106T102153`, checkpoint `ea5bc3ab…`) is read only, and hashed
+  before and after.
+- **The units:** every row at `1e-7` and `1e-8`, in one registered detached run with slug `census`.
+- **The budget:** 300 s per unit, with 06a's over-budget pass (a re-run once at 3,600 s, after both
+  sets).
 
 **Gate V0, before the run:**
-- **The parent's code is 06a's.** `git diff --stat e05c34f <code commit's parent> -- . ':!docs'
-  ':!prompts'` shows only `CLAUDE.md`, or files whose ASTs without docstrings equal `e05c34f`'s. So
-  06a's run is the parent's.
-- **The harness reproduces 06a.** At the parent it reproduces 06a's units **bit for bit** on
-  `low-G+r-1` and `ctrl-low-1` at `1e-7`, and on one stationary-point row, 06a's `0-1971`, at
-  `1e-8`.
+- **The parent's code is 06m's.** `git diff --stat 48cf87c0 <code commit's parent> -- . ':!docs'
+  ':!prompts'` shows nothing the harness imports.
+- **The harness, as changed, reproduces 06m's census at the parent,** bit for bit by 06m's
+  comparison, on 06k's 100 K0 units (`docs/levin-phase-floor/06l/out/k0/units.json`). It is one
+  registered run with slug `k0`.
 - **The new code is deterministic.** Two runs of one $g$ unit on a stationary-point row are
   bit-identical.
 
-**Predictions, fixed before the run** (README §5 rule 3). Copy them into the log unchanged.
+**Predictions, fixed before the run** (README §5 rule 3). Copy them into
+`state/predictions.md` unchanged.
 - **V1 — nothing else moves.**
-  - **The rule:** every Levin call in which $g$ locates nothing and guards nothing equals 06a's
-    call bit for bit, in value, abserr, region count and maximum depth. Every row all of whose
-    calls are such equals 06a's row in `total` and `total_abserr`.
+  - **The rule:** every Levin call, group or analytic, in which $g$ locates nothing and guards
+    nothing equals 06m's call bit for bit, in its record and its region record, by 06m's
+    comparison with the new keys set aside. Every row all of whose calls are such equals 06m's row
+    in `total` and `total_abserr`.
   - **Holds** if true at both rtols.
-- **V2 — no region is accepted across a stationary point.**
-  - **The rule:** at `1e-7`, 06a's scan (`spscan.py`, the same grid) finds no accepted **Levin**
-    region holding a sign change of $\theta'$, in any row.
-  - **Holds** if no row has one, against 06a's 720.
-- **V3 — the location finds what 06a's scan found.**
-  - It runs on 06a's grid, so the two should agree exactly.
-  - **The rule:** every call 06a's scan flagged has at least one located `root`, and every located
-    `root` lies within one scan spacing of a sign change 06a's scan recorded.
-- **V4 — honest on a sample.**
-  - **The sample:** 24 stationary-point calls at `1e-7`, stratified by band (low, mid), by $k$ (all
-    six that carry them) and by 06a's depth, with the deepest four rows included. The selection
-    rule is fixed in `state/predictions.md` before the run.
-  - **The reference** is P1's method (P1 report §5):
-    - Gauss–Legendre pieces of at most 0.75 rad over $|\theta - \theta(x_s)| \le \Phi$;
-    - Levin forced to $2^9$ pieces outside;
-    - its error measured as P1 measured it, by $\Phi = 10^3$ against $10^4$.
-  - **The rule:** $|{\rm value}_g - {\rm ref}| \le$ `abserr`$_g$ for every call in the sample.
+- **V2 — no Levin leaf is returned across a stationary point.**
+  - **The rule:** the scan finds no returned **Levin** leaf holding a sign change of $\theta'$, in
+    any group call at either rtol or any analytic call at `1e-7`.
+  - **Holds** if none does. At 06a's code there were 677 such regions, at `1e-7` alone.
+- **V3 — the location finds what the scan finds.**
+  - It runs on the scan's grid, so the two should agree exactly.
+  - **The rule:** every call in which the scan finds a sign change has a located `root` within one
+    scan spacing of each, and every located `root` lies within one scan spacing of a sign change
+    the scan found.
+- **V4 — honest where it is referenced.**
+  - **The set:**
+    - z00 and z12, against 06g's reference (`rows`);
+    - Z3's seven analytic calls in the 720 (z07, z16, z18, z21, z24, z28, z29), against 06g's;
+    - 24 more stationary-point group calls, stratified by band (low, mid), by $k$ (all six that
+      carry them), by rtol and by 06m's depth, with the deepest four included. The selection rule
+      is fixed in `state/predictions.md` before the run.
+  - **The 24's references** are `tools/filon_reference.py`'s, four readings (QAWO and FCC at two
+    resolutions), FCC at resolution 2 the reference, from captures at $g$'s tree, as 06g's were
+    made. Each capture is checked bit for bit against the census record. They run as one registered
+    run with slug `references`, after the census, at most six workers. The 30-minute reading limit
+    is a check, not a cutoff (06g's ruling). A projection beyond a day is a stop.
+  - **The rule:** $|{\rm value}_g - {\rm ref}| \le$ `abserr`$_g$ for every call in the set whose
+    four readings agree within 06g's tolerance, here $\min({\rm abserr}_{06m}, {\rm abserr}_g)/100$.
+    A call whose readings do not agree is reported, not scored.
+  - **Holds** if every scored call is honest.
 - **V5 — the cap is not reached where a point was handled.**
-  - **The rule:** at both rtols, no region reaches `depth_max` in a call that locates a point or
-    guards a region. An over-budget unit counts as false.
+  - **The rule:** at both rtols, no leaf reaches `depth_max` in a call that locates a point or
+    guards a leaf. An over-budget unit counts as false.
   - A failure is a finding for the user, not a fault. It reopens G2's L2 (Decisions, **G2 L2,
     decided**).
 
 **Descriptive, not scored:**
-- **Depth:** the distribution of row depth under $g$ at both rtols, against 06a's.
+- **Depth:** the distribution of row depth under $g$ at both rtols, against 06m's.
 - **Windows:** window pieces per call, the windows' widths in $x$, and $\theta'^2/|\theta''|$ at
   their edges.
-- **The sample's errors before:** for V4's sample, $|{\rm value}_{06a} - {\rm ref}|$ against 06a's
-  abserr. That is how wrong the stored rows were.
-- **Totals:** how they moved against 06a, relative and against `total_abserr`$_{06a}$, by band and
-  $k$.
-- **Locations:** minima located and their $\lambda$; points at an end of a span; and
-  `num_guarded_regions`, expected 0 since `theta_deriv` is supplied.
-- **Convergence:** `convergence_kinds.py` (06a's changed copy) under $g$, and the
-  `total_converged` counts.
-- **Cost:** wall time against 06a. Cost is not an argument (README §5 rule 4).
+- **The stationary-point calls before:** for V4's set, $|{\rm value}_{06m} - {\rm ref}|$ against
+  06m's abserr. That is how wrong the census at 06m's code was.
+- **Totals:** how they moved against 06m in the 720, relative and against `total_abserr`$_{06m}$, by
+  band and $k$.
+- **Locations:** minima located and their $\lambda$; points at an end of a span; analytic calls that
+  located a point; and `num_guarded_regions`, expected 0 since `theta_deriv` is supplied.
+- **Convergence and the flag:** unconverged calls, in the 720 and outside it, with 06m's flag-cost
+  table beside them (`[06m-calls-flagged-unconverged-within-their-request]`, 08's).
+- **§1.3's rule,** if one is in: where it fired, and on which calls.
+- **Cost:** group-call regions and wall time against 06m's. Cost is not an argument (README §5
+  rule 4).
+
+**The census's checkpoint and region records stay on the Mac Studio in full;** 08 compares against
+them.
 
 ## 7. Acceptance
 
 1. **§1–§4 as written:**
-   - §2's tables reported, and $\Lambda_c$ and $\Phi_w$ settled by the user;
-   - every test passing and the seven breakages caught;
+   - §2's tables reported; $\Lambda_c$, $\Phi_w$ and §1.3 settled by the user;
+   - every test passing and the eight breakages caught;
+   - every changed existing assertion of §3 test 12's kind, and listed;
    - the seven roots rising only by the tests added.
 2. **§5:**
-   - R15 and R16 both `done` with `1b332ffa…`;
-   - outside `QuadSourceIntegral`, every value table identical;
-   - inside it, every row that locates and guards nothing bit-identical, and the rest tabulated;
-   - P1's two rows honest;
+   - R27 and R28 both `done` with `1b332ffa…`;
+   - S0 scored;
+   - outside `QuadSourceIntegral` every value table identical;
+   - inside it every row that located and guarded nothing bit-identical, and the rest tabulated;
+   - S1 and S2 scored;
    - the readers exit 0, and the lock is released.
 3. **§6:** V0 holds; V1–V5 are each scored holds, fails or undecided against the rule as written,
-   with their numbers; and the store is unchanged.
+   with their numbers; the store and 06m's census are unchanged.
 4. **Records:**
-   - `logs/07-stationary-point-guard.md`, with §5 and §6's Mac Studio record appended by the
+   - `logs/07-stationary-point-guard.md`, with Part B's Mac Studio record appended by the
      orchestrator;
    - `docs/levin-phase-floor/VERIFICATION.md` §7, "The stationary-point guard";
    - the records in `docs/levin-phase-floor/07/`.
@@ -533,154 +789,24 @@ As 06 §5. Records go under `var/levin-phase-floor-07/rehearsal/`.
 ## 8. Stop conditions — stop and ask
 
 - **The Gate** fails.
-- **§2 is reached:** the planned stop, always taken. Separately, no rung qualifies under either
-  of §2's rules.
-- **A test cannot be built as written:** the parent does not show test 1's or test 5's failure.
+- **§2 is reached:** the planned stop, always taken. Separately: no rung qualifies under either of
+  §2.2's rules; §2.1's two references for (R) disagree; or §2.3's replay check does not reproduce a
+  capture, unexplained.
+- **A test cannot be built as written:** the parent does not show test 1's failure, and §3 test 5's
+  fallback does not apply.
 - **The construction reaches outside its files.** It needs a change outside
-  `AdaptiveLevin/levin_quadrature.py` and §1.5's record: to `phase_groups.py`, the partition, the
-  eq. (151) formula, `resolved`, `_local_atol`, `DEFAULT_LEVIN_MAX_DEPTH` or `rtol`. Or it needs
+  `AdaptiveLevin/levin_quadrature.py`, the test modules, `docs/levin-phase-floor/07/` and §1.6's
+  records: to `phase_groups.py`, `LiouvilleGreen/`, the partition, the eq. (151) formula,
+  `_cc_roundoff_floor`, the trust rule, $\nu_B$, `DEFAULT_LEVIN_MAX_DEPTH` or `rtol`. Or it needs
   the location in `adaptive_levin_sincos` rather than in the generic code.
-- **A test moves:**
-  - an existing assertion has to change outside §3's one exception;
-  - a test in `LiouvilleGreen/tests/` moves;
-  - a seven-roots count falls.
+- **The set-aside work** would have to be changed, applied or dropped (§0.5).
+- **A test moves** beyond §3 test 12's allowance; a test in `LiouvilleGreen/tests/` fails; a seven-roots
+  count falls.
 - **The rehearsals:**
-  - R15 or R16 does not give `1b332ffa…`;
-  - outside `QuadSourceIntegral` a value table differs;
-  - inside it, a row that locates and guards nothing is not bit-identical;
-  - P1's two rows are not honest under R16.
-- **The re-measurement:** V0 fails.
-- **Any store file** changes.
+  - R27 or R28 does not give `1b332ffa…`;
+  - outside `QuadSourceIntegral` a value table differs between R27 and R28;
+  - inside it, a row that located and guarded nothing is not bit-identical.
+- **The census:** V0 fails; a unit ends in an error (not over budget); V4's references project
+  beyond a day.
+- **Any store file** changes, or 06m's census does.
 - **The lock** is held, or will not release.
-
-## 9. Amendments, 2026-10-28, before §2 runs
-
-Part A stopped before §2 on 2026-10-27, on two of §8's conditions, with §1 built and uncommitted.
-The user's rulings, quoted, and what follows from them. **Where this section and the text above
-differ, this section holds.**
-
-1. **A new prompt runs first** (the board's Decisions, **07 LG stop**). A `LiouvilleGreen` draw
-   moved because the round-off-limited exit accepted the Levin range beyond a window at depth 0,
-   on a floor that bisection would have cut by about $10^4$
-   (`[07-roundoff-exit-assumes-bisection-cannot-help]`). The user: *"Fix it now. A prompt that runs
-   before 07's §2."* That is [`06b-roundoff-exit-premise.md`](06b-roundoff-exit-premise.md).
-   - **§1's uncommitted work** is set aside before 06b runs, with nothing lost, and restored after
-     06b's code commit. The agent rebases it onto 06b's code. That rebase is a deviation, recorded
-     as `STRUCTURALLY REQUIRED`.
-   - **§2 runs on 06b's code and 07's §1 together.**
-   - **The LiouvilleGreen stop is re-tested before §2's report.** The agent re-runs the 20 seeded
-     draws, seeds 0–19, at the rebased tree. Any draw that fails under the new code and passes at
-     06b's code is still §8's stop.
-2. **§2's reference** (the user, 2026-10-28): *"we can compute the integral by any acceptable
-   method"*, and *"Testing (R) using contour integration also: yes, please. I would like to be sure
-   we are getting this part of the integrator right. It is the science-critical step."*
-   - **Family (R)** is computed twice, by the closed form in the complex error function and by
-     contour integration. The two must agree, to well below the precision §2's rules need. The
-     log records the largest disagreement, and a case where they disagree is a stop.
-   - **Family (C)** is computed by contour integration.
-   - Both are validated against `mpmath.quad`, subdivided until it converges, wherever that takes
-     minutes, as Part A did.
-   - "`mpmath.quad` at 30 digits" in §2 and §3 means a reference of this kind.
-3. **$\omega$ in family (R)** (the user, 2026-10-28): *"we should have some cases where `omega` is
-   zero, and some where it is not … With this many digits precision, it should be possible to pick
-   out the shift in the root against the value of `x_s`. A few cases with `omega=1` seem
-   sufficient, since the amplitude of `omega` otherwise trades off against the value of `c`."*
-   - Every case of §2's (R) grid runs at $\omega = 0$.
-   - A few run also at $\omega = 1$, chosen by the agent and recorded. Their root lies at
-     $x_s - 1/c$, and the location must find it there, not at $x_s$.
-   - §2's rule for $\Phi_w$ covers every (R) case, those at $\omega = 1$ included.
-4. **The rehearsals are renamed.** 06b takes R15 and R16. §5's rehearsals are **R17** (at the code
-   commit's parent, which now carries 06b's code) and **R18**, with slugs `r17-parent` and
-   `r18-guard`. Both fingerprints must still equal `1b332ffa…`.
-5. **§6's "before" is 06b's census,** not 06a's. 06b's code changes values wherever the exit fired
-   against its premise, so 06a's run is no longer the parent's.
-   - **V0's first clause:** `git diff --stat <06b's code commit> <07's code commit's parent> --
-     . ':!docs' ':!prompts'` shows nothing but `CLAUDE.md`. So 06b's census is the parent's.
-   - **V0's second clause:** the harness reproduces **06b's** census units bit for bit, on the same
-     three rows.
-   - **V1** compares with 06b's calls and rows. **V4's** "errors before" are 06b's.
-   - **V2 and V3** keep 06a's scan. The scan reads $\theta'$ alone, which 06b does not change.
-   - The harness is copied from 06b's census copy, and its diff is saved against that copy.
-6. **06c runs first, and §2 is re-run on it** (the board's Decisions, **07 §2 stop**). §2 ran on
-   2026-10-28 at 06b's code with §1 rebased, and no rung of $\Phi_w$ passed its rule. Every (R)
-   case was honest at every rung, but 1–3 per rung reported unconverged, all at $x_s = 0.7236$,
-   $\omega = 0$, where the total cancels. The cause is the driver's per-region acceptance, each
-   window piece judged at `rtol` against its own value, not $\Phi_w$
-   (`[07-per-region-acceptance-misses-a-cancelling-total]`). The user: *"The fully global scheme
-   sounds like the right problem to solve, for the CC algorithm around the stationary point, and
-   the Levin scheme in general … Otherwise we are just treating the symptoms rather than dealing
-   with the actual cause."* That is [`06c-global-error-control.md`](06c-global-error-control.md).
-   - **§1's uncommitted work** is set aside before 06c runs, as for 06b, and rebased onto 06c's
-     code afterwards. That rebase is a deviation, recorded as `STRUCTURALLY REQUIRED`.
-   - **Window pieces are leaves** of 06c's loop, with the pieces of every window and the Levin
-     ranges between them in one budget for the call. §1.2's "a piece whose nested-pair estimate
-     misses its tolerance is bisected" becomes "a piece is bisected when the loop chooses it".
-     §0.2's rule (ii), the round-off-limited exit barred in window pieces and guarded regions,
-     becomes: such a leaf is never floor-limited, so it stays refinable until `depth_max`.
-   - **§2 is re-run in full,** both families and the LiouvilleGreen draws, on 06c's code and §1
-     together, under its rules as written. Its earlier tables stay in the records, as measured on
-     06b's code.
-   - **§0.3's** "the per-region `resolved` test" and "`_local_atol`" are 06c's, and are as 06c
-     leaves them; 07 does not change them further.
-   - **The rehearsals are renamed again.** 06c takes R17 and R18. §5's rehearsals are **R19** (at
-     the code commit's parent, which now carries 06c's code) and **R20**, with slugs `r19-parent`
-     and `r20-guard`. Both fingerprints must still equal `1b332ffa…`.
-   - **§6's "before" is 06c's census,** not 06b's: point 5 holds with 06c's code commit, 06c's
-     census and its harness copy in place of 06b's. V1's bit-identity is against 06c's calls.
-7. **06d runs first, and §2 is re-run on it** (the board's Decisions, **07 third stop**). Rebased
-   onto 06c, Part A stopped a third time: window leaves are never floor-limited, but the eq. (151)
-   floor they carried, the Levin solve's model with its $1/\min|\theta'|$, **grows** as a leaf holding
-   the stationary point shrinks, so 06c's budget is never met and the loop chases every window leaf
-   towards depth 20; and the depth-18 diagnostic divided by a zero `abserr`
-   (`[07-cc-solves-use-the-levin-roundoff-floor]`, `[07-depth18-diagnostic-divides-by-zero]`). The
-   user: *"I assumed we had updated the error model, not just taken over the Levin model intact. As
-   you say this needs fixing for every CC solve."* That is
-   [`06d-cc-roundoff-floor.md`](06d-cc-roundoff-floor.md), for every Clenshaw–Curtis solve.
-   - **§1's uncommitted work,** rebased onto 06c, is set aside before 06d runs, and rebased onto
-     06d afterwards: a deviation, `STRUCTURALLY REQUIRED`.
-   - **Window pieces** are Clenshaw–Curtis solves, so they carry 06d's floor. §0.2's rule (ii),
-     never floor-limited, stands as written.
-   - **§2 is re-run in full** on 06d's code and §1 together, under its rules as written, with the 20
-     LiouvilleGreen draws. The tables of the second and third stops stay in the records.
-   - **The rehearsals stay R19 and R20.** §6's "before" is 06c's census, which runs on 06c's and
-     06d's code together.
-8. **06e runs first, and window leaves get QUADPACK's rule** (the board's Decisions, **07 fourth
-   stop**). Rebased onto 06d, Part A stopped a fourth time: §2 could not complete. Window leaves,
-   never floor-limited under point 6, carry an error flat in depth (06d's node term, or on
-   LiouvilleGreen seed 0's call 15 the caller's `theta_abserr`, 4.55e-12 against a request of
-   2.59e-12) and are chased to `depth_max`; outside the windows, Levin leaves with a residual flat in
-   $h$ are chased too. A leaf study found the common cause in the rounding of $x$: the Chebyshev
-   end nodes miss the span by an ulp (`[06c-chebyshev-end-nodes-miss-the-span]`), and 06d's node
-   term is a worst case (`[06d-cc-node-term-is-pessimistic]`). That is
-   [`06e-exact-end-nodes.md`](06e-exact-end-nodes.md). The user, on a stopping rule for leaves whose
-   error does not fall, after pinning left 07's window leaves as its only cases: *"Let's go for
-   (b)"*, that is, it belongs here.
-   - **§1's uncommitted work,** rebased onto 06d, is set aside before 06e runs, and rebased onto
-     06e afterwards: a deviation, `STRUCTURALLY REQUIRED`.
-   - **§2 is re-run on 06e's code and §1 together, up to its planned stop,** with the 20
-     LiouvilleGreen draws. The report adds, for every call that does not finish or reaches
-     `depth_max`: which leaves hold the unmet error, inside a window or outside, and that error's
-     sequence over depth.
-   - **Point 6's "never floor-limited" is replaced by a QUADPACK-style rule** for window leaves (and
-     guarded regions): a leaf whose error bisection leaves flat is declared round-off-limited and
-     stops being refinable, declaring what it carries; the round-off-limited exit of 06b stays
-     barred there. **The rule's form, its constants and the regime in which it could fire falsely
-     are written as a further amendment after §2's re-run**, from the cases that run measures, and
-     shown to the user before any test is written. Its basis is QUADPACK's own: `dqage`'s `iroff1`
-     counts a bisection whose halves change the value by at most $10^{-5}$ relatively while their
-     summed error is at least 0.99 of the parent's, and gives `ier = 2` at 6 such; `iroff2` counts
-     a rise in error after 10 subintervals and gives up at 20 (`dqagse`: `iroff1 + iroff2` ≥ 10, or
-     `iroff3` ≥ 20). QUADPACK stops the whole call; it does not mark a leaf, so the adaptation is
-     the amendment's to justify. Its thresholds start at the generous end.
-   - **The rehearsals are renamed again.** 06e takes R19 and R20. §5's rehearsals are **R21** (at
-     the code commit's parent, which now carries 06e's code) and **R22**, with slugs `r21-parent`
-     and `r22-guard`. Both fingerprints must still equal `1b332ffa…`.
-   - **§6's "before" is 06e's census,** not 06c's: point 5 holds with 06e's code commit, 06e's
-     census and its harness copy in place of 06b's.
-   - **Y1's rows are scored.** 06c §4's Y1 failed worst on 12 equilateral rows, each holding the
-     stationary point of `G+q+r` at $z \approx 10211$ that §5 item 4 locates in P1's row. On each,
-     06b's code or 06c's reported converged while wrong by $4.5\times10^3$–$1.6\times10^6$× its
-     declared error. Their references were computed for 06c's Part B
-     (`docs/levin-phase-floor/06c/y1-references/`). **§5 adds Y1′:** on R22, every one of the 12 rows has
-     $|{\rm total} - {\rm ref}| \le$ `total_abserr`. **Holds** if no row violates it. A violation
-     is a finding for the user, not by itself a stop.
