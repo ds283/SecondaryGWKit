@@ -1,0 +1,3 @@
+stage 1: 105 units
+  z12 parent None: ratio 1681 converged True node_limited False regions 112 depth 17 wall 2.1 s
+  z12 g06 None: ratio 1681 converged True node_limited False regions 135 depth 18 wall 2.7 s

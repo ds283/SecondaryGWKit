@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-11-07 · **128 open** across twenty-two campaigns.
+**Last updated:** 2026-11-07 · **130 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -993,6 +993,8 @@ is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; thi
 | `[06m-calls-flagged-unconverged-within-their-request]` | levin-phase-floor | After route B, 114 group calls outside the 720 stationary-point rows (84 of 18,560 units) are still flagged unconverged; 104 meet their request and are flagged only by an untrusted leaf at `depth_max`. What `total_converged` should mean to the one-loop stage. **Assigned 2026-11-06** to the campaign's prompt 08 |
 | `[06m-levin-floor-misses-node-rounding-far-from-the-origin]` | levin-phase-floor | The Levin branch's eq. (151) floor has no term for node rounding: on 06m's constructed cell at $x \approx 3\times10^5$ Levin leaves carry $\Delta_1$ $3.8\times10^3$–$1.3\times10^5$× their floor. The trust check refuses and refines them, so no call is dishonest; whether production reaches it is not measured. Kept open to see whether it is reproduced |
 | `[07-cc-interior-nodes-shift-with-a-rounded-midpoint]` | levin-phase-floor | Where ${\rm fl}(a+b)$ rounds, a Clenshaw–Curtis leaf's interior nodes all shift by up to half an ulp of $x$ (06e pinned only the ends): an error $\approx\delta(g(b)-g(a))$ per leaf, flat under splitting, measured by $E$. Explains 07's §2.2 failure at $10^{-10}$ on $[0,1]$, where the parent's dyadic leaves escape it. Remedy for the user after 07 |
+| `[07-cc-fallback-ignores-a-reversed-span]` | levin-phase-floor | The Clenshaw–Curtis fallback weights by the span's length, unsigned, so a reversed `x_span` returns the forward value, not its negative; a Levin region keeps the sign. No production span is reversed; 07's window path keeps the sign |
+| `[07-cc-node-term-takes-one-phase-per-node]` | levin-phase-floor | The fallback's node term takes one $\theta'$ per node, so a basis of several phases (07's generic interface) cannot supply it exactly; `_Basis_SinCos`, the only basis, has one phase |
 | `[06-time-integrals-must-reach-late-resonances]` | levin-phase-floor | The time integrals must run late enough to include the QCD crossover and $e^+e^-$ annihilation for configurations that resonate then. Physics, out of 07 by the user's decision; a separate prompt after 07 |
 | `[06-s2-window-metric-floors-on-phi-t-structure]` | levin-phase-floor | 04's 9-sample φ metric measures $\varphi_T$'s own shape at $z \ge 1.75\times10^7$ ($\sigma_s/\sigma_{t_5}$ 0.95–1.04), so S2's $10^{-3}\sigma_{t_5}$ rule fails there |
 | `[06-ray-task-output-does-not-reach-the-launch-log]` | levin-phase-floor | A Ray task's warning may never reach a build's launch log; 06's warning grep found 0 lines, but no task printed, so it was not tested |

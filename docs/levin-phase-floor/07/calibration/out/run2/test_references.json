@@ -1,0 +1,113 @@
+{
+ "header": [
+  "levin-phase-floor 07: section 3, the tests' references",
+  "written 2026-11-07T22:09:49+00:00 on mps026088.phys.susx.ac.uk",
+  "python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "script test_references.py sha256 06403b6bceedc2bdb02b4be3047a95ab1876d71bb21f4f1afd655cf771099c4d",
+  "prov.py sha256 2999c22ba523324fe7a87aa3c9cafc481f5afb345bbc9b70b6eaae6f29af174e",
+  "AdaptiveLevin/levin_quadrature.py sha256 dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9",
+  "input docs/levin-phase-floor/07/calibration/scripts/reference.py sha256 43283037c7bad69b7624e05a6084067cf1e0f4d34da4a4a7c5e02cbe097e0a26",
+  "HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb",
+  "tree dirty: yes; git status --short:",
+  "     M AdaptiveLevin/levin_quadrature.py",
+  "     M ComputeTargets/QuadSourceIntegral.py",
+  "    ?? docs/levin-phase-floor/07/calibration/",
+  "    ?? docs/levin-phase-floor/07/earlier-attempts/",
+  "    ?? prompts/levin-phase-floor/logs/07-stationary-point-guard.md",
+  "uptime at start: 22:09  up 8 days, 30 mins, 1 user, load averages: 4.50 6.31 7.88"
+ ],
+ "P1": {
+  "value_40": "0.00141112186326158290958497602806",
+  "value_hex": "0x1.71eac90375ce6p-10",
+  "relative_40_vs_60": 1.6538325453408162e-37,
+  "params": {
+   "L": 16.0,
+   "A": 169.0,
+   "x_s": 9.381966011250105,
+   "g": 0.33,
+   "h": 0.78
+  }
+ },
+ "P5": {
+  "value_40": "-0.00112546372144488687714088877903",
+  "value_hex": "-0x1.27089781798d1p-10",
+  "relative_40_vs_60": 1.7945003564385613e-37,
+  "params": {
+   "L": 16.0,
+   "A": 169.0,
+   "x_s": 10.0918,
+   "g": 0.33,
+   "h": 0.78
+  }
+ },
+ "closed_form_check": {
+  "params": {
+   "L": 5.0,
+   "A": 1.0,
+   "x_s": 2.1,
+   "g": 0.33,
+   "h": 0.78
+  },
+  "closed_40": "-0.705757127394259821964009619189",
+  "literal_30": "-0.705757127394259821964009619189",
+  "pieces": 76,
+  "relative": 3.3565480315249714e-31
+ },
+ "two_roots": {
+  "value_40": "0.0395102262507622088794189764873",
+  "value_hex": "0x1.43aaf33358c16p-5",
+  "relative_40_vs_60": 1.4871334079880994e-30,
+  "params": {
+   "b": 10000.0,
+   "d": 0.01,
+   "x_0": 0.3819660112501051,
+   "a": -0.25
+  },
+  "pieces_30": 1123,
+  "pieces_45": 2242
+ },
+ "C_b10000_lambda1": {
+  "value_40": "0.0148034965787848604256788806268",
+  "value_hex": "0x1.e514bad60edf4p-7",
+  "relative_40_vs_60": 1.5665384161649977e-41,
+  "b": 10000.0,
+  "a": 21.544346900318835,
+  "x_0": 0.3819660112501051
+ },
+ "C_b1e+08_lambda1": {
+  "value_40": "0.00075180624733480753865313358567",
+  "value_hex": "0x1.8a29b9f63becdp-11",
+  "relative_40_vs_60": 1.6918172020202022e-42,
+  "b": 100000000.0,
+  "a": 464.1588833612779,
+  "x_0": 0.3819660112501051
+ },
+ "two_phases": {
+  "value_40": "0.00816369906183328340852021528759",
+  "value_hex": "0x1.0b82123e1329fp-7",
+  "relative_40_vs_60": 5.34492773365439e-40,
+  "params": {
+   "lambda_1": 200.0,
+   "c": 100000.0,
+   "x_s": 0.3819660112501051
+  }
+ },
+ "R_a": {
+  "value_40": "-0.00014323662749092536207337311393",
+  "value_hex": "-0x1.2c63942e63e04p-13",
+  "relative_40_vs_60": 6.506693750354581e-39,
+  "c": 1000000.0,
+  "x_s": 0.723606797749979,
+  "omega": 0.0,
+  "closed_minus_contour_relative": 6.417714579710545e-39
+ },
+ "R_b": {
+  "value_40": "0.00194257051986898276710399904014",
+  "value_hex": "0x1.fd3bb3697bb72p-10",
+  "relative_40_vs_60": 3.5351348129417467e-40,
+  "c": 1000000.0,
+  "x_s": 0.3819660112501051,
+  "omega": 0.0,
+  "closed_minus_contour_relative": 3.347124239744811e-40
+ }
+}

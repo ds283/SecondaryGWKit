@@ -1,0 +1,44 @@
+# levin-phase-floor 07: section 2.5 on the LiouvilleGreen units that did not finish
+# written 2026-11-07T10:11:02+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script lg_stuck_units.py sha256 7884056dc4f7878da768e53aa4f7482fcaf08138adc10e4303c247daf215f001
+# prov.py sha256 9e2adc86dd624417822eb68ef554a6e5c23c817a824a8f778df712055d449c76
+# AdaptiveLevin/levin_quadrature.py sha256 13294b2ac3e3e3a480a6735a263ea8abe205ccdaada12939c13cd20edad884a4
+# input docs/levin-phase-floor/07/calibration/scripts/analysis07.py sha256 1f2999bfb671bd564c3b4669214ebad490cc1579c06fcc09e996d4343f850239
+# input docs/levin-phase-floor/07/calibration/scripts/calibrate.py sha256 4f4290c5d7de782658dcc4cab48c80cd734f2f6bcdbfa36960d1ca478e3b72d9
+# input LiouvilleGreen/tests/test_3bessel_analytic.py sha256 3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c
+# input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+# HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? docs/levin-phase-floor/07/
+# uptime at start: 10:11  up 7 days, 12:31, 1 user, load averages: 20.23 26.52 53.16
+
+seed 0 test_JJJ: 20 calls, outcome under the cap pass, 92.9 s
+   #11 span [0.43451811659206757, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 74 at cap 6 untrusted window 1 e' window 1.58e-11 other 3.81e-12 request 2.72e-11 converged False wall 1.1 s
+      parent: converged True abserr 1.5e-11 regions 27 depth 8 floor-limited 3 wall 0.3 s
+      bar lifted: converged True abserr 1.97e-11 regions 50 depth 3 window floor-limited 10 untrusted window 0 wall 0.6 s
+   #14 span [-0.04917942646450173, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 4.54e-12 other 1.56e-15 request 2.59e-12 converged False wall 84.1 s
+      parent: converged False abserr 5.05e-12 regions 40 depth 8 floor-limited 40 wall 0.3 s
+      bar lifted: converged False abserr 4.93e-12 regions 101 depth 5 window floor-limited 85 untrusted window 0 wall 0.7 s
+seed 4 test_JJJ: 20 calls, outcome under the cap pass, 71.9 s
+   #14 span [0.7240732168480741, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 1.18e-11 other 3.68e-15 request 1.29e-14 converged False wall 64.1 s
+      parent: converged False abserr 1.46e-11 regions 52 depth 9 floor-limited 52 wall 0.3 s
+      bar lifted: converged False abserr 1.48e-11 regions 88 depth 4 window floor-limited 72 untrusted window 0 wall 0.5 s
+seed 11 test_JJJ: 20 calls, outcome under the cap pass, 75.6 s
+   #9 span [0.8910557040931713, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 5.47e-12 other 3.03e-15 request 5.21e-13 converged False wall 68.9 s
+      parent: converged False abserr 5.82e-12 regions 49 depth 10 floor-limited 49 wall 0.2 s
+      bar lifted: converged False abserr 5.72e-12 regions 80 depth 4 window floor-limited 64 untrusted window 0 wall 0.4 s
+   #18 span [1.850734432850061, 27.631021115928547] rtol 1e-10 depth 6/10 window pieces 66 at cap 0 untrusted window 0 e' window 1.01e-11 other 2.8e-12 request 1.59e-11 converged True wall 1.2 s
+seed 13 test_JJJ: 20 calls, outcome under the cap pass, 66.1 s
+   #17 span [0.8081946953613881, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 5.38e-12 other 2.36e-15 request 3.08e-12 converged False wall 60.1 s
+      parent: converged False abserr 5.75e-12 regions 49 depth 9 floor-limited 49 wall 0.2 s
+      bar lifted: converged False abserr 5.75e-12 regions 90 depth 5 window floor-limited 73 untrusted window 0 wall 0.6 s
+seed 17 test_JJJ: 20 calls, outcome under the cap pass, 130.0 s
+   #14 span [0.6056904622053462, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 7.67e-12 other 2.83e-15 request 5.66e-12 converged False wall 61.9 s
+      parent: converged False abserr 8.28e-12 regions 39 depth 8 floor-limited 39 wall 0.3 s
+      bar lifted: converged False abserr 8.45e-12 regions 89 depth 5 window floor-limited 72 untrusted window 0 wall 0.6 s
+   #17 span [0.7383913569611624, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 4.9e-12 other 1.79e-15 request 3.02e-12 converged False wall 61.8 s
+      parent: converged False abserr 5.32e-12 regions 61 depth 11 floor-limited 61 wall 0.4 s
+      bar lifted: converged False abserr 5.41e-12 regions 108 depth 5 window floor-limited 92 untrusted window 0 wall 0.7 s

@@ -1,0 +1,34 @@
+# levin-phase-floor 07: section 3, the deliberate breakages
+# written 2026-11-07T22:16:10+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script breakages.py sha256 0724974d0d18b26d729f8a53c3bb0598665dc5a8deb0b4e22128b66afa3f557b
+# prov.py sha256 2999c22ba523324fe7a87aa3c9cafc481f5afb345bbc9b70b6eaae6f29af174e
+# AdaptiveLevin/levin_quadrature.py sha256 dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9
+# input AdaptiveLevin/levin_quadrature.py sha256 dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9
+# input ComputeTargets/QuadSourceIntegral.py sha256 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7
+# input AdaptiveLevin/tests/test_levin_stationary.py sha256 6882ccd4a71f0349c368cd478650076ecc842c8ac900b30cb650878b75d86a2b
+# input ComputeTargets/tests/test_quadsource_levin_guard_counts.py sha256 0ce07d86777b80aadceb943cab127ba06191255cb32ded0bcb9c9764ab3b3b51
+# input docs/levin-phase-floor/07/calibration/scripts/variant_loader.py sha256 3206d8f892cdc31bdcd1ce8be719d1dc1c4361a294fc5c86dad8bd043f2d8b33
+# HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M AdaptiveLevin/tests/test_levin_trust_yardstick.py
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? AdaptiveLevin/tests/test_levin_stationary.py
+#     ?? ComputeTargets/tests/test_quadsource_levin_guard_counts.py
+#     ?? docs/levin-phase-floor/07/calibration/
+#     ?? docs/levin-phase-floor/07/earlier-attempts/
+#     ?? prompts/levin-phase-floor/logs/07-stationary-point-guard.md
+# uptime at start: 22:16  up 8 days, 36 mins, 1 user, load averages: 6.02 5.00 6.57
+
+(i) location, windows and guard all off: test_1_located_windowed_and_honest: control passes; broken FAILS -- AssertionError: 0 != 1
+(ii) location off, leaving only the guard: test_2_two_points_between_adjacent_nodes: control passes; broken FAILS -- AssertionError: 0 != 2
+(iii) the floor-limited exit allowed on window and guarded leaves: test_5_no_window_leaf_floor_limited_by_the_exit: control passes; broken FAILS -- AssertionError: True is not false
+(iv) minima never located (Lambda_c = 0): test_3_minimum_located_and_windowed: control passes; broken FAILS -- AssertionError: 0 != 1
+(v) a guarded leaf at depth_max returned as a Levin leaf: test_6_the_cap: control passes; broken FAILS -- AssertionError: 0 not greater than 0
+(vi) the window replaced by a plain split at x_s, the leaves on either side unguarded: test_1_located_windowed_and_honest: control passes; broken FAILS -- AssertionError: 0 not greater than 0
+(vi) the window replaced by a plain split at x_s, the leaves on either side unguarded: test_7_window_edges_and_pieces: control passes; broken passes 
+(vii) location done only for the first phase a basis reports: test_9_two_phases: control passes; broken FAILS -- ?  +
+(viii) the four counts left out of the group record: test_11_group_record_carries_the_four_counts: control passes; broken FAILS -- 'window_pieces'
+(ix) section 1.3's counter never reaching its limit: test_10a_flat_window_stops: control passes; broken FAILS -- AssertionError: False is not true
+all caught: True

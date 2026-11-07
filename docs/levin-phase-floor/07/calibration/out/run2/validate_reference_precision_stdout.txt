@@ -1,0 +1,37 @@
+{
+ "header": [
+  "# levin-phase-floor 07: 07 section 2: reference precision",
+  "# written 2026-11-07T22:01:32+00:00 on mps026088.phys.susx.ac.uk",
+  "# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "# script validate_reference_precision.py sha256 fe7feaa1226c174d87fdc03960712166a39a03c4cedbea10f5f7aa373ee2ae87",
+  "# prov.py sha256 2999c22ba523324fe7a87aa3c9cafc481f5afb345bbc9b70b6eaae6f29af174e",
+  "# AdaptiveLevin/levin_quadrature.py sha256 dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9",
+  "# input docs/levin-phase-floor/07/calibration/scripts/reference.py sha256 43283037c7bad69b7624e05a6084067cf1e0f4d34da4a4a7c5e02cbe097e0a26",
+  "# HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb",
+  "# tree dirty: yes; git status --short:",
+  "#      M AdaptiveLevin/levin_quadrature.py",
+  "#      M ComputeTargets/QuadSourceIntegral.py",
+  "#     ?? docs/levin-phase-floor/07/calibration/",
+  "#     ?? docs/levin-phase-floor/07/earlier-attempts/",
+  "#     ?? prompts/levin-phase-floor/logs/07-stationary-point-guard.md",
+  "# uptime at start: 22:01  up 8 days, 22 mins, 1 user, load averages: 15.43 14.08 10.59"
+ ],
+ "case": {
+  "family": "C",
+  "b": 10000.0,
+  "lambda": 0.25,
+  "a": 8.549879733383484,
+  "x_0": 0.3819660112501051,
+  "lambda_actual": 0.24999999999999997
+ },
+ "contour_40_digits": "0.029373948650182374496211003390698269",
+ "contour_60_digits": "0.029373948650182374496211003390698269",
+ "literal_30_digits_pi_pieces": "0.029373948650182374496211003803298034",
+ "literal_30_pieces": 565,
+ "literal_45_digits_quarter_pi_pieces": "0.029373948650182374496211003390698269",
+ "literal_45_pieces": 2257,
+ "contour40_minus_literal45": "6.9277e-44",
+ "literal30_minus_literal45": "4.126e-28",
+ "contour60_minus_literal45": "5.266e-48"
+}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/out/run2/validate_reference_precision.json

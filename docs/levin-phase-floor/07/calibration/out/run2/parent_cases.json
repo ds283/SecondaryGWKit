@@ -1,0 +1,53 @@
+{
+ "header": [
+  "levin-phase-floor 07: section 3 tests 1 and 5, the parent on their problems",
+  "written 2026-11-07T22:11:58+00:00 on mps026088.phys.susx.ac.uk",
+  "python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "script parent_cases.py sha256 c12d1aeb3771eaec15ac6257e4687e5f7db8555285621fcaefb4352a01fd19d9",
+  "prov.py sha256 2999c22ba523324fe7a87aa3c9cafc481f5afb345bbc9b70b6eaae6f29af174e",
+  "AdaptiveLevin/levin_quadrature.py sha256 dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9",
+  "input docs/levin-phase-floor/07/calibration/scripts/test_references.py sha256 06403b6bceedc2bdb02b4be3047a95ab1876d71bb21f4f1afd655cf771099c4d",
+  "input docs/levin-phase-floor/07/calibration/out/run2/test_references.json sha256 d5a8376d2f89291d217615f23da1ef83da035cb68178a5ba984f30eebf6f63bc",
+  "HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb",
+  "tree dirty: yes; git status --short:",
+  "     M AdaptiveLevin/levin_quadrature.py",
+  "     M ComputeTargets/QuadSourceIntegral.py",
+  "    ?? docs/levin-phase-floor/07/calibration/",
+  "    ?? docs/levin-phase-floor/07/earlier-attempts/",
+  "    ?? prompts/levin-phase-floor/logs/07-stationary-point-guard.md",
+  "uptime at start: 22:11  up 8 days, 32 mins, 1 user, load averages: 3.85 5.43 7.30"
+ ],
+ "parent_module_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+ "P1": {
+  "value_hex": "-0x1.4fabc846d3046p-22",
+  "value": -3.1261800297467865e-07,
+  "abserr": 2.5420001036024583e-11,
+  "true_error": 0.0014114344812645575,
+  "error_over_abserr": 55524564.26985618,
+  "num_regions": 1,
+  "converged": false,
+  "num_phase_limited_regions": 1,
+  "regions": [
+   "(0, 16), depth=0 | Levin, abserr=9.1686826e-12, relerr=2.932871e-05, phase_err=2.5420001e-11 (PHASE LIMITED) | p-ratios=[1, 0.05703]"
+  ],
+  "region_holds_x_s": [
+   true
+  ]
+ },
+ "P5": {
+  "value_hex": "-0x1.549abe81faaffp-23",
+  "value": -1.5860631569162417e-07,
+  "abserr": 9.011737810284884e-12,
+  "true_error": 0.0011253051151291953,
+  "error_over_abserr": 124871044.72179729,
+  "num_regions": 1,
+  "converged": false,
+  "num_phase_limited_regions": 1,
+  "regions": [
+   "(0, 16), depth=0 | Levin, abserr=3.7373596e-13, relerr=2.356375e-06, phase_err=9.0117378e-12 (PHASE LIMITED) | p-ratios=[1, 0.05478]"
+  ],
+  "region_holds_x_s": [
+   true
+  ]
+ }
+}

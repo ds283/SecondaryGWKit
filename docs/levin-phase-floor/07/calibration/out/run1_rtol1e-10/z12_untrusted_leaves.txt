@@ -1,0 +1,29 @@
+# levin-phase-floor 07: section 2.5 (B), z12's untrusted window leaves
+# written 2026-11-07T12:13:20+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script z12_untrusted_leaves.py sha256 06cd8747c58f55f4abbf97d76bff080ec9e6653145b9892348d539c9e24e5568
+# prov.py sha256 9e2adc86dd624417822eb68ef554a6e5c23c817a824a8f778df712055d449c76
+# AdaptiveLevin/levin_quadrature.py sha256 13294b2ac3e3e3a480a6735a263ea8abe205ccdaada12939c13cd20edad884a4
+# input var/levin-phase-floor-06g-fcc-laptop/inputs/z12.pkl sha256 7b8792e57d4aa769dcd16dbaea2a107c17b139a0d4aea63d0dc2cf20cb7f4882
+# HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? docs/levin-phase-floor/07/
+# uptime at start: 12:13  up 7 days, 14:34, 1 user, load averages: 4.82 5.25 8.53
+# ray initialised: False
+Phi_w 8 pi, depth_max 9: abserr 1.508e-33, request 1.612e-33, converged False, regions 501, window pieces 415, untrusted 225
+window leaves 415, untrusted 212, their summed e' 1.652e-39
+depth | width | value_own | nested pair | floor | floor less node | E | delta1 | delta2 | r
+9 | 1.288e-07 | -9.6251e-33 | 2.848e-43 | 3.025e-46 | 2.712e-46 | -3.130e-47 | 1.932e-43 | 1.146e-43 | 0.593
+9 | 1.288e-07 | -9.6520e-33 | 7.645e-44 | 9.049e-44 | 5.016e-46 | -8.998e-44 | 9.606e-44 | 1.315e-43 | 1.37
+9 | 1.288e-07 | -9.6773e-33 | 8.040e-44 | 8.456e-44 | 5.022e-46 | 8.406e-44 | 1.572e-43 | 1.573e-43 | 1
+9 | 1.288e-07 | -4.7227e-33 | 1.771e-42 | 3.795e-43 | 4.627e-46 | -3.790e-43 | 1.663e-42 | 6.922e-43 | 0.416
+9 | 1.288e-07 | -4.6124e-33 | 9.276e-43 | 2.510e-46 | 2.374e-46 | -1.358e-47 | 5.716e-43 | 9.648e-43 | 1.69
+9 | 1.288e-07 | -4.5014e-33 | 1.586e-42 | 3.843e-43 | 4.609e-46 | 3.839e-43 | 2.398e-42 | 1.350e-42 | 0.563
+9 | 1.288e-07 | -4.3896e-33 | 1.529e-42 | 3.868e-43 | 4.604e-46 | -3.863e-43 | 1.548e-42 | 1.613e-42 | 1.04
+9 | 1.288e-07 | -4.2772e-33 | 5.602e-43 | 2.480e-46 | 2.354e-46 | -1.252e-47 | 2.701e-43 | 6.289e-43 | 2.33
+9 | 1.288e-07 | -4.1641e-33 | 9.796e-43 | 3.912e-43 | 4.595e-46 | 3.908e-43 | 2.130e-42 | 5.597e-43 | 0.263
+9 | 1.288e-07 | -3.9361e-33 | 8.118e-43 | 2.444e-46 | 2.329e-46 | -1.144e-47 | 1.071e-43 | 4.199e-43 | 3.92
+9 | 1.288e-07 | -3.8211e-33 | 7.358e-43 | 3.976e-43 | 4.568e-46 | 3.971e-43 | 1.644e-42 | 1.240e-42 | 0.754
+9 | 1.288e-07 | -3.7056e-33 | 8.471e-43 | 3.996e-43 | 4.557e-46 | -3.992e-43 | 7.763e-43 | 6.750e-43 | 0.869

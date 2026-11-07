@@ -1,0 +1,269 @@
+{
+ "header": [
+  "levin-phase-floor 07: section 3, the deliberate breakages",
+  "written 2026-11-07T22:16:10+00:00 on mps026088.phys.susx.ac.uk",
+  "python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "script breakages.py sha256 0724974d0d18b26d729f8a53c3bb0598665dc5a8deb0b4e22128b66afa3f557b",
+  "prov.py sha256 2999c22ba523324fe7a87aa3c9cafc481f5afb345bbc9b70b6eaae6f29af174e",
+  "AdaptiveLevin/levin_quadrature.py sha256 dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9",
+  "input AdaptiveLevin/levin_quadrature.py sha256 dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9",
+  "input ComputeTargets/QuadSourceIntegral.py sha256 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7",
+  "input AdaptiveLevin/tests/test_levin_stationary.py sha256 6882ccd4a71f0349c368cd478650076ecc842c8ac900b30cb650878b75d86a2b",
+  "input ComputeTargets/tests/test_quadsource_levin_guard_counts.py sha256 0ce07d86777b80aadceb943cab127ba06191255cb32ded0bcb9c9764ab3b3b51",
+  "input docs/levin-phase-floor/07/calibration/scripts/variant_loader.py sha256 3206d8f892cdc31bdcd1ce8be719d1dc1c4361a294fc5c86dad8bd043f2d8b33",
+  "HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb",
+  "tree dirty: yes; git status --short:",
+  "     M AdaptiveLevin/levin_quadrature.py",
+  "     M AdaptiveLevin/tests/test_levin_trust_yardstick.py",
+  "     M ComputeTargets/QuadSourceIntegral.py",
+  "    ?? AdaptiveLevin/tests/test_levin_stationary.py",
+  "    ?? ComputeTargets/tests/test_quadsource_levin_guard_counts.py",
+  "    ?? docs/levin-phase-floor/07/calibration/",
+  "    ?? docs/levin-phase-floor/07/earlier-attempts/",
+  "    ?? prompts/levin-phase-floor/logs/07-stationary-point-guard.md",
+  "uptime at start: 22:16  up 8 days, 36 mins, 1 user, load averages: 6.02 5.00 6.57"
+ ],
+ "breakages": {
+  "i": {
+   "what": "location, windows and guard all off",
+   "kind": "lq",
+   "variant_sha256": "e344786267022da503552d9d1136d9a6bc1868ab42dee0f796a35e175712eed7",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestOneStationaryPoint.test_1_located_windowed_and_honest": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 119, in test_1_located_windowed_and_honest\n    self.assertEqual(len(points), 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n"
+      ]
+     },
+     "fails_under_breakage": true
+    }
+   },
+   "caught": true
+  },
+  "ii": {
+   "what": "location off, leaving only the guard",
+   "kind": "lq",
+   "variant_sha256": "b5d23d09e4c268f3cce2f86a986101b5ce685049780f8e9f60732c4bf69480db",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestTwoClosePoints.test_2_two_points_between_adjacent_nodes": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 176, in test_2_two_points_between_adjacent_nodes\n    self.assertEqual(len(roots), 2)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\nAssertionError: 0 != 2\n"
+      ]
+     },
+     "fails_under_breakage": true
+    }
+   },
+   "caught": true
+  },
+  "iii": {
+   "what": "the floor-limited exit allowed on window and guarded leaves",
+   "kind": "lq",
+   "variant_sha256": "3a8679cfad871874fff0117bef57d018b2254769d2bc6eed6300b7e5e71a959e",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestFloorLimitedExitBarred.test_5_no_window_leaf_floor_limited_by_the_exit": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 271, in test_5_no_window_leaf_floor_limited_by_the_exit\n    self.assertFalse(any(r.phase_limited for r in window_leaves))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: True is not false\n"
+      ]
+     },
+     "fails_under_breakage": true
+    }
+   },
+   "caught": true
+  },
+  "iv": {
+   "what": "minima never located (Lambda_c = 0)",
+   "kind": "lq",
+   "variant_sha256": "4346a105fa69a64dbe466168c74711c00591739bce7ebb418715a121ff55d73b",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestNearlyCoalescingPair.test_3_minimum_located_and_windowed": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 2,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 202, in test_3_minimum_located_and_windowed\n    self.assertEqual(len(minima), 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n"
+      ]
+     },
+     "fails_under_breakage": true
+    }
+   },
+   "caught": true
+  },
+  "v": {
+   "what": "a guarded leaf at depth_max returned as a Levin leaf",
+   "kind": "lq",
+   "variant_sha256": "ab8200452b811708db52c4f6c365a593c5d40e5fb3692684ce0b1bab37fd0927",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestTheGuard.test_6_the_cap": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 235, in test_6_the_cap\n    self.assertGreater(len(capped), 0)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nAssertionError: 0 not greater than 0\n"
+      ]
+     },
+     "fails_under_breakage": true
+    }
+   },
+   "caught": true
+  },
+  "vi": {
+   "what": "the window replaced by a plain split at x_s, the leaves on either side unguarded",
+   "kind": "lq",
+   "variant_sha256": "088fafd5e2f651bb97027c479635b0fc56a67f7a0b393bb734c09d7a8625377e",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestOneStationaryPoint.test_1_located_windowed_and_honest": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 123, in test_1_located_windowed_and_honest\n    self.assertGreater(data[\"num_window_pieces\"], 0)\n    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 not greater than 0\n"
+      ]
+     },
+     "fails_under_breakage": true
+    },
+    "AdaptiveLevin.tests.test_levin_stationary.TestOneStationaryPoint.test_7_window_edges_and_pieces": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "fails_under_breakage": false
+    }
+   },
+   "caught": true
+  },
+  "vii": {
+   "what": "location done only for the first phase a basis reports",
+   "kind": "lq",
+   "variant_sha256": "0a3ee6611a6ca16ad5c4485ed35a4ae42fa3c0d6efddaaeb0a7a82be61c27511",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestGenericPath.test_9_two_phases": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 539, in test_9_two_phases\n    self.assertEqual([p[\"phase\"] for p in points], [1])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [] != [1]\n\nSecond list contains 1 additional elements.\nFirst extra element 0:\n1\n\n- []\n+ [1]\n?  +\n\n"
+      ]
+     },
+     "fails_under_breakage": true
+    }
+   },
+   "caught": true
+  },
+  "viii": {
+   "what": "the four counts left out of the group record",
+   "kind": "qsi",
+   "variant_sha256": "87d22c4c6784ba361adfa625291551ca76c0dcc9016918a417109a3f83213a53",
+   "tests": {
+    "ComputeTargets.tests.test_quadsource_levin_guard_counts.TestGroupRecordCounts.test_11_group_record_carries_the_four_counts": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 4,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/test_quadsource_levin_guard_counts.py\", line 64, in test_11_group_record_carries_the_four_counts\n    self.assertEqual(set(record), GROUP_RECORD_KEYS)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Items in the second set but not the first:\n'stationary_points'\n'guarded_regions'\n'guard_at_depth_max'\n'window_pieces'\n"
+      ]
+     },
+     "fails_under_breakage": true
+    }
+   },
+   "caught": true
+  },
+  "ix": {
+   "what": "section 1.3's counter never reaching its limit",
+   "kind": "lq",
+   "variant_sha256": "1d19e0d6510ebc41c27800215de265b33c4c4e3ad5756f713fb520ddddbc459a",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestWindowStoppingRule.test_10a_flat_window_stops": {
+     "control": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 567, in test_10a_flat_window_stops\n    self.assertTrue(window[\"stopped\"])\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n"
+      ]
+     },
+     "fails_under_breakage": true
+    }
+   },
+   "caught": true
+  }
+ },
+ "all_caught": true
+}

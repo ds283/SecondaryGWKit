@@ -1,0 +1,255 @@
+{
+ "header": {
+  "title": "07: the third stop",
+  "script": "docs/levin-phase-floor/07/calibration/scripts/stop3_diagnose.py",
+  "script_sha256": "8684ec5f9fb32cdda3aacf052767d308033251559f732b4be356ed9ec3ef29f2",
+  "levin_quadrature_sha256": "c5304b807df2e5449e79c290ee44a9f12ba5ffe680ac9ffd0bfa8ae3ce663bde",
+  "scripts_sha256": {
+   "calibrate.py": "708162f57d27ee3a960740414e57979d3a755b50f485789e53e4225a8c172995",
+   "calibrate_supplement.py": "d0a55df541253a7beb0888101ecb2db1c077b70aa13e7f11ddcc7466d6d73e52",
+   "lg_location.py": "a9fc7b9fff7b53d0d5f50ad10e83b9049889229263127b6b875e0be5fa11e279",
+   "lg_repeat.py": "6e1b20ae09206afe19981784d5cdcf4d729a74b85e8c3db71ead722cf08f89a4",
+   "parent_compare.py": "5368a8ca12d121f6b064f84564d03903ace7107a721d42aaf10afc0bb52b4004",
+   "prov.py": "5860fe90ab5026409473858119f16c40b8ba42d898451c68d19a2988f0b05ebd",
+   "reference.py": "77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba",
+   "stop3_diagnose.py": "8684ec5f9fb32cdda3aacf052767d308033251559f732b4be356ed9ec3ef29f2",
+   "validate_reference.py": "9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c",
+   "validate_reference_precision.py": "62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412"
+  },
+  "git_head": "ad63e8a0009dec8fb724d4087168f5a3cff947e7",
+  "tree_dirty": true,
+  "git_status_short": [
+   "M  AdaptiveLevin/levin_quadrature.py",
+   "M  AdaptiveLevin/tests/test_levin_quadrature.py",
+   "M  ComputeTargets/QuadSourceIntegral.py",
+   "?? docs/levin-phase-floor/07/",
+   "?? prompts/levin-phase-floor/logs/07-stationary-point-guard.md"
+  ],
+  "host": "mps026088.phys.susx.ac.uk",
+  "utc": "2026-10-29T02:33:21.423220+00:00",
+  "uptime": "2:33  up 24 days,  1:18, 2 users, load averages: 15.29 30.14 25.02",
+  "python": "3.13.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "numpy": "2.2.4",
+  "scipy": "1.16.3",
+  "mpmath": "1.3.0",
+  "pid": 62317
+ },
+ "by_depth_max": [
+  {
+   "depth_max": 0,
+   "wall_s": 0.2862980419304222,
+   "request": 1.3224723684913091e-14,
+   "true_error": 1.0989390641794451e-05,
+   "abserr": 5.4000666097077524e-06,
+   "converged": false,
+   "window_leaves": 3,
+   "window_sum_floor": 1.3527260671724012e-16,
+   "window_sum_nested_pair": 2.4120005546622494e-11,
+   "window_sum_total_err": 2.4120007467635878e-11,
+   "worst_window_leaf": {
+    "start": 0.7215601443340861,
+    "end": 0.7265012027682121,
+    "depth": 0,
+    "floor": 1.1916335034068517e-16,
+    "nested_pair": 2.411999067272394e-11,
+    "holds_x_s": true
+   },
+   "other_leaves": 2,
+   "other_sum_total_err": 5.400042489700285e-06,
+   "num_untrusted_regions": 0,
+   "num_phase_limited_regions": 0
+  },
+  {
+   "depth_max": 1,
+   "wall_s": 0.0022411250974982977,
+   "request": 1.3764727933899034e-14,
+   "true_error": 5.589348151935033e-06,
+   "abserr": 3.6936820535090633e-06,
+   "converged": false,
+   "window_leaves": 6,
+   "window_sum_floor": 1.3449869870595615e-15,
+   "window_sum_nested_pair": 9.057560474215465e-15,
+   "window_sum_total_err": 9.58109153703038e-15,
+   "worst_window_leaf": {
+    "start": 0.724030673551149,
+    "end": 0.7265012027682121,
+    "depth": 1,
+    "floor": 4.595321532007574e-17,
+    "nested_pair": 8.282057765290896e-15,
+    "holds_x_s": false
+   },
+   "other_leaves": 4,
+   "other_sum_total_err": 3.6936820439279717e-06,
+   "num_untrusted_regions": 0,
+   "num_phase_limited_regions": 0
+  },
+  {
+   "depth_max": 2,
+   "wall_s": 0.00432941596955061,
+   "request": 1.4134096138242243e-14,
+   "true_error": 1.8956661085029315e-06,
+   "abserr": 1.5963163690151988e-06,
+   "converged": false,
+   "window_leaves": 12,
+   "window_sum_floor": 6.7302328569282916e-15,
+   "window_sum_nested_pair": 1.4013313079375145e-17,
+   "window_sum_total_err": 6.7302328569282916e-15,
+   "worst_window_leaf": {
+    "start": 0.7227954089426176,
+    "end": 0.724030673551149,
+    "depth": 2,
+    "floor": 6.5950505529490504e-15,
+    "nested_pair": 8.673617379884035e-19,
+    "holds_x_s": true
+   },
+   "other_leaves": 7,
+   "other_sum_total_err": 1.5963163622849657e-06,
+   "num_untrusted_regions": 0,
+   "num_phase_limited_regions": 1
+  },
+  {
+   "depth_max": 4,
+   "wall_s": 0.013233333127573133,
+   "request": 1.4325196609520504e-14,
+   "true_error": 1.5338604279671163e-08,
+   "abserr": 1.3951065695408562e-08,
+   "converged": false,
+   "window_leaves": 48,
+   "window_sum_floor": 2.9957695174563033e-15,
+   "window_sum_nested_pair": 4.607435716589767e-18,
+   "window_sum_total_err": 2.9957695174563033e-15,
+   "worst_window_leaf": {
+    "start": 0.7234130412468833,
+    "end": 0.7237218573990162,
+    "depth": 4,
+    "floor": 2.278486216890957e-15,
+    "nested_pair": 1.0842021724855044e-19,
+    "holds_x_s": true
+   },
+   "other_leaves": 16,
+   "other_sum_total_err": 1.3951062699639042e-08,
+   "num_untrusted_regions": 0,
+   "num_phase_limited_regions": 6
+  },
+  {
+   "depth_max": 6,
+   "wall_s": 0.0454590420704335,
+   "request": 1.4323661070070235e-14,
+   "true_error": 1.6790223020517886e-11,
+   "abserr": 1.672573458502858e-11,
+   "converged": false,
+   "window_leaves": 192,
+   "window_sum_floor": 9.291068850065238e-15,
+   "window_sum_nested_pair": 1.8823454368154706e-18,
+   "window_sum_total_err": 9.291068850065238e-15,
+   "worst_window_leaf": {
+    "start": 0.7235674493229498,
+    "end": 0.723644653360983,
+    "depth": 6,
+    "floor": 5.794922850193319e-15,
+    "nested_pair": 6.776263578034403e-21,
+    "holds_x_s": true
+   },
+   "other_leaves": 24,
+   "other_sum_total_err": 1.6716443516178522e-11,
+   "num_untrusted_regions": 0,
+   "num_phase_limited_regions": 14
+  },
+  {
+   "depth_max": 8,
+   "wall_s": 0.15121783292852342,
+   "request": 1.4323662749186297e-14,
+   "true_error": 9.376180387654642e-16,
+   "abserr": 1.239576074354138e-10,
+   "converged": false,
+   "window_leaves": 768,
+   "window_sum_floor": 2.5627134309310514e-13,
+   "window_sum_nested_pair": 4.1868243012739028e-19,
+   "window_sum_total_err": 2.5627134309310514e-13,
+   "worst_window_leaf": {
+    "start": 0.7236060513419664,
+    "end": 0.7236253523514747,
+    "depth": 8,
+    "floor": 2.167412130827915e-13,
+    "nested_pair": 0.0,
+    "holds_x_s": true
+   },
+   "other_leaves": 44,
+   "other_sum_total_err": 1.2370133609232066e-10,
+   "num_untrusted_regions": 0,
+   "num_phase_limited_regions": 18
+  },
+  {
+   "depth_max": 10,
+   "wall_s": 0.5989260419737548,
+   "request": 1.432366274920585e-14,
+   "true_error": 1.133153900573225e-15,
+   "abserr": 1.156767830946481e-09,
+   "converged": false,
+   "window_leaves": 3072,
+   "window_sum_floor": 4.601852396241898e-13,
+   "window_sum_nested_pair": 2.804369751223216e-19,
+   "window_sum_total_err": 4.601852396241898e-13,
+   "worst_window_leaf": {
+    "start": 0.7236060513419664,
+    "end": 0.7236108765943435,
+    "depth": 10,
+    "floor": 3.6747271099692457e-13,
+    "nested_pair": 0.0,
+    "holds_x_s": true
+   },
+   "other_leaves": 118,
+   "other_sum_total_err": 1.1563076457068546e-09,
+   "num_untrusted_regions": 5,
+   "num_phase_limited_regions": 20
+  }
+ ],
+ "full_call": {
+  "exception": "ZeroDivisionError('float division by zero')",
+  "traceback_tail": [
+   "        kind=leaf.kind,",
+   "    )",
+   "  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/levin_quadrature.py\", line 2953, in _make_leaf",
+   "    abs_improvement = prev_abs / this_abs",
+   "                      ~~~~~~~~~^~~~~~~~~~",
+   "ZeroDivisionError: float division by zero"
+  ],
+  "wall_s": 0.08474687486886978
+ },
+ "lg_seed0_test_JJJ": {
+  "new": {
+   "wall_s": 31.022557249991223,
+   "failures": [],
+   "errors": [
+    "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/tests/test_3bessel_analytic.py\", line 486, in test_JJJ\n    result = compute_3Bessel(\n        quad_JJJ,\n    ...<9 lines>...\n        timestamp=timestamp,\n    )\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/tests/test_3bessel_analytic.py\", line 271, in compute_3Bessel\n    result = evaluator(\n        mu_phase,\n    ...<10 lines>...\n        rtol=quad_rtol,\n    )\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/three_bessel_integrals.py\", line 120, in quad_JJJ\n    Levin = _Levin_JJJ(\n        mu_phase,\n    ...<9 lines>...\n        chebyshev_order=chebyshev_order,\n    )\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/three_bessel_integrals.py\", line 552, in _Levin_JJJ\n    return _Levin_3bessel(\n        mu_phase,\n    ...<11 lines>...\n        chebyshev_order=chebyshev_order,\n    )\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/three_bessel_integrals.py\", line 509, in _Levin_3bessel\n    data = adaptive_levin_sincos(\n        x_span,\n    ...<7 lines>...\n        notify_label=f\"phase{index + 1}\",\n    )\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/levin_quadrature.py\", line 4278, in adaptive_levin_sincos\n    return _adaptive_levin(\n        x_span,\n    ...<10 lines>...\n        diagnostics_path=diagnostics_path,\n    )\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/scripts/stop3_diagnose.py\", line 92, in wrapped\n    result = driver(*args, **kwargs)\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/levin_quadrature.py\", line 3502, in _adaptive_levin\n    left = _make_leaf(\n        a,\n    ...<7 lines>...\n        kind=leaf.kind,\n    )\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/levin_quadrature.py\", line 2953, in _make_leaf\n    abs_improvement = prev_abs / this_abs\n                      ~~~~~~~~~^~~~~~~~~~\nZeroDivisionError: float division by zero\n"
+   ],
+   "located_calls": [
+    {
+     "x_span": [
+      0.43451811659206757,
+      27.631021115928547
+     ],
+     "points": [
+      [
+       "root",
+       1.3124165471952725
+      ]
+     ],
+     "value": -0.27235145285433554,
+     "abserr": 2.3120812457694388e-11,
+     "converged": true,
+     "regions": 63,
+     "window_pieces": 57,
+     "max_depth": 5
+    }
+   ]
+  },
+  "parent": {
+   "wall_s": 89.14138554106466,
+   "failures": [],
+   "errors": [],
+   "located_calls": []
+  }
+ }
+}

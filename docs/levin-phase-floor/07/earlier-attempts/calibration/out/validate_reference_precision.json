@@ -1,0 +1,53 @@
+{
+ "header": {
+  "title": "07 section 2: reference precision",
+  "script": "docs/levin-phase-floor/07/calibration/scripts/validate_reference_precision.py",
+  "script_sha256": "62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412",
+  "levin_quadrature_sha256": "7d6921acb8eb751d15c9bcda66f9df3b4bf0fcc88117be173f21765f56960d30",
+  "scripts_sha256": {
+   "calibrate.py": "68e75f34ddd1b802e2409d6ce702f8e83681ddcf2d8bcfbd2cdb56fecbfb949d",
+   "lg_location.py": "4c0493026c689a6de25603b7341ac9e2f8de011041329e6bc0c71396d1287b5b",
+   "lg_repeat.py": "a8bb1fdf42defe205b0bc083e9e82af82790ada1f07963566dbfd6b18d25f93c",
+   "parent_compare.py": "19007f05aca59eb3eb0b176d47a41a0b28ff58119dbf1fdcdd1bd2e1d2a7fee3",
+   "prov.py": "5860fe90ab5026409473858119f16c40b8ba42d898451c68d19a2988f0b05ebd",
+   "reference.py": "77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba",
+   "validate_reference.py": "9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c",
+   "validate_reference_precision.py": "62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412"
+  },
+  "git_head": "cf3efac8fccc56723ad83fb11ff2514d1d2551f8",
+  "tree_dirty": true,
+  "git_status_short": [
+   "M  AdaptiveLevin/levin_quadrature.py",
+   "M  AdaptiveLevin/tests/test_levin_quadrature.py",
+   "M  ComputeTargets/QuadSourceIntegral.py",
+   "?? docs/levin-phase-floor/07/",
+   "?? prompts/levin-phase-floor/logs/07-stationary-point-guard.md"
+  ],
+  "host": "mps026088.phys.susx.ac.uk",
+  "utc": "2026-10-28T11:03:49.879455+00:00",
+  "uptime": "11:03  up 23 days,  9:48, 2 users, load averages: 12.24 13.24 13.51",
+  "python": "3.13.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "numpy": "2.2.4",
+  "scipy": "1.16.3",
+  "mpmath": "1.3.0",
+  "pid": 40717
+ },
+ "case": {
+  "family": "C",
+  "b": 10000.0,
+  "lambda": 0.25,
+  "a": 8.549879733383484,
+  "x_0": 0.3819660112501051,
+  "lambda_actual": 0.24999999999999997
+ },
+ "contour_40_digits": "0.029373948650182374496211003390698269",
+ "contour_60_digits": "0.029373948650182374496211003390698269",
+ "literal_30_digits_pi_pieces": "0.029373948650182374496211003803298034",
+ "literal_30_pieces": 565,
+ "literal_45_digits_quarter_pi_pieces": "0.029373948650182374496211003390698269",
+ "literal_45_pieces": 2257,
+ "contour40_minus_literal45": "6.9277e-44",
+ "literal30_minus_literal45": "4.126e-28",
+ "contour60_minus_literal45": "5.266e-48"
+}

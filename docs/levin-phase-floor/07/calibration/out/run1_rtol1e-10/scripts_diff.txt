@@ -1,0 +1,465 @@
+# levin-phase-floor 07: the diffs of 07's copied calibration scripts against their sources
+# written 2026-11-07T12:10:16Z; HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b; tree dirty
+# (1) 06m's copies (docs/levin-phase-floor/06m/calibration/scripts/), each first formatted by black (06m's are not black-clean; 07's are, so the raw diff would be mostly formatting), against 07's copies
+## lg_seeded_draws.py: 06m sha256 4334d863e9cdfac6c9212bc36f00b8b48b86b6df24136f72c786f804c6c74da5, 06m after black 5e6c88565323c09f009407b914a8a1016e243259a2bc417571ebedef24d25664, 07 221610cb0c4cf766475f1de00ef933da8517eccf24d9eace0e08e98dbe65c75b
+--- 06m-after-black/lg_seeded_draws.py	2026-11-07 12:10:16
++++ docs/levin-phase-floor/07/calibration/scripts/lg_seeded_draws.py	2026-11-07 10:10:08
+@@ -1,4 +1,21 @@
+-"""levin-phase-floor prompt 06m, section 2 test 6 ("The LiouvilleGreen draws"): 06l's harness
++"""levin-phase-floor prompt 07, section 2.4 ("The LiouvilleGreen draws"): 06m's harness
++(docs/levin-phase-floor/06m/calibration/scripts/lg_seeded_draws.py, a record, not edited), changed only where
++marked "prompt 07":
++- the modes are ``parent`` (the dispatch commit's AdaptiveLevin/levin_quadrature.py, 06m's code, read with
++  ``git show`` as 06m read its parent) and ``commit`` (the working tree's module, section 1's code); 06l's
++  variant is not run;
++- each call's record also keeps the stationary-point guard's results where the driver returns them (the points
++  located, with kind, x and lambda, and their windows; window pieces; guarded leaves; guarded leaves at
++  depth_max), ``result_sha256_07`` (06m's ``result_sha256`` with those six new result keys set aside, so that
++  the two modes compare bit for bit), and, under ``commit``, for a call that locates a point or guards a leaf and
++  does not converge or reaches depth_max, section 2.5's account (analysis07.py, from a recorder of every leaf);
++- prov.py is 07's copy (PARENT_SHA is 07's dispatch commit, OUT is ../out/);
++- each unit runs as a subprocess of its own (the action ``unit``) with a wall-clock limit, UNIT_TIMEOUT_07; a
++  unit over it is recorded with outcome "did_not_finish", and one whose process fails with "harness_error",
++  in place of 06m's pool of workers, so that a call that does not finish is recorded and does not hold the run.
++The comparison of the two modes that section 2.4 asks for is lg_compare_07.py's. 06m's text follows.
++
++levin-phase-floor prompt 06m, section 2 test 6 ("The LiouvilleGreen draws"): 06l's harness
+ (docs/levin-phase-floor/06l/scripts/calibration/lg_seeded_draws.py, a record, not edited), changed only where
+ marked "prompt 06m":
+ - the modes are ``parent`` (the dispatch commit's AdaptiveLevin/levin_quadrature.py, 06g's code, read with
+@@ -128,6 +145,8 @@
+ )  # prompt 06k (06g: ("parent", "new")); route2lit after stop 1
+ MODES = ("tree", "identity", "routeB")  # prompt 06l
+ MODES = ("parent", "commit", "routeB")  # prompt 06m
++MODES = ("parent", "commit")  # prompt 07
++UNIT_TIMEOUT_07 = 1200.0  # prompt 07: each unit's wall-clock limit, in seconds (06m's longest unit took 35.5 s)
+ VARIANT_06M = (
+     HERE.parents[2] / "06l" / "scripts" / "variants" / "levin_quadrature_routeB.py"
+ )  # prompt 06m
+@@ -257,6 +276,8 @@
+         "node_limited": data.get("node_limited"),
+         "node_error_signed_sum": data.get("node_error_signed_sum"),
+         "node_error_abs_sum": data.get("node_error_abs_sum"),
++        # prompt 07: the stationary-point guard's results, and the result digest with its six keys set aside
++        **_guard_record_07(data),
+         "num_quarters_regions": sum(
+             1 for r in data["regions"] if getattr(r, "value_kind", "own") == "quarters"
+         ),
+@@ -267,6 +288,59 @@
+     }
+ 
+ 
++GUARD_KEYS_07 = (  # prompt 07
++    "stationary_points",
++    "stationary_windows",
++    "unlocated_minima",
++    "num_window_pieces",
++    "num_guarded_regions",
++    "num_guard_at_depth_max",
++)
++
++
++def _guard_record_07(data):
++    """prompt 07: the guard's results where the driver returns them, and result_sha256_07."""
++    result_07 = hashlib.sha256(
++        json.dumps(
++            _canon_06m(
++                {
++                    k: v
++                    for k, v in data.items()
++                    if k not in ("elapsed", "regions", "route_06l") + GUARD_KEYS_07
++                }
++            ),
++            sort_keys=True,
++        ).encode()
++    ).hexdigest()
++    out = {
++        "result_sha256_07": result_07,
++        "has_guard_keys_07": "stationary_points" in data,
++        "value_hex_07": float(data["value"]).hex(),
++        "abserr_hex_07": float(data["abserr"]).hex(),
++    }
++    if "stationary_points" in data:
++        out["stationary_points_07"] = [
++            {
++                "x": p["x"],
++                "kind": p["kind"],
++                "found_as": p["found_as"],
++                "phase": p["phase"],
++                "lambda": p.get("lambda"),
++                "theta_deriv": p["theta_deriv"],
++                "window": p["window"],
++                "window_pieces": p["window_pieces"],
++            }
++            for p in data["stationary_points"]
++        ]
++        out["unlocated_minima_07"] = [
++            {"x": m["x"], "lambda": m["lambda"]} for m in data["unlocated_minima"]
++        ]
++        out["num_window_pieces_07"] = data["num_window_pieces"]
++        out["num_guarded_regions_07"] = data["num_guarded_regions"]
++        out["num_guard_at_depth_max_07"] = data["num_guard_at_depth_max"]
++    return out
++
++
+ def _route_summary_06l(r):
+     """prompt 06l: route B's record without its per-leaf list, plus each fired or withdrawn leaf's numbers."""
+     if r is None:
+@@ -357,10 +431,17 @@
+             made.append(self)
+ 
+     driver_module.used_interval = RecordedInterval
++    import analysis07  # prompt 07: section 2.5's account, from a snapshot of every leaf as it is made
++
++    recorder_07 = analysis07.Recorder(
++        driver_module
++    )  # prompt 07: subclasses RecordedInterval
++    recorder_07.install()  # prompt 07
+     calls = []
+ 
+     def recording_adaptive_levin(*args, **kwargs):
+         made.clear()
++        recorder_07.made.clear()  # prompt 07
+         data = driver(*args, **kwargs)
+         record = _call_record(len(calls), args, kwargs, data)
+         record["depth_max"] = kwargs.get("depth_max", lq.DEFAULT_LEVIN_MAX_DEPTH)
+@@ -370,6 +451,20 @@
+                 key = _r_class(region)
+                 classes[key] = classes.get(key, 0) + 1
+         record["checked_classes"] = classes
++        if (  # prompt 07: section 2.5, for a call that locates or guards and does not finish
++            mode == "commit"
++            and (data.get("stationary_points") or data.get("num_guarded_regions"))
++            and analysis07.needs_section_2_5(data, record["depth_max"])
++        ):
++            atol_07 = kwargs.get("atol", lq.DEFAULT_LEVIN_ABSTOL)
++            rtol_07 = kwargs.get("rtol", lq.DEFAULT_LEVIN_RELTOL)
++            record["section_2_5_07"] = analysis07.section_2_5(
++                data,
++                recorder_07.made,
++                analysis07.request_of(data, atol_07, rtol_07),
++                analysis07.n_seed_leaves(data),
++                record["depth_max"],
++            )
+         calls.append(record)
+         return data
+ 
+@@ -452,13 +547,70 @@
+     )
+     header.append(
+         f"# units {len(units)}: seeds {SEEDS[0]}-{SEEDS[-1]} x modes {tuple(modes)} x tests {TESTS};"
+-        f" processes {processes}; parent {prov.PARENT_SHA}; variant {VARIANT_06M} sha256 {prov.sha256(VARIANT_06M)}"  # prompt 06m
++        f" processes {processes}; parent {prov.PARENT_SHA}"  # prompt 07 (06m: and the variant's path and sha256)
+     )
++    header.append(  # prompt 07
++        f"# prompt 07: each unit in its own process (lg_seeded_draws.py unit), wall-clock limit {UNIT_TIMEOUT_07} s"
++    )
+     start = time.perf_counter()
+     records = []
+-    ctx = multiprocessing.get_context("spawn")
+-    with ctx.Pool(processes=processes, maxtasksperchild=1) as pool:
+-        for record in pool.imap_unordered(run_unit, units):
++    # prompt 07 (06m: a spawn pool with maxtasksperchild=1, imap_unordered over run_unit): each unit is a
++    # subprocess of its own with a wall-clock limit, so that a unit whose call does not finish is recorded as
++    # such and does not hold the run
++    import concurrent.futures
++    import subprocess
++
++    def one_07(unit):
++        t0 = time.perf_counter()
++        try:
++            proc = subprocess.run(
++                [
++                    sys.executable,
++                    "-B",
++                    str(Path(__file__)),
++                    "unit",
++                    json.dumps(list(unit)),
++                ],
++                capture_output=True,
++                text=True,
++                timeout=UNIT_TIMEOUT_07,
++            )
++        except subprocess.TimeoutExpired:
++            seed, mode, test = unit
++            return {
++                "seed": seed,
++                "mode": mode,
++                "test": test,
++                "outcome": "did_not_finish",
++                "detail": f"over {UNIT_TIMEOUT_07} s",
++                "elapsed_s": time.perf_counter() - t0,
++                "num_calls": None,
++                "calls": [],
++                "results": [],
++                "stdout": "",
++            }
++        lines = [ln for ln in proc.stdout.splitlines() if ln.startswith("UNIT07 ")]
++        if proc.returncode != 0 or not lines:
++            seed, mode, test = unit
++            return {
++                "seed": seed,
++                "mode": mode,
++                "test": test,
++                "outcome": "harness_error",
++                "detail": proc.stderr[-4000:],
++                "elapsed_s": time.perf_counter() - t0,
++                "num_calls": None,
++                "calls": [],
++                "results": [],
++                "stdout": "",
++            }
++        return json.loads(lines[-1][len("UNIT07 ") :])
++
++    with concurrent.futures.ThreadPoolExecutor(max_workers=processes) as pool:
++        for fut in concurrent.futures.as_completed(
++            [pool.submit(one_07, u) for u in units]
++        ):
++            record = fut.result()
+             records.append(record)
+             print(
+                 f"[{len(records)}/{len(units)}] seed {record['seed']} {record['mode']} "
+@@ -554,8 +706,24 @@
+     lines += [f"#   {line[2:]}" for line in run_header]
+     lines.append("")
+ 
++    # prompt 07: a unit that did not finish within UNIT_TIMEOUT_07, or whose process failed, carries no calls;
++    # it is listed here, and both modes' records of its (seed, test) are left out of the tables below, which
++    # pair the two modes (lg_compare_07.py reports them too)
++    unfinished_07 = [
++        r for r in records if r["outcome"] in ("did_not_finish", "harness_error")
++    ]
++    for r in unfinished_07:
++        lines.append(
++            f"prompt 07: seed {r['seed']} {r['mode']} {r['test']}: {r['outcome']} "
++            f"({r['detail'][-200:]}); this (seed, test) is left out of the tables below"
++        )
++    drop_07 = {(r["seed"], r["test"]) for r in unfinished_07}
++    records = [r for r in records if (r["seed"], r["test"]) not in drop_07]
+     by_key = {(r["seed"], r["mode"], r["test"]): r for r in records}
+     expected = {(s, m, t) for s in SEEDS for m in MODES for t in TESTS}
++    expected = {
++        (s, m, t) for (s, m, t) in expected if (s, t) not in drop_07
++    }  # prompt 07
+     missing = sorted(expected - set(by_key))
+     lines.append(f"units {len(records)} of {len(expected)}; missing {missing}")
+     modules = sorted({(r["mode"], Path(r["driver_module"]).name) for r in records})
+@@ -920,7 +1088,12 @@
+ 
+ def main():
+     parser = argparse.ArgumentParser()
+-    parser.add_argument("action", choices=("run", "report"))
++    parser.add_argument(
++        "action", choices=("run", "report", "unit")
++    )  # prompt 07: "unit"
++    parser.add_argument(
++        "unit", nargs="?"
++    )  # prompt 07: a unit's JSON (seed, mode, test)
+     parser.add_argument("--processes", type=int, default=8)
+     parser.add_argument(
+         "--modes", default=None
+@@ -929,7 +1102,10 @@
+         "--out", default=None
+     )  # prompt 06k: the run file (default RUN_OUT)
+     args = parser.parse_args()
+-    if args.action == "run":
++    if args.action == "unit":  # prompt 07: one unit, in this process
++        record = run_unit(tuple(json.loads(args.unit)))
++        print("UNIT07 " + json.dumps(record, default=repr), flush=True)
++    elif args.action == "run":
+         modes = MODES if args.modes is None else tuple(args.modes.split(","))
+         if any(m not in MODES for m in modes):
+             raise SystemExit(f"modes must be among {MODES}")
+## prov.py: 06m sha256 09478c2b5024cf42c79d9628c3ea5795d3ca27f124ad71a9322e5208977639b5, 06m after black 13f26f7bc4130a997c53430f0191e7864bf55ac324091f1241a4781ba3eb88db, 07 9e2adc86dd624417822eb68ef554a6e5c23c817a824a8f778df712055d449c76
+--- 06m-after-black/prov.py	2026-11-07 12:10:16
++++ docs/levin-phase-floor/07/calibration/scripts/prov.py	2026-11-07 08:59:44
+@@ -1,4 +1,11 @@
+-"""levin-phase-floor prompt 06m, section 2 test 6: 06l's calibration prov.py
++"""levin-phase-floor prompt 07, section 2: 06m's calibration prov.py
++(docs/levin-phase-floor/06m/calibration/scripts/prov.py, a record, not edited), changed only where marked
++"prompt 07": OUT is docs/levin-phase-floor/07/calibration/out/, PARENT_SHA is 07's dispatch commit (06m's
++code), the title names 07, and two helpers are added for 07's scripts (``json_header`` and
++``load_module_from_source``). Every script of 07's section 2 takes its provenance from here. 06m's text
++follows.
++
++levin-phase-floor prompt 06m, section 2 test 6: 06l's calibration prov.py
+ (docs/levin-phase-floor/06l/scripts/calibration/prov.py, a record, not edited), changed only where marked
+ "prompt 06m": REPO is the repository this copy sits in (the main checkout), OUT is
+ docs/levin-phase-floor/06m/calibration/out/lg_draws/, PARENT_SHA is 06m's dispatch commit, and the title names
+@@ -35,8 +42,8 @@
+ HERE = Path(__file__).resolve().parent
+ CALIBRATION = HERE.parent
+ OUT = (
+-    CALIBRATION / "out" / "lg_draws"
+-)  # prompt 06m (06l, 06k: HERE.parents[1] / "out" / "lg_draws"; 06g: CALIBRATION / "out")
++    CALIBRATION / "out"
++)  # prompt 07 (06m: CALIBRATION / "out" / "lg_draws") (06l, 06k: HERE.parents[1] / "out" / "lg_draws"; 06g: CALIBRATION / "out")
+ REPO = HERE.parents[
+     4
+ ]  # prompt 06m (06l: the worktree SecondaryGWKit-lpf06l-af4c4dc; 06k: -lpf06k-8937060; 06g: HERE.parents[4])
+@@ -46,7 +53,10 @@
+ 
+ #: prompt 06m: 06m's dispatch commit, whose AdaptiveLevin/levin_quadrature.py is 06g's code (3ae6f3a4)
+ #: (06g: 06g's dispatch commit 4f4f9ed2a31fb7437fcfca01263d260eebaff842, 06e's code).
+-PARENT_SHA = "5ff8a5e44be775df299af0f1754123578905b86e"
++PARENT_SHA = "bd21bf23da006aa21c5aa670cf32ea2ed726cb6b"  # prompt 07: 07's dispatch commit, 06m's code
++PARENT_SHA_06M = (
++    "5ff8a5e44be775df299af0f1754123578905b86e"  # prompt 07: 06m's, kept for the record
++)
+ 
+ 
+ def sha256(path) -> str:
+@@ -72,7 +82,7 @@
+     """The provenance lines every output opens with, each prefixed '# '."""
+     status = git("status", "--short")
+     lines = [
+-        f"levin-phase-floor 06m: {title}",  # prompt 06m (06l: 06l; 06k: 06k; 06g: 06g)
++        f"levin-phase-floor 07: {title}",  # prompt 07 (06m: 06m) (06l: 06l; 06k: 06k; 06g: 06g)
+         f"written {datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')}"
+         f" on {socket.gethostname()}",
+         f"python {platform.python_version()} ({sys.executable})",
+@@ -110,3 +120,24 @@
+     module = importlib.util.module_from_spec(spec)
+     spec.loader.exec_module(module)
+     return module, sha256(path)
++
++
++def json_header(script, title, inputs=()) -> list:
++    """prompt 07: header()'s lines without their '# ' prefix, for a JSON output's "header"."""
++    return [line[2:] for line in header(script, title, inputs)]
++
++
++def load_module_from_source(source: str, name: str):
++    """prompt 07: a module from source text written to a temporary file outside the repository, imported
++    under `name`; returns (module, the file's sha256)."""
++    import importlib.util
++    import tempfile
++
++    tmp = Path(tempfile.mkdtemp(prefix="lpf07-module-"))
++    path = tmp / f"{name}.py"
++    path.write_text(source)
++    spec = importlib.util.spec_from_file_location(name, path)
++    module = importlib.util.module_from_spec(spec)
++    sys.modules[name] = module
++    spec.loader.exec_module(module)
++    return module, sha256(path)
+## variant_loader.py: 06m sha256 1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f, 06m after black 3206d8f892cdc31bdcd1ce8be719d1dc1c4361a294fc5c86dad8bd043f2d8b33, 07 3206d8f892cdc31bdcd1ce8be719d1dc1c4361a294fc5c86dad8bd043f2d8b33
+# (2) the set-aside work's copies (earlier-attempts/calibration/scripts/, byte for byte the tarball's) against 07's
+## reference.py: earlier 77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba, 07 43283037c7bad69b7624e05a6084067cf1e0f4d34da4a4a7c5e02cbe097e0a26
+--- docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/reference.py	2026-10-29 11:17:49
++++ docs/levin-phase-floor/07/calibration/scripts/reference.py	2026-11-07 08:38:31
+@@ -1,5 +1,15 @@
+-"""levin-phase-floor 07 section 2: references for the two families, at 30 digits.
++"""levin-phase-floor 07 section 2.1 (rewritten text of 2026-11-07): the references for the two families
++
++Taken unchanged in substance from the set-aside work's copy (the tarball
++var/levin-phase-floor-07/wip/07-part-a-rebased-on-06d-untracked.tar.gz,
++docs/levin-phase-floor/07/calibration/scripts/reference.py, kept byte for byte in
++docs/levin-phase-floor/07/earlier-attempts/), changed only where marked "rewrite": this paragraph; the
++prompt sections it cites, which the rewrite renumbered (the old "section 9 point 2" and "point 3", the
++user's rulings on the reference and on omega, are the rewritten section 2.1); and the provenance header,
++now prov.py's list of lines. The text before the rewrite follows.
+ 
++levin-phase-floor 07 section 2: references for the two families, at 30 digits.
++
+ On x in [0, 1], with f_sin = exp(-x) and f_cos = cos(3x), the integral is
+ 
+     I = int_0^1 [ exp(-x) sin theta(x) + cos(3x) cos theta(x) ] dx
+@@ -11,7 +21,7 @@
+ x_0. As written it does not converge on these cases (``stop1/out/time_reference.json``: mpmath's
+ own error estimates 0.11 and 0.2 on the largest); made to converge by subdividing into pieces of at
+ most pi of phase it is ``literal()`` here, which projects to 8 h and 3 h on the largest case of
+-each family. **The user's ruling, 2026-10-28** (prompt section 9 point 2): any acceptable method;
++each family. **The user's ruling, 2026-10-28** (prompt section 2.1; rewrite: was section 9 point 2): any acceptable method;
+ (R) computed twice, by the error function and by contour integration, which must agree; (C) by
+ contour integration; both validated against ``literal()`` wherever that takes minutes.
+ 
+@@ -49,7 +59,7 @@
+ defines them once for every script; a is the double nearest the cube root of lambda^2 b, and the
+ lambda actually integrated, a^(3/2)/b^(1/2) of those doubles, is reported beside the nominal one.
+ 
+-**omega** (section 9 point 3): every (R) case of section 2's grid at omega = 0, and four also at
++**omega** (prompt section 2.1; rewrite: was section 9 point 3): every (R) case of section 2's grid at omega = 0, and four also at
+ omega = 1, the agent's choice: c = 1e4, 1e6 and 1e8 at x_s = 0.3819660112501051, and c = 1e8 at
+ x_s = 0.7236067977499790. Their root is at x_s - 1/c, 1e-4 to 1e-8 from x_s.
+ 
+@@ -66,7 +76,7 @@
+ C_VALUES = (1.0e4, 1.0e6, 1.0e8)
+ B_VALUES = (1.0e4, 1.0e8)
+ LAMBDAS = (0.25, 1.0, 4.0, 16.0, 64.0, 256.0, 1024.0)
+-# section 9 point 3: the (R) cases also run at omega = 1
++# section 2.1 (rewrite: was section 9 point 3): the (R) cases also run at omega = 1
+ OMEGA_ONE_CASES = (
+     (1.0e4, XS_FLOATS[0]),
+     (1.0e6, XS_FLOATS[0]),
+## validate_reference.py: earlier 9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c, 07 fe0808013dec09282eb4066c8f25cf12560ef2b01a0e1dce970a2ed6c7ad5124
+--- docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/validate_reference.py	2026-10-29 11:17:49
++++ docs/levin-phase-floor/07/calibration/scripts/validate_reference.py	2026-11-07 08:38:36
+@@ -1,6 +1,16 @@
+-"""levin-phase-floor 07 section 2: the references (reference.py) against each other and against
++"""levin-phase-floor 07 section 2.1 (rewritten text of 2026-11-07): validating the references
++
++Taken unchanged in substance from the set-aside work's copy (the tarball
++var/levin-phase-floor-07/wip/07-part-a-rebased-on-06d-untracked.tar.gz,
++docs/levin-phase-floor/07/calibration/scripts/validate_reference.py, kept byte for byte in
++docs/levin-phase-floor/07/earlier-attempts/), changed only where marked "rewrite": this paragraph; the
++prompt sections it cites, which the rewrite renumbered (the old "section 9 point 2" and "point 3", the
++user's rulings on the reference and on omega, are the rewritten section 2.1); and the provenance header,
++now prov.py's list of lines. The text before the rewrite follows.
++
++levin-phase-floor 07 section 2: the references (reference.py) against each other and against
+ the prompt's, on every case where the prompt's is practical, and their cost on every case
+-(prompt section 9 point 2).
++(prompt section 2.1; rewrite: was section 9 point 2).
+ 
+ - Every (R) case of ``reference.cases()``, omega = 0 and omega = 1, is computed twice, by
+   ``closed_R`` (the error function, at 40 working digits, and again at 60 to show the erf is
+@@ -68,7 +78,13 @@
+ 
+ 
+ def main():
+-    out = {"header": header(Path(__file__), "07 section 2: validating the reference")}
++    out = {  # rewrite: reference.py recorded as an input
++        "header": header(
++            Path(__file__),
++            "07 section 2: validating the reference",
++            (HERE / "reference.py",),
++        )
++    }
+     rows = []
+     for case in R.cases():
+         value, omitted, wall, extra = proposed(case)
+## validate_reference_precision.py: earlier 62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412, 07 fe7feaa1226c174d87fdc03960712166a39a03c4cedbea10f5f7aa373ee2ae87
+--- docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/validate_reference_precision.py	2026-10-29 11:17:49
++++ docs/levin-phase-floor/07/calibration/scripts/validate_reference_precision.py	2026-11-07 08:38:36
+@@ -1,4 +1,14 @@
+-"""levin-phase-floor 07 section 2: the one case on which ``validate_reference.py`` found the
++"""levin-phase-floor 07 section 2.1 (rewritten text of 2026-11-07): the reference's precision on one case
++
++Taken unchanged in substance from the set-aside work's copy (the tarball
++var/levin-phase-floor-07/wip/07-part-a-rebased-on-06d-untracked.tar.gz,
++docs/levin-phase-floor/07/calibration/scripts/validate_reference_precision.py, kept byte for byte in
++docs/levin-phase-floor/07/earlier-attempts/), changed only where marked "rewrite": this paragraph; the
++prompt sections it cites, which the rewrite renumbered (the old "section 9 point 2" and "point 3", the
++user's rulings on the reference and on omega, are the rewritten section 2.1); and the provenance header,
++now prov.py's list of lines. The text before the rewrite follows.
++
++levin-phase-floor 07 section 2: the one case on which ``validate_reference.py`` found the
+ proposed and the prompt's references differing by more than 1e-29 relative -- (C), b = 1e4,
+ lambda = 0.25, by 4.1e-28 (1.4e-26 relative) -- recomputed by both at higher precision, to say
+ which of the two carried the difference.
+@@ -29,7 +39,13 @@
+         for c in R.cases()
+         if c["family"] == "C" and c["b"] == 1.0e4 and c["lambda"] == 0.25
+     ][0]
+-    out = {"header": header(Path(__file__), "07 section 2: reference precision")}
++    out = {  # rewrite: reference.py recorded as an input
++        "header": header(
++            Path(__file__),
++            "07 section 2: reference precision",
++            (HERE / "reference.py",),
++        )
++    }
+     out["case"] = case
+     contour40, _ = R.contour_C(case["b"], case["a"])
+     lit30, n30 = R.literal(*R.family_C(case["b"], case["a"]))

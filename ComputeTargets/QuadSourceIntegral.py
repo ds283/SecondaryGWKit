@@ -968,6 +968,13 @@ def phase_group_Levin_integral(
                 "simple_regions": data["num_simple_regions"],
                 "evaluations": data["evaluations"],
                 "elapsed": data["elapsed"],
+                # the integrator's stationary-point guard (prompts/levin-phase-floor/
+                # 07-stationary-point-guard.md section 1.6): points located, window pieces
+                # returned, leaves found guarded, and guarded leaves re-solved at depth_max
+                "stationary_points": len(data["stationary_points"]),
+                "window_pieces": data["num_window_pieces"],
+                "guarded_regions": data["num_guarded_regions"],
+                "guard_at_depth_max": data["num_guard_at_depth_max"],
             }
             for group, data in results
         ],
@@ -1315,6 +1322,13 @@ def _three_bessel_Levin(
             "abserr": item["abserr"],
             "converged": item["converged"],
             "phase_limited": item["phase_limited"],
+            # the integrator's stationary-point guard (prompts/levin-phase-floor/
+            # 07-stationary-point-guard.md section 1.6), as in phase_group_Levin_integral's
+            # group records
+            "stationary_points": len(item["stationary_points"]),
+            "window_pieces": item["num_window_pieces"],
+            "guarded_regions": item["num_guarded_regions"],
+            "guard_at_depth_max": item["num_guard_at_depth_max"],
         }
         for key, item in data_blocks.items()
     }

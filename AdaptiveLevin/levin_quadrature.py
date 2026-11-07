@@ -96,9 +96,28 @@ deliberate departures are:
     one panel, or -- if gated on net change *without even measuring the oscillation at
     all* -- can be handed a case whose net phase change happens to be small purely by
     cancellation. Levin's method itself is not applicable at a stationary point (its
-    antiderivative p ~ f/(i*theta') is singular there); refining until the stationary
-    neighbourhood is weakly oscillatory and then applying a direct rule to it, which is
-    what this gate-and-bisect structure does, is the correct structural response.
+    antiderivative p ~ f/(i*theta') is singular there). This item used to call the
+    gate-and-bisect structure -- refining until the stationary neighbourhood is weakly
+    oscillatory, then applying a direct rule to it -- "the correct structural response". It is
+    not, by itself (prompts/levin-phase-floor/07-stationary-point-guard.md, after
+    docs/levin-phase-floor/06/p1/report.md): the gate acts only on a region bisection has
+    already produced, and nothing makes bisection reach a stationary point. Near one, a Levin
+    region's estimate and its halves' all lack the stationary-phase term, so the step-(4)
+    residual, and the trust check one level down, are blind to it; a Levin region of large
+    total variation was measured accepting an interior stationary point with an error estimate
+    about 1e5 times too small. The gate's regression test put its point at x = 1/2, the first
+    bisection point, where bisection exposes it by construction. See the next item.
+
+  * Stationary points are located before integrating, and their neighbourhoods integrated
+    directly (prompts/levin-phase-floor/07-stationary-point-guard.md; _adaptive_levin()). A basis
+    that supplies the closed-form rates of its independent phases (for adaptive_levin_sincos(),
+    the caller's theta["theta_deriv"]) has every sign change of a rate, and every interior minimum
+    of |theta'| deep enough to act as a nearly coalescing pair, located on a uniform scan. Round
+    each, a window of phase half-width _LEVIN_WINDOW_HALF_PHASE is integrated by the nested
+    Clenshaw-Curtis rule, in pieces of at most 2 pi, whatever their span; the rest is left to the
+    loop as before, in the same budget. As a safety net, a Levin region whose phase rate changes
+    sign on its own Chebyshev nodes is never returned as a Levin region. Without a closed-form
+    rate nothing is located, and that guard is the only protection.
 
   * A direct LU solve is used in place of the least-squares/SVD solve when the
     phase span shows the Levin super-operator to be well conditioned. Note
@@ -108,6 +127,20 @@ deliberate departures are:
     an LU solve gated on conditioning, with lstsq retained as the fallback for
     the ill-conditioned case where the minimum-norm solution is needed. An
     RRQR fallback in place of lstsq remains an unexplored optimisation.
+
+THE BASIS INTERFACE
+-------------------
+_adaptive_levin() is written for a basis of any number of components. It calls, on the basis
+object: build_Levin_data() (theta' on a region's nodes, the super-operator, the basis at the two
+endpoints and the phase span), theta_abserr_at(), and supports_complexified_solve if present; and,
+on a region the nested Clenshaw-Curtis rule takes, eval_basis_and_arguments(),
+theta_prime_on_fine_grid() and basis_derivative(). Since prompts/levin-phase-floor/
+07-stationary-point-guard.md, two optional methods supply what the stationary-point guard needs:
+independent_phases(), one callable per independent phase of the basis, and
+independent_phase_rates(), their closed-form rates d theta_i / dx in the same order, or None when
+the basis cannot supply them. A basis without them is treated as unable to supply rates: nothing is
+located, and only the nodal guard protects it. _Basis_SinCos has one phase, theta["theta"], whose
+rate is theta["theta_deriv"] when the caller supplies it.
 
 LOGGING
 -------
@@ -434,6 +467,60 @@ _CC_NODE_TERM_ROUNDING_COUNT = 5
 # conditioned and we need the minimum-norm solution; see _adaptive_levin_subregion_impl().
 _LEVIN_DIRECT_SOLVE_PHASE_SPAN = 20.0 * np.pi
 
+# The stationary-point guard (prompts/levin-phase-floor/07-stationary-point-guard.md; see
+# _locate_stationary_points() and _adaptive_levin()). Before the loop runs, each phase rate a
+# basis supplies in closed form is scanned on this many points uniform in x over x_span, endpoints
+# included: prompt 06a's grid, on which A3 v2's stationary points were first counted.
+_LEVIN_STATIONARY_SCAN_POINTS = 4097
+
+# Phi_w, the phase half-width of the window round each located point: the window is the largest
+# interval holding the point on which |theta_i(x) - theta_i(x_*)| <= Phi_w, and it is integrated
+# directly, by the nested Clenshaw-Curtis pair, in pieces. For a simple root, theta' ~ theta''
+# (x - x_s), and at the window's edge theta'^2 / |theta''| = 2 Phi_w whatever theta'' is: one
+# dimensionless number sets how well conditioned the Levin leaves beside the window are (prompt 07
+# section 0.2 (beta)).
+# Measured (prompt 07 section 2.2, the rule as the prompt fixes it, run at rtol 1e-9 after the section 2 stop,
+# section 9 point 1): Phi_w is the smallest rung of {2, 8, 32, 128, 512} pi on which every case of the
+# family (R) -- theta = omega x + (c/2)(x - x_s)^2 on [0, 1], c in {1e4, 1e6, 1e8}, two non-dyadic x_s, omega
+# 0 and 1 -- is honest and converged. At 2 pi all ten are (err/abserr at most 0.03, abserr/request at most
+# 0.89, no window stopped by the iroff1 rule); at 32 pi and above the cancelling case c = 1e8, x_s = 0.7236,
+# omega = 0 is not converged. docs/levin-phase-floor/07/calibration/out/run2/calibrate_tables_rtol1e-09.md.
+_LEVIN_WINDOW_HALF_PHASE = 2.0 * np.pi
+
+# Lambda_c: an interior local minimum x_m of |theta_i'| with no sign change beside it is located,
+# and windowed like a root, when its Airy parameter lambda = |theta_i'(x_m)|^(3/2) /
+# sqrt(|theta_i'''(x_m)| / 2) is below this: the phase accumulated across its slow zone is then
+# small, and the pair of stationary points nearly coalesces (prompt 07 section 0.2 (gamma)).
+# Measured (prompt 07 section 2.2, at Phi_w = 2 pi and rtol 1e-9): Lambda_c is the smallest rung L of
+# {4, 16, 64, 256, 1024} such that every case of the family (C) -- theta = a(x - x_0) + (b/3)(x - x_0)^3 on
+# [0, 1], b in {1e4, 1e8}, lambda in {0.25, 1, 4, ..., 1024} -- with lambda >= L is honest with no minimum
+# located; L = 4 (every case is honest, so the rule picks the lowest rung), and the cases below it,
+# lambda = 0.25 and 1 at both b, are honest and converged with their minimum located.
+# docs/levin-phase-floor/07/calibration/out/run2/calibrate_tables_rtol1e-09.md.
+_LEVIN_COALESCENCE_LAMBDA = 4.0
+
+# Delta phi_w, the largest phase span of one window piece, in every phase of the basis (prompt 07
+# section 1.2 item 3).
+_LEVIN_WINDOW_PIECE_PHASE = 2.0 * np.pi
+
+# The stopping rule for window leaves (prompts/levin-phase-floor/07-stationary-point-guard.md section
+# 1.3, ruled in by the user at the prompt's section 2 stop): QUADPACK's iroff1, counted per window. A
+# bisection of a window leaf P into L and R counts if
+#     |(V_L + V_R) - V_P| <= _LEVIN_WINDOW_IROFF1_VALUE_RTOL * |V_L + V_R|   and
+#     e'_L + e'_R >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO * e'_P,
+# i.e. the halves barely change the value and do not lower the error; at
+# _LEVIN_WINDOW_IROFF1_LIMIT counted bisections the window is round-off-limited, and every leaf of it
+# is returned floor-limited (see _adaptive_levin()). The three numbers are QUADPACK's dqage's,
+# unchanged: it counts the same bisection with the same thresholds and gives ier = 2 at 6, stopping
+# the whole call, where here one window stops. Why a rule is needed at all: window leaves are never
+# floor-limited (section 0.2 (ii)), and the prompt's section 2 measured them chased to depth_max two
+# ways, on a Clenshaw-Curtis floor flat in h above the request, and untrusted at the integrand's own
+# noise far inside it; iroff1 counts on both (docs/levin-phase-floor/07/calibration/out/, the first
+# run's calibrate_tables.md and replay_tables.md, section 2.5).
+_LEVIN_WINDOW_IROFF1_VALUE_RTOL = 1.0e-5
+_LEVIN_WINDOW_IROFF1_ERROR_RATIO = 0.99
+_LEVIN_WINDOW_IROFF1_LIMIT = 6
+
 INTERVAL_TYPE_LEVIN = 0
 INTERVAL_TYPE_DIRECT = 1
 types = {0: "Levin", 1: "direct"}
@@ -618,6 +705,17 @@ def _roundoff_floor(
     region's own. A finite floor now stops refinement of a leaf only if its halves' floors sum to at least
     _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 1/2 of its own (_roundoff_exit_premise_holds(); see
     that constant's comment for why 1/2).
+
+    The +inf at a node near a stationary point is not a stationary-point guard. It fires only when
+    a node falls close enough to the point; otherwise G0 is small but finite, the floor is finite,
+    and a Levin region across the point could be left with an error estimate that does not see the
+    stationary-phase term at all -- by its residual, or through the round-off-limited exit on this
+    floor (docs/levin-phase-floor/06/p1/report.md, section 6: at rtol 1e-9 and 1e-11). Since
+    prompts/levin-phase-floor/07-stationary-point-guard.md the driver locates stationary points
+    before integrating, where the basis supplies closed-form phase rates, and integrates a window
+    round each by the nested Clenshaw-Curtis pair, which carries _cc_roundoff_floor() and not this
+    floor; and it never returns a Levin region whose theta' changes sign on its own nodes, nor
+    lets such a region exit on this floor (see _adaptive_levin()).
 
     :param f_scale: max_grid |f| for this region -- max sqrt(f_1(x)^2 + f_2(x)^2) over the grid
         already sampled to build the region's estimate (see prompt 04, note (c), for why the
@@ -1070,6 +1168,9 @@ class used_interval:
         phase_err_roundoff: Optional[float] = None,
         node_error_signed: Optional[float] = None,
         phase_err_less_node: Optional[float] = None,
+        window: bool = False,
+        guarded: bool = False,
+        guard_at_depth_max: bool = False,
     ):
         self._start = start
         self._end = end
@@ -1142,6 +1243,16 @@ class used_interval:
         self._node_error_signed = node_error_signed
         self._phase_err_less_node = phase_err_less_node
 
+        # The stationary-point guard (prompts/levin-phase-floor/07-stationary-point-guard.md):
+        # window marks a piece of the window round a located stationary point (or one of its
+        # descendants), solved by the nested Clenshaw-Curtis pair whatever its phase span; guarded
+        # marks a region whose Levin solve found a phase rate not of one strict sign on its own
+        # Chebyshev nodes; guard_at_depth_max marks such a region at depth_max, re-solved by the
+        # nested pair. See _adaptive_levin().
+        self._window = window
+        self._guarded = guarded
+        self._guard_at_depth_max = guard_at_depth_max
+
     def __str__(self):
         if self._abserr is not None:
             abserr_label = f"abserr={self._abserr:.8g}"
@@ -1172,6 +1283,12 @@ class used_interval:
             )
         if self._value_kind != "own":
             phase_label = phase_label + f", value={self._value_kind}"
+        if self._window:
+            phase_label = phase_label + " (WINDOW)"
+        if self._guard_at_depth_max:
+            phase_label = phase_label + " (GUARD AT DEPTH_MAX)"
+        elif self._guarded:
+            phase_label = phase_label + " (GUARDED)"
 
         return f"({self._start:.8g}, {self._end:.8g}), depth={self._depth} | {types[self._type]}, {abserr_label}, {relerr_label}, {phase_label} | p-ratios={p_ratios_label}"
 
@@ -1226,6 +1343,12 @@ class used_interval:
         so bisecting it would not lower its error materially. Never True when phase_err is not
         finite. A region the loop never chose is never flagged, whatever its floor -- see
         _adaptive_levin().
+
+        Also True for every leaf of a stationary-point window that the iroff1 rule stopped
+        (prompts/levin-phase-floor/07-stationary-point-guard.md section 1.3,
+        _LEVIN_WINDOW_IROFF1_LIMIT): six of the window's bisections changed the value by at most
+        1e-5 relatively without lowering the error, so the window is round-off-limited and no leaf
+        of it is refined further, whether or not the loop chose that leaf.
         """
         return self._phase_limited
 
@@ -1425,6 +1548,36 @@ class used_interval:
     def p_ratios(self) -> List[float]:
         return self._p_ratios
 
+    @property
+    def window(self) -> bool:
+        """
+        True for a piece of the window round a located stationary point, or a descendant of one:
+        solved by the nested Clenshaw-Curtis pair whatever its phase span. The floor-limited exit
+        never fires on it; it is floor-limited only when its window is stopped by the iroff1 rule
+        (prompts/levin-phase-floor/07-stationary-point-guard.md sections 1.2-1.3; see
+        _adaptive_levin()).
+        """
+        return self._window
+
+    @property
+    def guarded(self) -> bool:
+        """
+        True if this region's Levin solve found a phase rate not of one strict sign on its own
+        Chebyshev nodes (the stationary-point guard; see _adaptive_levin()). Such a region is
+        never returned as a Levin region: below depth_max it is bisected, and at depth_max it is
+        re-solved by the nested Clenshaw-Curtis pair (guard_at_depth_max).
+        """
+        return self._guarded
+
+    @property
+    def guard_at_depth_max(self) -> bool:
+        """
+        True for a guarded region at depth_max, re-solved by the nested Clenshaw-Curtis pair
+        whatever its phase span; its errors are that solve's, and the call is not converged while
+        one is returned (see _adaptive_levin()).
+        """
+        return self._guard_at_depth_max
+
 
 ErrorHistoryType = dict[int, float]
 PScaleHistoryType = dict[int, List[float]]
@@ -1450,6 +1603,17 @@ class _levin_leaf:
     trust changes.
 
     The three histories feed the depth-18 diagnostic log, as before.
+
+    The stationary-point guard (prompts/levin-phase-floor/07-stationary-point-guard.md) adds two
+    flags. "forced_direct": the leaf, its halves and its grandchildren are solved by the nested
+    Clenshaw-Curtis pair whatever their phase span -- a window leaf, or a guarded leaf re-solved at
+    depth_max. "guarded": a Levin leaf below depth_max whose phase rate is not of one strict sign
+    on its own nodes; its error is read as +inf (see error), so it is chosen before every finite
+    one and the budget cannot be met while it is in the partition, and it is never floor-limited.
+    And, for section 1.3's rule, "window_index": the merged window a window leaf belongs to (None
+    for every other leaf); "fell_at_last_bisection": for a window leaf made by a bisection, whether
+    that bisection lowered the summed error (e'_L + e'_R below _LEVIN_WINDOW_IROFF1_ERROR_RATIO of
+    the parent's), None for a leaf made by seeding.
     """
 
     __slots__ = (
@@ -1469,6 +1633,10 @@ class _levin_leaf:
         "grandchildren",
         "checked",
         "version",
+        "forced_direct",
+        "guarded",
+        "window_index",
+        "fell_at_last_bisection",
     )
 
     def __init__(
@@ -1486,6 +1654,9 @@ class _levin_leaf:
         abserr_history: "ErrorHistoryType",
         relerr_history: "ErrorHistoryType",
         p_ratios_history: "PScaleHistoryType",
+        forced_direct: bool = False,
+        guarded: bool = False,
+        window_index: Optional[int] = None,
     ):
         self.start = start
         self.end = end
@@ -1503,6 +1674,10 @@ class _levin_leaf:
         self.grandchildren = None
         self.checked = False
         self.version = 0
+        self.forced_direct = forced_direct
+        self.guarded = guarded
+        self.window_index = window_index
+        self.fell_at_last_bisection = None
 
     @property
     def width(self) -> float:
@@ -1519,7 +1694,13 @@ class _levin_leaf:
         (total_err on a Levin leaf; on a fallback leaf, total_err with its node error |E| taken out
         of the floor, which the call carries signed; since
         prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md).
+
+        A guarded leaf's is +inf (prompts/levin-phase-floor/07-stationary-point-guard.md section
+        1.4): its Levin estimate holds a sign change of the phase rate, where neither the step-(4)
+        residual nor the round-off floor sees the error, so it is never returned as it stands.
         """
+        if self.guarded:
+            return float("inf")
         return self.region.budget_err
 
 
@@ -1935,6 +2116,28 @@ class _Basis_SinCos:
     def raw_theta(self, x):
         return self._theta(x)
 
+    def independent_phases(self) -> list:
+        """
+        The basis interface's phases (prompts/levin-phase-floor/07-stationary-point-guard.md
+        section 1.0): one callable per independent phase of the basis. This basis has one, the raw
+        phase theta["theta"]. _adaptive_levin() finds the edges of a stationary point's window on
+        it.
+        """
+        return [self._theta]
+
+    def independent_phase_rates(self) -> Optional[list]:
+        """
+        The basis interface's phase rates (section 1.0): one callable per phase, its d theta / dx in
+        closed form, in the order of independent_phases(); or None when the basis cannot supply
+        them. Here [theta["theta_deriv"]] when the caller supplied it, else None -- a theta' got by
+        differentiating sampled phase values is not a closed form, and the location would find its
+        noise. With None, _adaptive_levin() locates nothing, and the nodal guard is the only
+        protection at a stationary point.
+        """
+        if hasattr(self, "_theta_deriv"):
+            return [self._theta_deriv]
+        return None
+
     def theta_abserr_at(self, x) -> Optional[float]:
         """
         Declared absolute error of the phase at x, in radians (recommendation 5.2), or None when
@@ -2179,6 +2382,8 @@ def _adaptive_levin_subregion(
     build_p_sample: bool = False,
     diagnostics_path: Path = DEFAULT_LEVIN_DIAGNOSTICS_PATH,
     vectorize_cache: Optional[dict] = None,
+    force_direct: bool = False,
+    guard_rates: Optional[list] = None,
 ):
     working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
     num_order_changes = 0
@@ -2205,6 +2410,8 @@ def _adaptive_levin_subregion(
             build_p_sample=build_p_sample,
             diagnostics_path=diagnostics_path,
             vectorize_cache=vectorize_cache,
+            force_direct=force_direct,
+            guard_rates=guard_rates,
         )
         if data["metadata"].get("SVD_failure", False):
             working_order = working_order - 2
@@ -2245,6 +2452,8 @@ def _adaptive_levin_subregion_impl(
     build_p_sample: bool = False,
     diagnostics_path: Path = DEFAULT_LEVIN_DIAGNOSTICS_PATH,
     vectorize_cache: Optional[dict] = None,
+    force_direct: bool = False,
+    guard_rates: Optional[list] = None,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
@@ -2262,6 +2471,25 @@ def _adaptive_levin_subregion_impl(
         (the default) is safe for a direct caller that does not thread one through; it just
         means each of this call's f-components is probed for vectorisation on its own rather
         than sharing a probe with sibling subregions.
+    :param force_direct: solve the region by the nested Clenshaw-Curtis pair whatever its phase
+        span, bypassing the C2 gate below (prompts/levin-phase-floor/07-stationary-point-guard.md
+        section 1.2 item 4): for a piece of a stationary point's window, and for a guarded region
+        at depth_max. The value then keeps x_span's orientation (_oriented_cc()).
+    :param guard_rates: for a basis with several independent phases, their closed-form rates
+        (independent_phase_rates()), each sampled on this region's nodes for the nodal guard
+        below; None for a basis with one phase, whose theta_prime_Cheb is its rate already.
+
+    The C2 gate, and what it does not see. A region whose total phase variation is below 6 pi goes
+    to the nested Clenshaw-Curtis rule. That gate was the module's whole account of a stationary
+    point, and the account was incomplete (prompt 07, after docs/levin-phase-floor/06/p1/report.md):
+    it acts only on a region bisection has already produced, and nothing makes bisection reach a
+    stationary point inside a region of large variation, whose step-(4) residual cannot see it
+    (see _adaptive_levin()). So two things now sit beside the gate. The driver locates stationary
+    points before integrating and hands their windows here with force_direct; and every Levin solve
+    reports whether a phase rate fails to be of one strict sign on its own nodes ("guarded" in the
+    result: theta_prime_Cheb, and each of guard_rates), which the driver never returns as a Levin
+    region. A zero on a node counts as failing. The guard cannot see an even number of sign changes
+    between two adjacent nodes; that is what the location is for.
     :return:
     """
     if vectorize_cache is None:
@@ -2311,6 +2539,22 @@ def _adaptive_levin_subregion_impl(
     # nested Clenshaw-Curtis rule below samples f on its own (2*chebyshev_order - 1)-point grid,
     # never on this one, so there is no wasted evaluation of f for a region that turns out not to
     # need the Levin solve.
+    #
+    # force_direct (prompt 07) takes the same rule whatever the span: a window piece, or a guarded
+    # region at depth_max. Through _oriented_cc(), so that its value keeps x_span's orientation.
+    if force_direct:
+        return _oriented_cc(
+            x_span,
+            f,
+            BasisData,
+            chebyshev_order,
+            phase_span,
+            theta_prime_Cheb,
+            notify_label,
+            id_label,
+            vectorize_cache=vectorize_cache,
+        )
+
     if phase_span < SIX_PI:
         return _adaptive_levin_subregion_cc(
             x_span,
@@ -2582,6 +2826,11 @@ def _adaptive_levin_subregion_impl(
         BasisData, x_span[0], x_span[1], p_endpoint_l1_a, p_endpoint_l1_b
     )
 
+    # The nodal guard (prompt 07 section 1.4; see this function's docstring): from the samples of
+    # theta' this solve already holds, and for a basis with several phases each of their rates on
+    # the same nodes.
+    guarded = _nodal_guard(theta_prime_Cheb, grid, guard_rates, vectorize_cache)
+
     return {
         "value": upper_limit - lower_limit,
         "p_sample": p_sample,
@@ -2596,6 +2845,8 @@ def _adaptive_levin_subregion_impl(
         "abserr_truncation": abserr_truncation,
         "metadata": metadata,
         "is_direct": False,
+        # prompt 07: a phase rate not of one strict sign on this region's nodes
+        "guarded": guarded,
     }
 
 
@@ -2871,6 +3122,455 @@ def _log_depth_history(
         prev_rel = this_rel
 
 
+def _strictly_one_sign(values: np.ndarray) -> bool:
+    """True if every entry of values is > 0, or every entry is < 0 (a zero or a NaN is neither)."""
+    return bool(np.all(values > 0.0) or np.all(values < 0.0))
+
+
+def _nodal_guard(
+    theta_prime_Cheb: np.ndarray,
+    grid: np.ndarray,
+    guard_rates: Optional[list],
+    vectorize_cache: dict,
+) -> bool:
+    """
+    The stationary-point guard on one Levin solve (prompts/levin-phase-floor/
+    07-stationary-point-guard.md section 1.4): True if a phase rate is not of one strict sign on
+    the region's Chebyshev nodes -- theta_prime_Cheb, and, for a basis with several phases that
+    supplies their closed-form rates, each of guard_rates sampled on the same nodes. A zero on a
+    node counts, as does a non-finite sample. It cannot see an even number of sign changes between
+    two adjacent nodes; the location before the loop is for that (_locate_stationary_points()).
+    """
+    if not _strictly_one_sign(theta_prime_Cheb):
+        return True
+    if guard_rates is not None:
+        for index, rate in enumerate(guard_rates):
+            sample = _sample_vectorized(
+                rate, grid, vectorize_cache, ("guard_rate", index, id(rate))
+            )
+            if not _strictly_one_sign(sample):
+                return True
+    return False
+
+
+def _oriented_cc(
+    x_span: Tuple[float, float],
+    f,
+    BasisData,
+    chebyshev_order: int,
+    phase_span: float,
+    theta_prime_Cheb: np.ndarray,
+    notify_label: Optional[str],
+    id_label,
+    vectorize_cache: Optional[dict] = None,
+):
+    """
+    The nested Clenshaw-Curtis pair, _adaptive_levin_subregion_cc(), for the stationary-point
+    guard's forced solves (prompt 07 section 1.2 item 4: a window piece, or a guarded region at
+    depth_max), keeping x_span's orientation. _adaptive_levin_subregion_cc() weights by |b - a|
+    (_cc_weights()), so on a reversed span (a > b) its value has the wrong sign; prompt 07 records
+    that defect of the existing fallback and does not change it, and keeps it out of its own paths:
+    on a reversed span the pair is solved on the ascending span, with theta' sampled afresh on that
+    span's nodes, and its value and its signed node error E are negated. On an ascending span this
+    is _adaptive_levin_subregion_cc() itself.
+    """
+    if vectorize_cache is None:
+        vectorize_cache = {}
+    a, b = x_span
+    if a <= b:
+        return _adaptive_levin_subregion_cc(
+            x_span,
+            f,
+            BasisData,
+            chebyshev_order,
+            phase_span,
+            theta_prime_Cheb,
+            notify_label,
+            id_label,
+            vectorize_cache=vectorize_cache,
+        )
+
+    ascending = (b, a)
+    grid, Dmat = chebyshev_matrices(ascending, chebyshev_order)
+    _, theta_prime_ascending, _, _, phase_span_ascending = BasisData.build_Levin_data(
+        grid,
+        Dmat,
+        notify_label=notify_label,
+        id_label=id_label,
+        need_AmatT=False,
+        vectorize_cache=vectorize_cache,
+    )
+    data = _adaptive_levin_subregion_cc(
+        ascending,
+        f,
+        BasisData,
+        chebyshev_order,
+        phase_span_ascending,
+        theta_prime_ascending,
+        notify_label,
+        id_label,
+        vectorize_cache=vectorize_cache,
+    )
+    data["value"] = -data["value"]
+    if data.get("node_error_signed") is not None:
+        data["node_error_signed"] = -data["node_error_signed"]
+    return data
+
+
+def _scalar_callable(func):
+    """func, returning a Python float: for scipy's scalar root finders and minimisers."""
+
+    def scalar(x):
+        return float(func(x))
+
+    return scalar
+
+
+def _second_difference(func, x: float, step: float, lo: float, hi: float) -> float:
+    """
+    The central second difference (func(c + step) - 2 func(c) + func(c - step)) / step^2, its
+    centre c = x moved inward if need be so that the stencil stays inside [lo, hi] (a rate is not
+    promised to be defined outside x_span). Applied to a phase rate it estimates theta'''
+    (prompt 07 section 1.1 step 3): truncation error step^2 |theta^(5)| / 12, rounding about
+    4 eps max|theta'| / step^2.
+    """
+    c = min(max(x, lo + step), hi - step)
+    return (func(c + step) - 2.0 * func(c) + func(c - step)) / (step * step)
+
+
+def _first_difference(func, x: float, step: float, lo: float, hi: float) -> float:
+    """The central first difference, its centre kept inside [lo, hi] as in _second_difference()."""
+    c = min(max(x, lo + step), hi - step)
+    return (func(c + step) - func(c - step)) / (2.0 * step)
+
+
+def _locate_stationary_points(
+    x_span: Tuple[float, float],
+    phase_fns: list,
+    rate_fns: list,
+    vectorize_cache: dict,
+    window_half_phase: float,
+    coalescence_lambda: float,
+    piece_phase: float,
+) -> dict:
+    """
+    The stationary-point guard's location and windows (prompts/levin-phase-floor/
+    07-stationary-point-guard.md sections 1.1 and 1.2), for every independent phase of a basis,
+    from its closed-form rates. Run by _adaptive_levin() before its loop.
+
+    Location (section 1.1), for each phase i, from its rate theta_i':
+      1. Scan. theta_i' is sampled through _sample_vectorized() on _LEVIN_STATIONARY_SCAN_POINTS
+         points, numpy.linspace over x_span with both endpoints (prompt 06a's grid). A non-finite
+         sample is skipped, as 06a's scan skipped them.
+      2. Roots. Each exact zero sample is a root as it stands. Each adjacent pair of finite samples
+         of opposite sign is refined by scipy's brentq on the rate, with xtol = eps max(|x_a|,
+         |x_b|) and rtol = 4 eps (scipy's least), eps = 2^-52: finer than the prompt's
+         4 eps max(|x_a|, |x_b|). Kind "root".
+      3. Minima. Each strict interior local minimum of |theta_i'| on the scan, at which and at
+         whose two neighbours the rate has one strict sign (no sign change within a scan spacing
+         h), is refined by bounded Brent minimisation of |theta_i'| between its neighbours
+         (xatol = 4 eps max|x|, which scipy floors at about sqrt(eps)|x|; a refined value above the
+         grid's is replaced by the grid point). theta_i''' there is the central second difference
+         of the rate with step h/2 (_second_difference(); truncation error h^2 |theta^(5)| / 48,
+         rounding about 16 eps max|theta'| / h^2). The minimum is located, kind "minimum", if its
+         Airy parameter lambda = |theta_i'(x_m)|^(3/2) / sqrt(|theta_i'''| / 2) is below
+         coalescence_lambda; otherwise it is recorded in "unlocated_minima".
+      4. A point within h/2 of an end of x_span is moved to that end, kind "end" ("found_as" keeps
+         what it was found as). Points of one phase within 4 eps |x| of one another are merged.
+         Each point records its phase.
+
+    Windows (section 1.2):
+      1. Round each point x_* of phase i, the largest interval holding it on which
+         |theta_i(x) - theta_i(x_*)| <= window_half_phase, clipped to x_span. Each edge is the
+         first scan point outward from x_* at which that bound is reached, refined by brentq on
+         |theta_i(x) - theta_i(x_*)| - window_half_phase between it and the point before it (x_*
+         itself for the first). Edge precision: brentq returns x within about xtol + rtol |x| =
+         5 eps |x| of a zero of the computed function, and the phase is evaluated to about
+         ulp(|theta|), so at a returned edge | |theta_i - theta_i(x_*)| - window_half_phase | is at
+         most about 5 eps |x| |theta_i'| + ulp(|theta_i(x)|) + ulp(|theta_i(x_*)|): of order 1e-8
+         rad for a raw phase of 1e8, negligible against window_half_phase >= 2 pi.
+      2. Windows that overlap or touch are merged.
+      3. Each window is cut into pieces of at most piece_phase in every phase of the basis. A
+         phase's variation is measured on its monotone segments -- the window split at that
+         phase's located roots inside it, which are cuts -- exactly, as |Delta theta|, not
+         estimated on the scan: a window can be narrower than a few scan spacings. Each segment
+         is cut into ceil(|Delta theta| / piece_phase) pieces of equal phase, each cut found by
+         brentq on theta - level; a level whose bracket does not change sign (a phase not monotone
+         there, i.e. a point the location missed) is skipped. The cuts of every phase are united,
+         and cuts within 4 eps |x| of one another merged.
+
+    :param x_span: the call's x_span, in either order.
+    :param phase_fns: the basis's independent_phases().
+    :param rate_fns: the basis's independent_phase_rates(), the same length.
+    :return: dict with "points" (one dict per located point, ascending in x: "x", "kind", "found_as",
+        "phase", "theta", "theta_deriv", "lambda" and "theta_third_deriv" for a minimum,
+        "own_window", "own_window_edges" with theta' and theta'^2 / |theta''| at each edge,
+        "window_index", "window", "window_pieces"), "windows" (one dict per merged window,
+        ascending: "lo", "hi", "cuts" -- the piece edges from lo to hi -- and "points", indices into
+        "points"), "unlocated_minima" and "scan_spacing".
+    """
+    from scipy.optimize import brentq, minimize_scalar
+
+    eps = float(np.finfo(float).eps)
+    a0, b0 = float(x_span[0]), float(x_span[1])
+    lo, hi = min(a0, b0), max(a0, b0)
+    n_scan = _LEVIN_STATIONARY_SCAN_POINTS
+    scan = np.linspace(a0, b0, n_scan)
+    h = (hi - lo) / (n_scan - 1)
+    ascending = a0 <= b0
+    xs = scan if ascending else scan[::-1]
+
+    def root_in(func, xa, xb):
+        return float(
+            brentq(
+                func,
+                xa,
+                xb,
+                xtol=eps * max(abs(xa), abs(xb)),
+                rtol=4.0 * eps,
+                maxiter=200,
+            )
+        )
+
+    points = []
+    unlocated_minima = []
+    for phase_index, rate in enumerate(rate_fns):
+        sample = _sample_vectorized(
+            rate, scan, vectorize_cache, ("location_rate", phase_index, id(rate))
+        )
+        d = sample if ascending else sample[::-1]
+        r = _scalar_callable(rate)
+        finite = np.isfinite(d)
+        sgn = np.where(finite, np.sign(d), np.nan)
+
+        # step 2: exact zeros, then adjacent finite pairs of opposite sign
+        for j in np.nonzero(finite & (d == 0.0))[0]:
+            points.append({"x": float(xs[j]), "kind": "root", "phase": phase_index})
+        opposite = finite[:-1] & finite[1:] & (sgn[:-1] * sgn[1:] < 0.0)
+        for j in np.nonzero(opposite)[0]:
+            xa, xb = float(xs[j]), float(xs[j + 1])
+            fa, fb = r(xa), r(xb)
+            if fa == 0.0:
+                x_root = xa
+            elif fb == 0.0:
+                x_root = xb
+            elif np.isfinite(fa) and np.isfinite(fb) and np.sign(fa) != np.sign(fb):
+                x_root = root_in(r, xa, xb)
+            else:
+                # the array sample and the scalar call disagree in sign at the bracket's ends (a
+                # vectorised rate rounding differently from its scalar form): the zero is taken at
+                # the end where the rate is smaller
+                x_root = xa if abs(fa) <= abs(fb) else xb
+            points.append({"x": x_root, "kind": "root", "phase": phase_index})
+
+        # step 3: strict interior local minima of |theta'| with no sign change beside them
+        absd = np.abs(d)
+        is_min = (
+            finite[:-2]
+            & finite[1:-1]
+            & finite[2:]
+            & (sgn[1:-1] != 0.0)
+            & (sgn[:-2] == sgn[1:-1])
+            & (sgn[1:-1] == sgn[2:])
+            & (absd[1:-1] < absd[:-2])
+            & (absd[1:-1] < absd[2:])
+        )
+        for j in np.nonzero(is_min)[0] + 1:
+            xl, xr = float(xs[j - 1]), float(xs[j + 1])
+            result = minimize_scalar(
+                lambda x: abs(r(x)),
+                bounds=(xl, xr),
+                method="bounded",
+                options={"xatol": 4.0 * eps * max(abs(xl), abs(xr)), "maxiter": 500},
+            )
+            x_m = float(result.x)
+            a_m = abs(r(x_m))
+            if not (np.isfinite(a_m) and a_m <= absd[j]):
+                x_m, a_m = float(xs[j]), float(absd[j])
+            third = _second_difference(r, x_m, 0.5 * h, lo, hi)
+            if np.isfinite(third) and third != 0.0:
+                lam = a_m**1.5 / np.sqrt(0.5 * abs(third))
+            else:
+                lam = float("inf")
+            record = {
+                "x": x_m,
+                "kind": "minimum",
+                "phase": phase_index,
+                "lambda": float(lam),
+                "theta_third_deriv": float(third),
+            }
+            if lam < coalescence_lambda:
+                points.append(record)
+            else:
+                unlocated_minima.append(record)
+
+    # step 4: ends, then merging within a phase
+    for p in points:
+        p["found_as"] = p["kind"]
+        if p["x"] - lo <= 0.5 * h:
+            p["x"], p["kind"] = lo, "end"
+        elif hi - p["x"] <= 0.5 * h:
+            p["x"], p["kind"] = hi, "end"
+    points.sort(key=lambda p: (p["phase"], p["x"]))
+    merged = []
+    for p in points:
+        if merged:
+            q = merged[-1]
+            if q["phase"] == p["phase"] and abs(p["x"] - q["x"]) <= 4.0 * eps * max(
+                abs(p["x"]), abs(q["x"])
+            ):
+                continue
+        merged.append(p)
+    points = sorted(merged, key=lambda p: (p["x"], p["phase"]))
+
+    # section 1.2 item 1: each point's own window, from the phase sampled on the scan
+    phase_on_scan = {}
+
+    def window_edge(phase_index, x_p, t_p, direction):
+        theta = phase_fns[phase_index]
+
+        def g(x):
+            value = float(theta(x))
+            if not np.isfinite(value):
+                raise ValueError(
+                    "levin_quadrature: a phase returned a non-numeric value while locating "
+                    "the edge of a stationary-point window"
+                )
+            return abs(value - t_p) - window_half_phase
+
+        if phase_index not in phase_on_scan:
+            sampled = _sample_vectorized(
+                theta, scan, vectorize_cache, ("location_phase", phase_index, id(theta))
+            )
+            phase_on_scan[phase_index] = sampled if ascending else sampled[::-1]
+        theta_scan = phase_on_scan[phase_index]
+
+        if direction > 0:
+            indices = np.nonzero(xs > x_p)[0]
+        else:
+            indices = np.nonzero(xs < x_p)[0][::-1]
+        previous = x_p
+        for j in indices:
+            x_c = float(xs[j])
+            if not (np.abs(theta_scan[j] - t_p) >= window_half_phase):
+                previous = x_c
+                continue
+            g_c = g(x_c)
+            if g_c < 0.0:
+                previous = x_c
+                continue
+            if g_c == 0.0:
+                return x_c
+            if previous != x_p and not (g(previous) < 0.0):
+                # the scan's sample and the scalar call disagree at the previous point (a
+                # vectorised phase rounding differently from its scalar form)
+                return previous
+            u, v = (previous, x_c) if previous < x_c else (x_c, previous)
+            return root_in(g, u, v)
+        return hi if direction > 0 else lo
+
+    for p in points:
+        rate = _scalar_callable(rate_fns[p["phase"]])
+        t_p = float(phase_fns[p["phase"]](p["x"]))
+        p["theta"] = t_p
+        p["theta_deriv"] = rate(p["x"])
+        left = window_edge(p["phase"], p["x"], t_p, -1)
+        right = window_edge(p["phase"], p["x"], t_p, +1)
+        p["own_window"] = [left, right]
+        edges_info = []
+        for x_e in (left, right):
+            first = rate(x_e)
+            second = _first_difference(rate, x_e, 0.5 * h, lo, hi)
+            edges_info.append(
+                {
+                    "x": x_e,
+                    "theta_minus_theta_point": float(phase_fns[p["phase"]](x_e)) - t_p,
+                    "theta_deriv": first,
+                    "theta_second_deriv": float(second),
+                    "theta_deriv_sq_over_second": (
+                        first * first / abs(second) if second != 0.0 else float("inf")
+                    ),
+                }
+            )
+        p["own_window_edges"] = edges_info
+
+    # section 1.2 item 2: merge windows that overlap or touch
+    windows = []
+    for index in sorted(range(len(points)), key=lambda k: points[k]["own_window"][0]):
+        left, right = points[index]["own_window"]
+        if windows and left <= windows[-1]["hi"]:
+            windows[-1]["hi"] = max(windows[-1]["hi"], right)
+            windows[-1]["points"].append(index)
+        else:
+            windows.append({"lo": left, "hi": right, "points": [index]})
+
+    # section 1.2 item 3: pieces of at most piece_phase in every phase, each phase's located roots
+    # inside the window among the cuts
+    for window in windows:
+        w_lo, w_hi = window["lo"], window["hi"]
+        cuts = {w_lo, w_hi}
+        for phase_index, theta in enumerate(phase_fns):
+            roots = sorted(
+                {
+                    points[k]["x"]
+                    for k in window["points"]
+                    if points[k]["phase"] == phase_index
+                    and points[k]["found_as"] == "root"
+                    and w_lo < points[k]["x"] < w_hi
+                }
+            )
+            cuts.update(roots)
+            bounds = [w_lo] + roots + [w_hi]
+            for j in range(len(bounds) - 1):
+                s0, s1 = bounds[j], bounds[j + 1]
+                t0, t1 = float(theta(s0)), float(theta(s1))
+                span = abs(t1 - t0)
+                if not (span > piece_phase):
+                    continue
+                direction = 1.0 if t1 >= t0 else -1.0
+                count = int(ceil(span / piece_phase))
+                start = s0
+                for k in range(1, count):
+                    level = t0 + direction * span * k / count
+
+                    def g(x, level=level):
+                        return float(theta(x)) - level
+
+                    g_start, g_end = g(start), g(s1)
+                    if g_start == 0.0:
+                        x_cut = start
+                    elif not (np.sign(g_start) != np.sign(g_end)):
+                        continue
+                    else:
+                        x_cut = root_in(g, start, s1)
+                    cuts.add(x_cut)
+                    start = x_cut
+        ordered = sorted(cuts)
+        kept = [ordered[0]]
+        for x in ordered[1:]:
+            if x - kept[-1] > 4.0 * eps * max(abs(x), abs(kept[-1])):
+                kept.append(x)
+        if kept[-1] != w_hi:
+            if len(kept) > 1:
+                kept[-1] = w_hi
+            else:
+                kept.append(w_hi)
+        window["cuts"] = kept
+
+    for window_index, window in enumerate(windows):
+        for k in window["points"]:
+            points[k]["window_index"] = window_index
+            points[k]["window"] = [window["lo"], window["hi"]]
+            points[k]["window_pieces"] = len(window["cuts"]) - 1
+
+    return {
+        "points": points,
+        "windows": windows,
+        "unlocated_minima": unlocated_minima,
+        "scan_spacing": h,
+    }
+
+
 def _sum_leaves_ascending(leaves_ascending) -> Tuple[float, float, float]:
     """
     The call's value, the sum of its leaves' errors e'_i (used_interval.budget_err), and the
@@ -2910,6 +3610,7 @@ def _adaptive_levin(
     emit_diagnostics: bool = False,
     diagnostics_path: Optional[Union[str, Path]] = None,
     _test_only_bypass_roundoff_premise: bool = False,
+    _test_only_bypass_location: bool = False,
 ):
     """
     The adaptive driver, under one error budget for the whole call
@@ -2999,6 +3700,70 @@ def _adaptive_levin(
     a node) is always chosen first, and is bisected until it is finite or reaches depth_max.
 
     Termination: every bisection deepens a leaf, and a leaf at depth_max is never chosen.
+
+    The stationary-point guard (prompts/levin-phase-floor/07-stationary-point-guard.md). Neither
+    the step-(4) residual nor the trust check can see an interior stationary point of the phase:
+    near one the Levin antiderivative p ~ f / (i theta') is singular, and a leaf's estimate, its
+    halves' and its grandchildren's all lack the stationary-phase term, so they agree with one
+    another and not with the integral (docs/levin-phase-floor/06/p1/report.md: a residual 1e5
+    times smaller than the true error). The eq. (151) floor is infinite only when a node falls
+    close enough to the point, and the C2 gate acts only once bisection has reached a region of
+    small variation, which nothing forced. So, generically, for a basis of any number of
+    components:
+      1. Location. If the basis supplies the closed-form rates of its independent phases
+         (independent_phase_rates() not None; for adaptive_levin_sincos(), the caller's
+         theta["theta_deriv"]), _locate_stationary_points() finds, before the loop, every sign
+         change of every rate on _LEVIN_STATIONARY_SCAN_POINTS points, and every interior minimum
+         of |rate| whose Airy parameter is below _LEVIN_COALESCENCE_LAMBDA (a nearly coalescing
+         pair).
+      2. Windows. Round each point, the interval on which its phase stays within
+         _LEVIN_WINDOW_HALF_PHASE of its value at the point, cut into pieces of at most
+         _LEVIN_WINDOW_PIECE_PHASE in every phase. Each piece is a leaf at depth 0, solved -- with
+         its halves and grandchildren -- by the nested Clenshaw-Curtis pair whatever its span
+         (force_direct; used_interval.window). It is a Clenshaw-Curtis leaf in every other
+         respect: its errors, its trust check and its node error are the pair's. The floor-limited
+         exit never fires on it (prompt 07 section 0.2 (ii)), so it stays refinable until
+         depth_max or until the window is stopped by the next rule.
+      2a. The stopping rule for window leaves (prompt 07 section 1.3): QUADPACK's iroff1, counted
+         per merged window. A bisection of one of its leaves counts if the halves change the value
+         by at most _LEVIN_WINDOW_IROFF1_VALUE_RTOL relatively and their summed error is at least
+         _LEVIN_WINDOW_IROFF1_ERROR_RATIO of the parent's. At _LEVIN_WINDOW_IROFF1_LIMIT counted
+         bisections the window is round-off-limited: every leaf of it, made then or later, is not
+         refinable and is returned floor-limited, exempt from the trust check, declaring what it
+         carries (an untrusted leaf declares as an untrusted leaf at depth_max does), and the
+         call's "converged" follows its budget. It ends the two ways section 2 measured window
+         leaves chased to depth_max: on a Clenshaw-Curtis floor flat in h above the request, and
+         untrusted at the integrand's own noise far inside it. Guarded leaves are not counted.
+      3. The rest. The initial partition is the window pieces and the ranges of x_span between
+         windows, each a leaf at depth 0, all in the one budget, heap, trust check and node sum.
+         With nothing located it is the single leaf x_span, and the call takes exactly the path it
+         takes without location.
+      4. The guard. A Levin leaf whose phase rate is not of one strict sign on its own Chebyshev
+         nodes (the location missed a point, or the basis has no rates; see
+         _adaptive_levin_subregion_impl()) is guarded (used_interval.guarded): never returned as a
+         Levin leaf. Below depth_max its error is read as +inf (_levin_leaf.error), as for a leaf
+         whose G0 is at noise, so it is chosen first, the budget cannot be met while it is in the
+         partition, it is never trusted and never floor-limited, and it is bisected; below 6 pi
+         the C2 gate sends its halves to the fallback. At depth_max it is re-solved by the nested
+         pair whatever its span, its errors are that solve's, it is flagged guard_at_depth_max and
+         exempt from the trust check, and the call is not converged while one is returned.
+    An unguarded leaf outside every window behaves exactly as without the guard. Without rates
+    nothing is located, and the guard alone protects the call: it misses a pair of sign changes
+    between two adjacent nodes of a leaf, and a minimum of |theta'| that does not reach zero.
+
+    The result adds "stationary_points" (one dict per located point: its x, phase and kind --
+    "root", "minimum" or "end" -- theta' there, lambda for a minimum, its window's edges and number
+    of pieces, and theta'^2 / |theta''| at its own window's edges), "stationary_windows" (each
+    merged window's edges and piece cuts, its iroff1 count, and whether the rule stopped it, with
+    what was true of its leaves then), "unlocated_minima", "num_window_pieces" (window leaves
+    returned), "num_guarded_regions" (leaves found guarded when made, returned or bisected) and
+    "num_guard_at_depth_max".
+
+    :param _test_only_bypass_location: TEST-ONLY, off by default: skips step 1, and so 2 and 3, so
+        that a test can show a call in which nothing is located is bit-identical to one in which the
+        location never ran (prompt 07 section 3 test 8). The nodal guard still runs. Read only at
+        the location below; adaptive_levin_sincos() does not expose it. Never set it in production
+        code.
     """
     # _test_only_bypass_roundoff_premise: TEST-ONLY. True skips 06b's premise
     # (_roundoff_exit_premise_holds()) in the floor-limited test, so that a leaf chosen while the
@@ -3079,6 +3844,36 @@ def _adaptive_levin(
             _LEVIN_MINIMUM_ALLOWED_ORDER,
         )
 
+    # The stationary-point guard (prompt 07; see the docstring): the basis's independent phases and
+    # their closed-form rates. A basis without the two methods, or whose rates are None, cannot
+    # supply rates: nothing is located, and only the nodal guard protects the call.
+    phases_method = getattr(BasisData, "independent_phases", None)
+    rates_method = getattr(BasisData, "independent_phase_rates", None)
+    phase_fns = phases_method() if callable(phases_method) else None
+    rate_fns = rates_method() if callable(rates_method) else None
+    if phase_fns is None or rate_fns is None or len(rate_fns) != len(phase_fns):
+        rate_fns = None
+
+    # For a basis with several phases the nodal guard samples each phase's rate on a Levin leaf's
+    # nodes; for one phase theta_prime_Cheb is its rate already (_nodal_guard()).
+    guard_rates = rate_fns if rate_fns is not None and len(rate_fns) > 1 else None
+
+    location = None
+    if (
+        rate_fns is not None
+        and not _test_only_bypass_location
+        and x_span[1] != x_span[0]
+    ):
+        location = _locate_stationary_points(
+            x_span,
+            phase_fns,
+            rate_fns,
+            vectorize_cache,
+            window_half_phase=_LEVIN_WINDOW_HALF_PHASE,
+            coalescence_lambda=_LEVIN_COALESCENCE_LAMBDA,
+            piece_phase=_LEVIN_WINDOW_PIECE_PHASE,
+        )
+
     num_evaluations = 0
 
     num_SVD_errors = 0
@@ -3112,7 +3907,12 @@ def _adaptive_levin(
     num_check_passes = 0
     num_untrusted_found = 0
 
-    def _solve(span, description):
+    # The stationary-point guard's counts (prompt 07 section 1.5): leaves found guarded when made,
+    # returned or bisected; and guarded leaves re-solved by the nested pair at depth_max.
+    num_guarded_regions = 0
+    num_guard_at_depth_max = 0
+
+    def _solve(span, description, force_direct=False):
         nonlocal num_evaluations, num_solves_direct, num_solves_lstsq, num_solves_pinv
         try:
             solve_data = _adaptive_levin_subregion(
@@ -3126,6 +3926,8 @@ def _adaptive_levin(
                 build_p_sample=build_p_sample,
                 diagnostics_path=resolved_diagnostics_path,
                 vectorize_cache=vectorize_cache,
+                force_direct=force_direct,
+                guard_rates=guard_rates,
             )
         except LinAlgError as e:
             _logger.warning(
@@ -3158,6 +3960,8 @@ def _adaptive_levin(
         relerr_history,
         p_ratios_history,
         halves=None,
+        window=False,
+        window_index=None,
     ) -> _levin_leaf:
         """
         Make a leaf of [a, b] at this depth, and compute its error. data is its own solve when it
@@ -3166,9 +3970,15 @@ def _adaptive_levin(
         et al. (173)); a fallback leaf's error is its own nested-pair estimate. halves, when
         given, are the leaf's own halves' solves, carried forward from its parent's trust check
         (the parent's grandchildren), and are used rather than solved again.
+
+        window (prompt 07): the leaf is a window piece, or a descendant of one, solved by the
+        nested pair whatever its span. A Levin leaf whose solve is guarded is made guarded below
+        depth_max, and at depth_max is re-solved by the nested pair and flagged
+        guard_at_depth_max (see _adaptive_levin()'s docstring).
         """
         nonlocal seq_counter, max_depth, num_history_messages
         nonlocal chebyshev_min_order, num_SVD_errors, num_order_changes, num_direct_solves
+        nonlocal num_guarded_regions, num_guard_at_depth_max
 
         if depth > max_depth:
             max_depth = depth
@@ -3193,7 +4003,26 @@ def _adaptive_levin(
         # evaluates the nested Clenshaw-Curtis pair -- see _adaptive_levin_subregion_impl(). The
         # two outcomes are told apart below by data["is_direct"].
         if data is None:
-            data = _solve((a, b), "Levin subregion")
+            data = _solve(
+                (a, b),
+                "stationary-point window piece" if window else "Levin subregion",
+                force_direct=window,
+            )
+
+        # The stationary-point guard (prompt 07 section 1.4). A guarded Levin solve is never
+        # returned as a Levin leaf: below depth_max the leaf is made guarded, with an infinite
+        # error (_levin_leaf.error), and is bisected; at depth_max it is re-solved by the nested
+        # pair whatever its span, and that solve is the leaf's.
+        guarded = False
+        guard_at_depth_max = False
+        if not data.get("is_direct", False) and data.get("guarded", False):
+            num_guarded_regions += 1
+            guarded = True
+            if depth >= depth_max:
+                num_guard_at_depth_max += 1
+                guard_at_depth_max = True
+                data = _solve((a, b), "guarded leaf at depth_max", force_direct=True)
+                halves = None
 
         # Per-region bookkeeping, from each leaf's own solve, once per leaf -- including leaves
         # that are later bisected. The metadata of a half (dataL/dataR) is accumulated here when
@@ -3245,6 +4074,9 @@ def _adaptive_levin(
                 phase_err_roundoff=_solve_floor_roundoff(data),
                 node_error_signed=data.get("node_error_signed"),
                 phase_err_less_node=data.get("phase_err_less_node"),
+                window=window,
+                guarded=guarded,
+                guard_at_depth_max=guard_at_depth_max,
             )
         else:
             # Chen et al. (173): the step-(4) residual against the leaf's two halves. They are
@@ -3285,10 +4117,11 @@ def _adaptive_levin(
                 value=estimate,
                 phase_err_declared=_solve_floor_declared(data),
                 phase_err_roundoff=_solve_floor_roundoff(data),
+                guarded=guarded,
             )
 
         seq_counter += 1
-        return _levin_leaf(
+        leaf = _levin_leaf(
             start=a,
             end=b,
             depth=depth,
@@ -3303,7 +4136,15 @@ def _adaptive_levin(
             abserr_history=abserr_history,
             relerr_history=relerr_history,
             p_ratios_history=p_ratios_history,
+            forced_direct=window or guard_at_depth_max,
+            guarded=guarded and not guard_at_depth_max,
+            window_index=window_index if window else None,
         )
+        if guard_at_depth_max:
+            # exempt from the trust check: never trusted, its errors the nested pair's own, and
+            # the call not converged while it is returned
+            leaf.checked = True
+        return leaf
 
     # The current partition: every leaf, by its sequence number. The candidates for bisection are
     # the refinable leaves, on a heap ordered first by trust -- a leaf the trust check found
@@ -3349,6 +4190,9 @@ def _adaptive_levin(
         value_sum.add(leaf.value)
         if leaf.is_direct:
             num_direct_leaves += 1
+        if leaf.window_index is not None and leaf.window_index in windows_stopped:
+            _floor_limit_stopped_window_leaf(leaf)
+            return
         _push_candidate(leaf)
 
     def _refinable(leaf: _levin_leaf) -> bool:
@@ -3432,9 +4276,18 @@ def _adaptive_levin(
         # demand, each a full subregion solve on its own samples -- the same call that would
         # produce it as a leaf, so its "phase_err" is the floor it would carry -- and they are
         # kept, to become the children's own solves if the leaf is bisected.
+        # A window leaf's halves are solved by the nested pair whatever their span (prompt 07).
         c = leaf.break_point
-        leaf.dataL = _solve((leaf.start, c), "left half of fallback region")
-        leaf.dataR = _solve((c, leaf.end), "right half of fallback region")
+        leaf.dataL = _solve(
+            (leaf.start, c),
+            "left half of fallback region",
+            force_direct=leaf.forced_direct,
+        )
+        leaf.dataR = _solve(
+            (c, leaf.end),
+            "right half of fallback region",
+            force_direct=leaf.forced_direct,
+        )
 
     def _check_leaf(leaf: _levin_leaf) -> None:
         """
@@ -3477,10 +4330,17 @@ def _adaptive_levin(
         c = leaf.break_point
         cL = (c + a) / 2.0
         cR = (b + c) / 2.0
-        LL = _solve((a, cL), "trust check: left half of left half")
-        LR = _solve((cL, c), "trust check: right half of left half")
-        RL = _solve((c, cR), "trust check: left half of right half")
-        RR = _solve((cR, b), "trust check: right half of right half")
+        forced = leaf.forced_direct
+        LL = _solve((a, cL), "trust check: left half of left half", force_direct=forced)
+        LR = _solve(
+            (cL, c), "trust check: right half of left half", force_direct=forced
+        )
+        RL = _solve(
+            (c, cR), "trust check: left half of right half", force_direct=forced
+        )
+        RR = _solve(
+            (cR, b), "trust check: right half of right half", force_direct=forced
+        )
         leaf.grandchildren = ((LL, LR), (RL, RR))
 
         region = leaf.region
@@ -3543,6 +4403,55 @@ def _adaptive_levin(
             _set_value(leaf, region._value_own, "own")
         leaf.grandchildren = None
 
+    # Section 1.3's rule: each merged window's count of iroff1 bisections, and the windows stopped,
+    # with what was true of their leaves when they stopped (reported in "stationary_windows").
+    window_counts = {}
+    windows_stopped = {}
+
+    def _floor_limit_stopped_window_leaf(leaf: _levin_leaf) -> None:
+        """
+        A leaf of a window section 1.3's rule has stopped: not refinable, returned floor-limited,
+        exempt from the trust check as a floor-limited leaf is. It declares what it carries: its
+        e', except that a leaf the trust check found untrusted declares as an untrusted leaf at
+        depth_max does, max(residual, delta1) / (1 - r) if r < 1 and max(residual, delta1 +
+        delta2) if not. A trusted leaf keeps its widened declaration and returns its own value, V_P,
+        as a floor-limited leaf does.
+        """
+        region = leaf.region
+        _remove_error(leaf)
+        if region._trusted is False:
+            ratio = region._convergence_ratio
+            residual = region.abserr
+            region._declared_resolution = (
+                max(residual, region._delta1) / (1.0 - ratio)
+                if ratio < 1.0
+                else max(residual, region._delta1 + region._delta2)
+            )
+        region._trusted = None
+        region._phase_limited = True
+        _restore_error(leaf)
+        if region._value_kind != "own":
+            _set_value(leaf, region._value_own, "own")
+        leaf.dataL = None
+        leaf.dataR = None
+        leaf.grandchildren = None
+        _push_candidate(leaf)
+
+    def _stop_window(window_index: int) -> None:
+        members = [
+            leaf for leaf in leaves.values() if leaf.window_index == window_index
+        ]
+        windows_stopped[window_index] = {
+            "stopped_after_split": num_splits,
+            "leaves_at_stop": len(members),
+            "leaves_falling_at_stop": sum(
+                1 for leaf in members if leaf.fell_at_last_bisection
+            ),
+            "max_depth_at_stop": max(leaf.depth for leaf in members),
+        }
+        for member in members:
+            _floor_limit_stopped_window_leaf(member)
+
     def _split_could_meet_budget(leaf: _levin_leaf) -> bool:
         """
         The round-off exit's budget clause (06g, section 0.2 (d) item 2): True if the call's error
@@ -3593,7 +4502,42 @@ def _adaptive_levin(
         )
         return recomputed <= request
 
-    _add_leaf(_make_leaf(x_span[0], x_span[1], 0, None, {}, {}, {}))
+    # The initial partition. With nothing located, the root leaf x_span, as before prompt 07. With
+    # windows (prompt 07 section 1.2 item 5): one leaf for each range of x_span between windows,
+    # an ordinary leaf, and one for each window piece, a window leaf, all at depth 0 and oriented as
+    # x_span.
+    if location is None or not location["windows"]:
+        _add_leaf(_make_leaf(x_span[0], x_span[1], 0, None, {}, {}, {}))
+    else:
+        lo_span, hi_span = min(x_span[0], x_span[1]), max(x_span[0], x_span[1])
+        seed_spans = []
+        cursor = lo_span
+        for window_index, stationary_window in enumerate(location["windows"]):
+            if stationary_window["lo"] > cursor:
+                seed_spans.append((cursor, stationary_window["lo"], None))
+            cuts = stationary_window["cuts"]
+            for piece_lo, piece_hi in zip(cuts[:-1], cuts[1:]):
+                if piece_hi > piece_lo:
+                    seed_spans.append((piece_lo, piece_hi, window_index))
+            cursor = max(cursor, stationary_window["hi"])
+        if hi_span > cursor:
+            seed_spans.append((cursor, hi_span, None))
+        reversed_span = x_span[0] > x_span[1]
+        for seed_lo, seed_hi, seed_window_index in seed_spans:
+            seed_a, seed_b = (seed_hi, seed_lo) if reversed_span else (seed_lo, seed_hi)
+            _add_leaf(
+                _make_leaf(
+                    seed_a,
+                    seed_b,
+                    0,
+                    None,
+                    {},
+                    {},
+                    {},
+                    window=seed_window_index is not None,
+                    window_index=seed_window_index,
+                )
+            )
 
     running_stop = False
     node_limited = False
@@ -3717,8 +4661,16 @@ def _adaptive_levin(
         # Such a leaf's error is +inf, so it is chosen before every finite one, and it must not
         # be found floor-limited: "residual <= floor" is trivially true against +inf. It is
         # bisected until its floor is finite, or it reaches depth_max.
+        #
+        # The exit is barred on every window leaf and every guarded leaf (prompt 07 section 0.2
+        # (ii)): they are never floor-limited, and stay refinable until depth_max.
         phase_err = region.phase_err
-        if np.isfinite(phase_err) and region.abserr <= phase_err:
+        if (
+            not region.window
+            and not leaf.guarded
+            and np.isfinite(phase_err)
+            and region.abserr <= phase_err
+        ):
             if _test_only_bypass_roundoff_premise:
                 floor_limited = True
             else:
@@ -3763,6 +4715,8 @@ def _adaptive_levin(
             new_rel_history,
             new_p_ratios_history,
             halves=grandchildren[0] if grandchildren is not None else None,
+            window=region.window,
+            window_index=leaf.window_index,
         )
         right = _make_leaf(
             c,
@@ -3773,9 +4727,37 @@ def _adaptive_levin(
             new_rel_history,
             new_p_ratios_history,
             halves=grandchildren[1] if grandchildren is not None else None,
+            window=region.window,
+            window_index=leaf.window_index,
         )
 
         num_splits += 1
+
+        # Section 1.3's rule: count this bisection against its window if the halves barely change
+        # the value and do not lower the error (QUADPACK's iroff1); see the constants' comment.
+        stop_window = None
+        if leaf.window_index is not None:
+            value_halves = left.region.value_own + right.region.value_own
+            error_halves = _error_for_ordering(left.error) + _error_for_ordering(
+                right.error
+            )
+            error_parent = _error_for_ordering(leaf.error)
+            error_flat = error_halves >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO * error_parent
+            left.fell_at_last_bisection = not error_flat
+            right.fell_at_last_bisection = not error_flat
+            if (
+                np.fabs(value_halves - region.value_own)
+                <= _LEVIN_WINDOW_IROFF1_VALUE_RTOL * np.fabs(value_halves)
+                and error_flat
+            ):
+                window_counts[leaf.window_index] = (
+                    window_counts.get(leaf.window_index, 0) + 1
+                )
+                if (
+                    window_counts[leaf.window_index] >= _LEVIN_WINDOW_IROFF1_LIMIT
+                    and leaf.window_index not in windows_stopped
+                ):
+                    stop_window = leaf.window_index
 
         _remove_leaf(leaf)
         leaf.dataL = None
@@ -3783,6 +4765,8 @@ def _adaptive_levin(
         leaf.grandchildren = None
         _add_leaf(left)
         _add_leaf(right)
+        if stop_window is not None:
+            _stop_window(stop_window)
 
     leaves_ascending = _leaves_ascending()
     used_regions = [leaf.region for leaf in leaves_ascending]
@@ -3857,6 +4841,15 @@ def _adaptive_levin(
         if region.trusted is None and not region.phase_limited:
             num_unchecked = num_unchecked + 1
 
+    # The stationary-point guard's returned counts (prompt 07 section 1.5). Every guarded leaf
+    # below depth_max was bisected (its error is +inf, so the budget cannot stop the loop while
+    # one is in the partition, and it is never floor-limited), so the guarded leaves returned are
+    # those re-solved at depth_max.
+    num_window_pieces = sum(1 for region in used_regions if region.window)
+    num_guard_at_depth_max_returned = sum(
+        1 for region in used_regions if region.guard_at_depth_max
+    )
+
     # guarded exactly as the per-region relative error is guarded, and for the same reason
     relerr_total = abserr_total / max(np.fabs(val), atol)
 
@@ -3866,10 +4859,13 @@ def _adaptive_levin(
     # or floor-limited (round-off, phase_limited). And the call is not converged while a leaf it
     # returns is untrusted (the trust check one level down; such a leaf is at depth_max). A call
     # that stopped node-limited does not meet it either: there sum e'_i meets the request and
-    # |sum E| holds the call above it.
+    # |sum E| holds the call above it. Nor is it converged while it returns a guarded leaf
+    # re-solved at depth_max (prompt 07 section 1.4).
     requested_total = max(atol, rtol * np.fabs(val))
     budget_met = abserr_total <= requested_total
-    converged = budget_met and num_untrusted == 0
+    converged = (
+        budget_met and num_untrusted == 0 and num_guard_at_depth_max_returned == 0
+    )
 
     _logger.debug(
         "adaptive_levin (%s): global budget | %d leaves, %d bisections, %d floor-limited, "
@@ -3925,6 +4921,13 @@ def _adaptive_levin(
                 num_at_depth_max,
                 num_untrusted,
                 num_phase_limited,
+            )
+        if num_guard_at_depth_max_returned > 0:
+            _logger.warning(
+                "   -- %d leaves held a sign change of a phase rate on their nodes at depth_max "
+                "(the stationary-point guard) and were re-solved by the nested Clenshaw-Curtis "
+                "pair; the call is not converged while one is returned",
+                num_guard_at_depth_max_returned,
             )
 
     # Health check. If the requested accuracy is not attainable -- typically because the caller has
@@ -4057,6 +5060,46 @@ def _adaptive_levin(
         "num_solves_total": num_solves_direct + num_solves_lstsq + num_solves_pinv,
         "chebyshev_min_order": chebyshev_min_order,
         "max_depth": max_depth,
+        # The stationary-point guard (prompts/levin-phase-floor/07-stationary-point-guard.md
+        # section 1.5; see this function's docstring): each located point, with its window; each
+        # merged window, with its piece cuts; the minima found and not located (lambda at or above
+        # _LEVIN_COALESCENCE_LAMBDA); the window leaves returned; the leaves found guarded when
+        # made, returned or bisected; and the guarded leaves re-solved by the nested pair at
+        # depth_max, none of which may be returned by a converged call. All empty or zero when
+        # the basis supplies no rates and no leaf is guarded.
+        "stationary_points": (
+            [dict(point) for point in location["points"]]
+            if location is not None
+            else []
+        ),
+        "stationary_windows": (
+            [
+                {
+                    "lo": stationary_window["lo"],
+                    "hi": stationary_window["hi"],
+                    "cuts": list(stationary_window["cuts"]),
+                    "points": list(stationary_window["points"]),
+                    # section 1.3's rule: the window's count of iroff1 bisections, and, if the
+                    # rule stopped it, after which bisection of the call, how many of its leaves
+                    # there were then, how many of them a bisection had just lowered the error of
+                    # (fell_at_last_bisection), and their deepest depth
+                    "iroff1_count": window_counts.get(window_index, 0),
+                    "stopped": window_index in windows_stopped,
+                    **windows_stopped.get(window_index, {}),
+                }
+                for window_index, stationary_window in enumerate(location["windows"])
+            ]
+            if location is not None
+            else []
+        ),
+        "unlocated_minima": (
+            [dict(point) for point in location["unlocated_minima"]]
+            if location is not None
+            else []
+        ),
+        "num_window_pieces": num_window_pieces,
+        "num_guarded_regions": num_guarded_regions,
+        "num_guard_at_depth_max": num_guard_at_depth_max,
     }
 
 
@@ -4406,7 +5449,15 @@ def adaptive_levin_sincos(
           * "theta_deriv" (optional) -- callable, theta'(x). When supplied, it is used directly
             instead of differentiating a sampled theta(x) with the spectral differentiation
             matrix; this avoids inheriting rounding error from the magnitude of the raw phase
-            into the derivative estimate.
+            into the derivative estimate. Since prompts/levin-phase-floor/
+            07-stationary-point-guard.md it also drives the stationary-point location: the
+            driver scans it over x_span before integrating, locates every sign change of theta'
+            and every interior minimum of |theta'| deep enough to act as a nearly coalescing
+            pair, and integrates a window round each directly (see "stationary_points" below and
+            _adaptive_levin()). It must be the closed form of theta's derivative. Without it
+            nothing is located, and the only protection at a stationary point is the guard that
+            never returns a Levin subinterval whose theta' changes sign on its own nodes, which
+            misses a pair of sign changes between two adjacent nodes.
           * "theta_abserr" (optional) -- scalar, or callable of x, giving a declared absolute
             error of the phase itself, in radians (recommendation 5.2). When supplied, each
             region's round-off floor gains an endpoint term proportional to it. This is the only
@@ -4531,6 +5582,15 @@ def adaptive_levin_sincos(
             and "num_solves_total" is their sum; prefer these in new code, e.g. to check what
             fraction of solves took the fast LU path (audit sec 4.4) via
             num_solves_direct / num_solves_total.
+          * "stationary_points", "stationary_windows", "unlocated_minima", "num_window_pieces",
+            "num_guarded_regions", "num_guard_at_depth_max" -- the stationary-point guard (as of
+            prompts/levin-phase-floor/07-stationary-point-guard.md): each located point (its x,
+            kind "root", "minimum" or "end", theta' there, lambda for a minimum, and its window),
+            each merged window with its piece cuts, the minima found but not located, the window
+            subintervals returned, the subintervals found guarded (theta' changing sign on their
+            nodes) when made, and those re-solved by the Clenshaw-Curtis rule at depth_max, which
+            make "converged" False. Each used_interval carries window, guarded and
+            guard_at_depth_max. See _adaptive_levin().
     """
     if len(f) != 2:
         raise ValueError(

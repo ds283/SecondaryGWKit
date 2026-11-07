@@ -1,0 +1,60 @@
+# levin-phase-floor 07: section 2.4, the LiouvilleGreen draws compared
+# written 2026-11-07T10:09:39+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script lg_compare_07.py sha256 b92739259d398dd4bc59fbf440327b4e5d4e6c6f674a907ce288cf8844164aa6
+# prov.py sha256 9e2adc86dd624417822eb68ef554a6e5c23c817a824a8f778df712055d449c76
+# AdaptiveLevin/levin_quadrature.py sha256 13294b2ac3e3e3a480a6735a263ea8abe205ccdaada12939c13cd20edad884a4
+# input docs/levin-phase-floor/07/calibration/out/lg_seeded_draws.jsonl sha256 6979a3b46c591de592f4fa5fdcd2a9c680e9a50e0c4de99c03b877d91c377b48
+# HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? docs/levin-phase-floor/07/
+# uptime at start: 10:09  up 7 days, 12:30, 1 user, load averages: 24.65 28.28 56.31
+# the run's header:
+#   # levin-phase-floor 07: section 2 test 9, the LiouvilleGreen seeded draws (run)
+#   # written 2026-11-07T09:18:06+00:00 on mps026088.phys.susx.ac.uk
+#   # python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+#   # script lg_seeded_draws.py sha256 b8c569de119a046bd38e29d702f480a30dbd1da0feeee02fbca3de7034524b36
+#   # prov.py sha256 9e2adc86dd624417822eb68ef554a6e5c23c817a824a8f778df712055d449c76
+#   # AdaptiveLevin/levin_quadrature.py sha256 13294b2ac3e3e3a480a6735a263ea8abe205ccdaada12939c13cd20edad884a4
+#   # input LiouvilleGreen/tests/test_3bessel_analytic.py sha256 3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c
+#   # input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+#   # input LiouvilleGreen/bessel_phase.py sha256 bdee05b578d2f2da61ba2b09ed541cf1fe0b37a7c11ec1d7ae56e439c75210e8
+#   # HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+#   # tree dirty: yes; git status --short:
+#   #      M AdaptiveLevin/levin_quadrature.py
+#   #      M ComputeTargets/QuadSourceIntegral.py
+#   #     ?? docs/levin-phase-floor/07/
+#   # uptime at start: 9:18  up 7 days, 11:38, 1 user, load averages: 125.58 64.64 36.81
+#   # units 160: seeds 0-19 x modes ('parent', 'commit') x tests ('test_YJJ_log_singularity', 'test_JJJ', 'test_YJJ', 'test_abserr_bounds_truth'); processes 3; parent bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+#   # prompt 07: each unit in its own process (lg_seeded_draws.py unit), wall-clock limit 1200.0 s
+#   # wall time 3063.1 s; uptime at end: 10:09  up 7 days, 12:29, 1 user, load averages: 21.64 28.15 57.28
+
+units 160; (seed, test) pairs 80; unpaired [[0, 'test_JJJ', 20, 0], [4, 'test_JJJ', 20, 0], [11, 'test_JJJ', 20, 0], [13, 'test_JJJ', 20, 0], [17, 'test_JJJ', 20, 0]]
+
+1. Tests failing under the commit that pass under the parent: 5
+   seed 0 test_JJJ: did_not_finish
+   seed 4 test_JJJ: did_not_finish
+   seed 11 test_JJJ: did_not_finish
+   seed 13 test_JJJ: did_not_finish
+   seed 17 test_JJJ: did_not_finish
+   units not passing in either mode: [(0, 'test_JJJ', 'pass', 'did_not_finish'), (4, 'test_JJJ', 'pass', 'did_not_finish'), (11, 'test_JJJ', 'pass', 'did_not_finish'), (13, 'test_JJJ', 'pass', 'did_not_finish'), (17, 'test_JJJ', 'pass', 'did_not_finish')]
+
+2. Calls paired 4220; locating nothing and guarding nothing 3803; bit-identical to the parent 3803; not identical 0
+
+3. Calls locating a point: 417 (point kinds {'root': 416, 'minimum': 1}); calls guarding a leaf: 0
+   seed | test | # | points (kind x [lambda]) | window pieces | parent value, abserr, conv | commit value, abserr, conv, node_limited | |dv|/abserr_parent, |dv|/abserr_commit | regions p->c | depth p->c
+   0 | test_YJJ_log_singularity | 83 | root 2.0071445 | 65 | -2.5535483469e-01, 8.87e-10, True | -2.5535483469e-01, 8.57e-10, True, False | 2.07e-06, 2.14e-06 | 7->68 | 5->4
+   0 | test_YJJ_log_singularity | 85 | root 1.2777228 | 35 | 1.3944637583e-01, 1.21e-09, True | 1.3944637583e-01, 1.35e-09, True, False | 0.00133, 0.00119 | 6->38 | 5->4
+   0 | test_YJJ_log_singularity | 91 | root 3.1927464 | 49 | 6.3903612364e-01, 3.22e-10, True | 6.3903612364e-01, 3.49e-09, True, False | 0.000116, 1.07e-05 | 9->51 | 5->7
+   0 | test_YJJ_log_singularity | 93 | root 2.4486105 | 63 | 5.3505907934e-01, 3.49e-09, True | 5.3505907934e-01, 6.13e-10, True, False | 5.44e-06, 3.1e-05 | 11->65 | 7->5
+   0 | test_YJJ_log_singularity | 99 | root 4.3476241 | 61 | 1.4656622224e+00, 1.78e-09, True | 1.4656622224e+00, 5.03e-09, True, False | 7.84e-06, 2.78e-06 | 21->63 | 9->15
+   0 | test_YJJ_log_singularity | 101 | root 3.6008274 | 43 | 9.0445596776e-01, 5.77e-09, True | 9.0445596776e-01, 7.87e-09, True, False | 1.91e-05, 1.4e-05 | 10->45 | 7->6
+   0 | test_YJJ_log_singularity | 107 | root 5.4992763 | 52 | 2.2407740246e+00, 1.16e-08, True | 2.2407740246e+00, 1.16e-08, True, False | 8.05e-05, 8.04e-05 | 10->53 | 6->8
+   0 | test_YJJ_log_singularity | 109 | root 4.7522019 | 58 | 1.2675963204e+00, 7.74e-09, True | 1.2675963204e+00, 5.08e-09, True, False | 8.77e-05, 0.000134 | 9->59 | 6->9
+   0 | test_YJJ_log_singularity | 115 | root 6.6506049 | 44 | 3.0064849455e+00, 2.02e-08, True | 3.0064849455e+00, 9.94e-09, True, False | 1.27e-05, 2.57e-05 | 17->45 | 8->4
+   0 | test_YJJ_log_singularity | 117 | root 5.9035025 | 27 | 1.6297576693e+00, 7.34e-09, True | 1.6297576693e+00, 7.21e-09, True, False | 0.00345, 0.00351 | 13->28 | 7->2
+   0 | test_YJJ_log_singularity | 123 | root 7.801901 | 34 | 3.7708437485e+00, 2.60e-08, True | 3.7708437485e+00, 4.08e-09, True, False | 1.54e-05, 9.86e-05 | 11->35 | 6->3
+   0 | test_YJJ_log_singularity | 125 | root 7.0547959 | 45 | 1.9917858402e+00, 6.59e-09, True | 1.9917858402e+00, 5.77e-09, True, False | 4.15e-06, 4.74e-06 | 10->46 | 5->6
+   0 | test_YJJ_log_singularity | 131 | root 8.9531939 | 43 | 4.5350267641e+00, 3.20e-08, True | 4.5350267641e+00, 3.51e-08, True, False | 1.95e-07, 1.77e-07 | 9->44 | 5->5

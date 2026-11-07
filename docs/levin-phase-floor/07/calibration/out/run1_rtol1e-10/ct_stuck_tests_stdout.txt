@@ -1,0 +1,79 @@
+
+[oracle 2] b=0 together x_resp=60 exact: total=-1.196660220570e-10 quad=-1.196660220570e-10 rel=2.160e-15 (quad err 2.2e-13) regimes=['-', 'r', 'Gr', 'Gqr']
+
+[oracle 2] b=0 T-first x_resp=60 exact: total=-3.861167962962e-09 quad=-3.861167962962e-09 rel=2.785e-15 (quad err 1.0e-13) regimes=['-', 'r', 'qr', 'Gqr']
+
+[oracle 2] b=0 q-smooth x_resp=60 exact: total=-2.292731245284e-10 quad=-2.292731245284e-10 rel=3.179e-14 (quad err 6.5e-13) regimes=['G', 'Gr']
+
+[oracle 2] b=0.2 together x_resp=60 exact: total=+2.044830055377e-11 quad=+2.044830055377e-11 rel=1.196e-13 (quad err 2.8e-13) regimes=['-', 'G', 'Gr', 'Gqr']
+
+[oracle 2] b=0.2 T-first x_resp=60 exact: total=+2.409158654220e-09 quad=+2.409158654220e-09 rel=2.232e-15 (quad err 5.9e-13) regimes=['-', 'r', 'qr', 'Gqr']
+
+[oracle 2] b=0.2 q-smooth x_resp=60 exact: total=-1.125643845184e-10 quad=-1.125643845184e-10 rel=2.549e-14 (quad err 7.0e-13) regimes=['G', 'Gr']
+   #21 analytic J4 span [-7.457061423316192, -4.749011222213982] rtol 1e-10 depth 10/10 window leaves 3072 at cap 3072 untrusted window 0 e' window 2.17e-17 other 0 request 9.02e-18 converged False wall 52.4 s
+      parent: converged False abserr 2.38e-17 regions 2 depth 1 floor-limited 2 wall 0.1 s
+      bar lifted: converged False abserr 2.36e-17 regions 3 depth 0 window floor-limited 3 untrusted window 0 wall 0.1 s
+   #22 analytic Y4 span [-7.457061423316192, -4.749011222213982] rtol 1e-10 depth 8/10 window leaves 19 at cap 0 untrusted window 0 e' window 2.21e-17 other 0 request 7.93e-17 converged True wall 1.3 s
+   #78 analytic J4 span [-7.2543288692621095, -4.5462786681599] rtol 1e-10 depth 10/10 window leaves 2048 at cap 2048 untrusted window 0 e' window 1.24e-16 other 0 request 4.59e-17 converged False wall 39.5 s
+      parent: converged False abserr 1.71e-16 regions 1 depth 0 floor-limited 1 wall 0.0 s
+      bar lifted: converged False abserr 1.66e-16 regions 2 depth 0 window floor-limited 2 untrusted window 0 wall 0.1 s
+   #79 analytic Y4 span [-7.2543288692621095, -4.5462786681599] rtol 1e-10 depth 0/10 window leaves 2 at cap 0 untrusted window 0 e' window 1.66e-16 other 0 request 2.83e-16 converged True wall 0.1 s
+   #89 analytic J2 span [-6.848863761153946, -4.5462786681599] rtol 1e-10 depth 10/10 window leaves 2048 at cap 2048 untrusted window 0 e' window 3.36e-16 other 0 request 1.18e-16 converged False wall 44.1 s
+      parent: converged False abserr 3.47e-16 regions 1 depth 0 floor-limited 1 wall 0.0 s
+      bar lifted: converged False abserr 3.43e-16 regions 2 depth 0 window floor-limited 2 untrusted window 0 wall 0.1 s
+   #90 analytic Y2 span [-6.848863761153946, -4.5462786681599] rtol 1e-10 depth 1/10 window leaves 3 at cap 0 untrusted window 0 e' window 3.43e-16 other 0 request 2.26e-15 converged True wall 0.2 s
+/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/domenech.py:680: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  the requested tolerance from being achieved.  The error may be 
+  underestimated.
+  piece, piece_err = quad(
+/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/tests/domenech.py:680: IntegrationWarning: Extremely bad integrand behavior occurs at some points of the
+  integration interval.
+  piece, piece_err = quad(
+/Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The occurrence of roundoff error is detected, which prevents 
+  the requested tolerance from being achieved.  The error may be 
+  underestimated.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+   #78 analytic J2 span [-6.848863761153946, -1.7530706587173825] rtol 1e-12 depth 10/10 window leaves 3072 at cap 3072 untrusted window 0 e' window 3.94e-16 other 0 request 5.55e-18 converged False wall 45.0 s
+      parent: converged False abserr 3.92e-16 regions 3 depth 2 floor-limited 3 wall 0.1 s
+      bar lifted: converged False abserr 4.38e-16 regions 4 depth 1 window floor-limited 4 untrusted window 0 wall 0.1 s
+   #79 analytic Y2 span [-6.848863761153946, -1.7530706587173825] rtol 1e-12 depth 10/10 window leaves 3072 at cap 3072 untrusted window 0 e' window 3.94e-16 other 0 request 2.53e-17 converged False wall 45.4 s
+      parent: converged False abserr 3.92e-16 regions 3 depth 2 floor-limited 3 wall 0.1 s
+      bar lifted: converged False abserr 4.38e-16 regions 4 depth 1 window floor-limited 4 untrusted window 0 wall 0.1 s
+   #101 analytic J2 span [-6.848863761153946, -4.0354530443939085] rtol 1e-12 depth 10/10 window leaves 2048 at cap 2048 untrusted window 0 e' window 3.59e-16 other 0 request 5.48e-19 converged False wall 42.2 s
+      parent: converged False abserr 3.59e-16 regions 1 depth 0 floor-limited 1 wall 0.0 s
+      bar lifted: converged False abserr 3.57e-16 regions 2 depth 0 window floor-limited 2 untrusted window 0 wall 0.1 s
+   #102 analytic Y2 span [-6.848863761153946, -4.0354530443939085] rtol 1e-12 depth 10/10 window leaves 2048 at cap 2048 untrusted window 0 e' window 3.59e-16 other 0 request 2.59e-17 converged False wall 42.5 s
+      parent: converged False abserr 3.59e-16 regions 1 depth 0 floor-limited 1 wall 0.0 s
+      bar lifted: converged False abserr 3.57e-16 regions 2 depth 0 window floor-limited 2 untrusted window 0 wall 0.1 s
+   #124 analytic J2 span [-6.848863761153946, -5.239425848719845] rtol 1e-12 depth 10/10 window leaves 2048 at cap 2048 untrusted window 0 e' window 2.56e-16 other 0 request 1.96e-18 converged False wall 44.6 s
+      parent: converged False abserr 3.07e-16 regions 1 depth 0 floor-limited 1 wall 0.0 s
+      bar lifted: converged False abserr 2.99e-16 regions 2 depth 0 window floor-limited 2 untrusted window 0 wall 0.5 s
+   #125 analytic Y2 span [-6.848863761153946, -5.239425848719845] rtol 1e-12 depth 10/10 window leaves 2048 at cap 2048 untrusted window 0 e' window 2.56e-16 other 0 request 1.69e-17 converged False wall 44.0 s
+      parent: converged False abserr 3.07e-16 regions 1 depth 0 floor-limited 1 wall 0.0 s
+      bar lifted: converged False abserr 2.99e-16 regions 2 depth 0 window floor-limited 2 untrusted window 0 wall 0.5 s
+   #21 analytic J4 span [-7.7651544930281, -1.9558032127714648] rtol 1e-12 depth 10/10 window leaves 18432 at cap 18432 untrusted window 0 e' window 2.75e-17 other 9.78e-22 request 1.87e-19 converged False wall 162.1 s
+      parent: converged False abserr 2.99e-17 regions 3 depth 2 floor-limited 3 wall 0.1 s
+      bar lifted: converged False abserr 3.02e-17 regions 19 depth 0 window floor-limited 18 untrusted window 0 wall 0.3 s
+   #22 analytic Y4 span [-7.7651544930281, -1.9558032127714648] rtol 1e-12 depth 10/10 window leaves 18432 at cap 18432 untrusted window 0 e' window 2.75e-17 other 9.78e-22 request 1.14e-18 converged False wall 162.9 s
+      parent: converged False abserr 2.99e-17 regions 3 depth 2 floor-limited 3 wall 0.1 s
+      bar lifted: converged False abserr 3.02e-17 regions 19 depth 0 window floor-limited 18 untrusted window 0 wall 0.3 s
+   #44 analytic J4 span [-7.7651544930281, -4.238185598447991] rtol 1e-12 depth 10/10 window leaves 5120 at cap 5120 untrusted window 0 e' window 2.73e-17 other 0 request 1.6e-19 converged False wall 72.2 s
+      parent: converged False abserr 3.23e-17 regions 3 depth 2 floor-limited 3 wall 0.1 s
+      bar lifted: converged False abserr 3.01e-17 regions 5 depth 0 window floor-limited 5 untrusted window 0 wall 0.1 s
+   #45 analytic Y4 span [-7.7651544930281, -4.238185598447991] rtol 1e-12 depth 10/10 window leaves 5120 at cap 5120 untrusted window 0 e' window 2.73e-17 other 0 request 1.16e-18 converged False wall 72.1 s
+      parent: converged False abserr 3.23e-17 regions 3 depth 2 floor-limited 3 wall 0.1 s
+      bar lifted: converged False abserr 3.01e-17 regions 5 depth 0 window floor-limited 5 untrusted window 0 wall 0.1 s
+   #67 analytic J4 span [-7.7651544930281, -5.442158402773927] rtol 1e-12 depth 10/10 window leaves 2048 at cap 2048 untrusted window 0 e' window 1.98e-17 other 0 request 1.45e-19 converged False wall 33.8 s
+      parent: converged False abserr 2.85e-17 regions 1 depth 0 floor-limited 1 wall 0.0 s
+      bar lifted: converged False abserr 2.25e-17 regions 2 depth 0 window floor-limited 2 untrusted window 0 wall 0.1 s
+   #68 analytic Y4 span [-7.7651544930281, -5.442158402773927] rtol 1e-12 depth 10/10 window leaves 2048 at cap 2048 untrusted window 0 e' window 1.98e-17 other 0 request 1.05e-18 converged False wall 34.7 s
+      parent: converged False abserr 2.85e-17 regions 1 depth 0 floor-limited 1 wall 0.0 s
+      bar lifted: converged False abserr 2.25e-17 regions 2 depth 0 window floor-limited 2 untrusted window 0 wall 0.1 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/out/ct_stuck_tests.json

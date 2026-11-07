@@ -1,0 +1,253 @@
+@@ (J0,J0,J0):
+   k=4.237667072472735, q=3.8139765744074823, s=2.160800746071141 satisfies the triangle inequality
+   quadrature result = 0.02248900831966942
+   analytic result = 0.02248900831967066
+   relerr=5.5075e-14, abserr=1.2386e-15
+   reported abserr=2.3564e-12, converged=True, phase_limited=True
+@@ (J1,J1,J0):
+   k=1.3686920764355206, q=2.605246134706182, s=2.0841772735070303 satisfies the triangle inequality
+   quadrature result = 0.06397071445969155
+   analytic result = 0.06397071445968784
+   relerr=5.7923e-14, abserr=3.7054e-15
+   reported abserr=3.5983e-12, converged=True, phase_limited=True
+@@ (J2,J2,J0):
+   k=3.9406130862703863, q=1.5862323577867448, s=2.435325075346544 satisfies the triangle inequality
+   quadrature result = 0.04686861652382742
+   analytic result = 0.046868616523637635
+   relerr=4.0493e-12, abserr=1.8979e-13
+   reported abserr=3.2836e-12, converged=False, phase_limited=True
+@@ (J2,J2,J2):
+   k=2.9585719933296533, q=4.5497531374571425, s=2.5729655935052125 satisfies the triangle inequality
+   quadrature result = 0.0033332810580767075
+   analytic result = 0.0033332810580716755
+   relerr=1.5096e-12, abserr=5.032e-15
+   reported abserr=1.1998e-12, converged=False, phase_limited=True
+@@ (J2,J3,J1):
+   k=1.4810054375585489, q=3.8034406003703976, s=3.130008083709125 satisfies the triangle inequality
+   quadrature result = 0.010412123902126702
+   analytic result = 0.010412123902151524
+   relerr=2.384e-12, abserr=2.4822e-14
+   reported abserr=1.3498e-12, converged=False, phase_limited=True
+# input LiouvilleGreen/tests/test_3bessel_analytic.py sha256 3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c
+# input LiouvilleGreen/three_bessel_integrals.py sha256 fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e
+# HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? docs/levin-phase-floor/07/
+# uptime at start: 10:11  up 7 days, 12:31, 1 user, load averages: 20.23 26.52 53.16
+
+seed 0 test_JJJ: 20 calls, outcome under the cap pass, 92.9 s
+   #11 span [0.43451811659206757, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 74 at cap 6 untrusted window 1 e' window 1.58e-11 other 3.81e-12 request 2.72e-11 converged False wall 1.1 s
+      parent: converged True abserr 1.5e-11 regions 27 depth 8 floor-limited 3 wall 0.3 s
+      bar lifted: converged True abserr 1.97e-11 regions 50 depth 3 window floor-limited 10 untrusted window 0 wall 0.6 s
+   #14 span [-0.04917942646450173, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 4.54e-12 other 1.56e-15 request 2.59e-12 converged False wall 84.1 s
+      parent: converged False abserr 5.05e-12 regions 40 depth 8 floor-limited 40 wall 0.3 s
+      bar lifted: converged False abserr 4.93e-12 regions 101 depth 5 window floor-limited 85 untrusted window 0 wall 0.7 s
+@@ (J0,J0,J0):
+   k=1.2566356397134293, q=0.6055135677305075, s=2.040685388792337 does not satisfy the triangle inequality
+   quadrature result = -4.575264965658361e-13
+   analytic result = 0.0
+   abserr=4.5753e-13
+   reported abserr=5.4845e-11, converged=True, phase_limited=True
+@@ (J1,J1,J0):
+   k=0.8593641269318104, q=0.4259239688299906, s=2.0677959709768667 does not satisfy the triangle inequality
+   quadrature result = -5.990902218755423e-13
+   analytic result = 0.0
+   abserr=5.9909e-13
+   reported abserr=2.4171e-11, converged=False, phase_limited=True
+@@ (J2,J2,J0):
+   k=4.597979711129823, q=4.022216522329462, s=3.849296752276649 satisfies the triangle inequality
+   quadrature result = 0.0006087230650739057
+   analytic result = 0.0006087230650751367
+   relerr=2.0223e-12, abserr=1.231e-15
+   reported abserr=3.5994e-13, converged=False, phase_limited=True
+@@ (J2,J2,J2):
+   k=1.1874480608825566, q=2.7297320400565868, s=1.4557449528631063 does not satisfy the triangle inequality
+   quadrature result = 5.5462578973930476e-14
+   analytic result = 0.0
+   abserr=5.5463e-14
+   reported abserr=7.449e-12, converged=False, phase_limited=True
+@@ (J2,J3,J1):
+   k=0.9460561934983077, q=0.6202981329144976, s=1.150562119636691 satisfies the triangle inequality
+   quadrature result = -0.3659003350418448
+   analytic result = -0.36590033504258185
+   relerr=-2.0143e-12, abserr=7.3702e-13
+   reported abserr=4.8687e-11, converged=False, phase_limited=True
+# HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? docs/levin-phase-floor/07/
+# uptime at start: 10:11  up 7 days, 12:31, 1 user, load averages: 20.23 26.52 53.16
+
+seed 0 test_JJJ: 20 calls, outcome under the cap pass, 92.9 s
+   #11 span [0.43451811659206757, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 74 at cap 6 untrusted window 1 e' window 1.58e-11 other 3.81e-12 request 2.72e-11 converged False wall 1.1 s
+      parent: converged True abserr 1.5e-11 regions 27 depth 8 floor-limited 3 wall 0.3 s
+      bar lifted: converged True abserr 1.97e-11 regions 50 depth 3 window floor-limited 10 untrusted window 0 wall 0.6 s
+   #14 span [-0.04917942646450173, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 4.54e-12 other 1.56e-15 request 2.59e-12 converged False wall 84.1 s
+      parent: converged False abserr 5.05e-12 regions 40 depth 8 floor-limited 40 wall 0.3 s
+      bar lifted: converged False abserr 4.93e-12 regions 101 depth 5 window floor-limited 85 untrusted window 0 wall 0.7 s
+seed 4 test_JJJ: 20 calls, outcome under the cap pass, 71.9 s
+   #14 span [0.7240732168480741, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 1.18e-11 other 3.68e-15 request 1.29e-14 converged False wall 64.1 s
+      parent: converged False abserr 1.46e-11 regions 52 depth 9 floor-limited 52 wall 0.3 s
+      bar lifted: converged False abserr 1.48e-11 regions 88 depth 4 window floor-limited 72 untrusted window 0 wall 0.5 s
+@@ (J0,J0,J0):
+   k=2.3166598121981115, q=2.8428846917944304, s=4.628631861716274 satisfies the triangle inequality
+   quadrature result = 0.025764144780578327
+   analytic result = 0.025764144780578323
+   relerr=1.3466e-16, abserr=3.4694e-18
+   reported abserr=3.0726e-12, converged=True, phase_limited=True
+@@ (J1,J1,J0):
+   k=2.3816853434888894, q=2.588422238005129, s=2.9781856613644955 satisfies the triangle inequality
+   quadrature result = 0.012152904820671603
+   analytic result = 0.012152904820675955
+   relerr=3.5814e-13, abserr=4.3524e-15
+   reported abserr=1.5722e-12, converged=False, phase_limited=True
+@@ (J2,J2,J0):
+   k=1.0048356848888955, q=2.608352331304847, s=3.1864253290623297 satisfies the triangle inequality
+   quadrature result = -0.01890840324236389
+   analytic result = -0.018908403242317334
+   relerr=-2.4622e-12, abserr=4.6557e-14
+   reported abserr=2.3964e-12, converged=False, phase_limited=True
+@@ (J2,J2,J2):
+   k=3.9855866753477684, q=0.5612049355231705, s=1.586666186860175 does not satisfy the triangle inequality
+   quadrature result = -2.803920290395112e-14
+   analytic result = 0.0
+   abserr=2.8039e-14
+   reported abserr=3.9791e-12, converged=False, phase_limited=True
+@@ (J2,J3,J1):
+   k=0.544285633710013, q=4.06725821839917, s=3.4978485644520716 does not satisfy the triangle inequality
+   quadrature result = 1.1448827996751731e-12
+   analytic result = 0.0
+   abserr=1.1449e-12
+   reported abserr=4.6671e-12, converged=False, phase_limited=True
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? docs/levin-phase-floor/07/
+# uptime at start: 10:11  up 7 days, 12:31, 1 user, load averages: 20.23 26.52 53.16
+
+seed 0 test_JJJ: 20 calls, outcome under the cap pass, 92.9 s
+   #11 span [0.43451811659206757, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 74 at cap 6 untrusted window 1 e' window 1.58e-11 other 3.81e-12 request 2.72e-11 converged False wall 1.1 s
+      parent: converged True abserr 1.5e-11 regions 27 depth 8 floor-limited 3 wall 0.3 s
+      bar lifted: converged True abserr 1.97e-11 regions 50 depth 3 window floor-limited 10 untrusted window 0 wall 0.6 s
+   #14 span [-0.04917942646450173, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 4.54e-12 other 1.56e-15 request 2.59e-12 converged False wall 84.1 s
+      parent: converged False abserr 5.05e-12 regions 40 depth 8 floor-limited 40 wall 0.3 s
+      bar lifted: converged False abserr 4.93e-12 regions 101 depth 5 window floor-limited 85 untrusted window 0 wall 0.7 s
+seed 4 test_JJJ: 20 calls, outcome under the cap pass, 71.9 s
+   #14 span [0.7240732168480741, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 1.18e-11 other 3.68e-15 request 1.29e-14 converged False wall 64.1 s
+      parent: converged False abserr 1.46e-11 regions 52 depth 9 floor-limited 52 wall 0.3 s
+      bar lifted: converged False abserr 1.48e-11 regions 88 depth 4 window floor-limited 72 untrusted window 0 wall 0.5 s
+seed 11 test_JJJ: 20 calls, outcome under the cap pass, 75.6 s
+   #9 span [0.8910557040931713, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 5.47e-12 other 3.03e-15 request 5.21e-13 converged False wall 68.9 s
+      parent: converged False abserr 5.82e-12 regions 49 depth 10 floor-limited 49 wall 0.2 s
+      bar lifted: converged False abserr 5.72e-12 regions 80 depth 4 window floor-limited 64 untrusted window 0 wall 0.4 s
+   #18 span [1.850734432850061, 27.631021115928547] rtol 1e-10 depth 6/10 window pieces 66 at cap 0 untrusted window 0 e' window 1.01e-11 other 2.8e-12 request 1.59e-11 converged True wall 1.2 s
+@@ (J0,J0,J0):
+   k=1.3691416094058206, q=3.4577641655262314, s=3.452001398278943 satisfies the triangle inequality
+   quadrature result = 0.04805904980875926
+   analytic result = 0.048059049808764534
+   relerr=1.0973e-13, abserr=5.2736e-15
+   reported abserr=3.9008e-12, converged=True, phase_limited=True
+@@ (J1,J1,J0):
+   k=4.261747190810658, q=1.0100484519813036, s=1.2297371839307938 does not satisfy the triangle inequality
+   quadrature result = 1.6746153075342107e-14
+   analytic result = 0.0
+   abserr=1.6746e-14
+   reported abserr=3.538e-12, converged=False, phase_limited=True
+@@ (J2,J2,J0):
+   k=0.8210835990252472, q=1.203298384254352, s=3.696715650842588 does not satisfy the triangle inequality
+   quadrature result = -3.169469894870325e-14
+   analytic result = 0.0
+   abserr=3.1695e-14
+   reported abserr=4.0386e-12, converged=False, phase_limited=True
+@@ (J2,J2,J2):
+   k=0.7380438115228087, q=2.7034422840503898, s=1.1481468994095296 does not satisfy the triangle inequality
+   quadrature result = 3.837902218251088e-14
+   analytic result = 0.0
+   abserr=3.8379e-14
+   reported abserr=1.2135e-11, converged=False, phase_limited=True
+@@ (J2,J3,J1):
+   k=1.5438180934404766, q=2.214743609121842, s=4.204516901466161 does not satisfy the triangle inequality
+   quadrature result = 3.932357911518025e-14
+   analytic result = 0.0
+   abserr=3.9324e-14
+   reported abserr=1.6432e-12, converged=False, phase_limited=True
+# uptime at start: 10:11  up 7 days, 12:31, 1 user, load averages: 20.23 26.52 53.16
+
+seed 0 test_JJJ: 20 calls, outcome under the cap pass, 92.9 s
+   #11 span [0.43451811659206757, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 74 at cap 6 untrusted window 1 e' window 1.58e-11 other 3.81e-12 request 2.72e-11 converged False wall 1.1 s
+      parent: converged True abserr 1.5e-11 regions 27 depth 8 floor-limited 3 wall 0.3 s
+      bar lifted: converged True abserr 1.97e-11 regions 50 depth 3 window floor-limited 10 untrusted window 0 wall 0.6 s
+   #14 span [-0.04917942646450173, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 4.54e-12 other 1.56e-15 request 2.59e-12 converged False wall 84.1 s
+      parent: converged False abserr 5.05e-12 regions 40 depth 8 floor-limited 40 wall 0.3 s
+      bar lifted: converged False abserr 4.93e-12 regions 101 depth 5 window floor-limited 85 untrusted window 0 wall 0.7 s
+seed 4 test_JJJ: 20 calls, outcome under the cap pass, 71.9 s
+   #14 span [0.7240732168480741, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 1.18e-11 other 3.68e-15 request 1.29e-14 converged False wall 64.1 s
+      parent: converged False abserr 1.46e-11 regions 52 depth 9 floor-limited 52 wall 0.3 s
+      bar lifted: converged False abserr 1.48e-11 regions 88 depth 4 window floor-limited 72 untrusted window 0 wall 0.5 s
+seed 11 test_JJJ: 20 calls, outcome under the cap pass, 75.6 s
+   #9 span [0.8910557040931713, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 5.47e-12 other 3.03e-15 request 5.21e-13 converged False wall 68.9 s
+      parent: converged False abserr 5.82e-12 regions 49 depth 10 floor-limited 49 wall 0.2 s
+      bar lifted: converged False abserr 5.72e-12 regions 80 depth 4 window floor-limited 64 untrusted window 0 wall 0.4 s
+   #18 span [1.850734432850061, 27.631021115928547] rtol 1e-10 depth 6/10 window pieces 66 at cap 0 untrusted window 0 e' window 1.01e-11 other 2.8e-12 request 1.59e-11 converged True wall 1.2 s
+seed 13 test_JJJ: 20 calls, outcome under the cap pass, 66.1 s
+   #17 span [0.8081946953613881, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 5.38e-12 other 2.36e-15 request 3.08e-12 converged False wall 60.1 s
+      parent: converged False abserr 5.75e-12 regions 49 depth 9 floor-limited 49 wall 0.2 s
+      bar lifted: converged False abserr 5.75e-12 regions 90 depth 5 window floor-limited 73 untrusted window 0 wall 0.6 s
+@@ (J0,J0,J0):
+   k=2.657721157591217, q=4.052784807881528, s=4.806424394186996 satisfies the triangle inequality
+   quadrature result = 0.01517067162436068
+   analytic result = 0.015170671624360246
+   relerr=2.8587e-14, abserr=4.3368e-16
+   reported abserr=1.9613e-12, converged=True, phase_limited=True
+@@ (J1,J1,J0):
+   k=1.5191643510458812, q=3.8539264452099684, s=3.5506773475327225 satisfies the triangle inequality
+   quadrature result = 0.014691243354617814
+   analytic result = 0.014691243354620754
+   relerr=2.0014e-13, abserr=2.9404e-15
+   reported abserr=1.2176e-12, converged=False, phase_limited=True
+@@ (J2,J2,J0):
+   k=3.340776980396769, q=0.6397940396943379, s=0.23199021607358136 does not satisfy the triangle inequality
+   quadrature result = -7.902012377769552e-14
+   analytic result = 0.0
+   abserr=7.902e-14
+   reported abserr=4.7829e-12, converged=True, phase_limited=True
+@@ (J2,J2,J2):
+   k=1.982438412267058, q=3.7573364612152838, s=1.336680460814788 does not satisfy the triangle inequality
+   quadrature result = -9.837291571612727e-15
+   analytic result = 0.0
+   abserr=9.8373e-15
+   reported abserr=3.2013e-12, converged=False, phase_limited=True
+@@ (J2,J3,J1):
+   k=2.557853085783366, q=1.6554319436741738, s=4.247006264729278 does not satisfy the triangle inequality
+   quadrature result = -2.301748201760656e-13
+   analytic result = 0.0
+   abserr=2.3017e-13
+   reported abserr=1.593e-12, converged=False, phase_limited=True
+   #11 span [0.43451811659206757, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 74 at cap 6 untrusted window 1 e' window 1.58e-11 other 3.81e-12 request 2.72e-11 converged False wall 1.1 s
+      parent: converged True abserr 1.5e-11 regions 27 depth 8 floor-limited 3 wall 0.3 s
+      bar lifted: converged True abserr 1.97e-11 regions 50 depth 3 window floor-limited 10 untrusted window 0 wall 0.6 s
+   #14 span [-0.04917942646450173, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 4.54e-12 other 1.56e-15 request 2.59e-12 converged False wall 84.1 s
+      parent: converged False abserr 5.05e-12 regions 40 depth 8 floor-limited 40 wall 0.3 s
+      bar lifted: converged False abserr 4.93e-12 regions 101 depth 5 window floor-limited 85 untrusted window 0 wall 0.7 s
+seed 4 test_JJJ: 20 calls, outcome under the cap pass, 71.9 s
+   #14 span [0.7240732168480741, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 1.18e-11 other 3.68e-15 request 1.29e-14 converged False wall 64.1 s
+      parent: converged False abserr 1.46e-11 regions 52 depth 9 floor-limited 52 wall 0.3 s
+      bar lifted: converged False abserr 1.48e-11 regions 88 depth 4 window floor-limited 72 untrusted window 0 wall 0.5 s
+seed 11 test_JJJ: 20 calls, outcome under the cap pass, 75.6 s
+   #9 span [0.8910557040931713, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 18432 at cap 18432 untrusted window 0 e' window 5.47e-12 other 3.03e-15 request 5.21e-13 converged False wall 68.9 s
+      parent: converged False abserr 5.82e-12 regions 49 depth 10 floor-limited 49 wall 0.2 s
+      bar lifted: converged False abserr 5.72e-12 regions 80 depth 4 window floor-limited 64 untrusted window 0 wall 0.4 s
+   #18 span [1.850734432850061, 27.631021115928547] rtol 1e-10 depth 6/10 window pieces 66 at cap 0 untrusted window 0 e' window 1.01e-11 other 2.8e-12 request 1.59e-11 converged True wall 1.2 s
+seed 13 test_JJJ: 20 calls, outcome under the cap pass, 66.1 s
+   #17 span [0.8081946953613881, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 5.38e-12 other 2.36e-15 request 3.08e-12 converged False wall 60.1 s
+      parent: converged False abserr 5.75e-12 regions 49 depth 9 floor-limited 49 wall 0.2 s
+      bar lifted: converged False abserr 5.75e-12 regions 90 depth 5 window floor-limited 73 untrusted window 0 wall 0.6 s
+seed 17 test_JJJ: 20 calls, outcome under the cap pass, 130.0 s
+   #14 span [0.6056904622053462, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 7.67e-12 other 2.83e-15 request 5.66e-12 converged False wall 61.9 s
+      parent: converged False abserr 8.28e-12 regions 39 depth 8 floor-limited 39 wall 0.3 s
+      bar lifted: converged False abserr 8.45e-12 regions 89 depth 5 window floor-limited 72 untrusted window 0 wall 0.6 s
+   #17 span [0.7383913569611624, 27.631021115928547] rtol 1e-10 depth 10/10 window pieces 17408 at cap 17408 untrusted window 0 e' window 4.9e-12 other 1.79e-15 request 3.02e-12 converged False wall 61.8 s
+      parent: converged False abserr 5.32e-12 regions 61 depth 11 floor-limited 61 wall 0.4 s
+      bar lifted: converged False abserr 5.41e-12 regions 108 depth 5 window floor-limited 92 untrusted window 0 wall 0.7 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/out/lg_stuck_units.json

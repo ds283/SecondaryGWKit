@@ -476,6 +476,20 @@ class TestYardstickExactly(unittest.TestCase):
                         )
 
 
+# The stationary-point guard's result keys (prompts/levin-phase-floor/07-stationary-point-guard.md section
+# 1.5), which test 2's key-set comparison admits (that prompt's section 3 test 12, section 9 point 3).
+GUARD_KEYS_07 = frozenset(
+    (
+        "stationary_points",
+        "stationary_windows",
+        "unlocated_minima",
+        "num_window_pieces",
+        "num_guarded_regions",
+        "num_guard_at_depth_max",
+    )
+)
+
+
 class TestCodeIsTheVariants(unittest.TestCase):
 
     def test_bit_identical_to_the_variant(self):
@@ -500,9 +514,17 @@ class TestCodeIsTheVariants(unittest.TestCase):
                 var = sincos(variant, cell)
                 old = sincos(parent, cell)
                 self.assertNotIn("route_06l", new)
-                self.assertEqual(set(new), set(var) - {"route_06l"}, name)
+                # prompts/levin-phase-floor/07-stationary-point-guard.md section 3 test 12 (its section 9
+                # point 3): the key set admits the stationary-point guard's six result keys, and nothing
+                # else; every other key is compared as before
+                self.assertTrue(GUARD_KEYS_07 <= set(new), name)
                 self.assertEqual(
-                    result_record(new),
+                    set(new) - GUARD_KEYS_07, set(var) - {"route_06l"}, name
+                )
+                self.assertEqual(
+                    result_record(
+                        new, exclude=("elapsed",) + tuple(sorted(GUARD_KEYS_07))
+                    ),
                     result_record(var, exclude=("elapsed", "route_06l")),
                     name,
                 )
@@ -514,8 +536,14 @@ class TestCodeIsTheVariants(unittest.TestCase):
                 firings["cc"] += sum(1 for rec in fired if rec["is_direct"])
                 firings["levin"] += sum(1 for rec in fired if not rec["is_direct"])
                 if not fired:
-                    self.assertEqual(set(new), set(old), name)
-                    self.assertEqual(result_record(new), result_record(old), name)
+                    self.assertEqual(set(new) - GUARD_KEYS_07, set(old), name)
+                    self.assertEqual(
+                        result_record(
+                            new, exclude=("elapsed",) + tuple(sorted(GUARD_KEYS_07))
+                        ),
+                        result_record(old),
+                        name,
+                    )
 
                 saw["fallback"] |= any(
                     r.type == lq.types[lq.INTERVAL_TYPE_DIRECT] for r in new["regions"]

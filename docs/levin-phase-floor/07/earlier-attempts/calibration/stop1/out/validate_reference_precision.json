@@ -1,0 +1,42 @@
+{
+ "header": {
+  "title": "07 section 2: reference precision",
+  "script": "docs/levin-phase-floor/07/calibration/scripts/validate_reference_precision.py",
+  "script_sha256": "62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412",
+  "levin_quadrature_sha256": "54408c8f8117f8998e5c82f258dda08ffa86889c2bcfdb56f8c183a76122ab9f",
+  "git_head": "9afcfd0527bf52463800b274d8f17c9164777e07",
+  "tree_dirty": true,
+  "git_status_short": [
+   " M AdaptiveLevin/levin_quadrature.py",
+   " M AdaptiveLevin/tests/test_levin_quadrature.py",
+   " M ComputeTargets/QuadSourceIntegral.py",
+   "?? docs/levin-phase-floor/07/"
+  ],
+  "host": "mps026088.phys.susx.ac.uk",
+  "utc": "2026-10-27T15:45:37.905453+00:00",
+  "uptime": "15:45  up 22 days, 14:30, 2 users, load averages: 10.65 9.92 11.31",
+  "python": "3.13.16",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "numpy": "2.2.4",
+  "scipy": "1.16.3",
+  "mpmath": "1.3.0",
+  "pid": 47059
+ },
+ "case": {
+  "family": "C",
+  "b": 10000.0,
+  "lambda": 0.25,
+  "a": 8.549879733383484,
+  "x_0": 0.3819660112501051,
+  "lambda_actual": 0.24999999999999997
+ },
+ "contour_40_digits": "0.029373948650182374496211003390698269",
+ "contour_60_digits": "0.029373948650182374496211003390698269",
+ "literal_30_digits_pi_pieces": "0.029373948650182374496211003803298034",
+ "literal_30_pieces": 565,
+ "literal_45_digits_quarter_pi_pieces": "0.029373948650182374496211003390698269",
+ "literal_45_pieces": 2257,
+ "contour40_minus_literal45": "6.9277e-44",
+ "literal30_minus_literal45": "4.126e-28",
+ "contour60_minus_literal45": "5.266e-48"
+}

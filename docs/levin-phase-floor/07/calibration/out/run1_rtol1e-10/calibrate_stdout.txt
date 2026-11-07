@@ -1,0 +1,196 @@
+references done; (R) erf vs contour, largest relative 2.19e-37
+stage 1: 144 units
+  parent phi None L None R c=1e+06 x_s=0.3820 omega=0: err 2.21e-17 abserr 4.64e-14 honest True converged True node_limited False depth 9 regions 16 wall 0.0 s
+  parent phi None L None R c=1e+04 x_s=0.3820 omega=0: err 3.47e-17 abserr 1.01e-12 honest True converged True node_limited False depth 8 regions 14 wall 0.0 s
+  parent phi None L None R c=1e+04 x_s=0.7236 omega=0: err 1.6e-17 abserr 9.42e-14 honest True converged True node_limited False depth 8 regions 32 wall 0.1 s
+  parent phi None L None R c=1e+06 x_s=0.7236 omega=0: err 3.37e-17 abserr 1.06e-14 honest True converged True node_limited False depth 11 regions 27 wall 0.0 s
+  parent phi None L None R c=1e+08 x_s=0.3820 omega=0: err 3.44e-17 abserr 7.37e-15 honest True converged True node_limited False depth 14 regions 31 wall 0.0 s
+  parent phi None L None R c=1e+06 x_s=0.3820 omega=1: err 4.47e-17 abserr 1.31e-13 honest True converged True node_limited False depth 9 regions 15 wall 0.0 s
+  parent phi None L None R c=1e+04 x_s=0.3820 omega=1: err 3.47e-18 abserr 1.09e-12 honest True converged True node_limited False depth 8 regions 14 wall 0.0 s
+  parent phi None L None R c=1e+08 x_s=0.7236 omega=0: err 2.26e-17 abserr 1.35e-15 honest True converged True node_limited False depth 15 regions 68 wall 0.1 s
+  parent phi None L None C b=1e+04 lambda=0.25: err 1.04e-17 abserr 2.84e-13 honest True converged True node_limited False depth 5 regions 12 wall 0.0 s
+  parent phi None L None R c=1e+08 x_s=0.3820 omega=1: err 2.58e-17 abserr 1.6e-14 honest True converged True node_limited False depth 14 regions 31 wall 0.1 s
+  parent phi None L None R c=1e+08 x_s=0.7236 omega=1: err 5.63e-17 abserr 7.64e-15 honest True converged True node_limited False depth 15 regions 39 wall 0.0 s
+  parent phi None L None C b=1e+04 lambda=1: err 7.29e-17 abserr 2.3e-13 honest True converged True node_limited False depth 5 regions 11 wall 0.0 s
+  parent phi None L None C b=1e+04 lambda=4: err 3.86e-17 abserr 5.48e-14 honest True converged True node_limited False depth 5 regions 13 wall 0.0 s
+  parent phi None L None C b=1e+04 lambda=256: err 3.79e-19 abserr 7.83e-16 honest True converged True node_limited False depth 2 regions 4 wall 0.0 s
+  parent phi None L None C b=1e+04 lambda=64: err 6.42e-17 abserr 2.4e-14 honest True converged True node_limited False depth 3 regions 5 wall 0.0 s
+  parent phi None L None C b=1e+04 lambda=16: err 1.21e-16 abserr 4.72e-15 honest True converged True node_limited False depth 6 regions 17 wall 0.0 s
+  parent phi None L None C b=1e+04 lambda=1024: err 3.33e-17 abserr 1.82e-14 honest True converged True node_limited False depth 1 regions 2 wall 0.0 s
+  parent phi None L None C b=1e+08 lambda=0.25: err 5.85e-17 abserr 7.49e-14 honest True converged True node_limited False depth 10 regions 20 wall 0.0 s
+  parent phi None L None C b=1e+08 lambda=1: err 1.9e-17 abserr 1.77e-14 honest True converged True node_limited False depth 11 regions 23 wall 0.0 s
+  parent phi None L None C b=1e+08 lambda=4: err 2.47e-17 abserr 4.8e-15 honest True converged True node_limited False depth 11 regions 20 wall 0.0 s
+  parent phi None L None C b=1e+08 lambda=16: err 2.67e-17 abserr 4.71e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.0 s
+  parent phi None L None C b=1e+08 lambda=256: err 6.53e-18 abserr 3.51e-16 honest True converged False node_limited False depth 7 regions 15 wall 0.0 s
+  parent phi None L None C b=1e+08 lambda=64: err 6.64e-18 abserr 4.4e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.1 s
+  parent phi None L None C b=1e+08 lambda=1024: err 9.95e-18 abserr 3.42e-16 honest True converged False node_limited False depth 6 regions 13 wall 0.0 s
+  commit phi 2.0 L 64.0 R c=1e+04 x_s=0.3820 omega=0: err 6.94e-18 abserr 9.59e-13 honest True converged True node_limited False depth 7 regions 20 wall 0.2 s
+  commit phi 2.0 L 64.0 R c=1e+04 x_s=0.7236 omega=0: err 4.81e-17 abserr 3.78e-14 honest True converged True node_limited False depth 6 regions 21 wall 0.2 s
+  commit phi 2.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 4.27e-17 abserr 5.85e-15 honest True converged True node_limited False depth 10 regions 27 wall 0.2 s
+  commit phi 2.0 L 64.0 R c=1e+06 x_s=0.3820 omega=0: err 5.14e-17 abserr 4.01e-14 honest True converged True node_limited False depth 11 regions 34 wall 0.2 s
+  commit phi 2.0 L 64.0 R c=1e+08 x_s=0.3820 omega=0: err 1.66e-16 abserr 5.84e-15 honest True converged True node_limited False depth 15 regions 59 wall 0.3 s
+  commit phi 2.0 L 64.0 R c=1e+04 x_s=0.3820 omega=1: err 4.16e-17 abserr 1.63e-13 honest True converged True node_limited False depth 4 regions 18 wall 0.2 s
+  commit phi 2.0 L 64.0 R c=1e+06 x_s=0.3820 omega=1: err 8.54e-17 abserr 1.74e-14 honest True converged True node_limited False depth 7 regions 24 wall 0.2 s
+  commit phi 2.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 3.61e-16 abserr 1.75e-15 honest True converged False node_limited True depth 20 regions 290 wall 0.7 s
+  commit phi 2.0 L 0.0 C b=1e+04 lambda=0.25: err 1.04e-17 abserr 2.84e-13 honest True converged True node_limited False depth 5 regions 12 wall 0.2 s
+  commit phi 2.0 L 64.0 R c=1e+08 x_s=0.3820 omega=1: err 9.06e-17 abserr 1.54e-14 honest True converged True node_limited False depth 15 regions 55 wall 0.3 s
+  commit phi 2.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 4.27e-18 abserr 7.31e-15 honest True converged True node_limited False depth 15 regions 69 wall 0.3 s
+  commit phi 2.0 L 0.0 C b=1e+04 lambda=1: err 7.29e-17 abserr 2.3e-13 honest True converged True node_limited False depth 5 regions 11 wall 0.2 s
+  commit phi 2.0 L 0.0 C b=1e+04 lambda=64: err 6.42e-17 abserr 2.4e-14 honest True converged True node_limited False depth 3 regions 5 wall 0.1 s
+  commit phi 2.0 L 0.0 C b=1e+04 lambda=4: err 3.86e-17 abserr 5.48e-14 honest True converged True node_limited False depth 5 regions 13 wall 0.2 s
+  commit phi 2.0 L 0.0 C b=1e+04 lambda=16: err 1.21e-16 abserr 4.72e-15 honest True converged True node_limited False depth 6 regions 17 wall 0.2 s
+  commit phi 2.0 L 0.0 C b=1e+04 lambda=256: err 3.79e-19 abserr 7.83e-16 honest True converged True node_limited False depth 2 regions 4 wall 0.1 s
+  commit phi 2.0 L 0.0 C b=1e+04 lambda=1024: err 3.33e-17 abserr 1.82e-14 honest True converged True node_limited False depth 1 regions 2 wall 0.1 s
+  commit phi 2.0 L 0.0 C b=1e+08 lambda=0.25: err 5.85e-17 abserr 7.49e-14 honest True converged True node_limited False depth 10 regions 20 wall 0.2 s
+  commit phi 2.0 L 0.0 C b=1e+08 lambda=1: err 1.9e-17 abserr 1.77e-14 honest True converged True node_limited False depth 11 regions 23 wall 0.2 s
+  commit phi 2.0 L 0.0 C b=1e+08 lambda=4: err 2.47e-17 abserr 4.8e-15 honest True converged True node_limited False depth 11 regions 20 wall 0.2 s
+  commit phi 2.0 L 0.0 C b=1e+08 lambda=16: err 2.67e-17 abserr 4.71e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.3 s
+  commit phi 2.0 L 0.0 C b=1e+08 lambda=256: err 6.53e-18 abserr 3.51e-16 honest True converged False node_limited False depth 7 regions 15 wall 0.2 s
+  commit phi 2.0 L 0.0 C b=1e+08 lambda=64: err 6.64e-18 abserr 4.4e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.2 s
+  commit phi 2.0 L 0.0 C b=1e+08 lambda=1024: err 9.95e-18 abserr 3.42e-16 honest True converged False node_limited False depth 6 regions 13 wall 0.1 s
+  commit phi 8.0 L 64.0 R c=1e+04 x_s=0.3820 omega=0: err 5.9e-17 abserr 1.18e-13 honest True converged True node_limited False depth 5 regions 40 wall 0.3 s
+  commit phi 8.0 L 64.0 R c=1e+04 x_s=0.7236 omega=0: err 2.01e-16 abserr 9.27e-14 honest True converged True node_limited False depth 3 regions 18 wall 0.2 s
+  commit phi 8.0 L 64.0 R c=1e+06 x_s=0.3820 omega=0: err 3.45e-17 abserr 3.95e-14 honest True converged True node_limited False depth 6 regions 31 wall 0.2 s
+  commit phi 8.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 2.55e-16 abserr 7.74e-15 honest True converged True node_limited False depth 11 regions 45 wall 0.2 s
+  commit phi 8.0 L 64.0 R c=1e+08 x_s=0.3820 omega=0: err 6.84e-17 abserr 1.33e-14 honest True converged True node_limited False depth 9 regions 37 wall 0.2 s
+  commit phi 8.0 L 64.0 R c=1e+04 x_s=0.3820 omega=1: err 2.78e-17 abserr 6.12e-13 honest True converged True node_limited False depth 9 regions 70 wall 0.3 s
+  commit phi 8.0 L 64.0 R c=1e+06 x_s=0.3820 omega=1: err 3.12e-17 abserr 2.11e-14 honest True converged True node_limited False depth 6 regions 36 wall 0.2 s
+  commit phi 8.0 L 64.0 R c=1e+08 x_s=0.3820 omega=1: err 4.73e-17 abserr 2.13e-15 honest True converged True node_limited False depth 9 regions 38 wall 0.2 s
+  commit phi 8.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 2.83e-16 abserr 1.12e-14 honest True converged True node_limited False depth 16 regions 75 wall 0.3 s
+  commit phi 8.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 2.27e-16 abserr 1.69e-15 honest True converged False node_limited True depth 20 regions 467 wall 1.0 s
+  commit phi 8.0 L 0.0 C b=1e+04 lambda=0.25: err 1.04e-17 abserr 2.84e-13 honest True converged True node_limited False depth 5 regions 12 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+04 lambda=1: err 7.29e-17 abserr 2.3e-13 honest True converged True node_limited False depth 5 regions 11 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+04 lambda=16: err 1.21e-16 abserr 4.72e-15 honest True converged True node_limited False depth 6 regions 17 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+04 lambda=4: err 3.86e-17 abserr 5.48e-14 honest True converged True node_limited False depth 5 regions 13 wall 0.3 s
+  commit phi 8.0 L 0.0 C b=1e+04 lambda=64: err 6.42e-17 abserr 2.4e-14 honest True converged True node_limited False depth 3 regions 5 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+04 lambda=256: err 3.79e-19 abserr 7.83e-16 honest True converged True node_limited False depth 2 regions 4 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+08 lambda=0.25: err 5.85e-17 abserr 7.49e-14 honest True converged True node_limited False depth 10 regions 20 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+04 lambda=1024: err 3.33e-17 abserr 1.82e-14 honest True converged True node_limited False depth 1 regions 2 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+08 lambda=1: err 1.9e-17 abserr 1.77e-14 honest True converged True node_limited False depth 11 regions 23 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+08 lambda=4: err 2.47e-17 abserr 4.8e-15 honest True converged True node_limited False depth 11 regions 20 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+08 lambda=16: err 2.67e-17 abserr 4.71e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+08 lambda=256: err 6.53e-18 abserr 3.51e-16 honest True converged False node_limited False depth 7 regions 15 wall 0.1 s
+  commit phi 8.0 L 0.0 C b=1e+08 lambda=64: err 6.64e-18 abserr 4.4e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.2 s
+  commit phi 8.0 L 0.0 C b=1e+08 lambda=1024: err 9.95e-18 abserr 3.42e-16 honest True converged False node_limited False depth 6 regions 13 wall 0.2 s
+  commit phi 32.0 L 64.0 R c=1e+04 x_s=0.7236 omega=0: err 3.25e-16 abserr 4.3e-14 honest True converged True node_limited False depth 6 regions 92 wall 0.3 s
+  commit phi 32.0 L 64.0 R c=1e+06 x_s=0.3820 omega=0: err 2.61e-16 abserr 1.35e-13 honest True converged True node_limited False depth 6 regions 74 wall 0.3 s
+  commit phi 32.0 L 64.0 R c=1e+04 x_s=0.3820 omega=0: err 1.04e-17 abserr 5.96e-13 honest True converged True node_limited False depth 7 regions 111 wall 0.4 s
+  commit phi 32.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 1.22e-16 abserr 1.23e-14 honest True converged True node_limited False depth 5 regions 91 wall 0.3 s
+  commit phi 32.0 L 64.0 R c=1e+08 x_s=0.3820 omega=0: err 1.06e-16 abserr 1.2e-14 honest True converged True node_limited False depth 7 regions 96 wall 0.3 s
+  commit phi 32.0 L 64.0 R c=1e+04 x_s=0.3820 omega=1: err 9.71e-17 abserr 2.77e-14 honest True converged True node_limited False depth 11 regions 122 wall 0.5 s
+  commit phi 32.0 L 64.0 R c=1e+06 x_s=0.3820 omega=1: err 1.32e-16 abserr 3.7e-14 honest True converged True node_limited False depth 5 regions 78 wall 0.3 s
+  commit phi 32.0 L 64.0 R c=1e+08 x_s=0.3820 omega=1: err 1.78e-16 abserr 5.31e-15 honest True converged True node_limited False depth 8 regions 79 wall 0.3 s
+  commit phi 32.0 L 0.0 C b=1e+04 lambda=0.25: err 1.04e-17 abserr 2.84e-13 honest True converged True node_limited False depth 5 regions 12 wall 0.2 s
+  commit phi 32.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 8.88e-17 abserr 1.04e-14 honest True converged True node_limited False depth 9 regions 135 wall 0.3 s
+  commit phi 32.0 L 0.0 C b=1e+04 lambda=1: err 7.29e-17 abserr 2.3e-13 honest True converged True node_limited False depth 5 regions 11 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+04 lambda=4: err 3.86e-17 abserr 5.48e-14 honest True converged True node_limited False depth 5 regions 13 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+04 lambda=16: err 1.21e-16 abserr 4.72e-15 honest True converged True node_limited False depth 6 regions 17 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+04 lambda=64: err 6.42e-17 abserr 2.4e-14 honest True converged True node_limited False depth 3 regions 5 wall 0.1 s
+  commit phi 32.0 L 0.0 C b=1e+04 lambda=256: err 3.79e-19 abserr 7.83e-16 honest True converged True node_limited False depth 2 regions 4 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+04 lambda=1024: err 3.33e-17 abserr 1.82e-14 honest True converged True node_limited False depth 1 regions 2 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+08 lambda=0.25: err 5.85e-17 abserr 7.49e-14 honest True converged True node_limited False depth 10 regions 20 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+08 lambda=1: err 1.9e-17 abserr 1.77e-14 honest True converged True node_limited False depth 11 regions 23 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+08 lambda=4: err 2.47e-17 abserr 4.8e-15 honest True converged True node_limited False depth 11 regions 20 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+08 lambda=16: err 2.67e-17 abserr 4.71e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+08 lambda=256: err 6.53e-18 abserr 3.51e-16 honest True converged False node_limited False depth 7 regions 15 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+08 lambda=64: err 6.64e-18 abserr 4.4e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.2 s
+  commit phi 32.0 L 0.0 C b=1e+08 lambda=1024: err 9.95e-18 abserr 3.42e-16 honest True converged False node_limited False depth 6 regions 13 wall 0.1 s
+  commit phi 128.0 L 64.0 R c=1e+04 x_s=0.7236 omega=0: err 7.3e-16 abserr 9.94e-14 honest True converged True node_limited False depth 7 regions 272 wall 0.6 s
+  commit phi 128.0 L 64.0 R c=1e+04 x_s=0.3820 omega=0: err 8.67e-17 abserr 1.24e-13 honest True converged True node_limited False depth 9 regions 348 wall 0.8 s
+  commit phi 128.0 L 64.0 R c=1e+06 x_s=0.3820 omega=0: err 9.32e-17 abserr 7.58e-14 honest True converged True node_limited False depth 6 regions 330 wall 0.7 s
+  commit phi 128.0 L 64.0 R c=1e+08 x_s=0.3820 omega=0: err 1.05e-16 abserr 1.93e-14 honest True converged True node_limited False depth 7 regions 345 wall 0.8 s
+  commit phi 128.0 L 64.0 R c=1e+04 x_s=0.3820 omega=1: err 1.6e-16 abserr 1.34e-13 honest True converged True node_limited False depth 10 regions 335 wall 0.7 s
+  commit phi 128.0 L 64.0 R c=1e+06 x_s=0.3820 omega=1: err 2.19e-16 abserr 1.24e-13 honest True converged True node_limited False depth 6 regions 271 wall 0.6 s
+  commit phi 128.0 L 64.0 R c=1e+08 x_s=0.3820 omega=1: err 2.84e-17 abserr 1.95e-14 honest True converged True node_limited False depth 7 regions 299 wall 0.6 s
+  commit phi 128.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 7.97e-18 abserr 1.44e-14 honest True converged False node_limited True depth 17 regions 15717 wall 29.9 s
+  commit phi 128.0 L 0.0 C b=1e+04 lambda=0.25: err 1.04e-17 abserr 2.84e-13 honest True converged True node_limited False depth 5 regions 12 wall 0.3 s
+  commit phi 128.0 L 0.0 C b=1e+04 lambda=1: err 7.29e-17 abserr 2.3e-13 honest True converged True node_limited False depth 5 regions 11 wall 0.2 s
+  commit phi 128.0 L 0.0 C b=1e+04 lambda=4: err 3.86e-17 abserr 5.48e-14 honest True converged True node_limited False depth 5 regions 13 wall 0.1 s
+  commit phi 128.0 L 0.0 C b=1e+04 lambda=16: err 1.21e-16 abserr 4.72e-15 honest True converged True node_limited False depth 6 regions 17 wall 0.2 s
+  commit phi 128.0 L 0.0 C b=1e+04 lambda=64: err 6.42e-17 abserr 2.4e-14 honest True converged True node_limited False depth 3 regions 5 wall 0.1 s
+  commit phi 128.0 L 0.0 C b=1e+04 lambda=256: err 3.79e-19 abserr 7.83e-16 honest True converged True node_limited False depth 2 regions 4 wall 0.1 s
+  commit phi 128.0 L 0.0 C b=1e+04 lambda=1024: err 3.33e-17 abserr 1.82e-14 honest True converged True node_limited False depth 1 regions 2 wall 0.1 s
+  commit phi 128.0 L 0.0 C b=1e+08 lambda=0.25: err 5.85e-17 abserr 7.49e-14 honest True converged True node_limited False depth 10 regions 20 wall 0.1 s
+  commit phi 128.0 L 0.0 C b=1e+08 lambda=1: err 1.9e-17 abserr 1.77e-14 honest True converged True node_limited False depth 11 regions 23 wall 0.2 s
+  commit phi 128.0 L 0.0 C b=1e+08 lambda=4: err 2.47e-17 abserr 4.8e-15 honest True converged True node_limited False depth 11 regions 20 wall 0.2 s
+  commit phi 128.0 L 0.0 C b=1e+08 lambda=16: err 2.67e-17 abserr 4.71e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.2 s
+  commit phi 128.0 L 0.0 C b=1e+08 lambda=64: err 6.64e-18 abserr 4.4e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.3 s
+  commit phi 128.0 L 0.0 C b=1e+08 lambda=256: err 6.53e-18 abserr 3.51e-16 honest True converged False node_limited False depth 7 regions 15 wall 0.2 s
+  commit phi 128.0 L 0.0 C b=1e+08 lambda=1024: err 9.95e-18 abserr 3.42e-16 honest True converged False node_limited False depth 6 regions 13 wall 0.2 s
+  commit phi 512.0 L 64.0 R c=1e+04 x_s=0.3820 omega=0: err 5.76e-16 abserr 2.22e-13 honest True converged True node_limited False depth 9 regions 964 wall 2.8 s
+  commit phi 512.0 L 64.0 R c=1e+04 x_s=0.7236 omega=0: err 8.74e-16 abserr 1.16e-13 honest True converged True node_limited False depth 11 regions 777 wall 1.8 s
+  commit phi 512.0 L 64.0 R c=1e+06 x_s=0.3820 omega=0: err 3.14e-16 abserr 1.4e-13 honest True converged True node_limited False depth 8 regions 1113 wall 2.7 s
+  commit phi 128.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 1.21e-17 abserr 1.13e-14 honest True converged False node_limited True depth 20 regions 30651 wall 64.6 s
+  commit phi 32.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 4.9e-18 abserr 1.43e-15 honest True converged False node_limited True depth 20 regions 168821 wall 406.3 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.3820 omega=0: err 3.58e-17 abserr 1.94e-14 honest True converged False node_limited True depth 20 regions 247707 wall 678.4 s
+  commit phi 512.0 L 64.0 R c=1e+04 x_s=0.3820 omega=1: err 4.51e-16 abserr 2.37e-13 honest True converged True node_limited False depth 8 regions 895 wall 2.7 s
+  commit phi 512.0 L 64.0 R c=1e+06 x_s=0.3820 omega=1: err 2.37e-16 abserr 1.05e-13 honest True converged True node_limited False depth 13 regions 963 wall 2.6 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.3820 omega=1: err 3.19e-17 abserr 1.98e-14 honest True converged False node_limited True depth 20 regions 213935 wall 717.0 s
+  commit 128.0 R c=1e+08 x_s=0.7236 omega=0: DID NOT FINISH after 3600 s
+  commit phi 512.0 L 0.0 C b=1e+04 lambda=0.25: err 1.04e-17 abserr 2.84e-13 honest True converged True node_limited False depth 5 regions 12 wall 0.4 s
+  commit phi 512.0 L 0.0 C b=1e+04 lambda=1: err 7.29e-17 abserr 2.3e-13 honest True converged True node_limited False depth 5 regions 11 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+04 lambda=4: err 3.86e-17 abserr 5.48e-14 honest True converged True node_limited False depth 5 regions 13 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+04 lambda=16: err 1.21e-16 abserr 4.72e-15 honest True converged True node_limited False depth 6 regions 17 wall 0.3 s
+  commit phi 512.0 L 0.0 C b=1e+04 lambda=64: err 6.42e-17 abserr 2.4e-14 honest True converged True node_limited False depth 3 regions 5 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+04 lambda=256: err 3.79e-19 abserr 7.83e-16 honest True converged True node_limited False depth 2 regions 4 wall 0.3 s
+  commit phi 512.0 L 0.0 C b=1e+04 lambda=1024: err 3.33e-17 abserr 1.82e-14 honest True converged True node_limited False depth 1 regions 2 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+08 lambda=0.25: err 5.85e-17 abserr 7.49e-14 honest True converged True node_limited False depth 10 regions 20 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+08 lambda=1: err 1.9e-17 abserr 1.77e-14 honest True converged True node_limited False depth 11 regions 23 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+08 lambda=4: err 2.47e-17 abserr 4.8e-15 honest True converged True node_limited False depth 11 regions 20 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+08 lambda=16: err 2.67e-17 abserr 4.71e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.3 s
+  commit phi 512.0 L 0.0 C b=1e+08 lambda=64: err 6.64e-18 abserr 4.4e-16 honest True converged False node_limited False depth 12 regions 58 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+08 lambda=256: err 6.53e-18 abserr 3.51e-16 honest True converged False node_limited False depth 7 regions 15 wall 0.2 s
+  commit phi 512.0 L 0.0 C b=1e+08 lambda=1024: err 9.95e-18 abserr 3.42e-16 honest True converged False node_limited False depth 6 regions 13 wall 0.2 s
+  commit 512.0 R c=1e+06 x_s=0.7236 omega=0: DID NOT FINISH after 3601 s
+  commit 512.0 R c=1e+08 x_s=0.7236 omega=0: DID NOT FINISH after 3601 s
+  commit 512.0 R c=1e+08 x_s=0.7236 omega=1: DID NOT FINISH after 3601 s
+Phi_w by the rule: none
+stage 2 (the check): 20 units
+  commit phi 2.0 L 4.0 C b=1e+08 lambda=1: err 5.55e-17 abserr 2.69e-14 honest True converged True node_limited False depth 7 regions 26 wall 0.2 s
+  commit phi 2.0 L 4.0 C b=1e+04 lambda=0.25: err 9.37e-17 abserr 1.64e-12 honest True converged True node_limited False depth 6 regions 23 wall 0.2 s
+  commit phi 2.0 L 4.0 C b=1e+04 lambda=1: err 1.73e-17 abserr 9.34e-13 honest True converged True node_limited False depth 5 regions 24 wall 0.2 s
+  commit phi 2.0 L 4.0 C b=1e+08 lambda=0.25: err 7.91e-17 abserr 1e-13 honest True converged True node_limited False depth 12 regions 30 wall 0.2 s
+  commit phi 8.0 L 4.0 C b=1e+08 lambda=0.25: err 1.21e-17 abserr 2.82e-14 honest True converged True node_limited False depth 6 regions 38 wall 0.2 s
+  commit phi 8.0 L 4.0 C b=1e+04 lambda=1: err 5.03e-17 abserr 6.07e-13 honest True converged True node_limited False depth 4 regions 28 wall 0.2 s
+  commit phi 8.0 L 4.0 C b=1e+08 lambda=1: err 2.02e-17 abserr 1.63e-14 honest True converged True node_limited False depth 6 regions 31 wall 0.2 s
+  commit phi 8.0 L 4.0 C b=1e+04 lambda=0.25: err 3.12e-17 abserr 1.67e-13 honest True converged True node_limited False depth 6 regions 38 wall 0.2 s
+  commit phi 32.0 L 4.0 C b=1e+08 lambda=0.25: err 5.75e-17 abserr 5.54e-14 honest True converged True node_limited False depth 5 regions 90 wall 0.3 s
+  commit phi 32.0 L 4.0 C b=1e+04 lambda=0.25: err 1.35e-16 abserr 9.96e-13 honest True converged True node_limited False depth 4 regions 70 wall 0.3 s
+  commit phi 32.0 L 4.0 C b=1e+04 lambda=1: err 3.82e-17 abserr 2.26e-13 honest True converged True node_limited False depth 7 regions 105 wall 0.3 s
+  commit phi 32.0 L 4.0 C b=1e+08 lambda=1: err 4.11e-17 abserr 6.06e-14 honest True converged True node_limited False depth 5 regions 91 wall 0.3 s
+  commit phi 128.0 L 4.0 C b=1e+04 lambda=0.25: err 3.64e-16 abserr 1.09e-12 honest True converged True node_limited False depth 5 regions 209 wall 0.6 s
+  commit phi 128.0 L 4.0 C b=1e+08 lambda=0.25: err 3.91e-16 abserr 5.9e-14 honest True converged True node_limited False depth 6 regions 310 wall 0.6 s
+  commit phi 128.0 L 4.0 C b=1e+04 lambda=1: err 2.86e-16 abserr 7.1e-13 honest True converged True node_limited False depth 10 regions 260 wall 0.7 s
+  commit phi 128.0 L 4.0 C b=1e+08 lambda=1: err 4.3e-17 abserr 4.19e-14 honest True converged True node_limited False depth 7 regions 309 wall 0.8 s
+  commit phi 512.0 L 4.0 C b=1e+04 lambda=0.25: err 0 abserr 7.25e-13 honest True converged True node_limited False depth 8 regions 360 wall 0.8 s
+  commit phi 512.0 L 4.0 C b=1e+04 lambda=1: err 2.05e-16 abserr 1.23e-13 honest True converged True node_limited False depth 9 regions 390 wall 0.8 s
+  commit phi 512.0 L 4.0 C b=1e+08 lambda=1: err 5.23e-16 abserr 7.52e-14 honest True converged True node_limited False depth 7 regions 1140 wall 2.0 s
+  commit phi 512.0 L 4.0 C b=1e+08 lambda=0.25: err 7.31e-17 abserr 1.35e-13 honest True converged True node_limited False depth 10 regions 1162 wall 2.3 s
+stage 3 (bar lifted): 4 units
+  barlifted phi 32.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 2.68e-16 abserr 1.68e-15 honest True converged False node_limited True depth 9 regions 79 wall 0.3 s
+  barlifted phi 128.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 3.36e-16 abserr 1.14e-14 honest True converged False node_limited True depth 7 regions 214 wall 0.5 s
+  barlifted phi 512.0 L 64.0 R c=1e+08 x_s=0.3820 omega=0: err 2.94e-16 abserr 2.06e-14 honest True converged False node_limited True depth 6 regions 712 wall 1.2 s
+  barlifted phi 512.0 L 64.0 R c=1e+08 x_s=0.3820 omega=1: err 5.73e-16 abserr 2.13e-14 honest True converged False node_limited True depth 6 regions 695 wall 1.2 s
+stage 4 (did not finish: bounded depth, and the bar lifted): 20 units
+  commit phi 128.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 3.74e-14 abserr 3.76e-14 honest True converged False node_limited False depth 6 regions 8206 wall 3.8 s
+  barlifted phi 128.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 3.73e-16 abserr 1.79e-15 honest True converged False node_limited True depth 8 regions 502 wall 1.0 s
+  commit phi 128.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 2.74e-17 abserr 4.38e-15 honest True converged False node_limited False depth 8 regions 32785 wall 25.6 s
+  commit phi 512.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 8.92e-17 abserr 2.62e-14 honest True converged False node_limited False depth 6 regions 32904 wall 24.3 s
+  commit phi 128.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 1.89e-17 abserr 2.6e-15 honest True converged False node_limited False depth 10 regions 131089 wall 81.5 s
+  commit phi 512.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 2.92e-17 abserr 1.46e-14 honest True converged False node_limited False depth 8 regions 131592 wall 75.8 s
+  barlifted phi 512.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 4.73e-16 abserr 1.5e-14 honest True converged False node_limited True depth 3 regions 654 wall 1.1 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 1.51e-17 abserr 4.75e-15 honest True converged False node_limited False depth 6 regions 32910 wall 22.7 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 2.17e-17 abserr 2.27e-15 honest True converged False node_limited False depth 8 regions 131599 wall 86.0 s
+  commit phi 128.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 1.97e-17 abserr 1.64e-15 honest True converged False node_limited False depth 12 regions 524305 wall 293.0 s
+  commit phi 512.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 7.75e-18 abserr 1.46e-14 honest True converged False node_limited False depth 10 regions 526344 wall 326.8 s
+  barlifted phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 4.8e-16 abserr 5.12e-15 honest True converged False node_limited False depth 10 regions 2004 wall 1.8 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 8.89e-17 abserr 2.02e-14 honest True converged False node_limited False depth 6 regions 32781 wall 24.5 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 8.16e-18 abserr 1.75e-14 honest True converged False node_limited False depth 8 regions 131086 wall 94.1 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 1.93e-17 abserr 1.68e-15 honest True converged False node_limited False depth 10 regions 526351 wall 303.4 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 1.44e-17 abserr 1.51e-14 honest True converged False node_limited False depth 10 regions 524302 wall 402.2 s
+  barlifted phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 2.58e-16 abserr 1.2e-14 honest True converged False node_limited True depth 6 regions 781 wall 1.2 s
+  commit phi 512.0 L 64.0 R c=1e+06 x_s=0.7236 omega=0: err 1.65e-18 abserr 1.48e-14 honest True converged False node_limited False depth 12 regions 2105352 wall 1751.6 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=0: err 2.01e-17 abserr 7.85e-15 honest True converged False node_limited False depth 12 regions 2105359 wall 2650.6 s
+  commit phi 512.0 L 64.0 R c=1e+08 x_s=0.7236 omega=1: err 1.78e-17 abserr 1.31e-14 honest True converged False node_limited False depth 12 regions 2097166 wall 2780.2 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/out/calibrate.json
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/out/calibrate_tables.md

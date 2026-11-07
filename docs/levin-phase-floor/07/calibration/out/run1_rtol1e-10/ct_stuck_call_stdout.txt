@@ -1,0 +1,43 @@
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 763, in evaluate_QuadSource_integral
+    analytic_data = analytic_integral(
+        model,
+    ...<10 lines>...
+        atol=atol,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 1461, in analytic_integral
+    data2pt5 = _three_bessel_integrals(
+        k,
+    ...<8 lines>...
+        rtol=rtol,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 1020, in _three_bessel_integrals
+    Levin = _three_bessel_Levin(
+        k,
+    ...<9 lines>...
+        rtol=rtol,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/ComputeTargets/QuadSourceIntegral.py", line 1261, in _three_bessel_Levin
+    J4_data = adaptive_levin_sincos(
+        x_span,
+    ...<5 lines>...
+        notify_label="analytic J4",
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/levin_quadrature.py", line 5448, in adaptive_levin_sincos
+    return _adaptive_levin(
+        x_span,
+    ...<10 lines>...
+        diagnostics_path=diagnostics_path,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/scripts/ct_stuck_call.py", line 68, in wrapped
+    raise _Captured()
+type=<class '__main__._Captured'>, value=
+commit depth_max 0: abserr 2.363e-17 request 9.015e-18 window leaves 3 window sum e' 2.363e-17 (floor less node 2.363e-17, nested pair 2.066e-19) converged False wall 0.0 s
+commit depth_max 2: abserr 2.21e-17 request 9.015e-18 window leaves 12 window sum e' 2.21e-17 (floor less node 2.21e-17, nested pair 1.588e-22) converged False wall 0.2 s
+commit depth_max 4: abserr 2.182e-17 request 9.015e-18 window leaves 48 window sum e' 2.182e-17 (floor less node 2.182e-17, nested pair 1.524e-22) converged False wall 1.1 s
+commit depth_max 6: abserr 2.176e-17 request 9.015e-18 window leaves 192 window sum e' 2.176e-17 (floor less node 2.176e-17, nested pair 1.343e-22) converged False wall 4.1 s
+commit depth_max 8: abserr 2.174e-17 request 9.015e-18 window leaves 768 window sum e' 2.174e-17 (floor less node 2.174e-17, nested pair 1.449e-22) converged False wall 15.9 s
+commit depth_max 10: abserr 2.174e-17 request 9.015e-18 window leaves 3072 window sum e' 2.174e-17 (floor less node 2.174e-17, nested pair 1.415e-22) converged False wall 74.1 s
+commit depth_max 12: abserr 2.174e-17 request 9.015e-18 window leaves 12288 window sum e' 2.174e-17 (floor less node 2.174e-17, nested pair 1.422e-22) converged False wall 341.5 s
+parent: value -9.015191629003984e-08 abserr 2.385e-17 converged False regions 2 phase-limited 2 wall 0.1 s
+bar lifted: value -9.015191629003966e-08 abserr 2.363e-17 converged False regions 3 window leaves floor-limited 3 wall 0.2 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/out/ct_stuck_call.json

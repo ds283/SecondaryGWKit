@@ -1,0 +1,193 @@
+stage 1: 105 units
+  z12 parent None: ratio 1681 converged True node_limited False regions 112 depth 17 wall 5.3 s
+  z12 g06 None: ratio 1681 converged True node_limited False regions 135 depth 18 wall 6.9 s
+  z12 commit 8.0: DID NOT FINISH
+  z12 commit 2.0: DID NOT FINISH
+  z12 commit 32.0: DID NOT FINISH
+  z12 commit 128.0: DID NOT FINISH
+  z00 g06 None: ratio 0.01831 converged False node_limited False regions 249 depth 20 wall 10.4 s
+  z00 parent None: ratio 0.01828 converged False node_limited False regions 225 depth 20 wall 8.6 s
+  z12 commit 512.0: DID NOT FINISH
+  z00 commit 2.0: DID NOT FINISH
+  z00 commit 8.0: DID NOT FINISH
+  w00 g06 None: ratio 0.005418 converged False node_limited False regions 141 depth 20 wall 4.2 s
+  z00 commit 32.0: DID NOT FINISH
+  w00 commit 2.0: ratio 0.03617 converged True node_limited False regions 74 depth 13 wall 2.3 s
+  w00 parent None: ratio 0.005418 converged False node_limited False regions 123 depth 20 wall 3.5 s
+  w00 commit 8.0: ratio 0.0009299 converged False node_limited False regions 757 depth 20 wall 28.7 s
+  w00 commit 32.0: ratio 0.0007817 converged False node_limited False regions 1562 depth 20 wall 60.9 s
+  w00 commit 128.0: ratio 0.05915 converged False node_limited False regions 2322 depth 20 wall 86.6 s
+  w01 g06 None: ratio 0.8174 converged True node_limited False regions 45 depth 15 wall 0.8 s
+  w01 parent None: ratio 0.8174 converged True node_limited False regions 38 depth 15 wall 0.6 s
+  w01 commit 2.0: ratio 0.1285 converged False node_limited False regions 73 depth 20 wall 1.9 s
+  w01 commit 8.0: ratio 0.08556 converged False node_limited False regions 751 depth 20 wall 23.5 s
+  w01 commit 32.0: ratio 0.001213 converged False node_limited False regions 1623 depth 20 wall 54.9 s
+  w00 commit 512.0: ratio 0.7328 converged False node_limited False regions 5033 depth 20 wall 190.4 s
+  w01 commit 128.0: ratio 0.02275 converged False node_limited False regions 4715 depth 20 wall 177.4 s
+  w02 g06 None: ratio 0.003166 converged False node_limited False regions 84 depth 20 wall 1.7 s
+  w02 parent None: ratio 0.003166 converged True node_limited False regions 75 depth 17 wall 1.6 s
+  w02 commit 2.0: ratio 0.03499 converged True node_limited False regions 76 depth 13 wall 1.6 s
+  w02 commit 8.0: ratio 0.06099 converged False node_limited False regions 679 depth 20 wall 20.1 s
+  w02 commit 32.0: ratio 0.006925 converged False node_limited False regions 768 depth 20 wall 21.3 s
+  w02 commit 128.0: ratio 0.009746 converged False node_limited False regions 3784 depth 20 wall 119.2 s
+  w01 commit 512.0: ratio 0.001184 converged False node_limited False regions 9402 depth 20 wall 379.1 s
+  w03 g06 None: ratio 0.5732 converged False node_limited False regions 202 depth 20 wall 6.2 s
+  w03 parent None: ratio 0.5731 converged False node_limited False regions 139 depth 20 wall 3.8 s
+  w03 commit 2.0: ratio 0.07263 converged True node_limited False regions 185 depth 16 wall 4.7 s
+  w03 commit 8.0: ratio 0.0136 converged False node_limited False regions 761 depth 20 wall 22.9 s
+  w03 commit 32.0: ratio 0.01605 converged False node_limited False regions 1560 depth 20 wall 48.1 s
+  w02 commit 512.0: ratio 0.6973 converged False node_limited False regions 6640 depth 20 wall 240.6 s
+  z00 commit 128.0: DID NOT FINISH
+  w04 g06 None: ratio 0.001819 converged False node_limited False regions 105 depth 20 wall 1.9 s
+  w04 parent None: ratio 0.001819 converged False node_limited False regions 93 depth 20 wall 1.6 s
+  z00 commit 512.0: DID NOT FINISH
+  w04 commit 2.0: ratio 0.0003702 converged True node_limited False regions 133 depth 16 wall 2.8 s
+  w03 commit 128.0: ratio 0.06936 converged False node_limited False regions 4575 depth 20 wall 142.2 s
+  w04 commit 8.0: ratio 0.002084 converged False node_limited False regions 527 depth 20 wall 13.2 s
+  w04 commit 32.0: ratio 0.009476 converged False node_limited False regions 2807 depth 20 wall 78.8 s
+  w05 g06 None: ratio 0.05871 converged False node_limited False regions 115 depth 20 wall 2.1 s
+  w05 parent None: ratio 0.05871 converged False node_limited False regions 95 depth 20 wall 1.6 s
+  w05 commit 2.0: ratio 0.01868 converged True node_limited False regions 51 depth 9 wall 0.9 s
+  w05 commit 8.0: ratio 0.0713 converged False node_limited False regions 844 depth 20 wall 21.3 s
+  w04 commit 128.0: ratio 0.01718 converged False node_limited False regions 5363 depth 20 wall 160.9 s
+  w05 commit 32.0: ratio 0.008007 converged False node_limited False regions 2001 depth 20 wall 54.3 s
+  w03 commit 512.0: ratio 0.1063 converged False node_limited False regions 11738 depth 20 wall 426.1 s
+  w06 g06 None: ratio 0.1162 converged True node_limited False regions 39 depth 11 wall 0.4 s
+  w06 parent None: ratio 0.1162 converged True node_limited False regions 38 depth 11 wall 0.4 s
+  w06 commit 2.0: ratio 0.06701 converged True node_limited False regions 76 depth 11 wall 1.3 s
+  w06 commit 8.0: ratio 0.0009973 converged True node_limited False regions 136 depth 20 wall 3.3 s
+  w05 commit 128.0: ratio 0.005367 converged False node_limited False regions 7005 depth 20 wall 224.9 s
+  w06 commit 32.0: ratio 0.005277 converged False node_limited False regions 1683 depth 20 wall 47.3 s
+  w04 commit 512.0: ratio 0.03062 converged False node_limited False regions 11753 depth 20 wall 428.5 s
+  w07 g06 None: ratio 0.9424 converged False node_limited False regions 208 depth 20 wall 4.7 s
+  w07 parent None: ratio 0.9424 converged False node_limited False regions 175 depth 20 wall 3.8 s
+  w06 commit 128.0: ratio 0.002845 converged False node_limited False regions 2740 depth 20 wall 80.6 s
+  w07 commit 2.0: ratio 0.002971 converged False node_limited False regions 932 depth 20 wall 24.5 s
+  w07 commit 8.0: ratio 0.003618 converged False node_limited False regions 549 depth 20 wall 13.5 s
+  w07 commit 32.0: ratio 0.002939 converged False node_limited False regions 4927 depth 20 wall 147.0 s
+  w05 commit 512.0: ratio 0.151 converged False node_limited False regions 13854 depth 20 wall 532.6 s
+  w08 g06 None: ratio 0.01027 converged False node_limited False regions 176 depth 20 wall 4.4 s
+  w08 parent None: ratio 0.01027 converged False node_limited False regions 151 depth 20 wall 3.6 s
+  w08 commit 2.0: ratio 0.08832 converged True node_limited False regions 31 depth 9 wall 0.6 s
+  w08 commit 8.0: ratio 0.1248 converged False node_limited False regions 537 depth 20 wall 14.6 s
+  w07 commit 128.0: ratio 0.001009 converged False node_limited False regions 8309 depth 20 wall 281.9 s
+  w08 commit 32.0: ratio 0.1129 converged False node_limited False regions 1640 depth 20 wall 45.6 s
+  w06 commit 512.0: ratio 0.001307 converged False node_limited False regions 12259 depth 20 wall 454.4 s
+  w09 g06 None: ratio 0.06182 converged False node_limited False regions 109 depth 20 wall 2.4 s
+  w09 parent None: ratio 0.06182 converged False node_limited False regions 107 depth 20 wall 2.3 s
+  w09 commit 2.0: ratio 0.1256 converged False node_limited False regions 2058 depth 20 wall 55.4 s
+  w09 commit 8.0: ratio 0.141 converged False node_limited False regions 168 depth 20 wall 4.0 s
+  w09 commit 32.0: ratio 0.07397 converged False node_limited False regions 2915 depth 20 wall 87.5 s
+  w08 commit 128.0: ratio 0.2082 converged False node_limited False regions 8798 depth 20 wall 298.9 s
+  w09 commit 128.0: ratio 0.2017 converged False node_limited False regions 9169 depth 20 wall 348.6 s
+  w10 g06 None: ratio 0.3912 converged False node_limited False regions 137 depth 20 wall 3.5 s
+  w10 parent None: ratio 0.3912 converged False node_limited False regions 126 depth 20 wall 3.3 s
+  w10 commit 2.0: ratio 0.09232 converged False node_limited False regions 1634 depth 20 wall 48.6 s
+  w10 commit 8.0: ratio 0.1013 converged False node_limited False regions 396 depth 20 wall 11.1 s
+  w08 commit 512.0: ratio 0.09992 converged False node_limited False regions 15894 depth 20 wall 692.0 s
+  w07 commit 512.0: DID NOT FINISH
+  w10 commit 32.0: ratio 0.1006 converged False node_limited False regions 3471 depth 20 wall 113.1 s
+  w11 g06 None: ratio 0.0472 converged False node_limited False regions 121 depth 20 wall 2.6 s
+  w11 parent None: ratio 0.0472 converged False node_limited False regions 111 depth 20 wall 2.5 s
+  w11 commit 2.0: ratio 0.2176 converged True node_limited False regions 82 depth 19 wall 2.1 s
+  w11 commit 8.0: ratio 0.1182 converged False node_limited False regions 324 depth 20 wall 9.5 s
+  w11 commit 32.0: ratio 0.1024 converged False node_limited False regions 2339 depth 20 wall 76.0 s
+  w09 commit 512.0: ratio 0.1264 converged False node_limited False regions 14226 depth 20 wall 619.1 s
+  w10 commit 128.0: ratio 0.2238 converged False node_limited False regions 8052 depth 20 wall 305.5 s
+  r55 g06 None: ratio 0.02665 converged True node_limited False regions 1 depth 0 wall 0.0 s
+  r55 parent None: ratio 0.02665 converged True node_limited False regions 1 depth 0 wall 0.0 s
+  r55 commit 2.0: ratio 0.02665 converged True node_limited False regions 1 depth 0 wall 0.0 s
+  r55 commit 8.0: ratio 0.02665 converged True node_limited False regions 1 depth 0 wall 0.0 s
+  r55 commit 32.0: ratio 0.02665 converged True node_limited False regions 1 depth 0 wall 0.1 s
+  r55 commit 128.0: ratio 0.02665 converged True node_limited False regions 1 depth 0 wall 0.0 s
+  r55 commit 512.0: ratio 0.02665 converged True node_limited False regions 1 depth 0 wall 0.0 s
+  w11 commit 128.0: ratio 0.1894 converged False node_limited False regions 5648 depth 20 wall 199.6 s
+  w10 commit 512.0: ratio 0.1346 converged False node_limited False regions 11903 depth 20 wall 497.7 s
+  w11 commit 512.0: ratio 0.06542 converged False node_limited False regions 17333 depth 20 wall 779.7 s
+stage 2 (bar lifted; and bounded depth where a call did not finish): 84 units
+  w01 barlifted 2.0: ratio 0.1285 converged True node_limited False regions 36 depth 10 wall 0.8 s
+  w00 barlifted 8.0: ratio 0.0009297 converged True node_limited False regions 119 depth 11 wall 3.2 s
+  w00 barlifted 32.0: ratio 0.0007812 converged True node_limited False regions 168 depth 15 wall 4.3 s
+  w01 barlifted 8.0: ratio 0.08556 converged True node_limited False regions 111 depth 13 wall 2.8 s
+  w00 barlifted 128.0: ratio 0.05916 converged True node_limited False regions 267 depth 11 wall 7.1 s
+  w01 barlifted 32.0: ratio 0.001213 converged True node_limited False regions 257 depth 16 wall 7.3 s
+  w02 barlifted 8.0: ratio 0.06099 converged True node_limited False regions 134 depth 14 wall 3.5 s
+  w01 barlifted 128.0: ratio 0.02275 converged True node_limited False regions 439 depth 11 wall 12.7 s
+  w02 barlifted 32.0: ratio 0.006926 converged True node_limited False regions 219 depth 15 wall 5.4 s
+  w03 barlifted 8.0: ratio 0.0136 converged True node_limited False regions 73 depth 13 wall 1.7 s
+  w02 barlifted 128.0: ratio 0.009747 converged True node_limited False regions 456 depth 13 wall 12.9 s
+  w03 barlifted 32.0: ratio 0.01605 converged True node_limited False regions 191 depth 14 wall 5.2 s
+  w00 barlifted 512.0: ratio 0.7332 converged True node_limited False regions 980 depth 12 wall 28.8 s
+  w04 barlifted 8.0: ratio 0.002084 converged True node_limited False regions 94 depth 15 wall 2.5 s
+  w03 barlifted 128.0: ratio 0.06936 converged True node_limited False regions 371 depth 11 wall 11.7 s
+  w04 barlifted 32.0: ratio 0.009476 converged True node_limited False regions 259 depth 14 wall 7.5 s
+  w05 barlifted 8.0: ratio 0.0713 converged True node_limited False regions 211 depth 15 wall 6.7 s
+  w01 barlifted 512.0: ratio 0.001187 converged True node_limited False regions 1109 depth 12 wall 35.2 s
+  w02 barlifted 512.0: ratio 0.6976 converged True node_limited False regions 1006 depth 10 wall 32.6 s
+  w05 barlifted 32.0: ratio 0.008007 converged True node_limited False regions 196 depth 16 wall 5.9 s
+  w06 barlifted 8.0: ratio 0.0009972 converged True node_limited False regions 66 depth 12 wall 1.9 s
+  w04 barlifted 128.0: ratio 0.01718 converged True node_limited False regions 573 depth 13 wall 19.0 s
+  w06 barlifted 32.0: ratio 0.005276 converged True node_limited False regions 208 depth 12 wall 6.1 s
+  w05 barlifted 128.0: ratio 0.005369 converged True node_limited False regions 564 depth 14 wall 18.9 s
+  w06 barlifted 128.0: ratio 0.002847 converged True node_limited False regions 353 depth 14 wall 10.6 s
+  w07 barlifted 2.0: ratio 0.002971 converged True node_limited False regions 130 depth 13 wall 3.5 s
+  w07 barlifted 8.0: ratio 0.003618 converged True node_limited False regions 171 depth 11 wall 4.9 s
+  w07 barlifted 32.0: ratio 0.002938 converged True node_limited False regions 227 depth 15 wall 7.0 s
+  w03 barlifted 512.0: ratio 0.1063 converged True node_limited False regions 1282 depth 11 wall 43.4 s
+  w08 barlifted 8.0: ratio 0.1248 converged True node_limited False regions 89 depth 10 wall 2.0 s
+  w04 barlifted 512.0: ratio 0.03064 converged True node_limited False regions 1050 depth 13 wall 33.7 s
+  w08 barlifted 32.0: ratio 0.113 converged True node_limited False regions 117 depth 10 wall 3.6 s
+  w09 barlifted 2.0: ratio 0.1256 converged True node_limited False regions 31 depth 9 wall 0.7 s
+  w09 barlifted 8.0: ratio 0.141 converged True node_limited False regions 58 depth 10 wall 1.4 s
+  w09 barlifted 32.0: ratio 0.07397 converged True node_limited False regions 110 depth 11 wall 3.5 s
+  w07 barlifted 128.0: ratio 0.001011 converged True node_limited False regions 532 depth 11 wall 17.2 s
+  w08 barlifted 128.0: ratio 0.2082 converged True node_limited False regions 663 depth 13 wall 22.6 s
+  w09 barlifted 128.0: ratio 0.2017 converged True node_limited False regions 731 depth 14 wall 24.6 s
+  w06 barlifted 512.0: ratio 0.001312 converged True node_limited False regions 1294 depth 13 wall 43.2 s
+  w10 barlifted 2.0: ratio 0.09232 converged True node_limited False regions 29 depth 8 wall 0.8 s
+  w10 barlifted 8.0: ratio 0.1013 converged True node_limited False regions 68 depth 10 wall 1.8 s
+  w11 barlifted 8.0: ratio 0.1182 converged True node_limited False regions 57 depth 10 wall 1.5 s
+  w10 barlifted 32.0: ratio 0.1006 converged True node_limited False regions 225 depth 15 wall 7.4 s
+  w05 barlifted 512.0: ratio 0.1511 converged False node_limited False regions 1929 depth 20 wall 66.2 s
+  w11 barlifted 32.0: ratio 0.1024 converged True node_limited False regions 159 depth 13 wall 4.9 s
+  w10 barlifted 128.0: ratio 0.2238 converged True node_limited False regions 597 depth 13 wall 18.8 s
+  w11 barlifted 128.0: ratio 0.1894 converged True node_limited False regions 563 depth 15 wall 17.1 s
+  w08 barlifted 512.0: ratio 0.09994 converged True node_limited False regions 1653 depth 18 wall 53.4 s
+  w09 barlifted 512.0: ratio 0.1264 converged True node_limited False regions 1695 depth 15 wall 54.8 s
+  w10 barlifted 512.0: ratio 0.1346 converged True node_limited False regions 1274 depth 15 wall 40.8 s
+  z12 commit 8.0: ratio 1.432 converged False node_limited False regions 2168 depth 8 wall 18.2 s
+  z12 commit 2.0: ratio 1.749 converged False node_limited False regions 632 depth 8 wall 5.0 s
+  w11 barlifted 512.0: ratio 0.06542 converged True node_limited False regions 1781 depth 14 wall 58.6 s
+  z12 commit 2.0: ratio 0.7179 converged False node_limited False regions 943 depth 12 wall 30.8 s
+  z12 commit 8.0: ratio 0.001201 converged False node_limited False regions 1602 depth 12 wall 56.4 s
+  z12 commit 32.0: ratio 0.7626 converged False node_limited False regions 1201 depth 8 wall 37.6 s
+  z12 commit 32.0: ratio 0.7623 converged False node_limited False regions 5747 depth 12 wall 227.2 s
+  z12 commit 128.0: ratio 0.9084 converged False node_limited False regions 2755 depth 8 wall 93.8 s
+  z12 commit 128.0: ratio 0.9084 converged False node_limited False regions 9757 depth 12 wall 437.7 s
+  z12 barlifted 8.0: DID NOT FINISH
+  z12 barlifted 2.0: DID NOT FINISH
+  z12 barlifted 32.0: DID NOT FINISH
+  z12 commit 512.0: ratio 0.9299 converged False node_limited False regions 7905 depth 8 wall 321.3 s
+  z00 commit 2.0: ratio 1.749 converged False node_limited False regions 634 depth 8 wall 5.0 s
+  z00 commit 2.0: ratio 0.7179 converged False node_limited False regions 944 depth 12 wall 29.8 s
+  z12 barlifted 128.0: DID NOT FINISH
+  z00 commit 8.0: ratio 1.432 converged False node_limited False regions 2170 depth 8 wall 14.2 s
+  z00 commit 8.0: ratio 0.001201 converged False node_limited False regions 1604 depth 12 wall 42.6 s
+  z12 commit 512.0: DID NOT FINISH
+  z00 commit 32.0: ratio 0.7626 converged False node_limited False regions 1201 depth 8 wall 31.6 s
+  z12 barlifted 512.0: DID NOT FINISH
+  z00 commit 32.0: ratio 0.7623 converged False node_limited False regions 5750 depth 12 wall 179.2 s
+  z00 commit 128.0: ratio 0.9084 converged False node_limited False regions 2755 depth 8 wall 79.6 s
+  z00 barlifted 2.0: DID NOT FINISH
+  z00 commit 128.0: ratio 0.9084 converged False node_limited False regions 9761 depth 12 wall 345.4 s
+  z00 barlifted 8.0: ratio 0.001211 converged False node_limited False regions 19172 depth 20 wall 887.9 s
+  z00 commit 512.0: ratio 0.9299 converged False node_limited False regions 7905 depth 8 wall 256.0 s
+  z00 barlifted 32.0: DID NOT FINISH
+  w07 commit 512.0: ratio 0.001541 converged False node_limited False regions 4797 depth 8 wall 138.7 s
+  z00 barlifted 128.0: ratio 0.9084 converged False node_limited False regions 18668 depth 20 wall 849.7 s
+  w07 barlifted 512.0: ratio 0.001522 converged True node_limited False regions 2296 depth 16 wall 61.0 s
+  w07 commit 512.0: ratio 0.001517 converged False node_limited False regions 8472 depth 12 wall 272.9 s
+  z00 commit 512.0: ratio 0.9299 converged False node_limited False regions 20672 depth 12 wall 874.0 s
+  z00 barlifted 512.0: DID NOT FINISH
+replay check, all reproduce: False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/docs/levin-phase-floor/07/calibration/out/replay.json and replay_tables.md

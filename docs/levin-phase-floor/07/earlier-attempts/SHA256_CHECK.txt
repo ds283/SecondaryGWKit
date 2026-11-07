@@ -1,0 +1,150 @@
+# levin-phase-floor 07: section 0.5, the earlier attempts' records against the tarball
+# written 2026-11-07T09:00:54+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script check_earlier_attempts.py sha256 d8b8ae814d4b39b04485679c71fa0a1e6aa1163b1bf6d783c643bf12caf72926
+# prov.py sha256 9e2adc86dd624417822eb68ef554a6e5c23c817a824a8f778df712055d449c76
+# AdaptiveLevin/levin_quadrature.py sha256 13294b2ac3e3e3a480a6735a263ea8abe205ccdaada12939c13cd20edad884a4
+# input var/levin-phase-floor-07/wip/07-part-a-rebased-on-06d-untracked.tar.gz sha256 f87d82310401754d6afe83326945c347512a34b362233ad81b258064470514bf
+# HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? docs/levin-phase-floor/07/
+# uptime at start: 9:00  up 7 days, 11:21, 1 user, load averages: 13.75 14.08 17.30
+# tarball sha256 f87d82310401754d6afe83326945c347512a34b362233ad81b258064470514bf; listed in var/levin-phase-floor-07/wip/SHA256SUMS.txt: True
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/._07
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/._calibration
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/._out
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/._scripts
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/._stop1
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/._stop2
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/._stop3
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/out/._parent_compare.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/out/._stop4_diagnose.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/out/._stop4_lg_seed0.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/out/._validate_reference.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/out/._validate_reference_precision.json
+d9e4d5b416e6ac61f4ea37a277359318736cff8afe76e3f5bc8df9a8a9d81b7c  d9e4d5b416e6ac61f4ea37a277359318736cff8afe76e3f5bc8df9a8a9d81b7c  equal  docs/levin-phase-floor/07/calibration/out/parent_compare.json  docs/levin-phase-floor/07/earlier-attempts/calibration/out/parent_compare.json
+f8e13ac53097a921fc4c4dd703e896c1316b527ceea6b84baa46ea1da352cb1b  f8e13ac53097a921fc4c4dd703e896c1316b527ceea6b84baa46ea1da352cb1b  equal  docs/levin-phase-floor/07/calibration/out/stop4_diagnose.json  docs/levin-phase-floor/07/earlier-attempts/calibration/out/stop4_diagnose.json
+d084b2cc93b98a64222b319e6b4c0a9c18b2f70657e5fdae6d7266b2977aca82  d084b2cc93b98a64222b319e6b4c0a9c18b2f70657e5fdae6d7266b2977aca82  equal  docs/levin-phase-floor/07/calibration/out/stop4_lg_seed0.json  docs/levin-phase-floor/07/earlier-attempts/calibration/out/stop4_lg_seed0.json
+607fbe6e7a0701e40b1862a5c80b454aed604be84a226376b6a338b31a97063b  607fbe6e7a0701e40b1862a5c80b454aed604be84a226376b6a338b31a97063b  equal  docs/levin-phase-floor/07/calibration/out/validate_reference.json  docs/levin-phase-floor/07/earlier-attempts/calibration/out/validate_reference.json
+3f5023af1e31a7f76d9b4e8f25bd04bc07161acc47a45c0d5f02f13813729a94  3f5023af1e31a7f76d9b4e8f25bd04bc07161acc47a45c0d5f02f13813729a94  equal  docs/levin-phase-floor/07/calibration/out/validate_reference_precision.json  docs/levin-phase-floor/07/earlier-attempts/calibration/out/validate_reference_precision.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._calibrate.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._lg_location.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._lg_repeat.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._parent_compare.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._prov.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._stop4_diagnose.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._stop4_lg_seed0.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._validate_reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/scripts/._validate_reference_precision.py
+0b316b6d0fbdd021b2be20c54b6dc96914824ed974c48992a551c7391447e0e9  0b316b6d0fbdd021b2be20c54b6dc96914824ed974c48992a551c7391447e0e9  equal  docs/levin-phase-floor/07/calibration/scripts/calibrate.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/calibrate.py
+4d42a22dc1936d4cec927219cd910598a2cedb3d967e3b733065e2353e3f4424  4d42a22dc1936d4cec927219cd910598a2cedb3d967e3b733065e2353e3f4424  equal  docs/levin-phase-floor/07/calibration/scripts/lg_location.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/lg_location.py
+f6651cf53e0b7af1e582ea0852652e3c4ac1a406731f8ddbf488e6f850320925  f6651cf53e0b7af1e582ea0852652e3c4ac1a406731f8ddbf488e6f850320925  equal  docs/levin-phase-floor/07/calibration/scripts/lg_repeat.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/lg_repeat.py
+03fca21d4d4cb5275092d1034ac320b280ac6a77d24836e0470f065524ab243a  03fca21d4d4cb5275092d1034ac320b280ac6a77d24836e0470f065524ab243a  equal  docs/levin-phase-floor/07/calibration/scripts/parent_compare.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/parent_compare.py
+5860fe90ab5026409473858119f16c40b8ba42d898451c68d19a2988f0b05ebd  5860fe90ab5026409473858119f16c40b8ba42d898451c68d19a2988f0b05ebd  equal  docs/levin-phase-floor/07/calibration/scripts/prov.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/prov.py
+77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba  77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba  equal  docs/levin-phase-floor/07/calibration/scripts/reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/reference.py
+5a5e6ccf4ff19ff7a36d7f6324837a6a4273e126681c06036de24509cb3b756e  5a5e6ccf4ff19ff7a36d7f6324837a6a4273e126681c06036de24509cb3b756e  equal  docs/levin-phase-floor/07/calibration/scripts/stop4_diagnose.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/stop4_diagnose.py
+b313bf83a5f081a13e5967e002e3b29dc5bd8074491924207bc031745a2e2ef2  b313bf83a5f081a13e5967e002e3b29dc5bd8074491924207bc031745a2e2ef2  equal  docs/levin-phase-floor/07/calibration/scripts/stop4_lg_seed0.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/stop4_lg_seed0.py
+9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c  9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c  equal  docs/levin-phase-floor/07/calibration/scripts/validate_reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/validate_reference.py
+62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412  62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412  equal  docs/levin-phase-floor/07/calibration/scripts/validate_reference_precision.py  docs/levin-phase-floor/07/earlier-attempts/calibration/scripts/validate_reference_precision.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/._out
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/._scripts
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/out/._lg_location.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/out/._lg_repeat.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/out/._lg_seed10.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/out/._parent_compare.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/out/._time_reference.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/out/._validate_reference.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/out/._validate_reference_precision.json
+11277a9dbeab776847ae8e5f11755b7f915ec115a9a2062e581d19c8bdf7862a  11277a9dbeab776847ae8e5f11755b7f915ec115a9a2062e581d19c8bdf7862a  equal  docs/levin-phase-floor/07/calibration/stop1/out/lg_location.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/out/lg_location.json
+944539a4de2b386300c6f1a5a2594f4f54ba5546134e777e81372efce730f6ce  944539a4de2b386300c6f1a5a2594f4f54ba5546134e777e81372efce730f6ce  equal  docs/levin-phase-floor/07/calibration/stop1/out/lg_repeat.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/out/lg_repeat.json
+dfccf1ec84fd943b006fb65a0f7f3d43af2fea22f23d8b76acd7c7c9c3c302d8  dfccf1ec84fd943b006fb65a0f7f3d43af2fea22f23d8b76acd7c7c9c3c302d8  equal  docs/levin-phase-floor/07/calibration/stop1/out/lg_seed10.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/out/lg_seed10.json
+d6173148bbc5701acffbab12e44c72e17a64552bb753338e25413ab3da4b27b0  d6173148bbc5701acffbab12e44c72e17a64552bb753338e25413ab3da4b27b0  equal  docs/levin-phase-floor/07/calibration/stop1/out/parent_compare.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/out/parent_compare.json
+b581897cfa7234d2bf8af5d697e32311edbc914ddce05a763d33961035b345fa  b581897cfa7234d2bf8af5d697e32311edbc914ddce05a763d33961035b345fa  equal  docs/levin-phase-floor/07/calibration/stop1/out/time_reference.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/out/time_reference.json
+ae97f05761d56e43250aea15151308ae21b84559e4fe10c41fcf560013a2d13d  ae97f05761d56e43250aea15151308ae21b84559e4fe10c41fcf560013a2d13d  equal  docs/levin-phase-floor/07/calibration/stop1/out/validate_reference.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/out/validate_reference.json
+5c29a8fd024e8132e07ae0110b6f116f146a66e75b92b76c86fa0ce40244bc67  5c29a8fd024e8132e07ae0110b6f116f146a66e75b92b76c86fa0ce40244bc67  equal  docs/levin-phase-floor/07/calibration/stop1/out/validate_reference_precision.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/out/validate_reference_precision.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._lg_location.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._lg_repeat.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._lg_seed10.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._parent_compare.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._prov.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._time_reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._validate_reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop1/scripts/._validate_reference_precision.py
+17e0201c631c27482715492c34b2c4837b137e307d1524bc526cb1943136c7e8  17e0201c631c27482715492c34b2c4837b137e307d1524bc526cb1943136c7e8  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/lg_location.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/lg_location.py
+c10a21bc438bd4fe7663cd055a7d1a15c91f6738d1616d689af7a596b78610cd  c10a21bc438bd4fe7663cd055a7d1a15c91f6738d1616d689af7a596b78610cd  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/lg_repeat.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/lg_repeat.py
+f27b91af5cfd2a6a9be7f920dd97e862bc94fccff789b2223e6da09e87f1623e  f27b91af5cfd2a6a9be7f920dd97e862bc94fccff789b2223e6da09e87f1623e  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/lg_seed10.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/lg_seed10.py
+5288a4e09fcecb23c2285bbd1334f84c943b833cf3c5c50d319633d921df2cde  5288a4e09fcecb23c2285bbd1334f84c943b833cf3c5c50d319633d921df2cde  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/parent_compare.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/parent_compare.py
+c7e57773f6f7394702e821903556f7a2e7859aee04f9e6bb084c8c9003cf8fd4  c7e57773f6f7394702e821903556f7a2e7859aee04f9e6bb084c8c9003cf8fd4  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/prov.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/prov.py
+e7e3b2af7559e6a0c3843067f21eca80ccf71c927c1486a8952c4a12eb8e2fb2  e7e3b2af7559e6a0c3843067f21eca80ccf71c927c1486a8952c4a12eb8e2fb2  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/reference.py
+79b770ce918c63f9a5b2a17cf1717fc7b2ba3fed213bc6cf6e1b5eb28f1ee6cd  79b770ce918c63f9a5b2a17cf1717fc7b2ba3fed213bc6cf6e1b5eb28f1ee6cd  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/time_reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/time_reference.py
+1f302d4092fd07912a59cc8c3d6078bceb96fcd13f30971641942f7a684b66d0  1f302d4092fd07912a59cc8c3d6078bceb96fcd13f30971641942f7a684b66d0  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/validate_reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/validate_reference.py
+62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412  62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412  equal  docs/levin-phase-floor/07/calibration/stop1/scripts/validate_reference_precision.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop1/scripts/validate_reference_precision.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/._out
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/._scripts
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._calibrate.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._calibrate_supplement.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._calibrate_supplement.md
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._calibrate_tables.md
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._lg_location.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._lg_repeat.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._parent_compare.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._validate_reference.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/out/._validate_reference_precision.json
+be1f756fd2ba6dbfd0051c3e3675a82a6b91d6c8b1be2de58d8194679edf2ca7  be1f756fd2ba6dbfd0051c3e3675a82a6b91d6c8b1be2de58d8194679edf2ca7  equal  docs/levin-phase-floor/07/calibration/stop2/out/calibrate.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/calibrate.json
+3bcec9e3af7225d70f9dc13bad42787124b488d12a5ede60f702e2ce8188a0e2  3bcec9e3af7225d70f9dc13bad42787124b488d12a5ede60f702e2ce8188a0e2  equal  docs/levin-phase-floor/07/calibration/stop2/out/calibrate_supplement.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/calibrate_supplement.json
+2a325702aac6c13e45ad0be83efac34936348d77a6c1ef9af18d62ea9429ffee  2a325702aac6c13e45ad0be83efac34936348d77a6c1ef9af18d62ea9429ffee  equal  docs/levin-phase-floor/07/calibration/stop2/out/calibrate_supplement.md  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/calibrate_supplement.md
+82bbabc69f9be528af75f75ebfcf6cd8ef12a338bd7e4e4f60abeea6e8ff4844  82bbabc69f9be528af75f75ebfcf6cd8ef12a338bd7e4e4f60abeea6e8ff4844  equal  docs/levin-phase-floor/07/calibration/stop2/out/calibrate_tables.md  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/calibrate_tables.md
+04708db2a46a0c44eb23ed3e8cfab169b21e9dda3af4d50133fb75f2e05e1a83  04708db2a46a0c44eb23ed3e8cfab169b21e9dda3af4d50133fb75f2e05e1a83  equal  docs/levin-phase-floor/07/calibration/stop2/out/lg_location.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/lg_location.json
+6f7fcbeadaead66a53ac11bfb18830cac8a2cb1dde71fbee7c4ccdc6eb5e8753  6f7fcbeadaead66a53ac11bfb18830cac8a2cb1dde71fbee7c4ccdc6eb5e8753  equal  docs/levin-phase-floor/07/calibration/stop2/out/lg_repeat.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/lg_repeat.json
+23d7775f202d5cbef4ded5c4e1611402ab865e58a7f46c7ccb117f6ff1e97774  23d7775f202d5cbef4ded5c4e1611402ab865e58a7f46c7ccb117f6ff1e97774  equal  docs/levin-phase-floor/07/calibration/stop2/out/parent_compare.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/parent_compare.json
+607fbe6e7a0701e40b1862a5c80b454aed604be84a226376b6a338b31a97063b  607fbe6e7a0701e40b1862a5c80b454aed604be84a226376b6a338b31a97063b  equal  docs/levin-phase-floor/07/calibration/stop2/out/validate_reference.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/validate_reference.json
+3f5023af1e31a7f76d9b4e8f25bd04bc07161acc47a45c0d5f02f13813729a94  3f5023af1e31a7f76d9b4e8f25bd04bc07161acc47a45c0d5f02f13813729a94  equal  docs/levin-phase-floor/07/calibration/stop2/out/validate_reference_precision.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/out/validate_reference_precision.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._calibrate.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._calibrate_supplement.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._lg_location.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._lg_repeat.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._parent_compare.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._prov.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._validate_reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop2/scripts/._validate_reference_precision.py
+e6f21f2cad93fd21ad56e03196055d68043bb680ce21554a5da20ce3b133b325  e6f21f2cad93fd21ad56e03196055d68043bb680ce21554a5da20ce3b133b325  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/calibrate.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/calibrate.py
+d0a55df541253a7beb0888101ecb2db1c077b70aa13e7f11ddcc7466d6d73e52  d0a55df541253a7beb0888101ecb2db1c077b70aa13e7f11ddcc7466d6d73e52  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/calibrate_supplement.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/calibrate_supplement.py
+4c0493026c689a6de25603b7341ac9e2f8de011041329e6bc0c71396d1287b5b  4c0493026c689a6de25603b7341ac9e2f8de011041329e6bc0c71396d1287b5b  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/lg_location.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/lg_location.py
+a8bb1fdf42defe205b0bc083e9e82af82790ada1f07963566dbfd6b18d25f93c  a8bb1fdf42defe205b0bc083e9e82af82790ada1f07963566dbfd6b18d25f93c  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/lg_repeat.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/lg_repeat.py
+b278249346c5a5955bcd503200c95f94b993a86562bd1451435eecf60d714aea  b278249346c5a5955bcd503200c95f94b993a86562bd1451435eecf60d714aea  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/parent_compare.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/parent_compare.py
+5860fe90ab5026409473858119f16c40b8ba42d898451c68d19a2988f0b05ebd  5860fe90ab5026409473858119f16c40b8ba42d898451c68d19a2988f0b05ebd  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/prov.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/prov.py
+77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba  77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/reference.py
+9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c  9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/validate_reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/validate_reference.py
+62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412  62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412  equal  docs/levin-phase-floor/07/calibration/stop2/scripts/validate_reference_precision.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop2/scripts/validate_reference_precision.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/._out
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/._scripts
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/out/._parent_compare.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/out/._stop3_diagnose.json
+f80e8e889efb13cee8b96b28cc318e34423068a57810120071d9773953a0f97c  f80e8e889efb13cee8b96b28cc318e34423068a57810120071d9773953a0f97c  equal  docs/levin-phase-floor/07/calibration/stop3/out/parent_compare.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/out/parent_compare.json
+685132b1a5900470a2e0c36e9ed368ff404e9bbbbb788710a33911aab8d39be2  685132b1a5900470a2e0c36e9ed368ff404e9bbbbb788710a33911aab8d39be2  equal  docs/levin-phase-floor/07/calibration/stop3/out/stop3_diagnose.json  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/out/stop3_diagnose.json
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._calibrate.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._lg_location.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._lg_repeat.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._parent_compare.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._prov.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._stop3_diagnose.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._validate_reference.py
+# AppleDouble metadata, not a record, not copied: docs/levin-phase-floor/07/calibration/stop3/scripts/._validate_reference_precision.py
+708162f57d27ee3a960740414e57979d3a755b50f485789e53e4225a8c172995  708162f57d27ee3a960740414e57979d3a755b50f485789e53e4225a8c172995  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/calibrate.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/calibrate.py
+a9fc7b9fff7b53d0d5f50ad10e83b9049889229263127b6b875e0be5fa11e279  a9fc7b9fff7b53d0d5f50ad10e83b9049889229263127b6b875e0be5fa11e279  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/lg_location.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/lg_location.py
+6e1b20ae09206afe19981784d5cdcf4d729a74b85e8c3db71ead722cf08f89a4  6e1b20ae09206afe19981784d5cdcf4d729a74b85e8c3db71ead722cf08f89a4  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/lg_repeat.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/lg_repeat.py
+5368a8ca12d121f6b064f84564d03903ace7107a721d42aaf10afc0bb52b4004  5368a8ca12d121f6b064f84564d03903ace7107a721d42aaf10afc0bb52b4004  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/parent_compare.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/parent_compare.py
+5860fe90ab5026409473858119f16c40b8ba42d898451c68d19a2988f0b05ebd  5860fe90ab5026409473858119f16c40b8ba42d898451c68d19a2988f0b05ebd  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/prov.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/prov.py
+77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba  77617ac573307985dff4409793f4131a0ab19741703283826c2655e888feaeba  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/reference.py
+8684ec5f9fb32cdda3aacf052767d308033251559f732b4be356ed9ec3ef29f2  8684ec5f9fb32cdda3aacf052767d308033251559f732b4be356ed9ec3ef29f2  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/stop3_diagnose.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/stop3_diagnose.py
+9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c  9c791c8497f9fdf269b2a1a48c7fa83d20ca236e2c2f4f96ebef469572626d9c  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/validate_reference.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/validate_reference.py
+62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412  62f139f5230092e373aac28cc2fd7666dd6e78b0c62cfe9ca59f3251731a7412  equal  docs/levin-phase-floor/07/calibration/stop3/scripts/validate_reference_precision.py  docs/levin-phase-floor/07/earlier-attempts/calibration/stop3/scripts/validate_reference_precision.py
+# AppleDouble metadata, not a record, not copied: prompts/levin-phase-floor/logs/._07-stationary-point-guard.md
+fb76375394ebbb1f6dda81d2bfe97c449ee6963cc62d432e398b350a842e7cba  fb76375394ebbb1f6dda81d2bfe97c449ee6963cc62d432e398b350a842e7cba  equal  prompts/levin-phase-floor/logs/07-stationary-point-guard.md  docs/levin-phase-floor/07/earlier-attempts/log-parts-a-1-to-4.md
+# 61 files; 0 differing, missing or extra; tarball listed: True
