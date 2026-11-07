@@ -214,7 +214,7 @@ is written for a basis of any number of components. That covers every caller of
   **G2 L2, decided**).
 - **A stopping rule for window leaves whose error does not fall** (Decisions, **07 fourth stop**;
   the user, *"Let's go for (b)"*). If window leaves are still chased to `depth_max` on a flat error,
-  the rule is 07's, written after §2 measures them. Its basis is QUADPACK's own (§2.5). The driver's
+  the rule is 07's, written after §2 measures them (§1.3, written at §2's stop). Its basis is QUADPACK's own (§2.5). The driver's
   general stall rule stays withdrawn: *"Let's remeasure the stall question after 07"* (Decisions,
   **06c stall withdrawn**). It is not this prompt's.
 
@@ -353,15 +353,43 @@ Everything below runs once for each independent phase the basis reports.
    `num_regions`, `abserr` and the per-source breakdowns cover them. **With nothing located the
    root leaf is today's, unchanged.**
 6. **Window leaves in the loop:**
-   - they are never floor-limited (§0.2 (ii)), and stay refinable until `depth_max`;
+   - the floor-limited exit never fires on them (§0.2 (ii)); they stay refinable until `depth_max`
+     or until §1.3's rule stops their window;
    - their trust check, node errors and declared terms are a Clenshaw–Curtis leaf's, unchanged;
    - **at `depth_max`** a window leaf keeps its Clenshaw–Curtis estimate, as any leaf there does.
 
-### 1.3 The stopping rule for window leaves — not written yet
+### 1.3 The stopping rule for window leaves (written at §2's stop, §9 point 2)
 
-§0.2's last decision. Whether one is needed, and its form, come from §2.5's measurement, after the
-user has seen it. **Nothing of it is built before §2's stop.** If the user rules one in, it is
-written as an amendment to this prompt and shown to the user before any test of §3 is written.
+§0.2's last decision, written from §2.5's measurement. QUADPACK's `iroff1`, counted per window.
+- **The count.** Each window, after merging (§1.2 item 2), keeps a counter. A bisection of one of
+  its leaves $P$ into $L$ and $R$ **counts** if both hold:
+  - $|(V_L + V_R) - V_P| \le 10^{-5}\,|V_L + V_R|$: the halves change the value by at most $10^{-5}$
+    relatively, with $V$ each leaf's own solve (`value_own`);
+  - $e'_L + e'_R \ge 0.99\,e'_P$: their summed error is at least 0.99 of the parent's, with $e'$
+    the error the loop's budget sums for each leaf.
+- **At 6 counted bisections the window is round-off-limited.** Every leaf of it, those already
+  made and any made later, is then not refinable. Each is returned **floor-limited**
+  (`phase_limited`), and is exempt from the trust check as a floor-limited leaf is. It declares
+  what it carries: its $e'$, except that a leaf already found untrusted declares as an untrusted
+  leaf at `depth_max` does, $\max(\epsilon_P, \Delta_1)/(1-r)$ if $r < 1$ and
+  $\max(\epsilon_P, \Delta_1 + \Delta_2)$ if not. The call's `converged` then follows the budget,
+  as for any floor-limited leaf.
+- **The basis.** `dqage` counts the same bisection with the same two thresholds, and gives
+  `ier = 2` at 6. QUADPACK stops the whole call; here one window stops, because the rest of the
+  call may still be resolving. The three numbers are QUADPACK's, unchanged. `iroff2` (a rise in
+  error) is not adopted: §2.5 found both mechanisms flat, not rising.
+- **What it ends,** on §2.5's measurement: (A), window leaves on a Clenshaw–Curtis floor flat in
+  $h$ and above the request; and (B), window leaves whose nested-pair differences sit at the
+  integrand's noise, found untrusted and refined whatever the budget says. On (A) a window ends
+  floor-limited, as the parent's leaves do; on (B) its untrusted leaves stop holding the call
+  unconverged when their declared error is within the request.
+- **Where it could fire falsely:** a window that still has a leaf whose error is falling when six
+  flat bisections have counted elsewhere in it. That leaf then declares what it carries, so the
+  value stays honest, and the call may end unconverged where refinement would have converged it.
+  §2's re-run on the final code reports every window that stops while one of its leaves' errors
+  fell at its last bisection.
+- **Unchanged:** the bar on the floor-limited exit (§0.2 (ii)) for window leaves the rule has not
+  stopped, and for every guarded leaf; guarded leaves are not counted (none was guarded in §2).
 
 ### 1.4 The guard: the safety net
 
@@ -450,7 +478,10 @@ and *"Testing (R) using contour integration also: yes, please … It is the scie
 The earlier attempts' `reference.py` and `validate_reference*.py` did this (§0.5). They may be
 reused, re-validated on this tree.
 
-**The runs:** every case at `rtol` $10^{-10}$, with `atol` $10^{-14}$ times the reference.
+**The runs:** every case at `rtol` $10^{-9}$, with `atol` $10^{-14}$ times the reference
+(amended at §2's stop, §9 point 1; the first run was at $10^{-10}$). If at $10^{-9}$ no rung of
+$\Phi_w$ qualifies under §2.2's rule, or no rung of $\Lambda_c$ under its rule, §2.2 is run again in
+full at `rtol` $10^{-8}$ and its rules applied there.
 **"Honest"** means $|{\rm value} - {\rm ref}| \le$ `abserr`. **"Converged"** means the call reports
 `converged`.
 
@@ -584,8 +615,16 @@ the reference, and that `abserr` is at least the true error.
    - The point is located on phase 2 and windowed, and the value is honest against the closed form
      (a Fresnel integral and an elementary one).
    - Phase 1 locates nothing.
-10. **§1.3's rule,** if the user rules one in: tests of its own, written with it, one of which shows
-    it does not fire on test 1's window leaves where they converge.
+10. **§1.3's rule.**
+    - **(a) A flat window stops.** A call whose window leaves sit on a Clenshaw–Curtis floor above
+      the request (§2.5 (A); a family (R) case at a tight `rtol` is the model). The window stops
+      after six counted bisections, far short of `depth_max`; its leaves are floor-limited; the
+      call is unconverged and honest.
+    - **(b) Untrusted leaves at noise stop.** A call whose window leaves are found untrusted while
+      their error is far inside the request (§2.5 (B); z12's shape is the model, built on a closed
+      form). The window stops, the call is converged, and the value is honest.
+    - **(c) It does not fire where leaves converge:** on test 1's window leaves no bisection
+      counts.
 11. **The records of `QuadSourceIntegral`.** A test in `ComputeTargets/tests/` that runs a group
     call through `phase_group_Levin_integral` on a stand-in, as the module's existing tests do, and
     asserts that the group record carries the four counts. No existing test pins the record's key
@@ -599,6 +638,10 @@ the reference, and that `abserr` is at least the true error.
       converged to unconverged is a stop.
     - The tests that put a stationary point in a call without `theta_deriv` exercise the guard; they
       pass unchanged.
+    - **An assertion on the result's key set** may admit §1.5's new keys, and nothing else
+      (amended at §2's stop, §9 point 3): `test_levin_trust_yardstick.py`'s
+      `test_bit_identical_to_the_variant` is one. Every other field it compares stays
+      bit-identical.
 
 **Deliberate breakages,** each recorded in the log with the test that catches it, then reverted:
 - **(i)** location, windows and guard all off: test 1 must fail;
@@ -609,7 +652,8 @@ the reference, and that `abserr` is at least the true error.
 - **(vi)** the window replaced by a plain split at $x_s$, with the leaves on either side unguarded:
   test 1 or test 7 must fail;
 - **(vii)** location done only for the first phase a basis reports: test 9 must fail;
-- **(viii)** the four counts left out of the group record: test 11 must fail.
+- **(viii)** the four counts left out of the group record: test 11 must fail;
+- **(ix)** §1.3's counter never reaching its limit: test 10 (a) must fail.
 
 **The seven roots,** before and after. A fall is a stop. A rise equals the tests added.
 
@@ -810,3 +854,58 @@ them.
   beyond a day.
 - **Any store file** changes, or 06m's census does.
 - **The lock** is held, or will not release.
+
+## 9. Amendments at §2's stop
+
+1. **§2.1's runs move from `rtol` $10^{-10}$ to $10^{-9}$, with $10^{-8}$ as the fallback**
+   (2026-11-07). At $10^{-10}$ no rung of $\Phi_w$ qualified. The only failing (R) case,
+   $c = 10^8$, $x_s = 0.7236\ldots$, $\omega = 0$, is honest at every rung but ends `node_limited`
+   at $2\pi$ and $8\pi$. Its request, $1.4\times10^{-15}$ against $|I| = 1.4\times10^{-5}$, is about
+   $6\varepsilon$ of the integrand's scale. The orchestrator measured it at rtol $10^{-7}$ to
+   $10^{-10}$, at the parent and at $2\pi$, $8\pi$ and $32\pi$
+   (`docs/levin-phase-floor/07/investigations/cc-midpoint-shift/out/rtol_sweep.txt`): all 16
+   calls are honest, and every one converges except the three windows at $10^{-10}$. What sets the
+   floor there is a Clenshaw–Curtis node shift that 07's non-dyadic window edges expose and the
+   parent's dyadic leaves on $[0, 1]$ escape (`[07-cc-interior-nodes-shift-with-a-rounded-midpoint]`).
+   The user: *"For `Phi_w`: At the moment it's looking like we should re-run §2.2 with `rtol =
+   1e-9` and proceed for there. If that fails, then relax to `rtol = 1e-8`, but hopefully `1e-9`
+   works across the board."*
+   - **What is re-run:** all of §2, on the code with §1.3 built (point 4): §2.2 at the new rtol,
+     both families and both rules, with the parent's runs for context; §2.3 and §2.4 at their own
+     captured arguments and tolerances, which this does not change; and §2.5 for every call that
+     does not converge or reaches `depth_max`. The first run's outputs are kept beside the new ones,
+     not overwritten.
+   - **Unchanged:** the ladders, the rules, "honest" and "converged", and §8's stop when no rung
+     qualifies at the last rtol tried.
+2. **§1.3's rule is QUADPACK's `iroff1`, counted per window** (2026-11-07). The user had ruled it in
+   on 2026-10-30 (Decisions, **07 fourth stop**: *"Let's go for (b)"*), to be written after §2
+   measured the window leaves. §2.5 found them chased to `depth_max` two ways, (A) on a flat
+   Clenshaw–Curtis floor and (B) untrusted at the integrand's noise, and found that `iroff1`
+   counts on both. (B) is what keeps z00 and z12 from finishing at every rung. The user, on the
+   agent's reading that the rule would return some window leaves unconverged: *"§1.3: did we not
+   plan to implement the QUADPACK-style `iroff1` counter for this issue? The cost is that we have
+   some leaves marked unconverged (if I understood). Is that really a problem?"* It is not: a
+   stopped window's leaves are returned floor-limited, declaring what they carry, as the first
+   text of this prompt (its §9 point 8) said. On (A) the call is unconverged because its request is
+   below the floor, as at the parent; on (B) it converges when its budget is met. §1.2 item 6, §1.3,
+   §3 test 10 and breakage (ix) say so.
+3. **§3 test 12 admits §1.5's new keys in a key-set assertion** (2026-11-07).
+   `test_levin_trust_yardstick.py`'s `test_bit_identical_to_the_variant` (06m's test 2) asserts that
+   the result's key set equals 06l's variant's, so §1.5's keys fail it on all nine cells; every
+   other field is bit-identical (the log's deviation 15). The user: *"It's absurd not to allow new
+   keys that were added specifically because they were needed."* The test admits exactly those
+   keys, and keeps every other comparison.
+4. **The order after §2's stop: §1.3 first, then all of §2 once, then §3 without a further stop**
+   (2026-11-07). The orchestrator offered two orders: build §1.3, re-run §2 once on that code and go
+   on; or re-run §2.2 alone first and stop again before §1.3. The user: *"All looks good. Option 1,
+   please."* So:
+   - **§1.3 is built** on §1's code, with the provisional constants, before any §2 run.
+   - **§2 is re-run in full** on that code, as point 1 says, and its rules set $\Phi_w$ and
+     $\Lambda_c$. Each becomes a named module constant whose comment cites the measurement (§2.2).
+     That run is the recorded §2; the module's SHA-256 in its outputs is the committed file's, but
+     for the two constants' values and comments.
+   - **The agent goes on to §3 without a further stop** if a rung qualifies under each of §2.2's
+     rules and all 14 of §2.3's calls are honest at the chosen rung, z12 first. Otherwise it stops
+     and reports, as §2.6 says. §2.6's report is written into the log either way.
+   - §8's other stop conditions stand, and §2.5's report of windows stopped while a leaf's error
+     was still falling (§1.3) is a finding for the user, not a stop.
