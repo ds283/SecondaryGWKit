@@ -1,6 +1,6 @@
 # levin-phase-floor campaign — implementation state
 
-**Last updated:** 2026-11-06 · **Status: LAYER 1(a) AND THE STORED PHASE LANDED FOR $G$ AND $T$ — 01, 03, 04, 05, 05a and 06
+**Last updated:** 2026-11-07 · **Status: LAYER 1(a) AND THE STORED PHASE LANDED FOR $G$ AND $T$ — 01, 03, 04, 05, 05a and 06
 landed, 02 stopped and superseded; gate G1 answered 2026-10-26; G2 written up and answered in
 part on 2026-10-27 (§2.3); 06a's depth census landed the same day (C1 and C2 hold), and G2 is
 answered: layer 2 is not needed at this code. Next are 07 (the stationary-point guard,
@@ -1307,6 +1307,53 @@ regions harder.
   censuses can count Levin leaves with $\Delta_1/\phi_P > 10$, and returned Levin leaves at
   $|x|\,\theta'\,\varepsilon$ above their floor. If production reaches it, a node term for the Levin
   branch beside 06e's.
+
+- **[07-cc-interior-nodes-shift-with-a-rounded-midpoint]** *(opened 2026-11-07 by the orchestrator
+  on the user's word, from 07's §2 stop)* — `chebyshev_matrices` maps the nodes as
+  ${\rm fl}((a+b)/2) + {\rm fl}((b-a)/2\cdot x_{\rm base})$ and, since 06e, pins the two end nodes.
+  Where ${\rm fl}(a+b)$ rounds, every interior node moves by the same
+  $\delta = {\rm fl}((a+b)/2) - (a+b)/2$, up to half an ulp of $x$, and a Clenshaw–Curtis leaf
+  integrates a shifted copy of itself: an error of about $\delta\,(g(b) - g(a))$, $g$ the integrand,
+  up to about $|g|\,{\rm ulp}(x)$ per leaf whatever $\theta'$ is. Splitting does not lower it.
+  - **Its relation to 06e.** `[06c-chebyshev-end-nodes-miss-the-span]` is the same rounding seen at
+    the two ends. A Levin leaf's value depends only on its end nodes, so pinning them removed it
+    there. A Clenshaw–Curtis leaf samples every node, and its interior nodes still carry the shift.
+    06e's signed node term $E$ measures it, from each node's actual displacement, so the floor
+    accounts for it; nothing removes it.
+  - **Where seen.** 07's §2.2 case (R) $c = 10^8$, $x_s = 0.7236\ldots$, $\omega = 0$, on $[0, 1]$
+    (`docs/levin-phase-floor/07/investigations/cc-midpoint-shift/`, at §1's uncommitted module
+    `13294b2a…`, saved there as a patch on `bd21bf23`). Every leaf's exact integral by the erf
+    closed form at 60 digits; the leaves' errors sum to the call's.
+    - The parent's leaves come from halving $[0, 1]$, so their ends are dyadic, ${\rm fl}(a+b)$ is
+      exact and $\delta = 0$: true error $2$–$3\times10^{-17}$ at every rtol from $10^{-7}$ to
+      $10^{-10}$.
+    - 07's window edges $x_s \pm \sqrt{2\Phi_w/c}$ are arbitrary floats, and so is every leaf
+      descended from them: true error $2$–$4\times10^{-16}$ at $2\pi$ and $32\pi$ at every rtol.
+      The prediction $\delta\,(g(b)-g(a))$, summed over the Clenshaw–Curtis leaves, gives
+      $+3.50\times10^{-16}$ against a true $+3.17\times10^{-16}$ ($2\pi$, $10^{-7}$),
+      $-2.00\times10^{-16}$ against $-2.01\times10^{-16}$ ($32\pi$, $10^{-7}$) and
+      $+3.11\times10^{-16}$ against $+3.61\times10^{-16}$ ($2\pi$, $10^{-10}$). Leaves with dyadic
+      midpoints carry almost none.
+    - At rtol $10^{-10}$ (request $1.4\times10^{-15}$, about $6\varepsilon$ of the integrand's
+      scale) $\sum E = 3.49\times10^{-16}$ against a true $3.61\times10^{-16}$ at $2\pi$; it is what
+      ends $2\pi$ and $8\pi$ `node_limited`, the case's failure at §2. At $10^{-9}$ and looser
+      every rung converges, honest.
+  - **Not established:** the rest of err − prediction (about a tenth of $\sum|{\rm err}|$ at
+    $2\pi$, $10^{-10}$), presumably each node's own rounding; and how much of production's
+    $\sum E$ is this shift. Production spans have arbitrary float ends, so the parent's leaves
+    there already carry it.
+
+  **Impact:** a floor of order $|g|\,{\rm ulp}(x)$ per Clenshaw–Curtis leaf, which $E$ accounts
+  for, so declared errors stay honest (all 16 calls measured); a request near $\varepsilon|x||g|$
+  cannot be met. It sets 07's §2.2 failure at $10^{-10}$, and on the dyadic $[0, 1]$ makes the parent
+  look about ten times better than the window. At production's $10^{-7}$–$10^{-8}$ it is far below a
+  request unless a total cancels by about $10^8$.
+
+  **Next step:** a remedy for the user, after 07. A node map with no common shift, each node from its
+  nearer end ($a + h(1 + x_{\rm base})$, $b - h(1 - x_{\rm base})$, $h = (b-a)/2$), leaves each node
+  one independent rounding; it moves every Levin and fallback value, so it is a prompt with its own
+  rehearsal pair. Or a leaf returns its value less $E$, not only bounded by it. Related:
+  `[06e-node-errors-add-in-absolute-value]`.
 
 - **[06-time-integrals-must-reach-late-resonances]** *(opened 2026-10-27 by the orchestrator,
   from the user's decision on 06's P1, Decisions **06 P1** and **07 scope**)* — the time integrals

@@ -1,0 +1,28 @@
+# levin-phase-floor 07, orchestrator investigation: the CC midpoint shift
+# written 2026-11-07T21:09:10.439205+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# argv leaves parent 1e-7
+# script sha256 0c79df335ca28c3348bdc1f8480ffa67a7195eee000032ecfef92223e51106ba
+# AdaptiveLevin/levin_quadrature.py (working tree) sha256 13294b2ac3e3e3a480a6735a263ea8abe205ccdaada12939c13cd20edad884a4
+# parent bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+# HEAD bd21bf23da006aa21c5aa670cf32ea2ed726cb6b
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M ComputeTargets/QuadSourceIntegral.py
+#     ?? docs/levin-phase-floor/07/
+#     ?? prompts/levin-phase-floor/logs/07-stationary-point-guard.md
+# uptime at start: 21:09  up 7 days, 23:29, 1 user, load averages: 1.85 3.42 4.95
+# mpmath 1.3.0, numpy 2.2.4
+== parent None rtol=1e-07: value=-1.4074758476602928e-05 true err=-2.949e-17 sum E=+4.563e-17 leaves=25 converged=True node_limited=False wall=0.0s
+   fsum(leaf values) - value = -1.7e-21
+   sum of leaf errors = -2.949e-17
+   by class and distance from the root (w = sqrt(4 pi / c), the 2 pi window's half-width):
+   kind zone      n   sum err     sum E       sum|err|
+   CC   1-2w      6  +4.905e-18  -4.141e-18  1.553e-17
+   CC   2-6w      3  -1.292e-17  +4.043e-17  1.506e-17
+   CC   <=1w      7  +4.488e-19  +9.340e-18  9.133e-18
+   LEV  2-6w      2  -1.902e-18  +0.000e+00  2.667e-18
+   LEV  >6w       7  -2.002e-17  +0.000e+00  4.673e-17
+   Clenshaw-Curtis leaves by midpoint rounding (coh = delta_mid * (g(b) - g(a)), summed):
+   value    mids          n   sum err     sum coh     sum|err|   sum|err-coh|
+   quarters dyadic-mid    16  -7.571e-18  +0.000e+00  3.972e-17  3.972e-17
