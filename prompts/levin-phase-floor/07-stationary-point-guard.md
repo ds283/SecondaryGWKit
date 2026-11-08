@@ -43,6 +43,10 @@ reference, not a base (§0.5).
 
 The records of Part B are committed on the laptop afterwards, in 07's records commit.
 
+**Amended 2026-11-08, at Part B's first stop (§10):** Rule A, a phase whose variation is below the
+C2 gate's threshold is not located. It is a second code commit on the laptop, made before Part B
+goes on, with a rehearsal R29 in R28's place.
+
 **Closes, in its records commit, on the user's word:** `[06-levin-accepts-a-region-across-a-stationary-point]`,
 if §5 and §6 hold. It also answers two of the user's questions, from 06g's Part B:
 - *"What needs to be true is that z12 works after 07."* (§2.3, §6 V4);
@@ -307,11 +311,16 @@ the agent's choice, recorded in the log.
 
 Everything below runs once for each independent phase the basis reports.
 
+**Amended 2026-11-08 (§10):** a phase whose total variation over `x_span` is below `SIX_PI` is not
+located (Rule A), and §1.4's guard tests such a phase of a multi-phase basis for a sign change.
+
 ### 1.1 Location (in `_adaptive_levin`, before the loop, when the basis supplies its rates)
 
 1. **Scan.** Sample each rate $\theta_i'$ on $N_{\rm scan} = 4097$ points uniform in $x$ over
    `x_span`, endpoints included. This is 06a's grid. Sample through `_sample_vectorized`, so that a
    vectorised rate is used as such.
+   - **Rule A (§10).** If the phase's total variation, estimated from these samples, is below
+     `SIX_PI`, steps 2–4 do not run for it.
 2. **Roots.** Each adjacent pair of samples of opposite sign, and each exact zero, is refined by
    `scipy.optimize.brentq` on that rate, with `xtol` no coarser than
    $4\varepsilon\max(|x_a|, |x_b|)$.
@@ -408,7 +417,9 @@ guard is computed there and carried in the leaf's result dict.
   span (§1.2 item 4's path). Its errors are that solve's. It is flagged `guard_at_depth_max`, and
   the call's `converged` is False.
 
-An unguarded leaf outside every window behaves exactly as now.
+An unguarded leaf outside every window behaves exactly as now. A phase that Rule A skipped (§10) is
+tested by the guard, for a basis of several phases, for a sign change rather than for one strict
+sign.
 
 ### 1.5 What the result reports
 
@@ -654,6 +665,8 @@ the reference, and that `abserr` is at least the true error.
 - **(vii)** location done only for the first phase a basis reports: test 9 must fail;
 - **(viii)** the four counts left out of the group record: test 11 must fail;
 - **(ix)** §1.3's counter never reaching its limit: test 10 (a) must fail.
+
+**Amended 2026-11-08 (§10):** test 13 (a)–(d), Rule A's, and breakages (x) and (xi).
 
 **The seven roots,** before and after. A fall is a stop. A rise equals the tests added.
 
@@ -909,3 +922,97 @@ them.
      and reports, as §2.6 says. §2.6's report is written into the log either way.
    - §8's other stop conditions stand, and §2.5's report of windows stopped while a leaf's error
      was still falling (§1.3) is a finding for the user, not a stop.
+
+## 10. Amendment at Part B's first stop
+
+1. **Rule A: a phase whose variation is below the C2 gate's threshold is not located**
+   (2026-11-08). This is a second code commit for 07, on the laptop, before Part B goes on.
+   - **What R28 found** (the Mac Studio orchestrator's stop-1 report; the board's
+     `[07-location-on-an-identically-zero-rate]`):
+     - **The case.** 26 `q-r` group calls, in rows with $q = r$, each "located" 4,097 points, one
+       for every scan sample. They come from the regime in which $G$ is smooth and $T_q$, $T_r$
+       oscillate (`ComputeTargets/phase_groups.py`: phases $\theta_q \pm \theta_r$). On $q = r$,
+       $\theta_q - \theta_r$ is exactly 0.0, and so is its rate, at every sample.
+     - **The cause.** §1.1 step 2 takes each exact-zero sample as a root. With $\theta$ constant,
+       every window is the whole span; they merge into one window, cut at every root. So each call
+       was integrated as 4,102–5,505 forced Clenshaw–Curtis pieces, about 110 s per call, against
+       1–68 regions at the parent. Summed regions in the store went from 114,826 to 227,883.
+     - **It cost work, not honesty.** The integrand is $f_{\cos}$, smooth and not constant, of
+       order $G M_q^2/H^2$. On three referenced calls, by composite Gauss–Legendre at five
+       resolutions with QAGS as a second rule, R28 is at 0.179, 0 and 0.069 of its declared
+       error. R27 is at 0.0021, 0.0014 and 0.0006 of its own, which is $10^4$–$10^6$ times larger.
+     - **Why the C2 gate did not catch it.** The gate would send the whole span to the
+       Clenshaw–Curtis rule, since its phase span is 0. But location runs first, before the loop,
+       and does not consult the phase's variation.
+   - **The user,** after the orchestrator explained the case and two candidate rules: *"Yes, rule A
+     alone, please."* Then: *"Please make the fix as an amendment of 07."* The second candidate, a
+     run of exact-zero samples treated as one flat stretch, was dropped. The partly flat phase it
+     addressed is recorded instead as `[07-location-cuts-a-flat-stretch-at-every-zero-sample]`.
+   - **Rule A (§1.1, a new first step for each phase).**
+     - Estimate the phase's total variation over `x_span` from the scan's samples of its rate:
+       $V_i = \int|\theta_i'|\,dx$ by the trapezoidal rule on the 4,097 samples, skipping an
+       interval with a non-finite end, as step 2 skips such samples. This costs no evaluation
+       beyond the scan. The log states the estimate's error.
+     - **If $V_i <$ `SIX_PI`,** the C2 gate's own constant named as such, never a literal, phase
+       $i$ is not located: steps 2–4 do not run for it, and it gives no points, no windows and no
+       unlocated minima.
+     - **Why the gate's threshold.** Below it, the gate already sends a region of that phase to
+       the Clenshaw–Curtis rule, which needs no protection from a stationary point. The gate
+       estimates each region's span from its own nodes, which can exceed $V_i$. A region it still
+       sends to the Levin solve, holding a point this rule left unlocated, is the nodal guard's to
+       catch (§1.4), as for a basis without rates.
+     - **Reported.** The result gains one key listing each phase Rule A skipped, with its index and
+       $V_i$. The key's name is the agent's choice, recorded in the log. `stationary_points` and the
+       four counts are unchanged in meaning.
+   - **The guard (§1.4) for a skipped phase.**
+     - **One phase.** For `_Basis_SinCos`, and any basis whose guard reads only
+       `theta_prime_Cheb`, the guard is unchanged.
+     - **Several phases.** For a basis that passes several rates to the guard, a phase Rule A
+       skipped is tested for a sign change, meaning samples of both strict signs on the nodes,
+       rather than for "not of one strict sign". Otherwise a rate identically zero would mark every
+       Levin leaf guarded and drive it to `depth_max`, while a root the rate holds would still be
+       caught.
+     - **Every phase located** keeps §1.4's test exactly.
+   - **New tests (§3 test 13),** in `test_levin_stationary.py`. Each asserts honesty as §3 says,
+     against a closed form.
+     - **(a) A zero rate.** `_Basis_SinCos` with $\theta \equiv 0$, `theta_deriv` $\equiv 0$, and a
+       smooth, varying $f_{\cos}$ of the shape of R28's calls. Nothing is located, no window piece is
+       made, and the phase is reported skipped. Value, abserr and every returned leaf are
+       bit-identical to the same call with location bypassed (test 8's switch).
+     - **(b) A small phase with a root.** $\theta = \tfrac{c}{2}(x - x_s)^2$ at a non-dyadic $x_s$,
+       with $c$ chosen so that $V < 6\pi$. Nothing is located. The result is bit-identical to the
+       bypassed call, and the value is honest.
+     - **(c) The same phase with $V$ just above $6\pi$.** The root is located and windowed as
+       before.
+     - **(d) Several phases.** Test 9's two-phase basis with phase 2 identically zero and phase 1
+       linear with $V_1 \ge 6\pi$. Phase 2 is reported skipped, no leaf is guarded, and the call
+       converges and is honest.
+   - **New breakages,** each recorded with the test that catches it, then reverted:
+     - **(x)** Rule A off (the threshold 0): test 13 (a) must fail;
+     - **(xi)** a skipped phase tested by the guard for "not of one strict sign": test 13 (d) must
+       fail.
+   - **Test 12's key-set allowance** (§9 point 3) admits Rule A's key too, and nothing else.
+   - **What must not move.**
+     - **§2, re-run on the amended code:** §2.2's families at the recorded rtol, §2.3's 14 calls and
+       §2.4's draws.
+       - Every call with no phase skipped is bit-identical to the recorded run
+         (`docs/levin-phase-floor/07/calibration/out/run2/`).
+       - Every call with a skipped phase is listed, with its result under both codes.
+       - A rung of $\Phi_w$ or $\Lambda_c$ that moves is a stop. The outputs go in a new directory
+         beside run 2's; nothing is overwritten.
+     - **The seven roots,** before and after: a fall is a stop, and a rise equals the tests added.
+       Any other test whose assertion moves is a stop.
+   - **Records.**
+     - The log gains a section for this amendment, in README §5.1's form, with its own deviations,
+       numbered on from Part A's.
+     - The board's 07 row, its §3 entry for the issue (moved to §4 as closed by this commit), and
+       `docs/OPEN_ISSUES.md`.
+     - **One commit.**
+   - **Part B after it** (the orchestrator note's §B.6).
+     - The R28 that stopped is kept, as the record of the zero-rate case. A rehearsal R29 at the
+       amended code takes R28's place in §5, compared with R27 as §5 item 4 says, and with R28.
+     - Against R28, R29 should differ only in Levin calls whose phase Rule A skipped and which
+       located a point at R28. Those calls should equal R27's.
+     - S1 and S2 are re-scored on R29, and the census runs at the amended code.
+     - **V3 sets aside a phase Rule A skipped:** its calls are counted and listed, with any sign
+       change the scan finds in them; V2 still covers every returned Levin leaf.

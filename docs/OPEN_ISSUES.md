@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-11-07 · **130 open** across twenty-two campaigns.
+**Last updated:** 2026-11-08 · **135 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -961,7 +961,7 @@ remains in this section.**
 cost cliff and the honesty of what a `QuadSourceIntegral` row stores about its error and
 convergence. Its plan opened no issue; its prompt 01 opened two, its prompt 03 three (one closed at gate G1 on 2026-10-26, one at G2 on 2026-10-27), its prompt
 04 two (one closed by its prompt 05a on 2026-10-26, the other at G2 on 2026-10-27), its prompt 05 three (one closed at G2), the writing of its prompt 05a one (closed by
-05a the same day), its prompt 05a one, its prompt 06 three, the user's decision on 06's P1 one, its prompt 07's Part A one, its prompt 06b three (one closed by its prompt 06c on 2026-10-30), its prompt 07's §2 two (one closed by 06c), its prompt 06c one, its prompt 07's third stop two (both closed by its prompt 06d on 2026-10-30), its prompt 07's fourth stop three (two closed by its prompt 06e on 2026-10-31), its prompt 06c's census one, its prompt 06e's census three, its prompt 06f one (closed by its prompt 06h on 2026-11-01), its prompt 06h's code two and its prompt 06g's code one, the orchestrator from 06g's Part B two (one closed by its prompt 06j on 2026-11-03, the other by its prompt 06m on 2026-11-06), the orchestrator from 06m's code review two (one closed by its follow-up commit the same day) and its prompt 06m's census one, assigned to its prompt 08: the last twenty-five rows. The three rows above them were assigned to it from §1.1 on 2026-10-25. Two more were assigned and are closed: `[00-consumer-anchoring-floor]` from §1.4, closed for $G_k$ by its prompt 05 on 2026-10-26, and `[02-consumer-phi-below-the-storage-granularity]` from §1.6, closed by its prompt 06 on 2026-10-27. **Each stays on its own board**, which is the record and is where it
+05a the same day), its prompt 05a one, its prompt 06 three, the user's decision on 06's P1 one, its prompt 07's Part A one, its prompt 06b three (one closed by its prompt 06c on 2026-10-30), its prompt 07's §2 two (one closed by 06c), its prompt 06c one, its prompt 07's third stop two (both closed by its prompt 06d on 2026-10-30), its prompt 07's fourth stop three (two closed by its prompt 06e on 2026-10-31), its prompt 06c's census one, its prompt 06e's census three, its prompt 06f one (closed by its prompt 06h on 2026-11-01), its prompt 06h's code two and its prompt 06g's code one, the orchestrator from 06g's Part B two (one closed by its prompt 06j on 2026-11-03, the other by its prompt 06m on 2026-11-06), the orchestrator from 06m's code review two (one closed by its follow-up commit the same day) and its prompt 06m's census one, the orchestrator at 07's §2 stop one, its prompt 07's code two, the orchestrator at 07's Part B stop 1 five (two assigned to the one-loop build, §1.25), assigned to its prompt 08: the last twenty-five rows. The three rows above them were assigned to it from §1.1 on 2026-10-25. Two more were assigned and are closed: `[00-consumer-anchoring-floor]` from §1.4, closed for $G_k$ by its prompt 05 on 2026-10-26, and `[02-consumer-phi-below-the-storage-granularity]` from §1.6, closed by its prompt 06 on 2026-10-27. **Each stays on its own board**, which is the record and is where it
 is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; this campaign's prompt
 01 measures whether it reaches A3 v2.
 
@@ -995,9 +995,26 @@ is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; thi
 | `[07-cc-interior-nodes-shift-with-a-rounded-midpoint]` | levin-phase-floor | Where ${\rm fl}(a+b)$ rounds, a Clenshaw–Curtis leaf's interior nodes all shift by up to half an ulp of $x$ (06e pinned only the ends): an error $\approx\delta(g(b)-g(a))$ per leaf, flat under splitting, measured by $E$. Explains 07's §2.2 failure at $10^{-10}$ on $[0,1]$, where the parent's dyadic leaves escape it. Remedy for the user after 07 |
 | `[07-cc-fallback-ignores-a-reversed-span]` | levin-phase-floor | The Clenshaw–Curtis fallback weights by the span's length, unsigned, so a reversed `x_span` returns the forward value, not its negative; a Levin region keeps the sign. No production span is reversed; 07's window path keeps the sign |
 | `[07-cc-node-term-takes-one-phase-per-node]` | levin-phase-floor | The fallback's node term takes one $\theta'$ per node, so a basis of several phases (07's generic interface) cannot supply it exactly; `_Basis_SinCos`, the only basis, has one phase |
+| `[07-location-on-an-identically-zero-rate]` | levin-phase-floor | 07's location takes every exact-zero sample of a phase rate as a root; on R28's 26 `q-r` calls with $q = r$ the rate is identically zero, so 4,097 roots and 4,102–5,505 forced Clenshaw–Curtis pieces per call (about 110 s), honest. Fixed by 07 §10, Rule A |
+| `[07-location-cuts-a-flat-stretch-at-every-zero-sample]` | levin-phase-floor | A phase flat over part of a span (variation above $6\pi$ elsewhere) has each exact-zero sample in the flat stretch taken as a root and a cut; a noisy cancellation would give spurious sign changes instead. No production case known |
+| `[07-c2-gate-threshold-was-never-measured]` | levin-phase-floor | The C2 gate's $6\pi$ was a guess, never measured; CC₃₁ is accurate well past it and the nested estimate, CC₁₆'s error, is what forces refinement. Measure against phase span on production calls, after 07 |
 | `[06-time-integrals-must-reach-late-resonances]` | levin-phase-floor | The time integrals must run late enough to include the QCD crossover and $e^+e^-$ annihilation for configurations that resonate then. Physics, out of 07 by the user's decision; a separate prompt after 07 |
 | `[06-s2-window-metric-floors-on-phi-t-structure]` | levin-phase-floor | 04's 9-sample φ metric measures $\varphi_T$'s own shape at $z \ge 1.75\times10^7$ ($\sigma_s/\sigma_{t_5}$ 0.95–1.04), so S2's $10^{-3}\sigma_{t_5}$ rule fails there |
 | `[06-ray-task-output-does-not-reach-the-launch-log]` | levin-phase-floor | A Ray task's warning may never reach a build's launch log; 06's warning grep found 0 lines, but no task printed, so it was not tested |
+
+### 1.25 The one-loop build
+
+The one-loop integrator over $(q, r)$ is not yet a campaign; its planning is in
+[`docs/one-loop-planning/`](one-loop-planning/), the design proposal in
+[`resonance-scaffolding-v2/sigw-resonance-scaffolding.md`](one-loop-planning/resonance-scaffolding-v2/sigw-resonance-scaffolding.md).
+The rows below were opened on the `levin-phase-floor` board by the orchestrator, from 07's Part B
+stop 1, and assigned here on the user's word on 2026-11-08. **Each stays on that board**, which is
+the record.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[07-equal-momenta-difference-group-beats-at-zero-frequency]` | levin-phase-floor | Where $G$ is smooth, the `q-r` group on $q = r$ has phase identically zero, the source's zero-frequency beat against $G$ (a case of the Kohri–Terada resonance): a ridge along $q = r$ for the outer integral, which the planning document does not treat |
+| `[07-located-resonance-crossings-are-counted-not-stored]` | levin-phase-floor | 07 locates each crossing of $k = c_s(z)(q+r)$ per call (R28's agree with the model's `wPerturbations` to $3\times10^{-8}$) but `QuadSourceIntegral` stores only the count; a check on the planning document's §5.1 resonance map |
 
 ---
 
