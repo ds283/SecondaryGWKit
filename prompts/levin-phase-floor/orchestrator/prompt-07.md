@@ -708,6 +708,94 @@ The board's Decisions row is **07 Part B stop 1**. The amendment is prompt §10.
 - **Kept until the records commit:** R28's store, the `-7460035` worktree and the stop-1 records
   in `var/levin-phase-floor-07/`.
 
+### B.7 Addendum: Part B's resumed dispatch
+
+*Written 2026-11-08, at the amendment's landing. This addendum's commit is Part B's new dispatch
+SHA.*
+
+**The amendment landed.**
+- Prompt §10 is `2ddd3306`. Its code is **`adffa21b`**, "Skip locating a phase whose variation is
+  below the C2 gate". Both are pushed.
+- `adffa21b` passed §B.6's five checks. The board's Decisions row is **07 amendment lands**.
+  - **Scope:** only the allowed paths changed.
+  - **By AST against `ad732887`:** only `_locate_stationary_points`, `_nodal_guard` (with the new
+    `_changes_sign`), the threading of the skipped phases through `_adaptive_levin`,
+    `_adaptive_levin_subregion` and `_impl`, and the result key `location_skipped_phases` change.
+  - **§2.2:** 124 units re-run, bit-identical to run 2.
+  - **Breakages (x) and (xi)** re-applied and caught.
+  - **The seven roots:** 107, 781, 39, 156, 280, 127, 64, all OK.
+- **The user:** *"Yes, please push both, then write and push §B.7, and send to the Mac Studio to be
+  executed."*
+- **§2 does not exercise Rule A.** No call of §2.2, §2.3 or §2.4 has a phase below $6\pi$, so all
+  of §2 is bit-identical to run 2. Test 13 and R29 are where the rule is measured.
+- **O9 is on `[07-c2-gate-threshold-was-never-measured]`:** a phase Rule A skips can still reach the
+  Levin solve, because the gate's node-based estimate reads high. There the nodal guard covers it.
+
+**The trees:**
+- **The parent worktree** `SecondaryGWKit-lpf07-91472db` (`91472dbe`), unchanged. It runs V0's K0
+  run.
+- **The new code worktree** `SecondaryGWKit-lpf07-<this commit's short SHA>`, detached at this
+  commit, with no venv.
+  - Its code is `adffa21b`'s.
+  - `git diff --stat 74600350 <this commit> -- . ':!docs' ':!prompts'` touches only
+    `AdaptiveLevin/levin_quadrature.py`, `AdaptiveLevin/tests/test_levin_stationary.py`,
+    `AdaptiveLevin/tests/test_levin_trust_yardstick.py` and `CLAUDE.md`.
+  - It runs R29, the comparisons, S1 and S2's re-scoring, the readers, the census $g$ and V4's
+    references.
+  - The note and the prompt are read here.
+- **The old code worktree** `SecondaryGWKit-lpf07-7460035` and R28's store are kept, read-only, as
+  the record of the zero-rate case. No new run is made in that worktree.
+
+**What the Mac Studio orchestrator does, in order.** It is the same session, told by message.
+1. **Re-check before the lock.**
+   - Every tree is clean, and each `HEAD` is as dispatched.
+   - `runregistrykit list` shows nothing running or stale.
+   - The lock is free, and `ray-processes` lists nothing; each is a command of its own.
+   - Touch a new marker, and re-hash the 181 protected files against the first before-hashes.
+2. **The rehearsal agent, resumed or fresh, on prompt §5 with §10 as written.**
+   - **R29:**
+     - slug `r29-guard-rule-a`, in the new worktree;
+     - `--job-name levin-phase-floor-07 --campaign levin-phase-floor --prompt 07`;
+     - 06m's command line;
+     - a `--purpose` naming the host, the tree's SHA, the code commit `adffa21b` and the fingerprint
+       `1b332ffa…`.
+   - **The lock:** `acquire`, `set-pid` with R29's driver, held through the comparisons, the replay
+     and the readers, then `release`. Each lock command is a shell command of its own.
+   - **R29 against R28,** by the orchestrator's own reader, as well as the agent's:
+     - outside `QuadSourceIntegral`, every value table identical;
+     - inside it, a Levin record differs from R28's only if R28's count of located points was
+       nonzero and R29's is 0. Every such record equals R27's in value, abserr, convergence and
+       region count, bit for bit. The 26 `q-r` calls with $q = r$ are expected, and any other is
+       listed;
+     - every other Levin record bit-identical to R28's, its four counts included;
+     - rows that differ hold such a record, and are tabulated.
+   - **R29 against R27:** as prompt §5 item 4, with `tools.store_value_diff --json` and 05's
+     `classify_non_qsi.py`, and the rows tabulated.
+   - **The replay:** the calls of R29 that locate a point, by the harness the stop-1 replay used,
+     run from the new worktree. Each is checked bit for bit against R29 before use. About 444 are
+     expected: 470 less the 26.
+   - **S1 and S2,** re-scored on R29. S2's references from `p1-references` stand, being taken at
+     R27's tree.
+   - **The readers** on R29: exit 0, and R29 byte-identical before and after. Then the lock is
+     released, and `ray-processes` lists nothing.
+   - **S0** stands: R27 is unchanged.
+3. **Planned stop 1′, before the census, to the user, through the laptop.** Report:
+   - R29's fingerprint;
+   - R29 against R28 and against R27;
+   - the replay, S1 and S2;
+   - the readers and the lock;
+   - R29's wall time and summed regions against R28's.
+4. **The census agent, only on the user's word at stop 1′.** As §B.2, with the census tree $g$ the
+   new worktree, V0's K0 run in the parent worktree, and V3 as prompt §10 sets it. Planned stops 2,
+   3 and 4 as §B.2.
+5. **§B.3's review** at the end, with the run checks taking in R29. R28 is checked unchanged, not
+   re-reviewed.
+
+**Unchanged:**
+- git is read-only on the Mac Studio;
+- `--cpus 6`, never `ray stop`, never another session's run;
+- A3 v2, its scratch copy, 06m's census and R23–R26 are never written.
+
 ---
 
 ## 5. Stop and ask the user
