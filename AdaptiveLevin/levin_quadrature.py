@@ -115,7 +115,9 @@ deliberate departures are:
     of |theta'| deep enough to act as a nearly coalescing pair, located on a uniform scan. Round
     each, a window of phase half-width _LEVIN_WINDOW_HALF_PHASE is integrated by the nested
     Clenshaw-Curtis rule, in pieces of at most 2 pi, whatever their span; the rest is left to the
-    loop as before, in the same budget. As a safety net, a Levin region whose phase rate changes
+    loop as before, in the same budget. A phase whose total variation over the span is below the
+    C2 gate's SIX_PI is not located (Rule A, prompt 07 section 10): the gate already sends a region
+    of it to the Clenshaw-Curtis rule. As a safety net, a Levin region whose phase rate changes
     sign on its own Chebyshev nodes is never returned as a Levin region. Without a closed-form
     rate nothing is located, and that guard is the only protection.
 
@@ -139,8 +141,10 @@ theta_prime_on_fine_grid() and basis_derivative(). Since prompts/levin-phase-flo
 independent_phases(), one callable per independent phase of the basis, and
 independent_phase_rates(), their closed-form rates d theta_i / dx in the same order, or None when
 the basis cannot supply them. A basis without them is treated as unable to supply rates: nothing is
-located, and only the nodal guard protects it. _Basis_SinCos has one phase, theta["theta"], whose
-rate is theta["theta_deriv"] when the caller supplies it.
+located, and only the nodal guard protects it. A phase whose rates show a total variation over the
+span below SIX_PI is not located either (Rule A); for a basis of several phases the nodal guard tests
+such a phase for a sign change on a region's nodes rather than for one strict sign. _Basis_SinCos
+has one phase, theta["theta"], whose rate is theta["theta_deriv"] when the caller supplies it.
 
 LOGGING
 -------
@@ -2384,6 +2388,7 @@ def _adaptive_levin_subregion(
     vectorize_cache: Optional[dict] = None,
     force_direct: bool = False,
     guard_rates: Optional[list] = None,
+    guard_sign_change_phases: Optional[frozenset] = None,
 ):
     working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
     num_order_changes = 0
@@ -2412,6 +2417,7 @@ def _adaptive_levin_subregion(
             vectorize_cache=vectorize_cache,
             force_direct=force_direct,
             guard_rates=guard_rates,
+            guard_sign_change_phases=guard_sign_change_phases,
         )
         if data["metadata"].get("SVD_failure", False):
             working_order = working_order - 2
@@ -2454,6 +2460,7 @@ def _adaptive_levin_subregion_impl(
     vectorize_cache: Optional[dict] = None,
     force_direct: bool = False,
     guard_rates: Optional[list] = None,
+    guard_sign_change_phases: Optional[frozenset] = None,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
@@ -2478,6 +2485,11 @@ def _adaptive_levin_subregion_impl(
     :param guard_rates: for a basis with several independent phases, their closed-form rates
         (independent_phase_rates()), each sampled on this region's nodes for the nodal guard
         below; None for a basis with one phase, whose theta_prime_Cheb is its rate already.
+    :param guard_sign_change_phases: the indices into guard_rates of the phases Rule A left
+        unlocated (prompts/levin-phase-floor/07-stationary-point-guard.md section 10): the guard
+        tests each of them for a sign change on the nodes (samples of both strict signs) rather
+        than for one strict sign, so that a rate identically zero, or zero on a node, does not
+        guard the region (_nodal_guard()). None, or empty, when Rule A skipped no phase.
 
     The C2 gate, and what it does not see. A region whose total phase variation is below 6 pi goes
     to the nested Clenshaw-Curtis rule. That gate was the module's whole account of a stationary
@@ -2489,7 +2501,11 @@ def _adaptive_levin_subregion_impl(
     reports whether a phase rate fails to be of one strict sign on its own nodes ("guarded" in the
     result: theta_prime_Cheb, and each of guard_rates), which the driver never returns as a Levin
     region. A zero on a node counts as failing. The guard cannot see an even number of sign changes
-    between two adjacent nodes; that is what the location is for.
+    between two adjacent nodes; that is what the location is for. A phase the location skipped
+    because its total variation over the call's span is below SIX_PI (Rule A, prompt 07 section 10)
+    is the gate's: a region of it is sent to the Clenshaw-Curtis rule here unless the region's own
+    span estimate, taken over every phase, reaches SIX_PI; in that case, for a basis of several
+    phases, the guard tests such a phase for a sign change on the nodes (guard_sign_change_phases).
     :return:
     """
     if vectorize_cache is None:
@@ -2829,7 +2845,9 @@ def _adaptive_levin_subregion_impl(
     # The nodal guard (prompt 07 section 1.4; see this function's docstring): from the samples of
     # theta' this solve already holds, and for a basis with several phases each of their rates on
     # the same nodes.
-    guarded = _nodal_guard(theta_prime_Cheb, grid, guard_rates, vectorize_cache)
+    guarded = _nodal_guard(
+        theta_prime_Cheb, grid, guard_rates, vectorize_cache, guard_sign_change_phases
+    )
 
     return {
         "value": upper_limit - lower_limit,
@@ -3127,11 +3145,17 @@ def _strictly_one_sign(values: np.ndarray) -> bool:
     return bool(np.all(values > 0.0) or np.all(values < 0.0))
 
 
+def _changes_sign(values: np.ndarray) -> bool:
+    """True if values holds an entry > 0 and an entry < 0 (a zero or a NaN is neither)."""
+    return bool(np.any(values > 0.0) and np.any(values < 0.0))
+
+
 def _nodal_guard(
     theta_prime_Cheb: np.ndarray,
     grid: np.ndarray,
     guard_rates: Optional[list],
     vectorize_cache: dict,
+    guard_sign_change_phases: Optional[frozenset] = None,
 ) -> bool:
     """
     The stationary-point guard on one Levin solve (prompts/levin-phase-floor/
@@ -3140,6 +3164,13 @@ def _nodal_guard(
     supplies their closed-form rates, each of guard_rates sampled on the same nodes. A zero on a
     node counts, as does a non-finite sample. It cannot see an even number of sign changes between
     two adjacent nodes; the location before the loop is for that (_locate_stationary_points()).
+
+    A phase of guard_rates whose index is in guard_sign_change_phases -- one Rule A left unlocated,
+    its total variation over the call's span below SIX_PI (section 10) -- is tested instead for a
+    sign change: True only if its samples hold both strict signs. A zero or a non-finite sample of
+    it does not count, so that a rate identically zero does not guard every Levin region of the
+    call and drive it to depth_max, while a root such a rate holds between nodes of both signs is
+    still caught. theta_prime_Cheb, and every phase not skipped, keep the test above unchanged.
     """
     if not _strictly_one_sign(theta_prime_Cheb):
         return True
@@ -3148,7 +3179,10 @@ def _nodal_guard(
             sample = _sample_vectorized(
                 rate, grid, vectorize_cache, ("guard_rate", index, id(rate))
             )
-            if not _strictly_one_sign(sample):
+            if guard_sign_change_phases and index in guard_sign_change_phases:
+                if _changes_sign(sample):
+                    return True
+            elif not _strictly_one_sign(sample):
                 return True
     return False
 
@@ -3262,6 +3296,21 @@ def _locate_stationary_points(
       1. Scan. theta_i' is sampled through _sample_vectorized() on _LEVIN_STATIONARY_SCAN_POINTS
          points, numpy.linspace over x_span with both endpoints (prompt 06a's grid). A non-finite
          sample is skipped, as 06a's scan skipped them.
+         Rule A (prompt 07 section 10). The phase's total variation over x_span, V_i = int
+         |theta_i'| dx, is estimated from these samples by the trapezoidal rule, each interval with
+         a non-finite end left out; it costs no evaluation beyond the scan. If V_i < SIX_PI, the C2
+         gate's threshold, steps 2-4 do not run for phase i: it gives no point, no window and no
+         unlocated minimum, and is reported in "skipped_phases" with V_i. Below SIX_PI the gate
+         already sends a region of that phase to the Clenshaw-Curtis rule, which needs no
+         protection from a stationary point; a region it sends to the Levin solve all the same
+         (its own span estimate, from its nodes and over every phase, can exceed V_i) is the
+         nodal guard's (_nodal_guard()). The estimate's error, for a rate smooth between its
+         roots on a scan of spacing h: (x_span's width) h^2 max|theta_i'''| / 12 from the smooth
+         stretches, plus at most h^2 |theta_i''| / 4 at each root, where |theta_i'| has a kink
+         and the rule overestimates; plus the sum's rounding, about n eps V_i. It can move V_i
+         across SIX_PI only for a phase within that much of it, and on either side the phase is
+         covered: above, by the location; below, by the gate and, where the gate still sends a
+         region to the Levin solve, by the nodal guard.
       2. Roots. Each exact zero sample is a root as it stands. Each adjacent pair of finite samples
          of opposite sign is refined by scipy's brentq on the rate, with xtol = eps max(|x_a|,
          |x_b|) and rtol = 4 eps (scipy's least), eps = 2^-52: finer than the prompt's
@@ -3307,7 +3356,8 @@ def _locate_stationary_points(
         "own_window", "own_window_edges" with theta' and theta'^2 / |theta''| at each edge,
         "window_index", "window", "window_pieces"), "windows" (one dict per merged window,
         ascending: "lo", "hi", "cuts" -- the piece edges from lo to hi -- and "points", indices into
-        "points"), "unlocated_minima" and "scan_spacing".
+        "points"), "unlocated_minima", "skipped_phases" (one dict per phase Rule A skipped, in phase
+        order: "phase" and "variation", the estimate V_i) and "scan_spacing".
     """
     from scipy.optimize import brentq, minimize_scalar
 
@@ -3334,6 +3384,7 @@ def _locate_stationary_points(
 
     points = []
     unlocated_minima = []
+    skipped_phases = []
     for phase_index, rate in enumerate(rate_fns):
         sample = _sample_vectorized(
             rate, scan, vectorize_cache, ("location_rate", phase_index, id(rate))
@@ -3342,6 +3393,22 @@ def _locate_stationary_points(
         r = _scalar_callable(rate)
         finite = np.isfinite(d)
         sgn = np.where(finite, np.sign(d), np.nan)
+
+        # step 1, Rule A (section 10): the phase's total variation over x_span, by the trapezoidal
+        # rule on the scan, each interval with a non-finite end left out; below the C2 gate's
+        # threshold the phase is not located
+        both_finite = finite[:-1] & finite[1:]
+        abs_rate = np.abs(np.where(finite, d, 0.0))
+        variation = float(
+            np.sum(
+                np.where(
+                    both_finite, 0.5 * (abs_rate[:-1] + abs_rate[1:]) * np.diff(xs), 0.0
+                )
+            )
+        )
+        if variation < SIX_PI:
+            skipped_phases.append({"phase": phase_index, "variation": variation})
+            continue
 
         # step 2: exact zeros, then adjacent finite pairs of opposite sign
         for j in np.nonzero(finite & (d == 0.0))[0]:
@@ -3567,6 +3634,7 @@ def _locate_stationary_points(
         "points": points,
         "windows": windows,
         "unlocated_minima": unlocated_minima,
+        "skipped_phases": skipped_phases,
         "scan_spacing": h,
     }
 
@@ -3715,7 +3783,14 @@ def _adaptive_levin(
          theta["theta_deriv"]), _locate_stationary_points() finds, before the loop, every sign
          change of every rate on _LEVIN_STATIONARY_SCAN_POINTS points, and every interior minimum
          of |rate| whose Airy parameter is below _LEVIN_COALESCENCE_LAMBDA (a nearly coalescing
-         pair).
+         pair). Rule A (prompt 07 section 10): a phase whose total variation over x_span,
+         estimated from the scan by the trapezoidal rule, is below SIX_PI, the C2 gate's
+         threshold, is not located -- the gate sends a region of it to the fallback, which needs
+         no protection from a stationary point, unless the region's own span estimate (from its
+         nodes, over every phase) reaches SIX_PI, and then the guard (item 4) covers it, as for a
+         basis without rates. Without the rule a rate identically zero made
+         every scan sample a root, and its call one window cut at every sample (R28's q - r calls
+         with q = r).
       2. Windows. Round each point, the interval on which its phase stays within
          _LEVIN_WINDOW_HALF_PHASE of its value at the point, cut into pieces of at most
          _LEVIN_WINDOW_PIECE_PHASE in every phase. Each piece is a leaf at depth 0, solved -- with
@@ -3746,7 +3821,11 @@ def _adaptive_levin(
          partition, it is never trusted and never floor-limited, and it is bisected; below 6 pi
          the C2 gate sends its halves to the fallback. At depth_max it is re-solved by the nested
          pair whatever its span, its errors are that solve's, it is flagged guard_at_depth_max and
-         exempt from the trust check, and the call is not converged while one is returned.
+         exempt from the trust check, and the call is not converged while one is returned. For a
+         basis of several phases, a phase Rule A skipped is tested for a sign change (samples of
+         both strict signs on the nodes) rather than for one strict sign, so that a rate
+         identically zero does not guard every Levin leaf; theta_prime_Cheb and every located
+         phase keep the strict test.
     An unguarded leaf outside every window behaves exactly as without the guard. Without rates
     nothing is located, and the guard alone protects the call: it misses a pair of sign changes
     between two adjacent nodes of a leaf, and a minimum of |theta'| that does not reach zero.
@@ -3757,7 +3836,8 @@ def _adaptive_levin(
     merged window's edges and piece cuts, its iroff1 count, and whether the rule stopped it, with
     what was true of its leaves then), "unlocated_minima", "num_window_pieces" (window leaves
     returned), "num_guarded_regions" (leaves found guarded when made, returned or bisected) and
-    "num_guard_at_depth_max".
+    "num_guard_at_depth_max"; and "location_skipped_phases" (one dict per phase Rule A did not
+    locate: its index "phase" and "variation", its total variation estimated on the scan).
 
     :param _test_only_bypass_location: TEST-ONLY, off by default: skips step 1, and so 2 and 3, so
         that a test can show a call in which nothing is located is bit-identical to one in which the
@@ -3874,6 +3954,14 @@ def _adaptive_levin(
             piece_phase=_LEVIN_WINDOW_PIECE_PHASE,
         )
 
+    # Rule A (prompt 07 section 10): for a basis of several phases, the nodal guard tests each phase
+    # the location skipped for a sign change on a leaf's nodes, not for one strict sign
+    guard_sign_change_phases = None
+    if guard_rates is not None and location is not None:
+        guard_sign_change_phases = frozenset(
+            skipped["phase"] for skipped in location["skipped_phases"]
+        )
+
     num_evaluations = 0
 
     num_SVD_errors = 0
@@ -3928,6 +4016,7 @@ def _adaptive_levin(
                 vectorize_cache=vectorize_cache,
                 force_direct=force_direct,
                 guard_rates=guard_rates,
+                guard_sign_change_phases=guard_sign_change_phases,
             )
         except LinAlgError as e:
             _logger.warning(
@@ -5100,6 +5189,14 @@ def _adaptive_levin(
         "num_window_pieces": num_window_pieces,
         "num_guarded_regions": num_guarded_regions,
         "num_guard_at_depth_max": num_guard_at_depth_max,
+        # Rule A (prompt 07 section 10): each phase the location skipped, its total variation over
+        # x_span on the scan below SIX_PI, with that estimate; empty when nothing was skipped or the
+        # location did not run
+        "location_skipped_phases": (
+            [dict(skipped) for skipped in location["skipped_phases"]]
+            if location is not None
+            else []
+        ),
     }
 
 
@@ -5454,10 +5551,11 @@ def adaptive_levin_sincos(
             driver scans it over x_span before integrating, locates every sign change of theta'
             and every interior minimum of |theta'| deep enough to act as a nearly coalescing
             pair, and integrates a window round each directly (see "stationary_points" below and
-            _adaptive_levin()). It must be the closed form of theta's derivative. Without it
-            nothing is located, and the only protection at a stationary point is the guard that
-            never returns a Levin subinterval whose theta' changes sign on its own nodes, which
-            misses a pair of sign changes between two adjacent nodes.
+            _adaptive_levin()), unless theta's total variation over x_span is below SIX_PI
+            (Rule A; see "location_skipped_phases" below). It must be the closed form of theta's
+            derivative. Without it nothing is located, and the only protection at a stationary
+            point is the guard that never returns a Levin subinterval whose theta' changes sign on
+            its own nodes, which misses a pair of sign changes between two adjacent nodes.
           * "theta_abserr" (optional) -- scalar, or callable of x, giving a declared absolute
             error of the phase itself, in radians (recommendation 5.2). When supplied, each
             region's round-off floor gains an endpoint term proportional to it. This is the only
@@ -5591,6 +5689,10 @@ def adaptive_levin_sincos(
             nodes) when made, and those re-solved by the Clenshaw-Curtis rule at depth_max, which
             make "converged" False. Each used_interval carries window, guarded and
             guard_at_depth_max. See _adaptive_levin().
+          * "location_skipped_phases" -- Rule A (prompt 07 section 10): a phase whose total
+            variation over x_span, estimated on the location's scan of theta_deriv, is below
+            SIX_PI is not located, the C2 gate already sending it to the Clenshaw-Curtis rule;
+            each such phase is listed with its index and that estimate ("phase", "variation").
     """
     if len(f) != 2:
         raise ValueError(

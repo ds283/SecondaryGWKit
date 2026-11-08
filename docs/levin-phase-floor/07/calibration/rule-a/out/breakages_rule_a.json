@@ -1,0 +1,85 @@
+{
+ "header": [
+  "levin-phase-floor 07: section 10 (Rule A), the deliberate breakages (x) and (xi)",
+  "written 2026-11-08T12:05:26+00:00 on mps026088.phys.susx.ac.uk",
+  "python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "script breakages_rule_a.py sha256 112024af47930b86c43d930c879495bd84caf6d45c97321c76df68b55cfb4b85",
+  "prov.py sha256 9eb229e7c7ef3b922efc784a5cb53cd0faa601b921e0483f0bf92dcd9f9a5ac2",
+  "AdaptiveLevin/levin_quadrature.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc",
+  "input AdaptiveLevin/levin_quadrature.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc",
+  "input AdaptiveLevin/tests/test_levin_stationary.py sha256 23e489971b114218b42f027a6a95ceaf6fa43613765e78f062fbd893c0db3e0a",
+  "input docs/levin-phase-floor/07/calibration/rule-a/scripts/variant_loader.py sha256 3206d8f892cdc31bdcd1ce8be719d1dc1c4361a294fc5c86dad8bd043f2d8b33",
+  "HEAD 2ddd33066b1da9929988d23f3b42ecfa061ac7cc",
+  "tree dirty: yes; git status --short:",
+  "     M AdaptiveLevin/levin_quadrature.py",
+  "     M AdaptiveLevin/tests/test_levin_stationary.py",
+  "     M AdaptiveLevin/tests/test_levin_trust_yardstick.py",
+  "     M CLAUDE.md",
+  "     M docs/OPEN_ISSUES.md",
+  "    ?? docs/levin-phase-floor/07/calibration/rule-a/",
+  "uptime at start: 12:05  up 8 days, 14:26, 1 user, load averages: 26.52 51.27 48.92"
+ ],
+ "breakages": {
+  "x": {
+   "what": "Rule A off (its threshold 0)",
+   "substitutions": [
+    [
+     "        if variation < SIX_PI:\n",
+     "        if variation < 0.0:\n"
+    ]
+   ],
+   "variant_sha256": "5c401753a592e84dd3b0ac77cbe81b26d66511a70d27a222843f2d6c9b429ee5",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestRuleA.test_13a_zero_rate": {
+     "control_unbroken": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "control_passes": true,
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "\n    self.assertEqual(data[\"stationary_points\"], [])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [{'x': 0.0, 'kind': 'end', 'phase': 0, 'fo[1917339 chars]096}] != []\n\nFirst list contains 4097 additional elements.\nFirst extra element 0:\n{'x': 0.0, 'kind': 'end', 'phase': 0, 'found_as': 'root', 'theta': 0.0, 'theta_deriv': 0.0, 'own_window': [0.0, 1.0], 'own_window_edges': [{'x': 0.0, 'theta_minus_theta_point': 0.0, 'theta_deriv': 0.0, 'theta_second_deriv': 0.0, 'theta_deriv_sq_over_second': inf}, {'x': 1.0, 'theta_minus_theta_point': 0.0, 'theta_deriv': 0.0, 'theta_second_deriv': 0.0, 'theta_deriv_sq_over_second': inf}], 'window_index': 0, 'window': [0.0, 1.0], 'window_pieces': 4096}\n\nDiff is 3048163 characters long. Set self.maxDiff to None to see it.\n"
+      ]
+     },
+     "caught": true
+    }
+   }
+  },
+  "xi": {
+   "what": "a skipped phase tested by the guard for \"not of one strict sign\"",
+   "substitutions": [
+    [
+     "                if _changes_sign(sample):\n",
+     "                if not _strictly_one_sign(sample):\n"
+    ]
+   ],
+   "variant_sha256": "921132ece3152ed1977a6fcf77076ec1afcb5a8fff811254ccffc7fe2ef72c97",
+   "tests": {
+    "AdaptiveLevin.tests.test_levin_stationary.TestRuleA.test_13d_several_phases": {
+     "control_unbroken": {
+      "failures": 0,
+      "errors": 0,
+      "run": 1,
+      "detail": []
+     },
+     "control_passes": true,
+     "broken": {
+      "failures": 1,
+      "errors": 0,
+      "run": 1,
+      "detail": [
+       "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py\", line 794, in test_13d_several_phases\n    self.assertEqual(data[\"num_guarded_regions\"], 0)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 15 != 0\n"
+      ]
+     },
+     "caught": true
+    }
+   }
+  }
+ },
+ "all_caught": true
+}

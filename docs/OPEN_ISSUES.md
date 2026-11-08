@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-11-08 · **135 open** across twenty-two campaigns.
+**Last updated:** 2026-11-08 · **134 open** across twenty-two campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -995,7 +995,6 @@ is narrowed or closed. `[04-roundoff-floor-can-be-infinite]` stays in §1.3; thi
 | `[07-cc-interior-nodes-shift-with-a-rounded-midpoint]` | levin-phase-floor | Where ${\rm fl}(a+b)$ rounds, a Clenshaw–Curtis leaf's interior nodes all shift by up to half an ulp of $x$ (06e pinned only the ends): an error $\approx\delta(g(b)-g(a))$ per leaf, flat under splitting, measured by $E$. Explains 07's §2.2 failure at $10^{-10}$ on $[0,1]$, where the parent's dyadic leaves escape it. Remedy for the user after 07 |
 | `[07-cc-fallback-ignores-a-reversed-span]` | levin-phase-floor | The Clenshaw–Curtis fallback weights by the span's length, unsigned, so a reversed `x_span` returns the forward value, not its negative; a Levin region keeps the sign. No production span is reversed; 07's window path keeps the sign |
 | `[07-cc-node-term-takes-one-phase-per-node]` | levin-phase-floor | The fallback's node term takes one $\theta'$ per node, so a basis of several phases (07's generic interface) cannot supply it exactly; `_Basis_SinCos`, the only basis, has one phase |
-| `[07-location-on-an-identically-zero-rate]` | levin-phase-floor | 07's location takes every exact-zero sample of a phase rate as a root; on R28's 26 `q-r` calls with $q = r$ the rate is identically zero, so 4,097 roots and 4,102–5,505 forced Clenshaw–Curtis pieces per call (about 110 s), honest. Fixed by 07 §10, Rule A |
 | `[07-location-cuts-a-flat-stretch-at-every-zero-sample]` | levin-phase-floor | A phase flat over part of a span (variation above $6\pi$ elsewhere) has each exact-zero sample in the flat stretch taken as a root and a cut; a noisy cancellation would give spurious sign changes instead. No production case known |
 | `[07-c2-gate-threshold-was-never-measured]` | levin-phase-floor | The C2 gate's $6\pi$ was a guess, never measured; CC₃₁ is accurate well past it and the nested estimate, CC₁₆'s error, is what forces refinement. Measure against phase span on production calls, after 07 |
 | `[06-time-integrals-must-reach-late-resonances]` | levin-phase-floor | The time integrals must run late enough to include the QCD crossover and $e^+e^-$ annihilation for configurations that resonate then. Physics, out of 07 by the user's decision; a separate prompt after 07 |

@@ -1,0 +1,70 @@
+--- scripts/prov.py	2026-11-07 21:51:02
++++ rule-a/scripts/prov.py	2026-11-08 11:35:16
+@@ -44,14 +44,16 @@
+ # prompt 07, after the section 2 stop (section 9 point 4): the second run of section 2 writes to out/run2/; the
+ # first run's outputs are in out/run1_rtol1e-10/, kept as they were written (their own headers name the
+ # scripts' SHA-256 then)
+-OUT = CALIBRATION / "out" / "run2"
++# prompt 07 section 10 (Rule A): this copy sits in calibration/rule-a/scripts/, so CALIBRATION is rule-a/ and
++# the re-run on the amended code writes to rule-a/out/ (run 2's: CALIBRATION / "out" / "run2")
++OUT = CALIBRATION / "out"
+ OUT.mkdir(parents=True, exist_ok=True)
+ OUT_RUN1 = (
+     CALIBRATION / "out"
+ )  # prompt 07 (06m: CALIBRATION / "out" / "lg_draws") (06l, 06k: HERE.parents[1] / "out" / "lg_draws"; 06g: CALIBRATION / "out")
+ REPO = HERE.parents[
+-    4
+-]  # prompt 06m (06l: the worktree SecondaryGWKit-lpf06l-af4c4dc; 06k: -lpf06k-8937060; 06g: HERE.parents[4])
++    5
++]  # prompt 07 section 10 (07's scripts/: HERE.parents[4]); prompt 06m (06l: the worktree SecondaryGWKit-lpf06l-af4c4dc; 06k: -lpf06k-8937060; 06g: HERE.parents[4])
+ assert (REPO / "AdaptiveLevin" / "levin_quadrature.py").is_file(), REPO
+ 
+ LEVIN = REPO / "AdaptiveLevin" / "levin_quadrature.py"
+--- scripts/analysis07.py	2026-11-07 21:51:02
++++ rule-a/scripts/analysis07.py	2026-11-08 11:37:41
+@@ -183,6 +183,11 @@
+         rec["unlocated_minima"] = [
+             {"x": m["x"], "lambda": m["lambda"]} for m in result["unlocated_minima"]
+         ]
++    # prompt 07 section 10 (Rule A): the phases the location skipped, each with its total variation
++    if "location_skipped_phases" in result:
++        rec["location_skipped_phases"] = [
++            dict(s) for s in result["location_skipped_phases"]
++        ]
+     return rec
+ 
+ 
+--- scripts/lg_seeded_draws.py	2026-11-07 10:10:08
++++ rule-a/scripts/lg_seeded_draws.py	2026-11-08 11:37:41
+@@ -148,7 +148,11 @@
+ MODES = ("parent", "commit")  # prompt 07
+ UNIT_TIMEOUT_07 = 1200.0  # prompt 07: each unit's wall-clock limit, in seconds (06m's longest unit took 35.5 s)
+ VARIANT_06M = (
+-    HERE.parents[2] / "06l" / "scripts" / "variants" / "levin_quadrature_routeB.py"
++    HERE.parents[3]  # prompt 07 section 10 (07's scripts/: HERE.parents[2])
++    / "06l"
++    / "scripts"
++    / "variants"
++    / "levin_quadrature_routeB.py"
+ )  # prompt 06m
+ VARIANT_06M_SHA256 = (
+     "5aa6178a2298fb4cc32620cf6ae81538e873bf6a3177e8db6f3a5274d9bb4d9f"  # prompt 06m
+@@ -295,6 +299,7 @@
+     "num_window_pieces",
+     "num_guarded_regions",
+     "num_guard_at_depth_max",
++    "location_skipped_phases",  # prompt 07 section 10 (Rule A): set aside with the guard's other keys
+ )
+ 
+ 
+@@ -338,6 +343,10 @@
+         out["num_window_pieces_07"] = data["num_window_pieces"]
+         out["num_guarded_regions_07"] = data["num_guarded_regions"]
+         out["num_guard_at_depth_max_07"] = data["num_guard_at_depth_max"]
++    if "location_skipped_phases" in data:  # prompt 07 section 10 (Rule A)
++        out["location_skipped_phases_07"] = [
++            dict(s) for s in data["location_skipped_phases"]
++        ]
+     return out
+ 
+ 

@@ -477,7 +477,8 @@ class TestYardstickExactly(unittest.TestCase):
 
 
 # The stationary-point guard's result keys (prompts/levin-phase-floor/07-stationary-point-guard.md section
-# 1.5), which test 2's key-set comparison admits (that prompt's section 3 test 12, section 9 point 3).
+# 1.5), and Rule A's (section 10), which test 2's key-set comparison admits (that prompt's section 3 test 12,
+# section 9 point 3).
 GUARD_KEYS_07 = frozenset(
     (
         "stationary_points",
@@ -486,6 +487,7 @@ GUARD_KEYS_07 = frozenset(
         "num_window_pieces",
         "num_guarded_regions",
         "num_guard_at_depth_max",
+        "location_skipped_phases",
     )
 )
 

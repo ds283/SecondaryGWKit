@@ -1001,3 +1001,226 @@ At §2's stop:
 - **Questions for the user:** $\Phi_w$ and $\Lambda_c$ (no rung qualifies under §2.2's rule); §1.3,
   for mechanisms (A) and (B); `test_levin_trust_yardstick.py`'s key-set assertion; and the four
   ComputeTargets tests that do not finish, which §1.3 decides.
+
+## Amendment §10 (Rule A)
+
+> Written by the executing agent on the laptop, 2026-11-08, for prompt 07 §10 (Decisions, **07 Part
+> B stop 1**): a second code commit for 07, before Part B goes on. The sections above are kept as
+> they were written.
+
+**Subject:** prompt 07 §10 (Rule A), on the laptop, in the main checkout
+`/Users/ds283/Documents/Code/SecondaryGWKit`, branch `handover-remedial`.
+- **Dispatch SHA:** `2ddd3306` ("Amend levin-phase-floor 07 with Rule A at Part B's first stop"),
+  whose code is `ad732887`'s (07's Part A code commit; module SHA-256 `dc05596c…`).
+  `git log --oneline 2ddd3306..HEAD` was empty at the start and before staging.
+- **The Gate held:** `git status --short` empty; `HEAD` the dispatch SHA; `runregistrykit list` 82
+  runs, 80 finished, 2 `unknown` (`a3-pilot`, `a3-pilot-resume`, pre-registry), nothing `running`
+  or stale; `git stash list` shows 07's four stashes (`stash@{0}`–`stash@{3}`). The stashes and
+  `var/levin-phase-floor-07/wip/` were not otherwise touched.
+- No Ray was started (the replay imports `ray.cloudpickle` to read the captures; every replay records
+  `ray.is_initialized()` False), no store was opened, no run was registered, nothing was written
+  under `var/`.
+
+**Commit:** this amendment's code commit (one commit, not pushed; review pending).
+
+**Result:**
+- **Rule A is built** in `_locate_stationary_points`: each phase's total variation
+  $V_i = \int|\theta_i'|\,dx$ by the trapezoidal rule on the 4,097 scan samples, intervals with a
+  non-finite end left out, compared with `SIX_PI` by name; below it steps 2–4 do not run for the
+  phase. **The new result key is `location_skipped_phases`**: one dict per skipped phase,
+  `{"phase": i, "variation": V_i}`, empty when nothing is skipped or the location did not run.
+- **The guard**, for a basis passing several rates to it: a skipped phase is tested for a sign change
+  (samples of both strict signs on the nodes); `theta_prime_Cheb` and every located phase keep §1.4's
+  test.
+- **§2 re-run on the amended code** (`docs/levin-phase-floor/07/calibration/rule-a/out/`): **no call
+  of §2.2, §2.3 or §2.4 skips a phase, and every call is bit-identical to run 2** (148 §2.2 units,
+  105 §2.3 units, 8,640 LiouvilleGreen calls). The rungs do not move: $\Phi_w = 2\pi$,
+  $\Lambda_c = 4$, the check holding.
+- **Test 13 (a)–(d)** added to `test_levin_stationary.py`; **breakages (x) and (xi) caught**.
+- **The seven roots:** AdaptiveLevin 103 → 107 (the four tests added), the other six equal.
+- **Closed:** `[07-location-on-an-identically-zero-rate]` (board §4; `docs/OPEN_ISSUES.md` 135 → 134).
+
+### What shipped
+
+**`AdaptiveLevin/levin_quadrature.py`** (SHA-256 `4e5da371…`):
+- `_locate_stationary_points`: Rule A as the first step for each phase, after the scan and before
+  the roots; the returned dict gains `"skipped_phases"`. Its docstring states the rule and the
+  estimate's error.
+- **The estimate's error.** For a rate smooth between its roots, on the scan's spacing
+  $h = |x_{\rm span}|/4096$: the trapezoidal rule's $|x_{\rm span}|\,h^2\max|\theta_i'''|/12$ on the
+  smooth stretches; plus, at each root, where $|\theta_i'|$ has a kink, an overestimate of at most
+  $h^2|\theta_i''|/4$ (on an interval $[0, h]$ with the root at $t$, the rule's excess is
+  $|\theta''|\,t(h - t)$); plus the sum's rounding, about $n\varepsilon V_i$. Measured on test 13
+  (b) ($\theta' = 70(x - x_0)$ on $[0, 1]$, linear, so only the kink term): $V = 18.475242613612156$
+  against the exact $18.475241575014722$, an excess of $1.039\times10^{-6}$ against the bound
+  $70h^2/4 = 1.043\times10^{-6}$. The estimate can move $V_i$ across `SIX_PI` only for a phase that
+  close to it, and either side is covered (above, the location; below, the gate, and the guard
+  where the gate still sends a region to the Levin solve).
+- `_changes_sign` (new) and `_nodal_guard`, with a new keyword `guard_sign_change_phases` (the
+  indices of skipped phases), threaded from `_adaptive_levin` through `_solve`,
+  `_adaptive_levin_subregion` and `_adaptive_levin_subregion_impl`. It is set only when the basis
+  passes several rates to the guard and the location ran; empty when nothing is skipped, so every
+  call that skips nothing takes exactly its old path.
+- The result's `"location_skipped_phases"`.
+- **Docstrings:** the module docstring (the stationary-point item and the basis interface),
+  `_adaptive_levin_subregion_impl` (its parameter and its account of the gate), `_nodal_guard`,
+  `_locate_stationary_points`, `_adaptive_levin` (location item 1, guard item 4, the result keys)
+  and `adaptive_levin_sincos` (`theta_deriv`, and the new key).
+
+**`AdaptiveLevin/tests/test_levin_stationary.py`:** class `TestRuleA`, test 13 (a)–(d), with its
+references as float hex and a region-record helper (test 8's fields); the module docstring names
+Rule A. **`AdaptiveLevin/tests/test_levin_trust_yardstick.py`:** `GUARD_KEYS_07` admits
+`location_skipped_phases` (and its comment says so); nothing else.
+
+**`docs/levin-phase-floor/07/calibration/rule-a/`:** `scripts/` (copies of run 2's `prov.py`,
+`calibrate.py`, `analysis07.py`, `reference.py`, `replay.py`, `variant_loader.py`,
+`lg_seeded_draws.py`, `lg_compare_07.py`, changed as `out/scripts_diff.txt` shows; and three new
+scripts, `test_references_rule_a.py`, `compare_run2.py`, `breakages_rule_a.py`), formatted by
+`black` before the recorded run, and `out/`. Every output's header records its script's SHA-256,
+`prov.py`'s, the module's (`4e5da371…`), `HEAD` `2ddd3306` and a dirty tree.
+
+### §3 test 13 (`rule-a/out/test_references_rule_a.json`; every reference a closed form at 40 and 60 digits, agreeing to $\le 1.1\times10^{-41}$, and against `mpmath.quad` to $\le 1.7\times10^{-41}$)
+
+All at `rtol` $10^{-9}$, `atol` $10^{-14}|{\rm ref}|$, on $[0, 1]$, $f = (e^{-x}, \cos 3x)$ unless
+said.
+
+| | case | located | skipped | regions | guarded | converged | $|v - {\rm ref}|$ / abserr |
+|---|---|---|---|---|---|---|---|
+| (a) | $\theta \equiv 0$, `theta_deriv` $\equiv 0$, ref $\sin 3/3$ | nothing | phase 0, $V = 0$ | 1 | 0 | yes | $1.39\times10^{-17}$ / $2.47\times10^{-15}$ = 0.0056 |
+| (b) | $\theta = 35(x - x_0)^2$, $V = 18.475 = 0.980\cdot6\pi$ | nothing | phase 0, $V = 18.4752426$ | 5 | 1 (the root leaf) | yes | $2.78\times10^{-17}$ / $1.96\times10^{-13}$ = $1.4\times10^{-4}$ |
+| (c) | $\theta = 36(x - x_0)^2$, $V = 19.003 = 1.008\cdot6\pi$ | root at $x_0$ exactly, one window, 6 pieces | none | 7 | 0 | yes | $1.39\times10^{-16}$ / $7.21\times10^{-12}$ = $1.9\times10^{-5}$ |
+| (d) | test 9's basis, $\theta_1 = 200x$, $\theta_2 \equiv 0$; $f = (e^{-x}, 0, 0, \cos 3x)$ | nothing | phase 1, $V = 0$ | 1 (Levin) | 0 | yes | $1.53\times10^{-16}$ / $1.97\times10^{-14}$ = 0.0078 |
+
+- (a) and (b) are bit-identical, in value, abserr, `converged` and every returned leaf's fields, to
+  the same call with `_test_only_bypass_location`; (b)'s reported $V$ is within the estimate's
+  stated error of the exact one.
+- **(b) reaches the guard.** The root leaf's own span estimate, from its 16 nodes, is 23.69, above
+  $6\pi$, so the C2 gate sends it to the Levin solve with the root unlocated; the nodal guard catches
+  it, and it is bisected into Clenshaw–Curtis halves (one guarded region, under Rule A and under the
+  bypass alike). This is §10's "a region it still sends to the Levin solve … is the nodal guard's to
+  catch", met on the first case built (deviation 42).
+- (c) at $c = 72$ is located and windowed as before Rule A.
+- (d)'s zero block in the Levin system does not trouble the solve: one Levin leaf, converged.
+
+### Breakages (`rule-a/out/breakages_rule_a.txt`; each a text substitution in a copy of the module installed in a fresh process, the tree untouched; each named test passes on the tree as a control)
+
+| | breakage | test | result |
+|---|---|---|---|
+| (x) | Rule A off (`variation < SIX_PI` → `variation < 0.0`) | 13 (a) | **fails**: 4,097 points located (`stationary_points` not empty); the same call then makes one window and 4,102 pieces, R28's shape (honest, 17.7 s) |
+| (xi) | a skipped phase tested for "not of one strict sign" (`_changes_sign(sample)` → `not _strictly_one_sign(sample)`) | 13 (d) | **fails**: 15 guarded regions, not 0 |
+
+## Amendment §10: predictions and verdicts
+
+§10's "What must not move", scored on `rule-a/out/compare_run2.txt` (`compare_run2.py`; set aside:
+wall-clock times, the module's SHA-256, the replay's `evidence`, Rule A's key, and for a
+LiouvilleGreen call under `commit` 06m's `result_sha256` and `result_keys`, which count the result's
+keys; `result_sha256_07`, which sets the guard's keys aside, Rule A's among them, is compared):
+
+| rule | measured | verdict |
+|---|---|---|
+| §2.2 at `rtol` $10^{-9}$: every call with no phase skipped bit-identical to run 2 | 148 of 148 units paired; none skips a phase; 148 identical | **holds** |
+| §2.3, the 14 calls (and r55): the same | 105 of 105 units (g06, parent, five rungs, each sid); none skips; 105 identical; the replay check reproduces all 15 again | **holds** |
+| §2.4, the draws: the same | 160 of 160 units; 8,640 calls (4,320 per code); none skips; 8,640 identical, and every unit's outcome, three-Bessel results and output identical | **holds** |
+| every call with a skipped phase listed with both results | none | **holds** (nothing to list) |
+| a rung of $\Phi_w$ or $\Lambda_c$ that moves is a stop | $\Phi_w$ $2\pi$ → $2\pi$; $\Lambda_c$ 4 → 4; the check holds in both | **holds** |
+| the seven roots: a fall is a stop, a rise equals the tests added | AdaptiveLevin 103 → 107 (+4, test 13 (a)–(d)); the others equal | **holds** |
+| any other test whose assertion moves is a stop | none moved; one key-set allowance (`GUARD_KEYS_07`) | **holds** |
+
+`lg_compare_07.txt` on the re-run (parent against the amended code) repeats run 2's: no test fails;
+3,897 of 4,320 paired calls locate nothing and guard nothing, all bit-identical to the parent; 423
+locate a point (419 roots, 4 minima), none guards.
+
+## Amendment §10: deviations from the prompt
+
+38. **Rule A's estimate uses the scan's own spacings** (`numpy.diff` of the `linspace` grid, not one
+    $h$), and is compared with `SIX_PI` inside `_locate_stationary_points`, not passed in as a
+    parameter. `IMPLEMENTATION CHOICE`.
+39. **The key is `location_skipped_phases`**, a list of `{"phase", "variation"}`, always present in
+    `_adaptive_levin`'s result (empty when nothing is skipped, or the location bypassed or not run);
+    the location's own dict gains `"skipped_phases"`. `IMPLEMENTATION CHOICE`.
+40. **The guard's mechanism:** a keyword `guard_sign_change_phases` (a frozenset of indices into
+    `guard_rates`) threaded to `_nodal_guard`, and a helper `_changes_sign`. A zero or a non-finite
+    sample of a skipped phase does not count, following "samples of both strict signs" literally;
+    for a located phase a non-finite sample still guards. `IMPLEMENTATION CHOICE`.
+41. **A skipped phase still bounds the window pieces** of a multi-phase basis whose other phase is
+    located (§1.2 item 3, "in every phase of the basis", unchanged): Rule A removes its points,
+    windows and minima, not its share in the piece cuts. `IMPLEMENTATION CHOICE`.
+42. **Test 13 (b) asserts that the guard catches its root leaf** (one guarded region, under Rule A
+    and under the bypass), beyond §10's list. The first draft asserted no guarded region and failed:
+    the root leaf's node estimate of its span is 23.69, above $6\pi$, though $V = 18.475$. §10
+    foresees this path; the test now pins it. `IMPLEMENTATION CHOICE`.
+43. **Test 13's problems:** (a), (b) and (d) are driven through `_adaptive_levin` (test 8's switch
+    is there; (d) as test 9 is), (c) through `adaptive_levin_sincos`; $x_0 = 0.3819660112501051$;
+    $c = 70$ and 72 ($V/6\pi$ = 0.980 and 1.008); (d) is `_TwoPhaseQuadraticBasis(200, 0, x_0)`,
+    whose second rate is $\pm0$ on every node, with $f = (e^{-x}, 0, 0, \cos 3x)$. Each test also
+    asserts what it reports: (a), (b) `converged` equal to the bypass, (c) no phase skipped.
+    `IMPLEMENTATION CHOICE`.
+44. **Test 13's references** come from a new recorded script, `test_references_rule_a.py` (closed
+    forms at two precisions, checked against `mpmath.quad`; (b), (c) by `reference.closed_R` with
+    `contour_R` beside it), held as float hex in the test module, as 07's tests hold theirs.
+    `IMPLEMENTATION CHOICE`.
+45. **The copied scripts change beyond their paths** (`out/scripts_diff.txt`):
+    - paths: `prov.py`'s `REPO` (`HERE.parents[5]`) and `OUT` (`rule-a/out/`), and
+      `lg_seeded_draws.py`'s `VARIANT_06M` (`HERE.parents[3]`, unused: route B is not a mode);
+    - `analysis07.summary` records `location_skipped_phases` in each record;
+    - `lg_seeded_draws.py` sets the key aside in its `GUARD_KEYS_07`, so that `result_sha256_07`
+      stays comparable with run 2's, and records it per call (`location_skipped_phases_07`).
+    Without the last two no call with a skipped phase could be listed, and every call's digest would
+    differ from run 2's by the new key. `black` changed nothing in the copies but the wrapping of my
+    own edits. `calibrate.py`, `reference.py`, `replay.py`, `variant_loader.py` and
+    `lg_compare_07.py` are unchanged. `STRUCTURALLY REQUIRED`.
+46. **Three new scripts:** `compare_run2.py` (the comparison with run 2, its set-asides as stated
+    above), `breakages_rule_a.py` (07's `breakages.py`'s mechanism, for (x) and (xi)) and
+    `test_references_rule_a.py`. `IMPLEMENTATION CHOICE`.
+47. **§2 was re-run whole,** the modes that do not depend on the amended code included (the parent,
+    and §2.3's `g06` replay check in a scratch worktree at `3ae6f3a4`, made, found clean, and removed
+    with its `venv` symlink), so that the harnesses run as they ran in run 2 and every unit pairs.
+    Run 2's settings: §2.2 six workers, one-hour unit limit; §2.3 four workers, 900 s; §2.4 three
+    workers. `IMPLEMENTATION CHOICE`.
+48. **A first recorded pass was discarded.** After §2.2 and §2.3 had run and §2.4 had started, I
+    edited docstrings of the module, so those outputs named a module SHA-256 other than the
+    committed one. §2.4's run was stopped (its processes by pid), every output in `rule-a/out/` but
+    `scripts_diff.txt` deleted, and the whole re-run made again on the final module (`4e5da371…`,
+    11:51–12:05). No record of the first pass is kept; its §2.2 and §2.3 comparisons were not made.
+    `UNINTENDED DRIFT` (corrected).
+49. **The re-runs are not registered.** Each is under ten minutes (§2.2 61 s, §2.3 208 s, §2.4
+    537 s); README §5 rule 7 asks registration above about ten minutes. `IMPLEMENTATION CHOICE`.
+
+## Amendment §10: verification performed
+
+- **The seven roots at the dispatch SHA** (before any edit; the seven run in parallel):
+  AdaptiveLevin 103 OK; ComputeTargets 781 OK (492 s); CosmologyModels 39 OK; LiouvilleGreen 156 OK
+  (skipped=1); ObjectFactories 280 OK; RunDrivers 127 OK; tools 64 OK. They equal the dispatch's.
+- **The seven roots on the commit's tree** (in parallel, 12:06–12:13, after §2's re-run; ComputeTargets 449 s): AdaptiveLevin **107** OK; ComputeTargets 781 OK;
+  CosmologyModels 39 OK; LiouvilleGreen 156 OK (skipped=1); ObjectFactories 280 OK; RunDrivers 127
+  OK; tools 64 OK.
+- Before the key-set allowance, `test_levin_trust_yardstick.py`'s `test_bit_identical_to_the_variant`
+  failed on every cell on the new key alone; after it, it passes, every other field compared as
+  before.
+- **§2's re-run and its comparison** as above; the references and the breakages as above.
+- **`black --check`** on the module, the two test modules and `rule-a/scripts/`: clean.
+- `git log --oneline 2ddd3306..HEAD` empty before staging; `git worktree list` the main checkout
+  alone after §2.3.
+
+## Amendment §10: observations not acted on
+
+- **O9. A phase Rule A skips can still reach the Levin solve** (test 13 (b)): the gate's per-region
+  estimate, $\overline{|\theta'|}$ on the Chebyshev nodes times the width, weights the ends, where
+  $|\theta'|$ of a quadratic phase is largest, and reads 23.69 against $V = 18.475$ on $[0, 1]$.
+  The guard caught the root there, as §10 intends; it would miss a pair of sign changes between two
+  adjacent nodes of such a region. No production phase is known to be in that band; it bears on
+  `[07-c2-gate-threshold-was-never-measured]`, which owns the gate's estimate. Not opened.
+- **O10.** None of §2's calls has a phase below `SIX_PI` (no family, real call or draw skipped one),
+  so §2 does not exercise Rule A at all; test 13 and R29 (the 26 `q-r` calls) are where it is
+  measured.
+- `[07-location-cuts-a-flat-stretch-at-every-zero-sample]` and
+  `[07-c2-gate-threshold-was-never-measured]` are untouched, as §10 says.
+
+## Amendment §10: state handed on
+
+- **Committed** (one commit, not pushed; review pending): the module (`4e5da371…`), the two test
+  modules, `docs/levin-phase-floor/07/calibration/rule-a/`, this log, the board (the issue moved to
+  §4, the 07 row), `docs/OPEN_ISSUES.md` (135 → 134) and `CLAUDE.md` (the `black` list).
+- **Part B after it** (§10, the note's §B.6): R29 at this commit in R28's place, against R27 and R28;
+  S1 and S2 re-scored on R29; the census at this code, V3 setting aside a phase Rule A skipped.
+- **The set-aside work** is as it was: four stashes, `var/levin-phase-floor-07/wip/` unchanged.

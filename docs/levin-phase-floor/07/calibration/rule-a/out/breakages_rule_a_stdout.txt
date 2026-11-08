@@ -1,0 +1,25 @@
+# levin-phase-floor 07: section 10 (Rule A), the deliberate breakages (x) and (xi)
+# written 2026-11-08T12:05:26+00:00 on mps026088.phys.susx.ac.uk
+# python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)
+# script breakages_rule_a.py sha256 112024af47930b86c43d930c879495bd84caf6d45c97321c76df68b55cfb4b85
+# prov.py sha256 9eb229e7c7ef3b922efc784a5cb53cd0faa601b921e0483f0bf92dcd9f9a5ac2
+# AdaptiveLevin/levin_quadrature.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc
+# input AdaptiveLevin/levin_quadrature.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc
+# input AdaptiveLevin/tests/test_levin_stationary.py sha256 23e489971b114218b42f027a6a95ceaf6fa43613765e78f062fbd893c0db3e0a
+# input docs/levin-phase-floor/07/calibration/rule-a/scripts/variant_loader.py sha256 3206d8f892cdc31bdcd1ce8be719d1dc1c4361a294fc5c86dad8bd043f2d8b33
+# HEAD 2ddd33066b1da9929988d23f3b42ecfa061ac7cc
+# tree dirty: yes; git status --short:
+#      M AdaptiveLevin/levin_quadrature.py
+#      M AdaptiveLevin/tests/test_levin_stationary.py
+#      M AdaptiveLevin/tests/test_levin_trust_yardstick.py
+#      M CLAUDE.md
+#      M docs/OPEN_ISSUES.md
+#     ?? docs/levin-phase-floor/07/calibration/rule-a/
+# uptime at start: 12:05  up 8 days, 14:26, 1 user, load averages: 26.52 51.27 48.92
+
+(x) Rule A off (its threshold 0): test_13a_zero_rate: control passes; broken CAUGHT (fails)
+    Diff is 3048163 characters long. Set self.maxDiff to None to see it.
+(xi) a skipped phase tested by the guard for "not of one strict sign": test_13d_several_phases: control passes; broken CAUGHT (fails)
+    AssertionError: 15 != 0
+
+all caught, controls passing: True

@@ -1,0 +1,106 @@
+{
+ "header": [
+  "levin-phase-floor 07: section 10 (Rule A), section 2 re-run against run 2",
+  "written 2026-11-08T12:05:25+00:00 on mps026088.phys.susx.ac.uk",
+  "python 3.13.16 (/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python)",
+  "script compare_run2.py sha256 2f8ddfd1c50b0f3d950fd9b5fbac3aa9e726152c1247aa754f74116095e9a752",
+  "prov.py sha256 9eb229e7c7ef3b922efc784a5cb53cd0faa601b921e0483f0bf92dcd9f9a5ac2",
+  "AdaptiveLevin/levin_quadrature.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc",
+  "input docs/levin-phase-floor/07/calibration/out/run2/calibrate_units_rtol1e-09.jsonl sha256 726747d7a6ff4f73586304dec740544d632dd1b9c0d150e3acaca952a4e51c82",
+  "input docs/levin-phase-floor/07/calibration/out/run2/calibrate_rtol1e-09.json sha256 2a4a3c62f0e8ee9dafe29aaf6c2bb40b266d21861084dfaf4ac5ecc80ae4b11c",
+  "input docs/levin-phase-floor/07/calibration/out/run2/replay_units.jsonl sha256 6dd1ed2be50622476ee00d195ab7bef99030f84c150a85fffc56ae91610da699",
+  "input docs/levin-phase-floor/07/calibration/out/run2/replay.json sha256 9f4219e51749ec7a8827c7385755c7e5af9814000c3e94314db00fb403f35f88",
+  "input docs/levin-phase-floor/07/calibration/out/run2/lg_seeded_draws.jsonl sha256 75c79a44c71ef2ac5793afde0189d987703ce4bb6bbc80a246626ed4962794d7",
+  "input docs/levin-phase-floor/07/calibration/rule-a/out/calibrate_units_rtol1e-09.jsonl sha256 b04695c97d06847d1a6a14dd5b233bd47b2b6ce2423616cefcff0e5fc92d4e07",
+  "input docs/levin-phase-floor/07/calibration/rule-a/out/calibrate_rtol1e-09.json sha256 e707220c98b219aeebb8277c39950c0407f934ab8f04fa1c599a2b9f9f0dd515",
+  "input docs/levin-phase-floor/07/calibration/rule-a/out/replay_units.jsonl sha256 e4748ad66bc28c4aa0de482bc6204cdf4959c19f53ed064d4876af5fe4e92488",
+  "input docs/levin-phase-floor/07/calibration/rule-a/out/replay.json sha256 3b810c5bd232ac49a0bfe1007aada5da2e81a1d91f080ad083a3dda089747029",
+  "input docs/levin-phase-floor/07/calibration/rule-a/out/lg_seeded_draws.jsonl sha256 7f307f2818166b138db114cc669e74a3cb9390c9eefdbd1a5bdb6eae5112a1c3",
+  "HEAD 2ddd33066b1da9929988d23f3b42ecfa061ac7cc",
+  "tree dirty: yes; git status --short:",
+  "     M AdaptiveLevin/levin_quadrature.py",
+  "     M AdaptiveLevin/tests/test_levin_stationary.py",
+  "     M AdaptiveLevin/tests/test_levin_trust_yardstick.py",
+  "     M CLAUDE.md",
+  "     M docs/OPEN_ISSUES.md",
+  "    ?? docs/levin-phase-floor/07/calibration/rule-a/",
+  "uptime at start: 12:05  up 8 days, 14:26, 1 user, load averages: 26.52 51.27 48.92"
+ ],
+ "set_aside": [
+  "elapsed",
+  "elapsed_s",
+  "evidence",
+  "location_skipped_phases",
+  "location_skipped_phases_07",
+  "module_sha256",
+  "wall_s"
+ ],
+ "set_aside_lg_commit": [
+  "result_keys",
+  "result_sha256"
+ ],
+ "parts": [
+  {
+   "part": "section 2.2",
+   "units_run2": 148,
+   "units_rule_a": 148,
+   "only_run2": [],
+   "only_rule_a": [],
+   "calls": 148,
+   "calls_without_skip": 148,
+   "calls_without_skip_identical": 148,
+   "calls_without_skip_differing": [],
+   "calls_with_skip": [],
+   "unit_level_differences": [],
+   "rungs": {
+    "phi_w_by_rule_pi": [
+     2.0,
+     2.0
+    ],
+    "lambda_c_by_rule": {
+     "2pi": [
+      4.0,
+      4.0
+     ]
+    },
+    "check_holds": {
+     "2pi": [
+      true,
+      true
+     ]
+    }
+   },
+   "rungs_move": false
+  },
+  {
+   "part": "section 2.3",
+   "units_run2": 105,
+   "units_rule_a": 105,
+   "only_run2": [],
+   "only_rule_a": [],
+   "calls": 105,
+   "calls_without_skip": 105,
+   "calls_without_skip_identical": 105,
+   "calls_without_skip_differing": [],
+   "calls_with_skip": [],
+   "unit_level_differences": [],
+   "replay_check_all_reproduce": [
+    true,
+    true
+   ]
+  },
+  {
+   "part": "section 2.4",
+   "units_run2": 160,
+   "units_rule_a": 160,
+   "only_run2": [],
+   "only_rule_a": [],
+   "calls": 8640,
+   "calls_without_skip": 8640,
+   "calls_without_skip_identical": 8640,
+   "calls_without_skip_differing": [],
+   "calls_with_skip": [],
+   "unit_level_differences": []
+  }
+ ]
+}

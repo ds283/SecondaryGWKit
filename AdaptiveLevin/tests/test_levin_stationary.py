@@ -6,7 +6,8 @@ interior minimum of |theta'| whose Airy parameter is below _LEVIN_COALESCENCE_LA
 integrates a window of phase half-width _LEVIN_WINDOW_HALF_PHASE round each by the nested Clenshaw-Curtis
 pair, in pieces of at most 2 pi; it stops a window whose bisections no longer lower its error by QUADPACK's
 iroff1 counted per window (section 1.3); and it never returns a Levin leaf whose phase rate changes sign on its
-own nodes (the guard).
+own nodes (the guard). A phase whose total variation over the span is below SIX_PI is not located (Rule A, section
+10; test 13), and the guard tests such a phase of a basis of several phases for a sign change.
 
 References are closed forms (the incomplete gamma function and the error function), contour integrals, or
 mpmath.quad on pieces of at most pi/2 of phase split at every stationary point. They are computed, each at 40
@@ -605,6 +606,195 @@ class TestWindowStoppingRule(unittest.TestCase, _Honest):
         (window,) = data["stationary_windows"]
         self.assertEqual(window["iroff1_count"], 0)
         self.assertFalse(window["stopped"])
+
+
+# Test 13 (section 10, Rule A): references by rule-a/scripts/test_references_rule_a.py, at 40 and 60 digits
+# (agreeing to at most 1.1e-41 relative) and checked against mpmath.quad; its output is
+# docs/levin-phase-floor/07/calibration/rule-a/out/test_references_rule_a.json.
+# (a) theta = 0: I = int_0^1 cos 3x dx = sin(3) / 3.
+T13A_REF = float.fromhex("0x1.815a092491c7ap-5")  # 4.70400026866224073669149342694e-2
+# (b), (c) theta = (c/2)(x - x0)^2 on [0, 1] with section 2's amplitudes, V = (c/2)(x0^2 + (1 - x0)^2):
+# c = 70, V = 18.475 = 0.980 * 6 pi (b); c = 72, V = 19.003 = 1.008 * 6 pi (c).
+T13B_C, T13C_C = 70.0, 72.0
+T13B_REF = float.fromhex("0x1.58f28f18e1695p-3")  # 1.68431394526284234165192922057e-1
+T13C_REF = float.fromhex("0x1.4b17706bee4a3p-3")  # 1.61665800374781824059347863032e-1
+T13B_V = 18.47524157501472  # 18.4752415750147221490017579642
+# (d) test 9's basis with theta_1 = 200 x and theta_2 = 0, f = (e^{-x}, 0, 0, cos 3x):
+# I = (l - e^{-1}(sin l + l cos l)) / (1 + l^2) + sin(3) / 3, l = 200.
+T13D_L1 = 200.0
+T13D_REF = float.fromhex("0x1.a309197cde8f6p-5")  # 5.11517999465968404313882463355e-2
+
+_REGION_FIELDS_13 = (
+    "start",
+    "end",
+    "depth",
+    "type",
+    "abserr",
+    "relerr",
+    "phase_err",
+    "phase_limited",
+    "value",
+    "value_kind",
+    "value_own",
+    "trusted",
+    "delta1",
+    "delta2",
+    "convergence_ratio",
+    "declared_resolution",
+    "total_err",
+    "budget_err",
+    "node_error_signed",
+    "phase_err_less_node",
+    "window",
+    "guarded",
+)
+
+
+def _region_record_13(region):
+    out = []
+    for name in _REGION_FIELDS_13:
+        v = getattr(region, name)
+        out.append(float(v).hex() if isinstance(v, float) else v)
+    return out
+
+
+class TestRuleA(unittest.TestCase, _Honest):
+    """
+    Test 13 (prompt 07 section 10, Rule A): a phase whose total variation over the span, estimated on the
+    location's scan by the trapezoidal rule, is below SIX_PI is not located; it is reported under
+    "location_skipped_phases"; for a basis of several phases the guard tests it for a sign change.
+    """
+
+    KW = dict(rtol=1e-9)
+
+    def assertBitIdenticalToBypassed(self, located, bypassed):
+        self.assertEqual(float(located["value"]).hex(), float(bypassed["value"]).hex())
+        self.assertEqual(
+            float(located["abserr"]).hex(), float(bypassed["abserr"]).hex()
+        )
+        self.assertEqual(located["converged"], bypassed["converged"])
+        self.assertEqual(
+            [_region_record_13(r) for r in located["regions"]],
+            [_region_record_13(r) for r in bypassed["regions"]],
+        )
+
+    def assertNothingLocated(self, data):
+        self.assertEqual(data["stationary_points"], [])
+        self.assertEqual(data["stationary_windows"], [])
+        self.assertEqual(data["unlocated_minima"], [])
+        self.assertEqual(data["num_window_pieces"], 0)
+        self.assertFalse(any(r.window for r in data["regions"]))
+
+    def test_13a_zero_rate(self):
+        """
+        Test 13 (a). _Basis_SinCos with theta = 0 and theta_deriv = 0 identically, and a smooth, varying f_cos =
+        cos 3x (with f_sin = e^{-x}, which sin 0 annuls), the shape of R28's q - r calls with q = r. Nothing is
+        located, no window piece is made, the phase is reported skipped with variation 0, nothing is guarded;
+        value, abserr and every returned leaf are bit-identical to the call with the location bypassed (test 8's
+        switch); and the value is honest against sin(3) / 3. Before Rule A every one of the 4,097 scan samples
+        was a root (breakage (x)).
+        """
+        theta = {"theta": lambda x: 0.0 * x, "theta_deriv": lambda x: 0.0 * x}
+        kw = dict(self.KW, atol=1e-14 * abs(T13A_REF))
+        located = _adaptive_levin((0.0, 1.0), F_23, _Basis_SinCos(theta), **kw)
+        bypassed = _adaptive_levin(
+            (0.0, 1.0),
+            F_23,
+            _Basis_SinCos(theta),
+            _test_only_bypass_location=True,
+            **kw,
+        )
+        self.assertNothingLocated(located)
+        self.assertEqual(
+            located["location_skipped_phases"], [{"phase": 0, "variation": 0.0}]
+        )
+        self.assertEqual(bypassed["location_skipped_phases"], [])
+        self.assertEqual(located["num_guarded_regions"], 0)
+        self.assertBitIdenticalToBypassed(located, bypassed)
+        self.assertTrue(located["converged"])
+        self.assertHonest(located, T13A_REF)
+
+    def test_13b_small_phase_with_a_root(self):
+        """
+        Test 13 (b). theta = (c/2)(x - x0)^2 on [0, 1] at the non-dyadic x0 = 0.3819660112501051, c = 70, so that
+        its total variation V = (c/2)(x0^2 + (1 - x0)^2) = 18.475 is below 6 pi = 18.850. Its root is not
+        located; the phase is reported skipped, its variation within the estimate's stated error of V (the
+        trapezoidal rule on the scan: at most h^2 |theta''| / 4 at the root, where |theta'| has a kink, theta' being
+        linear elsewhere, plus the sum's rounding; h = 1/4096). The root leaf, whose node estimate of its span
+        exceeds 6 pi, is caught by the nodal guard. The result is bit-identical to the call with the location
+        bypassed, and the value is honest against the closed form in erf.
+        """
+        theta = quadratic_theta(T13B_C, X0)
+        kw = dict(self.KW, atol=1e-14 * abs(T13B_REF))
+        located = _adaptive_levin((0.0, 1.0), F_23, _Basis_SinCos(theta), **kw)
+        bypassed = _adaptive_levin(
+            (0.0, 1.0),
+            F_23,
+            _Basis_SinCos(theta),
+            _test_only_bypass_location=True,
+            **kw,
+        )
+        self.assertNothingLocated(located)
+        (skipped,) = located["location_skipped_phases"]
+        self.assertEqual(skipped["phase"], 0)
+        self.assertLess(skipped["variation"], lq.SIX_PI)
+        h = 1.0 / (lq._LEVIN_STATIONARY_SCAN_POINTS - 1)
+        bound = T13B_C * h * h / 4.0 + lq._LEVIN_STATIONARY_SCAN_POINTS * EPS * T13B_V
+        self.assertLessEqual(abs(skipped["variation"] - T13B_V), bound)
+        # The root leaf's own span estimate, from its 16 nodes, is 23.69 > 6 pi, so the C2 gate sends it to the
+        # Levin solve, where the nodal guard catches the root Rule A left unlocated (section 10, "Why the gate's
+        # threshold"): it is guarded and bisected, and its halves go to the Clenshaw-Curtis rule. No Levin leaf
+        # is returned guarded, and the guard acts as it does with the location bypassed.
+        self.assertEqual(located["num_guarded_regions"], 1)
+        self.assertEqual(bypassed["num_guarded_regions"], 1)
+        self.assertFalse(any(r.guarded for r in located["regions"]))
+        self.assertBitIdenticalToBypassed(located, bypassed)
+        self.assertHonest(located, T13B_REF)
+
+    def test_13c_same_phase_just_above_six_pi(self):
+        """
+        Test 13 (c). Test 13 (b)'s phase at c = 72, V = 19.003, just above 6 pi: no phase is skipped, and the root
+        is located at x0 (within 4 eps x0) and windowed, as before Rule A; the value is honest.
+        """
+        theta = quadratic_theta(T13C_C, X0)
+        data = adaptive_levin_sincos(
+            (0.0, 1.0), F_23, theta, atol=1e-14 * abs(T13C_REF), **self.KW
+        )
+        self.assertEqual(data["location_skipped_phases"], [])
+        (point,) = data["stationary_points"]
+        self.assertEqual(point["kind"], "root")
+        self.assertLessEqual(abs(point["x"] - X0), 4.0 * EPS * X0)
+        self.assertEqual(len(data["stationary_windows"]), 1)
+        self.assertGreater(data["num_window_pieces"], 0)
+        self.assertEqual(data["num_guarded_regions"], 0)
+        self.assertHonest(data, T13C_REF)
+
+    def test_13d_several_phases(self):
+        """
+        Test 13 (d). Test 9's two-phase basis with phase 2 identically zero (c = 0) and phase 1 linear, theta_1 =
+        200 x, V_1 = 200 >= 6 pi; f = (e^{-x}, 0, 0, cos 3x). Phase 2 (index 1) is reported skipped with variation 0,
+        phase 1 locates nothing; no leaf is guarded -- the guard tests the skipped phase for a sign change, and
+        its rate, 0 or -0 on every node, has none (tested for one strict sign, breakage (xi), every Levin leaf is
+        guarded); the call converges and is honest against the closed form.
+        """
+        basis = _TwoPhaseQuadraticBasis(T13D_L1, 0.0, X0)
+        f = [
+            lambda x: np.exp(-x),
+            lambda x: 0.0 * x,
+            lambda x: 0.0 * x,
+            lambda x: np.cos(3.0 * x),
+        ]
+        data = _adaptive_levin(
+            (0.0, 1.0), f, basis, atol=1e-14 * abs(T13D_REF), **self.KW
+        )
+        self.assertEqual(
+            data["location_skipped_phases"], [{"phase": 1, "variation": 0.0}]
+        )
+        self.assertNothingLocated(data)
+        self.assertEqual(data["num_guarded_regions"], 0)
+        self.assertFalse(any(r.guarded for r in data["regions"]))
+        self.assertTrue(data["converged"])
+        self.assertHonest(data, T13D_REF)
 
 
 if __name__ == "__main__":
