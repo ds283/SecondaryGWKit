@@ -1,0 +1,5 @@
+# laptop git stashes dropped 2026-11-10: stash SHA, then its message. Each was a draft of levin-phase-floor 07 Part A, superseded by the landed commits.
+19eb784eb4c3f97f3b9614974c8e53bedb95da3f On handover-remedial: levin-phase-floor 07 Part A, rebased on 06d at its fourth stop, set aside for 06e (base f5def2f, rebased onto e5764a6)
+4e6db6549bbba4032c71c8b73395a831b8d1f866 On handover-remedial: levin-phase-floor 07 Part A, rebased on 06c at its third stop, set aside for 06d (base 4bbeade)
+1278f4e56e2a2a865f08ef2d8cb726a69c2bc419 On handover-remedial: levin-phase-floor 07 Part A, rebased on 06b with section 2 run, set aside for 06c (base 22234a8)
+a89ac9be0a4b429daf50552f32808c8a9a6f95d6 On handover-remedial: levin-phase-floor 07 Part A, section 1 uncommitted, set aside for 06b (base 9afcfd0)

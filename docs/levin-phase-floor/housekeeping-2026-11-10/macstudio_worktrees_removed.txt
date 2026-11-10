@@ -1,0 +1,16 @@
+== 2026-11-10T10:01:17Z worktree list before
+/Users/ds283/Documents/Code/SecondaryGWKit               28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 74600350 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db 91472dbe (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 e182bc7a (detached HEAD)
+>> git worktree remove SecondaryGWKit-lpf07-91472db
+exit 0
+>> git worktree remove SecondaryGWKit-lpf07-7460035
+exit 0
+>> git worktree remove SecondaryGWKit-lpf07-e182bc7
+exit 0
+== worktree list after
+/Users/ds283/Documents/Code/SecondaryGWKit 28ebaf07 [handover-remedial]
+28ebaf0743e0555fb2c4512ce714884005a60eff
+       0
+SecondaryGWKit

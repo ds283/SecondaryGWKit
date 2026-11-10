@@ -1,0 +1,1311 @@
+== 2026-11-10T09:56:47Z cwd /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff status ''
+>> store create levin-phase-floor-06-r13
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.manifest.json
+{
+  "created": "2026-11-10T09:56:47+00:00",
+  "datastore": "levin-phase-floor-06-r13.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06-r13.sqlite",
+      "when": "2026-11-10T09:56:47+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06-r13",
+  "purpose": "levin-phase-floor-06-r13: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "4109ca0a6e93418ba5b3e290af646f2a"
+}
+create exit 0
+>> store retire levin-phase-floor-06-r13
+retire exit 1
+== 2026-11-10T09:56:49Z cwd /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff status ''
+>> store create levin-phase-floor-06-r14
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.manifest.json
+{
+  "created": "2026-11-10T09:56:49+00:00",
+  "datastore": "levin-phase-floor-06-r14.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06-r14.sqlite",
+      "when": "2026-11-10T09:56:49+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06-r14",
+  "purpose": "levin-phase-floor-06-r14: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "3c0c301df0b24adebf3fb09e35465abf"
+}
+create exit 0
+>> store retire levin-phase-floor-06-r14
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:56:51Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store create levin-phase-floor-06b-r15
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.manifest.json
+{
+  "created": "2026-11-10T09:56:51+00:00",
+  "datastore": "levin-phase-floor-06b-r15.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06b-r15.sqlite",
+      "when": "2026-11-10T09:56:51+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06b-r15",
+  "purpose": "levin-phase-floor-06b-r15: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "3e8c5c5e7d6647a7b4555d5b2d09fbae"
+}
+create exit 0
+>> store retire levin-phase-floor-06b-r15
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:56:53Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store create levin-phase-floor-06b-r16
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.manifest.json
+{
+  "created": "2026-11-10T09:56:53+00:00",
+  "datastore": "levin-phase-floor-06b-r16.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06b-r16.sqlite",
+      "when": "2026-11-10T09:56:53+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06b-r16",
+  "purpose": "levin-phase-floor-06b-r16: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "a18110c2bfea4b92b11d6229e6d53a54"
+}
+create exit 0
+>> store retire levin-phase-floor-06b-r16
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:56:55Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store create levin-phase-floor-06g-r23
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.manifest.json
+{
+  "created": "2026-11-10T09:56:55+00:00",
+  "datastore": "levin-phase-floor-06g-r23.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06g-r23.sqlite",
+      "when": "2026-11-10T09:56:55+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06g-r23",
+  "purpose": "levin-phase-floor-06g-r23: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "4094e13fab664420b27252a325b797ec"
+}
+create exit 0
+>> store retire levin-phase-floor-06g-r23
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:56:57Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store create levin-phase-floor-06g-r24
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.manifest.json
+{
+  "created": "2026-11-10T09:56:57+00:00",
+  "datastore": "levin-phase-floor-06g-r24.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06g-r24.sqlite",
+      "when": "2026-11-10T09:56:57+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06g-r24",
+  "purpose": "levin-phase-floor-06g-r24: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "368c2dd58c7b481c9754d14883a2dbcb"
+}
+create exit 0
+>> store retire levin-phase-floor-06g-r24
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:56:58Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store create levin-phase-floor-06m-r25
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r25.manifest.json
+{
+  "created": "2026-11-10T09:56:59+00:00",
+  "datastore": "levin-phase-floor-06m-r25.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06m-r25.sqlite",
+      "when": "2026-11-10T09:56:59+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06m-r25",
+  "purpose": "levin-phase-floor-06m-r25: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "c2b187f97be4480fbd07318fafc6b4a5"
+}
+create exit 0
+>> store retire levin-phase-floor-06m-r25
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r25.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r25.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:57:00Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store create levin-phase-floor-06m-r26
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.manifest.json
+{
+  "created": "2026-11-10T09:57:00+00:00",
+  "datastore": "levin-phase-floor-06m-r26.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-06m-r26.sqlite",
+      "when": "2026-11-10T09:57:01+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-06m-r26",
+  "purpose": "levin-phase-floor-06m-r26: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "910ef9a1a55a4fa88da69013e49e4d31"
+}
+create exit 0
+>> store retire levin-phase-floor-06m-r26
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:57:02Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store create levin-phase-floor-07-r27
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.manifest.json
+{
+  "created": "2026-11-10T09:57:02+00:00",
+  "datastore": "levin-phase-floor-07-r27.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-07-r27.sqlite",
+      "when": "2026-11-10T09:57:02+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-07-r27",
+  "purpose": "levin-phase-floor-07-r27: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "a89853e36f2e4b52b597b44f651b7a35"
+}
+create exit 0
+>> store retire levin-phase-floor-07-r27
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:57:04Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store create levin-phase-floor-07-r28
+>> create: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.manifest.json
+{
+  "created": "2026-11-10T09:57:04+00:00",
+  "datastore": "levin-phase-floor-07-r28.sqlite",
+  "history": [
+    {
+      "from": null,
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "operation": "create",
+      "to": "var/datastores/levin-phase-floor-07-r28.sqlite",
+      "when": "2026-11-10T09:57:04+00:00"
+    }
+  ],
+  "name": "levin-phase-floor-07-r28",
+  "purpose": "levin-phase-floor-07-r28: levin-phase-floor rehearsal store, superseded; sidecar created on 2026-11-10 so that it can be retired in the post-07 housekeeping the user asked for",
+  "sidecar_format": 1,
+  "store_id": "9e26caa4c8b94b039077c6074dbd6797"
+}
+create exit 0
+>> store retire levin-phase-floor-07-r28
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+
+######## second pass, 2026-11-10: record each fingerprint (store fingerprint --write), then retire
+== 2026-11-10T09:57:23Z cwd /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff status ''
+>> store fingerprint --write levin-phase-floor-06-r13
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-06-r13
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06-r13-parent-20261026T215550  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06-r13-shard0000.sqlite
+  var/datastores/levin-phase-floor-06-r13-shard0001.sqlite
+  var/datastores/levin-phase-floor-06-r13-shard0002.sqlite
+  var/datastores/levin-phase-floor-06-r13-shard0003.sqlite
+  var/datastores/levin-phase-floor-06-r13.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:57:30+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06-r13-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06-r13-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06-r13-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06-r13-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06-r13.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06-r13-parent-20261026T215550",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:57:30+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r13.manifest.json
+retire exit 0
+== 2026-11-10T09:57:30Z cwd /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff status ''
+>> store fingerprint --write levin-phase-floor-06-r14
+!! Cannot read sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite": shard #0 "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14-shard0000.sqlite" differs from the tables this code declares (its table "TkWKBValue" has the column(s) "theta_residual", which this code does not declare; its table "GkWKBValue" has the column(s) "theta_residual", which this code does not declare; its table "GkSourceValue" has the column(s) "theta_residual", which this code does not declare), so nothing was read
+fingerprint exit 1
+>> store retire levin-phase-floor-06-r14
+!! Cannot retire "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite": its sidecar records no fingerprint, so nothing would say what the retirement deleted. Run `python -m runregistrykit store fingerprint "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite" --write` to record one, and then retire it. Nothing was written or deleted
+retire exit 1
+== 2026-11-10T09:57:33Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-06b-r15
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-06b-r15
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06b-r15-parent-20261028T135349  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06b-r15-shard0000.sqlite
+  var/datastores/levin-phase-floor-06b-r15-shard0001.sqlite
+  var/datastores/levin-phase-floor-06b-r15-shard0002.sqlite
+  var/datastores/levin-phase-floor-06b-r15-shard0003.sqlite
+  var/datastores/levin-phase-floor-06b-r15.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:57:40+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06b-r15-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06b-r15-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06b-r15-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06b-r15-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06b-r15.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06b-r15-parent-20261028T135349",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:57:40+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r15.manifest.json
+retire exit 0
+== 2026-11-10T09:57:40Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-06b-r16
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-06b-r16
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06b-r16-premise-20261028T135745  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06b-r16-shard0000.sqlite
+  var/datastores/levin-phase-floor-06b-r16-shard0001.sqlite
+  var/datastores/levin-phase-floor-06b-r16-shard0002.sqlite
+  var/datastores/levin-phase-floor-06b-r16-shard0003.sqlite
+  var/datastores/levin-phase-floor-06b-r16.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:57:48+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06b-r16-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06b-r16-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06b-r16-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06b-r16-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06b-r16.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06b-r16-premise-20261028T135745",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:57:48+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06b-r16.manifest.json
+retire exit 0
+== 2026-11-10T09:57:48Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-06g-r23
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-06g-r23
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06g-r23-parent-20261101T110641  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06g-r23-shard0000.sqlite
+  var/datastores/levin-phase-floor-06g-r23-shard0001.sqlite
+  var/datastores/levin-phase-floor-06g-r23-shard0002.sqlite
+  var/datastores/levin-phase-floor-06g-r23-shard0003.sqlite
+  var/datastores/levin-phase-floor-06g-r23.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:57:55+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06g-r23-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06g-r23-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06g-r23-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06g-r23-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06g-r23.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06g-r23-parent-20261101T110641",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:57:55+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r23.manifest.json
+retire exit 0
+== 2026-11-10T09:57:55Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-06g-r24
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-06g-r24
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06g-r24-leafvalues-20261101T111215  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite
+  var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite
+  var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite
+  var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite
+  var/datastores/levin-phase-floor-06g-r24.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:58:02+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06g-r24-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06g-r24-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06g-r24-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06g-r24-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06g-r24.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06g-r24-leafvalues-20261101T111215",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:58:02+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06g-r24.manifest.json
+retire exit 0
+== 2026-11-10T09:58:02Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-06m-r25
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r25.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-06m-r25
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r25.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r25.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06m-r25-parent-20261106T092420  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06m-r25-shard0000.sqlite
+  var/datastores/levin-phase-floor-06m-r25-shard0001.sqlite
+  var/datastores/levin-phase-floor-06m-r25-shard0002.sqlite
+  var/datastores/levin-phase-floor-06m-r25-shard0003.sqlite
+  var/datastores/levin-phase-floor-06m-r25.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:58:09+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06m-r25-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06m-r25-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06m-r25-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06m-r25-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06m-r25.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06m-r25-parent-20261106T092420",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:58:09+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r25.manifest.json
+retire exit 0
+== 2026-11-10T09:58:09Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-06m-r26
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-06m-r26
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06m-r26-signedyardstick-20261106T093937  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06m-r26-shard0000.sqlite
+  var/datastores/levin-phase-floor-06m-r26-shard0001.sqlite
+  var/datastores/levin-phase-floor-06m-r26-shard0002.sqlite
+  var/datastores/levin-phase-floor-06m-r26-shard0003.sqlite
+  var/datastores/levin-phase-floor-06m-r26.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:58:16+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06m-r26-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06m-r26-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06m-r26-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06m-r26-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06m-r26.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06m-r26-signedyardstick-20261106T093937",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:58:16+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.manifest.json
+retire exit 0
+== 2026-11-10T09:58:16Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-07-r27
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-07-r27
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-07-r27-parent-20261108T000634  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-07-r27-shard0000.sqlite
+  var/datastores/levin-phase-floor-07-r27-shard0001.sqlite
+  var/datastores/levin-phase-floor-07-r27-shard0002.sqlite
+  var/datastores/levin-phase-floor-07-r27-shard0003.sqlite
+  var/datastores/levin-phase-floor-07-r27.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:58:24+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-07-r27-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-07-r27-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-07-r27-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-07-r27-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-07-r27.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-07-r27-parent-20261108T000634",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:58:24+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.manifest.json
+retire exit 0
+== 2026-11-10T09:58:24Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-07-r28
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-07-r28
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-07-r28-guard-20261108T001916  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-07-r28-shard0000.sqlite
+  var/datastores/levin-phase-floor-07-r28-shard0001.sqlite
+  var/datastores/levin-phase-floor-07-r28-shard0002.sqlite
+  var/datastores/levin-phase-floor-07-r28-shard0003.sqlite
+  var/datastores/levin-phase-floor-07-r28.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:58:31+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-07-r28-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-07-r28-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-07-r28-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-07-r28-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-07-r28.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-07-r28-guard-20261108T001916",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:58:31+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.manifest.json
+retire exit 0
+
+######## third pass, 2026-11-10: R14 carries theta_residual, so it is read from tree e182bc7a
+== 2026-11-10T09:58:46Z cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f status ''
+>> store fingerprint --write levin-phase-floor-06-r14
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite
+digest:   1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+format:   6
+classes:  (count, digest; then each tag set)
+  version                     1  482c17e47721
+                              1  482c17e47721  []
+  store_tag                  10  0e587e247945
+                             10  0e587e247945  []
+  redshift                 1159  49e68f80c811
+                           1159  49e68f80c811  []
+  wavenumber                  3  31dbbe9911d5
+                              3  31dbbe9911d5  []
+  tolerance                   7  f8f28bf518af
+                              7  f8f28bf518af  []
+  LambdaCDM                   1  dcbaa9d413d4
+                              1  dcbaa9d413d4  []
+  QCD_Cosmology               1  178439a39e42
+                              1  178439a39e42  []
+  IntegrationSolver           7  317b009bb7fe
+                              7  317b009bb7fe  []
+  GkSourcePolicy              2  064c7949b330
+                              2  064c7949b330  []
+  QuadSourcePolicy            2  064c7949b330
+                              2  064c7949b330  []
+  wavenumber_exit_time        3  2d72bde8a844
+                              3  2d72bde8a844  []
+  BackgroundModel             1  02c4204dea5c
+                              1  02c4204dea5c  [LargestSourceRedshift_6.8788e+13, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2]
+  TkNumericIntegration        3  c22909beca71
+                              3  c22909beca71  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  TkWKBIntegration            3  c280250edfce
+                              3  c280250edfce  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  GkNumericIntegration     1368  76a263026531
+                           1368  76a263026531  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkWKBIntegration         3477  a1b5e0a883e5
+                           3477  a1b5e0a883e5  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSource                  291  6a001ba4e735
+                            291  6a001ba4e735  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c]
+  GkSourcePolicyData        291  49cf16ecd76f
+                            291  49cf16ecd76f  []
+  QuadSource                  6  e8e9af1bf6b3
+                              6  e8e9af1bf6b3  [LargestSourceRedshift_6.8788e+13, OutsideHorizonEfolds_e3, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  QuadSourceIntegral        864  8913eda5ce7b
+                            864  8913eda5ce7b  [GkOneLoopDensity, LargestSourceRedshift_6.8788e+13, ResponseRedshiftGrid_97_d128e5d7, ResponseSparsenessZ_12, Run_default, SmallestSourceRedshift_250, SourceGridConstruction_2, SourceRedshiftGrid_1159_7139cb9c, TkOneLoopDensity]
+  OneLoopIntegral             0  e3b0c44298fc
+problems: none
+recorded: none recorded (the sidecar is registry)
+>> wrote the fingerprint into the sidecar; it replaced none
+fingerprint exit 0
+>> store retire levin-phase-floor-06-r14
+store:    /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.sqlite
+sidecar:  /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.manifest.json
+references:
+  runs naming it, under var/runs: 1
+    levin-phase-floor-06-r14-residual-20261026T215945  done      by results
+  sidecars naming it, under var/datastores: 0
+  not searched: sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files
+fingerprint check:
+  matched: a fresh read-only fingerprint matched the recorded one, digest 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+files deleted:
+  var/datastores/levin-phase-floor-06-r14-shard0000.sqlite
+  var/datastores/levin-phase-floor-06-r14-shard0001.sqlite
+  var/datastores/levin-phase-floor-06-r14-shard0002.sqlite
+  var/datastores/levin-phase-floor-06-r14-shard0003.sqlite
+  var/datastores/levin-phase-floor-06-r14.sqlite
+tombstone:
+  {
+    "completed": "2026-11-10T09:58:53+00:00",
+    "files": [
+      "var/datastores/levin-phase-floor-06-r14-shard0000.sqlite",
+      "var/datastores/levin-phase-floor-06-r14-shard0001.sqlite",
+      "var/datastores/levin-phase-floor-06-r14-shard0002.sqlite",
+      "var/datastores/levin-phase-floor-06-r14-shard0003.sqlite",
+      "var/datastores/levin-phase-floor-06-r14.sqlite"
+    ],
+    "files_present_only": false,
+    "fingerprint": {
+      "condition": "matched",
+      "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7"
+    },
+    "git_dirty": false,
+    "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+    "reason": "post-07 housekeeping, on the user's word of 2026-11-10: superseded rehearsal store, its records committed under docs/levin-phase-floor/",
+    "references": {
+      "not_searched": "sidecars outside var/datastores, and the `.tmp` and `.incomplete-move` files beside sidecars; run manifests outside var/runs; and every reference that is not in a run manifest or a sidecar, such as docs, boards, logs and other committed files",
+      "runs": [
+        {
+          "id": "levin-phase-floor-06-r14-residual-20261026T215945",
+          "matched_by": [
+            "results"
+          ],
+          "state": "done"
+        }
+      ],
+      "runs_root": "var/runs",
+      "sidecars": [],
+      "stores_root": "var/datastores"
+    },
+    "state": "retired",
+    "when": "2026-11-10T09:58:53+00:00"
+  }
+>> retired: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06-r14.manifest.json
+retire exit 0
