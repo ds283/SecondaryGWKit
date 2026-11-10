@@ -1,0 +1,43 @@
+1c1
+< """R25 against R24 inside QuadSourceIntegral: identity by bit pattern over every row and field.
+---
+> """R27 against R26 inside QuadSourceIntegral: identity by bit pattern over every row and field.
+3,4c3,6
+< levin-phase-floor 06m, rehearsal agent, prompt 06m section 4 ("R25 against R24"). New; the store
+< reader (`read`), `flatten`, `bits`, `col_kind`, `leaf_kind` and `fields` are copied verbatim from
+---
+> levin-phase-floor 07, rehearsal agent, prompt 07 section 5.3 (S0, "R27 against 06m's R26").
+> 06m's rehearsal agent's qsi_identity_r24_r25.py (e63aae0c...), with R24 -> R26 and R25 -> R27 by
+> sed, this paragraph, and a provenance header naming both worktrees' HEAD and status. In 06m: new; the
+> store reader (`read`), `flatten`, `bits`, `col_kind`, `leaf_kind` and `fields` are copied verbatim from
+21c23
+<     ./venv/bin/python -I -B qsi_identity_r24_r25.py <R24 primary> <R25 primary>
+---
+>     ./venv/bin/python -I -B qsi_identity_r24_r25.py <R26 primary> <R27 primary>
+33a36,39
+> TREES = (
+>     "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db",  # R27's tree, 91472dbe
+>     "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035",  # code worktree, 74600350
+> )
+156a163,169
+>     for t in TREES:
+>         head = subprocess.run(["git", "--no-optional-locks", "-C", t, "rev-parse", "HEAD"],
+>                               capture_output=True, text=True).stdout.strip()
+>         st = subprocess.run(["git", "--no-optional-locks", "-C", t, "status", "--short"],
+>                             capture_output=True, text=True).stdout
+>         print(f"# tree {t} HEAD {head} status --short {st!r}")
+>     print("# this script imports no tree code; it reads the stores with sqlite3 mode=ro")
+159,160c172,173
+<     print(f"A = R24 {a_path}: {len(A)} rows, {len(cols_a)} columns")
+<     print(f"B = R25 {b_path}: {len(B)} rows, {len(cols_b)} columns")
+---
+>     print(f"A = R26 {a_path}: {len(A)} rows, {len(cols_a)} columns")
+>     print(f"B = R27 {b_path}: {len(B)} rows, {len(cols_b)} columns")
+222c235
+<             print(f"  {key} {f}: R24 {hx(va)} R25 {hx(vb)}")
+---
+>             print(f"  {key} {f}: R26 {hx(va)} R27 {hx(vb)}")
+225c238
+<     print(f"VERDICT: R25 {'IS' if ok else 'IS NOT'} value-identical to R24 in QuadSourceIntegral "
+---
+>     print(f"VERDICT: R27 {'IS' if ok else 'IS NOT'} value-identical to R26 in QuadSourceIntegral "

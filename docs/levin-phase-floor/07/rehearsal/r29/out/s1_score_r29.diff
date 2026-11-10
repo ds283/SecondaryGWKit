@@ -1,0 +1,50 @@
+1c1
+< """S1 -- V1's twelve (prompt 07 section 5.5), scored from R28's group records against 06g's references.
+---
+> """S1 -- V1's twelve (prompt 07 section 5.5), scored from R29's group records against 06g's references.
+6c6
+< - R28's store (sqlite mode=ro): each w row's group record WKB_Levin.subintervals[1].groups[j] labelled
+---
+> - R29's store (sqlite mode=ro): each w row's group record WKB_Levin.subintervals[1].groups[j] labelled
+12c12
+< The rule (prompt 07 section 5.5): each locates its point at z ~ 10211, and |v28 - ref| <= abserr28. "Locates
+---
+> The rule (prompt 07 section 5.5): each locates its point at z ~ 10211, and |v29 - ref| <= abserr29. "Locates
+30c30
+< R = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal")
+---
+> R = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29")  # prompt 07 r29: the stop-1 s1_score.py, R29 -> R29 by sed
+32c32
+< import replay07 as RP  # noqa: E402
+---
+> import replay07_r29 as RP  # noqa: E402
+46c46
+<     for f in sorted(RP.STORES["g"].parent.glob("levin-phase-floor-07-r28*.sqlite")):
+---
+>     for f in sorted(RP.STORES["g"].parent.glob("levin-phase-floor-07-r29*.sqlite")):
+90,91c90,91
+<                "v28": c["value"]["hex"], "abserr28": c["abserr"]["hex"], "converged28": c["converged"],
+<                "regions28": c["num_regions"], "max_depth28": c["max_depth"], "store_value28": sv, "store_abserr28": se,
+---
+>                "v29": c["value"]["hex"], "abserr29": c["abserr"]["hex"], "converged29": c["converged"],
+>                "regions29": c["num_regions"], "max_depth29": c["max_depth"], "store_value28": sv, "store_abserr29": se,
+93c93
+<                "ratio_v28": mp.nstr(ratio, 6), "honest": honest,
+---
+>                "ratio_v29": mp.nstr(ratio, 6), "honest": honest,
+99,100c99,100
+<               f"; v28 {row['v28']} abserr28 {row['abserr28']} ref {w['ref_hex']} ({w['ref_30']}); "
+<               f"|v28 - ref|/abserr28 {row['ratio_v28']} ({'honest' if honest else 'NOT honest'}); converged {c['converged']}, "
+---
+>               f"; v29 {row['v29']} abserr29 {row['abserr29']} ref {w['ref_hex']} ({w['ref_30']}); "
+>               f"|v29 - ref|/abserr29 {row['ratio_v29']} ({'honest' if honest else 'NOT honest'}); converged {c['converged']}, "
+102c102
+<     worst = max(out, key=lambda r: float(r["ratio_v28"]))
+---
+>     worst = max(out, key=lambda r: float(r["ratio_v29"]))
+104,105c104,105
+<           f"{sum(r['honest'] for r in out)} of 12 honest; largest |v28 - ref|/abserr28 {worst['ratio_v28']} ({worst['wid']}); "
+<           f"converged {sum(r['converged28'] for r in out)} of 12")
+---
+>           f"{sum(r['honest'] for r in out)} of 12 honest; largest |v29 - ref|/abserr29 {worst['ratio_v29']} ({worst['wid']}); "
+>           f"converged {sum(r['converged29'] for r in out)} of 12")

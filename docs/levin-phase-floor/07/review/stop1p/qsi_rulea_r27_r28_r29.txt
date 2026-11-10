@@ -1,0 +1,89 @@
+# qsi_rulea_compare.py sha256 9aeaeef4e68219126b6670cbcd8f3630d13519b2c58ad9d21003f12c8098d017
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite sha256 d6fd30230fc6d20bc2efa504141e43fdd4cb1b9afdc35d367e8cbe1bca374acb
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.sqlite sha256 00468d55595b6d24e684fb416fdfa0a59b14605f608fbd55bf894bb6f0bc9b0b
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29.sqlite sha256 28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9
+rows R27 864 R28 864 R29 864; keys equal True
+Levin records 13177; bit-identical to R28 (counts included) 13087; changed 90
+record-layout problems 0
+changed records by (label, R28 stationary_points): {(None, 1): 64, ('q-r', 4097): 26}
+  of which q-r with q = r: 26; other: 64
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 439709641.9985043) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 439709641.9985043) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 579784350.3262237) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 579784350.3262237) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 764481514.1086781) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 764481514.1086781) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 1008016144.4251784) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 1008016144.4251784) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 1329131612.3012946) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 1329131612.3012946) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 1752542211.3413053) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 1752542211.3413053) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 2310835265.753073) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 2310835265.753073) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 3046979177.3866296) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 3046979177.3866296) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 4017630440.8276954) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 4017630440.8276954) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 5297494147.272005) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (100000.0, 100000.0, 100000.0, 5297494147.272005) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) False
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) False
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 1752542211.3413053) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 1752542211.3413053) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 2310835265.753073) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 2310835265.753073) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 3046979177.3866296) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 3046979177.3866296) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 4017630440.8276954) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) False
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 4017630440.8276954) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) False
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 5297494147.272005) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 5297494147.272005) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 6985073578.494601) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 6985073578.494601) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 9210251401.997091) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 9210251401.997091) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 12144285945.556408) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 12144285945.556408) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 13627426843.66573) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 13627426843.66573) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 17968604880.3992) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 17968604880.3992) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 23692716537.8973) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 23692716537.8973) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 31240311681.4866) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 31240311681.4866) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 40253855455.98643) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 40253855455.98643) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 49531657077.16097) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq R27 (must) True
+  OTHER CHANGED (1000000.0, 1000000.0, 1000000.0, 49531657077.16097) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq R27 (must) True
+changed records equal to R27 on ('value', 'abserr', 'converged', 'phase_limited', 'regions'): 86 of 90
+changed records equal to R27 on every leaf R27 has: 86 of 90
+  leaves differing from R27 among changed records: {'abserr': 4, 'regions': 4, 'phase_limited': 2}
+VIOLATIONS of the record rule: 4
+  VIOLATION (316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq_r27_must False diffs ['abserr', 'guarded_regions', 'phase_limited', 'regions', 'stationary_points', 'window_pieces']
+  VIOLATION (316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq_r27_must False diffs ['abserr', 'guarded_regions', 'phase_limited', 'regions', 'stationary_points', 'window_pieces']
+  VIOLATION (1000000.0, 1000000.0, 1000000.0, 4017630440.8276954) metadata.analytic.2pt5.Levin.J4_data sp28 1 eq_r27_must False diffs ['abserr', 'guarded_regions', 'phase_limited', 'regions', 'stationary_points', 'window_pieces']
+  VIOLATION (1000000.0, 1000000.0, 1000000.0, 4017630440.8276954) metadata.analytic.2pt5.Levin.Y4_data sp28 1 eq_r27_must False diffs ['abserr', 'guarded_regions', 'phase_limited', 'regions', 'stationary_points', 'window_pieces']
+rows differing outside their Levin records with no changed record: 0
+rows tabulated 54
+  total equal to R27 54; equal to R28 30
+  largest |t29 - t27|/abserr29 0 at (100000.0, 100000.0, 100000.0, 439709641.9985043)
+  total_converged (R28, R29) among them: {(1, 1): 54}
+R27: summed WKB_Levin_num_regions 114826; total_converged 845 of 864
+R28: summed WKB_Levin_num_regions 227883; total_converged 862 of 864
+R29: summed WKB_Levin_num_regions 114460; total_converged 862 of 864

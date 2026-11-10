@@ -1,0 +1,16 @@
+2026-11-08T13:15:05Z # prompt 07 r29: run blocks2
+2026-11-08T13:15:05Z # written 2026-11-08T13:15:04Z on mps026298.phys.susx.ac.uk
+2026-11-08T13:15:05Z # script replay07_r29.py sha256 192c9c42b42e9b899eddb187e0de1ca01fe40830d02840874d5415760dd069ea
+2026-11-08T13:15:05Z # tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+2026-11-08T13:15:05Z # tree o: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+2026-11-08T13:15:05Z # tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+2026-11-08T13:15:05Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-08T13:15:05Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/blocks2_spec.json sha256 e6c096ee3b9cc38ced581d46f09f001f06e3ffef096dfc85fbfa26871231aed4
+2026-11-08T13:15:05Z 3 workers, 6 units, at most 6 at once
+2026-11-08T13:15:05Z start blocks2-p (p, 2 units): pid 17024
+2026-11-08T13:15:05Z start blocks2-o (o, 2 units): pid 17025
+2026-11-08T13:15:05Z start blocks2-g (g, 2 units): pid 17026
+2026-11-08T13:15:59Z end blocks2-p: rc 0 after 54.5 s
+2026-11-08T13:16:01Z end blocks2-g: rc 0 after 56.5 s
+2026-11-08T13:16:02Z end blocks2-o: rc 0 after 57.5 s
+2026-11-08T13:16:03Z done in 58.5 s; return codes {0: 3}

@@ -1,0 +1,46 @@
+rows 54 {('no group located in R29', 'q-r 4097 in R28'): 26, ('no group located in R29', ''): 28}
+fields R29 vs R27 (counts aside):
+     2 metadata.analytic.2pt5.Levin.J4_data.regions
+     2 metadata.analytic.2pt5.Levin.Y4_data.abserr
+     2 metadata.analytic.2pt5.Levin.J4_data.abserr
+     2 metadata.analytic.abserr
+     2 metadata.analytic.2pt5.Levin.Y4_data.regions
+     2 analytic_rad
+     1 metadata.analytic.2pt5.Levin.Y4_data.phase_limited
+     1 metadata.analytic.2pt5.Levin.J4_data.phase_limited
+fields R29 vs R28:
+    32 metadata.analytic.2pt5.Levin.J4_data.regions
+    32 metadata.analytic.2pt5.Levin.Y4_data.stationary_points
+    32 metadata.analytic.2pt5.Levin.Y4_data.abserr
+    32 metadata.analytic.2pt5.Levin.J4_data.abserr
+    32 metadata.analytic.2pt5.Levin.Y4_data.window_pieces
+    32 metadata.analytic.2pt5.Levin.J4_data.stationary_points
+    32 metadata.analytic.abserr
+    32 metadata.analytic.2pt5.Levin.J4_data.window_pieces
+    32 metadata.analytic.2pt5.Levin.Y4_data.regions
+    27 analytic_rad
+    26 WKB_Levin_num_regions
+    26 metadata.WKB_Levin.subintervals[i].groups[i].window_pieces
+    26 metadata.WKB_Levin.subintervals[i].groups[i].abserr
+    26 metadata.WKB_Levin.subintervals[i].groups[i].simple_regions
+    26 total_abserr
+    26 metadata.WKB_Levin.subintervals[i].abserr
+    26 metadata.WKB_Levin.subintervals[i].groups[i].regions
+    26 WKB_Levin
+    26 metadata.WKB_Levin.subintervals[i].groups[i].evaluations
+    26 metadata.WKB_Levin.subintervals[i].groups[i].stationary_points
+    26 metadata.WKB_Levin.subintervals[i].value
+    26 metadata.WKB_Levin.abserr
+    26 metadata.WKB_Levin.subintervals[i].groups[i].value
+    26 WKB_Levin_evaluations
+    26 WKB_Levin_simple_regions
+    24 total
+    21 metadata.WKB_Levin.subintervals[i].groups[i].phase_limited
+    17 metadata.analytic.2pt5.Levin.Y4_data.phase_limited
+    16 metadata.WKB_Levin.subintervals[i].phase_limited
+    16 metadata.WKB_Levin.phase_limited
+    16 total_phase_limited
+    14 metadata.analytic.2pt5.Levin.J4_data.phase_limited
+     5 WKB_Levin_max_depth
+     2 metadata.analytic.2pt5.Levin.J4_data.guarded_regions
+     2 metadata.analytic.2pt5.Levin.Y4_data.guarded_regions

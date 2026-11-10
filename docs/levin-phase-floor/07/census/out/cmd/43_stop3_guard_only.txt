@@ -1,0 +1,56 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/stop3_guarded_07.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137 out/stop3/guard_only.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T23:35:13Z
+# ----
+{
+ "statuses": {
+  "done": 18560
+ },
+ "units_not_done": [],
+ "calls_by_rtol_kind_locate_guard": {
+  "1e-7|analytic|locates=False guards=False": 105888,
+  "1e-7|analytic|locates=False guards=True": 14,
+  "1e-7|analytic|locates=True guards=False": 1514,
+  "1e-7|group|locates=False guards=False": 36369,
+  "1e-7|group|locates=True guards=False": 956,
+  "1e-8|analytic|locates=False guards=False": 105888,
+  "1e-8|analytic|locates=False guards=True": 14,
+  "1e-8|analytic|locates=True guards=False": 1514,
+  "1e-8|group|locates=False guards=False": 36369,
+  "1e-8|group|locates=True guards=False": 956
+ },
+ "n_guard_only": 28
+}
+g-1e-7-1-20502 analytic #19 rtol 1e-7 | analytic J4 | skipped [(0, '18.57618483116867')] | guarded 1 at-cap 0 | regions 2 depth 1 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-1-20502 analytic #20 rtol 1e-7 | analytic Y4 | skipped [(0, '18.57618483116867')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-0-10584 analytic #19 rtol 1e-7 | analytic J4 | skipped [(0, '17.808863672213295')] | guarded 1 at-cap 0 | regions 2 depth 1 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-0-10584 analytic #20 rtol 1e-7 | analytic Y4 | skipped [(0, '17.808863672213295')] | guarded 1 at-cap 0 | regions 2 depth 1 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-2-21488 analytic #19 rtol 1e-7 | analytic J4 | skipped [(0, '18.11976310833019')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-2-21488 analytic #20 rtol 1e-7 | analytic Y4 | skipped [(0, '18.11976310833019')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-1-10792 analytic #19 rtol 1e-7 | analytic J4 | skipped [(0, '17.369695471611735')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-1-10792 analytic #20 rtol 1e-7 | analytic Y4 | skipped [(0, '17.369695471611735')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-0-33732 analytic #19 rtol 1e-7 | analytic J4 | skipped [(0, '16.64799457040518')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-0-33732 analytic #20 rtol 1e-7 | analytic Y4 | skipped [(0, '16.64799457040518')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-3-748 analytic #19 rtol 1e-7 | analytic J4 | skipped [(0, '15.604059951210203')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-3-748 analytic #20 rtol 1e-7 | analytic Y4 | skipped [(0, '15.604059951210203')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-3-1102 analytic #19 rtol 1e-7 | analytic J4 | skipped [(0, '15.953594793655034')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-7-3-1102 analytic #20 rtol 1e-7 | analytic Y4 | skipped [(0, '15.953594793655034')] | guarded 1 at-cap 0 | regions 2 depth 1 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-1-20502 analytic #19 rtol 1e-8 | analytic J4 | skipped [(0, '18.57618483116867')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-1-20502 analytic #20 rtol 1e-8 | analytic Y4 | skipped [(0, '18.57618483116867')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-0-10584 analytic #19 rtol 1e-8 | analytic J4 | skipped [(0, '17.808863672213295')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-0-10584 analytic #20 rtol 1e-8 | analytic Y4 | skipped [(0, '17.808863672213295')] | guarded 1 at-cap 0 | regions 2 depth 1 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-2-21488 analytic #19 rtol 1e-8 | analytic J4 | skipped [(0, '18.11976310833019')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-2-21488 analytic #20 rtol 1e-8 | analytic Y4 | skipped [(0, '18.11976310833019')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-1-10792 analytic #19 rtol 1e-8 | analytic J4 | skipped [(0, '17.369695471611735')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-1-10792 analytic #20 rtol 1e-8 | analytic Y4 | skipped [(0, '17.369695471611735')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-0-33732 analytic #19 rtol 1e-8 | analytic J4 | skipped [(0, '16.64799457040518')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-0-33732 analytic #20 rtol 1e-8 | analytic Y4 | skipped [(0, '16.64799457040518')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-3-748 analytic #19 rtol 1e-8 | analytic J4 | skipped [(0, '15.604059951210203')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-3-748 analytic #20 rtol 1e-8 | analytic Y4 | skipped [(0, '15.604059951210203')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-3-1102 analytic #19 rtol 1e-8 | analytic J4 | skipped [(0, '15.953594793655034')] | guarded 1 at-cap 0 | regions 3 depth 2 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+g-1e-8-3-1102 analytic #20 rtol 1e-8 | analytic Y4 | skipped [(0, '15.953594793655034')] | guarded 1 at-cap 0 | regions 2 depth 1 conv True | returned {'n_window': 0, 'n_guarded': 0, 'n_guard_at_depth_max': 0, 'n_window_phase_limited': 0, 'n_window_at_depth_max': 0, 'n_levin': 0}
+wrote out/stop3/guard_only.json sha256 e146317b16ed687b0a85b61e4297f5fa7910a58846fc43f68e0a383daa573a0d
+# ----
+# end 2026-11-08T23:35:30Z
+# exit 0

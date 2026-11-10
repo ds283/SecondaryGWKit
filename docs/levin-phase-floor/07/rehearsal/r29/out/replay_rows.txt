@@ -1,0 +1,27 @@
+# prompt 07 r29: the rows to replay and the four-block rows
+# written 2026-11-08T13:07:58Z on mps026298.phys.susx.ac.uk
+# script replay07_r29.py sha256 192c9c42b42e9b899eddb187e0de1ca01fe40830d02840874d5415760dd069ea
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# tree o: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035/docs/levin-phase-floor/06g/references/v1/out/v1_rows.json sha256 2df277bce398565b835040b62b0bf024e32745c85fecc4a1da7c595299d5b4d0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27-shard0000.sqlite sha256 307096b84b289e885596bb22b0fa6ebc960f30dbcd85e620a2e3b4ffcffce675
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27-shard0001.sqlite sha256 bbd9561d75a7df42ed45adb4cfcee80667f897b00c352538411ad22a85c78247
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27-shard0002.sqlite sha256 7ec3c659f1b33a2b37670b4939c7657c80b1525dec19defe0c0ef06defd8eaf7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27-shard0003.sqlite sha256 c3370cb94939db22a95afec4b79ceac0f7a7d0e6a42f1c4f4dc9b9e99c396d28
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite sha256 d6fd30230fc6d20bc2efa504141e43fdd4cb1b9afdc35d367e8cbe1bca374acb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28-shard0000.sqlite sha256 eb0e9743a8a93364f24fa103cd1dc43309386b5c022eadacb56b861533c51643
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28-shard0001.sqlite sha256 dbbcb8d9ad5febd5e9d35ba7095a9d3f9a7f4b1134bb5e87984ab4a48fa63755
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28-shard0002.sqlite sha256 f158ca355972473cfaf6683effdc6e548b0e3d59d7e3c4b83018029e66509ebf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28-shard0003.sqlite sha256 4cb097cf7bb61f10e1f4a470e3502861f369fa89a10c2d82672c4965a026d20a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.sqlite sha256 00468d55595b6d24e684fb416fdfa0a59b14605f608fbd55bf894bb6f0bc9b0b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29-shard0000.sqlite sha256 dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29-shard0001.sqlite sha256 1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29-shard0002.sqlite sha256 7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29-shard0003.sqlite sha256 897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29.sqlite sha256 28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/r29_vs_r28_records.csv sha256 c3f7993f5cbb28e3b22243288e7e324c4f503a4766f2243fc1c2092371019165
+changed records (R29 vs R28) 90 in 54 rows, all kept: 90
+rows 224 (touched 224; with a located record 172; P1 2; w 12; block rows 2); records 470, nonzero 384 (group 44, analytic 340)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/replay_rows.json sha256 53d9d982e0be2d5ed5320d9f05fda500a452d1b806d754edf409c14ac9f74a77

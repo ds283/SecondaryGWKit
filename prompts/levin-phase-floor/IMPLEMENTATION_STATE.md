@@ -189,6 +189,10 @@ records in `docs/levin-phase-floor/NN/` ·
 | **07 Part A lands** | **07's code lands as reviewed, and Part B's dispatch is written** (2026-11-07). The orchestrator's review of `ad732887` passed all eleven checks of its note §A.3: scope, the protected functions and constants by AST, the construction read, the seven roots (103, 781, 39, 156, 280, 127, 64, all OK), test 1's and 5's parent failures re-run in a scratch worktree and both references recomputed by an incomplete-gamma closed form, breakages (i) and (iii) re-applied, §2.2's 124 units re-run bit-identical on the committed module, z12 and w03 replayed, the earlier records against the tarball, and the records. On landing: *"Yes, please land it. Push. Then, write, commit, and push the dispatch addendum for Part B."* So `ad732887` was pushed and the note's §B.5 written; Part B starts on the user's word |
 | **07 Part B stop 1** | **Part B held before the census; the zero-rate case fixed by Rule A, an amendment to 07** (2026-11-08). Part B began on the user's word (*"Please start Part B on the Mac Studio"*), at `74600350`, through a Mac Studio orchestrator session in the worktree `SecondaryGWKit-lpf07-7460035`. R27 and R28 both give `1b332ffa…`; S0 holds (R27 equals R26 in all 143,831 `QuadSourceIntegral` fields and every other value table); outside `QuadSourceIntegral` R28 equals R27; 640 of 864 rows located nothing and are bit-identical. At planned stop 1 the agent asked how to get each located point's kind and $z$, which the store does not keep. The user: *"I approve the replay. Also, add a reference to check 2 or 3 of the `q-r` calls, to settle whether R28 is honest. Hold Part B before the census."* The replay reproduced all 470 calls that located a point; S1 and S2 hold. 26 `q-r` calls with $q = r$ located 4,097 points each, every scan sample of a rate identically zero (`[07-location-on-an-identically-zero-rate]`); on three referenced calls both stores are honest (R28 at 0.179, 0 and 0.069 of its error). Asked why a constant phase is integrated at all, and why the C2 gate does not catch it, the orchestrator traced it to location running before the gate; the user chose: *"Yes, rule A alone, please. Open a separate issue for the `6pi` gate. We'll deal with this afterwards, as you say. Record the resonance issues as belonging to the one-loop build and point at the planning document. Please make the fix as an amendment of 07."* So: prompt 07 §10 (Rule A), a second code commit on the laptop, then R29 in R28's place and the census at the amended code (the note's §B.6). Opened `[07-location-on-an-identically-zero-rate]`, `[07-location-cuts-a-flat-stretch-at-every-zero-sample]` and `[07-c2-gate-threshold-was-never-measured]`; opened and assigned to the one-loop build `[07-equal-momenta-difference-group-beats-at-zero-frequency]` and `[07-located-resonance-crossings-are-counted-not-stored]` |
 | **07 amendment lands** | **Rule A lands as reviewed; Part B resumes with R29** (2026-11-08). The orchestrator's review of `adffa21b` (the note's §B.6) passed all five checks: scope, only the allowed paths, the stashes and `wip/` as hashed before dispatch; by AST against `ad732887` only the location, the guard's handling of a skipped phase and their threading change, `adaptive_levin_sincos` in its docstring only; §2.2's 124 units re-run on the committed module, bit-identical to run 2 (no call of §2 has a phase below $6\pi$); breakages (x) and (xi) re-applied, caught by test 13 (a) and (d), both passing unbroken; the seven roots 107, 781, 39, 156, 280, 127, 64, all OK; the records. On the user's word: *"Yes, please push both, then write and push §B.7, and send to the Mac Studio to be executed."* and, on the agent's O9, *"Yes, please add O9 to the 6pi gate issue."* So `2ddd3306` and `adffa21b` were pushed, O9 narrowed `[07-c2-gate-threshold-was-never-measured]`, and the note's §B.7 was written as Part B's resumed dispatch |
+| **07 stop 1′** | **R29's four guarded blocks are findings; the census goes ahead** (2026-11-08). Part B resumed at `e182bc7a` (the note's §B.7) in a third worktree, `SecondaryGWKit-lpf07-e182bc7`. R29 (`levin-phase-floor-07-r29-guard-rule-a-20261108T123429`) gives `1b332ffa…`. Against R28, 90 Levin records changed, every one a call R28 located and Rule A skipped: 86 equal R27 bit for bit (the 26 `q-r` calls and 60 analytic `2pt5` J4/Y4 blocks), but in 4 analytic blocks the C2 gate's estimate on the root leaf (19.160, 20.196) exceeded `SIX_PI` while Rule A's $V$ (15.113, 15.896) did not, and the nodal guard caught the root (O9's case). The rehearsal agent stopped on §B.7's rule as written. The orchestrator's recommendation: go on, with the four reported as findings and referenced in each store; the rule was the orchestrator's error, to be corrected at the records commit. The user: *"Yes, please proceed as you recommend."* All three stores are honest on all four blocks (at most $6.2\times10^{-4}$ of abserr); S1 and S2 hold on R29; R29's regions are 114,460 (R27 114,826, R28 227,883). At planned stop 1′: *"Yes, please go ahead. There seems no reason not to. We may have to come back to the O9 issue but that is best done after the census anyway."* So the census agent was dispatched |
+| **07 Part B stops 2–4** | **All eight $k$; the census; the references on a subset; the cross-check** (2026-11-08 to 2026-11-09). **Stop 2,** after Gate V0 (which holds): V4's stratification over "all six" $k$ that carry stationary points was the prompt's factual slip, since all eight carry them: *"Please keep all 8 `k` and launch the census"*. The census `levin-phase-floor-07-census-20261108T171137` ran 18,560 of 18,560 units in 22,708 s, none over budget (checkpoint `03dfe786…`). **Stop 3,** the census done and V1 re-scored by the orchestrator's own reader: *"Yes, please do that"* (step 7: scoring V1–V3 and V5, V4's captures and the projection). **Stop 4,** a §6 stop: four readings on all 24 of V4's calls projected at about 9 days (775,468 s; 1,163,202 s with the margin). *"Take your recommended option of FCC at both resolutions plus QAWO where it is projected to be 30 minutes or less. It costs only a few hours for an independent check of many calls. Calls without QAWO should be scored on whatever references we do have, either one or two FCC readings."* So 74 readings (FCC r1 and r2 on all 24, QAWO r1 and r2 on 13), run `levin-phase-floor-07-references-20261109T005328`, about 25.6 h. **The cross-check,** asked for at stop 4, beyond §6: *"Yes, please do the cross-check on `rtol`s and the list of calls where `06m` and `07` differ by more than the stated error. We can decide on a sample of references to sort of what these difference really show, later."* Its rule was fixed before any result (`census/state/xcheck_rule_20261109.md`): 2,484 pairs, $r_g \le 1$ in 2,482 and $r_{06m} \le 1$ in 2,432; 843 calls differ beyond $\max$(abserr): (a) settled for 07 31, (b) 0, (c) undecided 786 (396 rows), (d) 0, (e) 26 |
+| **07 results** | **07's records land; the header issue closes; the early roundoff stop and O9 go to 07a** (2026-11-10). The Mac Studio orchestrator's §B.3 review passed all nine checks (`docs/levin-phase-floor/07/review.md`). S0–S2 and V0–V3 hold; V4 fails (5 of 24 at 2.21–3.16× $\text{abserr}_g$, each converged with its window stopped by §1.3's `iroff1` while leaves still fell; 06m 497–30,400× on the same calls) and V5 fails as written (Decisions, **G2 L2, reopened**). On the laptop S1, V4 (v00, v08, z12) and two rehearsal rows were re-checked exactly, every figure the same (`VERIFICATION.md` §7.7). The rulings: on the header issue, *"`[06-levin-accepts-a-region-across-a-stationary-point]`: I didn't address this, but yes, please close it"*, on V2 holding (no returned Levin leaf crosses a stationary point); on O9's census calls (28 guarded, and 154 unguarded with a skipped phase and a sign change), added to the $6\pi$ issue: *"I think so"*; on the 786 undecided calls, *"these are undecided because we don't have references for them? If so, then yes, we attribute them to 06m's errors for the time being, on this evidence."* (V4 referenced 12 of them; 06m fails all twelve by 356–$5.2\times10^5$×, 07 is honest on 7 and 2.2–3.2× out on 5). On what follows: *"I agree we fix the early roundoff stop and the O9 problem. These are issues where the problem and the fix are both clear."* So `[06-levin-accepts-a-region-across-a-stationary-point]` moves to §4; `[07-iroff1-window-stop-can-leave-a-call-dishonest]` is opened from the census agent's proposal and assigned to prompt **07a**, with `[07-c2-gate-threshold-was-never-measured]`'s O9 (one consistent estimate of a phase's variation for the gate and Rule A), 07a not yet written. Recorded in the log, not as issues: the 786 undecided calls, and the lone-`G` minima (236 calls per rtol, 6 or 19 minima, λ about $10^{-7}$–$10^{-6}$, all converged). **Housekeeping,** in its own commit: *"Yes, please go ahead with the cleanup as listed."* on the laptop 07's four stashes and `var/levin-phase-floor-07/wip/` dropped and the copy-back directories deleted; on the Mac Studio ten rehearsal stores (R13–R16, R23–R28) retired with their sidecars kept, the older census run directories trimmed, the working directories deleted and the three 07 worktrees removed (`docs/levin-phase-floor/housekeeping-2026-11-10/README.md`); R29's store, 07's census and references run directories, `var/levin-phase-floor-07/` and A3 v2's scratch copy stay |
+| **G2 L2, reopened** | **V5 fails, but says nothing specific about stationary points; whether any call should reach the cap is 08's** (2026-11-10). V5 (07 §6): 23 `G+q+r` calls that locate their root hold 2–54 leaves at `depth_max`, 3 of them converged; no unit over budget. The prompt said a V5 failure reopens L2 (Decisions, **G2 L2, decided**). The user: *"I don't see what value `V5` has if there are other regions that go down to the depth cap."* The orchestrator agreed that V5's premise was stale, its own error: V5 was written on 2026-10-27 from 06a's census, where no Levin call outside the stationary points reached the cap, and 06g–06m's trust-test changes since then left calls at the cap outside the 720 (06m's census: 114 group calls unconverged there, 105 holding an untrusted leaf at `depth_max`), which it did not re-check at Part B's dispatch. Inside the 720, 62 of 07's 64 unconverged group calls carry the same signature (an untrusted leaf at the cap, the call's error within its request). V5 is scored fails as written. L2 is reopened as one question for 08: whether any call should reach the cap. *"Include the cap experiment in prompt 08. That sounds like a better place to put it. We can make 07's records commit and the housekeeping commit now. Then we will need a prompt of the early roundoff stop and O9."* The experiment: re-run the about 227 calls with a leaf at the cap (160 units, 1,352 s serial at cap 20) at caps 22, 24 and 28, about 40 min on six workers at worst |
 | **06b close** | **06b's records land; its header issue stays open** (2026-10-28). The Mac Studio review stopped on check 10 alone (the census log has no What shipped section, and its deviation 19, no over-budget pass, is unclassified): *"If the only issue is that the agent didn't say whether anything went over budget, then I don't care. Just accept it."* `[07-roundoff-exit-assumes-bisection-cannot-help]`: *"seems that we should keep it open until we've fixed W2 at least."* W2's failure is opened as `[06b-moved-calls-declare-less-than-their-error]`. W4's three depth-20 calls narrow `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`: *"If we already have this on the board, there's no need to duplicate."* Not opened: C3 (06a's stationary-point calls moving, *"07 will presumably validate with its reference values"*), C4 (the analytic blocks as where the exit fired, *"more a downstream consequence of another issue"*), N1 (the exit now dead on the rehearsal scope, *"not actually a problem"*) and N2 (the analytic blocks' flags not stored, *"not a problem unless we need them later"*). The analytic-block reading of W1 and W4 had been accepted before the launch: *"For 06b, that reading is reasonable."* |
 | **06c stall rule** | **Three failed splits in a row, and an infinite parent never counts as failed** (2026-10-28), after 06c's Part A stopped before committing: two in a row at $\rho = \tfrac12$ stalled `test_levin_quadrature`'s SincIntegral at depth 2, unconverged and dishonest (true error $6.55\times10^{-6}$, declared $4.85\times10^{-6}$), and stalled the stationary-phase oracle, whose $x = 0.5$ is a node with an infinite floor. Of the measured forms the user chose (b): *"Can we try (b)"*; then, on (b2): *"Then it sounds that b2 would likely work effectively in prouction when the stationary phase point is cut out. Would you agree?"* and *"Yes, please do that"*: adopt (b2), add census prediction X6 (no call 06b reported converged has a stalled leaf), and allow 06b test 3's `num_phase_limited_regions == 0` to change. A tuned $\rho$ (0.75) was not taken. The margin is thin: three-in-a-row stalls SincIntegral at $\rho \le 0.30$. 06c §8 |
 | **06c stall withdrawn** | **The stall rule leaves 06c; re-measure after 07** (2026-10-28). Part A stopped a second time: (b2) stalls on lines through a stationary point, where Levin leaves' error estimates rise under bisection until the fallback takes over (about depth 5–6), giving true errors $6.5\times10^3$–$9\times10^{11}$ × the request where the parent's were 0.02–315 ×, and one dishonest result ($c = 10^5$, $x_s = 0.382$: true $4.3\times10^{-3}$, declared $4.1\times10^{-3}$), reproduced by the orchestrator. The global budget without a stall rule reproduces the parent on the converged cases. The user: *"(A). Let's remeasure the stall question after 07"*. A residual flat in $h$, or a request that cannot be met, is chased to `depth_max`: a cost in work, not in honesty. 06c §8; `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]` |
@@ -253,8 +257,9 @@ Q1–Q4, are in README §6.3.
 | 06k | [Three ways to stop refining the slow leaves](06k-slow-leaf-trust-routes.md) | `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`: three remedies, each a scratch variant of `_adaptive_levin` loaded in place of the tree's module. Route 1: the noise clause compares $\Delta_1$ with $\phi_P + \phi_L + \phi_R$. Route 2: $\Delta_1$, $\Delta_2$, $r$ from values corrected by $-E$. Route 3: untrusted leaves whose declarations sum to at most $10^{-3}$ of the request are left. Gate K0 (an identity variant bit-identical to 06g's census; each route identical where it never fires); Part L on 06j's 142 slow leaves and 06h's 17 carrying leaves, with the LiouvilleGreen draws; a census run per route against 06g's census and the existing references; scored L1, L2, C1, C2, H1, S1, K1 | Mac Studio, reads A3 v2's scratch copy and 06g's census, no Ray, no change to the tree | Opus | ✍️ 2026-11-04, on the user's decisions (Decisions, **06k**); dispatched on the user's word | ✅ 2026-11-05 on the Mac Studio, from the worktree `SecondaryGWKit-lpf06k-8937060` at `89370609` (code 06g's), Ray-free, no lock, no store; runs `levin-phase-floor-06k-k0partL-20261104T091640`, `-lgdraws-20261104T095904`, `-route2lit-20261104T101930`, and four censuses, each 18,560/18,560: route 1 (16,758 s), route 2 (13,621 s), route 2 literal (13,968 s, added on the user's ruling at planned stop 1) and route 3 (7,626 s), against 06g's 20,361 s. **Gate K0 holds** (the identity variant and the tree bit for bit on 100 units; each route equal wherever it never fires). **No route passes as a candidate remedy.** Route 1 ($\nu_1 = \phi_P + \phi_L + \phi_R$): L1, L2, C1, H1 and S1 hold; C2 fails (7 calls `node_limited` at `1e-8`) and K1 fails (its yardstick passes leaves up to $\Delta_1/\phi_P = 1.1\times10^4$); unit wall 0.78. Route 2 and route 2 literal ($-E$-corrected values): L1, C1 and H1 hold; L2 (40.1 %), C2 (5; 53), S1 (10 calls in 5 rows, worst 1.323) and K1 fail; 0.60 and 0.62. Route 3 ($D \le 10^{-3}$ of the request left): L2 and C1 hold; L1 (c01), C2 (1), H1 (c01 3.935, r56 1.492) and S1 (46 calls in 22 rows, worst 1.645) fail; 0.30. V1's 12 references unscored on the user's ruling (they are R24 calls, the prompt's error). Mac Studio review: all seven checks pass; two record observations are deviations 29 and 30. Narrowed `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`; opened none. Rulings: Decisions, **06k results** | records in the records commit | [log](logs/06k-slow-leaf-trust-routes.md) |
 | 06l | [The trust yardstick with the halves' node errors signed](06l-signed-trust-yardstick.md) | `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`: route B, a scratch variant of `_adaptive_levin` loaded in place of the tree's module. The noise clause compares $\Delta_1$ with $\nu_B = \phi_P + \sum_{\rm Levin\ halves}\phi_h + \sum_{\rm CC\ halves}\phi^{-}_h + |\sum_{\rm CC\ halves} E_h|$, a Clenshaw–Curtis half contributing nothing to a Levin parent's test. Gate K0 on 06k's 100 units; Part L on 06j's 142 slow leaves, 06h's 17 carrying leaves and 06g's trusted leaves, with Gate L3 (B's trust inside route 1's) and the LiouvilleGreen draws; one census against 06g's census, route 1's census and the 124 matched references; scored L1, L2, C1, C2, H1, S1, K1 | Mac Studio, reads A3 v2's scratch copy, 06g's census and route 1's, no Ray, no change to the tree | Opus | ✍️ 2026-11-05, on the user's decisions (Decisions, **06l**); dispatched on the user's word | ✅ 2026-11-05 on the Mac Studio, from the worktree `SecondaryGWKit-lpf06l-af4c4dc` at `af4c4dc1` (code 06g's), Ray-free, no lock, no store; runs `levin-phase-floor-06l-k0partL-20261105T091942` (`failed`: its capture check refused 46 equal captures on one harness hash, log deviation 11), `-partL-20261105T095407` (48/48) and the census `-census-routeB-20261105T100126` (18,560/18,560, 18,340 s against 06g's 20,361 s and route 1's 16,758 s). **Gates K0 and L3 hold** (the identity variant bit for bit on 100 units, B equal wherever it never fires; $\nu_B \le \nu_1$ and B's trust inside route 1's on all 2,046 leaves). **B does not pass as a candidate remedy, on L2 alone:** L1, C1 (93.5 %, 93.1 %), C2 (4, all `node_limited`), H1 (worst v03 1.182), S1 (0) and K1 (Levin-parent firings at most $\Delta_1/\phi_P = 2.85$) hold; L2 fails, 63 of 75, the same 63 route 1 trusts, so the prediction was wrong as written (the orchestrator's error). Against route 1: 72/76 calls at `depth_max` (route 1 14/16), regions 0.84 of 06g's (0.78); route 1 converges 91 calls B does not, of which A keeps at most 77. Mac Studio review: all seven checks pass; one record observation is deviation 22. Narrowed `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`; opened none. Rulings: Decisions, **06l results** | records in the records commit | [log](logs/06l-signed-trust-yardstick.md) |
 | 06m | [The signed trust yardstick in the driver](06m-signed-yardstick-in-the-driver.md) | `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`: route B in `_check_leaf`, the noise clause comparing $\Delta_1$ with $\nu_B$ from a new pure function `_trust_noise_yardstick`, in 06l's arithmetic and order; nothing else changes. Tests against 06l's committed variant bit for bit, the yardstick's four cases, three leaf cases and the LiouvilleGreen draws; R25 (parent) and R26 (code) with R1 and R25 against R24; 06l's census re-run at the code, Gates M0 (K0's 100 units) and M (all 18,560) bit-identical to route B's census; the flag's cost tabulated | Part A on the laptop; Part B on the Mac Studio, rehearsals under the lock, the census Ray-free on A3 v2's scratch copy | Opus | ✍️ 2026-11-06, on the user's decisions (Decisions, **06m**) | ✅ 2026-11-06. **Code** (§1–§3) `48cf87c0`, dispatched at `5ff8a5e`, reviewed by the orchestrator (nine checks) and pushed (Decisions, **06m Part A lands**). **Part B** on the Mac Studio the same day, from the worktrees `SecondaryGWKit-lpf06m-5ff8a5e` (R25) and `SecondaryGWKit-lpf06m-38f6a82` (`38f6a828`, the note's §B.1: R26, K0, the census), through an orchestrator session there with three planned stops: R25 `levin-phase-floor-06m-r25-parent-20261106T092420` and R26 `-r26-signedyardstick-20261106T093937`, both `1b332ffa…`; **R25 equals R24 in every value**; outside `QuadSourceIntegral` R26 equals R25; inside it 48 rows converge that did not (797 → 845), none is lost, rows at depth 20 fall 76 → 23 and regions 134,011 → 114,826. **R1 holds** (0 of 864 on `total`, largest 4.93e-6; 0 on the oracle, 6.68e-8). **Gate M0 holds** (`-k0-20261106T101118`, 100 of 100 units, 2,110 calls). **Gate M holds**: the census `-census-20261106T102153` (checkpoint `ea5bc3ab…`, 18,465 s) equals route B's on all 18,560 units and 289,482 calls, so 06l's verdicts are the code's (L1, C1, C2, H1, S1, K1 hold; L2 fails as scored); it replaces 06g's census as 07's "before". Flag cost outside the 720: 114 unconverged group calls in 84 units (06g 1,632 in 946), 104 within their request, 10 `node_limited` at most 1.048× over, largest share 4.73 %. Group-call regions 0.838 of 06g's. Each gate re-scored by the Mac Studio orchestrator's own readers; on the laptop R1 and the flag table re-scored exactly from the copied records. Deviations: 8 (rehearsal) and 15 (census), all classified and accepted. Closed `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]`; opened `[06m-calls-flagged-unconverged-within-their-request]`, assigned to 08 (Decisions, **06m results**). Part A in detail: `_trust_noise_yardstick` (pure, module level) returns $\nu_B$ in 06l's arithmetic and order; `_check_leaf` trusts iff $r < 1/4$, or $r < 1$ and $\Delta_1 \le \nu_B$; nothing else in the driver changes (comments on the trust test brought up to date, two beyond §1's three, deviation 1). **The commit is 06l's variant bit for bit**: test 2 on nine cells (every result key but `elapsed`, every returned region's fields; the variant fires 43 times on Clenshaw–Curtis parents and 3 on Levin parents, on two constructed noise-level families, `noisy` and `far`, no stand-in), and the 20 LiouvilleGreen draws in three modes, all 4,320 Levin calls and 80 units equal to the variant (122 calls fire, as in 06l), no convergence or honesty change against the parent, none at `depth_max`. Tests 1–5 (`test_levin_trust_yardstick`, 9 tests): the yardstick's cases bit for bit with an order-sensitive case; a leaf trusted on cancelling node errors ($|E_L + E_R|/(|E_L| + |E_R|) = 0.060$, untrusted and refined at the parent); a Levin parent's Clenshaw–Curtis halves kept out ($\nu_B = \phi_P$ where $\nu_1$ would trust); a Levin-over-Levin leaf at $\Delta_1/\nu_B = 1.43\times10^3$ untrusted under both. Breakages (i)–(v) caught (under (v) test 2 still passes, recorded). No existing assertion changed; AdaptiveLevin 82 → 91, the other six roots equal. The agent opened no issue; on the user's word the orchestrator opened its observations 1 and 3 as `[06m-levin-floor-misses-node-rounding-far-from-the-origin]` and `[06m-leaf-values-test-restates-06g-trust-rule]`, the second fixed in a follow-up commit. Deviation 9: `git stash list` run once, read-only | code `48cf87c0`; records in the records commit | [log](logs/06m-signed-yardstick-in-the-driver.md) |
-| 07 | [The stationary-point guard](07-stationary-point-guard.md) | G2's Q4 (i) and (ii): `[06-levin-accepts-a-region-across-a-stationary-point]`, fixed generically in the Levin integrator's generic code (`_adaptive_levin`), with the basis supplying its phases and their closed-form rates through two new interface methods; `adaptive_levin_sincos` stays a facade. Stationary points and nearly coalescing minima (Airy parameter $\lambda < \Lambda_c$) located in advance; a window of phase half-width $\Phi_w$ round each, integrated in nested Clenshaw–Curtis pieces of at most $2\pi$; the rest to Levin as now; a nodal sign-change guard as the safety net; the round-off-limited exit barred there. $\Phi_w$ and $\Lambda_c$ measured by fixed rules at a planned stop (§2), shown to the user before the tests. R15/R16; 06a's census re-run, scored V1–V5 | code on the laptop; R27, R28, the census and V4's references on the Mac Studio | Opus | ✍️ 2026-10-27, (α)–(γ) and (ii) settled by the user in writing it; amended 2026-10-28 (its §9): 06b first, §2's reference and $\omega$ settled, §6 against 06b's census; then (§9 point 6) 06c first, rehearsals R19/R20, §6 against 06c's census; **rewritten 2026-11-07** for the driver after 06m, with its orchestrator note (Decisions, **07 rewritten**); the first text, with its §9, is `50277f3e`'s | 🟡 **Code** (§1–§4, Part A) committed on the laptop 2026-11-07, dispatched at `bd21bf23`, resumed at `91472dbe` after the §2 stop (Decisions, **07 §2 stop**); reviewed in eleven checks by the orchestrator and pushed on the user's word (Decisions, **07 Part A lands**), Part B's dispatch addendum the note's §B.5. **Part B started 2026-11-08** at `74600350` on the Mac Studio: R27 and R28 both `1b332ffa…`, S0, S1 and S2 hold; **held before the census** at stop 1 on the zero-rate case (`[07-location-on-an-identically-zero-rate]`), and **amended** (prompt §10, Rule A; Decisions, **07 Part B stop 1**): a second code commit on the laptop, then R29 and the census (the note's §B.6). **Amendment §10's code committed 2026-11-08 on the laptop as `adffa21b`, reviewed by the orchestrator in five checks and pushed on the user's word (Decisions, **07 amendment lands**); Part B resumed from the note's §B.7:** Rule A (a phase whose total variation on the scan is below `SIX_PI` is not located; new result key `location_skipped_phases`; for a multi-phase basis the guard tests a skipped phase for a sign change); test 13 (a)–(d), breakages (x) and (xi) caught; §2 re-run on the amended code, no call skipping a phase and every call bit-identical to run 2, the rungs unmoved; AdaptiveLevin 103 → 107, the other six roots equal; `[07-location-on-an-identically-zero-rate]` closed. The location (4,097-point scan, roots and Airy minima), windows of phase half-width $\Phi_w$ cut into Clenshaw–Curtis pieces of at most $2\pi$, the nodal guard and the barred floor-limited exit, and §1.3: QUADPACK's `iroff1` counted per window, a window stopped at six counted bisections, its leaves floor-limited. §2 re-run in full at rtol $10^{-9}$: **$\Phi_w = 2\pi$, $\Lambda_c = 4$**; all 14 real calls honest and converged, z12 at 0.718 of its error (parent 1,681); no LiouvilleGreen draw fails, 3,897 of 3,897 calls that locate nothing bit-identical to the parent. Finding, not a stop: eight of the 14 calls have a window stopped while leaves were still falling, all honest. Tests: `test_levin_stationary` (12) and test 11 (`test_quadsource_levin_guard_counts`); one assertion changed, the yardstick test's key set (no number changed); breakages (i)–(ix) caught. AdaptiveLevin 91 → 103, ComputeTargets 780 → 781, the other five roots equal. Opened `[07-cc-fallback-ignores-a-reversed-span]` and `[07-cc-node-term-takes-one-phase-per-node]`. Before: ⏸ Part A stopped before §2 on 2026-10-27; §1 set aside until 06b landed, rebased onto it, and §2 run on 2026-10-28: it stopped again, no rung of $\Phi_w$ qualifying (Decisions, **07 §2 stop**); rebased onto 06c on 2026-10-29 and stopped a third time before §2 could run: window leaves, never floor-limited, carry the Levin floor that grows at the stationary point, and the depth-18 log divided by zero (Decisions, **07 third stop**); paused until 06d landed (`3d70db9`, 2026-10-29), then resumed on 06d's code to re-run §2 (§9 point 7); stopped a fourth time on 2026-10-29: §2 cannot complete, window leaves and flat-residual Levin leaves chased to depth 20, and a LiouvilleGreen call that does not finish (Decisions, **07 fourth stop**); set aside a fourth time on 2026-10-30 (`stash@{0}`, `var/levin-phase-floor-07/wip/`) until 06e lands, then rebased onto it with QUADPACK's rule for window leaves (§9 point 8); **to be dispatched afresh on the rewritten text** (2026-11-07): §1 rebuilt on the current driver, the four stashes and `var/levin-phase-floor-07/wip/` kept as read-only references, their records copied into `docs/levin-phase-floor/07/earlier-attempts/` | code commit (Part A); records after Part B | [log](logs/07-stationary-point-guard.md) |
-| 08 | Fact-finding for layer 3 and `rtol` | G2's Q4 (iii)–(v) and Q5, measured with 07's guard in place: the depth cap, the dead `local_atol` branch, what `total_converged` means (with `[06m-calls-flagged-unconverged-within-their-request]`), and `rtol` | Mac Studio | Opus | ⬜ not written | ⬜ | — | — |
+| 07 | [The stationary-point guard](07-stationary-point-guard.md) | G2's Q4 (i) and (ii): `[06-levin-accepts-a-region-across-a-stationary-point]`, fixed generically in the Levin integrator's generic code (`_adaptive_levin`), with the basis supplying its phases and their closed-form rates through two new interface methods; `adaptive_levin_sincos` stays a facade. Stationary points and nearly coalescing minima (Airy parameter $\lambda < \Lambda_c$) located in advance; a window of phase half-width $\Phi_w$ round each, integrated in nested Clenshaw–Curtis pieces of at most $2\pi$; the rest to Levin as now; a nodal sign-change guard as the safety net; the round-off-limited exit barred there. $\Phi_w$ and $\Lambda_c$ measured by fixed rules at a planned stop (§2), shown to the user before the tests. R15/R16; 06a's census re-run, scored V1–V5 | code on the laptop; R27, R28, R29, the census and V4's references on the Mac Studio | Opus | ✍️ 2026-10-27, (α)–(γ) and (ii) settled by the user in writing it; amended 2026-10-28 (its §9): 06b first, §2's reference and $\omega$ settled, §6 against 06b's census; then (§9 point 6) 06c first, rehearsals R19/R20, §6 against 06c's census; **rewritten 2026-11-07** for the driver after 06m, with its orchestrator note (Decisions, **07 rewritten**); the first text, with its §9, is `50277f3e`'s | ✅ 2026-11-10. **Part B** on the Mac Studio, 2026-11-08 to 2026-11-10, through an orchestrator session there, from the worktrees `SecondaryGWKit-lpf07-91472db` (R27, and V0's K0 run at the parent), `-7460035` (R28) and `-e182bc7` (`e182bc7a`, the note's §B.7: R29, the census and V4's references), with planned stops 1, 1′, 2, 3 and 4: R27 `levin-phase-floor-07-r27-parent-20261108T000634`, R28 `-r28-guard-20261108T001916` and R29 `-r29-guard-rule-a-20261108T123429`, all `1b332ffa…`. **S0 holds** (R27 equals R26 in every value); **S1 holds** (12 of 12 honest, worst 0.218) and **S2 holds** (0.020 and 0.263; R27 $5.6\times10^5$ and $4.1\times10^4$), on R28 and on R29. R29 against R27: 692 untouched rows bit-identical, 172 tabulated, 17 rows gain convergence and none loses; summed regions 114,460 (R27 114,826, R28 227,883). R29 against R28: 86 of the 90 changed records equal R27's; 4 analytic `2pt5` J4/Y4 blocks are guarded instead (O9's case), all three stores honest on them (at most $6.2\times10^{-4}$), ruled findings (Decisions, **07 stop 1′**). **V0–V3 hold:** the census `-census-20261108T171137` (checkpoint `03dfe786…`, 18,560 of 18,560, 22,708 s against 06m's 18,465 s, none over budget) equals 06m's on all 284,514 calls that locate and guard nothing and on the 16,104 units made only of them; no returned Levin leaf holds a sign change (182,066 calls scanned); the location agrees with the scan (0 violations of 170,582). **V4 fails:** 28 of 33 honest (z00 and z12 0.718, Z3's seven at most 0.0021, 19 of the 24); v08, v09, v12, v17 and v22 at 2.21–3.16× $\text{abserr}_g$, each converged with its window stopped by `iroff1` while leaves still fell (06m 497–30,400× on them; 06m honest on 17 of the 33). References `-references-20261109T005328`, 74 readings in about 25.6 h, on the user's subset (Decisions, **07 Part B stops 2–4**). **V5 fails as written:** 23 `G+q+r` calls hold 2–54 leaves at depth 20; its premise was stale, the orchestrator's error (Decisions, **G2 L2, reopened**). Rows at depth 20: 77 and 83 against 06m's 192 and 213. The cross-check (the user's request): $r_g \le 1$ in 2,482 of 2,484 pairs; 843 calls disagree with 06m beyond $\max$(abserr), (a) 31, (c) undecided 786, (e) 26. The Mac Studio review passed all nine checks; on the laptop S1, V4 (v00, v08, z12) and two rehearsal rows were re-checked exactly. Deviations: 15 and 9 (rehearsal) and 40 (census), all classified and accepted. Closed `[06-levin-accepts-a-region-across-a-stationary-point]`; opened `[07-iroff1-window-stop-can-leave-a-call-dishonest]` and narrowed `[07-c2-gate-threshold-was-never-measured]`, both assigned to 07a (Decisions, **07 results**). Before Part B: **Code** (§1–§4, Part A) committed on the laptop 2026-11-07, dispatched at `bd21bf23`, resumed at `91472dbe` after the §2 stop (Decisions, **07 §2 stop**); reviewed in eleven checks by the orchestrator and pushed on the user's word (Decisions, **07 Part A lands**), Part B's dispatch addendum the note's §B.5. **Part B started 2026-11-08** at `74600350` on the Mac Studio: R27 and R28 both `1b332ffa…`, S0, S1 and S2 hold; **held before the census** at stop 1 on the zero-rate case (`[07-location-on-an-identically-zero-rate]`), and **amended** (prompt §10, Rule A; Decisions, **07 Part B stop 1**): a second code commit on the laptop, then R29 and the census (the note's §B.6). **Amendment §10's code committed 2026-11-08 on the laptop as `adffa21b`, reviewed by the orchestrator in five checks and pushed on the user's word (Decisions, **07 amendment lands**); Part B resumed from the note's §B.7:** Rule A (a phase whose total variation on the scan is below `SIX_PI` is not located; new result key `location_skipped_phases`; for a multi-phase basis the guard tests a skipped phase for a sign change); test 13 (a)–(d), breakages (x) and (xi) caught; §2 re-run on the amended code, no call skipping a phase and every call bit-identical to run 2, the rungs unmoved; AdaptiveLevin 103 → 107, the other six roots equal; `[07-location-on-an-identically-zero-rate]` closed. The location (4,097-point scan, roots and Airy minima), windows of phase half-width $\Phi_w$ cut into Clenshaw–Curtis pieces of at most $2\pi$, the nodal guard and the barred floor-limited exit, and §1.3: QUADPACK's `iroff1` counted per window, a window stopped at six counted bisections, its leaves floor-limited. §2 re-run in full at rtol $10^{-9}$: **$\Phi_w = 2\pi$, $\Lambda_c = 4$**; all 14 real calls honest and converged, z12 at 0.718 of its error (parent 1,681); no LiouvilleGreen draw fails, 3,897 of 3,897 calls that locate nothing bit-identical to the parent. Finding, not a stop: eight of the 14 calls have a window stopped while leaves were still falling, all honest. Tests: `test_levin_stationary` (12) and test 11 (`test_quadsource_levin_guard_counts`); one assertion changed, the yardstick test's key set (no number changed); breakages (i)–(ix) caught. AdaptiveLevin 91 → 103, ComputeTargets 780 → 781, the other five roots equal. Opened `[07-cc-fallback-ignores-a-reversed-span]` and `[07-cc-node-term-takes-one-phase-per-node]`. Before: ⏸ Part A stopped before §2 on 2026-10-27; §1 set aside until 06b landed, rebased onto it, and §2 run on 2026-10-28: it stopped again, no rung of $\Phi_w$ qualifying (Decisions, **07 §2 stop**); rebased onto 06c on 2026-10-29 and stopped a third time before §2 could run: window leaves, never floor-limited, carry the Levin floor that grows at the stationary point, and the depth-18 log divided by zero (Decisions, **07 third stop**); paused until 06d landed (`3d70db9`, 2026-10-29), then resumed on 06d's code to re-run §2 (§9 point 7); stopped a fourth time on 2026-10-29: §2 cannot complete, window leaves and flat-residual Levin leaves chased to depth 20, and a LiouvilleGreen call that does not finish (Decisions, **07 fourth stop**); set aside a fourth time on 2026-10-30 (`stash@{0}`, `var/levin-phase-floor-07/wip/`) until 06e lands, then rebased onto it with QUADPACK's rule for window leaves (§9 point 8); **to be dispatched afresh on the rewritten text** (2026-11-07): §1 rebuilt on the current driver, the four stashes and `var/levin-phase-floor-07/wip/` kept as read-only references, their records copied into `docs/levin-phase-floor/07/earlier-attempts/` | code `ad732887`, amendment `adffa21b`; records in the records commit | [log](logs/07-stationary-point-guard.md) |
+| 07a | The early roundoff stop and O9 | `[07-iroff1-window-stop-can-leave-a-call-dishonest]`: a window stopped by §1.3's `iroff1` while its leaves still fall; and O9 of `[07-c2-gate-threshold-was-never-measured]`: one consistent estimate of a phase's variation for the C2 gate and Rule A (Decisions, **07 results**) | — | Opus | ⬜ not written | ⬜ | — | — |
+| 08 | Fact-finding for layer 3 and `rtol` | G2's Q4 (iii)–(v) and Q5, measured with 07's guard in place: the depth cap, with the depth-cap experiment and G2's L2 reopened (whether any call should reach the cap; Decisions, **G2 L2, reopened**), the dead `local_atol` branch, what `total_converged` means (with `[06m-calls-flagged-unconverged-within-their-request]`), and `rtol` | Mac Studio | Opus | ⬜ not written | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · 🟡 partly landed, with what is pending · ✅ landed · ⛔ stopped and superseded.
 
@@ -283,8 +288,8 @@ VERIFICATION §4. The worktree is kept until the user agrees to remove it.
 | Gate | Holds when | After | State |
 |---|---|---|---|
 | **G1** | the user has read 01–04 and answered README §6.3 Q1–Q3: which hypothesis stands, which layer 1, and where it lands | 04 | ✅ **answered 2026-10-26** (Decisions above): H-anchor; layer 1(a) here; the producers after it |
-| **G2** | the user has answered L2, Q4 and Q5 (§2.3): whether layer 2 is needed; layer 3, the acceptance test with the stationary-point guard, the depth cap and `total_converged`; and `rtol` | 06 | ✅ **answered 2026-10-27** (Decisions, **G2**): L2, after 06a's census, not needed at this code, to be revisited after 07 or later; Q4 (i)–(ii) is 07; Q4 (iii)–(v) and Q5 move to G3, after 08 |
-| **G3** | the user has answered Q4 (iii)–(v) and Q5 on 08's measurements, with 07's guard in place | 08 | ⬜ |
+| **G2** | the user has answered L2, Q4 and Q5 (§2.3): whether layer 2 is needed; layer 3, the acceptance test with the stationary-point guard, the depth cap and `total_converged`; and `rtol` | 06 | ✅ **answered 2026-10-27** (Decisions, **G2**): L2, after 06a's census, not needed at this code, to be revisited after 07 or later; Q4 (i)–(ii) is 07; Q4 (iii)–(v) and Q5 move to G3, after 08. **L2 reopened 2026-11-10** at 07's V5, as one question for 08 (Decisions, **G2 L2, reopened**) |
+| **G3** | the user has answered Q4 (iii)–(v) and Q5 on 08's measurements, with 07's guard in place, and L2 as reopened at 07 (whether any call should reach the cap) | 08 | ⬜ |
 
 ### 2.1 The hypotheses
 
@@ -606,102 +611,6 @@ regions harder.
   05's $p$ units give the same size on their 38 rows, so the effect is B1's, not the census's. The
   next step is unchanged. `VERIFICATION.md` §6a;
   `docs/levin-phase-floor/06a/issues.md` X3.
-
-- **[06-levin-accepts-a-region-across-a-stationary-point]** *(opened 2026-10-27 by prompt 06, its
-  rehearsal agent's P1, investigated from the laptop)* — `adaptive_levin_sincos` accepts a Levin
-  region that contains an interior stationary point of its phase, with an error estimate far too
-  small.
-  - **Where seen.** Two R14 rows at $z_{\rm response} = 250$, $(k,q,r) = (3.162\times10^5)^3$ and
-    $(10^5, 3.162\times10^5, 3.162\times10^5)$. Group G+q+r on $z \in [250, 5.42\times10^9]$ is
-    stationary at $z_* = 10211.3$ ($c_s = 1/2$) and $z_* = 275.0$ ($2qc_s = k$). Each is accepted
-    as one region of 3 evaluations. The totals are wrong by $1.28\times10^4$ and 555 times their
-    declared error, the group by $6.8\times10^{-3}$ and $1.2\times10^{-3}$.
-  - **The mechanism.** The region's estimate, and those of its two halves, all lack the
-    stationary-phase term, so the step-(4) residual is about $10^5$ smaller than the true error. The
-    miss equals the leading stationary-phase term to $10^{-5}$. The relative test can also be passed
-    through another part of the region. At rtol $10^{-9}$ and $10^{-11}$ the eq. (151) floor, with a
-    small but finite $G_0 = \min|\theta'|$, accepts the region as round-off-limited instead.
-  - **Why R13 was right.** Its noisier phase lifted the root's residual over rtol, by factors 2.05
-    and 1.008, through the unrelated high-$z$ half, and bisection then found the point. 06's
-    integrand is the more accurate of the two; it removed the noise that had rescued these rows.
-  - **Not closed by C2.** The C2 total-variation gate diverts only regions whose phase varies by less
-    than $6\pi$ (`levin_quadrature.py`, `_adaptive_levin_subregion_impl`). Its regression case puts
-    the stationary point at $x = 1/2$, the first bisection point. The one-loop reconciliation's
-    "already closed" (`docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md`
-    §1.5, §3.1) is wrong, and carries a dated correction note. The QCD review's Levin benchmark
-    (§5.2) is in exact radiation, where no isolated stationary point exists.
-
-  **Impact:**
-  - **Structural, not an edge case.** The stationary point is the Kohri–Terada resonance, where the
-    signal is expected to come from, and nearly every triangle with $\Sigma = (q+r)/k > \sqrt3$
-    has one wherever $c_s(z_*) = 1/\Sigma$. A stored `total_abserr` on such a group is not
-    trustworthy, in stores built at either tree, A3 v2 included.
-  - 06 makes the failure likelier, by removing the noise that sometimes forced the bisection.
-  - Any error budget built from the stored errors, the one-loop integral's included, waits on the
-    fix.
-  - It may bear on 06's S4 and S5 failures; not separated.
-
-  **Next step:** prompt 07, a generic fix to the integrator, in this campaign, before the next
-  production build (the user, 2026-10-27; Decisions, **06 P1** and **G2 Q4 (i)–(ii)**).
-  - **Locate the stationary points before integrating,** from each group's closed-form $\theta'$:
-    the sign changes, and the near-zero minima where two points are about to coalesce (the QCD and
-    $e^+e^-$ caustics). Split the range there, and give a small window around each to a rule that
-    resolves the phase directly.
-  - **Guard the driver,** as a safety net: no Levin acceptance, and no round-off-limited exit, for a
-    region whose $\theta'$ changes sign or nearly vanishes on its nodes.
-  - *(Moved out of 07 on 2026-10-27, by the user: how late the time integral must run, for the
-    configurations that resonate during the QCD crossover and $e^+e^-$ annihilation, is physics,
-    and is `[06-time-integrals-must-reach-late-resonances]`.)*
-  - **Regression cases:** the two R14 rows with 06's reference, and a synthetic case with the
-    stationary point off any bisection point.
-  [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §6.3;
-  [`docs/levin-phase-floor/06/p1/report.md`](../../docs/levin-phase-floor/06/p1/report.md).
-
-  **Measured across A3 v2 (2026-10-27, prompt 06a's scan, issues X1–X2).** At the current code and
-  `1e-7`, θ′ was sampled on 4,097 points per Levin call.
-  - **Where:** 720 of 37,325 calls hold an interior sign change, in 720 of the 9,280 rows, all in
-    group `G+q+r`. 412 are in the low band, 308 in mid and none in seam.
-  - **What is accepted across them:** in every one a region is accepted across the point. 623 of
-    those regions are at depth 0, the whole call accepted as one region, P1's pattern. 677 are
-    Levin regions and 238 are phase-limited.
-  - **Depth:** every A3 v2 row deeper than 11 is one of these rows, with its deep regions at the
-    point.
-  - **The limit:** two points closer together than the grid spacing (median $2.5\times10^{-3}$ in
-    $\log(1+z')$) are not seen.
-  - **For 07:** `docs/levin-phase-floor/06a/out/scan_listed_regions.csv` lists every such region.
-    The next step is unchanged.
-
-  **Narrowed 2026-10-30** (06c's Part B and the orchestrator's references,
-  `docs/levin-phase-floor/06c/y1-references/`): 06c §4's Y1 fails on 30 of 838 rows. The 12 worst,
-  all equilateral, hold this point in `G+q+r` at $z \approx 10211$, where $c_s = 1/2$, so every
-  equilateral row has it whatever $k$. On each row one code leaves the point inside a coarse
-  region and reports converged while wrong by $4.5\times10^3$–$1.6\times10^6$ × its declared
-  error: 06c's (R18) on 10 rows, 06b's (R17) on 2. Against the references R17 is within on 6,
-  R18 on 2, neither on 4. On the other 18 rows R18 is within its error (0.006–0.37) and R17 is not
-  (1.5–68×): 06c fixed those. The depth-20 check found one more of the class, `*-1-2174` call 1,
-  with a zero of $\theta'$ at $z \approx 279.5$, the only sampled call that pinning the end nodes
-  leaves at depth 20. **For 07:** the 12 rows' references are scored in 07's §6 (07 §9 point 8).
-
-  **Narrowed 2026-10-31** by 06e's census, its D5: at `1e-8`, `g-1e-8-1-2174` call 1, the
-  depth-20 check's stationary-point call, converges at depth 7 with 18 regions on depth20-tiling's
-  pinned value, $1.678\times10^3$× its declared error from 06c's census value; at `1e-7` it stays at
-  depth 20, unconverged, near 06c's value. Probably converged and dishonest; no reference
-  (`docs/levin-phase-floor/06e/census/issues.md` D5). **For 07:** a row of this class reported
-  converged at one rtol.
-
-  **Narrowed 2026-11-03** by 06g's Part B (`docs/levin-phase-floor/06g/`), against references
-  whose four readings agree (two implementations, two resolutions; the tool fixed for a stationary
-  point inside a segment, §4 `[06g-filon-route-b-inverts-through-a-stationary-point]`).
-  - **06e's D5 is confirmed.** `g-1e-8-1-2174` call 1 (z12) is reported converged at depth 18 under
-    06g, and is $1{,}681$× its declared error from the reference (06h: $1{,}678$×). At `1e-7` (z00,
-    the same integrand by bytes and at 65 points) it is unconverged at depth 20, 0.018 from it.
-  - **Twelve rehearsal rows** of 06g's V1 ($k = q = r$, sub-interval 1's `G+q+r` call) each hold a
-    stationary point. 06h's code is $4.5\times10^3$–$6.0\times10^5$× its error from the reference on
-    all 12; 06g is within its error on all 12, at most 0.942.
-
-  Levin's declared error is not claimed valid at a stationary point. The user, 2026-11-03: *"What
-  needs to be true is that z12 works after 07."* **For 07:** z12 and V1's 12 calls, with their
-  references and captures (06g's `references/`), are its test cases.
 
 - **[07-roundoff-exit-assumes-bisection-cannot-help]** *(opened 2026-10-28 by the orchestrator,
   from 07's Part A stop 2)* — `_adaptive_levin` accepts a region as round-off-limited
@@ -1279,6 +1188,17 @@ regions harder.
   what `total_converged` means (G2's Q4). The user: *"if that is prompt 08, we can look at it
   there."*
 
+  **Narrowed 2026-11-10** by 07's census (`VERIFICATION.md` §7.4): outside the 720 it is unchanged,
+  114 calls identical to 06m's (V1). In the 720, 64 group calls are unconverged at 07 against 311 at
+  06m: 62 within their request, each with an untrusted leaf at `depth_max`, and 2 `node_limited` at
+  most 1.0038× over; the largest share of a row's `total_abserr` is 18.7 % (06m 53.0 %).
+
+  **08 holds the depth-cap experiment** (2026-11-10, on the user's word: *"Include the cap
+  experiment in prompt 08. That sounds like a better place to put it."*; Decisions, **G2 L2,
+  reopened**): the about 227 calls with a leaf at the cap (160 units, 1,352 s serial at cap 20)
+  re-run at caps 22, 24 and 28, about 40 min on six workers at worst. Whether any call should reach
+  the cap is G2's L2, reopened as one question for 08.
+
 - **[06m-levin-floor-misses-node-rounding-far-from-the-origin]** *(opened 2026-11-06 by the
   orchestrator on the user's word, from prompt 06m's code agent, its Observation 1)* — the Levin
   branch's round-off floor, eq. (151) plus the declared endpoint term, has no term for the rounding
@@ -1445,6 +1365,24 @@ regions harder.
   error and floor against it, with a sharper Clenshaw–Curtis estimate as one option; then choose
   the threshold.
 
+  **Narrowed 2026-11-10** (07's Part B; added on the user's word, *"I think so"*): **O9 occurs in
+  production.**
+  - **R29** (`docs/levin-phase-floor/07/rehearsal/r29/`): 4 analytic `2pt5` J4 and Y4 blocks, at
+    $(3.162\times10^5)^3$, $z = 1.329\times10^9$, and $(10^6)^3$, $z = 4.018\times10^9$. Rule A skips
+    the phase ($V$ = 15.113 and 15.896), while the gate's estimate on the root leaf reads 19.160 and
+    20.196, so the root leaf goes to the Levin solve and the nodal guard catches its root. All three
+    stores are honest on all four against references with stated errors at least 1,990× below every
+    abserr (at most $6.2\times10^{-4}$ of abserr); R29's J4 declarations are 19× and 11× R27's.
+  - **07's census** (`docs/levin-phase-floor/07/census/`, `VERIFICATION.md` §7.4): 28 guarded
+    analytic calls, J4 and Y4 in 7 rows at both rtols, $V$ 15.60–18.58; each guard caught one leaf,
+    which was bisected, and all 28 converged. A further 154 analytic calls at `1e-7` have a skipped
+    phase and a scan sign change that the gate routed to Clenshaw–Curtis, unguarded.
+
+  **Assigned (2026-11-10): prompt 07a**, for O9 (Decisions, **07 results**): one consistent estimate
+  of a phase's variation for the gate and Rule A. The user: *"I agree we fix the early roundoff stop
+  and the O9 problem. These are issues where the problem and the fix are both clear."* Whether $6\pi$
+  itself is right stays in this issue, for 07a's writing to settle or pass on.
+
 - **[07-equal-momenta-difference-group-beats-at-zero-frequency]** *(opened 2026-11-08 by the
   orchestrator on the user's word, from 07's Part B stop 1)* — where $G$ is smooth and $T_q$, $T_r$
   oscillate, the source splits into groups with phases $\theta_q \pm \theta_r$. On $q = r$ the
@@ -1490,6 +1428,46 @@ regions harder.
   located points, or store their $z$ if the scan needs them.
 
   **Assigned (2026-11-08):** the one-loop build, on the user's word, as the issue above.
+
+- **[07-iroff1-window-stop-can-leave-a-call-dishonest]** *(opened 2026-11-10 by the orchestrator
+  on the user's word, from 07's census, its `issues.md` item 1)* — 07's §1.3 stops a window's
+  refinement when QUADPACK's `iroff1` count reaches 6, and returns its leaves floor-limited. Where
+  some of the window's leaves are still falling when it stops, the call can report converged with a
+  value outside its declared error.
+  - **Where seen.** V4 (07's census on A3 v2, `docs/levin-phase-floor/07/census/out/v4/report.md`,
+    `VERIFICATION.md` §7.4): 5 of the 24 new stationary-point group calls are not honest, against
+    readings that agree to 0.004 of the tolerance or better:
+
+    | call | unit | $\lvert v_g - {\rm ref}\rvert/\text{abserr}_g$ | 06m |
+    |---|---|---|---|
+    | v08 | `g-1e-7-1-38834` | 3.16 | $3.0\times10^4$ |
+    | v09 | `g-1e-8-3-34962` | 2.21 | 639 |
+    | v12 | `g-1e-8-0-14299` | 3.08 | $9.1\times10^3$ |
+    | v17 | `g-1e-7-0-1772` | 2.38 | 497 |
+    | v22 | `g-1e-8-3-14096` | 2.53 | $1.67\times10^4$ |
+
+    Each is a converged `G+q+r` call that locates one root, with no leaf at `depth_max` and a
+    maximum depth of 6–14. Its one window was stopped by `iroff1` at 6 while 4–13 of its leaves were
+    still falling; the window's `max_depth_at_stop` was 5–6. Each is class (c) of the cross-check.
+  - **How far.** Over the census, 1,157 of 2,470 windows stop at `1e-7` and 1,195 at `1e-8`; 1,153
+    and 1,192 of them with a leaf still falling (`leaves_falling_at_stop` 0–29), in calls nearly all
+    converged (1,146 and 1,183). §2.3 saw the same on 8 of its 14 calls, all honest (the agent's O8,
+    the note's §B.5). The cross-check's only pairs with $r_g > 1$, `3-14501` (1.39) and `3-35006`
+    (1.08), both converged `G+q+r` calls at $k = 10^5$, are candidates for the same cause; not
+    measured.
+  - **Against 06m:** at 06m's code the same five calls are 497–30,400× their abserr from the
+    reference, so 07 is far nearer; but its declared error still understates.
+
+  **Impact:** a converged stationary-point call can lie outside its declared error, by up to about
+  3× on the calls referenced. How many of the census's 1,153 and 1,192 windows stopped with a leaf
+  falling leave their call dishonest is not measured.
+
+  **Next step:** a window stopped by `iroff1` should not stop while its leaves are still falling, or
+  should declare what they would still lose; then re-score V4's five and the two cross-check pairs.
+
+  **Assigned (2026-11-10): prompt 07a** (Decisions, **07 results**), not yet written, with
+  `[07-c2-gate-threshold-was-never-measured]`'s O9. The user: *"I agree we fix the early roundoff
+  stop and the O9 problem. These are issues where the problem and the fix are both clear."*
 
 - **[06-time-integrals-must-reach-late-resonances]** *(opened 2026-10-27 by the orchestrator,
   from the user's decision on 06's P1, Decisions **06 P1** and **07 scope**)* — the time integrals
@@ -1592,6 +1570,22 @@ regions harder.
   05's memo-counter swaps (25 rows), of `[04-roundoff-floor-can-be-infinite]` (26 rows with an
   infinite `total_abserr` in both stores) and of the readers' unseeded work lists, as in 05a.
 
+**07's Part B findings, not opened as issues** (`docs/levin-phase-floor/07/{rehearsal,rehearsal/r29,census}/issues.md`):
+- **The cross-check's 786 undecided calls** (class (c), 396 rows), where 07 and 06m each agree with
+  themselves across rtols and disagree with each other beyond both errors. They are undecided for
+  want of references. On V4's evidence the user attributes them to 06m's errors for the time being
+  (*"these are undecided because we don't have references for them? If so, then yes, we attribute
+  them to 06m's errors for the time being, on this evidence."*): V4 referenced 12 of them, and 06m
+  fails all twelve by 356–$5.2\times10^5$×, while 07 is honest on 7 and 2.2–3.2× out on 5. A sample
+  of references is for later (Decisions, **07 Part B stops 2–4**). Recorded in 07's log.
+- **Lone-`G` minima:** 236 group calls per rtol locate 6 or 19 minima of $|\theta'|$ each, with λ
+  about $10^{-7}$–$10^{-6}$; all converged, nothing measured wrong. Recorded in 07's log.
+- **Rule A skips 64 analytic blocks R28 located,** not only the 26 `q-r` calls §B.7 expected, and
+  §B.7's "equals R27" rule was wrong for the 4 that the guard catches (the note's §B.8).
+- **The rehearsal agent's** `[07-location-on-an-identically-zero-rate]` (closed by Rule A), and
+  recurrences of 05's classifier on job names and of the registry recording the launcher's
+  repository; QAGS 4.9× its own estimate from the Gauss–Legendre sequence on the worst `q-r` call.
+
 **Assigned here on 2026-10-25, held on their own boards** (README §1, §6.2 C5):
 - `[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]` — `handover` board §3;
 - `[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]` — `handover` board §3;
@@ -1605,6 +1599,124 @@ regions harder.
 01 confirms whether it reaches A3 v2, and narrows it there.
 
 ## 4. Resolved issues
+
+- **[06-levin-accepts-a-region-across-a-stationary-point]** *(opened 2026-10-27 by prompt 06, its
+  rehearsal agent's P1, investigated from the laptop)* — `adaptive_levin_sincos` accepts a Levin
+  region that contains an interior stationary point of its phase, with an error estimate far too
+  small.
+  - **Where seen.** Two R14 rows at $z_{\rm response} = 250$, $(k,q,r) = (3.162\times10^5)^3$ and
+    $(10^5, 3.162\times10^5, 3.162\times10^5)$. Group G+q+r on $z \in [250, 5.42\times10^9]$ is
+    stationary at $z_* = 10211.3$ ($c_s = 1/2$) and $z_* = 275.0$ ($2qc_s = k$). Each is accepted
+    as one region of 3 evaluations. The totals are wrong by $1.28\times10^4$ and 555 times their
+    declared error, the group by $6.8\times10^{-3}$ and $1.2\times10^{-3}$.
+  - **The mechanism.** The region's estimate, and those of its two halves, all lack the
+    stationary-phase term, so the step-(4) residual is about $10^5$ smaller than the true error. The
+    miss equals the leading stationary-phase term to $10^{-5}$. The relative test can also be passed
+    through another part of the region. At rtol $10^{-9}$ and $10^{-11}$ the eq. (151) floor, with a
+    small but finite $G_0 = \min|\theta'|$, accepts the region as round-off-limited instead.
+  - **Why R13 was right.** Its noisier phase lifted the root's residual over rtol, by factors 2.05
+    and 1.008, through the unrelated high-$z$ half, and bisection then found the point. 06's
+    integrand is the more accurate of the two; it removed the noise that had rescued these rows.
+  - **Not closed by C2.** The C2 total-variation gate diverts only regions whose phase varies by less
+    than $6\pi$ (`levin_quadrature.py`, `_adaptive_levin_subregion_impl`). Its regression case puts
+    the stationary point at $x = 1/2$, the first bisection point. The one-loop reconciliation's
+    "already closed" (`docs/one-loop-planning/resonance-scaffolding-v1/sigw-resonance-reconciliation.md`
+    §1.5, §3.1) is wrong, and carries a dated correction note. The QCD review's Levin benchmark
+    (§5.2) is in exact radiation, where no isolated stationary point exists.
+
+  **Impact:**
+  - **Structural, not an edge case.** The stationary point is the Kohri–Terada resonance, where the
+    signal is expected to come from, and nearly every triangle with $\Sigma = (q+r)/k > \sqrt3$
+    has one wherever $c_s(z_*) = 1/\Sigma$. A stored `total_abserr` on such a group is not
+    trustworthy, in stores built at either tree, A3 v2 included.
+  - 06 makes the failure likelier, by removing the noise that sometimes forced the bisection.
+  - Any error budget built from the stored errors, the one-loop integral's included, waits on the
+    fix.
+  - It may bear on 06's S4 and S5 failures; not separated.
+
+  **Next step:** prompt 07, a generic fix to the integrator, in this campaign, before the next
+  production build (the user, 2026-10-27; Decisions, **06 P1** and **G2 Q4 (i)–(ii)**).
+  - **Locate the stationary points before integrating,** from each group's closed-form $\theta'$:
+    the sign changes, and the near-zero minima where two points are about to coalesce (the QCD and
+    $e^+e^-$ caustics). Split the range there, and give a small window around each to a rule that
+    resolves the phase directly.
+  - **Guard the driver,** as a safety net: no Levin acceptance, and no round-off-limited exit, for a
+    region whose $\theta'$ changes sign or nearly vanishes on its nodes.
+  - *(Moved out of 07 on 2026-10-27, by the user: how late the time integral must run, for the
+    configurations that resonate during the QCD crossover and $e^+e^-$ annihilation, is physics,
+    and is `[06-time-integrals-must-reach-late-resonances]`.)*
+  - **Regression cases:** the two R14 rows with 06's reference, and a synthetic case with the
+    stationary point off any bisection point.
+  [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §6.3;
+  [`docs/levin-phase-floor/06/p1/report.md`](../../docs/levin-phase-floor/06/p1/report.md).
+
+  **Measured across A3 v2 (2026-10-27, prompt 06a's scan, issues X1–X2).** At the current code and
+  `1e-7`, θ′ was sampled on 4,097 points per Levin call.
+  - **Where:** 720 of 37,325 calls hold an interior sign change, in 720 of the 9,280 rows, all in
+    group `G+q+r`. 412 are in the low band, 308 in mid and none in seam.
+  - **What is accepted across them:** in every one a region is accepted across the point. 623 of
+    those regions are at depth 0, the whole call accepted as one region, P1's pattern. 677 are
+    Levin regions and 238 are phase-limited.
+  - **Depth:** every A3 v2 row deeper than 11 is one of these rows, with its deep regions at the
+    point.
+  - **The limit:** two points closer together than the grid spacing (median $2.5\times10^{-3}$ in
+    $\log(1+z')$) are not seen.
+  - **For 07:** `docs/levin-phase-floor/06a/out/scan_listed_regions.csv` lists every such region.
+    The next step is unchanged.
+
+  **Narrowed 2026-10-30** (06c's Part B and the orchestrator's references,
+  `docs/levin-phase-floor/06c/y1-references/`): 06c §4's Y1 fails on 30 of 838 rows. The 12 worst,
+  all equilateral, hold this point in `G+q+r` at $z \approx 10211$, where $c_s = 1/2$, so every
+  equilateral row has it whatever $k$. On each row one code leaves the point inside a coarse
+  region and reports converged while wrong by $4.5\times10^3$–$1.6\times10^6$ × its declared
+  error: 06c's (R18) on 10 rows, 06b's (R17) on 2. Against the references R17 is within on 6,
+  R18 on 2, neither on 4. On the other 18 rows R18 is within its error (0.006–0.37) and R17 is not
+  (1.5–68×): 06c fixed those. The depth-20 check found one more of the class, `*-1-2174` call 1,
+  with a zero of $\theta'$ at $z \approx 279.5$, the only sampled call that pinning the end nodes
+  leaves at depth 20. **For 07:** the 12 rows' references are scored in 07's §6 (07 §9 point 8).
+
+  **Narrowed 2026-10-31** by 06e's census, its D5: at `1e-8`, `g-1e-8-1-2174` call 1, the
+  depth-20 check's stationary-point call, converges at depth 7 with 18 regions on depth20-tiling's
+  pinned value, $1.678\times10^3$× its declared error from 06c's census value; at `1e-7` it stays at
+  depth 20, unconverged, near 06c's value. Probably converged and dishonest; no reference
+  (`docs/levin-phase-floor/06e/census/issues.md` D5). **For 07:** a row of this class reported
+  converged at one rtol.
+
+  **Narrowed 2026-11-03** by 06g's Part B (`docs/levin-phase-floor/06g/`), against references
+  whose four readings agree (two implementations, two resolutions; the tool fixed for a stationary
+  point inside a segment, §4 `[06g-filon-route-b-inverts-through-a-stationary-point]`).
+  - **06e's D5 is confirmed.** `g-1e-8-1-2174` call 1 (z12) is reported converged at depth 18 under
+    06g, and is $1{,}681$× its declared error from the reference (06h: $1{,}678$×). At `1e-7` (z00,
+    the same integrand by bytes and at 65 points) it is unconverged at depth 20, 0.018 from it.
+  - **Twelve rehearsal rows** of 06g's V1 ($k = q = r$, sub-interval 1's `G+q+r` call) each hold a
+    stationary point. 06h's code is $4.5\times10^3$–$6.0\times10^5$× its error from the reference on
+    all 12; 06g is within its error on all 12, at most 0.942.
+
+  Levin's declared error is not claimed valid at a stationary point. The user, 2026-11-03: *"What
+  needs to be true is that z12 works after 07."* **For 07:** z12 and V1's 12 calls, with their
+  references and captures (06g's `references/`), are its test cases.
+
+  **Closed 2026-11-10 by prompt 07, on the user's word** (Decisions, **07 results**;
+  [`VERIFICATION.md`](../../docs/levin-phase-floor/VERIFICATION.md) §7). The user: *"I didn't
+  address this, but yes, please close it"*. The basis is V2: on 07's census at the code `adffa21b`,
+  no returned Levin leaf holds a sign change of $\theta'$, in 182,066 calls scanned (every group call
+  at both rtols, every analytic call at `1e-7`), against 677 such regions at 06a's code at `1e-7`
+  alone. Every stationary point the scan finds is located (V3, 0 violations in 170,582 calls), and
+  its window is integrated directly by Clenshaw–Curtis.
+  - **The test cases.** z12 is honest at 0.718 of its error (06m 1,681×), z00 at 0.718; V1's twelve
+    are honest on R28 and R29, worst 0.218 (06h $4.5\times10^3$–$6\times10^5$×); P1's two R14 rows
+    at 0.020 and 0.263 (R27, the parent, $5.6\times10^5$ and $4.1\times10^4$).
+  - **The rest of the 720.** Calls that locate nothing equal 06m's bit for bit (V1). Rows at depth 20
+    fall from 192 to 77 at `1e-7` and from 213 to 83 at `1e-8`; in the 720, from 139 to 24 and from
+    157 to 27. Unconverged group calls in the 720 fall from 311 to 64.
+
+  **What stays open elsewhere.** V4's five calls not honest (2.21–3.16× their error, each converged
+  with a window stopped while its leaves still fell) are
+  `[07-iroff1-window-stop-can-leave-a-call-dishonest]`, assigned to 07a; a phase Rule A skips that
+  still reaches the Levin solve (O9) is `[07-c2-gate-threshold-was-never-measured]`, also 07a's;
+  V5's leaves at the cap are G2's L2, reopened for 08 (Decisions, **G2 L2, reopened**); the 786
+  calls where 07 and 06m disagree undecided are recorded in 07's log; the late resonances are
+  `[06-time-integrals-must-reach-late-resonances]`.
 
 - **[07-location-on-an-identically-zero-rate]** *(opened 2026-11-08 by the orchestrator on the
   user's word, from 07's Part B stop 1; proposed by the rehearsal agent)* — 07's location

@@ -1,0 +1,40 @@
+# v4_rescore.py sha256 4349a916df6e3c800933def9e3652657e293742ab013b77c0ff9de0506942c6e
+sid  basis            conv g/06m spread/tol    ratio_g  ratio_06m  verdict
+v00  four readings    T/F           0.00117     0.0197   0.000548  honest
+v01  FCC r1 and r2    T/F           0.00118     0.0325     0.0234  honest
+v02  four readings    T/F          9.98e-05    0.00572    0.00968  honest
+v03  four readings    T/F          0.000614    0.00175      0.032  honest
+v04  four readings    F/T          1.64e-05      0.138   2.32e+05  honest
+v05  four readings    T/T          0.000126    0.00124        356  honest
+v06  FCC r1 and r2    T/F          0.000319   0.000278      0.127  honest
+v07  FCC r1 and r2    T/T          8.86e-06   0.000481   1.24e+04  honest
+v08  FCC r1 and r2    T/T           0.00388       3.16   3.04e+04  NOT honest
+v09  four readings    T/T           0.00053       2.21        639  NOT honest
+v10  four readings    T/T          0.000209      0.192   1.29e+03  honest
+v11  FCC r1 and r2    T/F          0.000303    0.00762      0.126  honest
+v12  FCC r1 and r2    T/T          0.000227       3.08   9.09e+03  NOT honest
+v13  FCC r1 and r2    T/T           0.00187      0.309   1.85e+04  honest
+v14  four readings    T/T          2.77e-05    0.00102   1.35e+04  honest
+v15  four readings    T/T           0.00137    0.00204   5.19e+05  honest
+v16  FCC r1 and r2    T/F           0.00116     0.0382     0.0441  honest
+v17  four readings    T/T          3.75e-05       2.38        497  NOT honest
+v18  FCC r1 and r2    T/T          0.000744      0.529   1.61e+04  honest
+v19  four readings    T/T           0.00051     0.0462   1.93e+05  honest
+v20  four readings    T/T            0.0012     0.0141    1.6e+05  honest
+v21  four readings    T/F          0.000962    0.00862    0.00206  honest
+v22  FCC r1 and r2    T/T          0.000152       2.53   1.67e+04  NOT honest
+v23  FCC r1 and r2    T/T          0.000104      0.767   1.23e-05  honest
+z00  ['fcc_r1', 'fcc_ T/F           0.00047      0.718     0.0183  honest
+z12  ['fcc_r1', 'fcc_ T/T           0.00047      0.718   1.68e+03  honest
+z07  ['fcc_r1', 'fcc_ T/T          1.57e-06   1.53e-06   1.53e-06  honest
+z16  ['fcc_r1', 'fcc_ T/T          0.000114   6.54e-06   6.54e-06  honest
+z18  ['fcc_r1', 'fcc_ T/T          1.69e-06   7.39e-07   7.39e-07  honest
+z21  ['fcc_r1', 'fcc_ T/T          1.34e-06   3.48e-07   3.48e-07  honest
+z24  ['fcc_r1', 'fcc_ T/T           0.00025    0.00207    0.00207  honest
+z28  ['fcc_r1', 'fcc_ T/T          0.000114   6.54e-06   6.54e-06  honest
+z29  ['fcc_r1', 'fcc_ T/T           3.4e-07   2.34e-07   2.34e-07  honest
+readings checked: 74 problems: []
+not honest: ['v08', 'v09', 'v12', 'v17', 'v22']  not scored: []
+06m honest on: 17 ['v00', 'v01', 'v02', 'v03', 'v06', 'v11', 'v16', 'v21', 'v23', 'z00', 'z07', 'z16', 'z18', 'z21', 'z24', 'z28', 'z29']
+vs agent: verdicts differ: []  basis differ: []  honest_06m differ: []  max ratio reldiff g/06m: 0 / 0
+exit 0

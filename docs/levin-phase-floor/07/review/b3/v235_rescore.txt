@@ -1,0 +1,23 @@
+# v235_rescore.py sha256 7bfe605afe1c3e5cad66b01c69cc8d0a8e21d3d5f456df5de7bfe50620e6abbb
+counts {
+ "units": 18560,
+ "scanned_calls": 182066,
+ "scanned_analytic_1e-7": 107416,
+ "v3_setaside": 11484,
+ "scanned_group_1e-7": 37325,
+ "v3_scored": 170582,
+ "pickles_read": 1945,
+ "v5_active_calls": 4968,
+ "v3_with_change_or_root": 2954,
+ "scanned_group_1e-8": 37325
+}
+missing {}  over budget 0
+V2: Levin leaves holding a sign change (grid): 0 []
+    'ends' listings: 2566 of them Levin: 0
+    non-Levin listed leaves by tag: {"('CC', '', '')": 168}
+    my grid set differs from the scan's own grid listing in calls: 0 []
+V3: violations 0 []
+    calls with kind-'end' points: 0 []
+    set aside with a sign change: 168 guarded among them: 14 by kind: {'analytic': 168}
+V5: violations 23 converged among them: 3 depth-max counts [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 6, 6, 6, 14, 54, 54] by group {'G+q+r': 23} by rtol {'1e-7': 10, '1e-8': 13}
+exit 0

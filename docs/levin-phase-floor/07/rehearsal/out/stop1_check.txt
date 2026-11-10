@@ -1,0 +1,34 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T00:41:24Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal; cd /Users/ds283/Documents/Code/SecondaryGWKit; tail -n +2 $R/state/store_sha256_before_diff.txt > $R/state/before_body.txt; tail -n +2 $R/state/store_sha256_after_diff.txt > $R/state/after_body.txt; cmp $R/state/before_body.txt $R/state/after_body.txt && echo "R27 and R28: 10 files identical before and after (sha256, size, mtime); no journal"; grep -E "^[0-9a-f]{64}.*06m-r26" $R/state/s0_store_sha256_after_diff.txt > /dev/null; shasum -a 256 var/datastores/levin-phase-floor-06m-r26*.sqlite > $R/state/r26_store_sha256_at_stop1.txt; cmp $R/state/r26_store_sha256_at_stop1.txt $R/state/r26_gate_hashes_only.txt && echo "R26 equal to gate"; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035; do echo "== $t"; git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short --ignored; find $t -newer $R/state/r27_launch_marker -not -path "*/.git/*" | head -3; done; echo "== main"; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short; echo "== pycache in records"; find $R -name __pycache__; echo "== lock dir"; ls -la ~/.raypoolkit/rehearsal-lock; cat ~/.raypoolkit/rehearsal-lock/owner 2>/dev/null | head -20; echo; echo "== out files over 2 MB"; find $R -size +2M -exec ls -l {} \;
+# output:
+R27 and R28: 10 files identical before and after (sha256, size, mtime); no journal
+R26 equal to gate
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db
+91472dbee1daba8374b0018db1195cf6c7898bbb
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+746003508bff868fc1b256b29cbd5035609bed2b
+== main
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== pycache in records
+== lock dir
+total 4
+drwxr-xr-x 3 ds283 staff  96 Nov  8 00:19 .
+drwxr-xr-x 3 ds283 staff  96 Nov  8 00:06 ..
+-rw-r--r-- 1 ds283 staff 438 Nov  8 00:19 owner
+project: SecondaryGWKit
+purpose: levin-phase-floor prompt 07 section 5, rehearsals R27 (worktree 91472dbe, parent of 07 code commit ad732887, production code 06m's, R26's) and R28 (worktree 74600350, code 07 ad732887) on the Mac Studio (mps026298), then the value comparisons S0 and R28-vs-R27, S2's capture and the readers
+acquired: 2026-11-08T00:06:22+00:00
+host: mps026298
+ray_temp_dir: /tmp/ray-sgk
+ray_address: in-process
+pid: 83825
+
+== out files over 2 MB
+-rw-r--r-- 1 ds283 staff 43452826 Nov  8 00:37 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/store_value_diff.json
+-rw-r--r-- 1 ds283 staff 26848195 Nov  8 00:17 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/store_value_diff_r26_r27.labels_normalised.json
+-rw-r--r-- 1 ds283 staff 40104919 Nov  8 00:17 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/store_value_diff_r26_r27.json
+# exit: 0
+# end: 2026-11-08T00:41:25Z

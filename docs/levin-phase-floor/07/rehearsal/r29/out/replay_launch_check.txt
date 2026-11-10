@@ -1,0 +1,22 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T13:08:20Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+Z=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29; cat $Z/state/launch_replay.txt; for p in $(pgrep -P 16130); do ps -o pid,ppid,command -p $p | tail -1 | cut -c1-150; for q in $(pgrep -P $p); do ps -o pid,ppid,command -p $q | tail -1 | cut -c1-150; done; done; cat $Z/out/r29_pipeline.log; tail -8 $Z/state/capture/replay/driver.log; uptime; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7; do git --no-optional-locks -C $t status --short --ignored; done; echo "(trees clean)"
+# output:
+sh pid 16130 launched 2026-11-08T13:08:13Z
+16133 16130 /bin/sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/scripts/capture/run_r29_pipeline.sh
+16140 16133 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -I -B /Users/ds283/Documents/Code/
+== stage replay_run start 2026-11-08T13:08:14Z
+2026-11-08T13:08:14Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/replay_spec.json sha256 b550426adbc803597edd68588febbd3dbde88506813646f97895fbe02cdcf11a
+2026-11-08T13:08:14Z 6 workers, 224 units, at most 6 at once
+2026-11-08T13:08:14Z start replay-g-0 (g, 38 units): pid 16149
+2026-11-08T13:08:14Z start replay-g-1 (g, 38 units): pid 16150
+2026-11-08T13:08:14Z start replay-g-2 (g, 37 units): pid 16151
+2026-11-08T13:08:14Z start replay-g-3 (g, 37 units): pid 16152
+2026-11-08T13:08:14Z start replay-g-4 (g, 37 units): pid 16153
+2026-11-08T13:08:14Z start replay-g-5 (g, 37 units): pid 16154
+13:08  up 32 days,  3:44, 1 user, load averages: 4.53 3.24 3.75
+(trees clean)
+# exit: 0
+# end: 2026-11-08T13:08:21Z

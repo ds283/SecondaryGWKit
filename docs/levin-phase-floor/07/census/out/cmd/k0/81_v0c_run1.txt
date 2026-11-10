@@ -1,0 +1,27 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_k0.py tree /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v0c_units.json state/v0c/run1 --workers 1 --tree g
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T14:04:36Z
+# ----
+# levin-phase-floor 07: census units at the tree g under the variant tree
+# written 2026-11-08T14:04:36Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 b6bf9abb823ce341072da9a4b31271a19675b5540bdc86b7bc7e1ac8eb2798f2
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v0c_units.json sha256 4ef29e8cbc2540e59d581f3f4a73d9656c53aa8f3460207691b5babe5fdcca8b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# variant null
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 at e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f
+# 1 units in 1 workers: tree-1e-8-k1_102 (1)
+tree-1e-8-k1_102: pid 22568 (1 units)
+tree-1e-8-k1_102: exit 0 after 61.6 s
+exit codes {tree-1e-8-k1_102: 0}
+refused: []
+bye tree-1e-8-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 1 of 1; not done []; wall 62 s
+wrote state/v0c/run1/units.jsonl sha256 80b5d2425be50d0649a267fb32887489ac6cc89f085604290ea76c8f2c3353f5
+# ----
+# end 2026-11-08T14:05:38Z
+# exit 0

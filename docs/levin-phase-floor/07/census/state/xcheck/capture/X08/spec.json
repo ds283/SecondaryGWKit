@@ -1,0 +1,30 @@
+{
+ "tree": "g",
+ "name": "X08",
+ "units": [
+  {
+   "uid": "g-1e-8-0-14322",
+   "tree": "g",
+   "rtol": "1e-8",
+   "row": "0-14322",
+   "names05": null,
+   "shard": 0,
+   "serial": 14322,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=3.14e+05/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.52504, z in (1.6721e+11, 0.52504), regime Gqr, group G+q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/xcheck/capture/X08",
+ "emit_fd": null,
+ "emit_file": "state/xcheck/capture/X08/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

@@ -1,0 +1,73 @@
+$ bash state/gate_trees.sh
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T13:40:12Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+status --short --ignored: [!! .DS_Store;!! .idea/;!! AdaptiveLevin/__pycache__/;!! AdaptiveLevin/tests/__pycache__/;!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf;!! Analytical_OmegaGW_LISA_Taiji_TianQin.png;!! ComputeTargets/__pycache__/;!! CosmologyConcepts/__pycache__/;!! CosmologyModels/GenericEOS/__pycache__/;!! CosmologyModels/LambdaCDM/__pycache__/;!! CosmologyModels/__pycache__/;!! Datastore/;!! GkSource-out/;!! LiouvilleGreen/.DS_Store;!! LiouvilleGreen/__pycache__/;!! LiouvilleGreen/tests/.DS_Store;!! LiouvilleGreen/tests/__pycache__/;!! LiouvilleGreen/tests/test_3bessel_analytic/;!! LiouvilleGreen/tests/three_bessel_debug/;!! MetadataConcepts/__pycache__/;!! ObjectFactories/__pycache__/;!! Omega_GW_sensitivity.pdf;!! Omega_GW_sensitivity.png;!! Quadrature/__pycache__/;!! Quadrature/integrators/__pycache__/;!! Quadrature/supervisors/__pycache__/;!! RayTools/;!! StoreFixtures/__pycache__/;!! Units/__pycache__/;!! __pycache__/;!! config/__pycache__/;!! docs/handover/a3-v2/findings/__pycache__/;!! profile-db.sqlite;!! test-db-qcd-shard0000.sqlite;!! test-db-qcd-shard0001.sqlite;!! test-db-qcd-shard0002.sqlite;!! test-db-qcd-shard0003.sqlite;!! test-db-qcd-shard0004.sqlite;!! test-db-qcd-shard0005.sqlite;!! test-db-qcd-shard0006.sqlite;!! test-db-qcd-shard0007.sqlite;!! test-db-qcd-shard0008.sqlite;!! test-db-qcd-shard0009.sqlite;!! test-db-qcd-shard0010.sqlite;!! test-db-qcd-shard0011.sqlite;!! test-db-qcd-shard0012.sqlite;!! test-db-qcd-shard0013.sqlite;!! test-db-qcd-shard0014.sqlite;!! test-db-qcd-shard0015.sqlite;!! test-db-qcd-shard0016.sqlite;!! test-db-qcd-shard0017.sqlite;!! test-db-qcd-shard0018.sqlite;!! test-db-qcd-shard0019.sqlite;!! test-db-qcd.sqlite;!! thirdparty/__pycache__/;!! three_bessel_debug/;!! tools/__pycache__/;!! var/;!! venv/;]
+status --short: []
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7
+e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f
+status --short --ignored: []
+status --short: []
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db
+91472dbee1daba8374b0018db1195cf6c7898bbb
+status --short --ignored: []
+status --short: []
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+746003508bff868fc1b256b29cbd5035609bed2b
+status --short --ignored: []
+status --short: []
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit               28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 74600350 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db 91472dbe (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 e182bc7a (detached HEAD)
+== module hashes
+4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/AdaptiveLevin/levin_quadrature.py
+beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db/AdaptiveLevin/levin_quadrature.py
+dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035/AdaptiveLevin/levin_quadrature.py
+33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/ComputeTargets/QuadSourceIntegral.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db/ComputeTargets/QuadSourceIntegral.py
+33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035/ComputeTargets/QuadSourceIntegral.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/RunDrivers/quadsource_atol_sweep.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db/RunDrivers/quadsource_atol_sweep.py
+== module at e182bc7a by git show
+4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc  -
+== module at adffa21b by git show
+4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc  -
+== module at 91472dbe by git show
+beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6  -
+== module at 48cf87c0 (06m's code commit) by git show
+beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6  -
+== git log --oneline -8 at G
+e182bc7a Write levin-phase-floor 07's resumed Part B dispatch
+adffa21b Skip locating a phase whose variation is below the C2 gate
+2ddd3306 Amend levin-phase-floor 07 with Rule A at Part B's first stop
+74600350 Write levin-phase-floor 07's Part B dispatch addendum
+ad732887 Integrate the Levin driver's stationary-point windows directly
+91472dbe Amend levin-phase-floor 07 at its section 2 stop
+945c8668 Open an issue for the Clenshaw-Curtis interior-node shift
+bd21bf23 Rewrite levin-phase-floor prompt 07 and its note for the current driver
+== git diff --stat 74600350 e182bc7a -- . ':!docs' ':!prompts'
+ AdaptiveLevin/levin_quadrature.py                 | 130 +++++++++++++--
+ AdaptiveLevin/tests/test_levin_stationary.py      | 192 +++++++++++++++++++++-
+ AdaptiveLevin/tests/test_levin_trust_yardstick.py |   4 +-
+ CLAUDE.md                                         |   9 +-
+ 4 files changed, 315 insertions(+), 20 deletions(-)
+== git diff --stat 91472dbe e182bc7a -- . ':!docs' ':!prompts'
+ AdaptiveLevin/levin_quadrature.py                  | 1196 +++++++++++++++++++-
+ AdaptiveLevin/tests/test_levin_stationary.py       |  801 +++++++++++++
+ AdaptiveLevin/tests/test_levin_trust_yardstick.py  |   38 +-
+ CLAUDE.md                                          |   10 +-
+ ComputeTargets/QuadSourceIntegral.py               |   14 +
+ .../tests/test_quadsource_levin_guard_counts.py    |   76 ++
+ 6 files changed, 2110 insertions(+), 25 deletions(-)
+== git diff --stat adffa21b e182bc7a -- . ':!docs' ':!prompts' (empty if the code is adffa21b's)
+== 06m's census scripts at G, by git: tracked file count
+166
+== __pycache__ in G, P or O
+# ----
+# end 2026-11-08T13:40:14Z
+# exit 0

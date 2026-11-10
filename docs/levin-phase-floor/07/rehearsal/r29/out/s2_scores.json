@@ -1,0 +1,79 @@
+{
+ "holds": true,
+ "rows": [
+  {
+   "p1": 1,
+   "key": [
+    316227.7660168379,
+    316227.7660168379,
+    316227.7660168379,
+    249.99999999999994
+   ],
+   "replay_reproduces_record": true,
+   "x": "0x1.276737eb9bc5ap+3",
+   "z": "10211.317891485687",
+   "abs_x_minus_x_s": "7.086201847528173e-09",
+   "scan_spacing_x": "0.004123069321132029",
+   "location_ok": true,
+   "counts": true,
+   "scatter": 6.110510907344426e-37,
+   "tolerance": 6.589177509276904e-33,
+   "ref_hex": "-0x1.059fce809a3c4p-74",
+   "ref_30": "-5.41026257527633907531151993666e-23",
+   "R28_value_stop1": "-0x1.059fce8287412p-74",
+   "R29_equals_R28": true,
+   "R27": {
+    "value": "-0x1.03d61621fa22ap-74",
+    "abserr": "0x1.aba97d7c8a694p-101",
+    "abs_v_minus_ref": "3.69743e-25",
+    "ratio": "561137.0",
+    "honest": false
+   },
+   "R29": {
+    "value": "-0x1.059fce8287412p-74",
+    "abserr": "0x1.7c75abe62fe62p-100",
+    "abs_v_minus_ref": "2.3738e-32",
+    "ratio": "0.0202477",
+    "honest": true
+   },
+   "honesty_ok": true
+  },
+  {
+   "p1": 2,
+   "key": [
+    100000.0,
+    316227.7660168379,
+    316227.7660168379,
+    249.99999999999994
+   ],
+   "replay_reproduces_record": true,
+   "x": "0x1.67b528656140dp+2",
+   "z": "275.0085916617262",
+   "abs_x_minus_x_s": "5.55820101055815e-09",
+   "scan_spacing_x": "0.004123069321132029",
+   "location_ok": true,
+   "counts": true,
+   "scatter": 1.1893684755646878e-36,
+   "tolerance": 9.176812891056615e-33,
+   "ref_hex": "0x1.2f1af86ca7aa5p-75",
+   "ref_30": "3.13403589614629993947855437008e-23",
+   "R28_value_stop1": "0x1.2f1af8c9265cap-75",
+   "R29_equals_R28": true,
+   "R27": {
+    "value": "0x1.2ebe63500406cp-75",
+    "abserr": "0x1.29cdfa922cc79p-100",
+    "abs_v_minus_ref": "3.73938e-26",
+    "ratio": "40748.1",
+    "honest": false
+   },
+   "R29": {
+    "value": "0x1.2f1af8c9265cap-75",
+    "abserr": "0x1.5f5be60884ad3p-99",
+    "abs_v_minus_ref": "5.70044e-31",
+    "ratio": "0.263249",
+    "honest": true
+   },
+   "honesty_ok": true
+  }
+ ]
+}

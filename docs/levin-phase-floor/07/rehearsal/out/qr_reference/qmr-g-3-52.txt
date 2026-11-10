@@ -1,0 +1,110 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_reference.py",
+  "script_sha256": "add90893bb9edb8897f5996c7288f8dfff0dd2c0604b005f17580b22a190739f",
+  "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-g-3-52.pkl",
+  "pickle_sha256": "6ae226ef16975650c79cfc0b0d58ad222778f42e5ab61e2d772b34233215cf0a",
+  "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035",
+  "tree_head": "746003508bff868fc1b256b29cbd5035609bed2b",
+  "tree_status_short": "",
+  "levin_quadrature": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035/AdaptiveLevin/levin_quadrature.py",
+  "levin_quadrature_sha256": "dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9",
+  "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/capture",
+  "host": "mps026298.phys.susx.ac.uk",
+  "written": "2026-11-08T10:22:58Z"
+ },
+ "unit": "g-1e-7-3-52",
+ "notify_label": "k=1e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=3.047e+09, z in (5.421e+09, 3.047e+09), regime qr, group q-r",
+ "x_span": [
+  "0x1.5d660ed8f6f2ap+4",
+  "0x1.669de13c08966p+4"
+ ],
+ "kw": {
+  "atol": "0x1.86f30c90089eep-112",
+  "rtol": "0x1.ad7f29abcaf48p-24",
+  "chebyshev_order": 24,
+  "notify_label": "k=1e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=3.047e+09, z in (5.421e+09, 3.047e+09), regime qr, group q-r"
+ },
+ "capture_record": {
+  "value": "0x1.025f739eec904p-74",
+  "abserr": "0x1.afde96e37d318p-117",
+  "num_regions": 4112,
+  "converged": true,
+  "max_depth": 2
+ },
+ "replay": {
+  "value": "0x1.025f739eec904p-74",
+  "abserr": "0x1.afde96e37d318p-117",
+  "num_regions": 4112,
+  "converged": true,
+  "phase_limited": true,
+  "num_stationary_points": 4097,
+  "num_window_pieces": 4112,
+  "seconds": 90.55439805984497
+ },
+ "replay_reproduces_capture": true,
+ "samples_theta_deriv_all_zero": true,
+ "samples_theta_all_zero": true,
+ "samples_integrand_sign": [
+  -1,
+  0,
+  1
+ ],
+ "reference": {
+  "method": "composite 20-point Gauss-Legendre on 2^m equal x-panels (fsum), m = 6..14; and QAGS (epsrel 1.2e-14)",
+  "GL": {
+   "6": {
+    "value": "0x1.025f739ee67c7p-74",
+    "repr": "5.343025473314445e-23",
+    "abs_sum": "5.06896289719717e-22",
+    "evaluations": 1280
+   },
+   "8": {
+    "value": "0x1.025f739eec8f8p-74",
+    "repr": "5.343025473343692e-23",
+    "abs_sum": "5.068966998201103e-22",
+    "evaluations": 5120
+   },
+   "10": {
+    "value": "0x1.025f739eec8c8p-74",
+    "repr": "5.343025473343636e-23",
+    "abs_sum": "5.068967057372031e-22",
+    "evaluations": 20480
+   },
+   "12": {
+    "value": "0x1.025f739eec8c8p-74",
+    "repr": "5.343025473343636e-23",
+    "abs_sum": "5.068967069103245e-22",
+    "evaluations": 81920
+   },
+   "14": {
+    "value": "0x1.025f739eec8c8p-74",
+    "repr": "5.343025473343636e-23",
+    "abs_sum": "5.068967069270715e-22",
+    "evaluations": 327680
+   }
+  },
+  "QAGS": {
+   "value": "0x1.025f739eec8dbp-74",
+   "repr": "5.343025473343658e-23",
+   "abserr": "6.494503170841366e-36",
+   "neval": 4137,
+   "last": 99
+  },
+  "reference": "0x1.025f739eec8c8p-74",
+  "reference_repr": "5.343025473343636e-23",
+  "stated_error": "2.2334392665623463e-37",
+  "stated_error_hex": "0x1.3000000000000p-122",
+  "rounding_scale_eps_abs_sum_m14": "1.1255367902742097e-37",
+  "differences": {
+   "GL6-GL14": "-2.9191051213969866e-34",
+   "GL8-GL14": "5.64237288394698e-37",
+   "GL10-GL14": "0.0",
+   "GL12-GL14": "0.0",
+   "QAGS-GL14": "2.2334392665623463e-37"
+  },
+  "seconds_GL": 22.190009832382202,
+  "seconds_QAGS": 0.21135902404785156
+ },
+ "ray_initialized": false
+}

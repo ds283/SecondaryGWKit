@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts PYTHONDONTWRITEBYTECODE=1 nice -n 19 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/xcheck_projection_07.py state/dev/xcap_captures_dev.json state/dev/xcap_check_dev.json state/dev/xcap_proj_dev.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T01:02:05Z
+# ----
+{
+ "n_calls": 2,
+ "n_projected": 2,
+ "total_all_four_s": 2797.6513306113698,
+ "total_fcc_s": 2557.2876539936415,
+ "total_fcc_plus_qawo_le_1800_s": 2797.6513306113698
+}
+x000 g-1e-7-0-12804 {'qawo_r1': 7, 'qawo_r2': 10, 'fcc_r1': 25, 'fcc_r2': 97} 138
+x001 g-1e-7-0-12869 {'qawo_r1': 176, 'qawo_r2': 48, 'fcc_r1': 440, 'fcc_r2': 1996} 2660
+x000 g-1e-7-0-12804 {'qawo_r1': 7, 'qawo_r2': 10, 'fcc_r1': 25, 'fcc_r2': 97} 138
+x001 g-1e-7-0-12869 {'qawo_r1': 176, 'qawo_r2': 48, 'fcc_r1': 440, 'fcc_r2': 1996} 2660
+wrote state/dev/xcap_proj_dev.json sha256 6270b3fd078b98556bdbd12ef3a3763d1ff7e56d39e30e82ab221cc2fd352155
+# ----
+# end 2026-11-09T01:02:07Z
+# exit 0

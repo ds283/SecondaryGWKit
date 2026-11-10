@@ -1,0 +1,12 @@
+# R28 store files after the readers, 2026-11-08T10:30:25Z
+eb0e9743a8a93364f24fa103cd1dc43309386b5c022eadacb56b861533c51643  var/datastores/levin-phase-floor-07-r28-shard0000.sqlite
+dbbcb8d9ad5febd5e9d35ba7095a9d3f9a7f4b1134bb5e87984ab4a48fa63755  var/datastores/levin-phase-floor-07-r28-shard0001.sqlite
+f158ca355972473cfaf6683effdc6e548b0e3d59d7e3c4b83018029e66509ebf  var/datastores/levin-phase-floor-07-r28-shard0002.sqlite
+4cb097cf7bb61f10e1f4a470e3502861f369fa89a10c2d82672c4965a026d20a  var/datastores/levin-phase-floor-07-r28-shard0003.sqlite
+00468d55595b6d24e684fb416fdfa0a59b14605f608fbd55bf894bb6f0bc9b0b  var/datastores/levin-phase-floor-07-r28.sqlite
+var/datastores/levin-phase-floor-07-r28-shard0000.sqlite 25468928 1794098152
+var/datastores/levin-phase-floor-07-r28-shard0001.sqlite 25501696 1794098152
+var/datastores/levin-phase-floor-07-r28-shard0002.sqlite 1077248 1794097166
+var/datastores/levin-phase-floor-07-r28-shard0003.sqlite 24793088 1794098152
+var/datastores/levin-phase-floor-07-r28.sqlite 36864 1794097166
+no journal, -wal or -shm

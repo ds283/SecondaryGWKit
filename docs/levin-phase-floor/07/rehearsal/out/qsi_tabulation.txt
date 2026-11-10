@@ -1,0 +1,98 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/tabulate_qsi_guard.py sha256 a1eaba31aa9860595806979a5c32bb7b1daa76312d8b1524ada16e06a20e537e
+# input var/datastores/levin-phase-floor-07-r27-shard0000.sqlite sha256 307096b84b289e885596bb22b0fa6ebc960f30dbcd85e620a2e3b4ffcffce675
+# input var/datastores/levin-phase-floor-07-r27-shard0001.sqlite sha256 bbd9561d75a7df42ed45adb4cfcee80667f897b00c352538411ad22a85c78247
+# input var/datastores/levin-phase-floor-07-r27-shard0002.sqlite sha256 7ec3c659f1b33a2b37670b4939c7657c80b1525dec19defe0c0ef06defd8eaf7
+# input var/datastores/levin-phase-floor-07-r27-shard0003.sqlite sha256 c3370cb94939db22a95afec4b79ceac0f7a7d0e6a42f1c4f4dc9b9e99c396d28
+# input var/datastores/levin-phase-floor-07-r27.sqlite sha256 d6fd30230fc6d20bc2efa504141e43fdd4cb1b9afdc35d367e8cbe1bca374acb
+# input var/datastores/levin-phase-floor-07-r28-shard0000.sqlite sha256 eb0e9743a8a93364f24fa103cd1dc43309386b5c022eadacb56b861533c51643
+# input var/datastores/levin-phase-floor-07-r28-shard0001.sqlite sha256 dbbcb8d9ad5febd5e9d35ba7095a9d3f9a7f4b1134bb5e87984ab4a48fa63755
+# input var/datastores/levin-phase-floor-07-r28-shard0002.sqlite sha256 f158ca355972473cfaf6683effdc6e548b0e3d59d7e3c4b83018029e66509ebf
+# input var/datastores/levin-phase-floor-07-r28-shard0003.sqlite sha256 4cb097cf7bb61f10e1f4a470e3502861f369fa89a10c2d82672c4965a026d20a
+# input var/datastores/levin-phase-floor-07-r28.sqlite sha256 00468d55595b6d24e684fb416fdfa0a59b14605f608fbd55bf894bb6f0bc9b0b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/store_value_diff.json sha256 927d4e70b2661744e364267dc44baf501d7e22739a16834fdef50d2f173270e8
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb status --short ''
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b status --short ''
+# run levin-phase-floor-07-r27-parent-20261108T000634: state done exit 0 fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 taken at 91472dbee1daba8374b0018db1195cf6c7898bbb
+# run levin-phase-floor-07-r28-guard-20261108T001916: state done exit 0 fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 taken at 746003508bff868fc1b256b29cbd5035609bed2b
+# this script imports no tree code; it reads the stores with sqlite3 mode=ro and the tool's JSON
+A = R27 var/datastores/levin-phase-floor-07-r27.sqlite: 864 rows, 48 columns
+B = R28 var/datastores/levin-phase-floor-07-r28.sqlite: 864 rows, 48 columns
+columns equal: True; key sets equal: True (0 only in A, 0 only in B)
+tool: QuadSourceIntegral identical 0, differ 864, only_in_a 0, only_in_b 0, unmatched 0, columns only in a/b []/[]
+rows compared: 864; tolerance mismatches 0
+Levin records in R28: group 3105 (with a nonzero count 70); analytic blocks 10072 (with a nonzero count 400)
+sums of the four counts, group records: {'stationary_points': 106566, 'window_pieces': 114289, 'guarded_regions': 0, 'guard_at_depth_max': 0}
+sums of the four counts, analytic blocks: {'stationary_points': 400, 'window_pieces': 2515, 'guarded_regions': 0, 'guard_at_depth_max': 0}
+
+UNTOUCHED rows (every count of every Levin record 0): 640
+  bit-identical in every value field (the four counts set aside): 640 / 640
+  bit-identical in every counter field too: 640 / 640
+  total bit-identical: 640; analytic_rad bit-identical: 640
+
+OTHER rows (some count nonzero): 224
+  rows in which a group call located a point: 70; an analytic block: 200
+  rows in which a group call guarded a leaf: 0; an analytic block: 0
+  total bit-identical: 156 / 224; analytic_rad bit-identical: 32 / 224
+  fields differing in these rows (path, indices folded: rows):
+    col:WKB_Levin: 70
+    col:WKB_Levin_evaluations: 70
+    col:WKB_Levin_max_depth: 32
+    col:WKB_Levin_num_regions: 70
+    col:WKB_Levin_simple_regions: 69
+    col:analytic_rad: 192
+    col:total: 68
+    col:total_abserr: 70
+    col:total_converged: 17
+    col:total_phase_limited: 17
+    meta:WKB_Levin.abserr: 70
+    meta:WKB_Levin.converged: 17
+    meta:WKB_Levin.phase_limited: 17
+    meta:WKB_Levin.subintervals[i].abserr: 70
+    meta:WKB_Levin.subintervals[i].converged: 17
+    meta:WKB_Levin.subintervals[i].groups[i].abserr: 70
+    meta:WKB_Levin.subintervals[i].groups[i].converged: 18
+    meta:WKB_Levin.subintervals[i].groups[i].evaluations: 70
+    meta:WKB_Levin.subintervals[i].groups[i].phase_limited: 25
+    meta:WKB_Levin.subintervals[i].groups[i].regions: 70
+    meta:WKB_Levin.subintervals[i].groups[i].simple_regions: 69
+    meta:WKB_Levin.subintervals[i].groups[i].value: 70
+    meta:WKB_Levin.subintervals[i].phase_limited: 17
+    meta:WKB_Levin.subintervals[i].value: 70
+    meta:analytic.2pt5.Levin.J4_data.abserr: 200
+    meta:analytic.2pt5.Levin.J4_data.phase_limited: 109
+    meta:analytic.2pt5.Levin.J4_data.regions: 183
+    meta:analytic.2pt5.Levin.Y4_data.abserr: 200
+    meta:analytic.2pt5.Levin.Y4_data.phase_limited: 128
+    meta:analytic.2pt5.Levin.Y4_data.regions: 179
+    meta:analytic.abserr: 200
+  largest |dtotal|/abserr27: 73773.30817570777 at (1000000.0, 1000000.0, 1000000.0, 2284.251956909201); there |dtotal|/abserr28 64230.92206231038
+  largest |dtotal|/abserr28: 64230.92206231038 at (1000000.0, 1000000.0, 1000000.0, 2284.251956909201); there |dtotal|/abserr27 73773.30817570777
+  analytic rows that located: 200; largest |drad|/abserr: 27 7.224504214477446e-07, 28 1.458369567396722e-05 at (316227.7660168379, 316227.7660168379, 316227.7660168379, 2297505.163844306)
+  total_converged among them: R27 206, R28 223 of 224
+  unconverged group calls among them: R27 19, R28 1
+  rows at WKB_Levin_max_depth 20: R27 20, R28 2
+
+ALL ROWS: total bit-identical 796 / 864; total_abserr 794; analytic_rad 672; analytic.abserr 664; total_converged 847
+WKB_Levin_num_regions summed: R27 114826, R28 227883; unconverged group calls: R27 20, R28 2; rows at max depth 20: R27 23, R28 5
+total_converged: R27 845, R28 862
+total_converged changes: unconverged -> converged 17; converged -> unconverged 0
+  unconverged -> converged: (100000.0, 100000.0, 100000.0, 329.64045755914753) touched=yes total 0x1.7585c17341c8ep-59 -> 0x1.7585c181b045ap-59, abserr 0x1.22ac948ee282ep-82 -> 0x1.486b2605de93bp-82, max depth 20 -> 8
+  unconverged -> converged: (100000.0, 100000.0, 100000.0, 573.1146466584687) touched=yes total 0x1.3b3cbba620aa3p-58 -> 0x1.3b3cbbaec1607p-58, abserr 0x1.e3aa8274170cep-82 -> 0x1.163f63be39309p-81, max depth 20 -> 15
+  unconverged -> converged: (100000.0, 100000.0, 100000.0, 755.6870974333904) touched=yes total -0x1.46fc938d3f3dfp-59 -> -0x1.46fc939139b13p-59, abserr 0x1.181854f8e5e7bp-82 -> 0x1.1924ea195819ap-82, max depth 20 -> 14
+  unconverged -> converged: (100000.0, 100000.0, 100000.0, 3011.9274410237094) touched=yes total 0x1.d25bb4bd8ff24p-57 -> 0x1.d25bb4bd4a659p-57, abserr 0x1.abe0e5a251c91p-80 -> 0x1.aaa822d963f58p-80, max depth 20 -> 14
+  unconverged -> converged: (100000.0, 100000.0, 100000.0, 3971.4125591760326) touched=yes total -0x1.6264cbb02c31cp-56 -> -0x1.6264cbae2a03dp-56, abserr 0x1.56ce2784626f0p-79 -> 0x1.4af4cbf682053p-79, max depth 20 -> 18
+  unconverged -> converged: (316227.7660168379, 316227.7660168379, 316227.7660168379, 329.64045755914753) touched=yes total -0x1.588c024be7cf1p-65 -> -0x1.588c025fa42d1p-65, abserr 0x1.aff567d16d488p-89 -> 0x1.af702a60cbd6fp-89, max depth 20 -> 17
+  unconverged -> converged: (316227.7660168379, 316227.7660168379, 316227.7660168379, 434.65132503921666) touched=yes total -0x1.bbf877683835cp-64 -> -0x1.bbf8777419accp-64, abserr 0x1.e654cec7acb63p-88 -> 0x1.e81daa510ca99p-88, max depth 20 -> 16
+  unconverged -> converged: (316227.7660168379, 316227.7660168379, 316227.7660168379, 996.4201622779478) touched=yes total -0x1.21132816cf333p-62 -> -0x1.2113281445048p-62, abserr 0x1.b1c6d36d0f0c7p-86 -> 0x1.ea7eadf77ccdcp-86, max depth 20 -> 14
+  unconverged -> converged: (316227.7660168379, 316227.7660168379, 316227.7660168379, 1313.8415928578513) touched=yes total 0x1.6c931409a742dp-62 -> 0x1.6c931411837a8p-62, abserr 0x1.53ec6a757d2dep-85 -> 0x1.4aa0e247c27a2p-85, max depth 20 -> 16
+  unconverged -> converged: (316227.7660168379, 316227.7660168379, 316227.7660168379, 1732.3813753196057) touched=yes total 0x1.432a62f8a170dp-63 -> 0x1.432a62f8a0d91p-63, abserr 0x1.94be8cab70d11p-87 -> 0x1.94bfa232b7fcfp-87, max depth 20 -> 16
+  unconverged -> converged: (316227.7660168379, 316227.7660168379, 316227.7660168379, 9104.29882234871) touched=yes total -0x1.6f6b112b85f84p-60 -> -0x1.6f6b11286b505p-60, abserr 0x1.88f10e765d5e6p-84 -> 0x1.753a083ea7f69p-84, max depth 20 -> 16
+  unconverged -> converged: (1000000.0, 1000000.0, 1000000.0, 329.64045755914753) touched=yes total -0x1.a4a7b36307962p-70 -> -0x1.a4a7b372eb9f0p-70, abserr 0x1.50feb18b1ae2cp-93 -> 0x1.6304e0555784ap-93, max depth 20 -> 14
+  unconverged -> converged: (1000000.0, 1000000.0, 1000000.0, 573.1146466584687) touched=yes total -0x1.4bb0ed52fd3d4p-68 -> -0x1.4bb0ed5d80f28p-68, abserr 0x1.f652a2fec491cp-92 -> 0x1.2bc92519a596ep-91, max depth 20 -> 18
+  unconverged -> converged: (1000000.0, 1000000.0, 1000000.0, 996.4201622779478) touched=yes total -0x1.19b37534bf035p-67 -> -0x1.19b375433fab5p-67, abserr 0x1.d527e4d5665cbp-91 -> 0x1.bbac831b019aep-91, max depth 20 -> 13
+  unconverged -> converged: (1000000.0, 1000000.0, 1000000.0, 1313.8415928578513) touched=yes total -0x1.0869366df0808p-68 -> -0x1.08693673833fbp-68, abserr 0x1.f8a7fed97b5c8p-92 -> 0x1.0aee0f55f1473p-91, max depth 20 -> 16
+  unconverged -> converged: (1000000.0, 1000000.0, 1000000.0, 1732.3813753196057) touched=yes total -0x1.e712f5a4fc702p-67 -> -0x1.e712f59be9097p-67, abserr 0x1.637f041e907f3p-90 -> 0x1.94c9645fc089fp-90, max depth 20 -> 15
+  unconverged -> converged: (1000000.0, 1000000.0, 1000000.0, 6904.718924492998) touched=yes total 0x1.fbac854c4b118p-65 -> 0x1.fbac855e2d8ecp-65, abserr 0x1.d25b86b58c9e6p-88 -> 0x1.e3bb0f3a584efp-88, max depth 20 -> 14
+# wrote 224 rows to /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qsi_rows.csv sha256 bc31acafee0952d20b0ec00b3506d628febfc29f06fb92a9125232b75ba3c1c8
+VERDICT: every untouched row bit-identical in every value field; the other rows tabulated

@@ -1,0 +1,156 @@
+[
+ {
+  "p1": 1,
+  "key": [
+   316227.7660168379,
+   316227.7660168379,
+   316227.7660168379,
+   249.99999999999994
+  ],
+  "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/Gpqpr-p-0-10192.pkl",
+  "pickle_sha256": "c44fc857444a5fa1ae9de135b523e72c12c9a238e9c4479955f2a64436626b33",
+  "R27_value": "-0x1.03d61621fa22ap-74",
+  "R27_abserr": "0x1.aba97d7c8a694p-101",
+  "R28_value": "-0x1.059fce8287412p-74",
+  "R28_abserr": "0x1.7c75abe62fe62p-100",
+  "R28_guard_07": {
+   "num_stationary_points": 1,
+   "num_window_pieces": 11,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "x_span": [
+    {
+     "repr": "5.5254529391317835",
+     "hex": "0x1.61a1055d4a1e2p+2"
+    },
+    {
+     "repr": "22.413544878488572",
+     "hex": "0x1.669de13c08966p+4"
+    }
+   ],
+   "windows": [
+    {
+     "lo": {
+      "repr": "9.228509122373385",
+      "hex": "0x1.274ff25cedcdap+3"
+     },
+     "hi": {
+      "repr": "9.234197095001885",
+      "hex": "0x1.277e8ae7fb3dep+3"
+     },
+     "n_cuts": 3,
+     "n_points": 1,
+     "iroff1_count": 6,
+     "stopped": true
+    }
+   ],
+   "unlocated_minima": 0,
+   "points": [
+    {
+     "x": {
+      "repr": "9.231349907086202",
+      "hex": "0x1.276737eb9bc5ap+3"
+     },
+     "kind": "root",
+     "found_as": "root",
+     "phase": 0,
+     "theta_deriv": {
+      "repr": "0.0",
+      "hex": "0x0.0p+0"
+     },
+     "lambda": null,
+     "own_window": [
+      {
+       "repr": "9.228509122373385",
+       "hex": "0x1.274ff25cedcdap+3"
+      },
+      {
+       "repr": "9.234197095001885",
+       "hex": "0x1.277e8ae7fb3dep+3"
+      }
+     ],
+     "window_pieces": 2
+    }
+   ]
+  },
+  "tolerance": 6.589177509276904e-33,
+  "out": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/p1_references/p1_row1.json"
+ },
+ {
+  "p1": 2,
+  "key": [
+   100000.0,
+   316227.7660168379,
+   316227.7660168379,
+   249.99999999999994
+  ],
+  "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/Gpqpr-p-3-20198.pkl",
+  "pickle_sha256": "a88661feace6fd2609cd534eaa912671e31d7493ed59356d6617afcd8b053056",
+  "R27_value": "0x1.2ebe63500406cp-75",
+  "R27_abserr": "0x1.29cdfa922cc79p-100",
+  "R28_value": "0x1.2f1af8c9265cap-75",
+  "R28_abserr": "0x1.5f5be60884ad3p-99",
+  "R28_guard_07": {
+   "num_stationary_points": 1,
+   "num_window_pieces": 19,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "x_span": [
+    {
+     "repr": "5.5254529391317835",
+     "hex": "0x1.61a1055d4a1e2p+2"
+    },
+    {
+     "repr": "22.413544878488572",
+     "hex": "0x1.669de13c08966p+4"
+    }
+   ],
+   "windows": [
+    {
+     "lo": {
+      "repr": "5.619663418617392",
+      "hex": "0x1.67a890c15f500p+2"
+     },
+     "hi": {
+      "repr": "5.6212007056608",
+      "hex": "0x1.67c1c09ac42d3p+2"
+     },
+     "n_cuts": 3,
+     "n_points": 1,
+     "iroff1_count": 6,
+     "stopped": true
+    }
+   ],
+   "unlocated_minima": 0,
+   "points": [
+    {
+     "x": {
+      "repr": "5.620431994441799",
+      "hex": "0x1.67b528656140dp+2"
+     },
+     "kind": "root",
+     "found_as": "root",
+     "phase": 0,
+     "theta_deriv": {
+      "repr": "0.0",
+      "hex": "0x0.0p+0"
+     },
+     "lambda": null,
+     "own_window": [
+      {
+       "repr": "5.619663418617392",
+       "hex": "0x1.67a890c15f500p+2"
+      },
+      {
+       "repr": "5.6212007056608",
+       "hex": "0x1.67c1c09ac42d3p+2"
+      }
+     ],
+     "window_pieces": 2
+    }
+   ]
+  },
+  "tolerance": 9.176812891056615e-33,
+  "out": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/p1_references/p1_row2.json"
+ }
+]

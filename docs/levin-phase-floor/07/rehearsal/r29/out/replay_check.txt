@@ -1,0 +1,441 @@
+# prompt 07 r29: the replay checked against R29, record by record
+# written 2026-11-08T13:14:04Z on mps026298.phys.susx.ac.uk
+# script replay07_r29.py sha256 192c9c42b42e9b899eddb187e0de1ca01fe40830d02840874d5415760dd069ea
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# tree o: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/replay_rows.json sha256 53d9d982e0be2d5ed5320d9f05fda500a452d1b806d754edf409c14ac9f74a77
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/replay/replay-g-0/emit.jsonl sha256 aaa099b7a40d522c880bb0a3fff854c2cc86686bdc88081b7ac7bc7bd5957284
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/replay/replay-g-1/emit.jsonl sha256 03d4849a0c11ad2494ba9f1d2d48c21a004424b9ae8c582b3cd80b643f6f2204
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/replay/replay-g-2/emit.jsonl sha256 f371b658fcb4a27e9a355774360d324938cf91ae70cadf80d627c508ec4245ad
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/replay/replay-g-3/emit.jsonl sha256 f5f356091985b9277fc3a57e83bb247184aaaf0fab9d5a68232b893e789ee3d0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/replay/replay-g-4/emit.jsonl sha256 f2135b7171b9ef3249f33ced76ff8d938311e87042ba9f1ad3e42bc1b104ad0d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/replay/replay-g-5/emit.jsonl sha256 fcdbc94e13a2aa0e9df1cd0678b66e53f0d3b5314cce70c442eb8997ee0d5da3
+records checked 470; reproduce bit for bit 470; not 0
+workers' ray_initialized at exit: {'False': 224}
+calls with a phase Rule A skipped (location_skipped_phases non-empty) in the replayed rows: 423
+  [100000.0, 100000.0, 100000.0, 333476695.529405] e+08, z in (1.7126e+09, 3.3348e+08), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '17.211078739273127', 'hex': '0x1.13609419a0f1ap+4'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 439709641.9985043] e+08, z in (1.7126e+09, 4.3971e+08), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '12.024525102568571', 'hex': '0x1.80c8e8de2ed16p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 439709641.9985043] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '16.17269351303919', 'hex': '0x1.02c35a45ebc13p+4'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 439709641.9985043] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '16.17269351303919', 'hex': '0x1.02c35a45ebc13p+4'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 439709641.9985043] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '14.364600765257178', 'hex': '0x1.cbaacf395c097p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 439709641.9985043] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '14.364600765257178', 'hex': '0x1.cbaacf395c097p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 579784350.3262237] e+08, z in (1.7126e+09, 5.7978e+08), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '8.095444887860207', 'hex': '0x1.030de26ffdc26p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 579784350.3262237] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '12.233041616169736', 'hex': '0x1.877513b101cacp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 579784350.3262237] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '12.233041616169736', 'hex': '0x1.877513b101cacp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 579784350.3262237] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '10.456356534350622', 'hex': '0x1.4e9a7904cb422p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 579784350.3262237] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '10.456356534350622', 'hex': '0x1.4e9a7904cb422p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 764481514.1086781] e+08, z in (1.7126e+09, 7.6448e+08), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '5.121468926569194', 'hex': '0x1.47c6259ac6131p+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 764481514.1086781] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '9.245199112845617', 'hex': '0x1.27d8abcf55c3bp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 764481514.1086781] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '9.245199112845617', 'hex': '0x1.27d8abcf55c3bp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 764481514.1086781] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '7.509926622040096', 'hex': '0x1.e0a2a3454167ep+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 764481514.1086781] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '7.509926622040096', 'hex': '0x1.e0a2a3454167ep+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1008016144.4251784] 8e+09, z in (1.7126e+09, 1.008e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '2.8737267848455694', 'hex': '0x1.6fd6477f46858p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1008016144.4251784] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '6.979211840488062', 'hex': '0x1.beab6823b023fp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1008016144.4251784] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '6.979211840488062', 'hex': '0x1.beab6823b023fp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1008016144.4251784] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '5.298543758727174', 'hex': '0x1.531b57480a1ecp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1008016144.4251784] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '5.298543758727174', 'hex': '0x1.531b57480a1ecp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1329131612.3012946] 291e+09, z in (1.7126e+09, 1.3291e+09), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '8.98759836832543', 'hex': '0x1.1f9a67e4b14d5p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1329131612.3012946] 291e+09, z in (1.7126e+09, 1.3291e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1329131612.3012946] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '5.2606816495313735', 'hex': '0x1.50af0215d9e4bp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1329131612.3012946] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '5.2606816495313735', 'hex': '0x1.50af0215d9e4bp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1329131612.3012946] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '3.652011403486714', 'hex': '0x1.d3751c134c188p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1329131612.3012946] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '3.652011403486714', 'hex': '0x1.d3751c134c188p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1752542211.3413053] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '3.9573443724077073', 'hex': '0x1.fa8a42a940188p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1752542211.3413053] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '3.9573443724077073', 'hex': '0x1.fa8a42a940188p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1752542211.3413053] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '2.443601057685828', 'hex': '0x1.38c7eb619da66p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 1752542211.3413053] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '2.443601057685828', 'hex': '0x1.38c7eb619da66p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 2310835265.753073] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '2.9688904478011056', 'hex': '0x1.7c049a295b34ap+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 2310835265.753073] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '2.9688904478011056', 'hex': '0x1.7c049a295b34ap+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 2310835265.753073] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 2310835265.753073] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 2310835265.753073] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 2310835265.753073] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 2310835265.753073] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.5802886963597103', 'hex': '0x1.948dcccd1a7a6p+0'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 2310835265.753073] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.5802886963597103', 'hex': '0x1.948dcccd1a7a6p+0'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '2.2192448152834343', 'hex': '0x1.1c1036cfbade6p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '2.2192448152834343', 'hex': '0x1.1c1036cfbade6p+1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.9955503788805842', 'hex': '0x1.fdb8c77da0026p-1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 3046979177.3866296] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.9955503788805842', 'hex': '0x1.fdb8c77da0026p-1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.6507119451843768', 'hex': '0x1.a6950edbaef62p+0'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.6507119451843768', 'hex': '0x1.a6950edbaef62p+0'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '14.24950026751882', 'hex': '0x1.c7fbe7fc2ac55p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '14.24950026751882', 'hex': '0x1.c7fbe7fc2ac55p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.6440723614507785', 'hex': '0x1.49c3da41608e3p-1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 4017630440.8276954] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.6440723614507785', 'hex': '0x1.49c3da41608e3p-1'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '16.985936926633727', 'hex': '0x1.0fc665cc7cf84p+4'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '16.985936926633727', 'hex': '0x1.0fc665cc7cf84p+4'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.219535402076247', 'hex': '0x1.383378dc3b502p+0'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.219535402076247', 'hex': '0x1.383378dc3b502p+0'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '8.52872928105505', 'hex': '0x1.10eb59ab52358p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '8.52872928105505', 'hex': '0x1.10eb59ab52358p+3'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.4976391141663093', 'hex': '0x1.fd951ba238059p-2'}}]; points 0, guarded 0
+  [100000.0, 100000.0, 100000.0, 5297494147.272005] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.4976391141663093', 'hex': '0x1.fd951ba238059p-2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 249.99999999999994] response=250, z in (5.463e+13, 5.421e+09), regime G, group G: skipped [{'phase': 0, 'variation': {'repr': '8.549059535950407', 'hex': '0x1.1191e54dced89p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 1329131612.3012946] 3291e+09, z in (5.421e+09, 1.3291e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 1752542211.3413053] 7525e+09, z in (5.421e+09, 1.7525e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 2310835265.753073] 3108e+09, z in (5.421e+09, 2.3108e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 2310835265.753073] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 2310835265.753073] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 2310835265.753073] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 2310835265.753073] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] 3.047e+09, z in (5.421e+09, 3.047e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] 0176e+09, z in (5.421e+09, 4.0176e+09), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '10.87189677785704', 'hex': '0x1.5be694124c47dp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] 0176e+09, z in (5.421e+09, 4.0176e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] 2975e+09, z in (5.421e+09, 5.2975e+09), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '0.7248943998058268', 'hex': '0x1.73255bd8706c2p-1'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] 2975e+09, z in (5.421e+09, 5.2975e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '11.550518420944506', 'hex': '0x1.719dd8ceb9abcp+3'}}]; points 0, guarded 0
+  [100000.0, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '11.550518420944506', 'hex': '0x1.719dd8ceb9abcp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 1329131612.3012946] 291e+09, z in (1.7159e+10, 1.3291e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 1752542211.3413053] 525e+09, z in (1.7159e+10, 1.7525e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 2310835265.753073] 108e+09, z in (1.7159e+10, 2.3108e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 2310835265.753073] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 2310835265.753073] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 2310835265.753073] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 2310835265.753073] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '15.814593503704206', 'hex': '0x1.fa1126653e322p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] .047e+09, z in (1.7159e+10, 3.047e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '14.345423994859736', 'hex': '0x1.cb0db69f25a3cp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 3046979177.3866296] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '10.96880821511615', 'hex': '0x1.5f007a1600a3dp+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] 176e+09, z in (1.7159e+10, 4.0176e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '10.670369750993517', 'hex': '0x1.5573ab4397d59p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.29375414855812', 'hex': '0x1.d2ccde3347c5ep+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] 975e+09, z in (1.7159e+10, 5.2975e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.88320076227874', 'hex': '0x1.f8865c7d72868p+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '4.506585281220338', 'hex': '0x1.206be4abde7bfp+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] 851e+09, z in (1.7159e+10, 6.9851e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '5.769405906776024', 'hex': '0x1.713df245bcf1ap+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '5.769405906776024', 'hex': '0x1.713df245bcf1ap+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '5.769405906776024', 'hex': '0x1.713df245bcf1ap+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '5.769405906776024', 'hex': '0x1.713df245bcf1ap+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '2.3927905069960356', 'hex': '0x1.3246f596dd15fp+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '2.3927905069960356', 'hex': '0x1.3246f596dd15fp+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '2.3927905069960356', 'hex': '0x1.3246f596dd15fp+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '2.3927905069960356', 'hex': '0x1.3246f596dd15fp+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] 103e+09, z in (1.7159e+10, 9.2103e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '4.1662994516892216', 'hex': '0x1.0aa4a6749644ap+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '4.1662994516892216', 'hex': '0x1.0aa4a6749644ap+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '4.1662994516892216', 'hex': '0x1.0aa4a6749644ap+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '4.1662994516892216', 'hex': '0x1.0aa4a6749644ap+2'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '9.869733446819938', 'hex': '0x1.3bd4db3cca871p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '9.869733446819938', 'hex': '0x1.3bd4db3cca871p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '0.7896841043863764', 'hex': '0x1.9451799505651p-1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '0.7896841043863764', 'hex': '0x1.9451799505651p-1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '0.7896841043863764', 'hex': '0x1.9451799505651p-1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '0.7896841043863764', 'hex': '0x1.9451799505651p-1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '8.290365238047185', 'hex': '0x1.094aac0a29da7p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '8.290365238047185', 'hex': '0x1.094aac0a29da7p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 12144285945.556408] 144e+10, z in (1.7159e+10, 1.2144e+10), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '12.842148811549393', 'hex': '0x1.9af2e2107f098p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 12144285945.556408] 144e+10, z in (1.7159e+10, 1.2144e+10), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 12144285945.556408] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '2.9505001704993425', 'hex': '0x1.79a9fd55918c8p+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 12144285945.556408] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '2.9505001704993425', 'hex': '0x1.79a9fd55918c8p+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 12144285945.556408] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '2.9505001704993425', 'hex': '0x1.79a9fd55918c8p+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 12144285945.556408] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '2.9505001704993425', 'hex': '0x1.79a9fd55918c8p+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 13627426843.66573] 627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '8.056950288522884', 'hex': '0x1.01d2896956838p+3'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 13627426843.66573] 627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 13627426843.66573] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '2.535128659109958', 'hex': '0x1.447f188d03ca0p+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 13627426843.66573] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '2.535128659109958', 'hex': '0x1.447f188d03ca0p+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 13627426843.66573] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '2.535128659109958', 'hex': '0x1.447f188d03ca0p+1'}}]; points 0, guarded 0
+  [100000.0, 1000000.0, 1000000.0, 13627426843.66573] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '2.535128659109958', 'hex': '0x1.447f188d03ca0p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1008016144.4251784] 08e+09, z in (5.421e+09, 1.008e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '18.206680403381704', 'hex': '0x1.234e901c53f9ep+4'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] 1e+09, z in (5.421e+09, 1.3291e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '12.77986167253679', 'hex': '0x1.98f4a0775e614p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '16.925427180447738', 'hex': '0x1.0ece8cbb2da3fp+4'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '16.925427180447738', 'hex': '0x1.0ece8cbb2da3fp+4'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '15.112984154245268', 'hex': '0x1.e39d90f1ee638p+3'}}]; points 0, guarded 1
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '15.112984154245268', 'hex': '0x1.e39d90f1ee638p+3'}}]; points 0, guarded 1
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1752542211.3413053] 5e+09, z in (5.421e+09, 1.7525e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '8.668391154527761', 'hex': '0x1.156375d8b43ccp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1752542211.3413053] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '12.803912580673396', 'hex': '0x1.99b9a6e05ab9fp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1752542211.3413053] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '12.803912580673396', 'hex': '0x1.99b9a6e05ab9fp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1752542211.3413053] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '11.021491449824001', 'hex': '0x1.60b00ed644682p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 1752542211.3413053] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '11.021491449824001', 'hex': '0x1.60b00ed644682p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 2310835265.753073] 8e+09, z in (5.421e+09, 2.3108e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '5.5558444816430494', 'hex': '0x1.6392f4bb946a0p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 2310835265.753073] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '9.678146640757095', 'hex': '0x1.35b360957e352p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 2310835265.753073] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '9.678146640757095', 'hex': '0x1.35b360957e352p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 2310835265.753073] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '7.935310677045628', 'hex': '0x1.fbdc215060ad8p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 2310835265.753073] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '7.935310677045628', 'hex': '0x1.fbdc215060ad8p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 3046979177.3866296] 47e+09, z in (5.421e+09, 3.047e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '3.202675808834239', 'hex': '0x1.99f147e951136p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '7.307558877693752', 'hex': '0x1.d3af0b6e52811p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '7.307558877693752', 'hex': '0x1.d3af0b6e52811p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '5.616918309768179', 'hex': '0x1.677b96ef3081ep+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 3046979177.3866296] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '5.616918309768179', 'hex': '0x1.677b96ef3081ep+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] 0176e+09, z in (5.421e+09, 4.3052e+09), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '8.064769715932481', 'hex': '0x1.021297f076706p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] 0176e+09, z in (5.421e+09, 4.3052e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] e+09, z in (4.3052e+09, 4.0176e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '0.370189164980616', 'hex': '0x1.7b12de53b3805p-2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] e+09, z in (4.3052e+09, 4.0176e+09), regime Gqr, group G+q-r: skipped [{'phase': 0, 'variation': {'repr': '2.4369378942913507', 'hex': '0x1.37ed94b72ea68p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] e+09, z in (4.3052e+09, 4.0176e+09), regime Gqr, group G-q+r: skipped [{'phase': 0, 'variation': {'repr': '2.4369378942913507', 'hex': '0x1.37ed94b72ea68p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] e+09, z in (4.3052e+09, 4.0176e+09), regime Gqr, group G-q-r: skipped [{'phase': 0, 'variation': {'repr': '5.244064953563318', 'hex': '0x1.4f9ec29c69de9p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '5.509699993145526', 'hex': '0x1.609eecb85536ap+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '5.509699993145526', 'hex': '0x1.609eecb85536ap+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '3.8878808126106206', 'hex': '0x1.f1a61416744a6p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '3.8878808126106206', 'hex': '0x1.f1a61416744a6p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005] 2975e+09, z in (5.421e+09, 5.2975e+09), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '0.7248943998058268', 'hex': '0x1.73255bd8706c2p-1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005] 2975e+09, z in (5.421e+09, 5.2975e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '4.146199978865413', 'hex': '0x1.095b5727f9c82p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '4.146199978865413', 'hex': '0x1.095b5727f9c82p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '2.6151208701754722', 'hex': '0x1.4ebc47da3ecfcp+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '2.6151208701754722', 'hex': '0x1.4ebc47da3ecfcp+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '3.1121186875508062', 'hex': '0x1.8e59e7b8268c4p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '3.1121186875508062', 'hex': '0x1.8e59e7b8268c4p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '16.74043534857313', 'hex': '0x1.0bd8d2bc6ec88p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '16.74043534857313', 'hex': '0x1.0bd8d2bc6ec88p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '16.74043534857313', 'hex': '0x1.0bd8d2bc6ec88p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '16.74043534857313', 'hex': '0x1.0bd8d2bc6ec88p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.7006655505022361', 'hex': '0x1.b35ed148d747ep+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 6985073578.494601] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.7006655505022361', 'hex': '0x1.b35ed148d747ep+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '15.047583496109903', 'hex': '0x1.e185cdd2f3e25p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '15.047583496109903', 'hex': '0x1.e185cdd2f3e25p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '15.047583496109903', 'hex': '0x1.e185cdd2f3e25p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '15.047583496109903', 'hex': '0x1.e185cdd2f3e25p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '2.32786926815494', 'hex': '0x1.29f79ec40b61dp+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '2.32786926815494', 'hex': '0x1.29f79ec40b61dp+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '11.670967680721237', 'hex': '0x1.75789136abdcap+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '11.670967680721237', 'hex': '0x1.75789136abdcap+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '11.670967680721237', 'hex': '0x1.75789136abdcap+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '11.670967680721237', 'hex': '0x1.75789136abdcap+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.074070480043352', 'hex': '0x1.12f64871629dap+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 9210251401.997091] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.074070480043352', 'hex': '0x1.12f64871629dap+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '11.20288844348937', 'hex': '0x1.667e0fe7b0bdfp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '11.20288844348937', 'hex': '0x1.667e0fe7b0bdfp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '11.20288844348937', 'hex': '0x1.667e0fe7b0bdfp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '11.20288844348937', 'hex': '0x1.667e0fe7b0bdfp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.733092873610499', 'hex': '0x1.bbabf97d16771p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.733092873610499', 'hex': '0x1.bbabf97d16771p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '15.357326836337027', 'hex': '0x1.eb6f38b0819f2p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '15.357326836337027', 'hex': '0x1.eb6f38b0819f2p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.82627281643777', 'hex': '0x1.f4e1a7610b236p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.82627281643777', 'hex': '0x1.f4e1a7610b236p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.82627281643777', 'hex': '0x1.f4e1a7610b236p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.82627281643777', 'hex': '0x1.f4e1a7610b236p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.6868616006496209', 'hex': '0x1.5fac52df562fep-1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 12144285945.556408] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.6868616006496209', 'hex': '0x1.5fac52df562fep-1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '9.889368345334638', 'hex': '0x1.3c75b49aa9eacp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '9.889368345334638', 'hex': '0x1.3c75b49aa9eacp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '9.889368345334638', 'hex': '0x1.3c75b49aa9eacp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '9.889368345334638', 'hex': '0x1.3c75b49aa9eacp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.529890607253995', 'hex': '0x1.87a6e92c9d0dap+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.529890607253995', 'hex': '0x1.87a6e92c9d0dap+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '12.631768907243083', 'hex': '0x1.9437736d67a37p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '12.631768907243083', 'hex': '0x1.9437736d67a37p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '6.512752778239849', 'hex': '0x1.a0d0f1075e4a7p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '6.512752778239849', 'hex': '0x1.a0d0f1075e4a7p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '6.512752778239849', 'hex': '0x1.a0d0f1075e4a7p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '6.512752778239849', 'hex': '0x1.a0d0f1075e4a7p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.588343745848863', 'hex': '0x1.2d3b64367439ap-1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 13627426843.66573] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.588343745848863', 'hex': '0x1.2d3b64367439ap-1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '15.709678947812801', 'hex': '0x1.f6b5b09ff0806p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '15.709678947812801', 'hex': '0x1.f6b5b09ff0806p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.290887372975503', 'hex': '0x1.d29de6126ff1ep+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.290887372975503', 'hex': '0x1.d29de6126ff1ep+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.290887372975503', 'hex': '0x1.d29de6126ff1ep+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.290887372975503', 'hex': '0x1.d29de6126ff1ep+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.1279042018617964', 'hex': '0x1.20be546c04743p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.1279042018617964', 'hex': '0x1.20be546c04743p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '7.337516879644757', 'hex': '0x1.d599e065fb055p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '7.337516879644757', 'hex': '0x1.d599e065fb055p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '3.91427191580042', 'hex': '0x1.f506dcb501cd1p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '3.91427191580042', 'hex': '0x1.f506dcb501cd1p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '3.91427191580042', 'hex': '0x1.f506dcb501cd1p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '3.91427191580042', 'hex': '0x1.f506dcb501cd1p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.4910534412918208', 'hex': '0x1.f6d6b69bbf1b0p-2'}}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 17968604880.3992] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.4910534412918208', 'hex': '0x1.f6d6b69bbf1b0p-2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 249.99999999999994] esponse=250, z in (5.463e+13, 1.7159e+10), regime G, group G: skipped [{'phase': 0, 'variation': {'repr': '8.538985247475011', 'hex': '0x1.113f5dfd5dd00p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 4017630440.8276954] 176e+09, z in (1.7159e+10, 4.3052e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 4017630440.8276954] e+09, z in (4.3052e+09, 4.0176e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '6.459347828411525', 'hex': '0x1.9d65f46f21082p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 4017630440.8276954] e+09, z in (4.3052e+09, 4.0176e+09), regime Gqr, group G+q-r: skipped [{'phase': 0, 'variation': {'repr': '2.4369378942913507', 'hex': '0x1.37ed94b72ea68p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 4017630440.8276954] e+09, z in (4.3052e+09, 4.0176e+09), regime Gqr, group G-q+r: skipped [{'phase': 0, 'variation': {'repr': '2.4369378942913507', 'hex': '0x1.37ed94b72ea68p+1'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 4017630440.8276954] e+09, z in (4.3052e+09, 4.0176e+09), regime Gqr, group G-q-r: skipped [{'phase': 0, 'variation': {'repr': '11.333223616994227', 'hex': '0x1.6aa9c49327d75p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 5297494147.272005] 975e+09, z in (1.7159e+10, 5.2975e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 6985073578.494601] 851e+09, z in (1.7159e+10, 6.9851e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 6985073578.494601] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '16.74043534857313', 'hex': '0x1.0bd8d2bc6ec88p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 6985073578.494601] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '16.74043534857313', 'hex': '0x1.0bd8d2bc6ec88p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 6985073578.494601] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '16.74043534857313', 'hex': '0x1.0bd8d2bc6ec88p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 6985073578.494601] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '16.74043534857313', 'hex': '0x1.0bd8d2bc6ec88p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] 103e+09, z in (1.7159e+10, 9.2103e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '15.047583496109903', 'hex': '0x1.e185cdd2f3e25p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '15.047583496109903', 'hex': '0x1.e185cdd2f3e25p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '15.047583496109903', 'hex': '0x1.e185cdd2f3e25p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '15.047583496109903', 'hex': '0x1.e185cdd2f3e25p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '11.670967680721237', 'hex': '0x1.75789136abdcap+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '11.670967680721237', 'hex': '0x1.75789136abdcap+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '11.670967680721237', 'hex': '0x1.75789136abdcap+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 9210251401.997091] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '11.670967680721237', 'hex': '0x1.75789136abdcap+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] 144e+10, z in (1.7159e+10, 1.2144e+10), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '12.842148811549393', 'hex': '0x1.9af2e2107f098p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] 144e+10, z in (1.7159e+10, 1.2144e+10), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '11.20288844348937', 'hex': '0x1.667e0fe7b0bdfp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '11.20288844348937', 'hex': '0x1.667e0fe7b0bdfp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '11.20288844348937', 'hex': '0x1.667e0fe7b0bdfp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '11.20288844348937', 'hex': '0x1.667e0fe7b0bdfp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.82627281643777', 'hex': '0x1.f4e1a7610b236p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.82627281643777', 'hex': '0x1.f4e1a7610b236p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.82627281643777', 'hex': '0x1.f4e1a7610b236p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 12144285945.556408] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.82627281643777', 'hex': '0x1.f4e1a7610b236p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] 627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '8.056950288522884', 'hex': '0x1.01d2896956838p+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] 627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '9.889368345334638', 'hex': '0x1.3c75b49aa9eacp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '9.889368345334638', 'hex': '0x1.3c75b49aa9eacp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '9.889368345334638', 'hex': '0x1.3c75b49aa9eacp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '9.889368345334638', 'hex': '0x1.3c75b49aa9eacp+3'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '6.512752778239849', 'hex': '0x1.a0d0f1075e4a7p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '6.512752778239849', 'hex': '0x1.a0d0f1075e4a7p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '6.512752778239849', 'hex': '0x1.a0d0f1075e4a7p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '6.512752778239849', 'hex': '0x1.a0d0f1075e4a7p+2'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '16.79978339325385', 'hex': '0x1.0ccbe9abde8c1p+4'}}]; points 0, guarded 0
+  [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '16.79978339325385', 'hex': '0x1.0ccbe9abde8c1p+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] e+09, z in (1.7159e+10, 4.0176e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '13.569897212063449', 'hex': '0x1.b23c9913fc9c6p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '17.71289237352296', 'hex': '0x1.1b6801d55d953p+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '17.71289237352296', 'hex': '0x1.1b6801d55d953p+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '15.896291130748331', 'hex': '0x1.fcae6abcc8494p+3'}}]; points 0, guarded 1
+  [1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '15.896291130748331', 'hex': '0x1.fcae6abcc8494p+3'}}]; points 0, guarded 1
+  [1000000.0, 1000000.0, 1000000.0, 5297494147.272005] e+09, z in (1.7159e+10, 5.2975e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '9.26771101985629', 'hex': '0x1.289116b361f86p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '13.401126480620341', 'hex': '0x1.acd607337a5dcp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '13.401126480620341', 'hex': '0x1.acd607337a5dcp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '11.613222368741505', 'hex': '0x1.739f84845d741p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 5297494147.272005] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '11.613222368741505', 'hex': '0x1.739f84845d741p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 6985073578.494601] e+09, z in (1.7159e+10, 6.9851e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '6.010282232470736', 'hex': '0x1.80a876cf0c448p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '10.131074128522858', 'hex': '0x1.4431c25eeb6fap+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '10.131074128522858', 'hex': '0x1.4431c25eeb6fap+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '8.381008791146733', 'hex': '0x1.0c3139592ed6cp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 6985073578.494601] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '8.381008791146733', 'hex': '0x1.0c3139592ed6cp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 9210251401.997091] e+09, z in (1.7159e+10, 9.2103e+09), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '3.5469104987582396', 'hex': '0x1.c60129c900ba6p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '7.6510595762018', 'hex': '0x1.e9aaf5c8e232dp+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '7.6510595762018', 'hex': '0x1.e9aaf5c8e232dp+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '5.950886570503545', 'hex': '0x1.7cdb5358a12c4p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 9210251401.997091] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '5.950886570503545', 'hex': '0x1.7cdb5358a12c4p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 12144285945.556408] e+10, z in (1.7159e+10, 1.2144e+10), regime Gqr, group G+q+r: skipped [{'phase': 0, 'variation': {'repr': '1.6880112273576713', 'hex': '0x1.b02180f8c8326p+0'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 12144285945.556408] e+10, z in (1.7159e+10, 1.2144e+10), regime Gqr, group G+q-r: skipped [{'phase': 0, 'variation': {'repr': '11.154137584191723', 'hex': '0x1.64eeb1f166034p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 12144285945.556408] e+10, z in (1.7159e+10, 1.2144e+10), regime Gqr, group G-q+r: skipped [{'phase': 0, 'variation': {'repr': '11.154137584191723', 'hex': '0x1.64eeb1f166034p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 12144285945.556408] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '5.770211375478707', 'hex': '0x1.714b24a72c0bep+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 12144285945.556408] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '5.770211375478707', 'hex': '0x1.714b24a72c0bep+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 12144285945.556408] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '4.135823546979934', 'hex': '0x1.08b1553f138dep+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 12144285945.556408] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '4.135823546979934', 'hex': '0x1.08b1553f138dep+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 13627426843.66573] 627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q+r: skipped [{'phase': 0, 'variation': {'repr': '8.056950288522884', 'hex': '0x1.01d2896956838p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 13627426843.66573] 627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r: skipped [{'phase': 0, 'variation': {'repr': '0.0', 'hex': '0x0.0p+0'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 13627426843.66573] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '5.127629356880079', 'hex': '0x1.482b145273ce1p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 13627426843.66573] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '5.127629356880079', 'hex': '0x1.482b145273ce1p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 13627426843.66573] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '3.526494690025618', 'hex': '0x1.c3642d9196be7p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 13627426843.66573] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '3.526494690025618', 'hex': '0x1.c3642d9196be7p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 17968604880.3992] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '3.8564366683290654', 'hex': '0x1.ed9fb77cc8c5cp+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 17968604880.3992] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '3.8564366683290654', 'hex': '0x1.ed9fb77cc8c5cp+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 17968604880.3992] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '2.35262841594792', 'hex': '0x1.2d22ed8d117c2p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 17968604880.3992] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '2.35262841594792', 'hex': '0x1.2d22ed8d117c2p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '18.69651870140824', 'hex': '0x1.2b24f0cb399cdp+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '18.69651870140824', 'hex': '0x1.2b24f0cb399cdp+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '18.69651870140824', 'hex': '0x1.2b24f0cb399cdp+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '18.69651870140824', 'hex': '0x1.2b24f0cb399cdp+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '2.8923615089255987', 'hex': '0x1.7238e6e485b76p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '2.8923615089255987', 'hex': '0x1.7238e6e485b76p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '15.319902693310382', 'hex': '0x1.ea3ca492b5740p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '15.319902693310382', 'hex': '0x1.ea3ca492b5740p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '15.319902693310382', 'hex': '0x1.ea3ca492b5740p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '15.319902693310382', 'hex': '0x1.ea3ca492b5740p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.516855370891365', 'hex': '0x1.8450a232bd887p+0'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 23692716537.8973] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.516855370891365', 'hex': '0x1.8450a232bd887p+0'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '13.970248225922402', 'hex': '0x1.bf0c4601ead6fp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '13.970248225922402', 'hex': '0x1.bf0c4601ead6fp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '13.970248225922402', 'hex': '0x1.bf0c4601ead6fp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '13.970248225922402', 'hex': '0x1.bf0c4601ead6fp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '2.161204921841979', 'hex': '0x1.14a25ce5a1fd1p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '2.161204921841979', 'hex': '0x1.14a25ce5a1fd1p+1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '10.593632465012732', 'hex': '0x1.52ff0982e25a8p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '10.593632465012732', 'hex': '0x1.52ff0982e25a8p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '10.593632465012732', 'hex': '0x1.52ff0982e25a8p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '10.593632465012732', 'hex': '0x1.52ff0982e25a8p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.9547603646355328', 'hex': '0x1.e8d659bb40d81p-1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 31240311681.4866] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.9547603646355328', 'hex': '0x1.e8d659bb40d81p-1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '10.648146511463828', 'hex': '0x1.54bd9dc0b81dcp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '10.648146511463828', 'hex': '0x1.54bd9dc0b81dcp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '10.648146511463828', 'hex': '0x1.54bd9dc0b81dcp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '10.648146511463828', 'hex': '0x1.54bd9dc0b81dcp+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.647273998064603', 'hex': '0x1.a5b3bfad3d175p+0'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.647273998064603', 'hex': '0x1.a5b3bfad3d175p+0'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '14.20334706730677', 'hex': '0x1.c681d1b57a3e3p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '14.20334706730677', 'hex': '0x1.c681d1b57a3e3p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '7.271530910046821', 'hex': '0x1.d160c32ea0451p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '7.271530910046821', 'hex': '0x1.d160c32ea0451p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '7.271530910046821', 'hex': '0x1.d160c32ea0451p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '7.271530910046821', 'hex': '0x1.d160c32ea0451p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.6423656507977186', 'hex': '0x1.48e4268c7ffa7p-1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 40253855455.98643] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.6423656507977186', 'hex': '0x1.48e4268c7ffa7p-1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '18.29646874776774', 'hex': '0x1.24be56037f2d2p+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '18.29646874776774', 'hex': '0x1.24be56037f2d2p+4'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '8.49142069715646', 'hex': '0x1.0fb9b7e5dbaa2p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '8.49142069715646', 'hex': '0x1.0fb9b7e5dbaa2p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '8.49142069715646', 'hex': '0x1.0fb9b7e5dbaa2p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '8.49142069715646', 'hex': '0x1.0fb9b7e5dbaa2p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '1.3136273534548233', 'hex': '0x1.5049e1da38311p+0'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '1.3136273534548233', 'hex': '0x1.5049e1da38311p+0'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic J1: skipped [{'phase': 0, 'variation': {'repr': '9.762890870549372', 'hex': '0x1.38699a1d6da61p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic Y1: skipped [{'phase': 0, 'variation': {'repr': '9.762890870549372', 'hex': '0x1.38699a1d6da61p+3'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic J2: skipped [{'phase': 0, 'variation': {'repr': '5.114805190804794', 'hex': '0x1.4758f7defaba7p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic Y2: skipped [{'phase': 0, 'variation': {'repr': '5.114805190804794', 'hex': '0x1.4758f7defaba7p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic J3: skipped [{'phase': 0, 'variation': {'repr': '5.114805190804794', 'hex': '0x1.4758f7defaba7p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic Y3: skipped [{'phase': 0, 'variation': {'repr': '5.114805190804794', 'hex': '0x1.4758f7defaba7p+2'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic J4: skipped [{'phase': 0, 'variation': {'repr': '0.5153608731128612', 'hex': '0x1.07dd615f50c3ep-1'}}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 49531657077.16097] analytic Y4: skipped [{'phase': 0, 'variation': {'repr': '0.5153608731128612', 'hex': '0x1.07dd615f50c3ep-1'}}]; points 0, guarded 0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/replay_calls.csv sha256 2c74cc9c68a8bee27f8b29a31600d94b055362adfe23abac59b25ad495ea4ea9 (470 lines) and /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/replay_calls.checks.json sha256 cd28ea6da6f0bf7bf66fb3c2e7075ddf7048d2e959bbd9c9ca3b63a35a404e72

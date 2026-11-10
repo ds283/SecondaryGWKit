@@ -1,0 +1,5 @@
+3e5 J4 R27 7.4e-05 (abserr/staterr 1.5e+04)|R28 4.4e-05 (abserr/staterr 1.99e+03)|R29 1.5e-06 (abserr/staterr 2.9e+05)
+3e5 Y4 R27 1.6e-05 (abserr/staterr 4.83e+04)|R28 0.00058 (abserr/staterr 3.01e+03)|R29 0.00037 (abserr/staterr 3.41e+03)
+1e6 J4 R27 0.0001 (abserr/staterr 4.9e+04)|R28 0.00021 (abserr/staterr 6.89e+03)|R29 3.1e-06 (abserr/staterr 5.18e+05)
+1e6 Y4 R27 0 (abserr/staterr 9.29e+04)|R28 0.00062 (abserr/staterr 2.7e+03)|R29 5.1e-05 (abserr/staterr 3.28e+03)
+SIX_PI 18.84955592153876 V 3e5 15.112984154245268 gate 19.159572454953185 V 1e6 15.896291130748331 gate 20.195797752642036

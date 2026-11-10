@@ -1,0 +1,12 @@
+{
+ "name": "dev1",
+ "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/dev1_spec.json",
+ "spec_sha256": "f4baec1929187677c7e18020ba7b794b49fa9ba49da3db020442410c772587fe",
+ "wall_s": 160.51771903038025,
+ "workers": {
+  "dev-g": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/dev1/dev-g/emit.jsonl"
+  }
+ }
+}

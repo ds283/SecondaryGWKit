@@ -1,0 +1,52 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/extra_descriptive_07.py state/score_07_units.json out/scores/extra_descriptive.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:20:33Z
+# ----
+{
+ "calls_with_a_skipped_phase": {
+  "1e-7|analytic|scanned=True|locates=False|guards=False": 4950,
+  "1e-7|analytic|scanned=True|locates=False|guards=True": 14,
+  "1e-7|group|scanned=True|locates=False|guards=False": 3260,
+  "1e-8|analytic|scanned=False|locates=False|guards=False": 4950,
+  "1e-8|analytic|scanned=False|locates=False|guards=True": 14,
+  "1e-8|group|scanned=True|locates=False|guards=False": 3260
+ },
+ "edge_ratio_by_kind": {
+  "analytic|root": {
+   "n": 6056,
+   "min": 1.1800770438827515,
+   "median": 8.085341656064898,
+   "max": 8.085356710053405,
+   "n_within_1e-3_of_4pi": 0
+  },
+  "group|minimum": {
+   "n": 9616,
+   "min": 1.620338189140791e-06,
+   "median": 6.283182739143909,
+   "max": 6.283194425795233,
+   "n_within_1e-3_of_4pi": 0
+  },
+  "group|root": {
+   "n": 2880,
+   "min": 12.516454097186847,
+   "median": 12.566365367359472,
+   "max": 12.617122519370549,
+   "n_within_1e-3_of_4pi": 2376
+  }
+ },
+ "minima_calls": {
+  "1e-7|group|G|minima=19": 76,
+  "1e-7|group|G|minima=6": 160,
+  "1e-8|group|G|minima=19": 76,
+  "1e-8|group|G|minima=6": 160
+ },
+ "minima_calls_by_rtol": {
+  "1e-7": 236,
+  "1e-8": 236
+ }
+}
+wrote out/scores/extra_descriptive.json sha256 9743dfddfe0335c9cb880d7e271f39fca8db6e4cbc9f4c97d702342049b94ef0
+# ----
+# end 2026-11-09T00:20:34Z
+# exit 0

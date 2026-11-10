@@ -598,13 +598,18 @@ the rules unchanged):
   at $512\pi$); V1's twelve are honest at every rung where they finish (59 of 60).
 - **The constants:** settled by the second run (above).
 
-**§5's rules S0–S2, copied from the prompt unchanged. Not yet scored** (Part B, on the Mac Studio):
+**§5's rules S0–S2, copied from the prompt unchanged.** Scored in Part B on the Mac Studio on
+2026-11-08; each verdict follows its rule, and the Part B record at the end of this log has the
+detail. Under §10, R29 (at `e182bc7a`, Rule A's code) takes R28's place:
 
 3. **S0 — R27 against 06m's R26.** R26 (`var/datastores/levin-phase-floor-06m-r26*`, kept on the
    Mac Studio) was built at 06m's code, the parent's. `tools.store_value_diff` on R26 and R27: every
    value table identical, every `QuadSourceIntegral` value field identical, and every other
    difference of the four volatile kinds. **Holds** if so. A difference is a finding for the user,
    reported before R28 is scored.
+   — **Holds.** R27 equals R26 in all seven value tables (360,462 rows) and in all 864
+   `QuadSourceIntegral` rows, every value field (118,776) and counter field (27,163) bit-identical;
+   the labels differ only by the job-name prefix and the stamp (normalised in a copy).
 4. **R28 against R27.** `tools.store_value_diff` with `--json`, with 05's `classify_non_qsi.py`.
    - **Outside `QuadSourceIntegral`:** every value table identical, every other difference of the
      four volatile kinds, no row in one store only.
@@ -618,11 +623,22 @@ the rules unchanged):
        each.
    - **The stationary-point rows'** convergence in each store, and the rows whose `total_converged`
      changes, in each direction.
+
+   — **Holds, and tabulated.** R28 against R27: outside `QuadSourceIntegral` 360,462 rows identical,
+   0 unclassified; 640 untouched rows, all bit-identical; 224 tabulated, with the kind and $z$ of
+   every located point from the replay (470 of 470 records bit for bit). **R29 against R27** (§10):
+   692 untouched rows, all bit-identical; 172 tabulated; the largest move $7.38\times10^4$ of R27's
+   `total_abserr`, at $(10^6)^3$, $z = 2284.25$; `total_converged` 845 → 862, 17 rows gained and none
+   lost. R29 against R28 (the note's §B.7 rule) fails as written on the 4 guarded analytic blocks,
+   which the user ruled findings; the rule was the orchestrator's error (the note's §B.8).
 5. **S1 — V1's twelve.** w00–w11 are R24's rows, so R27's and R28's too. Each w call, the `G+q+r`
    group of its row's sub-interval 1, is read from R28's group record. **Rule:** each locates its
    point at $z \approx 10211$, and $|v_{28} - {\rm ref}| \le {\rm abserr}_{28}$ against 06g's
    reference (`scores.json`, `V1`). **Holds** if all twelve do. A violation is a finding for the
    user, not by itself a stop.
+   — **Holds**, on R28 and on R29: each of the twelve locates one root at
+   $z = 10211.3179 \pm 9\times10^{-6}$, and each is honest, the worst 0.218 (w11); R29's twelve
+   equal R28's bit for bit.
 6. **S2 — P1's two rows.** P1's row 1, $(3.162\times10^5)^3$ at $z_{\rm response} = 250$, and row 2,
    $(10^5, 3.162\times10^5, 3.162\times10^5)$, each hold a point of `G+q+r`, at $z_* = 10211.3$ and
    $275.0$.
@@ -634,7 +650,13 @@ the rules unchanged):
      w00–w11 is scored by S1 instead.
    - **Holds** if both hold on both rows. A violation is a finding, not by itself a stop.
 
-**§6's Gate V0 and predictions V1–V5, copied from the prompt unchanged. Not yet scored** (Part B):
+   — **Holds**, on R28 and on R29: rows 1 and 2 locate their points within $7.1\times10^{-9}$ and
+   $5.6\times10^{-9}$ in $x$ (spacing 0.0041), and are 0.020 and 0.263 of their abserr from four
+   agreeing readings (`levin-phase-floor-07-p1-references-20261108T103132`); R27 is $5.6\times10^5$
+   and $4.1\times10^4$ out, P1's failure reproduced at the parent.
+
+**§6's Gate V0 and predictions V1–V5, copied from the prompt unchanged.** Scored in Part B on the
+Mac Studio, 2026-11-08 to 2026-11-10, with V3 as §10 sets it; each verdict follows its rule:
 
 **Gate V0, before the run:**
 - **The parent's code is 06m's.** `git diff --stat 48cf87c0 <code commit's parent> -- . ':!docs'
@@ -645,6 +667,11 @@ the rules unchanged):
 - **The new code is deterministic.** Two runs of one $g$ unit on a stationary-point row are
   bit-identical.
 
+— **V0 holds**, all three clauses: `git diff --stat 48cf87c0 91472dbe` touches a test module and
+`CLAUDE.md`, none of the 102 files the K0 workers loaded; `levin-phase-floor-07-k0-20261108T135240`
+reproduces 06m's census on 100 of 100 units (2,110 calls, 32,518 leaves, 0 differing);
+`g-1e-8-1-2174` run twice at $g$ is identical.
+
 **Predictions, fixed before the run** (README §5 rule 3). Copy them into
 `state/predictions.md` unchanged.
 - **V1 — nothing else moves.**
@@ -653,15 +680,24 @@ the rules unchanged):
     comparison with the new keys set aside. Every row all of whose calls are such equals 06m's row
     in `total` and `total_abserr`.
   - **Holds** if true at both rtols.
+  - — **Holds** at both rtols: 284,514 calls that locate and guard nothing (142,257 per rtol) equal
+    06m's bit for bit, and so do the 16,104 units made only of such calls, `total` and
+    `total_abserr` equal in hex.
 - **V2 — no Levin leaf is returned across a stationary point.**
   - **The rule:** the scan finds no returned **Levin** leaf holding a sign change of $\theta'$, in
     any group call at either rtol or any analytic call at `1e-7`.
   - **Holds** if none does. At 06a's code there were 677 such regions, at `1e-7` alone.
+  - — **Holds:** 182,066 calls scanned (37,325 group calls at each rtol, 107,416 analytic calls at
+    `1e-7`), and no returned Levin leaf holds a sign change. The leaves the scan lists are window
+    leaves and 168 ordinary Clenshaw–Curtis leaves of analytic calls whose phase Rule A skipped.
 - **V3 — the location finds what the scan finds.**
   - It runs on the scan's grid, so the two should agree exactly.
   - **The rule:** every call in which the scan finds a sign change has a located `root` within one
     scan spacing of each, and every located `root` lies within one scan spacing of a sign change
     the scan found.
+  - — **Holds:** 0 violations in 170,582 scored calls, 2,954 of them with a sign change; no point
+    of kind `end`. Set aside under §10: 11,484 scanned calls with a phase Rule A skipped, 168 of
+    them (all analytic) with a scan sign change, 14 of those guarded (O9's).
 - **V4 — honest where it is referenced.**
   - **The set:**
     - z00 and z12, against 06g's reference (`rows`);
@@ -678,11 +714,31 @@ the rules unchanged):
     four readings agree within 06g's tolerance, here $\min({\rm abserr}_{06m}, {\rm abserr}_g)/100$.
     A call whose readings do not agree is reported, not scored.
   - **Holds** if every scored call is honest.
+  - — **Fails.** 33 calls scored, every call's readings agreeing (the widest spread 0.0039 of the
+    tolerance); 28 honest. z00 and z12 are at 0.718 of their abserr and Z3's seven at most 0.0021,
+    on 06g's readings; 19 of the 24 are honest. **Not honest:** v08 3.16, v09 2.21, v12 3.08, v17 2.38
+    and v22 2.53 times $\text{abserr}_g$ (06m: 3.0e4, 639, 9.1e3, 497 and 1.67e4). Each is a converged
+    `G+q+r` call whose one window was stopped by §1.3's `iroff1` at 6 with 4–13 leaves still falling
+    (`max_depth_at_stop` 5–6): `[07-iroff1-window-stop-can-leave-a-call-dishonest]`. The 24's basis,
+    on the user's ruling at stop 4: four readings on 13, FCC at both resolutions on 11. 06m is
+    honest on 17 of the 33 and $356$–$5.2\times10^5$× out on the other 16 (z12 1,681×).
 - **V5 — the cap is not reached where a point was handled.**
   - **The rule:** at both rtols, no leaf reaches `depth_max` in a call that locates a point or
     guards a leaf. An over-budget unit counts as false.
   - A failure is a finding for the user, not a fault. It reopens G2's L2 (Decisions, **G2 L2,
     decided**).
+  - — **Fails, as written.** 23 `G+q+r` calls that locate their root (10 at `1e-7`, 13 at `1e-8`)
+    hold 2–54 leaves at `depth_max` 20; 3 are converged; no unit is over budget. **The rule's
+    premise was stale.** V5 was written on 2026-10-27 from 06a's census, where no Levin call
+    outside the stationary points reached the cap. 06g–06m's trust-test changes left calls at the
+    cap outside the 720 (06m's census: 114 group calls unconverged there, 105 of them holding an
+    untrusted leaf at `depth_max`), and the orchestrator did not re-check the premise at Part B's
+    dispatch: the orchestrator's error. Inside the 720, 62 of the 64 unconverged group calls carry
+    the signature of those outside (an untrusted leaf at the cap, the call's error within its
+    request), so V5's failure says nothing specific about stationary points. The user: *"I don't
+    see what value `V5` has if there are other regions that go down to the depth cap."* G2's L2 is
+    reopened as one question for 08: whether any call should reach the cap, with the depth-cap
+    experiment (Decisions, **G2 L2, reopened**).
 
 ## Deviations from the prompt
 
@@ -1224,3 +1280,754 @@ locate a point (419 roots, 4 minima), none guards.
 - **Part B after it** (§10, the note's §B.6): R29 at this commit in R28's place, against R27 and R28;
   S1 and S2 re-scored on R29; the census at this code, V3 setting aside a phase Rule A skipped.
 - **The set-aside work** is as it was: four stashes, `var/levin-phase-floor-07/wip/` unchanged.
+
+## Part B: the Mac Studio record (appended by the orchestrator, 2026-11-10)
+
+Part B ran from 2026-11-08 to 2026-11-10 on the Mac Studio (`mps026298`), from three worktrees the
+laptop made:
+- R27, S2's captures and V0's K0 run at the parent `91472dbe`, whose production code is 06m's;
+- R28 at `74600350`, Part B's first dispatch, whose code is `ad732887`'s;
+- after stop 1 and Rule A, R29, the census and V4's references at `e182bc7a`, Part B's resumed
+  dispatch, whose code is `adffa21b`'s.
+
+The Mac Studio orchestrator dispatched a rehearsal agent (R27 and R28, then R29), then a census
+agent. It held each at the note's planned stops 1, 1′, 2, 3 and 4 and checked each with readers of
+its own, then reviewed Part B in the nine checks of the note's §B.3, all passing. The records are in
+`docs/levin-phase-floor/07/`:
+- `rehearsal/`, `rehearsal/r29/` and `census/`: each agent's log, verification, issues, scripts and
+  outputs. The three logs are appended below, as written on the Mac Studio; only the census log's
+  headings are moved down one level to sit under this log's own;
+- `review/` and `review.md`: the orchestrator's dispatch briefs, stop records, scripts and hashes,
+  and its review.
+
+What stays on the Mac Studio is in `07/KEPT_ON_MAC_STUDIO.md`; `VERIFICATION.md` §7 is the summary;
+the orchestrator note's §B.8 is the story of Part B after stop 1′.
+
+**The verdicts on the predictions above** (each entered against its rule there too):
+
+| | Verdict | Numbers |
+|---|---|---|
+| §5, the fingerprints | **holds** | R27, R28 and R29 `1b332ffa…` |
+| §5, S0 | **holds** | R27 equals R26 in all seven value tables (360,462 rows) and all 864 `QuadSourceIntegral` rows, every value and counter field |
+| §5, R28 (then R29) against R27 | **holds** | untouched rows bit-identical: R28 640 of 640, R29 692 of 692; the rest tabulated; 17 rows gain convergence, none loses |
+| §5, S1 | **holds** | 12 of 12 locate one root at $z = 10211.3179 \pm 9\times10^{-6}$ and are honest, worst 0.218 (w11), on R28 and R29 |
+| §5, S2 | **holds** | both rows located within one spacing, 0.020 and 0.263 of their abserr, on R28 and R29; R27 $5.6\times10^5$ and $4.1\times10^4$ |
+| §6, Gate V0 | **holds** | (a) no file the harness loads differs; (b) 100 of 100 K0 units equal 06m's; (c) deterministic |
+| §6, V1 | **holds** | 284,514 calls and 16,104 units equal 06m's, at both rtols |
+| §6, V2 | **holds** | 0 returned Levin leaves hold a sign change, 182,066 calls scanned |
+| §6, V3 | **holds** | 0 violations in 170,582 calls; 11,484 set aside under §10 |
+| §6, V4 | **fails** | 28 of 33 honest; v08 3.16, v09 2.21, v12 3.08, v17 2.38, v22 2.53 × $\text{abserr}_g$ |
+| §6, V5 | **fails, as written** | 23 `G+q+r` calls with 2–54 leaves at `depth_max`, 3 converged; its premise was stale (Predictions and verdicts above) |
+| §B.7, R29 against R28 | **fails as written on 4 records** | 86 of 90 changed records equal R27; the 4 guarded analytic blocks are findings, the rule the orchestrator's error (the note's §B.8) |
+
+**The census.** `levin-phase-floor-07-census-20261108T171137`, checkpoint `03dfe786…`, 18,560 of
+18,560 units in 22,708 s (06m 18,465 s), none over budget. Rows at depth 20 fall from 192 to 77 at
+`1e-7` and from 213 to 83 at `1e-8`. V4's references: `levin-phase-floor-07-references-20261109T005328`,
+74 readings in about 25.6 h, on the user's subset at stop 4.
+
+**The cross-check,** beyond §6, on the user's word at stop 4: 2,484 pairs, $r_g \le 1$ in 2,482
+(the exceptions `3-14501` at 1.39 and `3-35006` at 1.08, both converged `G+q+r` calls at
+$k = 10^5$) and $r_{06m} \le 1$ in 2,432. 843 calls disagree beyond $\max$(abserr): (a) settled for
+07 31, (b) 0, (c) undecided 786 (396 rows), (d) 0, (e) 26.
+
+**Deviations in Part B.** The rehearsal agent logged 15 (R27 and R28) and 9 more (16–24, R29); the
+census agent logged 40. The Mac Studio orchestrator accepted each:
+- `STRUCTURALLY REQUIRED`: the job-name prefix normalised for S0; `p1-references`' manifest naming
+  the main checkout; the stop on R29's four records under §B.7's rule as written; the census
+  harness's changes within §6's list; K0 at the parent computing 06h's counterfactual; V4's capture
+  scripts; and the reading subset and its scoring rule, by the user's ruling at stop 4;
+- `UNINTENDED DRIFT`, none with an effect: a scratch file in `/tmp` and a mismatched grep at the
+  gate; two mistyped `pgrep -P` pids; the `q-r` references failing twice before they ran; a gate
+  check printing the main checkout's ignored files; a broken `run_k0.py` line found by reading; log
+  times corrected; a superseded projection; two scoring readers that crashed and were re-run; an
+  output directory made while a capture ran; a projection that failed on a missing input and was
+  started with `&`; a capture chain started with `&`; two figures misstated in the stop-4 report and
+  one in a message, corrected in the log; a before-against-after comparison re-run under `bash`;
+- the rest `IMPLEMENTATION CHOICE`.
+
+**Observations not acted on, and not opened as issues** (the agents' `issues.md`, and the user's
+word at the records commit):
+- **The 786 undecided calls** of the cross-check (class (c)), where each code agrees with itself
+  across rtols and the two disagree beyond both errors. They are undecided for want of references.
+  The user: *"these are undecided because we don't have references for them? If so, then yes, we
+  attribute them to 06m's errors for the time being, on this evidence."* V4 referenced 12 of them:
+  06m fails all twelve by 356–$5.2\times10^5$×, and 07 is honest on 7 and 2.2–3.2× out on 5.
+- **The lone-`G` minima:** 236 group calls per rtol locate 6 or 19 minima of $|\theta'|$, λ about
+  $10^{-7}$–$10^{-6}$; all converged, nothing measured wrong.
+- Rule A skips 64 analytic blocks that R28 located, not only the 26 `q-r` calls; it skips phases in
+  423 replayed calls in all, of every group and analytic label.
+- The rehearsal agent's recurrences: 05's classifier and job names; the registry recording the
+  launcher's repository; QAGS 4.9× its own estimate from the Gauss–Legendre sequence on the worst
+  `q-r` call.
+
+**On the laptop (2026-11-10)** (`VERIFICATION.md` §7.7): the copied files and the 29 run-directory
+files match the Mac Studio's SHA-256 lists. S1 was recomputed exactly from `s1_scores.json` (worst
+0.217573), and its twelve `ref_30` strings found verbatim in 06g's committed V1. V4 was re-scored in
+exact Fractions on v00, v08 and z12 from both census checkpoints. A moved and an untouched rehearsal
+row were read from the R27 and R29 stores in `float.hex`, and all 692 untouched rows compared. Every
+figure is the same as the agents' and the Mac Studio orchestrator's.
+
+**The user's rulings** (the board's Decisions, **07 stop 1′**, **07 Part B stops 2–4**, **07
+results** and **G2 L2, reopened**):
+- `[06-levin-accepts-a-region-across-a-stationary-point]` closes, on V2: *"I didn't address this,
+  but yes, please close it"*;
+- `[07-iroff1-window-stop-can-leave-a-call-dishonest]` is opened from the census agent's proposal,
+  and assigned to prompt 07a with O9 of `[07-c2-gate-threshold-was-never-measured]`, which O9's
+  census calls narrow (*"I think so"*): *"I agree we fix the early roundoff stop and the O9 problem.
+  These are issues where the problem and the fix are both clear."*;
+- V5 is scored fails as written; G2's L2 is reopened as one question for 08, with the depth-cap
+  experiment: *"Include the cap experiment in prompt 08."*
+
+## §5 — rehearsals R27 and R28 on the Mac Studio
+
+**Prompt:** [`07-stationary-point-guard.md`](../07-stationary-point-guard.md) §5 ("As 06m §4"), under the
+orchestrator's Part B dispatch (`74600350`, addendum B.5), with the user's addendum at planned stop 1. The code
+measured is 07's code commit `ad732887` (location, windows, the nodal guard and §1.3's per-window `iroff1` rule in
+`_adaptive_levin`; the four counts in `QuadSourceIntegral`'s Levin records), against its parent `91472dbe`, whose
+production code is 06m's.
+
+**Host:** mps026298, the Mac Studio.
+- **R27, S2's capture and the q-r captures at p** ran in the worktree `SecondaryGWKit-lpf07-91472db`, detached at
+  `91472dbe` (`levin_quadrature.py` `beaf0e23…`, `QuadSourceIntegral.py` `962424c0…`; against R26's tree
+  `38f6a828` only `CLAUDE.md` differs; `bd21bf23..91472dbe` outside `docs/` and `prompts/` is empty).
+- **R28, the comparisons, the replay, the q-r references, S1, the readers and S2's references** ran in the
+  worktree `SecondaryGWKit-lpf07-7460035`, detached at `74600350` (`levin_quadrature.py` `dc05596c…`,
+  `QuadSourceIntegral.py` `33cb161e…`). `git diff --stat 91472dbe 74600350` outside `docs/` and `prompts/` touches
+  exactly the six files the dispatch lists; `ad732887..74600350` outside `prompts/` is empty.
+- **The same file in both trees:** the launcher `RunDrivers/quadsource_atol_sweep.py` (`b0135218…`), `main.py`
+  (`a5d47f5f…`), `LiouvilleGreen/three_bessel_integrals.py` (`fea67d56…`), `tools/store_value_diff.py`
+  (`7997af85…`), `ComputeTargets/phase_groups.py` (`795a0119…`), `config/fingerprint.py` (`9fb94d77…`).
+- **The main checkout** stayed at `28ebaf07`, clean; it ran no tree code.
+
+**Model:** Claude Opus 5.5, the rehearsal subagent of the Mac Studio orchestrator, in six turns: (1) the gate, the
+lock, R27's launch; (2) R27's checks, S0, R28's launch; (3) R28's checks, R28 against R27, the tabulation
+(planned stop 1, lock held); (4) the replay's launch; (5) the replay's checks, the q-r references, S1, the readers,
+the release, S2's references' launch; (6) S2's scoring and these records.
+
+**Date:** 2026-11-08, 00:05–10:50 UTC.
+
+**Commit:** none. The records are committed on the laptop, in 07's records commit.
+
+**Result:** COMPLETE. **S0, S1 and S2 HOLD**; outside `QuadSourceIntegral` every value table is identical; inside it
+every untouched row is bit-identical and the rest are tabulated. No §8 stop condition fired. One finding for the
+user: the location on an identically zero rate (the q-r groups with q = r), where R28 is honest but does about
+4,100–5,500 Clenshaw–Curtis pieces per call.
+- **The fingerprints.** R27 and R28 both `done`, exit 0, `1b332ffa…`; `classes` equal R26's and R25's; `problems {}`.
+- **S0 — R27 against R26: value-identical.** 7 value tables, 360,462 rows, identical; all 864 `QuadSourceIntegral`
+  rows bit-identical in every value and counter field. Labels differ only by the job-name prefix and stamp
+  (normalised in a copy, as 06m did).
+- **R28 against R27, outside `QuadSourceIntegral`:** every value table identical (360,462 rows); every other
+  difference a timing, label, `parents_digest` (291) or `rho_reuse` (26); 0 unclassified; no row in one store only.
+- **Inside it:** 640 rows untouched (every count 0 in every Levin record), **all 640 bit-identical**; 224 rows
+  tabulated (70 with a group call that located a point, 200 with an analytic block that did). No leaf guarded.
+  `total_converged` 845 → 862: 17 rows gained, none lost. The largest move is 7.4e4 × R27's `total_abserr`.
+- **The replay** (the user's approval): 470 of 470 touched Levin records reproduced bit for bit at R28's tree, giving
+  every located point's kind and location: G+q+r roots at z = 10211.32 (42) and 275.009 (2); analytic J4/Y4 roots
+  (400); each q-r call with q = r 4,097 points, every scan sample, θ′ ≡ 0.
+- **The q-r references** (the user's addendum): on three of the 26 calls, the worst included, R28 is honest (0.179,
+  0, 0.069 of its abserr) and so is R27 (0.0021, 0.0014, 0.0006). On the worst call R28's verdict rests on the
+  Gauss–Legendre sequence; against the reference's stated error, set by QAGS, it is undecided (below).
+- **S1 holds:** w00–w11 each locate one root at z = 10211.3179 ± 9e-6, and each is honest (largest 0.218, w11).
+- **S2 holds:** both P1 rows locate their point (z 10211.318, 275.009; |x − x_s| ≤ 7e-9 against a spacing of 0.0041)
+  and are honest against four agreeing readings (0.020, 0.263). R27 reproduces P1's failure (5.6e5, 4.1e4).
+- **The readers** exit 0, six of six; R28 byte-identical before and after. **The lock** is released.
+
+The measurements are in `verification.md`, written for `docs/levin-phase-floor/VERIFICATION.md` §7.
+
+### What shipped
+
+No code. The records are under the main checkout's `var/levin-phase-floor-07/rehearsal/`, for the laptop to
+commit as `docs/levin-phase-floor/07/rehearsal/`:
+- `log.md` (this), `verification.md`, `issues.md` and `KEPT_ON_MAC_STUDIO.txt`.
+- **`scripts/`:**
+  - `rec.sh` (`b0952204…`): 06m's (`0a13627b…`), the record path changed by `sed`;
+  - `classify_non_qsi.py` (`26690e61…`): 05's, unchanged, byte-identical to 05's and 06m's copy;
+  - `normalise_jobname_labels.py` (`b02fd3fd…`): 06m's (`08dc45a8…`), its prefixes and docstring changed
+    (`out/normalise_jobname_labels.diff`);
+  - `qsi_identity_r26_r27.py` (`244840d0…`): 06m's `qsi_identity_r24_r25.py` (`e63aae0c…`), R24/R25 → R26/R27
+    and a provenance header (`out/qsi_identity_r26_r27.diff`);
+  - `s0_labels_and_qsi_tool_report.py` (`88357082…`), new;
+  - `tabulate_qsi_guard.py` (`a1eaba31…`), `qsi_guard_records.py` (`e327f3f9…`), `qsi_rows_summary.py`
+    (`aa317123…`): new; the store reader and field classification copied verbatim from 06m's (06g's);
+  - `capture/`: 06g's `references/v1/scripts/` harness (`worker.py`, `dispatch.py`, `harness.py`, `rebuild.py`,
+    `prov.py`, `run_census.py`, `launch.py`, `rerun.py`, `spscan.py`), copied (hashes equal to 06g's,
+    `state/capture_harness_06g_v1_sha256.txt`); `prov.py` (`f84a1771…`) and `worker.py` (`ba140a73…`) changed
+    where marked "prompt 07 rehearsal" (`out/capture_harness_diff.txt`); `replay07.py` (`68f985eb…`) and
+    `run_replay_pipeline.sh` (`11139d79…`), new;
+  - `replay_summary.py` (`8c978d0b…`), `s1_score.py` (`21cfa56f…`), `qr_reference.py` (`add90893…`),
+    `run_qr_reference.sh`, `qr_score.py` (`f6d6282a…`), `qr_worst_detail.py` (`a2e7131e…`), `p1_references.py`
+    (`d3770e03…`), `s2_score.py` (`a2bcd258…`): new;
+  - `run_readers_worktree.sh` (`ec96cf09…`): 06m's (= 06g's), unchanged; its diff against the original,
+    `out/run_readers_worktree.diff`, equals 06m's.
+- **`out/`:** `commands.log`; the gate (`00-gate-trees.txt`, `01-gate-registry-lock.txt`, `01-registry-list.txt`,
+  `02-r26-vs-06m-kept.txt`); each build's launch and end checks and `status.json`; S0's (`classify_non_qsi_r26_r27*`,
+  `normalise_jobname_labels.*`, `qsi_identity_r26_r27.*`, `s0_*`); R28 against R27 (`classify_non_qsi.*`,
+  `qsi_tabulation.*`, `qsi_rows.csv`, `qsi_guard_records.*`, `qsi_rows_summary.txt`, `stop1_check.txt`,
+  `depth_max_and_counters.txt`); the replay (`replay_rows.txt`, `replay_dev1*`, `replay_pipeline.log`,
+  `replay_run.txt` … `capture_check.txt`, `replay_calls.csv`, `replay_calls.checks.json`, `captures.json`,
+  `replay_summary.txt`, `replay_store_check.txt`, `replay_launch_check.txt`); the q-r references
+  (`qr_reference/` with its two failed attempts kept, `qr_scores.*`, `qr_worst_call_detail.txt`); S1
+  (`s1_scores.*`); S2 (`p1_references/` small files, `p1_references_status.json`, `p1refs_*`, `s2_scores.*`); the
+  readers (`readers.txt`, `readers_check.txt`); `final_check.txt`, `final_registry_list.txt`.
+- **`state/`:** `lock.log`; the launch lines (`launch_r27.txt`, `launch_r28.txt`, `launch_replay.txt`,
+  `launch_p1_references.txt`); the markers; every store-hash file (R26 at the gate; R26/R27 before and after S0;
+  R27 at R28's launch; R27/R28 before and after the comparison, after the replay; R28 before and after the readers;
+  `stores_sha256_final.txt`); the replay's row list and specs.
+- **Not for copying back** (`KEPT_ON_MAC_STUDIO.txt`): the three diff JSONs, the readers' `extract/`, `state/capture/`
+  and `state/inputs/` (the pickles), the tool's two reading JSONs (2.5 MB each) and their `.log` copies.
+- **The stores are kept:** `var/datastores/levin-phase-floor-07-r27*` and `…-r28*`, five files each.
+
+### Predictions and verdicts
+
+| Rule (prompt 07 §5, as written) | Scored on | Verdict |
+|---|---|---|
+| R27 and R28 with 06m's command line, slugs `r27-parent`, `r28-guard`, `--prompt 07`; **both fingerprints `1b332ffa…`** | both `done`, exit 0, `1b332ffa…`; `classes` equal R26's and R25's; `problems {}` | **holds** |
+| **S0 — R27 against R26:** every value table identical, every `QuadSourceIntegral` value field identical, every other difference of the four volatile kinds | 7 tables, 360,462 rows identical; 864 / 864 rows bit-identical in 118,776 value and 27,163 counter fields; other: timing, label (prefix and stamp, normalised in a copy), `parents_digest` 291, `rho_reuse` 26 | **holds** |
+| R28 against R27, outside `QuadSourceIntegral`: every value table identical, every other difference of the four volatile kinds, no row in one store only | 360,462 rows identical; 0 unclassified; 0 only-in-one, unmatched or unresolvable | **holds** |
+| Inside: a row in which nothing was located or guarded is bit-identical in `total`, `total_abserr`, the analytic columns and every Levin record, the four counts set aside | 640 untouched rows; 640 bit-identical (value and counter fields) | **holds** |
+| Inside: any other row tabulated (change against both `total_abserr`, located points (kind, z), window pieces, regions, maximum depth, `total_converged`) | 224 rows in `qsi_rows.csv`; 470 records in `qsi_guard_records.csv`; kind and location for each from the replay (`replay_calls.csv`, 470 / 470 bit for bit) | **done** |
+| The stationary-point rows' convergence in each store, and the rows whose `total_converged` changes | rows with a group call that located: 52 / 70 converged (R27), 69 / 70 (R28); all rows: 845 → 862; 17 gained, 0 lost (listed) | **done** |
+| **S1 — V1's twelve:** each locates its point at z ≈ 10211 and \|v28 − ref\| ≤ abserr28 against 06g's reference | 12 / 12 one root at z = 10211.31789148–50 (within 8.5e-6 of 10211.3179; spacing 31–44); ratios 0.00037–0.218 | **holds** |
+| **S2 — P1's two rows:** each locates its point within one scan spacing; each G+q+r call within its abserr of a reference taken afresh (captured at R27's tree, four readings) | row 1: \|x − x_s\| 7.1e-9 (spacing 0.0041), ratio 0.020; row 2: 5.6e-9, 0.263; readings agree (scatter 6.1e-37, 1.2e-36 against 6.6e-33, 9.2e-33) | **holds** |
+| The readers run on R28, exit 0, the store byte-identical | 6 / 6 exit 0; five files identical by SHA-256, size, mtime; no journal | **holds** |
+| The lock is released, `ray-processes` lists nothing | released; `status` free; `ray-processes` empty before and after | **holds** |
+| The stores are kept | R27 and R28 in place, unchanged since the comparison | **holds** |
+
+**The user's addendum at planned stop 1** (not a prompt rule; reported): **R28 is honest on the three referenced
+q-r calls**, and so is R27:
+
+| call (q = r) | R27 \|v−ref\|/abserr | R28 \|v−ref\|/abserr | reference's stated error / R28 abserr |
+|---|---|---|---|
+| (1e5, 1e6, 1e6, z 6.985e9), the worst | 0.00215 | 0.179 | 5.8 |
+| (3.162e5, 1e6, 1e6, z 1.363e10) | 0.00142 | 0 | 0.15 |
+| (1e5, 3.162e5, 3.162e5, z 3.047e9) | 0.000618 | 0.0695 | 0.022 |
+
+**On the worst call R28's "honest" rests on the Gauss–Legendre sequence alone.** GL at m = 8, 10, 12, 14 agree to
+5.9e-39 (GL12 = GL14), and R28 is 0.179–0.186 of its abserr (7.89e-37) from each. The reference's stated error,
+4.56e-36, is |QAGS − GL14|: QAGS sits 4.9 times its own estimate (9.29e-37) from GL14, and R28 is 5.6 of its abserr
+from QAGS. Against the stated error the verdict is undecided. On the other two calls it is honest outright. R27 is
+honest on all three under any reading.
+
+### Deviations from the prompt
+
+1. **The reading for S1 and S2 was deferred until after planned stop 1** (06g's `scores.json` and `report.md`, `v1/`
+   scripts, the capture harness, `tools/filon_reference.py`). The brief listed them among what to read; nothing
+   before the stop depended on them. IMPLEMENTATION CHOICE. 06g's and 06h's §4 were not read: 06m's records gave the
+   launch's exact form.
+2. **At the gate one read-only check wrote and removed a scratch file `/tmp/x_never`** (outside the write scope),
+   and its diff of R26's hashes exited 1 (the grep also matched R26's run-directory line). Redone properly
+   (`out/02-r26-vs-06m-kept.txt`: equal). UNINTENDED DRIFT.
+3. **S0's labels were normalised in a copy of the JSON** (06m's deviation 1): R26's job name is
+   `levin-phase-floor-06m`, R27's `levin-phase-floor-07`; the raw classifier reports 5,148 UNCLASSIFIED, the
+   normalised copy 0. The verdict is the same either way. STRUCTURALLY REQUIRED.
+4. **S0's identity inside `QuadSourceIntegral`** used 06m's identity script, adapted, and a new corroboration script
+   (the labels; the tool's own `QuadSourceIntegral` report). IMPLEMENTATION CHOICE.
+5. **A mistyped parent pid in `pgrep -P`** when finding R28's driver (read-only; printed nothing). UNINTENDED DRIFT.
+6. **The tabulation inside `QuadSourceIntegral` is new scripts**, not 06m's `tabulate_qsi_signedyardstick.py`: the
+   classification by R28's four counts and the untouched-row test are new; the reader and field classification are
+   06m's (06g's), verbatim. IMPLEMENTATION CHOICE.
+7. **Two inspections were printed and not saved** (R28's metadata structure at stop 1; a tally over
+   `qsi_guard_records.csv`), and two more later (a q-r pickle's keys and timing; `scores.json`'s structure). Every
+   figure used is in a saved output. IMPLEMENTATION CHOICE.
+8. **A two-unit development run of the replay** (`dev1`), to check the harness on 07's code and time it; kept.
+   IMPLEMENTATION CHOICE.
+9. **The replay ran every touched row at R28's tree only** (enough for kind and z); R27's tree ran only P1's rows and
+   the q-r rows, for the captures. IMPLEMENTATION CHOICE.
+10. **The harness lives in `scripts/capture/`** (so `prov.py`'s `parents[4] == MAIN` holds unchanged), the stores are
+    reached through symbolic links in `state/stores/` (as 06g's `v1/stores/`), and a worker runs several units (one
+    k cache per process). Kind and location come from `guard_07`, a record the worker reads from each call's own
+    result after the timed section; for a call of more than 64 points it records a summary (counts, x range, whether
+    every point is a grid sample) and re-samples θ′ and θ on the grid. IMPLEMENTATION CHOICE.
+11. **The q-r references failed twice before they ran:** first a zsh loop did not split its arguments (six processes
+    failed on a path); then scipy refused QAGS at epsrel 1e-14 (it must exceed 50 eps), fixed to 1.2e-14. Both
+    attempts' outputs are kept under `out/qr_reference/failed_attempt_*`; all six runs were redone on the fixed
+    script. UNINTENDED DRIFT.
+12. **The q-r reference method** (the user's terms leave it to the agent): direct composite Gauss–Legendre at five
+    resolutions with QAGS as a second rule, on the integrand captured at R28's tree; each capture replayed bit for
+    bit at its tree, and the two trees' integrands compared bit for bit at 1,001 points. IMPLEMENTATION CHOICE.
+13. **`p1-references`' manifest records the main checkout's `git_head` (28ebaf07)**, because its launcher lives under
+    `var/` there; its cwd and the tool it ran are the code worktree's (74600350). STRUCTURALLY REQUIRED (the
+    registry records the script's repository; the scripts' records live in `var/`).
+14. **Two readings the prompt leaves open:** S2's count tolerance is min(abserr_R27, abserr_R28)/100 (06g's form, as §6
+    V4 states it for the census); S1's "at z ≈ 10211" is read as one root within one scan spacing (in z, at the
+    point) of 10211.3179, P1's value. Either verdict is the same at any reasonable reading (|z − 10211.3179| ≈ 9e-6).
+    IMPLEMENTATION CHOICE.
+15. **S2's references ran at the R27-tree captures from the code worktree** (as 06g read captures across trees); the
+    integrand code is the same in both trees (`QuadSourceIntegral.py` differs only in the four counts; `phase_groups.py`
+    and `LiouvilleGreen/` are equal). IMPLEMENTATION CHOICE.
+
+### Verification performed
+
+**The gate** (`out/00-gate-trees.txt`, `out/01-gate-registry-lock.txt`): the trees as stated above; 62 runs, all
+finished; `~/.raypoolkit` empty, no old lock; `auth_token` mode 600; 135 GB free; venv 3.13.16 with datastorekit 0.5.0,
+raypoolkit 0.3.0, runregistrykit 0.2.0, ray 2.59.0, SQLAlchemy 2.0.55, numpy 2.2.4, scipy 1.16.3, mpmath 1.3.0; no 07
+store or run; R26's five files equal to 06m's record.
+
+**R27 and R28** (`out/r2{7,8}_{launch,end}_check.txt`): R27 launched 00:06:33Z (sh 83000, driver 83008), `done`
+00:15:41Z (about 9 min); R28 launched 00:19:15Z (sh 83821, driver 83825), `done` 00:35:54Z (about 16.5 min); each
+manifest at its tree with `git_dirty` false and the launcher `b0135218…`; no Traceback and no `!! WARNING`; each
+driver's cwd its worktree.
+
+**S0 and R28 against R27:** `tools.store_value_diff --json` from the code worktree (16.9 s each); the stores
+byte-identical before and after each comparison (`state/s0_store_sha256_*`, `state/store_sha256_*_diff.txt`).
+
+**The tabulation's assertions** (`out/qsi_tabulation.txt`): equal key sets, columns and tolerances; the four counts
+present as ints exactly in R28's Levin records; the group regions summing to `WKB_Levin_num_regions` and
+`total_converged` the AND of the group flags, in every row of both stores; `DEFAULT_LEVIN_MAX_DEPTH` 20 in both trees.
+
+**The replay and captures** (`out/replay_check.txt`, `out/capture_check.txt`, `out/replay_store_check.txt`): 470 / 470
+records; 8 / 8 captures (S2's two at p against R27; three q-r at p against R27 and at g against R28); Ray never
+initialised; R27 and R28 unchanged; both worktrees clean, nothing newer than the markers.
+
+**The q-r references** (`out/qr_scores.txt`): the replays reproduce their captures; the two trees' integrands
+bit-identical at 1,001 points with equal x_span and kw; θ′ and θ exactly 0 at every sample.
+
+**S2's references** (run `levin-phase-floor-07-p1-references-20261108T103132`, `done`, exit 0, 2 / 2; row 1 191 s, row
+2 425 s): four readings each, Route B, one non-monotone segment direct (QAWO) and three (FCC), as the tool's rule says
+beside a stationary point; the readings agree within the tolerance by four orders of magnitude.
+
+**The readers** (`out/readers_check.txt`): six of six exit 0; R28 identical before and after; 0 Tracebacks; six
+`!! WARNING … shards (=4) … (=10)`, as 06m's.
+
+**The lock** (`state/lock.log`), ten commands, each its own, appended by `>>`: ray-processes (empty); acquire;
+set-pid 83008; ray-processes (empty); set-pid 83825; ray-processes (empty); ray-processes (empty); release; status
+(free, no Ray processes); ray-processes (empty). Each exited 0.
+
+**Final** (`out/final_check.txt`): R26, R27 and R28 equal to their earlier hashes; 65 runs, all finished;
+`~/.raypoolkit` empty; the main checkout and both worktrees clean and unmoved, nothing written in either; no
+`__pycache__` in the records.
+
+### Observations not acted on
+
+1. **The location on an identically zero rate** (issue `[07-location-on-an-identically-zero-rate]`): the 26 q-r
+   calls with q = r locate every scan sample; they cost about 20 times a G+q+r call and double the rehearsal's
+   regions; R28 stays honest where referenced.
+2. **17 rows gained convergence, none lost;** the one row still unconverged among the touched (3.162e5, 3.162e5,
+   3.162e5, z 573.11) has one unconverged call (R27: two), at depth 20 in both.
+3. **R27 is wrong where 07 says it should be:** 16 rows move by more than both stores' errors (up to 7.4e4); on the
+   referenced ones (S1's w rows, S2's rows) R28 is honest and R27 is 4.1e4–5.6e5 of its abserr out (S2) — P1's
+   defect reproduced at the parent's code.
+4. **No minimum was located and no leaf guarded** anywhere in the rehearsal (`guarded_regions` 0 throughout, as §1.5
+   expects with `theta_deriv` supplied).
+5. **The analytic blocks locate a root in the 2pt5 J4 and Y4 blocks** of 200 rows (k = q = r), at a fixed η per k;
+   `analytic_rad` moved by at most 1.5e-5 of its abserr.
+6. **QAGS on the worst q-r call** is 4.9 times its own estimate from the Gauss–Legendre sequence; the reference rests
+   on GL there (Predictions and verdicts).
+7. **The tool writes its JSON to stdout too,** so each `p1_row*.log` duplicates its `.json` (kept on the Mac Studio).
+
+### State handed on
+
+- **R27** `levin-phase-floor-07-r27-parent-20261108T000634` and **R28** `levin-phase-floor-07-r28-guard-20261108T001916`:
+  both `done`, `1b332ffa…`. **`p1-references`** `levin-phase-floor-07-p1-references-20261108T103132`: `done`, exit 0.
+- **Their stores are kept** (`state/stores_sha256_final.txt`): `var/datastores/levin-phase-floor-07-r27*`, primary
+  `d6fd3023…`; `…-r28*`, primary `00468d55…`. R26 (06m's, read only) unchanged.
+- **The lock is released;** `~/.raypoolkit` is empty and `ray-processes` lists nothing. Nothing of this agent runs.
+- **The trees** are clean and unmoved; nothing was written in either worktree.
+- **Held, for the user:** the zero-rate case, before the census (the orchestrator's hold). Nothing of prompt §6 was done.
+- **Kept on the Mac Studio, not for copying back:** see `KEPT_ON_MAC_STUDIO.txt` (the diff JSONs, `extract/`,
+  `state/capture/`, `state/inputs/`, the tool's reading JSONs).
+
+## §5 resumed under §10 (Rule A) — rehearsal R29 on the Mac Studio
+
+**Prompt:** [`07-stationary-point-guard.md`](../07-stationary-point-guard.md) §10 (Part B after Rule A) and §5, under the
+orchestrator's resumed dispatch (`e182bc7a`), with the user's word at R29's stop. The code measured is `adffa21b`
+("Skip locating a phase whose variation is below the C2 gate"), Rule A on 07's `ad732887`. R29 takes R28's place in §5;
+R28 (`74600350`) is kept as the record of the zero-rate case.
+
+**Host:** mps026298. **Trees:** R29, the comparisons, the replay, S1, S2 and the readers in the worktree
+`SecondaryGWKit-lpf07-e182bc7` (detached at `e182bc7a`; `levin_quadrature.py` `4e5da371…`; `QuadSourceIntegral.py`,
+the launcher, `main.py` and `store_value_diff.py` unchanged from R28's tree); the four-block replays also at
+`SecondaryGWKit-lpf07-91472db` (R27's) and `SecondaryGWKit-lpf07-7460035` (R28's), read-only replays. `74600350..e182bc7a`
+outside `docs/` and `prompts/` touches `levin_quadrature.py`, the two test modules and `CLAUDE.md` only.
+
+**Model:** Claude Opus 5.5, the rehearsal subagent, in four turns (7–10 of this agent): the gate and R29's launch; R29's
+checks and the comparisons (a stop on 4 records); the user's word, the replay and the four-block captures; the
+references, S1, S2, the readers, the release and these records.
+
+**Date:** 2026-11-08, 12:33–13:35 UTC. **Commit:** none; the laptop commits these records.
+
+**Result:** COMPLETE (planned stop 1′). R29 `done`, `1b332ffa…`. **S1 and S2 hold on R29.** Against R28, 90 Levin
+records changed, every one a call R28 located and R29's Rule A skipped: 86 equal R27 bit for bit (26 `q-r`, 60
+analytic `2pt5` J4/Y4 blocks), and 4 analytic blocks were caught by the nodal guard instead (a stop, ruled findings by
+the user). **On those 4 blocks all three stores are honest** against references with stated errors 1,990× or more below
+every abserr. Against R27, 692 untouched rows are all bit-identical. Regions are back to R27's level (114,460 against
+114,826; R28 227,883), wall time 9.6 min (R27 9, R28 16.5).
+
+### What shipped
+
+No code. Records under `var/levin-phase-floor-07/rehearsal/r29/` (committed by the laptop as
+`docs/levin-phase-floor/07/rehearsal/r29/`): `log.md`, `verification.md`, `issues.md`, `KEPT_ON_MAC_STUDIO.txt`;
+- **`scripts/`:** `rec.sh` (b5279dd9, the stop-1 copy with the record path changed; `out/rec_sh.diff`);
+  `classify_non_qsi.py` (26690e61, 05's, unchanged); `tabulate_qsi_guard.py` (a1eaba31, the stop-1 script unchanged)
+  and `tabulate_qsi_guard_r29.py` (47e18cbe; `out/tabulate_qsi_guard_r29.diff`); `compare_r29_r28.py` (f6ba1f2e),
+  `stop_detail.py` (93517fee), `block_reference.py` (fc2c20df), `run_block_reference.sh` (0a5372da), `block_score.py`
+  (e62946d1), `replay_summary_r29.py` (49097a96), `s2_score_r29.py` (e7430b57): new; `s1_score_r29.py` (6f60c8d1; the
+  stop-1 `s1_score.py` by sed, `out/s1_score_r29.diff`); `run_readers_worktree.sh` (ec96cf09, unchanged);
+  `capture/`: the stop-1 harness (hashes equal, `state/capture_harness_stop1_sha256.txt`) with `prov.py` (1ec5f339)
+  and `worker.py` (6bcb4a2d) changed where marked "prompt 07 r29" (`out/capture_harness_r29_diff.txt`), and the new
+  `replay07_r29.py` (192c9c42) and `run_r29_pipeline.sh` (984105f7).
+- **`out/`:** `commands.log`; the gate and launch/end checks; `r29_status.json`; both diff JSONs and their classifier
+  outputs; `qsi_tabulation_r27_r29.*`, `qsi_rows_r27_r29.csv`; `r29_vs_r28.*`, `r29_vs_r28_records*.csv`,
+  `stop_detail.txt`; the replay (`replay_rows.txt`, `r29_pipeline.log`, stage outputs, `replay_calls.csv`,
+  `replay_calls.checks.json`, `replay_summary.txt`, `blocks.json`); `block_reference/`, `block_reference_run.txt`,
+  `block_scores.*`; `s1_scores.*`, `s2_scores.*`; `readers.txt`, `readers_check.txt`; `final_check.txt`,
+  `final_registry_list.txt`.
+- **`state/`:** `lock.log`, the launch lines and markers, every store-hash file, the replay's rows and specs.
+- **Not for copying back:** see `KEPT_ON_MAC_STUDIO.txt` (the diff JSONs, `extract/`, `state/capture/`, `state/inputs/`).
+- **The store is kept:** `var/datastores/levin-phase-floor-07-r29*`.
+
+### Predictions and verdicts
+
+| Rule (as the resumed dispatch and prompt §5/§10 write it) | Scored on | Verdict |
+|---|---|---|
+| R29 with R28's command line, slug `r29-guard-rule-a`; fingerprint `1b332ffa…` | `done`, exit 0, `1b332ffa…`, `classes` equal R28's/R27's/R26's | **holds** |
+| R29 against R28, outside `QuadSourceIntegral`: every value table identical | 360,462 rows identical; 0 unclassified | **holds** |
+| R29 against R28, inside: a record may differ only if R28 located and R29 did not; such a record equals R27 (value, abserr, converged, phase_limited, regions) with R29's four counts 0; every other record bit-identical to R28 | 13,087 of 13,177 bit-identical; 90 changed, all R28-located / R29-skipped; **86 equal R27**; **4 do not** (guarded) | **fails as written on 4 records** — the user ruled them findings; the laptop corrects the rule (§10's guard clause) |
+| Rows that differ hold such a record; tabulated | 54 rows, each holding a changed record; `total`, `total_abserr` equal R27's in all 54 | **holds** |
+| R29 against R27 (§5 item 4): untouched rows bit-identical; the rest tabulated; `total_converged` changes listed | 692 / 692; 172 tabulated; 17 gained, 0 lost | **holds** |
+| The four-block check (the user's addition): each store's value against a reference | 12 of 12 store-blocks honest outright (largest 6.2e-4 of abserr) | **reported** |
+| S1 on R29 | 12 / 12 located at z 10211.3179 ± 9e-6, honest, largest 0.218 | **holds** |
+| S2 on R29 (the standing `p1-references` readings) | located within one spacing on both; 0.020 and 0.263 | **holds** |
+| The readers on R29, exit 0, store byte-identical | 6 / 6; identical | **holds** |
+| The lock released, `ray-processes` empty | released; free; empty | **holds** |
+
+**The four blocks** (`out/block_scores.txt`; float.hex in `verification.md`): the stated error of each reference is
+set by QAGS's distance from GL14 (QAGS within its own estimate), and GL's sequence agrees to 0–2e-25. Ratios
+|v − ref|/abserr: J4 at (3.162e5)³ R27 7.4e-5, R28 4.4e-5, R29 1.5e-6; Y4 there 1.6e-5, 5.8e-4, 3.7e-4; J4 at (1e6)³
+1.0e-4, 2.1e-4, 3.1e-6; Y4 there 0, 6.2e-4, 5.1e-5. V = 15.113 and 15.896 (below SIX_PI); the gate's span estimate on
+the root leaf = 19.160 and 20.196 (above it). R29's J4 declarations are 19× and 11× R27's; its Y4 declarations smaller.
+
+### Deviations from the prompt
+
+(Numbered on from the stop-1 rehearsal's 15.)
+
+16. **Rule A's key is not in the store**, so V_i comes from the replay (`guard_07` records `location_skipped_phases`).
+    IMPLEMENTATION CHOICE.
+17. **The gate check printed the main checkout's `status --short --ignored` listing** (read-only; `status --short` is
+    empty). UNINTENDED DRIFT.
+18. **A mistyped parent pid in `pgrep -P`** when finding R29's driver (read-only). UNINTENDED DRIFT.
+19. **`tabulate_qsi_guard.py` adapted for R29 by two sed passes** (R28 → R29, then the `_28` key suffixes); and
+    `s1_score_r29.py` by one, which also changed the word in its own new comment ("R29 -> R29") and left one key,
+    `store_value28`, named for R28 (it holds R29's stored value). Cosmetic. IMPLEMENTATION CHOICE.
+20. **The record-by-record comparison is a new script** (`compare_r29_r28.py`), which also reports `simple_regions` and
+    `evaluations`. IMPLEMENTATION CHOICE.
+21. **The replay also covers the 90 records that changed against R28** (for V_i): 224 rows, 470 records (384 with a
+    nonzero count, the dispatch's "about 444" being the addendum's oversight). IMPLEMENTATION CHOICE.
+22. **The four-block check ran as stages of the replay pipeline** (pass 1 and pass 2 through the harness at each of the
+    three trees), then each capture replayed in its own process at its tree. IMPLEMENTATION CHOICE.
+23. **The four-block references:** composite 20-point Gauss–Legendre on 2^m x-panels each side of the root (located by
+    brentq on θ′ sampled at 40,001 points; one root each), m = 6–14, with QAGS split at the root as a second rule, on
+    R29's tree's captures; V by the trapezoidal rule on the driver's 4,097-point scan (equal to R29's
+    `location_skipped_phases`, bit for bit); the gate's estimate as `build_Levin_data` forms it on the root leaf. The
+    user's terms left the method to the agent. IMPLEMENTATION CHOICE.
+24. **A stop was taken on the 4 guarded records** (the dispatch's rule as written), reported before anything else, and
+    resumed on the user's word. STRUCTURALLY REQUIRED (the rule as written).
+
+### Verification performed
+
+- **The gate** (`out/00-gate.txt`): the four trees at their SHAs, clean; 65 runs, all finished; lock free.
+- **R29** (`out/r29_launch_check.txt`, `out/r29_end_check.txt`): launched 12:34:28Z (sh 14524, driver 14528), `done`
+  12:44:05Z, manifest at `e182bc7a`, clean, launcher `b0135218…`; no Traceback or WARNING.
+- **The comparisons** from the new worktree, `tools.store_value_diff` (16.5–16.7 s each); R27, R28, R29 byte-identical
+  before and after (`state/store_sha256_{before,after}_diff.txt`), and after the replays (`state/after_replay_body.txt`).
+- **The replay and captures** (`out/replay_check.txt`, `out/blockcheck.txt`): 470 / 470 records; the 12 block calls
+  reproduce their stores in pass 1 and pass 2, each capture's replay reproduces its value and abserr; Ray never
+  initialised (224 + 6 + 6 workers, 12 block processes).
+- **The readers** (`out/readers_check.txt`): 6 / 6 exit 0; R29 identical before and after; 0 Tracebacks.
+- **The lock** (`state/lock.log`), eight commands each its own: ray-processes, acquire, set-pid 14528, ray-processes,
+  ray-processes, release, status (free, no Ray processes), ray-processes. Each exited 0.
+- **Final** (`out/final_check.txt`): R27, R28, R29 and R26 unchanged; 66 runs, all finished; `~/.raypoolkit` empty; the
+  three worktrees and the main checkout clean, nothing written in any; the stop-1 records outside `r29/` untouched.
+
+### Observations not acted on
+
+1. **The gate's root-leaf estimate exceeds V on the four blocks** (19.16, 20.20 against 15.11, 15.90), which §10
+   anticipates; the guard catches the root, at the cost of a wider declaration on J4 (`issues.md`).
+2. **Rule A skips phases widely** — 423 replayed calls across every group and analytic label, V 0–18.70 — but only the
+   90 records that R28 located differ from R28.
+3. **R29's values on S1's and S2's calls equal R28's bit for bit;** the G+q+r roots are unchanged by Rule A.
+
+### State handed on
+
+- **R29** `levin-phase-floor-07-r29-guard-rule-a-20261108T123429`, `done`, `1b332ffa…`; its store kept
+  (`state/stores_sha256_final.txt`). R27, R28 (read-only record) and R26 unchanged.
+- **The lock is released;** nothing of this agent runs. All trees clean and unmoved.
+- **Planned stop 1′:** the census agent is not dispatched; nothing of prompt §6 was done.
+
+## levin-phase-floor 07 §6 — the census at 07's code (Mac Studio), the census agent
+
+**Subject:** prompt 07 §6, as amended by §10 (V3 sets aside a phase Rule A skipped), on the Mac Studio (`mps026298`),
+2026-11-08 to 2026-11-10, by Part B's census agent. Gate V0, the census, V1–V5, V4's references, the descriptive items,
+and a cross-check beyond §6 that the user asked for at stop 4. Ray-free; no store built.
+- **The tree g:** the worktree `SecondaryGWKit-lpf07-e182bc7` at Part B's resumed dispatch SHA `e182bc7a`, whose code is
+  `adffa21b`'s (07's `ad732887` with Rule A): `AdaptiveLevin/levin_quadrature.py` `4e5da371…`,
+  `ComputeTargets/QuadSourceIntegral.py` `33cb161e…`. No variant was installed.
+- **The parent p:** the worktree `SecondaryGWKit-lpf07-91472db` at `91472dbe` (06m's code, `beaf0e23…`), for V0's K0 run.
+- **The "before":** 06m's census, `levin-phase-floor-06m-census-20261106T102153` (checkpoint `ea5bc3ab…`).
+- **The store:** 06's certified scratch copy of A3 v2, read only.
+
+**Commit:** none here. The orchestrator commits these records from the laptop as `docs/levin-phase-floor/07/census/`.
+
+**Result:**
+- **Gate V0 holds**, all three clauses.
+- **The census** `levin-phase-floor-07-census-20261108T171137` is `done`: 18,560 of 18,560 units, 0 in error, 0 over budget,
+  wall 22,708 s (06m: 18,465 s).
+- **V1 holds:** all 284,514 calls that locate nothing and guard nothing equal 06m's bit for bit, and all 16,104 units
+  made only of such calls equal 06m's whole, `total` and `total_abserr` included.
+- **V2 holds:** no returned Levin leaf holds a sign change of θ′ (182,066 calls scanned).
+- **V3 holds:** 0 violations in 170,582 scored calls; 11,484 set aside under §10.
+- **V4 fails:** 28 of 33 scored calls are honest. z00, z12 and Z3's seven are honest, and 19 of the 24. Not honest:
+  v08, v09, v12, v17 and v22, at 2.2–3.2× their abserr.
+- **V5 fails:** 23 calls that locate a point hold leaves at `depth_max`.
+- **The store and 06m's census are unchanged**, before against after.
+
+### What shipped
+
+No code. The records are in `var/levin-phase-floor-07/census/`:
+- **The records:** `log.md` (this file), `verification.md`, `issues.md`, `KEPT_ON_MAC_STUDIO.txt`, and
+  `state/predictions.md` (SHA-256 `92e22911…`, mtime 2026-11-08T14:10:10Z, not rewritten).
+- **`scripts/`:** 06m's census harness, copied from g's `docs/levin-phase-floor/06m/census/scripts/`, changed where marked
+  "prompt 07". The diffs are `out/scripts_diff_at_copy.txt` (empty), `out/scripts_diff_before_k0.txt`,
+  `out/scripts_diff_at_stop2.txt` and `out/scripts_diff_at_stop4.txt`.
+  - **Changed:**
+    - `prov.py` and `refs_common.py`: the trees and the "before";
+    - `worker.py`: §1.5's diagnostics, Rule A's key, the scan;
+    - `run_k0.py`: `--tree`;
+    - `run_census.py`: 06a's over-budget pass;
+    - `run_06j.py`: the references' run backstop;
+    - `x1_capture.py` and `check_captures.py`: V4's captures, against 07's census.
+  - **New:**
+    - `compare_07.py`, `hash_runs_07.py`, `index_06m_07.py`, `v0a_imports_07.py`, `select_v4_07.py`;
+    - `census_projection_07.py`, `launch_07.py`, `launch_census_07.py`, `stop3_guarded_07.py`;
+    - `score_07.py`, `summarise_07.py`, `extra_descriptive_07.py`, `v4_capture_selection_07.py`, `slice_v4_07.py`;
+    - `refs_projection_07.py`, `score_v4_07.py`;
+    - the cross-check's `xcheck_07.py`, `xcheck_capture_07.py`, `xcheck_projection_07.py` and `xcheck_report_07.py`;
+    - `kept_list_07.py`.
+- **`out/`:** every command and its output (`out/cmd/`, `out/commands.log`), with these results:
+  - V0: `out/k0/compare_v0b.json`, `out/v0c/compare_det.json`, `out/v0/v0a_imports.txt`, `out/k0/compare_k0_g_calls.json`;
+  - stop 3: `out/stop3/compare_census_calls.json`, `out/stop3/guard_only.json`;
+  - the scores: `out/scores/summary.json`, `out/scores/extra_descriptive.json`;
+  - V4: `out/v4/` (captures, checks, inputs, projection, readings, `v4_scores.json`, `report.md`, `scripts_run.txt`);
+  - the cross-check: `out/xcheck/`;
+  - before and after: `out/runs_hashed_before.txt`, `out/runs_hashed_after.txt`, `out/census_projection.json`.
+- **Three registered runs, all `done`:**
+  - `levin-phase-floor-07-k0-20261108T135240`: 7 of 7 commands;
+  - `levin-phase-floor-07-census-20261108T171137`: 18,560 of 18,560, exit 0, checkpoint `03dfe786…`;
+  - `levin-phase-floor-07-references-20261109T005328`: 74 of 74 readings, exit 0, checkpoint `40a9d871…`.
+- **Kept on the Mac Studio** (`KEPT_ON_MAC_STUDIO.txt`): the census's checkpoint and region records in full (08 compares
+  against them), the references and k0 run directories, and every pickle and every file over 2 MB under `census/`.
+
+### Predictions and verdicts
+
+`state/predictions.md` holds prompt §6's predictions (lines 765–803) and §10's last bullet (lines 1017–1018), verbatim,
+then V4's selection and how each rule is read. It was written after V0 and before the census.
+
+| Prediction | Verdict | The numbers it was scored on |
+|---|---|---|
+| **V0 (a)** the parent's code is 06m's | **holds** | `git diff --stat 48cf87c0 91472dbe` (outside docs and prompts) touches `AdaptiveLevin/tests/test_levin_leaf_values.py` and `CLAUDE.md`; none of the 102 files of p the K0 workers loaded is among them |
+| **V0 (b)** K0 reproduces 06m at the parent | **holds** | 100 of 100 units equal: 2,110 calls (566 group, 1,544 analytic), 2,110 region records, 32,518 returned leaves; 0 differing |
+| **V0 (c)** the new code is deterministic | **holds** | `g-1e-8-1-2174` (z12's row, which locates one root at g) run twice in two fresh workers: identical on every key but timing and provenance, 07's new keys included |
+| **V1** nothing else moves | **holds** at both rtols | At each rtol: 9,280 of 9,280 units; 142,257 calls that locate and guard nothing, all equal; 8,052 units made only of such calls, `total` and `total_abserr` equal in hex |
+| **V2** no Levin leaf across a stationary point | **holds** | 182,066 calls scanned (37,325 group at each rtol; 107,416 analytic at 1e-7), 0 scan errors. Listed leaves: 0 Levin. The listed leaves are window leaves (526 group at each rtol, 1,514 analytic) and 168 ordinary Clenshaw–Curtis leaves of analytic calls whose phase Rule A skipped |
+| **V3** the location finds what the scan finds (§10's set-aside) | **holds** | 170,582 scored calls; 3,584 with a sign change or a located root; 0 violations; no point of kind `end`. Set aside: 11,484 scanned calls with a phase Rule A skipped (V from 0 to 18.81): 3,260 group calls at each rtol, none with a sign change; 4,964 analytic calls at 1e-7, of which 168 show a scan sign change (J4 and Y4 of 84 rows; 14 of them guarded, O9's calls). In all, counting the calls not scanned, 16,448 calls have a skipped phase |
+| **V4** honest where referenced | **fails** | 33 scored. Honest: z00 (0.718), z12 (0.718), Z3's seven (at most 0.0021), and 19 of the 24. Not honest: v08 3.16, v09 2.21, v12 3.08, v17 2.38, v22 2.53, |v_g − ref| / abserr_g. Every call's readings agree, the widest spread being 0.0039 of the tolerance. Basis: 13 calls on four readings, 11 on FCC r1 and r2 (the ruling at stop 4) |
+| **V5** the cap is not reached where a point was handled | **fails** | 23 calls (10 at 1e-7, 13 at 1e-8), each a `G+q+r` call #1 that locates its root, hold 2–54 leaves at `depth_max` 20 (`g-*-0-38999` holds 54). Three of them are converged (`g-1e-7-1-34766`, `g-1e-8-1-34766`, `g-1e-8-0-14167`); 20 are not. 0 units over budget |
+
+**The five V4 failures.**
+- Each is a converged `G+q+r` call of class (c) in the cross-check.
+- Each call's maximum region depth at g is 6, 7, 9, 11 or 14 (v17, v12, v08, v09, v22).
+- Each one's window was stopped by §1.3's `iroff1` rule while 4–13 of its leaves were still falling; the windows'
+  `max_depth_at_stop` was 5–6.
+- 06m was 497–30,400× its abserr from the reference on the same calls.
+- This is the case O8 and the note's B.5 anticipated (windows stopped while leaves still fell). On these five calls the
+  value is not within its declared error.
+
+**The comparison** with 06m is `scripts/compare_07.py`: 06l's `compare_k0.diff`, applied unchanged.
+- **Set aside:** 06m's exclusions (timing and provenance) and 07's new keys, each named and why:
+  - `guard_07`, `window_07`, `guarded_07`, `guard_at_depth_max_07`: §1.5's diagnostics;
+  - `scan_07`, `scan_07_error`, and `scan_07_s` (timing): §6's scan;
+  - QuadSourceIntegral's four counts (`stationary_points`, `window_pieces`, `guarded_regions`, `guard_at_depth_max`),
+    which reach the pickle's `result_full…groups[]` at g.
+- No 07 key name occurs in any 06m record.
+
+### Descriptive (not scored)
+
+- **Depth of the rows:**
+
+  | | rows at depth 20, g / 06m | rows at depth ≥ 18, g / 06m |
+  |---|---|---|
+  | 1e-7 | 77 / 192 | 283 / 384 |
+  | 1e-8 | 83 / 213 | 297 / 411 |
+
+  Of the 720 rows, 24 are at depth 20 at g against 139 at 06m (1e-7), and 27 against 157 (1e-8).
+- **Locations:** 4,940 calls locate, the same 2,470 at each rtol.
+  - Group calls: 720 roots (one per row of the 720), and 2,404 minima in lone-`G` calls (160 calls with 6 minima and 76
+    with 19, at each rtol), λ from 1.6e-7 to 2.3e-6.
+  - Analytic calls: 1,514 roots per rtol (757 J4, 757 Y4).
+  - No point at an end of a span; no minimum left unlocated.
+  - `num_guarded_regions`: 28 in all, O9's calls, one region each; `num_guard_at_depth_max` 0.
+- **Windows:** 2 to 32 pieces per call; widths in x from 4.7e-5 to 14.6 (median 2.58).
+  - θ′²/|θ″| at the own window edges: group roots 12.52–12.62 (median 12.566 = 2Φ_w); analytic roots 1.18–8.09;
+    minima up to 2π.
+- **§1.3's firings (B.5):**
+  - 1e-7: 1,157 of 2,470 windows stopped; 1,153 with a leaf still falling; 1,146 of those calls converged.
+  - 1e-8: 1,195 of 2,470 stopped; 1,192 falling; 1,183 of those calls converged.
+  - `leaves_falling_at_stop` 0–29. Every stopped window is listed in `out/scores/summary.json`.
+- **Convergence:**
+  - Located calls: 262 went from unconverged (06m) to converged, and 15 the other way.
+  - Unconverged group calls in the 720: 64 at g (62 within their request, each with an untrusted leaf at `depth_max`;
+    2 over, `node_limited`, at most 1.0038×; largest share of a row's `total_abserr` 18.7 %) against 311 at 06m
+    (largest share 53.0 %).
+  - Outside the 720: 114, identical to 06m's.
+  - No analytic call is unconverged.
+- **Totals in the 720:** 643 of 1,440 row totals moved by more than 06m's `total_abserr`; the largest move is 2.6e5 of
+  it (`g-1e-8-0-2065`); relative moves at most 0.86 %.
+- **Cost:**
+
+  | | g | 06m |
+  |---|---|---|
+  | census wall | 22,708 s | 18,465 s |
+  | unit walls, 1e-7 / 1e-8 | 24,203 / 27,479 s | 23,970 / 27,070 s |
+  | group-call regions, 1e-7 / 1e-8 | 952,275 / 1,065,288 | 939,882 / 1,053,755 |
+
+  - The median unit-wall ratio is 1.000.
+  - 254 tiny units (under 0.3 s) take more than twice 06m's time; 0 units are over budget.
+- **The stationary-point calls before:** 06m is honest on 17 of the 33 V4 calls. On the other 16 it is 356–5.2e5× its
+  abserr from the reference (z12 1,681×).
+- **V4's references:** 74 readings, all usable.
+  - Run wall about 25.6 h, against 89,230 s projected.
+  - The longest readings were FCC r2 on v18 (20,509 s) and on v13 (19,373 s).
+
+#### The cross-check (beyond §6, interim; the user's request at stop 4)
+
+The rule is `state/xcheck_rule_20261109.md` (SHA-256 `e06a1058…`), fixed before any result. The results are
+`out/xcheck/xcheck.json` and `out/xcheck/report.md`. Both checkpoints were unchanged before and after.
+
+- **(A) The population and the cross-rtol ratios:**
+  - 4,968 calls that locate or guard, i.e. 2,484 pairs; all paired.
+  - r_g ≤ 1 in 2,482 pairs and r_06m ≤ 1 in 2,432.
+  - Two pairs have r_g > 1: `3-14501` (1.39) and `3-35006` (1.08), both `G+q+r`, band low, k 1e5, class (e).
+- **(B) The disagreement list**, |v_g − v_06m| > max(abserr): 843 calls, all `G+q+r`.
+  - Classes: (a) 31, (b) 0, (c) 786, (d) 0, (e) 26.
+  - 3-38439's `G+q+r` is class (c), the known case.
+- **The cost of referencing class (c):** one capture per row; all 396 reproduce the census bit for bit.
+  - All four readings: 2.6e7 s; FCC only: 4.47e6 s.
+  - 145 rows project at 30 min or less by FCC alone.
+- **These are interim results.** The user is to choose a sample of references from them.
+
+### Deviations from the prompt
+
+1. **The harness changes,** each within §6's list: the tree and its paths; §1.5's diagnostics per call and per returned
+   leaf, with Rule A's `location_skipped_phases`; the scan on every group call at both rtols and every analytic call at
+   1e-7; the comparison with the new keys set aside. STRUCTURALLY REQUIRED.
+2. **K0 at p runs as `p-<rtol>-…`.** `compare_07.py whole` compares its `unit` and `tree` under 06m's names (`g-…`, `g`)
+   rather than excluding them. IMPLEMENTATION CHOICE.
+3. **06h's analytic counterfactual is computed at p as at g,** so that K0 reproduces 06m's records. STRUCTURALLY REQUIRED.
+4. **My first `run_k0.py` edit broke the spec line** (a comment swallowed `"units": units,`). I found it by reading and
+   fixed it before any run. UNINTENDED DRIFT (a failed attempt).
+5. **Development self-tests outside the scored set** (`out/cmd/10`–`13`, `21`; `state/smoke/`). IMPLEMENTATION CHOICE.
+6. **K0 at g, its call-by-call comparison and V0 (c) ran inside the k0 run,** so that the census projection had unit
+   timings at g. IMPLEMENTATION CHOICE.
+7. **Hand entries in `out/commands.log` first had estimated times,** later corrected. UNINTENDED DRIFT (cosmetic).
+8. **06a's over-budget pass lives in `run_census.py`,** in the census's own run. It was added after K0, so K0's records
+   name the earlier `run_census.py`. IMPLEMENTATION CHOICE.
+9. **V4 is stratified over all eight k,** not "all six that carry them": all eight carry stationary-point calls. The
+   user ruled at stop 2: "Please keep all 8 `k` and launch the census". IMPLEMENTATION CHOICE.
+10. **`state/predictions.md` gained a part 4,** how each rule is read, beyond the brief's three parts. IMPLEMENTATION
+    CHOICE.
+11. **`census_projection_07.py`'s first version counted the producer rebuild** in K0's ratio. It was superseded, and its
+    output is kept in `state/superseded/`. UNINTENDED DRIFT (a failed attempt).
+12. **The predictions check wrote and removed an unused `/tmp/x765.txt`.** UNINTENDED DRIFT (cosmetic).
+13. **The census held the shared rehearsal lock,** on the orchestrator's direction, though the brief said no lock was
+    needed. IMPLEMENTATION CHOICE.
+14. **The lock commands and the hashing are hand entries in `out/commands.log`,** each lock command a shell command of its
+    own. IMPLEMENTATION CHOICE.
+15. **`stop3_guarded_07.py`,** a new reader for stop 3. IMPLEMENTATION CHOICE.
+16. **`score_07.py`'s first full run crashed after 17 s** (an unpacking bug). Fixed, checked on five units, then re-run.
+    UNINTENDED DRIFT (a failed attempt).
+17. **`summarise_07.py`'s first run crashed** on a `None` row depth in a sort. Fixed and re-run. UNINTENDED DRIFT (a failed
+    attempt).
+18. **V4's capture scripts:** `x1_capture.py` (its title) and `check_captures.py` (07's census) were edited, and
+    `refs_common.py` gained `CENSUS07`. STRUCTURALLY REQUIRED (§6's "V4's references").
+19. **A 25th capture, z12's call,** made for the projection only. IMPLEMENTATION CHOICE.
+20. **`out/v4/` was made after `x1_capture.py` had started,** but before it wrote there. UNINTENDED DRIFT (caught before
+    it failed).
+21. **`refs_projection_07.py`'s first version failed:** 06g's captures are no longer on this host. Rewritten to take the
+    readings' own segment tables; the features were checked equal on z12's and P1's rows. UNINTENDED DRIFT (a failed
+    attempt).
+22. **That first attempt was started with a plain `&`;** it failed after 3 s. UNINTENDED DRIFT (cosmetic).
+23. **The projection model's choices:** γ is the largest calibration value; the margin is ×1.5; the laptop's FCC times
+    are scaled to this host by r55's readings. IMPLEMENTATION CHOICE.
+24. **New readers and launchers for scoring and V4.** IMPLEMENTATION CHOICE.
+25. **V3 covers the scanned calls only,** as §6's scan does: analytic calls at 1e-8 locate (1,514) but are not scanned.
+    IMPLEMENTATION CHOICE (recorded as read).
+26. **The reading subset.** FCC r1 and r2 on all 24; QAWO r1 and r2 on the 13 whose QAWO readings each project at 30
+    minutes or less (`state/v4_reading_list_20261109.json`, `ce594095…`); 74 readings in place of 96. The user: "Take
+    your recommended option of FCC at both resolutions plus QAWO where it is projected to be 30 minutes or less. It
+    costs only a few hours for an independent check of many calls. Calls without QAWO should be scored on whatever
+    references we do have, either one or two FCC readings." STRUCTURALLY REQUIRED (by the ruling).
+27. **V4's scoring rule, as the ruling states it.** Four readings: as written. Without QAWO: on the FCC readings it has,
+    FCC r2 the reference and the two in agreement within the same tolerance, or one reading with no agreement test.
+    Each call's basis is reported; readings that disagree are reported, not scored. STRUCTURALLY REQUIRED (by the
+    ruling).
+28. **`run_06j.py` gained the run backstop:** it reports past 30 minutes and stops only at a projected finish of 48 h. It
+    was tested on a scratch copy with a stub registry. IMPLEMENTATION CHOICE.
+29. **`launch_07.py`'s `references` plan was written for the ruled subset.** IMPLEMENTATION CHOICE.
+30. **The cross-check, beyond §6.** The user: "Yes, please do the cross-check on `rtol`s and the list of calls where
+    `06m` and `07` differ by more than the stated error. We can decide on a sample of references to sort of what these
+    difference really show, later." IMPLEMENTATION CHOICE.
+31. **Class (e) added to the cross-check's four classes,** named in the rule before any result so that the classes are
+    exhaustive. IMPLEMENTATION CHOICE.
+32. **The cross-check's captures were grouped one worker per (rtol, k),** one at a time under `nice`, one row per
+    class-(c) pair (the integrand is the same at both rtols). IMPLEMENTATION CHOICE.
+33. **The cross-check's capture chain was started with `&` inside a background shell,** and awaited by an until-loop on
+    its last command's record. UNINTENDED DRIFT.
+34. **Development runs of the cross-check on two rows** (`state/dev/`). IMPLEMENTATION CHOICE.
+35. **A reading-usability check in V4's scorer:** the tool's and the capture's SHA-256, Route B, Ray not initialised,
+    every non-monotone segment integrated directly. All 74 readings pass. IMPLEMENTATION CHOICE.
+36. **z00, z12 and Z3's seven are scored on 06g's own readings, two to four of them,** with this rule's tolerance and
+    agreement test. IMPLEMENTATION CHOICE.
+37. **Readings are compared as exact Fractions of their 30-digit strings** (06g used mpmath at 50 digits). IMPLEMENTATION
+    CHOICE.
+38. **Two figures in my stop-4 report were misstated;** the JSON was right throughout. The leaves at `depth_max` in V5's
+    23 calls number 2–54, not 2–14 (`g-*-0-38999` holds 54). Three of the 23 are converged, not two (`g-1e-7-1-34766`,
+    `g-1e-8-1-34766`, `g-1e-8-0-14167`). Corrected here. UNINTENDED DRIFT.
+39. **My V4 report to the orchestrator said "3–14 regions deep"** of the five failures. Their maximum region depth at g
+    is 6, 7, 9, 11 and 14, and their windows' `max_depth_at_stop` is 5–6. The phrase was in the report message only; it
+    is in no file. Corrected here. UNINTENDED DRIFT.
+40. **The first before-against-after comparison of 06m's run directory failed:** `sh` has no process substitution. Its
+    record is kept in `state/superseded/`, and it was re-run with `bash` (`out/cmd/99b`). UNINTENDED DRIFT (a failed
+    attempt).
+
+### Verification performed
+
+`verification.md` has the full account. In brief:
+- **The trees, before and after:** g at `e182bc7a`, p at `91472dbe` and `-7460035` at `74600350`, all clean with
+  `--ignored` and with no `__pycache__`. The main checkout is at `28ebaf07`, clean.
+- **The module hashes:** g `4e5da371…` (equal to `git show` at `e182bc7a` and `adffa21b`), p `beaf0e23…`. Every census
+  worker loaded g's module from the tree, with no variant, no foreign module and no Ray.
+- **The scratch copy:** EQUAL to its certification and to 06e's after-hashes, before and after; before equals after.
+- **06m's census:** 150 of 150 files equal its kept list, before and after.
+- **Captures:** 25 + 396 captures reproduce 07's census bit for bit (values, regions, call records, harness).
+- **The registry:** 69 runs, all finished. The lock is free.
+
+### Observations not acted on
+
+1. **Lone-`G` group calls locate minima of |θ′|** with λ about 1e-7–1e-6, 6 or 19 per call, 236 calls at each rtol.
+   Every one is converged. Not looked into further.
+2. **The class-(c) calls of the cross-check** (786 calls, 396 rows) are where both codes are self-consistent across
+   rtols and disagree beyond their errors. All five V4 failures are among them, and so is 3-38439. Which code
+   is right there is undecided without references.
+3. **The references run took about 25.6 h** against a projection of 89,230 s (+3 %). The backstop reported and stopped
+   nothing.
+
+### State handed on
+
+- **Nothing is running.** The lock is free; all three of my registered runs are `done`.
+- **Kept on the Mac Studio** (`KEPT_ON_MAC_STUDIO.txt`):
+  - the census run directory (150 files, 4.8 GB), the references and k0 run directories;
+  - every pickle and every file over 2 MB under `census/`: the K0, V0 (c), V4 and cross-check captures (`state/`,
+    917 MB), `state/score_07_units.json`, the comparison outputs.
+- **The census's checkpoint and region records stay in full; 08 compares against them.**
+- **Read only and unchanged:** the scratch copy and 06m's census.
+- **Issues:** proposed in `issues.md`, for the laptop and the user to decide.

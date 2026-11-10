@@ -1,0 +1,30 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T10:43:30Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; R=$M/var/levin-phase-floor-07/rehearsal; cd $M; grep -E "07-r2[78]" $R/state/stores_sha256_final.txt > $R/state/final_r27r28.txt; grep -E "07-r2[78]" $R/state/after_replay_body.txt > $R/state/replay_r27r28.txt; grep -v -E "^[0-9a-f]{64}.*r28|r28.*[0-9]{10}$" $R/state/replay_r27r28.txt > /dev/null; grep -E "^[0-9a-f]{64}" $R/state/final_r27r28.txt > $R/state/final_r27r28_hashes.txt; grep -E "^[0-9a-f]{64}" $R/state/replay_r27r28.txt > $R/state/replay_r27r28_hashes.txt; cmp $R/state/final_r27r28_hashes.txt $R/state/replay_r27r28_hashes.txt && echo "R27, R28 sha256 equal to after the replay (and stop 1)"; grep -E "^[0-9a-f]{64}.*06m-r26" $R/state/stores_sha256_final.txt > $R/state/final_r26_hashes.txt; cmp $R/state/final_r26_hashes.txt $R/state/r26_gate_hashes_only.txt && echo "R26 equal to the gate and 06m record"; ./venv/bin/python -B -m runregistrykit list > $R/out/final_registry_list.txt 2>&1; echo "list exit $?"; grep "levin-phase-floor-07" $R/out/final_registry_list.txt | cut -c1-110; tail -1 $R/out/final_registry_list.txt; ls -la ~/.raypoolkit; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035; do echo "== $t"; git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short --ignored; find $t -newer $R/state/r27_launch_marker -not -path "*/.git/*" | head -3; done; echo "== main"; git --no-optional-locks rev-parse HEAD; git --no-optional-locks status --short; echo "== pycache"; find $R -name __pycache__; echo "== files over 2 MB"; find $R -type f -size +2M | grep -v "/extract/" | wc -l; echo "== pickles"; find $R -name "*.pkl" | wc -l; du -sh $R
+# output:
+R27, R28 sha256 equal to after the replay (and stop 1)
+R26 equal to the gate and 06m record
+list exit 0
+   levin-phase-floor-07-p1-references-20261108T103132         done            2/2      12m  levin-phase-floor 
+   levin-phase-floor-07-r28-guard-20261108T001916             done              -  10h 24m  levin-phase-floor 
+   levin-phase-floor-07-r27-parent-20261108T000634            done              -  10h 36m  levin-phase-floor 
+65 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 65 finished; 0 with no host recorded.
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  8 10:30 .
+drwxr-x--- 158 ds283 staff 5056 Nov  8 09:25 ..
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db
+91472dbee1daba8374b0018db1195cf6c7898bbb
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+746003508bff868fc1b256b29cbd5035609bed2b
+== main
+28ebaf0743e0555fb2c4512ce714884005a60eff
+== pycache
+== files over 2 MB
+22
+== pickles
+21
+360M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal
+# exit: 0
+# end: 2026-11-08T10:43:31Z

@@ -1,0 +1,15 @@
+# stop3_emptylists.py sha256 854310a15998848b87cf2b816eac73892367fd128b3e38b475a8dc5d693e3315
+{
+ "pickle.w3 empty<->nonempty units": 17,
+ "pickle.w3 entries of active calls": 23,
+ "data.deep_lines.lines empty<->nonempty units": 275,
+ "data.deep_lines.lines entries of active calls": 275,
+ "data.deep_lines_06e.lines empty<->nonempty units": 120,
+ "data.deep_lines_06e.lines entries of active calls": 120,
+ "pickle.deep_lines_06e empty<->nonempty units": 120,
+ "pickle.deep_lines_06e entries of active calls": 120,
+ "pickle.deep_lines empty<->nonempty units": 275,
+ "pickle.deep_lines entries of active calls": 275
+}
+bad 0 []
+exit 0

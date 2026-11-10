@@ -1,0 +1,5 @@
+$ diff -r <g>/docs/levin-phase-floor/06m/census/scripts var/levin-phase-floor-07/census/scripts
+# host mps026298.phys.susx.ac.uk
+# at 2026-11-08T13:39:55Z
+# ----
+# exit 0

@@ -1,0 +1,113 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T12:34:03Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; N=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7; P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db; C=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035; for T in $M $P $C $N; do echo "== $T"; git -C $T --no-optional-locks rev-parse HEAD; git -C $T --no-optional-locks status --short --ignored | grep -v "^!! venv" ; echo "(end)"; done; git -C $M --no-optional-locks worktree list; echo "== log 74600350..e182bc7a"; git -C $N --no-optional-locks log --oneline 74600350..e182bc7a; echo "== diff --stat 74600350 e182bc7a outside docs prompts"; git -C $N --no-optional-locks diff --stat 74600350 e182bc7a -- . ":!docs" ":!prompts"; echo "== diff --stat adffa21b e182bc7a outside prompts"; git -C $N --no-optional-locks diff --stat adffa21b e182bc7a -- . ":!prompts"; echo "== hashes in N"; cd $N && shasum -a 256 AdaptiveLevin/levin_quadrature.py ComputeTargets/QuadSourceIntegral.py RunDrivers/quadsource_atol_sweep.py main.py tools/store_value_diff.py; cd $M; echo "== registry"; ./venv/bin/python -B -m runregistrykit list > /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/00-registry-list.txt 2>&1; echo "exit $?"; tail -1 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/00-registry-list.txt; ls -la ~/.raypoolkit; ls -d ~/ScienceData/.rehearsal-lock 2>&1; ls var/datastores | grep -c "07-r29"; ls var/runs | grep -c "07-r29"; uptime; df -h . | tail -1; ls -l ~/.ray/auth_token
+# output:
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+!! .DS_Store
+!! .idea/
+!! AdaptiveLevin/__pycache__/
+!! AdaptiveLevin/tests/__pycache__/
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf
+!! Analytical_OmegaGW_LISA_Taiji_TianQin.png
+!! ComputeTargets/__pycache__/
+!! CosmologyConcepts/__pycache__/
+!! CosmologyModels/GenericEOS/__pycache__/
+!! CosmologyModels/LambdaCDM/__pycache__/
+!! CosmologyModels/__pycache__/
+!! Datastore/
+!! GkSource-out/
+!! LiouvilleGreen/.DS_Store
+!! LiouvilleGreen/__pycache__/
+!! LiouvilleGreen/tests/.DS_Store
+!! LiouvilleGreen/tests/__pycache__/
+!! LiouvilleGreen/tests/test_3bessel_analytic/
+!! LiouvilleGreen/tests/three_bessel_debug/
+!! MetadataConcepts/__pycache__/
+!! ObjectFactories/__pycache__/
+!! Omega_GW_sensitivity.pdf
+!! Omega_GW_sensitivity.png
+!! Quadrature/__pycache__/
+!! Quadrature/integrators/__pycache__/
+!! Quadrature/supervisors/__pycache__/
+!! RayTools/
+!! StoreFixtures/__pycache__/
+!! Units/__pycache__/
+!! __pycache__/
+!! config/__pycache__/
+!! docs/handover/a3-v2/findings/__pycache__/
+!! profile-db.sqlite
+!! test-db-qcd-shard0000.sqlite
+!! test-db-qcd-shard0001.sqlite
+!! test-db-qcd-shard0002.sqlite
+!! test-db-qcd-shard0003.sqlite
+!! test-db-qcd-shard0004.sqlite
+!! test-db-qcd-shard0005.sqlite
+!! test-db-qcd-shard0006.sqlite
+!! test-db-qcd-shard0007.sqlite
+!! test-db-qcd-shard0008.sqlite
+!! test-db-qcd-shard0009.sqlite
+!! test-db-qcd-shard0010.sqlite
+!! test-db-qcd-shard0011.sqlite
+!! test-db-qcd-shard0012.sqlite
+!! test-db-qcd-shard0013.sqlite
+!! test-db-qcd-shard0014.sqlite
+!! test-db-qcd-shard0015.sqlite
+!! test-db-qcd-shard0016.sqlite
+!! test-db-qcd-shard0017.sqlite
+!! test-db-qcd-shard0018.sqlite
+!! test-db-qcd-shard0019.sqlite
+!! test-db-qcd.sqlite
+!! thirdparty/__pycache__/
+!! three_bessel_debug/
+!! tools/__pycache__/
+!! var/
+(end)
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db
+91472dbee1daba8374b0018db1195cf6c7898bbb
+(end)
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+746003508bff868fc1b256b29cbd5035609bed2b
+(end)
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7
+e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f
+(end)
+/Users/ds283/Documents/Code/SecondaryGWKit               28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 74600350 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db 91472dbe (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 e182bc7a (detached HEAD)
+== log 74600350..e182bc7a
+e182bc7a Write levin-phase-floor 07's resumed Part B dispatch
+adffa21b Skip locating a phase whose variation is below the C2 gate
+2ddd3306 Amend levin-phase-floor 07 with Rule A at Part B's first stop
+== diff --stat 74600350 e182bc7a outside docs prompts
+ AdaptiveLevin/levin_quadrature.py                 | 130 +++++++++++++--
+ AdaptiveLevin/tests/test_levin_stationary.py      | 192 +++++++++++++++++++++-
+ AdaptiveLevin/tests/test_levin_trust_yardstick.py |   4 +-
+ CLAUDE.md                                         |   9 +-
+ 4 files changed, 315 insertions(+), 20 deletions(-)
+== diff --stat adffa21b e182bc7a outside prompts
+ docs/OPEN_ISSUES.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+== hashes in N
+4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc  AdaptiveLevin/levin_quadrature.py
+33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  ComputeTargets/QuadSourceIntegral.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  RunDrivers/quadsource_atol_sweep.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  main.py
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  tools/store_value_diff.py
+== registry
+exit 0
+65 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 65 finished; 0 with no host recorded.
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  8 10:30 .
+drwxr-x--- 158 ds283 staff 5056 Nov  8 12:12 ..
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+0
+0
+12:34  up 32 days,  3:10, 1 user, load averages: 9.41 7.63 5.19
+/dev/disk3s3s1  927G  794G  133G  86% /
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+# exit: 0
+# end: 2026-11-08T12:34:05Z

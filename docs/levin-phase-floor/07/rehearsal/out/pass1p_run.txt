@@ -1,0 +1,13 @@
+2026-11-08T10:09:09Z # prompt 07 rehearsal: run pass1-p
+2026-11-08T10:09:09Z # written 2026-11-08T10:09:08Z on mps026298.phys.susx.ac.uk
+2026-11-08T10:09:09Z # script replay07.py sha256 68f985ebe3086a6d1a323a668420c62e0275c9788e0f85be9dcb4b5d57680a9d
+2026-11-08T10:09:09Z # tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+2026-11-08T10:09:09Z # tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+2026-11-08T10:09:09Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-08T10:09:09Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/pass1p_spec.json sha256 f006cf2fc6c685d8af2bf1978f189335fa2444dc6b21f006144efcf76eb1fe2a
+2026-11-08T10:09:09Z 2 workers, 5 units, at most 6 at once
+2026-11-08T10:09:09Z start pass1-p-0 (p, 3 units): pid 7202
+2026-11-08T10:09:09Z start pass1-p-1 (p, 2 units): pid 7203
+2026-11-08T10:10:02Z end pass1-p-1: rc 0 after 53.5 s
+2026-11-08T10:10:17Z end pass1-p-0: rc 0 after 68.6 s
+2026-11-08T10:10:18Z done in 69.6 s; return codes {0: 2}

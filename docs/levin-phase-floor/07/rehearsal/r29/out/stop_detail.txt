@@ -1,0 +1,25 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/scripts/stop_detail.py sha256 93517feed471277ccc2c30b2caf81f4b14a04b7cc2702005a6d1daebd276c00a
+
+row (316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946)
+  r27: analytic_rad -0x1.6eae47c092e75p-43 analytic.abserr 0x1.137b3e83a386fp-73 converged True; total -0x1.6eae8752bd8fep-43
+      2pt5 J4_data: abserr 0x1.4fd2c038b843dp-63 regions 1 converged True phase_limited False counts [None, None, None, None]
+      2pt5 Y4_data: abserr 0x1.79ab800000000p-62 regions 1 converged True phase_limited False counts [None, None, None, None]
+  r28: analytic_rad -0x1.6eae47c092e5ep-43 analytic.abserr 0x1.fce871f074ab1p-74 converged True; total -0x1.6eae8752bd8fep-43
+      2pt5 J4_data: abserr 0x1.65dacd1543ce8p-66 regions 14 converged True phase_limited True counts [1, 13, 0, 0]
+      2pt5 Y4_data: abserr 0x1.78af331f037f8p-66 regions 4 converged True phase_limited False counts [1, 3, 0, 0]
+  r29: analytic_rad -0x1.6eae47c092e6ep-43 analytic.abserr 0x1.01222fca1f865p-72 converged True; total -0x1.6eae8752bd8fep-43
+      2pt5 J4_data: abserr 0x1.9778b3736d5e1p-59 regions 2 converged True phase_limited False counts [0, 0, 1, 0]
+      2pt5 Y4_data: abserr 0x1.aa161bfb153afp-66 regions 3 converged True phase_limited True counts [0, 0, 1, 0]
+  |rad29 - rad27| = 1.76705e-28 = 1.551e-6 x abserr27 = 8.308e-7 x abserr29
+
+row (1000000.0, 1000000.0, 1000000.0, 4017630440.8276954)
+  r27: analytic_rad -0x1.200f6b1a6bc83p-45 analytic.abserr 0x1.34a555f6e4b03p-72 converged True; total -0x1.200f38a1171aap-45
+      2pt5 J4_data: abserr 0x1.c680c05f3602ep-66 regions 1 converged True phase_limited False counts [None, None, None, None]
+      2pt5 Y4_data: abserr 0x1.1045c00003c2dp-63 regions 1 converged True phase_limited False counts [None, None, None, None]
+  r28: analytic_rad -0x1.200f6b1a6bc8fp-45 analytic.abserr 0x1.31fcd6ac5f0c8p-72 converged True; total -0x1.200f38a1171aap-45
+      2pt5 J4_data: abserr 0x1.ff3cae87aca98p-69 regions 6 converged True phase_limited False counts [1, 5, 0, 0]
+      2pt5 Y4_data: abserr 0x1.faa21d2682f6bp-69 regions 13 converged True phase_limited True counts [1, 12, 0, 0]
+  r29: analytic_rad -0x1.200f6b1a6bc86p-45 analytic.abserr 0x1.3651245b06b22p-72 converged True; total -0x1.200f38a1171aap-45
+      2pt5 J4_data: abserr 0x1.2c82764608ef0p-62 regions 2 converged True phase_limited True counts [0, 0, 1, 0]
+      2pt5 Y4_data: abserr 0x1.332dd100e35e5p-68 regions 3 converged True phase_limited False counts [0, 0, 1, 0]
+  |rad29 - rad27| = 1.89327e-29 = 7.416e-8 x abserr27 = 7.376e-8 x abserr29

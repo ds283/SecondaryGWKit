@@ -1,0 +1,63 @@
+2026-11-08T14:17:56Z
+# levin-phase-floor 07: census units at the tree p under the variant tree
+# written 2026-11-08T14:17:56Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 b6bf9abb823ce341072da9a4b31271a19675b5540bdc86b7bc7e1ac8eb2798f2
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/review/stop2/units_parent.json sha256 3cc1bbd20de82570374805685a3337b1b212d6327d23df2864b82d3ffb20dca5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# variant null
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db at 91472dbee1daba8374b0018db1195cf6c7898bbb
+# 2 units in 2 workers: tree-1e-7-k1_102 (1), tree-1e-8-k0_101 (1)
+tree-1e-7-k1_102: pid 23589 (1 units)
+tree-1e-8-k0_101: pid 23590 (1 units)
+tree-1e-7-k1_102: exit 0 after 66.6 s
+tree-1e-8-k0_101: exit 0 after 79.4 s
+exit codes {tree-1e-7-k1_102: 0, tree-1e-8-k0_101: 0}
+refused: []
+bye tree-1e-7-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye tree-1e-8-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 2 of 2; not done []; wall 80 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/review/stop2/p_run/units.jsonl sha256 a822cbbbd9736149dfe8c8cf5d64786a06679365710e58d17a3a9cfe4d73010b
+exit p 0
+2026-11-08T14:19:16Z
+# levin-phase-floor 07: census units at the tree g under the variant tree
+# written 2026-11-08T14:19:16Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 b6bf9abb823ce341072da9a4b31271a19675b5540bdc86b7bc7e1ac8eb2798f2
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/review/stop2/units_g.json sha256 e6a1b26f37bda0dd9803374fd5b84daa887fdb1730aa09b0ff5cd3fb794de63e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# variant null
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 at e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f
+# 1 units in 1 workers: tree-1e-7-k0_101 (1)
+tree-1e-7-k0_101: pid 23628 (1 units)
+tree-1e-7-k0_101: exit 0 after 64.6 s
+exit codes {tree-1e-7-k0_101: 0}
+refused: []
+bye tree-1e-7-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 1 of 1; not done []; wall 65 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/review/stop2/g_run1/units.jsonl sha256 4c715be2cc595174953314b86124bb612e35cce108854c448c9d13bcc8833f73
+exit g1 0
+# levin-phase-floor 07: census units at the tree g under the variant tree
+# written 2026-11-08T14:20:22Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 b6bf9abb823ce341072da9a4b31271a19675b5540bdc86b7bc7e1ac8eb2798f2
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/review/stop2/units_g.json sha256 e6a1b26f37bda0dd9803374fd5b84daa887fdb1730aa09b0ff5cd3fb794de63e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# variant null
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 at e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f
+# 1 units in 1 workers: tree-1e-7-k0_101 (1)
+tree-1e-7-k0_101: pid 23653 (1 units)
+tree-1e-7-k0_101: exit 0 after 64.1 s
+exit codes {tree-1e-7-k0_101: 0}
+refused: []
+bye tree-1e-7-k0_101: ray_initialized False; foreign modules []; by root {'own tree': 102, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 1 of 1; not done []; wall 65 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/review/stop2/g_run2/units.jsonl sha256 c8a1e62ff6fdd93f652d248cde736cfd23ebbe9a6aecc2647bb5a5630e3b5845
+exit g2 0
+2026-11-08T14:21:27Z

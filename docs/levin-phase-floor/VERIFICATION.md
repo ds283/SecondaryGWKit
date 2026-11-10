@@ -3422,3 +3422,243 @@ lost. The flag-cost table's lines outside the 720 were re-counted exactly from
 - `[06g-slow-leaves-at-half-cost-convergence-outside-stationary-points]` closes;
 - `[06m-calls-flagged-unconverged-within-their-request]` is opened and assigned to prompt 08, with
   its question of what `total_converged` means.
+
+## 7. The stationary-point guard
+
+*Prompt 07: the code on the laptop (`ad732887`, and Rule A's amendment `adffa21b`, prompt §10); the
+rehearsals, the census and V4's references on the Mac Studio, 2026-11-08 to 2026-11-10, through an
+orchestrator session there, from the worktrees `SecondaryGWKit-lpf07-91472db` (R27 and V0's K0 run
+at the parent), `SecondaryGWKit-lpf07-7460035` (R28) and `SecondaryGWKit-lpf07-e182bc7` (R29, the
+census and the references). The records are under [`07/`](07/). What stays on the Mac Studio is in
+[`07/KEPT_ON_MAC_STUDIO.md`](07/KEPT_ON_MAC_STUDIO.md).*
+
+### 7.1 The code
+
+`_adaptive_levin` locates each phase's stationary points before integrating: a 4,097-point scan of
+the basis's closed-form rates, roots by sign change and nearly coalescing minima by their Airy
+parameter $\lambda < \Lambda_c$. A window of phase half-width $\Phi_w$ round each is cut into
+Clenshaw–Curtis pieces of at most $2\pi$, the rest goes to Levin as before, and a nodal sign-change
+guard is the safety net, with the floor-limited exit barred in window pieces and guarded regions.
+§1.3 counts QUADPACK's `iroff1` per window, stopping a window at six and returning its leaves
+floor-limited. `QuadSourceIntegral` stores four counts per Levin record. §2's fixed rules, re-run at
+rtol $10^{-9}$, set **$\Phi_w = 2\pi$ and $\Lambda_c = 4$**; all 14 real calls are honest and
+converged there, z12 at 0.718 of its error (1,681 at the parent). **Rule A** (§10, `adffa21b`): a
+phase whose total variation on the scan is below `SIX_PI` is not located, and is reported under
+`location_skipped_phases`; §2 re-run on it is bit-identical to run 2. The tests, the breakages and
+§2's records are in
+[`logs/07-stationary-point-guard.md`](../../prompts/levin-phase-floor/logs/07-stationary-point-guard.md)
+and [`07/calibration/`](07/calibration/): `test_levin_stationary` (16 tests with 13 (a)–(d)) and
+test 11; breakages (i)–(xi) caught; AdaptiveLevin 91 → 107 and ComputeTargets 780 → 781, the other
+five roots equal. The laptop orchestrator reviewed Part A in eleven checks and the amendment in five
+(the orchestrator note's §A.3 and §B.6).
+
+### 7.2 Rehearsals R27 and R28 (prompt 07 §5)
+
+The agent's record is [`07/rehearsal/verification.md`](07/rehearsal/verification.md).
+- **The runs.** R27 `levin-phase-floor-07-r27-parent-20261108T000634` at `91472dbe` (06m's code)
+  and R28 `levin-phase-floor-07-r28-guard-20261108T001916` at `74600350` (`ad732887`'s code), both
+  `done`, both fingerprinted `1b332ffa…`, with 06m's command line under the lock.
+- **S0 holds: R27 equals R26** in the seven value tables (360,462 rows) and in all 864
+  `QuadSourceIntegral` rows, every value field (118,776) and counter field (27,163) bit-identical.
+  The labels differ only by the job-name prefix and the stamp, normalised in a copy as 06m did.
+- **R28 against R27.** Outside `QuadSourceIntegral` the value tables are identical, 0 differences
+  unclassified. Inside it, 640 rows locate nothing and are bit-identical; 224 are tabulated
+  ([`qsi_rows.csv`](07/rehearsal/out/qsi_rows.csv)). A replay of those rows at R28's tree reproduced
+  all 470 touched records bit for bit and gave each located point's kind and $z$: 44 `G+q+r` roots
+  at $z = 10211.32$ (42) and $275.009$ (2), 400 analytic J4/Y4 roots, and 26 `q-r` calls with
+  $q = r$ locating 4,097 points each, every scan sample of a rate identically zero. 17 rows gain
+  convergence, none loses it; summed regions 114,826 → 227,883, almost all in the 26.
+- **The `q-r` references** (the user's addition at stop 1): on three of the 26, the worst included,
+  R28 is 0.179, 0 and 0.069 of its abserr and R27 0.0021, 0.0014 and 0.0006. On the worst, R28's
+  verdict rests on the Gauss–Legendre sequence (agreeing to $5.9\times10^{-39}$), not on the
+  reference's stated error, which QAGS sets.
+- **S1 holds:** each of V1's twelve locates one root at $z = 10211.3179 \pm 9\times10^{-6}$ and is
+  honest against 06g's reference, the worst 0.218 (w11).
+- **S2 holds:** P1's two rows locate their points within $7.1\times10^{-9}$ and $5.6\times10^{-9}$
+  (spacing 0.0041) and are 0.020 and 0.263 of their abserr from four agreeing readings
+  (`levin-phase-floor-07-p1-references-20261108T103132`); R27 is $5.6\times10^5$ and
+  $4.1\times10^4$ out, P1's failure reproduced.
+
+The readers ran on R28 (six of six exit 0, the store unchanged), and the lock was released with no
+Ray process left. The zero-rate case held Part B before the census and led to Rule A
+(`[07-location-on-an-identically-zero-rate]`, closed).
+
+### 7.3 Rehearsal R29, at Rule A's code (prompt 07 §10)
+
+The agent's record is [`07/rehearsal/r29/verification.md`](07/rehearsal/r29/verification.md).
+- **The run.** R29 `levin-phase-floor-07-r29-guard-rule-a-20261108T123429` at `e182bc7a`
+  (`adffa21b`'s code), `done`, `1b332ffa…`, R28's command line, 9.6 min.
+- **R29 against R28,** record by record over 13,177 Levin records: 13,087 bit-identical, the counts
+  included; 90 changed, every one located at R28 and skipped by Rule A at R29. 86 equal R27 bit for
+  bit (the 26 `q-r` calls and 60 analytic `2pt5` J4/Y4 blocks). **4 do not:** in the `2pt5` J4 and
+  Y4 blocks at $(3.162\times10^5)^3$, $z = 1.329\times10^9$, and $(10^6)^3$, $z = 4.018\times10^9$,
+  Rule A skips the phase while the C2 gate's estimate on the root leaf exceeds `SIX_PI`, so the root
+  leaf goes to the Levin solve and the nodal guard catches its root (O9's case). Outside
+  `QuadSourceIntegral` every value table is identical; the 54 rows that differ have `total` and
+  `total_abserr` equal to R27's.
+- **The four blocks** (the user's addition), each replayed at all three trees and referenced by
+  composite Gauss–Legendre split at the root, with QAGS as a second rule:
+
+  | block | $V$ (scan) | gate's estimate on the root leaf | R27 | R28 | R29 |
+  |---|---|---|---|---|---|
+  | $(3.162\times10^5)^3$ J4 | 15.113 | 19.160 | $7.4\times10^{-5}$ | $4.4\times10^{-5}$ | $1.5\times10^{-6}$ |
+  | $(3.162\times10^5)^3$ Y4 | 15.113 | 19.160 | $1.6\times10^{-5}$ | $5.8\times10^{-4}$ | $3.7\times10^{-4}$ |
+  | $(10^6)^3$ J4 | 15.896 | 20.196 | $1.0\times10^{-4}$ | $2.1\times10^{-4}$ | $3.1\times10^{-6}$ |
+  | $(10^6)^3$ Y4 | 15.896 | 20.196 | 0 | $6.2\times10^{-4}$ | $5.1\times10^{-5}$ |
+
+  The entries are $|v - {\rm ref}|/\text{abserr}$; every reference's stated error is at least
+  1,990× below every abserr, so all three stores are honest on all four outright. R29's J4
+  declarations are 19× and 11× R27's. `SIX_PI` is 18.850.
+- **R29 against R27:** 692 rows untouched and bit-identical; 172 tabulated
+  ([`qsi_rows_r27_r29.csv`](07/rehearsal/r29/out/qsi_rows_r27_r29.csv)); the largest move
+  $7.38\times10^4$ of R27's `total_abserr`, at $(10^6)^3$, $z = 2284.25$; `total_converged`
+  845 → 862, 17 rows gained and none lost. Summed regions: R27 114,826, R28 227,883, **R29 114,460**.
+- **The replay** reproduced all 470 records bit for bit (384 with a nonzero count: 44 `G+q+r` roots,
+  336 analytic roots, the 4 guarded blocks). **S1 and S2 hold on R29**, each call equal to R28's bit
+  for bit. The readers exit 0 and leave R29 unchanged; the lock was released.
+
+### 7.4 The census: 06m's census re-run at the code (prompt 07 §6)
+
+The agent's record is [`07/census/verification.md`](07/census/verification.md). 06m's harness ran
+from the worktree at `e182bc7a`, no variant installed, on 06's certified scratch copy of A3 v2,
+read-only; the "before" is 06m's census (checkpoint `ea5bc3ab…`). The predictions were copied into
+[`07/census/state/predictions.md`](07/census/state/predictions.md) after Gate V0 and before the
+census, with V4's 24 calls.
+- **Gate V0 holds.** (a) `git diff --stat 48cf87c0 91472dbe` touches a test module and `CLAUDE.md`,
+  none of the 102 files the K0 workers loaded; (b) `levin-phase-floor-07-k0-20261108T135240`
+  reproduces 06m's census on 100 of 100 K0 units at the parent (2,110 calls, 32,518 leaves, 0
+  differing); (c) `g-1e-8-1-2174` run twice at $g$ is identical.
+- **The census.** `levin-phase-floor-07-census-20261108T171137`: 18,560 of 18,560 units `done`,
+  none in error or over budget, 22,708 s (06m 18,465 s), checkpoint `03dfe786…`.
+
+| | Rule | Verdict | Numbers |
+|---|---|---|---|
+| V1 | every call that locates and guards nothing equals 06m's; so do the rows made only of them | **holds** | 284,514 calls (142,257 per rtol) and 16,104 units, `total` and `total_abserr` equal in hex |
+| V2 | no returned Levin leaf holds a sign change of $\theta'$ | **holds** | 182,066 calls scanned (37,325 group calls per rtol, 107,416 analytic at `1e-7`); 0 |
+| V3 | each sign change has a located root within one spacing, and each root a sign change | **holds** | 0 violations in 170,582 calls; set aside under §10, 11,484 calls with a skipped phase, 168 of them with a sign change (14 guarded) |
+| V4 | honest where referenced | **fails** | 28 of 33: z00 and z12 0.718, Z3's seven $\le 0.0021$, 19 of the 24; v08 3.16, v09 2.21, v12 3.08, v17 2.38, v22 2.53 |
+| V5 | no leaf at `depth_max` in a call that locates or guards | **fails, as written** | 23 `G+q+r` calls with 2–54 leaves at depth 20 (10 at `1e-7`, 13 at `1e-8`), 3 converged; 0 units over budget |
+
+- **V4's references.** `levin-phase-floor-07-references-20261109T005328`: 74 readings by
+  `tools/filon_reference.py`, about 25.6 h, all usable, on the user's subset at planned stop 4 (four
+  readings on 13 calls, FCC at both resolutions on 11). Every call's readings agree, the widest
+  spread 0.0039 of the tolerance. z00, z12 and Z3's seven are scored on 06g's readings.
+- **V4's five failures** are each a converged `G+q+r` call, maximum depth 6–14 and no leaf at
+  `depth_max`, whose one window was stopped by §1.3's `iroff1` at 6 while 4–13 of its leaves were
+  still falling (`max_depth_at_stop` 5–6). 06m is 497–30,400× its abserr on the same calls
+  (`[07-iroff1-window-stop-can-leave-a-call-dishonest]`).
+- **The stationary-point calls before:** 06m is honest on 17 of the 33 (v00–v03, v06, v11, v16,
+  v21, v23, z00 and Z3's seven) and 356–$5.2\times10^5$× out on the other 16, z12 at 1,681×.
+- **V5's premise was stale** (the log's verdict, and the board's Decisions **G2 L2, reopened**):
+  calls outside the stationary points had reached the cap since 06g, and in the 720, 62 of 07's 64
+  unconverged group calls carry the same signature (an untrusted leaf at the cap, the error within
+  the request).
+
+**Descriptive.**
+
+| | rows at depth 20, $g$ / 06m | in the 720 | group-call regions, $g$ / 06m | unit walls, $g$ / 06m |
+|---|---|---|---|---|
+| `1e-7` | 77 / 192 | 24 / 139 | 952,275 / 939,882 | 24,203 / 23,970 s |
+| `1e-8` | 83 / 213 | 27 / 157 | 1,065,288 / 1,053,755 | 27,479 / 27,070 s |
+
+- **Locations:** 2,470 calls per rtol locate a point: 720 `G+q+r` roots, 2,404 minima in 236
+  lone-`G` calls (λ $1.6\times10^{-7}$–$2.3\times10^{-6}$, all converged), and 1,514 analytic roots
+  (757 J4, 757 Y4). 28 analytic calls guard a leaf without locating, O9's
+  (`[07-c2-gate-threshold-was-never-measured]`): J4 and Y4 in 7 rows at both rtols, $V$
+  15.60–18.58, all converged; a further 154 at `1e-7` with a skipped phase and a sign change went to
+  Clenshaw–Curtis unguarded.
+- **§1.3's firings:** 1,157 of 2,470 windows stopped at `1e-7` and 1,195 at `1e-8`; 1,153 and 1,192
+  with a leaf still falling, in calls of which 1,146 and 1,183 converged.
+- **Convergence:** 262 located calls went from unconverged at 06m to converged, 15 the other way. In
+  the 720, 64 group calls are unconverged (06m 311): 62 within their request, each with an
+  untrusted leaf at `depth_max`, and 2 `node_limited` at most 1.0038× over. Outside the 720, 114,
+  identical to 06m's. No analytic call is unconverged.
+- **Totals in the 720:** 643 of 1,440 row totals move by more than 06m's `total_abserr`, the
+  largest by $2.6\times10^5$ of it, at most 0.86 % relative.
+
+**Read only and unchanged**, hashed before and after: the scratch copy and 06m's census run
+directory.
+
+### 7.5 The cross-check (beyond §6, the user's request at stop 4)
+
+The rule ([`07/census/state/xcheck_rule_20261109.md`](07/census/state/xcheck_rule_20261109.md),
+`e06a1058…`) was fixed before any result; the tables are
+[`07/census/out/xcheck/report.md`](07/census/out/xcheck/report.md).
+- **The cross-rtol check** on the 4,968 calls that locate or guard, 2,484 pairs, all paired:
+  $r_g = |v_g(10^{-7}) - v_g(10^{-8})|/e_g(10^{-7}) \le 1$ in 2,482 pairs and $r_{06m} \le 1$ in
+  2,432. The two exceptions at $g$ are `3-14501` (1.39) and `3-35006` (1.08), both converged
+  `G+q+r` calls at $k = 10^5$, class (e).
+- **The disagreement list,** $|v_g - v_{06m}| > \max(e_g, e_{06m})$: 843 calls, all `G+q+r`. Class
+  (a), settled for 07, 31; (b) 0; **(c), undecided, 786** (396 rows; 390 at `1e-7`, 396 at
+  `1e-8`); (d) 0; (e) 26. All five of V4's failures and 3-38439 are class (c).
+- **The cost of referencing (c):** one capture per row, all 396 reproducing the census bit for bit;
+  $4.47\times10^6$ s by FCC alone, 145 rows at 30 minutes or less.
+
+### 7.6 The review
+
+**The Mac Studio orchestrator** held the agents at planned stops 1, 1′, 2, 3 and 4 and checked each
+with readers of its own ([`07/review/`](07/review/): `stop1.md`, `hold_before_census.md`,
+`stop1p/notes.md`, `stop2.md`, `stop3.md`, `stop4.md`, `xcheck/notes.md`), then reviewed Part B in
+the nine checks of the note's §B.3, **all passing** ([`07/review.md`](07/review.md)):
+- `tools.store_value_diff` on R27 and R29 re-run, byte-identical to the agent's JSON (`c511b582…`);
+  692 untouched rows bit-identical by its own reader, the agent's 172 tabulated rows equal in hex;
+- the three fingerprints `1b332ffa…`; the 181 protected files unchanged; every lock transcript
+  complete;
+- V1 by its own comparator over every unit, call and region record; V2, V3 and V5 by its own scan
+  reader; V4 in exact Fractions from the readings' 30-digit values, every verdict and ratio equal to
+  the agent's; the cross-check recounted call by call;
+- the predictions verbatim, later than V0's outputs and earlier than the census's manifest; the
+  harness diff matching the census log's deviations;
+- the records: the rehearsal agent's deviations 1–15 and 16–24 and the census agent's 1–40, each
+  classified and accepted.
+
+Its one observation, an mtime change on the main checkout's `.git` during the census agent's step
+10 with no git state changed, has no identified cause.
+
+### 7.7 The laptop's re-checks (2026-11-10)
+
+By the laptop orchestrator, from the copied records and, for V4, from the two census checkpoints
+read on the Mac Studio:
+- **The copy.** The 4,309 files copied back and the 29 run-directory files matched the Mac Studio's
+  SHA-256 lists. The 4,309 included R29's readers' extract (3,126 files), copied by mistake, which
+  was then removed from the laptop's copy; it stays on the Mac Studio (`07/KEPT_ON_MAC_STUDIO.md`).
+  The other 1,183 files are in [`07/`](07/) byte for byte.
+- **S1,** recomputed exactly from
+  [`rehearsal/out/s1_scores.json`](07/rehearsal/out/s1_scores.json): 12 of 12 honest, the worst
+  0.217573 (w11), every ratio equal to the record; R29's twelve equal R28's. All twelve `ref_30`
+  strings appear verbatim in 06g's committed V1
+  ([`06g/references/out/scores_addendum6/scores.json`](06g/references/out/scores_addendum6/scores.json)).
+- **V4,** re-scored in exact Fractions with the census values read straight from both checkpoints
+  (07 `03dfe786…`, 06m `ea5bc3ab…`):
+
+  | call | ratio, 07 | ratio, 06m | spread / tolerance |
+  |---|---|---|---|
+  | v00 | 0.0196667 | 0.00054827 | 0.001166 |
+  | v08 | 3.1596 | 30,433.3 | 0.003882 |
+  | z12 (06g's final four readings, addendum 6) | 0.7181095 | 1,681.299 | 0.0004703 |
+
+  Each equals the agent's and the Mac Studio orchestrator's.
+- **Two rehearsal rows,** read from the R27 and R29 stores (sqlite read-only, keyed by physical
+  $k, q, r, z$):
+  - the moved row $(10^5)^3$ at $z = 2284.251956909201$: R27 `total` `-0x1.c1a4165d3c990p-57`,
+    `total_abserr` `0x1.8b3e83d833f62p-80`; R29 `-0x1.c1a4165b73c51p-57`,
+    `0x1.76b24c03d0ee4p-80`; equal to
+    [`rehearsal/r29/out/qsi_rows_r27_r29.csv`](07/rehearsal/r29/out/qsi_rows_r27_r29.csv);
+  - an untouched row $(10^5)^3$ at $z = 49531657077.16097$, equal in both stores
+    (`-0x1.65d2ee7128994p-36`, `0x1.2ea6d00a12143p-74`); and all 692 untouched rows equal in `total`
+    and `total_abserr`.
+
+### 7.8 The user's rulings
+
+The board's Decisions **07 stop 1′**, **07 Part B stops 2–4**, **07 results** and **G2 L2,
+reopened**:
+- R29's four guarded blocks are findings, and the census goes ahead;
+- V4 is stratified over all eight $k$; its references are FCC at both resolutions on all 24, with
+  QAWO where projected at 30 minutes or less;
+- the cross-check is run, and a sample of references for its undecided calls chosen later; the 786
+  are attributed to 06m's errors for the time being, on V4's evidence;
+- `[06-levin-accepts-a-region-across-a-stationary-point]` closes, on V2;
+- `[07-iroff1-window-stop-can-leave-a-call-dishonest]` is opened, and with O9 of
+  `[07-c2-gate-threshold-was-never-measured]` assigned to prompt 07a;
+- V5 is scored fails as written, and G2's L2 is reopened as one question for 08, with the depth-cap
+  experiment.

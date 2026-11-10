@@ -1,0 +1,27 @@
+# qsi_guard_compare.py sha256 907fafaedb47a3f0b9e923a83d9c45303ccda1b9d58cc5c06c834d80f15cdae3
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite sha256 d6fd30230fc6d20bc2efa504141e43fdd4cb1b9afdc35d367e8cbe1bca374acb
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r28.sqlite sha256 00468d55595b6d24e684fb416fdfa0a59b14605f608fbd55bf894bb6f0bc9b0b
+rows A 864 B 864; in one only 0
+Levin records in B: group 3105, analytic 10072; count-layout problems 0
+records with a nonzero count: group 70, analytic 400
+  sum of guard_at_depth_max over analytic records: 0
+  sum of guarded_regions over analytic records: 0
+  sum of stationary_points over analytic records: 400
+  sum of window_pieces over analytic records: 2515
+  sum of guard_at_depth_max over group records: 0
+  sum of guarded_regions over group records: 0
+  sum of stationary_points over group records: 106566
+  sum of window_pieces over group records: 114289
+UNTOUCHED rows 640; bit-identical (every field but the counts) 640
+OTHER rows 224
+  total bit-identical 156
+  analytic column bit-identical 24
+  rows with an analytic call that located a point 200
+  guarded_regions sum 0; guard_at_depth_max sum 0
+  largest |dtotal|/abserr_R27 73773.3 at (1000000.0, 1000000.0, 1000000.0, 2284.251956909201)
+  largest |dtotal|/abserr_R28 64230.9 at (1000000.0, 1000000.0, 1000000.0, 2284.251956909201)
+  total_converged (R27,R28) among other rows: {(1, 1): 206, (0, 1): 17, (0, 0): 1}
+total_converged (R27,R28) over all rows: {(True, True): 845, (False, True): 17, (False, False): 2}
+  changed False->True: 17
+gained 17: [(100000.0, 100000.0, 100000.0, 329.64045755914753, -32.0, -7.0), (100000.0, 100000.0, 100000.0, 573.1146466584687, -32.0, -7.0), (100000.0, 100000.0, 100000.0, 755.6870974333904, -32.0, -7.0), (100000.0, 100000.0, 100000.0, 3011.9274410237094, -32.0, -7.0), (100000.0, 100000.0, 100000.0, 3971.4125591760326, -32.0, -7.0), (316227.7660168379, 316227.7660168379, 316227.7660168379, 329.64045755914753, -32.0, -7.0), (316227.7660168379, 316227.7660168379, 316227.7660168379, 434.65132503921666, -32.0, -7.0), (316227.7660168379, 316227.7660168379, 316227.7660168379, 996.4201622779478, -32.0, -7.0), (316227.7660168379, 316227.7660168379, 316227.7660168379, 1313.8415928578513, -32.0, -7.0), (316227.7660168379, 316227.7660168379, 316227.7660168379, 1732.3813753196057, -32.0, -7.0), (316227.7660168379, 316227.7660168379, 316227.7660168379, 9104.29882234871, -32.0, -7.0), (1000000.0, 1000000.0, 1000000.0, 329.64045755914753, -32.0, -7.0), (1000000.0, 1000000.0, 1000000.0, 573.1146466584687, -32.0, -7.0), (1000000.0, 1000000.0, 1000000.0, 996.4201622779478, -32.0, -7.0), (1000000.0, 1000000.0, 1000000.0, 1313.8415928578513, -32.0, -7.0), (1000000.0, 1000000.0, 1000000.0, 1732.3813753196057, -32.0, -7.0), (1000000.0, 1000000.0, 1000000.0, 6904.718924492998, -32.0, -7.0)]
+lost 0: []

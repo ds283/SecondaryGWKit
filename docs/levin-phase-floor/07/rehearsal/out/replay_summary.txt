@@ -1,0 +1,51 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/replay_summary.py sha256 8c978d0be4e50e2bec8024c9c0799c1252e254e329dfc91adef799c77f4cb3fd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/replay_calls.csv sha256 9fccf1d1f6cee7fd0c61a5e03c41c1b96ddea5f53a53f69bdea313bc4a28c6f4
+lines 470; calls 470; all reproduce R28: True
+calls by label: {'G+q+r': 44, 'J4_data': 200, 'Y4_data': 200, 'q-r': 26}
+
+q-r calls (q = r): 26
+  (100000, 100000, 100000, z_resp 1.32913e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.32913e+09 .. 1.71262e+09; window pieces 4102
+  (100000, 316228, 316228, z_resp 1.32913e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.32913e+09 .. 5.42099e+09; window pieces 4102
+  (100000, 316228, 316228, z_resp 1.75254e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.75254e+09 .. 5.42099e+09; window pieces 4921
+  (100000, 316228, 316228, z_resp 2.31084e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 2.31084e+09 .. 5.42099e+09; window pieces 4112
+  (100000, 316228, 316228, z_resp 3.04698e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 3.04698e+09 .. 5.42099e+09; window pieces 4112
+  (100000, 316228, 316228, z_resp 4.01763e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 4.01763e+09 .. 5.42099e+09; window pieces 4102
+  (100000, 316228, 316228, z_resp 5.29749e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 5.29749e+09 .. 5.42099e+09; window pieces 4112
+  (100000, 1e+06, 1e+06, z_resp 1.32913e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.32913e+09 .. 1.71592e+10; window pieces 4102
+  (100000, 1e+06, 1e+06, z_resp 1.75254e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.75254e+09 .. 1.71592e+10; window pieces 4185
+  (100000, 1e+06, 1e+06, z_resp 2.31084e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 2.31084e+09 .. 1.71592e+10; window pieces 4102
+  (100000, 1e+06, 1e+06, z_resp 3.04698e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 3.04698e+09 .. 1.71592e+10; window pieces 5505
+  (100000, 1e+06, 1e+06, z_resp 4.01763e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 4.01763e+09 .. 1.71592e+10; window pieces 4102
+  (100000, 1e+06, 1e+06, z_resp 5.29749e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 5.29749e+09 .. 1.71592e+10; window pieces 4102
+  (100000, 1e+06, 1e+06, z_resp 6.98507e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 6.98507e+09 .. 1.71592e+10; window pieces 4666
+  (100000, 1e+06, 1e+06, z_resp 9.21025e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 9.21025e+09 .. 1.71592e+10; window pieces 4106
+  (100000, 1e+06, 1e+06, z_resp 1.21443e+10): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.21443e+10 .. 1.71592e+10; window pieces 5131
+  (100000, 1e+06, 1e+06, z_resp 1.36274e+10): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.36274e+10 .. 1.71592e+10; window pieces 4102
+  (316228, 316228, 316228, z_resp 4.01763e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 4.30522e+09 .. 5.42099e+09; window pieces 4102
+  (316228, 316228, 316228, z_resp 5.29749e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 5.29749e+09 .. 5.42099e+09; window pieces 4112
+  (316228, 1e+06, 1e+06, z_resp 4.01763e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 4.30522e+09 .. 1.71592e+10; window pieces 4965
+  (316228, 1e+06, 1e+06, z_resp 5.29749e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 5.29749e+09 .. 1.71592e+10; window pieces 4102
+  (316228, 1e+06, 1e+06, z_resp 6.98507e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 6.98507e+09 .. 1.71592e+10; window pieces 5380
+  (316228, 1e+06, 1e+06, z_resp 9.21025e+09): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 9.21025e+09 .. 1.71592e+10; window pieces 4102
+  (316228, 1e+06, 1e+06, z_resp 1.21443e+10): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.21443e+10 .. 1.71592e+10; window pieces 5094
+  (316228, 1e+06, 1e+06, z_resp 1.36274e+10): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.36274e+10 .. 1.71592e+10; window pieces 4102
+  (1e+06, 1e+06, 1e+06, z_resp 1.36274e+10): 4097 points {"end": 2, "root": 4095} found_as {"root": 4097}; every scan sample an exact zero of theta' (4097 of 4097, max |theta'| 0.0); points on the grid True; theta in [0.0, 0.0]; z 1.36274e+10 .. 1.71592e+10; window pieces 4102
+  every q-r call: 4097 points, each a sample of the scan grid, theta' exactly 0 at all 4097 samples: True
+
+G+q+r calls: 44; points 44; kinds {'root': 44}; found_as {'root': 44}
+  (k, q, r) = (100000, 100000, 100000): 14 calls, located z 10211.31789150223 .. 10211.317891502267 (distinct: [10211.31789150223, 10211.317891502249, 10211.317891502267])
+  (k, q, r) = (100000, 316228, 316228): 1 calls, located z 275.0085916617262 .. 275.0085916617262 (distinct: [275.0085916617262])
+  (k, q, r) = (316228, 316228, 316228): 14 calls, located z 10211.317891485669 .. 10211.317891485687 (distinct: [10211.317891485669, 10211.317891485687])
+  (k, q, r) = (316228, 1e+06, 1e+06): 1 calls, located z 275.00859166172523 .. 275.00859166172523 (distinct: [275.00859166172523])
+  (k, q, r) = (1e+06, 1e+06, 1e+06): 14 calls, located z 10211.317891484 .. 10211.317891484035 (distinct: [10211.317891484, 10211.317891484017, 10211.317891484035])
+
+analytic blocks: 400; points 400; kinds {'root': 400}; blocks {'2pt5.Levin.J4_data': 200, '2pt5.Levin.Y4_data': 200}
+  (100000, 100000, 100000) J4_data: 62 calls, located eta 8.13009e-05 .. 8.13009e-05
+  (100000, 100000, 100000) Y4_data: 62 calls, located eta 8.13009e-05 .. 8.13009e-05
+  (316228, 316228, 316228) J4_data: 67 calls, located eta 2.57096e-05 .. 2.57096e-05
+  (316228, 316228, 316228) Y4_data: 67 calls, located eta 2.57096e-05 .. 2.57096e-05
+  (1e+06, 1e+06, 1e+06) J4_data: 71 calls, located eta 8.13009e-06 .. 8.13009e-06
+  (1e+06, 1e+06, 1e+06) Y4_data: 71 calls, located eta 8.13009e-06 .. 8.13009e-06
+
+|theta'| at the located points (G+q+r and analytic): max 2.9802322387695312e-08
+minima located: 0; points at an end: 0 (q-r: 2 per call, in the summaries)

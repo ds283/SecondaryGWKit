@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 PYTHONDONTWRITEBYTECODE=1 nice -n 19 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/xcheck_capture_07.py state/dev/xcap_pre_dev.json state/dev/xcap_sel_dev.json state/dev/xcap out/xcheck/dev_captures.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:59:29Z
+# ----
+# levin-phase-floor 07: the cross-check's class (c)/(d) captures at g
+# written 2026-11-09T00:59:29Z on mps026298.phys.susx.ac.uk
+# script xcheck_capture_07.py sha256 3c42dedc58e2a222aea5fd35165f9a67ccf89458465cfea207628f8e04e01e79
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev/xcap_pre_dev.json sha256 61f348989a78882b8d9c1c969b725c1111fff36abf1b5a807016d8639d5f417f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+X00 (1e-7, k 0:101): 1 units, exit 0
+X01 (1e-7, k 0:202): 1 units, exit 0
+captured and matching 07's census bit for bit: 2 of 2; ray initialised in any worker: False
+wrote out/xcheck/dev_captures.json sha256 4d02d80a95d0797837fe8c4b636e98d543e185e6e3d01e265ffb7dad76be4404
+# ----
+# end 2026-11-09T01:01:41Z
+# exit 0

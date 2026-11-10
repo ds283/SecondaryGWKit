@@ -1,0 +1,9 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T00:19:02Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal; tail -n +2 $R/state/s0_store_sha256_before_diff.txt > $R/state/s0_before_body.txt; tail -n +2 $R/state/s0_store_sha256_after_diff.txt > $R/state/s0_after_body.txt; cmp $R/state/s0_before_body.txt $R/state/s0_after_body.txt && echo "R26 and R27: 10 files identical before and after S0 (sha256, size, mtime); no journal"
+# output:
+R26 and R27: 10 files identical before and after S0 (sha256, size, mtime); no journal
+# exit: 0
+# end: 2026-11-08T00:19:02Z

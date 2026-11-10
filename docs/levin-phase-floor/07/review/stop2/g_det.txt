@@ -1,0 +1,24 @@
+g-1e-7-0-33997 record differing 34 {'timing': 32, 'provenance': 2}
+g-1e-7-0-33997 region differing 32 {'timing': 11, 'new07': 21}
+    scan_07[0].scan.seconds
+    scan_07[10].scan.seconds
+    scan_07[11].scan.seconds
+    scan_07[12].scan.seconds
+    scan_07[13].scan.seconds
+    scan_07[14].scan.seconds
+    scan_07[15].scan.seconds
+    scan_07[16].scan.seconds
+    scan_07[17].scan.seconds
+    scan_07[18].scan.seconds
+    scan_07[19].scan.seconds
+    scan_07[1].scan.seconds
+    scan_07[20].scan.seconds
+    scan_07[2].scan.seconds
+    scan_07[3].scan.seconds
+    scan_07[4].scan.seconds
+    scan_07[5].scan.seconds
+    scan_07[6].scan.seconds
+    scan_07[7].scan.seconds
+    scan_07[8].scan.seconds
+    scan_07[9].scan.seconds
+located: [(0, {'minimum': 6}, []), (1, {}, []), (2, {}, []), (3, {}, []), (4, {}, [])]

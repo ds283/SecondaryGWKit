@@ -1,0 +1,150 @@
+{
+ "label": "k0",
+ "stages": [
+  {
+   "name": "k0_run_p",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "41_k0_run_p",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_k0.py",
+      "tree",
+      "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06l/out/k0/units.json",
+      "state/k0/p",
+      "--workers",
+      "6",
+      "--tree",
+      "p"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_compare_p",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "51_k0_compare_p_whole",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts",
+     "requires": "state/k0/p/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/compare_07.py",
+      "whole",
+      "state/k0/p",
+      "out/k0/compare_v0b.json",
+      "--processes",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_run_g",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "61_k0_run_g",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_k0.py",
+      "tree",
+      "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06l/out/k0/units.json",
+      "state/k0/g",
+      "--workers",
+      "6",
+      "--tree",
+      "g"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "k0_compare_g",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "71_k0_compare_g_calls",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts",
+     "requires": "state/k0/g/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/compare_07.py",
+      "calls",
+      "state/k0/g",
+      "out/k0/compare_k0_g_calls.json",
+      "--processes",
+      "6"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "v0c_run",
+   "max_parallel": 2,
+   "jobs": [
+    {
+     "name": "81_v0c_run1",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_k0.py",
+      "tree",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v0c_units.json",
+      "state/v0c/run1",
+      "--workers",
+      "1",
+      "--tree",
+      "g"
+     ]
+    },
+    {
+     "name": "82_v0c_run2",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_k0.py",
+      "tree",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v0c_units.json",
+      "state/v0c/run2",
+      "--workers",
+      "1",
+      "--tree",
+      "g"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "v0c_compare",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "91_v0c_compare_det",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts",
+     "requires": "state/v0c/run2/units.jsonl",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/compare_07.py",
+      "det",
+      "state/v0c/run1",
+      "state/v0c/run2",
+      "out/v0c/compare_det.json"
+     ]
+    }
+   ]
+  }
+ ]
+}

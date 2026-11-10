@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_reference.py", line 148, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_reference.py", line 68, in main
+    "pickle_sha256": sha256(pkl), "tree": tree, "tree_head": head, "tree_status_short": st,
+                     ~~~~~~^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_reference.py", line 45, in sha256
+    with open(p, "rb") as f:
+         ~~~~^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-p 3-20141-.pkl'

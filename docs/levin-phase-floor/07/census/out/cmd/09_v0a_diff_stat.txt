@@ -1,0 +1,16 @@
+$ sh -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db\ diff\ --stat\ 48cf87c0\ 91472dbee1daba8374b0018db1195cf6c7898bbb\ --\ .\ \':\!docs\'\ \':\!prompts\'\;\ echo\ \'==\ name-only\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db\ diff\ --name-only\ 48cf87c0\ 91472dbee1daba8374b0018db1195cf6c7898bbb\ --\ .\ \':\!docs\'\ \':\!prompts\'\;\ echo\ \'==\ 48cf87c0\ full\'\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db\ rev-parse\ 48cf87c0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T13:42:52Z
+# ----
+ AdaptiveLevin/tests/test_levin_leaf_values.py | 35 +++++++++++++++++++++++----
+ CLAUDE.md                                     |  6 +++--
+ 2 files changed, 34 insertions(+), 7 deletions(-)
+== name-only
+AdaptiveLevin/tests/test_levin_leaf_values.py
+CLAUDE.md
+== 48cf87c0 full
+48cf87c03d22fa983e4e04d4c4524c4f12f024ad
+# ----
+# end 2026-11-08T13:42:52Z
+# exit 0

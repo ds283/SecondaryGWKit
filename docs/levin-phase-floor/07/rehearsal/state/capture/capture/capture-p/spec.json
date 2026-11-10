@@ -1,0 +1,106 @@
+{
+ "tree": "p",
+ "name": "capture-p",
+ "units": [
+  {
+   "uid": "p-1e-7-3-20198",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "3-20198",
+   "names05": null,
+   "shard": 3,
+   "serial": 20198,
+   "k_key": "3:1",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=250, z in (5.421e+09, 250), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "p-1e-7-0-10192",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "0-10192",
+   "names05": null,
+   "shard": 0,
+   "serial": 10192,
+   "k_key": "0:2",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=3.16e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=250, z in (5.421e+09, 250), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "p-1e-7-3-20389",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "3-20389",
+   "names05": null,
+   "shard": 3,
+   "serial": 20389,
+   "k_key": "3:1",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=6.9851e+09, z in (1.7159e+10, 6.9851e+09), regime qr, group q-r"
+    ]
+   ]
+  },
+  {
+   "uid": "p-1e-7-0-10036",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "0-10036",
+   "names05": null,
+   "shard": 0,
+   "serial": 10036,
+   "k_key": "0:2",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=3.16e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.3627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r"
+    ]
+   ]
+  },
+  {
+   "uid": "p-1e-7-3-20141",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "3-20141",
+   "names05": null,
+   "shard": 3,
+   "serial": 20141,
+   "k_key": "3:1",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=3.047e+09, z in (5.421e+09, 3.047e+09), regime qr, group q-r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/capture/capture-p",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/capture/capture-p/emit.jsonl",
+ "rows_sha256": null,
+ "w2_capture_sha256": null
+}

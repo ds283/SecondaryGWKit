@@ -1,0 +1,26 @@
+1c1
+< """Write a copy of store_value_diff's JSON (R24 against R25) with the job-name prefix of every
+---
+> """Write a copy of store_value_diff's JSON (R26 against R27) with the job-name prefix of every
+4c4
+< levin-phase-floor 06m, rehearsal agent, prompt 06m section 4 (R25 against R24).
+---
+> levin-phase-floor 07, rehearsal agent, prompt 07 section 5.3 (S0, R27 against R26); 06m rehearsal agent's script with the two prefixes and this docstring changed.
+6,7c6,7
+< Why: R24 was built with `--job-name levin-phase-floor-06g` and R25 with
+< `--job-name levin-phase-floor-06m` (the brief's job name). main.py puts the job name at the head
+---
+> Why: R26 was built with `--job-name levin-phase-floor-06m` and R27 with
+> `--job-name levin-phase-floor-07` (the brief's job name). main.py puts the job name at the head
+11,12c11,12
+< side `a` of every `label` entry of every class, the leading `levin-phase-floor-06g-` by
+< `levin-phase-floor-06m-`, asserting that `a` starts with the first and `b` with the second.
+---
+> side `a` of every `label` entry of every class, the leading `levin-phase-floor-06m-` by
+> `levin-phase-floor-07-`, asserting that `a` starts with the first and `b` with the second.
+23,24c23,24
+< A_PREFIX = "levin-phase-floor-06g-"
+< B_PREFIX = "levin-phase-floor-06m-"
+---
+> A_PREFIX = "levin-phase-floor-06m-"
+> B_PREFIX = "levin-phase-floor-07-"

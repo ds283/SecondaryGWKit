@@ -796,6 +796,143 @@ SHA.*
 - `--cpus 6`, never `ray stop`, never another session's run;
 - A3 v2, its scratch copy, 06m's census and R23–R26 are never written.
 
+### B.8 Addendum: Part B from stop 1′ to its end, the records, and two corrections to §B.7
+
+*Written 2026-11-10, at 07's records commit. §B.7 is left as written; its corrections are at the end
+of this section.*
+
+**R29 and stop 1′** (2026-11-08, 12:33–13:35 UTC). The Mac Studio orchestrator's re-check before
+the lock passed: the three trees clean at their SHAs, nothing running or stale, the lock free, the
+181 protected files unchanged.
+- **R29** `levin-phase-floor-07-r29-guard-rule-a-20261108T123429`, at `e182bc7a`: `done`, exit 0,
+  `1b332ffa…`, 9.6 min (R27 9, R28 16.5).
+- **R29 against R28,** by the agent's comparison and the orchestrator's own
+  (`review/scripts/qsi_rulea_compare.py`): outside `QuadSourceIntegral` identical; 13,087 of 13,177
+  Levin records bit-identical; 90 changed, every one located at R28 and skipped by Rule A. 86 equal
+  R27 (the 26 `q-r` calls and 60 analytic `2pt5` J4/Y4 blocks). **4 do not:** the J4 and Y4 blocks
+  at $(3.162\times10^5)^3$, $z = 1.329\times10^9$, and $(10^6)^3$, $z = 4.018\times10^9$, where Rule
+  A skips the phase ($V$ 15.113, 15.896) but the C2 gate's estimate on the root leaf (19.160,
+  20.196) exceeds `SIX_PI`, so the root leaf reaches the Levin solve and the nodal guard catches it
+  (O9's case). §B.7's rule failed as written, and the agent stopped, the lock held.
+- **The laptop's recommendation,** relayed with the agent's question: go on, the four reported as
+  findings; the rule was the orchestrator's error, corrected below; add a check on the four. The
+  user: *"Yes, please proceed as you recommend."* The four blocks were replayed at R27's, R28's and
+  R29's trees and referenced by composite Gauss–Legendre split at the root, QAGS beside it. All three
+  stores are honest on all four, at most $6.2\times10^{-4}$ of abserr, every reference's stated error
+  at least 1,990× below every abserr. R29's J4 declarations are 19× and 11× R27's.
+- **Then:** the replay reproduced all 470 records; S1 and S2 hold on R29, each call equal to R28's;
+  the readers exit 0 and leave R29 unchanged; the lock was released. Summed regions are back to
+  R27's level: 114,460 (R27 114,826, R28 227,883).
+- **Planned stop 1′.** The orchestrator's checks (`review/stop1p/notes.md`) agreed with the agent in
+  every figure. The user: *"Yes, please go ahead. There seems no reason not to. We may have to come
+  back to the O9 issue but that is best done after the census anyway."*
+
+**Stop 2** (2026-11-08, 13:35–14:30 UTC). The census agent was dispatched at 13:34:50Z. Its K0 run
+`levin-phase-floor-07-k0-20261108T135240` gave V0: (a), (b) and (c) all hold. Its one question:
+V4's "all six $k$ that carry them" was the prompt's factual slip, since all eight $k$ carry
+stationary-point calls. The orchestrator re-ran two K0 units at the parent and one stationary-point
+unit at $g$ twice, by its own reader: 0 unclassified differences, deterministic
+(`review/stop2.md`). The predictions were written at 14:10:10Z, after V0 and before any census. The
+user: *"Please keep all 8 `k` and launch the census"*.
+
+**The census and stop 3** (2026-11-08, 17:11:37Z to 23:30:11Z). `levin-phase-floor-07-census-20261108T171137`,
+six workers, the lock held: 18,560 of 18,560 units, 22,708 s against a projection of 21,458 s, no
+unit over budget, checkpoint `03dfe786…`. The orchestrator's own comparison with 06m's census, by
+three scripts (`review/stop3.md`), found the 284,514 calls that locate and guard nothing and the
+16,104 units made only of them equal to 06m's. 4,968 calls are active: 4,940 locate and 28 guard
+without locating. The 28 are O9's case in production: J4 and Y4 in 7 rows at both rtols, $V$
+15.60–18.58, each guard catching one leaf, all converged. The user: *"Yes, please do that"* (step 7).
+
+**Stop 4** (2026-11-09). Step 7 scored V1–V3 (holding) and V5 (failing: 23 calls). V4's 24 captures
+reproduced the census bit for bit, and the projection for four readings on all 24 was 775,468 s,
+1,163,202 s with the margin, about 9 days: a §6 stop. The orchestrator recounted V5 itself, finding
+the same 23 units and two slips in the agent's prose (2–54 leaves, not 2–14; three converged, not
+two), which the census log corrects (its deviations 38 and 39). The user, on the readings: *"Take
+your recommended option of FCC at both resolutions plus QAWO where it is projected to be 30 minutes
+or less. It costs only a few hours for an independent check of many calls. Calls without QAWO should
+be scored on whatever references we do have, either one or two FCC readings."* And, beyond §6:
+*"Yes, please do the cross-check on `rtol`s and the list of calls where `06m` and `07` differ by more
+than the stated error. We can decide on a sample of references to sort of what these difference
+really show, later."*
+
+**The cross-check** (2026-11-09). Its rule was fixed before any result
+(`census/state/xcheck_rule_20261109.md`, mtime 00:57:12Z; first result 00:58:21Z). 2,484 pairs,
+$r_g \le 1$ in 2,482 (the exceptions `3-14501`, 1.39, and `3-35006`, 1.08) and $r_{06m} \le 1$ in
+2,432; 843 calls disagree beyond $\max$(abserr): (a) 31, (b) 0, (c) 786 (396 rows), (d) 0, (e) 26.
+The orchestrator recounted it call by call with its own reader, exactly (`review/xcheck/notes.md`).
+
+**The references** (2026-11-09T00:53Z to 2026-11-10T02:31Z).
+`levin-phase-floor-07-references-20261109T005328`: 74 readings (FCC r1 and r2 on all 24, QAWO r1 and
+r2 on 13), about 25.6 h against 89,230 s projected, the 48 h backstop never reached. V4 fails: 28 of
+33 honest; v08, v09, v12, v17 and v22 at 2.21–3.16× $\text{abserr}_g$, each converged with its window
+stopped by `iroff1` while 4–13 leaves still fell (06m 497–30,400×). z00 and z12 are at 0.718, Z3's
+seven at most 0.0021.
+
+**The review** (2026-11-10, `review.md`): all nine checks of §B.3 pass, with V4 and V5 re-scored
+exactly and failing. Two notes: the drivers living under the main checkout's `var/`, the registry's
+`git_head` is `28ebaf07` for the k0, census and references runs, and the tree each ran from is named
+in the manifest's `purpose`; and an mtime change on the main checkout's `.git` during the census
+agent's step 10, with no git state changed and no cause identified.
+
+**On the laptop** (2026-11-10). `var/levin-phase-floor-07/` was copied back without pickles, files
+over 2 MB or the readers' extracts, and the small run directories (R27, R28, R29, `k0`,
+`p1-references`, `references`, three launch logs); every file matched the Mac Studio's SHA-256 lists.
+The re-checks of §B.4, from the copied records (`VERIFICATION.md` §7.7):
+- **S1** recomputed exactly from `rehearsal/out/s1_scores.json`: 12 of 12 honest, worst 0.217573
+  (w11), every ratio equal to the record; R29's twelve equal R28's; all twelve `ref_30` strings
+  verbatim in 06g's committed V1 (`docs/levin-phase-floor/06g/references/out/scores_addendum6/scores.json`);
+- **V4** in exact Fractions with the census values read from both checkpoints on the Mac Studio: v00
+  0.0196667 (06m 0.00054827), v08 3.1596 (06m 30,433.3), z12 against 06g's final four readings
+  0.7181095 (06m 1,681.299), each equal to the agent's and the Mac Studio orchestrator's;
+- **two rehearsal rows** read from the R27 and R29 stores in `float.hex`: the moved row $(10^5)^3$ at
+  $z = 2284.251956909201$ equal to `rehearsal/r29/out/qsi_rows_r27_r29.csv`, an untouched row at
+  $z = 49531657077.16097$ equal in both stores, and all 692 untouched rows equal in `total` and
+  `total_abserr`.
+
+**The rulings at the records commit** (the board's Decisions, **07 results** and **G2 L2,
+reopened**):
+- *"`[06-levin-accepts-a-region-across-a-stationary-point]`: I didn't address this, but yes, please
+  close it"*: closed (board §4), on V2;
+- O9's census calls (the 28 guarded, and 154 unguarded calls whose phase Rule A skipped yet with a
+  sign change) added to the $6\pi$ issue: *"I think so"*;
+- the 786 undecided calls: *"these are undecided because we don't have references for them? If so,
+  then yes, we attribute them to 06m's errors for the time being, on this evidence."*;
+- V5: *"I don't see what value `V5` has if there are other regions that go down to the depth cap."*
+  V5 is scored fails as written. Its premise was stale: it was written on 2026-10-27 from 06a's
+  census, where no Levin call reached the cap outside the stationary points, and 06g–06m's
+  trust-test changes left calls at the cap outside the 720 (06m's census: 114 group calls
+  unconverged there, 105 holding an untrusted leaf at `depth_max`), which the orchestrator did not
+  re-check at Part B's dispatch. That was the orchestrator's error. Inside the 720, 62 of 07's 64
+  unconverged group calls carry the same signature, so V5's failure says nothing specific about
+  stationary points. G2's L2 is reopened as one question for 08: whether any call should reach the
+  cap;
+- what follows: *"I agree we fix the early roundoff stop and the O9 problem. These are issues where
+  the problem and the fix are both clear."* and *"Include the cap experiment in prompt 08. That
+  sounds like a better place to put it. We can make 07's records commit and the housekeeping commit
+  now. Then we will need a prompt of the early roundoff stop and O9."* So
+  `[07-iroff1-window-stop-can-leave-a-call-dishonest]` is opened and, with O9 of
+  `[07-c2-gate-threshold-was-never-measured]`, assigned to a prompt **07a**, not yet written. 08
+  gains the depth-cap experiment: the about 227 calls with a leaf at the cap (160 units, 1,352 s
+  serial at cap 20) re-run at caps 22, 24 and 28, about 40 min on six workers at worst;
+- the housekeeping, in its own commit: *"Yes, please go ahead with the cleanup as listed."*
+  (`docs/levin-phase-floor/housekeeping-2026-11-10/README.md`). 07's stashes and `wip/` were dropped;
+  the R27 and R28 stores were retired with their sidecars kept, among ten rehearsal stores; and the
+  three 07 worktrees were removed. **Kept:** R29's store, the census and references run directories
+  (08's "before"), `var/levin-phase-floor-07/` and A3 v2's scratch copy.
+
+**Two corrections to §B.7,** which stays as written:
+1. **§B.7 item 2 said every record R29 changes against R28 equals R27's.** That is wrong for the 4
+   analytic blocks in which 07's nodal guard fires. The guard is absent from R27's code, so where
+   Rule A skips a phase and the C2 gate still sends its root leaf to the Levin solve, R29 guards
+   that leaf and R27 does not. Those 4 records differ from R27 in abserr, regions and, in one of
+   each pair, `phase_limited`, and all three stores are honest on their references (ratios at most
+   $6.2\times10^{-4}$). The rule should have read: a record R29 changes against R28 equals R27's
+   unless R29 guards a leaf in it, and a guarded record is referenced.
+2. **§B.7's count of located calls omitted Rule A on the analytic blocks.** It expected about 444
+   located calls, 470 less the 26 `q-r` calls. Rule A also skips a phase in 64 analytic `2pt5`
+   J4/Y4 blocks that R28 located (V 0.49–15.9), so R29 locates in 380 records (44 group and 336
+   analytic), and 384 have a nonzero count with the 4 guarded blocks.
+
 ---
 
 ## 5. Stop and ask the user

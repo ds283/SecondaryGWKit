@@ -1,0 +1,39 @@
+{
+ "tree": "p",
+ "name": "pass1-p-1",
+ "units": [
+  {
+   "uid": "p-1e-7-0-10036",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "0-10036",
+   "names05": null,
+   "shard": 0,
+   "serial": 10036,
+   "k_key": "0:2",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "p-1e-7-3-20141",
+   "tree": "p",
+   "rtol": "1e-7",
+   "row": "3-20141",
+   "names05": null,
+   "shard": 3,
+   "serial": 20141,
+   "k_key": "3:1",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/pass1-p/pass1-p-1",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/pass1-p/pass1-p-1/emit.jsonl",
+ "rows_sha256": null,
+ "w2_capture_sha256": null
+}

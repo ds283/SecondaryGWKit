@@ -1,0 +1,28 @@
+== row (316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946)
+  r27 total -0x1.6eae8752bd8fep-43 abserr 0x1.352ecf634df1dp-66 conv 1 analytic_rad -0x1.6eae47c092e75p-43 metadata.analytic.abserr 1.139364459636655e-22
+  r28 total -0x1.6eae8752bd8fep-43 abserr 0x1.352ecf634df1dp-66 conv 1 analytic_rad -0x1.6eae47c092e5ep-43 metadata.analytic.abserr 1.0523970543074098e-22
+  r29 total -0x1.6eae8752bd8fep-43 abserr 0x1.352ecf634df1dp-66 conv 1 analytic_rad -0x1.6eae47c092e6ep-43 metadata.analytic.abserr 2.126958805400739e-22
+  -- J4_data
+    r27 {'abserr': '0x1.4fd2c038b843dp-63', 'converged': True, 'phase_limited': False, 'regions': 1}
+    r28 {'abserr': '0x1.65dacd1543ce8p-66', 'converged': True, 'guard_at_depth_max': 0, 'guarded_regions': 0, 'phase_limited': True, 'regions': 14, 'stationary_points': 1, 'window_pieces': 13}
+    r29 {'abserr': '0x1.9778b3736d5e1p-59', 'converged': True, 'guard_at_depth_max': 0, 'guarded_regions': 1, 'phase_limited': False, 'regions': 2, 'stationary_points': 0, 'window_pieces': 0}
+    abserr29/abserr27 19.4136
+  -- Y4_data
+    r27 {'abserr': '0x1.79ab800000000p-62', 'converged': True, 'phase_limited': False, 'regions': 1}
+    r28 {'abserr': '0x1.78af331f037f8p-66', 'converged': True, 'guard_at_depth_max': 0, 'guarded_regions': 0, 'phase_limited': False, 'regions': 4, 'stationary_points': 1, 'window_pieces': 3}
+    r29 {'abserr': '0x1.aa161bfb153afp-66', 'converged': True, 'guard_at_depth_max': 0, 'guarded_regions': 1, 'phase_limited': True, 'regions': 3, 'stationary_points': 0, 'window_pieces': 0}
+    abserr29/abserr27 0.0705124
+== row (1000000.0, 1000000.0, 1000000.0, 4017630440.8276954)
+  r27 total -0x1.200f38a1171aap-45 abserr 0x1.2ad05f3a35b57p-68 conv 1 analytic_rad -0x1.200f6b1a6bc83p-45 metadata.analytic.abserr 2.5530585744412836e-22
+  r28 total -0x1.200f38a1171aap-45 abserr 0x1.2ad05f3a35b57p-68 conv 1 analytic_rad -0x1.200f6b1a6bc8fp-45 metadata.analytic.abserr 2.5310705230245527e-22
+  r29 total -0x1.200f38a1171aap-45 abserr 0x1.2ad05f3a35b57p-68 conv 1 analytic_rad -0x1.200f6b1a6bc86p-45 metadata.analytic.abserr 2.5668817387894656e-22
+  -- J4_data
+    r27 {'abserr': '0x1.c680c05f3602ep-66', 'converged': True, 'phase_limited': False, 'regions': 1}
+    r28 {'abserr': '0x1.ff3cae87aca98p-69', 'converged': True, 'guard_at_depth_max': 0, 'guarded_regions': 0, 'phase_limited': False, 'regions': 6, 'stationary_points': 1, 'window_pieces': 5}
+    r29 {'abserr': '0x1.2c82764608ef0p-62', 'converged': True, 'guard_at_depth_max': 0, 'guarded_regions': 1, 'phase_limited': True, 'regions': 2, 'stationary_points': 0, 'window_pieces': 0}
+    abserr29/abserr27 10.5789
+  -- Y4_data
+    r27 {'abserr': '0x1.1045c00003c2dp-63', 'converged': True, 'phase_limited': False, 'regions': 1}
+    r28 {'abserr': '0x1.faa21d2682f6bp-69', 'converged': True, 'guard_at_depth_max': 0, 'guarded_regions': 0, 'phase_limited': True, 'regions': 13, 'stationary_points': 1, 'window_pieces': 12}
+    r29 {'abserr': '0x1.332dd100e35e5p-68', 'converged': True, 'guard_at_depth_max': 0, 'guarded_regions': 1, 'phase_limited': False, 'regions': 3, 'stationary_points': 0, 'window_pieces': 0}
+    abserr29/abserr27 0.0352564

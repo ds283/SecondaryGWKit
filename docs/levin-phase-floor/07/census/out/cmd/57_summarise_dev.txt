@@ -1,0 +1,14 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/summarise_07.py state/dev/score_dev.json state/dev/summary_dev.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:19:07Z
+# ----
+{"statuses": {"done": 5}, "scan_07_errors": 0, "n_scanned_calls": {"1e-7": {"group": 20, "analytic": 64}, "1e-8": {"group": 5, "analytic": 0}}}
+V1 True {"1e-7": {"units": 9280, "units_ok": 9280, "clean_calls": 142257, "units_all_clean": 8052, "units_all_clean_total_equal": 8052}, "1e-8": {"units": 9280, "units_ok": 9280, "clean_calls": 142257, "units_all_clean": 8052, "units_all_clean_total_equal": 8052}}
+V2 True 0 {"1e-7|analytic|CC": 2, "1e-7|analytic|window": 2}
+V3 True 6 0 set aside 6 {"1e-7|group|sign_changes=False|guards=False": 3, "1e-7|analytic|sign_changes=True|guards=True": 2, "1e-8|group|sign_changes=False|guards=False": 1} V range [0.2814205965846741, 18.57618483116867] ends 0
+V5 False 1
+wrote state/dev/summary_dev.json sha256 858b469de05aed52e4f5541cbba634945a3c4f8179618ad944518846c47deb42
+# ----
+# end 2026-11-09T00:19:07Z
+# exit 0

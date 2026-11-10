@@ -1,0 +1,21 @@
+replay units 224 status Counter({'done': 224}) match an R29 row in total/abserr/analytic_rad/conv/regions 224 distinct rows 224 bad []
+csv columns include location_skipped_phases: True
+R29 records with a nonzero count 384 ; replay records 470 ; nonzero all in replay True ; counts equal on all replay records True
+records R28 located and R29 not: 90 all in replay True
+S1 keys in row: ['wid', 'key', 'record', 'replay_reproduces_record', 'points', 'location', 'location_ok', 'v29', 'abserr29', 'converged29', 'regions29', 'max_depth29', 'store_value28', 'store_abserr29', 'ref_30', 'ref_hex', 'readings_spread_over_tol', 'ratio_v29', 'honest', 'R24_ratio_06g', 'R23_ratio_06g']
+S1 on R29, holds: True
+  w00 R29 record matches True ref = 06g True ratio 0.03617 (agent 0.0361742) equals R28 call True conv True
+  w01 R29 record matches True ref = 06g True ratio 0.1285 (agent 0.128455) equals R28 call True conv True
+  w02 R29 record matches True ref = 06g True ratio 0.03499 (agent 0.0349917) equals R28 call True conv True
+  w03 R29 record matches True ref = 06g True ratio 0.07263 (agent 0.0726277) equals R28 call True conv True
+  w04 R29 record matches True ref = 06g True ratio 0.0003702 (agent 0.000370221) equals R28 call True conv True
+  w05 R29 record matches True ref = 06g True ratio 0.01868 (agent 0.018685) equals R28 call True conv True
+  w06 R29 record matches True ref = 06g True ratio 0.06701 (agent 0.0670125) equals R28 call True conv True
+  w07 R29 record matches True ref = 06g True ratio 0.002971 (agent 0.00297081) equals R28 call True conv True
+  w08 R29 record matches True ref = 06g True ratio 0.08832 (agent 0.0883167) equals R28 call True conv True
+  w09 R29 record matches True ref = 06g True ratio 0.1256 (agent 0.125594) equals R28 call True conv True
+  w10 R29 record matches True ref = 06g True ratio 0.09232 (agent 0.0923246) equals R28 call True conv True
+  w11 R29 record matches True ref = 06g True ratio 0.2176 (agent 0.217573) equals R28 call True conv True
+S2 on R29, holds: True
+  row 1 ratio 0.02025 (agent 0.0202477) store consistency 2.2e-17 sp 1 conv True R27 ratio 561137.0
+  row 2 ratio 0.2632 (agent 0.263249) store consistency 5.7e-17 sp 1 conv True R27 ratio 40748.1

@@ -1,0 +1,17 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T10:17:46Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal; cd /Users/ds283/Documents/Code/SecondaryGWKit; { shasum -a 256 var/datastores/levin-phase-floor-07-r27*.sqlite var/datastores/levin-phase-floor-07-r28*.sqlite; /usr/bin/stat -f "%N %z %m" var/datastores/levin-phase-floor-07-r27*.sqlite var/datastores/levin-phase-floor-07-r28*.sqlite; ls var/datastores | grep -E "07-r2[78].*(-wal|-shm|-journal)" || echo "no journal, -wal or -shm"; } > $R/state/after_replay_body.txt; cmp $R/state/after_body.txt $R/state/after_replay_body.txt && echo "R27 and R28 identical to stop 1 after the replay and captures"; ls $R/state/stores/r27 $R/state/stores/r28 | grep -v sqlite$; echo "(only the links in the link dirs)"; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035; do git --no-optional-locks -C $t status --short --ignored; find $t -newer $R/state/replay_launch_marker -not -path "*/.git/*" | head -3; done; echo "(trees clean)"; find $R -name __pycache__; du -sh $R/state/capture $R/state/inputs; grep -h ray_initialized $R/state/capture/pass1-p/*/emit.jsonl $R/state/capture/capture/*/emit.jsonl | grep -o "\"ray_initialized\": [a-z]*" | sort | uniq -c
+# output:
+R27 and R28 identical to stop 1 after the replay and captures
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/stores/r27:
+
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/stores/r28:
+(only the links in the link dirs)
+(trees clean)
+134M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture
+6.1M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs
+      4 "ray_initialized": false
+# exit: 0
+# end: 2026-11-08T10:17:48Z

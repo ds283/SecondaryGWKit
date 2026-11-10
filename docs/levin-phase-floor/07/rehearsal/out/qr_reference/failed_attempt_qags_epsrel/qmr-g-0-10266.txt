@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_reference.py", line 148, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_reference.py", line 127, in main
+    q, qerr, info = quad(integrand, a, b, epsabs=0.0, epsrel=1e-14, limit=10000, full_output=1)[:3]
+                    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/scipy/integrate/_quadpack_py.py", line 586, in quad
+    raise ValueError(msg)
+ValueError: If 'epsabs'<=0, 'epsrel' must be greater than both 5e-29 and 50*(machine epsilon).

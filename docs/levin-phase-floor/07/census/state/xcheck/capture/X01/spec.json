@@ -1,0 +1,923 @@
+{
+ "tree": "g",
+ "name": "X01",
+ "units": [
+  {
+   "uid": "g-1e-7-0-12869",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-12869",
+   "names05": null,
+   "shard": 0,
+   "serial": 12869,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=8342.9, z in (5.169e+11, 8342.9), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-12870",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-12870",
+   "names05": null,
+   "shard": 0,
+   "serial": 12870,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=6328.3, z in (5.169e+11, 6328.3), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1869",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1869",
+   "names05": null,
+   "shard": 0,
+   "serial": 1869,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=4800.1, z in (5.169e+11, 4800.1), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1772",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1772",
+   "names05": null,
+   "shard": 0,
+   "serial": 1772,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=3641, z in (5.169e+11, 3641), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-36823",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-36823",
+   "names05": null,
+   "shard": 0,
+   "serial": 36823,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=2761.8, z in (5.169e+11, 2761.8), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-36804",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-36804",
+   "names05": null,
+   "shard": 0,
+   "serial": 36804,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=2094.9, z in (5.169e+11, 2094.9), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1800",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1800",
+   "names05": null,
+   "shard": 0,
+   "serial": 1800,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1589, z in (5.169e+11, 1589), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-37211",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-37211",
+   "names05": null,
+   "shard": 0,
+   "serial": 37211,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1205.3, z in (5.169e+11, 1205.3), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1776",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1776",
+   "names05": null,
+   "shard": 0,
+   "serial": 1776,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=914.24, z in (5.169e+11, 914.24), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1777",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1777",
+   "names05": null,
+   "shard": 0,
+   "serial": 1777,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=693.47, z in (5.169e+11, 693.47), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1778",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1778",
+   "names05": null,
+   "shard": 0,
+   "serial": 1778,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=526.01, z in (5.169e+11, 526.01), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-36826",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-36826",
+   "names05": null,
+   "shard": 0,
+   "serial": 36826,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=398.99, z in (5.169e+11, 398.99), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1863",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1863",
+   "names05": null,
+   "shard": 0,
+   "serial": 1863,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=302.64, z in (5.169e+11, 302.64), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1876",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1876",
+   "names05": null,
+   "shard": 0,
+   "serial": 1876,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=229.56, z in (5.169e+11, 229.56), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1907",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1907",
+   "names05": null,
+   "shard": 0,
+   "serial": 1907,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=174.13, z in (5.169e+11, 174.13), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2060",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2060",
+   "names05": null,
+   "shard": 0,
+   "serial": 2060,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=174.13, z in (1.6351e+12, 174.13), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1977",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1977",
+   "names05": null,
+   "shard": 0,
+   "serial": 1977,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=132.08, z in (5.169e+11, 132.08), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-37968",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-37968",
+   "names05": null,
+   "shard": 0,
+   "serial": 37968,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=132.08, z in (1.6351e+12, 132.08), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2061",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2061",
+   "names05": null,
+   "shard": 0,
+   "serial": 2061,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=100.19, z in (5.169e+11, 100.19), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2071",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2071",
+   "names05": null,
+   "shard": 0,
+   "serial": 2071,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=100.19, z in (1.6351e+12, 100.19), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2073",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2073",
+   "names05": null,
+   "shard": 0,
+   "serial": 2073,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=75.993, z in (5.169e+11, 75.993), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-13775",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-13775",
+   "names05": null,
+   "shard": 0,
+   "serial": 13775,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=75.993, z in (1.6351e+12, 75.993), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-13761",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-13761",
+   "names05": null,
+   "shard": 0,
+   "serial": 13761,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=57.642, z in (5.169e+11, 57.642), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1938",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1938",
+   "names05": null,
+   "shard": 0,
+   "serial": 1938,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=57.642, z in (1.6351e+12, 57.642), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2015",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2015",
+   "names05": null,
+   "shard": 0,
+   "serial": 2015,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=43.723, z in (5.169e+11, 43.723), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-37969",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-37969",
+   "names05": null,
+   "shard": 0,
+   "serial": 37969,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=43.723, z in (1.6351e+12, 43.723), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2017",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2017",
+   "names05": null,
+   "shard": 0,
+   "serial": 2017,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=33.165, z in (1.6351e+12, 33.165), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2074",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2074",
+   "names05": null,
+   "shard": 0,
+   "serial": 2074,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=25.156, z in (5.169e+11, 25.156), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-13763",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-13763",
+   "names05": null,
+   "shard": 0,
+   "serial": 13763,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=14.474, z in (5.169e+11, 14.474), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-1942",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-1942",
+   "names05": null,
+   "shard": 0,
+   "serial": 1942,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=10.979, z in (5.169e+11, 10.979), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-13765",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-13765",
+   "names05": null,
+   "shard": 0,
+   "serial": 13765,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=8.3275, z in (5.169e+11, 8.3275), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-14299",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-14299",
+   "names05": null,
+   "shard": 0,
+   "serial": 14299,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=6.3166, z in (5.169e+11, 6.3166), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-14300",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-14300",
+   "names05": null,
+   "shard": 0,
+   "serial": 14300,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=4.7913, z in (5.169e+11, 4.7913), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-14301",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-14301",
+   "names05": null,
+   "shard": 0,
+   "serial": 14301,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=3.6343, z in (5.169e+11, 3.6343), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2268",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2268",
+   "names05": null,
+   "shard": 0,
+   "serial": 2268,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (5.169e+11, 2.7567), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-14127",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-14127",
+   "names05": null,
+   "shard": 0,
+   "serial": 14127,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=2.7567, z in (1.6351e+12, 2.7567), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-34915",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-34915",
+   "names05": null,
+   "shard": 0,
+   "serial": 34915,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=2.091, z in (5.169e+11, 2.091), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2269",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2269",
+   "names05": null,
+   "shard": 0,
+   "serial": 2269,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1.5861, z in (5.169e+11, 1.5861), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-14303",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-14303",
+   "names05": null,
+   "shard": 0,
+   "serial": 14303,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1.2031, z in (5.169e+11, 1.2031), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-14199",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-14199",
+   "names05": null,
+   "shard": 0,
+   "serial": 14199,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.91255, z in (5.169e+11, 0.91255), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2253",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2253",
+   "names05": null,
+   "shard": 0,
+   "serial": 2253,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.69219, z in (5.169e+11, 0.69219), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-14437",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-14437",
+   "names05": null,
+   "shard": 0,
+   "serial": 14437,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-38934",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-38934",
+   "names05": null,
+   "shard": 0,
+   "serial": 38934,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.39825, z in (5.169e+11, 0.39825), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-35073",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-35073",
+   "names05": null,
+   "shard": 0,
+   "serial": 35073,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.30208, z in (5.169e+11, 0.30208), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-2310",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-2310",
+   "names05": null,
+   "shard": 0,
+   "serial": 2310,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.22914, z in (5.169e+11, 0.22914), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-35075",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-35075",
+   "names05": null,
+   "shard": 0,
+   "serial": 35075,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.17381, z in (5.169e+11, 0.17381), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-35112",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-35112",
+   "names05": null,
+   "shard": 0,
+   "serial": 35112,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.13184, z in (5.169e+11, 0.13184), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-0-35079",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "0-35079",
+   "names05": null,
+   "shard": 0,
+   "serial": 35079,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.1, z in (5.169e+11, 0.1), regime Gqr, group G+q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/xcheck/capture/X01",
+ "emit_fd": null,
+ "emit_file": "state/xcheck/capture/X01/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

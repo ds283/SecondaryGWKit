@@ -1,0 +1,21 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_runs_07.py before out/runs_hashed_before.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T13:42:06Z
+# ----
+# levin-phase-floor 07: 06m's census run directory, before
+# written 2026-11-08T13:42:06Z on mps026298.phys.susx.ac.uk
+# script hash_runs_07.py sha256 b97d63881033d9e899185ef408ee0f7689d284b1576843a409f5d8ccb6e9fdfb
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/KEPT_ON_MAC_STUDIO.txt sha256 2efec35da6a441eb38a831d8402a9d3da1454adbb019dd03bfb36d234385358e
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153: 150 files, 4413262193 bytes
+# levin-phase-floor-06m-census-20261106T102153: checkpoint sha256 ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e EQUAL ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e
+# levin-phase-floor-06m-census-20261106T102153: 16 region pickles
+# levin-phase-floor-06m-census-20261106T102153: against 06m's KEPT_ON_MAC_STUDIO.txt: 150 listed, 150 present, 0 differing or missing [], 0 not listed []
+# verdict: ALL HOLD
+wrote out/runs_hashed_before.txt sha256 889bfbfc9d5358e8a105b8b38d9c4b24c25cbd33651d1bef4fde115897b9375e
+# ----
+# end 2026-11-08T13:42:08Z
+# exit 0

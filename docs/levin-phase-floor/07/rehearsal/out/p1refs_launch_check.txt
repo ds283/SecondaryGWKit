@@ -1,0 +1,40 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T10:31:40Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; R=$M/var/levin-phase-floor-07/rehearsal; D=$M/var/runs/levin-phase-floor-07-p1-references-20261108T103132; cd $M; ./venv/bin/python -B -m runregistrykit list > $R/out/p1refs_launch_registry_list.txt 2>&1; echo "list exit $?"; grep p1-references $R/out/p1refs_launch_registry_list.txt | cut -c1-120; tail -1 $R/out/p1refs_launch_registry_list.txt; cat $D/status.json; echo; grep -E "git_head|git_dirty|script_sha256|\"cwd\"" $D/manifest.json; echo "== children of 9555"; for p in $(pgrep -P 9555); do ps -o pid,ppid,command -p $p | tail -1 | cut -c1-150; for q in $(pgrep -P $p); do ps -o pid,ppid,command -p $q | tail -1 | cut -c1-150; done; done; kill -0 9555 && echo "9555 alive"; ls -la $R/out/p1_references; cat $D/stderr.log; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035; do git --no-optional-locks -C $t status --short --ignored; done; echo "(trees clean)"; uptime
+# output:
+list exit 0
+   levin-phase-floor-07-p1-references-20261108T103132         running         0/2       9s  levin-phase-floor prompt 07 
+65 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 64 finished; 0 with no host recorded.
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-08T10:31:32+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 9558,
+  "stage": "row 1 running",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 2
+}
+
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035",
+  "git_dirty": false,
+  "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+  "script_sha256": "d3770e031b3ca94e486407ca03b0f7f99df925d25f89e29febe00e58db489366",
+== children of 9555
+ 9558  9555 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Sec
+ 9563  9558 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B -m tools.filon_reference /Users
+9555 alive
+total 4
+drwxr-xr-x  4 ds283 staff  128 Nov  8 10:31 .
+drwxr-xr-x 74 ds283 staff 2368 Nov  8 10:31 ..
+-rw-r--r--  1 ds283 staff 3648 Nov  8 10:31 calls.json
+-rw-r--r--  1 ds283 staff    0 Nov  8 10:31 p1_row1.log
+(trees clean)
+10:31  up 32 days,  1:08, 1 user, load averages: 5.28 7.22 6.40
+# exit: 0
+# end: 2026-11-08T10:31:41Z

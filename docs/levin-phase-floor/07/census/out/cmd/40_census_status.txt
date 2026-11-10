@@ -1,0 +1,32 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/status.json\;\ tail\ -5\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/stdout.log\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137\ \|\ wc\ -l\;\ wc\ -l\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl\;\ kill\ -0\ 28796\ 2\>\&1\;\ echo\ kill0_sh_exit=\$\?\;\ kill\ -0\ 28799\ 2\>\&1\;\ echo\ kill0_driver_exit=\$\?
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T23:33:26Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-08T23:30:05+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 28799,
+  "stage": "18560 units recorded; last g-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+# worker 1e-8-k3_201 exit 0
+# worker 1e-8-k3_1 exit 0
+# over budget in the two sets: 0 []
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+150
+18560 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl
+sh: line 0: kill: (28796) - No such process
+kill0_sh_exit=1
+sh: line 0: kill: (28799) - No such process
+kill0_driver_exit=1
+# ----
+# end 2026-11-08T23:33:27Z
+# exit 0

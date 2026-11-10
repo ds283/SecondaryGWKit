@@ -1,0 +1,349 @@
+$ diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T13:52:16Z
+# ----
+Only in scripts: compare_07.py
+Only in scripts: hash_runs_07.py
+Only in scripts: index_06m_07.py
+Only in scripts: launch_07.py
+diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/prov.py scripts/prov.py
+1c1,14
+< """levin-phase-floor prompt 06m section 5 (the census at the code commit, Ray-free, on the Mac Studio): copied
+---
+> """levin-phase-floor prompt 07 section 6 (the census at 07's code, Ray-free, on the Mac Studio): copied from 06m's
+> census ``scripts/prov.py`` (docs/levin-phase-floor/06m/census/scripts/prov.py, a record, not edited); changed here
+> only in its trees and its paths, each change marked "prompt 07":
+> - two trees: ``g``, Part B's resumed dispatch SHA ``e182bc7a`` (the worktree
+>   ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7``), whose code is ``adffa21b``'s (07's code commit
+>   ``ad732887`` with Rule A); and ``p``, 07's code commit's parent ``91472dbe`` (the worktree
+>   ``/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db``), whose production code is 06m's (``beaf0e23...``),
+>   for Gate V0's K0 run. 06m's tree (removed) is kept below by name, not used;
+> - the records directory is var/levin-phase-floor-07/census/ (the same depth as 06m's);
+> - 06m's census (the "before"), by run directory and checkpoint SHA-256, read only.
+> 
+> (06m's text follows, unchanged.)
+> 
+> levin-phase-floor prompt 06m section 5 (the census at the code commit, Ray-free, on the Mac Studio): copied
+222c235
+< WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l; prompt 06m: var/levin-phase-floor-06m/census
+---
+> WIDER = HERE.parent  # prompt 06c: var/levin-phase-floor-06c/census (the name WIDER kept); prompt 06e: var/levin-phase-floor-06e/census; prompt 06h: var/levin-phase-floor-06h/census; prompt 06g: var/levin-phase-floor-06g/census; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l; prompt 06m: var/levin-phase-floor-06m/census; prompt 07: var/levin-phase-floor-07/census
+307a321,335
+> # prompt 07: 06m's tree is kept above, by name, for the record (not used); the two trees of 07 section 6
+> G06M_TREE, G06M_SHA = G_TREE, G_SHA  # prompt 07: 06m's census tree (38f6a828), not used
+> G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7")  # prompt 07
+> G_SHA = "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f"  # prompt 07: Part B's resumed dispatch SHA; code = adffa21b's
+> P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db")  # prompt 07
+> P_SHA = "91472dbee1daba8374b0018db1195cf6c7898bbb"  # prompt 07: 07's code commit ad732887's parent; code = 06m's
+> CODE_SHA_07 = "ad732887"  # prompt 07: 07's code commit (short), for the record
+> CODE_SHA_07_RULE_A = "adffa21b"  # prompt 07: 07's amendment (Rule A, section 10) (short), for the record
+> LQ_SHA256_07G = "4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc"  # prompt 07: g's module
+> LQ_SHA256_07P = "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6"  # prompt 07: p's module (06m's)
+> LQ_SHA256_BY_TREE = {"g": LQ_SHA256_07G, "p": LQ_SHA256_07P}  # prompt 07
+> TREES = {"g": (G_TREE, G_SHA), "p": (P_TREE, P_SHA)}  # prompt 07: g, and the parent p for Gate V0's K0 run
+> # prompt 07: 06m's census (the "before"), read only
+> RUN06M = MAIN / "var" / "runs" / "levin-phase-floor-06m-census-20261106T102153"
+> CHECKPOINT06M_SHA256 = "ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e"
+diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/refs_common.py scripts/refs_common.py
+1c1,7
+< """levin-phase-floor prompt 06m section 5: copied from 06l's scripts/refs_common.py (a record, not edited;
+---
+> """levin-phase-floor prompt 07 section 6: copied from 06m's census scripts/refs_common.py (a record, not edited;
+> docs/levin-phase-floor/06m/census/scripts/refs_common.py), changed only where marked "prompt 07": ROOT is
+> var/levin-phase-floor-07/census/ (the same depth as 06m's), and G_TREE/G_SHA are 07's tree g (the worktree at Part B's
+> resumed dispatch SHA e182bc7a, code adffa21b's); P_TREE/P_SHA name the parent 91472dbe (Gate V0's K0 run). ROWS stays
+> 06g's rows.json (aa523d28...), read only. 06m's text follows.
+> 
+> levin-phase-floor prompt 06m section 5: copied from 06l's scripts/refs_common.py (a record, not edited;
+45c51
+< ROOT = HERE.parent  # var/levin-phase-floor-06g/references; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l; prompt 06m: var/levin-phase-floor-06m/census
+---
+> ROOT = HERE.parent  # var/levin-phase-floor-06g/references; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l; prompt 06m: var/levin-phase-floor-06m/census; prompt 07: var/levin-phase-floor-07/census
+51a58,61
+> G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7")  # prompt 07 (06m: -lpf06m-38f6a82)
+> G_SHA = "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f"  # prompt 07 (06m: 38f6a828...)
+> P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db")  # prompt 07: the parent, Gate V0's K0 run
+> P_SHA = "91472dbee1daba8374b0018db1195cf6c7898bbb"  # prompt 07
+diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/run_k0.py scripts/run_k0.py
+1c1,7
+< """levin-phase-floor prompt 06m section 5, Gate M0: copied from 06l's scripts/run_k0.py (a record, not edited), changed
+---
+> """levin-phase-floor prompt 07 section 6, Gate V0: copied from 06m's census scripts/run_k0.py (a record, not edited),
+> changed only where marked "prompt 07": ``--tree`` (g, the default, or p) names the tree the units run at (the parent p
+> for V0's K0 run, g for V0's third clause and for re-running chosen units); the units file names 06m's census units
+> (``g-<rtol>-<shard>-<serial>``) and each is run as ``<tree>-<rtol>-<shard>-<serial>``; PYTHONPATH must be that tree;
+> the title names 07. 06m's text follows.
+> 
+> levin-phase-floor prompt 06m section 5, Gate M0: copied from 06l's scripts/run_k0.py (a record, not edited), changed
+55a62
+>     ap.add_argument("--tree", default="g", choices=sorted(TREES))  # prompt 07
+59,60c66,67
+<     if os.environ.get("PYTHONPATH") != str(TREES["g"][0]):
+<         raise SystemExit("PYTHONPATH must be the tree g")
+---
+>     if os.environ.get("PYTHONPATH") != str(TREES[args.tree][0]):  # prompt 07: the tree named (06m: g)
+>         raise SystemExit(f"PYTHONPATH must be the tree {args.tree}")
+63c70
+<     for l in header(Path(__file__).resolve(), f"levin-phase-floor 06m: census units under the variant {args.variant}", inputs):  # prompt 06m: the title (06l: 06l)
+---
+>     for l in header(Path(__file__).resolve(), f"levin-phase-floor 07: census units at the tree {args.tree} under the variant {args.variant}", inputs):  # prompt 07: the title (06m: 06m; 06l: 06l)
+68a76,79
+>     if any(not w.startswith("g-") for w in want):  # prompt 07: the units file names 06m's census units
+>         raise SystemExit("every unit in the units file must be g-<rtol>-<shard>-<serial>")
+>     want = [f"{args.tree}-" + w.split("-", 1)[1] for w in want]  # prompt 07: run as <tree>-<rtol>-<shard>-<serial>
+>     print(f"# tree {args.tree}: {TREES[args.tree][0]} at {TREES[args.tree][1]}")
+70c81
+<     plans = RCN.plan(rows_doc, tree="g")  # every unit of the census, as run_census builds them
+---
+>     plans = RCN.plan(rows_doc, tree=args.tree)  # every unit of the census, as run_census builds them (prompt 07: at the tree named)
+94c105,106
+<         spec = {"tree": "g", "name": name, "units": units, "out_dir": str(wdir), "emit_fd": None,
+---
+>         # prompt 07: the spec's tree is the tree named (06m: "g")
+>         spec = {"tree": args.tree, "name": name, "units": units, "out_dir": str(wdir), "emit_fd": None,
+100c112
+<     env = RCN.worker_env("g")
+---
+>     env = RCN.worker_env(args.tree)  # prompt 07
+diff -r /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/worker.py scripts/worker.py
+1a2,21
+> levin-phase-floor prompt 07 section 6: 06m's census worker (docs/levin-phase-floor/06m/census/scripts/worker.py, a
+> record, byte-identical to 06l's), changed only where marked "prompt 07"; no computed value changes, and no key 06m
+> recorded changes (every addition is a new key, named ``*_07``), so that 06m's comparison applies with the new keys set
+> aside:
+> - **the trees** ``g`` (07's tree, e182bc7a: code adffa21b's) and ``p`` (07's code commit's parent 91472dbe, 06m's
+>   code), prov.TREES; the tree evidence also records the module's 07 markers (``_locate_stationary_points``,
+>   ``_nodal_guard``, the window and coalescence constants) beside its path and SHA-256, which it already recorded.
+>   06h's analytic counterfactual (``analytic_06h.parent_counterfactual``) is computed at ``p`` as at ``g``: 06m's census
+>   ran at a tree named ``g`` whose code is ``p``'s, so its records hold it, and Gate V0's K0 run at ``p`` must too;
+> - **section 1.5's diagnostics, per call** (``guard_07`` in each call's summary: the located points, the merged windows
+>   with section 1.3's stop record, the minima not located, the three counts, Rule A's ``location_skipped_phases``, and
+>   the returned leaves' window and guard flags counted; the full result entries in the pickle's ``guard_07``) **and per
+>   returned leaf** (the region arrays' ``window_07``, ``guarded_07`` and ``guard_at_depth_max_07``: 1, 0, or -1 where
+>   the tree's ``used_interval`` has no such flag);
+> - **the scan** (spscan.scan_call, unchanged) **on every group call at both rtols and on every analytic call at 1e-7**,
+>   against the returned leaves (``scan_07``: compact in the checkpoint, in full in the pickle). A 1e-7 group call's
+>   scan is the one 06a's block makes for 06a's ``scan`` (reused, not recomputed); 06a's ``scan`` is unchanged.
+> 
+> (06l's text follows, unchanged.)
+> 
+664a685,692
+>         # prompt 07: the stationary-point guard's markers (present at g, absent at p)
+>         "levin_has_locate_stationary_points_07": hasattr(lq, "_locate_stationary_points"),
+>         "levin_has_nodal_guard_07": hasattr(lq, "_nodal_guard"),
+>         "levin_has_changes_sign_07": hasattr(lq, "_changes_sign"),
+>         "levin_window_half_phase_07": getattr(lq, "_LEVIN_WINDOW_HALF_PHASE", None),
+>         "levin_coalescence_lambda_07": getattr(lq, "_LEVIN_COALESCENCE_LAMBDA", None),
+>         "levin_scan_points_07": getattr(lq, "_LEVIN_STATIONARY_SCAN_POINTS", None),
+>         "levin_quadrature_file_07": str(Path(lq.__file__).resolve()),
+1749a1778,1926
+> # prompt 07: the stationary-point guard's diagnostics (prompt 07 section 1.5, with section 10's Rule A key)
+> GUARD_RESULT_KEYS_07 = (
+>     "stationary_points",
+>     "stationary_windows",
+>     "unlocated_minima",
+>     "num_window_pieces",
+>     "num_guarded_regions",
+>     "num_guard_at_depth_max",
+>     "location_skipped_phases",
+> )
+> N_KEEP_07 = 8  # prompt 07: entries of a list kept in the checkpoint (all of them in the pickle)
+> 
+> 
+> def _jsonable_07(x):
+>     """prompt 07: a result entry, JSON-safe and exact: every float as fx (repr and hex)."""
+>     if isinstance(x, dict):
+>         return {str(k): _jsonable_07(v) for k, v in x.items()}
+>     if isinstance(x, (list, tuple)):
+>         return [_jsonable_07(v) for v in x]
+>     if isinstance(x, (bool, np.bool_)):
+>         return bool(x)
+>     if isinstance(x, (int, np.integer)):
+>         return int(x)
+>     if isinstance(x, (float, np.floating)):
+>         return fx(float(x))
+>     if x is None or isinstance(x, str):
+>         return x
+>     if isinstance(x, np.ndarray):
+>         return _jsonable_07(x.tolist())
+>     return repr(x)
+> 
+> 
+> def _plain_07(x):
+>     """prompt 07: a result entry with numpy scalars made Python scalars (floats kept as floats), for the pickle."""
+>     if isinstance(x, dict):
+>         return {k: _plain_07(v) for k, v in x.items()}
+>     if isinstance(x, (list, tuple)):
+>         return [_plain_07(v) for v in x]
+>     if isinstance(x, (bool, np.bool_)):
+>         return bool(x)
+>     if isinstance(x, np.integer):
+>         return int(x)
+>     if isinstance(x, np.floating):
+>         return float(x)
+>     if isinstance(x, np.ndarray):
+>         return [_plain_07(v) for v in x.tolist()]
+>     return x
+> 
+> 
+> def _guard_record_07(call):
+>     """prompt 07: the call's section 1.5 result entries in full, for the pickle (None where the tree has none)."""
+>     res = call["result"]
+>     present = [k for k in GUARD_RESULT_KEYS_07 if k in res]
+>     try:
+>         entries = {k: _plain_07(res.get(k)) for k in GUARD_RESULT_KEYS_07}
+>     except Exception:  # never let the record stop the unit
+>         entries = {"error": traceback.format_exc()[-4000:]}
+>     return {"index": call["index"], "notify_label": call["notify_label"], "keys_present": present, **entries}
+> 
+> 
+> def _guard_summary_07(call):
+>     """prompt 07: the call's section 1.5 diagnostics for the checkpoint: counts, the first N_KEEP_07 located points,
+>     windows and unlocated minima (exact), Rule A's skipped phases, and the returned leaves' window and guard flags
+>     counted. At a tree without the keys (p), ``present`` is False and nothing else is recorded."""
+>     res = call["result"]
+>     regs = res["regions"]
+>     present = all(k in res for k in GUARD_RESULT_KEYS_07)
+>     out = {"present": present, "keys_present": [k for k in GUARD_RESULT_KEYS_07 if k in res]}
+>     if not present:
+>         return out
+>     pts = res["stationary_points"] or []
+>     wins = res["stationary_windows"] or []
+>     um = res["unlocated_minima"] or []
+>     sk = res["location_skipped_phases"] or []
+>     kinds = {}
+>     for p_ in pts:
+>         kinds[str(p_.get("kind"))] = kinds.get(str(p_.get("kind")), 0) + 1
+>     out["n_points"] = len(pts)
+>     out["n_points_by_kind"] = dict(sorted(kinds.items()))
+>     out["points"] = [_jsonable_07(p_) for p_ in pts[:N_KEEP_07]]
+>     out["n_windows"] = len(wins)
+>     out["windows"] = [
+>         _jsonable_07({k: v for k, v in w_.items() if k != "cuts"} | {"n_pieces": max(len(w_.get("cuts") or []) - 1, 0)})
+>         for w_ in wins[:N_KEEP_07]
+>     ]
+>     out["n_windows_stopped"] = sum(1 for w_ in wins if w_.get("stopped"))
+>     out["n_unlocated_minima"] = len(um)
+>     out["unlocated_minima"] = [_jsonable_07(m_) for m_ in um[:N_KEEP_07]]
+>     out["num_window_pieces"] = int(res["num_window_pieces"])
+>     out["num_guarded_regions"] = int(res["num_guarded_regions"])
+>     out["num_guard_at_depth_max"] = int(res["num_guard_at_depth_max"])
+>     out["location_skipped_phases"] = _jsonable_07(sk)
+>     dmax = call["kw"].get("depth_max", call["default_depth_max"])
+>     win = [bool(getattr(r, "window", False)) for r in regs]
+>     out["returned"] = {
+>         "n_window": int(sum(win)),
+>         "n_guarded": int(sum(1 for r in regs if getattr(r, "guarded", False))),
+>         "n_guard_at_depth_max": int(sum(1 for r in regs if getattr(r, "guard_at_depth_max", False))),
+>         "n_window_phase_limited": int(sum(1 for r, w_ in zip(regs, win) if w_ and r.phase_limited)),
+>         "n_window_at_depth_max": int(sum(1 for r, w_ in zip(regs, win) if w_ and dmax is not None and r.depth >= dmax)),
+>         "n_levin": int(sum(1 for r in regs if r.type == "Levin")),
+>     }
+>     out["locates"] = len(pts) > 0
+>     out["guards"] = int(res["num_guarded_regions"]) > 0 or int(res["num_guard_at_depth_max"]) > 0
+>     return out
+> 
+> 
+> def _region_arrays_07(call):
+>     """prompt 07: each returned leaf's window, guarded and guard_at_depth_max flags (1, 0; -1 where the tree's
+>     used_interval has no such attribute, as at p)."""
+>     regs = call["result"]["regions"]
+> 
+>     def flag(name):
+>         return np.array([-1 if not hasattr(r, name) else int(bool(getattr(r, name))) for r in regs], dtype=np.int8)
+> 
+>     return {"window_07": flag("window"), "guarded_07": flag("guarded"), "guard_at_depth_max_07": flag("guard_at_depth_max")}
+> 
+> 
+> def _scan_compact_07(entry):
+>     """prompt 07: a scan_07 entry for the checkpoint (the full scan is in the pickle)."""
+>     if "error" in entry:
+>         return {k: entry[k] for k in ("index", "kind", "error")}
+>     s = entry["scan"]
+>     listed = s["listed"]
+>     lev = [x for x in listed if x["branch"] == "Levin"]
+>     return {
+>         "index": entry["index"],
+>         "kind": entry["kind"],
+>         "reused_06a_scan": entry["reused_06a_scan"],
+>         "h": fx(s["h"]),
+>         "n_nonfinite": s["n_nonfinite"],
+>         "n_sign_changes": s["n_sign_changes"],
+>         "sign_change_x": [fx(x) for x in s["sign_change_x"][:64]],
+>         "min_over_max_abs_theta_deriv": s["min_over_max_abs_theta_deriv"],
+>         "n_regions": s["n_regions"],
+>         "n_regions_listed": s["n_regions_listed"],
+>         "n_regions_listed_grid": s["n_regions_listed_grid"],
+>         "n_regions_listed_ends": s["n_regions_listed_ends"],
+>         "n_listed_levin": len(lev),
+>         "n_listed_levin_grid": sum(1 for x in lev if x["how"] == "grid"),
+>         "n_listed_levin_ends": sum(1 for x in lev if x["how"] == "ends"),
+>         "listed": [
+>             {"region_index": x["region_index"], "how": x["how"], "branch": x["branch"], "depth": x["depth"],
+>              "start": fx(x["start"]), "end": fx(x["end"])}
+>             for x in listed[:32]
+>         ],
+>     }
+> 
+> 
+2183a2361,2402
+>                     # prompt 07 section 6: the scan on every group call at both rtols and on every analytic call at
+>                     # 1e-7, against the returned leaves (spscan.scan_call, unchanged), after the timed section with
+>                     # the dispatcher uninstalled; a 1e-7 group call's scan is the one 06a's block above made
+>                     scans_07 = None
+>                     data["scan_07"] = None
+>                     data["scan_07_s"] = None
+>                     data["scan_07_error"] = None
+>                     if status != "error":
+>                         t_s7 = time.perf_counter()
+>                         scans_07 = []
+>                         made_06a = {} if scans is None else {c["index"]: s for c, s in zip(group_calls, scans)}
+>                         gids_07 = {id(g) for g in group_calls}
+>                         for c in calls:
+>                             is_group = id(c) in gids_07
+>                             if not is_group and u["rtol"] != "1e-7":
+>                                 continue
+>                             kind_07 = "group" if is_group else "analytic"
+>                             try:
+>                                 if c["index"] in made_06a:
+>                                     s7 = made_06a[c["index"]]
+>                                     if "error" in s7:
+>                                         raise RuntimeError("06a's scan of this call failed: " + s7["error"][-1000:])
+>                                     reused_07 = True
+>                                 else:
+>                                     if c["theta_deriv"] is None:
+>                                         raise RuntimeError("the call was handed no theta_deriv")
+>                                     s7 = SP.scan_call(c["theta_deriv"], c["x_span"], c["result"]["regions"])
+>                                     reused_07 = False
+>                                 scans_07.append({"index": c["index"], "kind": kind_07, "reused_06a_scan": reused_07, "scan": s7})
+>                             except Exception:
+>                                 scans_07.append({"index": c["index"], "kind": kind_07, "error": traceback.format_exc()[-4000:]})
+>                                 data["scan_07_error"] = (data["scan_07_error"] or 0) + 1
+>                         data["scan_07_s"] = time.perf_counter() - t_s7
+>                         data["scan_07"] = [_scan_compact_07(e7) for e7 in scans_07]
+>                     # prompt 07: section 1.5's diagnostics per call (an exception is recorded, never raised)
+>                     for c7, s7_ in list(zip(group_calls, data["calls"])) + list(
+>                         zip([c for c in calls if id(c) not in {id(g) for g in group_calls}], data["other_calls"])
+>                     ):
+>                         try:
+>                             s7_["guard_07"] = _guard_summary_07(c7)
+>                         except Exception:
+>                             s7_["guard_07"] = {"error": traceback.format_exc()[-4000:]}
+2341c2560
+<                         if tree_name == "g":
+---
+>                         if tree_name in ("g", "p"):  # prompt 07: at p too (06m's census computed it, at its tree g = p's code)
+2426a2646
+>                                     **_region_arrays_07(c),  # prompt 07
+2438a2659
+>                                     **_region_arrays_07(c),  # prompt 07
+2454a2676,2678
+>                             # prompt 07: each call's section 1.5 entries in full, and the scan of section 6
+>                             "guard_07": [_guard_record_07(c) for c in calls],
+>                             "scan_07": scans_07,
+2488a2713
+>                     del scans_07  # prompt 07
+# ----
+# end 2026-11-08T13:52:16Z
+# exit 1

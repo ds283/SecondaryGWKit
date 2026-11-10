@@ -1,0 +1,91 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/census_projection_07.py state/k0/g state/k0/p out/census_projection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T14:14:33Z
+# ----
+{
+ "wall_06m_s": 18465.0,
+ "n_rows_720": 720,
+ "classes": {
+  "1e-7|720=False": {
+   "g": {
+    "n": 41,
+    "time_k0": 376.79042025329545,
+    "time_06m": 293.9649093770422,
+    "rho_time": 1.281753053627297,
+    "rho_wall_s": 0.9919747610769695
+   },
+   "p": {
+    "n": 41,
+    "time_k0": 365.3957097567618,
+    "time_06m": 293.9649093770422,
+    "rho_time": 1.2429909084424147,
+    "rho_wall_s": 0.9534788709306327
+   }
+  },
+  "1e-7|720=True": {
+   "g": {
+    "n": 9,
+    "time_k0": 108.28279337799177,
+    "time_06m": 77.75893671438098,
+    "rho_time": 1.3925446765781921,
+    "rho_wall_s": 1.0992086777725418
+   },
+   "p": {
+    "n": 9,
+    "time_k0": 89.42041446221992,
+    "time_06m": 77.75893671438098,
+    "rho_time": 1.1499696143052098,
+    "rho_wall_s": 0.9017908408822853
+   }
+  },
+  "1e-8|720=False": {
+   "g": {
+    "n": 41,
+    "time_k0": 307.4481974192895,
+    "time_06m": 298.5044009187259,
+    "rho_time": 1.0299620255950557,
+    "rho_wall_s": 0.9957570091521241
+   },
+   "p": {
+    "n": 41,
+    "time_k0": 288.50346892047673,
+    "time_06m": 298.5044009187259,
+    "rho_time": 0.9664965341634205,
+    "rho_wall_s": 0.9440273601439063
+   }
+  },
+  "1e-8|720=True": {
+   "g": {
+    "n": 9,
+    "time_k0": 129.2654717490077,
+    "time_06m": 117.06106608174741,
+    "rho_time": 1.1042567445843827,
+    "rho_wall_s": 1.0416962619687684
+   },
+   "p": {
+    "n": 9,
+    "time_k0": 112.34412050107494,
+    "time_06m": 117.06106608174741,
+    "rho_time": 0.9597052569350557,
+    "rho_wall_s": 0.9516384184298877
+   }
+  }
+ },
+ "projection_g_s": 21457.69287339371,
+ "ratio_g": 1.1620738084697377,
+ "projection_p_s": 20143.317314723994,
+ "ratio_p": 1.0908918123327374,
+ "k0_stage_walls_s": {
+  "06m_k0": 330.0,
+  "p": 349.92174887657166,
+  "g": 359.0820007324219
+ },
+ "projection_from_k0_stage_wall_g_s": 20092.270131891422,
+ "sum_time_06m_s": 70542.4935237742,
+ "sum_rebuild_06m_s": 2291.94067401113
+}
+wrote out/census_projection.json sha256 d71812ad35851d025721ac3c41d99104df2e94b157f57726ad6be8640c8aff81
+# ----
+# end 2026-11-08T14:15:02Z
+# exit 0

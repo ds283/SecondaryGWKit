@@ -1,0 +1,27 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/s2_score.py sha256 a2bcd2585796f01a2ee02cf24e06a986a6b63ca76f3d8f48e3e920e3727b3880
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/p1_references/calls.json sha256 8286b1ffbe6385a116a385e244007ba7003bc66b955c9c7ceaf593566253a6b6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/p1_references/p1_row1.json sha256 868e528229ba77068d7ba6eea4384eb1883fd6d0e3ae6ad189cae5a51d9b273d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/Gpqpr-p-0-10192.pkl sha256 c44fc857444a5fa1ae9de135b523e72c12c9a238e9c4479955f2a64436626b33 (recorded c44fc857444a5fa1ae9de135b523e72c12c9a238e9c4479955f2a64436626b33)
+
+row 1 [316227.7660168379, 316227.7660168379, 316227.7660168379, 249.99999999999994]: located 1 point(s), root at x 9.231349907086202 (z 10211.317891485687); |x - x_s| 7.09e-09 against one spacing 0.004123: within
+  qawo_r1: -0x1.059fce809a3f6p-74 (-5.41026257527639842496426576025e-23), 16 s, all_monotone False, direct_segments 1
+  qawo_r2: -0x1.059fce809a3c4p-74 (-5.41026257527633988264973645981e-23), 38 s, all_monotone False, direct_segments 1
+  fcc_r1: -0x1.059fce809a3f8p-74 (-5.41026257527640018042059338092e-23), 28 s, all_monotone False, direct_segments 3
+  fcc_r2: -0x1.059fce809a3c4p-74 (-5.41026257527633907531151993666e-23), 108 s, all_monotone False, direct_segments 3
+  scatter 6.11e-37 against tolerance 6.589e-33: counts True; reference (FCC r2) -0x1.059fce809a3c4p-74 (-5.41026257527633907531151993666e-23)
+  R27: value -0x1.03d61621fa22ap-74 abserr 0x1.aba97d7c8a694p-101: |v - ref| 3.69743e-25 = 561137.0 x abserr (NOT honest)
+  R28: value -0x1.059fce8287412p-74 abserr 0x1.7c75abe62fe62p-100: |v - ref| 2.3738e-32 = 0.0202477 x abserr (honest)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/p1_references/p1_row2.json sha256 22f08c69553ba81f7074052ccc209ae799ed5133c59c714567d7fb63b3335983
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/Gpqpr-p-3-20198.pkl sha256 a88661feace6fd2609cd534eaa912671e31d7493ed59356d6617afcd8b053056 (recorded a88661feace6fd2609cd534eaa912671e31d7493ed59356d6617afcd8b053056)
+
+row 2 [100000.0, 316227.7660168379, 316227.7660168379, 249.99999999999994]: located 1 point(s), root at x 5.620431994441799 (z 275.0085916617262); |x - x_s| 5.56e-09 against one spacing 0.004123: within
+  qawo_r1: 0x1.2f1af86ca79e4p-75 (3.13403589614618614857001462833e-23), 13 s, all_monotone False, direct_segments 1
+  qawo_r2: 0x1.2f1af86ca7aa6p-75 (3.13403589614630015497715643983e-23), 26 s, all_monotone False, direct_segments 1
+  fcc_r1: 0x1.2f1af86ca79dbp-75 (3.13403589614618121812959997105e-23), 71 s, all_monotone False, direct_segments 3
+  fcc_r2: 0x1.2f1af86ca7aa5p-75 (3.13403589614629993947855437008e-23), 314 s, all_monotone False, direct_segments 3
+  scatter 1.19e-36 against tolerance 9.177e-33: counts True; reference (FCC r2) 0x1.2f1af86ca7aa5p-75 (3.13403589614629993947855437008e-23)
+  R27: value 0x1.2ebe63500406cp-75 abserr 0x1.29cdfa922cc79p-100: |v - ref| 3.73938e-26 = 40748.1 x abserr (NOT honest)
+  R28: value 0x1.2f1af8c9265cap-75 abserr 0x1.5f5be60884ad3p-99: |v - ref| 5.70044e-31 = 0.263249 x abserr (honest)
+
+S2 HOLDS: location 2 of 2; honesty 2 of 2
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/s2_scores.json sha256 37ce898f2da48a5673a31f6f04ab3cd70b11fb255b3199ea7e34717f85898504

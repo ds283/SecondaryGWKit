@@ -1,0 +1,20 @@
+{
+ "name": "blocks1",
+ "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/blocks1_spec.json",
+ "spec_sha256": "9c7d1d3df16152e82659f5323b8851f837e39db0cc47bfd6d957a93b97df8246",
+ "wall_s": 59.567312240600586,
+ "workers": {
+  "blocks1-p": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/blocks1/blocks1-p/emit.jsonl"
+  },
+  "blocks1-g": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/blocks1/blocks1-g/emit.jsonl"
+  },
+  "blocks1-o": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/capture/blocks1/blocks1-o/emit.jsonl"
+  }
+ }
+}

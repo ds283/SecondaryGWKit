@@ -1,0 +1,47 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/s0_labels_and_qsi_tool_report.py sha256 88357082519ac3f4ab770ec1a0c7e07785ed44f85516dc78eac6fbc9cb471dc6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/store_value_diff_r26_r27.json sha256 458bbce2bec8a55f68d587e45c260d3e6e61ba9dbe590428ed20cbd3cc896a93
+# a /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-06m-r26.sqlite
+# b /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite
+1. label differences, by class (all must differ only by the job-name prefix and stamp):
+   GkNumericIntegration: 1368
+   GkSource: 291
+   GkWKBIntegration: 3477
+   QuadSource: 6
+   QuadSourceIntegral: 864
+   TkNumericIntegration: 3
+   TkWKBIntegration: 3
+   total 6012; differing in anything else: 0; labels without a stamp: {}
+2. QuadSourceIntegral as the tool reports it:
+   identical 0, differ 864, only_in_a [], only_in_b [], unmatched [], columns_only_in_a [], columns_only_in_b []
+   columns reported differing (column, kind): rows
+     WKB_Levin_elapsed (float): 573
+     analytic_compute_time (float): 864
+     compute_time (float): 864
+     label (value): 864
+     metadata (json): 864
+     numeric_quad_compute_time (float): 396
+     numeric_quad_max_RHS_time (float): 391
+     numeric_quad_mean_RHS_time (float): 396
+     numeric_quad_min_RHS_time (float): 337
+   metadata keys reported differing (indices folded): row-key count
+     WKB_Levin.subintervals[i].groups[i].elapsed: 3105
+     analytic.0pt5.Levin.J1_data.elapsed: 659
+     analytic.0pt5.Levin.J2_data.elapsed: 659
+     analytic.0pt5.Levin.J3_data.elapsed: 659
+     analytic.0pt5.Levin.J4_data.elapsed: 659
+     analytic.0pt5.Levin.Y1_data.elapsed: 659
+     analytic.0pt5.Levin.Y2_data.elapsed: 659
+     analytic.0pt5.Levin.Y3_data.elapsed: 659
+     analytic.0pt5.Levin.Y4_data.elapsed: 659
+     analytic.0pt5.compute_time: 863
+     analytic.2pt5.Levin.J1_data.elapsed: 600
+     analytic.2pt5.Levin.J2_data.elapsed: 600
+     analytic.2pt5.Levin.J3_data.elapsed: 600
+     analytic.2pt5.Levin.J4_data.elapsed: 600
+     analytic.2pt5.Levin.Y1_data.elapsed: 600
+     analytic.2pt5.Levin.Y2_data.elapsed: 600
+     analytic.2pt5.Levin.Y3_data.elapsed: 600
+     analytic.2pt5.Levin.Y4_data.elapsed: 600
+     analytic.2pt5.compute_time: 864
+   by leaf name: {'elapsed': 13177, 'compute_time': 1727}
+VERDICT labels: only prefix and stamp; QSI metadata leaves other than elapsed/compute_time: []

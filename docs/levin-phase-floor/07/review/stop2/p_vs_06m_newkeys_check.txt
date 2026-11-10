@@ -1,0 +1,26 @@
+p-1e-7-1-14039 record new07 paths present in 06m (i.e. not pure additions): 0 []
+    pickle ('str', "'regions_1e-7-k1_102.pkl'") | ('str', "'regions_tree-1e-7-k1_102.pkl'")
+    pickle_length ('int', '326002') | ('int', '333254')
+    pickle_offset ('int', '124872523') | ('int', '0')
+    pickle_record_sha256 ('str', "'e896cd007db2d0852e2b912c912ae34bf8bc6af3df27ea46d2dbe84c9f84f79e'") | ('str', "'17e0b01d0c0fa16b00577860d8d53fb03f75001f4889c41b7c48c3274e940680'")
+    tree ('str', "'g'") | ('str', "'p'")
+    tree_head ('str', "'38f6a828d17b41893574f7344a543ebfb1e01e85'") | ('str', "'91472dbee1daba8374b0018db1195cf6c7898bbb'")
+    unit ('str', "'g-1e-7-1-14039'") | ('str', "'p-1e-7-1-14039'")
+    worker ('str', "'1e-7-k1_102'") | ('str', "'tree-1e-7-k1_102'")
+    worker_pid ('int', '62316') | ('int', '23589')
+    worker_tree ('str', "'g'") | None
+p-1e-7-1-14039 region new07 paths present in 06m (i.e. not pure additions): 0 []
+    unit ('str', "'g-1e-7-1-14039'") | ('str', "'p-1e-7-1-14039'")
+p-1e-8-0-2106 record new07 paths present in 06m (i.e. not pure additions): 0 []
+    pickle ('str', "'regions_1e-8-k0_101.pkl'") | ('str', "'regions_tree-1e-8-k0_101.pkl'")
+    pickle_length ('int', '536855') | ('int', '544063')
+    pickle_offset ('int', '123836703') | ('int', '0')
+    pickle_record_sha256 ('str', "'fc603f16c5568749f45f619bfe540420835fbef9840dec4c00a3d585e2eac019'") | ('str', "'8d26a51aa9694e6cc4bfb5d90ebc7a950510ccf04e8abca70003633cf8a72819'")
+    tree ('str', "'g'") | ('str', "'p'")
+    tree_head ('str', "'38f6a828d17b41893574f7344a543ebfb1e01e85'") | ('str', "'91472dbee1daba8374b0018db1195cf6c7898bbb'")
+    unit ('str', "'g-1e-8-0-2106'") | ('str', "'p-1e-8-0-2106'")
+    worker ('str', "'1e-8-k0_101'") | ('str', "'tree-1e-8-k0_101'")
+    worker_pid ('int', '88393') | ('int', '23590')
+    worker_tree ('str', "'g'") | None
+p-1e-8-0-2106 region new07 paths present in 06m (i.e. not pure additions): 0 []
+    unit ('str', "'g-1e-8-0-2106'") | ('str', "'p-1e-8-0-2106'")

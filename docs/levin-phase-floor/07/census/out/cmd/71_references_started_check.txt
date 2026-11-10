@@ -1,0 +1,28 @@
+$ sh -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-references-20261109T005328\;\ ls\ \$R\;\ cat\ \$R/status.json\;\ echo\;\ kill\ -0\ 82445\ \&\&\ echo\ \"sh\ 82445\ answers\ kill\ -0\"\;\ P=\$\(/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\)\[\\\"pid\\\"\]\)\"\)\;\ kill\ -0\ \$P\ \&\&\ echo\ \"driver\ \$P\ answers\ kill\ -0\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:53:32Z
+# ----
+manifest.json
+status.json
+stderr.log
+stdout.log
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-09T00:53:28+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 82448,
+  "stage": "v21-qawo-r1 started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 74
+}
+
+sh 82445 answers kill -0
+driver 82448 answers kill -0
+# ----
+# end 2026-11-09T00:53:32Z
+# exit 0

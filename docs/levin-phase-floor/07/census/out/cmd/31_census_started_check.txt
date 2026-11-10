@@ -1,0 +1,44 @@
+$ sh -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137\;\ ls\ \$R\ \|\ head\ -20\;\ cat\ \$R/status.json\;\ echo\;\ kill\ -0\ 28796\ \&\&\ echo\ \"sh\ 28796\ answers\ kill\ -0\"\;\ P=\$\(/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -c\ \"import\ json\;print\(json.load\(open\(\\\"\$R/status.json\\\"\)\)\[\\\"pid\\\"\]\)\"\)\;\ kill\ -0\ \$P\ \&\&\ echo\ \"driver\ \$P\ answers\ kill\ -0\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T17:11:41Z
+# ----
+manifest.json
+regions_1e-7-k0_101.pkl
+regions_1e-7-k0_202.pkl
+regions_1e-7-k1_102.pkl
+regions_1e-7-k1_301.pkl
+regions_1e-7-k2_2.pkl
+regions_1e-7-k2_302.pkl
+spec_1e-7-k0_101.json
+spec_1e-7-k0_202.json
+spec_1e-7-k1_102.json
+spec_1e-7-k1_301.json
+spec_1e-7-k2_2.json
+spec_1e-7-k2_302.json
+status.json
+stderr.log
+stdout.log
+worker_1e-7-k0_101_context.json
+worker_1e-7-k0_101_hello.json
+worker_1e-7-k0_101_levin_logging.json
+worker_1e-7-k0_101_store.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-08T17:11:37+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 28799,
+  "stage": "started worker 1e-7-k2_302 (1160 units)",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 18560
+}
+
+sh 28796 answers kill -0
+driver 28799 answers kill -0
+# ----
+# end 2026-11-08T17:11:41Z
+# exit 0

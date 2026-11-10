@@ -1,0 +1,114 @@
+{
+ "written": "2026-11-09",
+ "rule": "the user's ruling at stop 4, relayed verbatim: \"Take your recommended option of FCC at both resolutions plus QAWO where it is projected to be 30 minutes or less. It costs only a few hours for an independent check of many calls. Calls without QAWO should be scored on whatever references we do have, either one or two FCC readings.\" QAWO r1 and r2 are read on exactly the calls below: those whose QAWO r1 and QAWO r2 readings each project at 30 minutes (1,800 s) or less in out/v4/refs_projection.json (unchanged). FCC r1 and r2 are read on all 24.",
+ "projection": "out/v4/refs_projection.json",
+ "projection_sha256": "77831c1a0e5a71cbe8460d3ad6fee3bea54766a443d33b41e705af78d0d9300e",
+ "qawo_calls": [
+  {
+   "sid": "v00",
+   "unit": "g-1e-7-3-37343",
+   "qawo_r1_s": 104.55097273873601,
+   "qawo_r2_s": 201.2382453141517
+  },
+  {
+   "sid": "v02",
+   "unit": "g-1e-8-3-39137",
+   "qawo_r1_s": 178.6254059387639,
+   "qawo_r2_s": 278.5517070059975
+  },
+  {
+   "sid": "v03",
+   "unit": "g-1e-8-1-34611",
+   "qawo_r1_s": 24.339776764085173,
+   "qawo_r2_s": 63.270159751523785
+  },
+  {
+   "sid": "v04",
+   "unit": "g-1e-7-3-2326",
+   "qawo_r1_s": 77.59384260080712,
+   "qawo_r2_s": 294.66695789180295
+  },
+  {
+   "sid": "v05",
+   "unit": "g-1e-7-0-38985",
+   "qawo_r1_s": 465.8342180444563,
+   "qawo_r2_s": 535.5742622977731
+  },
+  {
+   "sid": "v09",
+   "unit": "g-1e-8-3-34962",
+   "qawo_r1_s": 270.75553841271415,
+   "qawo_r2_s": 625.1139912039931
+  },
+  {
+   "sid": "v10",
+   "unit": "g-1e-8-0-14314",
+   "qawo_r1_s": 442.6110675413262,
+   "qawo_r2_s": 441.7940000655394
+  },
+  {
+   "sid": "v14",
+   "unit": "g-1e-7-3-13816",
+   "qawo_r1_s": 48.31415282158185,
+   "qawo_r2_s": 33.99554186194718
+  },
+  {
+   "sid": "v15",
+   "unit": "g-1e-7-0-1973",
+   "qawo_r1_s": 151.48305354140416,
+   "qawo_r2_s": 136.15987663007473
+  },
+  {
+   "sid": "v17",
+   "unit": "g-1e-7-0-1772",
+   "qawo_r1_s": 186.18551564200123,
+   "qawo_r2_s": 88.38219012394089
+  },
+  {
+   "sid": "v19",
+   "unit": "g-1e-8-3-1921",
+   "qawo_r1_s": 47.65607108853999,
+   "qawo_r2_s": 31.547458684350833
+  },
+  {
+   "sid": "v20",
+   "unit": "g-1e-8-0-1896",
+   "qawo_r1_s": 132.86934020143406,
+   "qawo_r2_s": 62.274085675830264
+  },
+  {
+   "sid": "v21",
+   "unit": "g-1e-8-1-1747",
+   "qawo_r1_s": 16.261142660223484,
+   "qawo_r2_s": 31.094558704702585
+  }
+ ],
+ "fcc_calls": [
+  "v00",
+  "v01",
+  "v02",
+  "v03",
+  "v04",
+  "v05",
+  "v06",
+  "v07",
+  "v08",
+  "v09",
+  "v10",
+  "v11",
+  "v12",
+  "v13",
+  "v14",
+  "v15",
+  "v16",
+  "v17",
+  "v18",
+  "v19",
+  "v20",
+  "v21",
+  "v22",
+  "v23"
+ ],
+ "projected_total_s": 89229.83916077224,
+ "n_readings": 74
+}

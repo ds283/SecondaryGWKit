@@ -1,0 +1,65 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qsi_identity_r26_r27.py sha256 244840d0ae4c2c6b3f469903d8034b3bd4de4754af34635b88b0b7155750eb3a
+# input var/datastores/levin-phase-floor-06m-r26-shard0000.sqlite sha256 abca59fcb601585049e7f8eeea023fa714f0375804b7793149217204f06e097b
+# input var/datastores/levin-phase-floor-06m-r26-shard0001.sqlite sha256 6753c62af4d19affe40152c17a500cdcc673612d764795032d20560d54909ede
+# input var/datastores/levin-phase-floor-06m-r26-shard0002.sqlite sha256 bdfcf92688e3b87add4f4d94b86bfd149d4a15b6e2628e4883336fa9e9b81e01
+# input var/datastores/levin-phase-floor-06m-r26-shard0003.sqlite sha256 0cbf7425df82429940b46bdf86395c7751dad58c19699372bb0e5ddd8a332666
+# input var/datastores/levin-phase-floor-06m-r26.sqlite sha256 e90e26c2e23cdba61500c5c391fc39288016d13540423b66247f9473a939e272
+# input var/datastores/levin-phase-floor-07-r27-shard0000.sqlite sha256 307096b84b289e885596bb22b0fa6ebc960f30dbcd85e620a2e3b4ffcffce675
+# input var/datastores/levin-phase-floor-07-r27-shard0001.sqlite sha256 bbd9561d75a7df42ed45adb4cfcee80667f897b00c352538411ad22a85c78247
+# input var/datastores/levin-phase-floor-07-r27-shard0002.sqlite sha256 7ec3c659f1b33a2b37670b4939c7657c80b1525dec19defe0c0ef06defd8eaf7
+# input var/datastores/levin-phase-floor-07-r27-shard0003.sqlite sha256 c3370cb94939db22a95afec4b79ceac0f7a7d0e6a42f1c4f4dc9b9e99c396d28
+# input var/datastores/levin-phase-floor-07-r27.sqlite sha256 d6fd30230fc6d20bc2efa504141e43fdd4cb1b9afdc35d367e8cbe1bca374acb
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb status --short ''
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b status --short ''
+# this script imports no tree code; it reads the stores with sqlite3 mode=ro
+A = R26 var/datastores/levin-phase-floor-06m-r26.sqlite: 864 rows, 48 columns
+B = R27 var/datastores/levin-phase-floor-07-r27.sqlite: 864 rows, 48 columns
+columns equal: True
+key sets equal: True; only in A 0, only in B 0
+rows compared: 864; tolerance mismatches 0; field-set mismatches 0
+fields compared, by kind: {'value': 118776, 'counter': 27163, 'identity': 15552, 'timing': 20953, 'label': 864}
+field differences, by kind: {'identity': 5333, 'timing': 18725, 'label': 864}
+differing fields (kind, path with indices folded): count of row-field differences
+  identity col:data_serial: 825
+  identity col:k_wavenumber_exit_serial: 576
+  identity col:q_wavenumber_exit_serial: 576
+  identity col:r_wavenumber_exit_serial: 768
+  identity col:rtol_serial: 864
+  identity col:serial: 860
+  identity col:timestamp: 864
+  label    col:label: 864
+  timing   col:WKB_Levin_elapsed: 573
+  timing   col:analytic_compute_time: 864
+  timing   col:compute_time: 864
+  timing   col:numeric_quad_compute_time: 396
+  timing   col:numeric_quad_max_RHS_time: 391
+  timing   col:numeric_quad_mean_RHS_time: 396
+  timing   col:numeric_quad_min_RHS_time: 337
+  timing   meta:WKB_Levin.subintervals[i].groups[i].elapsed: 3105
+  timing   meta:analytic.0pt5.Levin.J1_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.J2_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.J3_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.J4_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.Y1_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.Y2_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.Y3_data.elapsed: 659
+  timing   meta:analytic.0pt5.Levin.Y4_data.elapsed: 659
+  timing   meta:analytic.0pt5.compute_time: 863
+  timing   meta:analytic.2pt5.Levin.J1_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.J2_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.J3_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.J4_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.Y1_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.Y2_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.Y3_data.elapsed: 600
+  timing   meta:analytic.2pt5.Levin.Y4_data.elapsed: 600
+  timing   meta:analytic.2pt5.compute_time: 864
+rows with every value field bit-identical: 864 / 864
+rows with every counter field bit-identical: 864 / 864
+col:total bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+col:total_abserr bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+col:analytic_rad bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+meta:analytic.abserr bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+col:total_converged bit-identical: 864 / 864 rows where present (non-numeric type: 0)
+VERDICT: R27 IS value-identical to R26 in QuadSourceIntegral (every value and counter field, every row, by bit pattern)

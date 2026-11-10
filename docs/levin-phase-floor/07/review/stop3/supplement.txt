@@ -1,0 +1,73 @@
+# stop3_supplement.py sha256 c17d38c614c373da13053b50867f418363305436cadd163972b4539de4a71a90
+{
+ "active_units": 2456,
+ "quiet_group_records": 10688,
+ "active_group_records": 1912,
+ "quiet_calls_with_deep_lines": 78
+}
+bad: 0
+distinct unit-level keys: 63
+   26609  data:deep_lines.lines[i].levels[i][i]
+    1536  pickle:result_full.WKB_Levin_subintervals[i].abserr
+    1536  pickle:result_full.WKB_Levin_subintervals[i].groups[i].abserr
+    1536  pickle:result_full.WKB_Levin_subintervals[i].groups[i].evaluations
+    1536  pickle:result_full.WKB_Levin_subintervals[i].groups[i].value
+    1536  pickle:result_full.WKB_Levin_subintervals[i].value
+    1528  data:analytic_06h.h.abserr.hex
+    1528  data:analytic_06h.h.abserr.repr
+    1528  data:analytic_06h.parent_counterfactual.abserr.hex
+    1528  data:analytic_06h.parent_counterfactual.abserr.repr
+    1513  pickle:result_full.WKB_Levin_subintervals[i].groups[i].regions
+    1513  pickle:result_full.WKB_Levin_subintervals[i].groups[i].simple_regions
+    1498  data:analytic_06h.h.value.hex
+    1498  data:analytic_06h.h.value.repr
+    1492  data:analytic_06h.parent_counterfactual.value.hex
+    1492  data:analytic_06h.parent_counterfactual.value.repr
+    1452  data:result.WKB_Levin.hex
+    1452  data:result.WKB_Levin.repr
+    1452  data:result.WKB_Levin_data.evaluations
+    1452  data:result.total.hex
+    1452  data:result.total.repr
+    1452  data:result.total_abserr.hex
+    1452  data:result.total_abserr.repr
+    1452  pickle:result_full.WKB_Levin.hex
+    1452  pickle:result_full.WKB_Levin.repr
+    1452  pickle:result_full.WKB_Levin_data.evaluations
+    1451  data:dispatcher_counts.G
+    1451  data:dispatcher_flags.G exact_remainder=True
+    1451  pickle:result_full.total.hex
+    1451  pickle:result_full.total.repr
+    1451  pickle:result_full.total_abserr.hex
+    1451  pickle:result_full.total_abserr.repr
+    1433  data:result.WKB_Levin_data.num_regions
+    1433  pickle:result_full.WKB_Levin_data.num_regions
+    1432  data:result.WKB_Levin_data.num_simple_regions
+    1432  pickle:result_full.WKB_Levin_data.num_simple_regions
+    1310  data:result.analytic_rad.hex
+    1310  data:result.analytic_rad.repr
+    1310  pickle:result_full.analytic_rad.hex
+    1309  pickle:result_full.analytic_rad.repr
+    1147  data:dispatcher_counts.T
+    1147  data:dispatcher_flags.T exact_remainder=True
+    1017  data:w3.n_regions
+     719  data:w3.min_ratio
+     671  data:result.WKB_Levin_data.max_depth
+     671  pickle:result_full.WKB_Levin_data.max_depth
+     665  pickle:result_full.WKB_Levin_subintervals[i].groups[i].phase_limited
+     567  data:w3.n_premise_fails
+     376  pickle:result_full.WKB_Levin_subintervals[i].phase_limited
+     361  data:deep_lines_06e.n_calls
+     293  data:deep_lines.lines[i].leaf_end
+     293  data:deep_lines.lines[i].leaf_start
+     288  data:deep_lines.lines[i].index
+     287  data:deep_lines_06e.n_not_reproducing
+     275  data:deep_lines.lines
+     247  data:result.total_phase_limited
+     247  pickle:result_full.total_phase_limited
+      95  data:deep_lines_06e.lines
+      95  pickle:deep_lines_06e
+      17  pickle:w3
+       1  data:deep_lines.lines[i].line_end_equals_leaf_and_reproduces_its_residual_and_floor
+       1  data:deep_lines.lines[i].n_leaves_at_max_depth
+       1  data:deep_lines.n_not_reproducing
+exit 0

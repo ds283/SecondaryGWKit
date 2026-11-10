@@ -1,0 +1,1172 @@
+{
+ "tree": "g",
+ "name": "X04",
+ "units": [
+  {
+   "uid": "g-1e-7-2-1716",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-1716",
+   "names05": null,
+   "shard": 2,
+   "serial": 1716,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=8342.9, z in (5.2861e+10, 8342.9), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-1698",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-1698",
+   "names05": null,
+   "shard": 2,
+   "serial": 1698,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=6328.3, z in (5.2861e+10, 6328.3), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-1566",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-1566",
+   "names05": null,
+   "shard": 2,
+   "serial": 1566,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4800.1, z in (5.2861e+10, 4800.1), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-36958",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-36958",
+   "names05": null,
+   "shard": 2,
+   "serial": 36958,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=3641, z in (5.2861e+10, 3641), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34474",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34474",
+   "names05": null,
+   "shard": 2,
+   "serial": 34474,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=2761.8, z in (5.2861e+10, 2761.8), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34559",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34559",
+   "names05": null,
+   "shard": 2,
+   "serial": 34559,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=2094.9, z in (5.2861e+10, 2094.9), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34475",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34475",
+   "names05": null,
+   "shard": 2,
+   "serial": 34475,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=1589, z in (5.2861e+10, 1589), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-37003",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-37003",
+   "names05": null,
+   "shard": 2,
+   "serial": 37003,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=914.24, z in (5.2861e+10, 914.24), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34580",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34580",
+   "names05": null,
+   "shard": 2,
+   "serial": 34580,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=693.47, z in (5.2861e+10, 693.47), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34477",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34477",
+   "names05": null,
+   "shard": 2,
+   "serial": 34477,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-36984",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-36984",
+   "names05": null,
+   "shard": 2,
+   "serial": 36984,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=398.99, z in (5.2861e+10, 398.99), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-13659",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-13659",
+   "names05": null,
+   "shard": 2,
+   "serial": 13659,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=302.64, z in (5.2861e+10, 302.64), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-13643",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-13643",
+   "names05": null,
+   "shard": 2,
+   "serial": 13643,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=229.56, z in (5.2861e+10, 229.56), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34581",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34581",
+   "names05": null,
+   "shard": 2,
+   "serial": 34581,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=229.56, z in (1.6721e+11, 229.56), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-37926",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-37926",
+   "names05": null,
+   "shard": 2,
+   "serial": 37926,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=174.13, z in (1.6721e+11, 174.13), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34683",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34683",
+   "names05": null,
+   "shard": 2,
+   "serial": 34683,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=132.08, z in (5.2861e+10, 132.08), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34816",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34816",
+   "names05": null,
+   "shard": 2,
+   "serial": 34816,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=132.08, z in (1.6721e+11, 132.08), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-37927",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-37927",
+   "names05": null,
+   "shard": 2,
+   "serial": 37927,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=100.19, z in (1.6721e+11, 100.19), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-37717",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-37717",
+   "names05": null,
+   "shard": 2,
+   "serial": 37717,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=75.993, z in (5.2861e+10, 75.993), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34817",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34817",
+   "names05": null,
+   "shard": 2,
+   "serial": 34817,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=75.993, z in (1.6721e+11, 75.993), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34785",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34785",
+   "names05": null,
+   "shard": 2,
+   "serial": 34785,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=57.642, z in (1.6721e+11, 57.642), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34703",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34703",
+   "names05": null,
+   "shard": 2,
+   "serial": 34703,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=43.723, z in (1.6721e+11, 43.723), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34786",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34786",
+   "names05": null,
+   "shard": 2,
+   "serial": 34786,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=33.165, z in (5.2861e+10, 33.165), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34787",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34787",
+   "names05": null,
+   "shard": 2,
+   "serial": 34787,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=33.165, z in (1.6721e+11, 33.165), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34728",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34728",
+   "names05": [
+    "R6"
+   ],
+   "shard": 2,
+   "serial": 34728,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=25.156, z in (5.2861e+10, 25.156), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-2088",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-2088",
+   "names05": null,
+   "shard": 2,
+   "serial": 2088,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=25.156, z in (1.6721e+11, 25.156), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34729",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34729",
+   "names05": null,
+   "shard": 2,
+   "serial": 34729,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=19.081, z in (1.6721e+11, 19.081), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-2090",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-2090",
+   "names05": null,
+   "shard": 2,
+   "serial": 2090,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=19.081, z in (5.169e+11, 19.081), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34708",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34708",
+   "names05": null,
+   "shard": 2,
+   "serial": 34708,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=14.474, z in (1.6721e+11, 14.474), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34669",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34669",
+   "names05": null,
+   "shard": 2,
+   "serial": 34669,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=14.474, z in (5.169e+11, 14.474), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-2093",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-2093",
+   "names05": null,
+   "shard": 2,
+   "serial": 2093,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=10.979, z in (1.6721e+11, 10.979), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-2094",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-2094",
+   "names05": null,
+   "shard": 2,
+   "serial": 2094,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=8.3275, z in (1.6721e+11, 8.3275), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34711",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34711",
+   "names05": null,
+   "shard": 2,
+   "serial": 34711,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=8.3275, z in (5.169e+11, 8.3275), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-38309",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-38309",
+   "names05": null,
+   "shard": 2,
+   "serial": 38309,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=6.3166, z in (5.2861e+10, 6.3166), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34825",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34825",
+   "names05": null,
+   "shard": 2,
+   "serial": 34825,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.7913, z in (5.2861e+10, 4.7913), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34827",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34827",
+   "names05": null,
+   "shard": 2,
+   "serial": 34827,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=3.6343, z in (5.2861e+10, 3.6343), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-38649",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-38649",
+   "names05": null,
+   "shard": 2,
+   "serial": 38649,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=3.6343, z in (1.6721e+11, 3.6343), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-2183",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-2183",
+   "names05": null,
+   "shard": 2,
+   "serial": 2183,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=2.7567, z in (5.2861e+10, 2.7567), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34978",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34978",
+   "names05": null,
+   "shard": 2,
+   "serial": 34978,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=2.7567, z in (1.6721e+11, 2.7567), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34887",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34887",
+   "names05": null,
+   "shard": 2,
+   "serial": 34887,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=2.091, z in (1.6721e+11, 2.091), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34830",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34830",
+   "names05": null,
+   "shard": 2,
+   "serial": 34830,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=1.5861, z in (5.2861e+10, 1.5861), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34831",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34831",
+   "names05": null,
+   "shard": 2,
+   "serial": 34831,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1.5861, z in (5.169e+11, 1.5861), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34981",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34981",
+   "names05": null,
+   "shard": 2,
+   "serial": 34981,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=1.2031, z in (5.2861e+10, 1.2031), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-2186",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-2186",
+   "names05": null,
+   "shard": 2,
+   "serial": 2186,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=1.2031, z in (1.6721e+11, 1.2031), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-2188",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-2188",
+   "names05": null,
+   "shard": 2,
+   "serial": 2188,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.91255, z in (1.6721e+11, 0.91255), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34835",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34835",
+   "names05": null,
+   "shard": 2,
+   "serial": 34835,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.91255, z in (5.169e+11, 0.91255), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34892",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34892",
+   "names05": null,
+   "shard": 2,
+   "serial": 34892,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.69219, z in (1.6721e+11, 0.69219), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-38338",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-38338",
+   "names05": null,
+   "shard": 2,
+   "serial": 38338,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.69219, z in (5.169e+11, 0.69219), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34894",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34894",
+   "names05": null,
+   "shard": 2,
+   "serial": 34894,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.52504, z in (1.6721e+11, 0.52504), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-38339",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-38339",
+   "names05": null,
+   "shard": 2,
+   "serial": 38339,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.52504, z in (5.169e+11, 0.52504), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-14346",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-14346",
+   "names05": null,
+   "shard": 2,
+   "serial": 14346,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=0.39825, z in (5.2861e+10, 0.39825), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34839",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34839",
+   "names05": null,
+   "shard": 2,
+   "serial": 34839,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.39825, z in (1.6721e+11, 0.39825), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34840",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34840",
+   "names05": null,
+   "shard": 2,
+   "serial": 34840,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.39825, z in (5.169e+11, 0.39825), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-34897",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-34897",
+   "names05": null,
+   "shard": 2,
+   "serial": 34897,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.30208, z in (1.6721e+11, 0.30208), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-2308",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-2308",
+   "names05": null,
+   "shard": 2,
+   "serial": 2308,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.30208, z in (5.169e+11, 0.30208), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-39035",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-39035",
+   "names05": null,
+   "shard": 2,
+   "serial": 39035,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=0.22914, z in (5.2861e+10, 0.22914), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-39050",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-39050",
+   "names05": null,
+   "shard": 2,
+   "serial": 39050,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.22914, z in (1.6721e+11, 0.22914), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-35057",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-35057",
+   "names05": null,
+   "shard": 2,
+   "serial": 35057,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=0.17381, z in (5.2861e+10, 0.17381), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-35061",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-35061",
+   "names05": null,
+   "shard": 2,
+   "serial": 35061,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.13184, z in (5.169e+11, 0.13184), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-39044",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-39044",
+   "names05": null,
+   "shard": 2,
+   "serial": 39044,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.1, z in (1.6721e+11, 0.1), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-2-39045",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "2-39045",
+   "names05": null,
+   "shard": 2,
+   "serial": 39045,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.1, z in (5.169e+11, 0.1), regime Gqr, group G+q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/xcheck/capture/X04",
+ "emit_fd": null,
+ "emit_file": "state/xcheck/capture/X04/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

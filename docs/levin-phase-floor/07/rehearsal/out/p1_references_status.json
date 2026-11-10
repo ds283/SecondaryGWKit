@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-08T10:41:48+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 9558,
+  "stage": "row 2 exit 0 (425 s)",
+  "state": "done",
+  "units_done": 2,
+  "units_total": 2
+}

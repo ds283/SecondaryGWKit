@@ -1,0 +1,112 @@
+# levin-phase-floor 07: Gate V0 (a), the parent's files the K0 workers loaded
+# written 2026-11-08T14:06:30Z on mps026298.phys.susx.ac.uk
+# script v0a_imports_07.py sha256 c3ce05b5bb75eee09d03efa2a02026be48da7c5264c15fd8326637342596a170
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# workers with a bye: 15; distinct files of p loaded: 102
+# git diff --name-only 48cf87c0 91472dbe -- . ':!docs' ':!prompts': ['AdaptiveLevin/tests/test_levin_leaf_values.py', 'CLAUDE.md']
+# files both changed and loaded: []
+# verdict: HOLDS (nothing the harness imports is changed)
+AdaptiveLevin/__init__.py
+AdaptiveLevin/levin_quadrature.py
+ComputeTargets/BackgroundModel.py
+ComputeTargets/GkNumericIntegration.py
+ComputeTargets/GkSource.py
+ComputeTargets/GkSourcePolicyData.py
+ComputeTargets/GkWKBIntegration.py
+ComputeTargets/OneLoopIntegral.py
+ComputeTargets/QuadSource.py
+ComputeTargets/QuadSourceIntegral.py
+ComputeTargets/TkNumericIntegration.py
+ComputeTargets/TkSourceFunctions.py
+ComputeTargets/TkWKBIntegration.py
+ComputeTargets/WKB_Gk.py
+ComputeTargets/WKB_Tk.py
+ComputeTargets/__init__.py
+ComputeTargets/analytic_Gk.py
+ComputeTargets/analytic_Tk.py
+ComputeTargets/cumulative_table.py
+ComputeTargets/handover.py
+ComputeTargets/phase_groups.py
+ComputeTargets/phase_residual.py
+ComputeTargets/primitive_phase.py
+ComputeTargets/spline_wrappers.py
+ComputeTargets/tests/__init__.py
+ComputeTargets/tests/test_main_plumbing.py
+CosmologyConcepts/__init__.py
+CosmologyConcepts/redshift.py
+CosmologyConcepts/wavenumber.py
+CosmologyModels/GenericEOS/GenericEOS.py
+CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py
+CosmologyModels/GenericEOS/QCD_Cosmology.py
+CosmologyModels/GenericEOS/QCD_EOS.py
+CosmologyModels/GenericEOS/__init__.py
+CosmologyModels/LambdaCDM/LambdaCDM.py
+CosmologyModels/LambdaCDM/Planck.py
+CosmologyModels/LambdaCDM/__init__.py
+CosmologyModels/__init__.py
+CosmologyModels/base.py
+CosmologyModels/model_ids.py
+LiouvilleGreen/WKBtools.py
+LiouvilleGreen/__init__.py
+LiouvilleGreen/bessel_near_region.py
+LiouvilleGreen/bessel_phase.py
+LiouvilleGreen/bessel_tail.py
+LiouvilleGreen/constants.py
+LiouvilleGreen/integration_tools.py
+LiouvilleGreen/phase_spline.py
+LiouvilleGreen/range_reduce_mod_2pi.py
+LiouvilleGreen/three_bessel_integrals.py
+MetadataConcepts/GkSourcePolicy.py
+MetadataConcepts/QuadSourcePolicy.py
+MetadataConcepts/__init__.py
+MetadataConcepts/store_tag.py
+MetadataConcepts/tolerance.py
+MetadataConcepts/version.py
+ObjectFactories/BackgroundModel.py
+ObjectFactories/GkNumericIntegration.py
+ObjectFactories/GkSource.py
+ObjectFactories/GkSourcePolicy.py
+ObjectFactories/GkSourcePolicyData.py
+ObjectFactories/GkWKBIntegration.py
+ObjectFactories/LambdaCDM.py
+ObjectFactories/OneLoopIntegral.py
+ObjectFactories/QCD_Cosmology.py
+ObjectFactories/QuadSource.py
+ObjectFactories/QuadSourceIntegral.py
+ObjectFactories/QuadSourcePolicy.py
+ObjectFactories/TkNumericIntegration.py
+ObjectFactories/TkWKBIntegration.py
+ObjectFactories/__init__.py
+ObjectFactories/integration_metadata.py
+ObjectFactories/redshift.py
+ObjectFactories/store_tag.py
+ObjectFactories/tolerance.py
+ObjectFactories/version.py
+ObjectFactories/wavenumber.py
+Quadrature/__init__.py
+Quadrature/integration_metadata.py
+Quadrature/integrators/WKB_phase_function.py
+Quadrature/integrators/__init__.py
+Quadrature/integrators/numeric_with_phase_cut.py
+Quadrature/simple_quadrature.py
+Quadrature/supervisors/__init__.py
+Quadrature/supervisors/base.py
+Quadrature/supervisors/numeric.py
+StoreFixtures/__init__.py
+StoreFixtures/standin_pool.py
+Units/Mpc_units.py
+Units/__init__.py
+Units/base.py
+config/__init__.py
+config/datastore.py
+config/defaults.py
+config/model_list.py
+config/ray_local.py
+config/sharding.py
+constants.py
+extract_common.py
+tools/__init__.py
+tools/inventory_report.py
+utilities.py

@@ -1,0 +1,69 @@
+{
+ "header": [
+  "# levin-phase-floor 07: the cross-check's class (c)/(d) reference costs",
+  "# written 2026-11-09T01:02:05Z on mps026298.phys.susx.ac.uk",
+  "# script xcheck_projection_07.py sha256 f9b457f51e5e14ffc92f226561879f507f03fdef4956225dc71abbc15c55389b",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input state/dev/xcap_captures_dev.json sha256 4d02d80a95d0797837fe8c4b636e98d543e185e6e3d01e265ffb7dad76be4404",
+  "# input state/dev/xcap_check_dev.json sha256 a94ecc938b8d755a15f1e318e16b52f88027025d8d8daeaacc8c87266d15e6db",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/out/v4/refs_projection.json sha256 77831c1a0e5a71cbe8460d3ad6fee3bea54766a443d33b41e705af78d0d9300e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/refs_projection_07.py sha256 8d9a5b856108a47825618f8bb4bb230fec4fe16eba74f8803cb9ca641ec6d65b"
+ ],
+ "n_calls": 2,
+ "n_projected": 2,
+ "total_all_four_s": 2797.6513306113698,
+ "total_fcc_s": 2557.2876539936415,
+ "total_fcc_plus_qawo_le_1800_s": 2797.6513306113698,
+ "calls": [
+  {
+   "sid": "x000",
+   "unit": "g-1e-7-0-12804",
+   "index": 1,
+   "class": "c",
+   "features": {
+    "n_seg": 1162,
+    "span_q": 1010588.154911574,
+    "span_f": 1010178.6537689604,
+    "D_q": 56.468551363595374,
+    "D_f": 363.6200018559409,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 6.827167524511605,
+    "qawo_r2": 9.95866547832406,
+    "fcc_r1": 24.60885852068657,
+    "fcc_r2": 96.63652168340836
+   },
+   "total_s": 138.0312132069306,
+   "fcc_s": 121.24538020409493,
+   "qawo_each_le_1800": true
+  },
+  {
+   "sid": "x001",
+   "unit": "g-1e-7-0-12869",
+   "index": 1,
+   "class": "c",
+   "features": {
+    "n_seg": 1574,
+    "span_q": 98062386.86565876,
+    "span_f": 98022651.1033473,
+    "D_q": 5479.400913640387,
+    "D_f": 35283.706104085126,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 175.9884760479427,
+    "qawo_r2": 47.589367566949925,
+    "fcc_r1": 440.0304783282977,
+    "fcc_r2": 1996.0117954612488
+   },
+   "total_s": 2659.620117404439,
+   "fcc_s": 2436.0422737895465,
+   "qawo_each_le_1800": true
+  }
+ ]
+}

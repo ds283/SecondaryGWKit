@@ -1,0 +1,28 @@
+$ sh -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-k0-20261108T135240\;\ cat\ \$R/status.json\;\ echo\;\ ps\ -o\ pid\,ppid\,etime\,command\ -p\ 21415\ \|\ cut\ -c1-200\;\ ps\ -Ao\ pid\,ppid\,etime\,command\ \|\ grep\ -v\ grep\ \|\ grep\ \"run_06j.py\\\|run_k0.py\"\ \|\ cut\ -c1-200\;\ ls\ state/k0\ 2\>\&1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T13:52:45Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-08T13:52:40+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 21419,
+  "stage": "41_k0_run_p started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 7
+}
+
+  PID  PPID ELAPSED COMMAND
+21415     1   00:06 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_06j.py --run-dir /Users/d
+21415     1       00:06 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_06j.py --run-dir /Use
+21419 21415       00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/c
+21426 21419       00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/c
+p
+# ----
+# end 2026-11-08T13:52:46Z
+# exit 0

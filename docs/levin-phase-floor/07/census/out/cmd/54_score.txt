@@ -1,0 +1,39 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_07.py state/score_07_units.json --processes 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:18:08Z
+# ----
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/pool.py", line 48, in mapstar
+    return list(map(*args))
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/score_07.py", line 107, in one
+    max((c["max_depth"] for _, c in calls6.values()), default=None)]
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/score_07.py", line 107, in <genexpr>
+    max((c["max_depth"] for _, c in calls6.values()), default=None)]
+                            ^^^^
+ValueError: too many values to unpack (expected 2)
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/score_07.py", line 249, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/score_07.py", line 231, in main
+    units = list(pool.imap(one, full, chunksize=16))
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/pool.py", line 423, in <genexpr>
+    return (item for chunk in result for item in chunk)
+                              ^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/pool.py", line 873, in next
+    raise value
+ValueError: too many values to unpack (expected 2)
+# ----
+# end 2026-11-09T00:18:25Z
+# exit 1

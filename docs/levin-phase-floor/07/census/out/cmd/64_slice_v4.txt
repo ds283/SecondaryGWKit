@@ -1,0 +1,34 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/slice_v4_07.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:24:15Z
+# ----
+v17: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v17.pkl sha256 fb2301c20e5e7922bf0f1c73c89ea92158d5ae546c84e15b2ea0ba165a95dd6a (1344878 bytes)
+v15: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v15.pkl sha256 3066288a33951f246c6d549fbfc974b8bbd48df40654ad0f5deea8de7e46eea8 (1357648 bytes)
+v05: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v05.pkl sha256 fa79451c3bfc2c34d4be4a61ecabafe06794dc78474d38c2128cd8e85286a9ce (1369114 bytes)
+v06: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v06.pkl sha256 ac644a6b33d6d897b848ff65b2fe5cb52b7ad7bcda397db1d1b25fe942c0eafc (1371121 bytes)
+v08: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v08.pkl sha256 a7be5d6caa9adee1cd3427ea8086f5d1815113e44c2464ef65320637bb7b7253 (1381889 bytes)
+v18: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v18.pkl sha256 268b63372d84ff7ee1ed9ba213f13f2e22a9424bf8866c6a72e65e64a1c70aac (1361734 bytes)
+v16: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v16.pkl sha256 e494479ab5b811c4fdee9f37994f8d54186b7472f0c34529e078be4b93bffc60 (1365720 bytes)
+v01: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v01.pkl sha256 f741273cbdf53102ceefb2ff59f8db00f61c90b806f94aae9dd881373f5598a0 (1367930 bytes)
+v14: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v14.pkl sha256 7e9eb36a7dc1107ed7bd517040cb09e8bcb5b49abe64b7df42dd75abcbc28fd1 (1347212 bytes)
+v07: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v07.pkl sha256 d4571bca79393d4024e8ecd48f27b228a03a1cca816dd20a5b0b4fdae0e4b36d (1387324 bytes)
+v04: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v04.pkl sha256 c83c34e1cd03c819176915eec9eecabb1fe1ba81c0bbb5fa6b25c48395472515 (1361299 bytes)
+v00: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v00.pkl sha256 75e68a8558b975d26dbfb636eb0a320a744ecfe3148c0a7c82d3ae88477f3131 (1346320 bytes)
+v12: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v12.pkl sha256 f2320a7bbbfd1fb371224afe4e9c676cb232452658580ba50127ff9d1c3e18ea (1368762 bytes)
+v10: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v10.pkl sha256 3895b614ef3b1d83474a4606a5f2a6fddf30e3101ea25fcbb5b994690e3c7813 (1367974 bytes)
+v20: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v20.pkl sha256 011524ab84eb1f0ae2856d28966e16b4fc3e51b3fd9c5f386881003941876481 (1352282 bytes)
+v21: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v21.pkl sha256 bdf68adb24444786b63bba3ba94ff959619e570669d53c69987b623540faa2db (1345799 bytes)
+cal_z12: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/cal_z12.pkl sha256 2b1e336cd063c7cd44919fcc0b8c0972f5db1d6865c563afb0c5ddfed3339891 (1366592 bytes)
+v03: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v03.pkl sha256 66394ef24bf9a14069ca81d909949355dfcb42b2f046314d755d34786fcdd81a (1348836 bytes)
+v23: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v23.pkl sha256 b36c8796f3ab8dfc90d266c4aeeb111ea5e786c473b03755eadd5ac73c25160b (1364726 bytes)
+v11: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v11.pkl sha256 2082cdece48c5888a3cc8146db2206fb02589a1c8a7cce7575d2d3555c7209a6 (1376881 bytes)
+v13: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v13.pkl sha256 efae5d641a8facdd0a62cc1be47ff504fcc5080cdec470d6c5d3b2d077e91947 (1384367 bytes)
+v22: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v22.pkl sha256 92e933c6c0dedf39266ad20b7aa83c70430c148616b1edde991c7cd5f7a79292 (1371267 bytes)
+v19: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v19.pkl sha256 e369405086175ec0e8d02d8ecf0e208b9af400f4b50dbf334baa9ee152f77d2e (1347032 bytes)
+v09: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v09.pkl sha256 e1913065dd5f3710aea6d7e0aead1c0b6f61ea6b54b770254d5b62b29c104ca5 (1376781 bytes)
+v02: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v02.pkl sha256 48131e7ae7de2faae9768345784ef84fb23cffb3082e83d170abed14814fc8b4 (1376008 bytes)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/out/v4/inputs.json sha256 55b855d4f71feba93f4a9d578530251d38d17b11c63267cee2241f109a222b11
+# ----
+# end 2026-11-09T00:24:16Z
+# exit 0

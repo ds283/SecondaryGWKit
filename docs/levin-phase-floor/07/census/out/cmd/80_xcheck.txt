@@ -1,0 +1,383 @@
+$ nice -n 19 env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/xcheck_07.py out/xcheck
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:58:07Z
+# ----
+# levin-phase-floor 07: the cross-rtol check and the disagreement list
+# written 2026-11-09T00:58:10Z on mps026298.phys.susx.ac.uk
+# script xcheck_07.py sha256 cabe191dcaad7945e37a8488958856b933e61ef51dd95b422f9cd3f8fad18225
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck_rule_20261109.md sha256 e06a105856046714465fdac0e89d282ee2ed167faca0885b840dadb2f3db8504
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/index_06m.json sha256 03e7786d41933830b83b45d96d0ee9b0e32ff3693cd294d31a44360c4312c45d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4_selection.json sha256 15a4391b8e49c547a0557bc20829faf5c2323f0e826420ef0e21d694b134d6c8
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json sha256 73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10 (checked before)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl sha256 ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e (checked before)
+{
+ "A": {
+  "population_calls": 4968,
+  "pairs": 2484,
+  "unpaired": [],
+  "overall": {
+   "pairs": 2484,
+   "r_g<=1": 2482,
+   "r_m<=1": 2432
+  },
+  "by_kind": {
+   "G": {
+    "pairs": 236,
+    "r_g<=1": 236,
+    "r_m<=1": 236
+   },
+   "G+q+r": {
+    "pairs": 720,
+    "r_g<=1": 718,
+    "r_m<=1": 668
+   },
+   "analytic J4": {
+    "pairs": 764,
+    "r_g<=1": 764,
+    "r_m<=1": 764
+   },
+   "analytic Y4": {
+    "pairs": 764,
+    "r_g<=1": 764,
+    "r_m<=1": 764
+   }
+  },
+  "by_band": {
+   "low": {
+    "pairs": 735,
+    "r_g<=1": 733,
+    "r_m<=1": 703
+   },
+   "mid": {
+    "pairs": 935,
+    "r_g<=1": 935,
+    "r_m<=1": 915
+   },
+   "seam": {
+    "pairs": 814,
+    "r_g<=1": 814,
+    "r_m<=1": 814
+   }
+  },
+  "by_k": {
+   "100000.0": {
+    "pairs": 341,
+    "r_g<=1": 339,
+    "r_m<=1": 327
+   },
+   "313856.84721559234": {
+    "pairs": 433,
+    "r_g<=1": 433,
+    "r_m<=1": 415
+   },
+   "985061.2054411147": {
+    "pairs": 281,
+    "r_g<=1": 281,
+    "r_m<=1": 267
+   },
+   "3091682.0425413917": {
+    "pairs": 289,
+    "r_g<=1": 289,
+    "r_m<=1": 285
+   },
+   "9703455.784651041": {
+    "pairs": 299,
+    "r_g<=1": 299,
+    "r_m<=1": 299
+   },
+   "30454960.396664713": {
+    "pairs": 296,
+    "r_g<=1": 296,
+    "r_m<=1": 296
+   },
+   "95584978.52172911": {
+    "pairs": 283,
+    "r_g<=1": 283,
+    "r_m<=1": 281
+   },
+   "300000000.0000001": {
+    "pairs": 262,
+    "r_g<=1": 262,
+    "r_m<=1": 262
+   }
+  },
+  "dist": {
+   "r_g": {
+    "n": 2484,
+    "q0": 0.0,
+    "q10": 0.0,
+    "q50": 2.1297350271228865e-08,
+    "q90": 0.001639795748900041,
+    "q99": 0.29910002008996206,
+    "q100": 1.3854511521153474,
+    "bins": {
+     "<=0.01": 2290,
+     "(0.01,0.1]": 118,
+     "(0.1,1]": 74,
+     "(1,10]": 2,
+     ">10": 0
+    }
+   },
+   "r_m": {
+    "n": 2484,
+    "q0": 0.0,
+    "q10": 0.0,
+    "q50": 1.118738813991115e-07,
+    "q90": 0.002185065214090182,
+    "q99": 5845.7652325158415,
+    "q100": 962571.1725242519,
+    "bins": {
+     "<=0.01": 2332,
+     "(0.01,0.1]": 42,
+     "(0.1,1]": 58,
+     "(1,10]": 6,
+     ">10": 46
+    }
+   },
+   "d8_g": {
+    "n": 2484,
+    "q0": 0.0,
+    "q10": 3.5332665603688366e-06,
+    "q50": 0.0006272168642327133,
+    "q90": 336.74687978836516,
+    "q99": 312918.53767428844,
+    "q100": 1458731.8286951,
+    "bins": {
+     "<=0.01": 1753,
+     "(0.01,0.1]": 146,
+     "(0.1,1]": 141,
+     "(1,10]": 60,
+     ">10": 384
+    }
+   },
+   "d8_m": {
+    "n": 2484,
+    "q0": 0.0,
+    "q10": 4.309687497288546e-06,
+    "q50": 0.0008890852760400691,
+    "q90": 1953.0259373454805,
+    "q99": 397879.2296929141,
+    "q100": 1544922.2660756833,
+    "bins": {
+     "<=0.01": 1764,
+     "(0.01,0.1]": 161,
+     "(0.1,1]": 119,
+     "(1,10]": 37,
+     ">10": 403
+    }
+   }
+  }
+ },
+ "B": {
+  "n_listed_calls": 843,
+  "by_class": {
+   "c": 786,
+   "a": 31,
+   "e": 26
+  },
+  "by_class_rtol": {
+   "a|1e-7": 31,
+   "c|1e-7": 390,
+   "c|1e-8": 396,
+   "e|1e-7": 6,
+   "e|1e-8": 20
+  },
+  "by_class_band_k": {
+   "a|low|100000.0": 7,
+   "a|low|313856.84721559234": 3,
+   "a|low|985061.2054411147": 3,
+   "a|low|3091682.0425413917": 1,
+   "a|low|95584978.52172911": 1,
+   "a|mid|100000.0": 4,
+   "a|mid|313856.84721559234": 6,
+   "a|mid|985061.2054411147": 6,
+   "c|low|100000.0": 57,
+   "c|low|313856.84721559234": 75,
+   "c|low|985061.2054411147": 76,
+   "c|low|3091682.0425413917": 60,
+   "c|low|9703455.784651041": 48,
+   "c|low|30454960.396664713": 36,
+   "c|low|95584978.52172911": 32,
+   "c|low|300000000.0000001": 32,
+   "c|mid|100000.0": 24,
+   "c|mid|313856.84721559234": 32,
+   "c|mid|985061.2054411147": 44,
+   "c|mid|3091682.0425413917": 62,
+   "c|mid|9703455.784651041": 58,
+   "c|mid|30454960.396664713": 60,
+   "c|mid|95584978.52172911": 44,
+   "c|mid|300000000.0000001": 46,
+   "e|low|100000.0": 6,
+   "e|low|313856.84721559234": 5,
+   "e|low|985061.2054411147": 5,
+   "e|low|3091682.0425413917": 5,
+   "e|low|95584978.52172911": 1,
+   "e|mid|313856.84721559234": 4
+  },
+  "by_class_kind": {
+   "a|G+q+r": 31,
+   "c|G+q+r": 786,
+   "e|G+q+r": 26
+  },
+  "in_v4": [
+   {
+    "rtol": "1e-8",
+    "row": "0-14299",
+    "index": 1,
+    "sid": "v12",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-8",
+    "row": "0-14314",
+    "index": 1,
+    "sid": "v10",
+    "class": "e"
+   },
+   {
+    "rtol": "1e-7",
+    "row": "0-1772",
+    "index": 1,
+    "sid": "v17",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-8",
+    "row": "0-1896",
+    "index": 1,
+    "sid": "v20",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-7",
+    "row": "0-1973",
+    "index": 1,
+    "sid": "v15",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-7",
+    "row": "0-38985",
+    "index": 1,
+    "sid": "v05",
+    "class": "a"
+   },
+   {
+    "rtol": "1e-8",
+    "row": "1-2174",
+    "index": 1,
+    "sid": "z12",
+    "class": "e"
+   },
+   {
+    "rtol": "1e-7",
+    "row": "1-38834",
+    "index": 1,
+    "sid": "v08",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-7",
+    "row": "2-13649",
+    "index": 1,
+    "sid": "v18",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-8",
+    "row": "2-34841",
+    "index": 1,
+    "sid": "v13",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-7",
+    "row": "3-13816",
+    "index": 1,
+    "sid": "v14",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-8",
+    "row": "3-14096",
+    "index": 1,
+    "sid": "v22",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-7",
+    "row": "3-14592",
+    "index": 1,
+    "sid": "v07",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-8",
+    "row": "3-1921",
+    "index": 1,
+    "sid": "v19",
+    "class": "c"
+   },
+   {
+    "rtol": "1e-7",
+    "row": "3-2326",
+    "index": 1,
+    "sid": "v04",
+    "class": "a"
+   },
+   {
+    "rtol": "1e-8",
+    "row": "3-34962",
+    "index": 1,
+    "sid": "v09",
+    "class": "c"
+   }
+  ],
+  "row_totals_summary": {
+   "rows": 843,
+   "dtotal_over_abserr_06m": {
+    "n": 843,
+    "q0": 0.008095612275322385,
+    "q10": 0.1542840565840949,
+    "q50": 21.272941369321927,
+    "q90": 8880.332277422372,
+    "q99": 119847.48642105903,
+    "q100": 259729.4443363902,
+    "bins": {
+     "<=0.01": 2,
+     "(0.01,0.1]": 56,
+     "(0.1,1]": 142,
+     "(1,10]": 155,
+     ">10": 488
+    }
+   },
+   "dtotal_over_abserr_g": {
+    "n": 843,
+    "q0": 0.008091561694636191,
+    "q10": 0.15515530806188463,
+    "q50": 21.344220074933734,
+    "q90": 8134.085715677992,
+    "q99": 121829.77429117958,
+    "q100": 267247.7260574567,
+    "bins": {
+     "<=0.01": 2,
+     "(0.01,0.1]": 56,
+     "(0.1,1]": 140,
+     "(1,10]": 160,
+     ">10": 485
+    }
+   }
+  }
+ },
+ "unchanged": true
+}
+wrote out/xcheck/xcheck.json sha256 533b2b0789b541aa0e19aa099340c17d90e793866edeecbe86bf924fa5543dab
+# ----
+# end 2026-11-09T00:58:21Z
+# exit 0

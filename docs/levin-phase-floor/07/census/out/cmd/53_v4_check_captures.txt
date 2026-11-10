@@ -1,0 +1,43 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_captures.py out/v4/captures.json state/v4_capture_selection.json out/v4/check_captures.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:17:53Z
+# ----
+# levin-phase-floor 07: V4's captures against 07's census g, bit for bit (regions)
+# written 2026-11-09T00:17:54Z on mps026298.phys.susx.ac.uk
+# script check_captures.py sha256 73305ab4228fae59385ceb76a6b16ddc0b6bf97ba18d8faf54298be444cbb639
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input out/v4/captures.json sha256 dae8a6d8ef4b8eff741d258f22b3b777572991a45777bb492a75f860a1002b15
+# input state/v4_capture_selection.json sha256 39a19bca0f26aa402b1405d6ccb9b272440f220dbc4df20cd740fc61812040a8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10
+v17 g-1e-7-0-1772 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v15 g-1e-7-0-1973 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v05 g-1e-7-0-38985 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v06 g-1e-7-1-2120 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v08 g-1e-7-1-38834 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v18 g-1e-7-2-13649 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v16 g-1e-7-2-2092 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v01 g-1e-7-2-34834 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v14 g-1e-7-3-13816 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v07 g-1e-7-3-14592 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v04 g-1e-7-3-2326 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v00 g-1e-7-3-37343 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v12 g-1e-8-0-14299 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v10 g-1e-8-0-14314 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v20 g-1e-8-0-1896 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v21 g-1e-8-1-1747 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+cal_z12 g-1e-8-1-2174 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v03 g-1e-8-1-34611 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v23 g-1e-8-1-34772 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v11 g-1e-8-2-2189 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v13 g-1e-8-2-34841 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v22 g-1e-8-3-14096 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v19 g-1e-8-3-1921 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v09 g-1e-8-3-34962 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+v02 g-1e-8-3-39137 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+25 of 25 captures reproduce the g census bit for bit; wrote out/v4/check_captures.json sha256 e7331819286aabbd47479f62c7914848fdc599bb9da3c0cca892ee01ddb633c3
+# ----
+# end 2026-11-09T00:17:58Z
+# exit 0

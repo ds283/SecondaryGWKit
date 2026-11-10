@@ -1,0 +1,29 @@
+Only in 07: census_projection_07.py
+Files docs/../../SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/check_captures.py and 07/check_captures.py differ
+Only in 07: compare_07.py
+Only in 07: extra_descriptive_07.py
+Only in 07: hash_runs_07.py
+Only in 07: index_06m_07.py
+Only in 07: kept_list_07.py
+Only in 07: launch_07.py
+Only in 07: launch_census_07.py
+Files docs/../../SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/prov.py and 07/prov.py differ
+Files docs/../../SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/refs_common.py and 07/refs_common.py differ
+Only in 07: refs_projection_07.py
+Files docs/../../SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/run_06j.py and 07/run_06j.py differ
+Files docs/../../SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/run_census.py and 07/run_census.py differ
+Files docs/../../SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/run_k0.py and 07/run_k0.py differ
+Only in 07: score_07.py
+Only in 07: score_v4_07.py
+Only in 07: select_v4_07.py
+Only in 07: slice_v4_07.py
+Only in 07: stop3_guarded_07.py
+Only in 07: summarise_07.py
+Only in 07: v0a_imports_07.py
+Only in 07: v4_capture_selection_07.py
+Files docs/../../SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/worker.py and 07/worker.py differ
+Files docs/../../SecondaryGWKit-lpf07-e182bc7/docs/levin-phase-floor/06m/census/scripts/x1_capture.py and 07/x1_capture.py differ
+Only in 07: xcheck_07.py
+Only in 07: xcheck_capture_07.py
+Only in 07: xcheck_projection_07.py
+Only in 07: xcheck_report_07.py

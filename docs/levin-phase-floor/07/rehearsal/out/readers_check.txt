@@ -1,0 +1,23 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T10:30:25Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal; tail -n +2 $R/state/r28_store_sha256_before_reads.txt > $R/state/r28_before_reads_body.txt; tail -n +2 $R/state/r28_store_sha256_after_reads.txt > $R/state/r28_after_reads_body.txt; cmp $R/state/r28_before_reads_body.txt $R/state/r28_after_reads_body.txt && echo "R28 identical before and after the readers"; echo "exits:"; grep -c "^exit 0;" $R/out/readers.txt; echo "store-identical lines:"; grep -c "identical before and after" $R/out/readers.txt; echo "Tracebacks in reader logs:"; cat $R/extract/*.log | grep -c Traceback; echo "WARNING lines:"; grep -h "WARNING" $R/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | cut -c1-160 | sort | uniq -c; echo "extract:"; du -sh $R/extract; find $R/extract -type f | wc -l; find $R/extract -size +2M | wc -l; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035; do git --no-optional-locks -C $t status --short --ignored; done; echo "(trees clean)"; cd /Users/ds283/Documents/Code/SecondaryGWKit; git --no-optional-locks status --short; echo "(main clean)"
+# output:
+R28 identical before and after the readers
+exits:
+6
+store-identical lines:
+6
+Tracebacks in reader logs:
+0
+WARNING lines:
+      6 !! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+extract:
+105M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/extract
+3039
+0
+(trees clean)
+(main clean)
+# exit: 0
+# end: 2026-11-08T10:30:26Z

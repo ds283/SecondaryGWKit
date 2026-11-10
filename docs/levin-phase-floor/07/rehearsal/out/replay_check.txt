@@ -1,0 +1,16 @@
+# prompt 07 rehearsal: the replay checked against R28, record by record
+# written 2026-11-08T10:09:08Z on mps026298.phys.susx.ac.uk
+# script replay07.py sha256 68f985ebe3086a6d1a323a668420c62e0275c9788e0f85be9dcb4b5d57680a9d
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/replay_rows.json sha256 6d75f03efcb6de868b114d93e5021e38e98d5a31f7e295c3d3805abf0f14b2c0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/replay/replay-g-0/emit.jsonl sha256 1e6d173007e3022b4d1e03c4b5680a0f24401e39cb0a221b53e05484c212785e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/replay/replay-g-1/emit.jsonl sha256 b8bfe82924859e88404904f651eb76e5a2ad3537bb5cec88557f83453ab2de47
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/replay/replay-g-2/emit.jsonl sha256 018e1b5087b626d0e26aebd514e623d38bbde7d5699715cc71e0bf73f53d5e7a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/replay/replay-g-3/emit.jsonl sha256 2b01411bf285a9b530844dda847ca67190555f3b69f0a07e9b92dd1e7e085d69
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/replay/replay-g-4/emit.jsonl sha256 6678d133e30e2c801c1d00acad32ba73e1505d90d14c87804a49f891be68c1b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/replay/replay-g-5/emit.jsonl sha256 fc44d8e0ab390516d458f5ebe68ac69b957bee84fb4d04c9edec55064b2b268b
+records checked 470; reproduce bit for bit 470; not 0
+workers' ray_initialized at exit: {'False': 224}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/replay_calls.csv sha256 9fccf1d1f6cee7fd0c61a5e03c41c1b96ddea5f53a53f69bdea313bc4a28c6f4 (470 lines) and /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/replay_calls.checks.json sha256 7adaf88598ed7bbc6d1ca3bff0566e1284a9e63dea2eeea46ab28c8034a4d994

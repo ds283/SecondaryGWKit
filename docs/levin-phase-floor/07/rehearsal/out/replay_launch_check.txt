@@ -1,0 +1,29 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T09:54:26Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+R=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal; cat $R/state/launch_replay.txt; echo "== children of 6123"; pgrep -P 6123; for p in $(pgrep -P 6123); do ps -o pid,ppid,command -p $p | cut -c1-160; for q in $(pgrep -P $p); do ps -o pid,ppid,command -p $q | tail -1 | cut -c1-160; done; done; echo "== pipeline log"; cat $R/out/replay_pipeline.log; echo "== driver log"; cat $R/state/capture/replay/driver.log 2>/dev/null | tail -8; echo "== load"; uptime; echo "== trees"; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035; do git --no-optional-locks -C $t status --short --ignored; done; echo "(clean)"
+# output:
+sh pid 6123 launched 2026-11-08T09:54:19Z
+== children of 6123
+6126
+  PID  PPID COMMAND
+ 6126  6123 /bin/sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/capture/run_replay_pipeline.sh
+ 6133  6126 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -I -B /Users/ds283/Documents/Code/SecondaryG
+== pipeline log
+== stage replay_run start 2026-11-08T09:54:19Z
+== driver log
+2026-11-08T09:54:19Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/replay_spec.json sha256 08fbd95fdfb3b2f74e85471f3b7ebf9abfb0d7d68215b3c80cd6c1a99936acb2
+2026-11-08T09:54:19Z 6 workers, 224 units, at most 6 at once
+2026-11-08T09:54:19Z start replay-g-0 (g, 38 units): pid 6140
+2026-11-08T09:54:19Z start replay-g-1 (g, 38 units): pid 6141
+2026-11-08T09:54:19Z start replay-g-2 (g, 37 units): pid 6142
+2026-11-08T09:54:19Z start replay-g-3 (g, 37 units): pid 6143
+2026-11-08T09:54:19Z start replay-g-4 (g, 37 units): pid 6144
+2026-11-08T09:54:19Z start replay-g-5 (g, 37 units): pid 6145
+== load
+ 9:54  up 32 days, 31 mins, 1 user, load averages: 3.89 3.65 3.43
+== trees
+(clean)
+# exit: 0
+# end: 2026-11-08T09:54:26Z

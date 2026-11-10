@@ -1,0 +1,12 @@
+rows mine 172 agent 172 same keys True
+rows whose totals/abserrs differ between the tables: 0
+spot-check row ('1000000.0', '1000000.0', '1000000.0', '2284.251956909201') d/abserr27 73773.30817570777
+r27 tables with total: [('shard0000.sqlite', 'QuadSourceIntegral'), ('shard0001.sqlite', 'QuadSourceIntegral'), ('shard0002.sqlite', 'QuadSourceIntegral'), ('shard0003.sqlite', 'QuadSourceIntegral')]
+r29 tables with total: [('shard0000.sqlite', 'QuadSourceIntegral'), ('shard0001.sqlite', 'QuadSourceIntegral'), ('shard0002.sqlite', 'QuadSourceIntegral'), ('shard0003.sqlite', 'QuadSourceIntegral')]
+CSV R27 total 0x1.374cf5c5ecc48p-69 R29 total 0x1.393a67dec64bdp-69
+r27 cols ['serial', 'version', 'timestamp', 'label', 'model_serial', 'k_wavenumber_exit_serial', 'q_wavenumber_exit_serial', 'r_wavenumber_exit_serial', 'atol_serial', 'rtol_serial', 'policy_serial', 'quad_policy_serial', 'source_serial', 'data_serial', 'Tq_numeric_serial', 'Tq_WKB_serial', 'Tr_numeric_serial', 'Tr_WKB_serial', 'z_response_serial', 'z_source_max_serial', 'b', 'total', 'total_abserr', 'total_converged', 'total_phase_limited', 'WKB_Levin', 'analytic_rad', 'eta_source_max', 'eta_response', 'WKB_Levin_num_regions']
+r27 ERR OperationalError('no such column: k_wavenumber_serial')
+r29 cols ['serial', 'version', 'timestamp', 'label', 'model_serial', 'k_wavenumber_exit_serial', 'q_wavenumber_exit_serial', 'r_wavenumber_exit_serial', 'atol_serial', 'rtol_serial', 'policy_serial', 'quad_policy_serial', 'source_serial', 'data_serial', 'Tq_numeric_serial', 'Tq_WKB_serial', 'Tr_numeric_serial', 'Tr_WKB_serial', 'z_response_serial', 'z_source_max_serial', 'b', 'total', 'total_abserr', 'total_converged', 'total_phase_limited', 'WKB_Levin', 'analytic_rad', 'eta_source_max', 'eta_response', 'WKB_Levin_num_regions']
+r29 ERR OperationalError('no such column: k_wavenumber_serial')
+r27 rows found 1 [('shard0001.sqlite', 1000000.0, 1000000.0, 1000000.0, 2284.251956909201, '0x1.374cf5c5ecc48p-69', '0x1.b65958f035578p-93', 1)] equals CSV total: [True]
+r29 rows found 1 [('shard0001.sqlite', 1000000.0, 1000000.0, 1000000.0, 2284.251956909201, '0x1.393a67dec64bdp-69', '0x1.f778c6c40fe4cp-93', 1)] equals CSV total: [True]

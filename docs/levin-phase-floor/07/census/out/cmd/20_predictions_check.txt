@@ -1,0 +1,13 @@
+$ sh -c $'sed -n 765,803p /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/prompts/levin-phase-floor/07-stationary-point-guard.md > /tmp/x765.txt 2>/dev/null; grep -c . state/predictions.md; python3 -c "\np=open(\'state/predictions.md\').read(); a=open(\'/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/prompts/levin-phase-floor/07-stationary-point-guard.md\').read().splitlines(True)\nprint(\'part1 verbatim:\', \'\'.join(a[764:803]) in p); print(\'part2 verbatim:\', \'\'.join(a[1016:1018]) in p)"; shasum -a 256 state/predictions.md; /usr/bin/stat -f \'%Sm %N\' -t \'%Y-%m-%dT%H:%M:%SZ\' state/predictions.md'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T14:10:17Z
+# ----
+123
+part1 verbatim: True
+part2 verbatim: True
+92e22911bff15f5e829404d85f1349bdc6f1a0cb48380d843ddc419788c82710  state/predictions.md
+2026-11-08T14:10:10Z state/predictions.md
+# ----
+# end 2026-11-08T14:10:17Z
+# exit 0

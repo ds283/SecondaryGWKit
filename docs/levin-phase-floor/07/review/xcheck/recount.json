@@ -1,0 +1,52 @@
+{
+ "script_sha256": "af759dfa5d93905fed0fb090d0f1ba1c0f8783f3d8e8d847abadfbb8f2465141",
+ "inputs_before": {
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl": "03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl": "ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e"
+ },
+ "inputs_after": {
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl": "03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153/checkpoint.jsonl": "ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e"
+ },
+ "population_calls": 4968,
+ "pairs": 2484,
+ "unpaired": [],
+ "n_rg_le1": 2482,
+ "n_rm_le1": 2432,
+ "listed": 843,
+ "by_class_rtol": {
+  "a 1e-7": 31,
+  "c 1e-7": 390,
+  "c 1e-8": 396,
+  "e 1e-7": 6,
+  "e 1e-8": 20
+ },
+ "by_group": {
+  "G+q+r": 843
+ },
+ "rg_gt1": [
+  [
+   "3-14501",
+   "calls",
+   1,
+   1.3854511521153474,
+   0.0012164314654118885,
+   "e"
+  ],
+  [
+   "3-35006",
+   "calls",
+   1,
+   1.0840634306935113,
+   5.4608200823347714e-05,
+   "e"
+  ]
+ ],
+ "agent_listed": 843,
+ "only_mine": [],
+ "only_agent": [],
+ "class_differs": [],
+ "n_only_mine": 0,
+ "n_only_agent": 0,
+ "n_class_differs": 0
+}

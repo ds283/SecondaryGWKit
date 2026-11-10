@@ -1,0 +1,15 @@
+$ sh -c for\ d\ in\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035\ /Users/ds283/Documents/Code/SecondaryGWKit\;\ do\ echo\ \"==\ \$d\ \$\(git\ --no-optional-locks\ -C\ \$d\ rev-parse\ HEAD\)\ \[\$\(git\ --no-optional-locks\ -C\ \$d\ status\ --short\ \|\ tr\ \"\\n\"\ \"\;\"\)\]\"\;\ done\;\ echo\ \"==\ ignored\ in\ worktrees:\"\;\ for\ d\ in\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db\;\ do\ git\ --no-optional-locks\ -C\ \$d\ status\ --short\ --ignored\;\ done\;\ find\ scripts\ -name\ __pycache__\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -m\ runregistrykit\ list\ \|\ tail\ -1\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T14:15:40Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f []
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db 91472dbee1daba8374b0018db1195cf6c7898bbb []
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 746003508bff868fc1b256b29cbd5035609bed2b []
+== /Users/ds283/Documents/Code/SecondaryGWKit 28ebaf0743e0555fb2c4512ce714884005a60eff []
+== ignored in worktrees:
+67 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 67 finished; 0 with no host recorded.
+14:15  up 32 days,  4:52, 1 user, load averages: 3.37 3.76 4.63
+# ----
+# end 2026-11-08T14:15:41Z
+# exit 0

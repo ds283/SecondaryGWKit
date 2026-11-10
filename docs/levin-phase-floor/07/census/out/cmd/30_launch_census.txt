@@ -1,0 +1,16 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/launch_census_07.py 21458
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T17:11:36Z
+# ----
+run id      levin-phase-floor-07-census-20261108T171137
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137
+expected    18560 units
+script      /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_census.py sha256 e4cff28942c28c864fd0414d8c061a48083d6d7fd33e6903b59c57f1b9f9bd1a
+module      /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/AdaptiveLevin/levin_quadrature.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc (no variant)
+sh pid      28796
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_census.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137 --projection-s 21458.0; exit $?
+launcher    pid 28791, exiting without waiting
+# ----
+# end 2026-11-08T17:11:37Z
+# exit 0

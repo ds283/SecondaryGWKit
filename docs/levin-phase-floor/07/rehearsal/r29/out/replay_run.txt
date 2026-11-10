@@ -1,0 +1,22 @@
+2026-11-08T13:08:14Z # prompt 07 r29: run replay
+2026-11-08T13:08:14Z # written 2026-11-08T13:08:14Z on mps026298.phys.susx.ac.uk
+2026-11-08T13:08:14Z # script replay07_r29.py sha256 192c9c42b42e9b899eddb187e0de1ca01fe40830d02840874d5415760dd069ea
+2026-11-08T13:08:14Z # tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+2026-11-08T13:08:14Z # tree o: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+2026-11-08T13:08:14Z # tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+2026-11-08T13:08:14Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-08T13:08:14Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/replay_spec.json sha256 b550426adbc803597edd68588febbd3dbde88506813646f97895fbe02cdcf11a
+2026-11-08T13:08:14Z 6 workers, 224 units, at most 6 at once
+2026-11-08T13:08:14Z start replay-g-0 (g, 38 units): pid 16149
+2026-11-08T13:08:14Z start replay-g-1 (g, 38 units): pid 16150
+2026-11-08T13:08:14Z start replay-g-2 (g, 37 units): pid 16151
+2026-11-08T13:08:14Z start replay-g-3 (g, 37 units): pid 16152
+2026-11-08T13:08:14Z start replay-g-4 (g, 37 units): pid 16153
+2026-11-08T13:08:14Z start replay-g-5 (g, 37 units): pid 16154
+2026-11-08T13:13:14Z end replay-g-5: rc 0 after 299.7 s
+2026-11-08T13:13:36Z end replay-g-0: rc 0 after 321.9 s
+2026-11-08T13:13:41Z end replay-g-4: rc 0 after 326.9 s
+2026-11-08T13:13:48Z end replay-g-3: rc 0 after 334.0 s
+2026-11-08T13:13:59Z end replay-g-1: rc 0 after 345.1 s
+2026-11-08T13:14:02Z end replay-g-2: rc 0 after 348.1 s
+2026-11-08T13:14:03Z done in 349.1 s; return codes {0: 6}

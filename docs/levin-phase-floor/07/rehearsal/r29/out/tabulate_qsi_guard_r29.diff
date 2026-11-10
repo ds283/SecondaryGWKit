@@ -1,0 +1,122 @@
+1c1
+< """R28 against R27 inside QuadSourceIntegral: classify every row by R28's four guard counts, check
+---
+> """R29 against R27 inside QuadSourceIntegral: classify every row by R29's four guard counts, check
+4c4
+< levin-phase-floor 07, rehearsal agent, prompt 07 section 5.4 ("R28 against R27", inside
+---
+> levin-phase-floor 07, rehearsal agent, prompt 07 section 5.4 ("R29 against R27", inside
+20c20
+< Prompt 07's four counts (section 1.6, ComputeTargets/QuadSourceIntegral.py at 74600350, 33cb161e):
+---
+> Prompt 07's four counts (section 1.6, ComputeTargets/QuadSourceIntegral.py at 74600350 and e182bc7a, 33cb161e):
+25,26c25,26
+< They are asserted present in every such record of R28, absent everywhere in R27, and absent from
+< every other path of R28. They are set aside from every comparison (their kind here is `guard`).
+---
+> They are asserted present in every such record of R29, absent everywhere in R27, and absent from
+> every other path of R29. They are set aside from every comparison (their kind here is `guard`).
+37c37
+<     ./venv/bin/python -I -B tabulate_qsi_guard.py <R27 primary> <R28 primary> <store_value_diff json> <out csv>
+---
+>     ./venv/bin/python -I -B tabulate_qsi_guard.py <R27 primary> <R29 primary> <store_value_diff json> <out csv>
+53c53
+<     "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035",  # R28's tree, 74600350
+---
+>     "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7",  # R29's tree, e182bc7a (prompt 07 rehearsal r29: R28 -> R29 by sed, tree and run changed)
+57c57
+<     "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-r28-guard-20261108T001916",
+---
+>     "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-r29-guard-rule-a-20261108T123429",
+234c234
+<     print(f"B = R28 {b_path}: {len(B)} rows, {len(cols_b)} columns")
+---
+>     print(f"B = R29 {b_path}: {len(B)} rows, {len(cols_b)} columns")
+269c269
+<         # the four counts: absent in R27, present exactly in the Levin records of R28
+---
+>         # the four counts: absent in R27, present exactly in the Levin records of R29
+365c365
+<                 f"e27={hx(ra['abserr'])},e28={hx(rec['abserr'])},"
+---
+>                 f"e27={hx(ra['abserr'])},e29={hx(rec['abserr'])},"
+371,372c371,372
+<             "total_27": hx(a["total"]), "total_28": hx(b["total"]),
+<             "total_abserr_27": hx(a["total_abserr"]), "total_abserr_28": hx(b["total_abserr"]),
+---
+>             "total_27": hx(a["total"]), "total_29": hx(b["total"]),
+>             "total_abserr_27": hx(a["total_abserr"]), "total_abserr_29": hx(b["total_abserr"]),
+375c375
+<             "abs_dtotal_over_abserr28": repr(ratio(dT, b["total_abserr"])),
+---
+>             "abs_dtotal_over_abserr29": repr(ratio(dT, b["total_abserr"])),
+378c378
+<             "total_converged_27": ca, "total_converged_28": cb,
+---
+>             "total_converged_27": ca, "total_converged_29": cb,
+381c381
+<             "group_calls_unconverged_28": sum(1 for r in recs_b if r[0] == "group" and not r[2]["converged"]),
+---
+>             "group_calls_unconverged_29": sum(1 for r in recs_b if r[0] == "group" and not r[2]["converged"]),
+391c391
+<             "WKB_Levin_num_regions_28": b["WKB_Levin_num_regions"],
+---
+>             "WKB_Levin_num_regions_29": b["WKB_Levin_num_regions"],
+393,395c393,395
+<             "WKB_Levin_max_depth_28": b["WKB_Levin_max_depth"],
+<             "analytic_rad_27": hx(a["analytic_rad"]), "analytic_rad_28": hx(b["analytic_rad"]),
+<             "analytic_abserr_27": hx(ea_a), "analytic_abserr_28": hx(ea_b),
+---
+>             "WKB_Levin_max_depth_29": b["WKB_Levin_max_depth"],
+>             "analytic_rad_27": hx(a["analytic_rad"]), "analytic_rad_29": hx(b["analytic_rad"]),
+>             "analytic_abserr_27": hx(ea_a), "analytic_abserr_29": hx(ea_b),
+397c397
+<             "abs_drad_over_abserr28": repr(ratio(dR, ea_b)),
+---
+>             "abs_drad_over_abserr29": repr(ratio(dR, ea_b)),
+400c400
+<             "analytic_converged_28": (meta_b.get("analytic") or {}).get("converged"),
+---
+>             "analytic_converged_29": (meta_b.get("analytic") or {}).get("converged"),
+407c407
+<     print(f"Levin records in R28: group {rec_counts['group']['records']} "
+---
+>     print(f"Levin records in R29: group {rec_counts['group']['records']} "
+437c437
+<         big28 = max(rows_out, key=lambda r: (fl(r["abs_dtotal_over_abserr28"]) if not math.isnan(fl(r["abs_dtotal_over_abserr28"])) else -1))
+---
+>         big28 = max(rows_out, key=lambda r: (fl(r["abs_dtotal_over_abserr29"]) if not math.isnan(fl(r["abs_dtotal_over_abserr29"])) else -1))
+439,440c439,440
+<               f"({big27['k']}, {big27['q']}, {big27['r']}, {big27['z_response']}); there |dtotal|/abserr28 {big27['abs_dtotal_over_abserr28']}")
+<         print(f"  largest |dtotal|/abserr28: {big28['abs_dtotal_over_abserr28']} at "
+---
+>               f"({big27['k']}, {big27['q']}, {big27['r']}, {big27['z_response']}); there |dtotal|/abserr29 {big27['abs_dtotal_over_abserr29']}")
+>         print(f"  largest |dtotal|/abserr29: {big28['abs_dtotal_over_abserr29']} at "
+444c444
+<             bA = max(an, key=lambda r: max(fl(r["abs_drad_over_abserr27"]), fl(r["abs_drad_over_abserr28"])))
+---
+>             bA = max(an, key=lambda r: max(fl(r["abs_drad_over_abserr27"]), fl(r["abs_drad_over_abserr29"])))
+446c446
+<                   f"28 {bA['abs_drad_over_abserr28']} at ({bA['k']}, {bA['q']}, {bA['r']}, {bA['z_response']})")
+---
+>                   f"29 {bA['abs_drad_over_abserr29']} at ({bA['k']}, {bA['q']}, {bA['r']}, {bA['z_response']})")
+448c448
+<               f"R28 {sum(r['total_converged_28'] for r in rows_out)} of {n_touched}")
+---
+>               f"R29 {sum(r['total_converged_29'] for r in rows_out)} of {n_touched}")
+450c450
+<               f"R28 {sum(r['group_calls_unconverged_28'] for r in rows_out)}")
+---
+>               f"R29 {sum(r['group_calls_unconverged_29'] for r in rows_out)}")
+452c452
+<               f"R28 {sum(r['WKB_Levin_max_depth_28'] == DEPTH_MAX for r in rows_out)}")
+---
+>               f"R29 {sum(r['WKB_Levin_max_depth_29'] == DEPTH_MAX for r in rows_out)}")
+456,458c456,458
+<     print(f"WKB_Levin_num_regions summed: R27 {regions_sum[0]}, R28 {regions_sum[1]}; unconverged group calls: "
+<           f"R27 {unconv_calls[0]}, R28 {unconv_calls[1]}; rows at max depth {DEPTH_MAX}: R27 {rows_at_depth_max[0]}, R28 {rows_at_depth_max[1]}")
+<     print(f"total_converged: R27 {sum(bool(A[k]['total_converged']) for k in keys)}, R28 {sum(bool(B[k]['total_converged']) for k in keys)}")
+---
+>     print(f"WKB_Levin_num_regions summed: R27 {regions_sum[0]}, R29 {regions_sum[1]}; unconverged group calls: "
+>           f"R27 {unconv_calls[0]}, R29 {unconv_calls[1]}; rows at max depth {DEPTH_MAX}: R27 {rows_at_depth_max[0]}, R29 {rows_at_depth_max[1]}")
+>     print(f"total_converged: R27 {sum(bool(A[k]['total_converged']) for k in keys)}, R29 {sum(bool(B[k]['total_converged']) for k in keys)}")

@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v05.pkl fcc 2 out/v4/readings/v05-fcc-r2.json --sid v05 --unit g-1e-7-0-38985 --index 1 --rtol 1e-7 --workers 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T07:34:14Z
+# ----
+{"sample": "v05", "route": "B", "impl": "fcc", "res": 2, "value_hex": "-0x1.65dc2846ccf08p-84", "value_30": "-7.22692493608543314222467049612e-26", "wall_s": 3390.1985248751007, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-09T08:30:46Z
+# exit 0

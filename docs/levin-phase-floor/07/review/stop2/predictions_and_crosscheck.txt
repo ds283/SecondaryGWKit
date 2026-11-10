@@ -1,0 +1,11 @@
+<stdin>:15: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+agent K0 g vs my g run g-1e-7-0-33997 record {'timing': 32, 'provenance': 3} []
+agent K0 g vs my g run g-1e-7-0-33997 region {'timing': 11, 'new07': 21} ['scan_07[0].scan.seconds', 'scan_07[10].scan.seconds', 'scan_07[11].scan.seconds', 'scan_07[12].scan.seconds', 'scan_07[13].scan.seconds']
+prompt lines 765 803 verbatim in predictions.md: True
+prompt lines 1017 1018 verbatim in predictions.md: True
+predictions sha256 92e22911bff15f5e829404d85f1349bdc6f1a0cb48380d843ddc419788c82710
+2026-11-08T14:10:10.339924 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/predictions.md
+2026-11-08T13:58:32.886863 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/out/k0/compare_v0b.json
+2026-11-08T14:05:40.410454 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/out/v0c/compare_det.json
+2026-11-08T14:09:24.443595 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4_selection.json
+census run dirs: []

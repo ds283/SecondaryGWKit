@@ -1,0 +1,36 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/select_v4_07.py state/v4_selection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T14:09:06Z
+# ----
+{"population": 1438, "by_band_rtol": {"low/1e-7": 411, "low/1e-8": 411, "mid/1e-7": 308, "mid/1e-8": 308}, "by_k": {"k1": 206, "k2": 206, "k3": 204, "k4": 206, "k5": 206, "k6": 184, "k7": 142, "k8": 84}, "k_values": {"k1": "100000.0", "k2": "313856.84721559234", "k3": "985061.2054411147", "k4": "3091682.0425413917", "k5": "9703455.784651041", "k6": "30454960.396664713", "k7": "95584978.52172911", "k8": "300000000.0000001"}, "bands_present": ["low", "mid"]}
+{"low/1e-7": {"n": 411, "slots": ["k1", "k2", "k3", "k5", "k7"], "fifth": "k2", "targets": [0, 10, 20, 4, 15]}, "low/1e-8": {"n": 411, "slots": ["k1", "k2", "k4", "k6", "k8"], "fifth": "k1", "targets": [0, 11, 20, 3, 16]}, "mid/1e-7": {"n": 308, "slots": ["k1", "k2", "k4", "k6", "k8"], "fifth": "k1", "targets": [0, 9, 20, 0, 15]}, "mid/1e-8": {"n": 308, "slots": ["k1", "k2", "k3", "k5", "k7"], "fifth": "k2", "targets": [0, 12, 20, 1, 16]}}
+v00 g-1e-7-3-37343 #1 1e-7 mid k5 depth 20 at-cap 132 conv False | deepest four
+v01 g-1e-7-2-34834 #1 1e-7 low k4 depth 20 at-cap 130 conv False | deepest four
+v02 g-1e-8-3-39137 #1 1e-8 low k1 depth 20 at-cap 122 conv False | deepest four
+v03 g-1e-8-1-34611 #1 1e-8 mid k3 depth 20 at-cap 100 conv False | deepest four
+v04 g-1e-7-3-2326 #1 1e-7 low k1 depth 1 at-cap 0 conv True | cell low/1e-7, k1, depth quantile 0.1 (target 0)
+v05 g-1e-7-0-38985 #1 1e-7 low k2 depth 10 at-cap 0 conv True | cell low/1e-7, k2, depth quantile 0.5 (target 10)
+v06 g-1e-7-1-2120 #1 1e-7 low k3 depth 20 at-cap 22 conv False | cell low/1e-7, k3, depth quantile 0.9 (target 20)
+v07 g-1e-7-3-14592 #1 1e-7 low k5 depth 4 at-cap 0 conv True | cell low/1e-7, k5, depth quantile 0.3 (target 4)
+v08 g-1e-7-1-38834 #1 1e-7 low k7 depth 16 at-cap 0 conv True | cell low/1e-7, k7, depth quantile 0.7 (target 15)
+v09 g-1e-8-3-34962 #1 1e-8 low k1 depth 2 at-cap 0 conv True | cell low/1e-8, k1, depth quantile 0.1 (target 0)
+v10 g-1e-8-0-14314 #1 1e-8 low k2 depth 12 at-cap 0 conv True | cell low/1e-8, k2, depth quantile 0.5 (target 11)
+v11 g-1e-8-2-2189 #1 1e-8 low k4 depth 20 at-cap 44 conv False | cell low/1e-8, k4, depth quantile 0.9 (target 20)
+v12 g-1e-8-0-14299 #1 1e-8 low k6 depth 2 at-cap 0 conv True | cell low/1e-8, k6, depth quantile 0.3 (target 3)
+v13 g-1e-8-2-34841 #1 1e-8 low k8 depth 15 at-cap 0 conv True | cell low/1e-8, k8, depth quantile 0.7 (target 16)
+v14 g-1e-7-3-13816 #1 1e-7 mid k1 depth 0 at-cap 0 conv True | cell mid/1e-7, k1, depth quantile 0.1 (target 0)
+v15 g-1e-7-0-1973 #1 1e-7 mid k2 depth 9 at-cap 0 conv True | cell mid/1e-7, k2, depth quantile 0.5 (target 9)
+v16 g-1e-7-2-2092 #1 1e-7 mid k4 depth 20 at-cap 88 conv False | cell mid/1e-7, k4, depth quantile 0.9 (target 20)
+v17 g-1e-7-0-1772 #1 1e-7 mid k6 depth 0 at-cap 0 conv True | cell mid/1e-7, k6, depth quantile 0.3 (target 0)
+v18 g-1e-7-2-13649 #1 1e-7 mid k8 depth 15 at-cap 0 conv True | cell mid/1e-7, k8, depth quantile 0.7 (target 15)
+v19 g-1e-8-3-1921 #1 1e-8 mid k1 depth 9 at-cap 0 conv True | cell mid/1e-8, k1, depth quantile 0.1 (target 0)
+v20 g-1e-8-0-1896 #1 1e-8 mid k2 depth 12 at-cap 0 conv True | cell mid/1e-8, k2, depth quantile 0.5 (target 12)
+v21 g-1e-8-1-1747 #1 1e-8 mid k3 depth 20 at-cap 8 conv False | cell mid/1e-8, k3, depth quantile 0.9 (target 20)
+v22 g-1e-8-3-14096 #1 1e-8 mid k5 depth 1 at-cap 0 conv True | cell mid/1e-8, k5, depth quantile 0.3 (target 1)
+v23 g-1e-8-1-34772 #1 1e-8 mid k7 depth 14 at-cap 0 conv True | cell mid/1e-8, k7, depth quantile 0.7 (target 16)
+strata: bands ['low', 'mid']; k ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8']; rtols ['1e-7', '1e-8']; distinct rows 24
+wrote state/v4_selection.json sha256 15a4391b8e49c547a0557bc20829faf5c2323f0e826420ef0e21d694b134d6c8
+# ----
+# end 2026-11-08T14:09:24Z
+# exit 0

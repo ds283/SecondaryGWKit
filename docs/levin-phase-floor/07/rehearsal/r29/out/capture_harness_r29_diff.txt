@@ -1,0 +1,31 @@
+1c1
+< """[prompt 07 section 5 rehearsal agent (the replay of R28's located calls, S2's capture and the q-r captures, against R27 and R28): 06g's references/v1/scripts/prov.py, changed only where marked "prompt 07 rehearsal".]
+---
+> """[prompt 07 section 5 rehearsal agent, R29 (section 10, Rule A): the stop-1 copy, changed where marked "prompt 07 r29": three trees (p R27, o R28, g R29) and their stores; the parents assertion one level deeper.]
+2a3,4
+> [prompt 07 section 5 rehearsal agent (the replay of R28's located calls, S2's capture and the q-r captures, against R27 and R28): 06g's references/v1/scripts/prov.py, changed only where marked "prompt 07 rehearsal".]
+> 
+169c171
+< assert HERE.parents[4] == MAIN, HERE  # prompt 07 rehearsal: holds for var/levin-phase-floor-07/rehearsal/scripts/capture; prompt 06b: one directory deeper than 06a's; prompt 06g addendum 1 (V1's calls against the rehearsal stores): one deeper again (references/v1/scripts)
+---
+> assert HERE.parents[5] == MAIN, HERE  # prompt 07 r29: var/levin-phase-floor-07/rehearsal/r29/scripts/capture, one deeper; prompt 07 rehearsal: holds for var/levin-phase-floor-07/rehearsal/scripts/capture; prompt 06b: one directory deeper than 06a's; prompt 06g addendum 1 (V1's calls against the rehearsal stores): one deeper again (references/v1/scripts)
+279a282,285
+> O_TREE, O_SHA = G_TREE, G_SHA  # prompt 07 r29: the stop-1 code worktree (74600350, R28's tree) is o
+> G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7")  # prompt 07 r29: g is R29's tree
+> G_SHA = "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f"  # prompt 07 r29 (code adffa21b, Rule A)
+> TREES = {"p": (P_TREE, P_SHA), "o": (O_TREE, O_SHA), "g": (G_TREE, G_SHA)}  # prompt 07 r29
+281a288,289
+> _R29 = MAIN / "var" / "levin-phase-floor-07" / "rehearsal" / "r29" / "state" / "stores"  # prompt 07 r29
+> STORE_DIR_BY_TREE = {"p": _R29 / "r27", "o": _R29 / "r28", "g": _R29 / "r29"}  # prompt 07 r29
+1c1,3
+< """[prompt 07 section 5 rehearsal agent: 06g's references/v1/scripts/worker.py, changed only where marked "prompt 07 rehearsal": each summarised call (group and other) gains ``guard_07``, the stationary-point guard's record from the call's own result (_guard_07), computed after the timed section; nothing in the timed section changes.]
+---
+> """[prompt 07 section 5 rehearsal agent, R29: the stop-1 copy, changed where marked "prompt 07 r29": guard_07 also records the result's location_skipped_phases (Rule A, prompt 07 section 10).]
+> 
+> [prompt 07 section 5 rehearsal agent: 06g's references/v1/scripts/worker.py, changed only where marked "prompt 07 rehearsal": each summarised call (group and other) gains ``guard_07``, the stationary-point guard's record from the call's own result (_guard_07), computed after the timed section; nothing in the timed section changes.]
+1642a1645,1649
+>         # prompt 07 r29: Rule A's skipped phases, each with its index and V_i (absent key at the stop-1 code)
+>         "location_skipped_phases": (
+>             [{"phase": d.get("phase"), "variation": h(d.get("variation"))} for d in res["location_skipped_phases"]]
+>             if "location_skipped_phases" in res else None
+>         ),

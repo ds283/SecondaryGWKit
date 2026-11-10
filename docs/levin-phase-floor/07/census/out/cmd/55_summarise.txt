@@ -1,0 +1,21 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/summarise_07.py state/score_07_units.json out/scores/summary.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:18:32Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/summarise_07.py", line 249, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/summarise_07.py", line 32, in main
+    hdr = header(Path(__file__).resolve(), "levin-phase-floor 07: V1, V2, V3, V5 and the descriptive tables", [src])
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/prov.py", line 423, in header
+    lines.append(f"# input {p} sha256 {sha256(p)}")
+                                       ~~~~~~^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/prov.py", line 380, in sha256
+    with open(path, "rb") as f:
+         ~~~~^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'state/score_07_units.json'
+# ----
+# end 2026-11-09T00:18:32Z
+# exit 1

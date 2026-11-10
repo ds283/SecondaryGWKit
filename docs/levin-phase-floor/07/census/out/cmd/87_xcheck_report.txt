@@ -1,0 +1,9 @@
+$ env PYTHONDONTWRITEBYTECODE=1 nice -n 19 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/xcheck_report_07.py out/xcheck/xcheck.json out/xcheck/projection.json out/xcheck/report.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T02:27:17Z
+# ----
+wrote out/xcheck/report.md sha256 f23d0a4569528d2bda2afa1aabf2d863ca6e8eb5f4e78ad09e07e522985e1137
+# ----
+# end 2026-11-09T02:27:17Z
+# exit 0

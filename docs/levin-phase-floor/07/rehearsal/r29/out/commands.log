@@ -1,0 +1,71 @@
+# Every command of the rehearsal agent for R29 (levin-phase-floor 07, prompt section 5 resumed under section 10, Rule A), verbatim or by its exact form, in order. Outputs are in the files named.
+# Main checkout M=/Users/ds283/Documents/Code/SecondaryGWKit at 28ebaf07. New code worktree N=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 at e182bc7a (code adffa21b). Parent worktree P (91472dbe), R27's; old code worktree C (74600350), R28's, a read-only record.
+# Z = $M/var/levin-phase-floor-07/rehearsal/r29. Nothing in $M/var/levin-phase-floor-07/rehearsal/ outside r29/ is modified.
+# scripts/rec.sh: the stop-1 rec.sh (b0952204) with R changed to Z by sed (copy b5279dd9; out/rec_sh.diff).
+## --- turn 7 (resumed for the resumed dispatch: R29 at Rule A) ---
+## read: N/prompts/levin-phase-floor/07-stationary-point-guard.md section 10 (lines 920-1030); N/prompts/levin-phase-floor/logs/07-stationary-point-guard.md, the amendment's section (lines 1005-1075) and grep of it for Rule A's key (location_skipped_phases); git diff --stat 74600350 e182bc7a outside prompts; git diff 74600350 e182bc7a -- ComputeTargets/QuadSourceIntegral.py (empty: the key does not reach the store); N's status and HEAD; shasum of N's modules
+## mkdir -p Z/out Z/scripts Z/state; sed of rec.sh -> Z/scripts/rec.sh; diff -> Z/out/rec_sh.diff
+## (cwd M) Z/scripts/rec.sh 00-gate ... -> out/00-gate.txt and out/00-registry-list.txt (M 28ebaf07; P 91472dbe, C 74600350, N e182bc7a, each status --short --ignored empty; for M the --ignored listing was printed (read-only; deviation 17); worktree list 4 trees; log 74600350..e182bc7a = 2ddd3306, adffa21b, e182bc7a; diff --stat outside docs/prompts: levin_quadrature.py, test_levin_stationary.py, test_levin_trust_yardstick.py, CLAUDE.md; adffa21b..e182bc7a outside prompts: docs/OPEN_ISSUES.md; N: levin_quadrature.py 4e5da371, QuadSourceIntegral.py 33cb161e, launcher b0135218, main.py a5d47f5f, store_value_diff.py 7997af85; 65 runs, all finished; ~/.raypoolkit empty, no old lock; no r29 store or run; load 9.41; 133G free; auth_token 600)
+## lock 1 (look): (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> var/levin-phase-floor-07/rehearsal/r29/state/lock.log 2>&1; echo "exit $?" >> ...   -> nothing listed, exit 0
+## lock 2: (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "levin-phase-floor prompt 07 section 5 resumed (section 10, Rule A): rehearsal R29 (worktree e182bc7a, code adffa21b on 07 ad732887) on the Mac Studio (mps026298), then R29 against R28 and R27, the replay, and the readers" --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> .../r29/state/lock.log 2>&1; echo "exit $?" >> ...   -> acquired, exit 0
+## touch Z/state/r29_launch_marker; R29 launch (cwd N):
+cd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 && nohup sh -c "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal \
+    --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29.sqlite \
+    --job-name levin-phase-floor-07 --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register r29-guard-rule-a --purpose \"\$0\" --campaign levin-phase-floor --prompt 07; \
+  echo \"** driver exit status \$?\"" "<PURPOSE_R29>" \
+  > /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-r29.launch.log 2>&1 &
+echo "sh pid $! launched $(date -u +%Y-%m-%dT%H:%M:%SZ)" > .../r29/state/launch_r29.txt; disown
+##   <PURPOSE_R29> as launched (in the manifest): "levin-phase-floor prompt 07 (section 10, Rule A), R29 on the Mac Studio (mps026298; tree e182bc7a in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7, Part B's resumed dispatch SHA, whose code is adffa21b, Rule A (a phase whose variation is below the C2 gate's SIX_PI is not located) on 07's code commit ad732887, levin_quadrature.py 4e5da371, QuadSourceIntegral.py 33cb161e; Python 3.13.16): rehearsal build at the amended code (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (R8's, R23-R28's); it takes R28's place in section 5, compared with R27 (91472dbe, 06m's code) and with R28 (74600350, 07 ad732887), from which it should differ only in Levin calls whose phase Rule A skipped"
+##   result: sh pid 14524, 12:34:28Z; pgrep -P 30669 (a mistyped pid: nothing; ps then failed on an empty -p; read-only; deviation 18); pgrep -P 14524 -> 14528 (driver)
+## lock 3: (cwd M) ./venv/bin/python -B -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 14528 >> .../r29/state/lock.log 2>&1; echo "exit $?" >> ...   -> recorded, exit 0
+## (cwd M) Z/scripts/rec.sh r29_launch_check ... -> out/r29_launch_check.txt and out/r29_launch_registry_list.txt (R29 running, 66 runs: 1 alive; status running pid 14528 heartbeat 12:34:43Z stage "CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS"; manifest at e182bc7a git_dirty false, launcher b0135218, cwd N; Ray started 12:34:36, store with 4 shards; Traceback 0; both pids alive; lsof cwd N; P and N clean; store files)
+## --- end of turn 7 (R29 running; driver 14528, sh 14524) ---
+## --- turn 8 (resumed: R29 sh 14524 exited; done, exit 0, 1b332ffa...) ---
+## (cwd M) cp R29's status.json -> Z/out/r29_status.json; Z/scripts/rec.sh r29_end_check ... -> out/r29_end_check.txt and out/r29_end_registry_list.txt (done, exit 0, heartbeat 12:44:05Z; digest 1b332ffa True; problems {}; taken at e182bc7a, git_dirty false; classes equal R28's, R27's, R26's; QSI 864, 8913eda5; created 12:34:29Z (wall about 9.6 min); pids gone; "** driver exit status 0"; 0 Traceback, 0 WARNING; P, C, N clean, nothing newer than the R29 marker; main clean; 66 runs, all finished)
+## lock 4 (look): ray-processes >> r29/state/lock.log -> nothing listed, exit 0
+## (cwd M) shasum + stat + journal look of R27, R28, R29 -> Z/state/store_sha256_before_diff.txt; R27, R28 equal to the stop-1 final hashes
+## cp R/scripts/classify_non_qsi.py Z/scripts/ (26690e61, unchanged)
+## (cwd N) /usr/bin/time -p env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=N venv python -B -m tools.store_value_diff <R28> <R29> --json > Z/out/store_value_diff_r28_r29.json 2> ...stderr   # exit 1, 16.7 s, 924458d5
+## (cwd N) the same for <R27> <R29> -> Z/out/store_value_diff_r27_r29.json   # exit 1, 16.5 s, c511b582; N clean after
+##   (a leftover no-op zsh for-loop in the same command line did nothing)
+## (cwd M) python -I Z/scripts/classify_non_qsi.py on each JSON -> Z/out/classify_non_qsi_r28_r29.txt, _r27_r29.txt   # exit 0 both: 0 unclassified, every value table identical
+## cp R/scripts/tabulate_qsi_guard.py Z/scripts/ (unchanged, a1eaba31); sed R28->R29, r28->r29, the tree and run, then _28 -> _29 in its keys (a second sed, deviation 19) -> Z/scripts/tabulate_qsi_guard_r29.py (47e18cbe); diff -> Z/out/tabulate_qsi_guard_r29.diff
+## (cwd M) python -I -B Z/scripts/tabulate_qsi_guard_r29.py <R27> <R29> Z/out/store_value_diff_r27_r29.json Z/out/qsi_rows_r27_r29.csv > Z/out/qsi_tabulation_r27_r29.txt   # exit 0: 692 untouched, all bit-identical; 172 tabulated; analytic blocks with a nonzero count 340, guarded_regions 4
+## Write Z/scripts/compare_r29_r28.py (new); (cwd M) python -I -B ... <R27> <R28> <R29> Z/out/r29_vs_r28_records.csv > Z/out/r29_vs_r28.txt   # exit 2: STOP -- 4 changed records break the rule (2pt5 J4 and Y4 blocks in two rows, guarded_regions 1 in R29, not equal to R27); 86 changed records allowed (26 q-r, 60 analytic); 54 rows differ, each holding a changed record
+## Write Z/scripts/stop_detail.py (new); (cwd M) python -I -B ... > Z/out/stop_detail.txt   # the two rows' analytic oracle and blocks in R27, R28, R29
+## (cwd M) store hashes after -> Z/state/store_sha256_after_diff.txt; cmp of the bodies: identical
+## --- end of turn 8: STOP, reported before anything else (lock held; replay, S1, S2, readers not run) ---
+## --- turn 9 (resumed: the user's word "Yes, please proceed as you recommend": the 4 records are findings; a four-block check added) ---
+## grep/sed of N/AdaptiveLevin/levin_quadrature.py: phase_span (build_Levin_data: mean|theta'| on the region's Chebyshev grid x width), the C2 gate (phase_span < SIX_PI), Rule A's code (variation, skipped_phases)
+## mkdir Z/scripts/capture; cp of the stop-1 harness (R/scripts/capture/{worker,dispatch,harness,rebuild,prov,run_census,launch,rerun,spscan}.py); shasum -> Z/state/capture_harness_stop1_sha256.txt, equal; mkdir Z/state/stores/{r27,r28,r29} with symbolic links to the stores' files (as stop 1)
+## python heredoc (asserted single replacements) editing Z/scripts/capture/prov.py (three trees p, o, g; STORE_DIR_BY_TREE -> Z/state/stores; parents[5]) and worker.py (guard_07 gains location_skipped_phases); diff against the stop-1 copies -> Z/out/capture_harness_r29_diff.txt (prov 1ec5f339, worker 6bcb4a2d)
+## Write Z/scripts/capture/replay07_r29.py (new, after the stop-1 replay07.py); python heredoc adding the R29-vs-R28 changed records to its rows (192c9c42)
+## (cwd Z/state) python -I -B replay07_r29.py rows Z/state/replay_rows.json > Z/out/replay_rows.txt   # 224 rows (172 with a located record, 54 changed against R28), 470 records (384 nonzero: 44 group, 340 analytic; 90 changed against R28)
+## spec replay -> Z/state/replay_spec.json (224 units, 6 workers); spec blocks1 -> Z/state/blocks1_spec.json (6 units: the two rows at p, o, g)
+## Write Z/scripts/capture/run_r29_pipeline.sh (984105f7)
+## projection: 224 units at R29's code (no slow q-r unit now), about 5-10 s each plus the k caches: about 5 min on six workers; blocks pass 1 and pass 2 (12 units) about 3-4 min; about 10 min in all, so launched detached
+## touch Z/state/replay_launch_marker; (cwd Z/state) nohup sh -c "Z/scripts/capture/run_r29_pipeline.sh; echo \"** pipeline exit status \$?\"" > Z/out/r29_pipeline.log 2>&1 &; launch line -> Z/state/launch_replay.txt   # sh 16130, 13:08:13Z
+## (cwd M) Z/scripts/rec.sh replay_launch_check ... -> Z/out/replay_launch_check.txt (pipeline sh 16133, driver python 16140; six workers 16149-16154 started; load 4.53; trees clean)
+## --- end of turn 9 (the r29 pipeline running, sh 16130; lock held) ---
+## --- turn 10 (resumed: the r29 pipeline sh 16130 exited 0, every stage exit 0, done 13:16:04Z) ---
+## cat Z/out/r29_pipeline.log and the stage outputs: replay 349 s, 6 workers rc 0; 470 / 470 records reproduce R29; ray_initialized False on 224; 423 replayed calls report a skipped phase; blocks1 60 s, blocks2 spec 6 units, blocks2 59 s; blockcheck: 12 / 12 store-blocks reproduce, 12 pickles in Z/state/inputs/
+## Write Z/scripts/block_reference.py (new); (cwd Z/state) PYTHONPATH=N:Z/scripts/capture python -B -c (load J4-g-0-157.pkl; its x_span, chebyshev_order 24, theta keys; 2000 integrand evaluations: 2.6e-4 s each), printed, not saved
+## projection: about 0.87 M integrand evaluations per reference at about 2e-4 s: about 3 min per block, four in parallel; the eight p/o replays seconds: about 4 min in all, under ten minutes, so run in session
+## Write Z/scripts/run_block_reference.sh (bash; xargs -P 6); bash ... > Z/out/block_reference_run.txt   # 13:18:12-13:20:45Z, twelve exit 0; Z/out/block_reference/*.json, *.txt
+## Write Z/scripts/block_score.py (new); (cwd M) python -I -B ... > Z/out/block_scores.txt   # exit 0: all three stores honest on all four blocks; out/block_scores.json
+## Write Z/scripts/replay_summary_r29.py (new); (cwd M) python -I -B ... > Z/out/replay_summary.txt   # exit 0
+## sed of R/scripts/s1_score.py -> Z/scripts/s1_score_r29.py; diff -> Z/out/s1_score_r29.diff; (cwd M) python -I -B ... > Z/out/s1_scores.txt   # exit 0, S1 HOLDS
+## Write Z/scripts/s2_score_r29.py (new); (cwd M) python -I -B ... > Z/out/s2_scores.txt   # exit 0, S2 HOLDS
+## (cwd M) store hashes -> Z/state/after_replay_body.txt, cmp with after_body: identical; cp R/scripts/run_readers_worktree.sh Z/scripts/ (ec96cf09); R29 hashes -> Z/state/r29_store_sha256_before_reads.txt; touch Z/state/readers_marker
+## readers (lock held): READERS_TREE=N READERS_PYTHON=$M/venv/bin/python bash Z/scripts/run_readers_worktree.sh $M/var/datastores/levin-phase-floor-07-r29.sqlite Z/extract > Z/out/readers.txt 2>&1; echo "exit $?" >> ...   # exit 0
+## Z/state/r29_store_sha256_after_reads.txt; Z/scripts/rec.sh readers_check ... -> Z/out/readers_check.txt (identical; 6 exits 0; 0 Tracebacks; six shard-count warnings; extract 110M, 3126 files, none over 2 MB; trees clean)
+## lock 5 (look): ray-processes >> r29/state/lock.log -> nothing listed, exit 0
+## lock 6: ./venv/bin/python -B -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk >> ...   -> released, exit 0
+## lock 7: ./venv/bin/python -B -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> ...   -> free, none, exit 0
+## lock 8: ./venv/bin/python -B -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> ...   -> nothing listed, exit 0
+## cat -n r29/state/lock.log; ls -la ~/.raypoolkit (empty)
+## (cwd M) final hashes -> Z/state/stores_sha256_final.txt; Z/scripts/rec.sh final_check ... -> Z/out/final_check.txt
+## shell block writing Z/KEPT_ON_MAC_STUDIO.txt; Write Z/issues.md, Z/verification.md (one python edit: "1,990x"), Z/log.md
+## --- end of turn 10 (planned stop 1') ---

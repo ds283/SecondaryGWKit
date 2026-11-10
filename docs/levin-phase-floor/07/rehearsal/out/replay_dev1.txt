@@ -1,0 +1,11 @@
+2026-11-08T09:50:20Z # prompt 07 rehearsal: run dev1
+2026-11-08T09:50:20Z # written 2026-11-08T09:50:20Z on mps026298.phys.susx.ac.uk
+2026-11-08T09:50:20Z # script replay07.py sha256 6d25f7da8c910613276858a220be15bb73889701ce70f6f73ef07be8aec2544e
+2026-11-08T09:50:20Z # tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+2026-11-08T09:50:20Z # tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+2026-11-08T09:50:20Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-08T09:50:20Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/dev1_spec.json sha256 f4baec1929187677c7e18020ba7b794b49fa9ba49da3db020442410c772587fe
+2026-11-08T09:50:20Z 1 workers, 2 units, at most 6 at once
+2026-11-08T09:50:20Z start dev-g (g, 2 units): pid 5939
+2026-11-08T09:53:00Z end dev-g: rc 0 after 159.5 s
+2026-11-08T09:53:01Z done in 160.5 s; return codes {0: 1}

@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts PYTHONDONTWRITEBYTECODE=1 nice -n 19 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_captures.py state/dev/xcap_captures_dev.json state/dev/xcap_sel_dev.json state/dev/xcap_check_dev.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T01:02:00Z
+# ----
+# levin-phase-floor 07: V4's captures against 07's census g, bit for bit (regions)
+# written 2026-11-09T01:02:02Z on mps026298.phys.susx.ac.uk
+# script check_captures.py sha256 73305ab4228fae59385ceb76a6b16ddc0b6bf97ba18d8faf54298be444cbb639
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/dev/xcap_captures_dev.json sha256 4d02d80a95d0797837fe8c4b636e98d543e185e6e3d01e265ffb7dad76be4404
+# input state/dev/xcap_sel_dev.json sha256 3adcbfb1feffd9bab329a5ce33217c9afd5ba6c2e0f0e6cb85b22ba338c366ae
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10
+x000 g-1e-7-0-12804 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+x001 g-1e-7-0-12869 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+2 of 2 captures reproduce the g census bit for bit; wrote state/dev/xcap_check_dev.json sha256 a94ecc938b8d755a15f1e318e16b52f88027025d8d8daeaacc8c87266d15e6db
+# ----
+# end 2026-11-09T01:02:05Z
+# exit 0

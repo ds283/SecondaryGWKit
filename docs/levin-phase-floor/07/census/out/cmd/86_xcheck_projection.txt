@@ -1,0 +1,26 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts PYTHONDONTWRITEBYTECODE=1 nice -n 19 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/xcheck_projection_07.py out/xcheck/captures.json out/xcheck/check_captures.json out/xcheck/projection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T02:22:34Z
+# ----
+{
+ "n_calls": 396,
+ "n_projected": 396,
+ "total_all_four_s": 25998821.48502773,
+ "total_fcc_s": 4468015.764707162,
+ "total_fcc_plus_qawo_le_1800_s": 4630859.453581853
+}
+x323 g-1e-8-3-34331 {'qawo_r1': 5, 'qawo_r2': 9, 'fcc_r1': 20, 'fcc_r2': 77} 111
+x000 g-1e-7-0-12804 {'qawo_r1': 7, 'qawo_r2': 10, 'fcc_r1': 25, 'fcc_r2': 97} 138
+x083 g-1e-7-0-37229 {'qawo_r1': 7, 'qawo_r2': 11, 'fcc_r1': 26, 'fcc_r2': 101} 145
+x301 g-1e-8-3-13490 {'qawo_r1': 8, 'qawo_r2': 18, 'fcc_r1': 25, 'fcc_r2': 96} 147
+x040 g-1e-7-0-1880 {'qawo_r1': 7, 'qawo_r2': 12, 'fcc_r1': 26, 'fcc_r2': 103} 148
+x293 g-1e-7-2-38646 {'qawo_r1': 196257, 'qawo_r2': 791871, 'fcc_r1': 4109, 'fcc_r2': 18808} 1011044
+x298 g-1e-7-2-39047 {'qawo_r1': 202169, 'qawo_r2': 815920, 'fcc_r1': 4110, 'fcc_r2': 18809} 1041008
+x272 g-1e-7-2-35082 {'qawo_r1': 206881, 'qawo_r2': 835086, 'fcc_r1': 4110, 'fcc_r2': 18811} 1064888
+x273 g-1e-7-2-35089 {'qawo_r1': 210587, 'qawo_r2': 850162, 'fcc_r1': 4110, 'fcc_r2': 18813} 1083672
+x274 g-1e-7-2-35099 {'qawo_r1': 215709, 'qawo_r2': 870995, 'fcc_r1': 4111, 'fcc_r2': 18816} 1109631
+wrote out/xcheck/projection.json sha256 b1322b35a61c09ca510c9941d5131aaac63c3f855b8bd131faaf49c58819cfce
+# ----
+# end 2026-11-09T02:26:39Z
+# exit 0

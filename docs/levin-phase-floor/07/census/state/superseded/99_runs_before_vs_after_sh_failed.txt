@@ -1,0 +1,10 @@
+$ sh -c diff\ \<\(grep\ -E\ \"\^\[0-9a-f\]\{64\}\ \"\ out/runs_hashed_before.txt\)\ \<\(grep\ -E\ \"\^\[0-9a-f\]\{64\}\ \"\ out/runs_hashed_after.txt\)\ \&\&\ echo\ \"EQUAL\ \(150\ lines\)\"
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-10T02:38:22Z
+# ----
+sh: -c: line 0: syntax error near unexpected token `('
+sh: -c: line 0: `diff <(grep -E "^[0-9a-f]{64} " out/runs_hashed_before.txt) <(grep -E "^[0-9a-f]{64} " out/runs_hashed_after.txt) && echo "EQUAL (150 lines)"'
+# ----
+# end 2026-11-10T02:38:22Z
+# exit 2

@@ -1,0 +1,45 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T12:45:05Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+D=var/runs/levin-phase-floor-07-r29-guard-rule-a-20261108T123429; ./venv/bin/python -I -c "
+import json,sys
+s=json.load(open(sys.argv[1]+\"/status.json\"))
+print({k:v for k,v in s.items() if k!=\"fingerprint\"})
+f=s[\"fingerprint\"]
+print(\"digest:\", f[\"digest\"], f[\"digest\"]==\"1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7\")
+print({k:f[k] for k in f if k not in (\"classes\",)})
+for name,p in ((\"R28\",sys.argv[2]),(\"R27\",sys.argv[3]),(\"R26\",sys.argv[4])):
+    o=json.load(open(p))[\"fingerprint\"]
+    print(\"classes equal\", name, o[\"classes\"]==f[\"classes\"], \"digest equal\", o[\"digest\"]==f[\"digest\"])
+print(\"n classes\", len(f[\"classes\"]), \"QSI\", f[\"classes\"][\"QuadSourceIntegral\"][\"count\"], f[\"classes\"][\"QuadSourceIntegral\"][\"digest\"])
+m=json.load(open(sys.argv[1]+\"/manifest.json\")); print(\"created\", m[\"created\"])
+" $D var/runs/levin-phase-floor-07-r28-guard-20261108T001916/status.json var/runs/levin-phase-floor-07-r27-parent-20261108T000634/status.json var/runs/levin-phase-floor-06m-r26-signedyardstick-20261106T093937/status.json; kill -0 14528 2>&1 || echo "14528 gone"; kill -0 14524 2>&1 || echo "14524 gone"; tail -1 var/runs/levin-phase-floor-07-r29.launch.log; for f in var/runs/levin-phase-floor-07-r29.launch.log $D/stdout.log $D/stderr.log; do echo "$f: $(grep -c Traceback $f) $(grep -c "!! WARNING" $f) size $(wc -c < $f)"; done; for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7; do git --no-optional-locks -C $t rev-parse HEAD; git --no-optional-locks -C $t status --short --ignored; find $t -newer var/levin-phase-floor-07/rehearsal/r29/state/r29_launch_marker -not -path "*/.git/*" | head -3; done; git --no-optional-locks status --short; ./venv/bin/python -B -m runregistrykit list > var/levin-phase-floor-07/rehearsal/r29/out/r29_end_registry_list.txt 2>&1; tail -1 var/levin-phase-floor-07/rehearsal/r29/out/r29_end_registry_list.txt; ls -l var/datastores | grep 07-r29
+# output:
+{'exit_code': 0, 'fingerprint_sidecar': 'not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29.manifest.json is not a problem-free registry sidecar (there is none)', 'heartbeat': '2026-11-08T12:44:05+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 14528, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete', 'state': 'done', 'units_done': 0, 'units_total': None}
+digest: 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 True
+{'digest': '1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7', 'encoding_format': 1, 'fingerprint_format': 6, 'problems': {}, 'taken': {'git_dirty': False, 'git_head': 'e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f', 'run_id': 'levin-phase-floor-07-r29-guard-rule-a-20261108T123429', 'when': '2026-11-08T12:44:03+00:00'}}
+classes equal R28 True digest equal True
+classes equal R27 True digest equal True
+classes equal R26 True digest equal True
+n classes 21 QSI 864 8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86
+created 2026-11-08T12:34:29+00:00
+sh: line 12: kill: (14528) - No such process
+14528 gone
+sh: line 12: kill: (14524) - No such process
+14524 gone
+** driver exit status 0
+var/runs/levin-phase-floor-07-r29.launch.log: 0 0 size 8386
+var/runs/levin-phase-floor-07-r29-guard-rule-a-20261108T123429/stdout.log: 0 0 size 8285
+var/runs/levin-phase-floor-07-r29-guard-rule-a-20261108T123429/stderr.log: 0 0 size 0
+91472dbee1daba8374b0018db1195cf6c7898bbb
+746003508bff868fc1b256b29cbd5035609bed2b
+e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f
+66 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 66 finished; 0 with no host recorded.
+-rw-r--r-- 1 ds283 staff  25411584 Nov  8 12:44 levin-phase-floor-07-r29-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff  25464832 Nov  8 12:44 levin-phase-floor-07-r29-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff   1077248 Nov  8 12:34 levin-phase-floor-07-r29-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff  24875008 Nov  8 12:44 levin-phase-floor-07-r29-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff     36864 Nov  8 12:34 levin-phase-floor-07-r29.sqlite
+# exit: 0
+# end: 2026-11-08T12:45:07Z

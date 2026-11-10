@@ -1,0 +1,13 @@
+exit 0
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor prompt 07 section 5 resumed (section 10, Rule A): rehearsal R29 (worktree e182bc7a, code adffa21b on 07 ad732887) on the Mac Studio (mps026298), then R29 against R28 and R27, the replay, and the readers
+exit 0
+recorded pid 14528 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+exit 0
+exit 0
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+exit 0
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+exit 0
+exit 0

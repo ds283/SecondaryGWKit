@@ -1,0 +1,44 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/scripts/block_score.py sha256 e62946d14ced2ee8cb0dc08cb109dd162cfed559634467f7851c347b85b48c56
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/blocks.json sha256 eb7c6d7cdc76773d01e06785a705ef3e4f50eb6ca641d92a52efad4bc2e6100b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/J4-p-0-10171.json sha256 6e003054fd1b47ccb565c78a22b4529a96c8528ed6d771dad78459b245eeae44
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/J4-o-0-20452.json sha256 94485015bd19c7278db813fc9133e810e1445c69f28435f8ce0ecaec10d3e72c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/J4-g-0-157.json sha256 66de1ca653529ad7b1e1fb02c33e1920342201588aa6039e1d795de6caf160da
+
+[316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] 2pt5 J4: integrands bit-identical at 1001 points across R27/R28/R29 trees True; x_span and kw equal True
+  root x ['-0x1.523259af83ecdp+3'] (eta ['2.5709595215475334e-05']); V (trapezoid, 4097-point scan) 15.112984154245268 (0x1.e39d90f1ee638p+3); R29's location_skipped_phases [{'phase': 0, 'variation': '0x1.e39d90f1ee638p+3'}]; gate span on the root leaf 19.159572454953185 (0x1.328d9bd8b5dcap+4) against SIX_PI 18.84955592153876
+  reference -0x1.9017c8e4681f2p-30 (-1.4555295242531946e-09), stated error 9.512577044359818e-24 (0x1.7000000000000p-77); differences {'GL6-GL14': '0.0', 'GL8-GL14': '-2.0679515313825692e-25', 'GL10-GL14': '0.0', 'GL12-GL14': '0.0', 'QAGS-GL14': '-9.512577044359818e-24'}; QAGS own abserr 1.020738805317604e-22
+  R27: value -0x1.9017c8e468225p-30 abserr 0x1.4fd2c038b843dp-63 regions 1 converged True replay True: |v - ref| 1.05466e-23 = 7.41531e-5 x abserr (honest); stated error = 6.688e-5 x abserr
+  R28: value -0x1.9017c8e4681f6p-30 abserr 0x1.65dacd1543ce8p-66 regions 14 converged True replay True: |v - ref| 8.27181e-25 = 4.3663e-5 x abserr (honest); stated error = 0.0005021 x abserr
+  R29: value -0x1.9017c8e468206p-30 abserr 0x1.9778b3736d5e1p-59 regions 2 converged True replay True: |v - ref| 4.1359e-24 = 1.4979e-6 x abserr (honest); stated error = 3.445e-6 x abserr
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/Y4-p-0-10171.json sha256 56e2dd41ddc957754e811b705c5de59b781df20c416baf8cb071ed25f2ce3e3e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/Y4-o-0-20452.json sha256 3f367b92d5cda44be1b5f0fb075da487056f57a0ee1c0a1f00cc21617cff85b1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/Y4-g-0-157.json sha256 5654988cb6ee4c907eef71830519dd5ec91d1648787fbd173d33374205c4c56c
+
+[316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] 2pt5 Y4: integrands bit-identical at 1001 points across R27/R28/R29 trees True; x_span and kw equal True
+  root x ['-0x1.523259af83ecdp+3'] (eta ['2.5709595215475334e-05']); V (trapezoid, 4097-point scan) 15.112984154245268 (0x1.e39d90f1ee638p+3); R29's location_skipped_phases [{'phase': 0, 'variation': '0x1.e39d90f1ee638p+3'}]; gate span on the root leaf 19.159572454953185 (0x1.328d9bd8b5dcap+4) against SIX_PI 18.84955592153876
+  reference 0x1.2018ed31b4477p-27 (8.384736991010429e-09), stated error 6.617444900424222e-24 (0x1.0000000000000p-77); differences {'GL6-GL14': '1.6543612251060553e-24', 'GL8-GL14': '0.0', 'GL10-GL14': '0.0', 'GL12-GL14': '0.0', 'QAGS-GL14': '-6.617444900424222e-24'}; QAGS own abserr 1.5028898128760986e-22
+  R27: value 0x1.2018ed31b4474p-27 abserr 0x1.79ab800000000p-62 regions 1 converged True replay True: |v - ref| 4.96308e-24 = 1.55145e-5 x abserr (honest); stated error = 2.069e-5 x abserr
+  R28: value 0x1.2018ed31b447ep-27 abserr 0x1.78af331f037f8p-66 regions 4 converged True replay True: |v - ref| 1.15805e-23 = 0.000580725 x abserr (honest); stated error = 0.0003318 x abserr
+  R29: value 0x1.2018ed31b4472p-27 abserr 0x1.aa161bfb153afp-66 regions 3 converged True replay True: |v - ref| 8.27181e-24 = 0.00036671 x abserr (honest); stated error = 0.0002934 x abserr
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/J4-p-1-186.json sha256 ee28459398d93e2361201297e7791ef132b71ecf93d246e905bcc434bf5497b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/J4-o-1-10349.json sha256 302377199b6f5c577f928bfa8873e8b147bb5cad769c1007c8ffa027b98b9813
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/J4-g-1-10283.json sha256 6a705bae55f500858082d9340c6029e0afbb0e9dfb4c57283a2cc6c1f5b6b5d0
+
+[1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] 2pt5 J4: integrands bit-identical at 1001 points across R27/R28/R29 trees True; x_span and kw equal True
+  root x ['-0x1.7709bd26ee970p+3'] (eta ['8.130087860186947e-06']); V (trapezoid, 4097-point scan) 15.896291130748331 (0x1.fcae6abcc8494p+3); R29's location_skipped_phases [{'phase': 0, 'variation': '0x1.fcae6abcc8494p+3'}]; gate span on the root leaf 20.195797752642036 (0x1.4321fcd303a54p+4) against SIX_PI 18.84955592153876
+  reference -0x1.e6f859d2f7c57p-33 (-2.2144837230684548e-10), stated error 4.911384887033602e-25 (0x1.3000000000000p-81); differences {'GL6-GL14': '5.169878828456423e-26', 'GL8-GL14': '-2.5849394142282115e-26', 'GL10-GL14': '0.0', 'GL12-GL14': '0.0', 'QAGS-GL14': '4.911384887033602e-25'}; QAGS own abserr 1.8518703217932133e-23
+  R27: value -0x1.e6f859d2f7bf8p-33 abserr 0x1.c680c05f3602ep-66 regions 1 converged True replay True: |v - ref| 2.45569e-24 = 0.00010206 x abserr (honest); stated error = 2.041e-5 x abserr
+  R28: value -0x1.e6f859d2f7c72p-33 abserr 0x1.ff3cae87aca98p-69 regions 6 converged True replay True: |v - ref| 6.97934e-25 = 0.000206301 x abserr (honest); stated error = 0.0001452 x abserr
+  R29: value -0x1.e6f859d2f7c38p-33 abserr 0x1.2c82764608ef0p-62 regions 2 converged True replay True: |v - ref| 8.01331e-25 = 3.14814e-6 x abserr (honest); stated error = 1.93e-6 x abserr
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/Y4-p-1-186.json sha256 294ac0750d1f44ffc19590f34c304f1fb4fb7430b41735c8fa3bc6512f073caa
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/Y4-o-1-10349.json sha256 8d479149697015a631e38b94f62772f76d90f8383eac7d7a5c10f3a29454acc2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/Y4-g-1-10283.json sha256 a107c6491c4b5dd987538c467105034cfebc3f48a64f57e50a8330f87f288162
+
+[1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] 2pt5 Y4: integrands bit-identical at 1001 points across R27/R28/R29 trees True; x_span and kw equal True
+  root x ['-0x1.7709bd26ee970p+3'] (eta ['8.130087860186947e-06']); V (trapezoid, 4097-point scan) 15.896291130748331 (0x1.fcae6abcc8494p+3); R29's location_skipped_phases [{'phase': 0, 'variation': '0x1.fcae6abcc8494p+3'}]; gate span on the root leaf 20.195797752642036 (0x1.4321fcd303a54p+4) against SIX_PI 18.84955592153876
+  reference 0x1.9714e016a7978p-30 (1.4809540309909523e-09), stated error 1.2407709188295415e-24 (0x1.8000000000000p-80); differences {'GL6-GL14': '4.1359030627651384e-25', 'GL8-GL14': '0.0', 'GL10-GL14': '0.0', 'GL12-GL14': '0.0', 'QAGS-GL14': '-1.2407709188295415e-24'}; QAGS own abserr 2.682224474873338e-23
+  R27: value 0x1.9714e016a7978p-30 abserr 0x1.1045c00003c2dp-63 regions 1 converged True replay True: |v - ref| 0.0 = 0.0 x abserr (honest); stated error = 1.076e-5 x abserr
+  R28: value 0x1.9714e016a7982p-30 abserr 0x1.faa21d2682f6bp-69 regions 13 converged True replay True: |v - ref| 2.06795e-24 = 0.000616817 x abserr (honest); stated error = 0.0003701 x abserr
+  R29: value 0x1.9714e016a7979p-30 abserr 0x1.332dd100e35e5p-68 regions 3 converged True replay True: |v - ref| 2.06795e-25 = 5.08661e-5 x abserr (honest); stated error = 0.0003052 x abserr
+
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_scores.json sha256 42f49e87374f6282774a00d2819e388377a6699643a1d5924da50379a8bcaccb

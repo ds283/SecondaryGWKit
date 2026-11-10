@@ -1,0 +1,11 @@
+# R29 store files before the readers, 2026-11-08T13:22:20Z
+dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874  var/datastores/levin-phase-floor-07-r29-shard0000.sqlite
+1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec  var/datastores/levin-phase-floor-07-r29-shard0001.sqlite
+7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2  var/datastores/levin-phase-floor-07-r29-shard0002.sqlite
+897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca  var/datastores/levin-phase-floor-07-r29-shard0003.sqlite
+28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9  var/datastores/levin-phase-floor-07-r29.sqlite
+var/datastores/levin-phase-floor-07-r29-shard0000.sqlite 25411584 1794141843
+var/datastores/levin-phase-floor-07-r29-shard0001.sqlite 25464832 1794141843
+var/datastores/levin-phase-floor-07-r29-shard0002.sqlite 1077248 1794141280
+var/datastores/levin-phase-floor-07-r29-shard0003.sqlite 24875008 1794141843
+var/datastores/levin-phase-floor-07-r29.sqlite 36864 1794141280

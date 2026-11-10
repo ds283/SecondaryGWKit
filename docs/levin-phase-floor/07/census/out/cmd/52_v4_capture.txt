@@ -1,0 +1,69 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x1_capture.py state/v4_capture_selection.json state/v4/capture out/v4/captures.json --workers 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:12:00Z
+# ----
+# levin-phase-floor 07: V4's calls' inputs, captured at g (06c's X1 capture)
+# written 2026-11-09T00:12:01Z on mps026298.phys.susx.ac.uk
+# script x1_capture.py sha256 fc212b2be346ae51e8381a9b43dd09753e4ae1a31a1487185d535be820e69c08
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/v4_capture_selection.json sha256 39a19bca0f26aa402b1405d6ccb9b272440f220dbc4df20cd740fc61812040a8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 80024
+C01: pid 80025
+C02: pid 80026
+C03: pid 80027
+C04: pid 80028
+C05: pid 80029
+C06: pid 80111
+C07: pid 80117
+C08: pid 80126
+C09: pid 80134
+C10: pid 80138
+C11: pid 80148
+C12: pid 80209
+C13: pid 80218
+C14: pid 80226
+C15: pid 80237
+C16: pid 80242
+C17: pid 80249
+C18: pid 80358
+C19: pid 80365
+C20: pid 80380
+C21: pid 80387
+C22: pid 80390
+C23: pid 80403
+C24: pid 80418
+exit codes {'C05': 0, 'C00': 0, 'C02': 0, 'C01': 0, 'C03': 0, 'C04': 0, 'C08': 0, 'C07': 0, 'C06': 0, 'C09': 0, 'C11': 0, 'C10': 0, 'C13': 0, 'C12': 0, 'C16': 0, 'C14': 0, 'C15': 0, 'C17': 0, 'C18': 0, 'C19': 0, 'C21': 0, 'C22': 0, 'C20': 0, 'C23': 0, 'C24': 0}
+captured and matching the census bit for bit: 25 of 25
+   g-1e-7-0-1772 1: matches True; error None; ray_initialized False
+   g-1e-7-0-1973 1: matches True; error None; ray_initialized False
+   g-1e-7-0-38985 1: matches True; error None; ray_initialized False
+   g-1e-7-1-2120 1: matches True; error None; ray_initialized False
+   g-1e-7-1-38834 1: matches True; error None; ray_initialized False
+   g-1e-7-2-13649 1: matches True; error None; ray_initialized False
+   g-1e-7-2-2092 1: matches True; error None; ray_initialized False
+   g-1e-7-2-34834 1: matches True; error None; ray_initialized False
+   g-1e-7-3-13816 1: matches True; error None; ray_initialized False
+   g-1e-7-3-14592 1: matches True; error None; ray_initialized False
+   g-1e-7-3-2326 1: matches True; error None; ray_initialized False
+   g-1e-7-3-37343 1: matches True; error None; ray_initialized False
+   g-1e-8-0-14299 1: matches True; error None; ray_initialized False
+   g-1e-8-0-14314 1: matches True; error None; ray_initialized False
+   g-1e-8-0-1896 1: matches True; error None; ray_initialized False
+   g-1e-8-1-1747 1: matches True; error None; ray_initialized False
+   g-1e-8-1-2174 1: matches True; error None; ray_initialized False
+   g-1e-8-1-34611 1: matches True; error None; ray_initialized False
+   g-1e-8-1-34772 1: matches True; error None; ray_initialized False
+   g-1e-8-2-2189 1: matches True; error None; ray_initialized False
+   g-1e-8-2-34841 1: matches True; error None; ray_initialized False
+   g-1e-8-3-14096 1: matches True; error None; ray_initialized False
+   g-1e-8-3-1921 1: matches True; error None; ray_initialized False
+   g-1e-8-3-34962 1: matches True; error None; ray_initialized False
+   g-1e-8-3-39137 1: matches True; error None; ray_initialized False
+wrote out/v4/captures.json sha256 dae8a6d8ef4b8eff741d258f22b3b777572991a45777bb492a75f860a1002b15
+# ----
+# end 2026-11-09T00:17:45Z
+# exit 0

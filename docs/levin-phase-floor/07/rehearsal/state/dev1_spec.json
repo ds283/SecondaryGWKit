@@ -1,0 +1,39 @@
+{
+ "name": "dev1",
+ "workers": [
+  {
+   "name": "dev-g",
+   "tree": "g",
+   "units": [
+    {
+     "uid": "g-1e-7-3-182",
+     "tree": "g",
+     "rtol": "1e-7",
+     "row": "3-182",
+     "names05": null,
+     "shard": 3,
+     "serial": 182,
+     "k_key": "3:1",
+     "budget": null,
+     "scan": false,
+     "w3": false,
+     "capture": null
+    },
+    {
+     "uid": "g-1e-7-3-78",
+     "tree": "g",
+     "rtol": "1e-7",
+     "row": "3-78",
+     "names05": null,
+     "shard": 3,
+     "serial": 78,
+     "k_key": "3:1",
+     "budget": null,
+     "scan": false,
+     "w3": false,
+     "capture": null
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,171 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T00:05:56Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; R=$M/var/levin-phase-floor-07/rehearsal
+cd $M
+echo "== runregistrykit list (to out/01-registry-list.txt)"; ./venv/bin/python -B -m runregistrykit list > $R/out/01-registry-list.txt 2>&1; echo "exit $?"
+echo "lines: $(wc -l < $R/out/01-registry-list.txt)"; echo "states (column 2) tally:"; awk "NR>1{print \$2}" $R/out/01-registry-list.txt | sort | uniq -c
+echo "running/stale/!! lines:"; grep -E "running|stale|!!|alive" $R/out/01-registry-list.txt; echo "(end)"
+echo "== lock dir"; ls -la ~/.raypoolkit; ls -d ~/.raypoolkit/rehearsal-lock 2>&1; ls -d ~/ScienceData/.rehearsal-lock 2>&1
+echo "== auth token"; ls -l ~/.ray/auth_token
+echo "== disk"; df -h $M
+echo "== load"; uptime; sysctl -n hw.ncpu
+echo "== venv"; ./venv/bin/python -B -c "import sys,ray,sqlalchemy,numpy,scipy,mpmath; from importlib.metadata import version as v; print(sys.version); print(\"ray\",ray.__version__,\"SQLAlchemy\",sqlalchemy.__version__,\"numpy\",numpy.__version__,\"scipy\",scipy.__version__,\"mpmath\",mpmath.__version__); print(\"datastorekit\",v(\"datastorekit\"),\"raypoolkit\",v(\"raypoolkit\"),\"runregistrykit\",v(\"runregistrykit\"))"
+echo "== no 07 store or run"; ls var/datastores | grep -c "levin-phase-floor-07"; ls var/runs | grep -c "levin-phase-floor-07"
+echo "== R26 store files"; ls -l var/datastores/levin-phase-floor-06m-r26*; ls var/datastores | grep -E "06m-r26.*(-wal|-shm|-journal)"; echo "(no journal lines above)"
+echo "== /tmp/ray-sgk"; ls -la /tmp/ray-sgk
+
+# output:
+== runregistrykit list (to out/01-registry-list.txt)
+exit 0
+lines: 65
+states (column 2) tally:
+      1 
+     54 done
+      4 failed
+      4 killed
+      1 run(s)
+running/stale/!! lines:
+   levin-phase-floor-06h-phase-20261101T033514                done          84/84   6d 20h  levin-phase-floor prompt 06h section 5 on the Mac Studio (mps026298; Python 3.13.16): the phase re-measurement, 06f's M2 items 1 and 4 repeated at 06h's code (H1, H2). Captures 06f's 20 M2 calls by 06e's x1_capture.py (06h's copy) at the parent p (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5, 2c325f5, code 06e's; each capture checked bit for bit against 06e's census checkpoint a0dc4d7f) and at h (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2, dispatch SHA c1ec3b2, code 7172a8f + ac1c6f4; each checked against 06h's census checkpoint), reading 06's certified scratch copy of A3 v2 read-only (fingerprint 0e32f24a) on a stand-in ShardedPool; the method check at the exact e^u before any scoring; replays each call in its own process in its own tree with 06f's pass-throughs, with mpmath phase references at 30 digits at the exact e^u (and at 06f's x_hat), at every node of every returned leaf and 06f's seeded dense sample of 1,000 points per call; each tree's code scored at the other's points; the reference re-checked at 50 digits at h's worst point. At most six processes; Ray-free, no lock, no store built, no code changed  · refcheck running
+(end)
+== lock dir
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov  6 09:57 .
+drwxr-x--- 158 ds283 staff 5056 Nov  8 00:04 ..
+ls: cannot access '/Users/ds283/.raypoolkit/rehearsal-lock': No such file or directory
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+== auth token
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+== disk
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  792G  135G  86% /
+== load
+ 0:05  up 31 days, 14:42, 1 user, load averages: 4.77 7.38 6.04
+10
+== venv
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+ray 2.59.0 SQLAlchemy 2.0.55 numpy 2.2.4 scipy 1.16.3 mpmath 1.3.0
+datastorekit 0.5.0 raypoolkit 0.3.0 runregistrykit 0.2.0
+== no 07 store or run
+0
+0
+== R26 store files
+-rw-r--r-- 1 ds283 staff 25006080 Nov  6 09:49 var/datastores/levin-phase-floor-06m-r26-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff 25284608 Nov  6 09:49 var/datastores/levin-phase-floor-06m-r26-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff  1077248 Nov  6 09:39 var/datastores/levin-phase-floor-06m-r26-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff 24420352 Nov  6 09:49 var/datastores/levin-phase-floor-06m-r26-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff    36864 Nov  6 09:39 var/datastores/levin-phase-floor-06m-r26.sqlite
+(no journal lines above)
+== /tmp/ray-sgk
+total 0
+drwxrwxrwx 107 ds283 wheel  3424 Nov  6 09:57 .
+drwxrwxrwt 779 root  wheel 24928 Nov  8 00:05 ..
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_10-50-09_138224_46020
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_10-51-06_087475_46672
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_10-54-01_339900_48224
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_10-54-38_261201_48682
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_10-55-00_205981_49005
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_10-55-25_352870_49358
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_10-55-59_418072_49775
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_16-46-32_856698_929
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_16-51-14_897195_3417
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_16-54-03_502186_5005
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_16-55-50_202575_6029
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_16-58-37_426637_7783
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_16-59-02_999536_8111
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_16-59-48_021702_8710
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-00-07_751694_9066
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-00-23_261502_9367
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-00-37_389385_9658
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-00-54_958374_9982
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-02-42_801794_11234
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-03-45_646481_11963
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-06-15_506876_13214
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-06-58_398267_13783
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-07-24_439924_14203
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-07-52_823157_14655
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_17-08-30_101832_15145
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_21-05-52_048521_21718
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_21-12-49_523945_25126
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_21-13-15_829526_25483
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_21-14-00_732543_25951
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_21-14-19_650889_26274
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_21-14-34_959324_26583
+drwxrwxrwx   3 ds283 wheel    96 Nov  3 00:00 session_2026-10-25_21-14-48_733157_26864
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_01-47-31_349798_47770
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_01-51-21_639714_49752
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_02-06-14_921557_57780
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_02-06-41_470776_58156
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_02-07-30_521216_58633
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_02-07-50_663521_58950
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_02-08-08_768162_59255
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_02-08-23_017201_59570
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_12-20-43_492082_22684
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_12-24-35_204962_24897
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_12-29-54_450551_27890
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_12-30-22_313812_28378
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_12-31-20_973217_29111
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_12-31-41_321690_29532
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_12-31-56_816144_29871
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_12-32-11_381024_30192
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_21-55-52_579453_97740
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_21-59-46_179241_99938
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_22-12-17_818554_6768
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_22-12-43_390260_7104
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_22-13-31_408468_7630
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-26_22-13-51_007795_8001
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_22-14-06_610962_8294
+drwxrwxrwx   3 ds283 wheel    96 Nov  5 00:00 session_2026-10-26_22-14-21_570637_8558
+drwxrwxrwx   4 ds283 wheel   128 Nov  2 00:00 session_2026-10-28_13-53-51_589813_96498
+drwxrwxrwx   4 ds283 wheel   128 Nov  2 00:00 session_2026-10-28_13-57-46_480591_97360
+drwxrwxrwx   4 ds283 wheel   128 Nov  2 00:00 session_2026-10-28_14-05-56_262602_99058
+drwxrwxrwx   4 ds283 wheel   128 Nov  2 00:00 session_2026-10-28_14-06-23_654557_99291
+drwxrwxrwx   4 ds283 wheel   128 Nov  2 00:00 session_2026-10-28_14-07-15_393306_99562
+drwxrwxrwx   4 ds283 wheel   128 Nov  2 00:00 session_2026-10-28_14-07-35_537092_99748
+drwxrwxrwx   4 ds283 wheel   128 Nov  2 00:00 session_2026-10-28_14-07-51_388015_99972
+drwxrwxrwx   4 ds283 wheel   128 Nov  2 00:00 session_2026-10-28_14-08-06_153376_278
+drwxrwxrwx   4 ds283 wheel   128 Nov  3 00:00 session_2026-10-29_12-37-22_204249_96791
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-29_12-40-59_209764_97470
+drwxrwxrwx   4 ds283 wheel   128 Nov  3 00:00 session_2026-10-29_12-51-44_690497_98913
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-29_12-52-09_885405_99099
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-29_12-52-58_742144_99317
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-29_12-53-18_346443_99519
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-29_12-53-34_030809_99736
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-29_12-53-48_430068_99951
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-30_07-44-42_560406_98917
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-30_07-50-35_561811_99675
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-30_07-59-34_965046_1178
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-30_07-59-58_864844_1371
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-30_08-00-43_076257_1566
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-30_08-01-01_883976_1789
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-30_08-01-17_225431_2014
+drwxrwxrwx   3 ds283 wheel    96 Nov  8 00:00 session_2026-10-30_08-01-31_682359_2211
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_00-18-54_001076_67087
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_00-24-24_541909_68069
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_00-32-31_856874_69507
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_00-32-56_662170_69685
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_00-33-40_766703_69918
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_00-33-59_761016_70125
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_00-34-15_150276_70333
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_00-34-29_063796_70521
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_11-06-44_300894_44460
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_11-12-17_767060_45379
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_11-27-38_002428_48345
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_11-28-03_752593_48525
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_11-28-46_988315_48716
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_11-29-06_791791_48934
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_11-29-22_625884_49142
+drwxrwxrwx   4 ds283 wheel   128 Nov  6 00:00 session_2026-11-01_11-29-37_147108_49318
+drwxrwxrwx  10 ds283 wheel   320 Nov  6 09:36 session_2026-11-06_09-24-23_806856_55646
+drwxrwxrwx  10 ds283 wheel   320 Nov  6 09:49 session_2026-11-06_09-39-40_011457_57112
+drwxrwxrwx  10 ds283 wheel   320 Nov  6 09:55 session_2026-11-06_09-54-39_953746_58388
+drwxrwxrwx  10 ds283 wheel   320 Nov  6 09:55 session_2026-11-06_09-55-10_733929_58589
+drwxrwxrwx  10 ds283 wheel   320 Nov  6 09:56 session_2026-11-06_09-56-02_438800_58775
+drwxrwxrwx  10 ds283 wheel   320 Nov  6 09:56 session_2026-11-06_09-56-24_434408_58997
+drwxrwxrwx  10 ds283 wheel   320 Nov  6 09:56 session_2026-11-06_09-56-42_348741_59209
+drwxrwxrwx  10 ds283 wheel   320 Nov  6 09:57 session_2026-11-06_09-56-59_883952_59422
+lrwxr-xr-x   1 ds283 wheel    53 Nov  6 09:57 session_latest -> /tmp/ray-sgk/session_2026-11-06_09-56-59_883952_59422
+# exit: 0
+# end: 2026-11-08T00:05:58Z

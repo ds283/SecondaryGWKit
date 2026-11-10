@@ -1,0 +1,943 @@
+{
+ "header": [
+  "# levin-phase-floor 07: V4's references' wall projection",
+  "# written 2026-11-09T00:23:17Z on mps026298.phys.susx.ac.uk",
+  "# script refs_projection_07.py sha256 8d9a5b856108a47825618f8bb4bb230fec4fe16eba74f8803cb9ca641ec6d65b",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/out/v4/captures.json sha256 dae8a6d8ef4b8eff741d258f22b3b777572991a45777bb492a75f860a1002b15",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/references/out/capture.json sha256 62b91d27bbd6a4e6a5fc10f64e212e4a491baeb043c1651e1722b0ebf5922a49"
+ ],
+ "model": "levin-phase-floor prompt 07 section 6, V4: project the references' wall time (four readings of each of the 24\ncaptured calls by tools/filon_reference.py at g, one reading at a time, six workers), from earlier readings of the same\ntool's code on this host, before any reading is taken. New in 07. Read only (captures are unpickled; no reading, no\nRay, no store).\n\n**The features of a captured Route B call** (``features``): the tool's own segment edges\n(``tools.filon_reference.production_edges``); on each segment theta' (the call's ``theta_deriv``) at 33\nChebyshev-Lobatto points: monotone if of one strict sign, its slope ratio max|theta'|/min|theta'|, its half width h and\nits phase extent at the largest slope, s = h max|theta'| (the tool's direct panels number 2.5 s / dphi); and its phase\nspan, |theta(X_r) - theta(X_l)| for a monotone segment, the sum of |Delta theta| over the samples otherwise. Then:\nn_seg; span_mono, the span over segments the reading integrates in t; D_q = sum of s over the non-monotone segments\n(QAWO's direct segments); D_f = sum of s over the non-monotone segments and those with slope ratio above 2 (FCC's).\n\n**The model, per reading (impl, res):** wall = alpha n_seg + beta span_mono + gamma D (D_q or D_f).\n- alpha and beta by least squares (non-negative) on 06g's readings at this host (var/levin-phase-floor-06g/references/\n  out/readings/, the tools at 1c5336e and ff3e8394) of every Route B call but the stationary-point samples, whose\n  reading has no direct or non-monotone segment, with n_seg and span from the reading's own segment table (06g's\n  captures are no longer on this host); for the 24, n_seg and span come from ``features``, checked against z12's and\n  P1's rows' own tables (``feature_check``);\n- gamma from the stationary-point calls read with the tool's present code: P1's two rows (this host, the tool at\n  74600350, byte-identical to g's), and z00 and z12 (QAWO: 06g's rerun batch at ff3e8394 on this host; FCC: the laptop's\n  batch at b5626ecb, scaled to this host by r55's FCC readings on both hosts), their features from this census's\n  calibration capture of z12 (z00's integrand); gamma = the largest over these of (wall - alpha n_seg - beta span_mono)/D.\n**The projection:** the sum over the 24 calls and the four readings, one reading at a time; and the same multiplied by\n1.5 for the load and the model's scatter. A projection of a day or more is a stop (prompt section 6).\n\nUsage: PYTHONPATH=<tree g>:<scripts> python -B refs_projection_07.py OUT_JSON\n",
+ "alpha_beta": {
+  "qawo_r1": {
+   "alpha": 0.004375625526261698,
+   "beta": 5.709287869487948e-08,
+   "n": 41,
+   "max_ratio_obs_over_pred": 3.3269502355020255,
+   "median_ratio": 1.2864784641030058
+  },
+  "qawo_r2": {
+   "alpha": 0.008263573832086249,
+   "beta": 2.322416480903813e-07,
+   "n": 37,
+   "max_ratio_obs_over_pred": 2.0330461807059383,
+   "median_ratio": 1.0173483083898598
+  },
+  "fcc_r1": {
+   "alpha": 0.01752002599743531,
+   "beta": 0.0,
+   "n": 42,
+   "max_ratio_obs_over_pred": 2.5531270170993428,
+   "median_ratio": 1.1005599169819948
+  },
+  "fcc_r2": {
+   "alpha": 0.06638837908678298,
+   "beta": 0.0,
+   "n": 42,
+   "max_ratio_obs_over_pred": 1.9551783268732132,
+   "median_ratio": 1.0855121384623059
+  }
+ },
+ "host_factor_mac_over_laptop_fcc": {
+  "1": 0.9603780046574665,
+  "2": 0.9724195114310248
+ },
+ "p1_features": {
+  "row1": {
+   "n_seg": 1466,
+   "span_q": 111295078.64842299,
+   "span_f": 111294660.92926046,
+   "D_q": 100.16648644326236,
+   "D_f": 413.4818820177243,
+   "n_nonmono": 1,
+   "n_steep": 2
+  },
+  "row2": {
+   "n_seg": 1466,
+   "span_q": 56674813.02283178,
+   "span_f": 56669215.87624848,
+   "D_q": 1014.396372755555,
+   "D_f": 5212.229852601164,
+   "n_nonmono": 1,
+   "n_steep": 2
+  }
+ },
+ "z12_features": {
+  "n_seg": 2024,
+  "span_q": 4231876133.106059,
+  "span_f": 4231821671.9827585,
+  "D_q": 12192.078824314076,
+  "D_f": 53038.13473580382,
+  "n_nonmono": 1,
+  "n_steep": 2
+ },
+ "feature_check": [
+  {
+   "sample": "z00",
+   "reading": "qawo_r1",
+   "n_seg": [
+    2024,
+    2024
+   ],
+   "span": [
+    4231876133.106059,
+    4231876133.106058
+   ],
+   "n_direct": [
+    1,
+    1
+   ]
+  },
+  {
+   "sample": "z12",
+   "reading": "qawo_r1",
+   "n_seg": [
+    2024,
+    2024
+   ],
+   "span": [
+    4231876133.106059,
+    4231876133.106058
+   ],
+   "n_direct": [
+    1,
+    1
+   ]
+  },
+  {
+   "sample": "p1_row1",
+   "reading": "qawo_r1",
+   "n_seg": [
+    1466,
+    1466
+   ],
+   "span": [
+    111295078.64842299,
+    111295078.648423
+   ],
+   "n_direct": [
+    1,
+    1
+   ]
+  },
+  {
+   "sample": "p1_row2",
+   "reading": "qawo_r1",
+   "n_seg": [
+    1466,
+    1466
+   ],
+   "span": [
+    56674813.02283178,
+    56674813.02283177
+   ],
+   "n_direct": [
+    1,
+    1
+   ]
+  },
+  {
+   "sample": "z00",
+   "reading": "qawo_r2",
+   "n_seg": [
+    2024,
+    2024
+   ],
+   "span": [
+    4231876133.106059,
+    4231876133.106058
+   ],
+   "n_direct": [
+    1,
+    1
+   ]
+  },
+  {
+   "sample": "z12",
+   "reading": "qawo_r2",
+   "n_seg": [
+    2024,
+    2024
+   ],
+   "span": [
+    4231876133.106059,
+    4231876133.106058
+   ],
+   "n_direct": [
+    1,
+    1
+   ]
+  },
+  {
+   "sample": "p1_row1",
+   "reading": "qawo_r2",
+   "n_seg": [
+    1466,
+    1466
+   ],
+   "span": [
+    111295078.64842299,
+    111295078.648423
+   ],
+   "n_direct": [
+    1,
+    1
+   ]
+  },
+  {
+   "sample": "p1_row2",
+   "reading": "qawo_r2",
+   "n_seg": [
+    1466,
+    1466
+   ],
+   "span": [
+    56674813.02283178,
+    56674813.02283177
+   ],
+   "n_direct": [
+    1,
+    1
+   ]
+  },
+  {
+   "sample": "z00",
+   "reading": "fcc_r1",
+   "n_seg": [
+    2024,
+    2024
+   ],
+   "span": [
+    4231821671.9827585,
+    4231821671.982758
+   ],
+   "n_direct": [
+    3,
+    3
+   ]
+  },
+  {
+   "sample": "z12",
+   "reading": "fcc_r1",
+   "n_seg": [
+    2024,
+    2024
+   ],
+   "span": [
+    4231821671.9827585,
+    4231821671.982758
+   ],
+   "n_direct": [
+    3,
+    3
+   ]
+  },
+  {
+   "sample": "p1_row1",
+   "reading": "fcc_r1",
+   "n_seg": [
+    1466,
+    1466
+   ],
+   "span": [
+    111294660.92926046,
+    111294660.92926043
+   ],
+   "n_direct": [
+    3,
+    3
+   ]
+  },
+  {
+   "sample": "p1_row2",
+   "reading": "fcc_r1",
+   "n_seg": [
+    1466,
+    1466
+   ],
+   "span": [
+    56669215.87624848,
+    56669215.87624847
+   ],
+   "n_direct": [
+    3,
+    3
+   ]
+  },
+  {
+   "sample": "z00",
+   "reading": "fcc_r2",
+   "n_seg": [
+    2024,
+    2024
+   ],
+   "span": [
+    4231821671.9827585,
+    4231821671.982758
+   ],
+   "n_direct": [
+    3,
+    3
+   ]
+  },
+  {
+   "sample": "z12",
+   "reading": "fcc_r2",
+   "n_seg": [
+    2024,
+    2024
+   ],
+   "span": [
+    4231821671.9827585,
+    4231821671.982758
+   ],
+   "n_direct": [
+    3,
+    3
+   ]
+  },
+  {
+   "sample": "p1_row1",
+   "reading": "fcc_r2",
+   "n_seg": [
+    1466,
+    1466
+   ],
+   "span": [
+    111294660.92926046,
+    111294660.92926043
+   ],
+   "n_direct": [
+    3,
+    3
+   ]
+  },
+  {
+   "sample": "p1_row2",
+   "reading": "fcc_r2",
+   "n_seg": [
+    1466,
+    1466
+   ],
+   "span": [
+    56669215.87624848,
+    56669215.87624847
+   ],
+   "n_direct": [
+    3,
+    3
+   ]
+  }
+ ],
+ "gamma": {
+  "qawo_r1": {
+   "samples": [
+    {
+     "sample": "z00",
+     "wall_s": 257.84713537525386,
+     "D": 12192.078824314076,
+     "gamma": 0.0006053831095810363
+    },
+    {
+     "sample": "z12",
+     "wall_s": 255.57015245826915,
+     "D": 12192.078824314076,
+     "gamma": 0.00041862390716808687
+    },
+    {
+     "sample": "p1_row1",
+     "wall_s": 15.757741207722574,
+     "D": 100.16648644326236,
+     "gamma": 0.029839498895715598
+    },
+    {
+     "sample": "p1_row2",
+     "wall_s": 13.040947957895696,
+     "D": 1014.396372755555,
+     "gamma": 0.0033424337886957117
+    }
+   ],
+   "gamma": 0.029839498895715598
+  },
+  "qawo_r2": {
+   "samples": [
+    {
+     "sample": "z00",
+     "wall_s": 1010.3223022501916,
+     "D": 12192.078824314076,
+     "gamma": 0.000884093787652717
+    },
+    {
+     "sample": "z12",
+     "wall_s": 1011.0530114169233,
+     "D": 12192.078824314076,
+     "gamma": 0.0009440268948168921
+    },
+    {
+     "sample": "p1_row1",
+     "wall_s": 38.17761458316818,
+     "D": 100.16648644326236,
+     "gamma": 0.0021550407060913234
+    },
+    {
+     "sample": "p1_row2",
+     "wall_s": 26.353834624867886,
+     "D": 1014.396372755555,
+     "gamma": 0.0010618959553913608
+    }
+   ],
+   "gamma": 0.0021550407060913234
+  },
+  "fcc_r1": {
+   "samples": [
+    {
+     "sample": "z00",
+     "wall_s": 655.4574371618376,
+     "D": 53038.13473580382,
+     "gamma": 0.011689643831393915
+    },
+    {
+     "sample": "z12",
+     "wall_s": 634.9166257405224,
+     "D": 53038.13473580382,
+     "gamma": 0.0113023600114852
+    },
+    {
+     "sample": "p1_row1",
+     "wall_s": 28.087124042212963,
+     "D": 413.4818820177243,
+     "gamma": 0.005811054932437889
+    },
+    {
+     "sample": "p1_row2",
+     "wall_s": 70.62861700030044,
+     "D": 5212.229852601164,
+     "gamma": 0.008622846681565825
+    }
+   ],
+   "gamma": 0.011689643831393915
+  },
+  "fcc_r2": {
+   "samples": [
+    {
+     "sample": "z00",
+     "wall_s": 2923.3017739973675,
+     "D": 53038.13473580382,
+     "gamma": 0.052583517663622285
+    },
+    {
+     "sample": "z12",
+     "wall_s": 2977.679849079111,
+     "D": 53038.13473580382,
+     "gamma": 0.05360878137910954
+    },
+    {
+     "sample": "p1_row1",
+     "wall_s": 107.56584308296442,
+     "D": 413.4818820177243,
+     "gamma": 0.024766452381827942
+    },
+    {
+     "sample": "p1_row2",
+     "wall_s": 313.5796792912297,
+     "D": 5212.229852601164,
+     "gamma": 0.04148978875942781
+    }
+   ],
+   "gamma": 0.05360878137910954
+  }
+ },
+ "calls": [
+  {
+   "sid": "v00",
+   "unit": "g-1e-7-3-37343",
+   "features": {
+    "n_seg": 1668,
+    "span_q": 790953195.2296281,
+    "span_f": 790940534.7563367,
+    "D_q": 1745.8280621407766,
+    "D_f": 11241.974300418873,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 104.55097273873601,
+    "qawo_r2": 201.2382453141517,
+    "fcc_r1": 160.6380788973025,
+    "fcc_r2": 713.4043588574773
+   },
+   "total_s": 1179.8316558076674
+  },
+  {
+   "sid": "v01",
+   "unit": "g-1e-7-2-34834",
+   "features": {
+    "n_seg": 2168,
+    "span_q": 30375826481.05445,
+    "span_f": 30375822447.217564,
+    "D_q": 556.2497927413572,
+    "D_f": 3581.879573491433,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 1760.3279477567328,
+    "qawo_r2": 7073.646173081609,
+    "fcc_r1": 79.85431282349975,
+    "fcc_r2": 335.95020484174586
+   },
+   "total_s": 9249.778638503587
+  },
+  {
+   "sid": "v02",
+   "unit": "g-1e-8-3-39137",
+   "features": {
+    "n_seg": 2228,
+    "span_q": 1086909637.5744996,
+    "span_f": 1086890930.978243,
+    "D_q": 3579.8762086870743,
+    "D_f": 17610.340167505805,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 178.6254059387639,
+    "qawo_r2": 278.5517070059975,
+    "fcc_r1": 244.89322223011857,
+    "fcc_r2": 1091.9821846569223
+   },
+   "total_s": 1794.0525198318023
+  },
+  {
+   "sid": "v03",
+   "unit": "g-1e-8-1-34611",
+   "features": {
+    "n_seg": 1532,
+    "span_q": 216276564.92772996,
+    "span_f": 216275279.68035448,
+    "D_q": 177.23041497347208,
+    "D_f": 1141.2462736658106,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 24.339776764085173,
+    "qawo_r2": 63.270159751523785,
+    "fcc_r1": 40.18144229112973,
+    "fcc_r2": 162.8878187456254
+   },
+   "total_s": 290.6791975523641
+  },
+  {
+   "sid": "v04",
+   "unit": "g-1e-7-3-2326",
+   "features": {
+    "n_seg": 1974,
+    "span_q": 1198389230.9432614,
+    "span_f": 1198389100.469402,
+    "D_q": 17.99181756869514,
+    "D_f": 115.85536689598345,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 77.59384260080712,
+    "qawo_r2": 294.66695789180295,
+    "fcc_r1": 35.93883929390681,
+    "fcc_r2": 137.2615253528329
+   },
+   "total_s": 545.4611651393498
+  },
+  {
+   "sid": "v05",
+   "unit": "g-1e-7-0-38985",
+   "features": {
+    "n_seg": 2072,
+    "span_q": 2128122924.5127273,
+    "span_f": 2128064212.579496,
+    "D_q": 11235.686602806287,
+    "D_f": 55271.25843367448,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 465.8342180444563,
+    "qawo_r2": 535.5742622977731,
+    "fcc_r1": 682.4028190692677,
+    "fcc_r2": 3100.581531386934
+   },
+   "total_s": 4784.392830798431
+  },
+  {
+   "sid": "v06",
+   "unit": "g-1e-7-1-2120",
+   "features": {
+    "n_seg": 2108,
+    "span_q": 10774663789.531235,
+    "span_f": 10774662504.283861,
+    "D_q": 177.23041497347208,
+    "D_f": 1141.2462736658106,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 629.668858095065,
+    "qawo_r2": 2520.1272284971506,
+    "fcc_r1": 50.27297726565247,
+    "fcc_r2": 201.12752509961237
+   },
+   "total_s": 3401.1965889574803
+  },
+  {
+   "sid": "v07",
+   "unit": "g-1e-7-3-14592",
+   "features": {
+    "n_seg": 2436,
+    "span_q": 120020672351.98428,
+    "span_f": 120020659691.51102,
+    "D_q": 1745.8280621407766,
+    "D_f": 11241.974300418873,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 6915.079345784047,
+    "qawo_r2": 27897.6911483352,
+    "fcc_r1": 174.0934588633328,
+    "fcc_r2": 764.3906339961266
+   },
+   "total_s": 35751.254586978706
+  },
+  {
+   "sid": "v08",
+   "unit": "g-1e-7-1-38834",
+   "features": {
+    "n_seg": 2346,
+    "span_q": 580250221924.2574,
+    "span_f": 580250097210.8467,
+    "D_q": 17197.474953857865,
+    "D_f": 110740.3275590954,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 33651.584785377876,
+    "qawo_r2": 134814.71544727666,
+    "fcc_r1": 1335.6169679277043,
+    "fcc_r2": 6092.401147304117
+   },
+   "total_s": 175894.31834788635
+  },
+  {
+   "sid": "v09",
+   "unit": "g-1e-8-3-34962",
+   "features": {
+    "n_seg": 2240,
+    "span_q": 2576545138.668297,
+    "span_f": 2576521359.8867283,
+    "D_q": 3815.4715190731454,
+    "D_f": 21640.061074174206,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 270.75553841271415,
+    "qawo_r2": 625.1139912039931,
+    "fcc_r1": 292.20946468096315,
+    "fcc_r2": 1308.8072723103774
+   },
+   "total_s": 2496.8862666080477
+  },
+  {
+   "sid": "v10",
+   "unit": "g-1e-8-0-14314",
+   "features": {
+    "n_seg": 2000,
+    "span_q": 1726880142.7698996,
+    "span_f": 1726821430.8366683,
+    "D_q": 11235.686602806287,
+    "D_f": 55271.25843367448,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 442.6110675413262,
+    "qawo_r2": 441.7940000655394,
+    "fcc_r1": 681.1413771974524,
+    "fcc_r2": 3095.8015680926856
+   },
+   "total_s": 4661.348012897003
+  },
+  {
+   "sid": "v11",
+   "unit": "g-1e-8-2-2189",
+   "features": {
+    "n_seg": 2264,
+    "span_q": 36199899209.466194,
+    "span_f": 36199895175.62931,
+    "D_q": 556.2497927413572,
+    "D_f": 3581.879573491433,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 2093.2610856006218,
+    "qawo_r2": 8427.031725214076,
+    "fcc_r1": 81.53623531925354,
+    "fcc_r2": 342.323489234077
+   },
+   "total_s": 10944.152535368028
+  },
+  {
+   "sid": "v12",
+   "unit": "g-1e-8-0-14299",
+   "features": {
+    "n_seg": 2198,
+    "span_q": 141483326314.84808,
+    "span_f": 141483286579.08575,
+    "D_q": 5479.400913640387,
+    "D_f": 35283.706104085126,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 8250.81058906015,
+    "qawo_r2": 32888.292547966346,
+    "fcc_r1": 450.96297455069737,
+    "fcc_r2": 2037.4381440114012
+   },
+   "total_s": 43627.504255588596
+  },
+  {
+   "sid": "v13",
+   "unit": "g-1e-8-2-34841",
+   "features": {
+    "n_seg": 2374,
+    "span_q": 1204284064315.6077,
+    "span_f": 1204283672894.028,
+    "D_q": 53975.45269086114,
+    "D_f": 347566.10067320324,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 70377.03219411148,
+    "qawo_r2": 279820.85288759536,
+    "fcc_r1": 4104.516466454058,
+    "fcc_r2": 18790.20111773135
+   },
+   "total_s": 373092.6026658923
+  },
+  {
+   "sid": "v14",
+   "unit": "g-1e-7-3-13816",
+   "features": {
+    "n_seg": 1570,
+    "span_q": 79031656.90926695,
+    "span_f": 79026128.20475605,
+    "D_q": 1237.6975924913293,
+    "D_f": 5384.247642972578,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 48.31415282158185,
+    "qawo_r2": 33.99554186194718,
+    "fcc_r1": 90.44637806234506,
+    "fcc_r2": 392.87270994935204
+   },
+   "total_s": 565.6287826952262
+  },
+  {
+   "sid": "v15",
+   "unit": "g-1e-7-0-1973",
+   "features": {
+    "n_seg": 1772,
+    "span_q": 487188049.73154163,
+    "span_f": 487170697.5138719,
+    "D_q": 3884.5986418556713,
+    "D_f": 16898.829898512384,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 151.48305354140416,
+    "qawo_r2": 136.15987663007473,
+    "fcc_r1": 228.5867887483757,
+    "fcc_r2": 1023.5658853338897
+   },
+   "total_s": 1539.7956042537444
+  },
+  {
+   "sid": "v16",
+   "unit": "g-1e-7-2-2092",
+   "features": {
+    "n_seg": 1952,
+    "span_q": 10645766501.623133,
+    "span_f": 10645762467.78624,
+    "D_q": 556.2497927413572,
+    "D_f": 3581.879573491433,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 632.9368915946917,
+    "qawo_r2": 2489.7195945886738,
+    "fcc_r1": 76.06998720805373,
+    "fcc_r2": 321.61031495900073
+   },
+   "total_s": 3520.3367883504197
+  },
+  {
+   "sid": "v17",
+   "unit": "g-1e-7-0-1772",
+   "features": {
+    "n_seg": 1646,
+    "span_q": 271148676.82101154,
+    "span_f": 271108941.0587001,
+    "D_q": 5479.400913640387,
+    "D_f": 35283.706104085126,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 186.18551564200123,
+    "qawo_r2": 88.38219012394089,
+    "fcc_r1": 441.29192020011305,
+    "fcc_r2": 2000.791758755497
+   },
+   "total_s": 2716.6513847215524
+  },
+  {
+   "sid": "v18",
+   "unit": "g-1e-7-2-13649",
+   "features": {
+    "n_seg": 2014,
+    "span_q": 48508786750.3734,
+    "span_f": 48508395328.794174,
+    "D_q": 53975.45269086114,
+    "D_f": 347566.10067320324,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 4388.919248349437,
+    "qawo_r2": 11398.722717147903,
+    "fcc_r1": 4098.209257094982,
+    "fcc_r2": 18766.301301260108
+   },
+   "total_s": 38652.15252385243
+  },
+  {
+   "sid": "v19",
+   "unit": "g-1e-8-3-1921",
+   "features": {
+    "n_seg": 1546,
+    "span_q": 69344516.70799373,
+    "span_f": 69338988.00348283,
+    "D_q": 1237.6975924913293,
+    "D_f": 5384.247642972578,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 47.65607108853999,
+    "qawo_r2": 31.547458684350833,
+    "fcc_r1": 90.02589743840662,
+    "fcc_r2": 391.27938885126923
+   },
+   "total_s": 560.5088160625667
+  },
+  {
+   "sid": "v20",
+   "unit": "g-1e-8-0-1896",
+   "features": {
+    "n_seg": 1580,
+    "span_q": 175877889.0735906,
+    "span_f": 175860536.85592082,
+    "D_q": 3884.5986418556713,
+    "D_f": 16898.829898512384,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 132.86934020143406,
+    "qawo_r2": 62.274085675830264,
+    "fcc_r1": 225.22294375686815,
+    "fcc_r2": 1010.8193165492273
+   },
+   "total_s": 1431.1856861833598
+  },
+  {
+   "sid": "v21",
+   "unit": "g-1e-8-1-1747",
+   "features": {
+    "n_seg": 1460,
+    "span_q": 80294823.53644952,
+    "span_f": 80293538.28907391,
+    "D_q": 177.23041497347208,
+    "D_f": 1141.2462736658106,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 16.261142660223484,
+    "qawo_r2": 31.094558704702585,
+    "fcc_r1": 38.920000419314384,
+    "fcc_r2": 158.10785545137702
+   },
+   "total_s": 244.38355723561747
+  },
+  {
+   "sid": "v22",
+   "unit": "g-1e-8-3-14096",
+   "features": {
+    "n_seg": 2052,
+    "span_q": 33412467113.201565,
+    "span_f": 33412454452.728275,
+    "D_q": 1745.8280621407766,
+    "D_f": 11241.974300418873,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 1968.6873499029148,
+    "qawo_r2": 7780.485613178787,
+    "fcc_r1": 167.36576888031766,
+    "fcc_r2": 738.8974964268019
+   },
+   "total_s": 10655.436228388822
+  },
+  {
+   "sid": "v23",
+   "unit": "g-1e-8-1-34772",
+   "features": {
+    "n_seg": 2130,
+    "span_q": 137838209116.42426,
+    "span_f": 137838084403.0135,
+    "D_q": 17197.474953857865,
+    "D_f": 110740.3275590954,
+    "n_nonmono": 1,
+    "n_steep": 2
+   },
+   "readings_s": {
+    "qawo_r1": 8392.064269869117,
+    "qawo_r2": 32066.43552585488,
+    "fcc_r1": 1331.8326423122583,
+    "fcc_r2": 6078.061257421372
+   },
+   "total_s": 47868.39369545763
+  }
+ ],
+ "total_s": 775467.9323350111,
+ "total_with_1p5_s": 1163201.8985025166,
+ "largest_reading_s": [
+  279820.85288759536,
+  "v13",
+  "qawo_r2"
+ ],
+ "n_readings_over_1800_s": 29,
+ "beyond_a_day": true
+}

@@ -1,0 +1,42 @@
+{
+ "label": "k0",
+ "results": [
+  {
+   "name": "41_k0_run_p",
+   "exit": 0,
+   "wall_s": 349.92174887657166
+  },
+  {
+   "name": "51_k0_compare_p_whole",
+   "exit": 0,
+   "wall_s": 2.04240083694458
+  },
+  {
+   "name": "61_k0_run_g",
+   "exit": 0,
+   "wall_s": 359.0820007324219
+  },
+  {
+   "name": "71_k0_compare_g_calls",
+   "exit": 0,
+   "wall_s": 2.5570690631866455
+  },
+  {
+   "name": "81_v0c_run1",
+   "exit": 0,
+   "wall_s": 62.644217014312744
+  },
+  {
+   "name": "82_v0c_run2",
+   "exit": 0,
+   "wall_s": 62.64017105102539
+  },
+  {
+   "name": "91_v0c_compare_det",
+   "exit": 0,
+   "wall_s": 1.5293092727661133
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-08T14:05:41Z"
+}

@@ -1,0 +1,346 @@
+[
+ {
+  "key": [
+   316227.7660168379,
+   316227.7660168379,
+   316227.7660168379,
+   1329131612.3012946
+  ],
+  "block": "2pt5 J4",
+  "integrands_bit_identical_3_trees": true,
+  "x_span_kw_equal": true,
+  "x_span": [
+   "-0x1.67024facbe2cdp+3",
+   "-0x1.fd8529ab2fd96p+2"
+  ],
+  "root_x": [
+   "-0x1.523259af83ecdp+3"
+  ],
+  "root_eta": [
+   "2.5709595215475334e-05"
+  ],
+  "V_trapezoid_4097": {
+   "repr": "15.112984154245268",
+   "hex": "0x1.e39d90f1ee638p+3"
+  },
+  "R29_location_skipped_phases": [
+   {
+    "phase": 0,
+    "variation": "0x1.e39d90f1ee638p+3"
+   }
+  ],
+  "gate_span_root_leaf": {
+   "repr": "19.159572454953185",
+   "hex": "0x1.328d9bd8b5dcap+4",
+   "SIX_PI": "18.84955592153876",
+   "chebyshev_order": 24,
+   "grid_points": 24
+  },
+  "reference": "-0x1.9017c8e4681f2p-30",
+  "reference_repr": "-1.4555295242531946e-09",
+  "stated_error": "9.512577044359818e-24",
+  "stated_error_hex": "0x1.7000000000000p-77",
+  "differences": {
+   "GL6-GL14": "0.0",
+   "GL8-GL14": "-2.0679515313825692e-25",
+   "GL10-GL14": "0.0",
+   "GL12-GL14": "0.0",
+   "QAGS-GL14": "-9.512577044359818e-24"
+  },
+  "QAGS_abserr": "1.020738805317604e-22",
+  "R27": {
+   "value": "-0x1.9017c8e468225p-30",
+   "abserr": "0x1.4fd2c038b843dp-63",
+   "regions": 1,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "1.05466e-23",
+   "ratio": "7.41531e-5",
+   "honest": true,
+   "stated_error_over_abserr": "6.688e-5"
+  },
+  "R28": {
+   "value": "-0x1.9017c8e4681f6p-30",
+   "abserr": "0x1.65dacd1543ce8p-66",
+   "regions": 14,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "8.27181e-25",
+   "ratio": "4.3663e-5",
+   "honest": true,
+   "stated_error_over_abserr": "0.0005021"
+  },
+  "R29": {
+   "value": "-0x1.9017c8e468206p-30",
+   "abserr": "0x1.9778b3736d5e1p-59",
+   "regions": 2,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "4.1359e-24",
+   "ratio": "1.4979e-6",
+   "honest": true,
+   "stated_error_over_abserr": "3.445e-6"
+  }
+ },
+ {
+  "key": [
+   316227.7660168379,
+   316227.7660168379,
+   316227.7660168379,
+   1329131612.3012946
+  ],
+  "block": "2pt5 Y4",
+  "integrands_bit_identical_3_trees": true,
+  "x_span_kw_equal": true,
+  "x_span": [
+   "-0x1.67024facbe2cdp+3",
+   "-0x1.fd8529ab2fd96p+2"
+  ],
+  "root_x": [
+   "-0x1.523259af83ecdp+3"
+  ],
+  "root_eta": [
+   "2.5709595215475334e-05"
+  ],
+  "V_trapezoid_4097": {
+   "repr": "15.112984154245268",
+   "hex": "0x1.e39d90f1ee638p+3"
+  },
+  "R29_location_skipped_phases": [
+   {
+    "phase": 0,
+    "variation": "0x1.e39d90f1ee638p+3"
+   }
+  ],
+  "gate_span_root_leaf": {
+   "repr": "19.159572454953185",
+   "hex": "0x1.328d9bd8b5dcap+4",
+   "SIX_PI": "18.84955592153876",
+   "chebyshev_order": 24,
+   "grid_points": 24
+  },
+  "reference": "0x1.2018ed31b4477p-27",
+  "reference_repr": "8.384736991010429e-09",
+  "stated_error": "6.617444900424222e-24",
+  "stated_error_hex": "0x1.0000000000000p-77",
+  "differences": {
+   "GL6-GL14": "1.6543612251060553e-24",
+   "GL8-GL14": "0.0",
+   "GL10-GL14": "0.0",
+   "GL12-GL14": "0.0",
+   "QAGS-GL14": "-6.617444900424222e-24"
+  },
+  "QAGS_abserr": "1.5028898128760986e-22",
+  "R27": {
+   "value": "0x1.2018ed31b4474p-27",
+   "abserr": "0x1.79ab800000000p-62",
+   "regions": 1,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "4.96308e-24",
+   "ratio": "1.55145e-5",
+   "honest": true,
+   "stated_error_over_abserr": "2.069e-5"
+  },
+  "R28": {
+   "value": "0x1.2018ed31b447ep-27",
+   "abserr": "0x1.78af331f037f8p-66",
+   "regions": 4,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "1.15805e-23",
+   "ratio": "0.000580725",
+   "honest": true,
+   "stated_error_over_abserr": "0.0003318"
+  },
+  "R29": {
+   "value": "0x1.2018ed31b4472p-27",
+   "abserr": "0x1.aa161bfb153afp-66",
+   "regions": 3,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "8.27181e-24",
+   "ratio": "0.00036671",
+   "honest": true,
+   "stated_error_over_abserr": "0.0002934"
+  }
+ },
+ {
+  "key": [
+   1000000.0,
+   1000000.0,
+   1000000.0,
+   4017630440.8276954
+  ],
+  "block": "2pt5 J4",
+  "integrands_bit_identical_3_trees": true,
+  "x_span_kw_equal": true,
+  "x_span": [
+   "-0x1.8bd9b32428d70p+3",
+   "-0x1.22284b2e6d0f2p+3"
+  ],
+  "root_x": [
+   "-0x1.7709bd26ee970p+3"
+  ],
+  "root_eta": [
+   "8.130087860186947e-06"
+  ],
+  "V_trapezoid_4097": {
+   "repr": "15.896291130748331",
+   "hex": "0x1.fcae6abcc8494p+3"
+  },
+  "R29_location_skipped_phases": [
+   {
+    "phase": 0,
+    "variation": "0x1.fcae6abcc8494p+3"
+   }
+  ],
+  "gate_span_root_leaf": {
+   "repr": "20.195797752642036",
+   "hex": "0x1.4321fcd303a54p+4",
+   "SIX_PI": "18.84955592153876",
+   "chebyshev_order": 24,
+   "grid_points": 24
+  },
+  "reference": "-0x1.e6f859d2f7c57p-33",
+  "reference_repr": "-2.2144837230684548e-10",
+  "stated_error": "4.911384887033602e-25",
+  "stated_error_hex": "0x1.3000000000000p-81",
+  "differences": {
+   "GL6-GL14": "5.169878828456423e-26",
+   "GL8-GL14": "-2.5849394142282115e-26",
+   "GL10-GL14": "0.0",
+   "GL12-GL14": "0.0",
+   "QAGS-GL14": "4.911384887033602e-25"
+  },
+  "QAGS_abserr": "1.8518703217932133e-23",
+  "R27": {
+   "value": "-0x1.e6f859d2f7bf8p-33",
+   "abserr": "0x1.c680c05f3602ep-66",
+   "regions": 1,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "2.45569e-24",
+   "ratio": "0.00010206",
+   "honest": true,
+   "stated_error_over_abserr": "2.041e-5"
+  },
+  "R28": {
+   "value": "-0x1.e6f859d2f7c72p-33",
+   "abserr": "0x1.ff3cae87aca98p-69",
+   "regions": 6,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "6.97934e-25",
+   "ratio": "0.000206301",
+   "honest": true,
+   "stated_error_over_abserr": "0.0001452"
+  },
+  "R29": {
+   "value": "-0x1.e6f859d2f7c38p-33",
+   "abserr": "0x1.2c82764608ef0p-62",
+   "regions": 2,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "8.01331e-25",
+   "ratio": "3.14814e-6",
+   "honest": true,
+   "stated_error_over_abserr": "1.93e-6"
+  }
+ },
+ {
+  "key": [
+   1000000.0,
+   1000000.0,
+   1000000.0,
+   4017630440.8276954
+  ],
+  "block": "2pt5 Y4",
+  "integrands_bit_identical_3_trees": true,
+  "x_span_kw_equal": true,
+  "x_span": [
+   "-0x1.8bd9b32428d70p+3",
+   "-0x1.22284b2e6d0f2p+3"
+  ],
+  "root_x": [
+   "-0x1.7709bd26ee970p+3"
+  ],
+  "root_eta": [
+   "8.130087860186947e-06"
+  ],
+  "V_trapezoid_4097": {
+   "repr": "15.896291130748331",
+   "hex": "0x1.fcae6abcc8494p+3"
+  },
+  "R29_location_skipped_phases": [
+   {
+    "phase": 0,
+    "variation": "0x1.fcae6abcc8494p+3"
+   }
+  ],
+  "gate_span_root_leaf": {
+   "repr": "20.195797752642036",
+   "hex": "0x1.4321fcd303a54p+4",
+   "SIX_PI": "18.84955592153876",
+   "chebyshev_order": 24,
+   "grid_points": 24
+  },
+  "reference": "0x1.9714e016a7978p-30",
+  "reference_repr": "1.4809540309909523e-09",
+  "stated_error": "1.2407709188295415e-24",
+  "stated_error_hex": "0x1.8000000000000p-80",
+  "differences": {
+   "GL6-GL14": "4.1359030627651384e-25",
+   "GL8-GL14": "0.0",
+   "GL10-GL14": "0.0",
+   "GL12-GL14": "0.0",
+   "QAGS-GL14": "-1.2407709188295415e-24"
+  },
+  "QAGS_abserr": "2.682224474873338e-23",
+  "R27": {
+   "value": "0x1.9714e016a7978p-30",
+   "abserr": "0x1.1045c00003c2dp-63",
+   "regions": 1,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "0.0",
+   "ratio": "0.0",
+   "honest": true,
+   "stated_error_over_abserr": "1.076e-5"
+  },
+  "R28": {
+   "value": "0x1.9714e016a7982p-30",
+   "abserr": "0x1.faa21d2682f6bp-69",
+   "regions": 13,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "2.06795e-24",
+   "ratio": "0.000616817",
+   "honest": true,
+   "stated_error_over_abserr": "0.0003701"
+  },
+  "R29": {
+   "value": "0x1.9714e016a7979p-30",
+   "abserr": "0x1.332dd100e35e5p-68",
+   "regions": 3,
+   "converged": true,
+   "replay_reproduces": true,
+   "ray_initialized": false,
+   "abs_v_minus_ref": "2.06795e-25",
+   "ratio": "5.08661e-5",
+   "honest": true,
+   "stated_error_over_abserr": "0.0003052"
+  }
+ }
+]

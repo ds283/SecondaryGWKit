@@ -1,0 +1,123 @@
+1c1
+< """[prompt 06g addendum 1 (V1's calls against the rehearsal stores): copied from the census agent's prov.py; changed only where marked.]
+---
+> """[prompt 07 section 5 rehearsal agent (the replay of R28's located calls, S2's capture and the q-r captures, against R27 and R28): 06g's references/v1/scripts/prov.py, changed only where marked "prompt 07 rehearsal".]
+2a3,4
+> [prompt 06g addendum 1 (V1's calls against the rehearsal stores): copied from the census agent's prov.py; changed only where marked.]
+> 
+167c169
+< assert HERE.parents[4] == MAIN, HERE  # prompt 06b: one directory deeper than 06a's; prompt 06g addendum 1 (V1's calls against the rehearsal stores): one deeper again (references/v1/scripts)
+---
+> assert HERE.parents[4] == MAIN, HERE  # prompt 07 rehearsal: holds for var/levin-phase-floor-07/rehearsal/scripts/capture; prompt 06b: one directory deeper than 06a's; prompt 06g addendum 1 (V1's calls against the rehearsal stores): one deeper again (references/v1/scripts)
+266a269,281
+> # prompt 07 rehearsal: 06g's trees and stores are kept above, by name, for the record; the two trees of prompt 07
+> # section 5: p, the parent worktree at 91472dbe (07's code commit ad732887's parent, production code 06m's, R27's
+> # tree), and g, the code worktree at 74600350 (Part B's dispatch SHA, code ad732887's, R28's tree); p reads R27 and
+> # g reads R28, each through a directory of symbolic links in var/levin-phase-floor-07/rehearsal/state/stores/ (as
+> # 06g's v1/stores/), opened read-only
+> P06G_TREE, P06G_SHA, G06G_TREE, G06G_SHA = P_TREE, P_SHA, G_TREE, G_SHA  # prompt 07 rehearsal: not used
+> P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db")  # prompt 07 rehearsal
+> P_SHA = "91472dbee1daba8374b0018db1195cf6c7898bbb"  # prompt 07 rehearsal
+> G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035")  # prompt 07 rehearsal
+> G_SHA = "746003508bff868fc1b256b29cbd5035609bed2b"  # prompt 07 rehearsal
+> TREES = {"p": (P_TREE, P_SHA), "g": (G_TREE, G_SHA)}  # prompt 07 rehearsal
+> STORE_DIR_BY_TREE = {"p": MAIN / "var" / "levin-phase-floor-07" / "rehearsal" / "state" / "stores" / "r27",
+>                      "g": MAIN / "var" / "levin-phase-floor-07" / "rehearsal" / "state" / "stores" / "r28"}  # prompt 07 rehearsal
+1c1
+< """[prompt 06g addendum 1 (V1's calls against the rehearsal stores): copied from the census agent's worker.py; changed only where marked: the 1e-8 tolerance object is optional.]
+---
+> """[prompt 07 section 5 rehearsal agent: 06g's references/v1/scripts/worker.py, changed only where marked "prompt 07 rehearsal": each summarised call (group and other) gains ``guard_07``, the stationary-point guard's record from the call's own result (_guard_07), computed after the timed section; nothing in the timed section changes.]
+2a3
+> [prompt 06g addendum 1 (V1's calls against the rehearsal stores): copied from the census agent's worker.py; changed only where marked: the 1e-8 tolerance object is optional.]
+3a5
+> 
+1604a1607,1676
+>     return out
+> 
+> 
+> def _guard_07(call):
+>     """prompt 07 rehearsal: the stationary-point guard's record of a call, from its own result dict
+>     (prompt 07 section 1.5): the four counts, every located point (x, its kind, found_as, phase,
+>     theta_deriv there, lambda for a minimum, its own window and number of pieces; floats as hex and
+>     repr) and every merged window (edges, number of cuts, iroff1 count, stopped). For a call with more
+>     than 64 points the points are summarised instead (counts by kind and found_as, the least and
+>     greatest x, whether every point's x is a sample of the 4097-point scan grid
+>     np.linspace(x_span[0], x_span[1], 4097)), and theta_deriv is sampled once more, by scalar calls,
+>     on that grid: the number of samples exactly 0.0, the largest |theta'|, and theta's least and
+>     greatest value there. None if the result has no "stationary_points" key (the parent's code).
+>     Runs after the timed section; reads the result and the call's own callables only."""
+>     import math as _m
+> 
+>     res = call["result"]
+>     if "stationary_points" not in res:
+>         return None
+> 
+>     def h(x):
+>         return None if x is None else {"repr": repr(float(x)), "hex": float(x).hex()}
+> 
+>     pts = res["stationary_points"]
+>     out = {
+>         "num_stationary_points": len(pts),
+>         "num_window_pieces": int(res["num_window_pieces"]),
+>         "num_guarded_regions": int(res["num_guarded_regions"]),
+>         "num_guard_at_depth_max": int(res["num_guard_at_depth_max"]),
+>         "x_span": [h(call["x_span"][0]), h(call["x_span"][1])],
+>         "windows": [
+>             {"lo": h(w["lo"]), "hi": h(w["hi"]), "n_cuts": len(w["cuts"]), "n_points": len(w["points"]),
+>              "iroff1_count": w.get("iroff1_count"), "stopped": w.get("stopped")}
+>             for w in (res.get("stationary_windows") or [])
+>         ] if len(res.get("stationary_windows") or []) <= 64 else {"n": len(res["stationary_windows"])},
+>         "unlocated_minima": len(res.get("unlocated_minima") or []),
+>     }
+>     if len(pts) <= 64:
+>         out["points"] = [
+>             {"x": h(p["x"]), "kind": p.get("kind"), "found_as": p.get("found_as"), "phase": p.get("phase"),
+>              "theta_deriv": h(p.get("theta_deriv")), "lambda": h(p.get("lambda")),
+>              "own_window": None if p.get("own_window") is None else [h(p["own_window"][0]), h(p["own_window"][1])],
+>              "window_pieces": p.get("window_pieces")}
+>             for p in pts
+>         ]
+>     else:
+>         grid = np.linspace(float(call["x_span"][0]), float(call["x_span"][1]), 4097)
+>         gridset = {float(g).hex() for g in grid}
+>         xs = [float(p["x"]) for p in pts]
+>         summ = {
+>             "kinds": dict(__import__("collections").Counter(p.get("kind") for p in pts)),
+>             "found_as": dict(__import__("collections").Counter(p.get("found_as") for p in pts)),
+>             "phases": dict(__import__("collections").Counter(p.get("phase") for p in pts)),
+>             "x_min": h(min(xs)), "x_max": h(max(xs)),
+>             "all_x_on_scan_grid": all(float(x).hex() in gridset for x in xs),
+>             "n_distinct_x": len(set(float(x).hex() for x in xs)),
+>         }
+>         try:
+>             td = call["theta_deriv"]
+>             th = (call["theta"] or {}).get("theta")
+>             vals = [float(td(float(g))) for g in grid]
+>             summ["grid_theta_deriv_exact_zeros"] = sum(1 for v in vals if v == 0.0)
+>             summ["grid_theta_deriv_max_abs"] = h(max(abs(v) for v in vals))
+>             if th is not None:
+>                 tv = [float(th(float(g))) for g in grid]
+>                 summ["grid_theta_min"] = h(min(tv))
+>                 summ["grid_theta_max"] = h(max(tv))
+>         except Exception:
+>             summ["grid_error"] = traceback.format_exc()[-1000:]
+>         out["points_summary"] = summ
+1607a1680,1689
+> def _summarise_call_07(call):
+>     """prompt 07 rehearsal: 06g's summary of a call, plus ``guard_07``."""
+>     out = _summarise_call_06g(call)
+>     try:
+>         out["guard_07"] = _guard_07(call)
+>     except Exception:
+>         out["guard_07"] = {"error": traceback.format_exc()[-2000:]}
+>     return out
+> 
+> 
+2063c2145
+<                         "calls": [_summarise_call_06g(c) for c in group_calls],  # prompt 06c; prompt 06g
+---
+>                         "calls": [_summarise_call_07(c) for c in group_calls],  # prompt 06c; prompt 06g; prompt 07 rehearsal: _summarise_call_07
+2066c2148
+<                             _summarise_call_06g(c) for c in calls if id(c) not in {id(g) for g in group_calls}  # prompt 06c; prompt 06g
+---
+>                             _summarise_call_07(c) for c in calls if id(c) not in {id(g) for g in group_calls}  # prompt 06c; prompt 06g; prompt 07 rehearsal: _summarise_call_07

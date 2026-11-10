@@ -1,0 +1,221 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T00:06:52Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; R=$M/var/levin-phase-floor-07/rehearsal; P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db; C=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+cd $M
+echo "== lock.log"; cat $R/state/lock.log
+echo "== registry (to out/r27_launch_registry_list.txt)"; ./venv/bin/python -B -m runregistrykit list > $R/out/r27_launch_registry_list.txt 2>&1; echo "exit $?"; head -3 $R/out/r27_launch_registry_list.txt; grep "levin-phase-floor-07" $R/out/r27_launch_registry_list.txt | cut -c1-140; tail -1 $R/out/r27_launch_registry_list.txt
+D=$(ls -d var/runs/levin-phase-floor-07-r27-parent-*); echo "== run dir $D"; ls -la $D
+echo "== status.json"; cat $D/status.json; echo
+echo "== manifest"; cat $D/manifest.json 2>/dev/null || ls $D
+echo; echo "== launch log head"; head -40 var/runs/levin-phase-floor-07-r27.launch.log
+echo "== Traceback count"; grep -c Traceback var/runs/levin-phase-floor-07-r27.launch.log
+echo "== kill -0 driver 83008 / sh 83000"; kill -0 83008 && echo "83008 alive"; kill -0 83000 && echo "83000 alive"
+echo "== driver cwd"; lsof -a -p 83008 -d cwd
+echo "== worktrees"; for T in $P $C; do git -C $T --no-optional-locks rev-parse HEAD; git -C $T --no-optional-locks status --short --ignored; echo "(end $T)"; done
+echo "== store files"; ls -l var/datastores/levin-phase-floor-07-r27*
+
+# output:
+== lock.log
+exit 0
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor prompt 07 section 5, rehearsals R27 (worktree 91472dbe, parent of 07 code commit ad732887, production code 06m's, R26's) and R28 (worktree 74600350, code 07 ad732887) on the Mac Studio (mps026298), then the value comparisons S0 and R28-vs-R27, S2's capture and the readers
+exit 0
+recorded pid 83008 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+== registry (to out/r27_launch_registry_list.txt)
+exit 0
+   RUN                                                        STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-07-r27-parent-20261108T000634            running           -      19s  levin-phase-floor prompt 07, R27 on the Mac Studio (mps026298; tree 91472dbe in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db, the parent of 07's code commit ad732887, whose production code is 06m's code commit 48cf87c0's, R26's, levin_quadrature.py beaf0e23, QuadSourceIntegral.py 962424c0; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (R8's, R23-R26's); its values must equal R26's (S0, reproducibility check) and are the before side of the R27/R28 value comparison, whose after side R28 runs at 74600350 with the code of 07 ad732887 (the stationary-point guard)  · CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS
+   levin-phase-floor-06m-census-20261106T102153               done      18560/18560   1d 13h  levin-phase-floor prompt 06m section 5 on the Mac Studio (mps026298; Python 3.13.16): the census m, 06l's census re-run at the tree with no variant installed (the tree's own AdaptiveLevin/levin_quadrature.py, sha256 beaf0e23, 06m's code commit 48cf87c0's), every A3 v2 QuadSourceIntegral row (9280) at rtol 1e-7 and 1e-8, Ray-free, no lock, with 06l's census harness and records. Tree g: the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82 at Part B's dispatch SHA 38f6a828. It reads, read-only, 06's certified scratch copy of A3 v2 (fingerprint 0e32f24a) on a stand-in ShardedPool. One worker per k per rtol, at most six at once; 300 s per unit (06a's over-budget pass, a re-run at 3,600 s, for any unit over budget). Projected 17640 s; past it the progress and projected finish are reported every 10 min, and the run is stopped only if the projection counting the units in flight is a day or more. Gate M compares every unit with route B's census (levin-phase-floor-06l-census-routeB-20261105T100126, 18,340 s); 06g's took 20,361 s  · 18560 units recorded; last g-1e-8-3-14506 done
+   levin-phase-floor-07-r27-parent-20261108T000634            running           -      19s  levin-phase-floor prompt 07, R27 on the Mac Stud
+63 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 62 finished; 0 with no host recorded.
+== run dir var/runs/levin-phase-floor-07-r27-parent-20261108T000634
+total 20
+drwxr-xr-x  6 ds283 staff  192 Nov  8 00:06 .
+drwxr-xr-x 95 ds283 staff 3040 Nov  8 00:06 ..
+-rw-r--r--  1 ds283 staff 5086 Nov  8 00:06 manifest.json
+-rw-r--r--  1 ds283 staff  311 Nov  8 00:06 status.json
+-rw-r--r--  1 ds283 staff    0 Nov  8 00:06 stderr.log
+-rw-r--r--  1 ds283 staff 4472 Nov  8 00:06 stdout.log
+== status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-08T00:06:48+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 83008,
+  "stage": "CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+== manifest
+{
+  "argv": [
+    "RunDrivers/quadsource_atol_sweep.py",
+    "--build",
+    "--rehearsal",
+    "--database",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite",
+    "--job-name",
+    "levin-phase-floor-07",
+    "--atol",
+    "1e-32",
+    "--rtol",
+    "1e-7",
+    "--cpus",
+    "6",
+    "--register",
+    "r27-parent",
+    "--purpose",
+    "levin-phase-floor prompt 07, R27 on the Mac Studio (mps026298; tree 91472dbe in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db, the parent of 07's code commit ad732887, whose production code is 06m's code commit 48cf87c0's, R26's, levin_quadrature.py beaf0e23, QuadSourceIntegral.py 962424c0; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (R8's, R23-R26's); its values must equal R26's (S0, reproducibility check) and are the before side of the R27/R28 value comparison, whose after side R28 runs at 74600350 with the code of 07 ad732887 (the stationary-point guard)",
+    "--campaign",
+    "levin-phase-floor",
+    "--prompt",
+    "07"
+  ],
+  "campaign": "levin-phase-floor",
+  "checkpoint": null,
+  "created": "2026-11-08T00:06:34+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db",
+  "expected_units": null,
+  "git_dirty": false,
+  "git_head": "91472dbee1daba8374b0018db1195cf6c7898bbb",
+  "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+  "host": {
+    "id": "d120d1cf03551e6f",
+    "machine": "arm64",
+    "name": "mps026298.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "07",
+  "purpose": "levin-phase-floor prompt 07, R27 on the Mac Studio (mps026298; tree 91472dbe in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db, the parent of 07's code commit ad732887, whose production code is 06m's code commit 48cf87c0's, R26's, levin_quadrature.py beaf0e23, QuadSourceIntegral.py 962424c0; Python 3.13.16): reference rehearsal build at the parent (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (R8's, R23-R26's); its values must equal R26's (S0, reproducibility check) and are the before side of the R27/R28 value comparison, whose after side R28 runs at 74600350 with the code of 07 ad732887 (the stationary-point guard)",
+  "results": "var/datastores/levin-phase-floor-07-r27.sqlite",
+  "results_store_id": null,
+  "run_id": "levin-phase-floor-07-r27-parent-20261108T000634",
+  "scope": "REHEARSAL build, not A3 v2: main.py's own unfiltered QuadSourceIntegral work list at atol=1e-32 rtol=1e-07, 6 cpus, LambdaCDM, 3 log-spaced k over 100000-1e+06 /Mpc, zend 250, into levin-phase-floor-07-r27.sqlite",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db/RunDrivers/quadsource_atol_sweep.py",
+  "script_sha256": "b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19",
+  "unit": null
+}
+
+== launch log head
+** quadsource_atol_sweep --build: registered as levin-phase-floor-07-r27-parent-20261108T000634
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-r27-parent-20261108T000634/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite', '--job-name', 'levin-phase-floor-07', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-11-08 00:06:41,568	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r27.sqlite" with 4 shards
+
+** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+[36m(Datastore pid=83056)[0m @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=83056)[0m |  Omega_m = 0.3111
+[36m(Datastore pid=83056)[0m |  Omega_cc = 0.6889
+[36m(Datastore pid=83056)[0m |  Omega_r = 9.139e-05
+[36m(Datastore pid=83056)[0m |  present-day energy density = 8.6e-24 g/m^3
+[36m(Datastore pid=83056)[0m |  matter-radiation equality at z = 3403
+[36m(Datastore pid=83056)[0m |  matter-Lambda equality at z = 0.3034
+[36m(Datastore pid=83056)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=83056)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+
+>> RUNNING PIPELINE FOR MODEL LambdaCDM
+
+** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE
+   -- ALL WORK ITEMS COMPLETE in time 0.434s
+      Queue summary: 3 lookup (avg 415.2/min), 3 compute (avg 415.2/min), 3 store (avg 415.2/min)
+
+** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE
+   -- ALL WORK ITEMS COMPLETE in time 0.0203s
+      Queue summary: 3 lookup (avg 148/sec), 0 compute (avg 0/day), 0 store (avg 0/day)
+      (no compute items were evaluated - all assets read from datastore)
+
+** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE
+   @@ earliest horizon exit/re-entry time is 1e+06/Mpc with z_exit=4.6349e+11
+   @@ the curvature criterion took 0.0515s over 3 wavenumbers in 2 sectors; the source grid carries 1159 samples against the 1144 a uniform 100 per decade of z would have given
+   @@ this run is named "default" (--run-label); its source grid was built by construction version 2 and tagged SourceRedshiftGrid_1159_7139cb9c
+== Traceback count
+0
+== kill -0 driver 83008 / sh 83000
+83008 alive
+83000 alive
+== driver cwd
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  83008 ds283  cwd    DIR   1,13     1152 1235376902 /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db
+== worktrees
+91472dbee1daba8374b0018db1195cf6c7898bbb
+(end /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db)
+746003508bff868fc1b256b29cbd5035609bed2b
+(end /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035)
+== store files
+-rw-r--r-- 1 ds283 staff 1921024 Nov  8 00:06 var/datastores/levin-phase-floor-07-r27-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff 1830912 Nov  8 00:06 var/datastores/levin-phase-floor-07-r27-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff 1077248 Nov  8 00:06 var/datastores/levin-phase-floor-07-r27-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff 1978368 Nov  8 00:06 var/datastores/levin-phase-floor-07-r27-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff   36864 Nov  8 00:06 var/datastores/levin-phase-floor-07-r27.sqlite
+# exit: 0
+# end: 2026-11-08T00:06:54Z

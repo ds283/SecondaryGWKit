@@ -1,0 +1,19 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/v0a_imports_07.py state/k0/p out/v0/v0a_imports.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T14:06:30Z
+# ----
+# levin-phase-floor 07: Gate V0 (a), the parent's files the K0 workers loaded
+# written 2026-11-08T14:06:30Z on mps026298.phys.susx.ac.uk
+# script v0a_imports_07.py sha256 c3ce05b5bb75eee09d03efa2a02026be48da7c5264c15fd8326637342596a170
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# workers with a bye: 15; distinct files of p loaded: 102
+# git diff --name-only 48cf87c0 91472dbe -- . ':!docs' ':!prompts': ['AdaptiveLevin/tests/test_levin_leaf_values.py', 'CLAUDE.md']
+# files both changed and loaded: []
+# verdict: HOLDS (nothing the harness imports is changed)
+wrote out/v0/v0a_imports.txt sha256 b663651034301ad944cec576154609174b3ef8cf74b8d9be44dea08bb665b006
+# ----
+# end 2026-11-08T14:06:31Z
+# exit 0

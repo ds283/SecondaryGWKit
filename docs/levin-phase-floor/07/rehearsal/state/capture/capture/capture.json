@@ -1,0 +1,16 @@
+{
+ "name": "capture",
+ "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture_spec.json",
+ "spec_sha256": "32ca3d2a75b33ec2f0ff1a612ad0705c8a0669f3a5ff9a62db4a0331cbf544da",
+ "wall_s": 391.5663101673126,
+ "workers": {
+  "capture-p": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/capture/capture-p/emit.jsonl"
+  },
+  "capture-g": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/capture/capture-g/emit.jsonl"
+  }
+ }
+}

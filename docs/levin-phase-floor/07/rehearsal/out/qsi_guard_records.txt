@@ -1,0 +1,39 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qsi_guard_records.py sha256 e327f3f9ccb241a02d5b843dc19594bd94c066b96619e2e7fc53390c034165d6
+# imports tabulate_qsi_guard.py sha256 a1eaba31aa9860595806979a5c32bb7b1daa76312d8b1524ada16e06a20e537e
+# input var/datastores/levin-phase-floor-07-r27-shard0000.sqlite sha256 307096b84b289e885596bb22b0fa6ebc960f30dbcd85e620a2e3b4ffcffce675
+# input var/datastores/levin-phase-floor-07-r27-shard0001.sqlite sha256 bbd9561d75a7df42ed45adb4cfcee80667f897b00c352538411ad22a85c78247
+# input var/datastores/levin-phase-floor-07-r27-shard0002.sqlite sha256 7ec3c659f1b33a2b37670b4939c7657c80b1525dec19defe0c0ef06defd8eaf7
+# input var/datastores/levin-phase-floor-07-r27-shard0003.sqlite sha256 c3370cb94939db22a95afec4b79ceac0f7a7d0e6a42f1c4f4dc9b9e99c396d28
+# input var/datastores/levin-phase-floor-07-r27.sqlite sha256 d6fd30230fc6d20bc2efa504141e43fdd4cb1b9afdc35d367e8cbe1bca374acb
+# input var/datastores/levin-phase-floor-07-r28-shard0000.sqlite sha256 eb0e9743a8a93364f24fa103cd1dc43309386b5c022eadacb56b861533c51643
+# input var/datastores/levin-phase-floor-07-r28-shard0001.sqlite sha256 dbbcb8d9ad5febd5e9d35ba7095a9d3f9a7f4b1134bb5e87984ab4a48fa63755
+# input var/datastores/levin-phase-floor-07-r28-shard0002.sqlite sha256 f158ca355972473cfaf6683effdc6e548b0e3d59d7e3c4b83018029e66509ebf
+# input var/datastores/levin-phase-floor-07-r28-shard0003.sqlite sha256 4cb097cf7bb61f10e1f4a470e3502861f369fa89a10c2d82672c4965a026d20a
+# input var/datastores/levin-phase-floor-07-r28.sqlite sha256 00468d55595b6d24e684fb416fdfa0a59b14605f608fbd55bf894bb6f0bc9b0b
+records with a nonzero count: 470
+group records, by label:
+  G+q+r: {'records': 44, 'stationary_points': 44, 'window_pieces': 562, 'guarded_regions': 0, 'guard_at_depth_max': 0, 'converged_27': 26, 'converged_28': 44, 'regions_27': 3869, 'regions_28': 3503, 'value_bit_identical': 0, 'dv_gt_abserr27': 18, 'dv_gt_abserr28': 16}
+  q-r: {'records': 26, 'stationary_points': 106522, 'window_pieces': 113727, 'guarded_regions': 0, 'guard_at_depth_max': 0, 'converged_27': 26, 'converged_28': 26, 'regions_27': 304, 'regions_28': 113727, 'value_bit_identical': 0, 'dv_gt_abserr27': 0, 'dv_gt_abserr28': 23}
+analytic blocks, by block:
+  2pt5.Levin.J4_data: {'records': 200, 'stationary_points': 200, 'window_pieces': 1369, 'guarded_regions': 0, 'guard_at_depth_max': 0, 'converged_27': 200, 'converged_28': 200, 'regions_27': 850, 'regions_28': 1556}
+  2pt5.Levin.Y4_data: {'records': 200, 'stationary_points': 200, 'window_pieces': 1146, 'guarded_regions': 0, 'guard_at_depth_max': 0, 'converged_27': 200, 'converged_28': 200, 'regions_27': 818, 'regions_28': 1327}
+group records: stationary_points per record min 1, median 1, max 4097; distribution [(1, 44), (4097, 26)]
+group records by (label, subinterval regime): {('G+q+r', '[True, True, True]'): 44, ('q-r', '[False, True, True]'): 26}
+analytic blocks: stationary_points per block [(1, 400)]; window_pieces per block [(2, 23), (3, 145), (4, 55), (5, 23), (6, 3), (7, 1), (8, 3), (9, 58), (10, 5), (12, 46), (13, 6), (14, 32)]
+group records ordered by |dv|/abserr28, top 15:
+  (100000, 100000, 100000, z 434.65133) G+q+r sp 1 wp 21 z [434.651, 1.71262e+09] |dv|/e27 2.398e+05 |dv|/e28 8.861e+05 conv True->True regions 1->118 v27 -0x1.95cb11ed07933p-61 v28 -0x1.9b1045b503999p-61 e27 0x1.70b41805badb4p-85 e28 0x1.8f22bd1e4f4e2p-87
+  (316228, 316228, 316228, z 5236.553) G+q+r sp 1 wp 15 z [5236.55, 5.42099e+09] |dv|/e27 4.992e+05 |dv|/e28 4.722e+05 conv True->True regions 74->113 v27 -0x1.42a6222a0654bp-62 v28 -0x1.44e24952c5b30p-62 e27 0x1.2c6ef440b6523p-88 e28 0x1.3d99951554f10p-88
+  (316228, 316228, 316228, z 250) G+q+r sp 1 wp 11 z [250, 5.42099e+09] |dv|/e27 5.611e+05 |dv|/e28 3.154e+05 conv True->True regions 101->160 v27 -0x1.fd85cf66a07fcp-67 v28 -0x1.0083af79fa9cdp-66 e27 0x1.a34f2e091bb51p-93 e28 0x1.75075f8ab0f69p-92
+  (316228, 316228, 316228, z 755.6871) G+q+r sp 1 wp 13 z [755.687, 5.42099e+09] |dv|/e27 2.882e+05 |dv|/e28 2.432e+05 conv True->True regions 73->98 v27 -0x1.112be3bc638bfp-65 v28 -0x1.13188dd149ba1p-65 e27 0x1.c00c8177d7512p-91 e28 0x1.098f1c04d94a2p-90
+  (100000, 100000, 100000, z 1732.3814) G+q+r sp 1 wp 13 z [1732.38, 1.71262e+09] |dv|/e27 2.097e+05 |dv|/e28 2.314e+05 conv True->True regions 1->42 v27 -0x1.b26a4e1a2aa03p-59 v28 -0x1.b6da14a08a444p-59 e27 0x1.62f41c848ccbcp-83 e28 0x1.419f31fb3bdbbp-83
+  (100000, 100000, 100000, z 996.42016) G+q+r sp 1 wp 13 z [996.42, 1.71262e+09] |dv|/e27 2.97e+05 |dv|/e28 1.9e+05 conv True->True regions 50->42 v27 -0x1.f3eaf69c289a4p-60 v28 -0x1.f9049687c8cdfp-60 e27 0x1.20136247c330ap-84 e28 0x1.c26741cedb68dp-84
+  (1e+06, 1e+06, 1e+06, z 2284.252) G+q+r sp 1 wp 23 z [2284.25, 1.71592e+10] |dv|/e27 2.397e+05 |dv|/e28 1.617e+05 conv True->True regions 75->77 v27 0x1.ddb03ca0e0378p-71 v28 0x1.e56605044654cp-71 e27 0x1.0dd330960a4fap-94 e28 0x1.90120c3dbf6a1p-94
+  (1e+06, 1e+06, 1e+06, z 434.65133) G+q+r sp 1 wp 19 z [434.651, 1.71592e+10] |dv|/e27 4.721e+05 |dv|/e28 7.198e+04 conv True->True regions 66->38 v27 -0x1.148f29c3936ccp-71 v28 -0x1.1577772478194p-71 e27 0x1.01f47062e57acp-98 e28 0x1.a70708947b03ap-96
+  (1e+06, 1e+06, 1e+06, z 250) G+q+r sp 1 wp 16 z [250, 1.71592e+10] |dv|/e27 3.172e+05 |dv|/e28 6.94e+04 conv True->True regions 25->42 v27 -0x1.8892891c5ae8ep-72 v28 -0x1.86d376ac263b6p-72 e27 0x1.7170c98c1c17ep-98 e28 0x1.a630a9610ca21p-96
+  (1e+06, 1e+06, 1e+06, z 755.6871) G+q+r sp 1 wp 16 z [755.687, 1.71592e+10] |dv|/e27 1.033e+05 |dv|/e28 5.778e+04 conv True->True regions 67->33 v27 -0x1.0cecc06ad9372p-70 v28 -0x1.0d95746f1827dp-70 e27 0x1.ac0e95a179a1fp-96 e28 0x1.7eb0252c91a56p-95
+  (1e+06, 1e+06, 1e+06, z 9104.2988) G+q+r sp 1 wp 9 z [9104.3, 1.71592e+10] |dv|/e27 5.439e+04 |dv|/e28 4.296e+04 conv True->True regions 124->39 v27 0x1.db81dc8fffd14p-67 v28 0x1.dc1b3f44515d7p-67 e27 0x1.71a502bdae542p-92 e28 0x1.d4014c96c3a7dp-92
+  (1e+06, 1e+06, 1e+06, z 3011.9274) G+q+r sp 1 wp 12 z [3011.93, 1.71592e+10] |dv|/e27 1.134e+05 |dv|/e28 3.517e+04 conv True->True regions 113->28 v27 0x1.3064cb84c9362p-68 v28 0x1.30da9044a1d8bp-68 e27 0x1.103db5d5a9843p-94 e28 0x1.b6ecce2dcac96p-93
+  (100000, 316228, 316228, z 250) G+q+r sp 1 wp 19 z [250, 5.42099e+09] |dv|/e27 4.075e+04 |dv|/e28 1.727e+04 conv True->True regions 7->35 v27 0x1.28d4ab5f73f29p-67 v28 0x1.292f71ed389ccp-67 e27 0x1.23fcf4ad51e79p-92 e28 0x1.587f1a8a5a15cp-91
+  (1e+06, 1e+06, 1e+06, z 5236.553) G+q+r sp 1 wp 4 z [5236.55, 1.71592e+10] |dv|/e27 1.324e+04 |dv|/e28 1.215e+04 conv True->True regions 1->58 v27 0x1.27a90fd012f6dp-67 v28 0x1.27d8f00fc3548p-67 e27 0x1.d9f5d5ff075ebp-92 e28 0x1.024f73d6a7f9fp-91
+  (1e+06, 1e+06, 1e+06, z 3971.4126) G+q+r sp 1 wp 3 z [3971.41, 1.71592e+10] |dv|/e27 5.225e+04 |dv|/e28 7366 conv True->True regions 127->57 v27 0x1.bb53004c9b983p-68 v28 0x1.bba5fbdffc9edp-68 e27 0x1.a050dc95bb404p-94 e28 0x1.71297d01ecb65p-91
+# wrote 470 records to /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qsi_guard_records.csv sha256 447524f3ec6f5d116371b78b9aed7098df35f8e9f943c50cc23ddffa7de66659

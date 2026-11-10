@@ -1,0 +1,10 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_worst_detail.py sha256 a2e7131e170944ee0e311e5142c587e3aed846328ff4ef378c07af1b5563934f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qr_reference/qmr-g-3-182.json sha256 ad6b41d4a5acf19cd97145762416186182557fb75d2847ee14145bfbd071fcd4
+R28 value -0x1.a95ce1e6e5fc6p-75 abserr 0x1.0c9262f698c90p-120 = 7.89262e-37
+GL m=6 (1280 evaluations): -0x1.a95ce1e6e61fcp-75; v28 - GL = 3.32665e-36 = 4.215 x abserr28
+GL m=8 (5120 evaluations): -0x1.a95ce1e6e5fdfp-75; v28 - GL = 1.46937e-37 = 0.1862 x abserr28
+GL m=10 (20480 evaluations): -0x1.a95ce1e6e5fdfp-75; v28 - GL = 1.46937e-37 = 0.1862 x abserr28
+GL m=12 (81920 evaluations): -0x1.a95ce1e6e5fdep-75; v28 - GL = 1.41059e-37 = 0.1787 x abserr28
+GL m=14 (327680 evaluations): -0x1.a95ce1e6e5fdep-75; v28 - GL = 1.41059e-37 = 0.1787 x abserr28
+QAGS -0x1.a95ce1e6e5cd7p-75 (own abserr 9.289917688733704e-37, neval 3465, intervals 83); v28 - QAGS = -4.41398e-36 = 5.593 x abserr28; QAGS - GL14 = 4.55504e-36 = 4.903 x QAGS's own abserr
+stated error 4.555040609436364e-36 = 5.771 x abserr28; rounding scale 1.6325565019220062e-38

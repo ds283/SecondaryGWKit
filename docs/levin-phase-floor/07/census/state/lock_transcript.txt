@@ -1,0 +1,19 @@
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor 07 section 6 census g (Ray-free), census agent, tree e182bc7a, Mac Studio; orchestrator-directed
+exit 0
+recorded pid 28799 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+exit 0
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
+exit 0
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor 07 section 6 V4 references (Ray-free; tools/filon_reference.py, 74 readings), census agent, tree e182bc7a, Mac Studio
+exit 0
+recorded pid 82448 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+exit 0
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+exit 0
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
+exit 0

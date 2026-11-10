@@ -1,0 +1,14 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T00:41:32Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+for t in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035; do echo "== $t"; grep -n "^DEFAULT_LEVIN_MAX_DEPTH" $t/AdaptiveLevin/levin_quadrature.py; done; echo "== +/- lines of git diff 91472dbe 74600350 -- ComputeTargets/QuadSourceIntegral.py naming a counter key (regions, simple_regions, evaluations, num_regions, max_depth)"; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 diff 91472dbe 74600350 -- ComputeTargets/QuadSourceIntegral.py | grep -E "^[+-][^+-]" | grep -E "\"(regions|simple_regions|evaluations)\"|num_regions|max_depth|num_simple_regions"; echo "grep exit $? (1 = none)"
+# output:
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db
+189:DEFAULT_LEVIN_MAX_DEPTH = 20
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+222:DEFAULT_LEVIN_MAX_DEPTH = 20
+== +/- lines of git diff 91472dbe 74600350 -- ComputeTargets/QuadSourceIntegral.py naming a counter key (regions, simple_regions, evaluations, num_regions, max_depth)
+grep exit 1 (1 = none)
+# exit: 0
+# end: 2026-11-08T00:41:32Z

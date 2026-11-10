@@ -1,0 +1,303 @@
+{
+ "header": [
+  "# prompt 07 rehearsal: the captures (S2 at p; q-r at p and g) checked",
+  "# written 2026-11-08T10:16:51Z on mps026298.phys.susx.ac.uk",
+  "# script replay07.py sha256 68f985ebe3086a6d1a323a668420c62e0275c9788e0f85be9dcb4b5d57680a9d",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/replay_rows.json sha256 6d75f03efcb6de868b114d93e5021e38e98d5a31f7e295c3d3805abf0f14b2c0",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/capture/capture-g/emit.jsonl sha256 04fe7035e8e4367531229e4bf07e14ba5266492ab5cd1e38841d6e0fdb82e128",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/capture/capture-p/emit.jsonl sha256 ff244a58265e8eaa8888d42607159147b941b3f5d7ee61b063d7f0364baf1988"
+ ],
+ "captures": [
+  {
+   "key": [
+    100000.0,
+    316227.7660168379,
+    316227.7660168379,
+    249.99999999999994
+   ],
+   "label": "G+q+r",
+   "tree": "p",
+   "store": "R27",
+   "uid": "p-1e-7-3-20198",
+   "p1": 2,
+   "store_value": "0x1.28d4ab5f73f29p-67",
+   "store_abserr": "0x1.23fcf4ad51e79p-92",
+   "store_converged": true,
+   "store_regions": 7,
+   "ray_initialized": false,
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/Gpqpr-p-3-20198.pkl",
+   "sha256": "a88661feace6fd2609cd534eaa912671e31d7493ed59356d6617afcd8b053056",
+   "bytes": 929773,
+   "index": 1,
+   "notify_label": "k=1e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=250, z in (5.421e+09, 250), regime Gqr, group G+q+r",
+   "call_value": "0x1.2ebe63500406cp-75",
+   "call_abserr": "0x1.29cdfa922cc79p-100",
+   "x_span": [
+    {
+     "repr": "5.5254529391317835",
+     "hex": "0x1.61a1055d4a1e2p+2"
+    },
+    {
+     "repr": "22.413544878488572",
+     "hex": "0x1.669de13c08966p+4"
+    }
+   ],
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    316227.7660168379,
+    316227.7660168379,
+    316227.7660168379,
+    249.99999999999994
+   ],
+   "label": "G+q+r",
+   "tree": "p",
+   "store": "R27",
+   "uid": "p-1e-7-0-10192",
+   "p1": 1,
+   "store_value": "-0x1.fd85cf66a07fcp-67",
+   "store_abserr": "0x1.a34f2e091bb51p-93",
+   "store_converged": true,
+   "store_regions": 101,
+   "ray_initialized": false,
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/Gpqpr-p-0-10192.pkl",
+   "sha256": "c44fc857444a5fa1ae9de135b523e72c12c9a238e9c4479955f2a64436626b33",
+   "bytes": 932225,
+   "index": 1,
+   "notify_label": "k=3.16e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=250, z in (5.421e+09, 250), regime Gqr, group G+q+r",
+   "call_value": "-0x1.03d61621fa22ap-74",
+   "call_abserr": "0x1.aba97d7c8a694p-101",
+   "x_span": [
+    {
+     "repr": "5.5254529391317835",
+     "hex": "0x1.61a1055d4a1e2p+2"
+    },
+    {
+     "repr": "22.413544878488572",
+     "hex": "0x1.669de13c08966p+4"
+    }
+   ],
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    100000.0,
+    1000000.0,
+    1000000.0,
+    6985073578.494601
+   ],
+   "label": "q-r",
+   "tree": "p",
+   "store": "R27",
+   "uid": "p-1e-7-3-20389",
+   "p1": null,
+   "store_value": "-0x1.59e46162f7450p-42",
+   "store_abserr": "0x1.5d634b251f6c3p-67",
+   "store_converged": true,
+   "store_regions": 1,
+   "ray_initialized": false,
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-p-3-20389.pkl",
+   "sha256": "6daf3fba5d0826ee4b70e11eb3cb1292061d10eefc8a3f233cdd4b0d54ec454e",
+   "bytes": 741406,
+   "index": 1,
+   "notify_label": "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=6.9851e+09, z in (1.7159e+10, 6.9851e+09), regime qr, group q-r",
+   "call_value": "-0x1.a95ce1e66fd4fp-75",
+   "call_abserr": "0x1.ada9683135978p-100",
+   "x_span": [
+    {
+     "repr": "22.66704136352893",
+     "hex": "0x1.6aac339096f9ep+4"
+    },
+    {
+     "repr": "23.56580162873359",
+     "hex": "0x1.790d860236f2ep+4"
+    }
+   ],
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    100000.0,
+    1000000.0,
+    1000000.0,
+    6985073578.494601
+   ],
+   "label": "q-r",
+   "tree": "g",
+   "store": "R28",
+   "uid": "g-1e-7-3-182",
+   "p1": null,
+   "store_value": "-0x1.59e4616357595p-42",
+   "store_abserr": "0x1.b4c9f3d7c6148p-88",
+   "store_converged": true,
+   "store_regions": 4666,
+   "ray_initialized": false,
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-g-3-182.pkl",
+   "sha256": "519b5062d6bb0e265cca2fff5266e55738531507741c2f366725c9a9414c4fd4",
+   "bytes": 741409,
+   "index": 1,
+   "notify_label": "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=6.9851e+09, z in (1.7159e+10, 6.9851e+09), regime qr, group q-r",
+   "call_value": "-0x1.a95ce1e6e5fc6p-75",
+   "call_abserr": "0x1.0c9262f698c90p-120",
+   "x_span": [
+    {
+     "repr": "22.66704136352893",
+     "hex": "0x1.6aac339096f9ep+4"
+    },
+    {
+     "repr": "23.56580162873359",
+     "hex": "0x1.790d860236f2ep+4"
+    }
+   ],
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    316227.7660168379,
+    1000000.0,
+    1000000.0,
+    13627426843.66573
+   ],
+   "label": "q-r",
+   "tree": "p",
+   "store": "R27",
+   "uid": "p-1e-7-0-10036",
+   "p1": null,
+   "store_value": "-0x1.e47f5f4e4416fp-44",
+   "store_abserr": "0x1.222622874a73cp-69",
+   "store_converged": true,
+   "store_regions": 1,
+   "ray_initialized": false,
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-p-0-10036.pkl",
+   "sha256": "5fc4b72972e76fd9df22392bb8e7780b8e785df366a1ef445faa9be6f431420c",
+   "bytes": 739969,
+   "index": 1,
+   "notify_label": "k=3.16e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.3627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r",
+   "call_value": "-0x1.3166237fff3d3p-77",
+   "call_abserr": "0x1.6dc933e8d695cp-103",
+   "x_span": [
+    {
+     "repr": "23.33535027867445",
+     "hex": "0x1.755d9840f9c7bp+4"
+    },
+    {
+     "repr": "23.56580162873359",
+     "hex": "0x1.790d860236f2ep+4"
+    }
+   ],
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    316227.7660168379,
+    1000000.0,
+    1000000.0,
+    13627426843.66573
+   ],
+   "label": "q-r",
+   "tree": "g",
+   "store": "R28",
+   "uid": "g-1e-7-0-10266",
+   "p1": null,
+   "store_value": "-0x1.e47f5f4e0f4b1p-44",
+   "store_abserr": "0x1.737f919752022p-89",
+   "store_converged": true,
+   "store_regions": 4102,
+   "ray_initialized": false,
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-g-0-10266.pkl",
+   "sha256": "d37148061aaa3849b72b0d5fdc007a7ffe5c6541f8a97e19206eb508c65f1116",
+   "bytes": 739974,
+   "index": 1,
+   "notify_label": "k=3.16e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.3627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r",
+   "call_value": "-0x1.3166237fddf59p-77",
+   "call_abserr": "0x1.d4577aa192a91p-123",
+   "x_span": [
+    {
+     "repr": "23.33535027867445",
+     "hex": "0x1.755d9840f9c7bp+4"
+    },
+    {
+     "repr": "23.56580162873359",
+     "hex": "0x1.790d860236f2ep+4"
+    }
+   ],
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    100000.0,
+    316227.7660168379,
+    316227.7660168379,
+    3046979177.3866296
+   ],
+   "label": "q-r",
+   "tree": "p",
+   "store": "R27",
+   "uid": "p-1e-7-3-20141",
+   "p1": null,
+   "store_value": "0x1.6e985069db046p-43",
+   "store_abserr": "0x1.e01e64cc4607dp-67",
+   "store_converged": true,
+   "store_regions": 4,
+   "ray_initialized": false,
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-p-3-20141.pkl",
+   "sha256": "ddcfb6311f112c875998757dc0fdec39694d3959e79f3908bc07d217a7d55181",
+   "bytes": 735602,
+   "index": 1,
+   "notify_label": "k=1e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=3.047e+09, z in (5.421e+09, 3.047e+09), regime qr, group q-r",
+   "call_value": "0x1.025f739f22193p-74",
+   "call_abserr": "0x1.5262252bddc77p-98",
+   "x_span": [
+    {
+     "repr": "21.837416503446697",
+     "hex": "0x1.5d660ed8f6f2ap+4"
+    },
+    {
+     "repr": "22.413544878488572",
+     "hex": "0x1.669de13c08966p+4"
+    }
+   ],
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    100000.0,
+    316227.7660168379,
+    316227.7660168379,
+    3046979177.3866296
+   ],
+   "label": "q-r",
+   "tree": "g",
+   "store": "R28",
+   "uid": "g-1e-7-3-52",
+   "p1": null,
+   "store_value": "0x1.6e9850698f0efp-43",
+   "store_abserr": "0x1.326197fdcdff7p-85",
+   "store_converged": true,
+   "store_regions": 4112,
+   "ray_initialized": false,
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-g-3-52.pkl",
+   "sha256": "6ae226ef16975650c79cfc0b0d58ad222778f42e5ab61e2d772b34233215cf0a",
+   "bytes": 735603,
+   "index": 1,
+   "notify_label": "k=1e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=3.047e+09, z in (5.421e+09, 3.047e+09), regime qr, group q-r",
+   "call_value": "0x1.025f739eec904p-74",
+   "call_abserr": "0x1.afde96e37d318p-117",
+   "x_span": [
+    {
+     "repr": "21.837416503446697",
+     "hex": "0x1.5d660ed8f6f2ap+4"
+    },
+    {
+     "repr": "22.413544878488572",
+     "hex": "0x1.669de13c08966p+4"
+    }
+   ],
+   "reproduces_store": true
+  }
+ ]
+}

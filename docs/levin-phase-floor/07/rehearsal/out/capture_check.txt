@@ -1,0 +1,18 @@
+# prompt 07 rehearsal: the captures (S2 at p; q-r at p and g) checked
+# written 2026-11-08T10:16:51Z on mps026298.phys.susx.ac.uk
+# script replay07.py sha256 68f985ebe3086a6d1a323a668420c62e0275c9788e0f85be9dcb4b5d57680a9d
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/replay_rows.json sha256 6d75f03efcb6de868b114d93e5021e38e98d5a31f7e295c3d3805abf0f14b2c0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/capture/capture-g/emit.jsonl sha256 04fe7035e8e4367531229e4bf07e14ba5266492ab5cd1e38841d6e0fdb82e128
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/capture/capture-p/emit.jsonl sha256 ff244a58265e8eaa8888d42607159147b941b3f5d7ee61b063d7f0364baf1988
+G+q+r p (R27) [100000.0, 316227.7660168379, 316227.7660168379, 249.99999999999994]: REPRODUCES the store bit for bit; call 0x1.2ebe63500406cp-75 0x1.29cdfa922cc79p-100; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/Gpqpr-p-3-20198.pkl
+G+q+r p (R27) [316227.7660168379, 316227.7660168379, 316227.7660168379, 249.99999999999994]: REPRODUCES the store bit for bit; call -0x1.03d61621fa22ap-74 0x1.aba97d7c8a694p-101; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/Gpqpr-p-0-10192.pkl
+q-r p (R27) [100000.0, 1000000.0, 1000000.0, 6985073578.494601]: REPRODUCES the store bit for bit; call -0x1.a95ce1e66fd4fp-75 0x1.ada9683135978p-100; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-p-3-20389.pkl
+q-r g (R28) [100000.0, 1000000.0, 1000000.0, 6985073578.494601]: REPRODUCES the store bit for bit; call -0x1.a95ce1e6e5fc6p-75 0x1.0c9262f698c90p-120; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-g-3-182.pkl
+q-r p (R27) [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573]: REPRODUCES the store bit for bit; call -0x1.3166237fff3d3p-77 0x1.6dc933e8d695cp-103; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-p-0-10036.pkl
+q-r g (R28) [316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573]: REPRODUCES the store bit for bit; call -0x1.3166237fddf59p-77 0x1.d4577aa192a91p-123; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-g-0-10266.pkl
+q-r p (R27) [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296]: REPRODUCES the store bit for bit; call 0x1.025f739f22193p-74 0x1.5262252bddc77p-98; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-p-3-20141.pkl
+q-r g (R28) [100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296]: REPRODUCES the store bit for bit; call 0x1.025f739eec904p-74 0x1.afde96e37d318p-117; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-g-3-52.pkl
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/captures.json sha256 406b57cd8876320c69685707be6f7cf03b55ed3734152b7144f67f08a998f203; all reproduce: True

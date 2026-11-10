@@ -1,0 +1,17 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B state/smoke/ob_test.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-08T14:11:02Z
+# ----
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/run_census.py", "script_sha256": "e4cff28942c28c864fd0414d8c061a48083d6d7fd33e6903b59c57f1b9f9bd1a", "scripts_sha256": {"run_census.py": "e4cff28942c28c864fd0414d8c061a48083d6d7fd33e6903b59c57f1b9f9bd1a", "worker.py": "ee80bff7663bb1ee7833f31611b875059d0e57887ac5207ebaf0f02edb64d0fc", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "6c87e73b0b27302327c3b0ce07099335c69b90651b40c04685f622809decd2f9", "launch.py": "d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b", "variant_loader.py": "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f"}, "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417", "w2_capture_sha256": null, "tree": "g", "trees": {"g": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7", "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f"], "p": ["/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db", "91472dbee1daba8374b0018db1195cf6c7898bbb"]}, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "pid": 23128, "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census", "started": "2026-11-08T14:11:02.990577+00:00", "n_units": 1, "workers": {"1e-7": [["1e-7-k0_101", 1]]}, "budget_s": 0.5, "max_workers": 1, "skipped_as_recorded": 0, "variant": null, "projection_s": null}
+# worker 1e-7-k0_101 pid 23129 (1 units)
+# worker 1e-7-k0_101 exit 0
+# over-budget pass: 1 units re-run once at 1000 s: ['g-1e-7-0-37232']
+# worker 1e-7-k0_101-ob3600 pid 23195 (1 units)
+# worker 1e-7-k0_101-ob3600 exit 0
+# over budget in the two sets: 1 ['g-1e-7-0-37232']
+
+== run ends: 2 of 2 units recorded; units in error 0; problems []
+# ----
+# end 2026-11-08T14:12:58Z
+# exit 0

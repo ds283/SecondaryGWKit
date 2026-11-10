@@ -1,0 +1,135 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/scripts/replay_summary_r29.py sha256 49097a9610c0d6095118dc3b3b4efd6a7768bfb8e84a5fea677cb989dc22f636
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/replay_calls.csv sha256 2c74cc9c68a8bee27f8b29a31600d94b055362adfe23abac59b25ad495ea4ea9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/replay_calls.checks.json sha256 cd28ea6da6f0bf7bf66fb3c2e7075ddf7048d2e959bbd9c9ca3b63a35a404e72
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/r29_vs_r28_records.csv sha256 c3f7993f5cbb28e3b22243288e7e324c4f503a4766f2243fc1c2092371019165
+records in the table 470; all reproduce R29: True
+located points 380: by label {'G+q+r': 44, 'J4_data': 168, 'Y4_data': 168}; kinds {'root': 380}
+  ('G+q+r', '100000.0', '100000.0', '100000.0'): locations [10211.317892]
+  ('G+q+r', '100000.0', '316227.7660168379', '316227.7660168379'): locations [275.008592]
+  ('G+q+r', '1000000.0', '1000000.0', '1000000.0'): locations [10211.317891]
+  ('G+q+r', '316227.7660168379', '1000000.0', '1000000.0'): locations [275.008592]
+  ('G+q+r', '316227.7660168379', '316227.7660168379', '316227.7660168379'): locations [10211.317891]
+  ('J4_data', '100000.0', '100000.0', '100000.0'): locations [8.13009e-05]
+  ('J4_data', '1000000.0', '1000000.0', '1000000.0'): locations [8.13009e-06]
+  ('J4_data', '316227.7660168379', '316227.7660168379', '316227.7660168379'): locations [2.57096e-05]
+  ('Y4_data', '100000.0', '100000.0', '100000.0'): locations [8.13009e-05]
+  ('Y4_data', '1000000.0', '1000000.0', '1000000.0'): locations [8.13009e-06]
+  ('Y4_data', '316227.7660168379', '316227.7660168379', '316227.7660168379'): locations [2.57096e-05]
+records with a guarded region: 4
+  (316228, 316228, 316228, z 1.3291316e+09) analytic.2pt5.Levin.J4_data: guarded 1, skipped [{"phase": 0, "variation": {"repr": "15.112984154245268", "hex": "0x1.e39d90f1ee638p+3"}}]
+  (316228, 316228, 316228, z 1.3291316e+09) analytic.2pt5.Levin.Y4_data: guarded 1, skipped [{"phase": 0, "variation": {"repr": "15.112984154245268", "hex": "0x1.e39d90f1ee638p+3"}}]
+  (1e+06, 1e+06, 1e+06, z 4.0176304e+09) analytic.2pt5.Levin.J4_data: guarded 1, skipped [{"phase": 0, "variation": {"repr": "15.896291130748331", "hex": "0x1.fcae6abcc8494p+3"}}]
+  (1e+06, 1e+06, 1e+06, z 4.0176304e+09) analytic.2pt5.Levin.Y4_data: guarded 1, skipped [{"phase": 0, "variation": {"repr": "15.896291130748331", "hex": "0x1.fcae6abcc8494p+3"}}]
+
+the records that changed between R28 and R29, with V_i from the replay:
+  ok   (100000, 100000, 100000, z 4.3970964e+08) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 14.364600765257178 (0x1.cbaacf395c097p+3)
+  ok   (100000, 100000, 100000, z 4.3970964e+08) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 14.364600765257178 (0x1.cbaacf395c097p+3)
+  ok   (100000, 100000, 100000, z 5.7978435e+08) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 10.456356534350622 (0x1.4e9a7904cb422p+3)
+  ok   (100000, 100000, 100000, z 5.7978435e+08) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 10.456356534350622 (0x1.4e9a7904cb422p+3)
+  ok   (100000, 100000, 100000, z 7.6448151e+08) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 7.509926622040096 (0x1.e0a2a3454167ep+2)
+  ok   (100000, 100000, 100000, z 7.6448151e+08) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 7.509926622040096 (0x1.e0a2a3454167ep+2)
+  ok   (100000, 100000, 100000, z 1.0080161e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 5.298543758727174 (0x1.531b57480a1ecp+2)
+  ok   (100000, 100000, 100000, z 1.0080161e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 5.298543758727174 (0x1.531b57480a1ecp+2)
+  ok   (100000, 100000, 100000, z 1.3291316e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 100000, 100000, z 1.3291316e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 3.652011403486714 (0x1.d3751c134c188p+1)
+  ok   (100000, 100000, 100000, z 1.3291316e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 3.652011403486714 (0x1.d3751c134c188p+1)
+  ok   (100000, 100000, 100000, z 1.7525422e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 2.443601057685828 (0x1.38c7eb619da66p+1)
+  ok   (100000, 100000, 100000, z 1.7525422e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 2.443601057685828 (0x1.38c7eb619da66p+1)
+  ok   (100000, 100000, 100000, z 2.3108353e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 1.5802886963597103 (0x1.948dcccd1a7a6p+0)
+  ok   (100000, 100000, 100000, z 2.3108353e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 1.5802886963597103 (0x1.948dcccd1a7a6p+0)
+  ok   (100000, 100000, 100000, z 3.0469792e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.9955503788805842 (0x1.fdb8c77da0026p-1)
+  ok   (100000, 100000, 100000, z 3.0469792e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.9955503788805842 (0x1.fdb8c77da0026p-1)
+  ok   (100000, 100000, 100000, z 4.0176304e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.6440723614507785 (0x1.49c3da41608e3p-1)
+  ok   (100000, 100000, 100000, z 4.0176304e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.6440723614507785 (0x1.49c3da41608e3p-1)
+  ok   (100000, 100000, 100000, z 5.2974941e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.4976391141663093 (0x1.fd951ba238059p-2)
+  ok   (100000, 100000, 100000, z 5.2974941e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.4976391141663093 (0x1.fd951ba238059p-2)
+  ok   (100000, 316228, 316228, z 1.3291316e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 316228, 316228, z 1.7525422e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 316228, 316228, z 2.3108353e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 316228, 316228, z 3.0469792e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 316228, 316228, z 4.0176304e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 316228, 316228, z 5.2974941e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 1.3291316e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 1.7525422e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 2.3108353e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 3.0469792e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 4.0176304e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 5.2974941e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 6.9850736e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 9.2102514e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 1.2144286e+10) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (100000, 1e+06, 1e+06, z 1.3627427e+10) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  FIND (316228, 316228, 316228, z 1.3291316e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 1; V = 15.112984154245268 (0x1.e39d90f1ee638p+3)
+  FIND (316228, 316228, 316228, z 1.3291316e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 1; V = 15.112984154245268 (0x1.e39d90f1ee638p+3)
+  ok   (316228, 316228, 316228, z 1.7525422e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 11.021491449824001 (0x1.60b00ed644682p+3)
+  ok   (316228, 316228, 316228, z 1.7525422e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 11.021491449824001 (0x1.60b00ed644682p+3)
+  ok   (316228, 316228, 316228, z 2.3108353e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 7.935310677045628 (0x1.fbdc215060ad8p+2)
+  ok   (316228, 316228, 316228, z 2.3108353e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 7.935310677045628 (0x1.fbdc215060ad8p+2)
+  ok   (316228, 316228, 316228, z 3.0469792e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 5.616918309768179 (0x1.677b96ef3081ep+2)
+  ok   (316228, 316228, 316228, z 3.0469792e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 5.616918309768179 (0x1.677b96ef3081ep+2)
+  ok   (316228, 316228, 316228, z 4.0176304e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (316228, 316228, 316228, z 4.0176304e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 3.8878808126106206 (0x1.f1a61416744a6p+1)
+  ok   (316228, 316228, 316228, z 4.0176304e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 3.8878808126106206 (0x1.f1a61416744a6p+1)
+  ok   (316228, 316228, 316228, z 5.2974941e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (316228, 316228, 316228, z 5.2974941e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 2.6151208701754722 (0x1.4ebc47da3ecfcp+1)
+  ok   (316228, 316228, 316228, z 5.2974941e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 2.6151208701754722 (0x1.4ebc47da3ecfcp+1)
+  ok   (316228, 316228, 316228, z 6.9850736e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 1.7006655505022361 (0x1.b35ed148d747ep+0)
+  ok   (316228, 316228, 316228, z 6.9850736e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 1.7006655505022361 (0x1.b35ed148d747ep+0)
+  ok   (316228, 316228, 316228, z 9.2102514e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 1.074070480043352 (0x1.12f64871629dap+0)
+  ok   (316228, 316228, 316228, z 9.2102514e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 1.074070480043352 (0x1.12f64871629dap+0)
+  ok   (316228, 316228, 316228, z 1.2144286e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.6868616006496209 (0x1.5fac52df562fep-1)
+  ok   (316228, 316228, 316228, z 1.2144286e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.6868616006496209 (0x1.5fac52df562fep-1)
+  ok   (316228, 316228, 316228, z 1.3627427e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.588343745848863 (0x1.2d3b64367439ap-1)
+  ok   (316228, 316228, 316228, z 1.3627427e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.588343745848863 (0x1.2d3b64367439ap-1)
+  ok   (316228, 316228, 316228, z 1.7968605e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.4910534412918208 (0x1.f6d6b69bbf1b0p-2)
+  ok   (316228, 316228, 316228, z 1.7968605e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.4910534412918208 (0x1.f6d6b69bbf1b0p-2)
+  ok   (316228, 1e+06, 1e+06, z 4.0176304e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (316228, 1e+06, 1e+06, z 5.2974941e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (316228, 1e+06, 1e+06, z 6.9850736e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (316228, 1e+06, 1e+06, z 9.2102514e+09) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (316228, 1e+06, 1e+06, z 1.2144286e+10) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (316228, 1e+06, 1e+06, z 1.3627427e+10) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  FIND (1e+06, 1e+06, 1e+06, z 4.0176304e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 1; V = 15.896291130748331 (0x1.fcae6abcc8494p+3)
+  FIND (1e+06, 1e+06, 1e+06, z 4.0176304e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 1; V = 15.896291130748331 (0x1.fcae6abcc8494p+3)
+  ok   (1e+06, 1e+06, 1e+06, z 5.2974941e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 11.613222368741505 (0x1.739f84845d741p+3)
+  ok   (1e+06, 1e+06, 1e+06, z 5.2974941e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 11.613222368741505 (0x1.739f84845d741p+3)
+  ok   (1e+06, 1e+06, 1e+06, z 6.9850736e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 8.381008791146733 (0x1.0c3139592ed6cp+3)
+  ok   (1e+06, 1e+06, 1e+06, z 6.9850736e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 8.381008791146733 (0x1.0c3139592ed6cp+3)
+  ok   (1e+06, 1e+06, 1e+06, z 9.2102514e+09) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 5.950886570503545 (0x1.7cdb5358a12c4p+2)
+  ok   (1e+06, 1e+06, 1e+06, z 9.2102514e+09) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 5.950886570503545 (0x1.7cdb5358a12c4p+2)
+  ok   (1e+06, 1e+06, 1e+06, z 1.2144286e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 4.135823546979934 (0x1.08b1553f138dep+2)
+  ok   (1e+06, 1e+06, 1e+06, z 1.2144286e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 4.135823546979934 (0x1.08b1553f138dep+2)
+  ok   (1e+06, 1e+06, 1e+06, z 1.3627427e+10) WKB_Levin.subintervals[0].groups[1] q-r: R29 points 0, guarded 0; V = 0.0 (0x0.0p+0)
+  ok   (1e+06, 1e+06, 1e+06, z 1.3627427e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 3.526494690025618 (0x1.c3642d9196be7p+1)
+  ok   (1e+06, 1e+06, 1e+06, z 1.3627427e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 3.526494690025618 (0x1.c3642d9196be7p+1)
+  ok   (1e+06, 1e+06, 1e+06, z 1.7968605e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 2.35262841594792 (0x1.2d22ed8d117c2p+1)
+  ok   (1e+06, 1e+06, 1e+06, z 1.7968605e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 2.35262841594792 (0x1.2d22ed8d117c2p+1)
+  ok   (1e+06, 1e+06, 1e+06, z 2.3692717e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 1.516855370891365 (0x1.8450a232bd887p+0)
+  ok   (1e+06, 1e+06, 1e+06, z 2.3692717e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 1.516855370891365 (0x1.8450a232bd887p+0)
+  ok   (1e+06, 1e+06, 1e+06, z 3.1240312e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.9547603646355328 (0x1.e8d659bb40d81p-1)
+  ok   (1e+06, 1e+06, 1e+06, z 3.1240312e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.9547603646355328 (0x1.e8d659bb40d81p-1)
+  ok   (1e+06, 1e+06, 1e+06, z 4.0253855e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.6423656507977186 (0x1.48e4268c7ffa7p-1)
+  ok   (1e+06, 1e+06, 1e+06, z 4.0253855e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.6423656507977186 (0x1.48e4268c7ffa7p-1)
+  ok   (1e+06, 1e+06, 1e+06, z 4.9531657e+10) analytic.2pt5.Levin.J4_data J4_data: R29 points 0, guarded 0; V = 0.5153608731128612 (0x1.07dd615f50c3ep-1)
+  ok   (1e+06, 1e+06, 1e+06, z 4.9531657e+10) analytic.2pt5.Levin.Y4_data Y4_data: R29 points 0, guarded 0; V = 0.5153608731128612 (0x1.07dd615f50c3ep-1)
+  J4_data: 32 records, V from 0.4910534412918208 to 15.896291130748331; every one below SIX_PI = 18.84955592153876: True; missing 0
+  Y4_data: 32 records, V from 0.4910534412918208 to 15.896291130748331; every one below SIX_PI = 18.84955592153876: True; missing 0
+  q-r: 26 records, V from 0.0 to 0.0; every one below SIX_PI = 18.84955592153876: True; missing 0
+
+replayed calls reporting a skipped phase: 423; by label (count, V min, V max):
+  G: 2, 8.538985247475011, 8.549059535950407
+  G+q+r: 17, 0.370189164980616, 18.206680403381704
+  G+q-r: 3, 2.4369378942913507, 11.154137584191723
+  G-q+r: 3, 2.4369378942913507, 11.154137584191723
+  G-q-r: 2, 5.244064953563318, 11.333223616994227
+  analytic J1: 11, 7.337516879644757, 18.29646874776774
+  analytic J2: 51, 0.7896841043863764, 18.69651870140824
+  analytic J3: 51, 0.7896841043863764, 18.69651870140824
+  analytic J4: 67, 0.4910534412918208, 17.71289237352296
+  analytic Y1: 11, 7.337516879644757, 18.29646874776774
+  analytic Y2: 51, 0.7896841043863764, 18.69651870140824
+  analytic Y3: 51, 0.7896841043863764, 18.69651870140824
+  analytic Y4: 67, 0.4910534412918208, 17.71289237352296
+  q+r: 10, 0.7248943998058268, 12.842148811549393
+  q-r: 26, 0.0, 0.0
+  of them with points: 0; with a guarded region: 4

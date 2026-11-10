@@ -1,0 +1,42 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/v4_capture_selection_07.py state/v4_capture_selection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:11:51Z
+# ----
+# levin-phase-floor 07: V4's capture selection
+# written 2026-11-09T00:11:51Z on mps026298.phys.susx.ac.uk
+# script v4_capture_selection_07.py sha256 97ddafb655a078349ebb664487545cdfd042f7dab931340715353ffedac26e47
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4_selection.json sha256 15a4391b8e49c547a0557bc20829faf5c2323f0e826420ef0e21d694b134d6c8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10
+v00 g-1e-7-3-37343 #1: g value 0x1.21ab1b1153579p-89 abserr 0x1.6fa6e6dd010e3p-111 regions 37 depth 10 conv True points {'root': 1}
+v01 g-1e-7-2-34834 #1: g value 0x1.e2cf721e0bd9ap-85 abserr 0x1.789211d9b86b4p-108 regions 51 depth 9 conv True points {'root': 1}
+v02 g-1e-8-3-39137 #1: g value 0x1.135af6fe0ee86p-79 abserr 0x1.60c920aba6431p-106 regions 152 depth 16 conv True points {'root': 1}
+v03 g-1e-8-1-34611 #1: g value -0x1.9f3d66ba84c27p-80 abserr 0x1.dbee1a092c039p-107 regions 161 depth 15 conv True points {'root': 1}
+v04 g-1e-7-3-2326 #1: g value -0x1.0091d3b2cdb9cp-69 abserr 0x1.e7f18f87b4557p-94 regions 115 depth 20 conv False points {'root': 1}
+v05 g-1e-7-0-38985 #1: g value -0x1.65dc284771a78p-84 abserr 0x1.03e640feae8c1p-107 regions 138 depth 16 conv True points {'root': 1}
+v06 g-1e-7-1-2120 #1: g value 0x1.9a2f7a50951ddp-80 abserr 0x1.9d7a101e9b12dp-104 regions 118 depth 14 conv True points {'root': 1}
+v07 g-1e-7-3-14592 #1: g value 0x1.f692c2e13672ep-90 abserr 0x1.0651976eb3e1ep-112 regions 97 depth 11 conv True points {'root': 1}
+v08 g-1e-7-1-38834 #1: g value -0x1.bab487816e417p-102 abserr 0x1.4a201521e15b2p-119 regions 31 depth 9 conv True points {'root': 1}
+v09 g-1e-8-3-34962 #1: g value -0x1.32c7bb5fdb672p-82 abserr 0x1.1182b437b1454p-109 regions 39 depth 11 conv True points {'root': 1}
+v10 g-1e-8-0-14314 #1: g value 0x1.8b3e1aea286f0p-84 abserr 0x1.b12b5c5db560fp-110 regions 39 depth 11 conv True points {'root': 1}
+v11 g-1e-8-2-2189 #1: g value 0x1.825f466b90c85p-85 abserr 0x1.2a9753cf1aed4p-110 regions 78 depth 10 conv True points {'root': 1}
+v12 g-1e-8-0-14299 #1: g value 0x1.0d8ebee1acfefp-94 abserr 0x1.057d5ac0b2a04p-113 regions 25 depth 7 conv True points {'root': 1}
+v13 g-1e-8-2-34841 #1: g value 0x1.7cd4d3106fa2bp-106 abserr 0x1.d64a77110b9c5p-124 regions 33 depth 11 conv True points {'root': 1}
+v14 g-1e-7-3-13816 #1: g value 0x1.38a6680b1b52cp-75 abserr 0x1.3291ae51a35abp-99 regions 46 depth 10 conv True points {'root': 1}
+v15 g-1e-7-0-1973 #1: g value -0x1.77f053d11e500p-88 abserr 0x1.cde9af9df95c5p-110 regions 166 depth 16 conv True points {'root': 1}
+v16 g-1e-7-2-2092 #1: g value -0x1.fe82dd11d39c9p-85 abserr 0x1.8ad8e2a8599a0p-109 regions 137 depth 16 conv True points {'root': 1}
+v17 g-1e-7-0-1772 #1: g value -0x1.1fb78506f64dep-96 abserr 0x1.bde2edd5fc6b8p-115 regions 22 depth 6 conv True points {'root': 1}
+v18 g-1e-7-2-13649 #1: g value 0x1.2f927c8dbddd9p-105 abserr 0x1.d200dbe9bf349p-124 regions 25 depth 7 conv True points {'root': 1}
+v19 g-1e-8-3-1921 #1: g value 0x1.b4c2721090350p-76 abserr 0x1.0130e9bf9cf16p-102 regions 161 depth 16 conv True points {'root': 1}
+v20 g-1e-8-0-1896 #1: g value 0x1.5cf98741d5298p-81 abserr 0x1.852ba37527862p-108 regions 153 depth 16 conv True points {'root': 1}
+v21 g-1e-8-1-1747 #1: g value -0x1.dba98858d16f8p-82 abserr 0x1.3d83a6a4d2365p-108 regions 62 depth 10 conv True points {'root': 1}
+v22 g-1e-8-3-14096 #1: g value -0x1.7ae21080873d5p-91 abserr 0x1.0c62359b8694cp-110 regions 124 depth 14 conv True points {'root': 1}
+v23 g-1e-8-1-34772 #1: g value -0x1.3ad3d7e0d6730p-99 abserr 0x1.fd69d0f9a86b1p-121 regions 32 depth 9 conv True points {'root': 1}
+cal_z12 g-1e-8-1-2174 #1: g value 0x1.0c5f19c042baep-86 abserr 0x1.1644533022b9fp-110 regions 70 depth 13 conv True points {'root': 1}
+wrote state/v4_capture_selection.json sha256 39a19bca0f26aa402b1405d6ccb9b272440f220dbc4df20cd740fc61812040a8
+# ----
+# end 2026-11-09T00:11:55Z
+# exit 0

@@ -1,0 +1,499 @@
+{
+ "header": [
+  "# levin-phase-floor 07: p against 06m's census (levin-phase-floor-06m-census-20261106T102153), mode whole",
+  "# written 2026-11-08T13:49:54Z on mps026298.phys.susx.ac.uk",
+  "# script compare_07.py sha256 460b4667ef0e60006ad3479f89553fb813216bcfb2d883998b626e873fd200ed",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/smoke/p/units.jsonl sha256 00ee3b3d24293493434d4ff01c4ff79b9d2193214ccd6766510491affdd3050c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/index_06m.json sha256 03e7786d41933830b83b45d96d0ee9b0e32ff3693cd294d31a44360c4312c45d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "whole",
+ "run_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/smoke/p",
+ "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/smoke/p/units.jsonl",
+ "source_sha256": "00ee3b3d24293493434d4ff01c4ff79b9d2193214ccd6766510491affdd3050c",
+ "run06m": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-06m-census-20261106T102153",
+ "checkpoint06m_sha256": "ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e",
+ "excluded_06m": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "set_aside_new_07": [
+  "guard_07",
+  "guard_at_depth_max",
+  "guard_at_depth_max_07",
+  "guarded_07",
+  "guarded_regions",
+  "scan_07",
+  "scan_07_error",
+  "stationary_points",
+  "window_07",
+  "window_pieces"
+ ],
+ "records_skipped": [],
+ "n_units": 1,
+ "n_units_equal": 1,
+ "n_units_differing": 0,
+ "statuses": {
+  "done": 1
+ },
+ "totals": {
+  "n_calls": 21,
+  "n_group_calls": 5,
+  "n_regions": 21,
+  "n_regions_returned": 264,
+  "n_clean": 0,
+  "n_located": 0,
+  "n_guarded": 0,
+  "new_keys_in_06m_records": 0
+ },
+ "unit_evidence_true_false": {
+  "lq_file_is_tree": [
+   1,
+   0
+  ],
+  "all_in_tree": [
+   1,
+   0
+  ],
+  "no_foreign": [
+   1,
+   0
+  ],
+  "no_variant_root": [
+   1,
+   0
+  ]
+ },
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "tree-1e-7-k0_101": {
+   "tree": "p",
+   "hello": true,
+   "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+   "lq_is_tree_module": true,
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db/AdaptiveLevin/levin_quadrature.py",
+   "variant_none": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true
+  }
+ },
+ "excluded_keys_inventory_units_present_differing": {
+  "data.analytic_06h.seconds": [
+   1,
+   1
+  ],
+  "data.budget_s": [
+   1,
+   0
+  ],
+  "data.cache_built": [
+   1,
+   1
+  ],
+  "data.calls[].elapsed": [
+   1,
+   1
+  ],
+  "data.calls[].guard_07": [
+   1,
+   1
+  ],
+  "data.calls[].route_06k": [
+   1,
+   0
+  ],
+  "data.calls[].route_06l": [
+   1,
+   0
+  ],
+  "data.cc_floor_s": [
+   1,
+   1
+  ],
+  "data.checked_06g_s": [
+   1,
+   1
+  ],
+  "data.declared_06h_s": [
+   1,
+   1
+  ],
+  "data.deep_lines.seconds": [
+   1,
+   1
+  ],
+  "data.modules": [
+   1,
+   0
+  ],
+  "data.modules.files.AdaptiveLevin.levin_quadrature": [
+   0,
+   1
+  ],
+  "data.modules.files.BesselPhaseGroup (QuadSourceIntegral's)": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets.GkSource": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets.GkSourcePolicyData": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets.GkWKBIntegration": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets.QuadSource": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets.QuadSourceIntegral": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets.TkSourceFunctions": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets.TkWKBIntegration": [
+   0,
+   1
+  ],
+  "data.modules.files.ComputeTargets.primitive_phase": [
+   0,
+   1
+  ],
+  "data.modules.files.LiouvilleGreen.bessel_phase": [
+   0,
+   1
+  ],
+  "data.modules.files.LiouvilleGreen.three_bessel_integrals": [
+   0,
+   1
+  ],
+  "data.modules.files.Quadrature.integrators.WKB_phase_function": [
+   0,
+   1
+  ],
+  "data.modules.files.StoreFixtures": [
+   0,
+   1
+  ],
+  "data.modules.files.WKB_phase_function (the producers' remote's function)": [
+   0,
+   1
+  ],
+  "data.modules.files.main.py": [
+   0,
+   1
+  ],
+  "data.modules.files.theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": [
+   0,
+   1
+  ],
+  "data.other_calls[].elapsed": [
+   1,
+   1
+  ],
+  "data.other_calls[].guard_07": [
+   1,
+   1
+  ],
+  "data.other_calls[].route_06k": [
+   1,
+   0
+  ],
+  "data.other_calls[].route_06l": [
+   1,
+   0
+  ],
+  "data.pickle": [
+   1,
+   1
+  ],
+  "data.pickle_length": [
+   1,
+   1
+  ],
+  "data.pickle_offset": [
+   1,
+   1
+  ],
+  "data.pickle_record_sha256": [
+   1,
+   1
+  ],
+  "data.rebuild_s": [
+   1,
+   1
+  ],
+  "data.result.compute_time": [
+   1,
+   1
+  ],
+  "data.rows_sha256": [
+   1,
+   0
+  ],
+  "data.scan_07": [
+   1,
+   1
+  ],
+  "data.scan_07_error": [
+   1,
+   1
+  ],
+  "data.scan_07_s": [
+   1,
+   1
+  ],
+  "data.scan_s": [
+   1,
+   1
+  ],
+  "data.scripts_sha256": [
+   1,
+   0
+  ],
+  "data.scripts_sha256.prov.py": [
+   0,
+   1
+  ],
+  "data.scripts_sha256.worker.py": [
+   0,
+   1
+  ],
+  "data.stored.compute_time": [
+   1,
+   0
+  ],
+  "data.tree_head": [
+   1,
+   1
+  ],
+  "data.tree_status_short": [
+   1,
+   0
+  ],
+  "data.w2_capture_sha256": [
+   1,
+   0
+  ],
+  "data.w3.seconds": [
+   1,
+   1
+  ],
+  "data.wall_s": [
+   1,
+   1
+  ],
+  "data.worker": [
+   1,
+   1
+  ],
+  "data.worker_pid": [
+   1,
+   1
+  ],
+  "data.worker_tree": [
+   1,
+   1
+  ],
+  "pickle.guard_07": [
+   1,
+   1
+  ],
+  "pickle.guard_07[].stationary_points": [
+   1,
+   0
+  ],
+  "pickle.other_regions[].guard_at_depth_max_07": [
+   1,
+   1
+  ],
+  "pickle.other_regions[].guarded_07": [
+   1,
+   1
+  ],
+  "pickle.other_regions[].window_07": [
+   1,
+   1
+  ],
+  "pickle.regions[].guard_at_depth_max_07": [
+   1,
+   1
+  ],
+  "pickle.regions[].guarded_07": [
+   1,
+   1
+  ],
+  "pickle.regions[].window_07": [
+   1,
+   1
+  ],
+  "pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed": [
+   1,
+   1
+  ],
+  "pickle.result_full.compute_time": [
+   1,
+   1
+  ],
+  "pickle.route_06k": [
+   1,
+   0
+  ],
+  "pickle.route_06k[].route_06k": [
+   1,
+   0
+  ],
+  "pickle.route_06l": [
+   1,
+   0
+  ],
+  "pickle.route_06l[].route_06l": [
+   1,
+   0
+  ],
+  "pickle.scan[].seconds": [
+   1,
+   1
+  ],
+  "pickle.scan_07": [
+   1,
+   1
+  ],
+  "pickle.scan_07[].scan.seconds": [
+   1,
+   0
+  ]
+ },
+ "first_differing_units": [],
+ "units": [
+  {
+   "unit": "p-1e-7-0-37232",
+   "unit_06m": "g-1e-7-0-37232",
+   "status": "done",
+   "status_06m": "done",
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "p-1e-7-0-37232",
+     "g-1e-7-0-37232"
+    ],
+    "pickle.unit": [
+     "p-1e-7-0-37232",
+     "g-1e-7-0-37232"
+    ],
+    "data.tree": [
+     "p",
+     "g"
+    ]
+   },
+   "differing": [],
+   "excl_differing": [
+    "data.analytic_06h.seconds",
+    "data.cache_built",
+    "data.calls[].elapsed",
+    "data.calls[].guard_07",
+    "data.cc_floor_s",
+    "data.checked_06g_s",
+    "data.declared_06h_s",
+    "data.deep_lines.seconds",
+    "data.modules.files.AdaptiveLevin.levin_quadrature",
+    "data.modules.files.BesselPhaseGroup (QuadSourceIntegral's)",
+    "data.modules.files.ComputeTargets",
+    "data.modules.files.ComputeTargets.GkSource",
+    "data.modules.files.ComputeTargets.GkSourcePolicyData",
+    "data.modules.files.ComputeTargets.GkWKBIntegration",
+    "data.modules.files.ComputeTargets.QuadSource",
+    "data.modules.files.ComputeTargets.QuadSourceIntegral",
+    "data.modules.files.ComputeTargets.TkSourceFunctions",
+    "data.modules.files.ComputeTargets.TkWKBIntegration",
+    "data.modules.files.ComputeTargets.primitive_phase",
+    "data.modules.files.LiouvilleGreen.bessel_phase",
+    "data.modules.files.LiouvilleGreen.three_bessel_integrals",
+    "data.modules.files.Quadrature.integrators.WKB_phase_function",
+    "data.modules.files.StoreFixtures",
+    "data.modules.files.WKB_phase_function (the producers' remote's function)",
+    "data.modules.files.main.py",
+    "data.modules.files.theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)",
+    "data.other_calls[].elapsed",
+    "data.other_calls[].guard_07",
+    "data.pickle",
+    "data.pickle_length",
+    "data.pickle_offset",
+    "data.pickle_record_sha256",
+    "data.rebuild_s",
+    "data.result.compute_time",
+    "data.scan_07",
+    "data.scan_07_error",
+    "data.scan_07_s",
+    "data.scan_s",
+    "data.scripts_sha256.prov.py",
+    "data.scripts_sha256.worker.py",
+    "data.tree_head",
+    "data.w3.seconds",
+    "data.wall_s",
+    "data.worker",
+    "data.worker_pid",
+    "data.worker_tree",
+    "pickle.guard_07",
+    "pickle.other_regions[].guard_at_depth_max_07",
+    "pickle.other_regions[].guarded_07",
+    "pickle.other_regions[].window_07",
+    "pickle.regions[].guard_at_depth_max_07",
+    "pickle.regions[].guarded_07",
+    "pickle.regions[].window_07",
+    "pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed",
+    "pickle.result_full.compute_time",
+    "pickle.scan[].seconds",
+    "pickle.scan_07"
+   ],
+   "new_keys_in_06m_records": 0,
+   "n_calls": 21,
+   "n_group_calls": 5,
+   "n_regions": 21,
+   "n_regions_returned": 264,
+   "evidence": {
+    "lq_file_is_tree": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "no_variant_root": true
+   }
+  }
+ ]
+}

@@ -1,0 +1,14 @@
+# levin-phase-floor 07 V4: every script run for V4, with its SHA-256 (written 2026-11-10T02:34:15Z on mps026298.phys.susx.ac.uk)
+35923bac0d3b35e7592fc50a7401bb19620e850f370a43d5056026f13b0e131f  scripts/select_v4_07.py
+97ddafb655a078349ebb664487545cdfd042f7dab931340715353ffedac26e47  scripts/v4_capture_selection_07.py
+fc212b2be346ae51e8381a9b43dd09753e4ae1a31a1487185d535be820e69c08  scripts/x1_capture.py
+ee80bff7663bb1ee7833f31611b875059d0e57887ac5207ebaf0f02edb64d0fc  scripts/worker.py
+73305ab4228fae59385ceb76a6b16ddc0b6bf97ba18d8faf54298be444cbb639  scripts/check_captures.py
+0a66ec1088a81ced8b81b086ed321279e88701e91591a432b222a3627a6cc8ec  scripts/slice_v4_07.py
+8d9a5b856108a47825618f8bb4bb230fec4fe16eba74f8803cb9ca641ec6d65b  scripts/refs_projection_07.py
+4fcff61953ffd7d271009efaa1488d08b21bb9de07ccbe43239cd216ac76e0eb  scripts/launch_07.py
+6227aea4f78cc7185343d2a48c5e06a2186a03f47ce789edd67e27eefd1d8ca7  scripts/run_06j.py
+3cf12125cebc8336eefd67c944a7599aab694816aa615a2a7605f17502dbc127  scripts/one_reading.py
+c976be1554809ebafb127c2407e97f37226b1bd60420dea940cd01cefbd72af9  scripts/score_v4_07.py
+d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7/tools/filon_reference.py
+# the references run: levin-phase-floor-07-references-20261109T005328 (done, 74/74); the scores: out/v4/v4_scores.json, out/v4/report.md

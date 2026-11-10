@@ -1,0 +1,77 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-08T00:05:45Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; P=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db; C=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+echo "== main"; git -C $M --no-optional-locks rev-parse --abbrev-ref HEAD; git -C $M --no-optional-locks rev-parse HEAD; echo "status --short:"; git -C $M --no-optional-locks status --short; echo "(end)"
+for T in $P $C; do echo "== $T"; git -C $T --no-optional-locks rev-parse HEAD; git -C $T --no-optional-locks rev-parse --abbrev-ref HEAD; echo "status --short --ignored:"; git -C $T --no-optional-locks status --short --ignored; echo "(end)"; done
+echo "== worktree list"; git -C $M --no-optional-locks worktree list
+echo "== ad732887 parent"; git -C $C --no-optional-locks rev-parse ad732887^ ad732887
+echo "== log 91472dbe..74600350"; git -C $C --no-optional-locks log --oneline 91472dbe..74600350
+echo "== diff --stat 91472dbe 74600350 outside docs prompts"; git -C $C --no-optional-locks diff --stat 91472dbe 74600350 -- . ":!docs" ":!prompts"
+echo "== diff --stat ad732887 74600350 outside prompts"; git -C $C --no-optional-locks diff --stat ad732887 74600350 -- . ":!prompts"
+echo "== diff --stat bd21bf23 91472dbe outside docs prompts"; git -C $C --no-optional-locks diff --stat bd21bf23 91472dbe -- . ":!docs" ":!prompts"
+echo "== diff --stat 38f6a828 91472dbe outside docs prompts (R26 tree vs R27 tree)"; git -C $C --no-optional-locks diff --stat 38f6a828 91472dbe -- . ":!docs" ":!prompts"
+echo "== module hashes"; for T in $P $C; do echo "-- $T"; (cd $T && shasum -a 256 AdaptiveLevin/levin_quadrature.py ComputeTargets/QuadSourceIntegral.py RunDrivers/quadsource_atol_sweep.py main.py LiouvilleGreen/three_bessel_integrals.py tools/store_value_diff.py ComputeTargets/phase_groups.py config/fingerprint.py); done
+
+# output:
+== main
+handover-remedial
+28ebaf0743e0555fb2c4512ce714884005a60eff
+status --short:
+(end)
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db
+91472dbee1daba8374b0018db1195cf6c7898bbb
+HEAD
+status --short --ignored:
+(end)
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+746003508bff868fc1b256b29cbd5035609bed2b
+HEAD
+status --short --ignored:
+(end)
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit               28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 74600350 (detached HEAD)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db 91472dbe (detached HEAD)
+== ad732887 parent
+91472dbee1daba8374b0018db1195cf6c7898bbb
+ad73288707bc4be55a61017750bff22014202436
+== log 91472dbe..74600350
+74600350 Write levin-phase-floor 07's Part B dispatch addendum
+ad732887 Integrate the Levin driver's stationary-point windows directly
+== diff --stat 91472dbe 74600350 outside docs prompts
+ AdaptiveLevin/levin_quadrature.py                  | 1094 +++++++++++++++++++-
+ AdaptiveLevin/tests/test_levin_stationary.py       |  611 +++++++++++
+ AdaptiveLevin/tests/test_levin_trust_yardstick.py  |   36 +-
+ CLAUDE.md                                          |    5 +-
+ ComputeTargets/QuadSourceIntegral.py               |   14 +
+ .../tests/test_quadsource_levin_guard_counts.py    |   76 ++
+ 6 files changed, 1813 insertions(+), 23 deletions(-)
+== diff --stat ad732887 74600350 outside prompts
+== diff --stat bd21bf23 91472dbe outside docs prompts
+== diff --stat 38f6a828 91472dbe outside docs prompts (R26 tree vs R27 tree)
+ CLAUDE.md | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+== module hashes
+-- /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db
+beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6  AdaptiveLevin/levin_quadrature.py
+962424c0f3f8051f9af1cfa3eec39721ccf0e7a39dfc65af550069ae348aa511  ComputeTargets/QuadSourceIntegral.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  RunDrivers/quadsource_atol_sweep.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  main.py
+fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e  LiouvilleGreen/three_bessel_integrals.py
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  tools/store_value_diff.py
+795a011997a5f1a40bdcecba58203d69b2b1ec74a1be95617fe05cb2445cd77f  ComputeTargets/phase_groups.py
+9fb94d772213fe8dcc3ef174927f8766dbed7e4d9a01591e163071771e08ddc6  config/fingerprint.py
+-- /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035
+dc05596ceb2ec022b79f5b0b30d46ad67e680d77b84dd1c2f4227c213af6d4d9  AdaptiveLevin/levin_quadrature.py
+33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  ComputeTargets/QuadSourceIntegral.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  RunDrivers/quadsource_atol_sweep.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  main.py
+fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e  LiouvilleGreen/three_bessel_integrals.py
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  tools/store_value_diff.py
+795a011997a5f1a40bdcecba58203d69b2b1ec74a1be95617fe05cb2445cd77f  ComputeTargets/phase_groups.py
+9fb94d772213fe8dcc3ef174927f8766dbed7e4d9a01591e163071771e08ddc6  config/fingerprint.py
+# exit: 0
+# end: 2026-11-08T00:05:47Z

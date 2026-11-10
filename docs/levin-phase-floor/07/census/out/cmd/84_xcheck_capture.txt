@@ -1,0 +1,28 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 PYTHONDONTWRITEBYTECODE=1 nice -n 19 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/xcheck_capture_07.py state/xcheck_capture_selection_pre.json state/xcheck_capture_selection.json state/xcheck/capture out/xcheck/captures.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T01:02:17Z
+# ----
+# levin-phase-floor 07: the cross-check's class (c)/(d) captures at g
+# written 2026-11-09T01:02:17Z on mps026298.phys.susx.ac.uk
+# script xcheck_capture_07.py sha256 3c42dedc58e2a222aea5fd35165f9a67ccf89458465cfea207628f8e04e01e79
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)
+# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/xcheck_capture_selection_pre.json sha256 dca192cb5034a514e1a452b0b69d4592942ee496880066e1b18cc43f08975f71
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06g/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+X00 (1e-7, k 0:101): 53 units, exit 0
+X01 (1e-7, k 0:202): 48 units, exit 0
+X02 (1e-7, k 1:102): 60 units, exit 0
+X03 (1e-7, k 1:301): 38 units, exit 0
+X04 (1e-7, k 2:2): 61 units, exit 0
+X05 (1e-7, k 2:302): 39 units, exit 0
+X06 (1e-7, k 3:1): 38 units, exit 0
+X07 (1e-7, k 3:201): 53 units, exit 0
+X08 (1e-8, k 0:101): 1 units, exit 0
+X09 (1e-8, k 3:1): 5 units, exit 0
+captured and matching 07's census bit for bit: 396 of 396; ray initialised in any worker: False
+wrote out/xcheck/captures.json sha256 d5fb8b89b649ebad5e3f00989f792765ffa76f965b0c7b658d9321fefd69c03d
+# ----
+# end 2026-11-09T02:22:10Z
+# exit 0

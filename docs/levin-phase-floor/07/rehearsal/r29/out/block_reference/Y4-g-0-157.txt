@@ -1,0 +1,117 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/scripts/block_reference.py",
+  "script_sha256": "fc2c20dfd4c452822d3de6e21285da30ef00fe88a3ea948e564a5c0d4555f6a3",
+  "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/inputs/Y4-g-0-157.pkl",
+  "pickle_sha256": "f6c4e20b91b9ddb00717e5bcc660a6a3a59c26eb15cf9a7411da750e07f118c4",
+  "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7",
+  "tree_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+  "tree_status_short": "",
+  "levin_quadrature_sha256": "4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc",
+  "host": "mps026298.phys.susx.ac.uk",
+  "written": "2026-11-08T13:18:13Z"
+ },
+ "unit": "g-1e-7-0-157",
+ "notify_label": "analytic Y4",
+ "x_span": [
+  "-0x1.67024facbe2cdp+3",
+  "-0x1.fd8529ab2fd96p+2"
+ ],
+ "kw": {
+  "atol": "0x1.9f623d5a8a733p-107",
+  "rtol": "0x1.ad7f29abcaf48p-24",
+  "chebyshev_order": 24,
+  "notify_label": "analytic Y4"
+ },
+ "capture_record": {
+  "value": "0x1.2018ed31b4472p-27",
+  "abserr": "0x1.aa161bfb153afp-66",
+  "num_regions": 3,
+  "converged": true,
+  "max_depth": 2
+ },
+ "replay": {
+  "value": "0x1.2018ed31b4472p-27",
+  "abserr": "0x1.aa161bfb153afp-66",
+  "num_regions": 3,
+  "converged": true,
+  "phase_limited": true,
+  "seconds": 0.22372794151306152,
+  "stationary_points": 0,
+  "num_guarded_regions": 1,
+  "location_skipped_phases": [
+   {
+    "phase": 0,
+    "variation": "0x1.e39d90f1ee638p+3"
+   }
+  ]
+ },
+ "replay_reproduces_capture": true,
+ "roots": [
+  "-0x1.523259af83ecdp+3"
+ ],
+ "root_eta": [
+  "2.5709595215475334e-05"
+ ],
+ "V_trapezoid_4097": {
+  "repr": "15.112984154245268",
+  "hex": "0x1.e39d90f1ee638p+3"
+ },
+ "gate_span_root_leaf": {
+  "repr": "19.159572454953185",
+  "hex": "0x1.328d9bd8b5dcap+4",
+  "SIX_PI": "18.84955592153876",
+  "chebyshev_order": 24,
+  "grid_points": 24
+ },
+ "reference": {
+  "method": "composite 20-point Gauss-Legendre on 2^m x-panels each side of the root (fsum), m = 6..14; QAGS (epsrel 1.2e-14, points=[root])",
+  "GL": {
+   "6": {
+    "value": "0x1.2018ed31b4478p-27",
+    "repr": "8.38473699101043e-09",
+    "evaluations": 2560
+   },
+   "8": {
+    "value": "0x1.2018ed31b4477p-27",
+    "repr": "8.384736991010429e-09",
+    "evaluations": 10240
+   },
+   "10": {
+    "value": "0x1.2018ed31b4477p-27",
+    "repr": "8.384736991010429e-09",
+    "evaluations": 40960
+   },
+   "12": {
+    "value": "0x1.2018ed31b4477p-27",
+    "repr": "8.384736991010429e-09",
+    "evaluations": 163840
+   },
+   "14": {
+    "value": "0x1.2018ed31b4477p-27",
+    "repr": "8.384736991010429e-09",
+    "evaluations": 655360
+   }
+  },
+  "QAGS": {
+   "value": "0x1.2018ed31b4473p-27",
+   "repr": "8.384736991010422e-09",
+   "abserr": "1.5028898128760986e-22",
+   "neval": 588,
+   "last": 15
+  },
+  "reference": "0x1.2018ed31b4477p-27",
+  "reference_repr": "8.384736991010429e-09",
+  "stated_error": "6.617444900424222e-24",
+  "stated_error_hex": "0x1.0000000000000p-77",
+  "differences": {
+   "GL6-GL14": "1.6543612251060553e-24",
+   "GL8-GL14": "0.0",
+   "GL10-GL14": "0.0",
+   "GL12-GL14": "0.0",
+   "QAGS-GL14": "-6.617444900424222e-24"
+  },
+  "seconds_GL": 145.43597412109375
+ },
+ "ray_initialized": false
+}

@@ -1,0 +1,54 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_reference.py",
+  "script_sha256": "add90893bb9edb8897f5996c7288f8dfff0dd2c0604b005f17580b22a190739f",
+  "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/inputs/qmr-p-3-20389.pkl",
+  "pickle_sha256": "6daf3fba5d0826ee4b70e11eb3cb1292061d10eefc8a3f233cdd4b0d54ec454e",
+  "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db",
+  "tree_head": "91472dbee1daba8374b0018db1195cf6c7898bbb",
+  "tree_status_short": "",
+  "levin_quadrature": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db/AdaptiveLevin/levin_quadrature.py",
+  "levin_quadrature_sha256": "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6",
+  "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/capture",
+  "host": "mps026298.phys.susx.ac.uk",
+  "written": "2026-11-08T10:22:58Z"
+ },
+ "unit": "p-1e-7-3-20389",
+ "notify_label": "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=6.9851e+09, z in (1.7159e+10, 6.9851e+09), regime qr, group q-r",
+ "x_span": [
+  "0x1.6aac339096f9ep+4",
+  "0x1.790d860236f2ep+4"
+ ],
+ "kw": {
+  "atol": "0x1.4d29483da6913p-111",
+  "rtol": "0x1.ad7f29abcaf48p-24",
+  "chebyshev_order": 24,
+  "notify_label": "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=6.9851e+09, z in (1.7159e+10, 6.9851e+09), regime qr, group q-r"
+ },
+ "capture_record": {
+  "value": "-0x1.a95ce1e66fd4fp-75",
+  "abserr": "0x1.ada9683135978p-100",
+  "num_regions": 1,
+  "converged": true,
+  "max_depth": 0
+ },
+ "replay": {
+  "value": "-0x1.a95ce1e66fd4fp-75",
+  "abserr": "0x1.ada9683135978p-100",
+  "num_regions": 1,
+  "converged": true,
+  "phase_limited": false,
+  "num_stationary_points": null,
+  "num_window_pieces": null,
+  "seconds": 0.022966623306274414
+ },
+ "replay_reproduces_capture": true,
+ "samples_theta_deriv_all_zero": true,
+ "samples_theta_all_zero": true,
+ "samples_integrand_sign": [
+  -1,
+  0,
+  1
+ ],
+ "ray_initialized": false
+}

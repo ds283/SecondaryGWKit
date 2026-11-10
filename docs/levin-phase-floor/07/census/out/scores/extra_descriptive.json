@@ -1,0 +1,52 @@
+{
+ "header": [
+  "# levin-phase-floor 07: extra descriptive counts",
+  "# written 2026-11-09T00:20:34Z on mps026298.phys.susx.ac.uk",
+  "# script extra_descriptive_07.py sha256 45013dd2ef3e8a900f6423d247382241ddbe0aafb58e63da5adb70ee127f5907",
+  "# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7 HEAD e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f (status --short: empty)",
+  "# tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input state/score_07_units.json sha256 bdcd705d5c9c39ab0a0ca1d5e421c2b33625111b420bac6c7d1e9308f1512858"
+ ],
+ "calls_with_a_skipped_phase": {
+  "1e-7|analytic|scanned=True|locates=False|guards=False": 4950,
+  "1e-7|analytic|scanned=True|locates=False|guards=True": 14,
+  "1e-7|group|scanned=True|locates=False|guards=False": 3260,
+  "1e-8|analytic|scanned=False|locates=False|guards=False": 4950,
+  "1e-8|analytic|scanned=False|locates=False|guards=True": 14,
+  "1e-8|group|scanned=True|locates=False|guards=False": 3260
+ },
+ "edge_ratio_by_kind": {
+  "analytic|root": {
+   "n": 6056,
+   "min": 1.1800770438827515,
+   "median": 8.085341656064898,
+   "max": 8.085356710053405,
+   "n_within_1e-3_of_4pi": 0
+  },
+  "group|minimum": {
+   "n": 9616,
+   "min": 1.620338189140791e-06,
+   "median": 6.283182739143909,
+   "max": 6.283194425795233,
+   "n_within_1e-3_of_4pi": 0
+  },
+  "group|root": {
+   "n": 2880,
+   "min": 12.516454097186847,
+   "median": 12.566365367359472,
+   "max": 12.617122519370549,
+   "n_within_1e-3_of_4pi": 2376
+  }
+ },
+ "minima_calls": {
+  "1e-7|group|G|minima=19": 76,
+  "1e-7|group|G|minima=6": 160,
+  "1e-8|group|G|minima=19": 76,
+  "1e-8|group|G|minima=6": 160
+ },
+ "minima_calls_by_rtol": {
+  "1e-7": 236,
+  "1e-8": 236
+ }
+}

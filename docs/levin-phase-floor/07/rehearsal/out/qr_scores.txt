@@ -1,0 +1,31 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/scripts/qr_score.py sha256 f6d6282acf84e8898472a2361601b519b83db6144f5d331369acae58878c4354
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/captures.json sha256 406b57cd8876320c69685707be6f7cf03b55ed3734152b7144f67f08a998f203
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qr_reference/qmr-g-3-182.json sha256 ad6b41d4a5acf19cd97145762416186182557fb75d2847ee14145bfbd071fcd4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qr_reference/qmr-p-3-20389.json sha256 a60a6f327db09266959015ddb85914b5565e3218d394f9a9037c656351a156e3
+
+[100000.0, 1000000.0, 1000000.0, 6985073578.494601] (k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=6.9851e+09, z in (1.7159e+10, 6.9851e+09), regime qr, group q-r)
+  integrands bit-identical at 1001 points (R27's tree vs R28's): True; x_span and kw equal: True; theta' == 0 and theta == 0 at every sample: True, True; integrand sign [-1, 0, 1]
+  replays reproduce their captures: R28 True, R27 True
+  reference -0x1.a95ce1e6e5fdep-75 (-4.3981484956387763e-23), stated error 4.555040609436364e-36 (rounding scale 1.6325565019220062e-38); differences {'GL6-GL14': '-3.185589690728399e-36', 'GL8-GL14': '-5.877471754111438e-39', 'GL10-GL14': '-5.877471754111438e-39', 'GL12-GL14': '0.0', 'QAGS-GL14': '4.555040609436364e-36'}; QAGS abserr 9.289917688733704e-37
+  R27: value -0x1.a95ce1e66fd4fp-75 abserr 0x1.ada9683135978p-100 converged True regions 1: |v - ref| 2.8446e-33 = 0.00214849 x abserr (honest); 624.494 x the reference's stated error
+  R28: value -0x1.a95ce1e6e5fc6p-75 abserr 0x1.0c9262f698c90p-120 converged True regions 4666: |v - ref| 1.41059e-37 = 0.178723 x abserr (honest); 0.0309677 x the reference's stated error
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qr_reference/qmr-g-0-10266.json sha256 129843edc152bab32eed9acd6c3efae80c31694ac8761667475ab33e6ec67446
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qr_reference/qmr-p-0-10036.json sha256 b9b6b7aad5d05ed01155cbe239680f2f3de0fded44e73ec3429012d59fea0ece
+
+[316227.7660168379, 1000000.0, 1000000.0, 13627426843.66573] (k=3.16e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.3627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r)
+  integrands bit-identical at 1001 points (R27's tree vs R28's): True; x_span and kw equal: True; theta' == 0 and theta == 0 at every sample: True, True; integrand sign [-1, 0]
+  replays reproduce their captures: R28 True, R27 True
+  reference -0x1.3166237fddf59p-77 (-7.894378583450803e-24), stated error 2.644862289350147e-38 (rounding scale 1.7529041736909618e-39); differences {'GL6-GL14': '-2.938735877055719e-39', 'GL8-GL14': '1.4693679385278594e-39', 'GL10-GL14': '0.0', 'GL12-GL14': '0.0', 'QAGS-GL14': '2.644862289350147e-38'}; QAGS abserr 9.300935273285339e-38
+  R27: value -0x1.3166237fff3d3p-77 abserr 0x1.6dc933e8d695cp-103 converged True regions 1: |v - ref| 2.00295e-34 = 0.00142159 x abserr (honest); 7573.0 x the reference's stated error
+  R28: value -0x1.3166237fddf59p-77 abserr 0x1.d4577aa192a91p-123 converged True regions 4102: |v - ref| 0.0 = 0.0 x abserr (honest); 0.0 x the reference's stated error
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qr_reference/qmr-g-3-52.json sha256 00a482a22ecb48058280da955907743a8773693de5150d28acca81ce773c7cc4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qr_reference/qmr-p-3-20141.json sha256 54d7fb666ca10e17e4026ce0b870c0f841a446e962b2a934d3cc293729e87c3d
+
+[100000.0, 316227.7660168379, 316227.7660168379, 3046979177.3866296] (k=1e+05/Mpc, q=3.16e+05/Mpc, r=3.16e+05/Mpc @ z_response=3.047e+09, z in (5.421e+09, 3.047e+09), regime qr, group q-r)
+  integrands bit-identical at 1001 points (R27's tree vs R28's): True; x_span and kw equal: True; theta' == 0 and theta == 0 at every sample: True, True; integrand sign [-1, 0, 1]
+  replays reproduce their captures: R28 True, R27 True
+  reference 0x1.025f739eec8c8p-74 (5.343025473343636e-23), stated error 2.2334392665623463e-37 (rounding scale 1.1255367902742097e-37); differences {'GL6-GL14': '-2.9191051213969866e-34', 'GL8-GL14': '5.64237288394698e-37', 'GL10-GL14': '0.0', 'GL12-GL14': '0.0', 'QAGS-GL14': '2.2334392665623463e-37'}; QAGS abserr 6.494503170841366e-36
+  R27: value 0x1.025f739f22193p-74 abserr 0x1.5262252bddc77p-98 converged True regions 4: |v - ref| 2.57832e-33 = 0.000618169 x abserr (honest); 11544.2 x the reference's stated error
+  R28: value 0x1.025f739eec904p-74 abserr 0x1.afde96e37d318p-117 converged True regions 4112: |v - ref| 7.05297e-37 = 0.0694654 x abserr (honest); 3.15789 x the reference's stated error
+
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/qr_scores.json sha256 a82f6f394f29732bb014aa97a517ad57bea6ae8ff6b623558d9a1864c1db3b3f

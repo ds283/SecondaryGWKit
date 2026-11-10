@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/refs_projection_07.py out/v4/refs_projection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-09T00:22:09Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/refs_projection_07.py", line 204, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/scripts/refs_projection_07.py", line 129, in main
+    x, _ = nnls(A, b)
+           ~~~~^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/scipy/_lib/deprecation.py", line 234, in inner_f
+    return f(*args, **kwargs)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/scipy/optimize/_nnls.py", line 75, in nnls
+    raise ValueError(f"Expected a 2D array, but the shape of A is {A.shape}")
+ValueError: Expected a 2D array, but the shape of A is (0,)
+# ----
+# end 2026-11-09T00:22:12Z
+# exit 1

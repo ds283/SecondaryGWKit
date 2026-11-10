@@ -1,0 +1,16 @@
+{
+ "name": "pass1-p",
+ "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/pass1p_spec.json",
+ "spec_sha256": "f006cf2fc6c685d8af2bf1978f189335fa2444dc6b21f006144efcf76eb1fe2a",
+ "wall_s": 69.64706301689148,
+ "workers": {
+  "pass1-p-1": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/pass1-p/pass1-p-1/emit.jsonl"
+  },
+  "pass1-p-0": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture/pass1-p/pass1-p-0/emit.jsonl"
+  }
+ }
+}

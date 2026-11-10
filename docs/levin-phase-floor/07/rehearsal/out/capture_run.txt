@@ -1,0 +1,13 @@
+2026-11-08T10:10:19Z # prompt 07 rehearsal: run capture
+2026-11-08T10:10:19Z # written 2026-11-08T10:10:19Z on mps026298.phys.susx.ac.uk
+2026-11-08T10:10:19Z # script replay07.py sha256 68f985ebe3086a6d1a323a668420c62e0275c9788e0f85be9dcb4b5d57680a9d
+2026-11-08T10:10:19Z # tree p: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db HEAD 91472dbee1daba8374b0018db1195cf6c7898bbb (status --short: empty)
+2026-11-08T10:10:19Z # tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035 HEAD 746003508bff868fc1b256b29cbd5035609bed2b (status --short: empty)
+2026-11-08T10:10:19Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-08T10:10:19Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/state/capture_spec.json sha256 32ca3d2a75b33ec2f0ff1a612ad0705c8a0669f3a5ff9a62db4a0331cbf544da
+2026-11-08T10:10:19Z 2 workers, 8 units, at most 6 at once
+2026-11-08T10:10:19Z start capture-p (p, 5 units): pid 7253
+2026-11-08T10:10:19Z start capture-g (g, 3 units): pid 7254
+2026-11-08T10:11:30Z end capture-p: rc 0 after 70.6 s
+2026-11-08T10:16:50Z end capture-g: rc 0 after 390.6 s
+2026-11-08T10:16:51Z done in 391.6 s; return codes {0: 2}

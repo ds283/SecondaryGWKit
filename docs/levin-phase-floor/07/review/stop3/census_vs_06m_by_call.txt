@@ -1,0 +1,46 @@
+# stop3_compare.py sha256 a8c322c1d714f32793e8a320dfc20a8f22bdc29d48f15b760de833ec5a7a166e
+# checkpoint sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10
+{
+ "units": 18560,
+ "calls": 289482,
+ "quiet_calls": 284514,
+ "active_calls": 4968,
+ "units_with_active": 2456,
+ "units_fail": 0,
+ "quiet_calls_differing": 0,
+ "calls_with_skipped_phases": 16448,
+ "calls_mismatch_units": 0
+}
+unit-level keys in units with an active call (top 30):
+   26609  data:deep_lines.lines[i].levels[i][i]
+    1536  pickle:result_full.WKB_Levin_subintervals[i].abserr
+    1536  pickle:result_full.WKB_Levin_subintervals[i].groups[i].abserr
+    1536  pickle:result_full.WKB_Levin_subintervals[i].groups[i].evaluations
+    1536  pickle:result_full.WKB_Levin_subintervals[i].groups[i].value
+    1536  pickle:result_full.WKB_Levin_subintervals[i].value
+    1528  data:analytic_06h.h.abserr.hex
+    1528  data:analytic_06h.h.abserr.repr
+    1528  data:analytic_06h.parent_counterfactual.abserr.hex
+    1528  data:analytic_06h.parent_counterfactual.abserr.repr
+    1513  pickle:result_full.WKB_Levin_subintervals[i].groups[i].regions
+    1513  pickle:result_full.WKB_Levin_subintervals[i].groups[i].simple_regions
+    1498  data:analytic_06h.h.value.hex
+    1498  data:analytic_06h.h.value.repr
+    1492  data:analytic_06h.parent_counterfactual.value.hex
+    1492  data:analytic_06h.parent_counterfactual.value.repr
+    1452  data:result.WKB_Levin.hex
+    1452  data:result.WKB_Levin.repr
+    1452  data:result.WKB_Levin_data.evaluations
+    1452  data:result.total.hex
+    1452  data:result.total.repr
+    1452  data:result.total_abserr.hex
+    1452  data:result.total_abserr.repr
+    1452  pickle:result_full.WKB_Levin.hex
+    1452  pickle:result_full.WKB_Levin.repr
+    1452  pickle:result_full.WKB_Levin_data.evaluations
+    1451  data:dispatcher_counts.G
+    1451  data:dispatcher_flags.G exact_remainder=True
+    1451  pickle:result_full.total.hex
+    1451  pickle:result_full.total.repr
+failing units: 0
+exit 0
