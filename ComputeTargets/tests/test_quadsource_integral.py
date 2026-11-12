@@ -1895,9 +1895,10 @@ class TestThreeBesselPhaseGroups(unittest.TestCase):
         TestTolerancePlumbing.test_every_analytic_Levin_call_uses_the_same_tolerances: the same
         spy captures all sixteen calls (eight groups x two nu_types) of one analytic_integral.
 
-        "theta" stays in the dict even though the driver never evaluates it once "theta_mod_2pi"
-        and "theta_deriv" are both present (levin_quadrature.py:948-952, :1038) --
-        compatibility-only is not optional, and _Basis_SinCos raises without it.
+        "theta" stays in the dict, and once "theta_mod_2pi" and "theta_deriv" are both present the
+        driver uses it only for routing, through differences, never for a value (prompts/
+        levin-phase-floor/07a, sections 1.1 and 10) -- it is not optional, and
+        _Basis_SinCos.__init__ raises without it.
         """
         case = Case(0.0, SHAPES[0], 100.0, exact=True)
         B05, B25 = case.bessel_phase_data()
@@ -1950,9 +1951,10 @@ class TestThreeBesselPhaseGroups(unittest.TestCase):
         Two questions are asserted separately (prompts/levin-phase-floor/06h, deviation 10, on the
         user's ruling). (1) Whether the restructure beats the summed route is measured on the raw
         single-double phase ``theta``, the one thing the summed route has; ``theta`` still rounds
-        K eta into one double, and the Levin driver never evaluates it when "theta_mod_2pi" and
-        "theta_deriv" are supplied, so its bound keeps that one rounding (theta_abserr plus
-        2 eps |K| eta). (2) Whether theta_abserr is an honest declaration is tested on
+        K eta into one double, and when "theta_mod_2pi" and "theta_deriv" are supplied the Levin
+        driver uses it only for routing, through differences, never for a value (prompts/
+        levin-phase-floor/07a, sections 1.1 and 10), so its bound keeps that one rounding
+        (theta_abserr plus 2 eps |K| eta). (2) Whether theta_abserr is an honest declaration is tested on
         ``theta_mod_2pi``, the phase it declares: |theta_mod_2pi - Theta| <= theta_abserr alone at
         every point, as angles modulo 2 pi. Since 06h, ``sin_cos`` carries the rounding of K eta
         exactly.
@@ -2119,8 +2121,9 @@ class TestThreeBesselPhaseGroups(unittest.TestCase):
         smaller while the constituent scale max(k, q c_s, r c_s) eta is ~1e9, so |delta| / |dTheta|
         is not a metric: it is undefined at exact resonance and meaningless just short of it. The
         old route gets that small number wrong by order 100 % of itself, which is invisible in any
-        relative measure and is exactly what Levin's subdivision (phase_span,
-        levin_quadrature.py:1090) consumes.
+        relative measure and is exactly what Levin's location of stationary points consumes: the
+        sign of theta' places the windows and decides how a region's phase variation is measured
+        (since prompts/levin-phase-floor/07a the C2 gate's phase_span is read from the raw phase).
         """
         coefficients = _phase_group_coefficients()["near-resonant"]
         phases, grid = self._build(coefficients)

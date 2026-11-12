@@ -929,10 +929,13 @@ def bessel_phase(
         {"theta": phase.raw_theta, "theta_mod_2pi": phase.theta_mod_2pi,
          "theta_deriv": phase.theta_deriv, "theta_abserr": phase.theta_abserr_at}
 
-    -- all four, in that shape. ``theta`` is required even though it is never *evaluated* when the
-    other two accessors are present (``levin_quadrature.py:948-952`` and ``:1038``), and
-    ``theta_deriv`` carries double duty there: it conditions the basis *and* decides subdivision,
-    since ``phase_span`` is computed from it (``:1090``).
+    -- all four, in that shape. ``theta`` is required (``_Basis_SinCos.__init__`` raises without
+    it); when the other two accessors are present Levin samples it for routing only, through
+    differences, never for a value or an error (``phase_span``, the C2 gate's and the LU choice's
+    variation, since prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md sections 1.1
+    and 10). ``theta_deriv`` carries double duty there: it conditions the basis *and* locates the
+    stationary points, and its sign on a region's nodes decides how that region's variation is
+    measured.
     """
     # ---- deprecated tolerance arguments ------------------------------------------------------
     deprecated_supplied = [

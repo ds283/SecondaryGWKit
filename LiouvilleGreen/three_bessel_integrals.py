@@ -587,8 +587,10 @@ class BesselPhaseGroup:
         (IMPLEMENTATION_STATE.md standing note 17), but it enters only as a correction to K x: at
         the bottom of the near region, where its relative error is worst, x is smallest, and the
         1.5e-11 measured above is that product. Levin uses theta' for basis conditioning *and* for
-        deciding subdivision (phase_span at levin_quadrature.py:1090), so this is the group
-        quantity it is most sensitive to.
+        locating stationary points, where its sign decides where windows go and how a region's
+        phase variation is measured (since prompts/levin-phase-floor/07a, the C2 gate's phase_span
+        is read from the raw phase, not from theta'), so this is the group quantity it is most
+        sensitive to.
         """
         x = np.exp(log_x)
         return self.K * x + sum(

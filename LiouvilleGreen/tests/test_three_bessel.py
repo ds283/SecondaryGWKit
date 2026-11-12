@@ -344,9 +344,10 @@ class TestPhaseGroups(unittest.TestCase):
 
         (1) **Does the K x + C + R restructure beat the legacy three-raw-phase route?** That can
         only be compared on the raw single-double phase :meth:`theta`, the one thing the legacy
-        route has. ``theta`` still rounds K x into one double, and the Levin driver never evaluates
-        it when "theta_mod_2pi" and "theta_deriv" are supplied, so its bound rightly keeps that one
-        rounding: theta_abserr plus 2 eps |K| x. The before/after ratio is measured and printed
+        route has. ``theta`` still rounds K x into one double, and when "theta_mod_2pi" and
+        "theta_deriv" are supplied the Levin driver uses it only for routing, through differences,
+        never for a value (prompts/levin-phase-floor/07a, sections 1.1 and 10), so its bound
+        rightly keeps that one rounding: theta_abserr plus 2 eps |K| x. The before/after ratio is measured and printed
         rather than being the only claim -- DRAFT-PLAN.md 8.2's restructure is justified by an
         argument, and this is the number that makes it a measurement.
 
