@@ -17,10 +17,12 @@ import math
 import pickle
 import unittest
 import warnings
+from unittest import mock
 
 import mpmath as mp
 import numpy as np
 
+import AdaptiveLevin.levin_quadrature as levin_quadrature
 from AdaptiveLevin.levin_quadrature import adaptive_levin_sincos
 from LiouvilleGreen.bessel_phase import (
     EVALUATION_FLOOR,
@@ -306,7 +308,9 @@ class TestLevinConsumption(unittest.TestCase):
     driven by the four-key phase dictionary prompt 06 settles.
 
     This is the campaign's concrete demonstration that the accuracy claim reaches the consumer: the
-    declared phase error appears in the reported ``abserr``, and the raw phase is never evaluated.
+    declared phase error appears in the reported ``abserr``, and the raw phase's absolute value
+    enters no value or error (since prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md
+    section 10; until then, the raw phase was never evaluated).
     """
 
     NU = 2.5
@@ -403,33 +407,88 @@ class TestLevinConsumption(unittest.TestCase):
         )
         self.assertLess(callable_run["abserr"], 0.1 * scalar_run["abserr"])
 
-    def test_the_raw_phase_is_never_evaluated(self):
-        """
-        ``RECONCILIATION.md`` §1's reading of ``levin_quadrature.py:1038``: ``need_theta_Cheb`` is
-        ``False`` whenever both ``theta_mod_2pi`` and ``theta_deriv`` are supplied, so ``theta`` is
-        a *required key* that is never called. Evidence rather than assertion: the same run with a
-        ``theta`` that raises must produce bit-identical output.
+    #: The constant added to the raw phase by the shift test below: not a multiple of 2 pi (it is
+    #: 159154.94... turns), and of order 1e6, large against either span's phase.
+    RAW_PHASE_SHIFT = 1.0e6 + 0.5
 
-        This matters because ``raw_theta`` is ``eps * theta``-limited by construction -- 2.2e-1 rad
-        at ``x = 1e15`` -- so a route that evaluated it would silently discard the campaign's gain.
+    def _run_recording_decisions(self, span, theta):
         """
+        ``_run`` with every region solve recorded: its span, whether the C2 gate (or a window)
+        sent it to the Clenshaw-Curtis rule, whether that was forced, and, for a Levin solve,
+        whether it took LU or least squares.
+        """
+        decisions = []
+        solve = levin_quadrature._adaptive_levin_subregion
 
-        def exploding_theta(x):
-            raise AssertionError(
-                "levin_quadrature evaluated theta['theta'], which RECONCILIATION.md 1 says it "
-                "must not when theta_mod_2pi and theta_deriv are both supplied"
+        def recording(span_, *args, **kwargs):
+            data = solve(span_, *args, **kwargs)
+            decisions.append(
+                (
+                    float(span_[0]).hex(),
+                    float(span_[1]).hex(),
+                    bool(data["is_direct"]),
+                    bool(kwargs.get("force_direct", False)),
+                    data["metadata"].get("direct_solve", 0),
+                    data["metadata"].get("lstsq_solve", 0),
+                )
             )
+            return data
+
+        with mock.patch.object(
+            levin_quadrature, "_adaptive_levin_subregion", recording
+        ):
+            result = self._run(
+                span, theta_abserr=self.phase.theta_abserr_at, theta=theta
+            )
+        return result, decisions
+
+    def test_the_raw_phase_enters_no_value_or_error(self):
+        """
+        The raw phase's absolute value never enters a value or an error of the integral.
+
+        ``raw_theta`` is limited to ``eps * theta`` by construction -- 2.2e-1 rad at ``x = 1e15``
+        -- so a route that took ``sin`` or ``cos`` of it, or any value from it, would silently
+        discard the campaign's gain. ``RECONCILIATION.md`` section 1 records the stronger statement
+        that held when it was written: Levin never *evaluated* ``theta`` when ``theta_mod_2pi`` and
+        ``theta_deriv`` were both supplied, and this test once asserted that, by running each span
+        with a ``theta`` that raises. Since prompts/levin-phase-floor/
+        07a-window-stop-and-phase-variation.md (sections 1.1 and 10) Levin samples ``theta`` for
+        routing: the C2 gate and the choice of LU over least squares read a region's phase
+        variation ``|theta(b) - theta(a)|``, a *difference* of two raw values, which carries about
+        two ulps of ``theta`` (0.4 rad at 1e15), negligible against the thresholds 6 pi and 20 pi.
+        ``RECONCILIATION.md`` is left as written; it describes the code before 07a.
+
+        So the test asserts the purpose: each span is run with the supplied ``theta`` and with
+        ``theta(x) + C``, ``C = RAW_PHASE_SHIFT`` (not a multiple of 2 pi, of order 1e6). A shift
+        cancels in every difference Levin takes, to rounding of order ``ulp(C)``; a route that took
+        a value from the raw phase would change the value. Required: the same value and abserr, bit
+        for bit, and the same decision on every region solved -- its span, the Clenshaw-Curtis rule
+        or the Levin solve, forced or not, LU or least squares -- so that the test sees that no
+        decision moved, not merely the outputs. (``C`` = 1e6 + 0.5 moves no decision on either span.)
+        """
+        shift = self.RAW_PHASE_SHIFT
+        self.assertNotEqual(math.fmod(shift, 2.0 * math.pi), 0.0)
+        raw_theta = self.phase.raw_theta
+
+        def shifted_theta(x):
+            return raw_theta(x) + shift
 
         for span in (self.NEAR_SPAN, self.TAIL_SPAN):
             with self.subTest(span=span):
-                supplied = self._run(span, theta_abserr=self.phase.theta_abserr_at)
-                exploding = self._run(
-                    span,
-                    theta_abserr=self.phase.theta_abserr_at,
-                    theta=exploding_theta,
+                supplied, supplied_decisions = self._run_recording_decisions(
+                    span, raw_theta
                 )
-                self.assertEqual(exploding["value"], supplied["value"])
-                self.assertEqual(exploding["abserr"], supplied["abserr"])
+                shifted, shifted_decisions = self._run_recording_decisions(
+                    span, shifted_theta
+                )
+                self.assertGreater(len(supplied_decisions), 0)
+                self.assertEqual(shifted_decisions, supplied_decisions)
+                self.assertEqual(
+                    float(shifted["value"]).hex(), float(supplied["value"]).hex()
+                )
+                self.assertEqual(
+                    float(shifted["abserr"]).hex(), float(supplied["abserr"]).hex()
+                )
 
     def test_theta_is_still_a_required_key(self):
         """``_Basis_SinCos.__init__`` raises without it (``levin_quadrature.py:948-952``)."""

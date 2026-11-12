@@ -1,0 +1,40 @@
+{
+ "label": "commit",
+ "tree": "/Users/ds283/Documents/Code/SecondaryGWKit",
+ "tree_git_sha": "a9f6abc34d5101160918b8994eb59f0237e015a8",
+ "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+ "levin_quadrature_status": "M AdaptiveLevin/levin_quadrature.py",
+ "test_module_sha256": "3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c",
+ "script_sha256": "33edc1fa8cd996d55b818a4cbec1c17f8a619db22b079dd06352d3c528eef06b",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19
+ ],
+ "tests": [
+  "test_YJJ_log_singularity",
+  "test_JJJ",
+  "test_YJJ",
+  "test_abserr_bounds_truth"
+ ],
+ "unit_timeout": 1200.0,
+ "started": "2026-11-12T01:48:32",
+ "finished": "2026-11-12T01:51:12"
+}

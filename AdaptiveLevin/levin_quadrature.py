@@ -81,9 +81,22 @@ deliberate departures are:
     global budget a leaf whose floor dominates the sum is the one chosen, so
     a floor its halves would cut is cut.
 
-  * Weakly oscillatory regions (total variation of the phase, mean|theta'| * width,
-    below 6*pi) are handed to a nested Clenshaw-Curtis rule rather than to the Levin
-    rule. The extremal Chebyshev grid the Levin solve already uses *is* the
+  * Weakly oscillatory regions (total variation of the phase below 6*pi) are handed to a
+    nested Clenshaw-Curtis rule rather than to the Levin rule. The variation V is computed
+    from the raw phase itself (prompts/levin-phase-floor/07a-window-stop-and-phase-
+    variation.md, section 1.1): V = |theta(b) - theta(a)| on a region whose rate theta' has no
+    two node samples of opposite strict sign, where theta is monotone and that is exact; else
+    the variation on the node partition, sum_j |theta(x_{j+1}) - theta(x_j)|, exact where
+    theta is monotone between adjacent nodes and a lower bound otherwise (see
+    _Basis_SinCos.build_Levin_data()). Until 07a it was estimated as the plain mean of
+    |theta'| on the region's Chebyshev nodes times its width, which leans to |theta'| at the
+    region's ends, where the nodes crowd: measured 1.27-1.32 times high for a near-centred
+    root, up to 8.43 times high with |theta'| weighted to one end, 0.47 of the truth on a
+    narrow bump in the middle; and it was not monotone under bisection, so a half of a region
+    the gate sent to the fallback could be sent to the Levin solve. V is additive on a
+    monotone region, so a half never reads more than its parent. The threshold 6*pi itself
+    is unchanged, and has never been measured ([07-c2-gate-threshold-was-never-measured]).
+    The extremal Chebyshev grid the Levin solve already uses *is* the
     Clenshaw-Curtis grid, and its N-point grid is exactly every other node of the
     (2N-1)-point grid (nesting holds for every N >= 2), so the pair (CC_N, CC_{2N-1})
     costs 2N-1 integrand and phase evaluations, always, and comes with its own error
@@ -115,11 +128,13 @@ deliberate departures are:
     of |theta'| deep enough to act as a nearly coalescing pair, located on a uniform scan. Round
     each, a window of phase half-width _LEVIN_WINDOW_HALF_PHASE is integrated by the nested
     Clenshaw-Curtis rule, in pieces of at most 2 pi, whatever their span; the rest is left to the
-    loop as before, in the same budget. A phase whose total variation over the span is below the
-    C2 gate's SIX_PI is not located (Rule A, prompt 07 section 10): the gate already sends a region
-    of it to the Clenshaw-Curtis rule. As a safety net, a Levin region whose phase rate changes
-    sign on its own Chebyshev nodes is never returned as a Levin region. Without a closed-form
-    rate nothing is located, and that guard is the only protection.
+    loop as before, in the same budget. The location does not depend on any estimate of the
+    phase's variation (prompt 07a section 1.1, in place of prompt 07 section 10's Rule A, which
+    skipped a phase whose variation over the span, estimated on the scan, was below SIX_PI): a
+    phase is left unlocated only when there is nothing to locate, its rate exactly zero at every
+    finite scan sample. As a safety net, a Levin region whose phase rate changes sign on its own
+    Chebyshev nodes is never returned as a Levin region. Without a closed-form rate nothing is
+    located, and that guard is the only protection.
 
   * A direct LU solve is used in place of the least-squares/SVD solve when the
     phase span shows the Levin super-operator to be well conditioned. Note
@@ -134,16 +149,18 @@ THE BASIS INTERFACE
 -------------------
 _adaptive_levin() is written for a basis of any number of components. It calls, on the basis
 object: build_Levin_data() (theta' on a region's nodes, the super-operator, the basis at the two
-endpoints and the phase span), theta_abserr_at(), and supports_complexified_solve if present; and,
+endpoints and the phase's variation V across the region, computed from the raw phase as above),
+theta_abserr_at(), and supports_complexified_solve if present; and,
 on a region the nested Clenshaw-Curtis rule takes, eval_basis_and_arguments(),
 theta_prime_on_fine_grid() and basis_derivative(). Since prompts/levin-phase-floor/
 07-stationary-point-guard.md, two optional methods supply what the stationary-point guard needs:
 independent_phases(), one callable per independent phase of the basis, and
 independent_phase_rates(), their closed-form rates d theta_i / dx in the same order, or None when
 the basis cannot supply them. A basis without them is treated as unable to supply rates: nothing is
-located, and only the nodal guard protects it. A phase whose rates show a total variation over the
-span below SIX_PI is not located either (Rule A); for a basis of several phases the nodal guard tests
-such a phase for a sign change on a region's nodes rather than for one strict sign. _Basis_SinCos
+located, and only the nodal guard protects it. A phase whose rate is exactly zero at every finite
+scan sample is not located either (prompt 07a section 1.1); for a basis of several phases the nodal
+guard tests such a phase for a sign change on a region's nodes rather than for one strict sign.
+_Basis_SinCos
 has one phase, theta["theta"], whose rate is theta["theta_deriv"] when the caller supplies it.
 
 LOGGING
@@ -234,6 +251,15 @@ DEFAULT_LEVIN_RELTOL = 1e-7
 # approximate machine epsilon for 64-bit floats
 MACHINE_EPSILON = 1e-16
 
+# The C2 gate's threshold: a region whose phase variation V is below SIX_PI goes to the nested
+# Clenshaw-Curtis rule, any other to the Levin solve (_adaptive_levin_subregion_impl()). Since
+# prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md, section 1.1, V is computed from
+# the raw phase at the region's nodes (_Basis_SinCos.build_Levin_data()), exactly where the phase is
+# monotone; until then it was estimated as mean|theta'| on the nodes times the width, which was
+# biased by an amount that depends on the region's shape (1.27-1.32x high for a near-centred root,
+# up to 8.43x high with |theta'| weighted to one end, 0.47x on a narrow central bump) and not
+# monotone under bisection, so 6 pi did not mean one thing. The number 6 pi is unchanged by 07a,
+# and has not been measured ([07-c2-gate-threshold-was-never-measured]).
 SIX_PI = 6.0 * np.pi
 
 # Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every Levin region's
@@ -468,7 +494,10 @@ _CC_NODE_TERM_ROUNDING_COUNT = 5
 
 # minimum phase change across a subinterval before we are prepared to invert the Levin super-operator
 # with a direct LU solve rather than a least-squares (SVD) solve. Below this the operator is poorly
-# conditioned and we need the minimum-norm solution; see _adaptive_levin_subregion_impl().
+# conditioned and we need the minimum-norm solution; see _adaptive_levin_subregion_impl(). The
+# phase change compared is the region's variation V, computed from the raw phase as the C2 gate's is
+# (see SIX_PI; since prompt 07a section 1.1, in place of the estimate mean|theta'| * width). The
+# number 20 pi is unchanged.
 _LEVIN_DIRECT_SOLVE_PHASE_SPAN = 20.0 * np.pi
 
 # The stationary-point guard (prompts/levin-phase-floor/07-stationary-point-guard.md; see
@@ -507,23 +536,59 @@ _LEVIN_COALESCENCE_LAMBDA = 4.0
 # section 1.2 item 3).
 _LEVIN_WINDOW_PIECE_PHASE = 2.0 * np.pi
 
-# The stopping rule for window leaves (prompts/levin-phase-floor/07-stationary-point-guard.md section
-# 1.3, ruled in by the user at the prompt's section 2 stop): QUADPACK's iroff1, counted per window. A
-# bisection of a window leaf P into L and R counts if
-#     |(V_L + V_R) - V_P| <= _LEVIN_WINDOW_IROFF1_VALUE_RTOL * |V_L + V_R|   and
-#     e'_L + e'_R >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO * e'_P,
-# i.e. the halves barely change the value and do not lower the error; at
-# _LEVIN_WINDOW_IROFF1_LIMIT counted bisections the window is round-off-limited, and every leaf of it
-# is returned floor-limited (see _adaptive_levin()). The three numbers are QUADPACK's dqage's,
-# unchanged: it counts the same bisection with the same thresholds and gives ier = 2 at 6, stopping
-# the whole call, where here one window stops. Why a rule is needed at all: window leaves are never
-# floor-limited (section 0.2 (ii)), and the prompt's section 2 measured them chased to depth_max two
-# ways, on a Clenshaw-Curtis floor flat in h above the request, and untrusted at the integrand's own
-# noise far inside it; iroff1 counts on both (docs/levin-phase-floor/07/calibration/out/, the first
-# run's calibrate_tables.md and replay_tables.md, section 2.5).
+# The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
+# 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
+# the request, by prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.2, the
+# user's choice of Part A's variant (d)). A bisection of a window leaf P into L and R counts against
+# its window if and only if (_window_bisection_counts())
+#   1. neither half is unresolved -- dqage's skip, its test defab1.eq.error1.or.defab2.eq.error2. A
+#      Clenshaw-Curtis leaf is unresolved when _DQK21_SATURATION_FACTOR |CC_{2N-1} - CC_N| >= resasc,
+#      both positive, where dqk21 would declare resasc itself (see that constant). A leaf with no resasc
+#      is never unresolved;
+#   2. |(V_L + V_R) - V_P| <= min(_LEVIN_WINDOW_IROFF1_VALUE_RTOL, rtol) |V_L + V_R|, each V a leaf's own
+#      solve's value: the halves barely change the value, measured against the request;
+#   3. e_L + e_R >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO e_P, each e a leaf's own solve's error
+#      (used_interval.own_err: the larger of its resolution and floor terms, plus truncation), taken
+#      before the trust check widens a declaration -- dqage counts on its raw estimates, not on the
+#      declared e' the budget sums.
+# At _LEVIN_WINDOW_IROFF1_LIMIT counted bisections the window is round-off-limited, and every leaf of
+# it is returned floor-limited (see _adaptive_levin()).
+#
+# Why each part.
+#   * The count is dqage's, with its skip and its raw estimates. 07's port counted every bisection,
+#     on e', which can be a trusted parent's widened declaration; dqage skips a bisection in which
+#     either half's estimate is not yet in its asymptotic regime, and compares the estimates it
+#     computed. The user kept dqage's rule defensively, "even though it barely makes any difference
+#     here" (07a section 9.1): on Part A's calls neither the skip nor the raw estimates ever acted.
+#   * The value test is no looser than the request: dqage's fixed 1e-5 would count, at rtol 1e-7 or
+#     1e-8, a bisection that moves the value by 100-1000 times the request.
+#   * dqage's outcome, ier = 2 ("roundoff error is detected, which prevents the requested tolerance
+#     from being achieved"), is not adopted (07a section 9.3): dqage's stop ends the whole integration,
+#     so "stopped unmet" there means "returned unmet"; here only the window stops, its leaves keep
+#     declaring their error inside the call's sum, and the call is converged only if that sum meets
+#     the request at the end -- the end-of-call test is the analogue of ier = 2. Flagging the call at
+#     the stop would, on Part A's evidence, flag calls the stopped windows' declarations already cover
+#     (they were measured at or above their true error), honest calls among them.
+# The three numbers 1e-5, 0.99 and 6 are dqage's, unchanged. Why a rule is needed at all: window
+# leaves are never floor-limited (07 section 0.2 (ii)), and 07's section 2 measured them chased to
+# depth_max two ways, on a Clenshaw-Curtis floor flat in h above the request, and untrusted at the
+# integrand's own noise far inside it; iroff1 counts on both (docs/levin-phase-floor/07/calibration/
+# out/, the first run's calibrate_tables.md and replay_tables.md, section 2.5). Part A's measurement
+# of the variants of this rule is docs/levin-phase-floor/07a/measurement/ (out/stop_2_report.md,
+# out/tables_final_rg.md).
 _LEVIN_WINDOW_IROFF1_VALUE_RTOL = 1.0e-5
 _LEVIN_WINDOW_IROFF1_ERROR_RATIO = 0.99
 _LEVIN_WINDOW_IROFF1_LIMIT = 6
+
+# dqk21's saturation factor. QUADPACK's 21-point Gauss-Kronrod rule declares its error as
+#     if(resasc.ne.0.0d+00.and.abserr.ne.0.0d+00)
+#    *  abserr = resasc*dmin1(0.1d+01,(0.2d+03*abserr/resasc)**1.5d+00)
+# (dqk21.f), with abserr = |K - G| and resasc = int |f - mean f|, so the error it returns equals
+# resasc exactly when 200 |K - G| >= resasc: the estimate is not yet in its asymptotic regime, and
+# dqage's test defab.eq.error then skips the bisection's iroff1 count. A Clenshaw-Curtis leaf's
+# analogue (07a section 1.2 item 1, Part A's definition): |CC_{2N-1} - CC_N| for |K - G|, and resasc
+# formed on the fine rule (_adaptive_levin_subregion_cc()).
+_DQK21_SATURATION_FACTOR = 200.0
 
 INTERVAL_TYPE_LEVIN = 0
 INTERVAL_TYPE_DIRECT = 1
@@ -1003,6 +1068,60 @@ def _error_for_ordering(err: float) -> float:
     return err
 
 
+def _cc_leaf_unresolved(abserr: Optional[float], resasc: Optional[float]) -> bool:
+    """
+    Whether a Clenshaw-Curtis leaf's error estimate is unresolved in dqk21's sense (prompts/
+    levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.2 item 1): True when
+    _DQK21_SATURATION_FACTOR * abserr >= resasc, both finite and positive, abserr being the leaf's
+    own nested-pair estimate |CC_{2N-1} - CC_N| and resasc its fine rule's sum_j |w_j| |g_j - gbar|.
+    dqk21 would declare resasc itself there. A leaf with no resasc (not a Clenshaw-Curtis leaf), or
+    with either number zero or not finite, is never unresolved, as dqk21 leaves its estimate alone
+    when either is zero.
+    """
+    if resasc is None or abserr is None:
+        return False
+    if not (np.isfinite(resasc) and np.isfinite(abserr)):
+        return False
+    return bool(
+        resasc > 0.0 and abserr > 0.0 and _DQK21_SATURATION_FACTOR * abserr >= resasc
+    )
+
+
+def _own_error(region: "used_interval") -> float:
+    """A region's own solve's error e (used_interval.own_err) for the window's count; +inf if None."""
+    own = region.own_err
+    return float("inf") if own is None else float(own)
+
+
+def _window_bisection_counts(
+    value_parent: float,
+    value_halves: float,
+    error_parent: float,
+    error_left: float,
+    error_right: float,
+    unresolved_left: bool,
+    unresolved_right: bool,
+    rtol: float,
+) -> bool:
+    """
+    Whether a bisection of a window leaf P into L and R counts against its window's iroff1 count
+    (prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.2 item 1; see the
+    comment above _LEVIN_WINDOW_IROFF1_VALUE_RTOL). It counts if and only if neither half is
+    unresolved (dqage's skip), |value_halves - value_parent| <= min(_LEVIN_WINDOW_IROFF1_VALUE_RTOL,
+    rtol) |value_halves|, and error_left + error_right >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO *
+    error_parent; each inequality inclusive. value_parent is V_P and value_halves V_L + V_R, each a
+    leaf's own solve's value; the errors are the leaves' own solves' errors e (used_interval.own_err),
+    not the declared e'.
+    """
+    if unresolved_left or unresolved_right:
+        return False
+    value_tolerance = min(_LEVIN_WINDOW_IROFF1_VALUE_RTOL, rtol)
+    return bool(
+        np.fabs(value_halves - value_parent) <= value_tolerance * np.fabs(value_halves)
+        and error_left + error_right >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO * error_parent
+    )
+
+
 def _solve_floor_declared(data: dict) -> float:
     """A subregion solve's declared endpoint term, "phase_err_declared" (0.0 if it reports none)."""
     return data.get("phase_err_declared", 0.0) or 0.0
@@ -1175,6 +1294,7 @@ class used_interval:
         window: bool = False,
         guarded: bool = False,
         guard_at_depth_max: bool = False,
+        resasc: Optional[float] = None,
     ):
         self._start = start
         self._end = end
@@ -1256,6 +1376,11 @@ class used_interval:
         self._window = window
         self._guarded = guarded
         self._guard_at_depth_max = guard_at_depth_max
+
+        # dqk21's resasc on a Clenshaw-Curtis region's fine rule (prompts/levin-phase-floor/
+        # 07a-window-stop-and-phase-variation.md section 1.2), None on a Levin region. Read only by
+        # the window's iroff1 count (_cc_leaf_unresolved()); it enters no value or error.
+        self._resasc = resasc
 
     def __str__(self):
         if self._abserr is not None:
@@ -1349,10 +1474,13 @@ class used_interval:
         _adaptive_levin().
 
         Also True for every leaf of a stationary-point window that the iroff1 rule stopped
-        (prompts/levin-phase-floor/07-stationary-point-guard.md section 1.3,
-        _LEVIN_WINDOW_IROFF1_LIMIT): six of the window's bisections changed the value by at most
-        1e-5 relatively without lowering the error, so the window is round-off-limited and no leaf
-        of it is refined further, whether or not the loop chose that leaf.
+        (prompts/levin-phase-floor/07-stationary-point-guard.md section 1.3, its count since
+        prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.2 dqage's;
+        _LEVIN_WINDOW_IROFF1_LIMIT): six of the window's bisections, each with neither half
+        unresolved in dqk21's sense, changed the value by at most min(1e-5, rtol) relatively
+        without lowering the halves' own error estimates (before the trust check widens them), so
+        the window is round-off-limited and no leaf of it is refined further, whether or not the
+        loop chose that leaf.
         """
         return self._phase_limited
 
@@ -1484,12 +1612,38 @@ class used_interval:
             return self._combine(self._phase_err)
         return self._combine(self._phase_err_less_node)
 
+    @property
+    def own_err(self) -> Optional[float]:
+        """
+        The error the region's own solve declares (prompts/levin-phase-floor/
+        07a-window-stop-and-phase-variation.md section 1.2 item 1, the raw estimate e): budget_err
+        with the resolution term its own abserr, before the trust check widens a declaration --
+        max(abserr, floor) plus truncation, the floor less |E| on a fallback region. It is what
+        QUADPACK's dqage compares in its iroff1 count; the window's count reads it.
+        """
+        floor = (
+            self._phase_err_less_node
+            if self._phase_err_less_node is not None
+            else self._phase_err
+        )
+        return self._combine_terms(self._abserr, floor)
+
+    @property
+    def resasc(self) -> Optional[float]:
+        """dqk21's resasc on a Clenshaw-Curtis region's fine rule; None on a Levin region."""
+        return self._resasc
+
     def _combine(self, floor: Optional[float]) -> Optional[float]:
         resolution = (
             self._declared_resolution
             if self._declared_resolution is not None
             else self._abserr
         )
+        return self._combine_terms(resolution, floor)
+
+    def _combine_terms(
+        self, resolution: Optional[float], floor: Optional[float]
+    ) -> Optional[float]:
         if resolution is None:
             base = floor
         elif floor is None:
@@ -1616,8 +1770,13 @@ class _levin_leaf:
     one and the budget cannot be met while it is in the partition, and it is never floor-limited.
     And, for section 1.3's rule, "window_index": the merged window a window leaf belongs to (None
     for every other leaf); "fell_at_last_bisection": for a window leaf made by a bisection, whether
-    that bisection lowered the summed error (e'_L + e'_R below _LEVIN_WINDOW_IROFF1_ERROR_RATIO of
-    the parent's), None for a leaf made by seeding.
+    that bisection lowered the summed declared error (e'_L + e'_R below
+    _LEVIN_WINDOW_IROFF1_ERROR_RATIO of the parent's e'), None for a leaf made by seeding. It reports
+    on e', as at prompt 07, and is not the count's error test: since prompts/levin-phase-floor/
+    07a-window-stop-and-phase-variation.md section 1.2 the count compares the leaves' own solves'
+    errors e (used_interval.own_err), as dqage compares its raw estimates, so a bisection can count
+    while its halves' e' fell (a parent's e' widened by the trust check) and fail to count while it
+    did not. It feeds "leaves_falling_at_stop".
     """
 
     __slots__ = (
@@ -2089,6 +2248,18 @@ def _sample_vectorized(func, grid: np.ndarray, cache: dict, key) -> np.ndarray:
     return np.array([func(x) for x in grid], dtype=float)
 
 
+def _node_partition_variation(theta_nodes: np.ndarray) -> float:
+    """
+    The variation of a phase on a region's node partition, sum_j |theta(x_{j+1}) - theta(x_j)|
+    over its nodes in order, summed correctly rounded (math.fsum, so the order of the nodes does
+    not change the bits): exact where the phase is monotone between adjacent nodes, a lower bound
+    on its total variation otherwise. The variation V a basis reports from build_Levin_data() on a
+    region whose rate changes sign on its nodes (prompts/levin-phase-floor/
+    07a-window-stop-and-phase-variation.md section 1.1 item 3).
+    """
+    return float(math.fsum(np.fabs(np.diff(np.asarray(theta_nodes, dtype=float)))))
+
+
 class _Basis_SinCos:
     def __init__(self, theta):
         """
@@ -2183,7 +2354,27 @@ class _Basis_SinCos:
         """
         Sample the phase function once and build everything derived from that sample: theta',
         the A^T super-operator block (unless need_AmatT is False), the basis vector w evaluated
-        at each endpoint, and an estimate of the total phase change across the interval.
+        at each endpoint, and V, the phase's total variation across the interval, which the C2
+        gate and the LU choice route on (_adaptive_levin_subregion_impl()).
+
+        V (prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.1 item 3)
+        is computed from the raw phase theta["theta"], not estimated from theta':
+          * if theta' on the region's nodes (theta_prime_Cheb, from theta_deriv or by spectral
+            differentiation) has no two samples of opposite strict sign (_changes_sign() False),
+            V = |theta(b) - theta(a)|, with theta at the region's two end nodes, which are its
+            endpoints exactly: exact where theta is monotone, from two evaluations of the phase.
+            Its rounding is about ulp(theta), 1.5e-8 rad for a raw phase near 1e8, negligible
+            against 6 pi;
+          * otherwise theta is not monotone on the region and |theta(b) - theta(a)| can read near
+            zero, so V is the variation on the node partition, sum_j |theta(x_{j+1}) - theta(x_j)|
+            over the nodes in order, summed correctly rounded (math.fsum): exact where theta is
+            monotone between adjacent nodes, a lower bound otherwise, which sends a region towards
+            the Clenshaw-Curtis rule, right whatever its stationary points do.
+        The raw phase is sampled on the nodes only in the second case (or where it is sampled
+        already, below), and at the two ends otherwise, through _sample_vectorized(). Until 07a
+        the method returned the estimate mean|theta'| * width, biased by the nodes' crowding to
+        the ends and not monotone under bisection (see SIX_PI's comment). This basis has one
+        phase, so V is that phase's.
 
         :param notify_label: caller-supplied label for this run, used only (with id_label) to
             annotate a non-finite-phase-derivative warning -- see _format_label().
@@ -2199,8 +2390,8 @@ class _Basis_SinCos:
             (recommendation 14). None (the default, used by any direct caller that does not
             thread one through) is equivalent to a fresh, un-shared cache -- correct, just
             without the cross-region reuse the driver otherwise gets.
-        :return: (AmatT, theta_prime_Cheb, w0, wk, phase_span). AmatT is None when need_AmatT is
-            False. Prior to prompt 04 this also returned a sixth element, theta_scale, used only
+        :return: (AmatT, theta_prime_Cheb, w0, wk, phase_span), phase_span being V above. AmatT
+            is None when need_AmatT is False. Prior to prompt 04 this also returned a sixth element, theta_scale, used only
             by the endpoint phase-rounding model that eq. (151) (_roundoff_floor()) replaces as
             the default accuracy floor -- see prompt 04's log for why that model, and the
             inference it required, were removed.
@@ -2262,12 +2453,39 @@ class _Basis_SinCos:
                 [[zero_block, -theta_prime_I], [theta_prime_I, zero_block]]
             )
 
-        # estimate the total phase change across the interval from quantities we have already computed.
-        # This costs no further evaluations of the phase function, and is used to decide whether the
-        # Levin super-operator is well enough conditioned to be inverted by a direct solve.
-        phase_span = float(
-            np.mean(np.fabs(theta_prime_Cheb)) * np.fabs(grid[0] - grid[-1])
-        )
+        # V, the phase's total variation across the region, from the raw phase (prompt 07a section
+        # 1.1 item 3; see the docstring): |theta(b) - theta(a)| where theta' has no strict sign
+        # change on the nodes, the node-partition sum where it has. It decides the C2 gate and
+        # whether the Levin super-operator is well enough conditioned to be inverted by a direct
+        # solve. grid is descending: grid[0] is the upper endpoint b, grid[-1] the lower a.
+        if _changes_sign(theta_prime_Cheb):
+            theta_nodes = theta_Cheb
+            if theta_nodes is None:
+                theta_nodes = _sample_vectorized(
+                    self._theta, grid, vectorize_cache, ("theta", id(self))
+                )
+            phase_span = _node_partition_variation(theta_nodes)
+        else:
+            if theta_Cheb is not None:
+                theta_b, theta_a = theta_Cheb[0], theta_Cheb[-1]
+            else:
+                theta_b, theta_a = _sample_vectorized(
+                    self._theta,
+                    np.array([grid[0], grid[-1]]),
+                    vectorize_cache,
+                    ("theta", id(self)),
+                )
+            phase_span = float(np.fabs(theta_b - theta_a))
+
+        if not np.isfinite(phase_span):
+            _logger.warning(
+                "!! WARNING (adaptive_levin_subregion, %s): sampled phase theta contains "
+                "non-numeric values (np.nan, np.inf, or np.-inf)",
+                _format_label(notify_label, id_label),
+            )
+            raise ValueError(
+                "sampled phase theta contains non-numeric values (np.nan, np.inf, or np.-inf)"
+            )
 
         # w0/wk are w = (sin theta, cos theta) at the two region endpoints, preferring a
         # range-reduced phase when one is supplied (an O(2*pi) argument to sin/cos rather than an
@@ -2485,14 +2703,24 @@ def _adaptive_levin_subregion_impl(
     :param guard_rates: for a basis with several independent phases, their closed-form rates
         (independent_phase_rates()), each sampled on this region's nodes for the nodal guard
         below; None for a basis with one phase, whose theta_prime_Cheb is its rate already.
-    :param guard_sign_change_phases: the indices into guard_rates of the phases Rule A left
-        unlocated (prompts/levin-phase-floor/07-stationary-point-guard.md section 10): the guard
-        tests each of them for a sign change on the nodes (samples of both strict signs) rather
-        than for one strict sign, so that a rate identically zero, or zero on a node, does not
-        guard the region (_nodal_guard()). None, or empty, when Rule A skipped no phase.
+    :param guard_sign_change_phases: the indices into guard_rates of the phases the location left
+        unlocated, each with a rate exactly zero at every finite scan sample (prompts/
+        levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.1; until 07a, prompt
+        07 section 10's Rule A): the guard tests each of them for a sign change on the nodes
+        (samples of both strict signs) rather than for one strict sign, so that a rate
+        identically zero, or zero on a node, does not guard the region (_nodal_guard()). None, or
+        empty, when no phase was skipped.
 
-    The C2 gate, and what it does not see. A region whose total phase variation is below 6 pi goes
-    to the nested Clenshaw-Curtis rule. That gate was the module's whole account of a stationary
+    The C2 gate, and what it does not see. A region whose total phase variation V is below 6 pi
+    goes to the nested Clenshaw-Curtis rule. V is computed from the raw phase by the basis's
+    build_Levin_data() (prompt 07a section 1.1): exactly, as |theta(b) - theta(a)|, where theta'
+    has no strict sign change on the region's nodes, and as the variation on the node partition,
+    a lower bound, where it has. Until 07a it was estimated as mean|theta'| on the nodes times the
+    width, an estimate whose bias depended on the region's shape and which a half of a region
+    could read above its parent's; V is additive where theta is monotone, so a half of a region
+    the gate sends to the fallback goes to the fallback too. The threshold 6 pi is unchanged, and
+    unmeasured ([07-c2-gate-threshold-was-never-measured]). That gate was the module's whole
+    account of a stationary
     point, and the account was incomplete (prompt 07, after docs/levin-phase-floor/06/p1/report.md):
     it acts only on a region bisection has already produced, and nothing makes bisection reach a
     stationary point inside a region of large variation, whose step-(4) residual cannot see it
@@ -2501,11 +2729,10 @@ def _adaptive_levin_subregion_impl(
     reports whether a phase rate fails to be of one strict sign on its own nodes ("guarded" in the
     result: theta_prime_Cheb, and each of guard_rates), which the driver never returns as a Levin
     region. A zero on a node counts as failing. The guard cannot see an even number of sign changes
-    between two adjacent nodes; that is what the location is for. A phase the location skipped
-    because its total variation over the call's span is below SIX_PI (Rule A, prompt 07 section 10)
-    is the gate's: a region of it is sent to the Clenshaw-Curtis rule here unless the region's own
-    span estimate, taken over every phase, reaches SIX_PI; in that case, for a basis of several
-    phases, the guard tests such a phase for a sign change on the nodes (guard_sign_change_phases).
+    between two adjacent nodes; that is what the location is for. Since prompt 07a the location
+    skips only a phase whose rate is exactly zero at every finite scan sample; for a basis of
+    several phases the guard tests such a phase for a sign change on the nodes
+    (guard_sign_change_phases).
     :return:
     """
     if vectorize_cache is None:
@@ -2522,10 +2749,12 @@ def _adaptive_levin_subregion_impl(
     m = len(f)
     grid, Dmat = chebyshev_matrices(x_span, chebyshev_order)
 
-    # Sample the phase once, before deciding anything else. build_Levin_data returns
-    # phase_span = mean|theta'| * width, which is the total variation of the phase across this
-    # region and costs no evaluations beyond theta' itself -- so it is available *before* we
-    # decide whether to solve the Levin system at all, and before sampling f.
+    # Sample the phase once, before deciding anything else. build_Levin_data returns phase_span =
+    # V, the total variation of the phase across this region computed from the raw phase (prompt
+    # 07a section 1.1: exact where theta' has no strict sign change on the nodes, the node-partition
+    # sum, a lower bound, where it has), at a cost of the raw phase at the two end nodes, or at
+    # every node in the second case -- so it is available *before* we decide whether to solve the
+    # Levin system at all, and before sampling f.
     #
     # A basis reports whether its Levin system can be solved in the complexified N x N form
     # (D + i diag(theta')) q = f1 + i f2 -- Chen et al. (168) -- instead of the realified 2N x 2N
@@ -2549,7 +2778,13 @@ def _adaptive_levin_subregion_impl(
     # C2 fix: gate on the phase's *total variation* across the region, not its net change
     # (theta(b) - theta(a)) -- the two differ whenever theta' changes sign inside the region, and
     # the net change can be accidentally small at a stationary point while the phase still
-    # oscillates heavily either side of it. See the module docstring and prompt 03's log.
+    # oscillates heavily either side of it. See the module docstring and prompt 03's log. Since
+    # prompt 07a the variation is V, computed from the raw phase (build_Levin_data()): the net
+    # change |theta(b) - theta(a)| only where theta' has no strict sign change on the nodes, where
+    # it equals the total variation; the node-partition sum where it has. It replaces the estimate
+    # mean|theta'| * width, which read 1.27-1.32 times high for a near-centred root and up to 8.43
+    # times high with |theta'| weighted to one end, and could send a half of a Clenshaw-Curtis
+    # region to the Levin solve (prompt 07a section 0.2). SIX_PI is unchanged, and unmeasured.
     #
     # This also means the fallback is chosen *before* f is sampled at all: a region routed to the
     # nested Clenshaw-Curtis rule below samples f on its own (2*chebyshev_order - 1)-point grid,
@@ -2649,6 +2884,9 @@ def _adaptive_levin_subregion_impl(
     # agrees with lstsq to machine precision while being an order of magnitude cheaper. The complex
     # N x N system has identical conditioning to the realified 2N x 2N one (verified: agrees to 4
     # significant figures at every order tested), so the same gate applies unchanged.
+    #
+    # The phase span compared is V, as at the C2 gate above (since prompt 07a; until then the
+    # estimate mean|theta'| * width).
     #
     # NOTE the gate has to be the phase span, *not* the residual of the solve. In the near-singular
     # regime the residual is small (~1e-14) even when the computed p is completely wrong, so a residual
@@ -2896,8 +3134,9 @@ def _adaptive_levin_subregion_cc(
     supplied (with none, 2N - 1 of the raw phase if theta_mod_2pi is supplied, else none):
     see _Basis_SinCos.theta_prime_on_fine_grid().
 
-    :param phase_span: total phase variation across x_span, already computed by the caller's
-        call to BasisData.build_Levin_data() -- passed in rather than recomputed.
+    :param phase_span: total phase variation V across x_span, already computed by the caller's
+        call to BasisData.build_Levin_data() -- passed in rather than recomputed, and only
+        reported in the returned dict (since prompt 07a, computed from the raw phase).
     The round-off floor, "phase_err", is this rule's own (_cc_roundoff_floor(), since
     prompts/levin-phase-floor/06d-cc-roundoff-floor.md): the rounding of the weighted sum, of
     the argument handed to sin and cos, and of the nodes, from the fine-grid samples -- plus the
@@ -2914,7 +3153,9 @@ def _adaptive_levin_subregion_cc(
         antiderivative concept does not apply here); and, since
         prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, the node term's parts,
         "node_error_signed" (E) and "node_error_bound" (R_g + R_2 + R_c), and "phase_err_less_node",
-        the floor with |E| taken out of the node term.
+        the floor with |E| taken out of the node term; and, since prompts/levin-phase-floor/
+        07a-window-stop-and-phase-variation.md, "resasc", dqk21's sum_j |w_j| |g_j - gbar| on the
+        fine rule, read only by the window's iroff1 count.
     """
     if vectorize_cache is None:
         vectorize_cache = {}
@@ -3050,9 +3291,18 @@ def _adaptive_levin_subregion_cc(
         BasisData, x_span[0], x_span[1], endpoint_proxy, endpoint_proxy
     )
 
+    # dqk21's resasc on the fine rule (prompts/levin-phase-floor/07a-window-stop-and-phase-
+    # variation.md section 1.2 item 1): sum_j |w_j| |g_j - gbar|, gbar = CC_{2N-1} / sum_j w_j, the
+    # rule's integral of |g - mean g|. It decides whether the leaf's error estimate is unresolved
+    # (_cc_leaf_unresolved()), which the window's iroff1 count reads; it enters no value or error.
+    weight_sum = float(np.sum(w_fine))
+    integrand_mean = value_fine / weight_sum if weight_sum != 0.0 else 0.0
+    resasc = float(np.sum(np.fabs(w_fine) * np.fabs(integrand_fine - integrand_mean)))
+
     return {
         "value": value_fine,
         "abserr_direct": abserr_direct,
+        "resasc": resasc,
         "p_sample": None,
         "p_ratios": None,
         "phase_span": phase_span,
@@ -3165,8 +3415,10 @@ def _nodal_guard(
     node counts, as does a non-finite sample. It cannot see an even number of sign changes between
     two adjacent nodes; the location before the loop is for that (_locate_stationary_points()).
 
-    A phase of guard_rates whose index is in guard_sign_change_phases -- one Rule A left unlocated,
-    its total variation over the call's span below SIX_PI (section 10) -- is tested instead for a
+    A phase of guard_rates whose index is in guard_sign_change_phases -- one the location left
+    unlocated, its rate exactly zero at every finite scan sample (prompts/levin-phase-floor/
+    07a-window-stop-and-phase-variation.md section 1.1; until 07a, prompt 07 section 10's Rule A,
+    whose phases had a variation over the call's span below SIX_PI) -- is tested instead for a
     sign change: True only if its samples hold both strict signs. A zero or a non-finite sample of
     it does not count, so that a rate identically zero does not guard every Levin region of the
     call and drive it to depth_max, while a root such a rate holds between nodes of both signs is
@@ -3296,21 +3548,22 @@ def _locate_stationary_points(
       1. Scan. theta_i' is sampled through _sample_vectorized() on _LEVIN_STATIONARY_SCAN_POINTS
          points, numpy.linspace over x_span with both endpoints (prompt 06a's grid). A non-finite
          sample is skipped, as 06a's scan skipped them.
-         Rule A (prompt 07 section 10). The phase's total variation over x_span, V_i = int
-         |theta_i'| dx, is estimated from these samples by the trapezoidal rule, each interval with
-         a non-finite end left out; it costs no evaluation beyond the scan. If V_i < SIX_PI, the C2
-         gate's threshold, steps 2-4 do not run for phase i: it gives no point, no window and no
-         unlocated minimum, and is reported in "skipped_phases" with V_i. Below SIX_PI the gate
-         already sends a region of that phase to the Clenshaw-Curtis rule, which needs no
-         protection from a stationary point; a region it sends to the Levin solve all the same
-         (its own span estimate, from its nodes and over every phase, can exceed V_i) is the
-         nodal guard's (_nodal_guard()). The estimate's error, for a rate smooth between its
-         roots on a scan of spacing h: (x_span's width) h^2 max|theta_i'''| / 12 from the smooth
-         stretches, plus at most h^2 |theta_i''| / 4 at each root, where |theta_i'| has a kink
-         and the rule overestimates; plus the sum's rounding, about n eps V_i. It can move V_i
-         across SIX_PI only for a phase within that much of it, and on either side the phase is
-         covered: above, by the location; below, by the gate and, where the gate still sends a
-         region to the Levin solve, by the nodal guard.
+         Nothing to locate (prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md
+         section 1.1 item 1). If theta_i' is exactly 0.0 at every finite scan sample, steps 2-4 do
+         not run for phase i: it gives no point, no window and no unlocated minimum, and is
+         reported in "skipped_phases" with the reason. Without this a rate identically zero made
+         every scan sample a root, and its call one window cut at every sample (R28's q - r calls
+         with q = r, [07-location-on-an-identically-zero-rate]). Every other phase is located,
+         whatever its variation: its roots, its exact zeros and its minima of |theta_i'|, steps
+         2-4. This replaces prompt 07 section 10's Rule A, which skipped a phase whose variation
+         over x_span, estimated on the scan by the trapezoidal rule, was below the C2 gate's
+         SIX_PI, on the reasoning that the gate would send every region of it to the
+         Clenshaw-Curtis rule. That held only where the gate agreed with the scan's estimate, and
+         the gate's own estimate, from a region's nodes, could read above SIX_PI where the scan's
+         did not, sending a region holding an unlocated root to the Levin solve, where only the
+         nodal guard stood between it and a wrong value (07a section 0.2). A phase of one strict
+         sign is still located: it can hold a nearly coalescing pair, a minimum of |theta_i'|
+         whose Airy parameter is below coalescence_lambda.
       2. Roots. Each exact zero sample is a root as it stands. Each adjacent pair of finite samples
          of opposite sign is refined by scipy's brentq on the rate, with xtol = eps max(|x_a|,
          |x_b|) and rtol = 4 eps (scipy's least), eps = 2^-52: finer than the prompt's
@@ -3356,8 +3609,9 @@ def _locate_stationary_points(
         "own_window", "own_window_edges" with theta' and theta'^2 / |theta''| at each edge,
         "window_index", "window", "window_pieces"), "windows" (one dict per merged window,
         ascending: "lo", "hi", "cuts" -- the piece edges from lo to hi -- and "points", indices into
-        "points"), "unlocated_minima", "skipped_phases" (one dict per phase Rule A skipped, in phase
-        order: "phase" and "variation", the estimate V_i) and "scan_spacing".
+        "points"), "unlocated_minima", "skipped_phases" (one dict per phase with nothing to locate,
+        in phase order: "phase", its index, and "reason", "zero_rate": the rate exactly 0.0 at
+        every finite scan sample) and "scan_spacing".
     """
     from scipy.optimize import brentq, minimize_scalar
 
@@ -3394,20 +3648,10 @@ def _locate_stationary_points(
         finite = np.isfinite(d)
         sgn = np.where(finite, np.sign(d), np.nan)
 
-        # step 1, Rule A (section 10): the phase's total variation over x_span, by the trapezoidal
-        # rule on the scan, each interval with a non-finite end left out; below the C2 gate's
-        # threshold the phase is not located
-        both_finite = finite[:-1] & finite[1:]
-        abs_rate = np.abs(np.where(finite, d, 0.0))
-        variation = float(
-            np.sum(
-                np.where(
-                    both_finite, 0.5 * (abs_rate[:-1] + abs_rate[1:]) * np.diff(xs), 0.0
-                )
-            )
-        )
-        if variation < SIX_PI:
-            skipped_phases.append({"phase": phase_index, "variation": variation})
+        # step 1 (prompt 07a section 1.1 item 1): a phase whose rate is exactly 0.0 at every finite
+        # scan sample has nothing to locate; every other phase is located, whatever its variation
+        if not np.any(finite & (d != 0.0)):
+            skipped_phases.append({"phase": phase_index, "reason": "zero_rate"})
             continue
 
         # step 2: exact zeros, then adjacent finite pairs of opposite sign
@@ -3783,14 +4027,18 @@ def _adaptive_levin(
          theta["theta_deriv"]), _locate_stationary_points() finds, before the loop, every sign
          change of every rate on _LEVIN_STATIONARY_SCAN_POINTS points, and every interior minimum
          of |rate| whose Airy parameter is below _LEVIN_COALESCENCE_LAMBDA (a nearly coalescing
-         pair). Rule A (prompt 07 section 10): a phase whose total variation over x_span,
-         estimated from the scan by the trapezoidal rule, is below SIX_PI, the C2 gate's
-         threshold, is not located -- the gate sends a region of it to the fallback, which needs
-         no protection from a stationary point, unless the region's own span estimate (from its
-         nodes, over every phase) reaches SIX_PI, and then the guard (item 4) covers it, as for a
-         basis without rates. Without the rule a rate identically zero made
-         every scan sample a root, and its call one window cut at every sample (R28's q - r calls
-         with q = r).
+         pair). The location does not depend on any estimate of the phase's variation (prompts/
+         levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.1): a phase is not
+         located only when its rate is exactly zero at every finite scan sample, where there is
+         nothing to locate -- without that, a rate identically zero made every scan sample a
+         root, and its call one window cut at every sample (R28's q - r calls with q = r). Every
+         other phase is located, so every region the Levin solve receives has its stationary
+         points located and cut out, whatever its variation, save a pair the scan missed between
+         two of its samples, which the guard (item 4) is for. This replaces prompt 07 section
+         10's Rule A, which skipped a phase whose variation over x_span, estimated on the scan,
+         was below SIX_PI, relying on the C2 gate to send its regions to the fallback; the gate,
+         deciding on its own estimate from a region's nodes, could disagree, and a region holding
+         an unlocated root then went to the Levin solve with only the guard to catch it.
       2. Windows. Round each point, the interval on which its phase stays within
          _LEVIN_WINDOW_HALF_PHASE of its value at the point, cut into pieces of at most
          _LEVIN_WINDOW_PIECE_PHASE in every phase. Each piece is a leaf at depth 0, solved -- with
@@ -3799,16 +4047,25 @@ def _adaptive_levin(
          respect: its errors, its trust check and its node error are the pair's. The floor-limited
          exit never fires on it (prompt 07 section 0.2 (ii)), so it stays refinable until
          depth_max or until the window is stopped by the next rule.
-      2a. The stopping rule for window leaves (prompt 07 section 1.3): QUADPACK's iroff1, counted
-         per merged window. A bisection of one of its leaves counts if the halves change the value
-         by at most _LEVIN_WINDOW_IROFF1_VALUE_RTOL relatively and their summed error is at least
-         _LEVIN_WINDOW_IROFF1_ERROR_RATIO of the parent's. At _LEVIN_WINDOW_IROFF1_LIMIT counted
+      2a. The stopping rule for window leaves (prompt 07 section 1.3; its count since prompt 07a
+         section 1.2 QUADPACK dqage's): iroff1, counted per merged window. A bisection of one of
+         its leaves counts (_window_bisection_counts()) if neither half's error estimate is
+         unresolved in dqk21's sense (_cc_leaf_unresolved(); dqage's skip), the halves change the
+         value by at most min(_LEVIN_WINDOW_IROFF1_VALUE_RTOL, rtol) relatively -- a test no
+         looser than the request, where dqage's fixed 1e-5 would count, at rtol 1e-8, a bisection
+         that moves the value by 1000 times the request -- and their own solves' summed error
+         (used_interval.own_err, before the trust check widens a declaration, as dqage compares
+         its raw estimates) is at least _LEVIN_WINDOW_IROFF1_ERROR_RATIO of the parent's. Until 07a
+         every bisection was counted, at a fixed 1e-5, on the declared e'. At
+         _LEVIN_WINDOW_IROFF1_LIMIT counted
          bisections the window is round-off-limited: every leaf of it, made then or later, is not
          refinable and is returned floor-limited, exempt from the trust check, declaring what it
          carries (an untrusted leaf declares as an untrusted leaf at depth_max does), and the
-         call's "converged" follows its budget. It ends the two ways section 2 measured window
-         leaves chased to depth_max: on a Clenshaw-Curtis floor flat in h above the request, and
-         untrusted at the integrand's own noise far inside it. Guarded leaves are not counted.
+         call's "converged" follows its budget: dqage's outcome at the stop, ier = 2, is not
+         adopted (07a section 9.3; see the comment above _LEVIN_WINDOW_IROFF1_VALUE_RTOL). It
+         ends the two ways 07's section 2 measured window leaves chased to depth_max: on a
+         Clenshaw-Curtis floor flat in h above the request, and untrusted at the integrand's own
+         noise far inside it. Guarded leaves are not counted.
       3. The rest. The initial partition is the window pieces and the ranges of x_span between
          windows, each a leaf at depth 0, all in the one budget, heap, trust check and node sum.
          With nothing located it is the single leaf x_span, and the call takes exactly the path it
@@ -3822,10 +4079,13 @@ def _adaptive_levin(
          the C2 gate sends its halves to the fallback. At depth_max it is re-solved by the nested
          pair whatever its span, its errors are that solve's, it is flagged guard_at_depth_max and
          exempt from the trust check, and the call is not converged while one is returned. For a
-         basis of several phases, a phase Rule A skipped is tested for a sign change (samples of
-         both strict signs on the nodes) rather than for one strict sign, so that a rate
-         identically zero does not guard every Levin leaf; theta_prime_Cheb and every located
-         phase keep the strict test.
+         basis of several phases, a phase the location skipped (its rate exactly zero at every
+         finite scan sample; until 07a, a phase Rule A skipped) is tested for a sign change
+         (samples of both strict signs on the nodes) rather than for one strict sign, so that a
+         rate identically zero does not guard every Levin leaf; theta_prime_Cheb and every
+         located phase keep the strict test. Since 07a the guard is a backstop: every phase with
+         something to locate is located, and it fires only where the scan missed a pair of
+         roots between two samples, or the basis supplies no rates.
     An unguarded leaf outside every window behaves exactly as without the guard. Without rates
     nothing is located, and the guard alone protects the call: it misses a pair of sign changes
     between two adjacent nodes of a leaf, and a minimum of |theta'| that does not reach zero.
@@ -3836,8 +4096,10 @@ def _adaptive_levin(
     merged window's edges and piece cuts, its iroff1 count, and whether the rule stopped it, with
     what was true of its leaves then), "unlocated_minima", "num_window_pieces" (window leaves
     returned), "num_guarded_regions" (leaves found guarded when made, returned or bisected) and
-    "num_guard_at_depth_max"; and "location_skipped_phases" (one dict per phase Rule A did not
-    locate: its index "phase" and "variation", its total variation estimated on the scan).
+    "num_guard_at_depth_max"; and "location_skipped_phases" (one dict per phase the location did
+    not locate, its rate exactly zero at every finite scan sample: its index "phase" and "reason",
+    "zero_rate"; until 07a, Rule A's phases with their estimated "variation"). Each window's
+    "iroff1_count" is the count of item 2a.
 
     :param _test_only_bypass_location: TEST-ONLY, off by default: skips step 1, and so 2 and 3, so
         that a test can show a call in which nothing is located is bit-identical to one in which the
@@ -3954,8 +4216,9 @@ def _adaptive_levin(
             piece_phase=_LEVIN_WINDOW_PIECE_PHASE,
         )
 
-    # Rule A (prompt 07 section 10): for a basis of several phases, the nodal guard tests each phase
-    # the location skipped for a sign change on a leaf's nodes, not for one strict sign
+    # For a basis of several phases, the nodal guard tests each phase the location skipped -- since
+    # prompt 07a section 1.1 only a rate exactly zero at every finite scan sample; until then prompt
+    # 07 section 10's Rule A -- for a sign change on a leaf's nodes, not for one strict sign
     guard_sign_change_phases = None
     if guard_rates is not None and location is not None:
         guard_sign_change_phases = frozenset(
@@ -4166,6 +4429,7 @@ def _adaptive_levin(
                 window=window,
                 guarded=guarded,
                 guard_at_depth_max=guard_at_depth_max,
+                resasc=data.get("resasc"),
             )
         else:
             # Chen et al. (173): the step-(4) residual against the leaf's two halves. They are
@@ -4822,8 +5086,14 @@ def _adaptive_levin(
 
         num_splits += 1
 
-        # Section 1.3's rule: count this bisection against its window if the halves barely change
-        # the value and do not lower the error (QUADPACK's iroff1); see the constants' comment.
+        # The window's stopping rule (prompt 07 section 1.3; its count dqage's since prompt 07a
+        # section 1.2): count this bisection against its window if neither half's estimate is
+        # unresolved (dqage's skip), the halves change the value by at most min(1e-5, rtol)
+        # relatively, and the halves' own solves' errors do not fall (QUADPACK's iroff1, on the
+        # raw estimates e, before the trust check widens a declaration); see the constants'
+        # comment and _window_bisection_counts(). fell_at_last_bisection still reports whether the
+        # declared e' fell, as at 07: it feeds "leaves_falling_at_stop", and is not the count's
+        # test.
         stop_window = None
         if leaf.window_index is not None:
             value_halves = left.region.value_own + right.region.value_own
@@ -4834,10 +5104,15 @@ def _adaptive_levin(
             error_flat = error_halves >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO * error_parent
             left.fell_at_last_bisection = not error_flat
             right.fell_at_last_bisection = not error_flat
-            if (
-                np.fabs(value_halves - region.value_own)
-                <= _LEVIN_WINDOW_IROFF1_VALUE_RTOL * np.fabs(value_halves)
-                and error_flat
+            if _window_bisection_counts(
+                region.value_own,
+                value_halves,
+                _own_error(region),
+                _own_error(left.region),
+                _own_error(right.region),
+                _cc_leaf_unresolved(left.region.abserr, left.region.resasc),
+                _cc_leaf_unresolved(right.region.abserr, right.region.resasc),
+                rtol,
             ):
                 window_counts[leaf.window_index] = (
                     window_counts.get(leaf.window_index, 0) + 1
@@ -5168,9 +5443,10 @@ def _adaptive_levin(
                     "hi": stationary_window["hi"],
                     "cuts": list(stationary_window["cuts"]),
                     "points": list(stationary_window["points"]),
-                    # section 1.3's rule: the window's count of iroff1 bisections, and, if the
-                    # rule stopped it, after which bisection of the call, how many of its leaves
-                    # there were then, how many of them a bisection had just lowered the error of
+                    # section 1.3's rule: the window's count of iroff1 bisections (dqage's count,
+                    # since prompt 07a section 1.2), and, if the rule stopped it, after which
+                    # bisection of the call, how many of its leaves there were then, how many of
+                    # them a bisection had just lowered the declared error e' of
                     # (fell_at_last_bisection), and their deepest depth
                     "iroff1_count": window_counts.get(window_index, 0),
                     "stopped": window_index in windows_stopped,
@@ -5189,9 +5465,9 @@ def _adaptive_levin(
         "num_window_pieces": num_window_pieces,
         "num_guarded_regions": num_guarded_regions,
         "num_guard_at_depth_max": num_guard_at_depth_max,
-        # Rule A (prompt 07 section 10): each phase the location skipped, its total variation over
-        # x_span on the scan below SIX_PI, with that estimate; empty when nothing was skipped or the
-        # location did not run
+        # each phase the location skipped, its rate exactly zero at every finite scan sample (prompt
+        # 07a section 1.1, in place of prompt 07 section 10's Rule A), with its index and the reason;
+        # empty when nothing was skipped or the location did not run
         "location_skipped_phases": (
             [dict(skipped) for skipped in location["skipped_phases"]]
             if location is not None
@@ -5551,8 +5827,13 @@ def adaptive_levin_sincos(
             driver scans it over x_span before integrating, locates every sign change of theta'
             and every interior minimum of |theta'| deep enough to act as a nearly coalescing
             pair, and integrates a window round each directly (see "stationary_points" below and
-            _adaptive_levin()), unless theta's total variation over x_span is below SIX_PI
-            (Rule A; see "location_skipped_phases" below). It must be the closed form of theta's
+            _adaptive_levin()), unless theta' is exactly zero at every finite sample of that
+            scan, when there is nothing to locate (see "location_skipped_phases" below; since
+            prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md, in place of Rule
+            A, which skipped a phase whose variation over x_span was below SIX_PI). The raw
+            phase "theta" is also what the C2 gate's variation is computed from, at each
+            region's end nodes, or at all its nodes where theta' changes sign on them (see
+            _Basis_SinCos.build_Levin_data()). It must be the closed form of theta's
             derivative. Without it nothing is located, and the only protection at a stationary
             point is the guard that never returns a Levin subinterval whose theta' changes sign on
             its own nodes, which misses a pair of sign changes between two adjacent nodes.
@@ -5689,10 +5970,13 @@ def adaptive_levin_sincos(
             nodes) when made, and those re-solved by the Clenshaw-Curtis rule at depth_max, which
             make "converged" False. Each used_interval carries window, guarded and
             guard_at_depth_max. See _adaptive_levin().
-          * "location_skipped_phases" -- Rule A (prompt 07 section 10): a phase whose total
-            variation over x_span, estimated on the location's scan of theta_deriv, is below
-            SIX_PI is not located, the C2 gate already sending it to the Clenshaw-Curtis rule;
-            each such phase is listed with its index and that estimate ("phase", "variation").
+          * "location_skipped_phases" -- a phase whose theta_deriv is exactly zero at every
+            finite sample of the location's scan has nothing to locate, and is not located; each
+            such phase is listed with its index and the reason ("phase", and "reason":
+            "zero_rate"). Every other phase is located whatever its variation (as of prompts/
+            levin-phase-floor/07a-window-stop-and-phase-variation.md; from prompt 07 section 10
+            until then, Rule A skipped a phase whose variation over x_span, estimated on the
+            scan, was below SIX_PI, and listed it with that estimate, "variation").
     """
     if len(f) != 2:
         raise ValueError(

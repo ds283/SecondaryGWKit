@@ -1,0 +1,64 @@
+............FF.F.........
+======================================================================
+FAIL: test_13a_zero_rate (AdaptiveLevin.tests.test_levin_stationary.TestRuleA.test_13a_zero_rate)
+Test 13 (a). _Basis_SinCos with theta = 0 and theta_deriv = 0 identically, and a smooth, varying f_cos =
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py", line 719, in test_13a_zero_rate
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        located["location_skipped_phases"], [{"phase": 0, "reason": "zero_rate"}]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: [{'phase': 0, 'variation': 0.0}] != [{'phase': 0, 'reason': 'zero_rate'}]
+
+First differing element 0:
+{'phase': 0, 'variation': 0.0}
+{'phase': 0, 'reason': 'zero_rate'}
+
+- [{'phase': 0, 'variation': 0.0}]
++ [{'phase': 0, 'reason': 'zero_rate'}]
+
+======================================================================
+FAIL: test_13b_small_phase_with_a_root (AdaptiveLevin.tests.test_levin_stationary.TestRuleA.test_13b_small_phase_with_a_root)
+Test 13 (b), 07a's section 3 test 5, O9's case. theta = (c/2)(x - x0)^2 = 35 (x - x0)^2 on [0, 1] at the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py", line 742, in test_13b_small_phase_with_a_root
+    self.assertEqual(data["location_skipped_phases"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'phase': 0, 'variation': 18.475242613612156}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'phase': 0, 'variation': 18.475242613612156}
+
+- [{'phase': 0, 'variation': 18.475242613612156}]
++ []
+
+======================================================================
+FAIL: test_13d_several_phases (AdaptiveLevin.tests.test_levin_stationary.TestRuleA.test_13d_several_phases)
+Test 13 (d). Test 9's two-phase basis with phase 2 identically zero (c = 0) and phase 1 linear, theta_1 =
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py", line 790, in test_13d_several_phases
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data["location_skipped_phases"], [{"phase": 1, "reason": "zero_rate"}]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: [{'phase': 1, 'variation': 0.0}] != [{'phase': 1, 'reason': 'zero_rate'}]
+
+First differing element 0:
+{'phase': 1, 'variation': 0.0}
+{'phase': 1, 'reason': 'zero_rate'}
+
+- [{'phase': 1, 'variation': 0.0}]
++ [{'phase': 1, 'reason': 'zero_rate'}]
+
+----------------------------------------------------------------------
+Ran 25 tests in 6.635s
+
+FAILED (failures=3)

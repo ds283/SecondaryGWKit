@@ -1,0 +1,25 @@
+FF........................
+======================================================================
+FAIL: test_8_lu_choice_follows_V (AdaptiveLevin.tests.test_levin_phase_variation.TestLUChoice.test_8_lu_choice_follows_V) (shape='bump')
+Test 8. The choice of LU over least squares (V > 20 pi) follows V, on the root region [0, 1], F_23:
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_phase_variation.py", line 347, in test_8_lu_choice_follows_V
+    self.assertEqual(data["metadata"].get("direct_solve"), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 1
+
+======================================================================
+FAIL: test_8_lu_choice_follows_V (AdaptiveLevin.tests.test_levin_phase_variation.TestLUChoice.test_8_lu_choice_follows_V) (shape='exp')
+Test 8. The choice of LU over least squares (V > 20 pi) follows V, on the root region [0, 1], F_23:
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_phase_variation.py", line 352, in test_8_lu_choice_follows_V
+    self.assertEqual(data["metadata"].get("lstsq_solve"), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 1
+
+----------------------------------------------------------------------
+Ran 25 tests in 6.619s
+
+FAILED (failures=2)

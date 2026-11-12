@@ -1,0 +1,339 @@
+{
+ "seed": 2,
+ "test": "test_YJJ",
+ "tree": "/Users/ds283/Documents/Code/SecondaryGWKit",
+ "module_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+ "outcome": "pass",
+ "failures": [],
+ "wall": 1.508386041969061,
+ "levin_calls": [
+  {
+   "regions_gated": 223,
+   "route_changed": 0,
+   "lu_changed": 0,
+   "node_partition": 0,
+   "route_changes": [],
+   "index": 0,
+   "x_span": [
+    -10.537685103266252,
+    27.631021115928547
+   ],
+   "atol": 1e-14,
+   "rtol": 1e-10,
+   "value": 1.331143729768217,
+   "value_hex": "0x1.54c5d5e1a144ap+0",
+   "abserr": 1.3651941579717574e-11,
+   "abserr_hex": "0x1.e055c20dc4e35p-37",
+   "converged": true,
+   "num_regions": 28,
+   "max_depth": 10,
+   "evaluations": 223,
+   "num_untrusted_regions": 0,
+   "num_points": 0,
+   "point_kinds": [],
+   "num_windows": 0,
+   "windows": [],
+   "num_window_pieces": 0,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "location_skipped_phases": [],
+   "regions_sha256": "66e90fae3a20d6048ed345f4a7704012ce0b5e4f9d97fe5cae04a896238b5d3c",
+   "result_sha256": "87f72e9a6a9676b6c2519232541bad1ac39661ac3e713e08abea0cc9b9f112f0"
+  },
+  {
+   "regions_gated": 191,
+   "route_changed": 0,
+   "lu_changed": 0,
+   "node_partition": 0,
+   "route_changes": [],
+   "index": 1,
+   "x_span": [
+    -10.537685103266252,
+    27.631021115928547
+   ],
+   "atol": 1e-14,
+   "rtol": 1e-10,
+   "value": 1.34489214215405,
+   "value_hex": "0x1.584ad9f732f38p+0",
+   "abserr": 2.845411985419241e-11,
+   "abserr_hex": "0x1.f491f6acafe74p-36",
+   "converged": true,
+   "num_regions": 24,
+   "max_depth": 9,
+   "evaluations": 191,
+   "num_untrusted_regions": 0,
+   "num_points": 0,
+   "point_kinds": [],
+   "num_windows": 0,
+   "windows": [],
+   "num_window_pieces": 0,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "location_skipped_phases": [],
+   "regions_sha256": "3efb474602cc72dc6279a90dc15c48dac3ad1aaf39797d652dc06190304b4af8",
+   "result_sha256": "c43c842fd087997c6654c40aa000f8de3393e5171c77e65e6bea8e88b1ee5ec1"
+  },
+  {
+   "regions_gated": 143,
+   "route_changed": 1,
+   "lu_changed": 0,
+   "node_partition": 0,
+   "route_changes": [
+    {
+     "span": [
+      -0.9955085484675523,
+      3.7755797289317976
+     ],
+     "V": 18.050229803284193,
+     "estimate": 25.752317585560192
+    }
+   ],
+   "index": 2,
+   "x_span": [
+    -10.537685103266252,
+    27.631021115928547
+   ],
+   "atol": 1e-14,
+   "rtol": 1e-10,
+   "value": 1.8809844510716531,
+   "value_hex": "0x1.e188326da323ap+0",
+   "abserr": 6.132754462827099e-11,
+   "abserr_hex": "0x1.0db8ad41b4f50p-34",
+   "converged": true,
+   "num_regions": 18,
+   "max_depth": 9,
+   "evaluations": 143,
+   "num_untrusted_regions": 0,
+   "num_points": 0,
+   "point_kinds": [],
+   "num_windows": 0,
+   "windows": [],
+   "num_window_pieces": 0,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "location_skipped_phases": [],
+   "regions_sha256": "964a5e002489121b2117a0056de7a64687d1c9ba66474305b43f9d52db421014",
+   "result_sha256": "87fb0d2eff736e808c7b39eea68f6787eae9c1e017b006c5a4fa801d7099a8e0"
+  },
+  {
+   "regions_gated": 127,
+   "route_changed": 1,
+   "lu_changed": 0,
+   "node_partition": 0,
+   "route_changes": [
+    {
+     "span": [
+      -0.9955085484675523,
+      3.7755797289317976
+     ],
+     "V": 14.571522272119399,
+     "estimate": 20.78923500400015
+    }
+   ],
+   "index": 3,
+   "x_span": [
+    -10.537685103266252,
+    27.631021115928547
+   ],
+   "atol": 1e-14,
+   "rtol": 1e-10,
+   "value": 1.9181530342698083,
+   "value_hex": "0x1.eb0c13c6e9787p+0",
+   "abserr": 6.461484862829045e-11,
+   "abserr_hex": "0x1.1c2dda2007bcfp-34",
+   "converged": true,
+   "num_regions": 16,
+   "max_depth": 8,
+   "evaluations": 127,
+   "num_untrusted_regions": 0,
+   "num_points": 0,
+   "point_kinds": [],
+   "num_windows": 0,
+   "windows": [],
+   "num_window_pieces": 0,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "location_skipped_phases": [],
+   "regions_sha256": "7cd1a7bea626810f19d042fbc35a4e8dda347fde2a75af3edee9f61d80ddd4e9",
+   "result_sha256": "a03ca939057e25eb6a0300f443059123733ee1abfad508fdaa0b8befb690a630"
+  },
+  {
+   "regions_gated": 87,
+   "route_changed": 0,
+   "lu_changed": 0,
+   "node_partition": 0,
+   "route_changes": [],
+   "index": 4,
+   "x_span": [
+    1.5577748361143111,
+    27.631021115928547
+   ],
+   "atol": 1e-14,
+   "rtol": 1e-10,
+   "value": -0.002514192258900056,
+   "value_hex": "-0x1.498a4b0e40028p-9",
+   "abserr": 1.753063288642439e-13,
+   "abserr_hex": "0x1.8ac137dd4eb3cp-43",
+   "converged": true,
+   "num_regions": 11,
+   "max_depth": 5,
+   "evaluations": 87,
+   "num_untrusted_regions": 0,
+   "num_points": 0,
+   "point_kinds": [],
+   "num_windows": 0,
+   "windows": [],
+   "num_window_pieces": 0,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "location_skipped_phases": [],
+   "regions_sha256": "05bdc79c443ad5dcff3ff08988736c7f4374656e3ff0efdd2a6d7f50a56cae89",
+   "result_sha256": "d17ab145470ac0f65b6588a20b87d7ccc120b52e641ff3666c2eaaa0af1ae6e0"
+  },
+  {
+   "regions_gated": 215,
+   "route_changed": 0,
+   "lu_changed": 0,
+   "node_partition": 0,
+   "route_changes": [],
+   "index": 5,
+   "x_span": [
+    1.5577748361143111,
+    27.631021115928547
+   ],
+   "atol": 1e-14,
+   "rtol": 1e-10,
+   "value": 0.035578766280614176,
+   "value_hex": "0x1.237614b36eb7fp-5",
+   "abserr": 3.4234872138387785e-12,
+   "abserr_hex": "0x1.e1d0203c951fdp-39",
+   "converged": true,
+   "num_regions": 27,
+   "max_depth": 10,
+   "evaluations": 215,
+   "num_untrusted_regions": 0,
+   "num_points": 0,
+   "point_kinds": [],
+   "num_windows": 0,
+   "windows": [],
+   "num_window_pieces": 0,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "location_skipped_phases": [],
+   "regions_sha256": "3cf804087b619abcb9db4e7da402e8d013d4bddfca3cbbe8ce52cca6987106e6",
+   "result_sha256": "c704207f224791080d0cc42f1ce9a7678387dc575e0e48bf5bfe530e819ca0d3"
+  },
+  {
+   "regions_gated": 111,
+   "route_changed": 0,
+   "lu_changed": 0,
+   "node_partition": 0,
+   "route_changes": [],
+   "index": 6,
+   "x_span": [
+    1.5577748361143111,
+    27.631021115928547
+   ],
+   "atol": 1e-14,
+   "rtol": 1e-10,
+   "value": 0.25760909829021655,
+   "value_hex": "0x1.07caadf13bef3p-2",
+   "abserr": 9.67696043740875e-12,
+   "abserr_hex": "0x1.547a4f933596dp-37",
+   "converged": true,
+   "num_regions": 14,
+   "max_depth": 8,
+   "evaluations": 111,
+   "num_untrusted_regions": 0,
+   "num_points": 0,
+   "point_kinds": [],
+   "num_windows": 0,
+   "windows": [],
+   "num_window_pieces": 0,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "location_skipped_phases": [],
+   "regions_sha256": "fe5364e3ec8ff44538f2bbc1dabed31123e3cd14cdc197370a45f969ab3fb15d",
+   "result_sha256": "f18a8e844d5f2d7518519c1906fbacf14944f012835565cac7a01c8eb66bec5a"
+  },
+  {
+   "regions_gated": 151,
+   "route_changed": 0,
+   "lu_changed": 0,
+   "node_partition": 0,
+   "route_changes": [],
+   "index": 7,
+   "x_span": [
+    1.5577748361143111,
+    27.631021115928547
+   ],
+   "atol": 1e-14,
+   "rtol": 1e-10,
+   "value": 0.0037182269692772143,
+   "value_hex": "0x1.e75afe76dc795p-9",
+   "abserr": 8.233310325726898e-13,
+   "abserr_hex": "0x1.cf7e81b10e323p-41",
+   "converged": false,
+   "num_regions": 38,
+   "max_depth": 9,
+   "evaluations": 151,
+   "num_untrusted_regions": 0,
+   "num_points": 0,
+   "point_kinds": [],
+   "num_windows": 0,
+   "windows": [],
+   "num_window_pieces": 0,
+   "num_guarded_regions": 0,
+   "num_guard_at_depth_max": 0,
+   "location_skipped_phases": [],
+   "regions_sha256": "872462e4229584df55a492e99d89f4510dcf456d4e0138c1e0b7d185e51a4c14",
+   "result_sha256": "7aa527959f69d5f216262e678bb43156b67a8bccad564dbb227f6ce02b24cf09"
+  }
+ ],
+ "bessel_results": [
+  {
+   "evaluator": "quad_YJJ",
+   "mu_nu_sigma": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "k_q_s": [
+    4.784567932257322,
+    4.744354686590812,
+    0.3771017018613626
+   ],
+   "rtol": 1e-10,
+   "value": 0.003939768385690592,
+   "abserr": 2.8269307116015164e-11,
+   "converged": true,
+   "analytic": 0.003939768385749977,
+   "levin_calls": [
+    0,
+    4
+   ]
+  },
+  {
+   "evaluator": "quad_YJJ",
+   "mu_nu_sigma": [
+    0.0,
+    2.0,
+    2.0
+   ],
+   "k_q_s": [
+    0.5158727762787161,
+    4.193944502834303,
+    3.7062529464357645
+   ],
+   "rtol": 1e-10,
+   "value": -0.14580980242663433,
+   "abserr": 2.462550659703722e-12,
+   "converged": false,
+   "analytic": -0.14580980242553493,
+   "levin_calls": [
+    4,
+    8
+   ]
+  }
+ ]
+}

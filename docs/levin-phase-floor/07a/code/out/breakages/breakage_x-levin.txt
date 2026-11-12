@@ -1,0 +1,42 @@
+...FF.
+======================================================================
+FAIL: test_the_raw_phase_enters_no_value_or_error (LiouvilleGreen.tests.test_bessel_compatibility.TestLevinConsumption.test_the_raw_phase_enters_no_value_or_error) (span=(10.0, 60.0))
+The raw phase's absolute value never enters a value or an error of the integral.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/tests/test_bessel_compatibility.py", line 485, in test_the_raw_phase_enters_no_value_or_error
+    self.assertEqual(shifted_decisions, supplied_decisions)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('0x[759 chars]'0x1.1800000000000p+5', '0x1.4a00000000000p+5'[3535 chars], 0)] != [('0x[759 chars]'0x1.4000000000000p+3', '0x1.a400000000000p+3'[1879 chars], 0)]
+
+First differing element 11:
+('0x1.1800000000000p+5', '0x1.4a00000000000p+5', True, False, 0, 0)
+('0x1.4000000000000p+3', '0x1.a400000000000p+3', True, False, 0, 0)
+
+First list contains 24 additional elements.
+First extra element 39:
+('0x1.1800000000000p+5', '0x1.3100000000000p+5', True, False, 0, 0)
+
+Diff is 5146 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_the_raw_phase_enters_no_value_or_error (LiouvilleGreen.tests.test_bessel_compatibility.TestLevinConsumption.test_the_raw_phase_enters_no_value_or_error) (span=(1000.0, 1100.0))
+The raw phase's absolute value never enters a value or an error of the integral.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/tests/test_bessel_compatibility.py", line 486, in test_the_raw_phase_enters_no_value_or_error
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        float(shifted["value"]).hex(), float(supplied["value"]).hex()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.26dff1e857b13p-7' != '0x1.f0a9ce196da5ap-8'
+- 0x1.26dff1e857b13p-7
++ 0x1.f0a9ce196da5ap-8
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.382s
+
+FAILED (failures=2)

@@ -1,0 +1,20 @@
+levin-phase-floor 07a Part B: the LiouvilleGreen draws' changes, call by call
+script sha256 7f6b3544dd6ea3730755417d1188790e56872285f9239b06feda474aa71095bd; lg_draws_07a.py sha256 33edc1fa8cd996d55b818a4cbec1c17f8a619db22b079dd06352d3c528eef06b
+
+1. Levin calls whose converged flag changes (parent -> commit):
+   seed 3 test_YJJ call 4: x_span [1.7607850769381965, 27.631021115928547], rtol 1e-10: converged True -> False; abserr 5.376e-13 -> 1.39e-12; value moved 3.68e-16 (0.000684 of the parent's abserr); regions 11 -> 42, depth 6 -> 10; windows 0 / 0; regions whose route changed 1, LU choice 0: [1.76079, 2.16501] V 18.832 estimate 18.914
+   seed 8 test_JJJ call 4: x_span [1.0054974982544955, 27.631021115928547], rtol 1e-10: converged True -> False; abserr 2.406e-12 -> 4.64e-12; value moved 1.28e-14 (0.00531 of the parent's abserr); regions 17 -> 45, depth 9 -> 9; windows 0 / 0; regions whose route changed 1, LU choice 1: [1.0055, 1.83755] V 18.725 estimate 19.065
+   seed 17 test_JJJ call 11: x_span [2.3569398149157545, 27.631021115928547], rtol 1e-10: converged True -> False; abserr 1.036e-12 -> 5.672e-12; value moved 8.43e-15 (0.00813 of the parent's abserr); regions 9 -> 27, depth 5 -> 9; windows 0 / 0; regions whose route changed 1, LU choice 0: [2.75185, 3.14675] V 18.816 estimate 18.892
+
+2. Three-Bessel results whose honesty changes (parent -> commit):
+   seed 15 test_YJJ_log_singularity quad_YJJ [0.0, 0.0, 0.0] k,q,s [4.8296864936054025, 0.15710799958149152, 4.986784493186894] rtol 1e-08: true error 2.78e-09 -> 2.78e-09, abserr 2.348e-09 -> 1.312e-08, ratio 1.18 -> 0.212, honest False -> True; its calls: regions route or LU changed 1, windows 0
+
+3. Three-Bessel results whose |err| / abserr rises by more than 2x under the commit:
+   seed 3 test_YJJ_log_singularity quad_YJJ [0.0, 2.0, 2.0] rtol 1e-08: ratio 2.4e+04 -> 5.44e+04 (abserr 1.842e-09 -> 8.136e-10, true error 4.424e-05 -> 4.424e-05)
+   seed 6 test_YJJ_log_singularity quad_YJJ [0.0, 2.0, 2.0] rtol 1e-08: ratio 0.00628 -> 0.0171 (abserr 5.15e-10 -> 1.899e-10, true error 3.237e-12 -> 3.241e-12)
+   seed 7 test_YJJ_log_singularity quad_YJJ [0.0, 0.0, 0.0] rtol 1e-08: ratio 3.02 -> 7.21 (abserr 2.416e-08 -> 1.011e-08, true error 7.292e-08 -> 7.292e-08)
+   seed 7 test_YJJ_log_singularity quad_YJJ [0.0, 0.0, 0.0] rtol 1e-08: ratio 2.84 -> 6.25 (abserr 8.622e-09 -> 3.915e-09, true error 2.446e-08 -> 2.446e-08)
+   seed 10 test_YJJ_log_singularity quad_YJJ [0.0, 2.0, 2.0] rtol 1e-08: ratio 0.00768 -> 0.019 (abserr 2.656e-10 -> 1.073e-10, true error 2.039e-12 -> 2.041e-12)
+   seed 14 test_YJJ_log_singularity quad_YJJ [0.0, 0.0, 0.0] rtol 1e-08: ratio 0.0134 -> 0.0322 (abserr 1.585e-09 -> 6.592e-10, true error 2.121e-11 -> 2.121e-11)
+   seed 14 test_YJJ_log_singularity quad_YJJ [0.0, 0.0, 0.0] rtol 1e-08: ratio 0.209 -> 0.42 (abserr 1.73e-09 -> 8.594e-10, true error 3.613e-10 -> 3.613e-10)
+   seed 17 test_YJJ_log_singularity quad_YJJ [0.0, 2.0, 2.0] rtol 1e-08: ratio 1.03e+06 -> 4.86e+06 (abserr 2.7e-11 -> 5.735e-12, true error 2.787e-05 -> 2.787e-05)

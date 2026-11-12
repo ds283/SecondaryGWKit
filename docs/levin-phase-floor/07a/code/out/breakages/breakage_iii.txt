@@ -1,0 +1,84 @@
+.FF......FF......F.........
+======================================================================
+FAIL: test_7_nearly_coalescing_pair_located (AdaptiveLevin.tests.test_levin_phase_variation.TestMinimaStayLocated.test_7_nearly_coalescing_pair_located) (b=10000.0)
+Test 7. Test 3's nearly coalescing pair (test_levin_stationary.py; family (C) at lambda = 1, b = 1e4 and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_phase_variation.py", line 310, in test_7_nearly_coalescing_pair_located
+    self.assertEqual(data["location_skipped_phases"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'phase': 0, 'reason': 'zero_rate'}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'phase': 0, 'reason': 'zero_rate'}
+
+- [{'phase': 0, 'reason': 'zero_rate'}]
++ []
+
+======================================================================
+FAIL: test_7_nearly_coalescing_pair_located (AdaptiveLevin.tests.test_levin_phase_variation.TestMinimaStayLocated.test_7_nearly_coalescing_pair_located) (b=100000000.0)
+Test 7. Test 3's nearly coalescing pair (test_levin_stationary.py; family (C) at lambda = 1, b = 1e4 and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_phase_variation.py", line 310, in test_7_nearly_coalescing_pair_located
+    self.assertEqual(data["location_skipped_phases"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'phase': 0, 'reason': 'zero_rate'}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'phase': 0, 'reason': 'zero_rate'}
+
+- [{'phase': 0, 'reason': 'zero_rate'}]
++ []
+
+======================================================================
+FAIL: test_3_minimum_located_and_windowed (AdaptiveLevin.tests.test_levin_stationary.TestNearlyCoalescingPair.test_3_minimum_located_and_windowed) (b=10000.0)
+Test 3. Section 2's family (C), theta = a (x - x0) + (b/3)(x - x0)^3, at lambda = a^(3/2) / b^(1/2) =
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py", line 209, in test_3_minimum_located_and_windowed
+    self.assertEqual(len(minima), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_3_minimum_located_and_windowed (AdaptiveLevin.tests.test_levin_stationary.TestNearlyCoalescingPair.test_3_minimum_located_and_windowed) (b=100000000.0)
+Test 3. Section 2's family (C), theta = a (x - x0) + (b/3)(x - x0)^3, at lambda = a^(3/2) / b^(1/2) =
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py", line 209, in test_3_minimum_located_and_windowed
+    self.assertEqual(len(minima), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_13d_several_phases (AdaptiveLevin.tests.test_levin_stationary.TestRuleA.test_13d_several_phases)
+Test 13 (d). Test 9's two-phase basis with phase 2 identically zero (c = 0) and phase 1 linear, theta_1 =
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_stationary.py", line 790, in test_13d_several_phases
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data["location_skipped_phases"], [{"phase": 1, "reason": "zero_rate"}]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: [{'phase': 0, 'reason': 'zero_rate'}, {'phase': 1, 'reason': 'zero_rate'}] != [{'phase': 1, 'reason': 'zero_rate'}]
+
+First differing element 0:
+{'phase': 0, 'reason': 'zero_rate'}
+{'phase': 1, 'reason': 'zero_rate'}
+
+First list contains 1 additional elements.
+First extra element 1:
+{'phase': 1, 'reason': 'zero_rate'}
+
+- [{'phase': 0, 'reason': 'zero_rate'}, {'phase': 1, 'reason': 'zero_rate'}]
++ [{'phase': 1, 'reason': 'zero_rate'}]
+
+----------------------------------------------------------------------
+Ran 25 tests in 6.616s
+
+FAILED (failures=5)

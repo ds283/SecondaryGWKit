@@ -1,0 +1,23 @@
+levin-phase-floor 07a Part B: test_3bessel_analytic.py, seeds 0-19, parent against commit
+  parent: tree /private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/b6b9b774-6813-426e-878d-4e77594f7b51/scratchpad/parent at a9f6abc34d5101160918b8994eb59f0237e015a8, levin_quadrature.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc (as committed), script 33edc1fa8cd996d55b818a4cbec1c17f8a619db22b079dd06352d3c528eef06b
+  commit: tree /Users/ds283/Documents/Code/SecondaryGWKit at a9f6abc34d5101160918b8994eb59f0237e015a8, levin_quadrature.py sha256 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577 (modified), script 33edc1fa8cd996d55b818a4cbec1c17f8a619db22b079dd06352d3c528eef06b
+
+1. Test outcomes (parent -> commit), units:
+   pass -> pass: 80
+   tests failing under the commit that pass under the parent: 0
+
+2. Levin calls paired by unit and index: 4320 (unpaired units or calls: 0)
+   with no window at either code and no region whose route or LU choice differs: 2973, of which not bit-identical (value, abserr, every region, every result key but elapsed and location_skipped_phases): 0
+   route_or_lu_changed: 1024 calls, 1024 not bit-identical; converged (parent, commit): (False, False): 88, (True, False): 3, (True, True): 933; largest |v_commit - v_parent| / abserr_parent 0.0233
+   window: 423 calls, 104 not bit-identical; converged (parent, commit): (False, False): 4, (True, True): 419; largest |v_commit - v_parent| / abserr_parent 3.33e-05
+   newly_located: 0 calls, 0 not bit-identical; converged (parent, commit): ; largest |v_commit - v_parent| / abserr_parent 0
+   regions gated under the commit: 493516; route changed 434, LU choice changed 771, V by the node-partition sum 0
+   calls with a guarded leaf: parent 0, commit 0
+   windows stopped: parent 83, commit 83
+
+3. Three-Bessel results (|value - analytic| <= abserr), by the Levin calls they hold:
+   neither: 155 results; honest parent 123, commit 123; dishonest and converged under the commit 32; worst |err|/abserr parent 5.35e+04, commit 5.35e+04
+   route_or_lu_changed: 674 results; honest parent 426, commit 427; dishonest and converged under the commit 247; worst |err|/abserr parent 1.2e+06, commit 4.86e+06
+   window: 251 results; honest parent 94, commit 94; dishonest and converged under the commit 157; worst |err|/abserr parent 1.35e+06, commit 1.35e+06
+
+4. Wall (s), summed over units: parent 691.5, commit 762.1

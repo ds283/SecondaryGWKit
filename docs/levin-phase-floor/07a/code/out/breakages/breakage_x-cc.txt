@@ -1,0 +1,35 @@
+..FF.
+======================================================================
+FAIL: test_the_declared_phase_error_dominates_the_reported_abserr (LiouvilleGreen.tests.test_bessel_compatibility.TestLevinConsumption.test_the_declared_phase_error_dominates_the_reported_abserr)
+Without a declaration the reported error is the eq. (151) round-off floor and the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/tests/test_bessel_compatibility.py", line 391, in test_the_declared_phase_error_dominates_the_reported_abserr
+    self.assertEqual(declared["value"], undeclared["value"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.08227535069321906 != 0.08227535069321909
+
+======================================================================
+FAIL: test_the_raw_phase_enters_no_value_or_error (LiouvilleGreen.tests.test_bessel_compatibility.TestLevinConsumption.test_the_raw_phase_enters_no_value_or_error) (span=(10.0, 60.0))
+The raw phase's absolute value never enters a value or an error of the integral.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/tests/test_bessel_compatibility.py", line 485, in test_the_raw_phase_enters_no_value_or_error
+    self.assertEqual(shifted_decisions, supplied_decisions)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('0x[759 chars]'0x1.1800000000000p+5', '0x1.4a00000000000p+5'[1327 chars], 0)] != [('0x[759 chars]'0x1.4000000000000p+3', '0x1.a400000000000p+3'[1879 chars], 0)]
+
+First differing element 11:
+('0x1.1800000000000p+5', '0x1.4a00000000000p+5', True, False, 0, 0)
+('0x1.4000000000000p+3', '0x1.a400000000000p+3', True, False, 0, 0)
+
+Second list contains 8 additional elements.
+First extra element 31:
+('0x1.cc00000000000p+4', '0x1.e500000000000p+4', True, False, 0, 0)
+
+Diff is 4181 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.472s
+
+FAILED (failures=2)

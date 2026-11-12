@@ -6,8 +6,10 @@ interior minimum of |theta'| whose Airy parameter is below _LEVIN_COALESCENCE_LA
 integrates a window of phase half-width _LEVIN_WINDOW_HALF_PHASE round each by the nested Clenshaw-Curtis
 pair, in pieces of at most 2 pi; it stops a window whose bisections no longer lower its error by QUADPACK's
 iroff1 counted per window (section 1.3); and it never returns a Levin leaf whose phase rate changes sign on its
-own nodes (the guard). A phase whose total variation over the span is below SIX_PI is not located (Rule A, section
-10; test 13), and the guard tests such a phase of a basis of several phases for a sign change.
+own nodes (the guard). A phase whose rate is exactly zero at every finite scan sample has nothing to locate and is not
+located, and the guard tests such a phase of a basis of several phases for a sign change (prompts/levin-phase-floor/
+07a-window-stop-and-phase-variation.md section 1.1, in place of 07's section 10 Rule A; test 13). The window's count
+is QUADPACK dqage's, with a value test no looser than the request (07a section 1.2; test 14).
 
 References are closed forms (the incomplete gamma function and the error function), contour integrals, or
 mpmath.quad on pieces of at most pi/2 of phase split at every stationary point. They are computed, each at 40
@@ -23,6 +25,7 @@ abserr is at least the true error. No Ray and no datastore.
 
 import math
 import unittest
+from unittest import mock
 
 import numpy as np
 
@@ -34,7 +37,10 @@ from AdaptiveLevin.levin_quadrature import (
     adaptive_levin_sincos,
     chebyshev_matrices,
 )
-from AdaptiveLevin.tests.test_levin_quadrature import _TwoIndependentSinCosBasis
+from AdaptiveLevin.tests.test_levin_quadrature import (
+    _TwoIndependentSinCosBasis,
+    _phase_variation,
+)
 
 EPS = float(np.finfo(float).eps)
 
@@ -474,9 +480,9 @@ class _TwoPhaseQuadraticBasis(_TwoIndependentSinCosBasis):
                     [zero, zero, d2, zero],
                 ]
             )
-        phase_span = float(
-            (np.mean(np.fabs(t1)) + np.mean(np.fabs(t2))) * np.fabs(grid[0] - grid[-1])
-        )
+        # V summed over the two phases, each by _Basis_SinCos's rule (prompt 07a section 1.1 item
+        # 3; until 07a, (mean|theta1'| + mean|theta2'|) * width)
+        phase_span = _phase_variation(theta1, t1) + _phase_variation(theta2, t2)
         w0 = [
             np.sin(theta1[-1]),
             np.cos(theta1[-1]),
@@ -595,6 +601,9 @@ class TestWindowStoppingRule(unittest.TestCase, _Honest):
         )
         (window,) = data["stationary_windows"]
         self.assertTrue(window["stopped"])
+        # 07a section 9.4 test 14 (c): the window still stops with its count at the limit under dqage's count
+        # (10 (a) asserts the same, 10 (c) a count of zero)
+        self.assertEqual(window["iroff1_count"], lq._LEVIN_WINDOW_IROFF1_LIMIT)
         self.assertTrue(data["converged"])
         self.assertEqual(data["num_untrusted_regions"], 0)
         self.assertHonest(data, T10B_REF, margin=1.0 / q)
@@ -608,9 +617,9 @@ class TestWindowStoppingRule(unittest.TestCase, _Honest):
         self.assertFalse(window["stopped"])
 
 
-# Test 13 (section 10, Rule A): references by rule-a/scripts/test_references_rule_a.py, at 40 and 60 digits
-# (agreeing to at most 1.1e-41 relative) and checked against mpmath.quad; its output is
-# docs/levin-phase-floor/07/calibration/rule-a/out/test_references_rule_a.json.
+# Test 13 (07 section 10's Rule A, rewritten for 07a section 1.1, 07a section 3 test 6): references by 07's
+# rule-a/scripts/test_references_rule_a.py, at 40 and 60 digits (agreeing to at most 1.1e-41 relative) and checked
+# against mpmath.quad; its output is docs/levin-phase-floor/07/calibration/rule-a/out/test_references_rule_a.json.
 # (a) theta = 0: I = int_0^1 cos 3x dx = sin(3) / 3.
 T13A_REF = float.fromhex("0x1.815a092491c7ap-5")  # 4.70400026866224073669149342694e-2
 # (b), (c) theta = (c/2)(x - x0)^2 on [0, 1] with section 2's amplitudes, V = (c/2)(x0^2 + (1 - x0)^2):
@@ -618,7 +627,6 @@ T13A_REF = float.fromhex("0x1.815a092491c7ap-5")  # 4.70400026866224073669149342
 T13B_C, T13C_C = 70.0, 72.0
 T13B_REF = float.fromhex("0x1.58f28f18e1695p-3")  # 1.68431394526284234165192922057e-1
 T13C_REF = float.fromhex("0x1.4b17706bee4a3p-3")  # 1.61665800374781824059347863032e-1
-T13B_V = 18.47524157501472  # 18.4752415750147221490017579642
 # (d) test 9's basis with theta_1 = 200 x and theta_2 = 0, f = (e^{-x}, 0, 0, cos 3x):
 # I = (l - e^{-1}(sin l + l cos l)) / (1 + l^2) + sin(3) / 3, l = 200.
 T13D_L1 = 200.0
@@ -660,9 +668,11 @@ def _region_record_13(region):
 
 class TestRuleA(unittest.TestCase, _Honest):
     """
-    Test 13 (prompt 07 section 10, Rule A): a phase whose total variation over the span, estimated on the
-    location's scan by the trapezoidal rule, is below SIX_PI is not located; it is reported under
-    "location_skipped_phases"; for a basis of several phases the guard tests it for a sign change.
+    Test 13, rewritten by prompt 07a (section 3 test 6) for the location's first step that replaces 07's Rule A
+    (07a section 1.1 item 1): a phase whose rate is exactly zero at every finite scan sample is not located; it
+    is reported under "location_skipped_phases" with the reason, "zero_rate"; for a basis of several phases the
+    guard tests it for a sign change. Every other phase is located whatever its variation: (b) is 07a's test 5,
+    O9's case, whose phase Rule A skipped. The class keeps its name, as the tests' records cite it.
     """
 
     KW = dict(rtol=1e-9)
@@ -689,10 +699,11 @@ class TestRuleA(unittest.TestCase, _Honest):
         """
         Test 13 (a). _Basis_SinCos with theta = 0 and theta_deriv = 0 identically, and a smooth, varying f_cos =
         cos 3x (with f_sin = e^{-x}, which sin 0 annuls), the shape of R28's q - r calls with q = r. Nothing is
-        located, no window piece is made, the phase is reported skipped with variation 0, nothing is guarded;
-        value, abserr and every returned leaf are bit-identical to the call with the location bypassed (test 8's
-        switch); and the value is honest against sin(3) / 3. Before Rule A every one of the 4,097 scan samples
-        was a root (breakage (x)).
+        located, no window piece is made, the phase is reported skipped with the reason "zero_rate" (07 reported
+        it with variation 0, 07a's rule in place of Rule A), nothing is guarded; value, abserr and every returned
+        leaf are bit-identical to the call with the location bypassed (test 8's switch), as at the parent; and the
+        value is honest against sin(3) / 3. Before Rule A every one of the 4,097 scan samples was a root (07's
+        breakage (x)).
         """
         theta = {"theta": lambda x: 0.0 * x, "theta_deriv": lambda x: 0.0 * x}
         kw = dict(self.KW, atol=1e-14 * abs(T13A_REF))
@@ -706,7 +717,7 @@ class TestRuleA(unittest.TestCase, _Honest):
         )
         self.assertNothingLocated(located)
         self.assertEqual(
-            located["location_skipped_phases"], [{"phase": 0, "variation": 0.0}]
+            located["location_skipped_phases"], [{"phase": 0, "reason": "zero_rate"}]
         )
         self.assertEqual(bypassed["location_skipped_phases"], [])
         self.assertEqual(located["num_guarded_regions"], 0)
@@ -716,45 +727,33 @@ class TestRuleA(unittest.TestCase, _Honest):
 
     def test_13b_small_phase_with_a_root(self):
         """
-        Test 13 (b). theta = (c/2)(x - x0)^2 on [0, 1] at the non-dyadic x0 = 0.3819660112501051, c = 70, so that
-        its total variation V = (c/2)(x0^2 + (1 - x0)^2) = 18.475 is below 6 pi = 18.850. Its root is not
-        located; the phase is reported skipped, its variation within the estimate's stated error of V (the
-        trapezoidal rule on the scan: at most h^2 |theta''| / 4 at the root, where |theta'| has a kink, theta' being
-        linear elsewhere, plus the sum's rounding; h = 1/4096). The root leaf, whose node estimate of its span
-        exceeds 6 pi, is caught by the nodal guard. The result is bit-identical to the call with the location
-        bypassed, and the value is honest against the closed form in erf.
+        Test 13 (b), 07a's section 3 test 5, O9's case. theta = (c/2)(x - x0)^2 = 35 (x - x0)^2 on [0, 1] at the
+        non-dyadic x0 = 0.3819660112501051, c = 70: its total variation V = (c/2)(x0^2 + (1 - x0)^2) = 18.475 is
+        below 6 pi = 18.850, while the root leaf's estimate at the parent, mean|theta'| on its 16 nodes times its
+        width, read 23.69. At the parent Rule A skipped the phase (its scan estimate 18.475242613612156), the gate
+        sent the root leaf to the Levin solve on its estimate, and the nodal guard caught the unlocated root: one
+        guarded leaf, value 0x1.58f28f18e1696p-3, abserr 1.962e-13, 5 regions, honest. Under 07a the root is
+        located at x0 (within 4 eps x0) and windowed, nothing is skipped, no leaf is guarded, and the value is
+        honest against the closed form in erf.
         """
         theta = quadratic_theta(T13B_C, X0)
         kw = dict(self.KW, atol=1e-14 * abs(T13B_REF))
-        located = _adaptive_levin((0.0, 1.0), F_23, _Basis_SinCos(theta), **kw)
-        bypassed = _adaptive_levin(
-            (0.0, 1.0),
-            F_23,
-            _Basis_SinCos(theta),
-            _test_only_bypass_location=True,
-            **kw,
-        )
-        self.assertNothingLocated(located)
-        (skipped,) = located["location_skipped_phases"]
-        self.assertEqual(skipped["phase"], 0)
-        self.assertLess(skipped["variation"], lq.SIX_PI)
-        h = 1.0 / (lq._LEVIN_STATIONARY_SCAN_POINTS - 1)
-        bound = T13B_C * h * h / 4.0 + lq._LEVIN_STATIONARY_SCAN_POINTS * EPS * T13B_V
-        self.assertLessEqual(abs(skipped["variation"] - T13B_V), bound)
-        # The root leaf's own span estimate, from its 16 nodes, is 23.69 > 6 pi, so the C2 gate sends it to the
-        # Levin solve, where the nodal guard catches the root Rule A left unlocated (section 10, "Why the gate's
-        # threshold"): it is guarded and bisected, and its halves go to the Clenshaw-Curtis rule. No Levin leaf
-        # is returned guarded, and the guard acts as it does with the location bypassed.
-        self.assertEqual(located["num_guarded_regions"], 1)
-        self.assertEqual(bypassed["num_guarded_regions"], 1)
-        self.assertFalse(any(r.guarded for r in located["regions"]))
-        self.assertBitIdenticalToBypassed(located, bypassed)
-        self.assertHonest(located, T13B_REF)
+        data = _adaptive_levin((0.0, 1.0), F_23, _Basis_SinCos(theta), **kw)
+        self.assertEqual(data["location_skipped_phases"], [])
+        (point,) = data["stationary_points"]
+        self.assertEqual(point["kind"], "root")
+        self.assertLessEqual(abs(point["x"] - X0), 4.0 * EPS * X0)
+        self.assertEqual(len(data["stationary_windows"]), 1)
+        self.assertGreater(data["num_window_pieces"], 0)
+        self.assertEqual(data["num_guarded_regions"], 0)
+        self.assertFalse(any(r.guarded for r in data["regions"]))
+        self.assertTrue(data["converged"])
+        self.assertHonest(data, T13B_REF)
 
     def test_13c_same_phase_just_above_six_pi(self):
         """
         Test 13 (c). Test 13 (b)'s phase at c = 72, V = 19.003, just above 6 pi: no phase is skipped, and the root
-        is located at x0 (within 4 eps x0) and windowed, as before Rule A; the value is honest.
+        is located at x0 (within 4 eps x0) and windowed, as before Rule A; the value is honest. Unchanged by 07a.
         """
         theta = quadratic_theta(T13C_C, X0)
         data = adaptive_levin_sincos(
@@ -772,10 +771,11 @@ class TestRuleA(unittest.TestCase, _Honest):
     def test_13d_several_phases(self):
         """
         Test 13 (d). Test 9's two-phase basis with phase 2 identically zero (c = 0) and phase 1 linear, theta_1 =
-        200 x, V_1 = 200 >= 6 pi; f = (e^{-x}, 0, 0, cos 3x). Phase 2 (index 1) is reported skipped with variation 0,
-        phase 1 locates nothing; no leaf is guarded -- the guard tests the skipped phase for a sign change, and
-        its rate, 0 or -0 on every node, has none (tested for one strict sign, breakage (xi), every Levin leaf is
-        guarded); the call converges and is honest against the closed form.
+        200 x, V_1 = 200 >= 6 pi; f = (e^{-x}, 0, 0, cos 3x). Phase 2 (index 1), its rate 0 or -0 at every scan
+        sample, is reported skipped with the reason "zero_rate" (07: with variation 0); phase 1 locates nothing; no
+        leaf is guarded -- the guard tests the skipped phase for a sign change, and its rate, 0 or -0 on every node,
+        has none (tested for one strict sign, 07's breakage (xi), every Levin leaf is guarded); the call converges
+        and is honest against the closed form.
         """
         basis = _TwoPhaseQuadraticBasis(T13D_L1, 0.0, X0)
         f = [
@@ -788,13 +788,279 @@ class TestRuleA(unittest.TestCase, _Honest):
             (0.0, 1.0), f, basis, atol=1e-14 * abs(T13D_REF), **self.KW
         )
         self.assertEqual(
-            data["location_skipped_phases"], [{"phase": 1, "variation": 0.0}]
+            data["location_skipped_phases"], [{"phase": 1, "reason": "zero_rate"}]
         )
         self.assertNothingLocated(data)
         self.assertEqual(data["num_guarded_regions"], 0)
         self.assertFalse(any(r.guarded for r in data["regions"]))
         self.assertTrue(data["converged"])
         self.assertHonest(data, T13D_REF)
+
+
+# Test 14 (prompt 07a section 9.4, the window's count after section 1.2). (d)'s reference is the closed form in
+# Fresnel integrals, by docs/levin-phase-floor/07a/code/test_references_07a.py at 40 and 60 digits (agreeing to
+# 7.2e-39 relative; out/test_references_07a.json).
+T14D_THETA0, T14D_C = 1.0e8, 1.0e6
+T14D_REF = float.fromhex("0x1.08956905b4489p-10")  # 1.00930646424427149117727776641e-3
+
+
+def _interval(abserr, floor, declared=None):
+    """A Clenshaw-Curtis region with the given nested-pair estimate and floor (less its node term), and, if
+    declared is given, the trust check's widened resolution error, so that its e' (budget_err) is the larger of
+    declared and floor while its own error e (own_err) is the larger of abserr and floor.
+    """
+    region = lq.used_interval(
+        start=0.0,
+        end=1.0,
+        depth=0,
+        type=lq.INTERVAL_TYPE_DIRECT,
+        abserr=abserr,
+        phase_err=floor,
+        phase_err_less_node=floor,
+    )
+    region._declared_resolution = declared
+    return region
+
+
+class TestWindowCount(unittest.TestCase, _Honest):
+    """
+    Test 14 (prompt 07a section 9.4): the window's iroff1 count is dqage's, with a value test no looser than the
+    request. lq._window_bisection_counts() decides one bisection from V_P, V_L + V_R, the leaves' own errors e
+    (lq._own_error(), used_interval.own_err) and the halves' unresolved flags (lq._cc_leaf_unresolved()).
+    """
+
+    def test_14a_the_count_directly(self):
+        """
+        Test 14 (a). On constructed inputs:
+          * at rtol 1e-8 a value change of 1e-6 relative, between rtol |V| and 1e-5 |V|, is not counted, where
+            07's fixed 1e-5 counts it (the same bisection at an rtol above 1e-5, where the cap 1e-5 applies);
+          * either half unresolved: not counted;
+          * raw estimates flat while e' falls (a parent whose e' the trust check widened): counted;
+          * raw estimates falling while e' is flat (halves whose e' the trust check widened): not counted;
+          * each inequality's boundary, inclusive: the value test at rtol = 2^-20 and the error test at 0.99.
+        """
+        count = lq._window_bisection_counts
+        flat = dict(error_parent=1.0, error_left=0.5, error_right=0.5)
+        resolved = dict(unresolved_left=False, unresolved_right=False)
+
+        v_parent = 1.0 - 1.0e-6
+        self.assertLess(1.0e-8 * 1.0, abs(1.0 - v_parent))
+        self.assertLessEqual(abs(1.0 - v_parent), 1.0e-5 * 1.0)
+        self.assertFalse(count(v_parent, 1.0, **flat, **resolved, rtol=1.0e-8))
+        self.assertTrue(count(v_parent, 1.0, **flat, **resolved, rtol=1.0e-3))
+        self.assertFalse(count(1.0 - 2.0e-5, 1.0, **flat, **resolved, rtol=1.0e-3))
+
+        for left, right in ((True, False), (False, True), (True, True)):
+            with self.subTest(unresolved=(left, right)):
+                self.assertFalse(
+                    count(
+                        1.0,
+                        1.0,
+                        **flat,
+                        unresolved_left=left,
+                        unresolved_right=right,
+                        rtol=1.0e-8,
+                    )
+                )
+        self.assertTrue(count(1.0, 1.0, **flat, **resolved, rtol=1.0e-8))
+
+        # raw flat, e' falling: the parent's e' widened to 1e-8 by the trust check, its own e 1e-10
+        parent = _interval(1.0e-10, 1.0e-12, declared=1.0e-8)
+        left, right = _interval(0.5e-10, 1.0e-12), _interval(0.5e-10, 1.0e-12)
+        self.assertLess(
+            left.budget_err + right.budget_err,
+            lq._LEVIN_WINDOW_IROFF1_ERROR_RATIO * parent.budget_err,
+        )
+        self.assertTrue(
+            count(
+                1.0,
+                1.0,
+                lq._own_error(parent),
+                lq._own_error(left),
+                lq._own_error(right),
+                **resolved,
+                rtol=1.0e-8,
+            )
+        )
+
+        # raw falling, e' flat: the halves' e' widened to 0.5e-8 each, their own e 1e-11
+        parent = _interval(1.0e-8, 1.0e-12)
+        left = _interval(1.0e-11, 1.0e-12, declared=0.5e-8)
+        right = _interval(1.0e-11, 1.0e-12, declared=0.5e-8)
+        self.assertGreaterEqual(
+            left.budget_err + right.budget_err,
+            lq._LEVIN_WINDOW_IROFF1_ERROR_RATIO * parent.budget_err,
+        )
+        self.assertFalse(
+            count(
+                1.0,
+                1.0,
+                lq._own_error(parent),
+                lq._own_error(left),
+                lq._own_error(right),
+                **resolved,
+                rtol=1.0e-8,
+            )
+        )
+
+        # the boundaries: |dV| = 2^-20 |V_L + V_R| at rtol 2^-20, and e_L + e_R = 0.99 e_P, both counted
+        tol = 2.0**-20
+        self.assertTrue(count(1.0 - tol, 1.0, **flat, **resolved, rtol=tol))
+        self.assertFalse(
+            count(np.nextafter(1.0 - tol, 0.0), 1.0, **flat, **resolved, rtol=tol)
+        )
+        ratio = lq._LEVIN_WINDOW_IROFF1_ERROR_RATIO
+        self.assertTrue(count(1.0, 1.0, 1.0, ratio * 1.0, 0.0, **resolved, rtol=1e-8))
+        self.assertFalse(
+            count(
+                1.0,
+                1.0,
+                1.0,
+                np.nextafter(ratio * 1.0, 0.0),
+                0.0,
+                **resolved,
+                rtol=1e-8,
+            )
+        )
+
+    def test_14b_unresolved(self):
+        """
+        Test 14 (b). A Clenshaw-Curtis leaf of a smooth integrand in its asymptotic regime (F_23, theta = 10x, on
+        [0, 1]: |CC_{2N-1} - CC_N| = 4.1e-9, positive, and 200 times it 1.3e-6 of resasc) is resolved; a leaf whose integrand is a peak narrower than the node spacing, centred on an
+        odd node of the fine rule (so the coarse rule misses it), is unresolved -- its 200 |CC_{2N-1} - CC_N| is
+        105 times its resasc, while |CC_{2N-1} - CC_N| alone is 0.53 of it. Each leaf's resasc
+        equals, to rounding, sum_j |w_j| |g_j - gbar| evaluated here. And the test itself is inclusive at the
+        factor 200, never true with either number zero or missing.
+        """
+        order = lq.DEFAULT_LEVIN_CHEBSHEV_ORDER
+        fine_order = 2 * order - 1
+        peak_span = (0.0, 1.0)
+        fine_grid, _ = chebyshev_matrices(peak_span, fine_order)
+        x_peak = float(fine_grid[13])
+        width = 1.0e-3
+        cases = (
+            (
+                "smooth",
+                (0.0, 1.0),
+                F_23,
+                {"theta": lambda x: 10.0 * x, "theta_deriv": lambda x: 10.0 + 0.0 * x},
+                False,
+            ),
+            (
+                "peak",
+                peak_span,
+                [
+                    lambda x: 0.0 * x,
+                    lambda x: np.exp(-(((x - x_peak) / width) ** 2)),
+                ],
+                {"theta": lambda x: 0.0 * x, "theta_deriv": lambda x: 0.0 * x},
+                True,
+            ),
+        )
+        for name, span, f, theta, unresolved in cases:
+            with self.subTest(leaf=name):
+                data = _adaptive_levin_subregion(
+                    span, f, _Basis_SinCos(theta), id_label=None, force_direct=True
+                )
+                self.assertTrue(data["is_direct"])
+                self.assertEqual(
+                    lq._cc_leaf_unresolved(data["abserr_direct"], data["resasc"]),
+                    unresolved,
+                )
+                grid, _ = chebyshev_matrices(span, fine_order)
+                weights = lq._cc_weights(span, fine_order)
+                th = theta["theta"](grid)
+                g = f[0](grid) * np.sin(th) + f[1](grid) * np.cos(th)
+                value = math.fsum(weights * g)
+                gbar = value / math.fsum(weights)
+                resasc = math.fsum(np.fabs(weights) * np.fabs(g - gbar))
+                self.assertAlmostEqual(
+                    data["resasc"], resasc, delta=1e-13 * abs(resasc)
+                )
+                if unresolved:
+                    self.assertLess(data["abserr_direct"], data["resasc"])
+                else:
+                    self.assertGreater(data["abserr_direct"], 0.0)
+                    self.assertLess(
+                        lq._DQK21_SATURATION_FACTOR * data["abserr_direct"],
+                        1e-3 * data["resasc"],
+                    )
+
+        self.assertEqual(lq._DQK21_SATURATION_FACTOR, 200.0)
+        self.assertTrue(lq._cc_leaf_unresolved(1.0, 200.0))
+        self.assertFalse(lq._cc_leaf_unresolved(1.0, np.nextafter(200.0, np.inf)))
+        self.assertFalse(lq._cc_leaf_unresolved(0.0, 1.0))
+        self.assertFalse(lq._cc_leaf_unresolved(1.0, 0.0))
+        self.assertFalse(lq._cc_leaf_unresolved(1.0, None))
+        self.assertFalse(lq._cc_leaf_unresolved(None, 1.0))
+
+    def test_14d_value_test_against_the_request(self):
+        """
+        Test 14 (d). A synthetic window at rtol 1e-9: theta = theta_0 + (c/2)(x - x_s)^2 on [0, 1], theta_0 = 1e8,
+        c = 1e6, x_s = 0.3819660112501051, f = (1, 0), depth_max 12. The raw phase near 1e8 puts the window
+        leaves' Clenshaw-Curtis floor above the request, so their own errors stop falling (e_L + e_R = e_P), and
+        their first bisections change the value by 2.8e-9 and 3.8e-9 relative: between rtol and 1e-5.
+          * 07's code (the parent, a9f6abc3) counts those bisections and stops the window after the call's 18th
+            bisection: 28 regions, value 0x1.0895691a63805p-10, abserr 1.977e-10, unconverged, honest at 0.0238
+            of its abserr.
+          * The commit does not count them: the window stops after the 22nd bisection, 32 regions, unconverged,
+            honest at 0.0126 of its abserr. Asserted here: the stop, its split and its count; at least one
+            bisection with a value change in (rtol, 1e-5], both halves resolved and the raw error flat, not
+            counted; and the honesty.
+        Section 3 asks for a case that leaves the call converged and dishonest at the parent. None was built:
+        on every case tried (this family at theta_0 1e6 and 1e8, rtol 1e-8 and 1e-9, f = (1, 0) and (0, 1)) both
+        codes are honest, as Part A found on production calls -- the stopped windows' declarations at or above
+        their true error, the five dishonest calls' excess outside the window (section 9.2). Test 14 (a) asserts
+        the rule directly.
+        """
+        theta = {
+            "theta": lambda x: T14D_THETA0 + 0.5 * T14D_C * (x - X0) * (x - X0),
+            "theta_deriv": lambda x: T14D_C * (x - X0),
+        }
+        f = [lambda x: 1.0 + 0.0 * x, lambda x: 0.0 * x]
+        rtol = 1.0e-9
+        decisions = []
+        count = lq._window_bisection_counts
+
+        def recording(
+            v_parent, v_halves, e_parent, e_left, e_right, u_left, u_right, r
+        ):
+            counted = count(
+                v_parent, v_halves, e_parent, e_left, e_right, u_left, u_right, r
+            )
+            decisions.append(
+                (
+                    abs(v_halves - v_parent) / abs(v_halves),
+                    e_left + e_right >= lq._LEVIN_WINDOW_IROFF1_ERROR_RATIO * e_parent,
+                    u_left or u_right,
+                    counted,
+                )
+            )
+            return counted
+
+        with mock.patch.object(lq, "_window_bisection_counts", recording):
+            data = adaptive_levin_sincos(
+                (0.0, 1.0),
+                f,
+                theta,
+                atol=1e-14 * abs(T14D_REF),
+                rtol=rtol,
+                depth_max=12,
+            )
+        (window,) = data["stationary_windows"]
+        self.assertTrue(window["stopped"])
+        self.assertEqual(window["iroff1_count"], lq._LEVIN_WINDOW_IROFF1_LIMIT)
+        self.assertEqual(window["stopped_after_split"], 22)
+        self.assertEqual(data["num_regions"], 32)
+        self.assertFalse(data["converged"])
+        between = [
+            d
+            for d in decisions
+            if rtol < d[0] <= lq._LEVIN_WINDOW_IROFF1_VALUE_RTOL and d[1] and not d[2]
+        ]
+        self.assertGreater(len(between), 0)
+        self.assertFalse(any(counted for *_, counted in between))
+        self.assertHonest(data, T14D_REF)
 
 
 if __name__ == "__main__":

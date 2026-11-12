@@ -1,0 +1,70 @@
+{
+ "units": 80,
+ "outcomes": {
+  "pass->pass": 80
+ },
+ "new_failures": [],
+ "paired_calls": 4320,
+ "unpaired_units_or_calls": 0,
+ "neither": 2973,
+ "neither_not_identical": 0,
+ "route_or_lu_changed": {
+  "calls": 1024,
+  "not_identical": 1024,
+  "converged": {
+   "True->True": 933,
+   "False->False": 88,
+   "True->False": 3
+  },
+  "largest_move_over_parent_abserr": 0.02328228180408559
+ },
+ "window": {
+  "calls": 423,
+  "not_identical": 104,
+  "converged": {
+   "True->True": 419,
+   "False->False": 4
+  },
+  "largest_move_over_parent_abserr": 3.33126280939409e-05
+ },
+ "newly_located": {
+  "calls": 0,
+  "not_identical": 0,
+  "converged": {},
+  "largest_move_over_parent_abserr": 0.0
+ },
+ "regions_gated": 493516,
+ "route_changed_regions": 434,
+ "lu_changed_regions": 771,
+ "node_partition_regions": 0,
+ "calls_guarded_parent": 0,
+ "calls_guarded_commit": 0,
+ "windows_stopped_parent": 83,
+ "windows_stopped_commit": 83,
+ "honesty": {
+  "route_or_lu_changed": {
+   "results": 674,
+   "honest_parent": 426,
+   "honest_commit": 427,
+   "dishonest_converged_commit": 247,
+   "worst_commit": 4859261.077433457,
+   "worst_parent": 1200741.676883897
+  },
+  "window": {
+   "results": 251,
+   "honest_parent": 94,
+   "honest_commit": 94,
+   "dishonest_converged_commit": 157,
+   "worst_commit": 1352038.8300989552,
+   "worst_parent": 1352038.8300989552
+  },
+  "neither": {
+   "results": 155,
+   "honest_parent": 123,
+   "honest_commit": 123,
+   "dishonest_converged_commit": 32,
+   "worst_commit": 53537.22874886897,
+   "worst_parent": 53537.22874886897
+  }
+ }
+}

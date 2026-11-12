@@ -663,9 +663,12 @@ class BesselPhaseFunction:
         ``x = 1e15``: the sum is formed in double precision and the correction is rounded against
         the leading term, which is precisely what :meth:`sin_cos_theta` exists to avoid. It is kept
         for compatibility and diagnostics, and because ``theta`` is a *required* key of the
-        ``AdaptiveLevin`` phase dictionary (``levin_quadrature.py:948-952`` raises without it) --
-        "compatibility-only" means Levin never *evaluates* it when ``theta_mod_2pi`` and
-        ``theta_deriv`` are both supplied (``:1038``), not that the key may be omitted.
+        ``AdaptiveLevin`` phase dictionary (``_Basis_SinCos.__init__`` raises without it). When
+        ``theta_mod_2pi`` and ``theta_deriv`` are both supplied, Levin samples it for routing only
+        (prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md, sections 1.1 and 10):
+        the variation ``|theta(b) - theta(a)|`` its C2 gate and LU choice read is a *difference* of
+        two raw values, which carries about two ulps of ``theta``, never a value or an error of the
+        integral. Until 07a Levin never evaluated it at all.
 
         Accurate oscillatory evaluation must use :meth:`sin_cos_theta` or :meth:`theta_mod_2pi`.
         This is **not** a cycle-count algorithm and must not be mistaken for one; if a consumer

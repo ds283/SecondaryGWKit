@@ -15,8 +15,23 @@ from AdaptiveLevin.levin_quadrature import (
     _levin_G0_G1,
     _detect_vectorized,
     _sample_vectorized,
+    _changes_sign,
+    _node_partition_variation,
 )
 from utilities import format_time
+
+
+def _phase_variation(theta_nodes, theta_prime_nodes) -> float:
+    """
+    One phase's variation V across a region, by _Basis_SinCos's rule (prompts/levin-phase-floor/
+    07a-window-stop-and-phase-variation.md section 1.1 item 3), from the phase and its rate on the
+    region's nodes (descending, as chebyshev_matrices() returns them): |theta(b) - theta(a)| at the
+    two end nodes where the rate has no two samples of opposite strict sign, else the variation on
+    the node partition. A test basis of several phases sums it over its phases.
+    """
+    if _changes_sign(theta_prime_nodes):
+        return _node_partition_variation(theta_nodes)
+    return float(np.fabs(theta_nodes[0] - theta_nodes[-1]))
 
 
 class _TwoIndependentSinCosBasis:
@@ -88,14 +103,16 @@ class _TwoIndependentSinCosBasis:
                 ]
             )
 
-        # Total variation across both phases -- generalises _Basis_SinCos's own
-        # mean|theta'| * width construction to a two-phase basis. This basis is only ever driven
-        # with a phase_span comfortably above SIX_PI in this test file's own use of it, so the
+        # Total variation across both phases, summed over the phases -- _Basis_SinCos's V
+        # (prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.1 item 3)
+        # for each phase: |theta_i(b) - theta_i(a)| where its rate has no strict sign change on
+        # the nodes, the node-partition sum where it has (until 07a, the estimate
+        # (mean|theta1'| + mean|theta2'|) * width). This basis is only ever driven with a
+        # phase_span comfortably above SIX_PI in this test file's own use of it, so the
         # Clenshaw-Curtis fallback path (which also calls eval_basis() below) is not separately
         # exercised by this basis.
-        phase_span = float(
-            (np.mean(np.fabs(theta1_prime)) + np.mean(np.fabs(theta2_prime)))
-            * np.fabs(grid[0] - grid[-1])
+        phase_span = _phase_variation(theta1, theta1_prime) + _phase_variation(
+            theta2, theta2_prime
         )
 
         # grid is descending: grid[-1] is the lower endpoint a, grid[0] is the upper endpoint b.

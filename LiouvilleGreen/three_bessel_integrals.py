@@ -484,8 +484,11 @@ class BesselPhaseGroup:
         """
         ``theta_group`` as a single number, for the ``"theta"`` key.
 
-        Required by adaptive_levin_sincos() (levin_quadrature.py:948-952 raises without it) but
-        never evaluated by it when "theta_mod_2pi" and "theta_deriv" are both supplied (:1038).
+        Required by adaptive_levin_sincos() (_Basis_SinCos.__init__ raises without it). When
+        "theta_mod_2pi" and "theta_deriv" are both supplied, Levin samples it for routing only
+        (prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md, sections 1.1 and 10):
+        its C2 gate and LU choice read differences of it, never a value or an error of the
+        integral. Until 07a it was never evaluated.
         Assembled from the split rather than from three raw_theta values, so it is as accurate as
         a double of its size can be, but a caller wanting trigonometric values should use
         :meth:`sin_cos` or :meth:`theta_mod_2pi` instead.
