@@ -283,7 +283,104 @@ census run directory, and A3 v2's scratch copy (for 08).
 
 ### C.5 Addendum: Part C's dispatch
 
-*Written at Part B's landing.*
+*Written 2026-11-12, at Part B's landing.*
+
+**Part B** is the code commit **`1ec734d7`**, whose parent is **`dadd63a0`**. It was reviewed in
+§B.3's eight checks, all passing, and pushed on the user's word: *"Yes, please land it – then write,
+commit, and push the Part C addendum."* Two orchestrator commits came before it, both pushed:
+- `a9f6abc3` amended the prompt at Part A's stop (its §9: §1.2 is variant (d), the H3 issue opened,
+  W6 on $r_g$, W4's and W6's failures predicted, W7 added);
+- `dadd63a0` amended it at Part B's stop (its §10). §1.1's $V$ needs the raw phase, which
+  LiouvilleGreen's `test_the_raw_phase_is_never_evaluated` forbade. The user: *"Option 1, and record
+  the 6π finding on that issue"*. The test is rewritten to its purpose as
+  `test_the_raw_phase_enters_no_value_or_error`, and two LiouvilleGreen docstrings are corrected.
+
+**The tree.** Part C runs at **this addendum's commit**, in the worktree
+`SecondaryGWKit-lpf07a-<this commit's short SHA>`. Its code is `1ec734d7`'s.
+- **S0′ holds by inspection:** `git diff --stat e182bc7a dadd63a0 -- . ':!docs' ':!prompts'` lists
+  only `CLAUDE.md`. R29 is the parent rehearsal, and no R31 is needed. The agent still runs the
+  check as prompt §5 writes it.
+- `git diff --stat dadd63a0 1ec734d7 -- . ':!docs' ':!prompts'` touches only:
+  - `AdaptiveLevin/levin_quadrature.py`;
+  - `AdaptiveLevin/tests/` (`test_levin_phase_variation.py`, new; `test_levin_stationary.py`;
+    `test_levin_quadrature.py`'s test bases);
+  - `LiouvilleGreen/bessel_phase.py` and `three_bessel_integrals.py`, docstrings only (their AST
+    without docstrings is unchanged);
+  - `LiouvilleGreen/tests/test_bessel_compatibility.py`.
+
+  Nothing under `ComputeTargets/` or `ObjectFactories/` moved. **So outside `QuadSourceIntegral`
+  R30 is predicted to equal R29**, as §5 says.
+
+**What Part B's review found that Part C must carry:**
+- **Every number in the review was re-run on the laptop:**
+  - the seven roots: 116, 781, 39, 156 (1 skipped), 280, 127 and 64, all OK;
+  - test 2's, test 5's and 14 (d)'s problems, at the parent and at the commit, each as its comment
+    says;
+  - breakages (i), (ii), (iii), (ix) and (x) re-applied, each caught;
+  - **z12 and v08 replayed at the commit, bit-identical to 07's census:** z12 honest at 0.718 of its
+    error, v08 at 3.16. So W4's failure on v08 is reproduced on the code Part C runs, as §9.5
+    predicts.
+- **Route changes go both ways, and some cost convergence** (prompt §10.4). In the LiouvilleGreen
+  draws, 434 regions change route, every one towards Clenshaw–Curtis ($V$ 0.31–0.999 of 07's
+  estimate, as §0.2's end-weighting predicts), and 771 change their LU choice. Three calls at rtol
+  $10^{-10}$ go from converged to unconverged when a region with $V$ just below $6\pi$ goes to
+  Clenshaw–Curtis. **The census lists every such call** (§10.4's descriptive item), with $V$, 07's
+  estimate and abserr under each code. They go to `[07-c2-gate-threshold-was-never-measured]`. They
+  are not a stop. W1 sets them aside, as calls whose route changed, and W7 does not cover them.
+- **No region took the node-partition sum in the draws** (493,516 regions gated): with `theta_deriv`
+  supplied, every phase with a sign change is located and windowed. W5's second count is predicted
+  zero in the census for the same reason. A non-zero count is a finding, with its calls listed.
+- **The raw phase now routes** (the agent's Observations 2 and 3). The gate reads
+  $|\theta(b) - \theta(a)|$ from the caller's raw phase. Any error in that phase, not just its
+  rounding, moves $V$. The draws reach $|\theta| = 1.02\times10^{13}$ (ulp $1.95\times10^{-3}$ rad).
+  **The census records, as descriptive, the largest $|\theta|$ sampled at a gated region's end, by
+  kind and rtol,** from the diagnostics it already computes, and the smallest margin $|V - 6\pi|$ and
+  $|V - 20\pi|$ among regions whose route did not change. Neither is scored.
+- **Cost.** The production path evaluates the raw phase at two points per gated region. In the draws
+  the summed wall was 762 s against the parent's 692 s, on a shared machine. The census reports
+  cost as §6 says; cost is not an argument.
+- **Not Part C's:** the agent's Observation 1, four comments made stale by §1.1:
+  - `LiouvilleGreen/bessel_phase.py`, the `bessel_phase()` docstring, still says `theta` is never
+    evaluated, and that `phase_span` comes from `theta_deriv`;
+  - `three_bessel_integrals.py`'s `residual_log_deriv` docstring and
+    `ComputeTargets/tests/test_quadsource_integral.py:2121–2122` also say `phase_span` comes from
+    $\theta'$.
+
+  Their fix is put to the user on the laptop. No Part C agent touches them.
+
+**§C.0, re-checked read-only on the Mac Studio, 11:22 UTC, 2026-11-12:**
+- **The main checkout** is `handover-remedial` at `28ebaf07`, with `git status --short` empty.
+  `git worktree list` shows it and Part A's `SecondaryGWKit-lpf07a-f93aafd` (at `f93aafd0`), which
+  is removed at dispatch (§C.0).
+- **The registry:** 73 runs, 65 done, 4 failed and 4 killed, all from earlier prompts. Nothing is
+  `running` or stale.
+- **The lock and Ray:** `rehearsal_lock status` reports the lock free (`~/.raypoolkit/rehearsal-lock`
+  does not exist). `ray-processes` lists no Ray process.
+- **Load and disk:** the load is 4.61 / 4.45 / 3.69, and 149 GiB is free (84 % used).
+- **The 07a paths:**
+  - `var/levin-phase-floor-07a/` holds only Part A's `measurement/` (61 files kept there, listed in
+    `docs/levin-phase-floor/07a/measurement/KEPT_ON_MAC_STUDIO.txt`);
+  - there is no `rehearsal/` or `census/` yet, and no `var/datastores/levin-phase-floor-07a-*`;
+  - `var/runs/` holds Part A's four run directories, `levin-phase-floor-07a-attr-1-…`, `-attr-2-…`,
+    `-bg2-items12-…` and `-x396-fast-…`. Their slugs do not collide with `r30-07a`, `k0` or
+    `census`.
+- **The inputs, by SHA-256 against their recorded lists,** 160 files, all OK:
+  - R29's five store files against `docs/levin-phase-floor/07/rehearsal/r29/KEPT_ON_MAC_STUDIO.txt`,
+    primary `28a83aa0…`;
+  - 07's census run directory `levin-phase-floor-07-census-20261108T171137`, all 150 files against
+    `docs/levin-phase-floor/07/census/KEPT_ON_MAC_STUDIO.txt`, checkpoint `03dfe786…` among them;
+  - the scratch copy's five files against `docs/levin-phase-floor/06e/review/checks/a3v2_copy_after.sha256`,
+    with no `-wal` or `-shm`.
+- **The venv** is Python 3.13.16, with `datastorekit` 0.5.0, `raypoolkit` 0.3.0, `runregistrykit`
+  0.2.0, `ray` 2.59.0, `SQLAlchemy` 2.0.55, `numpy` 2.2.4, `scipy` 1.16.3 and `mpmath` 1.3.0. The
+  laptop's are the same.
+
+**The dispatch** waits for the user's word. Then the laptop does three things:
+1. It fetches into the Mac Studio's main checkout, which moves no working tree.
+2. It repeats §C.0's checks, removes Part A's worktree and makes the one worktree at this commit,
+   detached and with no venv.
+3. It starts the Mac Studio orchestrator session in that worktree, through the saved `MacStudio`
+   connection, with this note's §C as its brief. The folder must be trusted in the app first.
 
 ## 5. Stop and ask the user
 
