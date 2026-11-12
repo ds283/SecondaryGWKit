@@ -1,0 +1,18 @@
+# levin-phase-floor 07: V4's captures against 07's census g, bit for bit (regions)
+# written 2026-11-10T21:30:54Z on mps026298.phys.susx.ac.uk
+# script check_captures.py sha256 73305ab4228fae59385ceb76a6b16ddc0b6bf97ba18d8faf54298be444cbb639
+# tree g: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd HEAD f93aafd0173bd5de1cdc4107656dbe07c4c1c2a3 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input out/pairs_capture/captures.json sha256 203e6f763f2f06b3761beef14df2240daa287d7daf972ebe57d05279bafee300
+# input state/pairs_capture_selection.json sha256 2719eecd22bedc9b78440aa97323782fd99d8e7298081504d4990da24db2f256
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10
+p35006_7 g-1e-7-3-35006 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+n3 g-1e-7-3-35006 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+n4 g-1e-7-3-35006 #7 analytic: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+p14501_7 g-1e-7-3-14501 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+p35006_8 g-1e-8-3-35006 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+p14501_8 g-1e-8-3-14501 #1 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+n0 g-1e-8-3-14501 #0 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+n1 g-1e-8-3-14501 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+n2 g-1e-8-3-14501 #4 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+9 of 9 captures reproduce the g census bit for bit; wrote out/pairs_capture/check_captures.json sha256 3081fab297a1526c65cb9596cd70a5b35ad6bb085a9a4bb9f77930eb6b18e531

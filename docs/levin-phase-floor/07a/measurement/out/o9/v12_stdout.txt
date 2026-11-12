@@ -1,0 +1,22 @@
+## v12: O9 check on its H3 leaves
+
+N = 24 nodes; H3 true error +3.029e-34 over 14 leaves; 3 leaves carry excess error, together 1.008 of it. Script sha256 f97b2de60c1f, module sha256 4e5da371f51e.
+
+| leaf i | why | region | span | phase_span (07) | |theta(b)-theta(a)| | theta' sign change | node-partition sum | true / est. | route (07) | route (true) | changes |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 7 (d4, true/decl 0.648) | top-3 |true error| in H3 | leaf | [7.87339, 8.32595] | 2.668e+08 | 2.639e+08 | no | 2.639e+08 | 0.9893 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 7 (d4, true/decl 0.648) | top-3 |true error| in H3 | parent | [7.42083, 8.32595] | 8.383e+08 | 8.115e+08 | no | 8.115e+08 | 0.9681 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 7 (d4, true/decl 0.648) | top-3 |true error| in H3 | sibling | [7.42083, 7.87339] | 5.515e+08 | 5.476e+08 | no | 5.476e+08 | 0.9931 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 10 (d6, true/decl 1.98) | carries excess error | leaf | [9.00478, 9.11792] | 3.557e+06 | 3.541e+06 | no | 3.541e+06 | 0.9956 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 10 (d6, true/decl 1.98) | carries excess error | parent | [9.00478, 9.23106] | 4.709e+06 | 4.594e+06 | no | 4.594e+06 | 0.9756 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 10 (d6, true/decl 1.98) | carries excess error | sibling | [9.11792, 9.23106] | 1.066e+06 | 1.053e+06 | no | 1.053e+06 | 0.9876 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 11 (d7, true/decl 5.01) | carries excess error | leaf | [9.11792, 9.17449] | 8.017e+05 | 8e+05 | no | 8e+05 | 0.9979 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 11 (d7, true/decl 5.01) | carries excess error | parent | [9.11792, 9.23106] | 1.066e+06 | 1.053e+06 | no | 1.053e+06 | 0.9876 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 11 (d7, true/decl 5.01) | carries excess error | sibling | [9.17449, 9.23106] | 2.546e+05 | 2.53e+05 | no | 2.53e+05 | 0.9938 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 12 (d7, true/decl 0.0421) | top-3 |true error| in H3 | leaf | [9.17449, 9.23106] | 2.546e+05 | 2.53e+05 | no | 2.53e+05 | 0.9938 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 12 (d7, true/decl 0.0421) | top-3 |true error| in H3 | parent | [9.11792, 9.23106] | 1.066e+06 | 1.053e+06 | no | 1.053e+06 | 0.9876 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 12 (d7, true/decl 0.0421) | top-3 |true error| in H3 | sibling | [9.11792, 9.17449] | 8.017e+05 | 8e+05 | no | 8e+05 | 0.9979 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 24 (d0, true/decl 7.44) | carries excess error ; top-3 |true error| in H3 | leaf | [9.23164, 26.9711] | 1.257e+08 | 9.448e+07 | no | 9.448e+07 | 0.7515 | Levin (LU tried first) | Levin (LU tried first) | no |
+| 24 | carries excess error ; top-3 |true error| in H3 | parent | - | | | | | | | | |
+| 24 | carries excess error ; top-3 |true error| in H3 | sibling | - | | | | | | | | |
+wrote out/o9/v12.json d651bfa7dcd3f84d90ca0c13e9bc29ac34e6150882a29a0af6d1abd207023e38 out/o9/v12.md f6591220e4cb320b15fbf3f05c81a64ab1c6250d0f4462a4a9fb747a0f784cd9

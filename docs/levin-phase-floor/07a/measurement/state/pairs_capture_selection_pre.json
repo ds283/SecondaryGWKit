@@ -1,0 +1,74 @@
+[
+ {
+  "sid": "p14501_7",
+  "unit": "g-1e-7-3-14501",
+  "g_unit": "g-1e-7-3-14501",
+  "index": 1,
+  "kind": "group",
+  "set": "pairs"
+ },
+ {
+  "sid": "p14501_8",
+  "unit": "g-1e-8-3-14501",
+  "g_unit": "g-1e-8-3-14501",
+  "index": 1,
+  "kind": "group",
+  "set": "pairs"
+ },
+ {
+  "sid": "p35006_7",
+  "unit": "g-1e-7-3-35006",
+  "g_unit": "g-1e-7-3-35006",
+  "index": 1,
+  "kind": "group",
+  "set": "pairs"
+ },
+ {
+  "sid": "p35006_8",
+  "unit": "g-1e-8-3-35006",
+  "g_unit": "g-1e-8-3-35006",
+  "index": 1,
+  "kind": "group",
+  "set": "pairs"
+ },
+ {
+  "sid": "n0",
+  "unit": "g-1e-8-3-14501",
+  "g_unit": "g-1e-8-3-14501",
+  "index": 0,
+  "kind": "group",
+  "set": "nowindow"
+ },
+ {
+  "sid": "n1",
+  "unit": "g-1e-8-3-14501",
+  "g_unit": "g-1e-8-3-14501",
+  "index": 2,
+  "kind": "group",
+  "set": "nowindow"
+ },
+ {
+  "sid": "n2",
+  "unit": "g-1e-8-3-14501",
+  "g_unit": "g-1e-8-3-14501",
+  "index": 4,
+  "kind": "group",
+  "set": "nowindow"
+ },
+ {
+  "sid": "n3",
+  "unit": "g-1e-7-3-35006",
+  "g_unit": "g-1e-7-3-35006",
+  "index": 3,
+  "kind": "group",
+  "set": "nowindow"
+ },
+ {
+  "sid": "n4",
+  "unit": "g-1e-7-3-35006",
+  "g_unit": "g-1e-7-3-35006",
+  "index": 7,
+  "kind": "analytic",
+  "set": "nowindow"
+ }
+]

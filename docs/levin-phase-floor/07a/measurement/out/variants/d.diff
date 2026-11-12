@@ -1,0 +1,259 @@
+--- /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/AdaptiveLevin/levin_quadrature.py	2026-11-10 21:17:01
++++ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/variants/levin_quadrature_07a_d.py	2026-11-10 21:31:04
+@@ -524,6 +524,58 @@
+ _LEVIN_WINDOW_IROFF1_VALUE_RTOL = 1.0e-5
+ _LEVIN_WINDOW_IROFF1_ERROR_RATIO = 0.99
+ _LEVIN_WINDOW_IROFF1_LIMIT = 6
++
++# levin-phase-floor 07a Part A (a measurement, never production): which variant of the window's stop this copy is,
++# and the instrument the replay installs (None records nothing). See
++# /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/make_variants_07a.py.
++_VARIANT_07A = "d"
++_MEASURE_07A = None
++# dqk21: its error is set to resasc when 200 |K - G| >= resasc (not yet in its asymptotic regime)
++_DQK21_SATURATION_07A = 200.0
++
++
++def _raw_err_07a(region) -> float:
++    """07a instrument: the leaf's own error estimate, used_interval._combine with no trust-check declaration."""
++    floor = region._phase_err_less_node if region._phase_err_less_node is not None else region._phase_err
++    resolution = region._abserr
++    if resolution is None:
++        base = floor
++    elif floor is None:
++        base = resolution
++    else:
++        base = max(resolution, floor)
++    if base is None:
++        out = region._abserr_truncation
++    elif region._abserr_truncation is None:
++        out = base
++    else:
++        out = base + region._abserr_truncation
++    return float("inf") if out is None else float(out)
++
++
++def _unresolved_07a(region) -> bool:
++    """07a: dqk21's defab.eq.error analogue on a Clenshaw-Curtis leaf: 200 |CC_{2N-1} - CC_N| >= resasc, both > 0."""
++    resasc = getattr(region, "_resasc_07a", None)
++    abserr = region._abserr
++    if resasc is None or abserr is None or not (np.isfinite(resasc) and np.isfinite(abserr)):
++        return False
++    return bool(resasc > 0.0 and abserr > 0.0 and _DQK21_SATURATION_07A * abserr >= resasc)
++
++
++def _leaf_info_07a(leaf) -> dict:
++    """07a instrument: what a leaf carries now."""
++    r = leaf.region
++    return {
++        "start": float(leaf.start), "end": float(leaf.end), "depth": int(leaf.depth), "seq": int(leaf.seq),
++        "window_index": leaf.window_index, "fell": leaf.fell_at_last_bisection, "value": float(leaf.value),
++        "value_own": float(r._value_own), "value_kind": r._value_kind, "raw": _raw_err_07a(r),
++        "eprime": float(_error_for_ordering(leaf.error)), "abserr": r._abserr, "phase_err": r._phase_err,
++        "phase_err_less_node": r._phase_err_less_node, "node_error_signed": r._node_error_signed,
++        "abserr_truncation": r._abserr_truncation, "resasc": getattr(r, "_resasc_07a", None),
++        "unresolved": _unresolved_07a(r), "trusted": r._trusted, "checked": bool(leaf.checked),
++        "phase_limited": bool(r._phase_limited), "is_direct": bool(leaf.is_direct), "window": bool(r._window),
++        "delta1": r._delta1, "delta2": r._delta2, "ratio": r._convergence_ratio, "declared": r._declared_resolution,
++    }
+ 
+ INTERVAL_TYPE_LEVIN = 0
+ INTERVAL_TYPE_DIRECT = 1
+@@ -3050,7 +3102,12 @@
+         BasisData, x_span[0], x_span[1], endpoint_proxy, endpoint_proxy
+     )
+ 
++    # 07a instrument: dqk21's resasc on the fine rule, sum_j |w_j| |g_j - gbar|, gbar = CC_{2N-1} / sum_j w_j
++    _w_sum_07a = float(np.sum(w_fine))
++    _gbar_07a = value_fine / _w_sum_07a if _w_sum_07a != 0.0 else 0.0
++    _resasc_07a = float(np.sum(np.fabs(w_fine) * np.fabs(integrand_fine - _gbar_07a)))
+     return {
++        "resasc_07a": _resasc_07a,
+         "value": value_fine,
+         "abserr_direct": abserr_direct,
+         "p_sample": None,
+@@ -4167,6 +4224,7 @@
+                 guarded=guarded,
+                 guard_at_depth_max=guard_at_depth_max,
+             )
++            region._resasc_07a = data.get("resasc_07a")  # 07a instrument
+         else:
+             # Chen et al. (173): the step-(4) residual against the leaf's two halves. They are
+             # kept, and become its children's own solves if it is bisected, so that they are not
+@@ -4496,6 +4554,8 @@
+     # with what was true of their leaves when they stopped (reported in "stationary_windows").
+     window_counts = {}
+     windows_stopped = {}
++    ier2_windows_07a = set()  # 07a: windows stopped while the call's request was unmet (dqage's ier = 2)
++    shadow_counts_07a = {}  # 07a instrument: 07's count, kept whatever the variant counts
+ 
+     def _floor_limit_stopped_window_leaf(leaf: _levin_leaf) -> None:
+         """
+@@ -4530,6 +4590,10 @@
+         members = [
+             leaf for leaf in leaves.values() if leaf.window_index == window_index
+         ]
++        _stop_rec_07a = None
++        if _MEASURE_07A is not None:
++            _stop_rec_07a = {"kind": "stop", "window_index": window_index, "split": num_splits,
++                             "before": [_leaf_info_07a(m_) for m_ in sorted(members, key=lambda m_: m_.start)]}
+         windows_stopped[window_index] = {
+             "stopped_after_split": num_splits,
+             "leaves_at_stop": len(members),
+@@ -4540,6 +4604,9 @@
+         }
+         for member in members:
+             _floor_limit_stopped_window_leaf(member)
++        if _stop_rec_07a is not None:
++            _stop_rec_07a["after"] = [_leaf_info_07a(m_) for m_ in sorted(members, key=lambda m_: m_.start)]
++            _MEASURE_07A.append(_stop_rec_07a)
+ 
+     def _split_could_meet_budget(leaf: _levin_leaf) -> bool:
+         """
+@@ -4825,6 +4892,7 @@
+         # Section 1.3's rule: count this bisection against its window if the halves barely change
+         # the value and do not lower the error (QUADPACK's iroff1); see the constants' comment.
+         stop_window = None
++        _bis_rec_07a = None
+         if leaf.window_index is not None:
+             value_halves = left.region.value_own + right.region.value_own
+             error_halves = _error_for_ordering(left.error) + _error_for_ordering(
+@@ -4834,11 +4902,57 @@
+             error_flat = error_halves >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO * error_parent
+             left.fell_at_last_bisection = not error_flat
+             right.fell_at_last_bisection = not error_flat
+-            if (
+-                np.fabs(value_halves - region.value_own)
++            # 07a: the three counts, and the one this variant uses
++            value_change_07a = np.fabs(value_halves - region.value_own)
++            counted_07 = bool(
++                value_change_07a
+                 <= _LEVIN_WINDOW_IROFF1_VALUE_RTOL * np.fabs(value_halves)
+                 and error_flat
+-            ):
++            )
++            raw_parent_07a = _raw_err_07a(region)
++            raw_left_07a = _raw_err_07a(left.region)
++            raw_right_07a = _raw_err_07a(right.region)
++            unres_left_07a = _unresolved_07a(left.region)
++            unres_right_07a = _unresolved_07a(right.region)
++            raw_flat_07a = bool(
++                raw_left_07a + raw_right_07a >= _LEVIN_WINDOW_IROFF1_ERROR_RATIO * raw_parent_07a
++            )
++            skip_07a = unres_left_07a or unres_right_07a
++            counted_c_07a = bool(
++                not skip_07a
++                and value_change_07a <= _LEVIN_WINDOW_IROFF1_VALUE_RTOL * np.fabs(value_halves)
++                and raw_flat_07a
++            )
++            counted_d_07a = bool(
++                not skip_07a
++                and value_change_07a
++                <= min(_LEVIN_WINDOW_IROFF1_VALUE_RTOL, rtol) * np.fabs(value_halves)
++                and raw_flat_07a
++            )
++            others_falling_07a = [
++                other_.seq
++                for other_ in leaves.values()
++                if other_.window_index == leaf.window_index
++                and other_ is not leaf
++                and other_.fell_at_last_bisection is True
++            ]
++            if _VARIANT_07A in ("a", "e"):
++                counted_variant_07a = counted_07
++            elif _VARIANT_07A == "b":
++                counted_variant_07a = False
++            elif _VARIANT_07A in ("c", "f"):
++                counted_variant_07a = counted_c_07a
++            elif _VARIANT_07A == "d":
++                counted_variant_07a = counted_d_07a
++            elif _VARIANT_07A == "g":
++                counted_variant_07a = counted_07 and not others_falling_07a
++            else:
++                raise RuntimeError(f"07a: unknown variant {_VARIANT_07A!r}")
++            if counted_07:
++                shadow_counts_07a[leaf.window_index] = (
++                    shadow_counts_07a.get(leaf.window_index, 0) + 1
++                )
++            if counted_variant_07a:
+                 window_counts[leaf.window_index] = (
+                     window_counts.get(leaf.window_index, 0) + 1
+                 )
+@@ -4847,6 +4961,38 @@
+                     and leaf.window_index not in windows_stopped
+                 ):
+                     stop_window = leaf.window_index
++            if _MEASURE_07A is not None:
++                rv_07a, re_07a, rn_07a = _running_sums()
++                request_07a = max(atol, rtol * np.fabs(rv_07a))
++                rel_change_07a = (
++                    float(value_change_07a / np.fabs(value_halves))
++                    if value_halves != 0.0
++                    else float("inf")
++                )
++                request_over_v_07a = (
++                    float(request_07a / np.fabs(rv_07a)) if rv_07a != 0.0 else float("inf")
++                )
++                _bis_rec_07a = {
++                    "kind": "bisection", "split": num_splits, "window_index": leaf.window_index,
++                    "parent": _leaf_info_07a(leaf), "left": _leaf_info_07a(left), "right": _leaf_info_07a(right),
++                    "V_P": float(region.value_own), "V_LR": float(value_halves),
++                    "abs_change": float(value_change_07a), "rel_change": rel_change_07a,
++                    "e_P": raw_parent_07a, "e_L": raw_left_07a, "e_R": raw_right_07a,
++                    "ep_P": float(error_parent), "ep_L": float(_error_for_ordering(left.error)),
++                    "ep_R": float(_error_for_ordering(right.error)),
++                    "error_flat_07": bool(error_flat), "raw_flat": raw_flat_07a,
++                    "unres_L": unres_left_07a, "unres_R": unres_right_07a,
++                    "counted_07": counted_07, "counted_c": counted_c_07a, "counted_d": counted_d_07a,
++                    "others_falling": others_falling_07a, "counted_variant": bool(counted_variant_07a),
++                    "count_variant_after": int(window_counts.get(leaf.window_index, 0)),
++                    "count_07_after": int(shadow_counts_07a.get(leaf.window_index, 0)),
++                    "rel_change_le_1e-5": bool(rel_change_07a <= _LEVIN_WINDOW_IROFF1_VALUE_RTOL),
++                    "request_over_v": request_over_v_07a,
++                    "rel_change_le_request_over_v": bool(rel_change_07a <= request_over_v_07a),
++                    "running_value": float(rv_07a), "running_eprime": float(re_07a), "running_node": float(rn_07a),
++                    "running_request": float(request_07a), "rtol": float(rtol),
++                    "stop": stop_window is not None,
++                }
+ 
+         _remove_leaf(leaf)
+         leaf.dataL = None
+@@ -4855,10 +5001,28 @@
+         _add_leaf(left)
+         _add_leaf(right)
+         if stop_window is not None:
++            # 07a: dqage's outcome (variants e, f): the call's request unmet once the halves are in
++            rv2_07a, re2_07a, rn2_07a = _running_sums()
++            unmet_07a = bool(re2_07a + rn2_07a > max(atol, rtol * np.fabs(rv2_07a)))
++            if unmet_07a and _VARIANT_07A in ("e", "f"):
++                ier2_windows_07a.add(stop_window)
++            if _bis_rec_07a is not None:
++                _bis_rec_07a["request_unmet_after_halves"] = unmet_07a
+             _stop_window(stop_window)
++        if _bis_rec_07a is not None:
++            _MEASURE_07A.append(_bis_rec_07a)
+ 
+     leaves_ascending = _leaves_ascending()
+     used_regions = [leaf.region for leaf in leaves_ascending]
++    if _MEASURE_07A is not None:
++        _MEASURE_07A.append({
++            "kind": "final", "variant": _VARIANT_07A, "num_splits": num_splits,
++            "window_counts": {int(k_): int(v_) for k_, v_ in window_counts.items()},
++            "shadow_counts_07": {int(k_): int(v_) for k_, v_ in shadow_counts_07a.items()},
++            "windows_stopped": {int(k_): dict(v_) for k_, v_ in windows_stopped.items()},
++            "ier2_windows": sorted(int(k_) for k_ in ier2_windows_07a),
++            "leaves": [_leaf_info_07a(leaf_) for leaf_ in leaves_ascending],
++        })
+     num_used_regions = len(used_regions)
+     num_simple_regions = sum(1 for leaf in leaves_ascending if leaf.is_direct)
+ 
+@@ -4955,6 +5119,9 @@
+     converged = (
+         budget_met and num_untrusted == 0 and num_guard_at_depth_max_returned == 0
+     )
++    if ier2_windows_07a:
++        # 07a, variants e and f: a window stopped while the call's request was unmet (dqage's ier = 2)
++        converged = False
+ 
+     _logger.debug(
+         "adaptive_levin (%s): global budget | %d leaves, %d bisections, %d floor-limited, "

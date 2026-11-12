@@ -1,0 +1,73 @@
+# levin-phase-floor 07a Part A measuring agent: files kept on the Mac Studio only (mps026298), not copied to the laptop.
+# sha256  size_bytes  path. Written by scripts/kept_list_07a.py (sha256 5d42eacbe93c0c8658b13363244f672e7e8fd0505fa88e2a95818d21d43fd054).
+
+## pickles, and files over 2 MB, under var/levin-phase-floor-07a/measurement/
+f6efb67d5add099ad9e924b733a634a345f932b0b29df184b977eab61af9c64b  17088918  out/replays/b2/cal_z12.json
+01a0dfaadf41dc5d55f24d7c590b2f0f92ff2a439552201179d56e711fdcf84c  27734776  out/replays/b2/p14501_7.json
+afe32d8205b3e561817b5ae0276ecc0709d909aa8c5d415744a7475d0001768e  27766069  out/replays/b2/p14501_8.json
+71fd2348bee77e134c44a249f5a95f76c29f6609377a904aca0cd9e18e1c3a08  16999924  out/replays/b2/p35006_7.json
+ef4920f40c28dda7b7846b377c8c60269ade5c7455e2672ff65e4ba81cf260e9  17037960  out/replays/b2/p35006_8.json
+a37e08f03e1cc675c1270a8577dd2e8a27ec01e5556c7c558db699135a9b6cca  6080528  out/replays/b2/v00.json
+308ed26e6959764f40aab79a31cade65144ba167bc5c2326bcffb474113c60da  9061744  out/replays/b2/v01.json
+d3d986d0891ab8a5a3091401fa25a8c7e1ebec3a1bd80b11f359643dcf4789b6  10908817  out/replays/b2/v02.json
+caf0c02d077ec09c5a486036943139b49c4f9606520c1b3479b3420a60a1f530  8416268  out/replays/b2/v03.json
+0fce1cb0bbafba21e4a4eb4fcc9ff9ce028f062a61c9763b7a3645a44f6b5454  22789746  out/replays/b2/v05.json
+970e947fd4973ea73b29526103bf1d22252c23a31d95423d2a310062712cdd8d  5129122  out/replays/b2/v06.json
+a037dd5670cd13fd3f3424795ec966784b1a8e540f1da81487bcd16552ac8fd8  24875656  out/replays/b2/v07.json
+92c41a5024c995bd931e53df0b1e504f21df5286655ea1a2ea1a6de29a8be856  22142204  out/replays/b2/v08.json
+37cb5f10a31cdb52323dba2dfa6e23cf4adb9e33461eb7fa994b330a0c08f0b2  24981261  out/replays/b2/v09.json
+da9b5553605e153e48343ba0ac28e0e591ac598500ecd0cf507389e9fc83829a  12756473  out/replays/b2/v10.json
+97907c092f5889c83ff152ad38ac34c59643f7a133a7af22da76d72ae3f8483d  5805568  out/replays/b2/v11.json
+0ac8ef82e9635fb2444e54dadee5142063fe6caba5580c561e02398656eca78c  8706031  out/replays/b2/v12.json
+53b74ef2f661cc5a32c359b080e06f08a11d8f8755972c7e089a3ab17c79487f  32173108  out/replays/b2/v13.json
+67d3afbff99a64f5de9ae7843d67c80d821f39d3ab38579b5f341746dcabf9f2  6292707  out/replays/b2/v14.json
+640ec9d866289a1b8f7e4eebfb456172664af91990c95eab15c68c4b20befca8  18025852  out/replays/b2/v15.json
+5a4164325228f191f54028d53f856fa56b903923d11346280fad081469724ad1  11954292  out/replays/b2/v16.json
+69b506d8c4a3bd6320dda707f054b3a36b306129eb841ca74383cfaf075d6a09  8673211  out/replays/b2/v17.json
+09ebc49f42218ce84baad470cf059557b1f792d49c1cbf32dca495cf0abe2bc8  20138616  out/replays/b2/v18.json
+97329a5f6ee1ca7b9ff889b6477398ff27b46f2a7a10b231187422f7c10eecae  18598568  out/replays/b2/v19.json
+045950a78c8d965164f4ee231844e18904f65cb6ef32858e3205c4f60294c0b7  2724272  out/replays/b2/v20.json
+ebd864bdb34e22354aa6bb4fc35047d08f352d8639ceea4560b608f83870d64b  4784924  out/replays/b2/v21.json
+d2ed3cc65dd3094c6d497897f2edd8dc5ad45b9c4138dca288a01fe00dcda24b  7677274  out/replays/b2/v22.json
+877993da21cdc9baed66564aaa5cb21f3e64d40c48c34eb5149d84d6257d156a  11220874  out/replays/b2/v23.json
+99f988867d63cd8f3f739fdf9914f88a08383a5b5b38d0be7f0ee014a54f0966  17088918  out/replays/g2/cal_z12.json
+b1514bb6d7a6a18c00c46efb498e0de995dcc1ef82dbba5faaafee6afb544c15  27734776  out/replays/g2/p14501_7.json
+d259173c9b87dbead9c8a3851c7b94049ba28b892f27c89708348659782f9be0  27766068  out/replays/g2/p14501_8.json
+129b25c5e5096a9987eb8b679e7e5fd5ebe97e7b8f8d2d9627c7a67fd3664622  16999925  out/replays/g2/p35006_7.json
+beff3a10cb6ba8489aa1aa01cf24787832f127fe4ddbbc8415f77d6c3ac6b6e2  17037961  out/replays/g2/p35006_8.json
+40c624e50ec4e79b38fb5ec4ea03e6a70deb48378f4030e2d620fb7f33827e7c  6080529  out/replays/g2/v00.json
+c6ee5f5d822ef33b0bba4671d5d139fdc26eacff2cd312a35bf065b608c9527a  9061744  out/replays/g2/v01.json
+9898e3c2ae16ee77e4bbe36fa52779b63f38e8c26c9de0801601d2d6e77c1a28  10908817  out/replays/g2/v02.json
+84267ba2932c45e645e8bd406f7a83fce77cb176f0927b56d7fe866dc7757915  8416268  out/replays/g2/v03.json
+7f18b5ca9d87696bbb30c17662caa7fff271d921e499e506bbbb3fa971db5d4d  22789746  out/replays/g2/v05.json
+050a00865b335428de40b18f12657b5deba9336f618e9149b50cea7331066894  5129121  out/replays/g2/v06.json
+6e6f0b89bc84a73ed1b8df82d2ecafdc27d905006fc3566c84e5ad0a9a7c367f  24875657  out/replays/g2/v07.json
+83e3cccfb97c9cdb6127f4554ef2aafb6407a0d04f192082ac8dc9dd1bfe5dcd  22142205  out/replays/g2/v08.json
+dd2e25070e72f709f3245ebec1d1c91d8570443b268ae2cc3f8267c2539b8da3  24981261  out/replays/g2/v09.json
+1975c86629e065cb2dc429c4fbf3fca718b7f710ea5ae3efea5edc9419470bc0  12756473  out/replays/g2/v10.json
+05a4196de86cbdcdb6fc77ad2f40f89a94c6abb15ecafac9aac2783dc6abf254  5805569  out/replays/g2/v11.json
+f369f671c67f7eaab44acf9e5bf9ee06de6eb4d153dc351afcc044eac9cb91be  8706031  out/replays/g2/v12.json
+17fbfc45eac7f4a71b3e17e45e9db5acbb024aff51bb82c93acd64eafb8449c3  32173108  out/replays/g2/v13.json
+2e38247a6e946d9afb573288fb95581641e30b2451c9fb7345193f9bc9656e3a  6292706  out/replays/g2/v14.json
+decd2706cc383c69f49b96546bf91dd277f0b63601ed11b24266162ee15cded7  18025853  out/replays/g2/v15.json
+adcea3c5842c2da860be05a6e6d719d5c8a4d3f1dadb4a766e2f935354f838ae  11954291  out/replays/g2/v16.json
+3791ce48ffe0f4f3d2b8e447b1e1c7932dc9a8279fe4fb4eb1fada923606e9ac  8673211  out/replays/g2/v17.json
+e1b39b82796c181a2f1926a383bcdfa3937f07fccaefdb3b1af95912a67dbec2  20138617  out/replays/g2/v18.json
+6050a82f2249f4feb203a19940b97f9bc77421179ef4cb8b041484570cf188bc  18598569  out/replays/g2/v19.json
+a792d7146205600f5baaa3a9ffc575a871bb6a416638da55dff5b36461bb0f27  2724273  out/replays/g2/v20.json
+09347d9ad2479d47b8e884680b3f38a20fb5b4f268444aaafcceffcc83868841  4784926  out/replays/g2/v21.json
+3422fc20e3146b3bad6b342186a73a85b3aede8446b2215c845e1608f2c98a62  7677274  out/replays/g2/v22.json
+3c0922c555e321e2658e4a3a260855d54a6fb0957a06a55e00738e16c53e355a  11220875  out/replays/g2/v23.json
+402608f34d0215da773e354a295a73da60e3d3f4b1e923711af3a91389680d69  8684689  state/census_refs.pkl
+b64777f96af3eccad4d3696b806a5512d903a9a743252c1bc8dd0db3e6bfe613  4132778  state/pairs_capture/X00/inputs_X00.pkl
+91f188d61a7cae61a51bede2670a9c0b58f5c7d9ae4f94a319219dc4e9738eb0  415575  state/pairs_capture/X00/regions_X00.pkl
+6084adb567a38195e1aa4c95108820e42115f4f8b746f5cc5f5b944e6f7e868b  6902530  state/pairs_capture/X01/inputs_X01.pkl
+27dfc93aa6b2a7e6f001740116afc0a66fc7f21e88676ebbc99c60bcaf0fdcb1  458110  state/pairs_capture/X01/regions_X01.pkl
+
+## pickles, and files over 2 MB, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-attr-1-20261110T215423
+
+## pickles, and files over 2 MB, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-attr-2-20261111T102500
+
+## pickles, and files over 2 MB, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-bg2-items12-20261110T223735
+
+## pickles, and files over 2 MB, under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-x396-fast-20261110T215229

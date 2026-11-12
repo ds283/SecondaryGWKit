@@ -1,0 +1,46 @@
+{
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/attr_projection_07a.py",
+ "script_sha256": "6e375fe264781b5704ea9cd1369975a3d323d25aeda84ae80aa06d5d7493a368",
+ "pilot": "v22",
+ "pilot_json_sha256": "922b7b3c8f81446457f9aefb88fa45009eaade710b51efe8bfb91c99b6d5d6c1",
+ "pilot_workers": 4,
+ "pilot_wall_s": 469.02354233385995,
+ "pilot_wall_at_6_s": 312.68236155590665,
+ "w07_v22_fcc_r1_r2_s": 845.5502031669021,
+ "ratio": 0.3697975121817654,
+ "calls_without_stopped_window": [
+  "v04"
+ ],
+ "projected_s": {
+  "cal_z12": 1376.8471815069092,
+  "v00": 309.2986913765318,
+  "v01": 113.80473382196149,
+  "v02": 489.63797951889643,
+  "v03": 55.3212692268391,
+  "v05": 1525.3939378108912,
+  "v06": 65.71119065273845,
+  "v07": 312.7960811779261,
+  "v08": 2894.96502312941,
+  "v09": 578.1480066234946,
+  "v10": 1502.6152076349913,
+  "v11": 115.76313520640065,
+  "v12": 966.7195644499799,
+  "v13": 8860.851882820974,
+  "v14": 146.4682737316451,
+  "v15": 468.63300021404297,
+  "v16": 108.46700083033053,
+  "v17": 955.7799334442648,
+  "v18": 9182.79018014426,
+  "v19": 142.95500949340345,
+  "v20": 467.33888121598596,
+  "v21": 53.80335191823246,
+  "v23": 3019.0889057120494
+ },
+ "projected_total_s": 33713.19842166216,
+ "projected_total_h": 9.3647773393506,
+ "over_12h": false,
+ "sources": {
+  "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/docs/levin-phase-floor/07/census/out/v4/v4_scores.json": "2d0268e607e0cb17b4d4247831a7b933c2df0db61c248b8959ecdf9f091649b8",
+  "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json": "73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912"
+ }
+}

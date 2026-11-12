@@ -1,0 +1,417 @@
+{
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/run_registered_07a.py",
+ "script_sha256": "edc7a4bb05f52eb0384d063418667899d6839bfd4442617279603d0ee40abdbd",
+ "plan": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/state/plan_bg2_items12.json",
+ "plan_sha256": "a2d1ccea4c3fd2e92fe71541b0c52835334409f1afd37bb4e85dec459f194499",
+ "wall_s": 21389.78148007393,
+ "results": [
+  {
+   "sid": "n0",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 2.73812198638916
+  },
+  {
+   "sid": "n0",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 2.770427703857422
+  },
+  {
+   "sid": "n1",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 4.212237119674683
+  },
+  {
+   "sid": "n1",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 4.188457012176514
+  },
+  {
+   "sid": "n2",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 2.5135087966918945
+  },
+  {
+   "sid": "n2",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 2.1183359622955322
+  },
+  {
+   "sid": "n3",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 2.6088340282440186
+  },
+  {
+   "sid": "n3",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 2.553670883178711
+  },
+  {
+   "sid": "n4",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 1.859848976135254
+  },
+  {
+   "sid": "n4",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 1.8334567546844482
+  },
+  {
+   "sid": "v12",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 676.6375739574432
+  },
+  {
+   "sid": "v12",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 684.4393820762634
+  },
+  {
+   "sid": "v17",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 669.6075172424316
+  },
+  {
+   "sid": "v17",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 676.2634830474854
+  },
+  {
+   "sid": "v18",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 2560.3469977378845
+  },
+  {
+   "sid": "v18",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 2726.3502130508423
+  },
+  {
+   "sid": "v08",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 3122.8930099010468
+  },
+  {
+   "sid": "v08",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 3185.6717476844788
+  },
+  {
+   "sid": "v13",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 6025.780183792114
+  },
+  {
+   "sid": "v13",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 6124.530992984772
+  },
+  {
+   "sid": "p14501_7",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 4479.884264230728
+  },
+  {
+   "sid": "p14501_7",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 4586.362593889236
+  },
+  {
+   "sid": "v00",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 405.324835062027
+  },
+  {
+   "sid": "v00",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 415.10258388519287
+  },
+  {
+   "sid": "v23",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 988.5660450458527
+  },
+  {
+   "sid": "v23",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 1018.20667719841
+  },
+  {
+   "sid": "v10",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 1210.7340958118439
+  },
+  {
+   "sid": "v10",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 1237.6850690841675
+  },
+  {
+   "sid": "v09",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 3686.519310951233
+  },
+  {
+   "sid": "v09",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 3776.785182952881
+  },
+  {
+   "sid": "p35006_7",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 1863.1602380275726
+  },
+  {
+   "sid": "p35006_7",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 1903.1801438331604
+  },
+  {
+   "sid": "v01",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 716.0778169631958
+  },
+  {
+   "sid": "v01",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 737.077793598175
+  },
+  {
+   "sid": "v14",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 431.0977840423584
+  },
+  {
+   "sid": "v14",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 443.6632990837097
+  },
+  {
+   "sid": "cal_z12",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 1951.6972410678864
+  },
+  {
+   "sid": "cal_z12",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 1983.32461977005
+  },
+  {
+   "sid": "v21",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 327.323664188385
+  },
+  {
+   "sid": "v21",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 325.15870213508606
+  },
+  {
+   "sid": "v11",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 393.29177713394165
+  },
+  {
+   "sid": "v11",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 388.3639647960663
+  },
+  {
+   "sid": "p14501_8",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 4474.588885068893
+  },
+  {
+   "sid": "p14501_8",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 4594.030529975891
+  },
+  {
+   "sid": "v07",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 3713.7151429653168
+  },
+  {
+   "sid": "v07",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 3826.489023923874
+  },
+  {
+   "sid": "p35006_8",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 1919.9574189186096
+  },
+  {
+   "sid": "p35006_8",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 1988.8832309246063
+  },
+  {
+   "sid": "v22",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 567.5270986557007
+  },
+  {
+   "sid": "v22",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 544.0778861045837
+  },
+  {
+   "sid": "v06",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 319.1575300693512
+  },
+  {
+   "sid": "v06",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 323.8473572731018
+  },
+  {
+   "sid": "v16",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 1022.5078558921814
+  },
+  {
+   "sid": "v16",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 1050.8500170707703
+  },
+  {
+   "sid": "v04",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 4.627723932266235
+  },
+  {
+   "sid": "v04",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 4.1731860637664795
+  },
+  {
+   "sid": "v20",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 148.72211718559265
+  },
+  {
+   "sid": "v20",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 148.5930938720703
+  },
+  {
+   "sid": "v05",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 3120.137927055359
+  },
+  {
+   "sid": "v05",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 3180.443094968796
+  },
+  {
+   "sid": "v02",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 916.0598089694977
+  },
+  {
+   "sid": "v02",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 954.2045509815216
+  },
+  {
+   "sid": "v19",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 2218.4822521209717
+  },
+  {
+   "sid": "v19",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 2261.33052110672
+  },
+  {
+   "sid": "v15",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 2064.1725990772247
+  },
+  {
+   "sid": "v15",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 1843.7106161117554
+  },
+  {
+   "sid": "v03",
+   "variant": "b2",
+   "status": "ok",
+   "wall_s": 634.8305959701538
+  },
+  {
+   "sid": "v03",
+   "variant": "g2",
+   "status": "ok",
+   "wall_s": 638.033942937851
+  }
+ ]
+}

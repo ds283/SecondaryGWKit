@@ -1,0 +1,553 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07a Part A: the O9 check on the H3 leaves (added at the user's word, 2026-11-11)",
+  "written": "2026-11-11T21:20:57Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/o9_check_07a.py",
+  "script_sha256": "f97b2de60c1f8e6155323e093b6f1e6819765a9e9ca82dd6377fc0c54ec027d2",
+  "module": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/AdaptiveLevin/levin_quadrature.py",
+  "module_sha256": "4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc",
+  "capture": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v17.pkl",
+  "capture_sha256": "fb2301c20e5e7922bf0f1c73c89ea92158d5ae546c84e15b2ea0ba165a95dd6a",
+  "attr_tables_json": "out/attr/attr_tables_final.json",
+  "attr_tables_json_sha256": "8dd85b42d7021ac71223b18c25b85093f9cac9193e17be5392eb7c7e6740921f",
+  "replay_json": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/out/replays/a/v17.json",
+  "replay_json_sha256": "a787becc0695aa0900aabf87b039245e705dae8104b5e6a68036fab6aa84a3a9"
+ },
+ "sid": "v17",
+ "chebyshev_order": 24,
+ "rtol": 1e-07,
+ "atol": 1.610663554457199e-33,
+ "SIX_PI": 18.84955592153876,
+ "LEVIN_DIRECT_SOLVE_PHASE_SPAN": 62.83185307179586,
+ "x_span": [
+  "0x1.0668c30a8e55ep+3",
+  "0x1.af89a649ba396p+4"
+ ],
+ "seeds": [
+  [
+   "0x1.0668c30a8e55ep+3",
+   "0x1.2764d83c85e39p+3"
+  ],
+  [
+   "0x1.276997be63154p+3",
+   "0x1.af89a649ba396p+4"
+  ]
+ ],
+ "h3_true_error": -9.988387087705188e-35,
+ "h3_leaves": 8,
+ "carriers": 4,
+ "carriers_share_of_H3_true_error": 1.0002864506201035,
+ "rows": [
+  {
+   "i": 1,
+   "depth": 2,
+   "type": "Levin",
+   "why_chosen": "top-3 |true error| in H3",
+   "true_error": -5.911811901177259e-44,
+   "declared": 4.3435618332777975e-43,
+   "true_over_declared": 0.13610516272346945,
+   "share_of_H3_true_error": 5.91868521841146e-10,
+   "leaf": {
+    "span": [
+     "0x1.16e6cda38a1ccp+3",
+     "0x1.1f25d2f008002p+3"
+    ],
+    "span_float": [
+     8.71567422810849,
+     8.97336718445877
+    ],
+    "width": 0.25769295635027945,
+    "n_nodes": 24,
+    "phase_span_07": 24001108.665921416,
+    "net_variation": 23752929.692149162,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -139049757.47444487,
+    "theta_prime_max": -52150513.61863804,
+    "node_partition_sum": 23752929.692149162,
+    "true_variation": 23752929.692149162,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9896596870908452,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "parent": {
+    "span": [
+     "0x1.16e6cda38a1ccp+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     8.71567422810849,
+     9.231060140809051
+    ],
+    "width": 0.5153859127005607,
+    "n_nodes": 24,
+    "phase_span_07": 31540661.717103228,
+    "net_variation": 29858847.50570202,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -139049757.47444487,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 29858847.50570202,
+    "true_variation": 29858847.50570202,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9466779033843405,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "sibling": {
+    "span": [
+     "0x1.1f25d2f008002p+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     8.97336718445877,
+     9.231060140809051
+    ],
+    "width": 0.2576929563502812,
+    "n_nodes": 24,
+    "phase_span_07": 6279991.60967972,
+    "net_variation": 6105917.813552856,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -52150513.61863804,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 6105917.813552856,
+    "true_variation": 6105917.813552856,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9722812056215882,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   }
+  },
+  {
+   "i": 3,
+   "depth": 4,
+   "type": "Levin",
+   "why_chosen": "carries excess error",
+   "true_error": 5.2931305153933655e-45,
+   "declared": 3.4768851076217196e-45,
+   "true_over_declared": 1.5223771713912069,
+   "share_of_H3_true_error": -5.299284528038302e-11,
+   "leaf": {
+    "span": [
+     "0x1.2345559646f1ep+3",
+     "0x1.255516e9666acp+3"
+    ],
+    "span_float": [
+     9.102213662633911,
+     9.166636901721482
+    ],
+    "width": 0.06442323908757075,
+    "n_nodes": 24,
+    "phase_span_07": 1054684.626596413,
+    "net_variation": 1052097.4115128517,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -22494729.69980693,
+    "theta_prime_max": -10452901.05787158,
+    "node_partition_sum": 1052097.4115128517,
+    "true_variation": 1052097.4115128517,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9975469301264867,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "parent": {
+    "span": [
+     "0x1.2345559646f1ep+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     9.102213662633911,
+     9.231060140809051
+    ],
+    "width": 0.12884647817513972,
+    "n_nodes": 24,
+    "phase_span_07": 1401582.6366891454,
+    "net_variation": 1381864.7503352165,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -22494729.69980693,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 1381864.7503352165,
+    "true_variation": 1381864.7503352165,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9859316990395179,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "sibling": {
+    "span": [
+     "0x1.255516e9666acp+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     9.166636901721482,
+     9.231060140809051
+    ],
+    "width": 0.06442323908756897,
+    "n_nodes": 24,
+    "phase_span_07": 332111.41007244156,
+    "net_variation": 329767.3388223648,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -10452901.05787158,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 329767.3388223648,
+    "true_variation": 329767.3388223648,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9929419129274557,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   }
+  },
+  {
+   "i": 4,
+   "depth": 5,
+   "type": "Levin",
+   "why_chosen": "carries excess error",
+   "true_error": -1.1970702071714126e-44,
+   "declared": 1.6948224129186417e-45,
+   "true_over_declared": 7.063101113407784,
+   "share_of_H3_true_error": 1.1984619705466751e-10,
+   "leaf": {
+    "span": [
+     "0x1.255516e9666acp+3",
+     "0x1.265cf792f6272p+3"
+    ],
+    "span_float": [
+     9.166636901721482,
+     9.198848521265266
+    ],
+    "width": 0.0322116195437836,
+    "n_nodes": 24,
+    "phase_span_07": 248984.85863885572,
+    "net_variation": 248684.46751499176,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -10452901.05787158,
+    "theta_prime_max": -5054082.633304596,
+    "node_partition_sum": 248684.46751499176,
+    "true_variation": 248684.46751499176,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9987935365808743,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "parent": {
+    "span": [
+     "0x1.255516e9666acp+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     9.166636901721482,
+     9.231060140809051
+    ],
+    "width": 0.06442323908756897,
+    "n_nodes": 24,
+    "phase_span_07": 332111.41007244156,
+    "net_variation": 329767.3388223648,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -10452901.05787158,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 329767.3388223648,
+    "true_variation": 329767.3388223648,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9929419129274557,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "sibling": {
+    "span": [
+     "0x1.265cf792f6272p+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     9.198848521265266,
+     9.231060140809051
+    ],
+    "width": 0.032211619543785375,
+    "n_nodes": 24,
+    "phase_span_07": 81368.55452619957,
+    "net_variation": 81082.87130737305,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -5054082.633304596,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 81082.87130737305,
+    "true_variation": 81082.87130737305,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9964890218280265,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   }
+  },
+  {
+   "i": 5,
+   "depth": 6,
+   "type": "Levin",
+   "why_chosen": "carries excess error",
+   "true_error": -1.3990811634880786e-44,
+   "declared": 8.343986026744198e-46,
+   "true_over_declared": 16.767539626789098,
+   "share_of_H3_true_error": 1.4007077931633452e-10,
+   "leaf": {
+    "span": [
+     "0x1.265cf792f6272p+3",
+     "0x1.26e0e7e7be056p+3"
+    ],
+    "span_float": [
+     9.198848521265266,
+     9.214954331037159
+    ],
+    "width": 0.016105809771893576,
+    "n_nodes": 24,
+    "phase_span_07": 60751.378912686734,
+    "net_variation": 60715.215618133545,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -5054082.633304596,
+    "theta_prime_max": -2501426.493777275,
+    "node_partition_sum": 60715.215618133545,
+    "true_variation": 60715.215618133545,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.999404732942685,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "parent": {
+    "span": [
+     "0x1.265cf792f6272p+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     9.198848521265266,
+     9.231060140809051
+    ],
+    "width": 0.032211619543785375,
+    "n_nodes": 24,
+    "phase_span_07": 81368.55452619957,
+    "net_variation": 81082.87130737305,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -5054082.633304596,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 81082.87130737305,
+    "true_variation": 81082.87130737305,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9964890218280265,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "sibling": {
+    "span": [
+     "0x1.26e0e7e7be056p+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     9.214954331037159,
+     9.231060140809051
+    ],
+    "width": 0.0161058097718918,
+    "n_nodes": 24,
+    "phase_span_07": 20402.914961741524,
+    "net_variation": 20367.655689239502,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -2501426.493777275,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 20367.655689239502,
+    "true_variation": 20367.655689239502,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9982718512247815,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   }
+  },
+  {
+   "i": 6,
+   "depth": 6,
+   "type": "Levin",
+   "why_chosen": "top-3 |true error| in H3",
+   "true_error": 2.861182583215569e-38,
+   "declared": 7.954295492765072e-36,
+   "true_over_declared": 0.0035970282796483903,
+   "share_of_H3_true_error": -0.0002864509112524713,
+   "leaf": {
+    "span": [
+     "0x1.26e0e7e7be056p+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     9.214954331037159,
+     9.231060140809051
+    ],
+    "width": 0.0161058097718918,
+    "n_nodes": 24,
+    "phase_span_07": 20402.914961741524,
+    "net_variation": 20367.655689239502,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -2501426.493777275,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 20367.655689239502,
+    "true_variation": 20367.655689239502,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9982718512247815,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "parent": {
+    "span": [
+     "0x1.265cf792f6272p+3",
+     "0x1.2764d83c85e39p+3"
+    ],
+    "span_float": [
+     9.198848521265266,
+     9.231060140809051
+    ],
+    "width": 0.032211619543785375,
+    "n_nodes": 24,
+    "phase_span_07": 81368.55452619957,
+    "net_variation": 81082.87130737305,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -5054082.633304596,
+    "theta_prime_max": -43372.237216472626,
+    "node_partition_sum": 81082.87130737305,
+    "true_variation": 81082.87130737305,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.9964890218280265,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "sibling": {
+    "span": [
+     "0x1.265cf792f6272p+3",
+     "0x1.26e0e7e7be056p+3"
+    ],
+    "span_float": [
+     9.198848521265266,
+     9.214954331037159
+    ],
+    "width": 0.016105809771893576,
+    "n_nodes": 24,
+    "phase_span_07": 60751.378912686734,
+    "net_variation": 60715.215618133545,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": -5054082.633304596,
+    "theta_prime_max": -2501426.493777275,
+    "node_partition_sum": 60715.215618133545,
+    "true_variation": 60715.215618133545,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.999404732942685,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   }
+  },
+  {
+   "i": 21,
+   "depth": 0,
+   "type": "Levin",
+   "why_chosen": "carries excess error ; top-3 |true error| in H3",
+   "true_error": -9.991248265313456e-35,
+   "declared": 3.397664112324514e-35,
+   "true_over_declared": 2.9406227146090487,
+   "share_of_H3_true_error": 1.0002864504131792,
+   "leaf": {
+    "span": [
+     "0x1.276997be63154p+3",
+     "0x1.af89a649ba396p+4"
+    ],
+    "span_float": [
+     9.23163973984689,
+     26.971105850217633
+    ],
+    "width": 17.739466110370742,
+    "n_nodes": 24,
+    "phase_span_07": 125720790.17131478,
+    "net_variation": 94483277.83525753,
+    "theta_prime_sign_change": false,
+    "theta_prime_min": 4.097511960384409,
+    "theta_prime_max": 44424516.896213055,
+    "node_partition_sum": 94483277.83525753,
+    "true_variation": 94483277.83525753,
+    "true_variation_basis": "|theta(b) - theta(a)|",
+    "true_over_estimate": 0.7515326439366861,
+    "route_07": "Levin (LU tried first)",
+    "route_true": "Levin (LU tried first)",
+    "route_changes": false,
+    "estimate_vs_SIX_PI": "at or above",
+    "true_vs_SIX_PI": "at or above",
+    "estimate_vs_LU": "above",
+    "true_vs_LU": "above"
+   },
+   "parent": null,
+   "sibling": null
+  }
+ ]
+}

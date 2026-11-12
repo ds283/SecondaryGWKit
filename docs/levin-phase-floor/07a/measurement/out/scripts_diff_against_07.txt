@@ -1,0 +1,30 @@
+Only in /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/docs/levin-phase-floor/07/census/scripts: calibration
+diff -u -r - /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/docs/levin-phase-floor/07/census/scripts/prov.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/prov.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/docs/levin-phase-floor/07/census/scripts/prov.py	2026-11-10 21:17:05
++++ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/prov.py	2026-11-10 21:25:22
+@@ -330,6 +330,13 @@
+ LQ_SHA256_07P = "beaf0e23aabc3135b9fc08788fe708e04fc4c68d84fffbfd8680e4cdf3b127b6"  # prompt 07: p's module (06m's)
+ LQ_SHA256_BY_TREE = {"g": LQ_SHA256_07G, "p": LQ_SHA256_07P}  # prompt 07
+ TREES = {"g": (G_TREE, G_SHA), "p": (P_TREE, P_SHA)}  # prompt 07: g, and the parent p for Gate V0's K0 run
++# prompt 07a Part A: one tree, g, the worktree at 07a's dispatch SHA f93aafd0, whose code is 07's (adffa21b's;
++# git diff adffa21b f93aafd0 -- AdaptiveLevin ComputeTargets LiouvilleGreen tools is empty); 07's g (e182bc7a, removed) is
++# kept above by name. The module's SHA-256 is 07's g's, LQ_SHA256_07G. p (removed) is not used.
++G07_TREE, G07_SHA = G_TREE, G_SHA  # prompt 07a: 07's g, not used
++G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd")  # prompt 07a
++G_SHA = "f93aafd0173bd5de1cdc4107656dbe07c4c1c2a3"  # prompt 07a
++TREES = {"g": (G_TREE, G_SHA)}  # prompt 07a: one tree
+ # prompt 07: 06m's census (the "before"), read only
+ RUN06M = MAIN / "var" / "runs" / "levin-phase-floor-06m-census-20261106T102153"
+ CHECKPOINT06M_SHA256 = "ea5bc3ab6b618d562b9dee0a7ed4bdba5c1999e8348b2ad33bdadb6135e63c2e"
+diff -u -r - /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/docs/levin-phase-floor/07/census/scripts/refs_common.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/refs_common.py
+--- /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd/docs/levin-phase-floor/07/census/scripts/refs_common.py	2026-11-10 21:17:05
++++ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/refs_common.py	2026-11-10 21:25:22
+@@ -57,6 +57,8 @@
+ G_SHA = "38f6a828d17b41893574f7344a543ebfb1e01e85"  # prompt 06m (06l: af4c4dc1...; 06k: 89370609...; 06j: dfa19d98...; 06g: 1c5336e7e0ab8ed4495601a4033841f2df17ebdd)
+ G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7")  # prompt 07 (06m: -lpf06m-38f6a82)
+ G_SHA = "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f"  # prompt 07 (06m: 38f6a828...)
++G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd")  # prompt 07a (07: -lpf07-e182bc7)
++G_SHA = "f93aafd0173bd5de1cdc4107656dbe07c4c1c2a3"  # prompt 07a (07: e182bc7a...)
+ P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db")  # prompt 07: the parent, Gate V0's K0 run
+ P_SHA = "91472dbee1daba8374b0018db1195cf6c7898bbb"  # prompt 07
+ # prompt 07: 07's census g (the census agent's own run; V4's captures are checked against it), read only

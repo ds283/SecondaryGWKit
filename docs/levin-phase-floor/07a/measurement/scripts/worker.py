@@ -1,0 +1,2732 @@
+"""
+levin-phase-floor prompt 07 section 6: 06m's census worker (docs/levin-phase-floor/06m/census/scripts/worker.py, a
+record, byte-identical to 06l's), changed only where marked "prompt 07"; no computed value changes, and no key 06m
+recorded changes (every addition is a new key, named ``*_07``), so that 06m's comparison applies with the new keys set
+aside:
+- **the trees** ``g`` (07's tree, e182bc7a: code adffa21b's) and ``p`` (07's code commit's parent 91472dbe, 06m's
+  code), prov.TREES; the tree evidence also records the module's 07 markers (``_locate_stationary_points``,
+  ``_nodal_guard``, the window and coalescence constants) beside its path and SHA-256, which it already recorded.
+  06h's analytic counterfactual (``analytic_06h.parent_counterfactual``) is computed at ``p`` as at ``g``: 06m's census
+  ran at a tree named ``g`` whose code is ``p``'s, so its records hold it, and Gate V0's K0 run at ``p`` must too;
+- **section 1.5's diagnostics, per call** (``guard_07`` in each call's summary: the located points, the merged windows
+  with section 1.3's stop record, the minima not located, the three counts, Rule A's ``location_skipped_phases``, and
+  the returned leaves' window and guard flags counted; the full result entries in the pickle's ``guard_07``) **and per
+  returned leaf** (the region arrays' ``window_07``, ``guarded_07`` and ``guard_at_depth_max_07``: 1, 0, or -1 where
+  the tree's ``used_interval`` has no such flag);
+- **the scan** (spscan.scan_call, unchanged) **on every group call at both rtols and on every analytic call at 1e-7**,
+  against the returned leaves (``scan_07``: compact in the checkpoint, in full in the pickle). A 1e-7 group call's
+  scan is the one 06a's block makes for 06a's ``scan`` (reused, not recomputed); 06a's ``scan`` is unchanged.
+
+(06l's text follows, unchanged.)
+
+levin-phase-floor prompt 06l section 1: 06k's census worker (docs/levin-phase-floor/06k/scripts/worker.py, a record;
+its copy is in state/scripts_06k_reference/), changed only where marked "prompt 06l": route B's result key
+``route_06l`` is kept in each call's summary under ``route_06l`` (as 06k keeps ``route_06k``) and in the unit's
+pickle record under ``route_06l`` as returned. No computed value changes, and no key 06g or 06k recorded changes.
+06k's text follows.
+
+levin-phase-floor prompt 06k section 1 (06g's census worker, run at the tree with a variant of
+``AdaptiveLevin/levin_quadrature.py`` loaded in its place; copied from 06j's copy of 06g's census
+scripts/worker.py, docs/levin-phase-floor/06j/scripts/worker.py, which is byte-identical to
+docs/levin-phase-floor/06g/census/scripts/worker.py; both are kept unchanged in
+state/scripts_06j_reference/ and state/scripts_06g_census_reference/). Changed here, each change
+marked "prompt 06k"; no computed value changes, and no key 06g recorded changes:
+- **the variant**: a spec's ``"variant"`` ({name, path, sha256}) is installed by
+  ``variant_loader.install`` before anything imports ``AdaptiveLevin`` (so before the tree evidence);
+  a spec without one runs the tree's module, as 06g's worker did;
+- **the tree evidence** counts ``AdaptiveLevin.levin_quadrature`` as in the tree when it is the
+  declared variant file, with its declared SHA-256, registered in ``sys.modules`` and bound by the
+  package and by both production importers (``variant_06k`` holds the detail); ``_module_roots``
+  counts the variant file under the root ``variant``, not as foreign;
+- **the route's firings**: each call's result key ``route_06k`` (the variants' new key) is kept in
+  the call's summary under ``route_06k`` (floats as numbers, non-finite as strings), and in the unit's
+  pickle record under ``route_06k`` as returned; ``variant_loader.py`` is in SCRIPTS.
+
+(06g's text follows, unchanged.)
+
+levin-phase-floor prompt 06g section 5 (06h's census re-run at 06g's code, the tree g: a trusted leaf
+returns its quarters sum, a slow leaf is untrusted, the fallback leaves' node errors are carried
+signed, and the round-off exit's premise leaves out the declared term and holds only where the split
+could not meet the budget; copied from prompt 06h's census scripts/worker.py,
+docs/levin-phase-floor/06h/census/scripts/worker.py, a record that is not edited; its copy is kept
+unchanged in state/scripts_06h_reference/). Changed here, each change marked "prompt 06g" (Part B's
+census brief: "Change the tree and its paths, and add what prompt section 5 says it records"; a change
+that records what Gate V, V2, V5-V8 or a descriptive item needs is allowed, if it changes no computed
+value). No key 06h recorded changes at the parent; every addition is a new key.
+- **the trees** ``p`` (06g's code commit's parent 4f4f9ed, Gate V's reproduction of 06h) and ``g``
+  (1c5336e: 06g's code 3ae6f3a), prov.TREES; the tree evidence also records whether
+  ``AdaptiveLevin.levin_quadrature`` has 06g's markers (``_LEVIN_TRUST_MAX_RATIO``,
+  ``_solve_floor_in_budget``, ``used_interval.budget_err``, ``used_interval.value_kind``) and the
+  signature of ``_roundoff_exit_premise_holds``; the worker refuses to start unless that signature
+  is 06h's (three floors) or 06g's (three floors and ``split_could_meet_budget``);
+- **the premise counter passes the budget clause through** (06g's code log, observation 6): the
+  pass-through at ``_roundoff_exit_premise_holds`` forwards every keyword it is given (at g,
+  ``split_could_meet_budget=``) and returns the original's value; 06h's ``premise_log`` (the results)
+  is kept, and beside it each check's detail: the result, the budget clause as passed (None at p),
+  the halving test alone (the original called once more on the three floors with no keyword, a pure
+  function), and the three floors as passed (hex). Per call in the checkpoint ``premise_06g``
+  (counts: checks, firings, halving-test failures, checks where the split could meet the budget);
+  per check in the pickle ``premise_06g``;
+- **every checked leaf** (prompt section 5: per checked leaf r, delta1, phi_P, trust and the returned
+  value's kind; the descriptive item "slow leaves", over every checked leaf, those later bisected
+  included, as 06g's code log's test 3 counted them): a pass-through at ``used_interval.__init__`` (the
+  class attribute, installed for the timed section only, restored in a finally) keeps every region
+  the driver makes in the call; after the call, each with its trust check taken (``delta1`` set) is
+  recorded with whether it was returned or bisected. Per call in the checkpoint ``checked_06g``
+  (counts by test 3's classes); per leaf in the pickle ``checked_leaves_06g``;
+- **per call** (``_summarise_call_06g``): the result's ``node_error_signed_sum``,
+  ``node_error_abs_sum``, ``abserr_node_signed`` and ``node_limited`` (None at p); ``has_cc_leaf``;
+  the returned leaves' e' sum in ascending x as the driver forms it (``abserr_eprime_sum``) and
+  whether it plus |sum E| reassembles ``abserr`` bit for bit; the returned leaves by value kind and
+  the sum of |Q - V_P| over those returning Q (``values_06g``); and 06g's three new numbers in the
+  budget record (sum E, sum |E|, node-limited), which 06h's parser would otherwise have kept only as
+  raw text;
+- **every returned leaf** (``_region_arrays_06g``): 06h's arrays plus its returned value, V_P, value
+  kind (0 own, 1 quarters, -1 none), the floor's parts (declared, round-off, less |E|), E and e';
+- **06h's two re-solving records at g** (``_cc_floor_terms``, ``_declared_terms_06h``): 06g's fallback
+  solve calls ``_cc_roundoff_floor`` twice (the floor, then the floor less |E|); their pass-throughs
+  keep the first call's capture, the floor in ``phase_err``, as 06h's single call gave. At p there
+  is one call, so nothing changes there.
+
+(06h's text follows, unchanged.)
+
+levin-phase-floor prompt 06h section 5 (06e's census re-run at 06h's code, the tree h: the Bessel group
+phase's product and K roundings carried in its small angle, the abscissa and the group's evaluation
+declared; copied from prompt 06e's census scripts/worker.py,
+docs/levin-phase-floor/06e/census/scripts/worker.py, a record that is not edited; its copy is kept
+unchanged in state/scripts_06e_reference/). Changed here, each change marked "prompt 06h" (prompt
+06h section 5: "Change only the tree and its paths"; Part B's census brief: a change that records
+what Gate H, H3, H4 or a descriptive item needs is allowed, if it changes no computed value). Nothing
+in the timed section changes: every addition runs after it, with the dispatcher and every wrapper
+of the timed section uninstalled, so the census's values, budget and over-budget units are
+measured exactly as 06e's were. No key 06e recorded changes; every addition is a new key.
+- **the trees** ``p`` (06h's code commit's parent 2c325f5, Gate H's reproduction of 06e) and ``g``
+  (the tree h, c1ec3b2: 06h's code 7172a8f + ac1c6f4), prov.TREES; the tree evidence also names
+  ``LiouvilleGreen.three_bessel_integrals`` and ``LiouvilleGreen.bessel_phase`` among the files that
+  must come from the tree, whether ``BesselPhaseGroup`` has 06h's ``_declared_error_parts`` and the
+  module 06h's ``_two_product_error`` and ``EXP_RELERR`` (present at g, absent at p), and the module
+  file's SHA-256;
+- **the declared phase term of every returned leaf** (``_declared_terms_06h``; the descriptive item
+  "what the declaration costs", 06f's ``declared_vs_request_06f.py`` method, by branch): for every
+  call whose phase dict supplies ``theta_abserr`` (the analytic blocks; the cosmological group calls
+  supply none and declare 0.0 by construction), every returned leaf, Levin and Clenshaw-Curtis, is
+  re-solved once after the timed section by the module's own ``_adaptive_levin_subregion`` with the
+  call's arguments, with pass-throughs at ``_declared_endpoint_phase_err`` (its arguments and
+  return), ``_roundoff_floor`` and ``_cc_roundoff_floor`` (their returns) installed for these
+  re-solves only and restored in a finally. Per leaf: the declared term, the round-off floor, the
+  endpoint ``theta_abserr`` at each end and the |p| (or the fallback's proxy) it is weighted by,
+  and, where the group has ``_declared_error_parts`` (g), the three parts of ``theta_abserr`` at
+  each end and the declared term split by part. A leaf is reproduced if the re-solve takes the
+  leaf's branch, its phase_err equals the leaf's bit for bit, floor plus declared (in the code's
+  order) equals phase_err, and ``_phase_error`` of each end recomputes the declared term bit for bit.
+  Per call (checkpoint ``declared_06h``): the request max(atol, rtol |value|), and per branch the
+  leaf counts and the sums (``math.fsum``) of the declared term, its parts and the floor over the
+  reproduced leaves, all and floor-attributed (06c's attribution, as ``_cc_floor_terms``). Per leaf in
+  the pickle (``declared_terms_06h``). 06e's ``cc_floor`` is kept unchanged beside it.
+- **the analytic oracle** (``analytic_06h``; H3's second reading, at the orchestrator's request:
+  06h's code cannot move ``total``, which is numeric_quad + WKB_Levin, but moves ``analytic_rad``):
+  h's own oracle, ``result["metadata"]["analytic"]``'s abserr and converged beside ``analytic_rad``;
+  and, in a unit at ``g``, **06e's oracle as a counterfactual**: ``analytic_integral``'s arguments
+  are kept by a pass-through at the module attribute ``QSI_MOD.analytic_integral`` (installed with
+  the timed section's other wrappers; it records its arguments and calls the original, changing no
+  value), and after the timed section ``analytic_integral`` is called once more on them with
+  ``QSI_MOD.BesselPhaseGroup`` replaced by the parent's class: the module source
+  ``2c325f5:LiouvilleGreen/three_bessel_integrals.py`` read from git (SHA-256 checked against
+  ``PARENT_TBI_SHA256``, the parent workers' file) and executed into a module object with no file,
+  registered nowhere. Its value, abserr and converged are recorded; the analysis counts the
+  counterfactual as 06e's only where its value equals 06e's recorded ``analytic_rad`` bit for bit.
+
+(06e's text follows, unchanged.)
+
+levin-phase-floor prompt 06e section 5 (06c's census re-run at 06e's code: exact end nodes and a node
+term that measures the displacement; copied from prompt 06c's census scripts/worker.py,
+docs/levin-phase-floor/06c/census/scripts/worker.py, a record that is not edited; its copy is kept
+unchanged in state/scripts_06c_reference/). Changed here, each change marked "prompt 06e" (prompt
+06e section 5: "Change only: the tree and its paths; what Z2-Z5 need recorded per call"). Nothing
+in the timed section changes: every addition runs after it, with the dispatcher and every wrapper
+of the timed section uninstalled, so the census's values, budget and over-budget units are
+measured exactly as 06c's were. No key 06c recorded changes; every addition is a new key.
+- **the trees** ``p`` (06e's code commit's parent 50277f3, Gate Z0's reproduction of 06c) and
+  ``g`` (the census, 6d81fad: 06e's code f4d8e17), prov.TREES; the tree evidence also names whether
+  ``AdaptiveLevin.levin_quadrature`` has 06e's ``_chebyshev_node_displacements`` and
+  ``_cc_node_term_parts`` and 06d's ``_cc_node_error_bound``, and the module file's SHA-256;
+- **the Clenshaw-Curtis floor's terms** (``_cc_floor_terms``; descriptive item "where the budget
+  went"): every returned leaf of the fallback branch re-solved once, after the timed section, by
+  the module's own ``_adaptive_levin_subregion`` with the call's arguments, with pass-throughs at
+  ``_cc_node_term_parts``, ``_cc_roundoff_floor`` and ``_declared_endpoint_phase_err`` installed
+  for the re-solve only: per leaf the floor's two rounding terms, the node term and its four parts
+  (E signed, R_g, R_2, R_c), and the declared-phase term, checked to reproduce the leaf's
+  ``phase_err`` and ``abserr`` bit for bit (pickle ``cc_floor_terms``; per call, sums in the
+  checkpoint's ``cc_floor``). None at ``p``, whose code has no ``_cc_node_term_parts``;
+- **the deep lines past depth 12** (descriptive item "anything still deep"): 06c's ``_deep_line``,
+  computed once for every call whose greatest leaf depth exceeds 12 (06c: only those at
+  depth_max). 06c's ``deep_lines`` keys hold exactly 06c's subset (depth_max) as before; the new
+  ``deep_lines_06e`` holds every line past depth 12, each level with whether its ends tile
+  (``_line_tiling``: the tree's own ``chebyshev_matrices`` of the level, its left and its right half
+  at the call's order N and at the fallback's fine order 2N - 1; depth20-tiling's rule).
+
+(06c's text follows, unchanged.)
+
+levin-phase-floor prompt 06c section 5 (06b's census re-run under the global error budget; copied
+from prompt 06b's census scripts/worker.py, docs/levin-phase-floor/06b/census/scripts/worker.py, a
+record that is not edited; its copy is kept unchanged in state/scripts_06b_reference/). Changed
+here, each change marked "prompt 06c" (prompt 06c section 5: "Change only: the tree and its paths;
+what X1-X5 need recorded per call; the reference for X1"):
+- **the trees** ``p`` (06c's code commit's parent fef401c, Gate X0's reproduction of 06b) and
+  ``g`` (the census, e5764a6: 06c's code plus 06d's), prov.TREES; the tree evidence also names
+  whether ``AdaptiveLevin.levin_quadrature`` has the trust check, the Clenshaw-Curtis floor of 06d
+  and ``_local_atol``, and its default depth_max;
+- **per call** (``calls`` and ``other_calls``, as 06b): besides 06b's summary, the call's
+  ``converged``, ``num_untrusted_regions`` and the error breakdown its result returns, its
+  depth_max and the leaves at it, and per-call sums over the returned leaves: the share of its
+  error from residual, floor and truncation (the resolution term being the trust check's
+  declared one where set), the error it would declare without the trust check's widening, and
+  the leaves by branch and by trust (``_summarise_call_06c``);
+- **the budget loop's own counters**, from the one DEBUG record ``_adaptive_levin`` emits per call
+  ("global budget | ..."): bisections, floor-limited and depth_max leaves, trust checks taken and
+  their passes, leaves found untrusted during the call and returned untrusted, unchecked leaves,
+  the running test and the returned flag, and resum rejections. A logging filter on the module's
+  logger captures that record; it lets through only records at the level that reached the
+  module's handlers before (WARNING and above), so nothing else the module logs changes. None at
+  ``p``, whose code has no such record;
+- **the solves by purpose**: a pass-through at the module attribute ``_adaptive_levin_subregion``
+  (installed for the timed section only, like 06b's premise counter) counts each solve by the
+  ``description`` its caller ``_solve`` was given, and for a fallback leaf's halves by who asked
+  for them (the trust check, or the premise check / bisection), so the solves the trust check
+  cost are known;
+- **every returned leaf** (the pickle's region arrays, ``_region_arrays_06c``): 06b's arrays plus
+  its truncation, total_err, and the trust check's delta1, delta2, convergence_ratio, trusted
+  (1, 0, or -1 for not taken) and declared_resolution;
+- **the deepest line of every call that reaches depth_max** (``_deep_line``, after the timed
+  section, with every wrapper uninstalled): from the root to the leftmost leaf at the call's
+  greatest depth, each ancestor P and its halves L, R recomputed by the module's own
+  ``_adaptive_levin_subregion`` with the call's arguments, with each one's residual, floor,
+  truncation and error max(residual, floor) + truncation, so that (e_L + e_R)/e_P and the
+  residual's flatness can be read level by level, and the trust check's delta1, delta2 and r of
+  each ancestor from its quarters. The line's last level is checked against the returned leaf
+  (residual and floor bit for bit);
+- **X1's inputs** (a unit whose spec has ``"capture"``): as 06b's W2 capture, under the key
+  ``x1_inputs`` and into ``inputs_<worker>.pkl``, each record now also carrying the call's
+  num_regions, max_depth and converged. The census run captures nothing; the 24 calls are
+  captured after the run by re-running their units at ``g`` (x1_capture.py).
+
+(06b's text follows, unchanged.)
+
+levin-phase-floor prompt 06b section 5 (06a's census re-run at the code commit; copied from prompt
+06a's scripts/worker.py, docs/levin-phase-floor/06a/scripts/worker.py, a record that is not edited;
+its copy is kept unchanged in state/scripts_06a_reference/). Changed here, each change marked
+"prompt 06b" (prompt 06b section 5: "Change only: the tree and its paths; what section 4's and W2's
+comparisons need recorded per call; the reference for W2"):
+- **the trees** ``p`` (the code commit's parent, Gate W0's reproduction of 06a) and ``b`` (the
+  census), prov.TREES; the tree evidence also names ``AdaptiveLevin.levin_quadrature`` and whether
+  it has the premise check;
+- **every unit records where its modules were loaded from** (``modules``): every module in
+  ``sys.modules`` at the unit's end classified by root (its own tree, the other tree, the main
+  checkout outside the venv, the venv, the scripts, the standard library), with any module from the
+  other tree or the main checkout listed; the ``bye`` message lists every module loaded from the
+  tree (Gate W0's first clause);
+- **per call** (group calls in ``calls`` as 06a, and now the other Levin calls, the analytic
+  blocks, in ``other_calls``): the number of phase-limited regions, and the number of times the
+  code's premise check ``_roundoff_exit_premise_holds`` was asked and failed in the call (a
+  pass-through counter at the module attribute, installed with the other wrappers for the timed
+  section only; absent at ``p``). The other calls' region arrays go to the pickle
+  (``other_regions``);
+- **W3's evidence** (a unit whose spec has ``"w3": true``, every 1e-7 unit): after the timed section,
+  with the dispatcher and every wrapper uninstalled, for every region a call accepted as
+  phase-limited, the region's own floor and its two halves' floors are recomputed by the module's
+  own ``_adaptive_levin_subregion`` on the region and on its halves (the halves' own samples), with
+  the call's arguments; the summary goes to the checkpoint (``w3``), the per-region numbers (hex)
+  to the pickle (``w3``);
+- **W2's inputs** (a unit whose spec has ``"capture"``, a list of [call index, notify_label] from
+  06a's records): after the timed section, each listed call's span, integrand ``f``, phase dict
+  ``theta`` and keyword arguments as the call saw them, with its value and abserr, are pickled
+  (harness._GroupPickler) to ``inputs_<worker>.pkl``, one record per call (offset, length and
+  SHA-256 in the checkpoint's ``w2_inputs``), for w2_reference.py to reload.
+
+(06a's text follows, unchanged.)
+
+levin-phase-floor prompt 06a (the depth census; copied from prompt 06's scripts/worker.py,
+docs/levin-phase-floor/06/wider/scripts/worker.py, a record that is not edited). Changed here, each
+change marked "prompt 06a" or confined to ``main()``, which is rewritten from 06's:
+- one tree, ``h`` (prov.TREES), reading 06's certified scratch copy (route (B), as in 06);
+- **the producer cache** (prompt 06a section 0.3 change 1): one ``rebuild.CensusCache`` per worker
+  process, passed to ``rebuild_row(..., cache=...)``; every producer is re-run once in the worker
+  (each GkWKBIntegration of a k once, each TkWKBIntegration once), each ``GkSource`` and
+  ``GkSourcePolicyData`` assembled once per (k, z_response), each ``QuadSource`` once per (q, r).
+  What the cache builds while a unit runs is emitted as ``event`` lines (the driver writes them to
+  ``events_<worker>.jsonl``) and named in the unit's ``cache_built``;
+- **no phase probe and no per-row deltaTheta** (prompt 06a section 0.3 change 4): phase_probe06.py
+  is not imported, ``build_partition`` is not wrapped;
+- **the stationary-point scan** (spscan.py; prompt 06a section 5 item 7) in a unit whose spec has
+  ``"scan": true`` (every rtol 1e-7 unit), after the timed section with the dispatcher uninstalled,
+  on each Levin call's own ``theta["theta_deriv"]``, kept by the ``adaptive_levin_sincos`` wrapper;
+- **what a unit keeps** (section 2 item 7): in its checkpoint, 06's per-call summary, the row's
+  totals and wall time (``_slim_result``), the scan's counts per call; in the worker's pickle
+  ``regions_<worker>.pkl``, a stream of one record per unit, appended and flushed as the unit ends
+  (offset, length and SHA-256 in the checkpoint), each call's region arrays (06's, plus relerr,
+  phase_err and phase_limited), the scan in full and 06's full result summary;
+- the ``!! WARNING (GkSourcePolicyData`` counter, per unit as in 06, and per (k, z_response) around
+  each assembly (in the ``Gk`` event).
+
+(06's text follows, unchanged.)
+
+levin-phase-floor prompt 06 section 6 (copied from prompt 05a's scripts/worker.py,
+docs/levin-phase-floor/05a/wider/scripts/worker.py, a record that is not edited). Changed here,
+each change marked "prompt 06":
+- the trees are ``t5`` (the worktree at ``9f66622``, 05a's t) and ``s`` (the worktree at
+  ``f5cee4c``, the code commit ``dc9d28c``'s code) in place of 05a's ``c`` and ``t``;
+- **the re-run of the producers**: a unit whose spec has ``"rerun": true`` (every ``s`` unit, and
+  U0's faithfulness units at ``t5``) calls ``rebuild_row(..., rerun=True)`` (rebuild.py, rerun.py);
+  its record carries the re-run's summary (timings, the comparison of every re-run value with the
+  stored one, the recomputed ``GkSourcePolicyData``) and its pickle every re-run object's
+  ``deltaTheta``;
+- every unit records its ``GkSourcePolicyData``'s classification (``Levin_z`` among it), and counts
+  the ``!! WARNING (GkSourcePolicyData`` lines (the disagreement of the two repairs, prompt 06
+  section 0.2) its process printed while the unit ran, by a pass-through counter on ``sys.stdout``;
+- the module-provenance evidence also names the producers' modules, ``WKB_phase_function``'s,
+  ``GkSource``'s and rerun.py's imports, and whether the producers' ``store()`` reduce exactly
+  (``reduce_exactly_mod_2pi`` in its source: absent at t5, present at s);
+- **route (B)** (the user's decision): ``s`` reads, read-only, the certified scratch copy of A3 v2
+  with the three nullable all-NULL ``theta_residual`` columns (prov.STORE_DIR_BY_TREE,
+  rebuild.use_store_dir); ``t5`` reads A3 v2;
+- **the phase probe** is 06's (phase_probe06.py): ``build_partition`` is wrapped at its module
+  attribute as in 05a, now keeping its arguments (the ``GkSourcePolicyData`` and the two
+  ``TkSourceFunctions`` the unit's own call was handed) as well as its result, and a unit whose
+  spec has ``"probe": true`` (the rtol 1e-7 units of R1-R7) runs phase_probe06.probe_row on them
+  after its timed section, with the dispatcher uninstalled. 05a's probe.py is not called.
+
+(05a's text follows, unchanged; read its c as t5, its t as s, and its probe as 06's.)
+
+levin-phase-floor prompt 05a section 6 (copied from prompt 05's scripts/worker.py,
+docs/levin-phase-floor/05/wider/scripts/worker.py, sha256 e2ef68f0..., a record that is not
+edited). Changed here, each change marked "prompt 05a": the trees are ``c`` (the worktree at
+``c4eaefd``, 05's c) and ``t`` (the main checkout, the code commit ``1fc349c``'s code) in place of
+05's ``p`` and ``c``; the module-provenance evidence also names ``ComputeTargets.TkSourceFunctions``
+and whether its constructor has ``exact_remainder``; and, for the phase probe (prompt 05a section 6
+with section 9; probe.py), ``build_partition`` is wrapped at its module attribute
+(``ComputeTargets.QuadSourceIntegral.build_partition``, through which
+``evaluate_QuadSource_integral`` calls it) to keep the sub-intervals and the two transfer-function
+objects the unit built, every unit records each factor's ``phase.exact_remainder``, and a unit
+whose spec has ``"probe": true`` (the rtol 1e-7 units) runs probe.py on them after its timed
+section and records the windows (summaries in the checkpoint, samples in the pickle). The probe
+reads phase objects only; it runs after ``wall_s`` is measured, outside the budget, with the
+dispatcher uninstalled, so it changes neither the unit's result nor its counts.
+
+(Prompt 05's text follows, unchanged.)
+
+levin-phase-floor prompt 05 section 6: the worker. Runs a list of units, all in one tree, in this
+process, by route (a) (harness.py, rebuild.py: a read-only stand-in ShardedPool, no Ray, no store
+write), and emits one JSON line per unit.
+
+Adapted from prompt 04's ``scripts/run_remove.py`` (docs/levin-phase-floor/04/scripts/
+run_remove.py, sha256 3c43db3f..., a record that is not edited): its unit loop, its wrapper on
+``adaptive_levin_sincos``, its per-call summary and region arrays, its result summary and its
+budget. What differs:
+- **One tree per process.** The tree is the one on ``PYTHONPATH``: the parent ``e648951`` (the
+  worktree) for ``p``, the code commit (the main checkout) for ``c``. The worker checks at start
+  that ``ComputeTargets``, ``ComputeTargets.primitive_phase``, ``ComputeTargets.QuadSource``,
+  ``StoreFixtures`` and ``main.py`` (through ``test_main_plumbing.MAIN_PY``) all come from that
+  tree, and that the tree's ``HEAD`` is the expected SHA with an empty ``git status --short``, and
+  it emits that evidence first. The registered driver (run_wider.py) starts one worker per tree.
+- **No arms.** The phase is production's in each tree; dispatch.py's dispatcher only counts calls
+  and enforces the budget, raising ``OverBudget`` at the entry of the first ``theta_mod_2pi`` call
+  past the deadline (04's deviation 10 and I9). An over-budget unit is a result: it is recorded
+  ``over budget`` with its wall time and the group calls it completed.
+- **No M0.** Under ``p`` the row's ``QuadSource`` is recomputed (rebuild.py), so ``p`` is not
+  expected to equal the stored row. The stored row's own fields are recorded beside the result.
+- An exception in a unit other than ``OverBudget`` is recorded as ``error`` with its traceback, and
+  the next unit runs.
+- **Every unit record** carries the tree's ``HEAD`` and ``git status --short`` taken at the end of
+  the unit, and the SHA-256 of every script in this directory that the run uses.
+
+Usage: python -B worker.py SPEC_JSON  (``PYTHONPATH`` the tree; see run_wider.py and the L0 runner)
+SPEC: {"tree": "p"|"c", "units": [{"uid", "tree", "rtol", "row", "shard", "serial", "role",
+       "budget"}...], "out_dir": DIR, "emit_fd": N or null, "emit_file": PATH or null,
+       "pickle_regions": true}
+"""
+
+import inspect
+import json
+import os
+import re
+import socket
+import sys
+import time
+import traceback
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+
+import numpy as np  # noqa: E402
+import ray  # noqa: E402
+
+from prov import TREES, sha256, tree_state  # noqa: E402
+
+SCRIPTS = [  # prompt 06a: run_census.py, spscan.py in place of run_wider.py, phase_probe06.py
+    "worker.py",
+    "dispatch.py",
+    "harness.py",
+    "rebuild.py",
+    "prov.py",
+    "run_census.py",
+    "launch.py",
+    "rerun.py",
+    "spscan.py",
+    "variant_loader.py",  # prompt 06k
+]
+
+
+class _WarnCounter:
+    """prompt 06: a pass-through on sys.stdout that counts the lines starting with
+    ``!! WARNING (GkSourcePolicyData`` (the two repairs' disagreement, prompt 06 section 0.2)."""
+
+    PREFIX = "!! WARNING (GkSourcePolicyData"
+
+    def __init__(self, stream):
+        self._stream = stream
+        self.count = 0
+        self.lines = []
+        self._buf = ""
+
+    def write(self, text):
+        self._buf += text
+        while "\n" in self._buf:
+            line, self._buf = self._buf.split("\n", 1)
+            if line.startswith(self.PREFIX):
+                self.count += 1
+                if len(self.lines) < 5:
+                    self.lines.append(line[:400])
+        return self._stream.write(text)
+
+    def flush(self):
+        return self._stream.flush()
+
+    def __getattr__(self, name):
+        return getattr(self._stream, name)
+
+
+class OverBudget(BaseException):
+    pass
+
+
+# 03's run_instrument.py LABEL_RE and parse_label (docs/levin-phase-floor/04/scripts/
+# run_instrument.py:81-114), unchanged
+LABEL_RE = re.compile(
+    r"^k=(?P<k>[^/]+)/Mpc, q=(?P<q>[^/]+)/Mpc, r=(?P<r>[^/]+)/Mpc @ z_response=(?P<zr>[^,]+), "
+    r"z in \((?P<zmax>[^,]+), (?P<zmin>[^)]+)\), regime (?P<regime>\S+), group (?P<group>\S+)$"
+)
+
+
+def parse_label(notify_label):
+    if notify_label is None:
+        return None
+    m = LABEL_RE.match(notify_label)
+    if m is None:
+        return {"kind": "other", "notify_label": notify_label}
+    d = m.groupdict()
+    d["kind"] = "group"
+    return d
+
+
+def fx(x):
+    """A float, exactly: repr (round-trips) and hex."""
+    if x is None:
+        return None
+    x = float(x)
+    return {"repr": repr(x), "hex": x.hex()}
+
+
+def summarise_call(call):
+    res = call["result"]
+    regs = res["regions"]
+    hist = {}
+    n18 = 0
+    maxd = 0
+    for r in regs:
+        h = hist.setdefault(str(r.depth), [0, 0])
+        h[0 if r.type == "Levin" else 1] += 1
+        if r.depth >= 18:
+            n18 += 1
+        maxd = max(maxd, r.depth)
+    p = call["parsed"] or {}
+    return {
+        "index": call["index"],
+        "notify_label": call["notify_label"],
+        "regime": p.get("regime"),
+        "group": p.get("group"),
+        "x_span": [fx(call["x_span"][0]), fx(call["x_span"][1])],
+        "rtol": call["rtol"],
+        "atol": call["atol"],
+        "value": fx(res["value"]),
+        "abserr": fx(res["abserr"]),
+        "converged": bool(res["converged"]),
+        "phase_limited": bool(res["phase_limited"]),
+        "num_regions": int(res["num_regions"]),
+        "num_simple_regions": int(res["num_simple_regions"]),
+        "evaluations": int(res["evaluations"]),
+        "elapsed": float(res["elapsed"]),
+        "depth_hist_levin_cc": hist,
+        "n_depth_ge_18": n18,
+        "max_depth": maxd,
+    }
+
+
+def region_arrays(call):
+    regs = call["result"]["regions"]
+    return {
+        "start": np.array([r.start for r in regs], dtype=float),
+        "end": np.array([r.end for r in regs], dtype=float),
+        "depth": np.array([r.depth for r in regs], dtype=np.int16),
+        "type": np.array([0 if r.type == "Levin" else 1 for r in regs], dtype=np.int8),
+        "abserr": np.array([r.abserr for r in regs], dtype=float),
+    }
+
+
+def _int(x):
+    return None if x is None else int(x)
+
+
+def summarise_result(result):
+    d = result["WKB_Levin_data"]
+    md = result["metadata"]
+    return {
+        "total": fx(result["total"]),
+        "total_abserr": fx(result["total_abserr"]),
+        "total_converged": bool(result["total_converged"]),
+        "total_phase_limited": bool(result["total_phase_limited"]),
+        "numeric_quad": fx(result["numeric_quad"]),
+        "WKB_Levin": fx(result["WKB_Levin"]),
+        "analytic_rad": fx(result["analytic_rad"]),
+        "b": fx(result["b"]),
+        "compute_time": float(result["compute_time"]),
+        "WKB_Levin_data": (
+            None
+            if d is None
+            else {
+                "max_depth": _int(d.max_depth),
+                "num_regions": _int(d.num_regions),
+                "num_simple_regions": _int(d.num_simple_regions),
+                "evaluations": _int(d.evaluations),
+            }
+        ),
+        "WKB_Levin_subintervals": json.loads(
+            json.dumps(md.get("WKB_Levin", {}).get("subintervals"), default=float)
+        ),
+        "numeric_quad_subintervals": json.loads(
+            json.dumps(md.get("numeric_quad", {}).get("subintervals"), default=float)
+        ),
+        "partition": json.loads(json.dumps(md.get("partition"), default=float)),
+    }
+
+
+def summarise_stored(stored):
+    d = stored.WKB_Levin_data
+    return {
+        "total": fx(stored.total),
+        "total_abserr": fx(stored.total_abserr),
+        "total_converged": bool(stored.total_converged),
+        "WKB_Levin": fx(stored.WKB_Levin),
+        "numeric_quad": fx(stored.numeric_quad),
+        "compute_time": float(stored.compute_time),
+        "WKB_Levin_data": (
+            None
+            if d is None
+            else {"max_depth": _int(d.max_depth), "num_regions": _int(d.num_regions)}
+        ),
+    }
+
+
+def tree_evidence(tree_name):
+    """Where this process's packages come from, and the tree's state."""
+    import importlib
+
+    import ComputeTargets
+    import StoreFixtures
+
+    # the modules, not the classes ComputeTargets/__init__.py re-exports under the same names
+    pp = importlib.import_module("ComputeTargets.primitive_phase")
+    qs = importlib.import_module("ComputeTargets.QuadSource")
+    qsi = importlib.import_module("ComputeTargets.QuadSourceIntegral")
+    gpd = importlib.import_module("ComputeTargets.GkSourcePolicyData")
+    tsf = importlib.import_module("ComputeTargets.TkSourceFunctions")  # prompt 05a
+    gkw = importlib.import_module("ComputeTargets.GkWKBIntegration")  # prompt 06
+    tkw = importlib.import_module("ComputeTargets.TkWKBIntegration")  # prompt 06
+    gks = importlib.import_module("ComputeTargets.GkSource")  # prompt 06
+    wpf = importlib.import_module("Quadrature.integrators.WKB_phase_function")  # prompt 06
+    lq = importlib.import_module("AdaptiveLevin.levin_quadrature")  # prompt 06b
+    tbi = importlib.import_module("LiouvilleGreen.three_bessel_integrals")  # prompt 06h
+    bph = importlib.import_module("LiouvilleGreen.bessel_phase")  # prompt 06h
+    from ComputeTargets.tests.test_main_plumbing import MAIN_PY
+
+    import dispatch
+
+    tree, sha = TREES[tree_name]
+    files = {
+        "ComputeTargets": ComputeTargets.__file__,
+        "ComputeTargets.primitive_phase": pp.__file__,
+        "ComputeTargets.QuadSource": qs.__file__,
+        "ComputeTargets.QuadSourceIntegral": qsi.__file__,
+        "ComputeTargets.GkSourcePolicyData": gpd.__file__,
+        "ComputeTargets.TkSourceFunctions": tsf.__file__,  # prompt 05a
+        "StoreFixtures": StoreFixtures.__file__,
+        "main.py": str(MAIN_PY),
+        "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": dispatch.ORIG_FILE,
+        "ComputeTargets.GkWKBIntegration": gkw.__file__,  # prompt 06
+        "ComputeTargets.TkWKBIntegration": tkw.__file__,  # prompt 06
+        "ComputeTargets.GkSource": gks.__file__,  # prompt 06
+        "Quadrature.integrators.WKB_phase_function": wpf.__file__,  # prompt 06
+        "AdaptiveLevin.levin_quadrature": lq.__file__,  # prompt 06b
+        "WKB_phase_function (the producers' remote's function)": (
+            gkw.WKB_phase_function._function.__code__.co_filename
+        ),  # prompt 06
+        "LiouvilleGreen.three_bessel_integrals": tbi.__file__,  # prompt 06h
+        "LiouvilleGreen.bessel_phase": bph.__file__,  # prompt 06h
+        "BesselPhaseGroup (QuadSourceIntegral's)": qsi.BesselPhaseGroup.theta_abserr.__code__.co_filename,  # prompt 06h
+    }
+    in_tree = {
+        k: str(Path(v).resolve()).startswith(str(tree) + os.sep)
+        for k, v in files.items()
+    }
+    # prompt 06k: a declared variant of AdaptiveLevin.levin_quadrature counts as the tree's module
+    import variant_loader as _VL
+
+    v_ev = _VL.evidence()
+    if v_ev is not None:
+        v_ev["QuadSourceIntegral_binds_variants"] = qsi.adaptive_levin_sincos is lq.adaptive_levin_sincos
+        v_ev["three_bessel_integrals_binds_variants"] = tbi.adaptive_levin_sincos is lq.adaptive_levin_sincos
+        in_tree["AdaptiveLevin.levin_quadrature"] = bool(
+            str(Path(lq.__file__).resolve()) == v_ev["path"]
+            and v_ev["sha256_now"] == v_ev["sha256"]
+            and v_ev["sys_modules_is_variant"]
+            and v_ev["package_attribute_is_variant"]
+            and v_ev["package_function_is_variants"]
+            and v_ev["QuadSourceIntegral_binds_variants"]
+            and v_ev["three_bessel_integrals_binds_variants"]
+        )
+    head, status = tree_state(tree)
+    params = list(inspect.signature(pp.PrimitivePhase.__init__).parameters)
+    return {
+        "tree": tree_name,
+        "tree_path": str(tree),
+        "expected_sha": sha,
+        "head": head,
+        "status_short": status,
+        "files": files,
+        "all_in_tree": all(in_tree.values()),
+        "in_tree": in_tree,
+        "PrimitivePhase_has_exact_remainder": "exact_remainder" in params,
+        "build_phase_source_mentions_exact_remainder": "exact_remainder=True"
+        in inspect.getsource(gpd._build_phase),
+        # prompt 05a: the keyword the code commit adds (absent at c, present and True at t)
+        "TkSourceFunctions_exact_remainder_default": (
+            inspect.signature(tsf.TkSourceFunctions.__init__)
+            .parameters["exact_remainder"]
+            .default
+            if "exact_remainder"
+            in inspect.signature(tsf.TkSourceFunctions.__init__).parameters
+            else "absent"
+        ),
+        # prompt 06: the producers' exact reduction (absent at t5, present at s)
+        "producers_store_reduce_exactly": {
+            "GkWKBIntegration": "reduce_exactly_mod_2pi"
+            in inspect.getsource(gkw.GkWKBIntegration.store),
+            "TkWKBIntegration": "reduce_exactly_mod_2pi"
+            in inspect.getsource(tkw.TkWKBIntegration.store),
+        },
+        "GkWKBValue_has_theta_residual": "theta_residual"
+        in inspect.signature(gkw.GkWKBValue.__init__).parameters,
+        # prompt 06b: the premise check (absent at p, present at b) and its ratio
+        "levin_has_roundoff_exit_premise_holds": hasattr(lq, "_roundoff_exit_premise_holds"),
+        "levin_roundoff_exit_min_floor_ratio": getattr(
+            lq, "_LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO", None
+        ),
+        "levin_adaptive_levin_has_bypass": "_test_only_bypass_roundoff_premise"
+        in inspect.signature(lq._adaptive_levin).parameters,
+        # prompt 06c: the global budget's trust check (present at g), 06d's Clenshaw-Curtis floor
+        # (present at g), the length share of atol (absent at g), the default depth_max
+        "levin_has_trust_check": hasattr(lq.used_interval, "convergence_ratio"),
+        "levin_has_cc_roundoff_floor": hasattr(lq, "_cc_roundoff_floor"),
+        "levin_has_local_atol": hasattr(lq, "_local_atol"),
+        "levin_default_max_depth": getattr(lq, "DEFAULT_LEVIN_MAX_DEPTH", None),
+        # prompt 06e: 06e's displacement helper and measured node term (present at g, absent at p),
+        # 06d's worst-case node bound (present at p, absent at g), and the module file's SHA-256
+        "levin_has_chebyshev_node_displacements": hasattr(lq, "_chebyshev_node_displacements"),
+        "levin_has_cc_node_term_parts": hasattr(lq, "_cc_node_term_parts"),
+        "levin_has_cc_node_error_bound_06d": hasattr(lq, "_cc_node_error_bound"),
+        "levin_quadrature_sha256": sha256(lq.__file__),
+        # prompt 06h: 06h's group phase (present at g, absent at p) and the module file's SHA-256
+        "group_has_declared_error_parts": hasattr(tbi.BesselPhaseGroup, "_declared_error_parts"),
+        "three_bessel_has_two_product_error": hasattr(tbi, "_two_product_error"),
+        "three_bessel_EXP_RELERR": getattr(tbi, "EXP_RELERR", None),
+        "three_bessel_integrals_sha256": sha256(tbi.__file__),
+        "bessel_phase_sha256": sha256(bph.__file__),
+        # prompt 06g: 06g's driver (present at g, absent at p) and the premise's signature
+        "levin_trust_max_ratio_06g": getattr(lq, "_LEVIN_TRUST_MAX_RATIO", None),
+        "levin_has_solve_floor_in_budget_06g": hasattr(lq, "_solve_floor_in_budget"),
+        "levin_used_interval_has_budget_err_06g": hasattr(lq.used_interval, "budget_err"),
+        "levin_used_interval_has_value_kind_06g": hasattr(lq.used_interval, "value_kind"),
+        "levin_roundoff_exit_premise_signature": (
+            str(inspect.signature(lq._roundoff_exit_premise_holds))
+            if hasattr(lq, "_roundoff_exit_premise_holds")
+            else None
+        ),
+        "PYTHONPATH": os.environ.get("PYTHONPATH"),
+        "PYTHONDONTWRITEBYTECODE": os.environ.get("PYTHONDONTWRITEBYTECODE"),
+        "dont_write_bytecode": sys.dont_write_bytecode,
+        "OMP_NUM_THREADS": os.environ.get("OMP_NUM_THREADS"),
+        "cwd": os.getcwd(),
+        "pid": os.getpid(),
+        "host": socket.gethostname(),
+        "python": sys.version,
+        # prompt 06k: the variant installed (None: the tree's module), and the tree's own file's SHA-256
+        "variant_06k": v_ev,
+        "levin_quadrature_tree_file_sha256": sha256(Path(str(tree)) / "AdaptiveLevin" / "levin_quadrature.py"),
+        # prompt 07: the stationary-point guard's markers (present at g, absent at p)
+        "levin_has_locate_stationary_points_07": hasattr(lq, "_locate_stationary_points"),
+        "levin_has_nodal_guard_07": hasattr(lq, "_nodal_guard"),
+        "levin_has_changes_sign_07": hasattr(lq, "_changes_sign"),
+        "levin_window_half_phase_07": getattr(lq, "_LEVIN_WINDOW_HALF_PHASE", None),
+        "levin_coalescence_lambda_07": getattr(lq, "_LEVIN_COALESCENCE_LAMBDA", None),
+        "levin_scan_points_07": getattr(lq, "_LEVIN_STATIONARY_SCAN_POINTS", None),
+        "levin_quadrature_file_07": str(Path(lq.__file__).resolve()),
+    }
+
+
+def _summarise_call_06b(call):
+    """prompt 06b: 06a's per-call summary, plus the number of phase-limited regions and the code's
+    premise checks in the call (None where the tree has no premise check)."""
+    out = summarise_call(call)
+    out["n_phase_limited_regions"] = int(
+        sum(1 for r in call["result"]["regions"] if r.phase_limited)
+    )
+    log_ = call["premise_log"]  # None where the tree has no premise check (p)
+    out["premise_checks"] = None if log_ is None else len(log_)
+    out["premise_failed"] = None if log_ is None else sum(1 for x in log_ if not x)
+    return out
+
+
+def _region_arrays_06a(call):
+    """prompt 06a: 06's region arrays, plus each region's relerr, phase_err and phase_limited."""
+    regs = call["result"]["regions"]
+    out = region_arrays(call)
+    out["relerr"] = np.array(
+        [np.nan if r.relerr is None else r.relerr for r in regs], dtype=float
+    )
+    out["phase_err"] = np.array(
+        [np.nan if r.phase_err is None else r.phase_err for r in regs], dtype=float
+    )
+    out["phase_limited"] = np.array([bool(r.phase_limited) for r in regs], dtype=bool)
+    return out
+
+
+def _slim_result(result):
+    """prompt 06a section 2 item 7: the row's totals for the checkpoint (the full summary goes to
+    the pickle)."""
+    d = result["WKB_Levin_data"]
+    return {
+        "total": fx(result["total"]),
+        "total_abserr": fx(result["total_abserr"]),
+        "total_converged": bool(result["total_converged"]),
+        "total_phase_limited": bool(result["total_phase_limited"]),
+        "numeric_quad": fx(result["numeric_quad"]),
+        "WKB_Levin": fx(result["WKB_Levin"]),
+        "analytic_rad": fx(result["analytic_rad"]),
+        "compute_time": float(result["compute_time"]),
+        "WKB_Levin_data": (
+            None
+            if d is None
+            else {
+                "max_depth": _int(d.max_depth),
+                "num_regions": _int(d.num_regions),
+                "num_simple_regions": _int(d.num_simple_regions),
+                "evaluations": _int(d.evaluations),
+            }
+        ),
+    }
+
+
+def _module_roots(tree_name):
+    """prompt 06b: where every module in sys.modules was loaded from, by root. Returns
+    (counts by root, the modules from a foreign root, the sorted (name, file) of the tree's own)."""
+    own_tree = str(TREES[tree_name][0]) + os.sep
+    import variant_loader as _VL  # prompt 06k
+
+    variant_file_06k = (_VL.evidence() or {}).get("path")
+    others = {
+        n: str(t) + os.sep for n, (t, _sha) in TREES.items() if n != tree_name
+    }
+    main_dir = str(Path("/Users/ds283/Documents/Code/SecondaryGWKit")) + os.sep
+    venv_dir = main_dir + "venv" + os.sep
+    scripts_dir = str(HERE) + os.sep
+    std_dirs = tuple(
+        sorted({str(Path(p).resolve()) + os.sep for p in (sys.base_prefix, sys.prefix)})
+    )
+    counts = {}
+    foreign = []
+    own = []
+    for name, mod in sorted(list(sys.modules.items())):
+        f = getattr(mod, "__file__", None)
+        if not f:
+            root = "no file"
+        else:
+            rp = str(Path(f).resolve())
+            if variant_file_06k is not None and rp == variant_file_06k:  # prompt 06k
+                root = "variant"
+            elif rp.startswith(own_tree):
+                root = "own tree"
+                own.append((name, rp))
+            elif any(rp.startswith(o) for o in others.values()):
+                root = "OTHER TREE"
+                foreign.append((name, rp))
+            elif rp.startswith(venv_dir):
+                root = "venv"
+            elif rp.startswith(scripts_dir):
+                root = "scripts"
+            elif rp.startswith(main_dir):
+                root = "MAIN CHECKOUT"
+                foreign.append((name, rp))
+            elif rp.startswith(std_dirs):
+                root = "python"
+            else:
+                root = "other"
+                foreign.append((name, rp))
+        counts[root] = counts.get(root, 0) + 1
+    return counts, foreign, own
+
+
+def _w3_region_floors(LQ, call):
+    """prompt 06b, W3: for every region the call accepted as phase-limited, the region's own floor
+    and its two halves' floors, each recomputed by the module's own _adaptive_levin_subregion on
+    its own samples, with the call's arguments (as _adaptive_levin calls it), and the premise
+    (halves' sum >= 1/2 of the region's own) evaluated here, not read from the code's flag. The
+    break point is _levin_interval.break_point's, (end + start) / 2.0."""
+    kw = call["kw"]
+    rtol = kw.get("rtol", LQ.DEFAULT_LEVIN_RELTOL)
+    order = kw.get("chebyshev_order", LQ.DEFAULT_LEVIN_CHEBSHEV_ORDER)
+    bps = kw.get("build_p_sample", False)
+    dpath = kw.get("diagnostics_path")
+    dpath = Path(dpath) if dpath is not None else LQ.DEFAULT_LEVIN_DIAGNOSTICS_PATH
+    basis = LQ._Basis_SinCos(call["theta"])
+    vcache = {}
+
+    def solve(span):
+        d = LQ._adaptive_levin_subregion(
+            span,
+            call["f"],
+            basis,
+            id_label=LQ._LazyUUID(),
+            chebyshev_order=order,
+            rtol=rtol,
+            notify_label=call["notify_label"],
+            build_p_sample=bps,
+            diagnostics_path=dpath,
+            vectorize_cache=vcache,
+        )
+        return d.get("phase_err", 0.0) or 0.0, bool(d.get("is_direct", False))
+
+    out = []
+    for r in call["result"]["regions"]:
+        if not r.phase_limited:
+            continue
+        a, b = r.start, r.end
+        c = (b + a) / 2.0
+        own, own_direct = solve((a, b))
+        pl, l_direct = solve((a, c))
+        pr, r_direct = solve((c, b))
+        stored = r.phase_err if r.phase_err is not None else float("nan")
+        s_halves = pl + pr
+        out.append(
+            {
+                "start": float(a).hex(),
+                "end": float(b).hex(),
+                "depth": int(r.depth),
+                "type": r.type,
+                "phase_err_stored": float(stored).hex(),
+                "phase_err_own": float(own).hex(),
+                "own_equals_stored": float(own).hex() == float(stored).hex(),
+                "own_is_direct": own_direct,
+                "phase_err_L": float(pl).hex(),
+                "phase_err_R": float(pr).hex(),
+                "L_is_direct": l_direct,
+                "R_is_direct": r_direct,
+                "halves_sum": float(s_halves).hex(),
+                "ratio": (s_halves / own) if own != 0 else None,
+                "premise_holds": bool(s_halves >= 0.5 * own),
+            }
+        )
+    return out
+
+
+# prompt 06c ------------------------------------------------------------------------------------
+
+# the arguments of _adaptive_levin's one DEBUG record per call ("global budget | ..."), in order,
+# after its label (AdaptiveLevin/levin_quadrature.py at g, the _logger.debug after the loop)
+_BUDGET_RECORD_KEYS = (
+    "num_leaves",
+    "num_splits",
+    "num_floor_limited",
+    "num_at_depth_max",
+    "num_checks",
+    "num_check_passes",
+    "num_untrusted_found",
+    "num_untrusted_returned",
+    "num_unchecked_returned",
+    "running_stop",
+    "budget_met",
+    "disagree",
+    "num_resum_rejections",
+)
+
+
+# prompt 06g: 06g's record carries three more arguments after these (its "node errors: sum E %.3g,
+# sum |E| %.3g, node-limited %s"); at p (06h's code) the record is 06h's, and parsed as before
+_BUDGET_RECORD_KEYS_06G = ("node_error_signed_sum", "node_error_abs_sum", "node_limited")
+
+
+def _budget_record(args):
+    """prompt 06c: the budget record's arguments as a dict (None if none was captured).
+    prompt 06g: a record with 06g's three further arguments is parsed too, the two sums as exact
+    floats (repr and hex) and the flag as a bool; one of 06h's length is parsed exactly as before."""
+    if args is None:
+        return None
+    args = list(args)
+    if len(args) == 1 + len(_BUDGET_RECORD_KEYS) + len(_BUDGET_RECORD_KEYS_06G):  # prompt 06g
+        out = _budget_record(args[: 1 + len(_BUDGET_RECORD_KEYS)])
+        e_s, e_a, n_l = args[1 + len(_BUDGET_RECORD_KEYS):]
+        out["node_error_signed_sum"] = fx(e_s)
+        out["node_error_abs_sum"] = fx(e_a)
+        out["node_limited"] = bool(n_l)
+        return out
+    if len(args) != 1 + len(_BUDGET_RECORD_KEYS):
+        return {"raw": [repr(a) for a in args]}
+    out = {}
+    for k, v in zip(_BUDGET_RECORD_KEYS, args[1:]):
+        if isinstance(v, str):
+            out[k] = v
+        elif k in ("running_stop", "budget_met"):
+            out[k] = bool(v)
+        else:
+            out[k] = int(v)
+    return out
+
+
+def _summarise_call_06c(call):
+    """prompt 06c: 06b's per-call summary, plus what X1-X5 and the descriptive items need from the
+    call's result and its returned leaves (see the module docstring)."""
+    import math
+
+    out = _summarise_call_06b(call)
+    res = call["result"]
+    regs = res["regions"]
+    dmax = call["kw"].get("depth_max", call["default_depth_max"])
+    out["depth_max"] = _int(dmax)
+    out["n_at_depth_max"] = int(sum(1 for r in regs if r.depth >= dmax))
+    out["abserr_finite"] = bool(math.isfinite(float(res["abserr"])))
+    out["num_untrusted_regions"] = _int(res.get("num_untrusted_regions"))
+    out["num_phase_limited_regions_result"] = _int(res.get("num_phase_limited_regions"))
+    for k in ("relerr", "abserr_resolution", "abserr_roundoff", "abserr_fallback", "abserr_truncation"):
+        out[k] = fx(res.get(k))
+    for k in ("num_subregion_solves", "num_solves_direct", "num_solves_lstsq", "num_solves_pinv"):
+        out[k] = _int(res.get(k))
+    e_res, e_floor, e_trunc, e_raw = [], [], [], []
+    counts = {"levin": 0, "cc": 0, "trusted": 0, "untrusted": 0, "unchecked": 0, "floor_limited": 0, "widened": 0}
+    r_max = None
+    n_r_inf = 0
+    for r in regs:
+        counts["levin" if r.type == "Levin" else "cc"] += 1
+        dec = getattr(r, "declared_resolution", None)
+        resid = r.abserr
+        resol = dec if dec is not None else resid
+        floor = r.phase_err
+        trunc = r.abserr_truncation if r.abserr_truncation is not None else 0.0
+        # attribution of used_interval.total_err's max(resolution, floor): to the larger (ties to
+        # the resolution term, as max() keeps its first argument), plus the truncation term
+        if resol is None:
+            e_floor.append(floor if floor is not None else 0.0)
+        elif floor is None or resol >= floor:
+            e_res.append(resol)
+        else:
+            e_floor.append(floor)
+        e_trunc.append(trunc)
+        # what the leaf would declare without the trust check's widening
+        if resid is None:
+            base = floor if floor is not None else 0.0
+        elif floor is None:
+            base = resid
+        else:
+            base = max(resid, floor)
+        e_raw.append(base + trunc)
+        trusted = getattr(r, "trusted", None)
+        if r.phase_limited:
+            counts["floor_limited"] += 1
+        elif trusted is None:
+            counts["unchecked"] += 1
+        elif trusted:
+            counts["trusted"] += 1
+        else:
+            counts["untrusted"] += 1
+        if trusted and dec is not None:
+            counts["widened"] += 1
+        cr = getattr(r, "convergence_ratio", None)
+        if cr is not None:
+            if math.isfinite(cr):
+                r_max = cr if r_max is None else max(r_max, cr)
+            else:
+                n_r_inf += 1
+    shares = {"resolution": math.fsum(e_res), "floor": math.fsum(e_floor), "truncation": math.fsum(e_trunc)}
+    out["E_share"] = {k: fx(v) for k, v in shares.items()}
+    out["E_largest_share"] = max(shares, key=lambda k: shares[k]) if regs else None
+    out["E_unwidened"] = fx(math.fsum(e_raw))
+    out["leaves"] = counts
+    out["r_max_finite"] = r_max
+    out["n_r_not_finite"] = n_r_inf
+    out["budget"] = call.get("budget")
+    out["solves_by_purpose"] = call.get("solves")
+    return out
+
+
+def _region_arrays_06c(call):
+    """prompt 06c: 06b's region arrays (06a's plus relerr, phase_err, phase_limited), plus each
+    leaf's truncation, total_err and the trust check's numbers (NaN, or -1 for trusted, where not
+    taken or absent)."""
+    regs = call["result"]["regions"]
+    out = _region_arrays_06a(call)
+
+    def arr(name):
+        vals = []
+        for r in regs:
+            v = getattr(r, name, None)
+            vals.append(np.nan if v is None else float(v))
+        return np.array(vals, dtype=float)
+
+    for name in ("abserr_truncation", "total_err", "delta1", "delta2", "convergence_ratio", "declared_resolution"):
+        out[name] = arr(name)
+    out["trusted"] = np.array(
+        [-1 if getattr(r, "trusted", None) is None else int(bool(r.trusted)) for r in regs], dtype=np.int8
+    )
+    return out
+
+
+def _deep_line(LQ, call):
+    """prompt 06c: the flat-residual item. For a call whose greatest leaf depth is at least its
+    depth_max: the line from the root to the leftmost leaf at that depth, each ancestor P (and the
+    leaf) with its halves L, R and quarters LL, LR, RL, RR solved once each by the module's own
+    _adaptive_levin_subregion, with the call's arguments, as _adaptive_levin calls it (break point
+    (end + start) / 2.0). Each node's residual is formed as _make_leaf forms it (Levin: |V - (V_L +
+    V_R)| on its halves; fallback: its nested-pair estimate), its floor is its phase_err, its
+    truncation its abserr_truncation, and its error max(residual, floor) + truncation (the trust
+    check's widening not applied). delta1, delta2 and r of each P are formed as _check_leaf forms
+    them. Returns a dict with every number as hex."""
+    import math
+
+    kw = call["kw"]
+    rtol = kw.get("rtol", LQ.DEFAULT_LEVIN_RELTOL)
+    order = kw.get("chebyshev_order", LQ.DEFAULT_LEVIN_CHEBSHEV_ORDER)
+    bps = kw.get("build_p_sample", False)
+    dpath = kw.get("diagnostics_path")
+    dpath = Path(dpath) if dpath is not None else LQ.DEFAULT_LEVIN_DIAGNOSTICS_PATH
+    basis = LQ._Basis_SinCos(call["theta"])
+    vcache = {}
+    solved = {}
+
+    def solve(a, b):
+        key = (a, b)
+        if key not in solved:
+            solved[key] = LQ._adaptive_levin_subregion(
+                (a, b),
+                call["f"],
+                basis,
+                id_label=LQ._LazyUUID(),
+                chebyshev_order=order,
+                rtol=rtol,
+                notify_label=call["notify_label"],
+                build_p_sample=bps,
+                diagnostics_path=dpath,
+                vectorize_cache=vcache,
+            )
+        return solved[key]
+
+    def hx_(x):
+        return None if x is None else float(x).hex()
+
+    def node(a, b):
+        d = solve(a, b)
+        is_direct = bool(d.get("is_direct", False))
+        floor = d.get("phase_err", 0.0) or 0.0
+        trunc = d.get("abserr_truncation")
+        if is_direct:
+            resid = d["abserr_direct"]
+        else:
+            c = (b + a) / 2.0
+            resid = np.fabs(d["value"] - (solve(a, c)["value"] + solve(c, b)["value"]))
+        e = max(resid, floor) + (trunc if trunc is not None else 0.0)
+        return {"type": "direct" if is_direct else "Levin", "value": hx_(d["value"]), "resid": hx_(resid),
+                "floor": hx_(floor), "trunc": hx_(trunc), "e": hx_(e), "_e": float(e), "_resid": float(resid), "_floor": float(floor)}
+
+    regs = call["result"]["regions"]
+    D = max(r.depth for r in regs)
+    leaf = min((r for r in regs if r.depth == D), key=lambda r: r.start)
+    a, b = call["x_span"]
+    levels = []
+    for depth in range(D + 1):
+        c = (b + a) / 2.0
+        cL = (c + a) / 2.0
+        cR = (b + c) / 2.0
+        P, L, R = node(a, b), node(a, c), node(c, b)
+        vP = solve(a, b)["value"]
+        halves_sum = solve(a, c)["value"] + solve(c, b)["value"]
+        quarters_sum = (solve(a, cL)["value"] + solve(cL, c)["value"]) + (solve(c, cR)["value"] + solve(cR, b)["value"])
+        delta1 = float(np.fabs(vP - halves_sum))
+        delta2 = float(np.fabs(halves_sum - quarters_sum))
+        if not (math.isfinite(delta1) and math.isfinite(delta2)):
+            ratio = float("inf")
+        elif delta1 == 0.0:
+            ratio = 0.0 if delta2 == 0.0 else float("inf")
+        else:
+            ratio = delta2 / delta1
+        eLR = L["_e"] + R["_e"]
+        levels.append(
+            {
+                "depth": depth,
+                "start": hx_(a),
+                "end": hx_(b),
+                "P": {k_: v_ for k_, v_ in P.items() if not k_.startswith("_")},
+                "L": {k_: v_ for k_, v_ in L.items() if not k_.startswith("_")},
+                "R": {k_: v_ for k_, v_ in R.items() if not k_.startswith("_")},
+                "eLR_over_eP": (eLR / P["_e"]) if P["_e"] != 0 else None,
+                "delta1": hx_(delta1),
+                "delta2": hx_(delta2),
+                "r": hx_(ratio),
+            }
+        )
+        if depth == D:
+            last = P
+            break
+        if leaf.start >= c:
+            a = c
+        else:
+            b = c
+    reproduces = (
+        a == leaf.start
+        and b == leaf.end
+        and float(last["_resid"]).hex() == float(leaf.abserr).hex()
+        and float(last["_floor"]).hex() == float(leaf.phase_err if leaf.phase_err is not None else 0.0).hex()
+    )
+    return {
+        "index": call["index"],
+        "notify_label": call["notify_label"],
+        "max_depth": D,
+        "n_leaves_at_max_depth": int(sum(1 for r in regs if r.depth == D)),
+        "leaf_start": hx_(leaf.start),
+        "leaf_end": hx_(leaf.end),
+        "line_end_equals_leaf_and_reproduces_its_residual_and_floor": bool(reproduces),
+        "n_solves": len(solved),
+        "levels": levels,
+    }
+
+
+# prompt 06e ------------------------------------------------------------------------------------
+
+DEEP_LINE_DEPTH_06E = 12  # prompt 06e section 5, "anything still deep": every call past depth 12
+
+
+def _line_tiling(LQ, line, order):
+    """prompt 06e: per level of a deep line (06c's ``_deep_line``), whether its ends tile, by the
+    tree's own ``chebyshev_matrices``: the level's span (a, b), its halves (a, c) and (c, b) with
+    c = (b + a) / 2.0 (the driver's break point). x[0] is the upper end and x[-1] the lower. At each
+    of the orders N (the call's chebyshev_order, the Levin grid) and 2N - 1 (the fallback's fine
+    grid): ``tile`` is x_L[-1] == x_P[-1] and x_R[0] == x_P[0] and x_L[0] == x_R[-1]
+    (depth20-tiling's rule), ``exact`` is x_P[-1] == a and x_P[0] == b. Returns one list per level:
+    [tile at N, exact at N, tile at 2N - 1, exact at 2N - 1]."""
+    out = []
+    for lev in line["levels"]:
+        a = float.fromhex(lev["start"])
+        b = float.fromhex(lev["end"])
+        c = (b + a) / 2.0
+        row = []
+        for n in (order, 2 * order - 1):
+            xP, _ = LQ.chebyshev_matrices((a, b), n)
+            xL, _ = LQ.chebyshev_matrices((a, c), n)
+            xR, _ = LQ.chebyshev_matrices((c, b), n)
+            row.append(bool(xL[-1] == xP[-1] and xR[0] == xP[0] and xL[0] == xR[-1]))
+            row.append(bool(xP[-1] == a and xP[0] == b))
+        out.append(row)
+    return out
+
+
+_CC_TERM_NAMES = (
+    "t_value_rounding",  # (n + 4) u S, _cc_roundoff_floor's first term
+    "t_argument",  # u sum_k |w_k| sum_i |f_ik| |a_ik|, its second
+    "node_term",  # phi_node = |E| + R_g + R_2 + R_c, its third (the argument it is handed)
+    "E",  # signed
+    "R_g",
+    "R_2",
+    "R_c",
+    "floor_returned",  # what _cc_roundoff_floor returned
+    "declared",  # _declared_endpoint_phase_err's return in the solve
+    "phase_err_resolve",  # the re-solve's phase_err (floor_returned + declared)
+    "abserr_resolve",  # the re-solve's abserr_direct (the nested pair)
+)
+
+
+def _cc_floor_terms(LQ, call):
+    """prompt 06e: the Clenshaw-Curtis floor's terms, as 06e's code exposes them, for every returned
+    leaf of the fallback branch (see the module docstring). Each such leaf's span is solved once
+    more by the module's own _adaptive_levin_subregion with the call's arguments (as
+    _adaptive_levin's _solve calls it), with pass-throughs at the module attributes
+    _cc_node_term_parts (its returned E, R_g, R_2, R_c), _cc_roundoff_floor (its node_term argument
+    and its return) and _declared_endpoint_phase_err (its return), installed for these re-solves
+    only and restored in a finally. _cc_roundoff_floor's first two terms, which the code sums
+    without returning them apart, are read from the code's own function on its own inputs: with
+    the arguments zeroed it returns (n + 4) u S alone, with the basis values zeroed
+    u sum|w||f||a| alone (the other terms are then exact zeros, and adding an exact zero is
+    exact). A leaf is reproduced if the re-solve's phase_err and abserr_direct equal the leaf's
+    phase_err and abserr bit for bit, the two terms plus node_term (in the code's order) equal the
+    floor returned, |E| + R_g + R_2 + R_c (in the code's order) equals node_term, and the floor
+    returned plus the declared term equals phase_err.
+
+    Returns (record for the pickle, summary for the checkpoint), or (None, None) where the tree
+    has no _cc_node_term_parts (p)."""
+    import inspect as _insp
+    import math
+
+    if not hasattr(LQ, "_cc_node_term_parts"):
+        return None, None
+    regs = call["result"]["regions"]
+    pos = [i for i, r in enumerate(regs) if r.type != "Levin"]
+    kw = call["kw"]
+    rtol = kw.get("rtol", LQ.DEFAULT_LEVIN_RELTOL)
+    order = kw.get("chebyshev_order", LQ.DEFAULT_LEVIN_CHEBSHEV_ORDER)
+    bps = kw.get("build_p_sample", False)
+    dpath = kw.get("diagnostics_path")
+    dpath = Path(dpath) if dpath is not None else LQ.DEFAULT_LEVIN_DIAGNOSTICS_PATH
+    arrs = {n: np.full(len(pos), np.nan) for n in _CC_TERM_NAMES}
+    flags = {n: np.zeros(len(pos), dtype=bool) for n in ("reproduces", "captured")}
+    errors = []
+    if pos:
+        basis = LQ._Basis_SinCos(call["theta"])
+        vcache = {}
+        orig_parts = LQ._cc_node_term_parts
+        orig_floor = LQ._cc_roundoff_floor
+        orig_decl = LQ._declared_endpoint_phase_err
+        sig_floor = _insp.signature(orig_floor)
+        cap = {}
+
+        def w_parts(*a_, **k_):
+            r_ = orig_parts(*a_, **k_)
+            cap["parts"] = tuple(float(x_) for x_ in r_)
+            return r_
+
+        def w_floor(*a_, **k_):
+            r_ = orig_floor(*a_, **k_)
+            if "floor" in cap:  # prompt 06g: the solve's second call (its floor less |E|) is not the floor
+                return r_
+            ba = sig_floor.bind(*a_, **k_)
+            w_, f_, b_, g_ = (ba.arguments[n_] for n_ in ("weights", "f_sample", "basis_sample", "argument_sample"))
+            t_val = orig_floor(w_, f_, b_, np.zeros_like(g_), 0.0)
+            t_arg = orig_floor(w_, f_, np.zeros_like(b_), g_, 0.0)
+            cap["floor"] = (float(t_val), float(t_arg), float(ba.arguments["node_term"]), float(r_))
+            return r_
+
+        def w_decl(*a_, **k_):
+            r_ = orig_decl(*a_, **k_)
+            cap["declared"] = float(r_)
+            return r_
+
+        LQ._cc_node_term_parts = w_parts
+        LQ._cc_roundoff_floor = w_floor
+        LQ._declared_endpoint_phase_err = w_decl
+        try:
+            for j, i in enumerate(pos):
+                r = regs[i]
+                cap.clear()
+                try:
+                    d = LQ._adaptive_levin_subregion(
+                        (r.start, r.end),
+                        call["f"],
+                        basis,
+                        id_label=LQ._LazyUUID(),
+                        chebyshev_order=order,
+                        rtol=rtol,
+                        notify_label=call["notify_label"],
+                        build_p_sample=bps,
+                        diagnostics_path=dpath,
+                        vectorize_cache=vcache,
+                    )
+                except Exception:
+                    errors.append({"region": i, "error": traceback.format_exc()[-2000:]})
+                    continue
+                if not (d.get("is_direct", False) and "parts" in cap and "floor" in cap and "declared" in cap):
+                    errors.append({"region": i, "error": "re-solve did not take the fallback branch, or a term was not captured",
+                                   "is_direct": bool(d.get("is_direct", False)), "captured": sorted(cap)})
+                    continue
+                flags["captured"][j] = True
+                E, R_g, R_2, R_c = cap["parts"]
+                t_val, t_arg, node_term, fl_ret = cap["floor"]
+                vals = {"t_value_rounding": t_val, "t_argument": t_arg, "node_term": node_term, "E": E, "R_g": R_g,
+                        "R_2": R_2, "R_c": R_c, "floor_returned": fl_ret, "declared": cap["declared"],
+                        "phase_err_resolve": float(d["phase_err"]), "abserr_resolve": float(d["abserr_direct"])}
+                for n_, v_ in vals.items():
+                    arrs[n_][j] = v_
+                leaf_pe = r.phase_err if r.phase_err is not None else 0.0
+                flags["reproduces"][j] = bool(
+                    float(d["phase_err"]).hex() == float(leaf_pe).hex()
+                    and float(d["abserr_direct"]).hex() == float(r.abserr).hex()
+                    and float(t_val + t_arg + node_term).hex() == float(fl_ret).hex()
+                    and float(abs(E) + R_g + R_2 + R_c).hex() == float(node_term).hex()
+                    and float(fl_ret + cap["declared"]).hex() == float(d["phase_err"]).hex()
+                )
+        finally:
+            LQ._cc_node_term_parts = orig_parts
+            LQ._cc_roundoff_floor = orig_floor
+            LQ._declared_endpoint_phase_err = orig_decl
+        assert LQ._cc_node_term_parts is orig_parts
+        assert LQ._cc_roundoff_floor is orig_floor
+        assert LQ._declared_endpoint_phase_err is orig_decl
+
+    # the floor attributed as 06c's E_share attributes it (_summarise_call_06c): a leaf's floor
+    # carries its error if its resolution term (declared_resolution where set, else abserr) is
+    # below its floor
+    attributed = np.zeros(len(pos), dtype=bool)
+    for j, i in enumerate(pos):
+        r = regs[i]
+        dec = getattr(r, "declared_resolution", None)
+        resol = dec if dec is not None else r.abserr
+        floor = r.phase_err
+        attributed[j] = bool(resol is None or (floor is not None and resol < floor))
+    ok = flags["captured"] & flags["reproduces"]
+
+    def sums(mask):
+        out_ = {}
+        for n_ in ("t_value_rounding", "t_argument", "node_term", "R_g", "R_2", "R_c", "declared", "phase_err_resolve"):
+            out_[n_] = fx(math.fsum(arrs[n_][mask & ok].tolist()))
+        out_["abs_E"] = fx(math.fsum(np.fabs(arrs["E"][mask & ok]).tolist()))
+        return out_
+
+    every = np.ones(len(pos), dtype=bool)
+    summary = {
+        "n_cc_leaves": len(pos),
+        "n_reproduced": int(ok.sum()),
+        "n_errors": len(errors),
+        "n_floor_attributed": int(attributed.sum()),
+        "sums_all_cc_leaves": sums(every),
+        "sums_floor_attributed_cc_leaves": sums(attributed),
+    }
+    record = {
+        "index": call["index"],
+        "notify_label": call["notify_label"],
+        "region_index": np.array(pos, dtype=np.int32),
+        "floor_attributed": attributed,
+        **{n_: a_ for n_, a_ in arrs.items()},
+        **flags,
+        "errors": errors,
+    }
+    return record, summary
+
+
+# prompt 06h ------------------------------------------------------------------------------------
+
+_DECL_LEAF_NAMES = (
+    "declared",  # _declared_endpoint_phase_err's return in the re-solve
+    "floor",  # the round-off floor: _roundoff_floor's return (Levin), _cc_roundoff_floor's (fallback)
+    "phase_err_resolve",  # the re-solve's phase_err (floor + declared)
+    "theta_abserr_a",  # BasisData.theta_abserr_at(start)
+    "theta_abserr_b",  # BasisData.theta_abserr_at(end)
+    "p_l1_a",  # the |p| sum (Levin) or the fallback's proxy at start, as handed to the declared term
+    "p_l1_b",  # the same at end
+    "constituents_a", "abscissa_a", "phi_eval_a",  # group._declared_error_parts(start), where it exists
+    "constituents_b", "abscissa_b", "phi_eval_b",  # the same at end
+    "declared_constituents",  # _phase_error(constituents_a, p_l1_a) + _phase_error(constituents_b, p_l1_b)
+    "declared_abscissa",  # the same for the abscissa part
+    "declared_phi_eval",  # the same for phi_eval
+)
+_DECL_PARTS = ("constituents", "abscissa", "phi_eval")
+
+
+def _declared_terms_06h(LQ, call):
+    """prompt 06h: the declared phase term of every returned leaf of a call whose phase dict supplies
+    theta_abserr, Levin and Clenshaw-Curtis alike (see the module docstring). Each leaf's span is
+    solved once more by the module's own _adaptive_levin_subregion with the call's arguments (as
+    _adaptive_levin's _solve calls it, and as _cc_floor_terms and _w3_region_floors do), with
+    pass-throughs at the module attributes _declared_endpoint_phase_err (its arguments and return),
+    _roundoff_floor and _cc_roundoff_floor (their returns), installed for these re-solves only and
+    restored in a finally. The endpoint theta_abserr is read from the solve's own BasisData
+    (theta_abserr_at), and, where the group the call's theta_abserr is bound to has
+    _declared_error_parts (06h's code), its three parts at each end. A leaf is reproduced if the
+    re-solve takes the leaf's branch (is_direct for a fallback leaf, not for a Levin leaf), its
+    phase_err equals the leaf's bit for bit, floor + declared (the code's order) equals its
+    phase_err, and (0.0 + _phase_error(ta, pa)) + _phase_error(tb, pb) (the code's order) equals the
+    declared term.
+
+    Returns (record for the pickle, summary for the checkpoint). A call that supplies no
+    theta_abserr gives (None, {"supplies_theta_abserr": False, "request": ...})."""
+    import inspect as _insp
+    import math
+
+    res = call["result"]
+    v = float(res["value"])
+    atol_, rtol_ = call.get("atol"), call.get("rtol")
+    request = None
+    if atol_ is not None and rtol_ is not None and math.isfinite(v):
+        request = max(float(atol_), float(rtol_) * abs(v))
+    theta = call["theta"]
+    if theta is None or "theta_abserr" not in theta:
+        return None, {"supplies_theta_abserr": False, "request": fx(request)}
+    regs = res["regions"]
+    kw = call["kw"]
+    rtol = kw.get("rtol", LQ.DEFAULT_LEVIN_RELTOL)
+    order = kw.get("chebyshev_order", LQ.DEFAULT_LEVIN_CHEBSHEV_ORDER)
+    bps = kw.get("build_p_sample", False)
+    dpath = kw.get("diagnostics_path")
+    dpath = Path(dpath) if dpath is not None else LQ.DEFAULT_LEVIN_DIAGNOSTICS_PATH
+    group = getattr(theta["theta_abserr"], "__self__", None)
+    has_parts = group is not None and hasattr(group, "_declared_error_parts")
+    n = len(regs)
+    arrs = {n_: np.full(n, np.nan) for n_ in _DECL_LEAF_NAMES}
+    branch = np.array([0 if r.type == "Levin" else 1 for r in regs], dtype=np.int8)
+    flags = {n_: np.zeros(n, dtype=bool) for n_ in ("reproduces", "captured")}
+    errors = []
+    if n:
+        basis = LQ._Basis_SinCos(theta)
+        vcache = {}
+        orig_decl = LQ._declared_endpoint_phase_err
+        orig_rf = LQ._roundoff_floor
+        orig_ccf = LQ._cc_roundoff_floor
+        sig_decl = _insp.signature(orig_decl)
+        cap = {}
+
+        def w_decl(*a_, **k_):
+            r_ = orig_decl(*a_, **k_)
+            ba = sig_decl.bind(*a_, **k_)
+            bd = ba.arguments["BasisData"]
+            a0, b0 = float(ba.arguments["a"]), float(ba.arguments["b"])
+            cap["decl"] = (
+                a0,
+                b0,
+                float(ba.arguments["p_endpoint_l1_a"]),
+                float(ba.arguments["p_endpoint_l1_b"]),
+                float(r_),
+                bd.theta_abserr_at(a0),
+                bd.theta_abserr_at(b0),
+            )
+            return r_
+
+        def w_rf(*a_, **k_):
+            r_ = orig_rf(*a_, **k_)
+            cap["floor"] = float(r_)
+            return r_
+
+        def w_ccf(*a_, **k_):
+            r_ = orig_ccf(*a_, **k_)
+            if "floor" not in cap:  # prompt 06g: keep the first call (the floor), not its floor less |E|
+                cap["floor"] = float(r_)
+            return r_
+
+        LQ._declared_endpoint_phase_err = w_decl
+        LQ._roundoff_floor = w_rf
+        LQ._cc_roundoff_floor = w_ccf
+        try:
+            for i, r in enumerate(regs):
+                cap.clear()
+                try:
+                    d = LQ._adaptive_levin_subregion(
+                        (r.start, r.end),
+                        call["f"],
+                        basis,
+                        id_label=LQ._LazyUUID(),
+                        chebyshev_order=order,
+                        rtol=rtol,
+                        notify_label=call["notify_label"],
+                        build_p_sample=bps,
+                        diagnostics_path=dpath,
+                        vectorize_cache=vcache,
+                    )
+                except Exception:
+                    errors.append({"region": i, "error": traceback.format_exc()[-2000:]})
+                    continue
+                is_direct = bool(d.get("is_direct", False))
+                if is_direct != (r.type != "Levin") or "decl" not in cap or "floor" not in cap:
+                    errors.append({"region": i, "error": "re-solve took another branch, or a term was not captured",
+                                   "type": r.type, "is_direct": is_direct, "captured": sorted(cap)})
+                    continue
+                flags["captured"][i] = True
+                a0, b0, pa, pb, decl, ta, tb = cap["decl"]
+                vals = {"declared": decl, "floor": cap["floor"], "phase_err_resolve": float(d["phase_err"]),
+                        "theta_abserr_a": ta, "theta_abserr_b": tb, "p_l1_a": pa, "p_l1_b": pb}
+                if has_parts:
+                    pa_parts = [float(x_) for x_ in group._declared_error_parts(a0)]
+                    pb_parts = [float(x_) for x_ in group._declared_error_parts(b0)]
+                    for k_, xa, xb in zip(_DECL_PARTS, pa_parts, pb_parts):
+                        vals[f"{k_}_a"] = xa
+                        vals[f"{k_}_b"] = xb
+                        vals[f"declared_{k_}"] = LQ._phase_error(xa, pa) + LQ._phase_error(xb, pb)
+                for n_, v_ in vals.items():
+                    arrs[n_][i] = v_
+                leaf_pe = r.phase_err if r.phase_err is not None else 0.0
+                recomputed = 0.0
+                if ta is not None:
+                    recomputed += LQ._phase_error(ta, pa)
+                if tb is not None:
+                    recomputed += LQ._phase_error(tb, pb)
+                flags["reproduces"][i] = bool(
+                    a0 == r.start
+                    and b0 == r.end
+                    and float(d["phase_err"]).hex() == float(leaf_pe).hex()
+                    and float(cap["floor"] + decl).hex() == float(d["phase_err"]).hex()
+                    and float(recomputed).hex() == float(decl).hex()
+                )
+        finally:
+            LQ._declared_endpoint_phase_err = orig_decl
+            LQ._roundoff_floor = orig_rf
+            LQ._cc_roundoff_floor = orig_ccf
+        assert LQ._declared_endpoint_phase_err is orig_decl
+        assert LQ._roundoff_floor is orig_rf
+        assert LQ._cc_roundoff_floor is orig_ccf
+
+    # the floor attributed as 06c's E_share attributes it (as _cc_floor_terms): a leaf's floor
+    # carries its error if its resolution term (declared_resolution where set, else abserr) is below
+    # its floor
+    attributed = np.zeros(n, dtype=bool)
+    for i, r in enumerate(regs):
+        dec = getattr(r, "declared_resolution", None)
+        resol = dec if dec is not None else r.abserr
+        floor = r.phase_err
+        attributed[i] = bool(resol is None or (floor is not None and resol < floor))
+    ok = flags["captured"] & flags["reproduces"]
+
+    def sums(mask):
+        out_ = {"n": int(mask.sum()), "n_reproduced": int((mask & ok).sum())}
+        for n_ in ("declared", "floor", "phase_err_resolve", "declared_constituents", "declared_abscissa", "declared_phi_eval"):
+            out_[n_] = fx(math.fsum(arrs[n_][mask & ok].tolist()))
+        for n_ in ("theta_abserr_a", "theta_abserr_b"):
+            vv = arrs[n_][mask & ok]
+            out_[f"max_{n_}"] = fx(float(np.max(vv))) if vv.size else None
+        return out_
+
+    lev = branch == 0
+    cc = branch == 1
+    summary = {
+        "supplies_theta_abserr": True,
+        "request": fx(request),
+        "has_parts": bool(has_parts),
+        "n_leaves": n,
+        "n_reproduced": int(ok.sum()),
+        "n_errors": len(errors),
+        "levin": sums(lev),
+        "levin_floor_attributed": sums(lev & attributed),
+        "cc": sums(cc),
+        "cc_floor_attributed": sums(cc & attributed),
+    }
+    record = {
+        "index": call["index"],
+        "notify_label": call["notify_label"],
+        "branch": branch,
+        "floor_attributed": attributed,
+        **{n_: a_ for n_, a_ in arrs.items()},
+        **flags,
+        "errors": errors,
+    }
+    return record, summary
+
+
+# prompt 06g ------------------------------------------------------------------------------------
+
+# test 3's classes (06g's code log, "Test 3's descriptive table"; its calibration's _r_class): the band
+# of r, and delta1 against the leaf's floor phase_err
+R_BANDS_06G = ("r<1/16", "1/16<=r<1/4", "1/4<=r<1", "r>=1")
+VALUE_KIND_CODE_06G = {"own": 0, "quarters": 1}
+
+
+def _r_class_06g(r, delta1, phase_err):
+    """prompt 06g: test 3's class of a checked leaf, as 06g's calibration's _r_class forms it."""
+    if r < 1.0 / 16.0:
+        band = "r<1/16"
+    elif r < 0.25:
+        band = "1/16<=r<1/4"
+    elif r < 1.0:
+        band = "1/4<=r<1"
+    else:
+        band = "r>=1"
+    return f"{band}|{'d1<=phi' if delta1 <= phase_err else 'd1>phi'}"
+
+
+def _opt(r, name):
+    """prompt 06g: an attribute a region may not have (p's used_interval lacks 06g's), else None."""
+    return getattr(r, name, None)
+
+
+def _region_arrays_06g(call):
+    """prompt 06g: 06h's region arrays (06c's), plus each returned leaf's value, V_P, value kind (0 own,
+    1 quarters, -1 where the tree has none), the floor's parts, E and e' (NaN where absent)."""
+    regs = call["result"]["regions"]
+    out = _region_arrays_06c(call)
+
+    def arr(name):
+        vals = []
+        for r in regs:
+            v = _opt(r, name)
+            vals.append(np.nan if v is None else float(v))
+        return np.array(vals, dtype=float)
+
+    for name in ("value", "value_own", "phase_err_declared", "phase_err_roundoff", "node_error_signed",
+                 "phase_err_less_node", "budget_err"):
+        out[name] = arr(name)
+    out["value_kind"] = np.array(
+        [VALUE_KIND_CODE_06G.get(_opt(r, "value_kind"), -1) for r in regs], dtype=np.int8
+    )
+    return out
+
+
+def _checked_leaves_06g(call):
+    """prompt 06g: every region the driver made in the call with its trust check taken (delta1 set),
+    returned or later bisected. Returns (per-leaf arrays for the pickle, counts for the checkpoint).
+    trust_g is 06g's test (r < 1/4, or r < 1 with delta1 <= phase_err) and trust_parent 06h's (r < 1),
+    each evaluated here on the leaf's recorded numbers; trusted_final is the region's flag as it
+    ended (None, reset by the floor-limited exemption, as -1)."""
+    import math
+
+    made = call.get("made") or []
+    returned_ids = {id(r) for r in call["result"]["regions"]}
+    checked = [r for r in made if _opt(r, "delta1") is not None]
+    n = len(checked)
+    f = {k_: np.full(n, np.nan) for k_ in ("start", "end", "delta1", "delta2", "convergence_ratio", "phase_err",
+                                          "phase_err_roundoff", "abserr", "declared_resolution", "value",
+                                          "value_own", "node_error_signed", "budget_err", "total_err")}
+    i8 = {k_: np.full(n, -1, dtype=np.int8) for k_ in ("type", "trusted_final", "value_kind")}
+    depth = np.zeros(n, dtype=np.int16)
+    b = {k_: np.zeros(n, dtype=bool) for k_ in ("returned", "phase_limited", "trust_g", "trust_parent")}
+    classes_all, classes_ret = {}, {}
+    n_b = n_b_ret = n_noise_trusted = n_fl = 0
+    for j, r in enumerate(checked):
+        for k_ in f:
+            v = _opt(r, k_)
+            f[k_][j] = np.nan if v is None else float(v)
+        depth[j] = int(r.depth)
+        i8["type"][j] = 0 if r.type == "Levin" else 1
+        tf = _opt(r, "trusted")
+        i8["trusted_final"][j] = -1 if tf is None else int(bool(tf))
+        i8["value_kind"][j] = VALUE_KIND_CODE_06G.get(_opt(r, "value_kind"), -1)
+        ret = id(r) in returned_ids
+        b["returned"][j] = ret
+        b["phase_limited"][j] = bool(r.phase_limited)
+        n_fl += bool(r.phase_limited)
+        rr, d1, phi = float(r.convergence_ratio), float(r.delta1), float(r.phase_err if r.phase_err is not None else 0.0)
+        b["trust_g"][j] = bool(rr < 0.25 or (rr < 1.0 and d1 <= phi))
+        b["trust_parent"][j] = bool(rr < 1.0)
+        key = _r_class_06g(rr, d1, phi)
+        classes_all[key] = classes_all.get(key, 0) + 1
+        if ret:
+            classes_ret[key] = classes_ret.get(key, 0) + 1
+        if key == "1/4<=r<1|d1>phi":  # (b): untrusted under 06g, trusted under 06h's r < 1
+            n_b += 1
+            n_b_ret += ret
+        if key == "1/4<=r<1|d1<=phi":
+            n_noise_trusted += 1
+    record = {
+        "index": call["index"],
+        "notify_label": call["notify_label"],
+        "n_made": len(made),
+        "depth": depth,
+        **f,
+        **i8,
+        **b,
+    }
+    summary = {
+        "n_made": len(made),
+        "n_checked": n,
+        "n_checked_returned": int(b["returned"].sum()),
+        "n_checked_bisected": int(n - b["returned"].sum()),
+        "n_checked_then_floor_limited": int(n_fl),
+        "classes_all": dict(sorted(classes_all.items())),
+        "classes_returned": dict(sorted(classes_ret.items())),
+        "n_b_untrusted": int(n_b),
+        "n_b_untrusted_returned": int(n_b_ret),
+        "n_noise_clause_trusted": int(n_noise_trusted),
+        "n_trust_g_differs_from_trusted_final": int(
+            sum(1 for j in range(n) if i8["trusted_final"][j] != -1 and bool(i8["trusted_final"][j]) != bool(b["trust_g"][j]))
+        ),
+    }
+    return record, summary
+
+
+def _premise_summary_06g(call):
+    """prompt 06g: the premise checks of the call (see the module docstring). Returns (per-check
+    list for the pickle, counts for the checkpoint); (None, None) where the tree has no premise."""
+    det = call.get("premise_detail")
+    if det is None:
+        return None, None
+    n_scmb = sum(1 for d_ in det if d_["split_could_meet_budget"] is True)
+    summary = {
+        "n_checks": len(det),
+        "n_fired": sum(1 for d_ in det if d_["result"]),
+        "n_not_fired": sum(1 for d_ in det if not d_["result"]),
+        "n_halving_failed": sum(1 for d_ in det if not d_["halving"]),
+        "n_split_could_meet_budget": None if any(d_["split_could_meet_budget"] is None for d_ in det) else n_scmb,
+        "n_halving_held_but_split_could_meet_budget": sum(
+            1 for d_ in det if d_["halving"] and d_["split_could_meet_budget"] is True
+        ),
+    }
+    return det, summary
+
+
+def _summarise_call_06g(call):
+    """prompt 06g: 06h's per-call summary (06c's), plus 06g's numbers (see the module docstring). An
+    exception in 06g's additions is recorded under ``error_06g`` and leaves 06h's summary as it is."""
+    out = _summarise_call_06c(call)
+    try:
+        out.update(_call_extras_06g(call))
+    except Exception:
+        out["error_06g"] = traceback.format_exc()[-2000:]
+    out["route_06k"] = _json_safe_06k(call["result"].get("route_06k"))  # prompt 06k
+    out["route_06l"] = _json_safe_06k(call["result"].get("route_06l"))  # prompt 06l
+    return out
+
+
+def _json_safe_06k(x):
+    """prompt 06k: a route's record with every float kept as a number, a non-finite one as a string."""
+    if isinstance(x, dict):
+        return {k: _json_safe_06k(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_json_safe_06k(v) for v in x]
+    if isinstance(x, float) and not np.isfinite(x):
+        return repr(x)
+    return x
+
+
+def _call_extras_06g(call):
+    import math
+
+    out = {}
+    res = call["result"]
+    regs = res["regions"]
+    for k in ("node_error_signed_sum", "node_error_abs_sum", "abserr_node_signed"):
+        out[k] = fx(res.get(k))
+    nl = res.get("node_limited")
+    out["node_limited"] = None if nl is None else bool(nl)
+    out["has_cc_leaf"] = bool(int(res["num_simple_regions"]) > 0)
+    # the leaves' e' sum in ascending x, as _sum_leaves_ascending forms it (plain addition over the
+    # returned regions, which are in ascending x); None where the tree's regions have no budget_err
+    if regs and all(hasattr(r, "budget_err") for r in regs):
+        e_sum = 0.0
+        for r in regs:
+            c_ = r.budget_err
+            if c_ is not None:
+                e_sum = e_sum + c_
+        out["abserr_eprime_sum"] = fx(e_sum)
+        ans = res.get("abserr_node_signed")
+        out["abserr_reassembles"] = (
+            None if ans is None else float(e_sum + float(ans)).hex() == float(res["abserr"]).hex()
+        )
+    else:
+        out["abserr_eprime_sum"] = None
+        out["abserr_reassembles"] = None
+    if regs and all(hasattr(r, "value_kind") for r in regs):
+        q_ = [r for r in regs if r.value_kind == "quarters"]
+        out["values_06g"] = {
+            "n_quarters": len(q_),
+            "n_own": sum(1 for r in regs if r.value_kind == "own"),
+            "sum_abs_q_minus_own": fx(math.fsum(abs(float(r.value) - float(r.value_own)) for r in q_)),
+            "value_reassembles": float(sum_ascending_values(regs)).hex() == float(res["value"]).hex(),
+        }
+    else:
+        out["values_06g"] = None
+    out["premise_06g"] = call.get("premise_06g_summary")
+    out["checked_06g"] = call.get("checked_06g_summary")
+    return out
+
+
+def sum_ascending_values(regs):
+    """prompt 06g: the returned values summed in ascending x with plain addition, as the driver sums
+    its value (_sum_leaves_ascending), from 0.0."""
+    v = 0.0
+    for r in regs:
+        v = v + r.value
+    return v
+
+
+# prompt 06h: the parent's three_bessel_integrals, for 06e's analytic oracle as a counterfactual
+PARENT_TBI_SHA = "2c325f56641666b45df483adb8c1202575721c42"
+PARENT_TBI_PATH = "LiouvilleGreen/three_bessel_integrals.py"
+PARENT_TBI_SHA256 = "862a18fef4752e7431ae8c2d592e2004c681601d42fe6c196e83dbe914e8c909"  # Gate H's P workers' file
+_PARENT_TBI = []
+_H_BPG = None
+
+
+def _parent_tbi():
+    """The parent's module, from git (read-only), SHA-256 checked, executed into a module object with
+    no file that is registered nowhere (its imports resolve in this process's tree, where the
+    modules it imports are unchanged by 06h). Loaded once per process."""
+    if not _PARENT_TBI:
+        import hashlib as _hl
+        import subprocess as _sp
+        import types as _types
+
+        src = _sp.run(
+            ["git", "--no-optional-locks", "-C", "/Users/ds283/Documents/Code/SecondaryGWKit", "show",
+             f"{PARENT_TBI_SHA}:{PARENT_TBI_PATH}"],
+            capture_output=True, check=True,
+        ).stdout
+        if _hl.sha256(src).hexdigest() != PARENT_TBI_SHA256:
+            raise RuntimeError("the parent's three_bessel_integrals.py has another SHA-256")
+        mod = _types.ModuleType("three_bessel_integrals_06e_parent")
+        exec(compile(src, f"<{PARENT_TBI_SHA[:7]}:{PARENT_TBI_PATH}>", "exec"), mod.__dict__)
+        _PARENT_TBI.append(mod)
+    return _PARENT_TBI[0]
+
+
+# prompt 07: the stationary-point guard's diagnostics (prompt 07 section 1.5, with section 10's Rule A key)
+GUARD_RESULT_KEYS_07 = (
+    "stationary_points",
+    "stationary_windows",
+    "unlocated_minima",
+    "num_window_pieces",
+    "num_guarded_regions",
+    "num_guard_at_depth_max",
+    "location_skipped_phases",
+)
+N_KEEP_07 = 8  # prompt 07: entries of a list kept in the checkpoint (all of them in the pickle)
+
+
+def _jsonable_07(x):
+    """prompt 07: a result entry, JSON-safe and exact: every float as fx (repr and hex)."""
+    if isinstance(x, dict):
+        return {str(k): _jsonable_07(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_jsonable_07(v) for v in x]
+    if isinstance(x, (bool, np.bool_)):
+        return bool(x)
+    if isinstance(x, (int, np.integer)):
+        return int(x)
+    if isinstance(x, (float, np.floating)):
+        return fx(float(x))
+    if x is None or isinstance(x, str):
+        return x
+    if isinstance(x, np.ndarray):
+        return _jsonable_07(x.tolist())
+    return repr(x)
+
+
+def _plain_07(x):
+    """prompt 07: a result entry with numpy scalars made Python scalars (floats kept as floats), for the pickle."""
+    if isinstance(x, dict):
+        return {k: _plain_07(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_plain_07(v) for v in x]
+    if isinstance(x, (bool, np.bool_)):
+        return bool(x)
+    if isinstance(x, np.integer):
+        return int(x)
+    if isinstance(x, np.floating):
+        return float(x)
+    if isinstance(x, np.ndarray):
+        return [_plain_07(v) for v in x.tolist()]
+    return x
+
+
+def _guard_record_07(call):
+    """prompt 07: the call's section 1.5 result entries in full, for the pickle (None where the tree has none)."""
+    res = call["result"]
+    present = [k for k in GUARD_RESULT_KEYS_07 if k in res]
+    try:
+        entries = {k: _plain_07(res.get(k)) for k in GUARD_RESULT_KEYS_07}
+    except Exception:  # never let the record stop the unit
+        entries = {"error": traceback.format_exc()[-4000:]}
+    return {"index": call["index"], "notify_label": call["notify_label"], "keys_present": present, **entries}
+
+
+def _guard_summary_07(call):
+    """prompt 07: the call's section 1.5 diagnostics for the checkpoint: counts, the first N_KEEP_07 located points,
+    windows and unlocated minima (exact), Rule A's skipped phases, and the returned leaves' window and guard flags
+    counted. At a tree without the keys (p), ``present`` is False and nothing else is recorded."""
+    res = call["result"]
+    regs = res["regions"]
+    present = all(k in res for k in GUARD_RESULT_KEYS_07)
+    out = {"present": present, "keys_present": [k for k in GUARD_RESULT_KEYS_07 if k in res]}
+    if not present:
+        return out
+    pts = res["stationary_points"] or []
+    wins = res["stationary_windows"] or []
+    um = res["unlocated_minima"] or []
+    sk = res["location_skipped_phases"] or []
+    kinds = {}
+    for p_ in pts:
+        kinds[str(p_.get("kind"))] = kinds.get(str(p_.get("kind")), 0) + 1
+    out["n_points"] = len(pts)
+    out["n_points_by_kind"] = dict(sorted(kinds.items()))
+    out["points"] = [_jsonable_07(p_) for p_ in pts[:N_KEEP_07]]
+    out["n_windows"] = len(wins)
+    out["windows"] = [
+        _jsonable_07({k: v for k, v in w_.items() if k != "cuts"} | {"n_pieces": max(len(w_.get("cuts") or []) - 1, 0)})
+        for w_ in wins[:N_KEEP_07]
+    ]
+    out["n_windows_stopped"] = sum(1 for w_ in wins if w_.get("stopped"))
+    out["n_unlocated_minima"] = len(um)
+    out["unlocated_minima"] = [_jsonable_07(m_) for m_ in um[:N_KEEP_07]]
+    out["num_window_pieces"] = int(res["num_window_pieces"])
+    out["num_guarded_regions"] = int(res["num_guarded_regions"])
+    out["num_guard_at_depth_max"] = int(res["num_guard_at_depth_max"])
+    out["location_skipped_phases"] = _jsonable_07(sk)
+    dmax = call["kw"].get("depth_max", call["default_depth_max"])
+    win = [bool(getattr(r, "window", False)) for r in regs]
+    out["returned"] = {
+        "n_window": int(sum(win)),
+        "n_guarded": int(sum(1 for r in regs if getattr(r, "guarded", False))),
+        "n_guard_at_depth_max": int(sum(1 for r in regs if getattr(r, "guard_at_depth_max", False))),
+        "n_window_phase_limited": int(sum(1 for r, w_ in zip(regs, win) if w_ and r.phase_limited)),
+        "n_window_at_depth_max": int(sum(1 for r, w_ in zip(regs, win) if w_ and dmax is not None and r.depth >= dmax)),
+        "n_levin": int(sum(1 for r in regs if r.type == "Levin")),
+    }
+    out["locates"] = len(pts) > 0
+    out["guards"] = int(res["num_guarded_regions"]) > 0 or int(res["num_guard_at_depth_max"]) > 0
+    return out
+
+
+def _region_arrays_07(call):
+    """prompt 07: each returned leaf's window, guarded and guard_at_depth_max flags (1, 0; -1 where the tree's
+    used_interval has no such attribute, as at p)."""
+    regs = call["result"]["regions"]
+
+    def flag(name):
+        return np.array([-1 if not hasattr(r, name) else int(bool(getattr(r, name))) for r in regs], dtype=np.int8)
+
+    return {"window_07": flag("window"), "guarded_07": flag("guarded"), "guard_at_depth_max_07": flag("guard_at_depth_max")}
+
+
+def _scan_compact_07(entry):
+    """prompt 07: a scan_07 entry for the checkpoint (the full scan is in the pickle)."""
+    if "error" in entry:
+        return {k: entry[k] for k in ("index", "kind", "error")}
+    s = entry["scan"]
+    listed = s["listed"]
+    lev = [x for x in listed if x["branch"] == "Levin"]
+    return {
+        "index": entry["index"],
+        "kind": entry["kind"],
+        "reused_06a_scan": entry["reused_06a_scan"],
+        "h": fx(s["h"]),
+        "n_nonfinite": s["n_nonfinite"],
+        "n_sign_changes": s["n_sign_changes"],
+        "sign_change_x": [fx(x) for x in s["sign_change_x"][:64]],
+        "min_over_max_abs_theta_deriv": s["min_over_max_abs_theta_deriv"],
+        "n_regions": s["n_regions"],
+        "n_regions_listed": s["n_regions_listed"],
+        "n_regions_listed_grid": s["n_regions_listed_grid"],
+        "n_regions_listed_ends": s["n_regions_listed_ends"],
+        "n_listed_levin": len(lev),
+        "n_listed_levin_grid": sum(1 for x in lev if x["how"] == "grid"),
+        "n_listed_levin_ends": sum(1 for x in lev if x["how"] == "ends"),
+        "listed": [
+            {"region_index": x["region_index"], "how": x["how"], "branch": x["branch"], "depth": x["depth"],
+             "start": fx(x["start"]), "end": fx(x["end"])}
+            for x in listed[:32]
+        ],
+    }
+
+
+def main():
+    spec = json.loads(Path(sys.argv[1]).read_text())
+    tree_name = spec["tree"]
+    if spec.get("variant") is not None:  # prompt 06k: before anything imports AdaptiveLevin
+        import variant_loader as _VL06k
+
+        _VL06k.install(spec["variant"]["path"], spec["variant"]["sha256"], spec["variant"]["name"])
+    worker_name = spec.get("name", tree_name)  # prompt 06a
+    out_dir = Path(spec["out_dir"])
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if spec.get("emit_fd") is not None:
+        emit_handle = os.fdopen(int(spec["emit_fd"]), "w", buffering=1)
+    else:
+        emit_handle = open(spec["emit_file"], "a", buffering=1)
+
+    def emit(kind, payload):
+        emit_handle.write(json.dumps({"kind": kind, "worker": worker_name, **payload}) + "\n")
+        emit_handle.flush()
+
+    ev = tree_evidence(tree_name)
+    script_hashes = {name: sha256(HERE / name) for name in SCRIPTS if (HERE / name).exists()}
+    ev["scripts_sha256"] = script_hashes
+    emit("hello", {"evidence": ev})
+    print(f"# worker {worker_name} evidence " + json.dumps(ev), flush=True)
+    if not (
+        ev["all_in_tree"]
+        and ev["head"] == ev["expected_sha"]
+        and ev["status_short"].strip() == ""
+        and sys.dont_write_bytecode
+    ):
+        emit("refused", {"why": "tree evidence does not hold", "evidence": ev})
+        raise SystemExit(f"worker {worker_name}: tree evidence does not hold: {ev}")
+
+    from harness import QSI_MOD, close_pool, dump_record, open_readonly_pool, standin_ray
+    from unittest import mock  # prompt 06h
+
+    global _H_BPG  # prompt 06h
+    _H_BPG = QSI_MOD.BesselPhaseGroup
+    import rebuild as RB
+    from rebuild import MAIN_PY_SHA256, CensusCache, build_context, rebuild_row  # prompt 06a
+    from prov import STORE_DIR_BY_TREE
+
+    # route (B), as in 06: h reads the certified scratch copy
+    PRIMARY = RB.use_store_dir(STORE_DIR_BY_TREE[tree_name])
+    emit("store", {"tree": tree_name, "primary": str(PRIMARY)})
+    print(f"# worker {worker_name} reads {PRIMARY}", flush=True)
+
+    import dispatch as DP
+    import spscan as SP  # prompt 06a: the stationary-point scan
+    import importlib as _il  # prompt 06b
+
+    LQ = _il.import_module("AdaptiveLevin.levin_quadrature")  # prompt 06b
+    inputs_path = out_dir / f"inputs_{worker_name}.pkl"  # prompt 06b: W2's inputs; prompt 06c: X1's
+    inputs_handle = None
+
+    # prompt 06c: the budget loop's one DEBUG record per call, captured by a filter on the module's
+    # logger. The logger is opened to DEBUG so that the record is made; the filter lets through
+    # only records at or above the level that reached the module's handlers before (its effective
+    # level, WARNING with nothing configured), so what the module emits is unchanged.
+    import logging as _logging
+
+    class _BudgetRecordFilter(_logging.Filter):
+        PREFIX = "adaptive_levin (%s): global budget |"
+
+        def __init__(self, pass_level):
+            super().__init__()
+            self.pass_level = pass_level
+            self.last = None
+            self.n_seen = 0
+
+        def filter(self, record):
+            if record.levelno == _logging.DEBUG and isinstance(record.msg, str) and record.msg.startswith(self.PREFIX):
+                self.last = tuple(record.args)
+                self.n_seen += 1
+            return record.levelno >= self.pass_level
+
+    lq_logger = LQ._logger
+    lq_pass_level = lq_logger.getEffectiveLevel()
+    budget_filter = _BudgetRecordFilter(lq_pass_level)
+    lq_logger.addFilter(budget_filter)
+    lq_logger.setLevel(_logging.DEBUG)
+    emit("levin_logging", {"logger": lq_logger.name, "pass_level": lq_pass_level,
+                           "handlers": [type(h).__name__ for h in lq_logger.handlers],
+                           "root_handlers": [type(h).__name__ for h in _logging.getLogger().handlers]})
+
+    # prompt 06c: the solves by purpose, by a pass-through at the module attribute
+    # _adaptive_levin_subregion, read from its caller's frame (installed for the timed section only)
+    orig_subregion = LQ._adaptive_levin_subregion
+
+    def w_subregion(*a_, **kw_):
+        acc = holder.get("solve_acc")
+        if acc is not None:
+            try:
+                fr = sys._getframe(1)
+                if fr.f_code.co_name == "_solve":
+                    key = str(fr.f_locals.get("description"))
+                    if key in ("left half of fallback region", "right half of fallback region"):
+                        key = f"fallback half, for {sys._getframe(3).f_code.co_name}"
+                    elif key.startswith("trust check:"):
+                        key = "trust check: a quarter"
+                else:
+                    key = f"<called from {fr.f_code.co_name}>"
+            except Exception as e_:  # never let the count change the computation
+                key = f"<unclassified: {type(e_).__name__}>"
+            acc[key] = acc.get(key, 0) + 1
+        return orig_subregion(*a_, **kw_)
+
+    # prompt 06a: one pickle per worker, a stream of one record per unit, appended and flushed as
+    # each unit ends (its offset, length and sha256 go in the unit's checkpoint record)
+    pkl_path = out_dir / f"regions_{worker_name}.pkl"
+    pkl_handle = open(pkl_path, "ab")
+
+    orig_levin = QSI_MOD.adaptive_levin_sincos
+    orig_eval = QSI_MOD.evaluate_QuadSource_integral
+    holder = {"calls": None, "disp": None, "deadline": None, "premise_log": None, "solve_acc": None,  # prompt 06c
+              "analytic_args": None,  # prompt 06h
+              "premise_detail": None, "made": None}  # prompt 06g
+    # prompt 06h: analytic_integral's arguments, kept by a pass-through (timed section only)
+    orig_analytic = QSI_MOD.analytic_integral
+
+    def w_analytic(*a_, **kw_):
+        acc = holder.get("analytic_args")
+        if acc is not None:
+            acc.append((a_, kw_))
+        return orig_analytic(*a_, **kw_)
+    # prompt 06b: the code's premise check, counted per call by a pass-through (b only)
+    orig_premise = getattr(LQ, "_roundoff_exit_premise_holds", None)
+    # prompt 06g: the signatures the pass-through is written for: 06h's (p) and 06g's (g)
+    _PREMISE_PARAMS = (
+        ["phase_err", "phase_err_L", "phase_err_R"],
+        ["phase_err", "phase_err_L", "phase_err_R", "split_could_meet_budget"],
+    )
+    if orig_premise is not None and list(inspect.signature(orig_premise).parameters) not in _PREMISE_PARAMS:
+        emit("refused", {"why": "_roundoff_exit_premise_holds has a signature the pass-through does not forward",
+                         "signature": str(inspect.signature(orig_premise))})
+        raise SystemExit(f"worker {worker_name}: unexpected premise signature {inspect.signature(orig_premise)}")
+
+    def w_premise(phase_err, phase_err_L, phase_err_R, **kw_):  # prompt 06g: keywords passed through
+        r_ = orig_premise(phase_err, phase_err_L, phase_err_R, **kw_)
+        log_ = holder["premise_log"]
+        if log_ is not None:
+            log_.append(bool(r_))
+            det_ = holder.get("premise_detail")  # prompt 06g: each check's detail
+            if det_ is not None:
+                try:  # never let the record change the computation
+                    halving = bool(orig_premise(phase_err, phase_err_L, phase_err_R))
+                except Exception:
+                    halving = None
+                scmb = kw_.get("split_could_meet_budget") if "split_could_meet_budget" in kw_ else None
+                det_.append({
+                    "result": bool(r_),
+                    "split_could_meet_budget": None if scmb is None else bool(scmb),
+                    "halving": halving,
+                    "phase_err": float(phase_err).hex(),
+                    "phase_err_L": float(phase_err_L).hex(),
+                    "phase_err_R": float(phase_err_R).hex(),
+                })
+        return r_
+
+    # prompt 06g: every region the driver makes in a call, by a pass-through at used_interval.__init__
+    # (the class attribute; installed for the timed section only, like the premise counter)
+    UI_CLASS = LQ.used_interval
+    orig_ui_init = UI_CLASS.__dict__["__init__"]
+
+    def w_ui_init(self, *a_, **k_):
+        orig_ui_init(self, *a_, **k_)
+        acc_ = holder.get("made")
+        if acc_ is not None:
+            acc_.append(self)
+
+    def install_premise():
+        if orig_premise is not None:
+            LQ._roundoff_exit_premise_holds = w_premise
+        LQ._adaptive_levin_subregion = w_subregion  # prompt 06c
+        QSI_MOD.analytic_integral = w_analytic  # prompt 06h
+        UI_CLASS.__init__ = w_ui_init  # prompt 06g
+
+    def restore_premise():
+        if orig_premise is not None:
+            LQ._roundoff_exit_premise_holds = orig_premise
+        LQ._adaptive_levin_subregion = orig_subregion  # prompt 06c
+        QSI_MOD.analytic_integral = orig_analytic  # prompt 06h
+        UI_CLASS.__init__ = orig_ui_init  # prompt 06g
+
+    def w_levin(*a, **kw):
+        plog = []  # prompt 06b
+        holder["premise_log"] = plog
+        sacc = {}  # prompt 06c
+        holder["solve_acc"] = sacc
+        pdet = []  # prompt 06g
+        holder["premise_detail"] = pdet
+        made = []  # prompt 06g
+        holder["made"] = made
+        budget_filter.last = None
+        try:
+            result = orig_levin(*a, **kw)
+        finally:
+            holder["premise_log"] = None
+            holder["solve_acc"] = None  # prompt 06c
+            holder["premise_detail"] = None  # prompt 06g
+            holder["made"] = None  # prompt 06g
+        budget_args = budget_filter.last  # prompt 06c
+        budget_filter.last = None
+        calls = holder["calls"]
+        if calls is not None:
+            x_span = a[0] if len(a) > 0 else kw.get("x_span")
+            theta = a[2] if len(a) > 2 else kw.get("theta")  # prompt 06a: kept for the scan
+            f_ = a[1] if len(a) > 1 else kw.get("f")  # prompt 06b: kept for W3 and W2's inputs
+            calls.append(
+                {
+                    "index": len(calls),
+                    "notify_label": kw.get("notify_label"),
+                    "parsed": parse_label(kw.get("notify_label")),
+                    "x_span": tuple(x_span),
+                    "atol": kw.get("atol"),
+                    "rtol": kw.get("rtol"),
+                    "result": result,
+                    "theta_deriv": None if theta is None else theta.get("theta_deriv"),
+                    "theta": theta,  # prompt 06b
+                    "f": f_,  # prompt 06b
+                    "kw": {k_: v_ for k_, v_ in kw.items() if k_ not in ("x_span", "f", "theta")},
+                    "premise_log": plog if orig_premise is not None else None,  # prompt 06b
+                    "budget": _budget_record(budget_args),  # prompt 06c
+                    "solves": dict(sacc),  # prompt 06c
+                    "default_depth_max": getattr(LQ, "DEFAULT_LEVIN_MAX_DEPTH", None),  # prompt 06c
+                    "premise_detail": pdet if orig_premise is not None else None,  # prompt 06g
+                    "made": made,  # prompt 06g
+                }
+            )
+        return result
+
+    def w_eval(*a, **kw):
+        with DP.install(deadline=holder["deadline"], stop_exc=OverBudget) as disp:
+            holder["disp"] = disp
+            return orig_eval(*a, **kw)
+
+    cache = CensusCache(STORE_DIR_BY_TREE[tree_name], warn_counter_factory=_WarnCounter)
+
+    try:
+        with standin_ray() as cluster:
+            pool, printed = open_readonly_pool(PRIMARY, cluster)
+            print(printed.strip(), flush=True)
+            try:
+                t_ctx = time.perf_counter()
+                ctx = build_context(pool, log=lambda s: print(s, flush=True))
+                rtol8 = ray.get(pool.object_get("tolerance", tol=1e-8))
+                if not (rtol8.available and rtol8.tol == 1e-8):
+                    raise RuntimeError(f"tolerance 1e-8 not available: {rtol8}")
+                rtol_obj = {"1e-7": None, "1e-8": rtol8}
+                emit(
+                    "context",
+                    {
+                        "tree": tree_name,
+                        "seconds": time.perf_counter() - t_ctx,
+                        "checks": ctx["checks"],
+                        "rtol_1e-7": [ctx["quad_rtol"].store_id, repr(ctx["quad_rtol"].tol)],
+                        "rtol_1e-8": [rtol8.store_id, repr(rtol8.tol)],
+                        "main_py_sha256": MAIN_PY_SHA256,
+                    },
+                )
+                for u in spec["units"]:
+                    uid = u["uid"]
+                    if u["tree"] != tree_name:
+                        raise RuntimeError(f"unit {uid} is not for tree {tree_name}")
+                    print(f"\n== unit {uid} ({u['row']}: shard {u['shard']}, serial {u['serial']})", flush=True)
+                    status = "done"
+                    err = None
+                    result = None
+                    calls = []
+                    analytic_args = []  # prompt 06h
+                    wall = None
+                    rb = None
+                    holder.update(disp=None)
+                    warn = _WarnCounter(sys.stdout)
+                    sys.stdout = warn
+                    n_events_before = len(cache.events)
+                    try:
+                        t_rb = time.perf_counter()
+                        rb = rebuild_row(
+                            ctx,
+                            pool,
+                            u["shard"],
+                            u["serial"],
+                            log=lambda s: print(s, flush=True),
+                            rtol=rtol_obj[u["rtol"]],
+                            cache=cache,  # prompt 06a
+                        )
+                        rebuild_s = time.perf_counter() - t_rb
+                        holder.update(calls=calls, analytic_args=analytic_args)  # prompt 06h: analytic_args
+                        QSI_MOD.adaptive_levin_sincos = w_levin
+                        QSI_MOD.evaluate_QuadSource_integral = w_eval
+                        install_premise()  # prompt 06b
+                        t0 = time.perf_counter()
+                        budget = u.get("budget")
+                        holder["deadline"] = None if budget is None else t0 + budget
+                        try:
+                            ref = rb["work"].compute(payload=rb["compute_payload"])
+                            result = ray.get(ref)
+                        except OverBudget:
+                            status = "over budget"
+                            result = None
+                        finally:
+                            wall = time.perf_counter() - t0
+                            holder.update(calls=None, deadline=None, analytic_args=None)  # prompt 06h: analytic_args
+                            QSI_MOD.adaptive_levin_sincos = orig_levin
+                            QSI_MOD.evaluate_QuadSource_integral = orig_eval
+                            restore_premise()  # prompt 06b
+                    except Exception:
+                        status = "error"
+                        err = traceback.format_exc()
+                        print(err, flush=True)
+                        rebuild_s = None
+                    finally:
+                        QSI_MOD.adaptive_levin_sincos = orig_levin
+                        QSI_MOD.evaluate_QuadSource_integral = orig_eval
+                        restore_premise()  # prompt 06b
+                        sys.stdout = warn._stream
+                    assert QSI_MOD.adaptive_levin_sincos is orig_levin
+                    assert QSI_MOD.evaluate_QuadSource_integral is orig_eval
+                    assert orig_premise is None or LQ._roundoff_exit_premise_holds is orig_premise
+                    assert LQ._adaptive_levin_subregion is orig_subregion  # prompt 06c
+                    assert QSI_MOD.analytic_integral is orig_analytic  # prompt 06h
+                    assert UI_CLASS.__dict__["__init__"] is orig_ui_init  # prompt 06g
+                    assert DP.PrimitivePhase.__dict__["theta_mod_2pi"] is DP.ORIG_THETA_MOD_2PI
+                    disp = holder["disp"]
+                    group_calls = [
+                        c for c in calls if (c["parsed"] or {}).get("kind") == "group"
+                    ]
+                    # prompt 06a: what the cache built while this unit ran, emitted once each
+                    events = cache.events[n_events_before:]
+                    for e in events:
+                        emit("event", {"unit": uid, "event": e})
+                    # prompt 06g: each call's premise checks and checked leaves (after the timed section)
+                    t_6g = time.perf_counter()
+                    prem_06g, checked_06g = {}, {}
+                    for c in calls:
+                        try:
+                            det_, sm_ = _premise_summary_06g(c)
+                        except Exception:
+                            det_, sm_ = None, {"error": traceback.format_exc()[-2000:]}
+                        c["premise_06g_summary"] = sm_
+                        prem_06g[c["index"]] = det_
+                        try:
+                            rec_, sm2_ = _checked_leaves_06g(c)
+                        except Exception:
+                            rec_, sm2_ = None, {"error": traceback.format_exc()[-2000:]}
+                        c["checked_06g_summary"] = sm2_
+                        checked_06g[c["index"]] = rec_
+                        c["made"] = None
+                    checked_06g_s = time.perf_counter() - t_6g
+                    head_now, status_now = tree_state(TREES[tree_name][0])
+                    data = {
+                        "unit": uid,
+                        "tree": tree_name,
+                        "rtol": u["rtol"],
+                        "row": u["row"],
+                        "names05": u.get("names05"),
+                        "shard": u["shard"],
+                        "serial": u["serial"],
+                        "k_key": u.get("k_key"),
+                        "status": status,
+                        "error": err,
+                        "wall_s": wall,
+                        "rebuild_s": rebuild_s,
+                        "budget_s": u.get("budget"),
+                        "dispatcher_counts": None if disp is None else dict(disp.counts),
+                        "dispatcher_flags": None if disp is None else dict(disp.flags),
+                        "tree_head": head_now,
+                        "tree_status_short": status_now,
+                        "scripts_sha256": script_hashes,
+                        "rows_sha256": spec.get("rows_sha256"),
+                        "w2_capture_sha256": spec.get("w2_capture_sha256"),  # prompt 06b
+                        "worker": worker_name,
+                        "worker_pid": os.getpid(),
+                        "calls": [_summarise_call_06g(c) for c in group_calls],  # prompt 06c; prompt 06g
+                        # prompt 06b: the other Levin calls (the analytic blocks), as the group calls
+                        "other_calls": [
+                            _summarise_call_06g(c) for c in calls if id(c) not in {id(g) for g in group_calls}  # prompt 06c; prompt 06g
+                        ],
+                        "n_calls_total": len(calls),
+                        "checked_06g_s": checked_06g_s,  # prompt 06g
+                        "cache_built": [
+                            {k_: v for k_, v in e.items() if k_ in ("kind", "k_serial", "z_response_serial", "mode_serial", "q_serial", "r_serial")}
+                            for e in events
+                        ],
+                    }
+                    if rb is not None:
+                        data["qs_check"] = {
+                            k_: v for k_, v in rb["qs_check"].items()
+                            if k_ in ("stored_serial", "keyed_as_stored", "n_stored", "n_recomputed",
+                                      "n_common_differing_columns", "added_is_B1s", "L0a_holds")
+                        }
+                        data["stored"] = summarise_stored(rb["stored"])
+                        data["rebuild_checks_all_hold"] = all(c[1] for c in rb["checks"])
+                        data["GkPolicy"] = rb["GkPolicy_summary"]
+                    data["policy_warnings"] = {"count": warn.count, "first": warn.lines}
+                    if result is not None:
+                        data["result"] = _slim_result(result)
+                    # prompt 06a section 5 item 7: the stationary-point scan, after the timed
+                    # section, with the dispatcher uninstalled (it reads phase objects only)
+                    scans = None
+                    data["scan"] = None
+                    data["scan_s"] = None
+                    data["scan_error"] = None
+                    if u.get("scan") and status != "error":
+                        t_sc = time.perf_counter()
+                        scans = []
+                        for c in group_calls:
+                            try:
+                                if c["theta_deriv"] is None:
+                                    raise RuntimeError("the call was handed no theta_deriv")
+                                scans.append(
+                                    SP.scan_call(c["theta_deriv"], c["x_span"], c["result"]["regions"])
+                                )
+                            except Exception:
+                                scans.append({"error": traceback.format_exc()})
+                                data["scan_error"] = (data["scan_error"] or 0) + 1
+                        data["scan_s"] = time.perf_counter() - t_sc
+                        data["scan"] = [
+                            None
+                            if "error" in s
+                            else {
+                                "index": c["index"],
+                                "h": s["h"],
+                                "n_sign_changes": s["n_sign_changes"],
+                                "min_over_max_abs_theta_deriv": s["min_over_max_abs_theta_deriv"],
+                                "sign_change_x": s["sign_change_x"][:8],
+                                "n_regions_listed": s["n_regions_listed"],
+                                "n_regions_listed_grid": s["n_regions_listed_grid"],
+                                "n_regions_listed_ends": s["n_regions_listed_ends"],
+                                "n_nonfinite": s["n_nonfinite"],
+                            }
+                            for c, s in zip(group_calls, scans)
+                        ]
+                    # prompt 07 section 6: the scan on every group call at both rtols and on every analytic call at
+                    # 1e-7, against the returned leaves (spscan.scan_call, unchanged), after the timed section with
+                    # the dispatcher uninstalled; a 1e-7 group call's scan is the one 06a's block above made
+                    scans_07 = None
+                    data["scan_07"] = None
+                    data["scan_07_s"] = None
+                    data["scan_07_error"] = None
+                    if status != "error":
+                        t_s7 = time.perf_counter()
+                        scans_07 = []
+                        made_06a = {} if scans is None else {c["index"]: s for c, s in zip(group_calls, scans)}
+                        gids_07 = {id(g) for g in group_calls}
+                        for c in calls:
+                            is_group = id(c) in gids_07
+                            if not is_group and u["rtol"] != "1e-7":
+                                continue
+                            kind_07 = "group" if is_group else "analytic"
+                            try:
+                                if c["index"] in made_06a:
+                                    s7 = made_06a[c["index"]]
+                                    if "error" in s7:
+                                        raise RuntimeError("06a's scan of this call failed: " + s7["error"][-1000:])
+                                    reused_07 = True
+                                else:
+                                    if c["theta_deriv"] is None:
+                                        raise RuntimeError("the call was handed no theta_deriv")
+                                    s7 = SP.scan_call(c["theta_deriv"], c["x_span"], c["result"]["regions"])
+                                    reused_07 = False
+                                scans_07.append({"index": c["index"], "kind": kind_07, "reused_06a_scan": reused_07, "scan": s7})
+                            except Exception:
+                                scans_07.append({"index": c["index"], "kind": kind_07, "error": traceback.format_exc()[-4000:]})
+                                data["scan_07_error"] = (data["scan_07_error"] or 0) + 1
+                        data["scan_07_s"] = time.perf_counter() - t_s7
+                        data["scan_07"] = [_scan_compact_07(e7) for e7 in scans_07]
+                    # prompt 07: section 1.5's diagnostics per call (an exception is recorded, never raised)
+                    for c7, s7_ in list(zip(group_calls, data["calls"])) + list(
+                        zip([c for c in calls if id(c) not in {id(g) for g in group_calls}], data["other_calls"])
+                    ):
+                        try:
+                            s7_["guard_07"] = _guard_summary_07(c7)
+                        except Exception:
+                            s7_["guard_07"] = {"error": traceback.format_exc()[-4000:]}
+                    # prompt 06b, W3: the halves' floors of every phase-limited region, recomputed
+                    w3_detail = None
+                    data["w3"] = None
+                    if u.get("w3") and status != "error":
+                        t_w3 = time.perf_counter()
+                        w3_detail = []
+                        n_reg = n_viol = n_mis = n_err = 0
+                        min_ratio = None
+                        for c in calls:
+                            if not any(r.phase_limited for r in c["result"]["regions"]):
+                                continue
+                            try:
+                                regs = _w3_region_floors(LQ, c)
+                            except Exception:
+                                w3_detail.append({"index": c["index"], "error": traceback.format_exc()})
+                                n_err += 1
+                                continue
+                            w3_detail.append({"index": c["index"], "notify_label": c["notify_label"], "regions": regs})
+                            for g in regs:
+                                n_reg += 1
+                                n_viol += not g["premise_holds"]
+                                n_mis += not g["own_equals_stored"]
+                                if g["ratio"] is not None:
+                                    min_ratio = g["ratio"] if min_ratio is None else min(min_ratio, g["ratio"])
+                        data["w3"] = {
+                            "n_regions": n_reg,
+                            "n_premise_fails": n_viol,
+                            "n_own_floor_differs_from_stored": n_mis,
+                            "n_errors": n_err,
+                            "min_ratio": min_ratio,
+                            "seconds": time.perf_counter() - t_w3,
+                        }
+                    # prompt 06c: the deepest line of every call that reaches its depth_max, recomputed
+                    deep_detail = None
+                    data["deep_lines"] = None
+                    deep_06e = None  # prompt 06e
+                    data["deep_lines_06e"] = None  # prompt 06e
+                    if status != "error":
+                        t_dl = time.perf_counter()
+                        deep_detail = []
+                        deep_06e = []  # prompt 06e: every call past depth 12, its line computed once
+                        for c in calls:
+                            regs_ = c["result"]["regions"]
+                            dmax_ = c["kw"].get("depth_max", c["default_depth_max"])
+                            if not regs_:
+                                continue
+                            d_max_c = max(r_.depth for r_ in regs_)
+                            at_cap = dmax_ is not None and d_max_c >= dmax_  # 06c's subset
+                            if not at_cap and d_max_c <= DEEP_LINE_DEPTH_06E:  # prompt 06e
+                                continue
+                            try:
+                                line_ = _deep_line(LQ, c)
+                            except Exception:
+                                line_ = {"index": c["index"], "notify_label": c["notify_label"], "error": traceback.format_exc()}
+                            if at_cap:
+                                deep_detail.append(line_)
+                            # prompt 06e: the same line, with each level's tiling
+                            l6 = dict(line_)
+                            if "error" not in l6:
+                                try:
+                                    l6["tiling"] = _line_tiling(
+                                        LQ, l6, c["kw"].get("chebyshev_order", LQ.DEFAULT_LEVIN_CHEBSHEV_ORDER)
+                                    )
+                                except Exception:
+                                    l6["tiling_error"] = traceback.format_exc()
+                            deep_06e.append(l6)
+                        data["deep_lines"] = {
+                            "n_calls": len(deep_detail),
+                            "n_errors": sum(1 for d_ in deep_detail if "error" in d_),
+                            "n_not_reproducing": sum(
+                                1 for d_ in deep_detail
+                                if "error" not in d_ and not d_["line_end_equals_leaf_and_reproduces_its_residual_and_floor"]
+                            ),
+                            "seconds": time.perf_counter() - t_dl,
+                            # compact, per line: per level [P's residual, floor, truncation, e,
+                            # (e_L + e_R)/e_P, r] (hex; the ratio as a float); the full line is in
+                            # the pickle's deep_lines
+                            "lines": [
+                                d_ if "error" in d_ else {
+                                    k_: d_[k_] for k_ in ("index", "notify_label", "max_depth", "n_leaves_at_max_depth",
+                                                          "leaf_start", "leaf_end", "n_solves",
+                                                          "line_end_equals_leaf_and_reproduces_its_residual_and_floor")
+                                } | {"levels": [[L_["P"]["type"], L_["P"]["resid"], L_["P"]["floor"], L_["P"]["trunc"],
+                                                 L_["P"]["e"], L_["eLR_over_eP"], L_["r"]] for L_ in d_["levels"]]}
+                                for d_ in deep_detail
+                            ],
+                        }
+                        # prompt 06e: every line past depth 12, compact as 06c's, with each level's
+                        # tiling [tile N, exact N, tile 2N-1, exact 2N-1] and the call's verdict
+                        data["deep_lines_06e"] = {
+                            "depth_threshold": DEEP_LINE_DEPTH_06E,
+                            "n_calls": len(deep_06e),
+                            "n_errors": sum(1 for d_ in deep_06e if "error" in d_ or "tiling_error" in d_),
+                            "n_not_reproducing": sum(
+                                1 for d_ in deep_06e
+                                if "error" not in d_ and not d_["line_end_equals_leaf_and_reproduces_its_residual_and_floor"]
+                            ),
+                            "lines": [
+                                d_ if "error" in d_ else {
+                                    k_: d_[k_] for k_ in ("index", "notify_label", "max_depth", "n_leaves_at_max_depth",
+                                                          "leaf_start", "leaf_end", "n_solves",
+                                                          "line_end_equals_leaf_and_reproduces_its_residual_and_floor")
+                                } | {"levels": [[L_["P"]["type"], L_["P"]["resid"], L_["P"]["floor"], L_["P"]["trunc"],
+                                                 L_["P"]["e"], L_["eLR_over_eP"], L_["r"]] for L_ in d_["levels"]],
+                                     "tiling": d_.get("tiling"),
+                                     "every_level_tiles_at_N": None if d_.get("tiling") is None else all(t_[0] for t_ in d_["tiling"]),
+                                     "tiling_error": d_.get("tiling_error")}
+                                for d_ in deep_06e
+                            ],
+                        }
+                    # prompt 06e: the Clenshaw-Curtis floor's terms of every returned fallback leaf
+                    cc_terms_detail = None
+                    data["cc_floor_s"] = None
+                    if status != "error":
+                        t_cc = time.perf_counter()
+                        cc_terms_detail = []
+                        cc_summ = {}
+                        for c in calls:
+                            try:
+                                rec_cc, summ_cc = _cc_floor_terms(LQ, c)
+                            except Exception:
+                                rec_cc, summ_cc = None, {"error": traceback.format_exc()[-4000:]}
+                            if rec_cc is not None:
+                                cc_terms_detail.append(rec_cc)
+                            cc_summ[c["index"]] = summ_cc
+                        for s_ in data["calls"] + data["other_calls"]:
+                            s_["cc_floor"] = cc_summ.get(s_["index"])
+                        data["cc_floor_s"] = time.perf_counter() - t_cc
+                    # prompt 06h: the declared phase term of every returned leaf, by branch
+                    decl_detail = None
+                    data["declared_06h_s"] = None
+                    if status != "error":
+                        t_dc = time.perf_counter()
+                        decl_detail = []
+                        decl_summ = {}
+                        for c in calls:
+                            try:
+                                rec_dc, summ_dc = _declared_terms_06h(LQ, c)
+                            except Exception:
+                                rec_dc, summ_dc = None, {"error": traceback.format_exc()[-4000:]}
+                            if rec_dc is not None:
+                                decl_detail.append(rec_dc)
+                            decl_summ[c["index"]] = summ_dc
+                        for s_ in data["calls"] + data["other_calls"]:
+                            s_["declared_06h"] = decl_summ.get(s_["index"])
+                        data["declared_06h_s"] = time.perf_counter() - t_dc
+                    # prompt 06h: the analytic oracle under h, and 06e's as a counterfactual (g only)
+                    data["analytic_06h"] = None
+                    if result is not None:
+                        t_an = time.perf_counter()
+                        md_an = (result.get("metadata") or {}).get("analytic") or {}
+                        an = {
+                            "h": {"value": fx(result["analytic_rad"]), "abserr": fx(md_an.get("abserr")),
+                                  "converged": None if md_an.get("converged") is None else bool(md_an["converged"])},
+                            "n_captured": len(analytic_args),
+                            "parent_counterfactual": None,
+                        }
+                        if tree_name in ("g", "p"):  # prompt 07: at p too (06m's census computed it, at its tree g = p's code)
+                            try:
+                                if len(analytic_args) != 1:
+                                    raise RuntimeError(f"{len(analytic_args)} analytic_integral calls captured, not 1")
+                                a_an, kw_an = analytic_args[0]
+                                with mock.patch.object(QSI_MOD, "BesselPhaseGroup", _parent_tbi().BesselPhaseGroup):
+                                    cf = orig_analytic(*a_an, **kw_an)
+                                assert QSI_MOD.BesselPhaseGroup is _H_BPG
+                                an["parent_counterfactual"] = {"value": fx(cf["value"]), "abserr": fx(cf["abserr"]),
+                                                               "converged": bool(cf["converged"])}
+                            except Exception:
+                                an["parent_counterfactual"] = {"error": traceback.format_exc()[-4000:]}
+                        an["seconds"] = time.perf_counter() - t_an
+                        data["analytic_06h"] = an
+                    # prompt 06b, W2's inputs: each listed call's span, f, theta and arguments
+                    # prompt 06c: X1's, under the key x1_inputs
+                    data["x1_inputs"] = None
+                    if u.get("capture") and status != "error":
+                        import hashlib as _hl2
+                        import io as _io2
+                        from harness import _GroupPickler as _GP2
+
+                        data["x1_inputs"] = []  # prompt 06c
+                        by_index = {c["index"]: c for c in calls}
+                        if inputs_handle is None:
+                            inputs_handle = open(inputs_path, "ab")
+                        for idx, label in u["capture"]:
+                            c = by_index.get(idx)
+                            if c is None or c["notify_label"] != label:
+                                data["x1_inputs"].append({"index": idx, "error": "call not found or its label differs",
+                                                          "label_found": None if c is None else c["notify_label"]})
+                                continue
+                            try:
+                                buf2 = _io2.BytesIO()
+                                _GP2(buf2, protocol=5).dump(
+                                    {
+                                        "unit": uid,
+                                        "tree": tree_name,
+                                        "index": idx,
+                                        "notify_label": c["notify_label"],
+                                        "x_span": c["x_span"],
+                                        "f": c["f"],
+                                        "theta": c["theta"],
+                                        "kw": c["kw"],
+                                        "value": float(c["result"]["value"]).hex(),
+                                        "abserr": float(c["result"]["abserr"]).hex(),
+                                        "num_regions": int(c["result"]["num_regions"]),
+                                        # prompt 06c: the rest of what "moved" and X1 read
+                                        "max_depth": int(max(r_.depth for r_ in c["result"]["regions"])),
+                                        "converged": bool(c["result"]["converged"]),
+                                        "rtol": c["rtol"],
+                                        "atol": c["atol"],
+                                    }
+                                )
+                                blob2 = buf2.getvalue()
+                                off2 = inputs_handle.tell()
+                                inputs_handle.write(blob2)
+                                inputs_handle.flush()
+                                os.fsync(inputs_handle.fileno())
+                                data["x1_inputs"].append({"index": idx, "pickle": inputs_path.name, "offset": off2,
+                                                          "length": len(blob2), "sha256": _hl2.sha256(blob2).hexdigest()})
+                            except Exception:
+                                data["x1_inputs"].append({"index": idx, "error": traceback.format_exc()})
+                    # prompt 06b: where this unit's modules were loaded from
+                    m_counts, m_foreign, m_own = _module_roots(tree_name)
+                    data["modules"] = {
+                        "counts_by_root": m_counts,
+                        "foreign": m_foreign,
+                        "n_own_tree": len(m_own),
+                        "files": ev["files"],
+                        "all_in_tree": ev["all_in_tree"],
+                    }
+                    for c in calls:
+                        c["theta_deriv"] = None
+                        c["theta"] = None  # prompt 06b
+                        c["f"] = None  # prompt 06b
+                    if status != "error":
+                        rec = {
+                            "unit": uid,
+                            "regions": [
+                                {
+                                    "index": c["index"],
+                                    "regime": c["parsed"]["regime"],
+                                    "group": c["parsed"]["group"],
+                                    "x_span": c["x_span"],
+                                    **_region_arrays_06g(c),  # prompt 06c; prompt 06g
+                                    **_region_arrays_07(c),  # prompt 07
+                                }
+                                for c in group_calls
+                            ],
+                            "scan": scans,
+                            "result_full": None if result is None else summarise_result(result),
+                            # prompt 06b: the other Levin calls' region arrays, and W3's numbers
+                            "other_regions": [
+                                {
+                                    "index": c["index"],
+                                    "notify_label": c["notify_label"],
+                                    "x_span": c["x_span"],
+                                    **_region_arrays_06g(c),  # prompt 06c; prompt 06g
+                                    **_region_arrays_07(c),  # prompt 07
+                                }
+                                for c in calls
+                                if id(c) not in {id(g) for g in group_calls}
+                            ],
+                            "w3": w3_detail,
+                            "deep_lines": deep_detail,  # prompt 06c
+                            "deep_lines_06e": deep_06e,  # prompt 06e
+                            "cc_floor_terms": cc_terms_detail,  # prompt 06e
+                            "declared_terms_06h": decl_detail,  # prompt 06h
+                            # prompt 06g: every checked leaf, and every premise check, per call
+                            "checked_leaves_06g": [checked_06g.get(c["index"]) for c in calls],
+                            "premise_06g": [{"index": c["index"], "checks": prem_06g.get(c["index"])} for c in calls],
+                            # prompt 06k: each call's route record, as the variant returned it
+                            "route_06k": [{"index": c["index"], "route_06k": c["result"].get("route_06k")} for c in calls],
+                            # prompt 06l: each call's route B record, as the variant returned it
+                            "route_06l": [{"index": c["index"], "route_06l": c["result"].get("route_06l")} for c in calls],
+                            # prompt 07: each call's section 1.5 entries in full, and the scan of section 6
+                            "guard_07": [_guard_record_07(c) for c in calls],
+                            "scan_07": scans_07,
+                        }
+                        import io as _io
+
+                        buf = _io.BytesIO()
+                        from harness import _GroupPickler
+
+                        _GroupPickler(buf, protocol=5).dump(rec)
+                        blob = buf.getvalue()
+                        offset = pkl_handle.tell()
+                        pkl_handle.write(blob)
+                        pkl_handle.flush()
+                        os.fsync(pkl_handle.fileno())
+                        import hashlib as _hl
+
+                        data["pickle"] = pkl_path.name
+                        data["pickle_offset"] = offset
+                        data["pickle_length"] = len(blob)
+                        data["pickle_record_sha256"] = _hl.sha256(blob).hexdigest()
+                    r = data.get("result")
+                    print(
+                        f"unit {uid}: {status}; wall {wall if wall is None else round(wall, 3)} s; "
+                        f"rebuild {rebuild_s if rebuild_s is None else round(rebuild_s, 3)} s; "
+                        + (
+                            f"total {r['total']['repr']} abserr {r['total_abserr']['repr']} "
+                            f"converged {r['total_converged']} WKB_Levin_data {r['WKB_Levin_data']}"
+                            if r is not None
+                            else f"{len(group_calls)} group calls completed"
+                        )
+                        + f"; policy warnings {warn.count}; cache built {len(events)}"
+                        + (f"; scan {data['scan_s']:.2f} s" if data["scan_s"] is not None else ""),
+                        flush=True,
+                    )
+                    emit("unit", {"data": data})
+                    del calls, group_calls, result, rb, scans, deep_detail, deep_06e, cc_terms_detail, decl_detail  # prompt 06c; 06e; 06h
+                    del scans_07  # prompt 07
+                    del prem_06g, checked_06g  # prompt 06g
+            finally:
+                print(close_pool(pool, cluster).strip(), flush=True)
+    finally:
+        QSI_MOD.adaptive_levin_sincos = orig_levin
+        QSI_MOD.evaluate_QuadSource_integral = orig_eval
+        pkl_handle.close()
+        if inputs_handle is not None:  # prompt 06b
+            inputs_handle.close()
+    _c, _f, _own = _module_roots(tree_name)  # prompt 06b: Gate W0's first clause
+    emit("bye", {"ray_initialized": ray.is_initialized(),
+                 "modules_by_root": _c, "modules_foreign": _f, "modules_own_tree": _own})
+    emit_handle.close()
+    if ray.is_initialized():
+        raise SystemExit("worker: Ray was initialised")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,16 @@
+{
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/b_scaling_07a.py",
+ "script_sha256": "e14fbdeebaefd2d5ffda6915ad24ff0dc4485f94a46d713ad19f2e8bbba79f82",
+ "variant": "b2",
+ "variant_sha256": "761199222be03505f8540836d2472889ddbe10dc0cd8ea75d9786f5134d7e865",
+ "sid": "v12",
+ "depth_max": 20,
+ "value": "0x1.0d8ebee1aced3p-94",
+ "abserr": "0x1.057d574f340c3p-113",
+ "converged": false,
+ "num_regions": 16210,
+ "max_depth": 20,
+ "num_window_pieces": 16196,
+ "n_window_at_depth_max": 11490,
+ "wall_s": 608.7568645421416
+}

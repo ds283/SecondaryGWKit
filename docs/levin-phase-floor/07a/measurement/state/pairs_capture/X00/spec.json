@@ -1,0 +1,57 @@
+{
+ "tree": "g",
+ "name": "X00",
+ "units": [
+  {
+   "uid": "g-1e-7-3-35006",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "3-35006",
+   "names05": null,
+   "shard": 3,
+   "serial": 35006,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=0.69219, z in (5.2861e+10, 0.69219), regime Gqr, group G+q+r"
+    ],
+    [
+     3,
+     "k=1e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=0.69219, z in (5.2861e+10, 0.69219), regime Gqr, group G-q+r"
+    ],
+    [
+     7,
+     "analytic J2"
+    ]
+   ]
+  },
+  {
+   "uid": "g-1e-7-3-14501",
+   "tree": "g",
+   "rtol": "1e-7",
+   "row": "3-14501",
+   "names05": null,
+   "shard": 3,
+   "serial": 14501,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=0.17381, z in (5.2861e+10, 0.17381), regime Gqr, group G+q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/pairs_capture/X00",
+ "emit_fd": null,
+ "emit_file": "state/pairs_capture/X00/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null
+}

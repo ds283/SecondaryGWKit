@@ -1,0 +1,47 @@
+{
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/run_attr_registered_07a.py",
+ "script_sha256": "2ed93f24cc75999ccf369bc00f64c58523ec2f20e6327156367d029ad5b1b1da",
+ "workers": 1,
+ "results": [
+  {
+   "sid": "v21",
+   "status": "ok",
+   "wall_s": 843.1022391319275
+  },
+  {
+   "sid": "v03",
+   "status": "ok",
+   "wall_s": 956.2547681331635
+  },
+  {
+   "sid": "v06",
+   "status": "ok",
+   "wall_s": 1088.8369190692902
+  },
+  {
+   "sid": "v16",
+   "status": "ok",
+   "wall_s": 1273.7839422225952
+  },
+  {
+   "sid": "v01",
+   "status": "ok",
+   "wall_s": 1260.1986787319183
+  },
+  {
+   "sid": "v11",
+   "status": "ok",
+   "wall_s": 1334.599023103714
+  },
+  {
+   "sid": "v19",
+   "status": "ok",
+   "wall_s": 932.1414139270782
+  },
+  {
+   "sid": "v14",
+   "status": "ok",
+   "wall_s": 932.3802881240845
+  }
+ ]
+}

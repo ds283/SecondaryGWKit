@@ -1,0 +1,5890 @@
+{
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/make_calls_07a.py",
+ "script_sha256": "dd58fd1914f2cb9bb65fd27e06bb7dd2b41513d0ff27f2522bb8279af6ba220d",
+ "census_refs_json_sha256": "17974e3487e2d7afee3f61dfb280197b1968e4ebf792c034603c331193687bfb",
+ "calls": {
+  "cal_z12": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/cal_z12.pkl",
+   "offset": 0,
+   "length": 1366592,
+   "sha256": "2b1e336cd063c7cd44919fcc0b8c0972f5db1d6865c563afb0c5ddfed3339891",
+   "census": "cal_z12",
+   "override": null
+  },
+  "v00": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v00.pkl",
+   "offset": 0,
+   "length": 1346320,
+   "sha256": "75e68a8558b975d26dbfb636eb0a320a744ecfe3148c0a7c82d3ae88477f3131",
+   "census": "v00",
+   "override": null
+  },
+  "v01": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v01.pkl",
+   "offset": 0,
+   "length": 1367930,
+   "sha256": "f741273cbdf53102ceefb2ff59f8db00f61c90b806f94aae9dd881373f5598a0",
+   "census": "v01",
+   "override": null
+  },
+  "v02": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v02.pkl",
+   "offset": 0,
+   "length": 1376008,
+   "sha256": "48131e7ae7de2faae9768345784ef84fb23cffb3082e83d170abed14814fc8b4",
+   "census": "v02",
+   "override": null
+  },
+  "v03": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v03.pkl",
+   "offset": 0,
+   "length": 1348836,
+   "sha256": "66394ef24bf9a14069ca81d909949355dfcb42b2f046314d755d34786fcdd81a",
+   "census": "v03",
+   "override": null
+  },
+  "v04": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v04.pkl",
+   "offset": 0,
+   "length": 1361299,
+   "sha256": "c83c34e1cd03c819176915eec9eecabb1fe1ba81c0bbb5fa6b25c48395472515",
+   "census": "v04",
+   "override": null
+  },
+  "v05": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v05.pkl",
+   "offset": 0,
+   "length": 1369114,
+   "sha256": "fa79451c3bfc2c34d4be4a61ecabafe06794dc78474d38c2128cd8e85286a9ce",
+   "census": "v05",
+   "override": null
+  },
+  "v06": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v06.pkl",
+   "offset": 0,
+   "length": 1371121,
+   "sha256": "ac644a6b33d6d897b848ff65b2fe5cb52b7ad7bcda397db1d1b25fe942c0eafc",
+   "census": "v06",
+   "override": null
+  },
+  "v07": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v07.pkl",
+   "offset": 0,
+   "length": 1387324,
+   "sha256": "d4571bca79393d4024e8ecd48f27b228a03a1cca816dd20a5b0b4fdae0e4b36d",
+   "census": "v07",
+   "override": null
+  },
+  "v08": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v08.pkl",
+   "offset": 0,
+   "length": 1381889,
+   "sha256": "a7be5d6caa9adee1cd3427ea8086f5d1815113e44c2464ef65320637bb7b7253",
+   "census": "v08",
+   "override": null
+  },
+  "v09": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v09.pkl",
+   "offset": 0,
+   "length": 1376781,
+   "sha256": "e1913065dd5f3710aea6d7e0aead1c0b6f61ea6b54b770254d5b62b29c104ca5",
+   "census": "v09",
+   "override": null
+  },
+  "v10": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v10.pkl",
+   "offset": 0,
+   "length": 1367974,
+   "sha256": "3895b614ef3b1d83474a4606a5f2a6fddf30e3101ea25fcbb5b994690e3c7813",
+   "census": "v10",
+   "override": null
+  },
+  "v11": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v11.pkl",
+   "offset": 0,
+   "length": 1376881,
+   "sha256": "2082cdece48c5888a3cc8146db2206fb02589a1c8a7cce7575d2d3555c7209a6",
+   "census": "v11",
+   "override": null
+  },
+  "v12": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v12.pkl",
+   "offset": 0,
+   "length": 1368762,
+   "sha256": "f2320a7bbbfd1fb371224afe4e9c676cb232452658580ba50127ff9d1c3e18ea",
+   "census": "v12",
+   "override": null
+  },
+  "v13": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v13.pkl",
+   "offset": 0,
+   "length": 1384367,
+   "sha256": "efae5d641a8facdd0a62cc1be47ff504fcc5080cdec470d6c5d3b2d077e91947",
+   "census": "v13",
+   "override": null
+  },
+  "v14": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v14.pkl",
+   "offset": 0,
+   "length": 1347212,
+   "sha256": "7e9eb36a7dc1107ed7bd517040cb09e8bcb5b49abe64b7df42dd75abcbc28fd1",
+   "census": "v14",
+   "override": null
+  },
+  "v15": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v15.pkl",
+   "offset": 0,
+   "length": 1357648,
+   "sha256": "3066288a33951f246c6d549fbfc974b8bbd48df40654ad0f5deea8de7e46eea8",
+   "census": "v15",
+   "override": null
+  },
+  "v16": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v16.pkl",
+   "offset": 0,
+   "length": 1365720,
+   "sha256": "e494479ab5b811c4fdee9f37994f8d54186b7472f0c34529e078be4b93bffc60",
+   "census": "v16",
+   "override": null
+  },
+  "v17": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v17.pkl",
+   "offset": 0,
+   "length": 1344878,
+   "sha256": "fb2301c20e5e7922bf0f1c73c89ea92158d5ae546c84e15b2ea0ba165a95dd6a",
+   "census": "v17",
+   "override": null
+  },
+  "v18": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v18.pkl",
+   "offset": 0,
+   "length": 1361734,
+   "sha256": "268b63372d84ff7ee1ed9ba213f13f2e22a9424bf8866c6a72e65e64a1c70aac",
+   "census": "v18",
+   "override": null
+  },
+  "v19": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v19.pkl",
+   "offset": 0,
+   "length": 1347032,
+   "sha256": "e369405086175ec0e8d02d8ecf0e208b9af400f4b50dbf334baa9ee152f77d2e",
+   "census": "v19",
+   "override": null
+  },
+  "v20": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v20.pkl",
+   "offset": 0,
+   "length": 1352282,
+   "sha256": "011524ab84eb1f0ae2856d28966e16b4fc3e51b3fd9c5f386881003941876481",
+   "census": "v20",
+   "override": null
+  },
+  "v21": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v21.pkl",
+   "offset": 0,
+   "length": 1345799,
+   "sha256": "bdf68adb24444786b63bba3ba94ff959619e570669d53c69987b623540faa2db",
+   "census": "v21",
+   "override": null
+  },
+  "v22": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v22.pkl",
+   "offset": 0,
+   "length": 1371267,
+   "sha256": "92e933c6c0dedf39266ad20b7aa83c70430c148616b1edde991c7cd5f7a79292",
+   "census": "v22",
+   "override": null
+  },
+  "v23": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v23.pkl",
+   "offset": 0,
+   "length": 1364726,
+   "sha256": "b36c8796f3ab8dfc90d266c4aeeb111ea5e786c473b03755eadd5ac73c25160b",
+   "census": "v23",
+   "override": null
+  },
+  "p35006_7": {
+   "set": "pairs",
+   "path": "state/pairs_capture/X00/inputs_X00.pkl",
+   "offset": 0,
+   "length": 1374552,
+   "sha256": "f33bda00dfda9dcb5a798ab5265dd971719b869b2b5eeb337b4becc4e31f870d",
+   "census": "p35006_7",
+   "override": null,
+   "census_unit": "g-1e-7-3-35006",
+   "census_index": 1,
+   "census_value": "0x1.212e0781b61d7p-82",
+   "census_abserr": "0x1.a60a8ee7b3c9cp-108",
+   "census_num_regions": 39,
+   "census_max_depth": 11,
+   "census_converged": true
+  },
+  "n3": {
+   "set": "nowindow",
+   "path": "state/pairs_capture/X00/inputs_X00.pkl",
+   "offset": 1374552,
+   "length": 1374555,
+   "sha256": "0dc1428da5a46228f58b2b621f96a3c05f76d1e19fecc4e9a96a5a9771bf74a5",
+   "census": null,
+   "override": null,
+   "census_unit": "g-1e-7-3-35006",
+   "census_index": 3,
+   "census_value": "0x1.c9b7be8b453b2p-78",
+   "census_abserr": "0x1.0805486457edap-103",
+   "census_num_regions": 33,
+   "census_max_depth": 9,
+   "census_converged": true
+  },
+  "n4": {
+   "set": "nowindow",
+   "path": "state/pairs_capture/X00/inputs_X00.pkl",
+   "offset": 2749107,
+   "length": 3359,
+   "sha256": "99a8cbbb2351b38c0fd06121a566a679a934ae8cc516bae44301e34bb22870b0",
+   "census": null,
+   "override": null,
+   "census_unit": "g-1e-7-3-35006",
+   "census_index": 7,
+   "census_value": "0x1.6e1dc4d1d7a23p-31",
+   "census_abserr": "0x1.e333db5c9417ap-63",
+   "census_num_regions": 7,
+   "census_max_depth": 4,
+   "census_converged": true
+  },
+  "p14501_7": {
+   "set": "pairs",
+   "path": "state/pairs_capture/X00/inputs_X00.pkl",
+   "offset": 2752466,
+   "length": 1380312,
+   "sha256": "0be60cb4d863b6b9cb943d1dbf5544f595bffa8fbdd1fda94af3ec097b20c514",
+   "census": "p14501_7",
+   "override": null,
+   "census_unit": "g-1e-7-3-14501",
+   "census_index": 1,
+   "census_value": "0x1.3069a00e640b1p-82",
+   "census_abserr": "0x1.aa90056108312p-109",
+   "census_num_regions": 36,
+   "census_max_depth": 8,
+   "census_converged": true
+  },
+  "p35006_8": {
+   "set": "pairs",
+   "path": "state/pairs_capture/X01/inputs_X01.pkl",
+   "offset": 0,
+   "length": 1376280,
+   "sha256": "d98175fedc7b9a5660364f30baa0c2543cf6de868ddb22fa05e863788af4de82",
+   "census": "p35006_8",
+   "override": null,
+   "census_unit": "g-1e-8-3-35006",
+   "census_index": 1,
+   "census_value": "0x1.212e07f4175c9p-82",
+   "census_abserr": "0x1.33e203cc1a48ep-109",
+   "census_num_regions": 108,
+   "census_max_depth": 14,
+   "census_converged": true
+  },
+  "p14501_8": {
+   "set": "pairs",
+   "path": "state/pairs_capture/X01/inputs_X01.pkl",
+   "offset": 1376280,
+   "length": 1381572,
+   "sha256": "2377a52707eb2ca73f965fbb33cd1795b15ec43fdc3a43cd629466caa799001d",
+   "census": "p14501_8",
+   "override": null,
+   "census_unit": "g-1e-8-3-14501",
+   "census_index": 1,
+   "census_value": "0x1.3069a05843748p-82",
+   "census_abserr": "0x1.823740e82f2d6p-109",
+   "census_num_regions": 91,
+   "census_max_depth": 14,
+   "census_converged": true
+  },
+  "n0": {
+   "set": "nowindow",
+   "path": "state/pairs_capture/X01/inputs_X01.pkl",
+   "offset": 2757852,
+   "length": 1381524,
+   "sha256": "4d345a76dd7311e27d26b089cd5ec925ccf323dd7ae0ceb12b81ff0a8436e41c",
+   "census": null,
+   "override": null,
+   "census_unit": "g-1e-8-3-14501",
+   "census_index": 0,
+   "census_value": "-0x1.fc9870c559a7cp-77",
+   "census_abserr": "0x1.5649552493292p-104",
+   "census_num_regions": 24,
+   "census_max_depth": 7,
+   "census_converged": true
+  },
+  "n1": {
+   "set": "nowindow",
+   "path": "state/pairs_capture/X01/inputs_X01.pkl",
+   "offset": 4139376,
+   "length": 1381575,
+   "sha256": "bdd5c4c9fa80d0108ffc3bfbf7f38f47adb553ce26a500b59a5568315fd2db40",
+   "census": null,
+   "override": null,
+   "census_unit": "g-1e-8-3-14501",
+   "census_index": 2,
+   "census_value": "0x1.bd02e37efccd2p-78",
+   "census_abserr": "0x1.951b5e4b4989cp-106",
+   "census_num_regions": 85,
+   "census_max_depth": 14,
+   "census_converged": true
+  },
+  "n2": {
+   "set": "nowindow",
+   "path": "state/pairs_capture/X01/inputs_X01.pkl",
+   "offset": 5520951,
+   "length": 1381579,
+   "sha256": "b1c674ab8d2328425c3ff1b443128df934c2a14fabccfa8355c67ffef672ebb9",
+   "census": null,
+   "override": null,
+   "census_unit": "g-1e-8-3-14501",
+   "census_index": 4,
+   "census_value": "-0x1.0cf1a5bdc6210p-82",
+   "census_abserr": "0x1.4695390ad817ep-109",
+   "census_num_regions": 2,
+   "census_max_depth": 1,
+   "census_converged": true
+  },
+  "x000": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 0,
+   "length": 1332156,
+   "sha256": "3632d7cf543311b2b009cb634d91370bbecf364de7e72aae6722ab03cfaef4e3",
+   "census": "x000",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.1818495854840811e-33,
+    "from_unit": "g-1e-7-0-12804",
+    "to_unit": "g-1e-8-0-12804"
+   }
+  },
+  "x083": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 1332156,
+   "length": 1334178,
+   "sha256": "a611ec979df7ffa84250faa393f14ed3e683e450dbd9120b49dfe9cc914884f9",
+   "census": "x083",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.2193555184340009e-33,
+    "from_unit": "g-1e-7-0-37229",
+    "to_unit": "g-1e-8-0-37229"
+   }
+  },
+  "x040": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 2666334,
+   "length": 1328565,
+   "sha256": "7c1a898ba8bd8e5b232fa8cc1d4c1840d946b76de607c9337f668981bb1a7cb0",
+   "census": "x040",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.2313861078951573e-33,
+    "from_unit": "g-1e-7-0-1880",
+    "to_unit": "g-1e-8-0-1880"
+   }
+  },
+  "x036": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 3994899,
+   "length": 1338995,
+   "sha256": "6403a8e96167ec74740af684e7b08b263b5fc1992d9be8279aeef7db7eaf953f",
+   "census": "x036",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.2773146910572481e-33,
+    "from_unit": "g-1e-7-0-1810",
+    "to_unit": "g-1e-8-0-1810"
+   }
+  },
+  "x041": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 5333894,
+   "length": 1350230,
+   "sha256": "edd00876f319e5505e4f7addc25625db22cbffadfa18535d125117f4abcc0110",
+   "census": "x041",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4186252129375723e-33,
+    "from_unit": "g-1e-7-0-1896",
+    "to_unit": "g-1e-8-0-1896"
+   }
+  },
+  "x007": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 6684124,
+   "length": 1353845,
+   "sha256": "744032fceb4b3eaae955911cf654402c7e1aa219b107cd1f91f243523d10a7c1",
+   "census": "x007",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4369424148769354e-33,
+    "from_unit": "g-1e-7-0-13952",
+    "to_unit": "g-1e-8-0-13952"
+   }
+  },
+  "x059": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 8037969,
+   "length": 1354443,
+   "sha256": "10b586e7ebc1d614097b7f67c26863548b7bf3cd1dfa29e69547019f1e7065b9",
+   "census": "x059",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4458447707647056e-33,
+    "from_unit": "g-1e-7-0-2101",
+    "to_unit": "g-1e-8-0-2101"
+   }
+  },
+  "x048": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 9392412,
+   "length": 1355760,
+   "sha256": "c9a6fe1443abc19632944ccad662d69183fe5ec197ae46a3f512203f7b360dfa",
+   "census": "x048",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.454575435848018e-33,
+    "from_unit": "g-1e-7-0-1983",
+    "to_unit": "g-1e-8-0-1983"
+   }
+  },
+  "x055": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 10748172,
+   "length": 1350995,
+   "sha256": "0ecb84c6c37b46a6431298caf3de350f7e18cc1785e4ee45a96a2541e6315296",
+   "census": "x055",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3783130475662984e-33,
+    "from_unit": "g-1e-7-0-2065",
+    "to_unit": "g-1e-8-0-2065"
+   }
+  },
+  "x045": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 12099167,
+   "length": 1354695,
+   "sha256": "d4112c065c15dcd47a9fbd158eae7e861fbf89fa4b939d7876c0352eacd71210",
+   "census": "x045",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4631319683438263e-33,
+    "from_unit": "g-1e-7-0-1951",
+    "to_unit": "g-1e-8-0-1951"
+   }
+  },
+  "x011": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 13453862,
+   "length": 1357504,
+   "sha256": "ea238a0d021235f015731b6123da12a37eff18437ee2b8fa4c457f53f7897d4c",
+   "census": "x011",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4715100792700142e-33,
+    "from_unit": "g-1e-7-0-14059",
+    "to_unit": "g-1e-8-0-14059"
+   }
+  },
+  "x046": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 14811366,
+   "length": 1357648,
+   "sha256": "b3eaa578c254d3dedc96160e82d1e3c5c141d6ab6226fb3e44acf9672f7519c8",
+   "census": "x046",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4877020038142277e-33,
+    "from_unit": "g-1e-7-0-1973",
+    "to_unit": "g-1e-8-0-1973"
+   }
+  },
+  "x008": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 16169014,
+   "length": 1365621,
+   "sha256": "d372c9bc5791614b8abb2da541f2db9dda5626c221d835c5d5ee64e172ade227",
+   "census": "x008",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5862787877177634e-33,
+    "from_unit": "g-1e-7-0-13957",
+    "to_unit": "g-1e-8-0-13957"
+   }
+  },
+  "x012": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 17534635,
+   "length": 1360745,
+   "sha256": "e6e14156f999ae88889d24f42780b76cb4dbdd2ff6a1544a1fb737434d08f595",
+   "census": "x012",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5030619195710302e-33,
+    "from_unit": "g-1e-7-0-14120",
+    "to_unit": "g-1e-8-0-14120"
+   }
+  },
+  "x049": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 18895380,
+   "length": 1354560,
+   "sha256": "c28a151f3dc3737623f646187d3ca175ccb79a42f26864f0b498c2e429172d62",
+   "census": "x049",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.429431774575857e-33,
+    "from_unit": "g-1e-7-0-2010",
+    "to_unit": "g-1e-8-0-2010"
+   }
+  },
+  "x009": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 20249940,
+   "length": 1361625,
+   "sha256": "02b513913d322c76127b503f5f58c9c578bbd8aaf724d4cdc44fabee1816cfc7",
+   "census": "x009",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5103852360582899e-33,
+    "from_unit": "g-1e-7-0-13959",
+    "to_unit": "g-1e-8-0-13959"
+   }
+  },
+  "x010": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 21611565,
+   "length": 1367974,
+   "sha256": "316e914e03dcd25a55978e572fe894bc6c559585a7bede42dc328a8eee3f28d2",
+   "census": "x010",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5994545052589906e-33,
+    "from_unit": "g-1e-7-0-13960",
+    "to_unit": "g-1e-8-0-13960"
+   }
+  },
+  "x052": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 22979539,
+   "length": 1363634,
+   "sha256": "02f065c0c9c92d86ca4eb97b19545bd2baa3d7f780565291fd8eca65eb6e1981",
+   "census": "x052",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.517437611387374e-33,
+    "from_unit": "g-1e-7-0-2058",
+    "to_unit": "g-1e-8-0-2058"
+   }
+  },
+  "x023": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 24343173,
+   "length": 1361736,
+   "sha256": "5ddfd8e05c4a9a9c686fdb6c8758eed029ed9f05363032e5814ecd367be54c87",
+   "census": "x023",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5241878221583937e-33,
+    "from_unit": "g-1e-7-0-14313",
+    "to_unit": "g-1e-8-0-14313"
+   }
+  },
+  "x094": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 25704909,
+   "length": 1370602,
+   "sha256": "f1e6263db00ec510a304a55cd40f2195aba3be6db45049855448e38176237236",
+   "census": "x094",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6115181451409274e-33,
+    "from_unit": "g-1e-7-0-38937",
+    "to_unit": "g-1e-8-0-38937"
+   }
+  },
+  "x028": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 27075511,
+   "length": 1366787,
+   "sha256": "5569bf039b2683492cfaf0a997bb966255bccf5b338d048eceb28953645e718b",
+   "census": "x028",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.617049013418099e-33,
+    "from_unit": "g-1e-7-0-14383",
+    "to_unit": "g-1e-8-0-14383"
+   }
+  },
+  "x090": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 28442298,
+   "length": 1365137,
+   "sha256": "e4c3cf98886c7a88469c1decfa18d82defa623497d76849f254da6b1d228b855",
+   "census": "x090",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5366345337685688e-33,
+    "from_unit": "g-1e-7-0-38449",
+    "to_unit": "g-1e-8-0-38449"
+   }
+  },
+  "x095": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 29807435,
+   "length": 1365473,
+   "sha256": "e08df656b6d9aed64c592dac69c25a5db6dcedfa6e8fd05f2567eb8d675c8808",
+   "census": "x095",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.542250833918428e-33,
+    "from_unit": "g-1e-7-0-38942",
+    "to_unit": "g-1e-8-0-38942"
+   }
+  },
+  "x016": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 31172908,
+   "length": 1370961,
+   "sha256": "9bd48b6cb69bc89d143ca323d6f2a237ecacab0d0f81816b8e33a3c4556945c6",
+   "census": "x016",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6269250719464848e-33,
+    "from_unit": "g-1e-7-0-14269",
+    "to_unit": "g-1e-8-0-14269"
+   }
+  },
+  "x024": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 32543869,
+   "length": 1366631,
+   "sha256": "3a61b4941f2acd95a1938523b86050c5dc633f1e630c5b01f4c17f8696b790fd",
+   "census": "x024",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5474100511792906e-33,
+    "from_unit": "g-1e-7-0-14317",
+    "to_unit": "g-1e-8-0-14317"
+   }
+  },
+  "x097": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 33910500,
+   "length": 1380159,
+   "sha256": "611304d7d06c4689dfbcfe5dc8f37b2c1e68d7283d9a86af500f67a60eebd873",
+   "census": "x097",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7103300085115754e-33,
+    "from_unit": "g-1e-7-0-38986",
+    "to_unit": "g-1e-8-0-38986"
+   }
+  },
+  "x086": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 35290659,
+   "length": 1367903,
+   "sha256": "89a46999bbca202d2ee2862433bdb20407a2257a9821df450d918b3e73cabac8",
+   "census": "x086",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.635015268631168e-33,
+    "from_unit": "g-1e-7-0-38350",
+    "to_unit": "g-1e-8-0-38350"
+   }
+  },
+  "x025": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 36658562,
+   "length": 1357249,
+   "sha256": "e30dc12c53dd6513517f6a6d1b460c45d0ec1b6c0a940b18a9556e3fae98a2dd",
+   "census": "x025",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4790344154446366e-33,
+    "from_unit": "g-1e-7-0-14321",
+    "to_unit": "g-1e-8-0-14321"
+   }
+  },
+  "x017": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 38015811,
+   "length": 1377531,
+   "sha256": "cf56e2f43cee9d16b4a5f5fc890eb56aeed6ad812a694d7619341cc834a49fc5",
+   "census": "x017",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7137934773160868e-33,
+    "from_unit": "g-1e-7-0-14273",
+    "to_unit": "g-1e-8-0-14273"
+   }
+  },
+  "x091": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 39393342,
+   "length": 1374672,
+   "sha256": "04e9f3bf70d7f203786a53f47fabcabcf15d5f02ab75155f861d54ad35b03897",
+   "census": "x091",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6383493873493923e-33,
+    "from_unit": "g-1e-7-0-38457",
+    "to_unit": "g-1e-8-0-38457"
+   }
+  },
+  "x063": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 40768014,
+   "length": 1380437,
+   "sha256": "f3a7a2c588530790fd45b7a5021b43e7a6416c994d631d43c78e36c6e4251181",
+   "census": "x063",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7168239422348402e-33,
+    "from_unit": "g-1e-7-0-2279",
+    "to_unit": "g-1e-8-0-2279"
+   }
+  },
+  "x088": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 42148451,
+   "length": 1376544,
+   "sha256": "0d8dc11a0173558e80203d1ae0f8a0457c55e82f7acc5e98c0537ae8d2a4249d",
+   "census": "x088",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6412149166065007e-33,
+    "from_unit": "g-1e-7-0-38353",
+    "to_unit": "g-1e-8-0-38353"
+   }
+  },
+  "x087": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 43524995,
+   "length": 1370142,
+   "sha256": "d34456e7cd48905bef6b4b6a90e271e08df54fc03e1366f3b08bd9d03e9fa9df",
+   "census": "x087",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5630013388866223e-33,
+    "from_unit": "g-1e-7-0-38352",
+    "to_unit": "g-1e-8-0-38352"
+   }
+  },
+  "x089": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 44895137,
+   "length": 1380125,
+   "sha256": "aced6f171cea0aa1fff0bdb243732fa33e85b804ece33b1f85debe44a3745faf",
+   "census": "x089",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.71942849432828e-33,
+    "from_unit": "g-1e-7-0-38354",
+    "to_unit": "g-1e-8-0-38354"
+   }
+  },
+  "x029": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 46275262,
+   "length": 1372320,
+   "sha256": "d0d37357616e493708afe4d89f8efac3ea42905e16a379797eb2ce45ba4c5091",
+   "census": "x029",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6436345072754907e-33,
+    "from_unit": "g-1e-7-0-14386",
+    "to_unit": "g-1e-8-0-14386"
+   }
+  },
+  "x096": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 47647582,
+   "length": 1370695,
+   "sha256": "73d0b36dc0a365d122fe86039e1a4d88e8664758b113f22e0d9fc648895eca05",
+   "census": "x096",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5656412930045112e-33,
+    "from_unit": "g-1e-7-0-38947",
+    "to_unit": "g-1e-8-0-38947"
+   }
+  },
+  "x018": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 49018277,
+   "length": 1378453,
+   "sha256": "cbbc0135f9cded0da38e5c416979d73b6605a96ffa15353ee21bab9817a74a55",
+   "census": "x018",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6456433929887927e-33,
+    "from_unit": "g-1e-7-0-14277",
+    "to_unit": "g-1e-8-0-14277"
+   }
+  },
+  "x014": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 50396730,
+   "length": 1361103,
+   "sha256": "c7199d5201c6b78c902a1aa19f90413ca878e37a33e83d39bf51cb8980843e3a",
+   "census": "x014",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4915790868174341e-33,
+    "from_unit": "g-1e-7-0-14167",
+    "to_unit": "g-1e-8-0-14167"
+   }
+  },
+  "x064": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 51757833,
+   "length": 1369550,
+   "sha256": "7e9f7966960accf53055856d95c5728c5b6f81319ac559b9be40355d2b2c841b",
+   "census": "x064",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5678331373437907e-33,
+    "from_unit": "g-1e-7-0-2283",
+    "to_unit": "g-1e-8-0-2283"
+   }
+  },
+  "x065": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 53127383,
+   "length": 1366658,
+   "sha256": "f42f6a4d55029eebadec563bf33093bcec2ed2869f61002a1b196816bb4c7b52",
+   "census": "x065",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4935174525296695e-33,
+    "from_unit": "g-1e-7-0-2285",
+    "to_unit": "g-1e-8-0-2285"
+   }
+  },
+  "x027": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 54494041,
+   "length": 1373456,
+   "sha256": "bebdc416ef73a493e28d2452a34157999a7b72443e07dba138218b035aed1d76",
+   "census": "x027",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5696249291055782e-33,
+    "from_unit": "g-1e-7-0-14325",
+    "to_unit": "g-1e-8-0-14325"
+   }
+  },
+  "x092": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 55867497,
+   "length": 1386821,
+   "sha256": "c56cb460f1994c34143af8afe6f883d66ebbcfc481c4837085269667a77ca991",
+   "census": "x092",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7249463098863294e-33,
+    "from_unit": "g-1e-7-0-38462",
+    "to_unit": "g-1e-8-0-38462"
+   }
+  },
+  "x098": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 57254318,
+   "length": 1380072,
+   "sha256": "dfd58a1509b0432e38b598548ab6a10b00c12a93de2e3a4456fbf1fb70fc5400",
+   "census": "x098",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6486097019506936e-33,
+    "from_unit": "g-1e-7-0-38990",
+    "to_unit": "g-1e-8-0-38990"
+   }
+  },
+  "x072": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 58634390,
+   "length": 1374186,
+   "sha256": "f8eb88fc6ff9a6c03ee98353fd727875c59666e72609bf75058ec622bf3bb878",
+   "census": "x072",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5710696019488427e-33,
+    "from_unit": "g-1e-7-0-35066",
+    "to_unit": "g-1e-8-0-35066"
+   }
+  },
+  "x067": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 60008576,
+   "length": 1385561,
+   "sha256": "2b879eabcaeaf7d706aaabd7f03fc46d02a79a5ff712a4e6be2c671fee1b6cc0",
+   "census": "x067",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.726149801954429e-33,
+    "from_unit": "g-1e-7-0-2312",
+    "to_unit": "g-1e-8-0-2312"
+   }
+  },
+  "x073": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 61394137,
+   "length": 1378669,
+   "sha256": "fff7253b4da6cc8391eefc35f399e0d9925285126800c84694d2b01795de039f",
+   "census": "x073",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6496646056085828e-33,
+    "from_unit": "g-1e-7-0-35067",
+    "to_unit": "g-1e-8-0-35067"
+   }
+  },
+  "x068": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 62772806,
+   "length": 1374831,
+   "sha256": "7dec635e82e9b046bc3e9a75547be04067f21b9cdbde2febaee0c5ae73f7f703",
+   "census": "x068",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5722205806211082e-33,
+    "from_unit": "g-1e-7-0-2313",
+    "to_unit": "g-1e-8-0-2313"
+   }
+  },
+  "x069": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 64147637,
+   "length": 1378253,
+   "sha256": "37be371abb017accbb8aa8c73cda32071a17174e5e8bf595fa4c0f8c051974c7",
+   "census": "x069",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7271086305979397e-33,
+    "from_unit": "g-1e-7-0-2314",
+    "to_unit": "g-1e-8-0-2314"
+   }
+  },
+  "x074": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 65525890,
+   "length": 1381369,
+   "sha256": "285bd97c52beb8bd7926da9ce1f5037e1b1457d9291398f97335b1f5575a1266",
+   "census": "x074",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.650496637731576e-33,
+    "from_unit": "g-1e-7-0-35070",
+    "to_unit": "g-1e-8-0-35070"
+   }
+  },
+  "x070": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 66907259,
+   "length": 1376201,
+   "sha256": "d490fc8c3b4c4b5a669bcb174d35912e5c0d23558a86152e24aa5f1327079b2c",
+   "census": "x070",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5731283898044807e-33,
+    "from_unit": "g-1e-7-0-2316",
+    "to_unit": "g-1e-8-0-2316"
+   }
+  },
+  "x099": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 68283460,
+   "length": 1386138,
+   "sha256": "653c240bdac5da3458dc600558fc9d53a438635eb09c424beb2ee04a9dbe9fe0",
+   "census": "x099",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.727864885660552e-33,
+    "from_unit": "g-1e-7-0-38995",
+    "to_unit": "g-1e-8-0-38995"
+   }
+  },
+  "x101": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 69669598,
+   "length": 1383941,
+   "sha256": "3122be16a0eda3027eb7a2737dabe1b0909081dc0849501c2c8003ea9b1d5f36",
+   "census": "x101",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6511474579092835e-33,
+    "from_unit": "g-1e-7-0-39000",
+    "to_unit": "g-1e-8-0-39000"
+   }
+  },
+  "x100": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X00/inputs_X00.pkl",
+   "offset": 71053539,
+   "length": 1375472,
+   "sha256": "0fe4a88f6349fe28919bbf2809b7979c7ae7fe44aa93d1d854b1eb61f3b6750c",
+   "census": "x100",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5738384832224144e-33,
+    "from_unit": "g-1e-7-0-38999",
+    "to_unit": "g-1e-8-0-38999"
+   }
+  },
+  "x001": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 0,
+   "length": 1341970,
+   "sha256": "7335bb072c227a3d93146e332c8c4bf51b70dee11704371727b3828e5397718e",
+   "census": "x001",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5846177676861034e-33,
+    "from_unit": "g-1e-7-0-12869",
+    "to_unit": "g-1e-8-0-12869"
+   }
+  },
+  "x002": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 1341970,
+   "length": 1342974,
+   "sha256": "7c0864d07862c414e2053cc0bf4ce741809cdd9d14afcc0d8d7d7e6befb45a94",
+   "census": "x002",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5934679942281257e-33,
+    "from_unit": "g-1e-7-0-12870",
+    "to_unit": "g-1e-8-0-12870"
+   }
+  },
+  "x038": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 2684944,
+   "length": 1343948,
+   "sha256": "9102cc766f9101194f508fbb0ef6dd010757ac12917410f4ca3ff967e2cd0e40",
+   "census": "x038",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6021483476880443e-33,
+    "from_unit": "g-1e-7-0-1869",
+    "to_unit": "g-1e-8-0-1869"
+   }
+  },
+  "x031": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 4028892,
+   "length": 1344878,
+   "sha256": "52105751fd4bc249ee00d265b25846ba30e4e80d512d65a408605c7a9f6cfdfd",
+   "census": "x031",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.610663554457199e-33,
+    "from_unit": "g-1e-7-0-1772",
+    "to_unit": "g-1e-8-0-1772"
+   }
+  },
+  "x080": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 5373770,
+   "length": 1345893,
+   "sha256": "8cd4d355f0696ba0efb435566a04ed4873f5414c5a844fbd65d52eeb8774b991",
+   "census": "x080",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6190181304719932e-33,
+    "from_unit": "g-1e-7-0-36823",
+    "to_unit": "g-1e-8-0-36823"
+   }
+  },
+  "x079": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 6719663,
+   "length": 1346874,
+   "sha256": "524915c0debfbbb6cf2aec4ee6321795a2f502e1e17af113dfe46cad18106e49",
+   "census": "x079",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.627216381043243e-33,
+    "from_unit": "g-1e-7-0-36804",
+    "to_unit": "g-1e-8-0-36804"
+   }
+  },
+  "x035": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 8066537,
+   "length": 1347911,
+   "sha256": "9336d1b8bd6af9a5bd269021787c3f84dac9fb4a6055309139123d570f3d0c47",
+   "census": "x035",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6352623976719175e-33,
+    "from_unit": "g-1e-7-0-1800",
+    "to_unit": "g-1e-8-0-1800"
+   }
+  },
+  "x082": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 9414448,
+   "length": 1348638,
+   "sha256": "e34e6ffcafad8ed3d7d891dd45038f85d8d53cdd34cf51e55b896fde16a721c6",
+   "census": "x082",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6431600511329048e-33,
+    "from_unit": "g-1e-7-0-37211",
+    "to_unit": "g-1e-8-0-37211"
+   }
+  },
+  "x032": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 10763086,
+   "length": 1349383,
+   "sha256": "31212baa09f30fcbc5e8d2190ed3418b4c0fe112bd7dfa7893bcf45db948b7fe",
+   "census": "x032",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.650912979890501e-33,
+    "from_unit": "g-1e-7-0-1776",
+    "to_unit": "g-1e-8-0-1776"
+   }
+  },
+  "x033": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 12112469,
+   "length": 1350436,
+   "sha256": "384ac9a78e128caba3dcbdb46a8de29fc9f901433ebc20559d3394b7fbdea9aa",
+   "census": "x033",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.658524572632447e-33,
+    "from_unit": "g-1e-7-0-1777",
+    "to_unit": "g-1e-8-0-1777"
+   }
+  },
+  "x034": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 13462905,
+   "length": 1351300,
+   "sha256": "016f6964a75e49d5097fe00c194b5e3a9c5af122ebafefd9608ba947b79fc109",
+   "census": "x034",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6659979433596604e-33,
+    "from_unit": "g-1e-7-0-1778",
+    "to_unit": "g-1e-8-0-1778"
+   }
+  },
+  "x081": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 14814205,
+   "length": 1363097,
+   "sha256": "58bada105913c3aab85a1f0fbe7e44d70ae1c30dcfbc69daeeec91905b0bf0c6",
+   "census": "x081",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.673335897030997e-33,
+    "from_unit": "g-1e-7-0-36826",
+    "to_unit": "g-1e-8-0-36826"
+   }
+  },
+  "x037": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 16177302,
+   "length": 1361477,
+   "sha256": "72e3a4938c2a88dad7ad07ddcf6821a03a077bbb19e406975fe727927f777527",
+   "census": "x037",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.680540883220964e-33,
+    "from_unit": "g-1e-7-0-1863",
+    "to_unit": "g-1e-8-0-1863"
+   }
+  },
+  "x039": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 17538779,
+   "length": 1354072,
+   "sha256": "c238d59e59002be98173e1bf6fe40cb86a276293dd9fdb64bc63159347a9e5ee",
+   "census": "x039",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.687614934590797e-33,
+    "from_unit": "g-1e-7-0-1876",
+    "to_unit": "g-1e-8-0-1876"
+   }
+  },
+  "x042": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 18892851,
+   "length": 1354757,
+   "sha256": "79b13e10a0a46b37a8950c192ee1dbce8f911bea3b6afbb7badb98e90bacfd57",
+   "census": "x042",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.694559586196021e-33,
+    "from_unit": "g-1e-7-0-1907",
+    "to_unit": "g-1e-8-0-1907"
+   }
+  },
+  "x053": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 20247608,
+   "length": 1359758,
+   "sha256": "29a753ce9ec5e021d6262680bb45b5b03e28e8907b32e509d7ad407c5722c7fb",
+   "census": "x053",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7840529655074883e-33,
+    "from_unit": "g-1e-7-0-2060",
+    "to_unit": "g-1e-8-0-2060"
+   }
+  },
+  "x047": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 21607366,
+   "length": 1355550,
+   "sha256": "095bbdca72200ef65b02ec8a211b3b66cb917fdcc7e2bc3035cf6429661953ad",
+   "census": "x047",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.701375770772346e-33,
+    "from_unit": "g-1e-7-0-1977",
+    "to_unit": "g-1e-8-0-1977"
+   }
+  },
+  "x084": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 22962916,
+   "length": 1360731,
+   "sha256": "dc37bdcc7a0bbe1efcc795b99587f32562781dc3ed080cee171e30ba0b10351e",
+   "census": "x084",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.790111796242e-33,
+    "from_unit": "g-1e-7-0-37968",
+    "to_unit": "g-1e-8-0-37968"
+   }
+  },
+  "x054": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 24323647,
+   "length": 1368318,
+   "sha256": "a99d4be4af36beb23ae93f1230e5a391c2e6edde39fedc4dac4f5b7596db1670",
+   "census": "x054",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.708063684210598e-33,
+    "from_unit": "g-1e-7-0-2061",
+    "to_unit": "g-1e-8-0-2061"
+   }
+  },
+  "x056": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 25691965,
+   "length": 1361630,
+   "sha256": "0c7ee96dff5f019b45dcc01ac7678d54045c20567ad077f352773c13325ef367",
+   "census": "x056",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.796056608187114e-33,
+    "from_unit": "g-1e-7-0-2071",
+    "to_unit": "g-1e-8-0-2071"
+   }
+  },
+  "x057": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 27053595,
+   "length": 1357457,
+   "sha256": "27995c6cf22b26d4ec22b9a521bfb3186f896fd0f95c7289fc2aefbe70660556",
+   "census": "x057",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7146226145737146e-33,
+    "from_unit": "g-1e-7-0-2073",
+    "to_unit": "g-1e-8-0-2073"
+   }
+  },
+  "x006": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 28411052,
+   "length": 1362532,
+   "sha256": "91a9c42f77076d0c6df46ec4505db5f49cefd67fd481ab51e5bef71311a4e98f",
+   "census": "x006",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.801886768509885e-33,
+    "from_unit": "g-1e-7-0-13775",
+    "to_unit": "g-1e-8-0-13775"
+   }
+  },
+  "x003": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 29773584,
+   "length": 1370407,
+   "sha256": "0f1cd50a8f4c01b10edc72089dcb8f0530c29e340663d1a948b8a6bdd9dd6a5d",
+   "census": "x003",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.721050727467087e-33,
+    "from_unit": "g-1e-7-0-13761",
+    "to_unit": "g-1e-8-0-13761"
+   }
+  },
+  "x043": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 31143991,
+   "length": 1363468,
+   "sha256": "6758408aa8d10ccee793516f380d406aeaf84e92ed0899ef7f1d99ec858c3458",
+   "census": "x043",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.807600646637327e-33,
+    "from_unit": "g-1e-7-0-1938",
+    "to_unit": "g-1e-8-0-1938"
+   }
+  },
+  "x050": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 32507459,
+   "length": 1370802,
+   "sha256": "9b23d987c28a6ff33c879d9cfdbe3ffe965008e2c90a94e97308c1e4685a827d",
+   "census": "x050",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7273448007839485e-33,
+    "from_unit": "g-1e-7-0-2015",
+    "to_unit": "g-1e-8-0-2015"
+   }
+  },
+  "x085": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 33878261,
+   "length": 1364331,
+   "sha256": "9ecac9dc6c7a4b42d1edc07d5b42e05dff6e220ce4977e956b02d91218236598",
+   "census": "x085",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8131953784745387e-33,
+    "from_unit": "g-1e-7-0-37969",
+    "to_unit": "g-1e-8-0-37969"
+   }
+  },
+  "x051": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 35242592,
+   "length": 1365230,
+   "sha256": "3a9fdb08b39a5b3d6fe04cfefb5dd69b3c621a7c6046ece57ded1dc61b86a383",
+   "census": "x051",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8186665809281946e-33,
+    "from_unit": "g-1e-7-0-2017",
+    "to_unit": "g-1e-8-0-2017"
+   }
+  },
+  "x058": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 36607822,
+   "length": 1360769,
+   "sha256": "a7034575ed0609d88c869e27944639ac15a4a82c45c170f88e2ca8ecadeea4bf",
+   "census": "x058",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7395090178873312e-33,
+    "from_unit": "g-1e-7-0-2074",
+    "to_unit": "g-1e-8-0-2074"
+   }
+  },
+  "x004": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 37968591,
+   "length": 1363364,
+   "sha256": "ceb007b45f60db91d0a6f95adfe8557450ce155a762a1175f87918bfa466b4ff",
+   "census": "x004",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7510481866529237e-33,
+    "from_unit": "g-1e-7-0-13763",
+    "to_unit": "g-1e-8-0-13763"
+   }
+  },
+  "x044": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 39331955,
+   "length": 1364153,
+   "sha256": "9b34068632c72fc83cd21cf61d9e7d6113bec50e654169c2f19655c751019636",
+   "census": "x044",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7565498434463803e-33,
+    "from_unit": "g-1e-7-0-1942",
+    "to_unit": "g-1e-8-0-1942"
+   }
+  },
+  "x005": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 40696108,
+   "length": 1376166,
+   "sha256": "2065b7267b312aa0e047f53c9f32739260638a7dad5835e9851dd3812d9551bf",
+   "census": "x005",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7618479551293536e-33,
+    "from_unit": "g-1e-7-0-13765",
+    "to_unit": "g-1e-8-0-13765"
+   }
+  },
+  "x019": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 42072274,
+   "length": 1369338,
+   "sha256": "ceebe618fd8e483649f14ae293a8c496f38b75af1d889f2b0bd2ac462ba9cbf1",
+   "census": "x019",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.76691906505752e-33,
+    "from_unit": "g-1e-7-0-14299",
+    "to_unit": "g-1e-8-0-14299"
+   }
+  },
+  "x020": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 43441612,
+   "length": 1373322,
+   "sha256": "536f9f25d0a3c77ac5f6b23eb25414213a6b54f8568bf4d0016bcc3f3928d4ee",
+   "census": "x020",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.77173618454079e-33,
+    "from_unit": "g-1e-7-0-14300",
+    "to_unit": "g-1e-8-0-14300"
+   }
+  },
+  "x021": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 44814934,
+   "length": 1375339,
+   "sha256": "af32569a769f021b7536389d90061c4990c8ad63739774a2182e5d40ae768211",
+   "census": "x021",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7762696831286417e-33,
+    "from_unit": "g-1e-7-0-14301",
+    "to_unit": "g-1e-8-0-14301"
+   }
+  },
+  "x061": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 46190273,
+   "length": 1379190,
+   "sha256": "22f741aa27317d5749d6571b25d80df8b434c3fe70ec6f7eddf163b66e725543",
+   "census": "x061",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7804889403363997e-33,
+    "from_unit": "g-1e-7-0-2268",
+    "to_unit": "g-1e-8-0-2268"
+   }
+  },
+  "x013": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 47569463,
+   "length": 1374017,
+   "sha256": "56ad1455ff4eb29df352176148d43617b42b3116580705c6c46b03435bbae748",
+   "census": "x013",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8604346136322783e-33,
+    "from_unit": "g-1e-7-0-14127",
+    "to_unit": "g-1e-8-0-14127"
+   }
+  },
+  "x071": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 48943480,
+   "length": 1369049,
+   "sha256": "212b1af5792c76219770de83eea30d9f067903cdb0f1a04f5e37034cc5a65841",
+   "census": "x071",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.784364813069952e-33,
+    "from_unit": "g-1e-7-0-34915",
+    "to_unit": "g-1e-8-0-34915"
+   }
+  },
+  "x062": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 50312529,
+   "length": 1373010,
+   "sha256": "46bc005f263cb817a56336bd0cbbd5aa50cb5f26b2062d5ffc174d46d1ed2980",
+   "census": "x062",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7878727531665133e-33,
+    "from_unit": "g-1e-7-0-2269",
+    "to_unit": "g-1e-8-0-2269"
+   }
+  },
+  "x022": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 51685539,
+   "length": 1377247,
+   "sha256": "fd8a12d692e51888d7900ecf59b020af61929ecf15dd3b0d7f75d047fc4fc332",
+   "census": "x022",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.790996121827898e-33,
+    "from_unit": "g-1e-7-0-14303",
+    "to_unit": "g-1e-8-0-14303"
+   }
+  },
+  "x015": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 53062786,
+   "length": 1381640,
+   "sha256": "ba64fc75006f68707d80eb4100268f043568e7965549f0b6c6d6448aaccaf7ff",
+   "census": "x015",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7937290060231673e-33,
+    "from_unit": "g-1e-7-0-14199",
+    "to_unit": "g-1e-8-0-14199"
+   }
+  },
+  "x060": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 54444426,
+   "length": 1379084,
+   "sha256": "da1ab76412582d76b0e74d62be1d962c5f19db9aa4d266ddb1cd85b9971bf72e",
+   "census": "x060",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.79607780049621e-33,
+    "from_unit": "g-1e-7-0-2253",
+    "to_unit": "g-1e-8-0-2253"
+   }
+  },
+  "x030": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 55823510,
+   "length": 1385099,
+   "sha256": "0a7617d87dd63ee0f9b5f4f642a4b4bd0be0ab05a3ea05608f35de5d4f3b43d8",
+   "census": "x030",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7980610715363683e-33,
+    "from_unit": "g-1e-7-0-14437",
+    "to_unit": "g-1e-8-0-14437"
+   }
+  },
+  "x093": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 57208609,
+   "length": 1384484,
+   "sha256": "450b4cc9e2d24a5b7e3c0ec2fa480935be5f503d9305b237aecbd9562e80d185",
+   "census": "x093",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7997076991702244e-33,
+    "from_unit": "g-1e-7-0-38934",
+    "to_unit": "g-1e-8-0-38934"
+   }
+  },
+  "x075": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 58593093,
+   "length": 1381820,
+   "sha256": "fcb136e652e9aa111321614ee6052ea80c9372a476ca8f68a1b6fdb5b64d0095",
+   "census": "x075",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8010537864704044e-33,
+    "from_unit": "g-1e-7-0-35073",
+    "to_unit": "g-1e-8-0-35073"
+   }
+  },
+  "x066": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 59974913,
+   "length": 1386283,
+   "sha256": "324e03475da45680b2d0f396d4807d3d405ee3123fd65e7e3864230c4ac35490",
+   "census": "x066",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8021390999586707e-33,
+    "from_unit": "g-1e-7-0-2310",
+    "to_unit": "g-1e-8-0-2310"
+   }
+  },
+  "x076": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 61361196,
+   "length": 1383405,
+   "sha256": "f3c02b0dc254758d94448b43d0bbce0ab0161bae167ffa04edd6f9a552e91b17",
+   "census": "x076",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8030037750880896e-33,
+    "from_unit": "g-1e-7-0-35075",
+    "to_unit": "g-1e-8-0-35075"
+   }
+  },
+  "x078": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 62744601,
+   "length": 1386683,
+   "sha256": "379c4af8e6d557fcb5cd2d58362f1fbbeb125a0dd9675fc28701a3235589afd2",
+   "census": "x078",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8036857686315274e-33,
+    "from_unit": "g-1e-7-0-35112",
+    "to_unit": "g-1e-8-0-35112"
+   }
+  },
+  "x077": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X01/inputs_X01.pkl",
+   "offset": 64131284,
+   "length": 1386961,
+   "sha256": "eac164e983fff0c50f9b17ed51d796bb698f5b6c8226ceaf3cea3c9739dbdb1e",
+   "census": "x077",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8042192277935834e-33,
+    "from_unit": "g-1e-7-0-35079",
+    "to_unit": "g-1e-8-0-35079"
+   }
+  },
+  "x183": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 0,
+   "length": 1340412,
+   "sha256": "99f90166e7c099ce63517b5f25b63084ea5127e3c2b75fae50d4993f3c3412ea",
+   "census": "x183",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.2933051745442257e-33,
+    "from_unit": "g-1e-7-1-35344",
+    "to_unit": "g-1e-8-1-35344"
+   }
+  },
+  "x172": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 1340412,
+   "length": 1344949,
+   "sha256": "660f6898434bf8f8377f033dfba452507b50a4b2df290cbdc2d2e2bacc1f7bb3",
+   "census": "x172",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3273152447886991e-33,
+    "from_unit": "g-1e-7-1-34622",
+    "to_unit": "g-1e-8-1-34622"
+   }
+  },
+  "x167": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 2685361,
+   "length": 1344587,
+   "sha256": "00a498216c4b9d0bcbc42daa8647365f61339bf24e43c20c7686bdaa7ae70bbf",
+   "census": "x167",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3382280272157175e-33,
+    "from_unit": "g-1e-7-1-34594",
+    "to_unit": "g-1e-8-1-34594"
+   }
+  },
+  "x115": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 4029948,
+   "length": 1349771,
+   "sha256": "d2f4d69609a60d70dd8cf7ad3d55aa0d530c113abfdf84a8d3050828a5dee879",
+   "census": "x115",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3898505957211344e-33,
+    "from_unit": "g-1e-7-1-1750",
+    "to_unit": "g-1e-8-1-1750"
+   }
+  },
+  "x119": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 5379719,
+   "length": 1357052,
+   "sha256": "96c6390ad70d64113e51428cbb4cb5d4b62a6d07d06c84ac0ea4c8d538195559",
+   "census": "x119",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5088902202020704e-33,
+    "from_unit": "g-1e-7-1-1853",
+    "to_unit": "g-1e-8-1-1853"
+   }
+  },
+  "x118": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 6736771,
+   "length": 1351607,
+   "sha256": "e215eabe0bbf77d7eee8e14e472b5d58465fbb5de7f22a00a4a5d305e3468d4f",
+   "census": "x118",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4186252129375723e-33,
+    "from_unit": "g-1e-7-1-1833",
+    "to_unit": "g-1e-8-1-1833"
+   }
+  },
+  "x178": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 8088378,
+   "length": 1358780,
+   "sha256": "8d3ec81a77c6c060ce861435b03fa293589db4f511d30302b70cbabb0ed907ee",
+   "census": "x178",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5173626951604325e-33,
+    "from_unit": "g-1e-7-1-34776",
+    "to_unit": "g-1e-8-1-34776"
+   }
+  },
+  "x176": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 9447158,
+   "length": 1357342,
+   "sha256": "477759ab0f81bf70d2c705b3c4b41d850bccd99206fc105535bbbe8628fdd404",
+   "census": "x176",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5256784403435378e-33,
+    "from_unit": "g-1e-7-1-34766",
+    "to_unit": "g-1e-8-1-34766"
+   }
+  },
+  "x193": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 10804500,
+   "length": 1350133,
+   "sha256": "469c6c0d2b37dedd170d0eb3f3908f9b7e0eddcfff805061168b160b98a84b61",
+   "census": "x193",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4369424148769354e-33,
+    "from_unit": "g-1e-7-1-38134",
+    "to_unit": "g-1e-8-1-38134"
+   }
+  },
+  "x179": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 12154633,
+   "length": 1356621,
+   "sha256": "c478316ec648968471f84de10caf6e2798713abde8247c1219bd8c074084bb60",
+   "census": "x179",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5338376947381949e-33,
+    "from_unit": "g-1e-7-1-34777",
+    "to_unit": "g-1e-8-1-34777"
+   }
+  },
+  "x120": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 13511254,
+   "length": 1361157,
+   "sha256": "cc474371109c47d6e383c40660d57e2160af4720aee7ff46ba1f06fa06ae1436",
+   "census": "x120",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.541839589781187e-33,
+    "from_unit": "g-1e-7-1-2020",
+    "to_unit": "g-1e-8-1-2020"
+   }
+  },
+  "x125": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 14872411,
+   "length": 1359249,
+   "sha256": "744d10e9638442ad16b97e1537e178b4130aef1613640be4dd985ee8928f0b69",
+   "census": "x125",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5496818875110906e-33,
+    "from_unit": "g-1e-7-1-2111",
+    "to_unit": "g-1e-8-1-2111"
+   }
+  },
+  "x186": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 16231660,
+   "length": 1361436,
+   "sha256": "ed99134a3e8bf44e33f6b90f756a6d5d69c88296d91521a3b97adbfa9e40fa90",
+   "census": "x186",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5573606569576516e-33,
+    "from_unit": "g-1e-7-1-37614",
+    "to_unit": "g-1e-8-1-37614"
+   }
+  },
+  "x194": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 17593096,
+   "length": 1361842,
+   "sha256": "bad2deab3c85b29b004a95d15fceb8c26079769341a29cd382a2432839f5df48",
+   "census": "x194",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.564869882325284e-33,
+    "from_unit": "g-1e-7-1-38135",
+    "to_unit": "g-1e-8-1-38135"
+   }
+  },
+  "x126": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 18954938,
+   "length": 1362633,
+   "sha256": "0655c2e9ee43945952f1cccdff84f31c6b541f27abfe271412427ca149cc46cf",
+   "census": "x126",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5722010018237592e-33,
+    "from_unit": "g-1e-7-1-2113",
+    "to_unit": "g-1e-8-1-2113"
+   }
+  },
+  "x187": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 20317571,
+   "length": 1364644,
+   "sha256": "106c8af0d3529078a40774d85fa4cd31f67a137bb81e22d3c7404838ad66af1d",
+   "census": "x187",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6566999998353448e-33,
+    "from_unit": "g-1e-7-1-37660",
+    "to_unit": "g-1e-8-1-37660"
+   }
+  },
+  "x121": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 21682215,
+   "length": 1363208,
+   "sha256": "78f5f44ddccf60a2caa209c528c21ad6bcf8ec61ff919f06638e6338159d9db5",
+   "census": "x121",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5793423865877572e-33,
+    "from_unit": "g-1e-7-1-2026",
+    "to_unit": "g-1e-8-1-2026"
+   }
+  },
+  "x192": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 23045423,
+   "length": 1366659,
+   "sha256": "361ff2f5f02df566bfcf1d085f4ad34139b85f4a27eda91220b7905c58dfb1f8",
+   "census": "x192",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6631909852583656e-33,
+    "from_unit": "g-1e-7-1-37825",
+    "to_unit": "g-1e-8-1-37825"
+   }
+  },
+  "x122": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 24412082,
+   "length": 1364540,
+   "sha256": "8407170a343198befbe057c849802e5240c95bf15ac98300e9a8434ba0fc4fb1",
+   "census": "x122",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5862787877177634e-33,
+    "from_unit": "g-1e-7-1-2027",
+    "to_unit": "g-1e-8-1-2027"
+   }
+  },
+  "x174": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 25776622,
+   "length": 1369503,
+   "sha256": "f55d06d03bebc2c08b6e711aa2831bacfdcb9a9c868b5177fdd8be84ac374c4e",
+   "census": "x174",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6694956558665196e-33,
+    "from_unit": "g-1e-7-1-34641",
+    "to_unit": "g-1e-8-1-34641"
+   }
+  },
+  "x180": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 27146125,
+   "length": 1361580,
+   "sha256": "d7b4d168cddd85794c4e335061efebedf0d5b67ffa05ec2a46e307bd8787cd26",
+   "census": "x180",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5103852360582899e-33,
+    "from_unit": "g-1e-7-1-34781",
+    "to_unit": "g-1e-8-1-34781"
+   }
+  },
+  "x195": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 28507705,
+   "length": 1372600,
+   "sha256": "34aee51d935a6b5cdcb93592398b16795025eec6f794a0417bed341e0c1a34db",
+   "census": "x195",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6755963819552617e-33,
+    "from_unit": "g-1e-7-1-38145",
+    "to_unit": "g-1e-8-1-38145"
+   }
+  },
+  "x188": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 29880305,
+   "length": 1366089,
+   "sha256": "23266b93eb3c4ad3e4b76c7f7c8430b5b5db4c5845f0e2de851f9e42a75d6187",
+   "census": "x188",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5994545052589906e-33,
+    "from_unit": "g-1e-7-1-37663",
+    "to_unit": "g-1e-8-1-37663"
+   }
+  },
+  "x181": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 31246394,
+   "length": 1360716,
+   "sha256": "1c9e33d3d379b47cb636bcdab9d0aa5eee583199216e2709a6b0351f7f8a3733",
+   "census": "x181",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.517437611387374e-33,
+    "from_unit": "g-1e-7-1-34782",
+    "to_unit": "g-1e-8-1-34782"
+   }
+  },
+  "x140": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 32607110,
+   "length": 1362172,
+   "sha256": "5b14e0e7f3980226eae005ba1da6ab5d88b93dcfd102880946d40584703e01d5",
+   "census": "x140",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5241878221583937e-33,
+    "from_unit": "g-1e-7-1-2173",
+    "to_unit": "g-1e-8-1-2173"
+   }
+  },
+  "x129": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 33969282,
+   "length": 1370946,
+   "sha256": "9ac0c605c4bea334c0635083ce54ebd615e11e5976538781a70d9581acd023c3",
+   "census": "x129",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.687094696586277e-33,
+    "from_unit": "g-1e-7-1-2133",
+    "to_unit": "g-1e-8-1-2133"
+   }
+  },
+  "x142": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 35340228,
+   "length": 1362035,
+   "sha256": "cb229f3b24ceb944311111d8224d5c020a0cadcff962afffc4f84221a17ed8ed",
+   "census": "x142",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.530599943426098e-33,
+    "from_unit": "g-1e-7-1-2206",
+    "to_unit": "g-1e-8-1-2206"
+   }
+  },
+  "x130": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 36702263,
+   "length": 1374938,
+   "sha256": "7d302b1fce685f99d4b5288d1297fabae8eac6df92024580536b81015e680466",
+   "census": "x130",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6924363468577233e-33,
+    "from_unit": "g-1e-7-1-2135",
+    "to_unit": "g-1e-8-1-2135"
+   }
+  },
+  "x131": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 38077201,
+   "length": 1368500,
+   "sha256": "d75144dc7660e3aca2d53782b8f3a6f528ca1c4d84309e1e8cf4a93e050675dc",
+   "census": "x131",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.617049013418099e-33,
+    "from_unit": "g-1e-7-1-2136",
+    "to_unit": "g-1e-8-1-2136"
+   }
+  },
+  "x143": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 39445701,
+   "length": 1365539,
+   "sha256": "d31732c81a327f73b2c2d458b23f6ef9d3a6d3177aa1852b3d18637961bf5305",
+   "census": "x143",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5366345337685688e-33,
+    "from_unit": "g-1e-7-1-2208",
+    "to_unit": "g-1e-8-1-2208"
+   }
+  },
+  "x127": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 40811240,
+   "length": 1374867,
+   "sha256": "cdfb0d481d3ad0f704cf30f751e66c7da052cc78b0c54de1209c96f34d2e1bec",
+   "census": "x127",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.697463493069584e-33,
+    "from_unit": "g-1e-7-1-2116",
+    "to_unit": "g-1e-8-1-2116"
+   }
+  },
+  "x144": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 42186107,
+   "length": 1363260,
+   "sha256": "242d830489a1c9f6c022f128372b77e686c270a4a969d33faf32cf59481d19ea",
+   "census": "x144",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.542250833918428e-33,
+    "from_unit": "g-1e-7-1-2209",
+    "to_unit": "g-1e-8-1-2209"
+   }
+  },
+  "x145": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 43549367,
+   "length": 1376595,
+   "sha256": "17fa00793ffb7eb158de958cb4003b1d437dd0026280cc0b9ca3fe28c3ead5a5",
+   "census": "x145",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7021421805066296e-33,
+    "from_unit": "g-1e-7-1-2211",
+    "to_unit": "g-1e-8-1-2211"
+   }
+  },
+  "x132": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 44925962,
+   "length": 1368858,
+   "sha256": "04713f3dd901ab59a269d27fb3ac18c6858a8da6c3b9581b988b925d37870708",
+   "census": "x132",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6269250719464848e-33,
+    "from_unit": "g-1e-7-1-2138",
+    "to_unit": "g-1e-8-1-2138"
+   }
+  },
+  "x141": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 46294820,
+   "length": 1378608,
+   "sha256": "241aca838fdf7923afdd118a5930d585fc465cb015ea5c3bce38d4384e8cbbec",
+   "census": "x141",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.706440092715612e-33,
+    "from_unit": "g-1e-7-1-2176",
+    "to_unit": "g-1e-8-1-2176"
+   }
+  },
+  "x133": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 47673428,
+   "length": 1374189,
+   "sha256": "5fc5b2941493234ea68de29e2c9ff73221f8d109fde485f0a63bd0f55d70ba12",
+   "census": "x133",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6312047588642842e-33,
+    "from_unit": "g-1e-7-1-2140",
+    "to_unit": "g-1e-8-1-2140"
+   }
+  },
+  "x148": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 49047617,
+   "length": 1366152,
+   "sha256": "615e20d85cbfcd9a6155ad23f839bc37cc8ae39659790e11e74e804220ac7aff",
+   "census": "x148",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.552079509218916e-33,
+    "from_unit": "g-1e-7-1-2230",
+    "to_unit": "g-1e-8-1-2230"
+   }
+  },
+  "x151": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 50413769,
+   "length": 1377026,
+   "sha256": "ac9b5951636aa7390a18a89bc3a6c1e98ce26039d35640bd019ed44f13eb74aa",
+   "census": "x151",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7103300085115754e-33,
+    "from_unit": "g-1e-7-1-2261",
+    "to_unit": "g-1e-8-1-2261"
+   }
+  },
+  "x154": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 51790795,
+   "length": 1380771,
+   "sha256": "c18f5dba0c57c88b820833d4aaf1d94371178a1dd6ee57ee99cfe28d28a74d6c",
+   "census": "x154",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7878727531665133e-33,
+    "from_unit": "g-1e-7-1-2288",
+    "to_unit": "g-1e-8-1-2288"
+   }
+  },
+  "x128": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 53171566,
+   "length": 1371380,
+   "sha256": "26f3766e693a0ef612c8ec7ca7cb4e8cd33ae17ec3b8a0a3e09e904f76c9e819",
+   "census": "x128",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.635015268631168e-33,
+    "from_unit": "g-1e-7-1-2118",
+    "to_unit": "g-1e-8-1-2118"
+   }
+  },
+  "x104": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 54542946,
+   "length": 1378359,
+   "sha256": "6836e63ee45b9e7c675d714bcc5bb43730a1a993c1c3e83c255dfca590c93e3a",
+   "census": "x104",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7137934773160868e-33,
+    "from_unit": "g-1e-7-1-14228",
+    "to_unit": "g-1e-8-1-14228"
+   }
+  },
+  "x137": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 55921305,
+   "length": 1384370,
+   "sha256": "4c0ac429e11ddec8d514714cc4a57b50b42ce398014748b59197acbaecc85e48",
+   "census": "x137",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.790996121827898e-33,
+    "from_unit": "g-1e-7-1-2158",
+    "to_unit": "g-1e-8-1-2158"
+   }
+  },
+  "x105": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 57305675,
+   "length": 1378253,
+   "sha256": "1c1b791dd8626c52b9b2c534921513c290c37029e5e0bd34676eb0742e10323f",
+   "census": "x105",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7168239422348402e-33,
+    "from_unit": "g-1e-7-1-14229",
+    "to_unit": "g-1e-8-1-14229"
+   }
+  },
+  "x155": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 58683928,
+   "length": 1387397,
+   "sha256": "239067f1c791f4b318cd28701411b11de1f97638d9e2f4e0c7ceecbc3ef1b5c5",
+   "census": "x155",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7937290060231673e-33,
+    "from_unit": "g-1e-7-1-2290",
+    "to_unit": "g-1e-8-1-2290"
+   }
+  },
+  "x152": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 60071325,
+   "length": 1380628,
+   "sha256": "c6de6e4a6a2f2c5ed20bb250312ea6bcef24fb58ee3ddc860ec1cbbc7dbbefb9",
+   "census": "x152",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.71942849432828e-33,
+    "from_unit": "g-1e-7-1-2264",
+    "to_unit": "g-1e-8-1-2264"
+   }
+  },
+  "x146": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 61451953,
+   "length": 1374478,
+   "sha256": "147f9e642d01c40d6cfdde86930e567857658377b7adcf87e37d781d96b04230",
+   "census": "x146",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6436345072754907e-33,
+    "from_unit": "g-1e-7-1-2220",
+    "to_unit": "g-1e-8-1-2220"
+   }
+  },
+  "x149": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 62826431,
+   "length": 1376638,
+   "sha256": "3c1cfa58c7279472bda38af150fbb4534d105be0200d81e6844d82c5116ac3cf",
+   "census": "x149",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6456433929887927e-33,
+    "from_unit": "g-1e-7-1-2234",
+    "to_unit": "g-1e-8-1-2234"
+   }
+  },
+  "x147": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 64203069,
+   "length": 1368565,
+   "sha256": "9a9d75fe9dbd1737ed2dea248fc905c47ba68c635534217f28677892679396e5",
+   "census": "x147",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5678331373437907e-33,
+    "from_unit": "g-1e-7-1-2221",
+    "to_unit": "g-1e-8-1-2221"
+   }
+  },
+  "x150": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 65571634,
+   "length": 1380844,
+   "sha256": "284e78cb44dd80d068060de91045a30943c2056746a96f27e1ab1b4a0d58d556",
+   "census": "x150",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7234536486356862e-33,
+    "from_unit": "g-1e-7-1-2235",
+    "to_unit": "g-1e-8-1-2235"
+   }
+  },
+  "x134": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 66952478,
+   "length": 1381960,
+   "sha256": "097da1ef2c5fe92b7ae97aa6e416ea3c3e5e9f2c9a935c2b9c4f564f685182d2",
+   "census": "x134",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7249463098863294e-33,
+    "from_unit": "g-1e-7-1-2148",
+    "to_unit": "g-1e-8-1-2148"
+   }
+  },
+  "x111": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 68334438,
+   "length": 1387902,
+   "sha256": "56f179f6a55e5aa668032dbc0697ce5d5b8a43fa0f77d79b7d5498aa493db162",
+   "census": "x111",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8010537864704044e-33,
+    "from_unit": "g-1e-7-1-14542",
+    "to_unit": "g-1e-8-1-14542"
+   }
+  },
+  "x156": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 69722340,
+   "length": 1380923,
+   "sha256": "d95359ae7d39d0fd647c25fcdc8194c0e619e6be76106565ddd770b3a70dd21e",
+   "census": "x156",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6486097019506936e-33,
+    "from_unit": "g-1e-7-1-2353",
+    "to_unit": "g-1e-8-1-2353"
+   }
+  },
+  "x109": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 71103263,
+   "length": 1384626,
+   "sha256": "063ad93814c027fbf9d443a1953b8164d9c93a9b21ad90daf8443cc723541782",
+   "census": "x109",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.726149801954429e-33,
+    "from_unit": "g-1e-7-1-14464",
+    "to_unit": "g-1e-8-1-14464"
+   }
+  },
+  "x157": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 72487889,
+   "length": 1391393,
+   "sha256": "ccab5ca3c7b7b6d7078bc0197bd4f7245ef7cf6887a885eb76feaf6442ed1716",
+   "census": "x157",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8021390999586707e-33,
+    "from_unit": "g-1e-7-1-2354",
+    "to_unit": "g-1e-8-1-2354"
+   }
+  },
+  "x110": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 73879282,
+   "length": 1373700,
+   "sha256": "44c18f1ff802badb062f2357450e71dba2b9f260d4fc290eb79edc14564b3fe5",
+   "census": "x110",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6496646056085828e-33,
+    "from_unit": "g-1e-7-1-14466",
+    "to_unit": "g-1e-8-1-14466"
+   }
+  },
+  "x158": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 75252982,
+   "length": 1374515,
+   "sha256": "572f2bcbd6c7960f62094e7029db3679a22a8ee889b0e57304f24bcb5ff5562e",
+   "census": "x158",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5722205806211082e-33,
+    "from_unit": "g-1e-7-1-2356",
+    "to_unit": "g-1e-8-1-2356"
+   }
+  },
+  "x182": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 76627497,
+   "length": 1375104,
+   "sha256": "878a82f129eca6ef42df9514350144db006fc529a7cb966390b98cbf5895e7e0",
+   "census": "x182",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.650496637731576e-33,
+    "from_unit": "g-1e-7-1-35054",
+    "to_unit": "g-1e-8-1-35054"
+   }
+  },
+  "x159": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 78002601,
+   "length": 1386065,
+   "sha256": "28a4c1b7971bd72560fb44dab6ce30e067489ed4105e03b746a7f063b441739a",
+   "census": "x159",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.727864885660552e-33,
+    "from_unit": "g-1e-7-1-2360",
+    "to_unit": "g-1e-8-1-2360"
+   }
+  },
+  "x160": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 79388666,
+   "length": 1381671,
+   "sha256": "b024c578bc880253a778b2ed3a3198d8921859cdd7ceb806e7caa48e9121a250",
+   "census": "x160",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6511474579092835e-33,
+    "from_unit": "g-1e-7-1-2362",
+    "to_unit": "g-1e-8-1-2362"
+   }
+  },
+  "x199": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X02/inputs_X02.pkl",
+   "offset": 80770337,
+   "length": 1384834,
+   "sha256": "4035de218071e7ecc724656df3ff0fa7d615d622dd77aa773e67b70977b9e0a7",
+   "census": "x199",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7284564325980312e-33,
+    "from_unit": "g-1e-7-1-39097",
+    "to_unit": "g-1e-8-1-39097"
+   }
+  },
+  "x184": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 0,
+   "length": 1347482,
+   "sha256": "29c13bff9f288ffe4695de99fea4b4c5360224233cd88d891c86780a5f6a3855",
+   "census": "x184",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6863269046097723e-33,
+    "from_unit": "g-1e-7-1-35381",
+    "to_unit": "g-1e-8-1-35381"
+   }
+  },
+  "x185": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 1347482,
+   "length": 1348563,
+   "sha256": "c9fb08acdf5d6c01ee022f278594e38101e0bd0f3c2834145e0108bd76051ffc",
+   "census": "x185",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6941937726471262e-33,
+    "from_unit": "g-1e-7-1-35423",
+    "to_unit": "g-1e-8-1-35423"
+   }
+  },
+  "x170": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 2696045,
+   "length": 1349462,
+   "sha256": "5a673c9fde01aaa589661620dc8a25824d3ebd205588a8c1e0a47345d0f00222",
+   "census": "x170",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.701909642389277e-33,
+    "from_unit": "g-1e-7-1-34614",
+    "to_unit": "g-1e-8-1-34614"
+   }
+  },
+  "x164": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 4045507,
+   "length": 1350099,
+   "sha256": "8d81d1572e84ab0c3fcad4768c6bbc5fff2f7ce3d12166116d3d473fb6fc4c84",
+   "census": "x164",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7094787150729712e-33,
+    "from_unit": "g-1e-7-1-34525",
+    "to_unit": "g-1e-8-1-34525"
+   }
+  },
+  "x166": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 5395606,
+   "length": 1351300,
+   "sha256": "15c35b6ed7767641a788a581babda017fabb0bd15beefc166bd1fa52b3ecd06e",
+   "census": "x166",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7169050048639e-33,
+    "from_unit": "g-1e-7-1-34547",
+    "to_unit": "g-1e-8-1-34547"
+   }
+  },
+  "x165": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 6746906,
+   "length": 1352232,
+   "sha256": "0633ab377632399422a583daaede9ee02cbe1385a86f12f3acd686d05166e592",
+   "census": "x165",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7241923387050118e-33,
+    "from_unit": "g-1e-7-1-34528",
+    "to_unit": "g-1e-8-1-34528"
+   }
+  },
+  "x168": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 8099138,
+   "length": 1353273,
+   "sha256": "b2c367d5f97184935df71bbbfb02ea30ec76f8ca10f871a7596ec836392a8984",
+   "census": "x168",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7313443534860568e-33,
+    "from_unit": "g-1e-7-1-34604",
+    "to_unit": "g-1e-8-1-34604"
+   }
+  },
+  "x169": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 9452411,
+   "length": 1354143,
+   "sha256": "a34361138e1e29762272ef7007efb27edec90376861495f7a821e3d8d2890f46",
+   "census": "x169",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7383644898958236e-33,
+    "from_unit": "g-1e-7-1-34605",
+    "to_unit": "g-1e-8-1-34605"
+   }
+  },
+  "x114": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 10806554,
+   "length": 1355942,
+   "sha256": "4ea96cc093f57ad1a7ecdf2cdcadf85fbaf17b66d1b0f35687fc2622fe489c18",
+   "census": "x114",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7520218423398635e-33,
+    "from_unit": "g-1e-7-1-1743",
+    "to_unit": "g-1e-8-1-1743"
+   }
+  },
+  "x116": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 12162496,
+   "length": 1356662,
+   "sha256": "b1ad90594b19712380a1163aba0009012e5d27c4ee37067b4324a829d80135c1",
+   "census": "x116",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7586648385418313e-33,
+    "from_unit": "g-1e-7-1-1763",
+    "to_unit": "g-1e-8-1-1763"
+   }
+  },
+  "x171": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 13519158,
+   "length": 1362556,
+   "sha256": "20c4cec0c6f45328f9d991be5828ecbbdc50db7cdd41378f4769d16e8a067810",
+   "census": "x171",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7651874640274647e-33,
+    "from_unit": "g-1e-7-1-34618",
+    "to_unit": "g-1e-8-1-34618"
+   }
+  },
+  "x117": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 14881714,
+   "length": 1358750,
+   "sha256": "27ae24f7469749a023d29f2105f03064009407e28d9d5c10dfd8acd947087bce",
+   "census": "x117",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.771591896196325e-33,
+    "from_unit": "g-1e-7-1-1766",
+    "to_unit": "g-1e-8-1-1766"
+   }
+  },
+  "x163": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 16240464,
+   "length": 1359507,
+   "sha256": "9981f454b14093546e312ebfd95ae35c6998e0d84409de6c270773e9c3f0f19d",
+   "census": "x163",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7778799418583996e-33,
+    "from_unit": "g-1e-7-1-34514",
+    "to_unit": "g-1e-8-1-34514"
+   }
+  },
+  "x177": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 17599971,
+   "length": 1360370,
+   "sha256": "326d0b7eec6ed84746de42ca7dbce9e71c49e5a5ddcfb2f4133d994c61015cf1",
+   "census": "x177",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7840529655074883e-33,
+    "from_unit": "g-1e-7-1-34770",
+    "to_unit": "g-1e-8-1-34770"
+   }
+  },
+  "x189": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 18960341,
+   "length": 1361344,
+   "sha256": "d0301b7ce1e4eb6624a27fdbb642cdefc760832464f514ba60cfcc3177b042d8",
+   "census": "x189",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.790111796242e-33,
+    "from_unit": "g-1e-7-1-37666",
+    "to_unit": "g-1e-8-1-37666"
+   }
+  },
+  "x173": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 20321685,
+   "length": 1361877,
+   "sha256": "996a39be74a2897d25c3e2f5239cba34b020fbb7112372876eebbb377dc6aa0a",
+   "census": "x173",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.796056608187114e-33,
+    "from_unit": "g-1e-7-1-34628",
+    "to_unit": "g-1e-8-1-34628"
+   }
+  },
+  "x190": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 21683562,
+   "length": 1363105,
+   "sha256": "fdf1a63a8f92e2a87c5c5e60b76cb8f11d045fb0df1164fa7c23ce4f2612a26f",
+   "census": "x190",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.801886768509885e-33,
+    "from_unit": "g-1e-7-1-37667",
+    "to_unit": "g-1e-8-1-37667"
+   }
+  },
+  "x175": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 23046667,
+   "length": 1363685,
+   "sha256": "fb10e39b29a4acf0b49314798915db3c821ed6879c6d0c7fdc261752a732664b",
+   "census": "x175",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.807600646637327e-33,
+    "from_unit": "g-1e-7-1-34645",
+    "to_unit": "g-1e-8-1-34645"
+   }
+  },
+  "x102": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 24410352,
+   "length": 1365590,
+   "sha256": "5e7e49f9c89a9d48796e72f1dd34645b7f8e1a9108271a23873a78420eca722e",
+   "census": "x102",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8186665809281946e-33,
+    "from_unit": "g-1e-7-1-14044",
+    "to_unit": "g-1e-8-1-14044"
+   }
+  },
+  "x123": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 25775942,
+   "length": 1366598,
+   "sha256": "2032ba881c2a060501dd6636e7459fa86df8da5670d7c33b715fc3f53f176e60",
+   "census": "x123",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.824008015899769e-33,
+    "from_unit": "g-1e-7-1-2038",
+    "to_unit": "g-1e-8-1-2038"
+   }
+  },
+  "x124": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 27142540,
+   "length": 1368183,
+   "sha256": "ff81d413b7d448a8a2729e8b5d94f88d48ac97bc3f1443770bd49aa71dfe95d8",
+   "census": "x124",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.834265054802519e-33,
+    "from_unit": "g-1e-7-1-2040",
+    "to_unit": "g-1e-8-1-2040"
+   }
+  },
+  "x103": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 28510723,
+   "length": 1369226,
+   "sha256": "b247203bf996604cd76852f32b6bdb945ff8779ad53b4148265bd761d91cea5d",
+   "census": "x103",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8391554163967034e-33,
+    "from_unit": "g-1e-7-1-14046",
+    "to_unit": "g-1e-8-1-14046"
+   }
+  },
+  "x191": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 29879949,
+   "length": 1370091,
+   "sha256": "4a1ae8370cfacb2f74718faa89d94fd6d36e0af909f7e503b33fda78659cc238",
+   "census": "x191",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8438648490037913e-33,
+    "from_unit": "g-1e-7-1-37671",
+    "to_unit": "g-1e-8-1-37671"
+   }
+  },
+  "x153": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 31250040,
+   "length": 1380592,
+   "sha256": "4fbe10f5d96c82c33c71548ac435d7d67e82af125f2c3e2180742529a34cd536",
+   "census": "x153",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8526543862584023e-33,
+    "from_unit": "g-1e-7-1-2266",
+    "to_unit": "g-1e-8-1-2266"
+   }
+  },
+  "x196": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 32630632,
+   "length": 1387701,
+   "sha256": "64a6775b13b4c9f66fd3ac5975c8701f95a7c31d447d0dc83fe597fff235fce6",
+   "census": "x196",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.933572587976078e-33,
+    "from_unit": "g-1e-7-1-38833",
+    "to_unit": "g-1e-8-1-38833"
+   }
+  },
+  "x197": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 34018333,
+   "length": 1381889,
+   "sha256": "332e0786ea0ccb8b2a1b77f894f37f818b9b85556825f6be736464afc9d34329",
+   "census": "x197",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8566841627809376e-33,
+    "from_unit": "g-1e-7-1-38834",
+    "to_unit": "g-1e-8-1-38834"
+   }
+  },
+  "x107": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 35400222,
+   "length": 1374878,
+   "sha256": "bae3eeed5c05fce74e974dca58de3c571d7ad040392bec95f8072ee5fe49a6f6",
+   "census": "x107",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8604346136322783e-33,
+    "from_unit": "g-1e-7-1-14454",
+    "to_unit": "g-1e-8-1-14454"
+   }
+  },
+  "x135": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 36775100,
+   "length": 1382605,
+   "sha256": "d2747b286e4d5b3b988de5525e5fe02ac3f527abb7a507e5e21c201caa63d498",
+   "census": "x135",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8638798338398808e-33,
+    "from_unit": "g-1e-7-1-2150",
+    "to_unit": "g-1e-8-1-2150"
+   }
+  },
+  "x108": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 38157705,
+   "length": 1382573,
+   "sha256": "ab74e7697773b2e3a35f47a1687be57d89687b731070d4cea3e45ab1ff710b17",
+   "census": "x108",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8669980028146027e-33,
+    "from_unit": "g-1e-7-1-14456",
+    "to_unit": "g-1e-8-1-14456"
+   }
+  },
+  "x106": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 39540278,
+   "length": 1377328,
+   "sha256": "db18055b427f52be30f5f3135467b444946b96a23a8d3a10befbb28aec1d3d19",
+   "census": "x106",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.869774330513611e-33,
+    "from_unit": "g-1e-7-1-14242",
+    "to_unit": "g-1e-8-1-14242"
+   }
+  },
+  "x136": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 40917606,
+   "length": 1386678,
+   "sha256": "8348fa62ef267fd5528d9c11d9aaa2fa849d71067eff149ec5a79c0bdd04e012",
+   "census": "x136",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8722035609094065e-33,
+    "from_unit": "g-1e-7-1-2152",
+    "to_unit": "g-1e-8-1-2152"
+   }
+  },
+  "x138": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 42304284,
+   "length": 1378158,
+   "sha256": "0dae6c4083e8ef8c019c59c9b881b5f02eb021904bffde978adbaa9c85b5dfcc",
+   "census": "x138",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.874291378218778e-33,
+    "from_unit": "g-1e-7-1-2167",
+    "to_unit": "g-1e-8-1-2167"
+   }
+  },
+  "x139": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 43682442,
+   "length": 1378768,
+   "sha256": "579b2e9a60d641fe65e7359a017dd2ad2f516c7d5c72f719e2b29b78d4efa9c9",
+   "census": "x139",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8760542858100303e-33,
+    "from_unit": "g-1e-7-1-2168",
+    "to_unit": "g-1e-8-1-2168"
+   }
+  },
+  "x198": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 45061210,
+   "length": 1385161,
+   "sha256": "90d99ba6152247b37f97c05f65cd31cb841909c98e43eaa3828ad911c0a3f938",
+   "census": "x198",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8775179548179027e-33,
+    "from_unit": "g-1e-7-1-38840",
+    "to_unit": "g-1e-8-1-38840"
+   }
+  },
+  "x161": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 46446371,
+   "length": 1385490,
+   "sha256": "de673301b4c2b0891acda6f645d0d90bc6c912176e07770e730dab3fb2c11ebe",
+   "census": "x161",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8796791999631887e-33,
+    "from_unit": "g-1e-7-1-2367",
+    "to_unit": "g-1e-8-1-2367"
+   }
+  },
+  "x112": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 47831861,
+   "length": 1383809,
+   "sha256": "1e92b16fead21163560f93c3942e8085f56b1d336ab03247867c78aa6728ff6b",
+   "census": "x112",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8804478000782276e-33,
+    "from_unit": "g-1e-7-1-14572",
+    "to_unit": "g-1e-8-1-14572"
+   }
+  },
+  "x162": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 49215670,
+   "length": 1383701,
+   "sha256": "2a72547da6fd74734a64b6ef22ef9803b0a78746090187c57c58ce18ff958d75",
+   "census": "x162",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8810540165612834e-33,
+    "from_unit": "g-1e-7-1-2368",
+    "to_unit": "g-1e-8-1-2368"
+   }
+  },
+  "x113": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X03/inputs_X03.pkl",
+   "offset": 50599371,
+   "length": 1385816,
+   "sha256": "47e5b1218046bfd64e9f6710ba8121f63959ebf3bba6acc1cb0dece8fe2db093",
+   "census": "x113",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.881528202483111e-33,
+    "from_unit": "g-1e-7-1-14578",
+    "to_unit": "g-1e-8-1-14578"
+   }
+  },
+  "x217": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 0,
+   "length": 1341661,
+   "sha256": "ad3b9671e64ce6e6f414f05737446a6e33530b4e0f8e90d17974ed614bc8d96e",
+   "census": "x217",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3832336765785088e-33,
+    "from_unit": "g-1e-7-2-1716",
+    "to_unit": "g-1e-8-2-1716"
+   }
+  },
+  "x216": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 1341661,
+   "length": 1344766,
+   "sha256": "6f0afa5d69505465a01debdb81c6b5a1f4d8ddfa7010b5707e02ba5606c6d92c",
+   "census": "x216",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.394030952959762e-33,
+    "from_unit": "g-1e-7-2-1698",
+    "to_unit": "g-1e-8-2-1698"
+   }
+  },
+  "x214": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 2686427,
+   "length": 1346891,
+   "sha256": "d8f4bec206d0fc6bd4b1edc15e1f860ac4f628c1618422b811db92d75d4606ec",
+   "census": "x214",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4046209841808488e-33,
+    "from_unit": "g-1e-7-2-1566",
+    "to_unit": "g-1e-8-2-1566"
+   }
+  },
+  "x275": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 4033318,
+   "length": 1347032,
+   "sha256": "ed8942c5aedd27bd3b5aa2514103ef3b5f821aa0d7a1df26e9afb04353ba4695",
+   "census": "x275",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.415009536439204e-33,
+    "from_unit": "g-1e-7-2-36958",
+    "to_unit": "g-1e-8-2-36958"
+   }
+  },
+  "x227": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 5380350,
+   "length": 1343642,
+   "sha256": "cc16e9977828e9758f76754f3e9e1ed01c470b25c62578686b0ef50ea63425b5",
+   "census": "x227",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.425202119177239e-33,
+    "from_unit": "g-1e-7-2-34474",
+    "to_unit": "g-1e-8-2-34474"
+   }
+  },
+  "x231": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 6723992,
+   "length": 1349456,
+   "sha256": "b6ea2df46919a3364c2439e94d73849175995c647cc25e83f7beaebd5dff007c",
+   "census": "x231",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.435203984874151e-33,
+    "from_unit": "g-1e-7-2-34559",
+    "to_unit": "g-1e-8-2-34559"
+   }
+  },
+  "x228": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 8073448,
+   "length": 1348534,
+   "sha256": "c5c0f261b2c6c7ab7e1d4b5bd40e76cbae84d5ab040d0a534b0e14b1fe9b4fb1",
+   "census": "x228",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.445020125161121e-33,
+    "from_unit": "g-1e-7-2-34475",
+    "to_unit": "g-1e-8-2-34475"
+   }
+  },
+  "x281": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 9421982,
+   "length": 1352327,
+   "sha256": "3109d0d8d1535d6f15d12d80ff03d7c42bd76cc95ea4f31ca3ac4e0a1e65e607",
+   "census": "x281",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4641138354677677e-33,
+    "from_unit": "g-1e-7-2-37003",
+    "to_unit": "g-1e-8-2-37003"
+   }
+  },
+  "x232": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 10774309,
+   "length": 1353264,
+   "sha256": "d1c7f4739a1bb006d24a13ea8131194d82ab85472e19edca20aa38a7136229d5",
+   "census": "x232",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.47339997861293e-33,
+    "from_unit": "g-1e-7-2-34580",
+    "to_unit": "g-1e-8-2-34580"
+   }
+  },
+  "x229": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 12127573,
+   "length": 1350635,
+   "sha256": "5bd0200d24b37b562687b2ebe71aa682fbb18e1ff414f47e340a3d59eeca7021",
+   "census": "x229",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4825174909001182e-33,
+    "from_unit": "g-1e-7-2-34477",
+    "to_unit": "g-1e-8-2-34477"
+   }
+  },
+  "x278": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 13478208,
+   "length": 1355181,
+   "sha256": "4a6f42314e630f170ad409e86d7785eec50e93fe98941d8d50967288167642af",
+   "census": "x278",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4914697943791373e-33,
+    "from_unit": "g-1e-7-2-36984",
+    "to_unit": "g-1e-8-2-36984"
+   }
+  },
+  "x204": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 14833389,
+   "length": 1356153,
+   "sha256": "65a556bd9f6b56d69cb42bfdd0889b1c1c46b0114701911fbae25679a34aef54",
+   "census": "x204",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5002598775308853e-33,
+    "from_unit": "g-1e-7-2-13659",
+    "to_unit": "g-1e-8-2-13659"
+   }
+  },
+  "x202": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 16189542,
+   "length": 1356036,
+   "sha256": "aaf0f513374115c6e205b9eb7365e6763205229c086750b04eaf8482b25bd9d7",
+   "census": "x202",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5088902202020704e-33,
+    "from_unit": "g-1e-7-2-13643",
+    "to_unit": "g-1e-8-2-13643"
+   }
+  },
+  "x233": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 17545578,
+   "length": 1353435,
+   "sha256": "49f6fc299a5f2d8d26f9a5b4f24b701a6dc1f1e7b216929413515563bd4a786f",
+   "census": "x233",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5991552274687626e-33,
+    "from_unit": "g-1e-7-2-34581",
+    "to_unit": "g-1e-8-2-34581"
+   }
+  },
+  "x286": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 18899013,
+   "length": 1359338,
+   "sha256": "90c3a97e00495e51be2b287676d659f2259f7dccdc461b31fb579561a75e5ead",
+   "census": "x286",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6068560744709974e-33,
+    "from_unit": "g-1e-7-2-37926",
+    "to_unit": "g-1e-8-2-37926"
+   }
+  },
+  "x238": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 20258351,
+   "length": 1357917,
+   "sha256": "ae237e616a2436b84a3b69d8d698d4e954541e89ff7a3f696c54f61f440f2dfe",
+   "census": "x238",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5256784403435378e-33,
+    "from_unit": "g-1e-7-2-34683",
+    "to_unit": "g-1e-8-2-34683"
+   }
+  },
+  "x248": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 21616268,
+   "length": 1358367,
+   "sha256": "9c1a42a7101dedf1a8b5de1867f67351d62f90b7ff60a66c9beb34aa8443826d",
+   "census": "x248",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6144144658122976e-33,
+    "from_unit": "g-1e-7-2-34816",
+    "to_unit": "g-1e-8-2-34816"
+   }
+  },
+  "x287": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 22974635,
+   "length": 1360095,
+   "sha256": "2673ec90efe74129a8403c48eac1d6301de010f4db316f52e287a4ea30d36bca",
+   "census": "x287",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6218306187138233e-33,
+    "from_unit": "g-1e-7-2-37927",
+    "to_unit": "g-1e-8-2-37927"
+   }
+  },
+  "x284": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 24334730,
+   "length": 1360789,
+   "sha256": "1b16c082d423ca0953cb17d1aa0fc12799708964b0c1894a3f754fdeff3dfcaa",
+   "census": "x284",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.541839589781187e-33,
+    "from_unit": "g-1e-7-2-37717",
+    "to_unit": "g-1e-8-2-37717"
+   }
+  },
+  "x249": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 25695519,
+   "length": 1363444,
+   "sha256": "36a5c84b6ecc58ea6b70bdde62679ebba624592ab7d7871d129b0e2b1f90621c",
+   "census": "x249",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.629103743716477e-33,
+    "from_unit": "g-1e-7-2-34817",
+    "to_unit": "g-1e-8-2-34817"
+   }
+  },
+  "x245": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 27058963,
+   "length": 1365064,
+   "sha256": "c7a1db0978447392704d04d44a568c08589a2f3d49491990d864649cb9ec2462",
+   "census": "x245",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.636231806680458e-33,
+    "from_unit": "g-1e-7-2-34785",
+    "to_unit": "g-1e-8-2-34785"
+   }
+  },
+  "x239": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 28424027,
+   "length": 1358079,
+   "sha256": "d911c768f42b676a751436f9d10bccadec450634beed40b753ac501a291b258f",
+   "census": "x239",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.643211234647376e-33,
+    "from_unit": "g-1e-7-2-34703",
+    "to_unit": "g-1e-8-2-34703"
+   }
+  },
+  "x246": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 29782106,
+   "length": 1363201,
+   "sha256": "94b04253872980fca1cbb9d4eba56af1087e112bab310bbf36eac5e519a66fd3",
+   "census": "x246",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.564869882325284e-33,
+    "from_unit": "g-1e-7-2-34786",
+    "to_unit": "g-1e-8-2-34786"
+   }
+  },
+  "x247": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 31145307,
+   "length": 1364140,
+   "sha256": "ec9581e58dc809cabe86af2e730d39b3c89ad64bb81d152635a07070bfdf752a",
+   "census": "x247",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6500365597083088e-33,
+    "from_unit": "g-1e-7-2-34787",
+    "to_unit": "g-1e-8-2-34787"
+   }
+  },
+  "x243": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 32509447,
+   "length": 1363345,
+   "sha256": "073ab74eac1114815d94efe31eefff347de38ab25f98ee63449377129d3aa923",
+   "census": "x243",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5722010018237592e-33,
+    "from_unit": "g-1e-7-2-34728",
+    "to_unit": "g-1e-8-2-34728"
+   }
+  },
+  "x218": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 33872792,
+   "length": 1365567,
+   "sha256": "82c23903eedbb055da3146a3b984259b27cdde5b48a0015125279b9b92af80d4",
+   "census": "x218",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6566999998353448e-33,
+    "from_unit": "g-1e-7-2-2088",
+    "to_unit": "g-1e-8-2-2088"
+   }
+  },
+  "x244": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 35238359,
+   "length": 1368208,
+   "sha256": "b6790d23363fcdcfef9d528dd06a53cb027e10ebdb9131887c6f2af0faa40f36",
+   "census": "x244",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6631909852583656e-33,
+    "from_unit": "g-1e-7-2-34729",
+    "to_unit": "g-1e-8-2-34729"
+   }
+  },
+  "x219": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 36606567,
+   "length": 1365944,
+   "sha256": "37825f313412411fb79663ab639b56c7e9237a4255c6184252debddcaa476dc3",
+   "census": "x219",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7453626119561896e-33,
+    "from_unit": "g-1e-7-2-2090",
+    "to_unit": "g-1e-8-2-2090"
+   }
+  },
+  "x240": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 37972511,
+   "length": 1369072,
+   "sha256": "1ac1ae9b0a969ae28bb8b3b08e5daaffab9ffa36c6a50eca3999b900b4f6235b",
+   "census": "x240",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6694956558665196e-33,
+    "from_unit": "g-1e-7-2-34708",
+    "to_unit": "g-1e-8-2-34708"
+   }
+  },
+  "x234": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 39341583,
+   "length": 1371597,
+   "sha256": "9f0a02f42917e86fac4f01b64a9f0cc45c648531b76bd9e027e5c873265c69e9",
+   "census": "x234",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7510481866529237e-33,
+    "from_unit": "g-1e-7-2-34669",
+    "to_unit": "g-1e-8-2-34669"
+   }
+  },
+  "x220": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 40713180,
+   "length": 1369071,
+   "sha256": "336b42671ca40eb518015e77484ed6f8fc0160443f52133dc751dfe555f463cf",
+   "census": "x220",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6755963819552617e-33,
+    "from_unit": "g-1e-7-2-2093",
+    "to_unit": "g-1e-8-2-2093"
+   }
+  },
+  "x221": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 42082251,
+   "length": 1368590,
+   "sha256": "a40c0cffcfa7fbf281bafd312d8b6e16a20dc75baaa5ab35f71b69303b4d2dd2",
+   "census": "x221",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6814713991326013e-33,
+    "from_unit": "g-1e-7-2-2094",
+    "to_unit": "g-1e-8-2-2094"
+   }
+  },
+  "x241": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 43450841,
+   "length": 1371668,
+   "sha256": "1a4f3ea271c1368a7234b8a0a3245941447085107fa9744f1333d4b0593815eb",
+   "census": "x241",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7618479551293536e-33,
+    "from_unit": "g-1e-7-2-34711",
+    "to_unit": "g-1e-8-2-34711"
+   }
+  },
+  "x290": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 44822509,
+   "length": 1370328,
+   "sha256": "90786d43a42daecaba295881a91db3d527111e4d6939ddf58af0640e5702af9d",
+   "census": "x290",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6056412593713452e-33,
+    "from_unit": "g-1e-7-2-38309",
+    "to_unit": "g-1e-8-2-38309"
+   }
+  },
+  "x250": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 46192837,
+   "length": 1370328,
+   "sha256": "c8ba9772df0fcfc483944d63050cf41b5df44d42f25ecf3c4e015dfc37a0ee15",
+   "census": "x250",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6115181451409274e-33,
+    "from_unit": "g-1e-7-2-34825",
+    "to_unit": "g-1e-8-2-34825"
+   }
+  },
+  "x251": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 47563165,
+   "length": 1371130,
+   "sha256": "5bae13d8ddc77990620a7ebf7ce7bc143aad4aa411ef2e12609a4af27875a299",
+   "census": "x251",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.617049013418099e-33,
+    "from_unit": "g-1e-7-2-34827",
+    "to_unit": "g-1e-8-2-34827"
+   }
+  },
+  "x294": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 48934295,
+   "length": 1366492,
+   "sha256": "b4d2e7e997c00b1387d714e3f754d884011084089068ddb61a2f5de08eb479cf",
+   "census": "x294",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.697463493069584e-33,
+    "from_unit": "g-1e-7-2-38649",
+    "to_unit": "g-1e-8-2-38649"
+   }
+  },
+  "x222": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 50300787,
+   "length": 1372064,
+   "sha256": "f0db72246ce5b196e03ec60a51bc505755c980dd0fb82191b403a37c577e9b06",
+   "census": "x222",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6221965072115574e-33,
+    "from_unit": "g-1e-7-2-2183",
+    "to_unit": "g-1e-8-2-2183"
+   }
+  },
+  "x268": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 51672851,
+   "length": 1372383,
+   "sha256": "41380125acf6dd6323fad9bab249efa7468223c58c8c37eea5c393ab2062cac5",
+   "census": "x268",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7021421805066296e-33,
+    "from_unit": "g-1e-7-2-34978",
+    "to_unit": "g-1e-8-2-34978"
+   }
+  },
+  "x261": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 53045234,
+   "length": 1370293,
+   "sha256": "e614a33284a7b41029293da112ce5f99549c9c000fe29366c55e86a0e7b6f187",
+   "census": "x261",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.706440092715612e-33,
+    "from_unit": "g-1e-7-2-34887",
+    "to_unit": "g-1e-8-2-34887"
+   }
+  },
+  "x252": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 54415527,
+   "length": 1373821,
+   "sha256": "770f74ec73af785d1047fcd65ff834b8d41a7f4f60f3747759bd2cfe7c2c900a",
+   "census": "x252",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6312047588642842e-33,
+    "from_unit": "g-1e-7-2-34830",
+    "to_unit": "g-1e-8-2-34830"
+   }
+  },
+  "x253": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 55789348,
+   "length": 1376020,
+   "sha256": "eedb69c59c454e682cb3d520ae32f1d1d466cf5711c3b977f57b3bdc378ce985",
+   "census": "x253",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7878727531665133e-33,
+    "from_unit": "g-1e-7-2-34831",
+    "to_unit": "g-1e-8-2-34831"
+   }
+  },
+  "x269": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 57165368,
+   "length": 1369429,
+   "sha256": "fd520cfaebbd4ab7ed78a98968e9c8f448b9ba184a9757cfcd50aecdb55213ee",
+   "census": "x269",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.635015268631168e-33,
+    "from_unit": "g-1e-7-2-34981",
+    "to_unit": "g-1e-8-2-34981"
+   }
+  },
+  "x223": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 58534797,
+   "length": 1374759,
+   "sha256": "49cd2d27ad99ffae235d83cb54a8b98057df86d731723bbdb27c05c4b82e56e8",
+   "census": "x223",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7137934773160868e-33,
+    "from_unit": "g-1e-7-2-2186",
+    "to_unit": "g-1e-8-2-2186"
+   }
+  },
+  "x224": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 59909556,
+   "length": 1373932,
+   "sha256": "229c1a20d78b8e795b04a0146131281acb4c143eacee1fbcbeb20bc662c96e81",
+   "census": "x224",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7168239422348402e-33,
+    "from_unit": "g-1e-7-2-2188",
+    "to_unit": "g-1e-8-2-2188"
+   }
+  },
+  "x254": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 61283488,
+   "length": 1379261,
+   "sha256": "d0d04ebf9f3cef719320ed8008355650070fa2cf47983c6b69f153b8013e7755",
+   "census": "x254",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7937290060231673e-33,
+    "from_unit": "g-1e-7-2-34835",
+    "to_unit": "g-1e-8-2-34835"
+   }
+  },
+  "x262": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 62662749,
+   "length": 1370153,
+   "sha256": "b3664b32eb583e8f3595b97398f4f16aefb0227f8f261299e5c7126bb85ab22b",
+   "census": "x262",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.71942849432828e-33,
+    "from_unit": "g-1e-7-2-34892",
+    "to_unit": "g-1e-8-2-34892"
+   }
+  },
+  "x291": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 64032902,
+   "length": 1380850,
+   "sha256": "81b06e49eda7892bc3c75a813e6f27df47c1d6af55d54a1c59b7a0a5e3a5429d",
+   "census": "x291",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.79607780049621e-33,
+    "from_unit": "g-1e-7-2-38338",
+    "to_unit": "g-1e-8-2-38338"
+   }
+  },
+  "x263": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 65413752,
+   "length": 1375002,
+   "sha256": "5c3f09cb26b60b4c1bc59fb8b2e2d9b4e4ed09f9b4a67557bd149abcef1905ba",
+   "census": "x263",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7216277215483662e-33,
+    "from_unit": "g-1e-7-2-34894",
+    "to_unit": "g-1e-8-2-34894"
+   }
+  },
+  "x292": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 66788754,
+   "length": 1380419,
+   "sha256": "46fe46df4ae89c2600f49942f8a8a225d1b5efe4064f7635125d86eb174d38b1",
+   "census": "x292",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7980610715363683e-33,
+    "from_unit": "g-1e-7-2-38339",
+    "to_unit": "g-1e-8-2-38339"
+   }
+  },
+  "x209": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 68169173,
+   "length": 1371959,
+   "sha256": "625d90addacf84e9be92b2f0db125b8821329a2c305ea3e8e2faaed61915d787",
+   "census": "x209",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6456433929887927e-33,
+    "from_unit": "g-1e-7-2-14346",
+    "to_unit": "g-1e-8-2-14346"
+   }
+  },
+  "x255": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 69541132,
+   "length": 1377929,
+   "sha256": "0a4ce6f1ca22c94ab55ff9401f5648fddcb6b471a1d1e4df725a7431421d8cf9",
+   "census": "x255",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7234536486356862e-33,
+    "from_unit": "g-1e-7-2-34839",
+    "to_unit": "g-1e-8-2-34839"
+   }
+  },
+  "x256": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 70919061,
+   "length": 1381025,
+   "sha256": "fcec51fe244aab36be18ac95381566b851a17de6cb0926556f2324ca35721de8",
+   "census": "x256",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7997076991702244e-33,
+    "from_unit": "g-1e-7-2-34840",
+    "to_unit": "g-1e-8-2-34840"
+   }
+  },
+  "x264": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 72300086,
+   "length": 1378169,
+   "sha256": "e9055feeb1cfb9e914aec7ac71d07068267c5d6b20986a5258eccaf0cd684ac7",
+   "census": "x264",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7249463098863294e-33,
+    "from_unit": "g-1e-7-2-34897",
+    "to_unit": "g-1e-8-2-34897"
+   }
+  },
+  "x225": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 73678255,
+   "length": 1375384,
+   "sha256": "56d11ea241ceda5e316696a29540d41d6db70c4626253124718de9236e5bb4eb",
+   "census": "x225",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8010537864704044e-33,
+    "from_unit": "g-1e-7-2-2308",
+    "to_unit": "g-1e-8-2-2308"
+   }
+  },
+  "x295": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 75053639,
+   "length": 1379762,
+   "sha256": "dca0416250538e15eb61054dfd1b79d9e8dd9dbd3c58671ad4548d92d96d379b",
+   "census": "x295",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6486097019506936e-33,
+    "from_unit": "g-1e-7-2-39035",
+    "to_unit": "g-1e-8-2-39035"
+   }
+  },
+  "x299": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 76433401,
+   "length": 1384265,
+   "sha256": "14bc5a0c0ada3ef9493b65dbbdb748d589acff22a6ee24ba65bd22053a7b93ff",
+   "census": "x299",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.726149801954429e-33,
+    "from_unit": "g-1e-7-2-39050",
+    "to_unit": "g-1e-8-2-39050"
+   }
+  },
+  "x270": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 77817666,
+   "length": 1379510,
+   "sha256": "1ba7d18389bfab1456c8ace080d38c3c5ce6ff729031e3c5cbf66101a6e0742d",
+   "census": "x270",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6496646056085828e-33,
+    "from_unit": "g-1e-7-2-35057",
+    "to_unit": "g-1e-8-2-35057"
+   }
+  },
+  "x271": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 79197176,
+   "length": 1379062,
+   "sha256": "24f52381490cd0954f22fe2a39deba71ef7de4665307b4f4c277385e10b087f8",
+   "census": "x271",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8036857686315274e-33,
+    "from_unit": "g-1e-7-2-35061",
+    "to_unit": "g-1e-8-2-35061"
+   }
+  },
+  "x296": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 80576238,
+   "length": 1382950,
+   "sha256": "23eda33250f2619af6ca9abe1edd4e4338002391a40741b82095c18d3ef8aa9c",
+   "census": "x296",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7284564325980312e-33,
+    "from_unit": "g-1e-7-2-39044",
+    "to_unit": "g-1e-8-2-39044"
+   }
+  },
+  "x297": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X04/inputs_X04.pkl",
+   "offset": 81959188,
+   "length": 1379446,
+   "sha256": "e7a1540cfd1585a1c4f0c0c46ad4bdcf6465a32455c51d31a90432e8dd987ab4",
+   "census": "x297",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8042192277935834e-33,
+    "from_unit": "g-1e-7-2-39045",
+    "to_unit": "g-1e-8-2-39045"
+   }
+  },
+  "x213": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 0,
+   "length": 1352190,
+   "sha256": "59f5c3f51d20049946c95ae0958c5a25522f8be9a9068fe8b281b1996c795ec5",
+   "census": "x213",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7880360415335205e-33,
+    "from_unit": "g-1e-7-2-1558",
+    "to_unit": "g-1e-8-2-1558"
+   }
+  },
+  "x215": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 1352190,
+   "length": 1353416,
+   "sha256": "750677cc9e4d6d909442a9e191828781edcf516725969aa9f6cb0c38cfbc4fc0",
+   "census": "x215",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7949195510662055e-33,
+    "from_unit": "g-1e-7-2-1592",
+    "to_unit": "g-1e-8-2-1592"
+   }
+  },
+  "x230": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 2705606,
+   "length": 1354391,
+   "sha256": "a0d1951f32475fa0507a84fee8825b262c7228dcd2a2b4ad857aa735bf784020",
+   "census": "x230",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8016709370905876e-33,
+    "from_unit": "g-1e-7-2-34484",
+    "to_unit": "g-1e-8-2-34484"
+   }
+  },
+  "x200": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 4059997,
+   "length": 1356226,
+   "sha256": "6985f752640a5987b6c64a36a5e1a7cac5d57c52040f98fffdfce89034d2cb3b",
+   "census": "x200",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8147918792558835e-33,
+    "from_unit": "g-1e-7-2-13624",
+    "to_unit": "g-1e-8-2-13624"
+   }
+  },
+  "x201": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 5416223,
+   "length": 1357162,
+   "sha256": "562e1d9d827b2ad1154739f89a52da48bc3234981cdb969ca58f28d66688c2ad",
+   "census": "x201",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8211682963668566e-33,
+    "from_unit": "g-1e-7-2-13625",
+    "to_unit": "g-1e-8-2-13625"
+   }
+  },
+  "x226": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 6773385,
+   "length": 1358167,
+   "sha256": "3a909efa2ca6f9de0bf04f8b425cacf91c61d940b0cf5da3cc941c498e5363fa",
+   "census": "x226",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8274263093002713e-33,
+    "from_unit": "g-1e-7-2-34467",
+    "to_unit": "g-1e-8-2-34467"
+   }
+  },
+  "x279": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 8131552,
+   "length": 1358927,
+   "sha256": "30d9b8018950fae85262412e756408066ef30743ef1b38fc92ce46ac872abdbd",
+   "census": "x279",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8335689286588176e-33,
+    "from_unit": "g-1e-7-2-36993",
+    "to_unit": "g-1e-8-2-36993"
+   }
+  },
+  "x205": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 9490479,
+   "length": 1359971,
+   "sha256": "07d5e177fd97da8f64cd70c97a1a41b6e608cdebf1ab7c6fc4c27e6333d825c8",
+   "census": "x205",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8395989843591714e-33,
+    "from_unit": "g-1e-7-2-13663",
+    "to_unit": "g-1e-8-2-13663"
+   }
+  },
+  "x280": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 10850450,
+   "length": 1360871,
+   "sha256": "4cf13c91132ba58fb337e09eef533a00238f286ae77f7b8a561535b9afca14f9",
+   "census": "x280",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8455191120473523e-33,
+    "from_unit": "g-1e-7-2-36995",
+    "to_unit": "g-1e-8-2-36995"
+   }
+  },
+  "x203": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 12211321,
+   "length": 1361734,
+   "sha256": "6b7c23d52607381585101a676738232d78a9f9171abadaa2912e53a773ddb2a2",
+   "census": "x203",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.851331733724075e-33,
+    "from_unit": "g-1e-7-2-13649",
+    "to_unit": "g-1e-8-2-13649"
+   }
+  },
+  "x206": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 13573055,
+   "length": 1362454,
+   "sha256": "ceceb570a36a39299d2536de14141103217a0731e42c549923e6f3c7219404d4",
+   "census": "x206",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8570390310240045e-33,
+    "from_unit": "g-1e-7-2-13665",
+    "to_unit": "g-1e-8-2-13665"
+   }
+  },
+  "x276": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 14935509,
+   "length": 1363497,
+   "sha256": "b7b4a16c78bb6e7d8289a245f4743d83fc6244b15260c31f35289add65c32f23",
+   "census": "x276",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8626429091717572e-33,
+    "from_unit": "g-1e-7-2-36972",
+    "to_unit": "g-1e-8-2-36972"
+   }
+  },
+  "x277": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 16299006,
+   "length": 1364361,
+   "sha256": "917bbb1dc6e77c0732ea2945c53db9bb49a6e81189a9996890c5ca8ca7373e34",
+   "census": "x277",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.868144949126073e-33,
+    "from_unit": "g-1e-7-2-36975",
+    "to_unit": "g-1e-8-2-36975"
+   }
+  },
+  "x207": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 17663367,
+   "length": 1365406,
+   "sha256": "31170fa613d9c846f2e2c9642ae292bc25cf7da6347789423bdd7368c616899d",
+   "census": "x207",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8735463448190257e-33,
+    "from_unit": "g-1e-7-2-14011",
+    "to_unit": "g-1e-8-2-14011"
+   }
+  },
+  "x282": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 19028773,
+   "length": 1366271,
+   "sha256": "7a33b7feb27631d304df9ba169702fcf619bec895ce44a78cb4357855543131e",
+   "census": "x282",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8788478217117237e-33,
+    "from_unit": "g-1e-7-2-37513",
+    "to_unit": "g-1e-8-2-37513"
+   }
+  },
+  "x285": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 20395044,
+   "length": 1366989,
+   "sha256": "22c3d2a097db3aceb108f9022e4d48eb6f4d76ae2c0e36f5cde7081189945014",
+   "census": "x285",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.884049532163699e-33,
+    "from_unit": "g-1e-7-2-37724",
+    "to_unit": "g-1e-8-2-37724"
+   }
+  },
+  "x235": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 21762033,
+   "length": 1367816,
+   "sha256": "e6d275613ad624169caa9941cad3ad018b45af1fa1f8ef211269443649930efc",
+   "census": "x235",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8891509224461234e-33,
+    "from_unit": "g-1e-7-2-34676",
+    "to_unit": "g-1e-8-2-34676"
+   }
+  },
+  "x208": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 23129849,
+   "length": 1377632,
+   "sha256": "d9c16eb5589be691a46b7e724476a81a0a73e2ab53fdf70b68baf12a641c3d03",
+   "census": "x208",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.899045956165196e-33,
+    "from_unit": "g-1e-7-2-14014",
+    "to_unit": "g-1e-8-2-14014"
+   }
+  },
+  "x242": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 24507481,
+   "length": 1370916,
+   "sha256": "219a83cc0498912f5e88572fbe03dfbbf4da914639c77920446282d05e6ce571",
+   "census": "x242",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9038332583121448e-33,
+    "from_unit": "g-1e-7-2-34718",
+    "to_unit": "g-1e-8-2-34718"
+   }
+  },
+  "x236": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 25878397,
+   "length": 1376916,
+   "sha256": "f127ed424edace4ca819aabe28ebf89952763774002f1e1bee24cd3f89dbe497",
+   "census": "x236",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9085070139122724e-33,
+    "from_unit": "g-1e-7-2-34679",
+    "to_unit": "g-1e-8-2-34679"
+   }
+  },
+  "x283": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 27255313,
+   "length": 1380187,
+   "sha256": "744a8e31dd6e494c4e14d60d547bf6704ad0653c70792cd913a7cc7cd52c84d1",
+   "census": "x283",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9130598092991636e-33,
+    "from_unit": "g-1e-7-2-37521",
+    "to_unit": "g-1e-8-2-37521"
+   }
+  },
+  "x237": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 28635500,
+   "length": 1380408,
+   "sha256": "a0eb981c5679d8a2c9504e3911800e74ea16045cd501af2a38ea4904faa22074",
+   "census": "x237",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.917481922952179e-33,
+    "from_unit": "g-1e-7-2-34681",
+    "to_unit": "g-1e-8-2-34681"
+   }
+  },
+  "x288": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 30015908,
+   "length": 1385124,
+   "sha256": "9906e35fe87ba83d9d85ce06d9768f431271019abbcb3ce21c614618c4eb05e3",
+   "census": "x288",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9217609893470907e-33,
+    "from_unit": "g-1e-7-2-38199",
+    "to_unit": "g-1e-8-2-38199"
+   }
+  },
+  "x257": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 31401032,
+   "length": 1385519,
+   "sha256": "77f65f7c17f15cc21c5cf912272cb63c02b5a3d7fa08634bef7414945f11029c",
+   "census": "x257",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.925881742878293e-33,
+    "from_unit": "g-1e-7-2-34841",
+    "to_unit": "g-1e-8-2-34841"
+   }
+  },
+  "x212": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 32786551,
+   "length": 1387711,
+   "sha256": "1b0c8d3a5cf03345743ce1dbb3ced6b09e4a3a84fcddb503b9cd08117ef6a6d4",
+   "census": "x212",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9298259394890893e-33,
+    "from_unit": "g-1e-7-2-14404",
+    "to_unit": "g-1e-8-2-14404"
+   }
+  },
+  "x258": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 34174262,
+   "length": 1379700,
+   "sha256": "8a62db39d0b1009ce98072e789bf5b03ba731871cce031efc80261ee41b4a584",
+   "census": "x258",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.933572587976078e-33,
+    "from_unit": "g-1e-7-2-34872",
+    "to_unit": "g-1e-8-2-34872"
+   }
+  },
+  "x265": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 35553962,
+   "length": 1384260,
+   "sha256": "6ef5ca7817d7575252e75dbb6d371c1987a0b6ae9a6536f6a5ddc44f7824cf44",
+   "census": "x265",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9370986424332964e-33,
+    "from_unit": "g-1e-7-2-34899",
+    "to_unit": "g-1e-8-2-34899"
+   }
+  },
+  "x259": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 36938222,
+   "length": 1380167,
+   "sha256": "da5f830242b1937cdf3f3465b2f00e1baeca5a674d426a436fd0f68bd2988999",
+   "census": "x259",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.94038028692822e-33,
+    "from_unit": "g-1e-7-2-34874",
+    "to_unit": "g-1e-8-2-34874"
+   }
+  },
+  "x210": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 38318389,
+   "length": 1385373,
+   "sha256": "770eb1d54b86d18c5690889e000061f158e104010c86757c8352ca86f28e7839",
+   "census": "x210",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9433948546098724e-33,
+    "from_unit": "g-1e-7-2-14353",
+    "to_unit": "g-1e-8-2-14353"
+   }
+  },
+  "x211": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 39703762,
+   "length": 1380672,
+   "sha256": "ca764b1dd6ec99343f64fc2f0bf7bbf6befb6b2b07325218ccfce4d0e1f10af9",
+   "census": "x211",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.946123252462754e-33,
+    "from_unit": "g-1e-7-2-14356",
+    "to_unit": "g-1e-8-2-14356"
+   }
+  },
+  "x266": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 41084434,
+   "length": 1381895,
+   "sha256": "e1268ee473dd66d489e004ce906fe4aba37192254c46e6ab90df967ec1a309a3",
+   "census": "x266",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9485525391993863e-33,
+    "from_unit": "g-1e-7-2-34902",
+    "to_unit": "g-1e-8-2-34902"
+   }
+  },
+  "x260": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 42466329,
+   "length": 1381970,
+   "sha256": "c74c4a5d2dc6c0147ae4cc74a5aaa78ef4dee28f5e1d9deb0fcb34bcaacb43ab",
+   "census": "x260",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9506781157957074e-33,
+    "from_unit": "g-1e-7-2-34878",
+    "to_unit": "g-1e-8-2-34878"
+   }
+  },
+  "x289": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 43848299,
+   "length": 1383122,
+   "sha256": "138250468ce94aa35a4ba1d4185415e2a40876b02f17256132aeb78ac21fce93",
+   "census": "x289",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9525049559414075e-33,
+    "from_unit": "g-1e-7-2-38305",
+    "to_unit": "g-1e-8-2-38305"
+   }
+  },
+  "x267": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 45231421,
+   "length": 1393365,
+   "sha256": "16d64c43beda8c9a2319dd06c1785af01a0acf976eb875659ceedfc64af46029",
+   "census": "x267",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9540475000837532e-33,
+    "from_unit": "g-1e-7-2-34906",
+    "to_unit": "g-1e-8-2-34906"
+   }
+  },
+  "x293": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 46624786,
+   "length": 1394305,
+   "sha256": "767c9bfe6ebf5aa37d12982072cc2558e9de47cf3f14c92a03fbf30709548d09",
+   "census": "x293",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.955328210465642e-33,
+    "from_unit": "g-1e-7-2-38646",
+    "to_unit": "g-1e-8-2-38646"
+   }
+  },
+  "x298": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 48019091,
+   "length": 1394629,
+   "sha256": "5aaf8aa0be90069b6c62f465eec1ef2f123e9ae1a6581759d0acd0f24d69d6c4",
+   "census": "x298",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9563751672546705e-33,
+    "from_unit": "g-1e-7-2-39047",
+    "to_unit": "g-1e-8-2-39047"
+   }
+  },
+  "x272": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 49413720,
+   "length": 1393150,
+   "sha256": "42ba55a91ee6a8198cbca3158f8ce3a579aae3858469da28ce49764ae228a018",
+   "census": "x272",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.957219299967767e-33,
+    "from_unit": "g-1e-7-2-35082",
+    "to_unit": "g-1e-8-2-35082"
+   }
+  },
+  "x273": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 50806870,
+   "length": 1393837,
+   "sha256": "1f18e792d3a076e8e140a2781d22d3805786e1223eaca66beac523e6b977e039",
+   "census": "x273",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.957891825068426e-33,
+    "from_unit": "g-1e-7-2-35089",
+    "to_unit": "g-1e-8-2-35089"
+   }
+  },
+  "x274": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X05/inputs_X05.pkl",
+   "offset": 52200707,
+   "length": 1398546,
+   "sha256": "3de725d2c3cbc3280b708f97531e10a769ee372175d903a5e3f540340be607be",
+   "census": "x274",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.9588371771726993e-33,
+    "from_unit": "g-1e-7-2-35099",
+    "to_unit": "g-1e-8-2-35099"
+   }
+  },
+  "x366": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 0,
+   "length": 1344728,
+   "sha256": "31da632f7bdb3845cb3e3b1308b913357b5eb4cee547181c397e8be7a7a6c2e1",
+   "census": "x366",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.330165505825029e-33,
+    "from_unit": "g-1e-7-3-37324",
+    "to_unit": "g-1e-8-3-37324"
+   }
+  },
+  "x331": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 1344728,
+   "length": 1343180,
+   "sha256": "43e06554b3a4edc8f1197bf28cf3e68feaeb3eb4ec0a07f177f6d74eae795cc0",
+   "census": "x331",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3499811099262177e-33,
+    "from_unit": "g-1e-7-3-34792",
+    "to_unit": "g-1e-8-3-34792"
+   }
+  },
+  "x319": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 2687908,
+   "length": 1344944,
+   "sha256": "9e7f0ce5941173898e2526091b891f4cc05aa22c27966aea6b90b4f4f4ecc65c",
+   "census": "x319",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3596117052771832e-33,
+    "from_unit": "g-1e-7-3-1921",
+    "to_unit": "g-1e-8-3-1921"
+   }
+  },
+  "x305": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 4032852,
+   "length": 1347212,
+   "sha256": "f68c6e72d71cba732bf85e10d073d12bb819b38413441bf4338dce23ad39b3f2",
+   "census": "x305",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.369056564999956e-33,
+    "from_unit": "g-1e-7-3-13816",
+    "to_unit": "g-1e-8-3-13816"
+   }
+  },
+  "x313": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 5380064,
+   "length": 1347681,
+   "sha256": "56d640a95860be48472c61b4393af939627f090c97a64ac35897deebc45f7789",
+   "census": "x313",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3783130475662984e-33,
+    "from_unit": "g-1e-7-3-14099",
+    "to_unit": "g-1e-8-3-14099"
+   }
+  },
+  "x332": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 6727745,
+   "length": 1349914,
+   "sha256": "8b6861d76bc89124c9e1cf609b00cd3e086d1bff6bb0bc945bec86f45d53f878",
+   "census": "x332",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.3873765131424687e-33,
+    "from_unit": "g-1e-7-3-34798",
+    "to_unit": "g-1e-8-3-34798"
+   }
+  },
+  "x328": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 8077659,
+   "length": 1352037,
+   "sha256": "743b5233870f03694a3d1ff07f067bf59f324540ba43eabdf7baf14f17494542",
+   "census": "x328",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4133221612301794e-33,
+    "from_unit": "g-1e-7-3-34737",
+    "to_unit": "g-1e-8-3-34737"
+   }
+  },
+  "x306": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 9429696,
+   "length": 1361768,
+   "sha256": "76d41693aa2bab19b39040a919f114640f158306d75ca0972739f268c1e1748a",
+   "census": "x306",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4954937879191869e-33,
+    "from_unit": "g-1e-7-3-13824",
+    "to_unit": "g-1e-8-3-13824"
+   }
+  },
+  "x372": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 10791464,
+   "length": 1352613,
+   "sha256": "3554bef656d60e8ac1129dccb3856af13dc94dd55141767cbe0b0606a4aa7163",
+   "census": "x372",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4215093887933763e-33,
+    "from_unit": "g-1e-7-3-38027",
+    "to_unit": "g-1e-8-3-38027"
+   }
+  },
+  "x335": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 12144077,
+   "length": 1362369,
+   "sha256": "000774c370a189caeadf38ef7a1a363f87f1e7802be8b730e0eea0a6e2b023a9",
+   "census": "x335",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5030619195710302e-33,
+    "from_unit": "g-1e-7-3-34806",
+    "to_unit": "g-1e-8-3-34806"
+   }
+  },
+  "x325": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 13506446,
+   "length": 1354810,
+   "sha256": "91320999270e3f679095ad7fac7a8086452a9603012ae394a36802ced284ebef",
+   "census": "x325",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.429431774575857e-33,
+    "from_unit": "g-1e-7-3-34688",
+    "to_unit": "g-1e-8-3-34688"
+   }
+  },
+  "x333": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 14861256,
+   "length": 1354592,
+   "sha256": "649aec470cdd69112242b86b1213d059d098089e7bc8b5adf24abab1f16208d5",
+   "census": "x333",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4370610553992455e-33,
+    "from_unit": "g-1e-7-3-34802",
+    "to_unit": "g-1e-8-3-34802"
+   }
+  },
+  "x371": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 16215848,
+   "length": 1363127,
+   "sha256": "dd1b22f4c705b78f7d8b854c65886a5a5e3508bea6b9ff526b28cd62415b9362",
+   "census": "x371",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.517437611387374e-33,
+    "from_unit": "g-1e-7-3-38017",
+    "to_unit": "g-1e-8-3-38017"
+   }
+  },
+  "x344": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 17578975,
+   "length": 1362502,
+   "sha256": "9409dff4bfdc94128f890836149599b486fb139d14c31c2bcfddb52a8d6bc595",
+   "census": "x344",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5241878221583937e-33,
+    "from_unit": "g-1e-7-3-34950",
+    "to_unit": "g-1e-8-3-34950"
+   }
+  },
+  "x384": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 18941477,
+   "length": 1346073,
+   "sha256": "d36d04921f0c63eb8a6bba813e2c89a7d6f9489d4beae3e550b908efe3f3444a",
+   "census": "x384",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4513001057515396e-33,
+    "from_unit": "g-1e-7-3-38541",
+    "to_unit": "g-1e-8-3-38541"
+   }
+  },
+  "x376": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 20287550,
+   "length": 1365728,
+   "sha256": "9bb69bbfa84c46deeef794f55483d6483716345fe0a255b8787bf1909e6d67f7",
+   "census": "x376",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.530599943426098e-33,
+    "from_unit": "g-1e-7-3-38443",
+    "to_unit": "g-1e-8-3-38443"
+   }
+  },
+  "x345": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 21653278,
+   "length": 1367402,
+   "sha256": "a8644883230ee97333670f87a6a62492e3893c49dc891e30011dd0856d1d7349",
+   "census": "x345",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5366345337685688e-33,
+    "from_unit": "g-1e-7-3-34954",
+    "to_unit": "g-1e-8-3-34954"
+   }
+  },
+  "x346": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 23020680,
+   "length": 1358409,
+   "sha256": "869448591c6a0a935e43a5e9a57ee5e19febac2c77c95588eaae62ca61526ac2",
+   "census": "x346",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4639040740970644e-33,
+    "from_unit": "g-1e-7-3-34955",
+    "to_unit": "g-1e-8-3-34955"
+   }
+  },
+  "x350": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 24379089,
+   "length": 1366655,
+   "sha256": "978734e4a4a3458b4b1b5662aee8f928fced356087d650682b26692cd518a2f1",
+   "census": "x350",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.542250833918428e-33,
+    "from_unit": "g-1e-7-3-34970",
+    "to_unit": "g-1e-8-3-34970"
+   }
+  },
+  "x314": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 25745744,
+   "length": 1368750,
+   "sha256": "f34eca5c9430f171d2315adefb0ee1a6f23111569a49a464120c890feb6f104f",
+   "census": "x314",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6312047588642842e-33,
+    "from_unit": "g-1e-7-3-14149",
+    "to_unit": "g-1e-8-3-14149"
+   }
+  },
+  "x377": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 27114494,
+   "length": 1357869,
+   "sha256": "6d463cd628580c7b867d416e1c1118531748d93c3e0e9c0a737caa86396ef80f",
+   "census": "x377",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.474536764572298e-33,
+    "from_unit": "g-1e-7-3-38473",
+    "to_unit": "g-1e-8-3-38473"
+   }
+  },
+  "x351": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 28472363,
+   "length": 1369075,
+   "sha256": "59110093e71a67a11f4cf533599c4f1782265055a1f55724b7ea52cddb3f43bf",
+   "census": "x351",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.635015268631168e-33,
+    "from_unit": "g-1e-7-3-34974",
+    "to_unit": "g-1e-8-3-34974"
+   }
+  },
+  "x356": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 29841438,
+   "length": 1360785,
+   "sha256": "463a4365d7484efa08a6b4c3d6dc9c09f2d2fd14b72a92c937fb555612e89312",
+   "census": "x356",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4790344154446366e-33,
+    "from_unit": "g-1e-7-3-35004",
+    "to_unit": "g-1e-8-3-35004"
+   }
+  },
+  "x378": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 31202223,
+   "length": 1366203,
+   "sha256": "e2acd5b596e4cbb78745018e9a3f67257493ea8e615dbc56ae037db9192489bc",
+   "census": "x378",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.556237059948164e-33,
+    "from_unit": "g-1e-7-3-38474",
+    "to_unit": "g-1e-8-3-38474"
+   }
+  },
+  "x352": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 32568426,
+   "length": 1376456,
+   "sha256": "62af70e27ee7512108ff07bff56069715365ff42e2dcc6820bb5b22d31c82ac5",
+   "census": "x352",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6383493873493923e-33,
+    "from_unit": "g-1e-7-3-34976",
+    "to_unit": "g-1e-8-3-34976"
+   }
+  },
+  "x340": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 33944882,
+   "length": 1359671,
+   "sha256": "17f827e7eb2c6a62046dce64e62e06a5faf06bb9cdee5d0e2735343ae5fb440c",
+   "census": "x340",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4829697686857767e-33,
+    "from_unit": "g-1e-7-3-34926",
+    "to_unit": "g-1e-8-3-34926"
+   }
+  },
+  "x379": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 35304553,
+   "length": 1360104,
+   "sha256": "ccd4db48fd7c1d965332d8e4d4ac6ce0226ba24dc5d86355d43e045357015cc7",
+   "census": "x379",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4863520327269167e-33,
+    "from_unit": "g-1e-7-3-38476",
+    "to_unit": "g-1e-8-3-38476"
+   }
+  },
+  "x358": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 36664657,
+   "length": 1368558,
+   "sha256": "ab878ece6d47b0d87e977925dbc4a2470c590e1b2e7e3cd8daebfdb5aad30cde",
+   "census": "x358",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5630013388866223e-33,
+    "from_unit": "g-1e-7-3-35027",
+    "to_unit": "g-1e-8-3-35027"
+   }
+  },
+  "x380": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 38033215,
+   "length": 1368011,
+   "sha256": "f27c425e42054baa6d882e6970ebd4420e136544f13a106356d85c3ba5e97ad2",
+   "census": "x380",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5656412930045112e-33,
+    "from_unit": "g-1e-7-3-38479",
+    "to_unit": "g-1e-8-3-38479"
+   }
+  },
+  "x347": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 39401226,
+   "length": 1376277,
+   "sha256": "8874436ddadcfbd6ef05a8f5088887e6ba9714dcaa29e61abce103403a73f7ef",
+   "census": "x347",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6456433929887927e-33,
+    "from_unit": "g-1e-7-3-34962",
+    "to_unit": "g-1e-8-3-34962"
+   }
+  },
+  "x385": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 40777503,
+   "length": 1365491,
+   "sha256": "1c5266d036aa6d0e210c9458306600e7d23795eeccbf23aa3f365b65abf4ab9f",
+   "census": "x385",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4915790868174341e-33,
+    "from_unit": "g-1e-7-3-38797",
+    "to_unit": "g-1e-8-3-38797"
+   }
+  },
+  "x348": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 42142994,
+   "length": 1380995,
+   "sha256": "3549a97c0843c540fa15db43bc194ca503a39722594cfbe9a04f61d5dafba9e5",
+   "census": "x348",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.64728561949501e-33,
+    "from_unit": "g-1e-7-3-34965",
+    "to_unit": "g-1e-8-3-34965"
+   }
+  },
+  "x316": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 43523989,
+   "length": 1378905,
+   "sha256": "0c98d77ded361df071ec367c3fa4170fe6ede6ee1eef541830007f7c7403b332",
+   "census": "x316",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6486097019506936e-33,
+    "from_unit": "g-1e-7-3-14584",
+    "to_unit": "g-1e-8-3-14584"
+   }
+  },
+  "x390": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 44902894,
+   "length": 1364855,
+   "sha256": "2b8ce8cfd7289e95d74c0136bbd7eae99a636618be354430a58dda8d5dbd1444",
+   "census": "x390",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4950803039527542e-33,
+    "from_unit": "g-1e-7-3-39133",
+    "to_unit": "g-1e-8-3-39133"
+   }
+  },
+  "x391": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 46267749,
+   "length": 1375017,
+   "sha256": "3d636922977d6f61e9a5c619648864bf502ad2d712262c9c2c2991f2d7dd32c0",
+   "census": "x391",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5722205806211082e-33,
+    "from_unit": "g-1e-7-3-39135",
+    "to_unit": "g-1e-8-3-39135"
+   }
+  },
+  "x392": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 47642766,
+   "length": 1381029,
+   "sha256": "0714e3e5d15caa90c38b1eee449b3ac9e26ce81dbd890e88725cc2c2d891ad76",
+   "census": "x392",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.650496637731576e-33,
+    "from_unit": "g-1e-7-3-39138",
+    "to_unit": "g-1e-8-3-39138"
+   }
+  },
+  "x393": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 49023795,
+   "length": 1382532,
+   "sha256": "6c7c4f97e98575eeacb8a8392e80de731c07c48cbc4600df0da93f734f58303e",
+   "census": "x393",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6511474579092835e-33,
+    "from_unit": "g-1e-7-3-39141",
+    "to_unit": "g-1e-8-3-39141"
+   }
+  },
+  "x360": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X06/inputs_X06.pkl",
+   "offset": 50406327,
+   "length": 1374469,
+   "sha256": "7cb80936de1e2111bdf895bc69e78377d97c40f6769c4a186794beca3fff3c73",
+   "census": "x360",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5738384832224144e-33,
+    "from_unit": "g-1e-7-3-35042",
+    "to_unit": "g-1e-8-3-35042"
+   }
+  },
+  "x324": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 0,
+   "length": 1346461,
+   "sha256": "00d65e4ccb09bef2357e88fc331a847ed14b740613864e11c3859bdf7c08fd62",
+   "census": "x324",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4849428135011517e-33,
+    "from_unit": "g-1e-7-3-34442",
+    "to_unit": "g-1e-8-3-34442"
+   }
+  },
+  "x322": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 1346461,
+   "length": 1339769,
+   "sha256": "5c1d1ef2244043d1daabf8c342b403d4a3e13dbf285c59a572eef606eae90609",
+   "census": "x322",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.4947567313777466e-33,
+    "from_unit": "g-1e-7-3-34324",
+    "to_unit": "g-1e-8-3-34324"
+   }
+  },
+  "x302": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 2686230,
+   "length": 1340885,
+   "sha256": "a515aead3eafa5b65e3fa0f4933aa873872e674b4c91257505f33101c3c578bd",
+   "census": "x302",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5043822788810753e-33,
+    "from_unit": "g-1e-7-3-13494",
+    "to_unit": "g-1e-8-3-13494"
+   }
+  },
+  "x367": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 4027115,
+   "length": 1341636,
+   "sha256": "25a62afd82965b74e4edd450724421bb00c26249bd81047ebaf69068faa2a60b",
+   "census": "x367",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5138246970539792e-33,
+    "from_unit": "g-1e-7-3-37340",
+    "to_unit": "g-1e-8-3-37340"
+   }
+  },
+  "x303": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 5368751,
+   "length": 1353086,
+   "sha256": "b7f9f22d50d5c4cbc0121a723db1249555eb999fcf33387793fd32d4f55fea27",
+   "census": "x303",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5230889935681589e-33,
+    "from_unit": "g-1e-7-3-13496",
+    "to_unit": "g-1e-8-3-13496"
+   }
+  },
+  "x363": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 6721837,
+   "length": 1343764,
+   "sha256": "8c7e5978c6a5659956c44d347102a8db872f3d444cb4f3f82bcb8df4a4bbd7d9",
+   "census": "x363",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5321799425349417e-33,
+    "from_unit": "g-1e-7-3-36009",
+    "to_unit": "g-1e-8-3-36009"
+   }
+  },
+  "x304": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 8065601,
+   "length": 1344516,
+   "sha256": "8cc0c959644a59b98e603d8a1b19922dda3fb451391fe445ad9b7d6332f978a7",
+   "census": "x304",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.541102080974291e-33,
+    "from_unit": "g-1e-7-3-13601",
+    "to_unit": "g-1e-8-3-13601"
+   }
+  },
+  "x361": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 9410117,
+   "length": 1347229,
+   "sha256": "6739b58c13cf88e334f7a1295c62617313e7b644af2835a58c51e20b627136b3",
+   "census": "x361",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.566897248319403e-33,
+    "from_unit": "g-1e-7-3-35985",
+    "to_unit": "g-1e-8-3-35985"
+   }
+  },
+  "x368": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 10757346,
+   "length": 1356038,
+   "sha256": "e009cfef1ac6b46c31da24b5e8da7122dd600532e17c8c65c3e16ddf225aad7f",
+   "census": "x368",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5751843860813547e-33,
+    "from_unit": "g-1e-7-3-37345",
+    "to_unit": "g-1e-8-3-37345"
+   }
+  },
+  "x362": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 12113384,
+   "length": 1360590,
+   "sha256": "d047cbdcd7d49fcb55712ae741c377c97eed1a260ae4d063cdb4ccbbe94e6cf5",
+   "census": "x362",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5833213613746786e-33,
+    "from_unit": "g-1e-7-3-35996",
+    "to_unit": "g-1e-8-3-35996"
+   }
+  },
+  "x364": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 13473974,
+   "length": 1358285,
+   "sha256": "ae4565aee81291ed6f1035a603fd04274cae05727f1620db0b53e0087256d977",
+   "census": "x364",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.591310890505328e-33,
+    "from_unit": "g-1e-7-3-36014",
+    "to_unit": "g-1e-8-3-36014"
+   }
+  },
+  "x300": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 14832259,
+   "length": 1356469,
+   "sha256": "ad39753cfe43b79820f491fccf69bcbb1895cf78aad3e493cc0197c71e9a3b08",
+   "census": "x300",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.5991552274687626e-33,
+    "from_unit": "g-1e-7-3-13479",
+    "to_unit": "g-1e-8-3-13479"
+   }
+  },
+  "x365": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 16188728,
+   "length": 1353241,
+   "sha256": "580964efe106333f110c09119e5c9a4839ca75a27ac4768956e2408cc47c1c94",
+   "census": "x365",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.687614934590797e-33,
+    "from_unit": "g-1e-7-3-36015",
+    "to_unit": "g-1e-8-3-36015"
+   }
+  },
+  "x326": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 17541969,
+   "length": 1362518,
+   "sha256": "2c5a518060496fcfe982154658890bd9592dd3bf071eefed87a3433f625455b3",
+   "census": "x326",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6068560744709974e-33,
+    "from_unit": "g-1e-7-3-34690",
+    "to_unit": "g-1e-8-3-34690"
+   }
+  },
+  "x320": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 18904487,
+   "length": 1354285,
+   "sha256": "8b2d2ad0785e9aafb2f8f465647f53c6e72dc4f8e506b19dfbb9f345682729be",
+   "census": "x320",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.694559586196021e-33,
+    "from_unit": "g-1e-7-3-1930",
+    "to_unit": "g-1e-8-3-1930"
+   }
+  },
+  "x336": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 20258772,
+   "length": 1355258,
+   "sha256": "ea40b925d5be181ad5485e07aaa5247b2e00ed8248060963dc2d0fa9b25608c5",
+   "census": "x336",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.701375770772346e-33,
+    "from_unit": "g-1e-7-3-34808",
+    "to_unit": "g-1e-8-3-34808"
+   }
+  },
+  "x369": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 21614030,
+   "length": 1356159,
+   "sha256": "5f4984371053264e204a72275c1f449de2052b32733468d4bf6ec68d7ba23fa8",
+   "census": "x369",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6218306187138233e-33,
+    "from_unit": "g-1e-7-3-37358",
+    "to_unit": "g-1e-8-3-37358"
+   }
+  },
+  "x309": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 22970189,
+   "length": 1356159,
+   "sha256": "1a0ee0d75d81069fdfec7cbb705995f6106d33e96cd75ab42340a60a7151a524",
+   "census": "x309",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.708063684210598e-33,
+    "from_unit": "g-1e-7-3-13932",
+    "to_unit": "g-1e-8-3-13932"
+   }
+  },
+  "x370": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 24326348,
+   "length": 1362410,
+   "sha256": "032a53a51fdd228e96e36b7e7ca07c2a5d090c713bdaa4e239d4a3b9ee9bb9ca",
+   "census": "x370",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.629103743716477e-33,
+    "from_unit": "g-1e-7-3-37359",
+    "to_unit": "g-1e-8-3-37359"
+   }
+  },
+  "x327": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 25688758,
+   "length": 1366442,
+   "sha256": "b1eada9de397b2143b7f10b83e34bed1dbd65ac3ad86b9f75b53ba97371a03c8",
+   "census": "x327",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7146226145737146e-33,
+    "from_unit": "g-1e-7-3-34694",
+    "to_unit": "g-1e-8-3-34694"
+   }
+  },
+  "x318": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 27055200,
+   "length": 1364370,
+   "sha256": "c4c20e848d28a78752b6b7ebac16f71d0caf7090c21a390ac9bf8c61a3bc69a2",
+   "census": "x318",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.636231806680458e-33,
+    "from_unit": "g-1e-7-3-1910",
+    "to_unit": "g-1e-8-3-1910"
+   }
+  },
+  "x307": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 28419570,
+   "length": 1368716,
+   "sha256": "fd23d189952faa782be4dbe6257678837a88762c077e8d423fed753ac7e17837",
+   "census": "x307",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.721050727467087e-33,
+    "from_unit": "g-1e-7-3-13831",
+    "to_unit": "g-1e-8-3-13831"
+   }
+  },
+  "x310": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 29788286,
+   "length": 1366299,
+   "sha256": "ba93e40025ffb03bedd2ed07d6056570cd1f169b1d7239f6dd9ff38e5cf10b12",
+   "census": "x310",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7273448007839485e-33,
+    "from_unit": "g-1e-7-3-13934",
+    "to_unit": "g-1e-8-3-13934"
+   }
+  },
+  "x321": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 31154585,
+   "length": 1366694,
+   "sha256": "a69494fae3b8cbf8669270f993f4a044864513a3ebe89d3244007a79b66114ff",
+   "census": "x321",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6500365597083088e-33,
+    "from_unit": "g-1e-7-3-1935",
+    "to_unit": "g-1e-8-3-1935"
+   }
+  },
+  "x308": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 32521279,
+   "length": 1368675,
+   "sha256": "5572f524b050599a7b7ec4a4880ba48be4d754f70ade576883ebd6b6577ddfbc",
+   "census": "x308",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.733499903544311e-33,
+    "from_unit": "g-1e-7-3-13899",
+    "to_unit": "g-1e-8-3-13899"
+   }
+  },
+  "x311": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 33889954,
+   "length": 1364679,
+   "sha256": "e7569ebd68c650717d939a68f9139b10104e65cd1f599c847f236f9b4b840f82",
+   "census": "x311",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7395090178873312e-33,
+    "from_unit": "g-1e-7-3-14093",
+    "to_unit": "g-1e-8-3-14093"
+   }
+  },
+  "x329": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 35254633,
+   "length": 1362278,
+   "sha256": "c64e5e56a22d1c79b917f1ad2ff89de66c8bcd1f4beaef4367adfbd7304d46bf",
+   "census": "x329",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7453626119561896e-33,
+    "from_unit": "g-1e-7-3-34742",
+    "to_unit": "g-1e-8-3-34742"
+   }
+  },
+  "x334": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 36616911,
+   "length": 1369467,
+   "sha256": "78efd3192ccab2e79f7237e9cb2f42e32bd483cc9c5867ef820202b362299d21",
+   "census": "x334",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7510481866529237e-33,
+    "from_unit": "g-1e-7-3-34804",
+    "to_unit": "g-1e-8-3-34804"
+   }
+  },
+  "x312": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 37986378,
+   "length": 1372095,
+   "sha256": "93b05a4f7a9630b89486af2a0ca7433d48834b19c0e823c1a85663d7ad72b1bd",
+   "census": "x312",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.6755963819552617e-33,
+    "from_unit": "g-1e-7-3-14096",
+    "to_unit": "g-1e-8-3-14096"
+   }
+  },
+  "x330": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 39358473,
+   "length": 1365158,
+   "sha256": "9c91b7401be6b46cee67a6ba7770ee8a4d35fef4d26eecfedb38753fb3fc6364",
+   "census": "x330",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7618479551293536e-33,
+    "from_unit": "g-1e-7-3-34756",
+    "to_unit": "g-1e-8-3-34756"
+   }
+  },
+  "x386": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 40723631,
+   "length": 1367235,
+   "sha256": "832aac36ed153d87b19310d0217538aa3532f40ffa5641ebc831cd9f3c61918f",
+   "census": "x386",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.76691906505752e-33,
+    "from_unit": "g-1e-7-3-38799",
+    "to_unit": "g-1e-8-3-38799"
+   }
+  },
+  "x381": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 42090866,
+   "length": 1367643,
+   "sha256": "f326518ddd14e8c7cfbe89871c8c373e6811547f4b7ef5d9eb9388ff87a096dd",
+   "census": "x381",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.77173618454079e-33,
+    "from_unit": "g-1e-7-3-38482",
+    "to_unit": "g-1e-8-3-38482"
+   }
+  },
+  "x341": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 43458509,
+   "length": 1376309,
+   "sha256": "7a9cada313ffc849003d99d3746f2752f3c80b6e575a44387f1ab849df8691be",
+   "census": "x341",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.697463493069584e-33,
+    "from_unit": "g-1e-7-3-34933",
+    "to_unit": "g-1e-8-3-34933"
+   }
+  },
+  "x374": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 44834818,
+   "length": 1379150,
+   "sha256": "920fc1bf79e8c7c177e026e5284183cf649b3a968037a5c2ce97658228d5b9c9",
+   "census": "x374",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7762696831286417e-33,
+    "from_unit": "g-1e-7-3-38435",
+    "to_unit": "g-1e-8-3-38435"
+   }
+  },
+  "x338": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 46213968,
+   "length": 1376826,
+   "sha256": "43d5606b5de4f38e0bbb6acc63aa406cf43f7473f3b904c3f5e6624b625322d5",
+   "census": "x338",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7021421805066296e-33,
+    "from_unit": "g-1e-7-3-34862",
+    "to_unit": "g-1e-8-3-34862"
+   }
+  },
+  "x349": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 47590794,
+   "length": 1377544,
+   "sha256": "95eed3f8d54b20f34736294eb43dc7548cc92d918fbe08e5ae0523834e5a3db6",
+   "census": "x349",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.706440092715612e-33,
+    "from_unit": "g-1e-7-3-34966",
+    "to_unit": "g-1e-8-3-34966"
+   }
+  },
+  "x387": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 48968338,
+   "length": 1378356,
+   "sha256": "a03b8625a25c963330789a3b5321c980d3007057a3ffd7e60375874e51c2222b",
+   "census": "x387",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.784364813069952e-33,
+    "from_unit": "g-1e-7-3-38903",
+    "to_unit": "g-1e-8-3-38903"
+   }
+  },
+  "x373": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 50346694,
+   "length": 1373210,
+   "sha256": "4987fbfdf4d08c1e72051d107c5635564084efdfdeebb2a9a61fe5ae12eef9ab",
+   "census": "x373",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7103300085115754e-33,
+    "from_unit": "g-1e-7-3-38237",
+    "to_unit": "g-1e-8-3-38237"
+   }
+  },
+  "x382": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 51719904,
+   "length": 1379258,
+   "sha256": "dd09afafa3891402fa4bbe715c5642a4fc29f71e4001213d13043d0abfb5f06b",
+   "census": "x382",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7878727531665133e-33,
+    "from_unit": "g-1e-7-3-38536",
+    "to_unit": "g-1e-8-3-38536"
+   }
+  },
+  "x375": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 53099162,
+   "length": 1378610,
+   "sha256": "fb7fa495bdf1f25b9ec5f784e91449ec600c95506b38895358f4d4d190b2dc08",
+   "census": "x375",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7137934773160868e-33,
+    "from_unit": "g-1e-7-3-38439",
+    "to_unit": "g-1e-8-3-38439"
+   }
+  },
+  "x342": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 54477772,
+   "length": 1383614,
+   "sha256": "5cb3d559c4f898a27347470960da59b95042d8f55689a6feea587d353fb0948a",
+   "census": "x342",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.790996121827898e-33,
+    "from_unit": "g-1e-7-3-34940",
+    "to_unit": "g-1e-8-3-34940"
+   }
+  },
+  "x388": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 55861386,
+   "length": 1377872,
+   "sha256": "40c5fb27a764614eee7521e108bc9f9a8c5876852ccc71cc24f0e31819a3ba07",
+   "census": "x388",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7168239422348402e-33,
+    "from_unit": "g-1e-7-3-38906",
+    "to_unit": "g-1e-8-3-38906"
+   }
+  },
+  "x343": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 57239258,
+   "length": 1382932,
+   "sha256": "401abb8bae114b4d364e848f0b1a06c9f89142aa03ab573c6ad09453174739ea",
+   "census": "x343",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7937290060231673e-33,
+    "from_unit": "g-1e-7-3-34942",
+    "to_unit": "g-1e-8-3-34942"
+   }
+  },
+  "x339": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 58622190,
+   "length": 1379565,
+   "sha256": "3cf531aa0b96b9c9d2d233e860f8884b907108a63f486346fa68fa9c4880aacc",
+   "census": "x339",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.71942849432828e-33,
+    "from_unit": "g-1e-7-3-34865",
+    "to_unit": "g-1e-8-3-34865"
+   }
+  },
+  "x389": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 60001755,
+   "length": 1373878,
+   "sha256": "b121600e64b2dc29f1a6e512459acaefadec542bcedcce9d56e6722c3dff36d8",
+   "census": "x389",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.79607780049621e-33,
+    "from_unit": "g-1e-7-3-38908",
+    "to_unit": "g-1e-8-3-38908"
+   }
+  },
+  "x383": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 61375633,
+   "length": 1378217,
+   "sha256": "914e8aa0902f64b564e3de64b274b79b2eca330f3b2c2d558cdb756b266eb293",
+   "census": "x383",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7216277215483662e-33,
+    "from_unit": "g-1e-7-3-38540",
+    "to_unit": "g-1e-8-3-38540"
+   }
+  },
+  "x353": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 62753850,
+   "length": 1382357,
+   "sha256": "64214689a45f8fb11557f5a69d31468672e56fedfb224fea602735847df48032",
+   "census": "x353",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7234536486356862e-33,
+    "from_unit": "g-1e-7-3-34995",
+    "to_unit": "g-1e-8-3-34995"
+   }
+  },
+  "x354": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 64136207,
+   "length": 1381781,
+   "sha256": "0fd3bb56699cb4219ab9508bc343c43cb2d10d5c371c6cc34d10df65f72562ed",
+   "census": "x354",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7997076991702244e-33,
+    "from_unit": "g-1e-7-3-34996",
+    "to_unit": "g-1e-8-3-34996"
+   }
+  },
+  "x355": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 65517988,
+   "length": 1383741,
+   "sha256": "9bb21481031627fcdddd1ec7aff034b091902a6331b1d0cb2383659e041d25c7",
+   "census": "x355",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7249463098863294e-33,
+    "from_unit": "g-1e-7-3-34997",
+    "to_unit": "g-1e-8-3-34997"
+   }
+  },
+  "x394": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 66901729,
+   "length": 1387649,
+   "sha256": "9e231fb7128c1e501bfbc5b22c661cfb28ad255db725926a2c0552d0d5a21d2a",
+   "census": "x394",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8030037750880896e-33,
+    "from_unit": "g-1e-7-3-39142",
+    "to_unit": "g-1e-8-3-39142"
+   }
+  },
+  "x317": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 68289378,
+   "length": 1387324,
+   "sha256": "06909e1b4559ca79977909167cd80fb53f2b759cdda2923c211e4bed466ecb2e",
+   "census": "x317",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.727864885660552e-33,
+    "from_unit": "g-1e-7-3-14592",
+    "to_unit": "g-1e-8-3-14592"
+   }
+  },
+  "x395": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 69676702,
+   "length": 1383896,
+   "sha256": "cb152b34837fa6f951d8ed61ddb906a06ffd05c1d029dac705ef37c6df5d230c",
+   "census": "x395",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.7284564325980312e-33,
+    "from_unit": "g-1e-7-3-39146",
+    "to_unit": "g-1e-8-3-39146"
+   }
+  },
+  "x315": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X07/inputs_X07.pkl",
+   "offset": 71060598,
+   "length": 1389404,
+   "sha256": "4ec7074224e7c1ef21a367975e1dd209d28116b806d7db5e5c7490511a45fef6",
+   "census": "x315",
+   "override": {
+    "rtol": 1e-08,
+    "atol": 1.8042192277935834e-33,
+    "from_unit": "g-1e-7-3-14497",
+    "to_unit": "g-1e-8-3-14497"
+   }
+  },
+  "x026": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X08/inputs_X08.pkl",
+   "offset": 0,
+   "length": 1384232,
+   "sha256": "da3e9708c3810c87e820fc2249f3e622f6ea7fd03dc39c85ec726a9f28154e98",
+   "census": "x026",
+   "override": null
+  },
+  "x323": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X09/inputs_X09.pkl",
+   "offset": 0,
+   "length": 1328780,
+   "sha256": "371d5a16f96d1a73cb9071f43b4801efe32bff8af7f6e080dcb86deb8e6e826c",
+   "census": "x323",
+   "override": null
+  },
+  "x301": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X09/inputs_X09.pkl",
+   "offset": 1328780,
+   "length": 1342352,
+   "sha256": "9ed06db4a7ada6bae2cdaa1e74088c0e9ac7f5c10e7d7b78d4338857189d74fb",
+   "census": "x301",
+   "override": null
+  },
+  "x357": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X09/inputs_X09.pkl",
+   "offset": 2671132,
+   "length": 1357438,
+   "sha256": "a797f1d7656494548b3c1afc785e33eb8828d8b00e68d769af6eeec5ebf4d80a",
+   "census": "x357",
+   "override": null
+  },
+  "x337": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X09/inputs_X09.pkl",
+   "offset": 4028570,
+   "length": 1362479,
+   "sha256": "19dc81b7508093ec1bbbd18014a76ef470db66b79b85bd91cd250d56bde45b77",
+   "census": "x337",
+   "override": null
+  },
+  "x359": {
+   "set": "x396",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck/capture/X09/inputs_X09.pkl",
+   "offset": 5391049,
+   "length": 1365763,
+   "sha256": "d4c3449b92e1e75f2bfd5b99d261c6b832e2b29025b23f913c052805ab9304e8",
+   "census": "x359",
+   "override": null
+  }
+ }
+}

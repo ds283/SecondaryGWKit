@@ -1,0 +1,61 @@
+# levin-phase-floor 07a Part A: section 2.4's tables (final, items 2 and 4 scored on r_g)
+
+Items 2 and 4 are scored on the cross-check's r_g = |v_7 - v_8| / e_7 (the user's ruling of 2026-11-11); the prompt's r = |v_7 - v_8| / (e_7 + e_8) is kept beside it, labelled, for the record.
+
+(b) and (g) are run as b2 and g2 (log deviation 10), on items 1-2 and the no-window calls only (the user's ruling at stop 1). Item 3 is undecided by construction for every variant; 'qualifies' is judged on items 1-2 with item 3 undecided. Columns 'regions' and 'wall' sum V4's 25, the pairs and (where run) the 396; '... 1-2' columns sum V4 and the pairs only, comparable across all variants.
+
+written 2026-11-11T10:29:32Z on mps026298.phys.susx.ac.uk; script tables_07a_final_rg.py sha256 1958adf7b59499a169d8c9dd446eb7d7110015eab14a038bce47ce153c3a1bb4; calls manifest sha256 dbb6f160936632c1f7c5c35096eca17ba4eacef52ff7da2878b1c2ac767a2584; variants.json sha256 bf7f99d39e217a628d92d69e8fd1923b374dfb98b6ede3b6a0a5055aad9fe614
+
+Replays at tree reproducing 07's census record bit for bit: 430 of 430; not: []
+Replays at a reproducing 07's census record bit for bit: 430 of 430; not: []
+
+No-window check (five calls, every variant against the tree, bit for bit): a: 5/5; b2: 5/5; c: 5/5; d: 5/5; e: 5/5; f: 5/5; g2: 5/5
+
+## 4. Qualification and cost
+
+| variant | qualifies (items 1-2) | conv. & dishonest V4 | conv. & dishonest 396 | pairs failing | 396 scored / undecided | unconverged V4 / pairs / 396 | regions | wall s | regions 1-2 | wall s 1-2 | windows stopped | leaves falling at stop | missing |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| tree | no | v08, v09, v12, v17, v22 | 0 | p14501, p35006 | 0 / 396 | 1 / 0 / 4 | 29555 | 615 | 2386 | 48 | 408 | 4325 | 0 |
+| a | no | v08, v09, v12, v17, v22 | 0 | p14501, p35006 | 0 / 396 | 1 / 0 / 4 | 29555 | 625 | 2386 | 48 | 408 | 4325 | 0 |
+| b2 | yes | - | n/a | - | 0 / 396 | 25 / 4 / not run | 764283 | 50555 | 764283 | 50555 | 0 | 0 | 0 |
+| c | no | v08, v09, v12, v17, v22 | 0 | p14501, p35006 | 0 / 396 | 1 / 0 / 4 | 29555 | 628 | 2386 | 48 | 408 | 4325 | 0 |
+| d | no | v08, v09, v12, v17, v22 | 0 | p14501, p35006 | 0 / 396 | 1 / 0 / 4 | 29827 | 629 | 2386 | 48 | 408 | 4543 | 0 |
+| e | no | v08, v09, v12, v17, v22 | 0 | - | 0 / 396 | 2 / 2 / 39 | 29555 | 617 | 2386 | 49 | 408 | 4325 | 0 |
+| f | no | v08, v09, v12, v17, v22 | 0 | - | 0 / 396 | 2 / 2 / 39 | 29555 | 619 | 2386 | 49 | 408 | 4325 | 0 |
+| g2 | yes | - | n/a | - | 0 / 396 | 25 / 4 / not run | 764283 | 51494 | 764283 | 51494 | 0 | 0 | 0 |
+
+## 1. Honesty on V4's 25: |v - ref| / abserr (* converged and dishonest; u unconverged)
+
+| call | tree | a | b2 | c | d | e | f | g2 |
+|---|---|---|---|---|---|---|---|---|
+| cal_z12 | 0.718 | 0.718 | 0.718 u | 0.718 | 0.718 | 0.718 | 0.718 | 0.718 u |
+| v00 | 0.0197 | 0.0197 | 0.0197 u | 0.0197 | 0.0197 | 0.0197 | 0.0197 | 0.0197 u |
+| v01 | 0.0325 | 0.0325 | 0.0325 u | 0.0325 | 0.0325 | 0.0325 | 0.0325 | 0.0325 u |
+| v02 | 0.00572 | 0.00572 | 0.00572 u | 0.00572 | 0.00572 | 0.00572 | 0.00572 | 0.00572 u |
+| v03 | 0.00175 | 0.00175 | 0.00175 u | 0.00175 | 0.00175 | 0.00175 u | 0.00175 u | 0.00175 u |
+| v04 | 0.138 u | 0.138 u | 0.138 u | 0.138 u | 0.138 u | 0.138 u | 0.138 u | 0.138 u |
+| v05 | 0.00124 | 0.00124 | 0.00124 u | 0.00124 | 0.00124 | 0.00124 | 0.00124 | 0.00124 u |
+| v06 | 0.000278 | 0.000278 | 0.000278 u | 0.000278 | 0.000278 | 0.000278 | 0.000278 | 0.000278 u |
+| v07 | 0.000481 | 0.000481 | 0.000482 u | 0.000481 | 0.000481 | 0.000481 | 0.000481 | 0.000482 u |
+| v08 (failure) | 3.16* | 3.16* | 3.16 u | 3.16* | 3.16* | 3.16* | 3.16* | 3.16 u |
+| v09 (failure) | 2.21* | 2.21* | 2.21 u | 2.21* | 2.21* | 2.21* | 2.21* | 2.21 u |
+| v10 | 0.192 | 0.192 | 0.192 u | 0.192 | 0.192 | 0.192 | 0.192 | 0.192 u |
+| v11 | 0.00762 | 0.00762 | 0.00762 u | 0.00762 | 0.00762 | 0.00762 | 0.00762 | 0.00762 u |
+| v12 (failure) | 3.08* | 3.08* | 3.08 u | 3.08* | 3.08* | 3.08* | 3.08* | 3.08 u |
+| v13 | 0.309 | 0.309 | 0.309 u | 0.309 | 0.309 | 0.309 | 0.309 | 0.309 u |
+| v14 | 0.00102 | 0.00102 | 0.00102 u | 0.00102 | 0.00102 | 0.00102 | 0.00102 | 0.00102 u |
+| v15 | 0.00204 | 0.00204 | 0.00205 u | 0.00204 | 0.00204 | 0.00204 | 0.00204 | 0.00205 u |
+| v16 | 0.0382 | 0.0382 | 0.0382 u | 0.0382 | 0.0382 | 0.0382 | 0.0382 | 0.0382 u |
+| v17 (failure) | 2.38* | 2.38* | 2.38 u | 2.38* | 2.38* | 2.38* | 2.38* | 2.38 u |
+| v18 | 0.529 | 0.529 | 0.529 u | 0.529 | 0.529 | 0.529 | 0.529 | 0.529 u |
+| v19 | 0.0462 | 0.0462 | 0.0462 u | 0.0462 | 0.0462 | 0.0462 | 0.0462 | 0.0462 u |
+| v20 | 0.0141 | 0.0141 | 0.0141 u | 0.0141 | 0.0141 | 0.0141 | 0.0141 | 0.0141 u |
+| v21 | 0.00862 | 0.00862 | 0.00863 u | 0.00862 | 0.00862 | 0.00862 | 0.00862 | 0.00863 u |
+| v22 (failure) | 2.53* | 2.53* | 2.53 u | 2.53* | 2.53* | 2.53* | 2.53* | 2.53 u |
+| v23 | 0.767 | 0.767 | 0.767 u | 0.767 | 0.767 | 0.767 | 0.767 | 0.767 u |
+
+## 2. The pairs, scored on r_g = |v_7 - v_8| / e_7, the cross-check's; in brackets the prompt's r = |v_7 - v_8| / (e_7 + e_8), for the record (u: a member unconverged; * converged and r_g > 1)
+
+| pair | tree | a | b2 | c | d | e | f | g2 |
+|---|---|---|---|---|---|---|---|---|
+wrote out/tables_final_rg.json 4b25f1a6e1181f84bfacc7846287e59daaedfb72298a0e551d5283b74cf80f51 out/tables_final_rg.md 7e644ff812559299ec1196904de337e0ac70c1f9a9e5f7a4d00f0dbeb8af4389

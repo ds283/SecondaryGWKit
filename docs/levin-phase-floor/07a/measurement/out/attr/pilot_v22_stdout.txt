@@ -1,0 +1,3 @@
+v22 res 1: 124 leaves, 2175 segments, 228 jobs, total -5.9777411754506750663e-28 in 87.0 s
+v22 res 2: 124 leaves, 2175 segments, 228 jobs, total -5.9777411754490174576e-28 in 382.1 s
+wrote out/attr/pilot_v22.json 922b7b3c8f81446457f9aefb88fa45009eaade710b51efe8bfb91c99b6d5d6c1

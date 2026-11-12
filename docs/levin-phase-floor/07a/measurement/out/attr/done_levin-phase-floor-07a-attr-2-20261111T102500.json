@@ -1,0 +1,82 @@
+{
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/run_attr_registered_07a.py",
+ "script_sha256": "2ed93f24cc75999ccf369bc00f64c58523ec2f20e6327156367d029ad5b1b1da",
+ "workers": 6,
+ "results": [
+  {
+   "sid": "v12",
+   "status": "ok",
+   "wall_s": 1357.0331418514252
+  },
+  {
+   "sid": "v17",
+   "status": "ok",
+   "wall_s": 1136.8504128456116
+  },
+  {
+   "sid": "v09",
+   "status": "ok",
+   "wall_s": 652.7990951538086
+  },
+  {
+   "sid": "v08",
+   "status": "ok",
+   "wall_s": 3462.16571187973
+  },
+  {
+   "sid": "cal_z12",
+   "status": "ok",
+   "wall_s": 407.4162859916687
+  },
+  {
+   "sid": "v00",
+   "status": "ok",
+   "wall_s": 431.95349311828613
+  },
+  {
+   "sid": "v02",
+   "status": "ok",
+   "wall_s": 382.5783257484436
+  },
+  {
+   "sid": "v07",
+   "status": "ok",
+   "wall_s": 474.48563838005066
+  },
+  {
+   "sid": "v15",
+   "status": "ok",
+   "wall_s": 172.1812858581543
+  },
+  {
+   "sid": "v20",
+   "status": "ok",
+   "wall_s": 168.7573812007904
+  },
+  {
+   "sid": "v05",
+   "status": "ok",
+   "wall_s": 2385.186905860901
+  },
+  {
+   "sid": "v10",
+   "status": "ok",
+   "wall_s": 733.3067462444305
+  },
+  {
+   "sid": "v23",
+   "status": "ok",
+   "wall_s": 3580.4667739868164
+  },
+  {
+   "sid": "v13",
+   "status": "ok",
+   "wall_s": 11102.411662101746
+  },
+  {
+   "sid": "v18",
+   "status": "ok",
+   "wall_s": 12701.995892047882
+  }
+ ]
+}

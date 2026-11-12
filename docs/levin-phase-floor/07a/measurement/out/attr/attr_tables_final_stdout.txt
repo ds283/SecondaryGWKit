@@ -1,0 +1,245 @@
+# levin-phase-floor 07a Part A: the attribution (section 2.2; section 2.4 item 5)
+
+written 2026-11-11T21:20:39Z on mps026298.phys.susx.ac.uk; script attr_tables_07a.py sha256 422b23e8a62fe70946e2b2f1f5aaf273ca47ddaa953640ccf6afa3d5cddbab39
+
+## v22
+
+value -5.9777207415559595e-28, abserr 8.076e-34, ref -5.97774117545071399004259977767e-28; (v - ref)/abserr +2.530; closure |sum ref_i - ref| / tol = 0.000149 (holds); leaves not meeting the 100x accuracy rule: 80 of 124
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 8 | -2.325e-41 | 1.010e-40 | 0.23 | -0.000 | 2.04e-41 |
+| H2 other window | 7 | -7.126e-41 | 1.468e-40 | 0.486 | -0.000 | 8.87e-41 |
+| H3 outside | 109 | +2.043e-33 | 8.076e-34 | 2.53 | +2.530 | 1.62e-40 |
+
+## v00
+
+value 1.8280644948558284e-27, abserr 5.532e-34, ref 1.82806450573505515530052691607e-27; (v - ref)/abserr -0.020; closure |sum ref_i - ref| / tol = 0.000563 (holds); leaves not meeting the 100x accuracy rule: 32 of 37
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 9 | -1.355e-42 | 9.375e-40 | 0.00145 | -0.000 | 1.94e-41 |
+| H2 other window | 8 | +3.215e-41 | 3.070e-40 | 0.105 | +0.000 | 7.53e-41 |
+| H3 outside | 20 | -1.088e-35 | 5.532e-34 | 0.0197 | -0.020 | 9.91e-41 |
+
+## v01
+
+value 4.8751385337851374e-26, abserr 4.533e-33, ref 4.87513851904420264082978246135e-26; (v - ref)/abserr +0.033; closure |sum ref_i - ref| / tol = 0.000264 (holds); leaves not meeting the 100x accuracy rule: 45 of 51
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 8 | +4.740e-40 | 8.515e-39 | 0.0557 | +0.000 | 6.31e-40 |
+| H2 other window | 6 | +2.958e-41 | 5.921e-39 | 0.005 | +0.000 | 1.30e-39 |
+| H3 outside | 37 | +1.474e-34 | 4.533e-33 | 0.0325 | +0.033 | 3.44e-39 |
+
+## v02
+
+value 1.7794421220214393e-24, abserr 1.699e-32, ref 1.7794421219243248177761180272e-24; (v - ref)/abserr +0.006; closure |sum ref_i - ref| / tol = 0.000487 (holds); leaves not meeting the 100x accuracy rule: 90 of 152
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 11 | -3.876e-39 | 9.779e-39 | 0.396 | -0.000 | 2.26e-39 |
+| H2 other window | 5 | -6.273e-39 | 4.771e-39 | 1.31 | -0.000 | 7.58e-39 |
+| H3 outside | 136 | +9.705e-35 | 1.699e-32 | 0.00571 | +0.006 | 5.11e-37 |
+
+## v03
+
+value -1.3417123142848253e-24, abserr 1.146e-32, ref -1.34171231426475990454116223234e-24; (v - ref)/abserr -0.002; closure |sum ref_i - ref| / tol = 0.000103 (holds); leaves not meeting the 100x accuracy rule: 83 of 161
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 9 | -7.864e-39 | 1.083e-37 | 0.0726 | -0.000 | 1.51e-38 |
+| H2 other window | 7 | -2.717e-38 | 5.364e-38 | 0.507 | -0.000 | 1.07e-38 |
+| H3 outside | 145 | -2.002e-35 | 1.146e-32 | 0.00175 | -0.002 | 1.01e-37 |
+
+## v05
+
+value -7.2269249368599186e-26, abserr 6.257e-33, ref -7.22692493608543314222467049612e-26; (v - ref)/abserr -0.001; closure |sum ref_i - ref| / tol = 6.25e-05 (holds); leaves not meeting the 100x accuracy rule: 66 of 138
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 14 | -3.070e-41 | 1.212e-39 | 0.0253 | -0.000 | 1.60e-40 |
+| H2 other window | 7 | +2.993e-40 | 6.268e-40 | 0.477 | +0.000 | 1.59e-40 |
+| H3 outside | 117 | -7.743e-36 | 6.257e-33 | 0.00124 | -0.001 | 1.50e-38 |
+
+## v06
+
+value 1.3253807037767092e-24, abserr 7.963e-32, ref 1.32538070379886865582055933152e-24; (v - ref)/abserr -0.000; closure |sum ref_i - ref| / tol = 3.37e-05 (holds); leaves not meeting the 100x accuracy rule: 68 of 118
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 8 | -1.374e-38 | 7.736e-38 | 0.178 | -0.000 | 5.41e-39 |
+| H2 other window | 7 | -1.193e-38 | 8.675e-38 | 0.137 | -0.000 | 2.30e-38 |
+| H3 outside | 103 | -2.212e-35 | 7.963e-32 | 0.000278 | -0.000 | 1.11e-37 |
+
+## v07
+
+value 1.5858416697418567e-27, abserr 1.973e-34, ref 1.58584166983687077828653126842e-27; (v - ref)/abserr -0.000; closure |sum ref_i - ref| / tol = 2.12e-05 (holds); leaves not meeting the 100x accuracy rule: 61 of 97
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 19 | +1.867e-41 | 3.976e-40 | 0.047 | +0.000 | 6.96e-41 |
+| H2 other window | 4 | +3.390e-41 | 5.465e-41 | 0.62 | +0.000 | 1.09e-41 |
+| H3 outside | 74 | -9.503e-38 | 1.973e-34 | 0.000482 | -0.000 | 1.64e-40 |
+
+## v08
+
+value -3.4104767482506145e-31, abserr 1.940e-36, ref -3.41053805400626407413049158363e-31; (v - ref)/abserr +3.160; closure |sum ref_i - ref| / tol = 0.00329 (holds); leaves not meeting the 100x accuracy rule: 29 of 31
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 7 | +7.060e-44 | 3.099e-43 | 0.228 | +0.000 | 3.63e-44 |
+| H2 other window | 8 | -8.750e-43 | 1.072e-42 | 0.817 | -0.000 | 4.06e-43 |
+| H3 outside | 16 | +6.131e-36 | 1.940e-36 | 3.16 | +3.160 | 1.61e-43 |
+
+## v09
+
+value -2.4781507433443480e-25, abserr 1.646e-33, ref -2.47815077974209502185220153454e-25; (v - ref)/abserr +2.211; closure |sum ref_i - ref| / tol = 6.16e-06 (holds); leaves not meeting the 100x accuracy rule: 36 of 39
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 13 | +2.920e-41 | 1.330e-40 | 0.22 | +0.000 | 3.28e-41 |
+| H2 other window | 6 | +1.449e-41 | 8.741e-41 | 0.166 | +0.000 | 2.34e-41 |
+| H3 outside | 20 | +3.640e-33 | 1.646e-33 | 2.21 | +2.211 | 1.27e-38 |
+
+## v10
+
+value 7.9818607049331825e-26, abserr 1.304e-33, ref 7.98186067985013134121352684174e-26; (v - ref)/abserr +0.192; closure |sum ref_i - ref| / tol = 1.78e-05 (holds); leaves not meeting the 100x accuracy rule: 35 of 39
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 10 | -2.450e-41 | 9.646e-41 | 0.254 | -0.000 | 2.51e-41 |
+| H2 other window | 9 | +1.105e-39 | 1.062e-39 | 1.04 | +0.000 | 2.83e-40 |
+| H3 outside | 20 | +2.508e-34 | 1.304e-33 | 0.192 | +0.192 | 4.12e-39 |
+
+## v11
+
+value 3.9013618997621280e-26, abserr 8.985e-34, ref 3.90136190044653073622109475435e-26; (v - ref)/abserr -0.008; closure |sum ref_i - ref| / tol = 0.000354 (holds); leaves not meeting the 100x accuracy rule: 43 of 78
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 5 | -5.199e-40 | 2.410e-39 | 0.216 | -0.000 | 2.57e-40 |
+| H2 other window | 9 | +1.677e-39 | 4.177e-39 | 0.401 | +0.000 | 1.26e-39 |
+| H3 outside | 64 | -6.842e-36 | 8.985e-34 | 0.00761 | -0.008 | 3.62e-39 |
+
+## v12
+
+value 5.3160863110212348e-29, abserr 9.836e-35, ref 5.31605601923708585534102868347e-29; (v - ref)/abserr +3.080; closure |sum ref_i - ref| / tol = 2.97e-05 (holds); leaves not meeting the 100x accuracy rule: 22 of 25
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 4 | +5.283e-43 | 2.367e-41 | 0.0223 | +0.000 | 6.32e-43 |
+| H2 other window | 7 | +1.129e-42 | 1.206e-41 | 0.0936 | +0.000 | 4.09e-42 |
+| H3 outside | 14 | +3.029e-34 | 9.836e-35 | 3.08 | +3.080 | 3.66e-42 |
+
+## v13
+
+value 1.8336362305545373e-32, abserr 8.638e-38, ref 1.8336335617074056581584833037e-32; (v - ref)/abserr +0.309; closure |sum ref_i - ref| / tol = 0.000393 (holds); leaves not meeting the 100x accuracy rule: 31 of 33
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 10 | -6.245e-45 | 2.543e-44 | 0.246 | -0.000 | 8.99e-45 |
+| H2 other window | 8 | +3.484e-45 | 2.641e-44 | 0.132 | +0.000 | 7.87e-45 |
+| H3 outside | 15 | +2.669e-38 | 8.638e-38 | 0.309 | +0.309 | 7.26e-45 |
+
+## v14
+
+value 3.2327254907143427e-23, abserr 1.889e-30, ref 3.2327254905214056221436023523e-23; (v - ref)/abserr +0.001; closure |sum ref_i - ref| / tol = 3.92e-05 (holds); leaves not meeting the 100x accuracy rule: 31 of 46
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 10 | +1.360e-38 | 2.667e-37 | 0.051 | +0.000 | 5.70e-38 |
+| H2 other window | 6 | -4.020e-37 | 4.476e-37 | 0.898 | -0.000 | 2.79e-37 |
+| H3 outside | 30 | +1.929e-33 | 1.889e-30 | 0.00102 | +0.001 | 1.96e-36 |
+
+## v15
+
+value -4.7450144874461292e-27, abserr 1.390e-33, ref -4.7450144846073062801113673764e-27; (v - ref)/abserr -0.002; closure |sum ref_i - ref| / tol = 0.000856 (holds); leaves not meeting the 100x accuracy rule: 94 of 166
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 16 | +5.508e-39 | 6.048e-38 | 0.0911 | +0.000 | 8.48e-39 |
+| H2 other window | 5 | +1.676e-38 | 4.927e-38 | 0.34 | +0.000 | 1.28e-38 |
+| H3 outside | 145 | -2.873e-36 | 1.390e-33 | 0.00207 | -0.002 | 2.16e-37 |
+
+## v16
+
+value -5.1548456463371177e-26, abserr 2.376e-33, ref -5.15484563726113667130039275106e-26; (v - ref)/abserr -0.038; closure |sum ref_i - ref| / tol = 0.000421 (holds); leaves not meeting the 100x accuracy rule: 74 of 137
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 10 | -1.135e-39 | 8.251e-39 | 0.138 | -0.000 | 7.06e-40 |
+| H2 other window | 7 | -1.771e-39 | 4.335e-39 | 0.409 | -0.000 | 1.32e-39 |
+| H3 outside | 120 | -9.075e-35 | 2.376e-33 | 0.0382 | -0.038 | 4.38e-39 |
+
+## v17
+
+value -1.4185537083923176e-29, abserr 4.193e-35, ref -1.41854372000413634517489124048e-29; (v - ref)/abserr -2.382; closure |sum ref_i - ref| / tol = 3.02e-06 (holds); leaves not meeting the 100x accuracy rule: 20 of 22
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 6 | -1.436e-42 | 5.426e-42 | 0.265 | -0.000 | 1.09e-42 |
+| H2 other window | 8 | -8.233e-42 | 1.689e-41 | 0.487 | -0.000 | 4.77e-42 |
+| H3 outside | 8 | -9.988e-35 | 4.193e-35 | 2.38 | -2.382 | 3.04e-42 |
+
+## v18
+
+value 2.9232940768718659e-32, abserr 8.559e-38, ref 2.92328954976412804054052253855e-32; (v - ref)/abserr +0.529; closure |sum ref_i - ref| / tol = 0.000123 (holds); leaves not meeting the 100x accuracy rule: 23 of 25
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 9 | +2.903e-45 | 4.612e-44 | 0.063 | +0.000 | 9.63e-45 |
+| H2 other window | 6 | +4.069e-46 | 1.477e-44 | 0.0275 | +0.000 | 5.78e-45 |
+| H3 outside | 10 | +4.527e-38 | 8.559e-38 | 0.529 | +0.529 | 5.42e-45 |
+
+## v19
+
+value 2.2579939661249731e-23, abserr 1.981e-31, ref 2.25799396520948802778958335615e-23; (v - ref)/abserr +0.046; closure |sum ref_i - ref| / tol = 0.000204 (holds); leaves not meeting the 100x accuracy rule: 83 of 161
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 16 | +4.662e-39 | 9.094e-37 | 0.00513 | +0.000 | 2.44e-37 |
+| H2 other window | 4 | +6.094e-38 | 3.893e-36 | 0.0157 | +0.000 | 9.77e-38 |
+| H3 outside | 141 | +9.155e-33 | 1.981e-31 | 0.0462 | +0.046 | 5.90e-36 |
+
+## v20
+
+value 5.6379906786423515e-25, abserr 4.684e-33, ref 5.63799067930491227733410665239e-25; (v - ref)/abserr -0.014; closure |sum ref_i - ref| / tol = 0.00194 (holds); leaves not meeting the 100x accuracy rule: 82 of 153
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 6 | -9.897e-39 | 6.402e-38 | 0.155 | -0.000 | 6.88e-39 |
+| H2 other window | 7 | -4.380e-38 | 8.649e-38 | 0.506 | -0.000 | 2.63e-38 |
+| H3 outside | 140 | -6.626e-35 | 4.684e-33 | 0.0141 | -0.014 | 2.40e-37 |
+
+## v21
+
+value -3.8423689487728947e-25, abserr 3.822e-33, ref -3.84236894844347553172561027629e-25; (v - ref)/abserr -0.009; closure |sum ref_i - ref| / tol = 0.00179 (holds); leaves not meeting the 100x accuracy rule: 32 of 62
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 8 | +2.588e-38 | 3.977e-38 | 0.651 | +0.000 | 9.78e-39 |
+| H2 other window | 6 | +1.182e-38 | 4.529e-38 | 0.261 | +0.000 | 1.74e-38 |
+| H3 outside | 48 | -3.292e-35 | 3.822e-33 | 0.00861 | -0.009 | 7.85e-38 |
+
+## v23
+
+value -1.9402743494437742e-30, abserr 7.485e-37, ref -1.94027377522400487845595321859e-30; (v - ref)/abserr -0.767; closure |sum ref_i - ref| / tol = 1.62e-05 (holds); leaves not meeting the 100x accuracy rule: 30 of 32
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 15 | +4.579e-44 | 6.484e-43 | 0.0706 | +0.000 | 2.01e-43 |
+| H2 other window | 5 | -4.949e-43 | 5.780e-43 | 0.856 | -0.000 | 1.82e-43 |
+| H3 outside | 12 | -5.742e-37 | 7.485e-37 | 0.767 | -0.767 | 2.25e-43 |
+
+## cal_z12
+
+value 1.3549297530712628e-26, abserr 8.374e-34, ref 1.35492969293828029382601756914e-26; (v - ref)/abserr +0.718; closure |sum ref_i - ref| / tol = 0.000316 (holds); leaves not meeting the 100x accuracy rule: 62 of 70
+
+| part | leaves | true error | declared | abs(true)/declared | true / call abserr | reference accuracy |
+|---|---|---|---|---|---|---|
+| H1 falling | 7 | -1.926e-39 | 5.122e-39 | 0.376 | -0.000 | 7.78e-40 |
+| H2 other window | 8 | -1.249e-40 | 1.756e-39 | 0.0712 | -0.000 | 5.68e-40 |
+| H3 outside | 55 | +6.013e-34 | 8.374e-34 | 0.718 | +0.718 | 5.53e-39 |
+
+wrote out/attr/attr_tables_final.json 8dd85b42d7021ac71223b18c25b85093f9cac9193e17be5392eb7c7e6740921f out/attr/attr_tables_final.md 85d9f92ae0504ec9bc487eee8008bbaeed2334ec871ef490bc69c7642f286e27

@@ -1,0 +1,93 @@
+{
+  "argv": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+    "-B",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/scripts/run_attr_registered_07a.py",
+    "<run dir>",
+    "1",
+    "v21",
+    "v03",
+    "v06",
+    "v16",
+    "v01",
+    "v11",
+    "v19",
+    "v14"
+  ],
+  "campaign": "levin-phase-floor",
+  "checkpoint": null,
+  "created": "2026-11-10T21:54:23+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement",
+  "expected_units": 8,
+  "git_dirty": false,
+  "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+  "heartbeat_means": "at start with the driver's pid, after every job, and every 60 s by a thread of the driver",
+  "host": {
+    "id": "d120d1cf03551e6f",
+    "machine": "arm64",
+    "name": "mps026298.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "07a",
+  "purpose": "levin-phase-floor prompt 07a Part A section 2.2: the attribution's leaf references (Filon, both resolutions) of V4's cheapest calls with a stopped window (Mac Studio; tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd at f93aafd0, code 07's; script run_attr_registered_07a.py sha256 2ed93f24cc75; attr_07a.py sha256 c37692a0b34b; 8 calls: v21 v03 v06 v16 v01 v11 v19 v14; at most 1 processes; Ray-free, no store, no lock)",
+  "results": null,
+  "results_store_id": null,
+  "run_id": "levin-phase-floor-07a-attr-1-20261110T215423",
+  "scope": "Filon leaf references (tools.filon_reference, d37e633b) of captured calls (records in /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/out/attr); nothing written in the tree",
+  "script": "var/levin-phase-floor-07a/measurement/scripts/run_attr_registered_07a.py",
+  "script_sha256": "2ed93f24cc75999ccf369bc00f64c58523ec2f20e6327156367d029ad5b1b1da",
+  "unit": "calls"
+}

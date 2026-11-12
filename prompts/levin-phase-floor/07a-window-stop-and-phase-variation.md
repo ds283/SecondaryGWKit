@@ -31,7 +31,8 @@ The records of Parts A and C are committed on the laptop afterwards: Part A's wi
 Part C's in 07a's records commit.
 
 **Closes, in its records commit, on the user's word:**
-`[07-iroff1-window-stop-can-leave-a-call-dishonest]`, if §6's W4 and W6 hold and §5 holds. It also
+`[07-iroff1-window-stop-can-leave-a-call-dishonest]`, if §6's W7 and §5 hold (amended at §2's stop,
+§9.6; it was "if §6's W4 and W6 hold and §5 holds"). It also
 **narrows** `[07-c2-gate-threshold-was-never-measured]`: O9 is removed from it, if §6's W3 and W5
 hold. Whether $6\pi$ itself is right stays in that issue, which this prompt does not touch.
 
@@ -244,17 +245,72 @@ Every change is in `AdaptiveLevin/levin_quadrature.py`.
 
 ### 1.2 The window's stop
 
-**Written at §2's stop, as §9's amendment, from the user's choice.** Until then this section is
-empty, and Part B is not dispatched. Whatever is chosen:
-- it touches only calls with a window, and only window leaves;
-- it states its basis in `dqage` and §2's measurement, with its constants named and commented;
-- a call whose window stops with its request unmet is not reported converged while its declared
-  error understates what it carries.
+**Written at §2's stop, as §9's amendment** (2026-11-12), from the user's choice: *"Yes, write
+§1.2 on (d)"*. That is §2.3's variant (d): `dqage`'s count, with a value test no looser than the
+request. §9 records the measurement it rests on. Its reference implementation is Part A's variant,
+`docs/levin-phase-floor/07a/measurement/scripts/variants/levin_quadrature_07a_d.py`. Its diff
+against 07's code is `out/variants/d.diff`, beside it; the instrument (`_MEASURE_07A`,
+`_leaf_info_07a`, the shadow counts) is Part A's, and is not shipped.
+
+1. **The count.** A bisection of a window leaf $P$ into $L$ and $R$ counts against its window if
+   and only if all three hold:
+   - **Neither half is unresolved.** This is `dqage`'s skip, `defab1.eq.error1.or.defab2.eq.error2`.
+     A Clenshaw–Curtis leaf is unresolved when $200\,|{\rm CC}_{2N-1} - {\rm CC}_N| \ge {\rm resasc}$,
+     both positive.
+     - ${\rm resasc} = \sum_j |w_j|\,|g_j - \bar g|$ is `dqk21`'s, formed on the fine rule's weights
+       $w_j$ and integrand samples $g_j$, with $\bar g = {\rm CC}_{2N-1}/\sum_j w_j$.
+     - `dqk21` declares ${\rm resasc}\cdot\min\bigl(1, (200\,|K - G|/{\rm resasc})^{3/2}\bigr)$, which
+       equals resasc exactly when this condition holds: the estimate is not yet in its asymptotic
+       regime.
+     - A leaf with no resasc (not a Clenshaw–Curtis leaf) is never unresolved. In Part A every window
+       leaf was a Clenshaw–Curtis leaf.
+   - **The value barely changes, measured against the request:**
+     $|(V_L + V_R) - V_P| \le \min(10^{-5}, {\rm rtol})\,|V_L + V_R|$, with $V$ each leaf's own value.
+   - **The raw error does not fall:** $e_L + e_R \ge 0.99\,e_P$.
+     - $e$ is the error a leaf's own solve declares: its resolution and floor terms combined as
+       `used_interval` combines them (the larger of the two), plus truncation.
+     - It is taken **before** the trust check widens a declaration. It is not $e'$.
+
+   At `_LEVIN_WINDOW_IROFF1_LIMIT` counted bisections the window stops, as at 07. Every leaf of it is
+   returned floor-limited by `_floor_limit_stopped_window_leaf`, which is unchanged.
+2. **Unchanged:**
+   - `_floor_limit_stopped_window_leaf`, and so what a stopped leaf declares;
+   - `fell_at_last_bisection` and `leaves_falling_at_stop`, which still report on $e'$, as 07's do;
+   - the windows, their pieces, and every leaf outside a window.
+3. **`converged` is unchanged:** the budget met, no untrusted leaf, and no guarded leaf at
+   `depth_max`, at the end of the call. `dqage`'s outcome (`ier = 2`) is not adopted (§9.3). §2's
+   three requirements are met as follows:
+   - **It touches only window leaves.** The count is read only at a window leaf's bisection. resasc is
+     computed on every Clenshaw–Curtis solve and kept on its region, but nothing else reads it, and it
+     changes no value, error or result key (W1).
+   - **Its basis.** It rests on `dqage`, `dqk21` and §2's measurement, with its constants named and
+     commented (item 4).
+   - **A call whose window stops with its request unmet is not reported converged while its declared
+     error understates what it carries.**
+     - A stopped window's leaves keep declaring their error inside the call's sum. An untrusted leaf
+       declares its widened bound.
+     - The call is converged only if that sum meets the request at the end.
+     - Part A measured the stopped windows' declarations at or above their true error (§9.2).
+4. **The constants,** each named and commented with its basis:
+   - `_LEVIN_WINDOW_IROFF1_VALUE_RTOL` = $10^{-5}$, `dqage`'s, now the cap of the value test;
+   - `_LEVIN_WINDOW_IROFF1_ERROR_RATIO` = 0.99 and `_LEVIN_WINDOW_IROFF1_LIMIT` = 6, `dqage`'s,
+     unchanged;
+   - **new:** the saturation factor 200 of `dqk21`, named by the agent and commented with
+     `dqk21.f`'s line.
+
+   **The comment above them is rewritten.** It says:
+   - the count is `dqage`'s, with its skip and its raw estimates;
+   - the value test is no looser than the request, because `dqage`'s fixed $10^{-5}$ would count, at
+     rtol `1e-7` or `1e-8`, a bisection that moves the value by 100–1000× the request;
+   - `ier = 2` is not adopted, and why (§9.3);
+   - where Part A's measurement is.
+5. **Docstrings and comments** that describe the rule are rewritten to say what is now counted and
+   why: `_adaptive_levin`'s item 2a; `phase_limited`'s and `fell_at_last_bisection`'s descriptions;
+   and the comment at the count. The agent lists each with its line.
 
 ### 1.3 What the result reports
 
-No new keys are required. If §9's amendment adds one (for example a flag that a window stopped with
-a leaf falling), its name is fixed there.
+No new keys. `stationary_windows`' `iroff1_count` reports §1.2's count.
 
 ## 2. The measurement — Part A, on the Mac Studio, a planned stop
 
@@ -538,4 +594,149 @@ unchanged, with §9's additions:
 
 ## 9. Amendments at §2's stop
 
-*Empty until the user chooses.*
+Written by the orchestrator on 2026-11-12, at Part A's §2.5 stop, from the user's words, quoted.
+Part A's records are in `docs/levin-phase-floor/07a/measurement/`; its report is
+`out/stop_2_report.md`.
+
+### 9.1 The rulings
+
+- **Before the attribution ran (stop 1, 2026-11-11):** *"run all the calls needed for the H3
+  attribution in full; no (b) or (g) on the 396 class-c captures; and fix the O9 issue as originally
+  planned."*
+- **The O9 check on the H3 leaves**, added to Part A on the orchestrator's proposal: *"Yes, add it to
+  the agent's work."*
+- **The pairs' score:** *"For the pairs formula, happy to follow your recommendation of using
+  `r_g`."* So §2.1 item 2's and §2.4 item 2's $r$ is the cross-check's
+  $r_g = |v_7 - v_8|/\epsilon_7$, and so is §6 W6's (§9.5). The prompt's
+  $|v_7 - v_8|/(\epsilon_7 + \epsilon_8)$ contradicted "as the cross-check scored them", an error in
+  the prompt.
+- **The stop.** The orchestrator recommended leaving 07's rule unchanged. The user asked:
+  *"isn't there a risk we stop too early, though? `dqage` made its choice of stop rule for a reason.
+  Why should we not keep the `dqage` stop rule defensively, even though it barely makes any difference
+  here?"* On the orchestrator's revised recommendation: *"Yes, write §1.2 on (d)"*.
+- **What the measurement found outside the window:** *"H3 defect: yes, this is an issue to fix in a
+  separate prompt."* (§9.6.)
+
+### 9.2 What Part A measured
+
+**Checks.** Every replay at 07's code reproduces its census record bit for bit, 430 of 430. The four
+new captures check, 9 of 9 calls. A call with no window is unchanged under every variant, 5 of 5.
+The orchestrator's review (`orchestrator/prompt-07a.md` §A.3) re-ran three replays and one failure
+under two variants, re-scored §2.4 item 4, and recomputed every closure. All agree.
+
+**The five failures move under no variant.** v08, v09, v12, v17 and v22 keep $|v - {\rm ref}|/{\rm
+abserr}$ at 3.16, 2.21, 3.08, 2.38 and 2.53 under every variant:
+- converged and dishonest under 07's code, (a), (c), (d), (e) and (f);
+- unconverged under (b2) and (g2), at 764,283 regions against (a)'s 2,386 on items 1–2, with values
+  unchanged.
+
+The 396 under (d), against (a):
+- 58 calls move, by at most $1.8\times10^{-7}$ of their abserr, adding 1–30 regions each;
+- no `converged` flag changes;
+- every move is $10^{-9}$ or less of the gap to 06m.
+
+**Where the error is: H3.** In all five failures the whole excess is in the Levin leaves outside the
+window, almost all of it (share 0.999–1.008) in one leaf at the window's upper edge:
+- in v08, v12 and v17, the depth-0 seed region, never bisected;
+- in v09 a depth-1 leaf, and in v22 a depth-5 one.
+
+That leaf's true error is 2.66–7.44× its $e'$. The window's parts (H1, H2) are $10^{-9}$ to
+$5\times10^{-7}$ of abserr. Across the 24 attributed calls:
+- the falling leaves at a stop carry 0.0014–0.65 of their declared error;
+- the other window leaves exceed their declaration only on v02 (1.31) and v10 (1.04), each part
+  about $10^{-7}$ of its call's abserr;
+- every call closes against its reference within $3.3\times10^{-3}$ of the tolerance.
+
+**Not O9.** Part A checked 120 regions: the H3 leaves carrying the excess, plus the top three by true
+error, each with its parent and sibling. The true variation is 0.47–1.39× 07's estimate, and none
+changes route or has a strict sign change of $\theta'$.
+
+**Why (c) and (d) barely act.** All 382 window bisections of items 1–2 have an untrusted parent, and
+299 of them come with the budget already met. Window leaves are refined because the trust check
+refuses them, not because the budget asks. `dqage`'s departures, its skip and its raw estimates,
+never act on these calls. (d)'s value test acts only on the 396.
+
+### 9.3 Why `dqage`'s outcome is not adopted
+
+§0.1's default included a call left unconverged when a window stops with its request unmet, as
+`dqage`'s `ier = 2`. The measurement argues otherwise, so it is not part of §1.2:
+- **`dqage`'s stop ends the whole integration, so "stopped unmet" there means "returned unmet".**
+  Here only the window stops. Its leaves keep declaring their error inside the call's sum, and the
+  call is converged only if that sum meets the request at the end. That end-of-call test is the
+  analogue of `ier = 2`.
+- **The extra flags would be false alarms on the evidence.**
+  - Variants (e) and (f) flag the call at the moment of the stop, even when the final sum meets the
+    request. The stopped windows' declarations were measured at or above their true error (§9.2).
+  - On the evidence (e) and (f) would flag v03, which is honest at 0.002 of its error.
+  - They would flag one member of each pair, without the pairs' disagreement being attributed to the
+    window.
+  - They would flag 35 more of the 396.
+  - They change none of the five failures, whose requests were met when their windows stopped.
+
+### 9.4 The tests and breakages for §1.2 (into §3)
+
+In `AdaptiveLevin/tests/test_levin_stationary.py`:
+- **14 (a) The count, directly.** The agent factors the count into a module-level function of
+  $V_P$, $V_L + V_R$, the raw $e_P$, $e_L$, $e_R$, the halves' unresolved flags and rtol, and tests
+  it on constructed inputs:
+  - at rtol `1e-8`, a value change between ${\rm rtol}\,|V|$ and $10^{-5}|V|$ is not counted (07's
+    form counts it);
+  - either half unresolved: not counted;
+  - raw estimates flat while $e'$ falls: counted;
+  - raw estimates falling while $e'$ is flat: not counted;
+  - each inequality's boundary, inclusive as written.
+- **14 (b) Unresolved.**
+  - A Clenshaw–Curtis leaf of a smooth integrand in its asymptotic regime is resolved.
+  - A leaf of an integrand the fine rule does not resolve (a peak narrower than the node spacing, say)
+    is unresolved.
+  - resasc equals, to rounding, a direct evaluation of $\sum_j |w_j|\,|g_j - \bar g|$ in the test.
+- **14 (c) 07's window tests keep their assertions.**
+  - Test 10 (a)'s and 10 (b)'s windows still stop, each with its `iroff1_count` at the limit.
+  - Test 10 (c)'s count is still zero.
+  - A change to any of them is a stop (§8).
+- **14 (d) The case §3 asks for.**
+  - The test is a synthetic window at rtol `1e-8` or below, where 07's code counts a bisection whose
+    value change lies between ${\rm rtol}\,|V|$ and $10^{-5}|V|$, and the commit does not.
+  - It records the split at which each code stops the window, and the call's honesty under each.
+  - It asserts the honesty under the commit.
+  - If no such case can be built, the agent says why, and 14 (a) asserts the rule directly (§3's
+    allowance).
+
+**Breakages,** added to §3's list, each recorded with the test that catches it, then reverted:
+- **(vi)** the value test back at a fixed $10^{-5}$: 14 (a) must fail;
+- **(vii)** the skip removed: 14 (a) must fail;
+- **(viii)** the count on $e'$ instead of the raw estimates: 14 (a) must fail;
+- **(ix)** the saturation factor 200 replaced by 1: 14 (b) must fail.
+
+**No existing test is allowed to go from converged to unconverged** for §1.2. Its outcome flag is
+unchanged.
+
+### 9.5 Additions to §6's predictions
+
+- **W4 is predicted to fail** on exactly v08, v09, v12, v17 and v22, at 3.16, 2.21, 3.08, 2.38 and
+  2.53 to three figures, and to hold on the other 28 calls.
+  - Basis: §9.2. Neither §1.2 nor O9 reaches the leaf that carries the excess
+    (`[07a-levin-leaf-beside-a-window-understates-its-error]`).
+  - A move of any of the five is reported with the regions it changed.
+- **W6 is scored on $r_g$** (§9.1). It is predicted to fail on `3-14501` ($r_g$ 1.39) and `3-35006`
+  (1.08), as at 07, and to hold on the other 2,482 pairs.
+- **W7 — the stop's change is small.** The rule covers every call that has a window at 07 and at
+  $h$, no region whose route or LU choice differs (the diagnostics), and no newly located phase.
+  - Each such call moves from 07's value by at most $10^{-5}$ of 07's abserr, and keeps 07's
+    `converged`.
+  - **Holds** if true at both rtols.
+  - Basis: (d) against (a) on 430 calls, largest move $1.76\times10^{-7}$ of abserr and no flag
+    changed. The threshold is 57 times that.
+
+### 9.6 The issues
+
+- **`[07a-levin-leaf-beside-a-window-understates-its-error]`** was opened on the board at this
+  stop, on the user's word. It holds the five failures' cause. It will be fixed in a prompt of its
+  own, whose measurement is a random reference sample of the 396 class-(c) rows. The user:
+  *"option 3 sounds good for the H3 prompt"*.
+- **`[07-iroff1-window-stop-can-leave-a-call-dishonest]`.** Its premise, that the stop makes the
+  five calls dishonest, is refuted by §9.2. The header's condition for closing it, "if §6's W4 and W6
+  hold", is predicted to fail for a cause outside the window. The orchestrator proposed that it close
+  in 07a's records commit if W7 and §5 hold, with the five calls and the two pairs carried by the
+  issue above, the pairs recorded there as not attributed. The user: *"Yes to the §9.6 closing
+  condition"*. The header is amended to match.
