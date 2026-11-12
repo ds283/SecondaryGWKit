@@ -32,7 +32,8 @@ Part C's in 07a's records commit.
 
 **Closes, in its records commit, on the user's word:**
 `[07-iroff1-window-stop-can-leave-a-call-dishonest]`, if §6's W7 and §5 hold (amended at §2's stop,
-§9.6; it was "if §6's W4 and W6 hold and §5 holds"). It also
+§9.6; it was "if §6's W4 and W6 hold and §5 holds"). Amended again at Part B's stop (§10): one
+LiouvilleGreen test is rewritten to the raw-phase invariant's purpose. It also
 **narrows** `[07-c2-gate-threshold-was-never-measured]`: O9 is removed from it, if §6's W3 and W5
 hold. Whether $6\pi$ itself is right stays in that issue, which this prompt does not touch.
 
@@ -579,7 +580,8 @@ unchanged, with §9's additions:
   no window.
 - **The construction reaches outside its files:** beyond `AdaptiveLevin/levin_quadrature.py`, the
   test modules, `docs/levin-phase-floor/07a/` and the records. In particular `phase_groups.py`,
-  `LiouvilleGreen/`, `QuadSourceIntegral.py`, `SIX_PI`, $20\pi$, $\Phi_w$, $\Lambda_c$, the trust
+  `LiouvilleGreen/` (except the one test and two docstrings §10.3 allows, amended at Part B's
+  stop), `QuadSourceIntegral.py`, `SIX_PI`, $20\pi$, $\Phi_w$, $\Lambda_c$, the trust
   rule, $\nu_B$, `DEFAULT_LEVIN_MAX_DEPTH` and `rtol` are not touched.
 - **$V$ cannot be built as §1.1 says** for a basis: it lacks the raw phase, say. Report what is
   missing.
@@ -740,3 +742,84 @@ unchanged.
   in 07a's records commit if W7 and §5 hold, with the five calls and the two pairs carried by the
   issue above, the pairs recorded there as not attributed. The user: *"Yes to the §9.6 closing
   condition"*. The header is amended to match.
+
+## 10. Amendment at Part B's stop
+
+Written by the orchestrator on 2026-11-12, when Part B's agent stopped before its commit (§8, "a
+LiouvilleGreen test fails under the commit that passes under the parent"). Part B resumes on this
+text, in the same checkout, with its work in place.
+
+### 10.1 The stop
+
+`LiouvilleGreen/tests/test_bessel_compatibility.py`'s `test_the_raw_phase_is_never_evaluated` fails
+on both its spans, (10, 60) and (1000, 1100). It runs each span twice, once with a `theta` that
+raises, and requires the same value and abserr: `theta` must never be called when `theta_mod_2pi`
+and `theta_deriv` are both supplied. §1.1 item 3 builds $V$ from `theta["theta"]` on every region,
+so the second run raises. The orchestrator reproduced the failure.
+
+The invariant's stated basis is that `raw_theta` is limited to $\epsilon\,\theta$ (about 0.2 rad at
+$x = 10^{15}$), so a route that took a value from it "would silently discard the campaign's gain".
+§1.1 uses the raw phase only for routing, and only through differences, which carry about two ulps
+of $\theta$: about 0.4 rad at $10^{15}$, and $4\times10^{-3}$ rad at the largest raw phase of the
+LiouvilleGreen draws ($1.02\times10^{13}$). Against $6\pi$ and $20\pi$ that is negligible, as §0.2
+anticipated. The invariant's purpose stands; its letter conflicts with §1.1.
+
+### 10.2 The ruling
+
+The orchestrator offered two ways: keep §1.1's $V$ and narrow the LiouvilleGreen test to its
+purpose; or build $V$ from $\theta'$ by the region's Clenshaw–Curtis weights, with no raw phase. The
+user: *"Option 1, and record the 6π finding on that issue"*. §1.1 is unchanged.
+
+### 10.3 What changes
+
+§8's list of files the construction may not reach is amended for these three, and these changes
+only:
+
+1. **`LiouvilleGreen/tests/test_bessel_compatibility.py`, `test_the_raw_phase_is_never_evaluated`,**
+   rewritten (and renamed to say what it now tests) so that it asserts the invariant's purpose: **the
+   raw phase's absolute value never enters a value or an error.**
+   - Each span is run with the supplied `theta`, then with `theta` replaced by `theta(x) + C`, for a
+     constant $C$ that is not a multiple of $2\pi$ and large against the span's phase (of order
+     $10^6$, say).
+   - Required: the two runs give the same value and the same abserr, bit for bit, and the same
+     route and LU choice on every region visited. A shift cancels in every difference §1.1 takes,
+     to rounding of order ${\rm ulp}(C)$; a route that took $\sin$ or $\cos$ of the raw phase would
+     change the value.
+   - If $C$'s rounding moves a region across $6\pi$ or $20\pi$ on either span, the agent chooses
+     another $C$ and says so; the test asserts that no decision moved, not merely the outputs.
+   - The docstring says what the test now protects and why, cites this section, and leaves
+     `RECONCILIATION.md` as written: its §1 described the code before 07a.
+   - A breakage, added to §3's list: **(x)** the Clenshaw–Curtis or Levin value built from
+     `theta["theta"]` (say, the CC rule's $\sin$ and $\cos$ taken of the raw phase in place of
+     `theta_mod_2pi`): the rewritten test must fail.
+2. **`LiouvilleGreen/bessel_phase.py`, `raw_theta`'s docstring,** and
+3. **`LiouvilleGreen/three_bessel_integrals.py`, `theta`'s docstring** (the group's `theta`): each
+   says that Levin never evaluates the key when `theta_mod_2pi` and `theta_deriv` are supplied,
+   which is now false. Each is corrected to say that Levin samples it for routing only, through
+   differences, never for a value. **Docstrings only:** the AST of each module, with docstrings
+   stripped, is unchanged.
+
+Nothing else in `LiouvilleGreen/` changes. Every other test in its root must pass, as before.
+
+### 10.4 The $6\pi$ finding
+
+In the LiouvilleGreen draws, three calls inside passing tests go from converged to unconverged at
+rtol $10^{-10}$, with no window, each because one region's route changed from Levin to
+Clenshaw–Curtis:
+
+| call | region | $V$ | 07's estimate | regions | abserr |
+|---|---|---|---|---|---|
+| seed 3 `test_YJJ` call 4 | [1.76079, 2.16501] | 18.832 | 18.914 | 11 → 42 | $5.38\times10^{-13}$ → $1.39\times10^{-12}$ |
+| seed 8 `test_JJJ` call 4 | [1.0055, 1.83755] | 18.725 | 19.065 | 17 → 45 | $2.41\times10^{-12}$ → $4.64\times10^{-12}$ |
+| seed 17 `test_JJJ` call 11 | [2.75185, 3.14675] | 18.816 | 18.892 | 9 → 27 | $1.04\times10^{-12}$ → $5.67\times10^{-12}$ |
+
+Each value moves by at most $8.1\times10^{-3}$ of the parent's abserr. Clenshaw–Curtis's floor on
+a region just below $6\pi$ sums above the request at $10^{-10}$. These are not §3's convergence
+assertions, and not a stop: §0.3 foresaw route changes in both directions. They are recorded on
+`[07-c2-gate-threshold-was-never-measured]` (on the user's word above) as evidence that, once the
+gate reads the true variation, $6\pi$ is high for Clenshaw–Curtis at tight tolerances. The log lists
+them under "Observations not acted on".
+
+**Into §6's descriptive items:** the census lists every call that goes from converged to
+unconverged with a region whose route changed and no window, with its $V$, 07's estimate and the
+abserr under each code, for that issue.
