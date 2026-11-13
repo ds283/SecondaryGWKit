@@ -1,0 +1,4 @@
+script af60baaf6b89b96109db511099ad8ee54c0d32712c14c0b5c08ec603484e687f qsi_compare 39c08073a8c8198ca05a85a78d7134f64b354789fd765301d7e2566898eff8c6
+{'moved, nothing located or guarded in either': 214, 'moved, located/guarded in either': 166}
+columns moved among unlocated rows: {'total_abserr': 32, 'analytic_rad': 88, 'total': 10, 'WKB_Levin': 10, 'WKB_Levin_simple_regions': 7, 'WKB_Levin_evaluations': 6, 'WKB_Levin_num_regions': 6, 'WKB_Levin_max_depth': 1}
+largest |dtotal|/abserr29 among unlocated rows: 0.00565342 (100000.0, 1313.8415928578513)

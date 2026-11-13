@@ -1,0 +1,88 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-12T12:32:04Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07a/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3
+cd $M
+shasum -a 256 var/datastores/levin-phase-floor-07-r29*.sqlite var/datastores/levin-phase-floor-07a-r30*.sqlite > $Z/state/stores_sha256_final.txt; ls -la var/datastores | grep -E "07-r29|07a-r30" >> $Z/state/stores_sha256_final.txt; cat $Z/state/stores_sha256_final.txt
+echo "== R29 final vs KEPT"; grep 07-r29 $Z/state/stores_sha256_final.txt | grep -v staff | sort -k2 | diff - $Z/state/r29_kept_expected.txt && echo "R29 unchanged (equal to KEPT_ON_MAC_STUDIO.txt)"
+echo "== R30 final vs after build"; grep 07a-r30 $Z/state/stores_sha256_final.txt | grep -v staff | diff - $Z/state/r30_store_sha256_after_build.txt && echo "R30 unchanged since the build"
+echo "== registry"; ./venv/bin/python -B -m runregistrykit list > $Z/out/final_registry_list.txt 2>&1; echo "exit $?"; grep -E "07a-r30" $Z/out/final_registry_list.txt | cut -c1-120; tail -1 $Z/out/final_registry_list.txt
+echo "== lock dir"; ls -la ~/.raypoolkit
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+echo "== worktree"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== main checkout"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== untouched: measurement/, var/levin-phase-floor-07/, R29 run dir, a3v2 copy"; find $M/var/levin-phase-floor-07a/measurement $M/var/levin-phase-floor-07 $M/var/runs/levin-phase-floor-07-r29-guard-rule-a-20261108T123429 $M/var/levin-phase-floor-06/wider/state/a3v2_copy -newer $Z/state/r30_launch_marker | head; echo "(end newer)"
+echo "== A3 v2 files newer than the marker"; find $M/var/datastores -name "handover-A3-v2-lambdacdm*" -newer $Z/state/r30_launch_marker; echo "(end)"
+echo "== pycache in records"; find $Z -name __pycache__ -o -name "*.pyc"; echo "(end)"
+echo "== records size"; du -sh $Z $Z/extract $Z/state/capture $Z/out; find $Z -size +2M -not -path "*/extract/*" | sort
+
+# output:
+dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874  var/datastores/levin-phase-floor-07-r29-shard0000.sqlite
+1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec  var/datastores/levin-phase-floor-07-r29-shard0001.sqlite
+7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2  var/datastores/levin-phase-floor-07-r29-shard0002.sqlite
+897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca  var/datastores/levin-phase-floor-07-r29-shard0003.sqlite
+28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9  var/datastores/levin-phase-floor-07-r29.sqlite
+e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2  var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite
+f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700  var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite
+a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab  var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite
+b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0  var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite
+e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84  var/datastores/levin-phase-floor-07a-r30.sqlite
+-rw-r--r--  1 ds283 staff  25411584 Nov  8 12:44 levin-phase-floor-07-r29-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25464832 Nov  8 12:44 levin-phase-floor-07-r29-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  8 12:34 levin-phase-floor-07-r29-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24875008 Nov  8 12:44 levin-phase-floor-07-r29-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  8 12:34 levin-phase-floor-07-r29.sqlite
+-rw-r--r--  1 ds283 staff  25391104 Nov 12 11:47 levin-phase-floor-07a-r30-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25489408 Nov 12 11:47 levin-phase-floor-07a-r30-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 12 11:38 levin-phase-floor-07a-r30-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24956928 Nov 12 11:47 levin-phase-floor-07a-r30-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 12 11:38 levin-phase-floor-07a-r30.sqlite
+== R29 final vs KEPT
+R29 unchanged (equal to KEPT_ON_MAC_STUDIO.txt)
+== R30 final vs after build
+0a1
+> e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84  var/datastores/levin-phase-floor-07a-r30.sqlite
+5d5
+< e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84  var/datastores/levin-phase-floor-07a-r30.sqlite
+== registry
+exit 0
+   levin-phase-floor-07a-r30-07a-20261112T113806              done              -      54m  levin-phase-floor prompt 07a
+74 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 74 finished; 0 with no host recorded.
+== lock dir
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov 12 12:31 .
+drwxr-x--- 161 ds283 staff 5152 Nov 12 12:30 ..
+== Ray processes (any)
+(end)
+== worktree
+4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+(end)
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end)
+== untouched: measurement/, var/levin-phase-floor-07/, R29 run dir, a3v2 copy
+(end newer)
+== A3 v2 files newer than the marker
+(end)
+== pycache in records
+(end)
+== records size
+321M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/store_value_diff_r29_r30.json
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/store_value_diff_r29_r30.labels_normalised.json
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-0/emit.jsonl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-0/regions_replay-h-0.pkl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-1/emit.jsonl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-1/regions_replay-h-1.pkl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-2/emit.jsonl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-2/regions_replay-h-2.pkl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-3/emit.jsonl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-3/regions_replay-h-3.pkl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-4/emit.jsonl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-4/regions_replay-h-4.pkl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-5/emit.jsonl
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-5/regions_replay-h-5.pkl
+# exit: 0
+# end: 2026-11-12T12:32:06Z

@@ -1,0 +1,10 @@
+2026-11-12T12:24:09Z # prompt 07a r30: run blocks2
+2026-11-12T12:24:09Z # written 2026-11-12T12:24:09Z on mps026298.phys.susx.ac.uk
+2026-11-12T12:24:09Z # script replay07a_r30.py sha256 c7ff4d85598f48624e2d8c3baf7d4403539f3155a3e63883ccce0328e45ddbd9
+2026-11-12T12:24:09Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+2026-11-12T12:24:09Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-12T12:24:09Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/blocks2_spec.json sha256 a0a51847f52dceadca086192aba195babe18496a5fa1f8ebfe2daa8e45e65555
+2026-11-12T12:24:09Z 1 workers, 2 units, at most 6 at once
+2026-11-12T12:24:09Z start blocks2-h (h, 2 units): pid 80491
+2026-11-12T12:25:01Z end blocks2-h: rc 0 after 51.5 s
+2026-11-12T12:25:02Z done in 52.5 s; return codes {0: 1}

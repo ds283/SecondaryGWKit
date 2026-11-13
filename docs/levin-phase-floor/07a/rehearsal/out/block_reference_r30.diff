@@ -1,0 +1,14 @@
+1c1,3
+< """The four-block check (the user's word at R29's stop): one captured analytic block (2pt5 J4 or Y4) at one tree --
+---
+> """[prompt 07a section 5 item 6 (S4), rehearsal agent, R30: R29's block_reference.py (fc2c20df), changed where marked "prompt 07a r30": a skipped phase is recorded by its index and reason (07a's entry form has no variation); the replay also records the located points (x, kind) from the result. Run at the tree h on R30's captures, without --reference: R29's references stand.]
+> 
+> The four-block check (the user's word at R29's stop): one captured analytic block (2pt5 J4 or Y4) at one tree --
+71,72c73,76
+<                      "location_skipped_phases": [{"phase": s["phase"], "variation": float(s["variation"]).hex()}
+<                                                  for s in r["location_skipped_phases"]] if "location_skipped_phases" in r else None}
+---
+>                      "location_skipped_phases": [{"phase": s.get("phase"), "reason": s.get("reason")}
+>                                                  for s in r["location_skipped_phases"]] if "location_skipped_phases" in r else None,  # prompt 07a r30
+>                      "points": [{"x": float(p_["x"]).hex(), "kind": p_.get("kind"), "found_as": p_.get("found_as"), "phase": p_.get("phase")}
+>                                 for p_ in r.get("stationary_points", [])]}  # prompt 07a r30

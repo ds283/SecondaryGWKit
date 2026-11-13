@@ -1,0 +1,22 @@
+# levin-phase-floor 07a: Gate W0, the parent's code in tree h (AST check)
+# written 2026-11-12T12:46:44Z on mps026298.phys.susx.ac.uk
+# script ast_lg_check_07a.py sha256 7af4ee5ee252adeb9f32398b42c7e300ec7391883edf4c245190954f5b1b15fc
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/LiouvilleGreen/bessel_phase.py sha256 01d2de604cedfd226881eaa2913d9687c00145ad6484a83e967acc72c49b69c7
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/LiouvilleGreen/three_bessel_integrals.py sha256 d6ffac2b81f2bffe4af7bec41eb83861e7196acc3aaaac4ab9b483d6f3c3b05b
+# files differing between dadd63a0 and 4bf50d34 outside docs/ and prompts/: 7
+  AdaptiveLevin/levin_quadrature.py: replaced in the K0 run by the parent's file (variant_loader)
+  AdaptiveLevin/tests/test_levin_phase_variation.py: a test module (not imported by the harness)
+  AdaptiveLevin/tests/test_levin_quadrature.py: a test module (not imported by the harness)
+  AdaptiveLevin/tests/test_levin_stationary.py: a test module (not imported by the harness)
+  LiouvilleGreen/bessel_phase.py: docstrings only: AST checked below
+  LiouvilleGreen/tests/test_bessel_compatibility.py: a test module (not imported by the harness)
+  LiouvilleGreen/three_bessel_integrals.py: docstrings only: AST checked below
+# LiouvilleGreen/bessel_phase.py: sha256 at dadd63a0 (git show) bdee05b578d2f2da61ba2b09ed541cf1fe0b37a7c11ec1d7ae56e439c75210e8, in h 01d2de604cedfd226881eaa2913d9687c00145ad6484a83e967acc72c49b69c7; text equal False; AST without docstrings equal: True
+  docstrings removed: 33 at the parent, 33 in h; differing: [('FunctionDef', 'raw_theta')]
+# LiouvilleGreen/three_bessel_integrals.py: sha256 at dadd63a0 (git show) fea67d56ad9aac465dfcecc0c4bf76083e552018bcc85f2ba4e0902f2a359d0e, in h d6ffac2b81f2bffe4af7bec41eb83861e7196acc3aaaac4ab9b483d6f3c3b05b; text equal False; AST without docstrings equal: True
+  docstrings removed: 18 at the parent, 18 in h; differing: [('FunctionDef', 'theta')]
+# '__doc__' read in h's .py files outside docs/, prompts/ and tests: 1 lines
+  ./RunDrivers/quadsource_atol_sweep.py:1008:    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+# verdict: HOLDS

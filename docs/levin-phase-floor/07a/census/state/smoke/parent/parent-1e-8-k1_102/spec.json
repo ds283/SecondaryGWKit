@@ -1,0 +1,45 @@
+{
+ "tree": "h",
+ "name": "parent-1e-8-k1_102",
+ "units": [
+  {
+   "uid": "h-1e-8-1-35480",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "1-35480",
+   "names05": null,
+   "shard": 1,
+   "serial": 35480,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-8-1-2174",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "1-2174",
+   "names05": null,
+   "shard": 1,
+   "serial": 2174,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/smoke/parent/parent-1e-8-k1_102",
+ "emit_fd": null,
+ "emit_file": "state/smoke/parent/parent-1e-8-k1_102/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": {
+  "name": "parent",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/variants/levin_quadrature_parent.py",
+  "sha256": "4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc"
+ },
+ "instrument_07a": true
+}

@@ -1,0 +1,25 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/check_captures_07a.py out/refs/captures_parent.json state/refs/selection.json out/refs/check_captures_07.json 07
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:33:57Z
+# ----
+# levin-phase-floor 07a: the reference captures against the census 07, bit for bit (regions)
+# written 2026-11-12T20:33:58Z on mps026298.phys.susx.ac.uk
+# script check_captures_07a.py sha256 c03405d60b510087496cf418ae0c99b7452b122963fda882cbf1574830910535
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input out/refs/captures_parent.json sha256 7a0010833d1ec0ade05266d8f66eedecc8ba9fe280fe24695518aebece20a9c8
+# input state/refs/selection.json sha256 c55c86adb3cbd4045dd53725a7d7c09176ecdb4bf7894155baa8b6b1a2387be2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10
+r1-34599-1e-7-2 h-1e-7-1-34599 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+r1-34599-1e-7-3 h-1e-7-1-34599 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+r3-678-1e-7-2 h-1e-7-3-678 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+r3-678-1e-7-3 h-1e-7-3-678 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+r1-34599-1e-8-2 h-1e-8-1-34599 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+r1-34599-1e-8-3 h-1e-8-1-34599 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+r3-678-1e-8-2 h-1e-8-3-678 #2 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+r3-678-1e-8-3 h-1e-8-3-678 #3 group: REPRODUCES (value, abserr, label, converged, regions bit for bit)
+8 of 8 captures reproduce the g census bit for bit; wrote out/refs/check_captures_07.json sha256 62446460aba92da1e3ab1e9ee06cda9219596d3ed654ed4867991055ced71919
+# ----
+# end 2026-11-12T20:34:01Z
+# exit 0

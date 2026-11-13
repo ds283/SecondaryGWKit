@@ -1,0 +1,30 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/x1_capture_07a.py state/refs/selection.json state/refs/capture_parent2 out/refs/captures_parent.json --workers 2 --variant parent
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:31:12Z
+# ----
+# levin-phase-floor 07a: the user's reference calls' inputs, captured at h, variant parent (06c's X1 capture)
+# written 2026-11-12T20:31:12Z on mps026298.phys.susx.ac.uk
+# script x1_capture_07a.py sha256 cee0329762cd3427581ed750e31def37af6c196f7766e9f7923a519cd04cbf1a
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/refs/selection.json sha256 c55c86adb3cbd4045dd53725a7d7c09176ecdb4bf7894155baa8b6b1a2387be2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 64270
+C01: pid 64272
+C02: pid 64357
+C03: pid 64365
+exit codes {'C01': 0, 'C00': 0, 'C03': 0, 'C02': 0}
+captured and matching the census bit for bit: 8 of 8
+   h-1e-7-1-34599 2: matches True; error None; ray_initialized False
+   h-1e-7-1-34599 3: matches True; error None; ray_initialized False
+   h-1e-7-3-678 2: matches True; error None; ray_initialized False
+   h-1e-7-3-678 3: matches True; error None; ray_initialized False
+   h-1e-8-1-34599 2: matches True; error None; ray_initialized False
+   h-1e-8-1-34599 3: matches True; error None; ray_initialized False
+   h-1e-8-3-678 2: matches True; error None; ray_initialized False
+   h-1e-8-3-678 3: matches True; error None; ray_initialized False
+wrote out/refs/captures_parent.json sha256 7a0010833d1ec0ade05266d8f66eedecc8ba9fe280fe24695518aebece20a9c8
+# ----
+# end 2026-11-12T20:33:21Z
+# exit 0

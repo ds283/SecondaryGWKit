@@ -1,0 +1,153 @@
+{
+ "header": [
+  "# levin-phase-floor 07a: Gate W0 (4), determinism, run1 against run2",
+  "# written 2026-11-12T13:16:05Z on mps026298.phys.susx.ac.uk",
+  "# script compare_07a.py sha256 d147fb2233824e340b61ccc4d3e84b2faf183222f938e5cbca252e9869f03dde",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/w0c4/run1/units.jsonl sha256 9ce4eb2d747eec51fd1c4dd7d467e71e56815241808a8f8825f912a1ca2e13f3",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/w0c4/run2/units.jsonl sha256 43c448a58b62af7e39d35157911caccd8451e2d01a293ae3189d4432ec50fd0e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "det",
+ "excluded": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "n_units": 1,
+ "n_units_identical": 1,
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "A:tree-1e-8-k1_102": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "B:tree-1e-8-k1_102": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  }
+ },
+ "units": [
+  {
+   "unit": "h-1e-8-1-2174",
+   "status": [
+    "done",
+    "done"
+   ],
+   "ok": true,
+   "differing": [],
+   "detail": [],
+   "excl_differing": [
+    "data.analytic_06h.seconds",
+    "data.calls[].elapsed",
+    "data.cc_floor_s",
+    "data.checked_06g_s",
+    "data.declared_06h_s",
+    "data.deep_lines.seconds",
+    "data.other_calls[].elapsed",
+    "data.pickle_record_sha256",
+    "data.rebuild_s",
+    "data.result.compute_time",
+    "data.scan_07_s",
+    "data.wall_s",
+    "data.worker_pid",
+    "pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed",
+    "pickle.result_full.compute_time",
+    "pickle.scan_07[].scan.seconds"
+   ],
+   "n_calls": 21,
+   "n_calls_windowed": 1,
+   "n_calls_route_changed": 5,
+   "route_changes": [
+    [
+     0,
+     1,
+     0,
+     true,
+     false
+    ],
+    [
+     15,
+     0,
+     1,
+     false,
+     true
+    ],
+    [
+     16,
+     0,
+     1,
+     false,
+     true
+    ],
+    [
+     17,
+     0,
+     1,
+     false,
+     true
+    ],
+    [
+     18,
+     0,
+     1,
+     false,
+     true
+    ]
+   ],
+   "windows": [
+    [
+     1,
+     1,
+     {
+      "root": 1
+     }
+    ]
+   ],
+   "wall_s": [
+    4.2378630000166595,
+    4.265785084106028
+   ]
+  }
+ ]
+}

@@ -1,0 +1,35 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/status.json\;\ echo\;\ tail\ -5\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/stdout.log\;\ wc\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/stderr.log\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744\ \|\ wc\ -l\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744\;\ grep\ -c\ \'\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/checkpoint.jsonl\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/checkpoint.jsonl\;\ kill\ -0\ 90766\ 90763\ 2\>\&1\;\ grep\ -h\ \'over\ budget\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/stdout.log\ \|\ tail\ -3
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T19:57:26Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-12T19:55:48+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 90766,
+  "stage": "18560 units recorded; last h-1e-8-3-14506 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+# worker 1e-8-k3_201 exit 0
+# worker 1e-8-k3_1 exit 0
+# over budget in the two sets: 0 []
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+0 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/stderr.log
+149
+6.7G	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744
+18560
+461df2ec66969a113e9f6d590f05a4d5b300d7c1e0cb62d05c7385d23e8de56b  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/checkpoint.jsonl
+sh: line 0: kill: (90766) - No such process
+sh: line 0: kill: (90763) - No such process
+# over budget in the two sets: 0 []
+# ----
+# end 2026-11-12T19:57:36Z
+# exit 0

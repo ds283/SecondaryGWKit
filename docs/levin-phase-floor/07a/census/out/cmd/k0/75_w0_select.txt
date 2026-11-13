@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/select_w0_units_07a.py state/k0/h
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T13:13:48Z
+# ----
+# levin-phase-floor 07a: Gate W0's clause 3 and 4 units
+# written 2026-11-12T13:13:48Z on mps026298.phys.susx.ac.uk
+# script select_w0_units_07a.py sha256 48bb44de1dc5eafd48e34e4b8363981c296f37b96c1b74ab6507774276129751
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/docs/levin-phase-floor/06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699
+# input state/k0/h/units.jsonl sha256 195df102f46fda10ea7e65d983843a55c299694e72d55b313f70a487c1f21c0c
+candidates by tier (1: an own solve's C2 route; 2: an own solve's LU choice; 3: any solve): {1: 'g-1e-7-1-11214', 2: 'g-1e-7-1-11233', 3: 'g-1e-7-1-14039'}
+window unit g-1e-8-1-2174; route unit g-1e-7-1-11214 (tier 1); its changed calls [(0, 'k=9.56e+07/Mpc, q=3.09e+06/Mpc, r=9.56e+07/Mpc @ z_response=3.6477e+06, z in (1.6391e+16, 1.6351e+12), regime G, group G', {'n_route_differs_own': 1, 'n_lu_differs_own': 0, 'n_route_differs_aux': 0, 'n_lu_differs_aux': 0})]
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/w0c3_units.json sha256 f89c4f1573d0c1308277afc9060809bec51482b3329246b23ae05b4be4122fc0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/w0c4_units.json sha256 efeaf21d0c870ebed3aa95affad2e2b4740f797e88999df2d1abed5206dba7a8
+# ----
+# end 2026-11-12T13:13:49Z
+# exit 0

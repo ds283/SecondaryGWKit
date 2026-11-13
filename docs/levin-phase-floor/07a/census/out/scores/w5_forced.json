@@ -1,0 +1,133 @@
+{
+ "header": [
+  "# levin-phase-floor 07a: W5's forced solves on the node-partition sum",
+  "# written 2026-11-12T20:17:20Z on mps026298.phys.susx.ac.uk",
+  "# script w5_forced_detail_07a.py sha256 df09dd01360c1a88e8356dbd5871ca026fbc9ced427d1b6c20d2af33e4b8ad47",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/score_07a_units.json sha256 ccfd448e2b33bfbda92455b5120f83ad9b524c09985f6d673b6ce979cf9cb987"
+ ],
+ "solves_by": {
+  "1e-7|analytic|points=root": 6613,
+  "1e-7|group|points=root": 2492,
+  "1e-8|analytic|points=root": 6613,
+  "1e-8|group|points=root": 2518
+ },
+ "solves_by_role": {
+  "stationary-point window piece|made=True": 4416,
+  "fallback half|made=True": 2337,
+  "trust-check quarter|made=True": 2734,
+  "trust-check quarter|made=False": 6670,
+  "fallback half|made=False": 2079
+ },
+ "calls_by": {
+  "1e-7|analytic|points=root": 1682,
+  "1e-7|group|points=root": 526,
+  "1e-8|analytic|points=root": 1682,
+  "1e-8|group|points=root": 526
+ },
+ "n_solves": 18236,
+ "n_calls": 4416,
+ "examples": [
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -18.074107153672394,
+   "b": -17.423721302208087,
+   "V": 0.49104019092090345,
+   "est_07": 0.4850419274935304,
+   "role": "stationary-point window piece",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -17.74891422794024,
+   "b": -17.423721302208087,
+   "V": 0.1265959526586271,
+   "est_07": 0.1262182109562561,
+   "role": "fallback half",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -17.586317765074163,
+   "b": -17.423721302208087,
+   "V": 0.03195692118411264,
+   "est_07": 0.031916320899512046,
+   "role": "trust-check quarter",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -17.505019533641125,
+   "b": -17.423721302208087,
+   "V": 0.008025191002265064,
+   "est_07": 0.008020121763329268,
+   "role": "trust-check quarter",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -17.464370417924606,
+   "b": -17.423721302208087,
+   "V": 0.0020108375199581197,
+   "est_07": 0.002010193528168739,
+   "role": "trust-check quarter",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 15,
+   "a": -18.074107153672394,
+   "b": -17.423721302208087,
+   "V": 0.49104019092090345,
+   "est_07": 0.4850419274935304,
+   "role": "stationary-point window piece",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 15,
+   "a": -17.74891422794024,
+   "b": -17.423721302208087,
+   "V": 0.1265959526586271,
+   "est_07": 0.1262182109562561,
+   "role": "fallback half",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 15,
+   "a": -17.586317765074163,
+   "b": -17.423721302208087,
+   "V": 0.03195692118411264,
+   "est_07": 0.031916320899512046,
+   "role": "trust-check quarter",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33370",
+   "index": 14,
+   "a": -18.074107153672394,
+   "b": -17.423721302208087,
+   "V": 0.49104019092090345,
+   "est_07": 0.4850419274935304,
+   "role": "stationary-point window piece",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33370",
+   "index": 14,
+   "a": -17.74891422794024,
+   "b": -17.423721302208087,
+   "V": 0.1265959526586271,
+   "est_07": 0.1262182109562561,
+   "role": "fallback half",
+   "n_sign_changes_scan": 1
+  }
+ ]
+}

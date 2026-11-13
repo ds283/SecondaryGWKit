@@ -1,0 +1,29 @@
+script 7fa5fe1176c6e9fb1ad11ec36d75763edb092ae10ff02bf7463c3e98cba684db
+  reading r3-678-1e-7-2-fcc-r1.json sha 19a5f98bce91 checks True segments_listed True
+  reading r3-678-1e-7-2-fcc-r2.json sha 0472c765c1ef checks True segments_listed True
+  reading r3-678-1e-7-2-qawo-r1.json sha f90860b3e1a5 checks True segments_listed True
+  reading r3-678-1e-7-2-qawo-r2.json sha 8a65c1e85eea checks True segments_listed True
+3-678 index 2: readings ['fcc_r1', 'fcc_r2', 'qawo_r1', 'qawo_r2']; ref (FCC r2) 1.431843199210653e-30; spread 1.002e-45; |FCC r2 - r1| 5.87e-46
+   1e-7 G+q-r: abserr h 1.088e-38 07 1.214e-37; |v-ref|/abserr h 0.4909  07 0.1353; spread x10 <= min(abserr) True  (spread/min abserr 9.21e-08); |vh-v7|/abserr_h 2
+   1e-8 G+q-r: abserr h 1.088e-38 07 1.214e-37; |v-ref|/abserr h 0.4909  07 0.1353; spread x10 <= min(abserr) True  (spread/min abserr 9.21e-08); |vh-v7|/abserr_h 2
+  reading r3-678-1e-7-3-fcc-r1.json sha 972e16154e26 checks True segments_listed True
+  reading r3-678-1e-7-3-fcc-r2.json sha 2845a123c201 checks True segments_listed True
+  reading r3-678-1e-7-3-qawo-r1.json sha 3126fffdb984 checks True segments_listed True
+  reading r3-678-1e-7-3-qawo-r2.json sha 18fcf2d8ce86 checks True segments_listed True
+3-678 index 3: readings ['fcc_r1', 'fcc_r2', 'qawo_r1', 'qawo_r2']; ref (FCC r2) 1.431843199210653e-30; spread 1.002e-45; |FCC r2 - r1| 5.87e-46
+   1e-7 G-q+r: abserr h 1.088e-38 07 1.214e-37; |v-ref|/abserr h 0.4909  07 0.1353; spread x10 <= min(abserr) True  (spread/min abserr 9.21e-08); |vh-v7|/abserr_h 2
+   1e-8 G-q+r: abserr h 1.088e-38 07 1.214e-37; |v-ref|/abserr h 0.4909  07 0.1353; spread x10 <= min(abserr) True  (spread/min abserr 9.21e-08); |vh-v7|/abserr_h 2
+  reading r1-34599-1e-7-2-fcc-r1.json sha a23a224011cb checks True segments_listed True
+  reading r1-34599-1e-7-2-fcc-r2.json sha 377109fa09af checks True segments_listed True
+  reading r1-34599-1e-7-2-qawo-r1.json sha 41da83f52fa8 checks True segments_listed True
+  reading r1-34599-1e-7-2-qawo-r2.json sha c9a49ac2dea8 checks True segments_listed True
+1-34599 index 2: readings ['fcc_r1', 'fcc_r2', 'qawo_r1', 'qawo_r2']; ref (FCC r2) -3.162788408760542e-26; spread 5.683e-40; |FCC r2 - r1| 5.535e-40
+   1e-7 G+q-r: abserr h 1.524e-33 07 4.462e-34; |v-ref|/abserr h 0.02009  07 4.031; spread x10 <= min(abserr) True  (spread/min abserr 1.27e-06); |vh-v7|/abserr_h 1.16
+   1e-8 G+q-r: abserr h 1.118e-33 07 4.462e-34; |v-ref|/abserr h 0.01501  07 4.031; spread x10 <= min(abserr) True  (spread/min abserr 1.27e-06); |vh-v7|/abserr_h 1.595
+  reading r1-34599-1e-7-3-fcc-r1.json sha 27bda2cab843 checks True segments_listed True
+  reading r1-34599-1e-7-3-fcc-r2.json sha d18c864c4ae9 checks True segments_listed True
+  reading r1-34599-1e-7-3-qawo-r1.json sha 8db2a6fe6fb7 checks True segments_listed True
+  reading r1-34599-1e-7-3-qawo-r2.json sha e9984aface04 checks True segments_listed True
+1-34599 index 3: readings ['fcc_r1', 'fcc_r2', 'qawo_r1', 'qawo_r2']; ref (FCC r2) -3.162788408760542e-26; spread 5.683e-40; |FCC r2 - r1| 5.535e-40
+   1e-7 G-q+r: abserr h 1.524e-33 07 4.462e-34; |v-ref|/abserr h 0.02009  07 4.031; spread x10 <= min(abserr) True  (spread/min abserr 1.27e-06); |vh-v7|/abserr_h 1.16
+   1e-8 G-q+r: abserr h 1.118e-33 07 4.462e-34; |v-ref|/abserr h 0.01501  07 4.031; spread x10 <= min(abserr) True  (spread/min abserr 1.27e-06); |vh-v7|/abserr_h 1.595

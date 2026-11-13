@@ -1,0 +1,93 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-12T11:48:38Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07a/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3
+cd $M
+D=var/runs/levin-phase-floor-07a-r30-07a-20261112T113806
+./venv/bin/python -I -c "
+import json,sys
+s=json.load(open(sys.argv[1]+\"/status.json\"))
+print({k:v for k,v in s.items() if k!=\"fingerprint\"})
+f=s[\"fingerprint\"]
+print(\"digest:\", f[\"digest\"], f[\"digest\"]==\"1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7\")
+print({k:f[k] for k in f if k not in (\"classes\",)})
+o=json.load(open(sys.argv[2]))[\"fingerprint\"]
+print(\"classes equal R29\", o[\"classes\"]==f[\"classes\"], \"digest equal\", o[\"digest\"]==f[\"digest\"])
+print(\"n classes\", len(f[\"classes\"]), \"QSI\", f[\"classes\"][\"QuadSourceIntegral\"][\"count\"], f[\"classes\"][\"QuadSourceIntegral\"][\"digest\"])
+m=json.load(open(sys.argv[1]+\"/manifest.json\")); print(\"created\", m[\"created\"], \"git_head\", m[\"git_head\"], \"git_dirty\", m[\"git_dirty\"], \"script_sha256\", m[\"script_sha256\"])
+" $D var/runs/levin-phase-floor-07-r29-guard-rule-a-20261108T123429/status.json
+kill -0 75161 2>&1 || echo "75161 gone"; kill -0 75153 2>&1 || echo "75153 gone"
+echo "== launch log tail"; tail -3 var/runs/levin-phase-floor-07a-r30.launch.log
+echo "== Traceback / WARNING / ERROR counts"; for f in var/runs/levin-phase-floor-07a-r30.launch.log $D/stdout.log $D/stderr.log; do echo "$f: Traceback $(grep -c Traceback $f) WARNING $(grep -c WARNING $f) ERROR $(grep -c ERROR $f)"; done
+echo "== run dir"; ls -la $D
+echo "== registry"; ./venv/bin/python -B -m runregistrykit list > $Z/out/r30_end_registry_list.txt 2>&1; echo "exit $?"; grep "07a-r30" $Z/out/r30_end_registry_list.txt | cut -c1-140; tail -1 $Z/out/r30_end_registry_list.txt
+echo "== worktree"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"; find $W -newer $Z/state/r30_launch_marker -not -path "*/.git/*" | head; echo "(end newer)"
+echo "== main checkout"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== R30 store files"; ls -la var/datastores/ | grep "07a-r30"
+echo "== R30 store sha256"; shasum -a 256 var/datastores/levin-phase-floor-07a-r30.sqlite var/datastores/levin-phase-floor-07a-r30-shard000?.sqlite | tee $Z/state/r30_store_sha256_after_build.txt
+echo "== R29 store sha256 (re-hash)"; shasum -a 256 var/datastores/levin-phase-floor-07-r29.sqlite var/datastores/levin-phase-floor-07-r29-shard000?.sqlite > $Z/state/r29_store_sha256_after_build.txt; cat $Z/state/r29_store_sha256_after_build.txt; cmp $Z/state/r29_store_sha256_before.txt $Z/state/r29_store_sha256_after_build.txt && echo "R29 unchanged"
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+
+# output:
+{'exit_code': 0, 'fingerprint_sidecar': 'not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30.manifest.json is not a problem-free registry sidecar (there is none)', 'heartbeat': '2026-11-12T11:47:48+00:00', 'host': {'boot': 'C58A0F92-923F-471F-B32E-B1B9F5D0A848', 'id': 'd120d1cf03551e6f'}, 'pid': 75161, 'stage': 'CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete', 'state': 'done', 'units_done': 0, 'units_total': None}
+digest: 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 True
+{'digest': '1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7', 'encoding_format': 1, 'fingerprint_format': 6, 'problems': {}, 'taken': {'git_dirty': False, 'git_head': '4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03', 'run_id': 'levin-phase-floor-07a-r30-07a-20261112T113806', 'when': '2026-11-12T11:47:46+00:00'}}
+classes equal R29 True digest equal True
+n classes 21 QSI 864 8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86
+created 2026-11-12T11:38:06+00:00 git_head 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 git_dirty False script_sha256 b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19
+sh: line 16: kill: (75161) - No such process
+75161 gone
+sh: line 16: kill: (75153) - No such process
+75153 gone
+== launch log tail
+[36m(Datastore pid=75216)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"[32m [repeated 3x across cluster][0m
+[36m(Datastore pid=75216)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20[32m [repeated 3x across cluster][0m
+** driver exit status 0
+== Traceback / WARNING / ERROR counts
+var/runs/levin-phase-floor-07a-r30.launch.log: Traceback 0 WARNING 0 ERROR 0
+var/runs/levin-phase-floor-07a-r30-07a-20261112T113806/stdout.log: Traceback 0 WARNING 0 ERROR 0
+var/runs/levin-phase-floor-07a-r30-07a-20261112T113806/stderr.log: Traceback 0 WARNING 0 ERROR 0
+== run dir
+total 32
+drwxr-xr-x   6 ds283 staff   192 Nov 12 11:47 .
+drwxr-xr-x 109 ds283 staff  3488 Nov 12 11:38 ..
+-rw-r--r--   1 ds283 staff  5175 Nov 12 11:38 manifest.json
+-rw-r--r--   1 ds283 staff 10321 Nov 12 11:47 status.json
+-rw-r--r--   1 ds283 staff     0 Nov 12 11:38 stderr.log
+-rw-r--r--   1 ds283 staff  8309 Nov 12 11:47 stdout.log
+== registry
+exit 0
+   levin-phase-floor-07a-r30-07a-20261112T113806              done              -      11m  levin-phase-floor prompt 07a section 5 (Part C),
+74 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 74 finished; 0 with no host recorded.
+== worktree
+4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+(end)
+(end newer)
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end)
+== R30 store files
+-rw-r--r--  1 ds283 staff  25391104 Nov 12 11:47 levin-phase-floor-07a-r30-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25489408 Nov 12 11:47 levin-phase-floor-07a-r30-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 12 11:38 levin-phase-floor-07a-r30-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24956928 Nov 12 11:47 levin-phase-floor-07a-r30-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 12 11:38 levin-phase-floor-07a-r30.sqlite
+== R30 store sha256
+e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84  var/datastores/levin-phase-floor-07a-r30.sqlite
+e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2  var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite
+f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700  var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite
+a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab  var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite
+b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0  var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite
+== R29 store sha256 (re-hash)
+28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9  var/datastores/levin-phase-floor-07-r29.sqlite
+dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874  var/datastores/levin-phase-floor-07-r29-shard0000.sqlite
+1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec  var/datastores/levin-phase-floor-07-r29-shard0001.sqlite
+7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2  var/datastores/levin-phase-floor-07-r29-shard0002.sqlite
+897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca  var/datastores/levin-phase-floor-07-r29-shard0003.sqlite
+R29 unchanged
+== Ray processes (any)
+(end)
+# exit: 0
+# end: 2026-11-12T11:48:40Z

@@ -1,0 +1,108 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-12T11:54:30Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07a/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3
+cd $M
+shasum -a 256 var/datastores/levin-phase-floor-07-r29*.sqlite var/datastores/levin-phase-floor-07a-r30*.sqlite > $Z/state/store_sha256_after_diff.txt; ls -la var/datastores | grep -E "07-r29|07a-r30" >> $Z/state/store_sha256_after_diff.txt
+echo "== stores before vs after the comparisons"; cmp $Z/state/store_sha256_before_diff.txt $Z/state/store_sha256_after_diff.txt && echo "R29 and R30 byte-identical before and after (hashes, sizes, mtimes)"
+echo "== R29 against its KEPT hashes"; grep 07-r29 $Z/state/store_sha256_after_diff.txt | grep -v staff | sort -k2 | diff - $Z/state/r29_kept_expected.txt && echo "R29 equal to KEPT_ON_MAC_STUDIO.txt"
+echo "== journals"; ls var/datastores | grep -E "07-r29|07a-r30" | grep -E "journal|wal|shm"; echo "(none above = none)"
+echo "== worktree"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"; find $W -newer $Z/state/r30_launch_marker -not -path "*/.git/*" | head; echo "(end newer)"
+echo "== main checkout"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== registry"; ./venv/bin/python -B -m runregistrykit list > $Z/out/stop1_registry_list.txt 2>&1; echo "exit $?"; tail -1 $Z/out/stop1_registry_list.txt
+echo "== lock owner"; cat ~/.raypoolkit/rehearsal-lock/owner; echo
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+echo "== records outside rehearsal/ untouched"; find $M/var/levin-phase-floor-07a/measurement $M/var/levin-phase-floor-07 -newer $Z/state/r30_launch_marker | head; echo "(end newer)"
+echo "== out/ listing"; ls -la $Z/out $Z/scripts $Z/state
+
+# output:
+== stores before vs after the comparisons
+R29 and R30 byte-identical before and after (hashes, sizes, mtimes)
+== R29 against its KEPT hashes
+R29 equal to KEPT_ON_MAC_STUDIO.txt
+== journals
+(none above = none)
+== worktree
+4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+(end)
+(end newer)
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end)
+== registry
+exit 0
+74 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 74 finished; 0 with no host recorded.
+== lock owner
+project: SecondaryGWKit
+purpose: levin-phase-floor prompt 07a section 5 (Part C): rehearsal R30 on the Mac Studio (mps026298; worktree 4bf50d34, code commit 1ec734d7, parent dadd63a0), fingerprint 1b332ffa required; then R30 against R29, S3, S1, S2, S4 and the readers
+acquired: 2026-11-12T11:37:54+00:00
+host: mps026298
+ray_temp_dir: /tmp/ray-sgk
+ray_address: in-process
+pid: 75161
+
+== Ray processes (any)
+(end)
+== records outside rehearsal/ untouched
+(end newer)
+== out/ listing
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out:
+total 67228
+drwxr-xr-x 28 ds283 staff      896 Nov 12 11:54 .
+drwxr-xr-x  5 ds283 staff      160 Nov 12 11:37 ..
+-rw-r--r--  1 ds283 staff     5626 Nov 12 11:37 00-gate.txt
+-rw-r--r--  1 ds283 staff    18785 Nov 12 11:37 01-registry-and-r29-hashes.txt
+-rw-r--r--  1 ds283 staff    68376 Nov 12 11:37 01-registry-list.txt
+-rw-r--r--  1 ds283 staff        0 Nov 12 11:49 classify_non_qsi_r29_r30_labels_normalised.stderr
+-rw-r--r--  1 ds283 staff     4567 Nov 12 11:49 classify_non_qsi_r29_r30_labels_normalised.txt
+-rw-r--r--  1 ds283 staff        0 Nov 12 11:49 classify_non_qsi_r29_r30.stderr
+-rw-r--r--  1 ds283 staff     4594 Nov 12 11:49 classify_non_qsi_r29_r30.txt
+-rw-r--r--  1 ds283 staff     5876 Nov 12 11:38 commands.log
+-rw-r--r--  1 ds283 staff     1457 Nov 12 11:49 normalise_jobname_labels.diff
+-rw-r--r--  1 ds283 staff      892 Nov 12 11:49 normalise_jobname_labels.txt
+-rw-r--r--  1 ds283 staff   265604 Nov 12 11:51 qsi_records_r29_r30.csv
+-rw-r--r--  1 ds283 staff   201405 Nov 12 11:51 qsi_rows_r29_r30.csv
+-rw-r--r--  1 ds283 staff    34336 Nov 12 11:53 qsi_summary_r29_r30.txt
+-rw-r--r--  1 ds283 staff        0 Nov 12 11:51 qsi_tabulation_r29_r30.stderr
+-rw-r--r--  1 ds283 staff    11490 Nov 12 11:51 qsi_tabulation_r29_r30.txt
+-rw-r--r--  1 ds283 staff     7695 Nov 12 11:48 r30_end_check.txt
+-rw-r--r--  1 ds283 staff    69359 Nov 12 11:48 r30_end_registry_list.txt
+-rw-r--r--  1 ds283 staff     6570 Nov 12 11:38 r30_launch_check.txt
+-rw-r--r--  1 ds283 staff    69339 Nov 12 11:38 r30_launch_registry_list.txt
+-rw-r--r--  1 ds283 staff    10321 Nov 12 11:48 r30_status.json
+-rw-r--r--  1 ds283 staff      177 Nov 12 11:37 rec_sh.diff
+-rw-r--r--  1 ds283 staff     2978 Nov 12 11:54 stop1_check.txt
+-rw-r--r--  1 ds283 staff    69359 Nov 12 11:54 stop1_registry_list.txt
+-rw-r--r--  1 ds283 staff 40313612 Nov 12 11:49 store_value_diff_r29_r30.json
+-rw-r--r--  1 ds283 staff       38 Nov 12 11:49 store_value_diff_r29_r30.json.stderr
+-rw-r--r--  1 ds283 staff 27023601 Nov 12 11:49 store_value_diff_r29_r30.labels_normalised.json
+
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts:
+total 68
+drwxr-xr-x 8 ds283 staff   256 Nov 12 11:53 .
+drwxr-xr-x 5 ds283 staff   160 Nov 12 11:37 ..
+-rw-r--r-- 1 ds283 staff  3574 Nov 12 11:49 classify_non_qsi.py
+-rw-r--r-- 1 ds283 staff  2336 Nov 12 11:49 normalise_jobname_labels.py
+-rw-r--r-- 1 ds283 staff  6569 Nov 12 11:53 qsi_summary_r29_r30.py
+-rwxr-xr-x 1 ds283 staff   668 Nov 12 11:37 rec.sh
+-rw-r--r-- 1 ds283 staff 24538 Nov 12 11:50 tabulate_qsi_guard_r29.py
+-rw-r--r-- 1 ds283 staff 24410 Nov 12 11:51 tabulate_qsi_r29_r30.py
+
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state:
+total 36
+drwxr-xr-x 12 ds283 staff  384 Nov 12 11:54 .
+drwxr-xr-x  5 ds283 staff  160 Nov 12 11:37 ..
+-rw-r--r--  1 ds283 staff  333 Nov 12 11:38 deviations_draft.md
+-rw-r--r--  1 ds283 staff   43 Nov 12 11:38 launch_r30.txt
+-rw-r--r--  1 ds283 staff  422 Nov 12 11:48 lock.log
+-rw-r--r--  1 ds283 staff  605 Nov 12 11:37 r29_kept_expected.txt
+-rw-r--r--  1 ds283 staff  605 Nov 12 11:48 r29_store_sha256_after_build.txt
+-rw-r--r--  1 ds283 staff  605 Nov 12 11:37 r29_store_sha256_before.txt
+-rw-r--r--  1 ds283 staff    0 Nov 12 11:38 r30_launch_marker
+-rw-r--r--  1 ds283 staff  610 Nov 12 11:48 r30_store_sha256_after_build.txt
+-rw-r--r--  1 ds283 staff 2110 Nov 12 11:54 store_sha256_after_diff.txt
+-rw-r--r--  1 ds283 staff 2110 Nov 12 11:49 store_sha256_before_diff.txt
+# exit: 0
+# end: 2026-11-12T11:54:32Z

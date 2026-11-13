@@ -1,0 +1,12 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_v4_07a.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744 out/scores/w4_scores.json out/scores/w4_report.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:08:38Z
+# ----
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/score_v4_07a.py", line 1
+    """"""levin-phase-floor prompt 07a section 6, W4: V4's 33 calls re-scored from 07a's census h against the readings 07
+                                   ^
+SyntaxError: leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers
+# ----
+# end 2026-11-12T20:08:38Z
+# exit 1

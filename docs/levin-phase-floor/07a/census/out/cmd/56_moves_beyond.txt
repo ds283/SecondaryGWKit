@@ -1,0 +1,75 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/moves_beyond_07a.py out/scores/moves_beyond.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:16:05Z
+# ----
+{
+ "n_beyond_e07": 12,
+ "beyond_by_class": {
+  "own": 8,
+  "aux_only": 4
+ },
+ "beyond_both_by_class": {
+  "own": 4
+ },
+ "v4_classes": {
+  "v17": "window_both",
+  "v18": "window_both",
+  "z07": "untouched",
+  "v15": "window_both",
+  "v08": "window_both",
+  "z28": "untouched",
+  "v16": "window_both",
+  "z00": "window_both",
+  "z29": "untouched",
+  "v05": "window_both",
+  "v01": "window_both",
+  "v06": "window_both",
+  "v00": "window_both",
+  "v14": "window_both",
+  "v04": "window_both",
+  "v07": "window_both",
+  "z24": "own",
+  "v23": "window_both",
+  "v13": "window_both",
+  "v21": "window_both",
+  "v12": "window_both",
+  "v03": "window_both",
+  "v20": "window_both",
+  "z21": "untouched",
+  "z18": "untouched",
+  "z16": "untouched",
+  "z12": "window_both",
+  "v10": "window_both",
+  "v11": "window_both",
+  "v22": "window_both",
+  "v19": "window_both",
+  "v09": "window_both",
+  "v02": "window_both"
+ },
+ "v4_by_class": {
+  "window_both": 26,
+  "untouched": 6,
+  "own": 1
+ },
+ "aux_shrink_gt_2x_move_over_eh": {
+  "max": 2.0002117076908745,
+  "n_gt_1": 4
+ }
+}
+h-1e-7-1-34599 group 2 e+10, 526.01), regime Gqr, group G+q-r own 3.96 1.16 both=True eh/e7=3.42 [True, True] [16, 6] {'own': {'route': 1, 'lu': 0}}
+h-1e-7-1-34599 group 3 e+10, 526.01), regime Gqr, group G-q+r own 3.96 1.16 both=True eh/e7=3.42 [True, True] [16, 6] {'own': {'route': 1, 'lu': 0}}
+h-1e-7-1-2179 group 2 9e+11, 2.091), regime Gqr, group G+q-r own 4.66 0.343 both=False eh/e7=13.6 [True, True] [59, 47] {'own': {'route': 0, 'lu': 1}, 'quarter': {'route': 1, 'lu': 0}}
+h-1e-7-1-2179 group 3 9e+11, 2.091), regime Gqr, group G-q+r own 4.66 0.343 both=False eh/e7=13.6 [True, True] [59, 47] {'own': {'route': 0, 'lu': 1}, 'quarter': {'route': 1, 'lu': 0}}
+h-1e-7-3-843 analytic 5 analytic J2 aux_only 1.09 0.576 both=False eh/e7=1.89 [True, True] [1, 1] {'comparison_half': {'route': 1, 'lu': 0}}
+h-1e-7-3-13508 group 2 11e+10, 1589), regime Gqr, group G+q-r aux_only 1.08 0.599 both=False eh/e7=1.8 [True, True] [117, 18] {'quarter': {'route': 1, 'lu': 0}}
+h-1e-7-3-13508 group 3 11e+10, 1589), regime Gqr, group G-q+r aux_only 1.08 0.599 both=False eh/e7=1.8 [True, True] [117, 18] {'quarter': {'route': 1, 'lu': 0}}
+h-1e-8-1-34599 group 2 e+10, 526.01), regime Gqr, group G+q-r own 3.99 1.59 both=True eh/e7=2.5 [True, True] [17, 6] {'own': {'route': 1, 'lu': 0}}
+h-1e-8-1-34599 group 3 e+10, 526.01), regime Gqr, group G-q+r own 3.99 1.59 both=True eh/e7=2.5 [True, True] [17, 6] {'own': {'route': 1, 'lu': 0}}
+h-1e-8-3-843 analytic 5 analytic J2 aux_only 1.09 0.576 both=False eh/e7=1.89 [True, True] [1, 1] {'comparison_half': {'route': 1, 'lu': 0}}
+h-1e-8-1-2179 group 2 9e+11, 2.091), regime Gqr, group G+q-r own 4.66 0.343 both=False eh/e7=13.6 [True, True] [59, 47] {'own': {'route': 0, 'lu': 1}, 'quarter': {'route': 1, 'lu': 0}}
+h-1e-8-1-2179 group 3 9e+11, 2.091), regime Gqr, group G-q+r own 4.66 0.343 both=False eh/e7=13.6 [True, True] [59, 47] {'own': {'route': 0, 'lu': 1}, 'quarter': {'route': 1, 'lu': 0}}
+wrote out/scores/moves_beyond.json sha256 7130243f68903fb783d51f3fe69daa09928a991a8661050a03958099cc7c7f1b
+# ----
+# end 2026-11-12T20:16:09Z
+# exit 0

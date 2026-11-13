@@ -1,0 +1,34 @@
+{
+ "basis": {
+  "rule": "levin-phase-floor prompt 07a section 6, Gate W0's third and fourth clauses: the units, chosen by a rule fixed before\nany is run (this docstring; new in 07a). Read only, except the two units files it writes.\n\n- **The unit with a window** (clauses 3 and 4): z12's row at 1e-8, ``g-1e-8-1-2174`` (07's own V0 (c) unit, whose\n  ``G+q+r`` call #1 locates one root and integrates its window at 07; run at h as ``h-1e-8-1-2174``). Fixed by name. That it\n  has a windowed call at h is read from the clause runs' own records (compare_07a.py prints each unit's windowed calls).\n- **The unit with a route change** (clause 3): from Gate W0's K0 run at h (K0_H_DIR/units.jsonl), in the order of 06k's\n  K0 list (docs/levin-phase-floor/06l/out/k0/units.json), the first unit, other than the window unit, that has no\n  windowed call at h and has a call one of whose ``own`` solves (its span a region the driver made) changed its C2 route\n  (route_07a ``n_route_differs_own`` > 0). If none: the first such unit with an own solve whose LU choice changed\n  (``n_lu_differs_own`` > 0); if none, the first with any solve whose route or LU choice changed. If none at all, the\n  script exits 1 and writes nothing.",
+  "header": [
+   "# levin-phase-floor 07a: Gate W0's clause 3 and 4 units",
+   "# written 2026-11-12T13:13:48Z on mps026298.phys.susx.ac.uk",
+   "# script select_w0_units_07a.py sha256 48bb44de1dc5eafd48e34e4b8363981c296f37b96c1b74ab6507774276129751",
+   "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+   "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+   "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/docs/levin-phase-floor/06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699",
+   "# input state/k0/h/units.jsonl sha256 195df102f46fda10ea7e65d983843a55c299694e72d55b313f70a487c1f21c0c"
+  ],
+  "window_unit": "g-1e-8-1-2174",
+  "route_unit": "g-1e-7-1-11214",
+  "route_unit_tier": 1,
+  "route_unit_calls_changed": [
+   [
+    0,
+    "k=9.56e+07/Mpc, q=3.09e+06/Mpc, r=9.56e+07/Mpc @ z_response=3.6477e+06, z in (1.6391e+16, 1.6351e+12), regime G, group G",
+    {
+     "n_route_differs_own": 1,
+     "n_lu_differs_own": 0,
+     "n_route_differs_aux": 0,
+     "n_lu_differs_aux": 0
+    }
+   ]
+  ]
+ },
+ "units": [
+  {
+   "uid": "g-1e-8-1-2174"
+  }
+ ]
+}

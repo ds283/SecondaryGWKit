@@ -3662,3 +3662,240 @@ reopened**:
   `[07-c2-gate-threshold-was-never-measured]` assigned to prompt 07a;
 - V5 is scored fails as written, and G2's L2 is reopened as one question for 08, with the depth-cap
   experiment.
+
+## 7a. The window's early stop, and the phase variation the C2 gate routes on
+
+*Prompt 07a: Part A's measurement on the Mac Studio at 07's code (`f93aafd0`), 2026-11-10 to 2026-11-12; the code
+on the laptop (`1ec734d7`, amended at its stop by prompt §10); R30, the census and two references on the Mac Studio,
+2026-11-12, through an orchestrator session there, from the worktree `SecondaryGWKit-lpf07a-4bf50d3` at Part C's
+dispatch SHA `4bf50d34`. The records are under [`07a/`](07a/). What stays on the Mac Studio is in
+[`07a/KEPT_ON_MAC_STUDIO.md`](07a/KEPT_ON_MAC_STUDIO.md).*
+
+### 7a.1 Part A and the code
+
+**Part A** replayed V4's 25 captures, the cross-check's two pairs and the 396 class-(c) captures at 07's code and at
+seven variants of the window's stop ([`07a/measurement/`](07a/measurement/)). Every replay at 07's code reproduces
+07's census, 430 of 430. No variant moves V4's five failures. Their whole excess is in one Levin leaf beside the
+window, its true error 2.66–7.44× its $e'$ (`[07a-levin-leaf-beside-a-window-understates-its-error]`). The stop is
+made `dqage`'s count defensively, on the user's word.
+
+**The code** ([`logs/07a-window-stop-and-phase-variation.md`](../../prompts/levin-phase-floor/logs/07a-window-stop-and-phase-variation.md),
+[`07a/code/`](07a/code/)):
+- **§1.1 (O9).** A phase is located unless its rate is zero at every finite scan sample. The C2 gate, the LU choice
+  and `phase_span` take $V = |\theta(b) - \theta(a)|$ from the raw phase where $\theta'$ has no strict sign change on
+  the region's nodes, and the node-partition sum where it has.
+- **§1.2.** A window's bisections are counted as `dqage` counts `iroff1`: the skip on dqk21's resasc, raw error
+  estimates, and the value test at $\min(10^{-5}, {\rm rtol})$. It is bit-identical to Part A's variant (d) on eight
+  window problems. `converged` is unchanged by a stop.
+- **§10.** LiouvilleGreen's raw-phase test is narrowed to its purpose, as
+  `test_the_raw_phase_enters_no_value_or_error` ($\theta + C$, $C = 10^6 + 0.5$).
+- The seven roots 116, 781, 39, 156 (1 skipped), 280, 127 and 64; breakages (i)–(x) caught; z12 and v08 replayed at
+  the commit bit-identical to 07's census.
+
+### 7a.2 Rehearsal R30 against R29 (prompt 07a §5, Mac Studio, 2026-11-12)
+
+Records: [`07a/rehearsal/`](07a/rehearsal/). Log: [`07a/rehearsal/log.md`](07a/rehearsal/log.md).
+
+**The tree.** `SecondaryGWKit-lpf07a-4bf50d3`, detached at Part C's dispatch SHA `4bf50d34`. Its code is the code commit
+`1ec734d7`, whose parent is `dadd63a0`. The main checkout stayed at `28ebaf07`, and nothing was written in either tree.
+
+**R30.** Run `levin-phase-floor-07a-r30-07a-20261112T113806`, on host mps026298.
+- Launched 11:38:06Z: driver pid 75161, `sh` pid 75153, Ray address `local`, `/tmp/ray-sgk`, 6 cpus.
+- Finished `done` with exit 0 at 11:47:48Z, about 9.7 min.
+- Fingerprint `1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7`, taken at 4bf50d34 with `git_dirty`
+  false. Its `classes` equal R29's.
+- Store primary `e5f8b443…`; see [`KEPT_ON_MAC_STUDIO.txt`](07a/rehearsal/KEPT_ON_MAC_STUDIO.txt).
+- Records: [`out/r30_end_check.txt`](07a/rehearsal/out/r30_end_check.txt) and
+  [`out/r30_status.json`](07a/rehearsal/out/r30_status.json).
+
+| Check (prompt 07a §5) | Measured | Verdict |
+|---|---|---|
+| S0′: `git diff --stat e182bc7a dadd63a0 -- . ':!docs' ':!prompts'` lists nothing the build imports ([`out/00-gate.txt`](07a/rehearsal/out/00-gate.txt)) | `CLAUDE.md` only | **holds** |
+| R30 gives `1b332ffa…` | `1b332ffa…`; `classes` equal R29's | **holds** |
+| Outside `QuadSourceIntegral`: every value table identical; every other difference one of the four volatile kinds; no row in one store only ([`out/classify_non_qsi_r29_r30_labels_normalised.txt`](07a/rehearsal/out/classify_non_qsi_r29_r30_labels_normalised.txt)) | 360,462 value-table rows identical; 0 unclassified; differences are timing, `label` (job-name prefix normalised in a copy), `parents_digest` 291 and `rho_reuse` 19 | **holds** |
+| Inside it, every moved row tabulated ([`out/qsi_tabulation_r29_r30.txt`](07a/rehearsal/out/qsi_tabulation_r29_r30.txt), [`out/qsi_rows_r29_r30.csv`](07a/rehearsal/out/qsi_rows_r29_r30.csv), [`out/qsi_records_r29_r30.csv`](07a/rehearsal/out/qsi_records_r29_r30.csv), [`out/qsi_summary_r29_r30.txt`](07a/rehearsal/out/qsi_summary_r29_r30.txt)) | 380 of 864 rows moved: `total` in 25, `total_abserr` in 60, `analytic_rad` in 168. Largest \|Δtotal\| is 0.0470 of R29's abserr and 0.0745 of R30's. `total_converged` changes: 0 each way | tabulated |
+| S3: \|t30 − t29\| ≤ e29 + e30 on every row with finite abserr in both, evaluated exactly ([`out/s3_scores.txt`](07a/rehearsal/out/s3_scores.txt)) | 864 scored; 0 violations; largest 0.0288 | **holds** |
+| S1: V1's twelve locate z ≈ 10211 and are honest against 06g's references ([`out/s1_scores.txt`](07a/rehearsal/out/s1_scores.txt)) | 12 of 12 locate a root at z 10211.31789, within 8.5e-6 (spacing ≥ 31); 12 of 12 honest, largest 0.2176 (w11). Equal to R29 bit for bit | **holds** |
+| S2: P1's two rows locate within one spacing and are honest against `p1_references` ([`out/s2_scores.txt`](07a/rehearsal/out/s2_scores.txt)) | \|x − x_s\| 7.1e-9 and 5.6e-9 against 4.1e-3; ratios 0.0202 and 0.263. Equal to R28 and R29 | **holds** |
+| S4: R29's four guarded 2pt5 J4/Y4 blocks each locate their root, guard no leaf, and are honest against R29's block references ([`out/block_scores.txt`](07a/rehearsal/out/block_scores.txt)) | 4 of 4 locate one root at the reference root, bit for bit; 0 guarded; ratios 4.37e-5, 5.81e-4, 2.06e-4 and 6.17e-4; reference errors ≤ 5.0e-4 of abserr30. Equal to R28's values bit for bit | **holds** |
+| The readers on R30: exit 0, store byte-identical ([`out/readers_check.txt`](07a/rehearsal/out/readers_check.txt)) | 6 of 6 exit 0; R30 identical before and after | **holds** |
+| The lock released; `ray-processes` lists nothing ([`state/lock.log`](07a/rehearsal/state/lock.log)) | released; free; nothing listed | **holds** |
+| R29 and R30 kept; R29 unchanged ([`state/stores_sha256_final.txt`](07a/rehearsal/state/stores_sha256_final.txt)) | R29 equal to 07's `r29/KEPT_ON_MAC_STUDIO.txt`; R30 equal to its post-build hashes | **holds** |
+
+**The replay behind S1, S2 and S4** ([`out/replay_check.txt`](07a/rehearsal/out/replay_check.txt),
+[`out/blockcheck.txt`](07a/rehearsal/out/blockcheck.txt)).
+- R29's capture harness was run at h, Ray-free and under the lock.
+- The rows: 223 in all, covering 202 located rows, P1, the w rows, the block rows, and the rows of the 49 records whose
+  abserr moved with no change to value, regions or location.
+- **493 of 493 records reproduce R30 bit for bit.** Every one of the 223 workers had Ray uninitialised.
+- Each located record holds exactly one root: 44 group (G+q+r), 200 J4 and 200 Y4 at 2pt5. None is guarded.
+- The 4 S4 block calls reproduce R30 in pass 1 and pass 2.
+- Their captures are not byte-identical to R29's. They differ only in the unit id, the tree tag and the call's own
+  result ([`out/capture_compare.txt`](07a/rehearsal/out/capture_compare.txt)). Their integrands equal R29's bit for bit
+  at 1001 points, with equal `x_span` and `kw`.
+- The trust reading of `issues.md` item 1 is in [`out/trust_reading.txt`](07a/rehearsal/out/trust_reading.txt).
+
+**Float values in hex** (from [`out/block_scores.txt`](07a/rehearsal/out/block_scores.txt)):
+
+| Block | value30 | abserr30 | reference | regions |
+|---|---|---|---|---|
+| (3.162e5)³, z 1.329e9, J4 | `-0x1.9017c8e4681f6p-30` | `0x1.65dacd1543ce8p-66` | `-0x1.9017c8e4681f2p-30` | 14 |
+| (3.162e5)³, z 1.329e9, Y4 | `0x1.2018ed31b447ep-27` | `0x1.78af331f037f8p-66` | `0x1.2018ed31b4477p-27` | 4 |
+| (1e6)³, z 4.018e9, J4 | `-0x1.e6f859d2f7c72p-33` | `0x1.ff3cae87aca98p-69` | `-0x1.e6f859d2f7c57p-33` | 6 |
+| (1e6)³, z 4.018e9, Y4 | `0x1.9714e016a7982p-30` | `0x1.faa21d2682f6bp-69` | `0x1.9714e016a7978p-30` | 13 |
+
+### 7a.3 The census: 07's census re-run at the code (prompt 07a §6)
+
+On the Mac Studio (mps026298), 2026-11-12, by Part C's census agent. The log is
+[`07a/census/log.md`](07a/census/log.md).
+- **Tree and store:** the census ran from the worktree `SecondaryGWKit-lpf07a-4bf50d3`, at Part C's dispatch SHA
+  `4bf50d34`, code `1ec734d7`'s (`AdaptiveLevin/levin_quadrature.py` `4ea1948b…`).
+  - Gate W0's K0 run ran in the same tree with the parent's module (`dadd63a0`'s, `4e5da371…`, byte-identical to 07's
+    census tree `e182bc7a`'s) installed in place of h's by `variant_loader.py`.
+  - Both read 06's certified scratch copy of A3 v2, read-only.
+- **Constraints:** Ray-free, no lock, no store built, nothing written in a tree.
+
+#### The Gate and the inputs
+
+Commands and outputs are `07a/census/out/cmd/00`–`10`.
+- **The harness:** 07's census `scripts/`, byte-identical to the copy that ran on the Mac Studio (`out/cmd/00`).
+- **The trees:** h is clean with `--ignored`. The main checkout is at `28ebaf07`, clean.
+  - `git diff --stat e182bc7a dadd63a0` (outside docs and prompts) lists `CLAUDE.md` only.
+  - `1ec734d7..4bf50d34` lists nothing.
+- **The parent's module** (`out/cmd/08`): `git show dadd63a0` gives `4e5da371…`, blob `9ea30e2b…`, equal at `e182bc7a`.
+- **The LiouvilleGreen modules:** AST-equal without docstrings between `dadd63a0` and h
+  ([`07a/census/out/w0/w0a_ast_lg.txt`](07a/census/out/w0/w0a_ast_lg.txt)).
+- **The registry:** 74 runs, all finished.
+- **The scratch copy:** EQUAL to `copy_files_certified.txt`, and OK against 06e's after-hashes.
+- **07's census:** 150 of 150 files equal its `KEPT_ON_MAC_STUDIO.txt`, checkpoint `03dfe786…`. Its 850 working-record files
+  are hashed ([`07a/census/out/runs_hashed_before.txt`](07a/census/out/runs_hashed_before.txt)).
+
+#### The harness
+
+07's census `scripts/`, copied, changed where marked "prompt 07a" (diff:
+[`07a/census/out/scripts_diff_at_end.txt`](07a/census/out/scripts_diff_at_end.txt)).
+- **The tree:** h, with the parent as a variant.
+- **The diagnostics `route_07a`:** every subregion solve of every Levin call, with:
+  - h's V and 07's estimate on the same nodes;
+  - the C2 route and LU choice under each;
+  - the solve's role (own, trust-check quarter, comparison half, fallback half);
+  - the node-partition sum;
+  - Clenshaw–Curtis regions with a half sent to Levin.
+- **The comparison:** 07's diff, with 07a's keys set aside. Each differing path is put in a category (`call`, `location`,
+  `harness`).
+- **V4's re-scoring:** on 07's readings.
+
+#### Gate W0 — holds
+
+- **(1)** The K0 workers loaded no file that S0′'s diff lists. Of the parent→h diff they loaded only the two AST-equal
+  LiouvilleGreen modules, and never h's `levin_quadrature.py`
+  ([`07a/census/out/w0/w0a_imports.txt`](07a/census/out/w0/w0a_imports.txt)).
+- **(2)** Run `levin-phase-floor-07a-k0-20261112T130135`: 100 of 100 K0 units at the parent equal 07's census bit for bit.
+  That is 2,110 calls and 32,956 leaves ([`07a/census/out/k0/compare_w0b.json`](07a/census/out/k0/compare_w0b.json)).
+- **(3)** `h-1e-8-1-2174` (a window) and `h-1e-7-1-11214` (an own C2 route change), diagnostics on and off: identical
+  ([`07a/census/out/w0c3/compare_instr.json`](07a/census/out/w0c3/compare_instr.json)).
+- **(4)** `h-1e-8-1-2174` twice: identical ([`07a/census/out/w0c4/compare_det.json`](07a/census/out/w0c4/compare_det.json)).
+
+#### The predictions and the rulings
+
+- [`07a/census/state/predictions.md`](07a/census/state/predictions.md), written 2026-11-12T13:16:44Z, after W0 and before the
+  launch, SHA-256 `3ec7b53d…`.
+- The user's rulings at STOP 2 (Q1: reading A; Q2: the call's outputs) are in
+  [`07a/census/state/ruling_stop2.md`](07a/census/state/ruling_stop2.md).
+
+#### The census
+
+Run `levin-phase-floor-07a-census-20261112T132744`: `done`, 18,560 of 18,560, exit 0, 0 errors, 0 over budget.
+- Wall 23,284 s against a projection of 23,353 s. Checkpoint `461df2ec…`.
+- All 16 workers used `4ea1948b…`, with no variant and no Ray.
+
+#### W1–W7
+
+[`07a/census/out/scores/summary.json`](07a/census/out/scores/summary.json),
+[`07a/census/out/stop3/compare_census_calls.json`](07a/census/out/stop3/compare_census_calls.json),
+[`07a/census/out/scores/w4_report.md`](07a/census/out/scores/w4_report.md),
+[`07a/census/out/xcheck/`](07a/census/out/xcheck/).
+- **W1 holds** (reading A; the call's outputs):
+  - 258,824 untouched calls, 0 differing in the call's outputs;
+  - 13,382 differ only in the skipped-phase record;
+  - 9,726 rows made only of untouched calls have `total` and `total_abserr` equal.
+- **W2 holds:** 0 Levin leaves listed.
+- **W3 holds:** 0 violations. The 784 skipped phases are all `zero_rate`.
+- **W4 fails, as predicted:** v08 3.16, v09 2.21, v12 3.08, v17 2.38, v22 2.53. All 33 calls are bit-identical to 07's.
+- **W5 holds** (gated solves, by the user's ruling, [`07a/census/state/ruling_w5.md`](07a/census/state/ruling_w5.md)):
+  0 node-partition sums, 0 Clenshaw–Curtis regions with a Levin half, 0 guarded regions.
+  - Descriptive: 18,236 forced solves took the node-partition sum, within the root-located calls (4,416 of 4,804).
+- **W6 fails, as predicted:** `3-14501` r_g 1.39 and `3-35006` r_g 1.08. The other 2,482 pairs are ≤ 1.
+- **W7 fails:** 25 lone-`G` minima-window calls at 1e-8 move by 0.0066–0.145 of abserr_07, beyond 1e-5. At 1e-7 the largest
+  move is 1.80e-7.
+
+#### The user's references (findings, not W verdicts)
+
+On the user's word at the W5 stop: rows `3-678` and `1-34599`, group calls 2 and 3, at 1e-7 and 1e-8, by 07's V4 method. The
+results are in [`07a/census/out/refs/report.md`](07a/census/out/refs/report.md).
+- **The captures:**
+  - 8 of 8 h captures reproduce 07a's census bit for bit;
+  - 8 of 8 captures with the parent's module reproduce 07's census;
+  - the integrands are equal by bit pattern between the two captures and across the rtols.
+- **The run:** `levin-phase-floor-07a-references-20261112T203555`: 16 of 16 readings, all usable. FCC r2 is the reference.
+- **The stated error** (the readings' spread) is 1.3e-6 (`1-34599`) and 9.2e-8 (`3-678`) of the smaller abserr, so every call
+  is scored.
+- **`1-34599`:** h honest at 0.020 (1e-7) and 0.015 (1e-8) of its abserr; 07 not honest, at 4.03.
+- **`3-678`:** h honest at 0.491 of its abserr, which is 11× smaller than 07's; 07 at 0.135.
+
+#### After
+
+- **The scratch copy:** EQUAL to its certification after the census and at the end, and equal to its before
+  (`out/cmd/41`–`43`, `60`–`62`).
+- **07's census:** all 1,000 files (run directory and working records) equal before, after the census and at the end
+  (`out/cmd/44`–`45`, `63`–`64`).
+- **After the references run:** the scratch copy is again EQUAL to its certification, and 07's census is equal to its before (`out/cmd/83`–`87`).
+- **Trees:** h is clean with `--ignored`; the main checkout is clean at `28ebaf07`.
+- **The registry:** 77 runs, all finished.
+
+### 7a.4 The review
+
+**The Mac Studio orchestrator** held the agents at planned stops 1, 2 and 3 and at scoring on W5's wording, and checked
+each with readers of its own ([`07a/review/`](07a/review/): `stop1/`, `stop2/`, `stop3/` and `final/`, each with its
+notes). It then reviewed Part C in the note's §C.2 checks, **all passing** ([`07a/review/review.md`](07a/review/review.md)):
+- scope: 13,596 protected files unchanged by hash at each stop and at the end; the worktree clean with `--ignored`;
+- the runs: 77 in the registry, all finished; R30's fingerprint re-run, `1b332ffa…`;
+- `tools.store_value_diff` on R29 and R30 re-run, byte-identical to the agent's JSON (`f6de2ef1…`); S3 and S4 by its
+  own readers;
+- W0–W7 re-scored from the two checkpoints (07 `03dfe786…`, 07a `461df2ec…`) through its own indices, every line
+  checked by SHA-256: every verdict and figure equal to the agents';
+- the references, re-scored: equal to the census agent's;
+- the predictions verbatim, later than W0's outputs and earlier than the census's manifest; the harness diff matching
+  the census log's deviations;
+- the records: the rehearsal agent's 21 deviations and the census agent's 29, each classified and accepted.
+
+It did not re-check the route-change tallies by solve role, the aux_only abserr ratios, the disagreement list
+against 06m, or the references' projection. One slip of its own: two fingerprint attempts ran with the cwd in the
+main checkout, whose code refused the store's schema; they read and wrote nothing.
+
+### 7a.5 The laptop's re-checks (2026-11-13)
+
+By the laptop orchestrator, from the copied records, against committed records the agents did not write:
+- **The copy.** The copy-back list was made on the Mac Studio first: 781 record files into the laptop's
+  `var/levin-phase-floor-07a/` and 15 run-directory files into `var/runs/`, all matching the Mac Studio's SHA-256. The
+  3,219 files left out agree with the agents' `KEPT_ON_MAC_STUDIO.txt` lists. The 781 are in [`07a/`](07a/) byte for
+  byte.
+- **W4,** from the census's W4 scores against 07's committed census: z12, v08 and v12 equal 07's values bit for bit,
+  at 0.7181, 3.16 and 3.08.
+- **S1,** w03, w07 and w11 at 0.0726277, 0.00297081 and 0.217573. Their `ref_30` strings are identical to 06g's
+  committed stage-3 `scores.json` entries, found by `wid`.
+- **Two rehearsal rows,** read from the copied tables:
+  - an untouched row, $k = 10^5$, $z = 250$: R29 and R30 equal in hex, and R29 equal to 07's committed R29;
+  - the most-moved row, $k = 3.162\times10^5$, $z = 1.918\times10^8$: $|\Delta|$ 0.04703 of R29's abserr and 0.02883
+    of the two abserrs summed, R29 equal to 07's committed R29.
+
+### 7a.6 The user's rulings
+
+The board's Decisions **07a Part C**:
+- W1 on reading A, every solve counted, and "bit for bit" on the call's outputs; W5 on gated solves; references for
+  `1-34599` and `3-678`;
+- `[07-iroff1-window-stop-can-leave-a-call-dishonest]` stays open, narrowed to W7's 25 calls;
+- `[07-c2-gate-threshold-was-never-measured]` loses O9 and gains the census's route changes and `1-34599`;
+- `[07a-trust-check-auxiliary-route-moves-the-declared-error]` is opened;
+- `[07a-levin-leaf-beside-a-window-understates-its-error]` stands, W4 and W6 reproduced;
+- R29 and R30 are kept, with 07's and 07a's census run directories and A3 v2's scratch copy.

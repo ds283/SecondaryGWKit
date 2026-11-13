@@ -1,0 +1,35 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/xcheck_06m_from07_07a.py out/xcheck/h_vs_06m_pop07/disagreement.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:11:22Z
+# ----
+{
+ "n_pairs": 2484,
+ "n_listed_calls": 843,
+ "by_class": {
+  "c": 786,
+  "a": 31,
+  "e": 26
+ },
+ "by_class_rtol": {
+  "a|1e-7": 31,
+  "c|1e-7": 390,
+  "c|1e-8": 396,
+  "e|1e-7": 6,
+  "e|1e-8": 20
+ },
+ "by_group": {
+  "G+q+r": 843
+ },
+ "listed_at_07_too": 843,
+ "class_h_vs_07": {},
+ "class_07_to_h": {
+  "c->c": 786,
+  "a->a": 31,
+  "e->e": 26
+ }
+}
+wrote out/xcheck/h_vs_06m_pop07/disagreement.json sha256 4f1b3dadcef89b9595948ff9e0bd6f17cac13c4e344959289a8bd1feb2718479
+# ----
+# end 2026-11-12T20:11:23Z
+# exit 0

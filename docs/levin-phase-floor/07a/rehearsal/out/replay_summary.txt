@@ -1,0 +1,14 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/replay_summary_r30.py sha256 4ea0b46c6fe076aa1d3387fba45d60b37d7c58fd69c32a5073e3525fefe86b28
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/replay_calls.csv sha256 80b0e6609b756d7ca3f6dfa4d8a52a15926229936d65bd482abd01d06995afa9
+lines 493; records 493; reproduce 493 lines
+located points by (record kind, label/block, point kind, found_as):
+  ('analytic', '2pt5.Levin.J4_data', 'root', 'root'): 200
+  ('analytic', '2pt5.Levin.Y4_data', 'root', 'root'): 200
+  ('group', 'G+q+r', 'root', 'root'): 44
+records by (kind, located, guarded, guard at depth_max):
+  ('analytic', 'located', 'unguarded', '-'): 400
+  ('group', 'located', 'unguarded', '-'): 44
+  ('group', 'none', 'unguarded', '-'): 49
+records with more than 64 points: 0
+window pieces summed: 3077; points summed: 444
+exit 0

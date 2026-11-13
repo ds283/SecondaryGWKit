@@ -1,0 +1,22 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w0a_imports_07a.py state/k0/parent out/w0/w0a_imports.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T13:16:20Z
+# ----
+# levin-phase-floor 07a: Gate W0 (1), the files of h the K0 workers loaded
+# written 2026-11-12T13:16:20Z on mps026298.phys.susx.ac.uk
+# script w0a_imports_07a.py sha256 4db219cc0e951acd255fe563c6786dc45a4d174bebe649feeae8500f2b936f26
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/variants/levin_quadrature_parent.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc
+# workers with a bye: 15; distinct files of h loaded: 101
+# variants installed (path, sha256 at hello): [('/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/variants/levin_quadrature_parent.py', '4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc')]; the parent's: True
+# h's own AdaptiveLevin/levin_quadrature.py among the files loaded: False
+# git diff --name-only dadd63a0 4bf50d34 -- . ':!docs' ':!prompts': ['AdaptiveLevin/levin_quadrature.py', 'AdaptiveLevin/tests/test_levin_phase_variation.py', 'AdaptiveLevin/tests/test_levin_quadrature.py', 'AdaptiveLevin/tests/test_levin_stationary.py', 'LiouvilleGreen/bessel_phase.py', 'LiouvilleGreen/tests/test_bessel_compatibility.py', 'LiouvilleGreen/three_bessel_integrals.py']
+# files both changed (parent to h) and loaded: ['LiouvilleGreen/bessel_phase.py', 'LiouvilleGreen/three_bessel_integrals.py']; of these, AST-equal without docstrings (out/w0/w0a_ast_lg.txt): ['LiouvilleGreen/bessel_phase.py', 'LiouvilleGreen/three_bessel_integrals.py']; other: []
+# S0': git diff --name-only e182bc7a dadd63a0 -- . ':!docs' ':!prompts': ['CLAUDE.md']; loaded among them: []
+# verdict: HOLDS (the code the K0 workers executed is the parent code, and the parent is 07s)
+wrote out/w0/w0a_imports.txt sha256 027bdfda7568f238610ba5554984387813d39b683e5e64e5ce6123dcd349d145
+# ----
+# end 2026-11-12T13:16:21Z
+# exit 0

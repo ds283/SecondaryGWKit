@@ -1,0 +1,27 @@
+{
+ "tree": "h",
+ "name": "tree-1e-7-k3_1",
+ "units": [
+  {
+   "uid": "h-1e-7-3-34969",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-34969",
+   "names05": null,
+   "shard": 3,
+   "serial": 34969,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/review/stop2/h_run1/tree-1e-7-k3_1",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/review/stop2/h_run1/tree-1e-7-k3_1/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null,
+ "instrument_07a": true
+}

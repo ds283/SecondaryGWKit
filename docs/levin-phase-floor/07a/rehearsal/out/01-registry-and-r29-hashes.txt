@@ -1,0 +1,412 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-12T11:37:38Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07a/rehearsal
+cd $M
+echo "== runregistrykit list"; ./venv/bin/python -B -m runregistrykit list > $Z/out/01-registry-list.txt 2>&1; echo "exit $?"; grep -vE "^\s+\S+\s+(done|failed|lost|ended)\s" $Z/out/01-registry-list.txt | head -20; tail -1 $Z/out/01-registry-list.txt
+echo "== R29 store sha256 (before)"; shasum -a 256 var/datastores/levin-phase-floor-07-r29.sqlite var/datastores/levin-phase-floor-07-r29-shard000?.sqlite | tee $Z/state/r29_store_sha256_before.txt
+echo "== against R29 KEPT_ON_MAC_STUDIO.txt"; grep "var/datastores/levin-phase-floor-07-r29" /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/docs/levin-phase-floor/07/rehearsal/r29/KEPT_ON_MAC_STUDIO.txt | awk "{print \$1\"  \"\$3}" | sort -k2 > $Z/state/r29_kept_expected.txt; sort -k2 $Z/state/r29_store_sha256_before.txt | diff - $Z/state/r29_kept_expected.txt && echo "R29 store equal to KEPT_ON_MAC_STUDIO.txt (5 files)"
+echo "== R29 stat"; stat -f "%N %z %m %Sm" var/datastores/levin-phase-floor-07-r29*
+echo "== R29 sidecar / journal files"; ls -la var/datastores/ | grep -E "07-r29" 
+echo "== R29 run dir"; ls -la var/runs/levin-phase-floor-07-r29-guard-rule-a-20261108T123429; cat var/runs/levin-phase-floor-07-r29-guard-rule-a-20261108T123429/status.json
+echo "== top CPU"; ps -Ao pid,ppid,pcpu,etime,comm -r | head -12
+echo "== ray processes on the machine (any temp dir)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+
+# output:
+== runregistrykit list
+exit 0
+   RUN                                                        STATE      PROGRESS      AGE  PURPOSE · STAGE
+   py313-venv-02-resumed-b-20261025T165402                    killed            -  17d 18h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   py313-venv-02-resumed-a-20261025T165114                    killed            -  17d 18h  py313-venv prompt 02, R7 on the Mac Studio (mps026298; tree c9026af; Python 3.13.16, ray 2.59.0, SQLAlchemy 2.0.55; datastorekit 0.5.0 f47b9a2, raypoolkit 0.3.0 67a75b9, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py 5b984c75): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must equal 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+   handover-06-resumed-b-20261022T200009                      killed            -  20d 16h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): second launch of the resumed rehearsal build, --resume, to be killed by SIGTERM in CALCULATE QUADRATIC SOURCE INTEGRALS; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE QUADRATIC SOURCE INTEGRALS
+   handover-06-resumed-a-20261022T195718                      killed            -  20d 16h  handover prompt 06, R4 on the Mac Studio (mps026298; tree 3152af9; datastorekit 0.5.0 f47b9a2, raypoolkit 0.2.0 eaef0ce6, runregistrykit 0.2.0 0bae3a3; launcher RunDrivers/quadsource_atol_sweep.py b2fa4ef1): first launch of the resumed rehearsal build (same scope as reference), to be killed by SIGTERM in CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT; the resumed store must end equal to 39809dca, recorded by R3's rrk-v020-adoption-03-reference-20261018T232838  · CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT
+
+73 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 73 finished; 0 with no host recorded.
+73 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 73 finished; 0 with no host recorded.
+== R29 store sha256 (before)
+28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9  var/datastores/levin-phase-floor-07-r29.sqlite
+dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874  var/datastores/levin-phase-floor-07-r29-shard0000.sqlite
+1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec  var/datastores/levin-phase-floor-07-r29-shard0001.sqlite
+7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2  var/datastores/levin-phase-floor-07-r29-shard0002.sqlite
+897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca  var/datastores/levin-phase-floor-07-r29-shard0003.sqlite
+== against R29 KEPT_ON_MAC_STUDIO.txt
+R29 store equal to KEPT_ON_MAC_STUDIO.txt (5 files)
+== R29 stat
+stat: cannot read file system information for '%N %z %m %Sm': No such file or directory
+  File: var/datastores/levin-phase-floor-07-r29-shard0000.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 38924046   Available: 38924046
+Inodes: Total: 1563738323 Free: 1556961840
+  File: var/datastores/levin-phase-floor-07-r29-shard0001.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 38924046   Available: 38924046
+Inodes: Total: 1563738323 Free: 1556961840
+  File: var/datastores/levin-phase-floor-07-r29-shard0002.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 38924046   Available: 38924046
+Inodes: Total: 1563738323 Free: 1556961840
+  File: var/datastores/levin-phase-floor-07-r29-shard0003.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 38924046   Available: 38924046
+Inodes: Total: 1563738323 Free: 1556961840
+  File: var/datastores/levin-phase-floor-07-r29.sqlite
+    ID: 100000d0000001a Namelen: ?       Type: apfs
+Block size: 4096       Fundamental block size: 4096
+Blocks: Total: 242837545  Free: 38924046   Available: 38924046
+Inodes: Total: 1563738323 Free: 1556961840
+== R29 sidecar / journal files
+-rw-r--r--  1 ds283 staff  25411584 Nov  8 12:44 levin-phase-floor-07-r29-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25464832 Nov  8 12:44 levin-phase-floor-07-r29-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  8 12:34 levin-phase-floor-07-r29-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24875008 Nov  8 12:44 levin-phase-floor-07-r29-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  8 12:34 levin-phase-floor-07-r29.sqlite
+== R29 run dir
+total 32
+drwxr-xr-x   6 ds283 staff   192 Nov  8 12:44 .
+drwxr-xr-x 107 ds283 staff  3424 Nov 11 10:25 ..
+-rw-r--r--   1 ds283 staff  5212 Nov  8 12:34 manifest.json
+-rw-r--r--   1 ds283 staff 10328 Nov  8 12:44 status.json
+-rw-r--r--   1 ds283 staff     0 Nov  8 12:34 stderr.log
+-rw-r--r--   1 ds283 staff  8285 Nov  8 12:44 stdout.log
+{
+  "exit_code": 0,
+  "fingerprint": {
+    "classes": {
+      "BackgroundModel": {
+        "count": 1,
+        "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "02c4204dea5cce79ffe95ca6cb0cdbcdba6c08572530fe24848fba14313bc177",
+            "tags": [
+              "LargestSourceRedshift_6.8788e+13",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2"
+            ]
+          }
+        ]
+      },
+      "GkNumericIntegration": {
+        "count": 1368,
+        "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+        "tag_sets": [
+          {
+            "count": 1368,
+            "digest": "76a2630265316af84811f7eba708aabbc066dfc3678b5fb588b464f3b436ab16",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_6.8788e+13",
+              "ResponseRedshiftGrid_97_d128e5d7",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c"
+            ]
+          }
+        ]
+      },
+      "GkSource": {
+        "count": 291,
+        "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+        "tag_sets": [
+          {
+            "count": 291,
+            "digest": "6a001ba4e73566f1d6f1fc04529d71eec38c38dbe2f9607309e0c46d90bee79a",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_6.8788e+13",
+              "ResponseRedshiftGrid_97_d128e5d7",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c"
+            ]
+          }
+        ]
+      },
+      "GkSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "GkSourcePolicyData": {
+        "count": 291,
+        "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+        "tag_sets": [
+          {
+            "count": 291,
+            "digest": "49cf16ecd76f344429b5698fd65a7f3f1aea19c6227954109b99b803213b3572",
+            "tags": []
+          }
+        ]
+      },
+      "GkWKBIntegration": {
+        "count": 3477,
+        "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+        "tag_sets": [
+          {
+            "count": 3477,
+            "digest": "a1b5e0a883e5d55e3fb57ebfb36a3442bfc047715ec660ca4664a3d0bbe29f19",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_6.8788e+13",
+              "ResponseRedshiftGrid_97_d128e5d7",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c"
+            ]
+          }
+        ]
+      },
+      "IntegrationSolver": {
+        "count": 7,
+        "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+        "tag_sets": [
+          {
+            "count": 7,
+            "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+            "tags": []
+          }
+        ]
+      },
+      "LambdaCDM": {
+        "count": 1,
+        "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+            "tags": []
+          }
+        ]
+      },
+      "OneLoopIntegral": {
+        "count": 0,
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sets": []
+      },
+      "QCD_Cosmology": {
+        "count": 1,
+        "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+            "tags": []
+          }
+        ]
+      },
+      "QuadSource": {
+        "count": 6,
+        "digest": "e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e",
+        "tag_sets": [
+          {
+            "count": 6,
+            "digest": "e8e9af1bf6b3bcc8adb3a389b7bab80ae68b4f89a36bc6c1bfe0b4651fb72c3e",
+            "tags": [
+              "LargestSourceRedshift_6.8788e+13",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourceIntegral": {
+        "count": 864,
+        "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+        "tag_sets": [
+          {
+            "count": 864,
+            "digest": "8913eda5ce7b2aafe9a9ef670844e65b2dada691c10087a08cd1d6e4fe8b1e86",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_6.8788e+13",
+              "ResponseRedshiftGrid_97_d128e5d7",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "TkNumericIntegration": {
+        "count": 3,
+        "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+        "tag_sets": [
+          {
+            "count": 3,
+            "digest": "c22909beca710a0f593aeda3802b340161bc0327108ba0cc7dba070fa697a5c1",
+            "tags": [
+              "LargestSourceRedshift_6.8788e+13",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "TkWKBIntegration": {
+        "count": 3,
+        "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+        "tag_sets": [
+          {
+            "count": 3,
+            "digest": "c280250edfceb9e8482f86d52b7199de1eb00ec850d55ebbd411aefb1a9e0bab",
+            "tags": [
+              "LargestSourceRedshift_6.8788e+13",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_250",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1159_7139cb9c",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "redshift": {
+        "count": 1159,
+        "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+        "tag_sets": [
+          {
+            "count": 1159,
+            "digest": "49e68f80c811313dde4e0a772a3c76ceae20de77a37268fa76342467acf3876f",
+            "tags": []
+          }
+        ]
+      },
+      "store_tag": {
+        "count": 10,
+        "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+        "tag_sets": [
+          {
+            "count": 10,
+            "digest": "0e587e2479454b31f63a4411f74dd6ffdff434b59f3cb3e1f7122979b7be2551",
+            "tags": []
+          }
+        ]
+      },
+      "tolerance": {
+        "count": 7,
+        "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+        "tag_sets": [
+          {
+            "count": 7,
+            "digest": "f8f28bf518afcf15e4c5b6010586a521bb2def0290d86db11f2bbb29ca8c6255",
+            "tags": []
+          }
+        ]
+      },
+      "version": {
+        "count": 1,
+        "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber": {
+        "count": 3,
+        "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+        "tag_sets": [
+          {
+            "count": 3,
+            "digest": "31dbbe9911d5eba73550c06578a2c6af39d0925e94e931a83cbe43c883c2e7e8",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber_exit_time": {
+        "count": 3,
+        "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+        "tag_sets": [
+          {
+            "count": 3,
+            "digest": "2d72bde8a844309a16267fe3cb20fddc8e53e8710428522f8377012cda82ad89",
+            "tags": []
+          }
+        ]
+      }
+    },
+    "digest": "1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7",
+    "encoding_format": 1,
+    "fingerprint_format": 6,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f",
+      "run_id": "levin-phase-floor-07-r29-guard-rule-a-20261108T123429",
+      "when": "2026-11-08T12:44:03+00:00"
+    }
+  },
+  "fingerprint_sidecar": "not written: /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07-r29.manifest.json is not a problem-free registry sidecar (there is none)",
+  "heartbeat": "2026-11-08T12:44:05+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 14528,
+  "stage": "CALCULATE QUADRATIC SOURCE INTEGRALS, all work items complete",
+  "state": "done",
+  "units_done": 0,
+  "units_total": null
+}
+== top CPU
+  PID  PPID  %CPU     ELAPSED COMM
+85672     1  85.2 25-23:51:42 /System/Library/PrivateFrameworks/Categories.framework/Versions/A/XPCServices/CategoriesService.xpc/Contents/MacOS/CategoriesService
+  616     1   7.8 36-02:11:37 /usr/libexec/syspolicyd
+  522     1   6.1 36-02:11:38 /System/Library/PrivateFrameworks/TCC.framework/Support/tccd
+75099     1   2.5 09-20:21:07 /usr/libexec/trustd
+  490     1   1.7 36-02:11:38 /usr/libexec/opendirectoryd
+  515     1   1.7 36-02:11:38 /usr/sbin/notifyd
+  737     1   1.5 36-02:11:36 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN
+ 6993     1   1.3 03-02:12:40 /System/Cryptexes/App/usr/libexec/SafariBookmarksSyncAgent
+75079 75075   1.2       00:01 sh
+ 4237     1   1.1 24-00:05:15 /usr/sbin/cfprefsd
+ 6705     1   1.1 03-02:12:58 /usr/libexec/ContinuityCaptureAgent
+== ray processes on the machine (any temp dir)
+(end)
+# exit: 0
+# end: 2026-11-12T11:37:39Z

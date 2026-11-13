@@ -1,0 +1,38 @@
+# w4_rescore.py sha256 92fd99d7e09ade619dec1bfe1584db98cfb791e8f488ea3e5543277655a0db2f
+sid  class         conv h/07 bit=   sprd/tol   ratio_h  ratio_07  e_h/e_07  verdict
+v00  window_both   T/T       T         4e-05    0.0197    0.0197         1  honest
+v01  window_both   T/T       T      0.000162    0.0325    0.0325         1  honest
+v02  window_both   T/T       T      9.38e-05   0.00572   0.00572         1  honest
+v03  window_both   T/T       T      0.000614   0.00175   0.00175         1  honest
+v04  window_both   F/F       T      1.19e-05     0.138     0.138         1  honest
+v05  window_both   T/T       T      5.47e-05   0.00124   0.00124         1  honest
+v06  window_both   T/T       T      0.000168  0.000278  0.000278         1  honest
+v07  window_both   T/T       T      8.37e-06  0.000481  0.000481         1  honest
+v08  window_both   T/T       T      3.93e-05      3.16      3.16         1  NOT honest
+v09  window_both   T/T       T       0.00053      2.21      2.21         1  NOT honest
+v10  window_both   T/T       T      0.000209     0.192     0.192         1  honest
+v11  window_both   T/T       T      0.000303   0.00762   0.00762         1  honest
+v12  window_both   T/T       T      9.48e-06      3.08      3.08         1  NOT honest
+v13  window_both   T/T       T      1.56e-05     0.309     0.309         1  honest
+v14  window_both   T/T       T      2.77e-05   0.00102   0.00102         1  honest
+v15  window_both   T/T       T       0.00135   0.00204   0.00204         1  honest
+v16  window_both   T/T       T      0.000276    0.0382    0.0382         1  honest
+v17  window_both   T/T       T      3.75e-05      2.38      2.38         1  NOT honest
+v18  window_both   T/T       T      7.53e-06     0.529     0.529         1  honest
+v19  window_both   T/T       T       0.00051    0.0462    0.0462         1  honest
+v20  window_both   T/T       T      0.000819    0.0141    0.0141         1  honest
+v21  window_both   T/T       T       0.00085   0.00862   0.00862         1  honest
+v22  window_both   T/T       T      2.13e-05      2.53      2.53         1  NOT honest
+v23  window_both   T/T       T      0.000104     0.767     0.767         1  honest
+z00  window_both   T/T       T       0.00047     0.718     0.718         1  honest
+z12  window_both   T/T       T       0.00047     0.718     0.718         1  honest
+z07  untouched     T/T       T      1.57e-06  1.53e-06  1.53e-06         1  honest
+z16  untouched     T/T       T      0.000114  6.54e-06  6.54e-06         1  honest
+z18  untouched     T/T       T      1.69e-06  7.39e-07  7.39e-07         1  honest
+z21  untouched     T/T       T      1.34e-06  3.48e-07  3.48e-07         1  honest
+z24  own           T/T       T       0.00025   0.00207   0.00207         1  honest
+z28  untouched     T/T       T      0.000114  6.54e-06  6.54e-06         1  honest
+z29  untouched     T/T       T       3.4e-07  2.34e-07  2.34e-07         1  honest
+reading problems: []
+not honest: ['v08', 'v09', 'v12', 'v17', 'v22']  not scored: []  agree differs by tol: []
+ratio_07 equals 07 agent's ratio_g in all: True

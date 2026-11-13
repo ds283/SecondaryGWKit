@@ -1,0 +1,12 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/normalise_jobname_labels.py sha256 41da5c72dc891db7b787c401c5fbd56efea3dc6eebd7e7021ec4324bcf318d98
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/store_value_diff_r29_r30.json sha256 f6de2ef1ae3e9c50e3194440720e0637f3eeeebeb03255bbb20addc9f423be42
+GkNumericIntegration: 1368 labels normalised
+GkSource: 291 labels normalised
+GkWKBIntegration: 3477 labels normalised
+QuadSource: 6 labels normalised
+QuadSourceIntegral: 864 labels normalised
+TkNumericIntegration: 3 labels normalised
+TkWKBIntegration: 3 labels normalised
+total: 6012
+# output /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/store_value_diff_r29_r30.labels_normalised.json sha256 4367877c179f717a265133f38657db082d1372f412f4c9a038cef83773c642c1
+exit 0

@@ -1,0 +1,30 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-references-20261112T203555/status.json\;\ echo\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-references-20261112T203555\;\ ps\ -o\ pid\,ppid\,etime\,command\ -p\ 64863\;\ pgrep\ -P\ 64863\;\ ls\ out/cmd/references
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:36:01Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-12T20:35:55+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 64868,
+  "stage": "r3-678-1e-7-2-qawo-r1 started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 16
+}
+
+manifest.json
+status.json
+stderr.log
+stdout.log
+  PID  PPID ELAPSED COMMAND
+64863     1   00:06 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/run_06j.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-references-20261112T203555 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/plan_references.json; exit $?
+64868
+r3-678-1e-7-2-qawo-r1.txt
+# ----
+# end 2026-11-12T20:36:01Z
+# exit 0

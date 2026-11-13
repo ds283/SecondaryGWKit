@@ -1,0 +1,97 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-12T11:38:19Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07a/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3
+cd $M
+echo "== lock.log"; cat $Z/state/lock.log
+echo "== registry"; ./venv/bin/python -B -m runregistrykit list > $Z/out/r30_launch_registry_list.txt 2>&1; echo "exit $?"; grep "levin-phase-floor-07a-r30" $Z/out/r30_launch_registry_list.txt | cut -c1-140; tail -1 $Z/out/r30_launch_registry_list.txt
+D=$(ls -d var/runs/levin-phase-floor-07a-r30-07a-*); echo "== run dir $D"; ls -la $D
+echo "== status.json"; cat $D/status.json; echo
+echo "== manifest (selected)"; ./venv/bin/python -I -c "import json,sys; m=json.load(open(sys.argv[1])); print({k:m.get(k) for k in (\"run_id\",\"created\",\"cwd\",\"git_head\",\"git_dirty\",\"script_sha256\",\"campaign\",\"prompt\",\"results\")}); print(\"argv\", m[\"argv\"][:15], m[\"argv\"][-4:])" $D/manifest.json
+echo "== launch log head"; head -16 var/runs/levin-phase-floor-07a-r30.launch.log
+echo "== Traceback count"; grep -c Traceback var/runs/levin-phase-floor-07a-r30.launch.log
+echo "== kill -0 driver 75161 / sh 75153"; kill -0 75161 && echo "75161 alive"; kill -0 75153 && echo "75153 alive"
+echo "== driver cwd"; lsof -a -p 75161 -d cwd
+echo "== worktree"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== main checkout"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== store files"; ls -l var/datastores/ | grep "07a-r30"
+
+# output:
+== lock.log
+exit 0
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor prompt 07a section 5 (Part C): rehearsal R30 on the Mac Studio (mps026298; worktree 4bf50d34, code commit 1ec734d7, parent dadd63a0), fingerprint 1b332ffa required; then R30 against R29, S3, S1, S2, S4 and the readers
+exit 0
+recorded pid 75161 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+== registry
+exit 0
+   levin-phase-floor-07a-r30-07a-20261112T113806              running           -      14s  levin-phase-floor prompt 07a section 5 (Part C),
+74 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 73 finished; 0 with no host recorded.
+== run dir var/runs/levin-phase-floor-07a-r30-07a-20261112T113806
+total 20
+drwxr-xr-x   6 ds283 staff  192 Nov 12 11:38 .
+drwxr-xr-x 109 ds283 staff 3488 Nov 12 11:38 ..
+-rw-r--r--   1 ds283 staff 5175 Nov 12 11:38 manifest.json
+-rw-r--r--   1 ds283 staff  293 Nov 12 11:38 status.json
+-rw-r--r--   1 ds283 staff    0 Nov 12 11:38 stderr.log
+-rw-r--r--   1 ds283 staff 4253 Nov 12 11:38 stdout.log
+== status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-12T11:38:19+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 75161,
+  "stage": "CALCULATE QUADRATIC SOURCE TERMS",
+  "state": "running",
+  "units_done": 0,
+  "units_total": null
+}
+
+== manifest (selected)
+{'run_id': 'levin-phase-floor-07a-r30-07a-20261112T113806', 'created': '2026-11-12T11:38:06+00:00', 'cwd': '/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3', 'git_head': '4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03', 'git_dirty': False, 'script_sha256': 'b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19', 'campaign': 'levin-phase-floor', 'prompt': '07a', 'results': 'var/datastores/levin-phase-floor-07a-r30.sqlite'}
+argv ['RunDrivers/quadsource_atol_sweep.py', '--build', '--rehearsal', '--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30.sqlite', '--job-name', 'levin-phase-floor-07a', '--atol', '1e-32', '--rtol', '1e-7', '--cpus', '6', '--register', 'r30-07a'] ['--campaign', 'levin-phase-floor', '--prompt', '07a']
+== launch log head
+** quadsource_atol_sweep --build: registered as levin-phase-floor-07a-r30-07a-20261112T113806
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-r30-07a-20261112T113806/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30.sqlite', '--job-name', 'levin-phase-floor-07a', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-11-12 11:38:13,683	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30.sqlite" with 4 shards
+
+** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+[36m(Datastore pid=75218)[0m @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+== Traceback count
+0
+== kill -0 driver 75161 / sh 75153
+75161 alive
+75153 alive
+== driver cwd
+COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF       NODE NAME
+Python  75161 ds283  cwd    DIR   1,13     1152 1238033179 /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3
+== worktree
+4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+(end)
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end)
+== store files
+-rw-r--r-- 1 ds283 staff   1335296 Nov 12 11:38 levin-phase-floor-07a-r30-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff       512 Nov 12 11:38 levin-phase-floor-07a-r30-shard0000.sqlite-journal
+-rw-r--r-- 1 ds283 staff   1286144 Nov 12 11:38 levin-phase-floor-07a-r30-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff   1077248 Nov 12 11:38 levin-phase-floor-07a-r30-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff   1372160 Nov 12 11:38 levin-phase-floor-07a-r30-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff     36864 Nov 12 11:38 levin-phase-floor-07a-r30.sqlite
+# exit: 0
+# end: 2026-11-12T11:38:20Z

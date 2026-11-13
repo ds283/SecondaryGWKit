@@ -1,0 +1,26 @@
+== var/runs/levin-phase-floor-07a-r30-07a-20261112T113806
+   campaign = levin-phase-floor
+   git_dirty = False
+   git_head = 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+   prompt = 07a
+   status done exit 0 0 None
+== var/runs/levin-phase-floor-07a-k0-20261112T130135
+   campaign = levin-phase-floor
+   git_dirty = False
+   git_head = 28ebaf0743e0555fb2c4512ce714884005a60eff
+   prompt = 07a
+   status done exit 0 11 11
+== var/runs/levin-phase-floor-07a-census-20261112T132744
+   campaign = levin-phase-floor
+   git_dirty = False
+   git_head = 28ebaf0743e0555fb2c4512ce714884005a60eff
+   prompt = 07a
+   status done exit 0 18560 18560
+var/runs/levin-phase-floor-07a-attr-1-20261110T215423
+var/runs/levin-phase-floor-07a-attr-2-20261111T102500
+var/runs/levin-phase-floor-07a-bg2-items12-20261110T223735
+var/runs/levin-phase-floor-07a-census-20261112T132744
+var/runs/levin-phase-floor-07a-k0-20261112T130135
+var/runs/levin-phase-floor-07a-r30-07a-20261112T113806
+var/runs/levin-phase-floor-07a-r30.launch.log
+var/runs/levin-phase-floor-07a-x396-fast-20261110T215229

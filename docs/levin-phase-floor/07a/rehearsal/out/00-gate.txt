@@ -1,0 +1,89 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-12T11:37:26Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07a/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3
+echo "== hostname"; hostname
+echo "== main checkout HEAD / status --short"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== worktree HEAD / status --short --ignored"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== worktree log -4"; git -C $W --no-optional-locks log --oneline -4
+echo "== 1ec734d7 parent"; git -C $W --no-optional-locks rev-parse 1ec734d7 1ec734d7^
+echo "== S0prime (section 5 item 1 as written): git diff --stat e182bc7a dadd63a0 -- . :!docs :!prompts"; git -C $W --no-optional-locks diff --stat e182bc7a dadd63a0 -- . ":!docs" ":!prompts"; echo "(end S0prime)"
+echo "== code commit: git diff --stat dadd63a0 1ec734d7 -- . :!docs :!prompts"; git -C $W --no-optional-locks diff --stat dadd63a0 1ec734d7 -- . ":!docs" ":!prompts"
+echo "== after the code commit: git diff --stat 1ec734d7 4bf50d34 -- . :!docs :!prompts"; git -C $W --no-optional-locks diff --stat 1ec734d7 4bf50d34 -- . ":!docs" ":!prompts"; echo "(end)"
+echo "== e182bc7a..4bf50d34 under ComputeTargets ObjectFactories RunDrivers main.py tools config CosmologyModels Datastore"; git -C $W --no-optional-locks diff --stat e182bc7a 4bf50d34 -- ComputeTargets ObjectFactories RunDrivers main.py tools config CosmologyModels requirements.txt; echo "(end)"
+echo "== key file hashes in the worktree"; cd $W && shasum -a 256 AdaptiveLevin/levin_quadrature.py ComputeTargets/QuadSourceIntegral.py RunDrivers/quadsource_atol_sweep.py main.py tools/store_value_diff.py
+echo "== worktree list"; git -C $W --no-optional-locks worktree list
+echo "== python"; $M/venv/bin/python -B -c "import sys; print(sys.version)"
+echo "== auth token"; ls -l ~/.ray/auth_token
+echo "== lock dir"; ls -la ~/.raypoolkit; ls -d ~/ScienceData/.rehearsal-lock 2>&1
+echo "== load / disk"; uptime; df -h $M | tail -1
+echo "== R29/R30 stores"; ls -l $M/var/datastores/ | grep -E "07-r29|07a-r30"
+echo "== runs named r30"; ls $M/var/runs | grep -E "r30" ; echo "(end)"
+
+# output:
+== hostname
+mps026298.phys.susx.ac.uk
+== main checkout HEAD / status --short
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end)
+== worktree HEAD / status --short --ignored
+4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+(end)
+== worktree log -4
+4bf50d34 Write levin-phase-floor 07a's Part C dispatch
+1ec734d7 Route the C2 gate on the raw phase and count windows as dqage does
+dadd63a0 Amend levin-phase-floor 07a at Part B's stop
+a9f6abc3 Amend levin-phase-floor 07a with the window-stop choice
+== 1ec734d7 parent
+1ec734d7db52d7945a7e8ead35eb1bb04743a9fd
+dadd63a0cbc9c34eefff9a8d1b937bd998dbf2b1
+== S0prime (section 5 item 1 as written): git diff --stat e182bc7a dadd63a0 -- . :!docs :!prompts
+ CLAUDE.md | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+(end S0prime)
+== code commit: git diff --stat dadd63a0 1ec734d7 -- . :!docs :!prompts
+ AdaptiveLevin/levin_quadrature.py                 | 558 ++++++++++++++++------
+ AdaptiveLevin/tests/test_levin_phase_variation.py | 357 ++++++++++++++
+ AdaptiveLevin/tests/test_levin_quadrature.py      |  29 +-
+ AdaptiveLevin/tests/test_levin_stationary.py      | 376 ++++++++++++---
+ LiouvilleGreen/bessel_phase.py                    |   9 +-
+ LiouvilleGreen/tests/test_bessel_compatibility.py |  99 +++-
+ LiouvilleGreen/three_bessel_integrals.py          |   7 +-
+ 7 files changed, 1212 insertions(+), 223 deletions(-)
+== after the code commit: git diff --stat 1ec734d7 4bf50d34 -- . :!docs :!prompts
+(end)
+== e182bc7a..4bf50d34 under ComputeTargets ObjectFactories RunDrivers main.py tools config CosmologyModels Datastore
+(end)
+== key file hashes in the worktree
+4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  AdaptiveLevin/levin_quadrature.py
+33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  ComputeTargets/QuadSourceIntegral.py
+b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19  RunDrivers/quadsource_atol_sweep.py
+a5d47f5f71755b4abf1af5645b679baa1bcf2da25f98f6800df2728c0b85f4d4  main.py
+7997af85f080ba0783ce6fd2c78280c9c9835a30362bad268f82655937e5c630  tools/store_value_diff.py
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 4bf50d34 (detached HEAD)
+== python
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+== auth token
+-rw------- 1 ds283 staff 64 Oct 25 16:26 /Users/ds283/.ray/auth_token
+== lock dir
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov 10 02:32 .
+drwxr-x--- 161 ds283 staff 5152 Nov 12 11:34 ..
+ls: cannot access '/Users/ds283/ScienceData/.rehearsal-lock': No such file or directory
+== load / disk
+11:37  up 36 days,  2:14, 1 user, load averages: 5.73 10.05 7.36
+/dev/disk3s3s1  927G  778G  149G  84% /
+== R29/R30 stores
+-rw-r--r-- 1 ds283 staff  25411584 Nov  8 12:44 levin-phase-floor-07-r29-shard0000.sqlite
+-rw-r--r-- 1 ds283 staff  25464832 Nov  8 12:44 levin-phase-floor-07-r29-shard0001.sqlite
+-rw-r--r-- 1 ds283 staff   1077248 Nov  8 12:34 levin-phase-floor-07-r29-shard0002.sqlite
+-rw-r--r-- 1 ds283 staff  24875008 Nov  8 12:44 levin-phase-floor-07-r29-shard0003.sqlite
+-rw-r--r-- 1 ds283 staff     36864 Nov  8 12:34 levin-phase-floor-07-r29.sqlite
+== runs named r30
+(end)
+# exit: 0
+# end: 2026-11-12T11:37:27Z

@@ -1,0 +1,13 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/refs_slice_07a.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:34:49Z
+# ----
+r1-34599-1e-7-2: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/inputs/r1-34599-1e-7-2.pkl sha256 cbfde19a5bb43019aa49876ab6b34ea4489d4bcfef522c232020cd5c31cb7f70 (1350827 bytes)
+r1-34599-1e-7-3: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/inputs/r1-34599-1e-7-3.pkl sha256 d7ef669f873c05b4b34880426bee65e219d2aa39f682112ebc5417457537dcb1 (1350827 bytes)
+r3-678-1e-7-2: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/inputs/r3-678-1e-7-2.pkl sha256 125d1d1b794b9efe8fa11e0d7efaf64afad85325d2150365249c30354488ad4c (1315278 bytes)
+r3-678-1e-7-3: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/inputs/r3-678-1e-7-3.pkl sha256 9a6a8279739cf0c4d4a79a1389268b6b01c3f32333882ea25ee2ce6aaa3bacd7 (1315278 bytes)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/inputs.json sha256 0784c04c01857e79f48d54511679bfc4d014abba03145ec1f3b7b4626a8b6701
+# ----
+# end 2026-11-12T20:34:50Z
+# exit 0

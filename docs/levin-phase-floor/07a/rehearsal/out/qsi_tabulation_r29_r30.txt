@@ -1,0 +1,122 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/tabulate_qsi_r29_r30.py sha256 adff0052bc9c86803587a1e3ac956187ff8664bb070e597f56abb96cfaa653aa
+# input var/datastores/levin-phase-floor-07-r29-shard0000.sqlite sha256 dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874
+# input var/datastores/levin-phase-floor-07-r29-shard0001.sqlite sha256 1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec
+# input var/datastores/levin-phase-floor-07-r29-shard0002.sqlite sha256 7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2
+# input var/datastores/levin-phase-floor-07-r29-shard0003.sqlite sha256 897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca
+# input var/datastores/levin-phase-floor-07-r29.sqlite sha256 28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9
+# input var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite sha256 e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2
+# input var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite sha256 f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700
+# input var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite sha256 a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab
+# input var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite sha256 b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0
+# input var/datastores/levin-phase-floor-07a-r30.sqlite sha256 e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/store_value_diff_r29_r30.json sha256 f6de2ef1ae3e9c50e3194440720e0637f3eeeebeb03255bbb20addc9f423be42
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 status --short --ignored ''
+# run levin-phase-floor-07-r29-guard-rule-a-20261108T123429: state done exit 0 fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 taken at e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f
+# run levin-phase-floor-07a-r30-07a-20261112T113806: state done exit 0 fingerprint 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 taken at 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+# this script imports no tree code; it reads the stores with sqlite3 mode=ro and the tool's JSON
+A = R29 var/datastores/levin-phase-floor-07-r29.sqlite: 864 rows, 48 columns
+B = R30 var/datastores/levin-phase-floor-07a-r30.sqlite: 864 rows, 48 columns
+columns equal: True; key sets equal: True (0 only in A, 0 only in B)
+tool: QuadSourceIntegral identical 0, differ 864, only_in_a 0, only_in_b 0, unmatched 0, columns only in a/b []/[]
+tool: column total: {'count': 25, 'max_abs_delta': 1.752458603025185e-23, 'max_rel_delta': 4.298848506018754e-09}
+tool: column total_abserr: {'count': 60, 'max_abs_delta': 1.3729075110423884e-22, 'max_rel_delta': 0.368456565120454}
+tool: column analytic_rad: {'count': 168, 'max_abs_delta': 9.693522803355793e-27, 'max_rel_delta': 3.3866601330586403e-13}
+tool: column WKB_Levin: {'count': 25, 'max_abs_delta': 1.752458603025185e-23, 'max_rel_delta': 4.298848506018754e-09}
+tool: column WKB_Levin_num_regions: {'count': 17}
+tool: column WKB_Levin_max_depth: {'count': 2}
+rows compared: 864; tolerance mismatches 0
+R29: sums of the four counts, group records {'stationary_points': 44, 'window_pieces': 562, 'guarded_regions': 0, 'guard_at_depth_max': 0}; analytic blocks {'stationary_points': 336, 'window_pieces': 2172, 'guarded_regions': 4, 'guard_at_depth_max': 0}
+R29: rows with a located point 170, a window piece 170, a guarded region 2, a guard at depth_max 0
+R30: sums of the four counts, group records {'stationary_points': 44, 'window_pieces': 562, 'guarded_regions': 0, 'guard_at_depth_max': 0}; analytic blocks {'stationary_points': 400, 'window_pieces': 2515, 'guarded_regions': 0, 'guard_at_depth_max': 0}
+R30: rows with a located point 202, a window piece 202, a guarded region 0, a guard at depth_max 0
+
+UNMOVED rows (only timing and label differ): 484
+MOVED rows (a value, counter or guard field differs): 380; by kind present: {'value': 380, 'counter': 79, 'guard': 32}
+  fields differing (kind, path with indices folded: rows):
+    counter col:WKB_Levin_evaluations: 17
+    counter col:WKB_Levin_max_depth: 2
+    counter col:WKB_Levin_num_regions: 17
+    counter col:WKB_Levin_simple_regions: 21
+    counter meta:WKB_Levin.subintervals[i].groups[i].evaluations: 24
+    counter meta:WKB_Levin.subintervals[i].groups[i].regions: 24
+    counter meta:WKB_Levin.subintervals[i].groups[i].simple_regions: 31
+    counter meta:analytic.0pt5.Levin.J2_data.regions: 1
+    counter meta:analytic.0pt5.Levin.J3_data.regions: 2
+    counter meta:analytic.0pt5.Levin.J4_data.regions: 18
+    counter meta:analytic.0pt5.Levin.Y1_data.regions: 1
+    counter meta:analytic.0pt5.Levin.Y2_data.regions: 2
+    counter meta:analytic.0pt5.Levin.Y3_data.regions: 2
+    counter meta:analytic.0pt5.Levin.Y4_data.regions: 23
+    counter meta:analytic.2pt5.Levin.J2_data.regions: 1
+    counter meta:analytic.2pt5.Levin.J3_data.regions: 1
+    counter meta:analytic.2pt5.Levin.J4_data.regions: 34
+    counter meta:analytic.2pt5.Levin.Y4_data.regions: 32
+    guard meta:analytic.2pt5.Levin.J4_data.guarded_regions: 2
+    guard meta:analytic.2pt5.Levin.J4_data.stationary_points: 32
+    guard meta:analytic.2pt5.Levin.J4_data.window_pieces: 32
+    guard meta:analytic.2pt5.Levin.Y4_data.guarded_regions: 2
+    guard meta:analytic.2pt5.Levin.Y4_data.stationary_points: 32
+    guard meta:analytic.2pt5.Levin.Y4_data.window_pieces: 32
+    value col:WKB_Levin: 25
+    value col:analytic_rad: 168
+    value col:total: 25
+    value col:total_abserr: 60
+    value meta:WKB_Levin.abserr: 60
+    value meta:WKB_Levin.subintervals[i].abserr: 60
+    value meta:WKB_Levin.subintervals[i].groups[i].abserr: 88
+    value meta:WKB_Levin.subintervals[i].groups[i].phase_limited: 1
+    value meta:WKB_Levin.subintervals[i].groups[i].value: 39
+    value meta:WKB_Levin.subintervals[i].value: 26
+    value meta:analytic.0pt5.Levin.J1_data.abserr: 69
+    value meta:analytic.0pt5.Levin.J1_data.phase_limited: 1
+    value meta:analytic.0pt5.Levin.J2_data.abserr: 112
+    value meta:analytic.0pt5.Levin.J3_data.abserr: 98
+    value meta:analytic.0pt5.Levin.J4_data.abserr: 98
+    value meta:analytic.0pt5.Levin.J4_data.phase_limited: 8
+    value meta:analytic.0pt5.Levin.Y1_data.abserr: 63
+    value meta:analytic.0pt5.Levin.Y1_data.phase_limited: 1
+    value meta:analytic.0pt5.Levin.Y2_data.abserr: 122
+    value meta:analytic.0pt5.Levin.Y2_data.phase_limited: 1
+    value meta:analytic.0pt5.Levin.Y3_data.abserr: 106
+    value meta:analytic.0pt5.Levin.Y3_data.phase_limited: 1
+    value meta:analytic.0pt5.Levin.Y4_data.abserr: 107
+    value meta:analytic.0pt5.Levin.Y4_data.phase_limited: 13
+    value meta:analytic.2pt5.Levin.J1_data.abserr: 33
+    value meta:analytic.2pt5.Levin.J2_data.abserr: 45
+    value meta:analytic.2pt5.Levin.J2_data.phase_limited: 1
+    value meta:analytic.2pt5.Levin.J3_data.abserr: 33
+    value meta:analytic.2pt5.Levin.J3_data.phase_limited: 1
+    value meta:analytic.2pt5.Levin.J4_data.abserr: 71
+    value meta:analytic.2pt5.Levin.J4_data.phase_limited: 18
+    value meta:analytic.2pt5.Levin.Y1_data.abserr: 33
+    value meta:analytic.2pt5.Levin.Y1_data.phase_limited: 1
+    value meta:analytic.2pt5.Levin.Y2_data.abserr: 48
+    value meta:analytic.2pt5.Levin.Y3_data.abserr: 36
+    value meta:analytic.2pt5.Levin.Y4_data.abserr: 65
+    value meta:analytic.2pt5.Levin.Y4_data.phase_limited: 19
+    value meta:analytic.abserr: 339
+  Levin records differing in a non-timing field, by (kind, label/block): {('analytic', '0pt5.Levin.J1_data'): 70, ('analytic', '0pt5.Levin.J2_data'): 112, ('analytic', '0pt5.Levin.J3_data'): 98, ('analytic', '0pt5.Levin.J4_data'): 98, ('analytic', '0pt5.Levin.Y1_data'): 63, ('analytic', '0pt5.Levin.Y2_data'): 122, ('analytic', '0pt5.Levin.Y3_data'): 106, ('analytic', '0pt5.Levin.Y4_data'): 107, ('analytic', '2pt5.Levin.J1_data'): 33, ('analytic', '2pt5.Levin.J2_data'): 45, ('analytic', '2pt5.Levin.J3_data'): 33, ('analytic', '2pt5.Levin.J4_data'): 74, ('analytic', '2pt5.Levin.Y1_data'): 34, ('analytic', '2pt5.Levin.Y2_data'): 48, ('analytic', '2pt5.Levin.Y3_data'): 36, ('analytic', '2pt5.Levin.Y4_data'): 67, ('group', 'G+q+r'): 23, ('group', 'G+q-r'): 28, ('group', 'G-q+r'): 30, ('group', 'G-q-r'): 7}
+  ... by (kind, field): {('analytic', 'abserr'): 1139, ('analytic', 'guarded_regions'): 4, ('analytic', 'phase_limited'): 65, ('analytic', 'regions'): 117, ('analytic', 'stationary_points'): 64, ('analytic', 'window_pieces'): 64, ('group', 'abserr'): 88, ('group', 'evaluations'): 24, ('group', 'phase_limited'): 1, ('group', 'regions'): 24, ('group', 'simple_regions'): 31, ('group', 'value'): 39}
+
+ALL ROWS: total bit-identical 839 / 864; total_abserr 804; analytic_rad 696; analytic.abserr 525; total_converged 864
+WKB_Levin_num_regions summed: R29 114460, R30 114245; unconverged group calls: R29 2, R30 2; rows at max depth 20: R29 5, R30 5
+moved rows whose total differs: 25; whose total_abserr differs: 60; whose analytic_rad differs: 168
+  largest abs_dtotal_over_abserr29: 0.04703192838505148 at (316227.7660168379, 316227.7660168379, 316227.7660168379, 191807016.520263); total -0x1.25bf919562c4ap-48 -> -0x1.25bf91aa925d6p-48, abserr 0x1.c27555f815dc0p-72 -> 0x1.1c7be807656eep-72
+  largest abs_dtotal_over_abserr30: 0.07447140732928664 at (316227.7660168379, 316227.7660168379, 316227.7660168379, 191807016.520263); total -0x1.25bf919562c4ap-48 -> -0x1.25bf91aa925d6p-48, abserr 0x1.c27555f815dc0p-72 -> 0x1.1c7be807656eep-72
+  largest s3_abs_dtotal_over_sum_abserr: 0.028826648055817014 at (316227.7660168379, 316227.7660168379, 316227.7660168379, 191807016.520263); total -0x1.25bf919562c4ap-48 -> -0x1.25bf91aa925d6p-48, abserr 0x1.c27555f815dc0p-72 -> 0x1.1c7be807656eep-72
+  largest abs_drad_over_abserr29: 5.4695192481609336e-05 at (316227.7660168379, 100000.0, 316227.7660168379, 2310835265.753073); total 0x1.32d3ff3caae74p-43 -> 0x1.32d3ff3caae74p-43, abserr 0x1.72a2177e0a850p-65 -> 0x1.72a2177e0a850p-65
+  largest abs_drad_over_abserr30: 5.4695192481609336e-05 at (316227.7660168379, 100000.0, 316227.7660168379, 2310835265.753073); total 0x1.32d3ff3caae74p-43 -> 0x1.32d3ff3caae74p-43, abserr 0x1.72a2177e0a850p-65 -> 0x1.72a2177e0a850p-65
+  moved rows with |dtotal|/abserr29 > 1: 0; > abserr30: 0; > abserr29+abserr30: 0
+  moved rows with regions changed: 17; max depth changed: 2
+  among moved rows, R29: with a located point 134, a window piece 134, a guarded region 2, total_converged 379 of 380
+  among moved rows, R30: with a located point 166, a window piece 166, a guarded region 0, total_converged 379 of 380
+
+total_converged: R29 862, R30 862
+total_converged changes: unconverged -> converged 0; converged -> unconverged 0
+group-record converged changes: up 0, down 0
+analytic-block converged changes: up 0, down 0
+analytic.converged changes: 0
+# wrote 380 rows to /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/qsi_rows_r29_r30.csv sha256 1be0c3fd4d03ff1da95d7b51713b12c2e5570168c9af2c23d8bc6b5097b55a9a
+# wrote 1234 rows to /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/qsi_records_r29_r30.csv sha256 e24ea2f1363ef061318b10f61879e0c4faf8c61093bd82bc30fc5dfa40d4aa7c
+exit 0

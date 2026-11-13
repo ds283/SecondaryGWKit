@@ -1,0 +1,35 @@
+{
+ "tree": "h",
+ "name": "C02",
+ "units": [
+  {
+   "uid": "h-1e-8-1-34599",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "1-34599",
+   "names05": null,
+   "shard": 1,
+   "serial": 34599,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     2,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G+q-r"
+    ],
+    [
+     3,
+     "k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G-q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "state/refs/capture_h/C02",
+ "emit_fd": null,
+ "emit_file": "state/refs/capture_h/C02/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

@@ -1,0 +1,255 @@
+{
+ "header": [
+  "# levin-phase-floor 07a: Gate W0 (3), the instrument on against off, on against off",
+  "# written 2026-11-12T13:15:03Z on mps026298.phys.susx.ac.uk",
+  "# script compare_07a.py sha256 d147fb2233824e340b61ccc4d3e84b2faf183222f938e5cbca252e9869f03dde",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/w0c3/on/units.jsonl sha256 8f1347abeb4f499d7b325b688fff47c88c536567b3786caff262f039493e630a",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/w0c3/off/units.jsonl sha256 952f828d96a016c20dbea9b839f9824284bb8793245e79e1570eaabde1604ec5",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "instr",
+ "excluded": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "instrument_07a",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "route_07a",
+  "route_07a_post",
+  "route_07a_post_unit",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "n_units": 2,
+ "n_units_identical": 2,
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "A:tree-1e-7-k1_301": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "A:tree-1e-8-k1_102": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "B:tree-1e-7-k1_301": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "B:tree-1e-8-k1_102": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  }
+ },
+ "units": [
+  {
+   "unit": "h-1e-7-1-11214",
+   "status": [
+    "done",
+    "done"
+   ],
+   "ok": true,
+   "differing": [],
+   "detail": [],
+   "excl_differing": [
+    "data.analytic_06h.seconds",
+    "data.calls[].elapsed",
+    "data.calls[].route_07a",
+    "data.calls[].route_07a_post",
+    "data.cc_floor_s",
+    "data.checked_06g_s",
+    "data.declared_06h_s",
+    "data.deep_lines.seconds",
+    "data.instrument_07a",
+    "data.other_calls[].elapsed",
+    "data.other_calls[].route_07a",
+    "data.other_calls[].route_07a_post",
+    "data.pickle_length",
+    "data.pickle_record_sha256",
+    "data.rebuild_s",
+    "data.result.compute_time",
+    "data.route_07a_post_unit",
+    "data.scan_07_s",
+    "data.scan_s",
+    "data.w3.seconds",
+    "data.wall_s",
+    "data.worker_pid",
+    "pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed",
+    "pickle.result_full.compute_time",
+    "pickle.route_07a",
+    "pickle.route_07a_post",
+    "pickle.scan[].seconds",
+    "pickle.scan_07[].scan.seconds"
+   ],
+   "n_calls": 23,
+   "n_calls_windowed": 0,
+   "n_calls_route_changed": 1,
+   "route_changes": [
+    [
+     0,
+     1,
+     0,
+     true,
+     false
+    ]
+   ],
+   "windows": [],
+   "wall_s": [
+    8.417762250173837,
+    8.140457999892533
+   ],
+   "A_route_07a_on_every_call": true,
+   "B_route_07a_on_no_call": true
+  },
+  {
+   "unit": "h-1e-8-1-2174",
+   "status": [
+    "done",
+    "done"
+   ],
+   "ok": true,
+   "differing": [],
+   "detail": [],
+   "excl_differing": [
+    "data.analytic_06h.seconds",
+    "data.calls[].elapsed",
+    "data.calls[].route_07a",
+    "data.calls[].route_07a_post",
+    "data.cc_floor_s",
+    "data.checked_06g_s",
+    "data.declared_06h_s",
+    "data.deep_lines.seconds",
+    "data.instrument_07a",
+    "data.other_calls[].elapsed",
+    "data.other_calls[].route_07a",
+    "data.other_calls[].route_07a_post",
+    "data.pickle_length",
+    "data.pickle_record_sha256",
+    "data.rebuild_s",
+    "data.result.compute_time",
+    "data.route_07a_post_unit",
+    "data.scan_07_s",
+    "data.wall_s",
+    "data.worker_pid",
+    "pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed",
+    "pickle.result_full.compute_time",
+    "pickle.route_07a",
+    "pickle.route_07a_post",
+    "pickle.scan_07[].scan.seconds"
+   ],
+   "n_calls": 21,
+   "n_calls_windowed": 1,
+   "n_calls_route_changed": 5,
+   "route_changes": [
+    [
+     0,
+     1,
+     0,
+     true,
+     false
+    ],
+    [
+     15,
+     0,
+     1,
+     false,
+     true
+    ],
+    [
+     16,
+     0,
+     1,
+     false,
+     true
+    ],
+    [
+     17,
+     0,
+     1,
+     false,
+     true
+    ],
+    [
+     18,
+     0,
+     1,
+     false,
+     true
+    ]
+   ],
+   "windows": [
+    [
+     1,
+     1,
+     {
+      "root": 1
+     }
+    ]
+   ],
+   "wall_s": [
+    4.444347582757473,
+    4.354346291627735
+   ],
+   "A_route_07a_on_every_call": true,
+   "B_route_07a_on_no_call": true
+  }
+ ]
+}

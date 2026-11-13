@@ -1,0 +1,21 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/write_predictions_07a.py state/predictions.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T13:16:44Z
+# ----
+# levin-phase-floor 07a §6 — the census's predictions, fixed before the census
+
+Provenance (the writer's header):
+
+```
+levin-phase-floor 07a section 6: the census's predictions, fixed before the census
+written 2026-11-12T13:16:44Z on mps026298.phys.susx.ac.uk
+script write_predictions_07a.py sha256 61d989f391cd8310ecc20be790d55580845d81c1a2386cae00310c57901fa911
+tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md sha256 854dd5fc7d131c1f512c8ae4ef25f55641c09e14c6e385fc48eb56d89360de3b
+input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/docs/levin-phase-floor/07/census/out/v4/v4_scores.json sha256 2d0268e607e0cb17b4d4247831a7b933c2df0db61c248b8959ecdf9f091649b8
+wrote state/predictions.md sha256 3ec7b53db8181f041da056bae0a363cfb08dd05273aa1fb2a4cfc8ec4803e86e
+# ----
+# end 2026-11-12T13:16:44Z
+# exit 0

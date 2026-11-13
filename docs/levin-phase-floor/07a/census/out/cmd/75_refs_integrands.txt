@@ -1,0 +1,26 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/refs_integrand_07a.py out/refs/integrands.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:34:22Z
+# ----
+h_vs_parent r1-34599-1e-7-2 ALL EQUAL
+h_vs_parent r1-34599-1e-7-3 ALL EQUAL
+h_vs_parent r1-34599-1e-8-2 ALL EQUAL
+h_vs_parent r1-34599-1e-8-3 ALL EQUAL
+h_vs_parent r3-678-1e-7-2 ALL EQUAL
+h_vs_parent r3-678-1e-7-3 ALL EQUAL
+h_vs_parent r3-678-1e-8-2 ALL EQUAL
+h_vs_parent r3-678-1e-8-3 ALL EQUAL
+across_rtol r1-34599-1e-7-2~r1-34599-1e-8-2 ALL EQUAL
+across_rtol r1-34599-1e-7-3~r1-34599-1e-8-3 ALL EQUAL
+across_rtol r3-678-1e-7-2~r3-678-1e-8-2 ALL EQUAL
+across_rtol r3-678-1e-7-3~r3-678-1e-8-3 ALL EQUAL
+index2_vs_index3 r1-34599-1e-7-2~r1-34599-1e-7-3 {'kw': False, 'kw_differs': ['notify_label'], 'f1': False, 'all_equal': False}
+index2_vs_index3 r1-34599-1e-8-2~r1-34599-1e-8-3 {'kw': False, 'kw_differs': ['notify_label'], 'f1': False, 'all_equal': False}
+index2_vs_index3 r3-678-1e-7-2~r3-678-1e-7-3 {'kw': False, 'kw_differs': ['notify_label'], 'f1': False, 'all_equal': False}
+index2_vs_index3 r3-678-1e-8-2~r3-678-1e-8-3 {'kw': False, 'kw_differs': ['notify_label'], 'f1': False, 'all_equal': False}
+kw {'atol': '1.4825174909001182e-33', 'rtol': '1e-07', 'chebyshev_order': '24', 'notify_label': "'k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G+q-r'"}
+wrote out/refs/integrands.json sha256 f211447c35b62916c29773a63d9e4e33498cde16dec9b5eb50cf63b368b744bb
+# ----
+# end 2026-11-12T20:34:25Z
+# exit 0

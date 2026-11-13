@@ -1,0 +1,69 @@
+{
+ "tree": "h",
+ "name": "tree-1e-7-k2_2",
+ "units": [
+  {
+   "uid": "h-1e-7-2-21980",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-21980",
+   "names05": null,
+   "shard": 2,
+   "serial": 21980,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-2-1427",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-1427",
+   "names05": null,
+   "shard": 2,
+   "serial": 1427,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-2-1448",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-1448",
+   "names05": null,
+   "shard": 2,
+   "serial": 1448,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-2-35010",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-35010",
+   "names05": null,
+   "shard": 2,
+   "serial": 35010,
+   "k_key": "2:2",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/k0/h/tree-1e-7-k2_2",
+ "emit_fd": null,
+ "emit_file": "state/k0/h/tree-1e-7-k2_2/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null,
+ "instrument_07a": true
+}

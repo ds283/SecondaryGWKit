@@ -1,0 +1,32 @@
+**Predictions, fixed before the run** (README §5 rule 3), copied into `state/predictions.md`
+unchanged, with §9's additions:
+- **W1 — nothing else moves.** Every call with no window at 07 or at $h$, and no region whose route
+  or LU choice differs, equals 07's call bit for bit, with `phase_span` set aside. Every row all of
+  whose calls are such equals 07's in `total` and `total_abserr`. **Holds** if true at both rtols.
+- **W2 — no Levin leaf is returned across a stationary point** (07's V2): the scan finds no returned
+  Levin leaf holding a sign change of $\theta'$.
+- **W3 — every phase with something to locate is located.** The location agrees with the scan both
+  ways (07's V3), with no phase set aside except one whose rate is identically zero; every skipped
+  phase is listed with its call, and each is of that kind.
+- **W4 — honest where it is referenced.** V4's 33 calls (z00, z12, Z3's seven and the 24),
+  re-scored from the census against the readings 07 scored them on, by 07's rule. **Holds** if
+  every scored call is honest, or is unconverged under a rule of §9's amendment.
+- **W5 — the gate is consistent, and the guard is a backstop.** In every call: no Clenshaw–Curtis
+  region has a half sent to the Levin solve; no region takes the node-partition sum; no region is
+  guarded (`num_guarded_regions` 0). **Holds** if all three are zero. A non-zero count is a finding,
+  with its calls listed.
+- **W6 — the pairs.** The cross-check's $r$ re-computed at $h$ over all 2,484 pairs: every pair has
+  $r \le 1$, or a member unconverged under §9's rule. `3-14501` and `3-35006` are listed.
+
+**Descriptive, not scored:**
+- **Route changes:** the regions and calls that changed route or LU choice, by kind, band, $k$ and
+  rtol, in which direction, and how far the old estimate stood from $V$.
+- **Moves:** totals and calls against 07's, relative and against `total_abserr`$_{07}$.
+- **The newly located:** calls whose phase Rule A skipped at 07, with their points and window
+  pieces; any call locating more than 64 points.
+- **The windows:** windows stopped, leaves falling at the stop, and calls left unconverged by the
+  stop, against 07's 1,157/1,153 and 1,195/1,192.
+- **Convergence and the flag,** in the 720 and outside, against 07's; and the depth distribution.
+- **The disagreement list:** 07's cross-check list re-made at $h$ against 06m and against 07, by
+  class.
+- **Cost:** regions and wall against 07's. Cost is not an argument (README §5 rule 4).

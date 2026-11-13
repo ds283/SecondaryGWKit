@@ -1,0 +1,27 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_07a.py calls state/smoke/h state/smoke/compare_h_calls.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T12:56:48Z
+# ----
+# levin-phase-floor 07a: h against 07's census (levin-phase-floor-07-census-20261108T171137), mode calls
+# written 2026-11-12T12:56:49Z on mps026298.phys.susx.ac.uk
+# script compare_07a.py sha256 d147fb2233824e340b61ccc4d3e84b2faf183222f938e5cbca252e9869f03dde
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/smoke/h/units.jsonl sha256 288487cdb1891a7b6bdee9b359f3c9643851e4cfb86d200abbfd91928af16f1a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/index_07.json sha256 17b08699957c244d404579372b718600396a65d7dee807dd9b05bed3f074c367
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+# 2 units to compare (0 other records skipped: []), 1 process(es); excluded: 07's ['cache_built', 'compute_time', 'elapsed', 'modules', 'pickle', 'pickle_length', 'pickle_offset', 'pickle_record_sha256', 'rebuild_s', 'route_06k', 'route_06l', 'rows_sha256', 'scripts_sha256', 'seconds', 'tree_head', 'tree_status_short', 'w2_capture_sha256', 'wall_s', 'worker', 'worker_pid', 'worker_tree'] and every key ending _s; set aside as new: ['instrument_07a', 'route_07a', 'route_07a_post', 'route_07a_post_unit']
+units 2; problems 0 []; statuses {'done': 2}
+calls by class: {'untouched': 35, 'own': 2, 'window_both': 1, 'aux_only': 4}
+equal by class: {'untouched': {'equal': 34, 'differing': 1}, 'own': {'equal': 0, 'differing': 2}, 'window_both': {'equal': 1, 'differing': 0}, 'aux_only': {'equal': 0, 'differing': 4}}
+differing categories by class: {"untouched": {"location": 1, "none": 34}, "own": {"call": 1, "call+location": 1}, "window_both": {"none": 1}, "aux_only": {"call": 4}}
+units all of W1's classes, reading A (every solve) / B (own solves): {"A": {"n_all_w1": 0, "n_totals_equal": 0, "n_whole_equal": 0, "whole_categories": {}}, "B": {"n_all_w1": 0, "n_totals_equal": 0, "n_whole_equal": 0, "whole_categories": {}}}
+new keys in 07's records 0; phase_span keys 0
+unit evidence (true, false): {'lq_file_is_expected': [2, 0], 'all_in_tree': [2, 0], 'no_foreign': [2, 0], 'variant_root_as_expected': [2, 0]}
+worker evidence: 1 workers, all hold True
+wrote state/smoke/compare_h_calls.calls.jsonl sha256 be8053fdf9b57e1c940f2b94f268374d58e540b8ee2ba4f37a39247acb9377ec
+wrote state/smoke/compare_h_calls.json sha256 5f1a5fdf99adcf6955c09ed4dbf4dc3cca40edf625cc7a6930c7d9d913ddf7ab
+# ----
+# end 2026-11-12T12:56:50Z
+# exit 0

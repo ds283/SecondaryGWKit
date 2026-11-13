@@ -1,0 +1,6336 @@
+{
+ "header": [
+  "# levin-phase-floor 07a: h against 07's census (levin-phase-floor-07-census-20261108T171137), mode calls",
+  "# written 2026-11-12T13:13:45Z on mps026298.phys.susx.ac.uk",
+  "# script compare_07a.py sha256 d147fb2233824e340b61ccc4d3e84b2faf183222f938e5cbca252e9869f03dde",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/k0/h/units.jsonl sha256 195df102f46fda10ea7e65d983843a55c299694e72d55b313f70a487c1f21c0c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/index_07.json sha256 17b08699957c244d404579372b718600396a65d7dee807dd9b05bed3f074c367",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "calls",
+ "run_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/k0/h",
+ "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/k0/h/units.jsonl",
+ "source_sha256": "195df102f46fda10ea7e65d983843a55c299694e72d55b313f70a487c1f21c0c",
+ "run07": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137",
+ "checkpoint07_sha256": "03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10",
+ "excluded_07": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "set_aside_new_07a": [
+  "instrument_07a",
+  "route_07a",
+  "route_07a_post",
+  "route_07a_post_unit"
+ ],
+ "records_skipped": [],
+ "n_units": 100,
+ "statuses": {
+  "done": 100
+ },
+ "unit_evidence_true_false": {
+  "lq_file_is_expected": [
+   100,
+   0
+  ],
+  "all_in_tree": [
+   100,
+   0
+  ],
+  "no_foreign": [
+   100,
+   0
+  ],
+  "variant_root_as_expected": [
+   100,
+   0
+  ]
+ },
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "tree-1e-7-k0_101": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-7-k0_202": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-7-k1_102": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-7-k1_301": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-7-k2_2": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-7-k2_302": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-7-k3_1": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-7-k3_201": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-8-k0_101": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-8-k0_202": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-8-k1_102": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-8-k2_2": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-8-k2_302": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-8-k3_1": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "tree-1e-8-k3_201": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  }
+ },
+ "new_keys_in_07_records": 0,
+ "phase_span_keys": 0,
+ "summary": {
+  "by_class": {
+   "window_both": 73,
+   "untouched": 1860,
+   "aux_only": 109,
+   "window_h_only": 19,
+   "own": 49
+  },
+  "by_class_rtol": {
+   "1e-7|group|window_both": 15,
+   "1e-7|group|untouched": 245,
+   "1e-7|analytic|untouched": 718,
+   "1e-7|analytic|window_both": 18,
+   "1e-7|analytic|aux_only": 50,
+   "1e-7|group|window_h_only": 8,
+   "1e-7|group|own": 18,
+   "1e-7|analytic|own": 6,
+   "1e-7|group|aux_only": 7,
+   "1e-8|group|window_both": 16,
+   "1e-8|group|untouched": 230,
+   "1e-8|analytic|untouched": 667,
+   "1e-8|analytic|own": 15,
+   "1e-8|analytic|window_both": 24,
+   "1e-8|group|window_h_only": 11,
+   "1e-8|analytic|aux_only": 46,
+   "1e-8|group|own": 10,
+   "1e-8|group|aux_only": 6
+  },
+  "equal_by_class": {
+   "window_both": {
+    "equal": 66,
+    "differing": 7
+   },
+   "untouched": {
+    "equal": 1840,
+    "differing": 20
+   },
+   "aux_only": {
+    "equal": 0,
+    "differing": 109
+   },
+   "window_h_only": {
+    "equal": 0,
+    "differing": 19
+   },
+   "own": {
+    "equal": 0,
+    "differing": 49
+   }
+  },
+  "categories_by_class": {
+   "window_both": {
+    "none": 66,
+    "call+harness": 6,
+    "call": 1
+   },
+   "untouched": {
+    "none": 1840,
+    "location": 20
+   },
+   "aux_only": {
+    "call": 70,
+    "call+harness": 39
+   },
+   "window_h_only": {
+    "call+location": 17,
+    "call+harness+location": 2
+   },
+   "own": {
+    "call+harness": 29,
+    "call": 19,
+    "call+location": 1
+   }
+  },
+  "units": {
+   "A": {
+    "n_all_w1": 32,
+    "n_totals_equal": 32,
+    "n_whole_equal": 26,
+    "whole_categories": {
+     "none": 26,
+     "location": 6
+    }
+   },
+   "B": {
+    "n_all_w1": 41,
+    "n_totals_equal": 38,
+    "n_whole_equal": 26,
+    "whole_categories": {
+     "none": 26,
+     "call+harness": 5,
+     "location": 6,
+     "call+harness+location": 3,
+     "call": 1
+    }
+   }
+  }
+ },
+ "problems": [],
+ "calls_jsonl": "out/k0/compare_k0_h_calls.calls.jsonl",
+ "calls_jsonl_sha256": "34df4dd1f511797fb7f7b0edb5fe7214f1f7b6d0d64a0507884ea1232728b093",
+ "units": [
+  {
+   "unit": "h-1e-7-0-33997",
+   "unit_07": "g-1e-7-0-33997",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.66c6e29b53046p-51",
+    "-0x1.66c6e29b53046p-51"
+   ],
+   "total_abserr": [
+    "0x1.1cba964d79c66p-74",
+    "0x1.1cba964d79c66p-74"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-33997",
+     "g-1e-7-0-33997"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-33997",
+     "g-1e-7-0-33997"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 380,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 7
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-12727",
+   "unit_07": "g-1e-7-0-12727",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.6f2ed40aed23bp-53",
+    "-0x1.6f2ed40aed23bp-53"
+   ],
+   "total_abserr": [
+    "0x1.fb0b87c34aec2p-77",
+    "0x1.fb0b87c34aec2p-77"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-12727",
+     "g-1e-7-0-12727"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-12727",
+     "g-1e-7-0-12727"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 328,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-12935",
+   "unit_07": "g-1e-7-0-12935",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.57d2841088b90p-66",
+    "-0x1.57d2841088b90p-66"
+   ],
+   "total_abserr": [
+    "0x1.22d47f47c0b05p-89",
+    "0x1.22d47f435b0fep-89"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-12935",
+     "g-1e-7-0-12935"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-12935",
+     "g-1e-7-0-12935"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 696,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-1814",
+   "unit_07": "g-1e-7-0-1814",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.22ed777244032p-63",
+    "-0x1.22ed777244032p-63"
+   ],
+   "total_abserr": [
+    "0x1.2dcd31dd4e4c3p-86",
+    "0x1.2dcd31dd4e4c3p-86"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-1814",
+     "g-1e-7-0-1814"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-1814",
+     "g-1e-7-0-1814"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 876,
+    "n_route_differs": 4,
+    "n_lu_differs": 0,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-37232",
+   "unit_07": "g-1e-7-0-37232",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.19ce24df297b6p-75",
+    "-0x1.19ce24df297b6p-75"
+   ],
+   "total_abserr": [
+    "0x1.773bd6870581fp-99",
+    "0x1.773bd6423d087p-99"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-37232",
+     "g-1e-7-0-37232"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-37232",
+     "g-1e-7-0-37232"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 736,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-33892",
+   "unit_07": "g-1e-7-0-33892",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.9c6e52f7502a2p-64",
+    "-0x1.9c6e52f7502a2p-64"
+   ],
+   "total_abserr": [
+    "0x1.e843c21a0e7f0p-79",
+    "0x1.e843c21a0e7f0p-79"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-33892",
+     "g-1e-7-0-33892"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-33892",
+     "g-1e-7-0-33892"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 112,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-33730",
+   "unit_07": "g-1e-7-0-33730",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.d584b415d32e1p-65",
+    "-0x1.d584b415d32e1p-65"
+   ],
+   "total_abserr": [
+    "0x1.5c355472f86e3p-81",
+    "0x1.5c355472f86e3p-81"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call",
+     "harness"
+    ],
+    "n_differing": {
+     "call": 62,
+     "harness": 8
+    },
+    "first_differing": {
+     "call": [
+      "data.analytic_06h.h.abserr.hex",
+      "data.analytic_06h.h.abserr.repr",
+      "data.analytic_06h.h.value.hex",
+      "data.analytic_06h.h.value.repr",
+      "data.other_calls[6].E_share.resolution.hex",
+      "data.other_calls[6].E_share.resolution.repr",
+      "data.other_calls[6].abserr.hex",
+      "data.other_calls[6].abserr.repr"
+     ],
+     "harness": [
+      "data.analytic_06h.parent_counterfactual.abserr.hex",
+      "data.analytic_06h.parent_counterfactual.abserr.repr",
+      "data.analytic_06h.parent_counterfactual.value.hex",
+      "data.analytic_06h.parent_counterfactual.value.repr",
+      "data.other_calls[6].declared_06h.request.hex",
+      "data.other_calls[6].declared_06h.request.repr",
+      "data.other_calls[7].declared_06h.request.hex",
+      "data.other_calls[7].declared_06h.request.repr"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-33730",
+     "g-1e-7-0-33730"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-33730",
+     "g-1e-7-0-33730"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 112,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-12778",
+   "unit_07": "g-1e-7-0-12778",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.398b483d84f88p-72",
+    "0x1.398b483d84f88p-72"
+   ],
+   "total_abserr": [
+    "0x1.c7112dc31d307p-89",
+    "0x1.c7112dc31d307p-89"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-12778",
+     "g-1e-7-0-12778"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-12778",
+     "g-1e-7-0-12778"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 200,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-12959",
+   "unit_07": "g-1e-7-0-12959",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.883471c422b02p-77",
+    "-0x1.883471c422b02p-77"
+   ],
+   "total_abserr": [
+    "0x1.432c7fba28f39p-93",
+    "0x1.432c7fba28f39p-93"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-12959",
+     "g-1e-7-0-12959"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-12959",
+     "g-1e-7-0-12959"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 784,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-37211",
+   "unit_07": "g-1e-7-0-37211",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.9b891f32a5993p-82",
+    "0x1.9b891f32a5993p-82"
+   ],
+   "total_abserr": [
+    "0x1.0718e09292999p-99",
+    "0x1.0718e09292999p-99"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-37211",
+     "g-1e-7-0-37211"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-37211",
+     "g-1e-7-0-37211"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 706,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 9
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-1873",
+   "unit_07": "g-1e-7-0-1873",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.64e10a2df3ebep-83",
+    "0x1.64e10a2df3ebep-83"
+   ],
+   "total_abserr": [
+    "0x1.3de1da5765dacp-99",
+    "0x1.3de1da5765dacp-99"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-1873",
+     "g-1e-7-0-1873"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-1873",
+     "g-1e-7-0-1873"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 432,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-2108",
+   "unit_07": "g-1e-7-0-2108",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.6f848cbba0f9ep-86",
+    "-0x1.6f848cbba0f9ep-86"
+   ],
+   "total_abserr": [
+    "0x1.102e05838db3ep-101",
+    "0x1.102e05838db3ep-101"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-2108",
+     "g-1e-7-0-2108"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-2108",
+     "g-1e-7-0-2108"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 528,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-0-14529",
+   "unit_07": "g-1e-7-0-14529",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.a22b14e424a3ep-97",
+    "0x1.a22b14e424a3ep-97"
+   ],
+   "total_abserr": [
+    "0x1.725c4dc41809dp-114",
+    "0x1.725c4dc41809dp-114"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-0-14529",
+     "g-1e-7-0-14529"
+    ],
+    "pickle.unit": [
+     "h-1e-7-0-14529",
+     "g-1e-7-0-14529"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1256,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-10963",
+   "unit_07": "g-1e-7-1-10963",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.eb7a5adefcb25p-62",
+    "-0x1.eb7a5adefcb25p-62"
+   ],
+   "total_abserr": [
+    "0x1.71217e9f76769p-80",
+    "0x1.71217e9f76769p-80"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "location"
+    ],
+    "n_differing": {
+     "location": 2
+    },
+    "first_differing": {
+     "location": [
+      "data.calls[0].guard_07.location_skipped_phases",
+      "pickle.guard_07[0].location_skipped_phases"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-10963",
+     "g-1e-7-1-10963"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-10963",
+     "g-1e-7-1-10963"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 200,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-11233",
+   "unit_07": "g-1e-7-1-11233",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.1e6032f2b646bp-52",
+    "-0x1.1e6032f2b646bp-52"
+   ],
+   "total_abserr": [
+    "0x1.8116e4dc4ed47p-76",
+    "0x1.8116e4dc4ed47p-76"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-11233",
+     "g-1e-7-1-11233"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-11233",
+     "g-1e-7-1-11233"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 160,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-11199",
+   "unit_07": "g-1e-7-1-11199",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.4880e005ad90cp-52",
+    "0x1.4880e005ad90cp-52"
+   ],
+   "total_abserr": [
+    "0x1.78703f48b96fdp-75",
+    "0x1.78703f48b96fdp-75"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-11199",
+     "g-1e-7-1-11199"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-11199",
+     "g-1e-7-1-11199"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 298,
+    "n_route_differs": 4,
+    "n_lu_differs": 0,
+    "n_partition": 6
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-35492",
+   "unit_07": "g-1e-7-1-35492",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.0ef33fb82c92cp-68",
+    "0x1.0ef33fba74b08p-68"
+   ],
+   "total_abserr": [
+    "0x1.d0e36a9cbe466p-92",
+    "0x1.da4fe94ce50f4p-92"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call",
+     "harness",
+     "location"
+    ],
+    "n_differing": {
+     "call": 409,
+     "harness": 112,
+     "location": 2
+    },
+    "first_differing": {
+     "call": [
+      "data.analytic_06h.h.abserr.hex",
+      "data.analytic_06h.h.abserr.repr",
+      "data.calls[2].E_share.floor.hex",
+      "data.calls[2].E_share.floor.repr",
+      "data.calls[2].E_share.resolution.hex",
+      "data.calls[2].E_share.resolution.repr",
+      "data.calls[2].E_unwidened.hex",
+      "data.calls[2].E_unwidened.repr"
+     ],
+     "harness": [
+      "data.analytic_06h.parent_counterfactual.abserr.hex",
+      "data.analytic_06h.parent_counterfactual.abserr.repr",
+      "data.calls[2].cc_floor.n_cc_leaves",
+      "data.calls[2].cc_floor.n_floor_attributed",
+      "data.calls[2].cc_floor.n_reproduced",
+      "data.calls[2].cc_floor.sums_all_cc_leaves.R_2.hex",
+      "data.calls[2].cc_floor.sums_all_cc_leaves.R_2.repr",
+      "data.calls[2].cc_floor.sums_all_cc_leaves.R_c.hex"
+     ],
+     "location": [
+      "data.calls[0].guard_07.location_skipped_phases",
+      "pickle.guard_07[0].location_skipped_phases"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-35492",
+     "g-1e-7-1-35492"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-35492",
+     "g-1e-7-1-35492"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 720,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-35497",
+   "unit_07": "g-1e-7-1-35497",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.788a585886eb4p-66",
+    "-0x1.788a585886eb4p-66"
+   ],
+   "total_abserr": [
+    "0x1.9cc98a182f722p-89",
+    "0x1.9cc98a182f722p-89"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-35497",
+     "g-1e-7-1-35497"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-35497",
+     "g-1e-7-1-35497"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 648,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-1849",
+   "unit_07": "g-1e-7-1-1849",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.94def88ce327ep-67",
+    "-0x1.94def88ce327ep-67"
+   ],
+   "total_abserr": [
+    "0x1.b4e7a11543dd6p-90",
+    "0x1.b4e7a11543dd6p-90"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-1849",
+     "g-1e-7-1-1849"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-1849",
+     "g-1e-7-1-1849"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 978,
+    "n_route_differs": 2,
+    "n_lu_differs": 0,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-37614",
+   "unit_07": "g-1e-7-1-37614",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.786d4268a6035p-74",
+    "-0x1.786d4268a6035p-74"
+   ],
+   "total_abserr": [
+    "0x1.721a70116c81bp-99",
+    "0x1.721a629b47091p-99"
+   ],
+   "total_converged": [
+    false,
+    false
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-37614",
+     "g-1e-7-1-37614"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-37614",
+     "g-1e-7-1-37614"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 504,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-14039",
+   "unit_07": "g-1e-7-1-14039",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.8e084535d9e47p-83",
+    "-0x1.8e08452859728p-83"
+   ],
+   "total_abserr": [
+    "0x1.2511a44f2035ap-105",
+    "0x1.18b2fa6302220p-105"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call",
+     "harness",
+     "location"
+    ],
+    "n_differing": {
+     "location": 2,
+     "call": 238,
+     "harness": 14
+    },
+    "first_differing": {
+     "location": [
+      "data.calls[0].guard_07.location_skipped_phases",
+      "pickle.guard_07[0].location_skipped_phases"
+     ],
+     "call": [
+      "data.calls[2].E_share.resolution.hex",
+      "data.calls[2].E_share.resolution.repr",
+      "data.calls[2].E_unwidened.hex",
+      "data.calls[2].E_unwidened.repr",
+      "data.calls[2].abserr.hex",
+      "data.calls[2].abserr.repr",
+      "data.calls[2].abserr_eprime_sum.hex",
+      "data.calls[2].abserr_eprime_sum.repr"
+     ],
+     "harness": [
+      "data.deep_lines_06e.lines[0].levels[1][5]",
+      "data.deep_lines_06e.lines[0].levels[1][6]",
+      "data.deep_lines_06e.lines[1].levels[1][5]",
+      "data.deep_lines_06e.lines[1].levels[1][6]",
+      "pickle.deep_lines_06e[0].levels[1].R.e",
+      "pickle.deep_lines_06e[0].levels[1].R.resid",
+      "pickle.deep_lines_06e[0].levels[1].delta2",
+      "pickle.deep_lines_06e[0].levels[1].eLR_over_eP"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-14039",
+     "g-1e-7-1-14039"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-14039",
+     "g-1e-7-1-14039"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 560,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-2142",
+   "unit_07": "g-1e-7-1-2142",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.20cb8d9626ce6p-77",
+    "-0x1.20cb8d9626ce6p-77"
+   ],
+   "total_abserr": [
+    "0x1.1a13d273654e0p-100",
+    "0x1.1a13d273654e0p-100"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-2142",
+     "g-1e-7-1-2142"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-2142",
+     "g-1e-7-1-2142"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 352,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-35052",
+   "unit_07": "g-1e-7-1-35052",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.29765892c3ab8p-80",
+    "0x1.29765892c3ab8p-80"
+   ],
+   "total_abserr": [
+    "0x1.e367fd43b218fp-101",
+    "0x1.e367fd43b218fp-101"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-35052",
+     "g-1e-7-1-35052"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-35052",
+     "g-1e-7-1-35052"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 448,
+    "n_route_differs": 0,
+    "n_lu_differs": 3,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-20582",
+   "unit_07": "g-1e-7-1-20582",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.0d890ca8daba8p-62",
+    "0x1.0d890ca8daba8p-62"
+   ],
+   "total_abserr": [
+    "0x1.bc917df951e38p-79",
+    "0x1.4d240ef094e81p-79"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-20582",
+     "g-1e-7-1-20582"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-20582",
+     "g-1e-7-1-20582"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 56,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-10846",
+   "unit_07": "g-1e-7-1-10846",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.bd7368df1e127p-67",
+    "0x1.bd736229b8f8bp-67"
+   ],
+   "total_abserr": [
+    "0x1.6682692b1dcf6p-81",
+    "0x1.1131cb951b253p-80"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-10846",
+     "g-1e-7-1-10846"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-10846",
+     "g-1e-7-1-10846"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 112,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-1-11214",
+   "unit_07": "g-1e-7-1-11214",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.97791838ee190p-77",
+    "0x1.97791838ee190p-77"
+   ],
+   "total_abserr": [
+    "0x1.c5c13a36b5c63p-90",
+    "0x1.c75ed59f5e1e0p-90"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-1-11214",
+     "g-1e-7-1-11214"
+    ],
+    "pickle.unit": [
+     "h-1e-7-1-11214",
+     "g-1e-7-1-11214"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 176,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-21980",
+   "unit_07": "g-1e-7-2-21980",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.44abac19154f5p-58",
+    "0x1.44abac19154f5p-58"
+   ],
+   "total_abserr": [
+    "0x1.47b5c8c6502e3p-81",
+    "0x1.47b5c8c6502e3p-81"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-21980",
+     "g-1e-7-2-21980"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-21980",
+     "g-1e-7-2-21980"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 112,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-1427",
+   "unit_07": "g-1e-7-2-1427",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.68243099f4c50p-64",
+    "-0x1.68243099f4c50p-64"
+   ],
+   "total_abserr": [
+    "0x1.08ac5344e7a56p-85",
+    "0x1.08ac53423e737p-85"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-1427",
+     "g-1e-7-2-1427"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-1427",
+     "g-1e-7-2-1427"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 400,
+    "n_route_differs": 2,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-1448",
+   "unit_07": "g-1e-7-2-1448",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.60ad9ad11c97ep-66",
+    "-0x1.60ad9ad11c97ep-66"
+   ],
+   "total_abserr": [
+    "0x1.05ead46da48edp-88",
+    "0x1.05ead46da48edp-88"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-1448",
+     "g-1e-7-2-1448"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-1448",
+     "g-1e-7-2-1448"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 408,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-35010",
+   "unit_07": "g-1e-7-2-35010",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.75595e3181ecap-83",
+    "-0x1.75595e3181ecap-83"
+   ],
+   "total_abserr": [
+    "0x1.a000f40b3c2aap-104",
+    "0x1.a000f40b3c2aap-104"
+   ],
+   "total_converged": [
+    false,
+    false
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-35010",
+     "g-1e-7-2-35010"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-35010",
+     "g-1e-7-2-35010"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 552,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-33416",
+   "unit_07": "g-1e-7-2-33416",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.644bd5ccfd5c4p-66",
+    "0x1.644bd5ccf981bp-66"
+   ],
+   "total_abserr": [
+    "0x1.32efabe541911p-81",
+    "0x1.32efa9f06874cp-81"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call"
+    ],
+    "n_differing": {
+     "call": 45
+    },
+    "first_differing": {
+     "call": [
+      "data.calls[3].E_share.resolution.hex",
+      "data.calls[3].E_share.resolution.repr",
+      "data.calls[3].abserr.hex",
+      "data.calls[3].abserr.repr",
+      "data.calls[3].abserr_eprime_sum.hex",
+      "data.calls[3].abserr_eprime_sum.repr",
+      "data.calls[3].num_solves_lstsq",
+      "data.calls[3].relerr.hex"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-33416",
+     "g-1e-7-2-33416"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-33416",
+     "g-1e-7-2-33416"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 112,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-21696",
+   "unit_07": "g-1e-7-2-21696",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.9c75a6096bbcep-77",
+    "0x1.9c75a6096bbcep-77"
+   ],
+   "total_abserr": [
+    "0x1.3a6d267873b57p-82",
+    "0x1.3a6d267873b57p-82"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-21696",
+     "g-1e-7-2-21696"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-21696",
+     "g-1e-7-2-21696"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 112,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-21857",
+   "unit_07": "g-1e-7-2-21857",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.0fbbe5c30aba3p-79",
+    "0x1.0fbbe5c30aba3p-79"
+   ],
+   "total_abserr": [
+    "0x1.f795c29ba5c17p-86",
+    "0x1.f795c29ba5c17p-86"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call",
+     "harness"
+    ],
+    "n_differing": {
+     "call": 58,
+     "harness": 8
+    },
+    "first_differing": {
+     "call": [
+      "data.analytic_06h.h.abserr.hex",
+      "data.analytic_06h.h.abserr.repr",
+      "data.analytic_06h.h.value.hex",
+      "data.analytic_06h.h.value.repr",
+      "data.other_calls[2].E_share.resolution.hex",
+      "data.other_calls[2].E_share.resolution.repr",
+      "data.other_calls[2].abserr.hex",
+      "data.other_calls[2].abserr.repr"
+     ],
+     "harness": [
+      "data.analytic_06h.parent_counterfactual.abserr.hex",
+      "data.analytic_06h.parent_counterfactual.abserr.repr",
+      "data.analytic_06h.parent_counterfactual.value.hex",
+      "data.analytic_06h.parent_counterfactual.value.repr",
+      "data.other_calls[2].declared_06h.request.hex",
+      "data.other_calls[2].declared_06h.request.repr",
+      "data.other_calls[3].declared_06h.request.hex",
+      "data.other_calls[3].declared_06h.request.repr"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-21857",
+     "g-1e-7-2-21857"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-21857",
+     "g-1e-7-2-21857"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 416,
+    "n_route_differs": 2,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-1458",
+   "unit_07": "g-1e-7-2-1458",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.15d3659685f5fp-84",
+    "-0x1.15d3659685f5fp-84"
+   ],
+   "total_abserr": [
+    "0x1.3f867f131b1e4p-90",
+    "0x1.3f867f131b1e4p-90"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-1458",
+     "g-1e-7-2-1458"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-1458",
+     "g-1e-7-2-1458"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 696,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-1634",
+   "unit_07": "g-1e-7-2-1634",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.51cc922186bfbp-90",
+    "-0x1.51cc922186bfbp-90"
+   ],
+   "total_abserr": [
+    "0x1.9d92d4e7fe017p-102",
+    "0x1.9d92d4e7fe017p-102"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-1634",
+     "g-1e-7-2-1634"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-1634",
+     "g-1e-7-2-1634"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 848,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-2-2078",
+   "unit_07": "g-1e-7-2-2078",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.ea25af610e54ap-98",
+    "0x1.ea25af610e54ap-98"
+   ],
+   "total_abserr": [
+    "0x1.2d287b19b57b3p-107",
+    "0x1.2d287b19b57b3p-107"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-2-2078",
+     "g-1e-7-2-2078"
+    ],
+    "pickle.unit": [
+     "h-1e-7-2-2078",
+     "g-1e-7-2-2078"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1004,
+    "n_route_differs": 2,
+    "n_lu_differs": 2,
+    "n_partition": 9
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-1040",
+   "unit_07": "g-1e-7-3-1040",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.30c72b60a031ep-51",
+    "-0x1.30c72b60a031ep-51"
+   ],
+   "total_abserr": [
+    "0x1.aa29c058d16d0p-74",
+    "0x1.aa29c058d16d0p-74"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "location"
+    ],
+    "n_differing": {
+     "location": 20
+    },
+    "first_differing": {
+     "location": [
+      "data.calls[1].guard_07.location_skipped_phases[0].reason",
+      "data.calls[1].guard_07.location_skipped_phases[0].variation",
+      "data.other_calls[10].guard_07.location_skipped_phases",
+      "data.other_calls[11].guard_07.location_skipped_phases",
+      "data.other_calls[12].guard_07.location_skipped_phases",
+      "data.other_calls[13].guard_07.location_skipped_phases",
+      "data.other_calls[2].guard_07.location_skipped_phases",
+      "data.other_calls[3].guard_07.location_skipped_phases"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-1040",
+     "g-1e-7-3-1040"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-1040",
+     "g-1e-7-3-1040"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 136,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-34254",
+   "unit_07": "g-1e-7-3-34254",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.5fed20f753c12p-47",
+    "-0x1.5fed20f753c12p-47"
+   ],
+   "total_abserr": [
+    "0x1.ecd2ee0edd3a9p-71",
+    "0x1.ecd2ee0edd3a9p-71"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-34254",
+     "g-1e-7-3-34254"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-34254",
+     "g-1e-7-3-34254"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 450,
+    "n_route_differs": 2,
+    "n_lu_differs": 0,
+    "n_partition": 7
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-34298",
+   "unit_07": "g-1e-7-3-34298",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.b9c33520f57c8p-61",
+    "-0x1.b9c33520f57c8p-61"
+   ],
+   "total_abserr": [
+    "0x1.5f3f8062095c8p-81",
+    "0x1.5f3f8062095c8p-81"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-34298",
+     "g-1e-7-3-34298"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-34298",
+     "g-1e-7-3-34298"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 570,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 7
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-13481",
+   "unit_07": "g-1e-7-3-13481",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.70177ad5f6ffdp-58",
+    "0x1.70177ad79a88ep-58"
+   ],
+   "total_abserr": [
+    "0x1.4a4f99fc2e168p-81",
+    "0x1.4b27f412a2877p-81"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-13481",
+     "g-1e-7-3-13481"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-13481",
+     "g-1e-7-3-13481"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 384,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-34748",
+   "unit_07": "g-1e-7-3-34748",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.d6b9878ce86e6p-75",
+    "-0x1.d6b9878ce86e6p-75"
+   ],
+   "total_abserr": [
+    "0x1.3ebff44eaed6fp-99",
+    "0x1.3ebff44eaed6fp-99"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-34748",
+     "g-1e-7-3-34748"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-34748",
+     "g-1e-7-3-34748"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 776,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-34738",
+   "unit_07": "g-1e-7-3-34738",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.3145c0a58ad72p-74",
+    "0x1.3145c0a58ad72p-74"
+   ],
+   "total_abserr": [
+    "0x1.cadb2f47b8a1ap-99",
+    "0x1.cadb2f47b8a1ap-99"
+   ],
+   "total_converged": [
+    false,
+    false
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-34738",
+     "g-1e-7-3-34738"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-34738",
+     "g-1e-7-3-34738"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 760,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-13829",
+   "unit_07": "g-1e-7-3-13829",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.0d4d1544e251ep-74",
+    "-0x1.0d4d1544e251ep-74"
+   ],
+   "total_abserr": [
+    "0x1.7bf997f89ddc8p-98",
+    "0x1.7bfb14bf8dafbp-98"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-13829",
+     "g-1e-7-3-13829"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-13829",
+     "g-1e-7-3-13829"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 968,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-34950",
+   "unit_07": "g-1e-7-3-34950",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.25e5f4b6747e5p-69",
+    "0x1.25e5f4b6747e5p-69"
+   ],
+   "total_abserr": [
+    "0x1.0973bfd633757p-93",
+    "0x1.0973bfd633757p-93"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-34950",
+     "g-1e-7-3-34950"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-34950",
+     "g-1e-7-3-34950"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 640,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-34969",
+   "unit_07": "g-1e-7-3-34969",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.43906bd6b56d4p-65",
+    "-0x1.43906bd6b56d4p-65"
+   ],
+   "total_abserr": [
+    "0x1.22f0c0fd8e5a4p-88",
+    "0x1.22f0c0fd8e5a4p-88"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-34969",
+     "g-1e-7-3-34969"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-34969",
+     "g-1e-7-3-34969"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1074,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 7
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-38477",
+   "unit_07": "g-1e-7-3-38477",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.2b013d0fe19aep-83",
+    "-0x1.2b013d0fe19aep-83"
+   ],
+   "total_abserr": [
+    "0x1.cbd694a6476efp-106",
+    "0x1.cbd694a6476efp-106"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-38477",
+     "g-1e-7-3-38477"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-38477",
+     "g-1e-7-3-38477"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 928,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-761",
+   "unit_07": "g-1e-7-3-761",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.243116f6f6afdp-61",
+    "-0x1.243116f6f6afdp-61"
+   ],
+   "total_abserr": [
+    "0x1.9825b2f35acb7p-80",
+    "0x1.9825b2f35acb7p-80"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "location"
+    ],
+    "n_differing": {
+     "location": 2
+    },
+    "first_differing": {
+     "location": [
+      "data.calls[0].guard_07.location_skipped_phases",
+      "pickle.guard_07[0].location_skipped_phases"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-761",
+     "g-1e-7-3-761"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-761",
+     "g-1e-7-3-761"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 152,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-1188",
+   "unit_07": "g-1e-7-3-1188",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.d4c6bb848143ap-64",
+    "0x1.d4c6bb848143ap-64"
+   ],
+   "total_abserr": [
+    "0x1.c3563240e00dfp-83",
+    "0x1.c3563240e00dfp-83"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-1188",
+     "g-1e-7-3-1188"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-1188",
+     "g-1e-7-3-1188"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 112,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-13606",
+   "unit_07": "g-1e-7-3-13606",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.f11208f9f29f7p-80",
+    "-0x1.f11208f9f29f7p-80"
+   ],
+   "total_abserr": [
+    "0x1.d631859f1a188p-99",
+    "0x1.d631859f1a188p-99"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-13606",
+     "g-1e-7-3-13606"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-13606",
+     "g-1e-7-3-13606"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 632,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-7-3-35986",
+   "unit_07": "g-1e-7-3-35986",
+   "status": "done",
+   "rtol": "1e-7",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.ae0b2313860ebp-83",
+    "0x1.ae0b2313860ebp-83"
+   ],
+   "total_abserr": [
+    "0x1.0538c3ec11067p-100",
+    "0x1.0538c3ec11067p-100"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "location"
+    ],
+    "n_differing": {
+     "location": 2
+    },
+    "first_differing": {
+     "location": [
+      "data.calls[0].guard_07.location_skipped_phases",
+      "pickle.guard_07[0].location_skipped_phases"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-7-3-35986",
+     "g-1e-7-3-35986"
+    ],
+    "pickle.unit": [
+     "h-1e-7-3-35986",
+     "g-1e-7-3-35986"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 480,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-10209",
+   "unit_07": "g-1e-8-0-10209",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.ebe5ccef430adp-65",
+    "-0x1.ebe5ccef430adp-65"
+   ],
+   "total_abserr": [
+    "0x1.177569975f64ep-91",
+    "0x1.177569975f64ep-91"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-10209",
+     "g-1e-8-0-10209"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-10209",
+     "g-1e-8-0-10209"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 0,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-10193",
+   "unit_07": "g-1e-8-0-10193",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.743ac35d960eep-59",
+    "-0x1.743ac35d960eep-59"
+   ],
+   "total_abserr": [
+    "0x1.d1484907a5804p-86",
+    "0x1.d1484907a5804p-86"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-10193",
+     "g-1e-8-0-10193"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-10193",
+     "g-1e-8-0-10193"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 0,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-33945",
+   "unit_07": "g-1e-8-0-33945",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.b08668d7143acp-48",
+    "-0x1.b08668d7143acp-48"
+   ],
+   "total_abserr": [
+    "0x1.eac16a934fbccp-75",
+    "0x1.eac16a934fbccp-75"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-33945",
+     "g-1e-8-0-33945"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-33945",
+     "g-1e-8-0-33945"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 412,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-34019",
+   "unit_07": "g-1e-8-0-34019",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.59a0c7586a546p-50",
+    "0x1.59a0c75873b12p-50"
+   ],
+   "total_abserr": [
+    "0x1.01caf800445e8p-76",
+    "0x1.03d65877e37aep-76"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-34019",
+     "g-1e-8-0-34019"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-34019",
+     "g-1e-8-0-34019"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 288,
+    "n_route_differs": 2,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-33906",
+   "unit_07": "g-1e-8-0-33906",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.1b5df0681af9cp-51",
+    "-0x1.1b5df0681af9cp-51"
+   ],
+   "total_abserr": [
+    "0x1.5d45b7596d0c5p-78",
+    "0x1.5d45b7596d0c5p-78"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-33906",
+     "g-1e-8-0-33906"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-33906",
+     "g-1e-8-0-33906"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 436,
+    "n_route_differs": 4,
+    "n_lu_differs": 0,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-33980",
+   "unit_07": "g-1e-8-0-33980",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.72733386978a7p-50",
+    "-0x1.72733386978a7p-50"
+   ],
+   "total_abserr": [
+    "0x1.9d8512eb75163p-76",
+    "0x1.9d8512eb75163p-76"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-33980",
+     "g-1e-8-0-33980"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-33980",
+     "g-1e-8-0-33980"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 344,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-12681",
+   "unit_07": "g-1e-8-0-12681",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.7b792250ee1d5p-58",
+    "-0x1.7b792250ee1d5p-58"
+   ],
+   "total_abserr": [
+    "0x1.bd7911e12a8c0p-85",
+    "0x1.bd7911e12a8c0p-85"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-12681",
+     "g-1e-8-0-12681"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-12681",
+     "g-1e-8-0-12681"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 320,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-12965",
+   "unit_07": "g-1e-8-0-12965",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.4b9b1ff3074cbp-60",
+    "-0x1.4b9b1ff3074cbp-60"
+   ],
+   "total_abserr": [
+    "0x1.e436de9b62635p-87",
+    "0x1.e436de9b62635p-87"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-12965",
+     "g-1e-8-0-12965"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-12965",
+     "g-1e-8-0-12965"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 680,
+    "n_route_differs": 0,
+    "n_lu_differs": 1,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-13954",
+   "unit_07": "g-1e-8-0-13954",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.de2f0a5339446p-78",
+    "-0x1.de2f0a5339446p-78"
+   ],
+   "total_abserr": [
+    "0x1.af0472a6f0570p-102",
+    "0x1.af0472a6f0570p-102"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-13954",
+     "g-1e-8-0-13954"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-13954",
+     "g-1e-8-0-13954"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 792,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-2106",
+   "unit_07": "g-1e-8-0-2106",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.33e9bcbfa5538p-69",
+    "-0x1.33e9bcbfa5538p-69"
+   ],
+   "total_abserr": [
+    "0x1.6f53643df0902p-96",
+    "0x1.6f53643df0902p-96"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-2106",
+     "g-1e-8-0-2106"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-2106",
+     "g-1e-8-0-2106"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 940,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-14054",
+   "unit_07": "g-1e-8-0-14054",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.7172ef56a1572p-71",
+    "-0x1.7172ef56a1572p-71"
+   ],
+   "total_abserr": [
+    "0x1.decd3cd93b4dap-98",
+    "0x1.decd3cd93b4dap-98"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-14054",
+     "g-1e-8-0-14054"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-14054",
+     "g-1e-8-0-14054"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 972,
+    "n_route_differs": 2,
+    "n_lu_differs": 2,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-13772",
+   "unit_07": "g-1e-8-0-13772",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.7a5398a9e3a4cp-77",
+    "-0x1.7a5398a9e3a4cp-77"
+   ],
+   "total_abserr": [
+    "0x1.196d2e987b592p-104",
+    "0x1.196d2e987b592p-104"
+   ],
+   "total_converged": [
+    false,
+    false
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-13772",
+     "g-1e-8-0-13772"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-13772",
+     "g-1e-8-0-13772"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 680,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-38451",
+   "unit_07": "g-1e-8-0-38451",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.7f76a2ac7e948p-87",
+    "0x1.7f76a2ad34ebfp-87"
+   ],
+   "total_abserr": [
+    "0x1.b916cc5d0869cp-107",
+    "0x1.b91a4506b4f12p-107"
+   ],
+   "total_converged": [
+    false,
+    false
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-38451",
+     "g-1e-8-0-38451"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-38451",
+     "g-1e-8-0-38451"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1048,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-35102",
+   "unit_07": "g-1e-8-0-35102",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.3d6e546888ed2p-82",
+    "-0x1.3d6e546888ed2p-82"
+   ],
+   "total_abserr": [
+    "0x1.387b3705c4d08p-108",
+    "0x1.387b3705c4d08p-108"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-35102",
+     "g-1e-8-0-35102"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-35102",
+     "g-1e-8-0-35102"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 880,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-33648",
+   "unit_07": "g-1e-8-0-33648",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.15823f49a74bap-60",
+    "-0x1.15823f49a74bap-60"
+   ],
+   "total_abserr": [
+    "0x1.a566e94964c28p-75",
+    "0x1.a566e94964c28p-75"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-33648",
+     "g-1e-8-0-33648"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-33648",
+     "g-1e-8-0-33648"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 152,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-33730",
+   "unit_07": "g-1e-8-0-33730",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.d584b415d32e1p-65",
+    "-0x1.d584b415d32e1p-65"
+   ],
+   "total_abserr": [
+    "0x1.5c355472f86e3p-81",
+    "0x1.5c355472f86e3p-81"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call",
+     "harness"
+    ],
+    "n_differing": {
+     "call": 62,
+     "harness": 8
+    },
+    "first_differing": {
+     "call": [
+      "data.analytic_06h.h.abserr.hex",
+      "data.analytic_06h.h.abserr.repr",
+      "data.analytic_06h.h.value.hex",
+      "data.analytic_06h.h.value.repr",
+      "data.other_calls[6].E_share.resolution.hex",
+      "data.other_calls[6].E_share.resolution.repr",
+      "data.other_calls[6].abserr.hex",
+      "data.other_calls[6].abserr.repr"
+     ],
+     "harness": [
+      "data.analytic_06h.parent_counterfactual.abserr.hex",
+      "data.analytic_06h.parent_counterfactual.abserr.repr",
+      "data.analytic_06h.parent_counterfactual.value.hex",
+      "data.analytic_06h.parent_counterfactual.value.repr",
+      "data.other_calls[6].declared_06h.request.hex",
+      "data.other_calls[6].declared_06h.request.repr",
+      "data.other_calls[7].declared_06h.request.hex",
+      "data.other_calls[7].declared_06h.request.repr"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-33730",
+     "g-1e-8-0-33730"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-33730",
+     "g-1e-8-0-33730"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 128,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-34037",
+   "unit_07": "g-1e-8-0-34037",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.7f206f1104b2bp-69",
+    "-0x1.7f206f1104b2bp-69"
+   ],
+   "total_abserr": [
+    "0x1.ff96dd65306a0p-87",
+    "0x1.ff96dd65306a0p-87"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-34037",
+     "g-1e-8-0-34037"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-34037",
+     "g-1e-8-0-34037"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 650,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 9
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-12778",
+   "unit_07": "g-1e-8-0-12778",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.398b483d84f88p-72",
+    "0x1.398b483d84f88p-72"
+   ],
+   "total_abserr": [
+    "0x1.c7112dc31d307p-89",
+    "0x1.c7112dc31d307p-89"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-12778",
+     "g-1e-8-0-12778"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-12778",
+     "g-1e-8-0-12778"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 432,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-12617",
+   "unit_07": "g-1e-8-0-12617",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.6e3b1c6a6a28cp-75",
+    "-0x1.6e3b1c6a6a28cp-75"
+   ],
+   "total_abserr": [
+    "0x1.aa0932cf8d58ap-91",
+    "0x1.aa0932cf8d58ap-91"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call",
+     "harness"
+    ],
+    "n_differing": {
+     "call": 61,
+     "harness": 6
+    },
+    "first_differing": {
+     "call": [
+      "data.analytic_06h.h.abserr.hex",
+      "data.analytic_06h.h.abserr.repr",
+      "data.analytic_06h.h.value.hex",
+      "data.analytic_06h.h.value.repr",
+      "data.other_calls[6].E_share.resolution.hex",
+      "data.other_calls[6].E_share.resolution.repr",
+      "data.other_calls[6].abserr.hex",
+      "data.other_calls[6].abserr.repr"
+     ],
+     "harness": [
+      "data.analytic_06h.parent_counterfactual.abserr.hex",
+      "data.analytic_06h.parent_counterfactual.abserr.repr",
+      "data.analytic_06h.parent_counterfactual.value.hex",
+      "data.analytic_06h.parent_counterfactual.value.repr",
+      "data.other_calls[6].declared_06h.request.hex",
+      "data.other_calls[6].declared_06h.request.repr"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-12617",
+     "g-1e-8-0-12617"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-12617",
+     "g-1e-8-0-12617"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 656,
+    "n_route_differs": 2,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-12959",
+   "unit_07": "g-1e-8-0-12959",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.883471c422b02p-77",
+    "-0x1.883471c422b02p-77"
+   ],
+   "total_abserr": [
+    "0x1.432c7fba28f39p-93",
+    "0x1.432c7fba28f39p-93"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-12959",
+     "g-1e-8-0-12959"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-12959",
+     "g-1e-8-0-12959"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 624,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-1873",
+   "unit_07": "g-1e-8-0-1873",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.64e10a2df3ebep-83",
+    "0x1.64e10a2df3ebep-83"
+   ],
+   "total_abserr": [
+    "0x1.3de1da5765dacp-99",
+    "0x1.3de1da5765dacp-99"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-1873",
+     "g-1e-8-0-1873"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-1873",
+     "g-1e-8-0-1873"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 608,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-0-2108",
+   "unit_07": "g-1e-8-0-2108",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.6f848cbba0f66p-86",
+    "-0x1.6f848cbba0f66p-86"
+   ],
+   "total_abserr": [
+    "0x1.102e05838db3ep-101",
+    "0x1.102e05838db3ep-101"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-0-2108",
+     "g-1e-8-0-2108"
+    ],
+    "pickle.unit": [
+     "h-1e-8-0-2108",
+     "g-1e-8-0-2108"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 568,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-20299",
+   "unit_07": "g-1e-8-1-20299",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.1b48b5a737e1ep-61",
+    "-0x1.1b48b5a737e1ep-61"
+   ],
+   "total_abserr": [
+    "0x1.19c0802e881e3p-89",
+    "0x1.19c0802e881e3p-89"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-20299",
+     "g-1e-8-1-20299"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-20299",
+     "g-1e-8-1-20299"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 0,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-35136",
+   "unit_07": "g-1e-8-1-35136",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.ade7355206660p-55",
+    "-0x1.ade7355206660p-55"
+   ],
+   "total_abserr": [
+    "0x1.40f0607ce10e0p-81",
+    "0x1.40f0607ce10e0p-81"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-35136",
+     "g-1e-8-1-35136"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-35136",
+     "g-1e-8-1-35136"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 408,
+    "n_route_differs": 2,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-35446",
+   "unit_07": "g-1e-8-1-35446",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.0893a8ee5e978p-61",
+    "0x1.0893a8ee5e978p-61"
+   ],
+   "total_abserr": [
+    "0x1.1df7a220f1121p-87",
+    "0x1.1df7a220f1121p-87"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-35446",
+     "g-1e-8-1-35446"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-35446",
+     "g-1e-8-1-35446"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 842,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-35480",
+   "unit_07": "g-1e-8-1-35480",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.91512a316e134p-69",
+    "0x1.91512a316e134p-69"
+   ],
+   "total_abserr": [
+    "0x1.527cc09b64098p-95",
+    "0x1.527cc09b64098p-95"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-35480",
+     "g-1e-8-1-35480"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-35480",
+     "g-1e-8-1-35480"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 496,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-37676",
+   "unit_07": "g-1e-8-1-37676",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.355740d66ddb4p-72",
+    "-0x1.355740d66ddb4p-72"
+   ],
+   "total_abserr": [
+    "0x1.a87f3141adca9p-99",
+    "0x1.a87f3141adca9p-99"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-37676",
+     "g-1e-8-1-37676"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-37676",
+     "g-1e-8-1-37676"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 954,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-34781",
+   "unit_07": "g-1e-8-1-34781",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.7b83c5a7dc9e4p-75",
+    "-0x1.7b83c5a7dc9e4p-75"
+   ],
+   "total_abserr": [
+    "0x1.a993054b7eceap-101",
+    "0x1.a993054b7eceap-101"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-34781",
+     "g-1e-8-1-34781"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-34781",
+     "g-1e-8-1-34781"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1154,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-2177",
+   "unit_07": "g-1e-8-1-2177",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.be4fa79e5ed10p-87",
+    "0x1.be4fa79e5ed10p-87"
+   ],
+   "total_abserr": [
+    "0x1.6bf5de8ab1f5ap-107",
+    "0x1.6bf5de8ab1f5ap-107"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call",
+     "harness",
+     "location"
+    ],
+    "n_differing": {
+     "call": 118,
+     "harness": 2,
+     "location": 2
+    },
+    "first_differing": {
+     "call": [
+      "data.analytic_06h.h.abserr.hex",
+      "data.analytic_06h.h.abserr.repr",
+      "data.other_calls[10].E_share.resolution.hex",
+      "data.other_calls[10].E_share.resolution.repr",
+      "data.other_calls[10].E_unwidened.hex",
+      "data.other_calls[10].E_unwidened.repr",
+      "data.other_calls[10].abserr.hex",
+      "data.other_calls[10].abserr.repr"
+     ],
+     "harness": [
+      "data.analytic_06h.parent_counterfactual.abserr.hex",
+      "data.analytic_06h.parent_counterfactual.abserr.repr"
+     ],
+     "location": [
+      "data.calls[0].guard_07.location_skipped_phases",
+      "pickle.guard_07[0].location_skipped_phases"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-2177",
+     "g-1e-8-1-2177"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-2177",
+     "g-1e-8-1-2177"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1152,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-2158",
+   "unit_07": "g-1e-8-1-2158",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.fc9dd86b5d7f6p-84",
+    "-0x1.fc9dd86b5d7f6p-84"
+   ],
+   "total_abserr": [
+    "0x1.61d5921e279f4p-108",
+    "0x1.5e62bbfd0b8f2p-108"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-2158",
+     "g-1e-8-1-2158"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-2158",
+     "g-1e-8-1-2158"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1064,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-1-14543",
+   "unit_07": "g-1e-8-1-14543",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.d8ffeca337941p-78",
+    "-0x1.d8ffeca337941p-78"
+   ],
+   "total_abserr": [
+    "0x1.4f009c3d29cf4p-104",
+    "0x1.4f009c3d29cf4p-104"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-1-14543",
+     "g-1e-8-1-14543"
+    ],
+    "pickle.unit": [
+     "h-1e-8-1-14543",
+     "g-1e-8-1-14543"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 744,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-2-1391",
+   "unit_07": "g-1e-8-2-1391",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.5d205d84d5560p-66",
+    "-0x1.5d205d84d5560p-66"
+   ],
+   "total_abserr": [
+    "0x1.551efd7ae7150p-90",
+    "0x1.551efd7ae7150p-90"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-2-1391",
+     "g-1e-8-2-1391"
+    ],
+    "pickle.unit": [
+     "h-1e-8-2-1391",
+     "g-1e-8-2-1391"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 496,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-2-1626",
+   "unit_07": "g-1e-8-2-1626",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.676b24653e996p-75",
+    "-0x1.676b24653e996p-75"
+   ],
+   "total_abserr": [
+    "0x1.4cd50fcf658a2p-93",
+    "0x1.4cd50fcf658a2p-93"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "location"
+    ],
+    "n_differing": {
+     "location": 2
+    },
+    "first_differing": {
+     "location": [
+      "data.calls[0].guard_07.location_skipped_phases",
+      "pickle.guard_07[0].location_skipped_phases"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-2-1626",
+     "g-1e-8-2-1626"
+    ],
+    "pickle.unit": [
+     "h-1e-8-2-1626",
+     "g-1e-8-2-1626"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 648,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-2-13642",
+   "unit_07": "g-1e-8-2-13642",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.f404cc8941810p-87",
+    "0x1.f404cc8941810p-87"
+   ],
+   "total_abserr": [
+    "0x1.e0fe99eddd367p-102",
+    "0x1.e0fe99eddd367p-102"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "location"
+    ],
+    "n_differing": {
+     "location": 2
+    },
+    "first_differing": {
+     "location": [
+      "data.calls[0].guard_07.location_skipped_phases",
+      "pickle.guard_07[0].location_skipped_phases"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-2-13642",
+     "g-1e-8-2-13642"
+    ],
+    "pickle.unit": [
+     "h-1e-8-2-13642",
+     "g-1e-8-2-13642"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 672,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-2-21692",
+   "unit_07": "g-1e-8-2-21692",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.299bbf3c69f85p-73",
+    "-0x1.299bbf3c69f85p-73"
+   ],
+   "total_abserr": [
+    "0x1.1f35c6aa7842ap-79",
+    "0x1.1f35c6aa7842ap-79"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-2-21692",
+     "g-1e-8-2-21692"
+    ],
+    "pickle.unit": [
+     "h-1e-8-2-21692",
+     "g-1e-8-2-21692"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 344,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-2-21897",
+   "unit_07": "g-1e-8-2-21897",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.16dfe9fa871b4p-79",
+    "-0x1.16dfe9fa871b4p-79"
+   ],
+   "total_abserr": [
+    "0x1.d94569d3fef27p-92",
+    "0x1.d94569d3fef27p-92"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-2-21897",
+     "g-1e-8-2-21897"
+    ],
+    "pickle.unit": [
+     "h-1e-8-2-21897",
+     "g-1e-8-2-21897"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 988,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 9
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-2-34906",
+   "unit_07": "g-1e-8-2-34906",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.02dbcb5d14b69p-101",
+    "-0x1.02dbcb5d14b69p-101"
+   ],
+   "total_abserr": [
+    "0x1.535b56075ef6fp-113",
+    "0x1.535b56074abccp-113"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-2-34906",
+     "g-1e-8-2-34906"
+    ],
+    "pickle.unit": [
+     "h-1e-8-2-34906",
+     "g-1e-8-2-34906"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1324,
+    "n_route_differs": 2,
+    "n_lu_differs": 2,
+    "n_partition": 9
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-2-39047",
+   "unit_07": "g-1e-8-2-39047",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.442e53e20442ap-103",
+    "-0x1.442e53e20442ap-103"
+   ],
+   "total_abserr": [
+    "0x1.41b74de69048ep-113",
+    "0x1.41b74de69048ep-113"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-2-39047",
+     "g-1e-8-2-39047"
+    ],
+    "pickle.unit": [
+     "h-1e-8-2-39047",
+     "g-1e-8-2-39047"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1228,
+    "n_route_differs": 0,
+    "n_lu_differs": 2,
+    "n_partition": 9
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-34272",
+   "unit_07": "g-1e-8-3-34272",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.4cfc92014af94p-65",
+    "0x1.4cfc92014af94p-65"
+   ],
+   "total_abserr": [
+    "0x1.3b3f1a17831bdp-90",
+    "0x1.3b3f1a17831bdp-90"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-34272",
+     "g-1e-8-3-34272"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-34272",
+     "g-1e-8-3-34272"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 480,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-34298",
+   "unit_07": "g-1e-8-3-34298",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.b9c336001f980p-61",
+    "-0x1.b9c336001f980p-61"
+   ],
+   "total_abserr": [
+    "0x1.843cdbb017780p-84",
+    "0x1.843cdbb017780p-84"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-34298",
+     "g-1e-8-3-34298"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-34298",
+     "g-1e-8-3-34298"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 714,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 7
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-37338",
+   "unit_07": "g-1e-8-3-37338",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.9dc379031921bp-68",
+    "-0x1.9dc379031921bp-68"
+   ],
+   "total_abserr": [
+    "0x1.607fb71b6f62ap-95",
+    "0x1.607fb71b6f62ap-95"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-37338",
+     "g-1e-8-3-37338"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-37338",
+     "g-1e-8-3-37338"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 816,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-37323",
+   "unit_07": "g-1e-8-3-37323",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.3e83c96085df3p-67",
+    "0x1.3e83c96085dfcp-67"
+   ],
+   "total_abserr": [
+    "0x1.03603a62e4cc0p-93",
+    "0x1.036f557ebfdb0p-93"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-37323",
+     "g-1e-8-3-37323"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-37323",
+     "g-1e-8-3-37323"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 696,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-34739",
+   "unit_07": "g-1e-8-3-34739",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.79d10f89faad9p-69",
+    "0x1.79d10f89faad9p-69"
+   ],
+   "total_abserr": [
+    "0x1.1e422f59d9bc7p-95",
+    "0x1.1e422f59d9bc7p-95"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-34739",
+     "g-1e-8-3-34739"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-34739",
+     "g-1e-8-3-34739"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 704,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-14505",
+   "unit_07": "g-1e-8-3-14505",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.8b249f4bef089p-82",
+    "-0x1.8b249f4bef089p-82"
+   ],
+   "total_abserr": [
+    "0x1.4da4e83276690p-108",
+    "0x1.4da4e7b3d24b2p-108"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-14505",
+     "g-1e-8-3-14505"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-14505",
+     "g-1e-8-3-14505"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 944,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-1264",
+   "unit_07": "g-1e-8-3-1264",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.da6f7eefdd749p-64",
+    "0x1.da6f7eefdd749p-64"
+   ],
+   "total_abserr": [
+    "0x1.1f92856fb957cp-82",
+    "0x1.1f92856fb957cp-82"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-1264",
+     "g-1e-8-3-1264"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-1264",
+     "g-1e-8-3-1264"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 320,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-13600",
+   "unit_07": "g-1e-8-3-13600",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.28c57fab7e881p-77",
+    "0x1.28c57fab7e881p-77"
+   ],
+   "total_abserr": [
+    "0x1.d7fedb1242e7cp-97",
+    "0x1.d7fedb1242e7cp-97"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-13600",
+     "g-1e-8-3-13600"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-13600",
+     "g-1e-8-3-13600"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 760,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-13606",
+   "unit_07": "g-1e-8-3-13606",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.f11208f9bef6ep-80",
+    "-0x1.f11208f9bef6ep-80"
+   ],
+   "total_abserr": [
+    "0x1.c8ac8be681546p-99",
+    "0x1.c8ac8be681546p-99"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-13606",
+     "g-1e-8-3-13606"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-13606",
+     "g-1e-8-3-13606"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 888,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-13830",
+   "unit_07": "g-1e-8-3-13830",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.0315fb205387dp-83",
+    "0x1.0315fb205387dp-83"
+   ],
+   "total_abserr": [
+    "0x1.0d12f769ad7f8p-102",
+    "0x1.0d12f769ad7f8p-102"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": true
+   },
+   "whole": {
+    "equal": false,
+    "categories": [
+     "call",
+     "harness"
+    ],
+    "n_differing": {
+     "call": 173,
+     "harness": 10
+    },
+    "first_differing": {
+     "call": [
+      "data.analytic_06h.h.abserr.hex",
+      "data.analytic_06h.h.abserr.repr",
+      "data.analytic_06h.h.value.hex",
+      "data.analytic_06h.h.value.repr",
+      "data.other_calls[0].E_share.resolution.hex",
+      "data.other_calls[0].E_share.resolution.repr",
+      "data.other_calls[0].abserr.hex",
+      "data.other_calls[0].abserr.repr"
+     ],
+     "harness": [
+      "data.analytic_06h.parent_counterfactual.abserr.hex",
+      "data.analytic_06h.parent_counterfactual.abserr.repr",
+      "data.analytic_06h.parent_counterfactual.value.hex",
+      "data.analytic_06h.parent_counterfactual.value.repr",
+      "data.other_calls[0].declared_06h.request.hex",
+      "data.other_calls[0].declared_06h.request.repr",
+      "data.other_calls[1].declared_06h.request.hex",
+      "data.other_calls[1].declared_06h.request.repr"
+     ]
+    }
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-13830",
+     "g-1e-8-3-13830"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-13830",
+     "g-1e-8-3-13830"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 904,
+    "n_route_differs": 0,
+    "n_lu_differs": 6,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-14589",
+   "unit_07": "g-1e-8-3-14589",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "0x1.f9de05c5d7cd1p-88",
+    "0x1.f9de05c5d7cd1p-88"
+   ],
+   "total_abserr": [
+    "0x1.48bbac82fe267p-108",
+    "0x1.48bbac82fe267p-108"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": true,
+    "B": true
+   },
+   "whole": {
+    "equal": true,
+    "categories": [],
+    "n_differing": {},
+    "first_differing": {}
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-14589",
+     "g-1e-8-3-14589"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-14589",
+     "g-1e-8-3-14589"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 608,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  },
+  {
+   "unit": "h-1e-8-3-2324",
+   "unit_07": "g-1e-8-3-2324",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.172002b9a4084p-89",
+    "-0x1.172002b9a4084p-89"
+   ],
+   "total_abserr": [
+    "0x1.ee154c9d14673p-109",
+    "0x1.ee154c9d14673p-109"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": true,
+   "all_w1": {
+    "A": false,
+    "B": false
+   },
+   "ok": true,
+   "normalised": {
+    "data.unit": [
+     "h-1e-8-3-2324",
+     "g-1e-8-3-2324"
+    ],
+    "pickle.unit": [
+     "h-1e-8-3-2324",
+     "g-1e-8-3-2324"
+    ],
+    "data.tree": [
+     "h",
+     "g"
+    ]
+   },
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 856,
+    "n_route_differs": 0,
+    "n_lu_differs": 4,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  }
+ ]
+}

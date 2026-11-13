@@ -1,0 +1,41 @@
+{
+ "tree": "h",
+ "name": "tree-1e-8-k1_102",
+ "units": [
+  {
+   "uid": "h-1e-8-1-35480",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "1-35480",
+   "names05": null,
+   "shard": 1,
+   "serial": 35480,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-8-1-2174",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "1-2174",
+   "names05": null,
+   "shard": 1,
+   "serial": 2174,
+   "k_key": "1:102",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/smoke/h_off/tree-1e-8-k1_102",
+ "emit_fd": null,
+ "emit_file": "state/smoke/h_off/tree-1e-8-k1_102/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null,
+ "instrument_07a": false
+}

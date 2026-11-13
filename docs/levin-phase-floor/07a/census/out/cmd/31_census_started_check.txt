@@ -1,0 +1,57 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/status.json\;\ echo\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744\ \|\ head\ -30\;\ ps\ -o\ pid\,ppid\,etime\,command\ -p\ 90763\;\ pgrep\ -P\ 90763\;\ head\ -c\ 400\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/checkpoint.jsonl\;\ echo\;\ head\ -1\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/checkpoint.jsonl\ \|\ python3\ -c\ \'import\ json\,sys\;\ r=json.loads\(sys.stdin.read\(\)\)\;\ d=r\[\"data\"\]\;\ print\(r\[\"unit\"\]\,\ d\[\"status\"\]\,\ d\[\"wall_s\"\]\,\ d\[\"tree_head\"\]\,\ repr\(d\[\"tree_status_short\"\]\)\,\ d\[\"result\"\]\[\"total\"\]\[\"hex\"\]\,\ d\[\"instrument_07a\"\]\)\'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T13:28:45Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-12T13:28:45+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 90766,
+  "stage": "20 units recorded; last h-1e-7-0-10050 done",
+  "state": "running",
+  "units_done": 23,
+  "units_total": 18560
+}
+
+total 2160
+drwxr-xr-x  55 ds283 staff   1760 Nov 12 13:28 .
+drwxr-xr-x 111 ds283 staff   3552 Nov 12 13:27 ..
+-rw-r--r--   1 ds283 staff 170602 Nov 12 13:28 checkpoint.jsonl
+-rw-r--r--   1 ds283 staff  11410 Nov 12 13:28 events_1e-7-k0_101.jsonl
+-rw-r--r--   1 ds283 staff   7894 Nov 12 13:28 events_1e-7-k0_202.jsonl
+-rw-r--r--   1 ds283 staff  11414 Nov 12 13:28 events_1e-7-k1_102.jsonl
+-rw-r--r--   1 ds283 staff   9581 Nov 12 13:28 events_1e-7-k1_301.jsonl
+-rw-r--r--   1 ds283 staff  13071 Nov 12 13:28 events_1e-7-k2_2.jsonl
+-rw-r--r--   1 ds283 staff  11283 Nov 12 13:28 events_1e-7-k2_302.jsonl
+-rw-r--r--   1 ds283 staff   4327 Nov 12 13:27 manifest.json
+-rw-r--r--   1 ds283 staff   8118 Nov 12 13:28 regions_1e-7-k0_101.pkl
+-rw-r--r--   1 ds283 staff   3244 Nov 12 13:28 regions_1e-7-k0_202.pkl
+-rw-r--r--   1 ds283 staff   8112 Nov 12 13:28 regions_1e-7-k1_102.pkl
+-rw-r--r--   1 ds283 staff   4873 Nov 12 13:28 regions_1e-7-k1_301.pkl
+-rw-r--r--   1 ds283 staff   8106 Nov 12 13:28 regions_1e-7-k2_2.pkl
+-rw-r--r--   1 ds283 staff   6486 Nov 12 13:28 regions_1e-7-k2_302.pkl
+-rw-r--r--   1 ds283 staff 278446 Nov 12 13:27 spec_1e-7-k0_101.json
+-rw-r--r--   1 ds283 staff 278329 Nov 12 13:27 spec_1e-7-k0_202.json
+-rw-r--r--   1 ds283 staff 278357 Nov 12 13:27 spec_1e-7-k1_102.json
+-rw-r--r--   1 ds283 staff 278583 Nov 12 13:27 spec_1e-7-k1_301.json
+-rw-r--r--   1 ds283 staff 275733 Nov 12 13:27 spec_1e-7-k2_2.json
+-rw-r--r--   1 ds283 staff 278016 Nov 12 13:27 spec_1e-7-k2_302.json
+-rw-r--r--   1 ds283 staff    306 Nov 12 13:28 status.json
+-rw-r--r--   1 ds283 staff      0 Nov 12 13:27 stderr.log
+-rw-r--r--   1 ds283 staff   2354 Nov 12 13:27 stdout.log
+-rw-r--r--   1 ds283 staff    480 Nov 12 13:27 worker_1e-7-k0_101_context.json
+-rw-r--r--   1 ds283 staff   6717 Nov 12 13:27 worker_1e-7-k0_101_hello.json
+-rw-r--r--   1 ds283 staff    149 Nov 12 13:27 worker_1e-7-k0_101_levin_logging.json
+-rw-r--r--   1 ds283 staff    179 Nov 12 13:27 worker_1e-7-k0_101_store.json
+  PID  PPID ELAPSED COMMAND
+90763     1   01:01 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/run_census.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744 --projection-s 23353.0; exit $?
+90766
+{"unit": "h-1e-7-2-32862", "recorded": "2026-11-12T13:28:43+00:00", "script_sha256": "7adf368293ddef5250494ea792ab152bcd3cb2e168158228abc51239ac30d417", "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff", "git_dirty": false, "data": {"unit": "h-1e-7-2-32862", "tree": "h", "rtol": "1e-7", "row": "2-32862", "names05": null, "shard": 2, "serial": 32862, "k_key": "2:2", "status": "done", "error": 
+h-1e-7-2-32862 done 0.08099116710945964 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 '' -0x1.8ce47fb3c8b65p-82 True
+# ----
+# end 2026-11-12T13:28:45Z
+# exit 0

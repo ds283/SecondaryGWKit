@@ -1,0 +1,57 @@
+{
+ "name": "blocks2",
+ "workers": [
+  {
+   "name": "blocks2-h",
+   "tree": "h",
+   "units": [
+    {
+     "uid": "h-1e-7-0-10129",
+     "tree": "h",
+     "rtol": "1e-7",
+     "row": "0-10129",
+     "names05": null,
+     "shard": 0,
+     "serial": 10129,
+     "k_key": "0:101",
+     "budget": null,
+     "scan": false,
+     "w3": false,
+     "capture": [
+      [
+       19,
+       "analytic J4"
+      ],
+      [
+       20,
+       "analytic Y4"
+      ]
+     ]
+    },
+    {
+     "uid": "h-1e-7-1-20022",
+     "tree": "h",
+     "rtol": "1e-7",
+     "row": "1-20022",
+     "names05": null,
+     "shard": 1,
+     "serial": 20022,
+     "k_key": "1:2",
+     "budget": null,
+     "scan": false,
+     "w3": false,
+     "capture": [
+      [
+       19,
+       "analytic J4"
+      ],
+      [
+       20,
+       "analytic Y4"
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}

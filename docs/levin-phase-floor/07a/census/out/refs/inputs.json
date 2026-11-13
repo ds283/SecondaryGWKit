@@ -1,0 +1,46 @@
+{
+ "header": [
+  "# levin-phase-floor 07a: the reference calls, one file each",
+  "# written 2026-11-12T20:34:49Z on mps026298.phys.susx.ac.uk",
+  "# script refs_slice_07a.py sha256 def83d40899fd4908bcb3cfaf7a6b50d4c68cb8f99aa3c8d689bfcdd0887d024",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/captures_h.json sha256 38bc850c6e63bcf5f720516e9a8abe4473a1a101efc272d88d8d5459c0ade845",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/check_captures_h.json sha256 d42b2255af3c45963c716ee713fd069e05d1e9e0f70171e65f9f6df64b77d7cb",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/integrands.json sha256 f211447c35b62916c29773a63d9e4e33498cde16dec9b5eb50cf63b368b744bb"
+ ],
+ "inputs": {
+  "r1-34599-1e-7-2": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/inputs/r1-34599-1e-7-2.pkl",
+   "sha256": "cbfde19a5bb43019aa49876ab6b34ea4489d4bcfef522c232020cd5c31cb7f70",
+   "bytes": 1350827,
+   "unit": "h-1e-7-1-34599",
+   "index": 2,
+   "rtol": "1e-7"
+  },
+  "r1-34599-1e-7-3": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/inputs/r1-34599-1e-7-3.pkl",
+   "sha256": "d7ef669f873c05b4b34880426bee65e219d2aa39f682112ebc5417457537dcb1",
+   "bytes": 1350827,
+   "unit": "h-1e-7-1-34599",
+   "index": 3,
+   "rtol": "1e-7"
+  },
+  "r3-678-1e-7-2": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/inputs/r3-678-1e-7-2.pkl",
+   "sha256": "125d1d1b794b9efe8fa11e0d7efaf64afad85325d2150365249c30354488ad4c",
+   "bytes": 1315278,
+   "unit": "h-1e-7-3-678",
+   "index": 2,
+   "rtol": "1e-7"
+  },
+  "r3-678-1e-7-3": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/inputs/r3-678-1e-7-3.pkl",
+   "sha256": "9a6a8279739cf0c4d4a79a1389268b6b01c3f32333882ea25ee2ce6aaa3bacd7",
+   "bytes": 1315278,
+   "unit": "h-1e-7-3-678",
+   "index": 3,
+   "rtol": "1e-7"
+  }
+ }
+}

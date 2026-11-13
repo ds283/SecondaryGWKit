@@ -1,0 +1,21 @@
+2,5c2,6
+< # prompt 07 r29: the replay of R29's located (and R28-changed) calls at g, its check, the four-block check's pass 1 at
+< # p, o and g, its capture spec, pass 2 (the captures), and the block check. Ray-free; at most six worker processes at
+< # once; under the held rehearsal lock; not a registered run. Each stage's output goes to r29/out/; the pipeline stops at
+< # the first failing stage.
+---
+> # prompt 07a r30: R29's run_r29_pipeline.sh (984105f7) for R30: the replay of R30's located rows (and P1's, the w rows,
+> # the block rows and the 49 abserr-only records' rows) at h, its check against R30, the four-block check's capture
+> # spec, pass 2 (the captures), and the block check. Pass 1 (blocks1) ran in session before this, as the pilot.
+> # Ray-free; at most six worker processes at once; under the held rehearsal lock; not a registered run. Each stage's
+> # output goes to rehearsal/out/; the pipeline stops at the first failing stage.
+7c8
+< Z=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29
+---
+> Z=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal
+9c10
+< S=$Z/scripts/capture/replay07_r29.py
+---
+> S=$Z/scripts/capture/replay07a_r30.py
+15d15
+< stage blocks1_run $PY -I -B $S run $Z/state/blocks1_spec.json || exit 3

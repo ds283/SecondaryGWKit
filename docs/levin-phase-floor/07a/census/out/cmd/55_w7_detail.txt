@@ -1,0 +1,55 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w7_detail_07a.py out/scores/w7_detail.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:15:30Z
+# ----
+{
+ "n_moved": 214,
+ "n_violating": 25,
+ "violating_by": {
+  "1e-8|group|G|points={'minimum': 6}": 6,
+  "1e-8|group|G|points={'minimum': 19}": 19
+ },
+ "violating_by_band_k": {
+  "seam|313856.84721559234": 3,
+  "mid|313856.84721559234": 3,
+  "seam|100000.0": 5,
+  "mid|100000.0": 7,
+  "low|100000.0": 7
+ },
+ "moved_by": {
+  "1e-7|G+q+r|False": 29,
+  "1e-8|G|True": 25,
+  "1e-8|G+q+r|False": 159,
+  "1e-8|G|False": 1
+ }
+}
+h-1e-8-0-33814 0 .6391e+16, 5.406e+09), regime G, group G 0.131 0.131 e_h/e_07 1 [40, 39] [6, 6] {'minimum': 6} h [[5, False, None, 2]] 07 [[6, True, 10, 2]] [0, 1]
+h-1e-8-0-33950 0 .6391e+16, 5.406e+09), regime G, group G 0.145 0.145 e_h/e_07 1 [45, 45] [7, 7] {'minimum': 6} h [[5, False, None, 2]] 07 [[6, True, 10, 2]] [0, 1]
+h-1e-8-0-12780 0 .6391e+16, 5.406e+09), regime G, group G 0.136 0.136 e_h/e_07 1 [43, 42] [5, 5] {'minimum': 6} h [[5, False, None, 2]] 07 [[6, True, 10, 2]] [0, 1]
+h-1e-8-0-14051 0 .6391e+16, 5.406e+09), regime G, group G 0.135 0.135 e_h/e_07 1 [46, 45] [7, 7] {'minimum': 6} h [[5, False, None, 2]] 07 [[6, True, 10, 2]] [0, 1]
+h-1e-8-0-2006 0 .6391e+16, 5.406e+09), regime G, group G 0.137 0.137 e_h/e_07 1 [43, 42] [5, 5] {'minimum': 6} h [[5, False, None, 2]] 07 [[6, True, 10, 2]] [0, 1]
+h-1e-8-0-13955 0 .6391e+16, 5.406e+09), regime G, group G 0.128 0.128 e_h/e_07 1 [45, 44] [7, 7] {'minimum': 6} h [[5, False, None, 2]] 07 [[6, True, 13, 2]] [0, 1]
+h-1e-8-3-1232 0 .6391e+16, 1.709e+09), regime G, group G 0.0178 0.0178 e_h/e_07 1 [53, 52] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 19, 2]] [0, 1]
+h-1e-8-3-1269 0 .6391e+16, 1.709e+09), regime G, group G 0.0298 0.0298 e_h/e_07 1 [56, 55] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 19, 2]] [0, 1]
+h-1e-8-3-34127 0 .6391e+16, 1.709e+09), regime G, group G 0.0103 0.0103 e_h/e_07 1 [75, 74] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 24, 2]] [0, 1]
+h-1e-8-3-34218 0 .6391e+16, 1.709e+09), regime G, group G 0.0214 0.0214 e_h/e_07 1 [43, 43] [7, 7] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 10, 2]] [0, 1]
+h-1e-8-3-34264 0 .6391e+16, 1.709e+09), regime G, group G 0.0168 0.0168 e_h/e_07 1 [52, 51] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 17, 2]] [0, 1]
+h-1e-8-3-34331 0 .6391e+16, 1.709e+09), regime G, group G 0.0337 0.0337 e_h/e_07 1 [59, 58] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 19, 2]] [0, 1]
+h-1e-8-3-13615 0 .6391e+16, 1.709e+09), regime G, group G 0.105 0.105 e_h/e_07 1 [43, 43] [6, 6] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 12, 2]] [0, 1]
+h-1e-8-3-13490 0 .6391e+16, 1.709e+09), regime G, group G 0.0737 0.0737 e_h/e_07 1 [42, 42] [6, 6] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 11, 2]] [0, 1]
+h-1e-8-3-13534 0 .6391e+16, 1.709e+09), regime G, group G 0.0104 0.0104 e_h/e_07 1 [76, 75] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 24, 2]] [0, 1]
+h-1e-8-3-38024 0 .6391e+16, 1.709e+09), regime G, group G 0.0549 0.0549 e_h/e_07 1 [41, 41] [7, 7] {'minimum': 19} h [[4, False, None, 2]] 07 [[6, True, 8, 2]] [0, 1]
+h-1e-8-3-14103 0 .6391e+16, 1.709e+09), regime G, group G 0.00664 0.00664 e_h/e_07 1 [74, 73] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 25, 2]] [0, 1]
+h-1e-8-3-38028 0 .6391e+16, 1.709e+09), regime G, group G 0.055 0.055 e_h/e_07 1 [40, 40] [6, 6] {'minimum': 19} h [[4, False, None, 2]] 07 [[6, True, 8, 2]] [0, 1]
+h-1e-8-3-14148 0 .6391e+16, 1.709e+09), regime G, group G 0.0194 0.0194 e_h/e_07 1 [53, 52] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 17, 2]] [0, 1]
+h-1e-8-3-35024 0 .6391e+16, 1.709e+09), regime G, group G 0.0577 0.0577 e_h/e_07 1 [41, 41] [7, 7] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 8, 2]] [0, 1]
+h-1e-8-3-38376 0 .6391e+16, 1.709e+09), regime G, group G 0.105 0.105 e_h/e_07 1 [43, 43] [6, 6] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 12, 2]] [0, 1]
+h-1e-8-3-34857 0 .6391e+16, 1.709e+09), regime G, group G 0.0293 0.0293 e_h/e_07 1 [57, 56] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 19, 2]] [0, 1]
+h-1e-8-3-38378 0 .6391e+16, 1.709e+09), regime G, group G 0.0549 0.0549 e_h/e_07 1 [42, 42] [7, 7] {'minimum': 19} h [[4, False, None, 2]] 07 [[6, True, 8, 2]] [0, 1]
+h-1e-8-3-35036 0 .6391e+16, 1.709e+09), regime G, group G 0.0195 0.0195 e_h/e_07 1 [53, 52] [8, 8] {'minimum': 19} h [[5, False, None, 2]] 07 [[6, True, 17, 2]] [0, 1]
+h-1e-8-3-35040 0 .6391e+16, 1.709e+09), regime G, group G 0.042 0.042 e_h/e_07 1 [40, 40] [7, 7] {'minimum': 19} h [[4, False, None, 2]] 07 [[6, True, 8, 2]] [0, 1]
+wrote out/scores/w7_detail.json sha256 53093decfddd8e6f490689165e569450b129cb858667c0b3a2bc74113a9ad284
+# ----
+# end 2026-11-12T20:15:33Z
+# exit 0

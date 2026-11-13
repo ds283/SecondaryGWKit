@@ -1,0 +1,93 @@
+{
+ "header": [
+  "# levin-phase-floor 07a: the census's cost projection",
+  "# written 2026-11-12T13:16:21Z on mps026298.phys.susx.ac.uk",
+  "# script census_projection_07a.py sha256 3835ee495d1636d2edce0db269121b7848cdcb42ce41815ea235e45fd569e31f",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137/checkpoint.jsonl sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/docs/levin-phase-floor/06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699",
+  "# input state/k0/h/units.jsonl sha256 195df102f46fda10ea7e65d983843a55c299694e72d55b313f70a487c1f21c0c",
+  "# input state/k0/parent/units.jsonl sha256 35f368b83c8fe6f7567f72be66536c0fb4f12c4d1a16aecde7c6b821b39d4426"
+ ],
+ "wall_07_s": 22708.0,
+ "n_rows_720": 720,
+ "classes": {
+  "1e-7|720=False": {
+   "h": {
+    "n": 41,
+    "time_k0": 385.6152198705822,
+    "time_07": 375.9465472539887,
+    "rho_time": 1.0257182109723204,
+    "rho_wall_s": 1.0280113593642808
+   },
+   "parent": {
+    "n": 41,
+    "time_k0": 382.6132449163124,
+    "time_07": 375.9465472539887,
+    "rho_time": 1.017733099854272,
+    "rho_wall_s": 1.0193516871557233
+   }
+  },
+  "1e-7|720=True": {
+   "h": {
+    "n": 9,
+    "time_k0": 113.32455266546458,
+    "time_07": 107.86749057285488,
+    "rho_time": 1.0505904240807749,
+    "rho_wall_s": 1.0537590413499403
+   },
+   "parent": {
+    "n": 9,
+    "time_k0": 109.09975900361314,
+    "time_07": 107.86749057285488,
+    "rho_time": 1.011423909318869,
+    "rho_wall_s": 1.0117198475851978
+   }
+  },
+  "1e-8|720=False": {
+   "h": {
+    "n": 41,
+    "time_k0": 318.196911635343,
+    "time_07": 309.1502043888904,
+    "rho_time": 1.0292631449632568,
+    "rho_wall_s": 1.0248117692212924
+   },
+   "parent": {
+    "n": 41,
+    "time_k0": 310.13240497140214,
+    "time_07": 309.1502043888904,
+    "rho_time": 1.0031770982796318,
+    "rho_wall_s": 1.0025432527499143
+   }
+  },
+  "1e-8|720=True": {
+   "h": {
+    "n": 9,
+    "time_k0": 134.46924016438425,
+    "time_07": 131.1981774577871,
+    "rho_time": 1.0249322267273844,
+    "rho_wall_s": 1.022368536399671
+   },
+   "parent": {
+    "n": 9,
+    "time_k0": 131.3738186233677,
+    "time_07": 131.1981774577871,
+    "rho_time": 1.001338746993167,
+    "rho_wall_s": 1.0006937021129008
+   }
+  }
+ },
+ "projection_h_s": 23352.84827064661,
+ "ratio_h": 1.0283974049078126,
+ "projection_parent_s": 22946.93980635379,
+ "ratio_parent": 1.010522274368231,
+ "k0_stage_walls_s": {
+  "07_k0_g": 359.0820007324219,
+  "parent": 361.6332538127899,
+  "h": 362.6280438899994
+ },
+ "projection_from_k0_stage_wall_h_s": 22932.24835513344,
+ "sum_time_07_s": 87455.89758073771,
+ "sum_rebuild_07_s": 2016.9763357480988
+}

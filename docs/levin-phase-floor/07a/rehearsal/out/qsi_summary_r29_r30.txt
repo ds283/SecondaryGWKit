@@ -1,0 +1,245 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/qsi_summary_r29_r30.py sha256 cc7bc729c26b9e4764ef37b3e4b9ea807c0b626e1899f15f91b5ec2badd24312
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/qsi_rows_r29_r30.csv sha256 1be0c3fd4d03ff1da95d7b51713b12c2e5570168c9af2c23d8bc6b5097b55a9a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/qsi_records_r29_r30.csv sha256 e24ea2f1363ef061318b10f61879e0c4faf8c61093bd82bc30fc5dfa40d4aa7c
+# tree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+moved rows: 380; Levin records differing: 1234
+moved rows by (total moved, total_abserr moved, analytic_rad moved):
+  (False, False, False): 163
+  (False, False, True): 157
+  (False, True, False): 28
+  (False, True, True): 7
+  (True, True, False): 21
+  (True, True, True): 4
+rows whose total moved: 25
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '191807016.520263') |dT|/e29 4.703e-02 |dT|/e30 7.447e-02 S3 2.883e-02 e29 0x1.c27555f815dc0p-72 e30 0x1.1c7be807656eep-72 reg 69->73 depth 10->10 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('1000000.0', '1000000.0', '1000000.0', '20992322.666081365') |dT|/e29 1.779e-02 |dT|/e30 1.833e-02 S3 9.026e-03 e29 0x1.0c54851934375p-76 e30 0x1.0473ec2039d42p-76 reg 136->203 depth 11->15 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '6944780.034414906') |dT|/e29 7.477e-03 |dT|/e30 7.688e-03 S3 3.791e-03 e29 0x1.2d305bc86283fp-73 e30 0x1.24f3cb862880ep-73 reg 512->511 depth 16->16 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('100000.0', '1000000.0', '1000000.0', '1313.8415928578513') |dT|/e29 5.653e-03 |dT|/e30 6.389e-03 S3 2.999e-03 e29 0x1.d39ea37139924p-87 e30 0x1.9dc5dc785378cp-87 reg 357->81 depth 17->9 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '3994454.6549974815') |dT|/e29 5.570e-03 |dT|/e30 5.570e-03 S3 2.785e-03 e29 0x1.dd249f22a0bd4p-72 e30 0x1.dd25250a67036p-72 reg 245->245 depth 14->14 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('100000.0', '100000.0', '100000.0', '5266935.440690548') |dT|/e29 1.941e-03 |dT|/e30 1.927e-03 S3 9.672e-04 e29 0x1.10f783b56271ep-68 e30 0x1.12f4fdd435fbcp-68 reg 178->176 depth 13->13 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '1008016144.4251784') |dT|/e29 1.465e-03 |dT|/e30 1.488e-03 S3 7.382e-04 e29 0x1.3aad4c40f078fp-68 e30 0x1.35ee5850d01edp-68 reg 34->35 depth 7->7 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('1000000.0', '100000.0', '1000000.0', '579784350.3262237') |dT|/e29 8.995e-04 |dT|/e30 8.808e-04 S3 4.450e-04 e29 0x1.69cbb56465c3bp-72 e30 0x1.7170e1c5631a4p-72 reg 161->162 depth 9->9 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '764481514.1086781') |dT|/e29 8.560e-04 |dT|/e30 8.557e-04 S3 4.279e-04 e29 0x1.6c32910f33d2dp-69 e30 0x1.6c525b9603b75p-69 reg 27->23 depth 6->6 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('100000.0', '1000000.0', '1000000.0', '1742432.6346774828') |dT|/e29 6.895e-04 |dT|/e30 6.573e-04 S3 3.365e-04 e29 0x1.186eb06862fd5p-76 e30 0x1.2623378e4002ap-76 reg 295->291 depth 13->13 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '331553.02818648185') |dT|/e29 4.773e-04 |dT|/e30 4.767e-04 S3 2.385e-04 e29 0x1.2c5dce50d4514p-75 e30 0x1.2cbcd14ab9787p-75 reg 517->515 depth 15->15 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '764481514.1086781') |dT|/e29 2.741e-04 |dT|/e30 2.723e-04 S3 1.366e-04 e29 0x1.118c8dd38d815p-66 e30 0x1.136b9ddea2aeep-66 reg 51->49 depth 7->7 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('1000000.0', '1000000.0', '1000000.0', '20871.228010574065') |dT|/e29 1.831e-04 |dT|/e30 1.887e-04 S3 9.292e-05 e29 0x1.5d77b823c8116p-87 e30 0x1.5305fccf39390p-87 reg 401->402 depth 19->19 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('100000.0', '1000000.0', '1000000.0', '2297505.163844306') |dT|/e29 4.399e-05 |dT|/e30 4.427e-05 S3 2.206e-05 e29 0x1.87d46ffc48b86p-76 e30 0x1.85520919ef3c3p-76 reg 266->268 depth 15->15 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('1000000.0', '1000000.0', '1000000.0', '755.6870974333904') |dT|/e29 1.887e-05 |dT|/e30 1.894e-05 S3 9.452e-06 e29 0x1.4d30fd50bc65dp-92 e30 0x1.4c0c801795e99p-92 reg 232->234 depth 15->15 conv True->True grp sp/wp/gr 29 1/16/0 30 1/16/0
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '249.99999999999994') |dT|/e29 7.347e-06 |dT|/e30 7.342e-06 S3 3.672e-06 e29 0x1.04d591a858d75p-87 e30 0x1.0501b36de7f75p-87 reg 429->431 depth 16->16 conv True->True grp sp/wp/gr 29 1/11/0 30 1/11/0
+  ('1000000.0', '1000000.0', '1000000.0', '110322346.5975613') |dT|/e29 4.332e-06 |dT|/e30 4.331e-06 S3 2.166e-06 e29 0x1.1ca3033bd5741p-76 e30 0x1.1cbcf60e4942dp-76 reg 230->228 depth 13->13 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('1000000.0', '1000000.0', '1000000.0', '3029402.6138165654') |dT|/e29 3.453e-06 |dT|/e30 3.454e-06 S3 1.727e-06 e29 0x1.b7f2b99092c66p-79 e30 0x1.b7ccb5c47f4d7p-79 reg 384->382 depth 15->15 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('100000.0', '100000.0', '100000.0', '20992322.666081365') |dT|/e29 4.502e-07 |dT|/e30 4.502e-07 S3 2.251e-07 e29 0x1.92793fe4883e2p-66 e30 0x1.92794c2c16279p-66 reg 109->109 depth 10->10 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('1000000.0', '1000000.0', '1000000.0', '331553.02818648185') |dT|/e29 2.622e-08 |dT|/e30 2.622e-08 S3 1.311e-08 e29 0x1.598acc06ef64ap-83 e30 0x1.598accd55e255p-83 reg 72->72 depth 9->9 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('1000000.0', '1000000.0', '1000000.0', '145466835.24567592') |dT|/e29 1.984e-08 |dT|/e30 1.984e-08 S3 9.920e-09 e29 0x1.2066a9e7f6796p-76 e30 0x1.2066a9823adabp-76 reg 39->39 depth 7->7 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('100000.0', '1000000.0', '1000000.0', '27520.004604907732') |dT|/e29 5.973e-09 |dT|/e30 5.973e-09 S3 2.987e-09 e29 0x1.3f506f2033918p-82 e30 0x1.3f506f0dcca42p-82 reg 52->52 depth 7->7 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '579784350.3262237') |dT|/e29 4.779e-09 |dT|/e30 4.779e-09 S3 2.390e-09 e29 0x1.8f1204ddcea3ep-73 e30 0x1.8f1204a5d7901p-73 reg 46->46 depth 8->8 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '27679675.39550536') |dT|/e29 1.844e-09 |dT|/e30 1.844e-09 S3 9.219e-10 e29 0x1.029dd7efe4c69p-76 e30 0x1.029dd7f239759p-76 reg 155->155 depth 12->12 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '48124030.34924725') |dT|/e29 1.789e-09 |dT|/e30 1.789e-09 S3 8.947e-10 e29 0x1.0a7b38365d344p-70 e30 0x1.0a7b383e8caf9p-70 reg 60->60 depth 11->11 conv True->True grp sp/wp/gr 29 0/0/0 30 0/0/0
+rows whose total_abserr moved with total bit-identical: 35
+rows whose regions or maximum depth changed:
+  ('100000.0', '100000.0', '100000.0', '5266935.440690548') reg 178->176 depth 13->13 total moved True |dT|/e29 1.941e-03 conv True->True
+  ('100000.0', '316227.7660168379', '316227.7660168379', '331553.02818648185') reg 517->515 depth 15->15 total moved True |dT|/e29 4.773e-04 conv True->True
+  ('100000.0', '1000000.0', '1000000.0', '1313.8415928578513') reg 357->81 depth 17->9 total moved True |dT|/e29 5.653e-03 conv True->True
+  ('100000.0', '1000000.0', '1000000.0', '1742432.6346774828') reg 295->291 depth 13->13 total moved True |dT|/e29 6.895e-04 conv True->True
+  ('100000.0', '1000000.0', '1000000.0', '2297505.163844306') reg 266->268 depth 15->15 total moved True |dT|/e29 4.399e-05 conv True->True
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '249.99999999999994') reg 429->431 depth 16->16 total moved True |dT|/e29 7.347e-06 conv True->True
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '6944780.034414906') reg 512->511 depth 16->16 total moved True |dT|/e29 7.477e-03 conv True->True
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '191807016.520263') reg 69->73 depth 10->10 total moved True |dT|/e29 4.703e-02 conv True->True
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '764481514.1086781') reg 51->49 depth 7->7 total moved True |dT|/e29 2.741e-04 conv True->True
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '1008016144.4251784') reg 34->35 depth 7->7 total moved True |dT|/e29 1.465e-03 conv True->True
+  ('316227.7660168379', '1000000.0', '1000000.0', '764481514.1086781') reg 27->23 depth 6->6 total moved True |dT|/e29 8.560e-04 conv True->True
+  ('1000000.0', '100000.0', '1000000.0', '579784350.3262237') reg 161->162 depth 9->9 total moved True |dT|/e29 8.995e-04 conv True->True
+  ('1000000.0', '1000000.0', '1000000.0', '755.6870974333904') reg 232->234 depth 15->15 total moved True |dT|/e29 1.887e-05 conv True->True
+  ('1000000.0', '1000000.0', '1000000.0', '20871.228010574065') reg 401->402 depth 19->19 total moved True |dT|/e29 1.831e-04 conv True->True
+  ('1000000.0', '1000000.0', '1000000.0', '3029402.6138165654') reg 384->382 depth 15->15 total moved True |dT|/e29 3.453e-06 conv True->True
+  ('1000000.0', '1000000.0', '1000000.0', '20992322.666081365') reg 136->203 depth 11->15 total moved True |dT|/e29 1.779e-02 conv True->True
+  ('1000000.0', '1000000.0', '1000000.0', '110322346.5975613') reg 230->228 depth 13->13 total moved True |dT|/e29 4.332e-06 conv True->True
+Levin records whose four counts changed:
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 2, 0, 0), 'True', 'True'): 5
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 3, 0, 0), 'True', 'True'): 7
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 4, 0, 0), 'True', 'True'): 5
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 5, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 6, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 8, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 9, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 12, 0, 0), 'True', 'True'): 6
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 0, 0), (1, 13, 0, 0), 'True', 'True'): 3
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 1, 0), (1, 5, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.J4_data', (0, 0, 1, 0), (1, 13, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 0, 0), (1, 2, 0, 0), 'True', 'True'): 9
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 0, 0), (1, 3, 0, 0), 'True', 'True'): 13
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 0, 0), (1, 4, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 0, 0), (1, 5, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 0, 0), (1, 8, 0, 0), 'True', 'True'): 2
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 0, 0), (1, 9, 0, 0), 'True', 'True'): 2
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 0, 0), (1, 10, 0, 0), 'True', 'True'): 2
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 1, 0), (1, 3, 0, 0), 'True', 'True'): 1
+  ('analytic', '2pt5.Levin.Y4_data', (0, 0, 1, 0), (1, 12, 0, 0), 'True', 'True'): 1
+group records with value bit-identical and abserr moved (no location in either):
+  ('100000.0', '100000.0', '100000.0', '12004.580918217') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.60844959d83abp-83 -> 0x1.608448551fdf5p-83 rel -4.408e-08 regions 31->31 sp 0/0
+  ('100000.0', '100000.0', '100000.0', '12004.580918217') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.60844959d83abp-83 -> 0x1.608448551fdf5p-83 rel -4.408e-08 regions 31->31 sp 0/0
+  ('100000.0', '100000.0', '100000.0', '760071.5863905636') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr'] abserr 0x1.96a6c2802ce97p-77 -> 0x1.96a6c282b0027p-77 rel +3.682e-10 regions 141->141 sp 0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '249.99999999999994') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.c8e95422f5c9ap-91 -> 0x1.c8e951915c532p-91 rel -8.578e-08 regions 75->75 sp 0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '249.99999999999994') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.c8e95422f5c9ap-91 -> 0x1.c8e951915c532p-91 rel -8.578e-08 regions 75->75 sp 0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '329.64045755914753') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.67afbceafd54cp-90 -> 0x1.67afbcc1eb9b1p-90 rel -6.806e-09 regions 53->53 sp 0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '329.64045755914753') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.67afbceafd54cp-90 -> 0x1.67afbcc1eb9b1p-90 rel -6.806e-09 regions 53->53 sp 0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '331553.02818648185') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.750b457021c76p-81 -> 0x1.750b45b820a41p-81 rel +1.150e-08 regions 196->196 sp 0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '331553.02818648185') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.750b457021c76p-81 -> 0x1.750b45b820a41p-81 rel +1.150e-08 regions 196->196 sp 0/0
+  ('100000.0', '316227.7660168379', '316227.7660168379', '20992322.666081365') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr', 'simple_regions'] abserr 0x1.edf0c08d18567p-76 -> 0x1.eafecdedf8c63p-76 rel -5.962e-03 regions 94->94 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '1732.3813753196057') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.a461536562704p-89 -> 0x1.5b27396086f7fp-89 rel -1.742e-01 regions 86->86 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '1732.3813753196057') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.a461536562704p-89 -> 0x1.5b27396086f7fp-89 rel -1.742e-01 regions 86->86 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '63088.47086072452') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.f7af1f07eaf94p-85 -> 0x1.f7af233e1a9dap-85 rel +1.276e-07 regions 121->121 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '63088.47086072452') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.f7af1f07eaf94p-85 -> 0x1.f7af233e1a9dap-85 rel +1.276e-07 regions 121->121 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '5266935.440690548') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.0b57069fa8c43p-77 -> 0x1.bfe9349245331p-78 rel -1.623e-01 regions 32->32 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '5266935.440690548') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.0b57069fa8c43p-77 -> 0x1.bfe9349245331p-78 rel -1.623e-01 regions 32->32 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '20992322.666081365') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.8821fb4e8d0ddp-77 -> 0x1.8821fb4d8e0d9p-77 rel -1.514e-10 regions 36->36 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '20992322.666081365') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.8821fb4e8d0ddp-77 -> 0x1.8821fb4d8e0d9p-77 rel -1.514e-10 regions 36->36 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '83668694.2301112') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr', 'simple_regions'] abserr 0x1.9626b10454a26p-76 -> 0x1.6516fd684a0abp-76 rel -1.208e-01 regions 7->7 sp 0/0
+  ('100000.0', '1000000.0', '1000000.0', '83668694.2301112') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr', 'simple_regions'] abserr 0x1.9626b10454a26p-76 -> 0x1.6516fd684a0abp-76 rel -1.208e-01 regions 7->7 sp 0/0
+  ('316227.7660168379', '100000.0', '316227.7660168379', '755.6870974333904') WKB_Levin.subintervals[2].groups[0] G+q+r fields ['abserr'] abserr 0x1.a6a069ee5be98p-90 -> 0x1.a21d7a6562d89p-90 rel -1.067e-02 regions 28->28 sp 0/0
+  ('316227.7660168379', '100000.0', '316227.7660168379', '144627.70674226896') WKB_Levin.subintervals[2].groups[1] G+q-r fields ['abserr'] abserr 0x1.05cfbf474d565p-84 -> 0x1.05d53f72d114cp-84 rel +8.207e-05 regions 22->22 sp 0/0
+  ('316227.7660168379', '100000.0', '316227.7660168379', '9157121.87276865') WKB_Levin.subintervals[2].groups[2] G-q+r fields ['abserr'] abserr 0x1.2e9e1f77dcf82p-78 -> 0x1.2e98d37713a5ep-78 rel -6.837e-05 regions 70->70 sp 0/0
+  ('316227.7660168379', '100000.0', '316227.7660168379', '20992322.666081365') WKB_Levin.subintervals[2].groups[3] G-q-r fields ['abserr'] abserr 0x1.42bc16941f8e0p-78 -> 0x1.42bc159a32c97p-78 rel -4.616e-08 regions 13->13 sp 0/0
+  ('316227.7660168379', '100000.0', '316227.7660168379', '110322346.5975613') WKB_Levin.subintervals[2].groups[0] G+q+r fields ['abserr'] abserr 0x1.c6f9ccff65d06p-76 -> 0x1.c6f9d5c2db16fp-76 rel +2.939e-07 regions 1->1 sp 0/0
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '83186.04960494472') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr'] abserr 0x1.17de65757b1ecp-84 -> 0x1.17de65a96c097p-84 rel +1.106e-08 regions 84->84 sp 0/0
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '63454509.53566468') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.89dee35f08239p-76 -> 0x1.89dee37fa657cp-76 rel +4.936e-09 regions 28->28 sp 0/0
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '63454509.53566468') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.89dee35f08239p-76 -> 0x1.89dee37fa657cp-76 rel +4.936e-09 regions 28->28 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '573.1146466584687') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr'] abserr 0x1.ef28e3eec31dcp-98 -> 0x1.ef28e3da93e37p-98 rel -2.430e-09 regions 19->19 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '755.6870974333904') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.d37de1e5ea93fp-94 -> 0x1.d37de1ed6ea52p-94 rel +9.583e-10 regions 4->4 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '755.6870974333904') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.d37de1e5ea93fp-94 -> 0x1.d37de1ed6ea52p-94 rel +9.583e-10 regions 4->4 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '996.4201622779478') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.8f78941c1995dp-95 -> 0x1.8f789b195ba0cp-95 rel +2.670e-07 regions 110->110 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '996.4201622779478') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.8f78941c1995dp-95 -> 0x1.8f789b195ba0cp-95 rel +2.670e-07 regions 110->110 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '331553.02818648185') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr', 'simple_regions'] abserr 0x1.1ff0b595ca28fp-86 -> 0x1.214bae11741bcp-86 rel +4.707e-03 regions 29->29 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '331553.02818648185') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr', 'simple_regions'] abserr 0x1.1ff0b595ca28fp-86 -> 0x1.214bae11741bcp-86 rel +4.707e-03 regions 29->29 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '252909410.75517792') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr'] abserr 0x1.55a8ac4810892p-76 -> 0x1.55a8a9f2f0a54p-76 rel -1.042e-07 regions 2->2 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '252909410.75517792') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr'] abserr 0x1.55a8ac4810892p-76 -> 0x1.55a8a9f2f0a54p-76 rel -1.042e-07 regions 2->2 sp 0/0
+  ('316227.7660168379', '1000000.0', '1000000.0', '3046979177.3866296') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr'] abserr 0x1.39752b3b7596bp-74 -> 0x1.39f67c9c41abfp-74 rel +1.612e-03 regions 5->5 sp 0/0
+  ('1000000.0', '100000.0', '1000000.0', '760071.5863905636') WKB_Levin.subintervals[2].groups[2] G-q+r fields ['abserr'] abserr 0x1.1fdddd7482d40p-85 -> 0x1.1fdddd3acc9b6p-85 rel -1.195e-08 regions 18->18 sp 0/0
+  ('1000000.0', '316227.7660168379', '1000000.0', '1008016144.4251784') WKB_Levin.subintervals[2].groups[0] G+q+r fields ['abserr'] abserr 0x1.c372658cea62fp-76 -> 0x1.c37269402421fp-76 rel +1.251e-07 regions 1->1 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '27520.004604907732') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr', 'simple_regions'] abserr 0x1.ec96acbaf0c62p-91 -> 0x1.5881e81e1bb5cp-89 rel +1.798e+00 regions 91->91 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '144627.70674226896') WKB_Levin.subintervals[1].groups[3] G-q-r fields ['abserr'] abserr 0x1.0ee64b9a308e0p-90 -> 0x1.0ee64acf3193bp-90 rel -4.466e-08 regions 163->163 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '760071.5863905636') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr', 'simple_regions'] abserr 0x1.04d60de520ba2p-86 -> 0x1.0390e78cdabcfp-86 rel -4.869e-03 regions 88->88 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '83668694.2301112') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr'] abserr 0x1.0f8dd53ef4763p-80 -> 0x1.0f8deaf92f18ep-80 rel +1.221e-06 regions 1->1 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '252909410.75517792') WKB_Levin.subintervals[1].groups[1] G+q-r fields ['abserr', 'simple_regions'] abserr 0x1.5d36d43c731f1p-79 -> 0x1.4b930c15a2746p-79 rel -5.051e-02 regions 27->27 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '252909410.75517792') WKB_Levin.subintervals[1].groups[2] G-q+r fields ['abserr', 'simple_regions'] abserr 0x1.5d36d43c731f1p-79 -> 0x1.4b930c15a2746p-79 rel -5.051e-02 regions 27->27 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '333476695.529405') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr', 'simple_regions'] abserr 0x1.5112d7685286ep-77 -> 0x1.104644c42387cp-77 rel -1.922e-01 regions 8->8 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '579784350.3262237') WKB_Levin.subintervals[1].groups[0] G+q+r fields ['abserr'] abserr 0x1.a5e915f38a7abp-77 -> 0x1.a156d432f77d3p-77 rel -1.083e-02 regions 1->1 sp 0/0
+  ('1000000.0', '1000000.0', '1000000.0', '1329131612.3012946') WKB_Levin.subintervals[1].groups[3] G-q-r fields ['abserr'] abserr 0x1.0fc9d507e4ad3p-78 -> 0x1.0fb24d67e01a3p-78 rel -3.382e-04 regions 15->15 sp 0/0
+  count: 49
+group records whose value moved:
+  ('100000.0', '100000.0', '100000.0', '5266935.440690548') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 7.711e-02 |dv|/e30 5.980e-02 regions 19->17 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('100000.0', '100000.0', '100000.0', '20992322.666081365') WKB_Levin.subintervals[1].groups[3] G-q-r |dv|/e29 4.555e-05 |dv|/e30 4.555e-05 regions 27->27 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '316227.7660168379', '316227.7660168379', '331553.02818648185') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 5.354e-02 |dv|/e30 4.702e-02 regions 75->73 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '316227.7660168379', '316227.7660168379', '3994454.6549974815') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 1.116e-01 |dv|/e30 1.116e-01 regions 65->65 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '316227.7660168379', '316227.7660168379', '3994454.6549974815') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 1.116e-01 |dv|/e30 1.116e-01 regions 65->65 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '1000000.0', '1000000.0', '1313.8415928578513') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 3.394e-02 |dv|/e30 1.100e-01 regions 150->12 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '1000000.0', '1000000.0', '1313.8415928578513') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 3.394e-02 |dv|/e30 1.100e-01 regions 150->12 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '1000000.0', '1000000.0', '27520.004604907732') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 8.841e-09 |dv|/e30 8.841e-09 regions 8->8 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '1000000.0', '1000000.0', '27520.004604907732') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 8.841e-09 |dv|/e30 8.841e-09 regions 8->8 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '1000000.0', '1000000.0', '1742432.6346774828') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 1.203e-02 |dv|/e30 6.493e-03 regions 124->122 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '1000000.0', '1000000.0', '1742432.6346774828') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 1.203e-02 |dv|/e30 6.493e-03 regions 124->122 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '1000000.0', '1000000.0', '2297505.163844306') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 6.906e-04 |dv|/e30 7.678e-04 regions 27->28 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('100000.0', '1000000.0', '1000000.0', '2297505.163844306') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 6.906e-04 |dv|/e30 7.678e-04 regions 27->28 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('316227.7660168379', '100000.0', '316227.7660168379', '1002201.3820619704') WKB_Levin.subintervals[2].groups[3] G-q-r |dv|/e29 1.011e-08 |dv|/e30 1.011e-08 regions 31->31 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '249.99999999999994') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 2.735e-04 |dv|/e30 2.670e-04 regions 119->120 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '249.99999999999994') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 2.735e-04 |dv|/e30 2.670e-04 regions 119->120 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '6944780.034414906') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 1.367e-01 |dv|/e30 2.734e-01 regions 13->12 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '48124030.34924725') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 1.722e-07 |dv|/e30 1.722e-07 regions 1->1 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '48124030.34924725') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 1.722e-07 |dv|/e30 1.722e-07 regions 1->1 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '191807016.520263') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 8.829e-02 |dv|/e30 2.864e-01 regions 1->5 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '764481514.1086781') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 1.343e-02 |dv|/e30 1.006e-02 regions 3->1 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('316227.7660168379', '316227.7660168379', '316227.7660168379', '1008016144.4251784') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 5.183e-02 |dv|/e30 1.111e-01 regions 1->2 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('316227.7660168379', '1000000.0', '1000000.0', '15920620.622177951') WKB_Levin.subintervals[1].groups[3] G-q-r |dv|/e29 3.672e-08 |dv|/e30 3.672e-08 regions 56->56 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('316227.7660168379', '1000000.0', '1000000.0', '27679675.39550536') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 4.956e-09 |dv|/e30 4.956e-09 regions 33->33 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('316227.7660168379', '1000000.0', '1000000.0', '579784350.3262237') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 2.526e-08 |dv|/e30 2.526e-08 regions 1->1 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('316227.7660168379', '1000000.0', '1000000.0', '579784350.3262237') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 2.526e-08 |dv|/e30 2.526e-08 regions 1->1 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('316227.7660168379', '1000000.0', '1000000.0', '764481514.1086781') WKB_Levin.subintervals[1].groups[3] G-q-r |dv|/e29 1.357e-01 |dv|/e30 1.287e-01 regions 7->3 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('1000000.0', '100000.0', '1000000.0', '579784350.3262237') WKB_Levin.subintervals[2].groups[2] G-q+r |dv|/e29 1.412e-02 |dv|/e30 1.060e-02 regions 3->4 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('1000000.0', '1000000.0', '1000000.0', '755.6870974333904') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 3.342e-04 |dv|/e30 3.558e-04 regions 22->23 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('1000000.0', '1000000.0', '1000000.0', '755.6870974333904') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 3.342e-04 |dv|/e30 3.558e-04 regions 22->23 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('1000000.0', '1000000.0', '1000000.0', '20871.228010574065') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 2.886e-03 |dv|/e30 5.457e-03 regions 85->86 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('1000000.0', '1000000.0', '1000000.0', '331553.02818648185') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 3.965e-07 |dv|/e30 3.965e-07 regions 1->1 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('1000000.0', '1000000.0', '1000000.0', '3029402.6138165654') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 1.317e-04 |dv|/e30 1.334e-04 regions 86->85 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('1000000.0', '1000000.0', '1000000.0', '3029402.6138165654') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 1.317e-04 |dv|/e30 1.334e-04 regions 86->85 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('1000000.0', '1000000.0', '1000000.0', '20992322.666081365') WKB_Levin.subintervals[1].groups[0] G+q+r |dv|/e29 3.357e-01 |dv|/e30 7.530e-01 regions 1->68 sp 0/0 wp 0/0 conv True->True pl False->True
+  ('1000000.0', '1000000.0', '1000000.0', '110322346.5975613') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 3.671e-05 |dv|/e30 3.660e-05 regions 40->39 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('1000000.0', '1000000.0', '1000000.0', '110322346.5975613') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 3.671e-05 |dv|/e30 3.660e-05 regions 40->39 sp 0/0 wp 0/0 conv True->True pl True->True
+  ('1000000.0', '1000000.0', '1000000.0', '145466835.24567592') WKB_Levin.subintervals[1].groups[1] G+q-r |dv|/e29 1.277e-06 |dv|/e30 1.277e-06 regions 1->1 sp 0/0 wp 0/0 conv True->True pl False->False
+  ('1000000.0', '1000000.0', '1000000.0', '145466835.24567592') WKB_Levin.subintervals[1].groups[2] G-q+r |dv|/e29 1.277e-06 |dv|/e30 1.277e-06 regions 1->1 sp 0/0 wp 0/0 conv True->True pl False->False
+phase_limited flips (records):
+  ('analytic', '0pt5.Levin.J1_data', 'False', 'True'): 1
+  ('analytic', '0pt5.Levin.J4_data', 'False', 'True'): 8
+  ('analytic', '0pt5.Levin.Y1_data', 'False', 'True'): 1
+  ('analytic', '0pt5.Levin.Y2_data', 'False', 'True'): 1
+  ('analytic', '0pt5.Levin.Y3_data', 'False', 'True'): 1
+  ('analytic', '0pt5.Levin.Y4_data', 'False', 'True'): 13
+  ('analytic', '2pt5.Levin.J2_data', 'True', 'False'): 1
+  ('analytic', '2pt5.Levin.J3_data', 'True', 'False'): 1
+  ('analytic', '2pt5.Levin.J4_data', 'False', 'True'): 8
+  ('analytic', '2pt5.Levin.J4_data', 'True', 'False'): 10
+  ('analytic', '2pt5.Levin.Y1_data', 'False', 'True'): 1
+  ('analytic', '2pt5.Levin.Y4_data', 'False', 'True'): 4
+  ('analytic', '2pt5.Levin.Y4_data', 'True', 'False'): 15
+  ('group', 'G+q+r', 'False', 'True'): 1
+analytic block records by (block, regions changed, abserr ratio band):
+  ('0pt5.Levin.J1_data', False, '0.5<=x<1'): 33
+  ('0pt5.Levin.J1_data', False, '1'): 1
+  ('0pt5.Levin.J1_data', False, '1<x<=2'): 36
+  ('0pt5.Levin.J2_data', False, '0.5<=x<1'): 53
+  ('0pt5.Levin.J2_data', False, '1<x<=2'): 58
+  ('0pt5.Levin.J2_data', True, 'x>2'): 1
+  ('0pt5.Levin.J3_data', False, '0.5<=x<1'): 48
+  ('0pt5.Levin.J3_data', False, '1<x<=2'): 48
+  ('0pt5.Levin.J3_data', True, '1<x<=2'): 1
+  ('0pt5.Levin.J3_data', True, 'x>2'): 1
+  ('0pt5.Levin.J4_data', False, '0.5<=x<1'): 41
+  ('0pt5.Levin.J4_data', False, '1<x<=2'): 39
+  ('0pt5.Levin.J4_data', True, '0.5<=x<1'): 5
+  ('0pt5.Levin.J4_data', True, '1<x<=2'): 1
+  ('0pt5.Levin.J4_data', True, 'x<0.5'): 2
+  ('0pt5.Levin.J4_data', True, 'x>2'): 10
+  ('0pt5.Levin.Y1_data', False, '0.5<=x<1'): 29
+  ('0pt5.Levin.Y1_data', False, '1<x<=2'): 32
+  ('0pt5.Levin.Y1_data', False, 'x>2'): 1
+  ('0pt5.Levin.Y1_data', True, 'x>2'): 1
+  ('0pt5.Levin.Y2_data', False, '0.5<=x<1'): 60
+  ('0pt5.Levin.Y2_data', False, '1<x<=2'): 60
+  ('0pt5.Levin.Y2_data', True, '0.5<=x<1'): 1
+  ('0pt5.Levin.Y2_data', True, 'x<0.5'): 1
+  ('0pt5.Levin.Y3_data', False, '0.5<=x<1'): 54
+  ('0pt5.Levin.Y3_data', False, '1<x<=2'): 50
+  ('0pt5.Levin.Y3_data', True, '0.5<=x<1'): 1
+  ('0pt5.Levin.Y3_data', True, 'x<0.5'): 1
+  ('0pt5.Levin.Y4_data', False, '0.5<=x<1'): 47
+  ('0pt5.Levin.Y4_data', False, '1<x<=2'): 37
+  ('0pt5.Levin.Y4_data', True, '0.5<=x<1'): 5
+  ('0pt5.Levin.Y4_data', True, '1<x<=2'): 1
+  ('0pt5.Levin.Y4_data', True, 'x<0.5'): 13
+  ('0pt5.Levin.Y4_data', True, 'x>2'): 4
+  ('2pt5.Levin.J1_data', False, '0.5<=x<1'): 14
+  ('2pt5.Levin.J1_data', False, '1<x<=2'): 19
+  ('2pt5.Levin.J2_data', False, '0.5<=x<1'): 18
+  ('2pt5.Levin.J2_data', False, '1<x<=2'): 26
+  ('2pt5.Levin.J2_data', True, 'x<0.5'): 1
+  ('2pt5.Levin.J3_data', False, '0.5<=x<1'): 15
+  ('2pt5.Levin.J3_data', False, '1<x<=2'): 17
+  ('2pt5.Levin.J3_data', True, 'x<0.5'): 1
+  ('2pt5.Levin.J4_data', False, '0.5<=x<1'): 18
+  ('2pt5.Levin.J4_data', False, '1'): 3
+  ('2pt5.Levin.J4_data', False, '1<x<=2'): 19
+  ('2pt5.Levin.J4_data', True, '0.5<=x<1'): 31
+  ('2pt5.Levin.J4_data', True, 'x<0.5'): 3
+  ('2pt5.Levin.Y1_data', False, '0.5<=x<1'): 16
+  ('2pt5.Levin.Y1_data', False, '1'): 1
+  ('2pt5.Levin.Y1_data', False, '1<x<=2'): 17
+  ('2pt5.Levin.Y2_data', False, '0.5<=x<1'): 24
+  ('2pt5.Levin.Y2_data', False, '1<x<=2'): 24
+  ('2pt5.Levin.Y3_data', False, '0.5<=x<1'): 16
+  ('2pt5.Levin.Y3_data', False, '1<x<=2'): 20
+  ('2pt5.Levin.Y4_data', False, '0.5<=x<1'): 13
+  ('2pt5.Levin.Y4_data', False, '1'): 2
+  ('2pt5.Levin.Y4_data', False, '1<x<=2'): 20
+  ('2pt5.Levin.Y4_data', True, '0.5<=x<1'): 29
+  ('2pt5.Levin.Y4_data', True, 'x<0.5'): 3
+exit 0

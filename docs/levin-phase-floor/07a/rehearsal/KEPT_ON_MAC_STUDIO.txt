@@ -1,0 +1,45 @@
+Kept on the Mac Studio (mps026298), not copied back: every pickle, every run directory and every file over 2 MB made by
+the 07a rehearsal agent for R30 (prompt 07a section 5), with SHA-256 and size in bytes, and the store. Paths relative to the
+main checkout /Users/ds283/Documents/Code/SecondaryGWKit. Written 2026-11-12T12:32:21Z.
+
+Pickles and files over 2 MB under var/levin-phase-floor-07a/rehearsal/ (outside extract/):
+f6de2ef1ae3e9c50e3194440720e0637f3eeeebeb03255bbb20addc9f423be42  40313612  var/levin-phase-floor-07a/rehearsal/out/store_value_diff_r29_r30.json
+4367877c179f717a265133f38657db082d1372f412f4c9a038cef83773c642c1  27023601  var/levin-phase-floor-07a/rehearsal/out/store_value_diff_r29_r30.labels_normalised.json
+2f96e92610b07f0bec5bb7afa9fc5e45625436716ae043fbd0176efb269d173b  163834  var/levin-phase-floor-07a/rehearsal/state/capture/blocks1/blocks1-h/regions_blocks1-h.pkl
+69338f65c9bfd68a489131f7ac8bc6c86b80fd006515a2dd56afa2642f3448ad  88526  var/levin-phase-floor-07a/rehearsal/state/capture/blocks2/blocks2-h/inputs_blocks2-h.pkl
+fedd6c5d75ae35897ba40dc11a1f786d4b10ab291f3cfd5ca52c0c62f739d31c  163834  var/levin-phase-floor-07a/rehearsal/state/capture/blocks2/blocks2-h/regions_blocks2-h.pkl
+fdaca3af94ab6a1d1c5681f10acabd1e5ddfe7eae0250dfb13971400ade15939  6479125  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-0/emit.jsonl
+191075a2d019901c10dfe85e2dba9d6e0cb82e070408ebc9f77c9054fcb47aee  7153490  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-0/regions_replay-h-0.pkl
+a6b502c0aaf4d11d87fec13b2c501db2cb501dc55b0e923e18d926a954019848  6264593  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-1/emit.jsonl
+b20f0640eeade56ca7c81c4f356f5de9b5e95d8a2cc2cd15f19f61effb58a26d  6329482  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-1/regions_replay-h-1.pkl
+cf003b4bcc41af8e34760b4b03a91fb5230e130edfaf55c51989e17498c63088  6248800  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-2/emit.jsonl
+ff786c14e9cff228f76a4bc7ea447a6013790f92531516cf86ea9e25a423e042  6313797  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-2/regions_replay-h-2.pkl
+49cca8dbbf5a0605c83bdff8da733798dfa6251fb8507af777047774f53afe03  6270385  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-3/emit.jsonl
+a9500d005462157bd89713fa01c6b924e75ce7abc14665fd4427be9ee00daeb1  6423072  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-3/regions_replay-h-3.pkl
+82e4e95272e8ff0de3827382c80079cbe6c61604fa8926456e8f501313135ff3  6265477  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-4/emit.jsonl
+5751033532ac53cb659632be2de8ecc1916f891901e2ad5da1195b740c0fa43a  6427100  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-4/regions_replay-h-4.pkl
+b2d46d1b79e6792372e3b737e74684ebc03e8f212db5f7f1df336009f86a063e  6302197  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-5/emit.jsonl
+40d9e8f6f16336d9ee6afdb23075c2f903205004d4f827a7abf9f6787d95b190  7000049  var/levin-phase-floor-07a/rehearsal/state/capture/replay/replay-h-5/regions_replay-h-5.pkl
+891a061bf1adf30cfbc3bb6451abc3e42985ab7a6da8731a3bdf63d436585617  21931  var/levin-phase-floor-07a/rehearsal/state/inputs/J4-h-0-10129.pkl
+e60ac3f6a66c3e18db0334c09a6701821ed29f9c1a24b387254ddc4ce58d14b8  21931  var/levin-phase-floor-07a/rehearsal/state/inputs/J4-h-1-20022.pkl
+f21ad1d24760f6c79688b564fc1c2cb5e9e6bcf5a9c23ee73802d037248c662a  22332  var/levin-phase-floor-07a/rehearsal/state/inputs/Y4-h-0-10129.pkl
+102ef19afa82fb2a7e21fb759a00b2b266dac171d1d539a69587d75d2280fef6  22332  var/levin-phase-floor-07a/rehearsal/state/inputs/Y4-h-1-20022.pkl
+
+Directories kept whole (bulk; not for copying back):
+var/levin-phase-floor-07a/rehearsal/extract/  (the readers' output on R30: 3091 files, 174M; no file over 2 MB)
+var/levin-phase-floor-07a/rehearsal/state/capture/  (the harness's worker directories of the runs blocks1, replay, blocks2: 39 files, 80M)
+var/levin-phase-floor-07a/rehearsal/state/inputs/  (the four block captures, 96K; listed above)
+var/levin-phase-floor-07a/rehearsal/state/stores/r30/  (symbolic links only, to R30's files in var/datastores/)
+
+The store (kept until the user says otherwise):
+e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2  25391104  var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite
+f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700  25489408  var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite
+a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab  1077248  var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite
+b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0  24956928  var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite
+e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84  36864  var/datastores/levin-phase-floor-07a-r30.sqlite
+
+The run directory (recorded in the registry) and launch log:
+var/runs/levin-phase-floor-07a-r30-07a-20261112T113806/  (manifest.json status.json stderr.log stdout.log )
+var/runs/levin-phase-floor-07a-r30.launch.log
+
+Read only, unchanged (state/stores_sha256_final.txt): R29 (var/datastores/levin-phase-floor-07-r29*), equal to 07's r29/KEPT_ON_MAC_STUDIO.txt.

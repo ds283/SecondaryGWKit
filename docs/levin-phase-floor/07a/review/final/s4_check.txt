@@ -1,0 +1,23 @@
+script acbe8be89c713ba6e3302d601cf236e2610563f709f294e5c7e66afacb73702c
+
+input 66de1ca653529ad7b1e1fb02c33e1920342201588aa6039e1d795de6caf160da J4-g-0-157.json g-1e-7-0-157 analytic J4
+  R29: k=316227.766 z=1329131612 abserr 0x1.9778b3736d5e1p-59 regions 2 converged True located 0 window_pieces 0 guarded 1 at_depth_max 0
+  R30: k=316227.766 z=1329131612 abserr 0x1.65dacd1543ce8p-66 regions 14 converged True located 1 window_pieces 13 guarded 0 at_depth_max 0
+        replay J4-h-0-10129.json sha 5b3222898528: matches the store's block True; root(s) equal R29 reference's True; value -0x1.9017c8e4681f6p-30 |v-ref|/abserr 4.3663e-05 -> OK
+
+input 5654988cb6ee4c907eef71830519dd5ec91d1648787fbd173d33374205c4c56c Y4-g-0-157.json g-1e-7-0-157 analytic Y4
+  R29: k=316227.766 z=1329131612 abserr 0x1.aa161bfb153afp-66 regions 3 converged True located 0 window_pieces 0 guarded 1 at_depth_max 0
+  R30: k=316227.766 z=1329131612 abserr 0x1.78af331f037f8p-66 regions 4 converged True located 1 window_pieces 3 guarded 0 at_depth_max 0
+        replay Y4-h-0-10129.json sha cd6fdbdfbebb: matches the store's block True; root(s) equal R29 reference's True; value 0x1.2018ed31b447ep-27 |v-ref|/abserr 0.000580725 -> OK
+
+input 6a705bae55f500858082d9340c6029e0afbb0e9dfb4c57283a2cc6c1f5b6b5d0 J4-g-1-10283.json g-1e-7-1-10283 analytic J4
+  R29: k=1000000 z=4017630441 abserr 0x1.2c82764608ef0p-62 regions 2 converged True located 0 window_pieces 0 guarded 1 at_depth_max 0
+  R30: k=1000000 z=4017630441 abserr 0x1.ff3cae87aca98p-69 regions 6 converged True located 1 window_pieces 5 guarded 0 at_depth_max 0
+        replay J4-h-1-20022.json sha 721fc4ea826a: matches the store's block True; root(s) equal R29 reference's True; value -0x1.e6f859d2f7c72p-33 |v-ref|/abserr 0.000206301 -> OK
+
+input a107c6491c4b5dd987538c467105034cfebc3f48a64f57e50a8330f87f288162 Y4-g-1-10283.json g-1e-7-1-10283 analytic Y4
+  R29: k=1000000 z=4017630441 abserr 0x1.332dd100e35e5p-68 regions 3 converged True located 0 window_pieces 0 guarded 1 at_depth_max 0
+  R30: k=1000000 z=4017630441 abserr 0x1.faa21d2682f6bp-69 regions 13 converged True located 1 window_pieces 12 guarded 0 at_depth_max 0
+        replay Y4-h-1-20022.json sha 0cc97def86a5: matches the store's block True; root(s) equal R29 reference's True; value 0x1.9714e016a7982p-30 |v-ref|/abserr 0.000616817 -> OK
+
+S4 HOLDS

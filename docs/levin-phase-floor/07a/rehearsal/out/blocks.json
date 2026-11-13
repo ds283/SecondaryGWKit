@@ -1,0 +1,714 @@
+{
+ "header": [
+  "# prompt 07a r30: the four blocks at h, checked against R30, and each capture against R29's",
+  "# written 2026-11-12T12:25:02Z on mps026298.phys.susx.ac.uk",
+  "# script replay07a_r30.py sha256 c7ff4d85598f48624e2d8c3baf7d4403539f3155a3e63883ccce0328e45ddbd9",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/replay_rows.json sha256 f719b3fd588e6e77eedb0dc2606f896a108c33c652839d675c1eeb0b8f3fd5b8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/blocks1/blocks1-h/emit.jsonl sha256 3f13ef0a3ab618d859d86b1f2031ffe551d864961e394b2cfc2e1c3144d204dc",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/blocks2/blocks2-h/emit.jsonl sha256 e5fa8cb541d5e4eab4fb2faaf91db36eb674f14648898ad8f243002de88a771a"
+ ],
+ "blocks": [
+  {
+   "key": [
+    316227.7660168379,
+    316227.7660168379,
+    316227.7660168379,
+    1329131612.3012946
+   ],
+   "block": "J4",
+   "tree": "h",
+   "store": "R30",
+   "uid": "h-1e-7-0-10129",
+   "store_record": {
+    "value": null,
+    "abserr": "0x1.65dacd1543ce8p-66",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 14,
+    "stationary_points": 1,
+    "window_pieces": 13,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "pass1": {
+    "n_hits": 1,
+    "row_total_and_analytic_rad_equal": true,
+    "ray_initialized": false,
+    "index": 19,
+    "value": "-0x1.9017c8e4681f6p-30",
+    "abserr": "0x1.65dacd1543ce8p-66",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 14,
+    "guard_07": {
+     "num_stationary_points": 1,
+     "num_window_pieces": 13,
+     "num_guarded_regions": 0,
+     "num_guard_at_depth_max": 0,
+     "x_span": [
+      {
+       "repr": "-11.21903213251917",
+       "hex": "-0x1.67024facbe2cdp+3"
+      },
+      {
+       "repr": "-7.9612526103732275",
+       "hex": "-0x1.fd8529ab2fd96p+2"
+      }
+     ],
+     "windows": [
+      {
+       "lo": {
+        "repr": "-11.21903213251917",
+        "hex": "-0x1.67024facbe2cdp+3"
+       },
+       "hi": {
+        "repr": "-8.642876223536229",
+        "hex": "-0x1.149271286ed9dp+3"
+       },
+       "n_cuts": 4,
+       "n_points": 1,
+       "iroff1_count": 6,
+       "stopped": true
+      }
+     ],
+     "unlocated_minima": 0,
+     "location_skipped_phases": [],
+     "points": [
+      {
+       "x": {
+        "repr": "-10.568646281054862",
+        "hex": "-0x1.523259af83ecdp+3"
+       },
+       "kind": "root",
+       "found_as": "root",
+       "phase": 0,
+       "theta_deriv": {
+        "repr": "0.0",
+        "hex": "0x0.0p+0"
+       },
+       "lambda": null,
+       "own_window": [
+        {
+         "repr": "-11.21903213251917",
+         "hex": "-0x1.67024facbe2cdp+3"
+        },
+        {
+         "repr": "-8.642876223536229",
+         "hex": "-0x1.149271286ed9dp+3"
+        }
+       ],
+       "window_pieces": 3
+      }
+     ]
+    }
+   },
+   "pass2": {
+    "n_hits": 1,
+    "row_total_and_analytic_rad_equal": true,
+    "ray_initialized": false,
+    "index": 19,
+    "value": "-0x1.9017c8e4681f6p-30",
+    "abserr": "0x1.65dacd1543ce8p-66",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 14,
+    "guard_07": {
+     "num_stationary_points": 1,
+     "num_window_pieces": 13,
+     "num_guarded_regions": 0,
+     "num_guard_at_depth_max": 0,
+     "x_span": [
+      {
+       "repr": "-11.21903213251917",
+       "hex": "-0x1.67024facbe2cdp+3"
+      },
+      {
+       "repr": "-7.9612526103732275",
+       "hex": "-0x1.fd8529ab2fd96p+2"
+      }
+     ],
+     "windows": [
+      {
+       "lo": {
+        "repr": "-11.21903213251917",
+        "hex": "-0x1.67024facbe2cdp+3"
+       },
+       "hi": {
+        "repr": "-8.642876223536229",
+        "hex": "-0x1.149271286ed9dp+3"
+       },
+       "n_cuts": 4,
+       "n_points": 1,
+       "iroff1_count": 6,
+       "stopped": true
+      }
+     ],
+     "unlocated_minima": 0,
+     "location_skipped_phases": [],
+     "points": [
+      {
+       "x": {
+        "repr": "-10.568646281054862",
+        "hex": "-0x1.523259af83ecdp+3"
+       },
+       "kind": "root",
+       "found_as": "root",
+       "phase": 0,
+       "theta_deriv": {
+        "repr": "0.0",
+        "hex": "0x0.0p+0"
+       },
+       "lambda": null,
+       "own_window": [
+        {
+         "repr": "-11.21903213251917",
+         "hex": "-0x1.67024facbe2cdp+3"
+        },
+        {
+         "repr": "-8.642876223536229",
+         "hex": "-0x1.149271286ed9dp+3"
+        }
+       ],
+       "window_pieces": 3
+      }
+     ]
+    }
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/J4-h-0-10129.pkl",
+   "sha256": "891a061bf1adf30cfbc3bb6451abc3e42985ab7a6da8731a3bdf63d436585617",
+   "bytes": 21931,
+   "r29_pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/inputs/J4-g-0-157.pkl",
+   "r29_sha256": "0a98c0f446ae9e4bd1d20ebf2e66f9fd169b255d83856bce836ea9c74ec75656",
+   "capture_equals_r29": false,
+   "pass1_pass2_value_equal": true,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    316227.7660168379,
+    316227.7660168379,
+    316227.7660168379,
+    1329131612.3012946
+   ],
+   "block": "Y4",
+   "tree": "h",
+   "store": "R30",
+   "uid": "h-1e-7-0-10129",
+   "store_record": {
+    "value": null,
+    "abserr": "0x1.78af331f037f8p-66",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 4,
+    "stationary_points": 1,
+    "window_pieces": 3,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "pass1": {
+    "n_hits": 1,
+    "row_total_and_analytic_rad_equal": true,
+    "ray_initialized": false,
+    "index": 20,
+    "value": "0x1.2018ed31b447ep-27",
+    "abserr": "0x1.78af331f037f8p-66",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 4,
+    "guard_07": {
+     "num_stationary_points": 1,
+     "num_window_pieces": 3,
+     "num_guarded_regions": 0,
+     "num_guard_at_depth_max": 0,
+     "x_span": [
+      {
+       "repr": "-11.21903213251917",
+       "hex": "-0x1.67024facbe2cdp+3"
+      },
+      {
+       "repr": "-7.9612526103732275",
+       "hex": "-0x1.fd8529ab2fd96p+2"
+      }
+     ],
+     "windows": [
+      {
+       "lo": {
+        "repr": "-11.21903213251917",
+        "hex": "-0x1.67024facbe2cdp+3"
+       },
+       "hi": {
+        "repr": "-8.642876223536229",
+        "hex": "-0x1.149271286ed9dp+3"
+       },
+       "n_cuts": 4,
+       "n_points": 1,
+       "iroff1_count": 0,
+       "stopped": false
+      }
+     ],
+     "unlocated_minima": 0,
+     "location_skipped_phases": [],
+     "points": [
+      {
+       "x": {
+        "repr": "-10.568646281054862",
+        "hex": "-0x1.523259af83ecdp+3"
+       },
+       "kind": "root",
+       "found_as": "root",
+       "phase": 0,
+       "theta_deriv": {
+        "repr": "0.0",
+        "hex": "0x0.0p+0"
+       },
+       "lambda": null,
+       "own_window": [
+        {
+         "repr": "-11.21903213251917",
+         "hex": "-0x1.67024facbe2cdp+3"
+        },
+        {
+         "repr": "-8.642876223536229",
+         "hex": "-0x1.149271286ed9dp+3"
+        }
+       ],
+       "window_pieces": 3
+      }
+     ]
+    }
+   },
+   "pass2": {
+    "n_hits": 1,
+    "row_total_and_analytic_rad_equal": true,
+    "ray_initialized": false,
+    "index": 20,
+    "value": "0x1.2018ed31b447ep-27",
+    "abserr": "0x1.78af331f037f8p-66",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 4,
+    "guard_07": {
+     "num_stationary_points": 1,
+     "num_window_pieces": 3,
+     "num_guarded_regions": 0,
+     "num_guard_at_depth_max": 0,
+     "x_span": [
+      {
+       "repr": "-11.21903213251917",
+       "hex": "-0x1.67024facbe2cdp+3"
+      },
+      {
+       "repr": "-7.9612526103732275",
+       "hex": "-0x1.fd8529ab2fd96p+2"
+      }
+     ],
+     "windows": [
+      {
+       "lo": {
+        "repr": "-11.21903213251917",
+        "hex": "-0x1.67024facbe2cdp+3"
+       },
+       "hi": {
+        "repr": "-8.642876223536229",
+        "hex": "-0x1.149271286ed9dp+3"
+       },
+       "n_cuts": 4,
+       "n_points": 1,
+       "iroff1_count": 0,
+       "stopped": false
+      }
+     ],
+     "unlocated_minima": 0,
+     "location_skipped_phases": [],
+     "points": [
+      {
+       "x": {
+        "repr": "-10.568646281054862",
+        "hex": "-0x1.523259af83ecdp+3"
+       },
+       "kind": "root",
+       "found_as": "root",
+       "phase": 0,
+       "theta_deriv": {
+        "repr": "0.0",
+        "hex": "0x0.0p+0"
+       },
+       "lambda": null,
+       "own_window": [
+        {
+         "repr": "-11.21903213251917",
+         "hex": "-0x1.67024facbe2cdp+3"
+        },
+        {
+         "repr": "-8.642876223536229",
+         "hex": "-0x1.149271286ed9dp+3"
+        }
+       ],
+       "window_pieces": 3
+      }
+     ]
+    }
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/Y4-h-0-10129.pkl",
+   "sha256": "f21ad1d24760f6c79688b564fc1c2cb5e9e6bcf5a9c23ee73802d037248c662a",
+   "bytes": 22332,
+   "r29_pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/inputs/Y4-g-0-157.pkl",
+   "r29_sha256": "f6c4e20b91b9ddb00717e5bcc660a6a3a59c26eb15cf9a7411da750e07f118c4",
+   "capture_equals_r29": false,
+   "pass1_pass2_value_equal": true,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    4017630440.8276954
+   ],
+   "block": "J4",
+   "tree": "h",
+   "store": "R30",
+   "uid": "h-1e-7-1-20022",
+   "store_record": {
+    "value": null,
+    "abserr": "0x1.ff3cae87aca98p-69",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 6,
+    "stationary_points": 1,
+    "window_pieces": 5,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "pass1": {
+    "n_hits": 1,
+    "row_total_and_analytic_rad_equal": true,
+    "ray_initialized": false,
+    "index": 19,
+    "value": "-0x1.e6f859d2f7c72p-33",
+    "abserr": "0x1.ff3cae87aca98p-69",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 6,
+    "guard_07": {
+     "num_stationary_points": 1,
+     "num_window_pieces": 5,
+     "num_guarded_regions": 0,
+     "num_guard_at_depth_max": 0,
+     "x_span": [
+      {
+       "repr": "-12.370324679016193",
+       "hex": "-0x1.8bd9b32428d70p+3"
+      },
+      {
+       "repr": "-9.067418661762051",
+       "hex": "-0x1.22284b2e6d0f2p+3"
+      }
+     ],
+     "windows": [
+      {
+       "lo": {
+        "repr": "-12.370324679016193",
+        "hex": "-0x1.8bd9b32428d70p+3"
+       },
+       "hi": {
+        "repr": "-9.794168770033254",
+        "hex": "-0x1.3969d49fd9841p+3"
+       },
+       "n_cuts": 4,
+       "n_points": 1,
+       "iroff1_count": 0,
+       "stopped": false
+      }
+     ],
+     "unlocated_minima": 0,
+     "location_skipped_phases": [],
+     "points": [
+      {
+       "x": {
+        "repr": "-11.719938827551886",
+        "hex": "-0x1.7709bd26ee970p+3"
+       },
+       "kind": "root",
+       "found_as": "root",
+       "phase": 0,
+       "theta_deriv": {
+        "repr": "0.0",
+        "hex": "0x0.0p+0"
+       },
+       "lambda": null,
+       "own_window": [
+        {
+         "repr": "-12.370324679016193",
+         "hex": "-0x1.8bd9b32428d70p+3"
+        },
+        {
+         "repr": "-9.794168770033254",
+         "hex": "-0x1.3969d49fd9841p+3"
+        }
+       ],
+       "window_pieces": 3
+      }
+     ]
+    }
+   },
+   "pass2": {
+    "n_hits": 1,
+    "row_total_and_analytic_rad_equal": true,
+    "ray_initialized": false,
+    "index": 19,
+    "value": "-0x1.e6f859d2f7c72p-33",
+    "abserr": "0x1.ff3cae87aca98p-69",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 6,
+    "guard_07": {
+     "num_stationary_points": 1,
+     "num_window_pieces": 5,
+     "num_guarded_regions": 0,
+     "num_guard_at_depth_max": 0,
+     "x_span": [
+      {
+       "repr": "-12.370324679016193",
+       "hex": "-0x1.8bd9b32428d70p+3"
+      },
+      {
+       "repr": "-9.067418661762051",
+       "hex": "-0x1.22284b2e6d0f2p+3"
+      }
+     ],
+     "windows": [
+      {
+       "lo": {
+        "repr": "-12.370324679016193",
+        "hex": "-0x1.8bd9b32428d70p+3"
+       },
+       "hi": {
+        "repr": "-9.794168770033254",
+        "hex": "-0x1.3969d49fd9841p+3"
+       },
+       "n_cuts": 4,
+       "n_points": 1,
+       "iroff1_count": 0,
+       "stopped": false
+      }
+     ],
+     "unlocated_minima": 0,
+     "location_skipped_phases": [],
+     "points": [
+      {
+       "x": {
+        "repr": "-11.719938827551886",
+        "hex": "-0x1.7709bd26ee970p+3"
+       },
+       "kind": "root",
+       "found_as": "root",
+       "phase": 0,
+       "theta_deriv": {
+        "repr": "0.0",
+        "hex": "0x0.0p+0"
+       },
+       "lambda": null,
+       "own_window": [
+        {
+         "repr": "-12.370324679016193",
+         "hex": "-0x1.8bd9b32428d70p+3"
+        },
+        {
+         "repr": "-9.794168770033254",
+         "hex": "-0x1.3969d49fd9841p+3"
+        }
+       ],
+       "window_pieces": 3
+      }
+     ]
+    }
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/J4-h-1-20022.pkl",
+   "sha256": "e60ac3f6a66c3e18db0334c09a6701821ed29f9c1a24b387254ddc4ce58d14b8",
+   "bytes": 21931,
+   "r29_pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/inputs/J4-g-1-10283.pkl",
+   "r29_sha256": "8e5eecb2d80dd30d84f4fd2c7ad42688428993713bbd35da4c347497f77cbd4f",
+   "capture_equals_r29": false,
+   "pass1_pass2_value_equal": true,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    4017630440.8276954
+   ],
+   "block": "Y4",
+   "tree": "h",
+   "store": "R30",
+   "uid": "h-1e-7-1-20022",
+   "store_record": {
+    "value": null,
+    "abserr": "0x1.faa21d2682f6bp-69",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 13,
+    "stationary_points": 1,
+    "window_pieces": 12,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "pass1": {
+    "n_hits": 1,
+    "row_total_and_analytic_rad_equal": true,
+    "ray_initialized": false,
+    "index": 20,
+    "value": "0x1.9714e016a7982p-30",
+    "abserr": "0x1.faa21d2682f6bp-69",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 13,
+    "guard_07": {
+     "num_stationary_points": 1,
+     "num_window_pieces": 12,
+     "num_guarded_regions": 0,
+     "num_guard_at_depth_max": 0,
+     "x_span": [
+      {
+       "repr": "-12.370324679016193",
+       "hex": "-0x1.8bd9b32428d70p+3"
+      },
+      {
+       "repr": "-9.067418661762051",
+       "hex": "-0x1.22284b2e6d0f2p+3"
+      }
+     ],
+     "windows": [
+      {
+       "lo": {
+        "repr": "-12.370324679016193",
+        "hex": "-0x1.8bd9b32428d70p+3"
+       },
+       "hi": {
+        "repr": "-9.794168770033254",
+        "hex": "-0x1.3969d49fd9841p+3"
+       },
+       "n_cuts": 4,
+       "n_points": 1,
+       "iroff1_count": 6,
+       "stopped": true
+      }
+     ],
+     "unlocated_minima": 0,
+     "location_skipped_phases": [],
+     "points": [
+      {
+       "x": {
+        "repr": "-11.719938827551886",
+        "hex": "-0x1.7709bd26ee970p+3"
+       },
+       "kind": "root",
+       "found_as": "root",
+       "phase": 0,
+       "theta_deriv": {
+        "repr": "0.0",
+        "hex": "0x0.0p+0"
+       },
+       "lambda": null,
+       "own_window": [
+        {
+         "repr": "-12.370324679016193",
+         "hex": "-0x1.8bd9b32428d70p+3"
+        },
+        {
+         "repr": "-9.794168770033254",
+         "hex": "-0x1.3969d49fd9841p+3"
+        }
+       ],
+       "window_pieces": 3
+      }
+     ]
+    }
+   },
+   "pass2": {
+    "n_hits": 1,
+    "row_total_and_analytic_rad_equal": true,
+    "ray_initialized": false,
+    "index": 20,
+    "value": "0x1.9714e016a7982p-30",
+    "abserr": "0x1.faa21d2682f6bp-69",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 13,
+    "guard_07": {
+     "num_stationary_points": 1,
+     "num_window_pieces": 12,
+     "num_guarded_regions": 0,
+     "num_guard_at_depth_max": 0,
+     "x_span": [
+      {
+       "repr": "-12.370324679016193",
+       "hex": "-0x1.8bd9b32428d70p+3"
+      },
+      {
+       "repr": "-9.067418661762051",
+       "hex": "-0x1.22284b2e6d0f2p+3"
+      }
+     ],
+     "windows": [
+      {
+       "lo": {
+        "repr": "-12.370324679016193",
+        "hex": "-0x1.8bd9b32428d70p+3"
+       },
+       "hi": {
+        "repr": "-9.794168770033254",
+        "hex": "-0x1.3969d49fd9841p+3"
+       },
+       "n_cuts": 4,
+       "n_points": 1,
+       "iroff1_count": 6,
+       "stopped": true
+      }
+     ],
+     "unlocated_minima": 0,
+     "location_skipped_phases": [],
+     "points": [
+      {
+       "x": {
+        "repr": "-11.719938827551886",
+        "hex": "-0x1.7709bd26ee970p+3"
+       },
+       "kind": "root",
+       "found_as": "root",
+       "phase": 0,
+       "theta_deriv": {
+        "repr": "0.0",
+        "hex": "0x0.0p+0"
+       },
+       "lambda": null,
+       "own_window": [
+        {
+         "repr": "-12.370324679016193",
+         "hex": "-0x1.8bd9b32428d70p+3"
+        },
+        {
+         "repr": "-9.794168770033254",
+         "hex": "-0x1.3969d49fd9841p+3"
+        }
+       ],
+       "window_pieces": 3
+      }
+     ]
+    }
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/Y4-h-1-20022.pkl",
+   "sha256": "102ef19afa82fb2a7e21fb759a00b2b266dac171d1d539a69587d75d2280fef6",
+   "bytes": 22332,
+   "r29_pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/state/inputs/Y4-g-1-10283.pkl",
+   "r29_sha256": "a29738acb792b7892f78ab2815e5170fad9494521d59b5206a4aebf0a08615ee",
+   "capture_equals_r29": false,
+   "pass1_pass2_value_equal": true,
+   "reproduces_store": true
+  }
+ ]
+}

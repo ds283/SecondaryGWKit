@@ -1,0 +1,12 @@
+== stage replay_run start 2026-11-12T12:18:43Z
+== stage replay_run exit 0 2026-11-12T12:24:08Z
+== stage replay_check start 2026-11-12T12:24:08Z
+== stage replay_check exit 0 2026-11-12T12:24:09Z
+== stage blocks2_spec start 2026-11-12T12:24:09Z
+== stage blocks2_spec exit 0 2026-11-12T12:24:09Z
+== stage blocks2_run start 2026-11-12T12:24:09Z
+== stage blocks2_run exit 0 2026-11-12T12:25:02Z
+== stage blockcheck start 2026-11-12T12:25:02Z
+== stage blockcheck exit 0 2026-11-12T12:25:02Z
+== pipeline done 2026-11-12T12:25:02Z
+** pipeline exit status 0

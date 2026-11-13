@@ -1,0 +1,14 @@
+$ sh -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ shasum\ -a\ 256\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/docs/levin-phase-floor/06e/review/checks/a3v2_copy_after.sha256
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T12:45:48Z
+# ----
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0000.sqlite: OK
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0001.sqlite: OK
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0002.sqlite: OK
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0003.sqlite: OK
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite: OK
+shasum: WARNING: 1 line is improperly formatted
+# ----
+# end 2026-11-12T12:45:49Z
+# exit 0

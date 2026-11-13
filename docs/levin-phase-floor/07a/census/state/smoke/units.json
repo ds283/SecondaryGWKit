@@ -1,0 +1,11 @@
+{
+ "note": "smoke test (development, not scored): z12's row and one K0 unit with a phase Rule A skipped at 07, same rtol and shard",
+ "units": [
+  {
+   "uid": "g-1e-8-1-2174"
+  },
+  {
+   "uid": "g-1e-8-1-35480"
+  }
+ ]
+}

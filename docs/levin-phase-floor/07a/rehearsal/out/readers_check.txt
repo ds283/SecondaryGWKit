@@ -1,0 +1,17 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-12T12:31:22Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+Z=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal; tail -n +2 $Z/state/r30_store_sha256_before_reads.txt > $Z/state/r30_br.txt; tail -n +2 $Z/state/r30_store_sha256_after_reads.txt > $Z/state/r30_ar.txt; cmp $Z/state/r30_br.txt $Z/state/r30_ar.txt && echo "R30 identical before and after the readers"; echo "exits 0: $(grep -c "^exit 0;" $Z/out/readers.txt); store-identical: $(grep -c "identical before and after" $Z/out/readers.txt); Tracebacks: $(cat $Z/extract/*.log | grep -c Traceback)"; grep -h WARNING $Z/extract/*.log | sed "s/\x1b\[[0-9;]*m//g" | cut -c1-120 | sort | uniq -c; du -sh $Z/extract; find $Z/extract -type f | wc -l; find $Z/extract -size +2M | wc -l; git --no-optional-locks -C /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 status --short --ignored; find /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 -newer $Z/state/r30_launch_marker -not -path "*/.git/*" | head; echo "(tree clean, nothing newer)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(no ray process listed above)"
+# output:
+R30 identical before and after the readers
+exits 0: 6; store-identical: 6; Tracebacks: 0
+      6 !! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+174M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/extract
+3091
+0
+(tree clean, nothing newer)
+(no ray process listed above)
+# exit: 0
+# end: 2026-11-12T12:31:23Z

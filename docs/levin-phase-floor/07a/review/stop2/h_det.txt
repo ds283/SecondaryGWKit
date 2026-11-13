@@ -1,0 +1,25 @@
+script 4697320319db07412a95dc358fbaaa607934c8e92ea95073c0fdda9029aba76d
+input f49d22d435a87556da8c354f87be65e49bf84bfeb58ef039c81cd8348173bf26 h_run1/units.jsonl
+input 1d7dc3f80633b35e93461ad05d7cf9f99879e351cbfa8f447d34230b48c2dd88 h_run2/units.jsonl
+unit h-1e-7-3-34969 / h-1e-7-3-34969, status done / done
+== unit record (run1, run2): 8721 / 8721 leaves, 34 differ
+        1  analytic_06h/seconds   (only first 0, only second 0)
+        5  calls/elapsed   (only first 0, only second 0)
+        1  cc_floor_s   (only first 0, only second 0)
+        1  checked_06g_s   (only first 0, only second 0)
+        1  declared_06h_s   (only first 0, only second 0)
+        1  deep_lines/seconds   (only first 0, only second 0)
+       16  other_calls/elapsed   (only first 0, only second 0)
+        1  pickle_record_sha256   (only first 0, only second 0)
+        1  rebuild_s   (only first 0, only second 0)
+        1  result/compute_time   (only first 0, only second 0)
+        1  scan_07_s   (only first 0, only second 0)
+        1  scan_s   (only first 0, only second 0)
+        1  w3/seconds   (only first 0, only second 0)
+        1  wall_s   (only first 0, only second 0)
+        1  worker_pid   (only first 0, only second 0)
+== region record (run1, run2): 65608 / 65608 leaves, 32 differ
+        5  result_full/WKB_Levin_subintervals/groups/elapsed   (only first 0, only second 0)
+        1  result_full/compute_time   (only first 0, only second 0)
+        5  scan/seconds   (only first 0, only second 0)
+       21  scan_07/scan/seconds   (only first 0, only second 0)

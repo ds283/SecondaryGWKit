@@ -1,0 +1,317 @@
+=== prov.py -> prov.py
+1c1
+< """[prompt 07 section 5 rehearsal agent, R29 (section 10, Rule A): the stop-1 copy, changed where marked "prompt 07 r29": three trees (p R27, o R28, g R29) and their stores; the parents assertion one level deeper.]
+---
+> """[prompt 07a section 5 rehearsal agent, R30: R29's copy, changed where marked "prompt 07a r30": one tree, h (4bf50d34, code 1ec734d7), reading R30; the parents assertion one level shallower.]
+2a3,4
+> [prompt 07 section 5 rehearsal agent, R29 (section 10, Rule A): the stop-1 copy, changed where marked "prompt 07 r29": three trees (p R27, o R28, g R29) and their stores; the parents assertion one level deeper.]
+> 
+171c173
+< assert HERE.parents[5] == MAIN, HERE  # prompt 07 r29: var/levin-phase-floor-07/rehearsal/r29/scripts/capture, one deeper; prompt 07 rehearsal: holds for var/levin-phase-floor-07/rehearsal/scripts/capture; prompt 06b: one directory deeper than 06a's; prompt 06g addendum 1 (V1's calls against the rehearsal stores): one deeper again (references/v1/scripts)
+---
+> assert HERE.parents[4] == MAIN, HERE  # prompt 07a r30: var/levin-phase-floor-07a/rehearsal/scripts/capture; prompt 07 r29: var/levin-phase-floor-07/rehearsal/r29/scripts/capture, one deeper; prompt 07 rehearsal: holds for var/levin-phase-floor-07/rehearsal/scripts/capture; prompt 06b: one directory deeper than 06a's; prompt 06g addendum 1 (V1's calls against the rehearsal stores): one deeper again (references/v1/scripts)
+289a292,299
+> # prompt 07a r30: R29's trees and stores are kept above, by name, for the record; one tree, h, the worktree at Part C's
+> # dispatch SHA 4bf50d34 (code 1ec734d7, R30's tree), reading R30 through a directory of symbolic links in
+> # var/levin-phase-floor-07a/rehearsal/state/stores/r30 (as R29's), opened read-only
+> P07_TREE, P07_SHA, O07_TREE, O07_SHA, G07_TREE, G07_SHA = P_TREE, P_SHA, O_TREE, O_SHA, G_TREE, G_SHA  # prompt 07a r30: not used
+> H_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3")  # prompt 07a r30
+> H_SHA = "4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03"  # prompt 07a r30 (code 1ec734d7)
+> TREES = {"h": (H_TREE, H_SHA)}  # prompt 07a r30
+> STORE_DIR_BY_TREE = {"h": MAIN / "var" / "levin-phase-floor-07a" / "rehearsal" / "state" / "stores" / "r30"}  # prompt 07a r30
+=== worker.py -> worker.py
+1c1,3
+< """[prompt 07 section 5 rehearsal agent, R29: the stop-1 copy, changed where marked "prompt 07 r29": guard_07 also records the result's location_skipped_phases (Rule A, prompt 07 section 10).]
+---
+> """[prompt 07a section 5 rehearsal agent, R30: R29's copy, changed where marked "prompt 07a r30": guard_07's location_skipped_phases also records each entry's "reason" (07a's entry form); and a route diagnostic, ``route_07a``, per summarised call: a pass-through at ``_adaptive_levin_subregion`` (the existing one, extended) and at ``_Basis_SinCos.build_Levin_data`` (the class attribute, installed for the timed section only) records, for every region solve the driver makes in the call, its span, the caller (as solve_acc names it), V as build_Levin_data returns it, 07's estimate mean|theta'| * width computed from the same theta_prime_Cheb by the parent's expression (e182bc7a), and the solve's is_direct; after the call each solve is classed by whether its C2 route (V < SIX_PI against estimate < SIX_PI) or LU choice (> _LEVIN_DIRECT_SOLVE_PHASE_SPAN) differs and whether its span is a returned region. Nothing the pass-throughs return differs from what they are given.]
+> 
+> [prompt 07 section 5 rehearsal agent, R29: the stop-1 copy, changed where marked "prompt 07 r29": guard_07 also records the result's location_skipped_phases (Rule A, prompt 07 section 10).]
+1647c1649,1650
+<             [{"phase": d.get("phase"), "variation": h(d.get("variation"))} for d in res["location_skipped_phases"]]
+---
+>             [{"phase": d.get("phase"), "variation": h(d.get("variation")), "reason": d.get("reason")}  # prompt 07a r30: reason
+>              for d in res["location_skipped_phases"]]
+1693a1697,1700
+>     try:  # prompt 07a r30
+>         out["route_07a"] = _route_07a(call)
+>     except Exception:
+>         out["route_07a"] = {"error": traceback.format_exc()[-2000:]}
+1696a1704,1742
+> def _route_07a(call):
+>     """prompt 07a r30: every region solve of the call (see the module docstring), classed by whether its
+>     C2 route or LU choice differs between V and 07's estimate, and whether its span is a returned region.
+>     None if the call recorded no solves (bld_07a None)."""
+>     sols = call.get("bld_07a")
+>     if sols is None:
+>         return None
+>     import importlib as _il7a
+> 
+>     LQ_ = _il7a.import_module("AdaptiveLevin.levin_quadrature")
+>     six = float(LQ_.SIX_PI)
+>     lu = float(LQ_._LEVIN_DIRECT_SOLVE_PHASE_SPAN)
+>     ret = {(float(min(r.start, r.end)).hex(), float(max(r.start, r.end)).hex()): r for r in call["result"]["regions"]}
+>     made = {(float(min(r.start, r.end)).hex(), float(max(r.start, r.end)).hex()) for r in (call.get("made") or [])}
+>     counts = {}
+>     changed = []
+>     for s in sols:
+>         a, b = float(s["span"][0]), float(s["span"][1])
+>         k = (float(min(a, b)).hex(), float(max(a, b)).hex())
+>         if not s["builds"]:
+>             cls = "no build recorded"
+>             counts[(s["desc"], cls)] = counts.get((s["desc"], cls), 0) + 1
+>             continue
+>         old, V = s["builds"][0]
+>         gate_diff = (V < six) != (old < six)
+>         lu_diff = (V < six) is False and (V > lu) != (old > lu)
+>         returned = k in ret
+>         cls = ("route differs" if gate_diff else "LU differs" if lu_diff else "same") + (" | returned" if returned else " | not returned") + (" | made" if k in made else "")
+>         counts[(s["desc"], cls)] = counts.get((s["desc"], cls), 0) + 1
+>         if (gate_diff or lu_diff) and len(changed) < 40:
+>             changed.append({"a": a.hex(), "b": b.hex(), "desc": s["desc"], "V": V.hex(), "V_repr": repr(V), "est": old.hex(), "est_repr": repr(old),
+>                             "is_direct": s.get("is_direct"), "returned": returned, "made": k in made,
+>                             "depth": None if not returned else int(ret[k].depth), "n_builds": len(s["builds"])})
+>     return {"n_solves": len(sols), "counts": {f"{d_} || {c_}": n_ for (d_, c_), n_ in sorted(counts.items())},
+>             "n_route_differs": sum(n_ for (d_, c_), n_ in counts.items() if c_.startswith("route differs")),
+>             "n_lu_differs": sum(n_ for (d_, c_), n_ in counts.items() if c_.startswith("LU differs")),
+>             "changed": changed}
+> 
+> 
+1879c1925,1949
+<         return orig_subregion(*a_, **kw_)
+---
+>         # prompt 07a r30: the route diagnostic's record of this solve (see the module docstring)
+>         sols_ = holder.get("bld")
+>         if sols_ is None:
+>             return orig_subregion(*a_, **kw_)
+>         try:
+>             fr_ = sys._getframe(1)
+>             desc_ = (str(fr_.f_locals.get("description")) if fr_.f_code.co_name == "_solve" else f"<called from {fr_.f_code.co_name}>")
+>             if desc_.startswith("trust check:"):
+>                 desc_ = "trust check: a quarter"
+>             span_ = a_[0] if a_ else kw_.get("x_span")
+>             ent_ = {"span": (float(span_[0]), float(span_[1])), "desc": desc_, "builds": []}
+>         except Exception as e_:
+>             ent_ = {"span": (float("nan"), float("nan")), "desc": f"<unrecorded: {type(e_).__name__}>", "builds": []}
+>         holder["bstack"].append(ent_)
+>         try:
+>             d_ = orig_subregion(*a_, **kw_)
+>         finally:
+>             holder["bstack"].pop()
+>         try:
+>             ent_["is_direct"] = bool(d_.get("is_direct", False))
+>             ent_["phase_span"] = d_.get("phase_span")
+>         except Exception:
+>             pass
+>         sols_.append(ent_)
+>         return d_
+1890c1960,1961
+<               "premise_detail": None, "made": None}  # prompt 06g
+---
+>               "premise_detail": None, "made": None,  # prompt 06g
+>               "bld": None, "bstack": []}  # prompt 07a r30
+1943a2015,2031
+>     # prompt 07a r30: build_Levin_data pass-through (the class attribute; timed section only): records, on the solve
+>     # being made (holder["bstack"]), 07's estimate from the returned theta_prime_Cheb by the parent's expression and V
+>     BLD_CLASS = LQ._Basis_SinCos
+>     orig_bld = BLD_CLASS.__dict__["build_Levin_data"]
+> 
+>     def w_bld(self, *a_, **k_):
+>         out_ = orig_bld(self, *a_, **k_)
+>         st_ = holder.get("bstack")
+>         if st_:
+>             try:
+>                 grid_ = a_[0] if a_ else k_["grid"]
+>                 est_ = float(np.mean(np.fabs(out_[1])) * np.fabs(grid_[0] - grid_[-1]))
+>                 st_[-1]["builds"].append((est_, float(out_[4])))
+>             except Exception:
+>                 pass
+>         return out_
+> 
+1949a2038
+>         BLD_CLASS.build_Levin_data = w_bld  # prompt 07a r30
+1956a2046
+>         BLD_CLASS.build_Levin_data = orig_bld  # prompt 07a r30
+1966a2057,2059
+>         sols07a = []  # prompt 07a r30
+>         holder["bld"] = sols07a
+>         holder["bstack"] = []
+1974a2068
+>             holder["bld"] = None  # prompt 07a r30
+2000a2095
+>                     "bld_07a": sols07a,  # prompt 07a r30
+=== replay07_r29.py -> replay07a_r30.py
+1c1,7
+< """levin-phase-floor prompt 07 section 5 resumed (section 10, Rule A), rehearsal agent: the replay of R29's located
+---
+> """[prompt 07a section 5 rehearsal agent, R30: R29's replay07_r29.py (192c9c42), changed where marked "prompt 07a r30": one tree h
+> (4bf50d34, code 1ec734d7) reading R30 (R29 read for the record only); the rows: every R30 row with a nonzero count, P1's two
+> rows, the w rows, the two block rows, and the rows holding one of the 49 group records whose abserr moved against R29 with
+> value, regions and location unchanged (out/qsi_records_r29_r30.csv); the check also reports each call's route_07a; the
+> blockcheck also compares each capture's blob with R29's (state/inputs/ of R29's records).]
+> 
+> levin-phase-floor prompt 07 section 5 resumed (section 10, Rule A), rehearsal agent: the replay of R29's located
+42,46c48,53
+< REH = MAIN / "var" / "levin-phase-floor-07" / "rehearsal" / "r29"
+< STORES = {"p": MAIN / "var" / "datastores" / "levin-phase-floor-07-r27.sqlite",
+<           "o": MAIN / "var" / "datastores" / "levin-phase-floor-07-r28.sqlite",
+<           "g": MAIN / "var" / "datastores" / "levin-phase-floor-07-r29.sqlite"}
+< TAG = {"p": "R27", "o": "R28", "g": "R29"}
+---
+> REH = MAIN / "var" / "levin-phase-floor-07a" / "rehearsal"  # prompt 07a r30
+> STORES = {"h": MAIN / "var" / "datastores" / "levin-phase-floor-07a-r30.sqlite"}  # prompt 07a r30
+> TAG = {"h": "R30"}  # prompt 07a r30
+> R29_STORE = MAIN / "var" / "datastores" / "levin-phase-floor-07-r29.sqlite"  # prompt 07a r30: for the record only
+> R29_REH = MAIN / "var" / "levin-phase-floor-07" / "rehearsal" / "r29"  # prompt 07a r30: R29's block captures (read only)
+> W = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3")  # prompt 07a r30
+119,121c126,129
+<     v1_rows = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-7460035/docs/levin-phase-floor/06g/references/v1/out/v1_rows.json")
+<     ins = [v1_rows] + [f for t in ("r27", "r28", "r29") for f in sorted(STORES["g"].parent.glob(f"levin-phase-floor-07-{t}*.sqlite"))]
+<     lines = header(Path(__file__).resolve(), "prompt 07 r29: the rows to replay and the four-block rows", ins)
+---
+>     v1_rows = W / "docs/levin-phase-floor/06g/references/v1/out/v1_rows.json"  # prompt 07a r30
+>     rec_csv = REH / "out" / "qsi_records_r29_r30.csv"  # prompt 07a r30
+>     ins = [v1_rows, rec_csv] + sorted(STORES["h"].parent.glob("levin-phase-floor-07a-r30*.sqlite")) + sorted(R29_STORE.parent.glob("levin-phase-floor-07-r29*.sqlite"))
+>     lines = header(Path(__file__).resolve(), "prompt 07a r30: the rows to replay and the four-block rows", ins)
+122a131
+>     data29 = read_store(R29_STORE)  # prompt 07a r30
+126c135
+<         hits = [k for k in data["g"] if _close(k, target)]
+---
+>         hits = [k for k in data["h"] if _close(k, target)]
+133,136c142,143
+<     touched = {k for k, rec in data["g"].items() if any(any(r[2].get(g) for g in GUARD) for r in levin_records(rec["metadata"]))}
+<     # the Levin records that differ between R28 and R29 (out/r29_vs_r28_records.csv): replayed too, for V_i
+<     chg_csv = REH / "out" / "r29_vs_r28_records.csv"
+<     lines.append(f"# input {chg_csv} sha256 {sha256(chg_csv)}")
+---
+>     touched = {k for k, rec in data["h"].items() if any(any(r[2].get(g) for g in GUARD) for r in levin_records(rec["metadata"]))}
+>     # prompt 07a r30: the 49 group records whose abserr moved against R29 with value, regions and location unchanged
+138c145
+<     with open(chg_csv) as f:
+---
+>     with open(rec_csv) as f:
+140c147,150
+<             changed.add(((float(r_["k"]), float(r_["q"]), float(r_["r"]), float(r_["z_response"])), r_["record"]))
+---
+>             fs = set(r_["fields_differing"].split())
+>             if (r_["kind"] == "group" and "value" not in fs and "abserr" in fs
+>                     and r_["regions_29"] == r_["regions_30"] and r_["stationary_points_29"] == "0" and r_["stationary_points_30"] == "0"):
+>                 changed.add(((float(r_["k"]), float(r_["q"]), float(r_["r"]), float(r_["z_response"])), r_["record"]))
+145c155
+<              "changed_vs_r28": key in chg_keys, "p1": (p1_keys.index(key) + 1) if key in p1_keys else None,
+---
+>              "changed_vs_r28": key in chg_keys, "p1": (p1_keys.index(key) + 1) if key in p1_keys else None,  # prompt 07a r30: changed_vs_r28 read as "holds one of the 49 abserr-only records"
+147c157
+<         for t in ("p", "o", "g"):
+---
+>         for t in ("h",):  # prompt 07a r30
+150c160,161
+<         recs = {t: {name: rec for _, name, rec, _ in levin_records(data[t][key]["metadata"])} for t in ("p", "o")}
+---
+>         e["R29"] = {k_: data29[key][k_] for k_ in ("shard", "serial", "k_exit_serial", "total", "total_abserr", "analytic_rad", "log10_rtol")}  # prompt 07a r30
+>         recs29 = {name: rec for _, name, rec, _ in levin_records(data29[key]["metadata"])}  # prompt 07a r30
+152c163
+<         for kind, name, rec, sub in levin_records(data["g"][key]["metadata"]):
+---
+>         for kind, name, rec, sub in levin_records(data["h"][key]["metadata"]):
+161,162c172
+<                                  "R29": fieldsof(rec), "R28": fieldsof(recs["o"][name]),
+<                                  "R27": fieldsof(recs["p"][name], counts=False)})
+---
+>                                  "R30": fieldsof(rec), "R29": fieldsof(recs29[name])})  # prompt 07a r30
+170c180
+<     print(f"changed records (R29 vs R28) {len(changed)} in {len(chg_keys)} rows, all kept: {sum(1 for e in rows for r in e['records'] if r['changed_vs_r28'])}")
+---
+>     print(f"abserr-only records (R30 vs R29) {len(changed)} in {len(chg_keys)} rows, all kept: {sum(1 for e in rows for r in e['records'] if r['changed_vs_r28'])}")
+219c229
+<     for l in header(Path(__file__).resolve(), f"prompt 07 r29: run {spec['name']}", [Path(spec_path)]):
+---
+>     for l in header(Path(__file__).resolve(), f"prompt 07a r30: run {spec['name']}", [Path(spec_path)]):
+273,274c283,284
+<             ws[i % MAX_WORKERS].append(unit_spec("g", e["R29"]))
+<         spec = {"name": "replay", "workers": [{"name": f"replay-g-{i}", "tree": "g", "units": u} for i, u in enumerate(ws)]}
+---
+>             ws[i % MAX_WORKERS].append(unit_spec("h", e["R30"]))  # prompt 07a r30
+>         spec = {"name": "replay", "workers": [{"name": f"replay-h-{i}", "tree": "h", "units": u} for i, u in enumerate(ws)]}
+278c288
+<                                                for t in ("p", "o", "g")]}
+---
+>                                                for t in ("h",)]}  # prompt 07a r30
+282c292
+<         for t in ("p", "o", "g"):
+---
+>         for t in ("h",):  # prompt 07a r30
+304c314
+<     lines = header(Path(__file__).resolve(), "prompt 07 r29: the replay checked against R29, record by record",
+---
+>     lines = header(Path(__file__).resolve(), "prompt 07a r30: the replay checked against R30, record by record",
+315c325
+<         uid = f"g-1e-7-{e['R29']['shard']}-{e['R29']['serial']}"
+---
+>         uid = f"h-1e-7-{e['R30']['shard']}-{e['R30']['serial']}"  # prompt 07a r30
+320,321c330,331
+<                   and u["result"]["total"]["hex"] == e["R29"]["total"]
+<                   and u["result"]["analytic_rad"]["hex"] == e["R29"]["analytic_rad"])
+---
+>                   and u["result"]["total"]["hex"] == e["R30"]["total"]
+>                   and u["result"]["analytic_rad"]["hex"] == e["R30"]["analytic_rad"])  # prompt 07a r30
+333c343
+<             want = r["R29"]
+---
+>             want = r["R30"]  # prompt 07a r30
+339c349
+<                 cands = block_call(u, want, blk, "g") if r["path"].startswith("analytic.") else []
+---
+>                 cands = block_call(u, want, blk, "h") if r["path"].startswith("analytic.") else []  # prompt 07a r30
+350c360,362
+<                            "row_total_and_analytic_rad_equal": row_ok, "fields_equal": fields, "reproduces": ok})
+---
+>                            "row_total_and_analytic_rad_equal": row_ok, "fields_equal": fields, "reproduces": ok,
+>                            "abserr_only_vs_r29": bool(r.get("changed_vs_r28")),  # prompt 07a r30
+>                            "route_07a": (c or {}).get("route_07a")})  # prompt 07a r30
+382c394,418
+<     print(f"calls with a phase Rule A skipped (location_skipped_phases non-empty) in the replayed rows: {len(skipped_calls)}")
+---
+>     # prompt 07a r30: the route diagnostic, over every replayed call, and on the 49 abserr-only records
+>     agg = Counter()
+>     n_calls = 0
+>     for e in rows:
+>         if not (e["touched"] or e["p1"] or e["wid"]):
+>             continue
+>         u, _, _ = units[f"h-1e-7-{e['R30']['shard']}-{e['R30']['serial']}"]
+>         for c in (u.get("calls") or []) + (u.get("other_calls") or []):
+>             rt = c.get("route_07a")
+>             if not rt or "counts" not in rt:
+>                 agg["<call without route_07a>"] += 1
+>                 continue
+>             n_calls += 1
+>             for k_, n_ in rt["counts"].items():
+>                 agg[k_] += n_
+>     print(f"route_07a over {n_calls} replayed calls (solve caller || class: solves):")
+>     for k_, n_ in sorted(agg.items()):
+>         print(f"  {k_}: {n_}")
+>     ao = [c for c in checks if c["abserr_only_vs_r29"]]
+>     print(f"the abserr-only records: {len(ao)}; reproduced {sum(c['reproduces'] for c in ao)}")
+>     for c in ao:
+>         rt = c["route_07a"] or {}
+>         print(f"  {c['key']} {c['path']} {c['label']}: reproduces {c['reproduces']}; solves {rt.get('n_solves')}, route differs {rt.get('n_route_differs')}, "
+>               f"LU differs {rt.get('n_lu_differs')}; classes {rt.get('counts')}")
+>     print(f"calls with a phase skipped (location_skipped_phases non-empty) in the replayed rows: {len(skipped_calls)}")
+395c431
+<     lines = header(Path(__file__).resolve(), "prompt 07 r29: the four blocks at p, o and g, checked against each store",
+---
+>     lines = header(Path(__file__).resolve(), "prompt 07a r30: the four blocks at h, checked against R30, and each capture against R29's",
+404c440
+<             for t in ("p", "o", "g"):
+---
+>             for t in ("h",):  # prompt 07a r30
+437a474,477
+>                     # prompt 07a r30: R29's capture of the same block (its g pickle), compared byte for byte
+>                     p29 = R29_REH / "state" / "inputs" / f"{blk}-g-{e['R29']['shard']}-{e['R29']['serial']}.pkl"
+>                     b29 = p29.read_bytes()
+>                     out.update(r29_pickle=str(p29), r29_sha256=hashlib.sha256(b29).hexdigest(), capture_equals_r29=(b29 == blob))
+447c487,488
+<                       f"value {out['pass1'].get('value')} abserr {out['pass1'].get('abserr')} regions {out['pass1'].get('regions')}; pickle {out.get('pickle')}")
+---
+>                       f"value {out['pass1'].get('value')} abserr {out['pass1'].get('abserr')} regions {out['pass1'].get('regions')}; pickle {out.get('pickle')}; "
+>                       f"capture equals R29's {out.get('capture_equals_r29')}")

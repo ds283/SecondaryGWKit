@@ -1,0 +1,9 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:scripts nice /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_07a.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744 state/score_07a_units.json --processes 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:12:34Z
+# ----
+units 18560; statuses ['done']; wrote state/score_07a_units.json sha256 ccfd448e2b33bfbda92455b5120f83ad9b524c09985f6d673b6ce979cf9cb987
+# ----
+# end 2026-11-12T20:13:08Z
+# exit 0

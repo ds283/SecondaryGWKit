@@ -1,0 +1,20 @@
+2026-11-12T12:18:43Z # prompt 07a r30: run replay
+2026-11-12T12:18:43Z # written 2026-11-12T12:18:43Z on mps026298.phys.susx.ac.uk
+2026-11-12T12:18:43Z # script replay07a_r30.py sha256 c7ff4d85598f48624e2d8c3baf7d4403539f3155a3e63883ccce0328e45ddbd9
+2026-11-12T12:18:43Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+2026-11-12T12:18:43Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-12T12:18:43Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/replay_spec.json sha256 6a4a4097ce89cdf7c3fc529164c119bd3d08337fefc19a1fd60ebaa8857a8a8b
+2026-11-12T12:18:43Z 6 workers, 223 units, at most 6 at once
+2026-11-12T12:18:43Z start replay-h-0 (h, 38 units): pid 79533
+2026-11-12T12:18:43Z start replay-h-1 (h, 37 units): pid 79534
+2026-11-12T12:18:43Z start replay-h-2 (h, 37 units): pid 79535
+2026-11-12T12:18:43Z start replay-h-3 (h, 37 units): pid 79536
+2026-11-12T12:18:43Z start replay-h-4 (h, 37 units): pid 79537
+2026-11-12T12:18:43Z start replay-h-5 (h, 37 units): pid 79538
+2026-11-12T12:23:32Z end replay-h-2: rc 0 after 288.8 s
+2026-11-12T12:23:33Z end replay-h-3: rc 0 after 289.8 s
+2026-11-12T12:23:36Z end replay-h-1: rc 0 after 292.9 s
+2026-11-12T12:23:39Z end replay-h-4: rc 0 after 295.9 s
+2026-11-12T12:24:05Z end replay-h-5: rc 0 after 322.1 s
+2026-11-12T12:24:07Z end replay-h-0: rc 0 after 324.2 s
+2026-11-12T12:24:08Z done in 325.2 s; return codes {0: 6}

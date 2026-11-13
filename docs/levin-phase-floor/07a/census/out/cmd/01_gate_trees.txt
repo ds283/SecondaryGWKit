@@ -1,0 +1,67 @@
+$ bash state/gate_trees.sh
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T12:44:34Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+status --short --ignored: [!! .DS_Store;!! .idea/;!! AdaptiveLevin/__pycache__/;!! AdaptiveLevin/tests/__pycache__/;!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf;!! Analytical_OmegaGW_LISA_Taiji_TianQin.png;!! ComputeTargets/__pycache__/;!! CosmologyConcepts/__pycache__/;!! CosmologyModels/GenericEOS/__pycache__/;!! CosmologyModels/LambdaCDM/__pycache__/;!! CosmologyModels/__pycache__/;!! Datastore/;!! GkSource-out/;!! LiouvilleGreen/.DS_Store;!! LiouvilleGreen/__pycache__/;!! LiouvilleGreen/tests/.DS_Store;!! LiouvilleGreen/tests/__pycache__/;!! LiouvilleGreen/tests/test_3bessel_analytic/;!! LiouvilleGreen/tests/three_bessel_debug/;!! MetadataConcepts/__pycache__/;!! ObjectFactories/__pycache__/;!! Omega_GW_sensitivity.pdf;!! Omega_GW_sensitivity.png;!! Quadrature/__pycache__/;!! Quadrature/integrators/__pycache__/;!! Quadrature/supervisors/__pycache__/;!! RayTools/;!! StoreFixtures/__pycache__/;!! Units/__pycache__/;!! __pycache__/;!! config/__pycache__/;!! docs/handover/a3-v2/findings/__pycache__/;!! profile-db.sqlite;!! test-db-qcd-shard0000.sqlite;!! test-db-qcd-shard0001.sqlite;!! test-db-qcd-shard0002.sqlite;!! test-db-qcd-shard0003.sqlite;!! test-db-qcd-shard0004.sqlite;!! test-db-qcd-shard0005.sqlite;!! test-db-qcd-shard0006.sqlite;!! test-db-qcd-shard0007.sqlite;!! test-db-qcd-shard0008.sqlite;!! test-db-qcd-shard0009.sqlite;!! test-db-qcd-shard0010.sqlite;!! test-db-qcd-shard0011.sqlite;!! test-db-qcd-shard0012.sqlite;!! test-db-qcd-shard0013.sqlite;!! test-db-qcd-shard0014.sqlite;!! test-db-qcd-shard0015.sqlite;!! test-db-qcd-shard0016.sqlite;!! test-db-qcd-shard0017.sqlite;!! test-db-qcd-shard0018.sqlite;!! test-db-qcd-shard0019.sqlite;!! test-db-qcd.sqlite;!! thirdparty/__pycache__/;!! three_bessel_debug/;!! tools/__pycache__/;!! var/;!! venv/;]
+status --short: []
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3
+4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+status --short --ignored: []
+status --short: []
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 4bf50d34 (detached HEAD)
+== git log --oneline -6 at h
+4bf50d34 Write levin-phase-floor 07a's Part C dispatch
+1ec734d7 Route the C2 gate on the raw phase and count windows as dqage does
+dadd63a0 Amend levin-phase-floor 07a at Part B's stop
+a9f6abc3 Amend levin-phase-floor 07a with the window-stop choice
+f93aafd0 Write levin-phase-floor 07a and its orchestrator note
+b5405eb0 Record the housekeeping after levin-phase-floor 07
+== h's parents: 4bf50d34^ and 1ec734d7^
+1ec734d7db52d7945a7e8ead35eb1bb04743a9fd
+dadd63a0cbc9c34eefff9a8d1b937bd998dbf2b1
+== S0': git diff --stat e182bc7a dadd63a0 -- . ':!docs' ':!prompts'
+ CLAUDE.md | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+== git diff --stat dadd63a0 1ec734d7 -- . ':!docs' ':!prompts'
+ AdaptiveLevin/levin_quadrature.py                 | 558 ++++++++++++++++------
+ AdaptiveLevin/tests/test_levin_phase_variation.py | 357 ++++++++++++++
+ AdaptiveLevin/tests/test_levin_quadrature.py      |  29 +-
+ AdaptiveLevin/tests/test_levin_stationary.py      | 376 ++++++++++++---
+ LiouvilleGreen/bessel_phase.py                    |   9 +-
+ LiouvilleGreen/tests/test_bessel_compatibility.py |  99 +++-
+ LiouvilleGreen/three_bessel_integrals.py          |   7 +-
+ 7 files changed, 1212 insertions(+), 223 deletions(-)
+== git diff --stat 1ec734d7 4bf50d34 -- . ':!docs' ':!prompts' (expected empty)
+(end)
+== git diff --stat e182bc7a 4bf50d34 -- ComputeTargets ObjectFactories RunDrivers main.py tools config CosmologyModels Quadrature requirements.txt StoreFixtures (expected empty)
+(end)
+== module hashes (file in h; git show at each commit)
+4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/levin_quadrature.py
+33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/ComputeTargets/QuadSourceIntegral.py
+d6ffac2b81f2bffe4af7bec41eb83861e7196acc3aaaac4ab9b483d6f3c3b05b  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/LiouvilleGreen/three_bessel_integrals.py
+01d2de604cedfd226881eaa2913d9687c00145ad6484a83e967acc72c49b69c7  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/LiouvilleGreen/bessel_phase.py
+4cebf6e3bcae4f464a81cadc5e3205d53015cfc139e8f93f2fdf8dfb1d83b878  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/AdaptiveLevin/__init__.py
+levin_quadrature.py at e182bc7a: 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc  -  blob 9ea30e2b62db911758ccb08efec314eb97df1c05
+levin_quadrature.py at dadd63a0: 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc  -  blob 9ea30e2b62db911758ccb08efec314eb97df1c05
+levin_quadrature.py at 1ec734d7: 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  -  blob 0701d2a6a9442bdb88606276580421a3522cba63
+levin_quadrature.py at 4bf50d34: 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  -  blob 0701d2a6a9442bdb88606276580421a3522cba63
+AdaptiveLevin/__init__.py at e182bc7a: 4cebf6e3bcae4f464a81cadc5e3205d53015cfc139e8f93f2fdf8dfb1d83b878  -
+AdaptiveLevin/__init__.py at dadd63a0: 4cebf6e3bcae4f464a81cadc5e3205d53015cfc139e8f93f2fdf8dfb1d83b878  -
+AdaptiveLevin/__init__.py at 1ec734d7: 4cebf6e3bcae4f464a81cadc5e3205d53015cfc139e8f93f2fdf8dfb1d83b878  -
+QuadSourceIntegral.py at e182bc7a: 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  -
+QuadSourceIntegral.py at dadd63a0: 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  -
+QuadSourceIntegral.py at 1ec734d7: 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  -
+== __pycache__ in h (expected none)
+(end)
+== python
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+== load
+12:44  up 36 days,  3:21, 1 user, load averages: 4.60 4.54 5.37
+# ----
+# end 2026-11-12T12:44:36Z
+# exit 0

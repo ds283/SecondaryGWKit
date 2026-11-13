@@ -1,0 +1,8 @@
+script 8a98959990971c4c38c2bfda395330cf6aba777acd2935b104884945d72a4a42
+checkpoint 461df2ec66969a113e9f6d590f05a4d5b300d7c1e0cb62d05c7385d23e8de56b
+{'forced_sum': 18236, 'nonforced_sum': 0} calls with forced partition 4416 root-located calls 4804 sets equal False
+forced partition count per call: {3: 2080, 4: 776, 5: 655, 6: 771, 7: 93, 8: 31, 9: 8, 10: 2}
+forced subset of root-located: True
+root-located without forced partition, by (kind, rtol, has window, has pieces, returned window leaves, point kinds):
+   194 ('calls', '1e-7', True, True, True, (('root', 1),))
+   194 ('calls', '1e-8', True, True, True, (('root', 1),))

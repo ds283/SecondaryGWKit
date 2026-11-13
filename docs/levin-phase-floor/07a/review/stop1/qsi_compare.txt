@@ -1,0 +1,47 @@
+script 39c08073a8c8198ca05a85a78d7134f64b354789fd765301d7e2566898eff8c6
+input 28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9 var/datastores/levin-phase-floor-07-r29.sqlite
+input dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874 var/datastores/levin-phase-floor-07-r29-shard0000.sqlite
+input 1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec var/datastores/levin-phase-floor-07-r29-shard0001.sqlite
+input 7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2 var/datastores/levin-phase-floor-07-r29-shard0002.sqlite
+input 897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca var/datastores/levin-phase-floor-07-r29-shard0003.sqlite
+input e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84 var/datastores/levin-phase-floor-07a-r30.sqlite
+input e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2 var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite
+input f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700 var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite
+input a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite
+input b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0 var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite
+rows 864 864 keys equal True
+identical rows 484 moved rows 380
+  column total moved in 25 rows
+  column total_abserr moved in 60 rows
+  column total_converged moved in 0 rows
+  column analytic_rad moved in 168 rows
+  column WKB_Levin moved in 25 rows
+  column numeric_quad moved in 0 rows
+  column WKB_Levin_num_regions moved in 17 rows
+  column WKB_Levin_max_depth moved in 2 rows
+  column total_phase_limited moved in 0 rows
+total_converged up 0 down 0 converged R29 862 R30 862
+largest |dtotal|/abserr29 0.0470319  /abserr30 0.0744714  at k=316227.7660168379 z=191807016.520263
+rows with |dtotal| > abserr29+abserr30: 0 (S3's quantity; not scored here)
+R29 group {'stationary_points': 44, 'window_pieces': 562, 'guarded_regions': 0, 'guard_at_depth_max': 0} analytic {'stationary_points': 336, 'window_pieces': 2172, 'guarded_regions': 4, 'guard_at_depth_max': 0} rows with a located point 170
+R30 group {'stationary_points': 44, 'window_pieces': 562, 'guarded_regions': 0, 'guard_at_depth_max': 0} analytic {'stationary_points': 400, 'window_pieces': 2515, 'guarded_regions': 0, 'guard_at_depth_max': 0} rows with a located point 202
+Levin records differing (non-timing): {'group': 88, 'analytic': 1146}
+group records: value bit-equal, abserr differs, no location in either: 49
+  rel change range -0.192 .. 1.8; regions unchanged in 49
+    316227.7660168379 3046979177.3866296 ('group', (1, 'G+q+r')) 6.482153119657567e-23 6.492599335076263e-23 5 5
+    316227.7660168379 755.6870974333904 ('group', (2, 'G+q+r')) 1.3335744606725757e-27 1.3193387792821496e-27 28 28
+    316227.7660168379 331553.02818648185 ('group', (1, 'G+q-r')) 1.4537268649497723e-26 1.460569654218722e-26 29 29
+    316227.7660168379 331553.02818648185 ('group', (1, 'G-q+r')) 1.4537268649497723e-26 1.460569654218722e-26 29 29
+    1000000.0 27520.004604907732 ('group', (1, 'G+q+r')) 7.771677354399642e-28 2.1741476588052135e-27 91 91
+    1000000.0 333476695.529405 ('group', (1, 'G+q+r')) 8.713148324756075e-24 7.038130523881948e-24 8 8
+    1000000.0 252909410.75517792 ('group', (1, 'G+q-r')) 2.2567437186566995e-24 2.1427493585967027e-24 27 27
+    1000000.0 252909410.75517792 ('group', (1, 'G-q+r')) 2.2567437186566995e-24 2.1427493585967027e-24 27 27
+    1000000.0 579784350.3262237 ('group', (1, 'G+q+r')) 1.090613057981181e-23 1.0787964835958986e-23 1 1
+    1000000.0 760071.5863905636 ('group', (1, 'G+q+r')) 1.3168860225649184e-26 1.3104735737326738e-26 88 88
+    100000.0 1732.3813753196057 ('group', (1, 'G+q-r')) 2.65297190690744e-27 2.1908448223316132e-27 86 86
+    100000.0 1732.3813753196057 ('group', (1, 'G-q+r')) 2.65297190690744e-27 2.1908448223316132e-27 86 86
+    100000.0 20992322.666081365 ('group', (1, 'G+q+r')) 2.5536122134383496e-23 2.538386360073028e-23 94 94
+    100000.0 5266935.440690548 ('group', (1, 'G+q-r')) 6.910575603606596e-24 5.7891134524930246e-24 32 32
+    100000.0 5266935.440690548 ('group', (1, 'G-q+r')) 6.910575603606596e-24 5.7891134524930246e-24 32 32
+    100000.0 83668694.2301112 ('group', (1, 'G+q-r')) 2.099752172414399e-23 1.8461110185382644e-23 7 7
+    100000.0 83668694.2301112 ('group', (1, 'G-q+r')) 2.099752172414399e-23 1.8461110185382644e-23 7 7

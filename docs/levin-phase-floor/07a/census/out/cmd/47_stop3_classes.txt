@@ -1,0 +1,188 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/stop3_classes_07a.py out/stop3/compare_census_calls.calls.jsonl out/stop3/classes.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:00:17Z
+# ----
+{
+ "by_rtol_kind_class": {
+  "1e-7|analytic|aux_only": 7371,
+  "1e-7|analytic|own": 1380,
+  "1e-7|analytic|untouched": 96983,
+  "1e-7|analytic|window_both": 1514,
+  "1e-7|analytic|window_h_only": 168,
+  "1e-7|group|aux_only": 660,
+  "1e-7|group|own": 1906,
+  "1e-7|group|untouched": 32791,
+  "1e-7|group|window_both": 956,
+  "1e-7|group|window_h_only": 1012,
+  "1e-8|analytic|aux_only": 7251,
+  "1e-8|analytic|own": 2186,
+  "1e-8|analytic|untouched": 96297,
+  "1e-8|analytic|window_both": 1514,
+  "1e-8|analytic|window_h_only": 168,
+  "1e-8|group|aux_only": 565,
+  "1e-8|group|own": 2039,
+  "1e-8|group|untouched": 32753,
+  "1e-8|group|window_both": 956,
+  "1e-8|group|window_h_only": 1012
+ },
+ "untouched_differing": {
+  "n": 13382,
+  "paths": {
+   ".summary[0].guard_07.location_skipped_phases": 12598,
+   ".summary[0].guard_07.location_skipped_phases[0].reason": 784,
+   ".summary[0].guard_07.location_skipped_phases[0].variation": 784
+  },
+  "n_points_h_nonzero": 0,
+  "n_windows_h_nonzero": 0,
+  "skipped_07_kinds": {
+   "[[\"phase\", \"variation\"]]": 13382
+  },
+  "skipped_h_kinds": {
+   "[]": 12598,
+   "[\"zero_rate\"]": 784
+  },
+  "examples": [
+   {
+    "unit": "h-1e-7-2-32870",
+    "kind": "analytic",
+    "index": 0,
+    "label": "analytic J1",
+    "first_differing": {
+     "location": [
+      "call[analytic:0].summary[0].guard_07.location_skipped_phases"
+     ]
+    },
+    "skipped_07": [
+     {
+      "phase": 0,
+      "variation": {
+       "repr": "0.1874526291671763",
+       "hex": "0x1.7fe729fe93f18p-3"
+      }
+     }
+    ],
+    "skipped_h": []
+   },
+   {
+    "unit": "h-1e-7-2-32870",
+    "kind": "analytic",
+    "index": 1,
+    "label": "analytic Y1",
+    "first_differing": {
+     "location": [
+      "call[analytic:1].summary[0].guard_07.location_skipped_phases"
+     ]
+    },
+    "skipped_07": [
+     {
+      "phase": 0,
+      "variation": {
+       "repr": "0.1874526291671763",
+       "hex": "0x1.7fe729fe93f18p-3"
+      }
+     }
+    ],
+    "skipped_h": []
+   },
+   {
+    "unit": "h-1e-7-2-32870",
+    "kind": "analytic",
+    "index": 2,
+    "label": "analytic J2",
+    "first_differing": {
+     "location": [
+      "call[analytic:2].summary[0].guard_07.location_skipped_phases"
+     ]
+    },
+    "skipped_07": [
+     {
+      "phase": 0,
+      "variation": {
+       "repr": "0.08699706795830509",
+       "hex": "0x1.6457099ba9348p-4"
+      }
+     }
+    ],
+    "skipped_h": []
+   },
+   {
+    "unit": "h-1e-7-2-32870",
+    "kind": "analytic",
+    "index": 3,
+    "label": "analytic Y2",
+    "first_differing": {
+     "location": [
+      "call[analytic:3].summary[0].guard_07.location_skipped_phases"
+     ]
+    },
+    "skipped_07": [
+     {
+      "phase": 0,
+      "variation": {
+       "repr": "0.08699706795830509",
+       "hex": "0x1.6457099ba9348p-4"
+      }
+     }
+    ],
+    "skipped_h": []
+   },
+   {
+    "unit": "h-1e-7-2-32870",
+    "kind": "analytic",
+    "index": 4,
+    "label": "analytic J3",
+    "first_differing": {
+     "location": [
+      "call[analytic:4].summary[0].guard_07.location_skipped_phases"
+     ]
+    },
+    "skipped_07": [
+     {
+      "phase": 0,
+      "variation": {
+       "repr": "0.08699706795830509",
+       "hex": "0x1.6457099ba9348p-4"
+      }
+     }
+    ],
+    "skipped_h": []
+   }
+  ]
+ },
+ "calls_with_call_category_differing_by_class": {
+  "own": 7511,
+  "window_h_only": 2360,
+  "aux_only": 15847,
+  "window_both": 460
+ },
+ "aux_only": {
+  "n": 15847,
+  "value_equal": 8792,
+  "abserr_equal": 1609,
+  "abserr_smaller_h": 6697,
+  "abserr_larger_h": 7541,
+  "conv_changes": [],
+  "abserr_ratio_h_over_07": {
+   "n": 15847,
+   "min": 0.08965274016551184,
+   "p10": 0.9999741409457356,
+   "median": 1.0,
+   "p90": 1.000032775312663,
+   "max": 5.104014173235042
+  },
+  "value_move_over_abserr07": {
+   "n": 15847,
+   "min": 0.0,
+   "p10": 0.0,
+   "median": 0.0,
+   "p90": 3.2936101260565184e-05,
+   "max": 1.0902375423299884
+  },
+  "regions_equal": 15415
+ }
+}
+wrote out/stop3/classes.json sha256 f0f66888069320ef990a644b453246a94d395764be99af1b089fce29520fc73e
+# ----
+# end 2026-11-12T20:00:20Z
+# exit 0

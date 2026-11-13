@@ -1,0 +1,18 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/s3_score.py sha256 f12ebafdfe0fab61bfc7e5ec6fa0420275d52e99f1b46573422d58821b1804d4
+# module /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/tabulate_qsi_r29_r30.py sha256 adff0052bc9c86803587a1e3ac956187ff8664bb070e597f56abb96cfaa653aa
+# input var/datastores/levin-phase-floor-07-r29-shard0000.sqlite sha256 dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874
+# input var/datastores/levin-phase-floor-07-r29-shard0001.sqlite sha256 1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec
+# input var/datastores/levin-phase-floor-07-r29-shard0002.sqlite sha256 7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2
+# input var/datastores/levin-phase-floor-07-r29-shard0003.sqlite sha256 897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca
+# input var/datastores/levin-phase-floor-07-r29.sqlite sha256 28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9
+# input var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite sha256 e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2
+# input var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite sha256 f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700
+# input var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite sha256 a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab
+# input var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite sha256 b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0
+# input var/datastores/levin-phase-floor-07a-r30.sqlite sha256 e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84
+rows 864; scored (finite total_abserr and total in both) 864; not scored 0
+rows with total moved: 25; violations 0
+largest |total_30 - total_29| / (abserr_29 + abserr_30): 0.028826648055817014 at (316227.7660168379, 316227.7660168379, 316227.7660168379, 191807016.520263); total -0x1.25bf919562c4ap-48 -> -0x1.25bf91aa925d6p-48, abserr 0x1.c27555f815dc0p-72 / 0x1.1c7be807656eep-72
+S3 HOLDS
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/s3_scores.json sha256 8b26d7100723d0744daee4051f8d156632c5ccc342324921f36cbfc4f66c144d
+exit 0

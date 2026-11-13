@@ -1,0 +1,18 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:scripts nice /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/refs_projection_07a.py out/refs/refs_projection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:35:10Z
+# ----
+qawo_r1 {'n': 13, 'alpha_beta_gamma': [0.006700567592748503, 5.659572927515706e-08, 5.5529178391281344e-05], 'max_actual_over_fit': 1.0989409394281422, 'min_actual_over_fit': 0.9805191787527202}
+qawo_r2 {'n': 13, 'alpha_beta_gamma': [0.012566691017654936, 2.290151279317463e-07, 0.0006207521290901313], 'max_actual_over_fit': 1.2175850226377591, 'min_actual_over_fit': 0.8289415869043739}
+fcc_r1 {'n': 24, 'alpha_beta_gamma': [0.007656822524060482, 1.5448684718534356e-10, 0.012501926644972553], 'max_actual_over_fit': 1.9313962828453655, 'min_actual_over_fit': 0.853922782627113}
+fcc_r2 {'n': 24, 'alpha_beta_gamma': [0.03811011151584723, 0.0, 0.05728684543969346], 'max_actual_over_fit': 1.5614530890880491, 'min_actual_over_fit': 0.853616104114823}
+r1-34599-1e-7-2 {'n_seg': 1616, 'span_q': 464374557.6132952, 'span_f': 464374557.6132952, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0, 'n_steep': 0} {'qawo_r1': 41, 'qawo_r2': 154, 'fcc_r1': 24, 'fcc_r2': 96} QAWO
+r1-34599-1e-7-3 {'n_seg': 1616, 'span_q': 464374557.6132952, 'span_f': 464374557.6132952, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0, 'n_steep': 0} {'qawo_r1': 41, 'qawo_r2': 154, 'fcc_r1': 24, 'fcc_r2': 96} QAWO
+r3-678-1e-7-2 {'n_seg': 550, 'span_q': 406.5212299825406, 'span_f': 406.5212299825406, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0, 'n_steep': 0} {'qawo_r1': 4, 'qawo_r2': 8, 'fcc_r1': 8, 'fcc_r2': 33} QAWO
+r3-678-1e-7-3 {'n_seg': 550, 'span_q': 406.5212299825406, 'span_f': 406.5212299825406, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0, 'n_steep': 0} {'qawo_r1': 4, 'qawo_r2': 8, 'fcc_r1': 8, 'fcc_r2': 33} QAWO
+total, one reading at a time, with margin: 737 s
+wrote out/refs/refs_projection.json sha256 0512daddfc3bb920cbb4d0d0515c8b735742c631bb69b76b56b2fd350af15a1b
+# ----
+# end 2026-11-12T20:35:28Z
+# exit 0

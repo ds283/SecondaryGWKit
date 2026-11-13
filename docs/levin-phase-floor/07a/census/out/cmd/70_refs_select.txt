@@ -1,0 +1,24 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/refs_select_07a.py state/refs/selection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:28:27Z
+# ----
+# levin-phase-floor 07a: the user's two reference calls, selected
+# written 2026-11-12T20:28:27Z on mps026298.phys.susx.ac.uk
+# script refs_select_07a.py sha256 3306efd7ca2c45c50afa4dbd9c1a599aa9465442d825f0e1e041700e9181b8c3
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/stop3/compare_census_calls.calls.jsonl sha256 72e929cf806c9797a0cf6bb78b06fc2c86fc5d0cc18d70dca0c98e4d26ff9a1f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/scores/moves_beyond.json sha256 7130243f68903fb783d51f3fe69daa09928a991a8661050a03958099cc7c7f1b
+r1-34599-1e-7-2 h-1e-7-1-34599 2 own k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G+q-r
+r1-34599-1e-7-3 h-1e-7-1-34599 3 own k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G-q+r
+r1-34599-1e-8-2 h-1e-8-1-34599 2 own k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G+q-r
+r1-34599-1e-8-3 h-1e-8-1-34599 3 own k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G-q+r
+r3-678-1e-7-2 h-1e-7-3-678 2 aux_only k=9.7e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=1.104e+10, z in (5.1721e+12, 1.104e+10), regime Gqr, group G+q-r
+r3-678-1e-7-3 h-1e-7-3-678 3 aux_only k=9.7e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=1.104e+10, z in (5.1721e+12, 1.104e+10), regime Gqr, group G-q+r
+r3-678-1e-8-2 h-1e-8-3-678 2 aux_only k=9.7e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=1.104e+10, z in (5.1721e+12, 1.104e+10), regime Gqr, group G+q-r
+r3-678-1e-8-3 h-1e-8-3-678 3 aux_only k=9.7e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=1.104e+10, z in (5.1721e+12, 1.104e+10), regime Gqr, group G-q+r
+8 calls; wrote state/refs/selection.json sha256 c55c86adb3cbd4045dd53725a7d7c09176ecdb4bf7894155baa8b6b1a2387be2
+# ----
+# end 2026-11-12T20:28:30Z
+# exit 0

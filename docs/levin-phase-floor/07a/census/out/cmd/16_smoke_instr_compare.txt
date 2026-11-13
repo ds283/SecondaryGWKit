@@ -1,0 +1,20 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_07a.py instr state/smoke/h state/smoke/h_off state/smoke/compare_instr.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T12:59:31Z
+# ----
+# levin-phase-floor 07a: Gate W0 (3), the instrument on against off, h against h_off
+# written 2026-11-12T12:59:32Z on mps026298.phys.susx.ac.uk
+# script compare_07a.py sha256 d147fb2233824e340b61ccc4d3e84b2faf183222f938e5cbca252e9869f03dde
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/smoke/h/units.jsonl sha256 288487cdb1891a7b6bdee9b359f3c9643851e4cfb86d200abbfd91928af16f1a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/smoke/h_off/units.jsonl sha256 73875c0ae012038970f85155ffeda18c495e693b47f9855380c61e229d435d24
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+h-1e-8-1-2174: IDENTICAL; status ['done', 'done']; calls 21; windowed 1 [(1, 1, {'root': 1})]; route-changed 5 [(0, 1, 0, True, False), (15, 0, 1, False, True), (16, 0, 1, False, True), (17, 0, 1, False, True), (18, 0, 1, False, True)]; wall [4.120309249963611, 3.9722835421562195]; differing []; excluded keys differing ['data.analytic_06h.seconds', 'data.calls[].elapsed', 'data.calls[].route_07a', 'data.calls[].route_07a_post', 'data.cc_floor_s', 'data.checked_06g_s', 'data.declared_06h_s', 'data.deep_lines.seconds', 'data.instrument_07a', 'data.other_calls[].elapsed', 'data.other_calls[].route_07a', 'data.other_calls[].route_07a_post', 'data.pickle_length', 'data.pickle_offset', 'data.pickle_record_sha256', 'data.rebuild_s', 'data.result.compute_time', 'data.route_07a_post_unit', 'data.scan_07_s', 'data.wall_s', 'data.worker_pid', 'pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed', 'pickle.result_full.compute_time', 'pickle.route_07a', 'pickle.route_07a_post', 'pickle.scan_07[].scan.seconds']; on/off True/True
+h-1e-8-1-35480: IDENTICAL; status ['done', 'done']; calls 21; windowed 0 []; route-changed 1 [(4, 0, 1, True, False)]; wall [9.905293333344162, 10.042129999957979]; differing []; excluded keys differing ['data.analytic_06h.seconds', 'data.calls[].elapsed', 'data.calls[].route_07a', 'data.calls[].route_07a_post', 'data.cc_floor_s', 'data.checked_06g_s', 'data.declared_06h_s', 'data.deep_lines.seconds', 'data.instrument_07a', 'data.other_calls[].elapsed', 'data.other_calls[].route_07a', 'data.other_calls[].route_07a_post', 'data.pickle_length', 'data.pickle_record_sha256', 'data.rebuild_s', 'data.result.compute_time', 'data.route_07a_post_unit', 'data.scan_07_s', 'data.wall_s', 'data.worker_pid', 'pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed', 'pickle.result_full.compute_time', 'pickle.route_07a', 'pickle.route_07a_post', 'pickle.scan_07[].scan.seconds']; on/off True/True
+worker evidence all hold True
+wrote state/smoke/compare_instr.json sha256 cbb8a91716485033be142935038be459a2e13e585cddd35ad6d59ca80fed9ac7
+# ----
+# end 2026-11-12T12:59:32Z
+# exit 0

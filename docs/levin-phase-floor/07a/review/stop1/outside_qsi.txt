@@ -1,0 +1,9 @@
+wavenumber_exit_time {'compute_time': 3}
+BackgroundModel {'compute_time': 1, 'max_RHS_time': 1, 'mean_RHS_time': 1}
+TkNumericIntegration {'compute_time': 3, 'label': 3, 'max_RHS_time': 3, 'mean_RHS_time': 3, 'min_RHS_time': 2}
+TkWKBIntegration {'label': 3, 'stage_1_compute_time': 3}
+GkNumericIntegration {'compute_time': 1368, 'label': 1368, 'max_RHS_time': 1367, 'mean_RHS_time': 1368, 'min_RHS_time': 947}
+GkWKBIntegration {'label': 3477, 'metadata': {'rho_evals': 19, 'rho_reused': 19}, 'stage_1_RHS_evaluations': 19, 'stage_1_compute_time': 3474}
+GkSource {'label': 291, 'parents_digest': 291}
+QuadSource {'compute_time': 6, 'label': 6}
+value-table rows identical: 360462

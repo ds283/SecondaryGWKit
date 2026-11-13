@@ -1,0 +1,26 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/run_k0.py parent state/smoke/units.json state/smoke/parent --workers 1 --tree h
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T12:57:06Z
+# ----
+# levin-phase-floor 07a: census units at the tree h under the variant parent, instrument_07a True
+# written 2026-11-12T12:57:06Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 39b6da7512a99f8c8894a81322c07e106a6b5afb26b082855b5b78c45bf50e54
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input state/smoke/units.json sha256 4a5558bc42155e921976ea8adada9bc5d54a9b1fb4fc32eb5e002d3b40dd2814
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/variants/levin_quadrature_parent.py sha256 4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc
+# variant {"name": "parent", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/variants/levin_quadrature_parent.py", "sha256": "4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc"}
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 at 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03
+# 2 units in 1 workers: parent-1e-8-k1_102 (2)
+parent-1e-8-k1_102: pid 86274 (2 units)
+parent-1e-8-k1_102: exit 0 after 66.2 s
+exit codes {parent-1e-8-k1_102: 0}
+refused: []
+bye parent-1e-8-k1_102: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 2 of 2; not done []; wall 67 s
+wrote state/smoke/parent/units.jsonl sha256 8289e8a613b0c2ca334a94fc2e63808dfe0cdcaf6dabbebaed85140927b6bcc0
+# ----
+# end 2026-11-12T12:58:13Z
+# exit 0

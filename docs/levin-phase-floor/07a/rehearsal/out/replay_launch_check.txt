@@ -1,0 +1,44 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-12T12:18:48Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07a/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3
+echo "== pipeline log"; cat $Z/out/r30_pipeline.log
+echo "== process tree"; ps -Ao pid,ppid,etime,command | awk "\$2==79518 || \$1==79518" | cut -c1-160; P2=$(pgrep -P 79518); echo "pipeline sh: $P2"; for c in $P2; do pgrep -P $c | while read d; do ps -o pid,ppid,etime,command -p $d | tail -1 | cut -c1-160; echo "workers of $d:"; pgrep -P $d | tr "\n" " "; echo; done; done
+echo "== driver log head"; head -12 $Z/state/capture/replay/driver.log 2>&1 | cut -c1-200
+echo "== load"; uptime
+echo "== W"; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+
+# output:
+== pipeline log
+== stage replay_run start 2026-11-12T12:18:43Z
+== process tree
+79518     1       00:07 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/capture/run_r30_pipeline.sh; echo "** pipel
+79521 79518       00:07 /bin/sh /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/capture/run_r30_pipeline.sh
+pipeline sh: 79521
+79528 79521   00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -I -B /Users/ds283/Documents/Code/Se
+workers of 79528:
+79533 79534 79535 79536 79537 79538 
+== driver log head
+2026-11-12T12:18:43Z # prompt 07a r30: run replay
+2026-11-12T12:18:43Z # written 2026-11-12T12:18:43Z on mps026298.phys.susx.ac.uk
+2026-11-12T12:18:43Z # script replay07a_r30.py sha256 c7ff4d85598f48624e2d8c3baf7d4403539f3155a3e63883ccce0328e45ddbd9
+2026-11-12T12:18:43Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+2026-11-12T12:18:43Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-12T12:18:43Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/replay_spec.json sha256 6a4a4097ce89cdf7c3fc529164c119bd3d08337fefc19a1fd60ebaa8857a8a
+2026-11-12T12:18:43Z 6 workers, 223 units, at most 6 at once
+2026-11-12T12:18:43Z start replay-h-0 (h, 38 units): pid 79533
+2026-11-12T12:18:43Z start replay-h-1 (h, 37 units): pid 79534
+2026-11-12T12:18:43Z start replay-h-2 (h, 37 units): pid 79535
+2026-11-12T12:18:43Z start replay-h-3 (h, 37 units): pid 79536
+2026-11-12T12:18:43Z start replay-h-4 (h, 37 units): pid 79537
+== load
+12:18  up 36 days,  2:55, 1 user, load averages: 3.99 3.19 3.60
+== W
+(end)
+== Ray processes (any)
+(end)
+# exit: 0
+# end: 2026-11-12T12:18:49Z

@@ -361,7 +361,7 @@ leaves falling and wall: the same file's "Per call and variant".
 | the LiouvilleGreen draws with no new failure | 0 of 80 units newly failing | holds |
 | the seven roots rising only by the tests added | AdaptiveLevin +9 = tests added; the other six equal (after §10) | holds |
 
-### §5's predictions (R30), copied before they run — *not yet scored*
+### §5's predictions (R30), copied before they run — scored in Part C, 2026-11-12
 
 As 07 §5, with records under `var/levin-phase-floor-07a/rehearsal/`, slug `r30-07a`, `--prompt 07a`,
 `--job-name levin-phase-floor-07a`, and the fingerprint `1b332ffa…`. There is no new parent
@@ -371,8 +371,12 @@ commit's parent's.
 1. **S0′ — R29 is the parent.** `git diff --stat e182bc7a <code commit's parent> -- . ':!docs'
    ':!prompts'` lists nothing the build imports. **Holds** if so; if not, a parent rehearsal R31 is
    run first and this prompt's comparisons use it.
+   — **Holds.** The diff lists `CLAUDE.md` only (`07a/rehearsal/out/00-gate.txt`).
 2. **The lock:** `acquire`, `set-pid` at the launch, `release` after the readers, each a shell
    command of its own.
+   — **Held, with one slip.** Nine lock commands, each exit 0; released, the lock free and
+   `ray-processes` listing nothing (`state/lock.log`). One look-only `status` shared its shell
+   command with a `shasum` and an `ls` (the rehearsal agent's deviation 15).
 3. **R30 against R29,** by `tools.store_value_diff` with `--json` and 05's `classify_non_qsi.py`
    (with the job names normalised in a copy, as 07 did):
    - **outside `QuadSourceIntegral`:** every value table identical, every other difference of the
@@ -380,18 +384,31 @@ commit's parent's.
    - **inside it, every moved row tabulated:** the change against R29's and R30's `total_abserr`,
      regions, maximum depth, located points, window pieces, guarded regions and `total_converged`;
      and the rows whose `total_converged` changes, in each direction.
+   — **Holds, and tabulated.** R30 `levin-phase-floor-07a-r30-07a-20261112T113806`, `1b332ffa…`.
+   Outside `QuadSourceIntegral`, 360,462 value-table rows identical and 0 unclassified (timing,
+   `label`, `parents_digest` 291 and `rho_reuse` 19). Inside it, 380 of 864 rows moved, the largest
+   $|\Delta{\rm total}|$ 0.0470 of R29's `total_abserr`; located rows 170 → 202, guarded analytic
+   blocks 4 → 0; `total_converged` changes 0 in either direction. 49 records moved in abserr only,
+   each through one auxiliary trust-check solve whose route or LU choice changed (the replay, 493
+   of 493 records bit for bit).
 4. **S3 — consistency.** Every row with finite `total_abserr` in both has
    $|{\rm total}_{30} - {\rm total}_{29}| \le {\rm total\_abserr}_{29} + {\rm total\_abserr}_{30}$.
    **Holds** if no row violates it. A violation is a finding, not by itself a stop.
+   — **Holds:** 864 rows scored, 0 violations, the largest 0.0288.
 5. **S1 and S2** re-scored on R30 as 07 §5 items 5 and 6, against 06g's references and 07's
    `p1_references`.
+   — **Both hold.** S1: 12 of 12 locate the root at $z = 10211.31789$ and are honest, the worst
+   0.2176 (w11), equal to R29's bit for bit. S2: 0.0202 and 0.263 of their abserr.
 6. **S4 — O9's four blocks.** R29's four guarded analytic J4/Y4 blocks: in R30 each locates its
    root, guards no leaf, and is honest against R29's block references
    (`docs/levin-phase-floor/07/rehearsal/r29/out/block_reference/`).
+   — **Holds:** each of the four locates one root at the reference's, guards nothing, and is
+   4.37e-5, 5.81e-4, 2.06e-4 and 6.17e-4 of its abserr from the reference.
 7. **The readers** run on R30, exit 0, and the store is byte-identical before and after. **The
    lock** is released and `ray-processes` lists nothing. **R29 and R30 are kept.**
+   — **Holds:** 6 of 6 readers exit 0, R30 identical before and after; R29 unchanged; both kept.
 
-### §6's predictions (the census), copied before they run, with §9.5's additions — *not yet scored*
+### §6's predictions (the census), copied before they run, with §9.5's additions — scored in Part C, 2026-11-12
 
 **Gate W0, before the run:**
 - **The parent's code is 07's:** as S0′.
@@ -401,25 +418,47 @@ commit's parent's.
   run with and without it, bit-identical.
 - **The new code is deterministic:** two runs of one $h$ unit with a window, bit-identical.
 
+— **W0 holds**, all four clauses: the K0 workers loaded no file S0′'s diff lists; run
+`levin-phase-floor-07a-k0-20261112T130135` reproduces 07's census on 100 of 100 K0 units (2,110
+calls, 32,956 leaves); `h-1e-8-1-2174` and `h-1e-7-1-11214` with and without the instrument, and
+`h-1e-8-1-2174` twice, bit-identical.
+
 **Predictions, fixed before the run** (README §5 rule 3), copied into `state/predictions.md`
 unchanged, with §9's additions:
 - **W1 — nothing else moves.** Every call with no window at 07 or at $h$, and no region whose route
   or LU choice differs, equals 07's call bit for bit, with `phase_span` set aside. Every row all of
   whose calls are such equals 07's in `total` and `total_abserr`. **Holds** if true at both rtols.
+  — **Holds**, on the user's readings at stop 2 (*"Yes, A for Q1 and call's outputs for Q2"*:
+  every solve counts as a region whose route or LU choice may differ, and "bit for bit" compares
+  the call's outputs). 258,824 untouched calls, 0 differing in their outputs; 13,382 differ only in
+  the skipped-phase record (07's `{phase, variation}` against 07a's none or `zero_rate`); 9,726 rows
+  made only of untouched calls equal 07's in `total` and `total_abserr`, in hex.
 - **W2 — no Levin leaf is returned across a stationary point** (07's V2): the scan finds no returned
   Levin leaf holding a sign change of $\theta'$.
+  — **Holds:** 182,066 calls scanned, 0 returned Levin leaves holding a sign change.
 - **W3 — every phase with something to locate is located.** The location agrees with the scan both
   ways (07's V3), with no phase set aside except one whose rate is identically zero; every skipped
   phase is listed with its call, and each is of that kind.
+  — **Holds:** 0 violations either way; 784 skipped phases, all `zero_rate`, none with a sign
+  change.
 - **W4 — honest where it is referenced.** V4's 33 calls (z00, z12, Z3's seven and the 24),
   re-scored from the census against the readings 07 scored them on, by 07's rule. **Holds** if
   every scored call is honest, or is unconverged under a rule of §9's amendment.
+  — **Fails, as §9.5 predicts:** 28 of 33 honest; v08, v09, v12, v17 and v22 at 3.16, 2.21,
+  3.08, 2.38 and 2.53. All 33 calls are bit-identical to 07's.
 - **W5 — the gate is consistent, and the guard is a backstop.** In every call: no Clenshaw–Curtis
   region has a half sent to the Levin solve; no region takes the node-partition sum; no region is
   guarded (`num_guarded_regions` 0). **Holds** if all three are zero. A non-zero count is a finding,
   with its calls listed.
+  — **Holds on gated solves**, on the user's ruling (*"Yes, W5 gated only, and take references
+  for both calls"*): 0 Clenshaw–Curtis regions with a half sent to Levin, 0 gated solves taking
+  the node-partition sum, 0 guarded regions. **Descriptive:** 18,236 forced solves (window pieces
+  whose end node is the root, and their halves and quarters) take the node-partition sum, 3–10
+  per call, in 4,416 of the 4,804 root-located calls; their $V$ routes nothing but is reported as
+  `phase_span`.
 - **W6 — the pairs.** The cross-check's $r$ re-computed at $h$ over all 2,484 pairs: every pair has
   $r \le 1$, or a member unconverged under §9's rule. `3-14501` and `3-35006` are listed.
+  — **Fails, as §9.5 predicts:** see W6's addition below.
 
 §9.5's additions:
 
@@ -428,8 +467,11 @@ unchanged, with §9's additions:
   - Basis: §9.2. Neither §1.2 nor O9 reaches the leaf that carries the excess
     (`[07a-levin-leaf-beside-a-window-understates-its-error]`).
   - A move of any of the five is reported with the regions it changed.
+  - — **As predicted, exactly:** the five at 3.16, 2.21, 3.08, 2.38 and 2.53; none moved.
 - **W6 is scored on $r_g$** (§9.1). It is predicted to fail on `3-14501` ($r_g$ 1.39) and `3-35006`
   (1.08), as at 07, and to hold on the other 2,482 pairs.
+  — **As predicted:** $r_g \le 1$ in 2,482 of 2,484 pairs; `3-14501` at 1.385 and `3-35006` at
+  1.084, both members converged, as at 07.
 - **W7 — the stop's change is small.** The rule covers every call that has a window at 07 and at
   $h$, no region whose route or LU choice differs (the diagnostics), and no newly located phase.
   - Each such call moves from 07's value by at most $10^{-5}$ of 07's abserr, and keeps 07's
@@ -437,6 +479,14 @@ unchanged, with §9's additions:
   - **Holds** if true at both rtols.
   - Basis: (d) against (a) on 430 calls, largest move $1.76\times10^{-7}$ of abserr and no flag
     changed. The threshold is 57 times that.
+  - — **Fails, not predicted.** 4,774 calls covered. At `1e-7` every one moves by at most
+    $1.80\times10^{-7}$ of 07's abserr. At `1e-8`, **25 calls move by 0.0066–0.145** of it: every
+    one a lone-`G` group call (group index 0) with minima windows (6 or 19 minima), at
+    $k = 10^5$ (19) and $3.14\times10^5$ (6), whose window stopped at 07 (`iroff1` 6) and does not
+    stop under 07a's value test at $\min(10^{-5}, {\rm rtol})$ (`iroff1` 4–5). Their abserr and
+    `converged` are unchanged, and their regions change by 0 or 1. Part A's 430 calls, the
+    threshold's basis, were all `G+q+r` and held no minima window. No reference was taken for
+    them, so whether 07 or 07a is nearer is not known.
 
 ## Deviations from the prompt
 
@@ -702,3 +752,894 @@ results whose ratio rises: Observations 4 and 5.
   on `[07-c2-gate-threshold-was-never-measured]` (the orchestrator, `dadd63a0`); §10.4 adds to §6's descriptive items
   the census's list of such calls. Observation 1 (the comments §10 did not correct) is proposed for the board then.
 - The parent worktree used for the parent runs was removed (`git worktree list` shows the main checkout only).
+
+## Part C: the Mac Studio record (appended by the orchestrator, 2026-11-13)
+
+Part C ran on 2026-11-12 on the Mac Studio (`mps026298`), through an orchestrator session there, from the worktree
+`SecondaryGWKit-lpf07a-4bf50d3` at Part C's dispatch SHA `4bf50d34`, whose code is the code commit `1ec734d7`'s (the
+orchestrator note's §C.5). The Mac Studio orchestrator dispatched a rehearsal agent (R30), then a census agent, and
+held them at the note's planned stops 1, 2 and 3. A fourth stop came at scoring, on W5's wording. It checked each
+stop with readers of its own, then reviewed Part C in the note's §C.2 checks, **all passing**. The records are in
+`docs/levin-phase-floor/07a/`:
+- `rehearsal/` and `census/`: each agent's log, verification, issues, scripts and outputs. The two logs are appended
+  below as written on the Mac Studio;
+- `review/`: the Mac Studio orchestrator's stop records, scripts and hashes, and its review (`review/review.md`).
+
+What stays on the Mac Studio is in `07a/KEPT_ON_MAC_STUDIO.md`. `VERIFICATION.md` §7a is the summary. Part A's log
+follows the census agent's, in full, with its headings moved down one level to sit under this log's own.
+
+**The verdicts on the predictions above** (each entered against its rule there too):
+
+| | Verdict | Numbers |
+|---|---|---|
+| §5, S0′ | **holds** | `e182bc7a..dadd63a0` lists `CLAUDE.md` only; R29 is the parent |
+| §5, the fingerprint | **holds** | R30 `1b332ffa…`, its `classes` equal R29's |
+| §5, R30 against R29 | **holds, and tabulated** | outside `QuadSourceIntegral` 360,462 rows identical; inside it 380 of 864 rows moved, the largest 0.0470 of R29's abserr, no `total_converged` change |
+| §5, S3 | **holds** | 0 violations in 864 rows; the largest 0.0288 |
+| §5, S1 | **holds** | 12 of 12 honest, worst 0.2176 (w11), equal to R29's bit for bit |
+| §5, S2 | **holds** | 0.0202 and 0.263 |
+| §5, S4 | **holds** | the four blocks each locate one root, guard nothing, and are honest at 4.4e-5 to 6.2e-4 |
+| §5, the readers and the lock | **hold** | 6 of 6 exit 0, R30 unchanged; the lock released; one look-only `status` shared a shell command |
+| §6, Gate W0 | **holds** | 100 of 100 K0 units equal 07's census; the instrument and the code deterministic |
+| §6, W1 | **holds** | on the user's readings: 258,824 untouched calls, 0 differing in their outputs; 9,726 rows equal in hex |
+| §6, W2 | **holds** | 0 returned Levin leaves hold a sign change, 182,066 calls scanned |
+| §6, W3 | **holds** | 0 violations; 784 skipped phases, all `zero_rate` |
+| §6, W4 | **fails, as predicted** | 28 of 33 honest; v08 3.16, v09 2.21, v12 3.08, v17 2.38, v22 2.53, all bit-identical to 07's |
+| §6, W5 | **holds on gated solves** | 0, 0 and 0; 18,236 forced solves take the node-partition sum (descriptive, by the user's ruling) |
+| §6, W6 | **fails, as predicted** | $r_g \le 1$ in 2,482 of 2,484; `3-14501` 1.385, `3-35006` 1.084 |
+| §9.5, W7 | **fails, not predicted** | 25 lone-`G` minima-window calls at `1e-8` move by 0.0066–0.145 of abserr; `converged` unchanged |
+
+**R30.** `levin-phase-floor-07a-r30-07a-20261112T113806`, about 9.7 min, store primary `e5f8b443…`. 64 analytic
+blocks newly locate their root, and the four blocks R29 guarded now locate and guard nothing. 49 records moved in
+abserr alone, by −19 % to +180 %. The replay (493 of 493 records bit for bit) puts each on one auxiliary
+trust-check solve, a quarter or a comparison half, whose route or LU choice changed: quarter route 19, quarter LU
+22, half LU 7, half route 1. No region's own solve changed in them.
+
+**The census.** `levin-phase-floor-07a-census-20261112T132744`, checkpoint `461df2ec…`, 18,560 of 18,560 units in
+23,284 s (07: 22,708 s, +2.5 %), none over budget.
+- **Classes** (both rtols): untouched 258,824; aux_only 15,847; own 7,511; window_both 4,940; window_h_only 2,360;
+  window_07_only 0.
+- **Convergence:** no `converged` flag changes in any class at either rtol. §10.4's list, of calls losing convergence
+  through a route change, is empty.
+- **Route changes:** 10,014 C2 decisions changed, every one towards Clenshaw–Curtis (07's estimate over $V$
+  1.00001–2.29), and 14,545 LU decisions, every one towards least squares. The smallest unchanged-route margin to
+  $6\pi$ is $4.8\times10^{-8}$ rad, to $20\pi$ $3.0\times10^{-4}$. The largest $|\theta|$ at a gated region's end is
+  $8.87\times10^{12}$ (analytic) and $4.12\times10^{12}$ (group).
+- **Windows:** 3,650 per rtol at 07a against 2,470 at 07; 1,180 calls per rtol newly located, all converged before
+  and after. Stopped windows 1,247 against 1,157 (`1e-7`) and 1,236 against 1,195 (`1e-8`).
+
+**The user's references** (findings, not verdicts), by 07's V4 method, on the user's word at the W5 stop: rows
+`1-34599` and `3-678`, group calls 2 and 3, both rtols. 16 of 16 readings, FCC r2 the reference, the readings'
+spread at most $1.3\times10^{-6}$ of the smaller abserr.
+- **`1-34599`** (own): 07a honest at 0.020 (`1e-7`) and 0.015 (`1e-8`); **07 not honest, at 4.03.** One region with
+  $V$ just under $6\pi$, which 07's estimate sent to Levin, now goes to Clenshaw–Curtis.
+- **`3-678`** (aux_only): 07a honest at 0.491 of an abserr 11× smaller than 07's (one region against 12); 07 at
+  0.135.
+
+**The laptop's re-checks** (2026-11-13), from the copies, against committed records the agents did not write: W4 on
+z12, v08 and v12 equal 07's committed census values bit for bit (0.7181, 3.16, 3.08); S1 on w03, w07 and w11
+(0.0726, 0.00297, 0.2176) against 06g's committed references; an untouched rehearsal row ($k = 10^5$, $z = 250$)
+equal in hex in R29 and R30, and the most-moved row ($k = 3.162\times10^5$, $z = 1.918\times10^8$) at 0.04703 of R29's
+abserr, its R29 values equal to 07's committed table.
+
+**Deviations in Part C.** The rehearsal agent logged 21: 12 `IMPLEMENTATION CHOICE`, 3 `STRUCTURALLY REQUIRED`
+and 6 `UNINTENDED DRIFT`. The census agent logged 29: 15 `IMPLEMENTATION CHOICE`, 6 `STRUCTURALLY REQUIRED` and 9
+`UNINTENDED DRIFT`, item 3 carrying two classes. The Mac Studio orchestrator accepted each. The drift is cosmetic, or
+a failed attempt re-run with nothing used from it. The structurally required ones: the job-name prefix normalised
+for S0; the classifier run on the raw JSON too; a capture recording its own run; the parent run as a variant module
+in tree h, 07's worktrees being removed; 06g's `rows.json` read from 07's copy (same SHA-256), and 06m's values taken
+from 07's cross-check output, those records being gone from the Mac Studio; the references, on the user's ruling;
+and the references' projection refitted on 07's own readings.
+
+**The user's rulings** (relayed by the laptop orchestrator):
+- stop 1: *"Yes, resume the rehearsal agent with the replay"*;
+- stop 2: *"Yes, A for Q1 and call's outputs for Q2; launch the census"*;
+- stop 3: *"Yes, resume the census agent for scoring"*;
+- the W5 stop: *"Yes, W5 gated only, and take references for both calls"*;
+- at the records commit, on the orchestrator's four proposals: *"Yes to 1–4; keep R29 for now; make the records
+  commit."* So:
+  1. `[07-iroff1-window-stop-can-leave-a-call-dishonest]` stays open, narrowed to W7's 25 calls, its next step
+     references for two or three of them;
+  2. `[07-c2-gate-threshold-was-never-measured]` loses O9 and gains the census's evidence, `1-34599` among it;
+  3. `[07a-trust-check-auxiliary-route-moves-the-declared-error]` is opened from the census agent's item 5 and the
+     rehearsal agent's item 1;
+  4. `[07a-levin-leaf-beside-a-window-understates-its-error]` stands, with W4 and W6 reproduced.
+
+  R29 and R30 are kept.
+
+**Observations not acted on, and not opened as issues** (the agents' `issues.md`):
+- **Retention:** 06g's census records are gone from the Mac Studio, and 06m's census checkpoint was trimmed on
+  2026-11-10 (`TRIMMED_2026-11-10.txt`). 07's worktrees are removed. A later prompt reading those meets the same
+  absence.
+- **Analytic block records store no value**, so a rehearsal that must score a block's value plans a replay, as S4's
+  did.
+- **The readers draw random subsamples** of $k$ and $z$ (`extract_Gk_data.py`, `extract_GkSource_data.py`), so their
+  output is not comparable file for file across rehearsals.
+- **`route_07a` over the replay**, 427,437 solves: 312 differ in C2 route and 430 in LU choice, mostly trust-check
+  quarters and comparison halves; descriptive.
+- **The forced solves' node-partition sums** (W5's descriptive count) route nothing, but each is reported as its
+  region's `phase_span`.
+- **Whether other own-class calls are like `1-34599`** (converged and dishonest at 07, with no window) is not
+  measured: 5,314 own calls moved. It is recorded on `[07-c2-gate-threshold-was-never-measured]`.
+- The comments made stale by §1.1, which the rehearsal agent met, are corrected in `89c368f2`, a docstring-only commit
+  after Part C's dispatch SHA that touches nothing Part C ran.
+
+## Part C §5: rehearsal R30 on the Mac Studio
+
+**Prompt:** [`07a-window-stop-and-phase-variation.md`](../07a-window-stop-and-phase-variation.md) §5 ("as 07 §5"), under
+Part C's dispatch (`4bf50d34`) and the user's word at stop 1: *"Yes, resume the rehearsal agent with the replay"*.
+
+**What was measured:** the code commit `1ec734d7`: the C2 gate on the raw phase, Rule A replaced, and the window's count
+as `dqage`'s. Its parent is `dadd63a0`. The parent rehearsal is R29, built at `e182bc7a`, whose code is the parent's.
+
+**Host and trees:** mps026298.
+- Every build, replay, score and reader ran in the worktree `SecondaryGWKit-lpf07a-4bf50d3`, detached at `4bf50d34`.
+  - Its key files: `levin_quadrature.py` `4ea1948b`; `QuadSourceIntegral.py` `33cb161e`; the launcher `b0135218`;
+    `main.py` `a5d47f5f`; `store_value_diff.py` `7997af85`. The last four are R29's tree's.
+- Nothing was written in the worktree; `status --short --ignored` was empty throughout.
+- The main checkout stayed at `28ebaf07`.
+
+**Model:** Claude Opus 5.5, the rehearsal subagent, in four turns:
+1. the gate and R30's launch;
+2. the end check, the comparisons, and stop 1;
+3. the replay's set-up and launch;
+4. the trust reading, S1–S4, the readers, the release and these records.
+
+**Date:** 2026-11-12, 11:37–12:35 UTC. **Commit:** none; the laptop commits these records.
+
+**Result:** COMPLETE.
+- **R30 is `done` with `1b332ffa…`.** S0′ holds.
+- **Outside `QuadSourceIntegral` every value table equals R29's.**
+- Inside it, 380 of 864 rows moved, and no `total_converged` changed in either direction.
+- **S3, S1, S2 and S4 hold.** The readers exit 0 with the store unchanged. The lock is released.
+- The 49 abserr-only records are explained, by the replay, as a route or LU change in one auxiliary trust-check solve
+  each (`issues.md` item 1).
+
+### What shipped
+
+No code. The records under `var/levin-phase-floor-07a/rehearsal/` (committed by the laptop as
+`docs/levin-phase-floor/07a/rehearsal/`): `log.md`, `verification.md`, `issues.md`, `KEPT_ON_MAC_STUDIO.txt`, and:
+- **`scripts/`:**
+  - adapted:
+    - `rec.sh` (`065afcc6`; R29's, path by sed, `out/rec_sh.diff`);
+    - `normalise_jobname_labels.py` (`41da5c72`; 07's, `out/normalise_jobname_labels.diff`);
+    - `block_reference_r30.py` (`efac125e`; R29's, `out/block_reference_r30.diff`);
+    - `s1_score_r30.py` (`0f2a0469`) and `s2_score_r30.py` (`6fc3fb30`), both R29's, changes marked;
+  - unchanged copies:
+    - `classify_non_qsi.py` (`26690e61`, 05's);
+    - `tabulate_qsi_guard_r29.py` (`47e18cbe`, kept as the source of the verbatim reader);
+    - `run_readers_worktree.sh` (`ec96cf09`);
+  - new:
+    - `tabulate_qsi_r29_r30.py` (`adff0052`) and `qsi_summary_r29_r30.py` (`cc7bc729`);
+    - `s3_score.py` (`f12ebafd`);
+    - `trust_reading.py` (`49f1456c`);
+    - `run_block_reference_r30.sh` (`4a2bd2c3`) and `block_score_r30.py` (`7c92da59`);
+    - `capture_compare.py` (`f240a7c2`);
+    - `replay_summary_r30.py` (`4ea0b46c`);
+    - `peek_qsi_metadata.py` (`e33881f0`, deviation 8);
+  - **`capture/`:** R29's on-disk harness (hashes in `state/capture_harness_r29_sha256.txt`), with `prov.py`
+    (`b4cd02b9`) and `worker.py` (`63c28b49`) changed where marked "prompt 07a r30". It adds the new `replay07a_r30.py`
+    (`c7ff4d85`) and `run_r30_pipeline.sh` (`c4b10450`). Diffs are in `out/capture_harness_r30_diff.txt` and
+    `out/run_pipeline_r30.diff`.
+- **`out/`:**
+  - `commands.log`;
+  - the gate, launch, end, stop-1 and final checks;
+  - `r30_status.json`;
+  - the diff JSON (kept, over 2 MB), its normalised copy, and the classifier outputs;
+  - the QSI tabulation, its CSVs and its summary;
+  - the replay's stage outputs: `replay_rows.txt`, `replay_run.txt`, `replay_check.txt`, `replay_calls.csv`,
+    `replay_calls.checks.json`, `blocks1_run.txt`, `blocks2_*.txt`, `blockcheck.txt`, `blocks.json`,
+    `replay_summary.txt`, `r30_pipeline.log`;
+  - `trust_reading.txt`;
+  - `s1_scores.*`, `s2_scores.*`, `s3_scores.*`;
+  - `block_reference/`, `block_reference_run.txt`, `block_scores.*`, `capture_compare.txt`;
+  - `readers.txt`, `readers_check.txt`.
+- **`state/`:** `lock.log`, the launch lines and markers, every store-hash file, the replay's rows and specs, and the
+  store links.
+- **Not for copying back:** see `KEPT_ON_MAC_STUDIO.txt` (the diff JSONs, `extract/`, `state/capture/`,
+  `state/inputs/`).
+- **The store is kept:** `var/datastores/levin-phase-floor-07a-r30*`.
+
+### Predictions and verdicts
+
+| Rule (prompt 07a §5, as 07 §5) | Scored on | Verdict |
+|---|---|---|
+| 1. S0′: `git diff --stat e182bc7a dadd63a0 -- . ':!docs' ':!prompts'` lists nothing the build imports | `CLAUDE.md` only | **holds** |
+| R30 with 07's command line (`--job-name levin-phase-floor-07a`, slug `r30-07a`, `--prompt 07a`, `--cpus 6`) gives `1b332ffa…` | `done`, exit 0, `1b332ffa…`, `classes` equal R29's; 9.7 min | **holds** |
+| 2. The lock: `acquire`, `set-pid` at the launch, `release` after the readers, each a shell command of its own | acquired 11:37:54Z, `set-pid` 75161, released 12:31Z; one look-only `status` shared its shell with hashing (deviation 15) | **holds** (with deviation 15) |
+| 3. Outside `QuadSourceIntegral`: every value table identical; every other difference of the four volatile kinds; no row in one store only | 360,462 value-table rows identical; 0 unclassified on the normalised copy | **holds** |
+| 3. Inside it: every moved row tabulated, against both stores' `total_abserr`, regions, maximum depth, located points, window pieces, guarded regions and `total_converged`; the `total_converged` changes each way | 380 rows tabulated (`out/qsi_rows_r29_r30.csv`); 1,234 records (`out/qsi_records_r29_r30.csv`); `total_converged` changes 0 up, 0 down | tabulated |
+| 4. S3: \|t30 − t29\| ≤ e29 + e30 on every row with finite `total_abserr` in both | 864 scored exactly; 0 violations; largest 0.0288 | **holds** |
+| 5. S1: V1's twelve locate their point at z ≈ 10211 and are honest against 06g's references | 12 of 12, largest 0.2176 (w11); equal to R29 | **holds** |
+| 5. S2: P1's two rows locate within one spacing and are honest against `p1_references` | both; 0.0202 and 0.263 | **holds** |
+| 6. S4: R29's four guarded J4/Y4 blocks each locate their root, guard no leaf, and are honest against R29's block references | 4 of 4: the root bit-equal to the reference root, 0 guarded, ratios 4.4e-5 to 6.2e-4 | **holds** |
+| 7. The readers on R30 exit 0, store byte-identical; lock released, `ray-processes` empty; R29 and R30 kept | 6 of 6; identical; free; nothing listed; R29 equal to its KEPT hashes | **holds** |
+
+**The inside-QSI tabulation** (`out/qsi_tabulation_r29_r30.txt`, `out/qsi_summary_r29_r30.txt`):
+- **Rows:** 484 unmoved and 380 moved.
+  - `total` moved in 25 rows, `total_abserr` in 60, `analytic_rad` in 168 and `analytic.abserr` in 339.
+  - The other 163 moved only in analytic-block fields or counters.
+- **Largest changes:**
+  - \|Δtotal\|/abserr is 0.0470 against R29's abserr and 0.0745 against R30's, at (3.162e5)³, z 1.918e8 (regions
+    69 → 73).
+  - The largest group-record \|Δv\|/abserr is 0.336 (R29) and 0.753 (R30), on G+q+r at (1e6)³, z 2.099e7: regions
+    1 → 68, `phase_limited` False → True.
+  - \|Δanalytic_rad\|/analytic.abserr is at most 5.5e-5.
+- **Regions:** summed, 114,460 → 114,245. They change in 17 rows. Maximum depth changes in 2 rows (17 → 9 and 11 → 15).
+  Five rows are at depth 20 in each store.
+- **Convergence:** `total_converged` is 862 of 864 in both stores, with 0 changes either way. Group and analytic-block
+  `converged` also have 0 changes either way.
+- **Location:**
+
+  | | Group records: points / window pieces / guarded | Analytic blocks: points / window pieces / guarded | Rows located | Rows guarded |
+  |---|---|---|---|---|
+  | R29 | 44 / 562 / 0 | 336 / 2,172 / 4 | 170 | 2 |
+  | R30 | 44 / 562 / 0 | 400 / 2,515 / 0 | 202 | 0 |
+
+  - The new points are 64 2pt5 J4/Y4 blocks in 32 rows, which R29's Rule A skipped. Each locates one root, with 2–13
+    window pieces.
+- **The replay** (`out/replay_summary.txt`): every located record holds exactly one root. There are 44 G+q+r, 200 J4 and
+  200 Y4, with 3,077 window pieces and no record over 64 points. The four q-r calls of the replayed rows are skipped with
+  reason `zero_rate`.
+
+### Deviations from the prompt
+
+1. **`rec.sh` is R29's** (`b5279dd9`) with its record path changed by sed. IMPLEMENTATION CHOICE.
+2. **A GNU-style `stat -f` format string failed** in a read-only gate check. The hashes and `ls -la` carry the same
+   information. UNINTENDED DRIFT.
+3. **`normalise_jobname_labels.py` is 07's** (`b02fd3fd`), with its two prefixes (`07-` → `07a-`) and its docstring
+   changed. IMPLEMENTATION CHOICE.
+4. **`classify_non_qsi.py` was run on both the raw and the normalised JSON.** The raw run gives 5,148 unclassified, every
+   one a `label` whose job-name prefix differs; the normalised run gives 0. The verdict is the normalised copy's, as 07's
+   S0. STRUCTURALLY REQUIRED: the brief sets R30's job name.
+5. **The inside-QSI tabulation is a new script**, `tabulate_qsi_r29_r30.py`.
+   - R29's script classes a row "untouched" by the newer store's four counts, against a store that lacks them. That
+     cannot apply when both stores carry the counts.
+   - A row here is "moved" if and only if a value, counter or guard field differs.
+   - The reader and the field classification are copied verbatim.
+   - IMPLEMENTATION CHOICE.
+6. **`qsi_summary_r29_r30.py`**, a summary of the two CSVs for the stop-1 report. IMPLEMENTATION CHOICE.
+7. **The classifier prints no provenance header,** so the shell wrote one (script and input SHA-256, the tree's HEAD).
+   IMPLEMENTATION CHOICE.
+8. **Four read-only exploratory commands at stop 1 printed output that was not saved:** a peek at R30's metadata
+   structure (`peek_qsi_metadata.py`; a first one-liner failed on sqlite quoting) and three inline analyses of the CSVs.
+   `qsi_summary_r29_r30.py` re-derives and saves their content. UNINTENDED DRIFT.
+9. **The capture harness is R29's on-disk copy** (hashes equal to R29's records). `prov.py` was changed to the one tree
+   h and R30's store links, with the parents assertion one level shallower. IMPLEMENTATION CHOICE.
+10. **`worker.py`: `guard_07`'s skipped-phase entries also record `reason`.** 07a's entry form carries no variation.
+    STRUCTURALLY REQUIRED.
+11. **`worker.py`: a route diagnostic, `route_07a`, added for the orchestrator's reading.**
+    - Pass-throughs at `_adaptive_levin_subregion` (the existing one, extended) and at
+      `_Basis_SinCos.build_Levin_data` record, for each solve: V, 07's estimate (the parent's expression on the same
+      `theta_prime_Cheb`), `is_direct` and the caller.
+    - It returns exactly what it is given. The replay reproducing R30 bit for bit, 493 of 493 records, shows it changed
+      no value.
+    - IMPLEMENTATION CHOICE.
+12. **`replay07a_r30.py` is R29's driver run at one tree.**
+    - The 49 abserr-only records' rows are added.
+    - The check reports `route_07a`.
+    - The blockcheck compares each capture with R29's.
+    - IMPLEMENTATION CHOICE.
+13. **A first `rows` run failed with a KeyError.** A comment I inserted had commented out the rest of a dict line. It was
+    corrected before any output existed or was used. UNINTENDED DRIFT.
+14. **Pass 1 of the block check (`blocks1`) ran in session, as the pilot, before the detached pipeline ran the rest.**
+    The pipeline is not a registered run, as R29's was not. IMPLEMENTATION CHOICE.
+15. **One look-only lock `status` ran in a shell command that had first run `shasum` and `ls`.** That is against "each
+    lock command … the only process that command starts". Those processes had ended before it ran, and it changed
+    nothing. UNINTENDED DRIFT.
+16. **The block captures are not byte-identical to R29's,** as the dispatch's comparison asked.
+    - They differ only in the unit id, the tree tag and the call's own result fields (`out/capture_compare.txt`).
+    - The integrand's equality is shown instead: 1001-point samples bit-identical, with equal `x_span` and `kw`
+      (`out/block_scores.txt`).
+    - STRUCTURALLY REQUIRED: a capture records its own run.
+17. **S4 used two scripts.**
+    - `block_reference_r30.py` is R29's, with the skipped-phase form changed and the located points recorded. It was
+      run at h without `--reference`.
+    - `block_score_r30.py` is new.
+    - R29's references were reused, as §5 item 6 says.
+    - IMPLEMENTATION CHOICE.
+18. **S3 is scored by a new script, exactly, in `Fraction`s.** IMPLEMENTATION CHOICE.
+19. **S1 and S2 are R29's scripts, adapted. Some names were left as R29's:**
+    - S1 keeps its key names `v29`/`abserr29`, which hold R30's numbers, so its JSON is byte-identical to R29's
+      (`ae704a3c`). R30's twelve calls equal R29's bit for bit.
+    - S2 still prints "replay reproduces R29" for R30's check, and its `R30_equals_R29` expression carries a dead
+      conditional.
+    - Cosmetic. UNINTENDED DRIFT.
+20. **`trust_reading.py` and `replay_summary_r30.py` are new.** IMPLEMENTATION CHOICE.
+21. **Two read-only looks printed output that was not saved:** the pilot's `emit.jsonl` and the block replays' JSON
+    fields. The pipeline's check and `block_score_r30.py` save the same content. UNINTENDED DRIFT.
+
+### Verification performed
+
+- **Gate** (`out/00-gate.txt`, `out/01-*`):
+  - the worktree at 4bf50d34, clean; the main checkout at 28ebaf07, clean;
+  - S0′ as written;
+  - `1ec734d7..4bf50d34` outside docs/prompts: empty;
+  - `e182bc7a..4bf50d34` under ComputeTargets, ObjectFactories, RunDrivers, main.py, tools, config, CosmologyModels and
+    requirements.txt: empty;
+  - 73 runs, all finished; no lock; no Ray process; `auth_token` mode 600;
+  - R29 equal to its KEPT hashes.
+- **R30** (`out/r30_launch_check.txt`, `out/r30_end_check.txt`):
+  - launched 11:38:05Z (sh 75153, driver 75161); manifest at 4bf50d34, clean, launcher `b0135218`;
+  - `done` at 11:47:48Z; no Traceback, WARNING or ERROR.
+- **Stores:**
+  - R29 is byte-identical before, during and after everything (`state/r29_store_sha256_*`, `state/store_sha256_*`,
+    `state/stores_sha256_final.txt`).
+  - R30 is unchanged after its build: across the comparisons, the replay and the readers.
+- **The comparisons:** `tools.store_value_diff` R29 against R30 (15.9 s, exit 1, `f6de2ef1`), run from the worktree.
+- **The replay** (`out/replay_check.txt`, `out/blockcheck.txt`):
+  - 493 of 493 records reproduce, with Ray uninitialised in all 223 workers;
+  - the four block calls reproduce in pass 1 and pass 2;
+  - wall time: replay 325 s, blocks 52.5 s each pass.
+- **The readers** (`out/readers_check.txt`): 6 of 6 exit 0; R30 identical; 0 Tracebacks; the worktree clean.
+- **The lock** (`state/lock.log`): nine commands, each exit 0: ray-processes, acquire, set-pid, ray-processes, status,
+  ray-processes, release, status (free), ray-processes (nothing).
+- **Final** (`out/final_check.txt`):
+  - 74 runs, all finished; `~/.raypoolkit` empty; no Ray process;
+  - the worktree and the main checkout clean;
+  - `measurement/`, `var/levin-phase-floor-07/`, R29's run directory, A3 v2 and its scratch copy all untouched;
+  - no `__pycache__` in the records.
+
+### Observations not acted on
+
+1. **The 49 abserr-only records** (`issues.md` item 1).
+   - In each, exactly one auxiliary trust-check solve changes route or LU choice: a quarter in 41, a comparison half
+     in 8.
+   - No region's own solve changes, so neither does the value.
+   - This refines the orchestrator's reading.
+   - It bears on §6 W1's diagnostics: those must count the trust check's solves, or W1 will see calls move that it
+     predicts are bit-identical.
+2. **R30's four S4 block values equal R28's bit for bit.** R30's S1 and S2 calls equal R29's (and R28's) bit for bit.
+3. **`route_07a` over 4,614 replayed calls:** 312 solves change C2 route and 430 change LU choice, of 427,437
+   (`issues.md` item 3).
+4. **The readers subsample k and z at random,** so their file counts differ from R29's (`issues.md` item 4).
+5. **The stale comments the dispatch named** were met in passing and not touched (`issues.md` item 5).
+
+### State handed on
+
+- **R30:** `levin-phase-floor-07a-r30-07a-20261112T113806`, `done`, `1b332ffa…`. Its store is kept
+  (`KEPT_ON_MAC_STUDIO.txt`).
+- **R29** is unchanged and kept.
+- **The lock is released.** Nothing of this agent runs. The worktree and the main checkout are clean and unmoved.
+- §6, the census, was not touched.
+
+## Part C §6: the census at 07a's code (Mac Studio), the census agent
+
+**Subject:** prompt 07a §6, as amended by §9.5 and §10.4: the census re-run at the code commit `1ec734d7`, against 07's
+census as the "before". On the Mac Studio (`mps026298`), 2026-11-12, by Part C's census agent. Covers Gate W0, the
+predictions, the census, stop 3's comparison, W1–W7, the descriptive items and the records. Ray-free, no lock, no store
+built.
+- **The tree h:** the worktree `SecondaryGWKit-lpf07a-4bf50d3`, detached at Part C's dispatch SHA `4bf50d34`, whose code is
+  `1ec734d7`'s.
+  - `AdaptiveLevin/levin_quadrature.py` `4ea1948b…`; `ComputeTargets/QuadSourceIntegral.py` `33cb161e…`.
+  - Clean with `--ignored` throughout. The main checkout stayed at `28ebaf07`, clean.
+- **The parent:** there is no parent worktree. W0's K0 run ran in h with the parent's module installed in place of h's by
+  `variant_loader.py`.
+  - The module is `state/variants/levin_quadrature_parent.py`, from `git show dadd63a0`, `4e5da371…`.
+  - It is byte-identical to 07's census tree `e182bc7a`'s.
+- **The "before":** 07's census, `levin-phase-floor-07-census-20261108T171137`, checkpoint `03dfe786…`.
+- **The store:** 06's certified scratch copy of A3 v2, read only.
+
+**Commit:** none here. The orchestrator commits these records from the laptop as `docs/levin-phase-floor/07a/census/`.
+
+**The user's rulings, relayed by the laptop orchestrator:**
+- At STOP 2: *"Yes, A for Q1 and call's outputs for Q2; launch the census"*. The orchestrator's reading is recorded in
+  `state/ruling_stop2.md`:
+  - Q1, reading A: every solve counts as "a region whose route or LU choice differs" in W1 and W7.
+  - Q2: "bit for bit" compares the call's outputs. The `location` and `harness` categories are set aside as `phase_span`
+    is.
+- At STOP 3: *"Yes, resume the census agent for scoring"*.
+- At the W5 stop: *"Yes, W5 gated only, and take references for both calls"*. The orchestrator's reading is recorded in
+  `state/ruling_w5.md`:
+  - W5's counts are made over gated solves only. The forced solves' count is descriptive.
+  - `state/predictions.md` part 5's wording ("every solve … forced included") is superseded by this ruling. The file is not
+    edited.
+  - References are taken, by 07's V4 method, for rows `3-678` and `1-34599`. The ruling overrides §C.1's "no new references
+    are taken" for these two calls only. The results are findings, not W verdicts.
+
+**Result:**
+- **Gate W0 holds**, all four clauses.
+- **The census** `levin-phase-floor-07a-census-20261112T132744` is `done`: 18,560 of 18,560 units, 0 in error, 0 over budget,
+  wall 23,284 s (07: 22,708 s). Checkpoint `461df2ec…`.
+- **W1 holds** under the ruled readings: 0 of 258,824 untouched calls differ in the call's outputs, and all 9,726 units made
+  only of such calls have `total` and `total_abserr` equal to 07's.
+- **W2 holds** (0 Levin leaves listed). **W3 holds** (0 violations; the 784 skipped phases are all `zero_rate`).
+- **W4 fails, as §9.5 predicted:** exactly v08, v09, v12, v17 and v22, at 3.16, 2.21, 3.08, 2.38 and 2.53. All 33 calls are
+  bit-identical to 07's.
+- **W5 holds** (gated solves, as ruled): 0 node-partition sums, 0 Clenshaw–Curtis regions with a Levin half, 0 guarded
+  regions. Descriptive: 18,236 forced solves took the node-partition sum, 3–10 per call, all within the root-located calls
+  (4,416 of the 4,804). Their V routes nothing.
+- **W6 fails, as §9.5 predicted:** 2,482 of 2,484 pairs have r_g ≤ 1. The two that do not are `3-14501` (1.39) and
+  `3-35006` (1.08), as at 07.
+- **W7 fails:** at 1e-7, 2,407 covered calls move by at most 1.80e-7 of abserr_07. At 1e-8, 25 of 2,367 move by
+  0.0066–0.145 of abserr_07, beyond the 1e-5 threshold.
+  - All 25 are lone-`G` group calls with minima windows (6 or 19 minima).
+  - At 07 one window in each stopped (iroff1 6). At h none did (iroff1 4–5), because the value test is now at rtol 1e-8.
+  - Their abserr and `converged` are unchanged.
+  - Part A's basis (430 calls, all `G+q+r`) held no such call.
+- **The store and 07's census are unchanged**, before, after the census and at the end.
+- **The user's references** (findings, not verdicts):
+
+  | row | class | h | 07 |
+  |---|---|---|---|
+  | `1-34599` (`G±q∓r`) | own | **honest**: 0.020 (1e-7) and 0.015 (1e-8) of abserr_h | **not honest**: 4.03× abserr_07 |
+  | `3-678` (`G±q∓r`) | aux_only | **honest**: 0.491 of its abserr, 11× smaller than 07's and from 1 region | honest: 0.135 |
+
+  - At `1-34599` the own C2 route change corrected a dishonest call of 07.
+  - At `3-678` the shrunken declaration, the product of an auxiliary trust-check route change, is honest.
+  - In every case the readings' spread is at least 7.8e5 below both abserrs.
+
+### What shipped
+
+No code. The records are in `var/levin-phase-floor-07a/census/`:
+- **The records:**
+  - `log.md` (this file), `verification.md`, `issues.md`, `KEPT_ON_MAC_STUDIO.txt`;
+  - `state/predictions.md`: SHA-256 `3ec7b53d…`, mtime 2026-11-12T13:16:44.807Z, read-only, written after W0 and before the
+    launch;
+  - `state/ruling_stop2.md`.
+- **`scripts/`:** 07's census harness, copied from h's `docs/levin-phase-floor/07/census/scripts/`. It is byte-identical to
+  07's Mac Studio copy (`out/cmd/00`). Changes are marked "prompt 07a". The diffs are `out/scripts_diff_before_k0.txt`,
+  `out/scripts_diff_at_stop2.txt` and `out/scripts_diff_at_end.txt`.
+  - **Changed:**
+    - `prov.py`: the tree h, the parent's module and 07's census;
+    - `worker.py`: tree h; section 6's diagnostics `route_07a` with its on/off switch; the post-call tallies;
+    - `run_k0.py`: variant `parent`, `--no-instrument`;
+    - `run_census.py`: tree h;
+    - `refs_common.py`: the ROWS path.
+  - **New:**
+    - `hash_runs_07a.py`, `ast_lg_check_07a.py`, `index_07_07a.py`, `compare_07a.py`;
+    - `select_w0_units_07a.py`, `w0a_imports_07a.py`, `launch_07a.py`, `launch_census_07a.py`, `census_projection_07a.py`;
+    - `write_predictions_07a.py`, `stop3_classes_07a.py`, `score_v4_07a.py`, `xcheck_07a.py`, `xcheck_06m_from07_07a.py`;
+    - the references: `refs_select_07a.py`, `x1_capture_07a.py`, `check_captures_07a.py`, `refs_integrand_07a.py`,
+      `refs_slice_07a.py`, `refs_projection_07a.py`, `score_refs_07a.py`;
+    - `score_07a.py`, `summarise_07a.py`, `w7_detail_07a.py`, `moves_beyond_07a.py`, `w5_forced_detail_07a.py`,
+      `kept_list_07a.py`.
+- **`out/`:** every command and its output (`out/cmd/`, `out/commands.log`), with these results:
+  - W0: `out/w0/`, `out/k0/compare_w0b.json`, `out/w0c3/compare_instr.json`, `out/w0c4/compare_det.json`,
+    `out/k0/compare_k0_h_calls.json`;
+  - stop 3: `out/stop3/compare_census_calls.json`, `.calls.jsonl` and `classes.json`;
+  - the scores: `out/scores/summary.json`, `w4_scores.json`, `w4_report.md`, `w7_detail.json`, `moves_beyond.json`,
+    `w5_forced.json`;
+  - the cross-checks: `out/xcheck/`;
+  - the user's references: `out/refs/` (captures, checks, integrands, projection, readings, `scores.json`, `report.md`);
+  - before and after: `out/runs_hashed_{before,after,end}.txt`, and `out/census_projection.json`.
+- **Three registered runs, all `done`:**
+  - `levin-phase-floor-07a-k0-20261112T130135`: 11 of 11 commands, checkpoint `97731e2b…`;
+  - `levin-phase-floor-07a-census-20261112T132744`: 18,560 of 18,560, exit 0, checkpoint `461df2ec…`;
+  - `levin-phase-floor-07a-references-20261112T203555`: 16 of 16 readings, exit 0.
+- **Kept on the Mac Studio** (`KEPT_ON_MAC_STUDIO.txt`):
+  - the census's checkpoint and region records in full (6.7 GB, 08's "before");
+  - the k0 and references run directories;
+  - every pickle and every file over 2 MB under `census/`.
+
+### Predictions and verdicts
+
+`state/predictions.md` holds the prompt's §6 W1–W6 and descriptive items (lines 525–556), §9.5 (716–731) and §10.4's item
+(823–825), each verbatim by line range. Then come this agent's descriptive additions (part 4), how each rule is read
+(part 5, with Q1 and Q2 left to the user), and V4's 33 calls (part 6). Verdicts are as ruled at STOP 2.
+
+| Prediction | Verdict | The numbers it was scored on |
+|---|---|---|
+| **W0 (1)** the parent's code is 07's (S0′) | **holds** | `git diff --stat e182bc7a dadd63a0` (outside docs and prompts) lists `CLAUDE.md` only. The K0 workers loaded 101 files of h. None is in S0′'s diff. Of the parent→h diff only the two LiouvilleGreen modules were loaded, both AST-equal without docstrings. h's own `levin_quadrature.py` was never loaded (`out/w0/w0a_imports.txt`, `out/w0/w0a_ast_lg.txt`) |
+| **W0 (2)** the harness reproduces 07's census at the parent | **holds** | 100 of 100 K0 units equal 07's bit for bit: 2,110 calls, 2,110 region records, 32,956 leaves. Only 07a's four keys are set aside. 0 of 07a's keys in 07's records; `phase_span` 0 times as a key in either (`out/k0/compare_w0b.json`) |
+| **W0 (3)** the instrument changes nothing | **holds** | `h-1e-8-1-2174` (a root window) and `h-1e-7-1-11214` (an own solve's C2 route changed; chosen by `select_w0_units_07a.py`'s fixed rule), diagnostics on and off: IDENTICAL (`out/w0c3/compare_instr.json`) |
+| **W0 (4)** the new code is deterministic | **holds** | `h-1e-8-1-2174` run twice: identical on every key, 07a's included (`out/w0c4/compare_det.json`) |
+| **W1** nothing else moves | **holds** (reading A; the call's outputs) | 1e-7: 129,774 untouched calls; 123,083 strictly equal; 6,691 differ only in `location`; 0 in `call` or `harness`. 1e-8: 129,050; 122,359; 6,691; 0. Rows made only of untouched calls: 4,891 and 4,835, totals equal in all. Strictly: fails (13,382 `location`-only calls). Under reading B: fails (15,847 aux_only calls differ in `call`; totals differ in 217 + 207 rows) |
+| **W2** no Levin leaf across a stationary point | **holds** | 182,066 calls scanned (37,325 group at each rtol, 107,416 analytic at 1e-7), 0 scan errors. Listed leaves: 0 Levin; window leaves 1,682 (analytic, 1e-7), 526 (group, each rtol) |
+| **W3** every phase with something to locate is located | **holds** | 181,282 scanned calls scored, 0 violations. 784 set aside (392 group calls per rtol, the q = r rate): every one `reason: zero_rate`, no scan sign change, min/max \|θ′\| undefined (rate zero) |
+| **W4** honest where referenced | **fails** (as §9.5 predicted) | 28 of 33 honest. v08 3.16, v09 2.21, v12 3.08, v17 2.38, v22 2.53, to three figures as predicted. All 33 calls' value and abserr equal 07's in hex (26 window_both, 6 untouched, 1 own: z24). Tolerance min(abserr_07, abserr_h)/100. Every call's readings agree |
+| **W5** the gate is consistent; the guard a backstop | **holds** (gated solves, as ruled at the W5 stop) | Gated solves: 0 Clenshaw–Curtis regions with a half sent to Levin (also 0 on 07's estimate); 0 node-partition sums; 0 guarded regions. Descriptive: 18,236 forced solves took the node-partition sum (`out/scores/w5_forced.json`), 3–10 per call, all within the root-located calls (4,416 of the 4,804; 388 root-located group calls, 194 per rtol, have none). In each such call this is the window piece whose end node is the root, and its forced halves and quarters; their V routes nothing. Before the ruling it was undecided, because it fails if forced solves count (part 5's superseded text) |
+| **W6** the pairs, on r_g | **fails** (as §9.5 predicted) | 2,482 of 2,484 pairs r_g ≤ 1, 0 unpaired. `3-14501` 1.385 and `3-35006` 1.084, as at 07, all members converged. h's own population: 3,650 pairs, 3,648 ≤ 1, the same two |
+| **W7** the stop's change is small | **fails** | Reading A: at 1e-7, 2,407 covered calls, 0 violating, max move 1.80e-7 of abserr_07. At 1e-8, 2,367 covered, 25 violating (0.0066–0.145 of abserr_07), no `converged` change. Reading B: also fails (38 and 97) |
+
+### The user's references (findings, not W verdicts; `out/refs/`)
+
+Method: 07's V4 reference method, ruled at the W5 stop.
+- **The tool and readings:** `tools/filon_reference.py` (`d37e633b`, as 07's). QAWO r1 and r2 and FCC r1 and r2 on each call;
+  each QAWO reading projected at 30 minutes or less. The reference is FCC r2. 07's reading-usability check passed on all 16.
+- **The calls:** the eight flagged calls (row × group calls 2 and 3 × 1e-7 and 1e-8).
+- **The captures:** each captured at h, and checked bit for bit against 07a's census (`out/refs/check_captures_h.json`,
+  8 of 8). Each captured again in h with the parent's module, and checked against 07's census
+  (`out/refs/check_captures_07.json`, 8 of 8).
+- **The integrands:** equal by bit pattern at 1001 points between the two captures and across the rtols
+  (`out/refs/integrands.json`). So one reference per row and index serves both rtols.
+- **The run:** `levin-phase-floor-07a-references-20261112T203555`, `done`, 16 of 16 readings, wall about 13 minutes
+  (projected 737 s).
+- **The stated error:** the readings' spread.
+
+| call | ref (FCC r2) | stated error | ÷ min abserr | abserr_h | abserr_07 | \|v_h − ref\|/abserr_h | \|v_07 − ref\|/abserr_07 | regions h / 07 |
+|---|---|---|---|---|---|---|---|---|
+| `1-34599` #2, #3, 1e-7 (own) | −3.162788408760542e-26 | 5.7e-40 | 1.3e-6 | 1.524e-33 | 4.462e-34 | **0.0201** | **4.03** | 16 / 6 |
+| `1-34599` #2, #3, 1e-8 (own) | (the same) | 5.7e-40 | 1.3e-6 | 1.118e-33 | 4.462e-34 | **0.0150** | **4.03** | 17 / 6 |
+| `3-678` #2, #3, 1e-7 and 1e-8 (aux_only) | 1.431843199210653e-30 | 1.0e-45 | 9.2e-8 | 1.088e-38 | 1.214e-37 | **0.491** | 0.135 | 1 / 12 |
+
+- Every call's stated error is at least 10× below both abserrs, so every call is scored. The readings also agree within
+  07's own tolerance (min/100).
+- Calls #2 (G+q−r) and #3 (G−q+r) give the same values, since q = r.
+- `1-34599`: h is honest, and 07 was 4.03× its abserr from the reference.
+- `3-678`: h's eleven-times-smaller declaration is honest, at 0.491 of it.
+
+### Descriptive (not scored)
+
+- **Route changes:**
+  - 24,559 solves changed decision, of 22,945,838 recorded:
+    - 10,014 C2 route changes, every one towards Clenshaw–Curtis (V < 6π ≤ estimate);
+    - 14,545 LU changes, every one towards least squares (V ≤ 20π < estimate).
+  - By class:
+
+    | class | to CC | to least squares |
+    |---|---|---|
+    | own | 3,007 | 4,689 |
+    | comparison half | 3,864 | 5,251 |
+    | trust-check quarter | 3,143 | 4,605 |
+
+  - Estimate/V on the changed solves: 1.00001–2.29 (median 1.064) for C2 changes, 1.00001–2.39 (median 1.150) for LU
+    changes. 07's estimate was always above V on a changed solve.
+  - By rtol and kind: analytic 3,402 + 5,776 (1e-7) and 3,695 + 6,224 (1e-8); group 1,449 + 1,260 and 1,468 + 1,285.
+  - Every band and k is touched (`out/scores/summary.json`).
+  - Calls: own 1,380 analytic + 1,906 group (1e-7) and 2,186 + 2,039 (1e-8); aux_only 7,371 + 660 and 7,251 + 565.
+- **Moves:** 3,091 units' `total` or `total_abserr` differ from 07's.
+  - Relative: at most 3.3e-4 (90th percentile 2.3e-7).
+  - Against total_abserr_07: at most 0.749, 0 above 1.
+  - No `total_converged` and no call's `converged` changed.
+  - **Calls moved beyond an abserr** (`out/scores/moves_beyond.json`):
+    - **beyond both codes' abserrs:** `1-34599` `G+q-r`/`G-q+r` at 1e-7 (3.96× abserr_07, 1.16× abserr_h) and 1e-8 (3.99×,
+      1.59×), class own (one own C2 route change; regions 16/17 against 6);
+    - **beyond abserr_07 only:** `1-2179` `G±q∓r` (4.66× abserr_07, 0.34× abserr_h; abserr_h 13.6× abserr_07), class own;
+      `3-843` analytic J2 (1.09×, 0.58×) and `3-13508` `G±q∓r` (1.08×, 0.60×), class aux_only.
+- **The aux_only calls** (reading A sets them outside W1): 15,847 calls (`out/scores/summary.json`, `aux_only`).
+  - The changed solves are comparison halves in 8,878 calls and quarters in 7,500.
+  - abserr equal in 1,609, smaller at h in 6,697, larger in 7,541.
+    - The ratio h/07 runs 0.090–5.10, median 1.0, 99th percentile 1.28.
+    - It shrank by more than 2× in **47** calls and grew by more than 2× in 70.
+  - Value: unchanged in 8,792. The move over abserr_07 is at most 1.09, 90th percentile 3.3e-5.
+  - 4 calls moved by more than their own abserr at h: `3-678` `G+q-r` and `G-q+r`, at 1e-7 and at 1e-8.
+    - Their abserr shrank to 0.0897 of 07's and their regions went 12 → 1.
+    - Their value moved by 2.00× abserr_h (0.179× abserr_07).
+    - These are among the 47.
+  - No `converged` change; regions changed in 432 calls.
+  - **Referenced aux_only calls: none.** V4's 33 calls are window_both (26), untouched (6) and own (1). The cross-check's
+    2,484 pairs are all calls with a window. So no shrinking declaration among them is tested against a reference.
+- **The newly located:** 2,360 calls (window_h_only; at each rtol 1,012 group plus 84 J4 and 84 Y4).
+  - Points: 2,024 minima and 336 roots. Pieces 2–59, median 14.
+  - All converged at both codes.
+  - 07's Rule A variation on them was 0.009–18.58.
+  - No call locates more than 64 points (the most is 64 pieces, in a call of the old population).
+- **Windows:**
+  - 3,650 windows per rtol at h (07: 2,470).
+  - Stopped: 1,247 at 1e-7, 1,243 with a leaf still falling (07: 1,157/1,153); 1,236 at 1e-8, 1,233 falling (07:
+    1,195/1,192).
+  - Calls with a stopped window left unconverged: 7 (1e-7) and 9 (1e-8).
+- **Convergence and the flag:** unconverged group calls at h equal 07's in every class.
+  - 1e-7: 30 in the 720, 52 outside. 1e-8: 34 and 62.
+  - No analytic call is unconverged.
+  - Row depth 20: 77 (1e-7) and 83 (1e-8) at both codes.
+- **The disagreement list:**
+  - h against 07: 0 listed calls, on 07's population and on h's.
+  - h against 06m (06m's values from 07's cross-check output; 06m's checkpoint was trimmed on 2026-11-10): 843 listed calls,
+    class (c) 786, (a) 31, (e) 26, all `G+q+r`, each in the same class as at 07.
+- **§10.4's item:** **0** calls go from converged to unconverged with a solve whose route changed and no window, under
+  either reading.
+- **The largest |θ| at a gated region's end:**
+  - analytic: 8.874e12 (ulp 1.95e-3 rad), `h-*-2-35099` J1, both rtols;
+  - group: 4.119e12 (ulp 4.9e-4 rad), the same row's `G+q+r`.
+- **The smallest margins among unchanged solves:**
+  - |V − 6π|: 4.77e-8 (group, a trust-check quarter, `*-1-14543`, V 18.8495560, estimate 18.8496054); analytic 1.38e-3
+    (1e-7) and 3.10e-4 (1e-8).
+  - |V − 20π| on the Levin route: 3.02e-4 (group, `*-3-34129`, an own solve); analytic 4.53e-3 and 2.94e-3.
+- **Cost:**
+  - Census wall 23,284 s against 22,708 s.
+  - Unit walls 24,952 / 28,513 s against 24,203 / 27,479 s.
+  - Group-call regions 952,395 / 1,065,828 against 952,275 / 1,065,288 (1e-7 / 1e-8).
+  - The harness's own re-solves after the timed section: 06h's counterfactual made 6,906,084 solves, 7,097 with a C2 change
+    and 11,999 with an LU change (`route_07a_post_unit`). They are not the call's.
+
+### Deviations from the prompt
+
+1. **The harness changes,** each within §6's list (`out/scripts_diff_at_end.txt`). STRUCTURALLY REQUIRED.
+   - The tree and its paths (`prov.py`, `refs_common.py`, `run_census.py`, `run_k0.py`).
+   - The diagnostics (`worker.py`'s `route_07a` and its on/off switch).
+   - The comparison with 07's census (`compare_07a.py`).
+   - V4's re-scoring (`score_v4_07a.py`).
+2. **The parent ran as a variant from `state/variants/` in h**, not as a parent worktree, as the dispatch directs.
+   STRUCTURALLY REQUIRED.
+3. **06g's `rows.json` is no longer on this host.** 07's copy (same SHA-256) is read. The first copy command failed
+   (`out/cmd/07`). STRUCTURALLY REQUIRED; the failed attempt is UNINTENDED DRIFT.
+4. **New scripts** (listed under What shipped). IMPLEMENTATION CHOICE.
+5. **Development smoke tests** (`state/smoke/`, `out/cmd/11`–`17`), not scored. IMPLEMENTATION CHOICE.
+6. **K0 at h, its call comparison, the unit selection and W0's clauses 3 and 4 ran inside the `k0` run**, as 07 did.
+   IMPLEMENTATION CHOICE.
+7. **W0 (3)'s units:** z12's row fixed by name; the route unit chosen by a rule fixed before the run. IMPLEMENTATION CHOICE.
+8. **The diagnostics also tally the harness's own re-solves after the timed section** (`route_07a_post`). IMPLEMENTATION
+   CHOICE.
+9. **The comparison puts each differing path in one category** (`call`, `location`, `harness`). It was put to the user as
+   Q2 and ruled. IMPLEMENTATION CHOICE.
+10. **`predictions.md` gained parts 4 and 5.** Part 6's column labelled "30 digits" holds 07's stored reading strings (17
+    digits). The file is fixed and was not rewritten. The label is UNINTENDED DRIFT (cosmetic).
+11. **The first edit of `prov.py` ran through the system `python3`** (an editing script; no repository code). UNINTENDED
+    DRIFT (cosmetic).
+12. **Redundant background waits on the k0 driver** were started and stopped. UNINTENDED DRIFT (cosmetic).
+13. **No lock taken, and no lock `status` or `ray-processes` run**, as the dispatch says. IMPLEMENTATION CHOICE.
+14. **The A3 v2 fingerprint was not recomputed;** the copy is checked by SHA-256 against its certification, as 07 did.
+    IMPLEMENTATION CHOICE.
+15. **The stop-3 comparison and every scoring script ran in the session through `rec.sh`**, not as registered runs. The
+    dispatch names only the `k0` and `census` slugs. The longest took 103 s. IMPLEMENTATION CHOICE.
+16. **`score_v4_07a.py`'s first run failed on a broken docstring** (`out/cmd/50`); it was fixed and re-run (`50b`).
+    UNINTENDED DRIFT (a failed attempt).
+17. **A first loop of the three cross-checks did not run** (zsh does not word-split `set -- $args`; `rec.sh` could not open
+    its output). It was re-run under `bash`. Nothing was written but the shell's errors. UNINTENDED DRIFT (a failed attempt).
+18. **The disagreement list against 06m used 07's cross-check output for 06m's values,** because 06m's census checkpoint was
+    trimmed on 2026-11-10. The first attempt, against 06m's checkpoint, failed (`out/cmd/51_xcheck_h_vs_06m_pop07`).
+    STRUCTURALLY REQUIRED.
+19. **`xcheck_06m_from07_07a.py`'s output carries a vestigial empty key** `class_h_vs_07`. The real table is
+    `class_07_to_h`. UNINTENDED DRIFT (cosmetic).
+23. **References were taken for rows `3-678` and `1-34599`,** on the user's word at the W5 stop. This overrides §C.1's "no new
+    references are taken" for these two calls only. STRUCTURALLY REQUIRED (by the ruling).
+24. **The reference harness is 07's V4 method, copied with changes marked "prompt 07a"** (`out/scripts_diff_at_end.txt`).
+    IMPLEMENTATION CHOICE.
+    - `x1_capture_07a.py`: tree h, the parent variant, the match to 07's record.
+    - `check_captures_07a.py`: the census named on the command line; `route_07a*` set aside.
+    - `refs_slice_07a.py`: the 1e-7 captures only.
+    - `launch_07a.py`'s `references` plan.
+    - `one_reading.py` and `run_06j.py` are unchanged.
+    - New: `refs_select_07a.py`, `refs_integrand_07a.py`, `score_refs_07a.py`.
+25. **The projection was refitted on 07's own 74 readings,** because 07's calibration (06g's readings) is gone from this host.
+    07's feature function and model form are unchanged (`refs_projection_07a.py`). STRUCTURALLY REQUIRED.
+26. **One reference per row and index serves both rtols,** on the integrands' shown identity, as 07's cross-check did.
+    IMPLEMENTATION CHOICE.
+27. **The parent captures (`out/refs/captures_parent.json`) were made so that each call could be checked against 07's census.**
+    IMPLEMENTATION CHOICE.
+28. **The stated error of a reference is the readings' spread** (07's agreement measure). IMPLEMENTATION CHOICE.
+29. **Two failed attempts, each re-run.** UNINTENDED DRIFT (failed attempts).
+    - The first captures (`out/cmd/71`, `72`) could not write their JSON because `out/refs/` did not exist; re-run as `71b` and
+      `72b` into new directories.
+    - A zsh `$H:s…` substitution error stopped one command; re-run with the literal path.
+20. **W4's tolerance** is min(abserr_07, abserr_h)/100: 07's rule with "the before" now 07 (part 5). 07's own scores are
+    shown beside it. IMPLEMENTATION CHOICE.
+21. **W3's "scored" count** is every scanned call less the 784 set aside. `score_07a.py` keeps in detail only calls with a
+    sign change, a point or a listed leaf; the others satisfy V3 vacuously. IMPLEMENTATION CHOICE.
+22. **`kept_list_07a.py` was made from 07's by `sed`.** A substitution miswrote its own source's name in its docstring; this
+    was corrected before it ran. UNINTENDED DRIFT (cosmetic).
+
+### Verification performed
+
+`verification.md` has the account. In brief:
+- **The trees:** h at `4bf50d34`, clean with `--ignored` at every check and at the end, with no `__pycache__`. The main
+  checkout is at `28ebaf07`, clean.
+- **Every census worker:** module `4ea1948b`, no variant, h clean at its SHA, no Ray, no foreign module.
+- **The scratch copy:** EQUAL to its certification before, after the census and at the end. Before equals end.
+- **07's census:** 150 of 150 files equal its kept list. Its 850 working-record files are byte-identical before, after and at
+  the end.
+- **The registry:** 76 runs, all finished. No lock was taken.
+
+### Observations not acted on
+
+1. **W7's 25 calls:** at 1e-8, minima windows of lone-`G` calls that stopped at 07 no longer stop under 07a's value test
+   (min(1e-5, rtol)). Values move by up to 0.145 of their abserr, abserr and `converged` unchanged. §9.5's basis (Part A's
+   430 `G+q+r` calls) did not sample them.
+2. **W5's forced partition sums** (descriptive under the ruling): in a root-located call, the window piece whose end node is
+   the root takes the node-partition sum.
+   - θ′ changes sign at that node.
+   - So do its forced halves and quarters there.
+   - V routes nothing on a forced solve, but it is the `phase_span` reported for that region.
+3. **Shrinking declarations on auxiliary-only calls:** 47 aux_only calls' abserr shrank by more than 2×.
+   - The one the user referenced, `3-678`, is honest at 0.491 of its eleven-times-smaller abserr.
+   - The other 46 are unreferenced.
+4. **`1-34599`, where 07 and h disagreed beyond both errors:** the reference shows h honest (0.020 and 0.015) and 07 not
+   (4.03). An own C2 route change corrected it.
+5. **06m's census checkpoint was trimmed on 2026-11-10,** and 06g's census records are gone from this host (`issues.md`).
+6. **§10.4's set is empty** in the census: no call loses convergence with a route change and no window.
+
+### State handed on
+
+- **Nothing is running.** All three registered runs are `done`: k0, census and references. No lock was taken.
+- **Kept on the Mac Studio** (`KEPT_ON_MAC_STUDIO.txt`):
+  - the census run directory in full (149 files, 6.7 GB; 08's "before");
+  - the k0 and references run directories;
+  - every pickle and every file over 2 MB under `census/` (the K0, W0 and smoke runs' region pickles; the stop-3 and
+    scoring outputs).
+- **Read only and unchanged:** the scratch copy and 07's census, by hash.
+- **Issues:** proposed in `issues.md`, for the laptop and the user.
+
+## levin-phase-floor 07a, Part A (section 2): the measurement — log of the measuring agent
+
+**Subject:** prompt 07a Part A, the replays of section 2.1's calls at 07's code and at variants of the window's stop,
+on the Mac Studio (mps026298), worktree `/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-f93aafd` at the dispatch
+SHA `f93aafd0173bd5de1cdc4107656dbe07c4c1c2a3` (code 07's), records in
+`/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/`.
+**Commit:** none (records committed by the orchestrator, on the laptop).
+**Result (2026-11-11): the planned stop of section 2.5.** Stop 1 (2026-11-10) asked two cost questions. The user's
+rulings (deviations 16, 17, 20, 21) were applied, and every part of section 2 they left in scope is done:
+- the Gate (Mac Studio clauses) holds before and after;
+- section 2.1 item 2's captures check, 9 of 9;
+- replays at 07's code reproduce 07's census, 430 of 430 bit for bit;
+- variants (a), (c)-(f) ran on all 430 calls, and (b) and (g) (as b2 and g2) on items 1-2 and the no-window calls;
+- the no-window check passes, 5 of 5 for every variant;
+- all 24 attributions are done, and every one closes;
+- the O9 check covers the five failures;
+- the final tables are written.
+
+**No variant changes any of the five failures.** In every failure the whole excess error is in H3, the Levin leaves
+outside the windows. In three of them it sits in a single seed region beside the window that was never bisected.
+(b2) and (g2) qualify only by leaving all 29 window calls unconverged. Item 3 is undecided by construction.
+
+*Stop 1's result line, kept:* stopped before section 2.5 with a question on section 2.2's cost rule (the attribution
+projects over 12 h) and on the cost of variants (b) and (g), which the prompt does not bound.
+
+### What shipped
+
+Nothing in the tree (its `git status --short --ignored` empty throughout; the main checkout at `28ebaf07`, clean).
+Records only, under `measurement/`:
+- `scripts/`: 07's census harness copied from `docs/levin-phase-floor/07/census/scripts/` (diff in
+  `out/scripts_diff_against_07.txt`: `prov.py` and `refs_common.py` only, each change marked "prompt 07a"), and 07a's
+  own scripts (`*_07a.py`, `capture_pairs_07a.py`, `gate_hashes.py`, `launch_07a.py`, `launch_attr_07a.py`);
+- `scripts/variants/levin_quadrature_07a_{a,b,c,d,e,f,g,b2,g2}.py`, each with its diff against the tree in
+  `out/variants/<v>.diff` and its SHA-256 in `out/variants/variants.json` (the first index kept as
+  `variants_v1.json`);
+- `state/`: `census_refs.pkl` (07's census records of every call), `calls_07a.json` (the manifest),
+  `pairs_capture/` (section 2.1 item 2's captures), the plans;
+- `out/`: the replays (`replays/<variant>/<sid>.json`, instrument records `*.instrument.json` for items 1-2), the
+  interim tables (`tables_interim_1.{json,md}`), the attribution (`attr/`), the (b) cost probe (`b_scaling/`), the
+  captures' check (`pairs_capture/`), the Gate's hashes (`gate_hashes_*.json`);
+- registered runs `levin-phase-floor-07a-x396-fast-20261110T215229` (done, 2,376 of 2,376),
+  `levin-phase-floor-07a-attr-1-20261110T215423` (done, 8 of 8), `levin-phase-floor-07a-bg2-items12-20261110T223735`
+  (done, 68 of 68) and `levin-phase-floor-07a-attr-2-20261111T102500` (done, 15 of 15, 10 h 55 min);
+- after stop 1: `out/tables_final.{json,md}` (`tables_07a_final.py`), `out/tables_final_rg.{json,md}`
+  (`tables_07a_final_rg.py`, items 2 and 4 on r_g: **the tables of record**), `out/attr/attr_tables_final.{json,md}`
+  (all 24 calls), `out/o9/` (`o9_check_07a.py`, `o9_table_07a.py`: the O9 check), `out/gate_hashes_after_final.json`,
+  and `out/stop_2_report.md` (the section 2.5 report).
+
+### Predictions and verdicts
+
+Part A has no predictions (section 2.4's tables are descriptive; section 2.5 recommends nothing). The checks it
+carries:
+
+| check (prompt) | scored on | verdict |
+|---|---|---|
+| Gate: code is 07's | `git diff --stat adffa21b f93aafd0 -- AdaptiveLevin ComputeTargets LiouvilleGreen tools` empty | holds |
+| Gate: 07's captures match `KEPT_ON_MAC_STUDIO.txt` | 78 of 78 lines (V4 `C00`-`C24`, cross-check `X00`-`X09`), before and after | holds |
+| Gate: the scratch copy matches its certification | 5 of 5 files, SHA-256, size and mtime, no extra file, before and after | holds |
+| Gate: nothing `running` or stale | Mac Studio registry, 69 runs finished at start (the laptop's: the orchestrator's check) | holds |
+| 2.1 item 2: each capture checks against 07's census | 9 of 9 (four pair calls, five no-window calls) by 07's `check_captures.py`: value, abserr, label, converged, regions bit for bit | holds |
+| 2.1: a replay at 07's code reproduces its census record | 430 of 430 at the tree and 430 of 430 at (a): value, abserr, converged, num_regions, max_depth, every region array, section 1.5's entries | holds |
+| 2.3: a variant does not change a call with no window | five calls, (a), (b2), (c), (d), (e), (f), (g2): 5 of 5 each, bit for bit | holds |
+| 2.2: the attribution's closure check, |sum ref_i - ref| <= tol | all 24 calls with a stopped window: 6.2e-6 to 3.3e-3 of tol | holds (no call reported unattributed) |
+
+### Deviations from the prompt
+
+1. **`STRUCTURALLY REQUIRED`** — "07's `make_capture.py`" is 06b's writer of a capture list from 06a's checkpoint; 07's
+   capture runner is `xcheck_capture_07.py` (after 06c's `x1_capture.py`: the census `worker.py` re-runs the unit with
+   `capture` in its spec). Section 2.1 item 2's captures were made by `capture_pairs_07a.py`, a copy of
+   `xcheck_capture_07.py` changed only to merge several calls of one unit into one run of it (07's made one unit entry
+   per call), and checked by 07's `check_captures.py` unchanged.
+2. **`STRUCTURALLY REQUIRED`** — the harness's trees and paths: `prov.py` and `refs_common.py` name this worktree as
+   `g`; `refs_common.ROWS` is 07's census copy of `rows.json` (`var/levin-phase-floor-07/census/state/rows.json`, the
+   same SHA-256 `aa523d28...`), since 06g's was removed in the housekeeping of 2026-11-10.
+3. **`STRUCTURALLY REQUIRED`** — section 2.3's five calls with no window: every call of section 2.1 has one, so five
+   were captured from the pair units in the same two worker runs as item 2 (`g-1e-8-3-14501` calls 0, 2, 4;
+   `g-1e-7-3-35006` calls 3 and 7, the last an analytic J2 block), each checked bit for bit like the pairs. Which five:
+   **`IMPLEMENTATION CHOICE`**.
+4. **`STRUCTURALLY REQUIRED`** — the 396: 07 captured 390 of them at 1e-7 and 6 at 1e-8 (one call per row; the integrand
+   is the same at both rtols). Section 2.1 item 3 names the calls at 1e-8, so a 1e-7 capture is replayed with the 1e-8
+   census call's `rtol` and `atol` and compared with that call's record; all 396 reproduce it bit for bit.
+5. **`IMPLEMENTATION CHOICE`** — the variants are one instrumented copy of the module, differing only in the constant
+   `_VARIANT_07A`; (a) is that copy, and 07's code itself is replayed too (`tree`), so the instrument is shown to change
+   nothing (430 of 430 at both). The instrument records section 2.2's quantities at each window bisection and stop, and
+   every returned leaf at the end; it is on for items 1-2 only (at (a), (c)-(f)).
+6. **`IMPLEMENTATION CHOICE`** — the raw estimate e of a leaf is its own solve's error, `used_interval`'s budget error
+   with no trust-check declaration; **the analogue of `defab.eq.error`** is `200 |CC_{2N-1} - CC_N| >= resasc`, with
+   dqk21's `resasc` formed on the fine Clenshaw-Curtis rule (`sum_j |w_j| |g_j - gbar|`), both positive. The
+   Clenshaw-Curtis solve returns `resasc_07a` in its dict and the region keeps it; nothing reads them but the window code
+   and the instrument (the no-window check).
+7. **`IMPLEMENTATION CHOICE`** — (d)'s value test: `|ΔV| <= min(1e-5, rtol) |V_L + V_R|`.
+8. **`IMPLEMENTATION CHOICE`** — (e)'s "request unmet": the call's running error above `max(atol, rtol |V|)` once the
+   halves of the bisection that reached the count are in, before the window's leaves are floor-limited (dqage's
+   `errsum > errbnd`, tested before it sets `ier = 2`).
+9. **`IMPLEMENTATION CHOICE`** — the two extra variants: (f), dqage in full, (c)'s count with (e)'s outcome (section
+   0.1's default); (g), 07's count with no count while another leaf of the window fell at its last bisection.
+10. **`UNINTENDED DRIFT`**, corrected — in (b) and (g) as first written, the list of the window's other falling leaves
+    was formed at every window bisection, a pass over every leaf; read only by (g) and the instrument, it changes no
+    value, but makes (b) quadratic in its leaves. `b2` and `g2` (`make_variants_07a_bg2.py`) form it only where read;
+    `b2` equals `b` bit for bit at depth_max 12 (v08) at the same wall, so the driver's own passes dominate. (b) and (g)
+    are to be run as `b2` and `g2`; no result of `b` or `g` is used.
+11. **`IMPLEMENTATION CHOICE`** — the attribution's method: `tools.filon_reference` (Route B, 07's tool `d37e633b`),
+    one reading per resolution with every leaf end added to the production edges, each leaf's reference the in-order
+    sum of its own jobs (`attr_07a.py`'s docstring); window leaves fall to the tool's direct `mpmath` Gauss-Legendre
+    path. Reference: resolution 2; stated accuracy `max(|ref_2 - ref_1|, fit-noise 1 sigma)`.
+12. **`STRUCTURALLY REQUIRED`** — section 2.2's "stated accuracy at least 100x finer than the leaf's declared error"
+    cannot be met on leaves whose e' is below about 100x the integrand's own double-precision noise (the readings agree
+    to about 1e-15 of the local magnitude): 80 of v22's 124 leaves, 32 of v21's 62, 83 of v03's 161. Such leaves are
+    listed per call; the parts' summed accuracies are given beside each part.
+13. **`IMPLEMENTATION CHOICE`** — part H3 ("the Levin leaves outside every window") holds every leaf outside every
+    window, Clenshaw-Curtis fallback leaves included (listed by type); each part's declared error is `sum e' + |sum E|`
+    over its leaves, as the call's abserr is formed.
+14. **`IMPLEMENTATION CHOICE`** — the (b) cost probe (`b_scaling_07a.py`: v08 and v12 at variant (b) with `depth_max`
+    6-18, scratch, not a section 2.4 table), run to project (b)'s cost before committing it.
+15. **`STRUCTURALLY REQUIRED`** — the projection rule as written passed (the pilot, v22, projects 9.4 h) but the next two
+    calls cost 2.6-2.7x what the pilot's ratio predicts (07's own readings' CPU is the better guide: about 25 h). The
+    20 remaining attributions were held, and reported with the calls to drop (stop 1).
+16. **`STRUCTURALLY REQUIRED`** — the user's ruling on stop 1's first question, relayed by the orchestrator on
+    2026-11-11 (the user's words: "run all the calls needed for the H3 attribution in full"): every remaining
+    attribution of section 2.2 is run, v13, v18 and v23 included, past section 2.2's twelve-hour rule (projection
+    about 25 h on six workers). Run as `levin-phase-floor-07a-attr-2-20261111T102500` (15 calls, serial, six spawn
+    workers each); the earlier `attr-1` ran eight calls with one worker each beside the (b2)/(g2) run.
+17. **`STRUCTURALLY REQUIRED`** — the user's ruling on stop 1's second question ("no (b) or (g) on the 396 class-c
+    captures"): (b2) and (g2) are run on items 1-2 and the no-window calls only (68 of 68 ok), not on the 396.
+    Section 2.4 item 3 is therefore **undecided by construction** for every variant; (b2) converged on none of the 29
+    window calls of items 1-2 (only on the five no-window calls, where it equals the tree). Qualification (item 4) is
+    judged on items 1-2 with item 3 undecided.
+18. **`IMPLEMENTATION CHOICE`** — the final tables are written by `tables_07a_final.py`, a copy of `tables_07a.py`
+    (left as run for the interim tables) changed only for deviation 17 and for the pairs' r_g (deviation 19), each
+    change marked "07a final"; it reads b2 and g2 as (b) and (g) (deviation 10).
+19. **`IMPLEMENTATION CHOICE`** — at the orchestrator's instruction (2026-11-11; the pairs' formula is a question still
+    with the user), item 2 tabulates the prompt's r = |v_7 - v_8| / (e_7 + e_8) and, labelled beside it, the
+    cross-check's r_g = |v_7 - v_8| / e_7.
+20. **`STRUCTURALLY REQUIRED`** — the user's ruling of 2026-11-11 on the pairs' formula, relayed by the orchestrator
+    ("happy to follow your recommendation of using `r_g`"): items 2 and 4 are scored on the cross-check's
+    r_g = |v(1e-7) - v(1e-8)| / abserr(1e-7) (07's `xcheck_rule_20261109.md`); the prompt's r is kept beside it,
+    labelled. The prompt's formula contradicted its own "as the cross-check scored them" (the orchestrator's error, in
+    its words). Written by `tables_07a_final_rg.py`, a copy of `tables_07a_final.py` (left as run) changed only for
+    this, each change marked "07a r_g". Deviation 19's tables are superseded for items 2 and 4, and kept.
+21. **`STRUCTURALLY REQUIRED`** — an addition at the user's word (2026-11-11, on the orchestrator's proposal): the O9
+    check on the H3 leaves of the five failures, a measurement only, at 07's code as it is
+    (`scripts/o9_check_07a.py`, `out/o9/<sid>.{json,md}`): for each leaf, its parent and its sibling, 07's gate
+    estimate `phase_span` from `_Basis_SinCos.build_Levin_data` on the region's own grid, |theta(b) - theta(a)| from
+    the raw phase, whether theta' changes strict sign on the nodes, the node-partition sum, and the route each would
+    take against `SIX_PI` and `_LEVIN_DIRECT_SOLVE_PHASE_SPAN`.
+22. **`IMPLEMENTATION CHOICE`** — the O9 check's details. (i) The grid is the call's own `chebyshev_order` (24 on
+    v22), not 16 as the instruction said: "the leaf's own nodes" are the ones its solve used. (ii) The leaves
+    checked: every H3 leaf whose |true error| exceeds its declared e' + |E|, and, labelled, the three H3 leaves of
+    largest |true error|. (iii) The node-partition sum is given for every region; it is the true variation used for
+    the route only where theta' changes sign, else |theta(b) - theta(a)|. (iv) Parent and sibling are found by
+    descending from the leaf's seed region (the range between windows that holds it) by `break_point`, the driver's
+    own split, and the leaf must be reached exactly at its depth. (v) It is run for each failure once the
+    attribution run has ended, not as each call lands: watching for each would mean polling a long run (CLAUDE.md
+    rule 4); its result does not depend on when it runs.
+
+### Verification performed
+
+- The Gate's hash clauses before and after (`out/gate_hashes_before.json`, `out/gate_hashes_after_interim_1.json`):
+  78 of 78 captures, 5 of 5 store files; 07's census checkpoint `03dfe786...` before and after; R29's store and 07's
+  run directories not opened.
+- 9 of 9 captures by `check_captures.py` (`out/pairs_capture/check_captures.json`).
+- 430 of 430 replays reproduce 07's census at the tree and at (a) (`out/tables_interim_1.md`).
+- The no-window check, (a), (c)-(f): 5 of 5 each.
+- `b2` = `b` bit for bit on v08 at depth_max 12.
+- The attribution's closure check on all 24 calls: |sum ref_i - ref| / tol between 6.2e-6 (v09) and 3.3e-3 (v08); holds
+  on every call (`out/attr/attr_tables_final.md`).
+- After the runs (`out/gate_hashes_after_final.json`): 78 of 78 captures and 5 of 5 store files match again. 07's
+  census checkpoint is still `03dfe786...` (hashed read-only).
+- The O9 check: each region was reached by descent at exactly its own depth; no family error on any of the five
+  calls.
+- The worktree's `git status --short --ignored` empty; the main checkout at `28ebaf07`, clean; no Ray initialised in
+  any replay (`ray_initialized` false in every output).
+
+### Observations not acted on
+
+- The requests of several calls are atol-dominated (v08: `atol` 1.86e-33 against `rtol |V|` 3.4e-38; abserr 1.94e-36):
+  converged is far inside the request; the honesty failures are of the declared error, not of the request.
+- In every window of items 1-2 the bisections are driven by untrusted leaves (issues.md item 2).
+- On v22 the excess error is in one Levin leaf beside the window (issues.md item 1).
+- (d) changes 58 of the 396 (value, abserr or regions); (e) and (f) leave 35 more of the 396 unconverged, and v03 and
+  the two 1e-8 pair members; no variant run so far changes a V4 failure.
+- 16 of the 396 have a window that never stopped.
+- (b2) and (g2) are equal bit for bit on all 34 calls: (g)'s rule never stops a window here, because at every
+  bisection that reaches the count another leaf of the window also fell. Both leave all 29 window calls unconverged:
+  764,283 regions and about 50,000 s, against (a)'s 2,386 regions and 48 s on items 1-2.
+- In three failures (v08, v12, v17) the leaf carrying all of the excess is a **depth-0 seed region**, the range from
+  the window's upper edge to the end of the span (about [9.23, 27-28]). It was solved as one Levin leaf, with an
+  estimated phase span of 1.3e8-4.1e8, and never bisected; its true error is 2.9-7.4x its e'. In v09 the leaf is at
+  depth 1 and in v22 at depth 5 (issues.md item 1).
+- The O9 check finds no route change and no strict sign change of theta' on any leaf, parent or sibling checked.
+  07's estimate of the phase span overstates the true variation on the big seed leaves (true / estimate 0.73-0.75),
+  but both sides are far above 20 pi.
+- The H2 part's |true| / declared exceeds 1 on two controls, v02 (1.31) and v10 (1.04). Both parts are about 1e-7 of
+  their call's abserr.
+
+### State handed on
+
+At the section 2.5 stop: nothing running. All four of 07a's registered runs are `done`, and the lock was not used.
+The scratch copy, 07's census and its captures are unchanged. The worktree's `git status --short --ignored` is empty,
+and the main checkout is at `28ebaf07`, clean. `KEPT_ON_MAC_STUDIO.txt` lists 61 files: every pickle, and every file
+over 2 MB, chiefly the (b2)/(g2) replay records.
+*At stop 1 (kept):* `attr-1` was running, and nothing else.

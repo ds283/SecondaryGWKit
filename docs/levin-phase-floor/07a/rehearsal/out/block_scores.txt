@@ -1,0 +1,39 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/scripts/block_score_r30.py sha256 7c92da59287c8c4c79959ab311545d2bc4a2177135a009f91e3ffd85b749fa87
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/blocks.json sha256 9a271fabee2c4f87e482a2e403bbf9a198424ef8e1e6c6d37a0ffabba2c8ab24
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_scores.json sha256 42f49e87374f6282774a00d2819e388377a6699643a1d5924da50379a8bcaccb
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/block_reference/J4-h-0-10129.json sha256 5b3222898528d9dbee9eee91fff944b8236b4b9eb1fc276c228ec0ef449cd0ee
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/J4-g-0-157.json sha256 66de1ca653529ad7b1e1fb02c33e1920342201588aa6039e1d795de6caf160da
+#   tree of R30's replay: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 status ''; levin_quadrature 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/J4-h-0-10129.pkl sha256 891a061bf1adf30cfbc3bb6451abc3e42985ab7a6da8731a3bdf63d436585617
+
+[316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] 2pt5 J4: replay reproduces capture True, capture reproduces R30's store True; integrand bit-identical to R29's capture at 1001 points True; x_span and kw equal True
+  located [{'x': '-0x1.523259af83ecdp+3', 'kind': 'root', 'found_as': 'root', 'phase': 0}] (reference root -0x1.523259af83ecdp+3; |dx| 0.0 against one spacing 0.0007954: within); guarded regions 0; skipped phases []
+  R30: value -0x1.9017c8e4681f6p-30 abserr 0x1.65dacd1543ce8p-66 regions 14 converged True: |v - ref| 8.27181e-25 = 4.3663e-5 x abserr (honest); reference -0x1.9017c8e4681f2p-30 (-1.4555295242531946e-09), stated error 9.512577044359818e-24 = 0.0005021 x abserr30
+  context (R29's scores): R27 7.41531e-5 x abserr (regions 1); R28 4.3663e-5 x abserr (regions 14); R29 1.4979e-6 x abserr (regions 2); R30 equals R28 bit for bit True
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/block_reference/Y4-h-0-10129.json sha256 cd6fdbdfbebbd31c0ce8cfeee43737b298dd972aa946922918271ec1bd6e94f1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/Y4-g-0-157.json sha256 5654988cb6ee4c907eef71830519dd5ec91d1648787fbd173d33374205c4c56c
+#   tree of R30's replay: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 status ''; levin_quadrature 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/Y4-h-0-10129.pkl sha256 f21ad1d24760f6c79688b564fc1c2cb5e9e6bcf5a9c23ee73802d037248c662a
+
+[316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] 2pt5 Y4: replay reproduces capture True, capture reproduces R30's store True; integrand bit-identical to R29's capture at 1001 points True; x_span and kw equal True
+  located [{'x': '-0x1.523259af83ecdp+3', 'kind': 'root', 'found_as': 'root', 'phase': 0}] (reference root -0x1.523259af83ecdp+3; |dx| 0.0 against one spacing 0.0007954: within); guarded regions 0; skipped phases []
+  R30: value 0x1.2018ed31b447ep-27 abserr 0x1.78af331f037f8p-66 regions 4 converged True: |v - ref| 1.15805e-23 = 0.000580725 x abserr (honest); reference 0x1.2018ed31b4477p-27 (8.384736991010429e-09), stated error 6.617444900424222e-24 = 0.0003318 x abserr30
+  context (R29's scores): R27 1.55145e-5 x abserr (regions 1); R28 0.000580725 x abserr (regions 4); R29 0.00036671 x abserr (regions 3); R30 equals R28 bit for bit True
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/block_reference/J4-h-1-20022.json sha256 721fc4ea826a8bf450ee26b08eb95b6cb01b68439e9d035c05fb64e1d24b40c7
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/J4-g-1-10283.json sha256 6a705bae55f500858082d9340c6029e0afbb0e9dfb4c57283a2cc6c1f5b6b5d0
+#   tree of R30's replay: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 status ''; levin_quadrature 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/J4-h-1-20022.pkl sha256 e60ac3f6a66c3e18db0334c09a6701821ed29f9c1a24b387254ddc4ce58d14b8
+
+[1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] 2pt5 J4: replay reproduces capture True, capture reproduces R30's store True; integrand bit-identical to R29's capture at 1001 points True; x_span and kw equal True
+  located [{'x': '-0x1.7709bd26ee970p+3', 'kind': 'root', 'found_as': 'root', 'phase': 0}] (reference root -0x1.7709bd26ee970p+3; |dx| 0.0 against one spacing 0.0008064: within); guarded regions 0; skipped phases []
+  R30: value -0x1.e6f859d2f7c72p-33 abserr 0x1.ff3cae87aca98p-69 regions 6 converged True: |v - ref| 6.97934e-25 = 0.000206301 x abserr (honest); reference -0x1.e6f859d2f7c57p-33 (-2.2144837230684548e-10), stated error 4.911384887033602e-25 = 0.0001452 x abserr30
+  context (R29's scores): R27 0.00010206 x abserr (regions 1); R28 0.000206301 x abserr (regions 6); R29 3.14814e-6 x abserr (regions 2); R30 equals R28 bit for bit True
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/block_reference/Y4-h-1-20022.json sha256 0cc97def86a59b133a2bd114d054310fc4e71902dc9fd95c958bb2016213744d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/r29/out/block_reference/Y4-g-1-10283.json sha256 a107c6491c4b5dd987538c467105034cfebc3f48a64f57e50a8330f87f288162
+#   tree of R30's replay: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 status ''; levin_quadrature 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/Y4-h-1-20022.pkl sha256 102ef19afa82fb2a7e21fb759a00b2b266dac171d1d539a69587d75d2280fef6
+
+[1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] 2pt5 Y4: replay reproduces capture True, capture reproduces R30's store True; integrand bit-identical to R29's capture at 1001 points True; x_span and kw equal True
+  located [{'x': '-0x1.7709bd26ee970p+3', 'kind': 'root', 'found_as': 'root', 'phase': 0}] (reference root -0x1.7709bd26ee970p+3; |dx| 0.0 against one spacing 0.0008064: within); guarded regions 0; skipped phases []
+  R30: value 0x1.9714e016a7982p-30 abserr 0x1.faa21d2682f6bp-69 regions 13 converged True: |v - ref| 2.06795e-24 = 0.000616817 x abserr (honest); reference 0x1.9714e016a7978p-30 (1.4809540309909523e-09), stated error 1.2407709188295415e-24 = 0.0003701 x abserr30
+  context (R29's scores): R27 0.0 x abserr (regions 1); R28 0.000616817 x abserr (regions 13); R29 5.08661e-5 x abserr (regions 3); R30 equals R28 bit for bit True
+
+S4 HOLDS: 4 of 4 locate their root; 4 of 4 guard no leaf; 4 of 4 honest
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/block_scores.json sha256 cf55fd42a7ef096762dc5cedbf0c2c08cf034ec481483ba1c32eb7a08a60eda5
+exit 0

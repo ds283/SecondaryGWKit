@@ -1,0 +1,20 @@
+protected:
+0
+28ebaf07
+0
+0
+75 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 75 finished; 0 with no host recorded.
+   levin-phase-floor-06h-phase-20261101T033514                done          84/84  11d 09h  levin-phase-floor prompt 06h section 5 on the Mac Studio (mps026298; Python 3.13.16): the phase re-measurement, 06f's M2 items 1 and 4 repeated at 06h's code (H1, H2). Captures 06f's 20 M2 calls by 06e's x1_capture.py (06h's copy) at the parent p (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-2c325f5, 2c325f5, code 06e's; each capture checked bit for bit against 06e's census checkpoint a0dc4d7f) and at h (worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf06h-c1ec3b2, dispatch SHA c1ec3b2, code 7172a8f + ac1c6f4; each checked against 06h's census checkpoint), reading 06's certified scratch copy of A3 v2 read-only (fingerprint 0e32f24a) on a stand-in ShardedPool; the method check at the exact e^u before any scoring; replays each call in its own process in its own tree with 06f's pass-throughs, with mpmath phase references at 30 digits at the exact e^u (and at 06f's x_hat), at every node of every returned leaf and 06f's seeded dense sample of 1,000 points per call; each tree's code scored at the other's points; the reference re-checked at 50 digits at h's worst point. At most six processes; Ray-free, no lock, no store built, no code changed  · refcheck running
+newer than marker:
+      1 var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite
+      1 var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite
+      1 var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite
+      1 var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite
+      1 var/datastores/levin-phase-floor-07a-r30.sqlite
+    249 var/levin-phase-floor-07a/census
+   3257 var/levin-phase-floor-07a/rehearsal
+     43 var/levin-phase-floor-07a/review
+      5 var/runs/levin-phase-floor-07a-k0-20261112T130135
+      4 var/runs/levin-phase-floor-07a-r30-07a-20261112T113806
+      1 var/runs/levin-phase-floor-07a-r30.launch.log
+13:24  up 36 days, 4 hrs, 1 user, load averages: 4.13 4.19 5.51

@@ -1,0 +1,39 @@
+{
+ "tree": "h",
+ "name": "blocks1-h",
+ "units": [
+  {
+   "uid": "h-1e-7-0-10129",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-10129",
+   "names05": null,
+   "shard": 0,
+   "serial": 10129,
+   "k_key": "0:101",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-1-20022",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "1-20022",
+   "names05": null,
+   "shard": 1,
+   "serial": 20022,
+   "k_key": "1:2",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": null
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/blocks1/blocks1-h",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/blocks1/blocks1-h/emit.jsonl",
+ "rows_sha256": null,
+ "w2_capture_sha256": null
+}

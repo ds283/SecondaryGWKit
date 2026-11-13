@@ -1,0 +1,22 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_refs_07a.py out/refs/scores.json out/refs/report.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:50:15Z
+# ----
+
+# The user's references (rows 3-678 and 1-34599)
+
+| call | class | ref (FCC r2) | stated error (spread) | spread / min(abserr) | abserr_h | abserr_07 | |v_h - ref|/abserr_h | |v_07 - ref|/abserr_07 | regions h / 07 |
+|---|---|---|---|---|---|---|---|---|---|
+| r1-34599-1e-7-2 | own | -3.162788408760542e-26 | 5.68e-40 | 1.27e-06 | 1.524e-33 | 4.462e-34 | 0.02009 | 4.031 | 16 / 6 |
+| r1-34599-1e-7-3 | own | -3.162788408760542e-26 | 5.68e-40 | 1.27e-06 | 1.524e-33 | 4.462e-34 | 0.02009 | 4.031 | 16 / 6 |
+| r1-34599-1e-8-2 | own | -3.162788408760542e-26 | 5.68e-40 | 1.27e-06 | 1.118e-33 | 4.462e-34 | 0.01501 | 4.031 | 17 / 6 |
+| r1-34599-1e-8-3 | own | -3.162788408760542e-26 | 5.68e-40 | 1.27e-06 | 1.118e-33 | 4.462e-34 | 0.01501 | 4.031 | 17 / 6 |
+| r3-678-1e-7-2 | aux_only | 1.431843199210653e-30 | 1e-45 | 9.21e-08 | 1.088e-38 | 1.214e-37 | 0.4909 | 0.1353 | 1 / 12 |
+| r3-678-1e-7-3 | aux_only | 1.431843199210653e-30 | 1e-45 | 9.21e-08 | 1.088e-38 | 1.214e-37 | 0.4909 | 0.1353 | 1 / 12 |
+| r3-678-1e-8-2 | aux_only | 1.431843199210653e-30 | 1e-45 | 9.21e-08 | 1.088e-38 | 1.214e-37 | 0.4909 | 0.1353 | 1 / 12 |
+| r3-678-1e-8-3 | aux_only | 1.431843199210653e-30 | 1e-45 | 9.21e-08 | 1.088e-38 | 1.214e-37 | 0.4909 | 0.1353 | 1 / 12 |
+wrote out/refs/scores.json sha256 72805d3de1cfbdf85485af1aa49d5204f6b14860dc5a2b24e2bd743d21398827; out/refs/report.md sha256 479ef5fd2d59d570d41aadfbb37946a2a2ad9071c2853c87958bd96993b0e482
+# ----
+# end 2026-11-12T20:50:16Z
+# exit 0

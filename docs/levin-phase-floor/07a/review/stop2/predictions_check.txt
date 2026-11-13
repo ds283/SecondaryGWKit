@@ -1,0 +1,47 @@
+predictions:
+stat: cannot read file system information for '%Sm %N': No such file or directory
+stat: cannot read file system information for '%Y-%m-%dT%H:%M:%S': No such file or directory
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/predictions.md 100000d0000001a ? 1a 4096 4096 242837545 39893381 39893381 1602519802 1595735240
+3ec7b53db8181f041da056bae0a363cfb08dd05273aa1fb2a4cfc8ec4803e86e  /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/predictions.md
+prompt lines 497,560: 58 non-blank, missing from predictions: 27
+   MISSING: ## 6. The census — on the Mac Studio, Ray-free, on A3 v2's scratch copy
+   MISSING: 07's census re-run at the code commit, against 07's run as the "before".
+   MISSING: - **The harness** is 07's, from `docs/levin-phase-floor/07/census/scripts/`, copied into
+   MISSING:   `var/levin-phase-floor-07a/census/scripts/`, the diff saved and each change a deviation. Change
+   MISSING:   only: the tree and its paths; the comparison with 07's census, which sets `phase_span` aside; the
+   MISSING:   diagnostics below; and V4's re-scoring.
+   MISSING: - **The diagnostics,** an instrument that wraps the region solve and changes no computed value. For
+   MISSING:   each call: the regions visited whose route (Levin or Clenshaw–Curtis) or LU choice would differ
+   MISSING:   under 07's estimate, computed from the same nodes; the regions whose $V$ took the node-partition
+   MISSING:   sum; and each Clenshaw–Curtis region with a half sent to the Levin solve.
+   MISSING: - **The tree** $h$ is a worktree at Part C's dispatch SHA, whose code is the code commit's.
+   MISSING: - **The store** is `var/levin-phase-floor-06/wider/state/a3v2_copy/`, re-checked against its
+   MISSING:   certification, read-only, hashed before and after. **07's census**
+   MISSING:   (`levin-phase-floor-07-census-20261108T171137`, checkpoint
+   MISSING:   `03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10`) is read only, and hashed befor
+   MISSING:   and after.
+   MISSING: - **The units:** every row at `1e-7` and `1e-8`, in one registered detached run with slug `census`.
+   MISSING:   The budget is 300 s per unit, with 06a's over-budget pass.
+   MISSING: **Gate W0, before the run:**
+   MISSING: - **The parent's code is 07's:** as S0′.
+   MISSING: - **The harness reproduces 07's census at the parent,** bit for bit by 07's comparison, on 06k's
+   MISSING:   100 K0 units. One registered run, slug `k0`.
+   MISSING: - **The instrument changes nothing:** one unit with a window and one with a route change, at $h$,
+   MISSING:   run with and without it, bit-identical.
+   MISSING: - **The new code is deterministic:** two runs of one $h$ unit with a window, bit-identical.
+   MISSING: **The census's checkpoint and region records stay on the Mac Studio in full: they are 08's
+   MISSING: "before".**
+prompt lines 716,731: 15 non-blank, missing from predictions: 0
+prompt lines 823,825: 3 non-blank, missing from predictions: 0
+W0 outputs:
+ls: invalid tab size: ‘-t’
+census run dirs:
+(eval):8: no matches found: /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census*
+2026-11-12T12:46:45.354881+00:00 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/w0/w0a_ast_lg.txt
+2026-11-12T13:07:40.754337+00:00 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/k0/compare_w0b.json
+2026-11-12T13:15:04.623082+00:00 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/w0c3/compare_instr.json
+2026-11-12T13:16:06.368464+00:00 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/w0c4/compare_det.json
+2026-11-12T13:16:06.957348+00:00 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-k0-20261112T130135/status.json
+2026-11-12T13:16:21.050272+00:00 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/w0/w0a_imports.txt
+2026-11-12T13:16:44.807382+00:00 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/predictions.md
+prompt lines 525-556: 31 non-blank, missing 0

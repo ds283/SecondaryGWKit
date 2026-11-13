@@ -1,0 +1,195 @@
+{
+ "header": [
+  "# levin-phase-floor 07a: the reference calls' integrands compared",
+  "# written 2026-11-12T20:34:22Z on mps026298.phys.susx.ac.uk",
+  "# script refs_integrand_07a.py sha256 c7dcee39fedfbab8cc4562046829c954ebbe5529978afe1f1e6b743287779317",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/captures_h.json sha256 38bc850c6e63bcf5f720516e9a8abe4473a1a101efc272d88d8d5459c0ade845",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/captures_parent.json sha256 7a0010833d1ec0ade05266d8f66eedecc8ba9fe280fe24695518aebece20a9c8"
+ ],
+ "h_vs_parent": {
+  "r1-34599-1e-7-2": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r1-34599-1e-7-3": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r1-34599-1e-8-2": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r1-34599-1e-8-3": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r3-678-1e-7-2": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r3-678-1e-7-3": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r3-678-1e-8-2": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r3-678-1e-8-3": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  }
+ },
+ "across_rtol": {
+  "r1-34599-1e-7-2~r1-34599-1e-8-2": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r1-34599-1e-7-3~r1-34599-1e-8-3": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r3-678-1e-7-2~r3-678-1e-8-2": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  },
+  "r3-678-1e-7-3~r3-678-1e-8-3": {
+   "x_span": true,
+   "kw": true,
+   "f0": true,
+   "f1": true,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": true
+  }
+ },
+ "index2_vs_index3": {
+  "r1-34599-1e-7-2~r1-34599-1e-7-3": {
+   "x_span": true,
+   "kw": false,
+   "kw_differs": [
+    "notify_label"
+   ],
+   "f0": true,
+   "f1": false,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": false
+  },
+  "r1-34599-1e-8-2~r1-34599-1e-8-3": {
+   "x_span": true,
+   "kw": false,
+   "kw_differs": [
+    "notify_label"
+   ],
+   "f0": true,
+   "f1": false,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": false
+  },
+  "r3-678-1e-7-2~r3-678-1e-7-3": {
+   "x_span": true,
+   "kw": false,
+   "kw_differs": [
+    "notify_label"
+   ],
+   "f0": true,
+   "f1": false,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": false
+  },
+  "r3-678-1e-8-2~r3-678-1e-8-3": {
+   "x_span": true,
+   "kw": false,
+   "kw_differs": [
+    "notify_label"
+   ],
+   "f0": true,
+   "f1": false,
+   "theta": true,
+   "theta_deriv": true,
+   "theta_mod_2pi": true,
+   "all_equal": false
+  }
+ },
+ "kw_example": {
+  "atol": "1.4825174909001182e-33",
+  "rtol": "1e-07",
+  "chebyshev_order": "24",
+  "notify_label": "'k=9.85e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=526.01, z in (5.2861e+10, 526.01), regime Gqr, group G+q-r'"
+ }
+}

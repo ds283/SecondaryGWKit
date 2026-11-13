@@ -1,0 +1,134 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3:scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/w5_forced_detail_07a.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744 out/scores/w5_forced.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:17:19Z
+# ----
+{
+ "solves_by": {
+  "1e-7|analytic|points=root": 6613,
+  "1e-7|group|points=root": 2492,
+  "1e-8|analytic|points=root": 6613,
+  "1e-8|group|points=root": 2518
+ },
+ "solves_by_role": {
+  "stationary-point window piece|made=True": 4416,
+  "fallback half|made=True": 2337,
+  "trust-check quarter|made=True": 2734,
+  "trust-check quarter|made=False": 6670,
+  "fallback half|made=False": 2079
+ },
+ "calls_by": {
+  "1e-7|analytic|points=root": 1682,
+  "1e-7|group|points=root": 526,
+  "1e-8|analytic|points=root": 1682,
+  "1e-8|group|points=root": 526
+ },
+ "n_solves": 18236,
+ "n_calls": 4416,
+ "examples": [
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -18.074107153672394,
+   "b": -17.423721302208087,
+   "V": 0.49104019092090345,
+   "est_07": 0.4850419274935304,
+   "role": "stationary-point window piece",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -17.74891422794024,
+   "b": -17.423721302208087,
+   "V": 0.1265959526586271,
+   "est_07": 0.1262182109562561,
+   "role": "fallback half",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -17.586317765074163,
+   "b": -17.423721302208087,
+   "V": 0.03195692118411264,
+   "est_07": 0.031916320899512046,
+   "role": "trust-check quarter",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -17.505019533641125,
+   "b": -17.423721302208087,
+   "V": 0.008025191002265064,
+   "est_07": 0.008020121763329268,
+   "role": "trust-check quarter",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 14,
+   "a": -17.464370417924606,
+   "b": -17.423721302208087,
+   "V": 0.0020108375199581197,
+   "est_07": 0.002010193528168739,
+   "role": "trust-check quarter",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 15,
+   "a": -18.074107153672394,
+   "b": -17.423721302208087,
+   "V": 0.49104019092090345,
+   "est_07": 0.4850419274935304,
+   "role": "stationary-point window piece",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 15,
+   "a": -17.74891422794024,
+   "b": -17.423721302208087,
+   "V": 0.1265959526586271,
+   "est_07": 0.1262182109562561,
+   "role": "fallback half",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33227",
+   "index": 15,
+   "a": -17.586317765074163,
+   "b": -17.423721302208087,
+   "V": 0.03195692118411264,
+   "est_07": 0.031916320899512046,
+   "role": "trust-check quarter",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33370",
+   "index": 14,
+   "a": -18.074107153672394,
+   "b": -17.423721302208087,
+   "V": 0.49104019092090345,
+   "est_07": 0.4850419274935304,
+   "role": "stationary-point window piece",
+   "n_sign_changes_scan": 1
+  },
+  {
+   "unit": "h-1e-7-2-33370",
+   "index": 14,
+   "a": -17.74891422794024,
+   "b": -17.423721302208087,
+   "V": 0.1265959526586271,
+   "est_07": 0.1262182109562561,
+   "role": "fallback half",
+   "n_sign_changes_scan": 1
+  }
+ ]
+}
+wrote out/scores/w5_forced.json sha256 73138338c89f5687b7790c0b1d3e46d8d0b621962a9d125baabab8b26c02b6d4
+# ----
+# end 2026-11-12T20:17:34Z
+# exit 0

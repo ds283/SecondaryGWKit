@@ -1,0 +1,31 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-references-20261112T203555/status.json\;\ echo\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-references-20261112T203555\;\ wc\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-references-20261112T203555/stderr.log
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:52:50Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-12T20:48:47+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 64868,
+  "stage": "references finished: all exit 0",
+  "state": "done",
+  "units_done": 16,
+  "units_total": 16
+}
+
+total 16
+drwxr-xr-x   7 ds283 staff  224 Nov 12 20:48 .
+drwxr-xr-x 112 ds283 staff 3584 Nov 12 20:35 ..
+-rw-r--r--   1 ds283 staff 5067 Nov 12 20:48 checkpoint.jsonl
+-rw-r--r--   1 ds283 staff 3794 Nov 12 20:35 manifest.json
+-rw-r--r--   1 ds283 staff  285 Nov 12 20:48 status.json
+-rw-r--r--   1 ds283 staff    0 Nov 12 20:35 stderr.log
+-rw-r--r--   1 ds283 staff    0 Nov 12 20:35 stdout.log
+0 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-references-20261112T203555/stderr.log
+# ----
+# end 2026-11-12T20:52:50Z
+# exit 0

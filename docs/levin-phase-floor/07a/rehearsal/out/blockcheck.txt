@@ -1,0 +1,13 @@
+# prompt 07a r30: the four blocks at h, checked against R30, and each capture against R29's
+# written 2026-11-12T12:25:02Z on mps026298.phys.susx.ac.uk
+# script replay07a_r30.py sha256 c7ff4d85598f48624e2d8c3baf7d4403539f3155a3e63883ccce0328e45ddbd9
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/replay_rows.json sha256 f719b3fd588e6e77eedb0dc2606f896a108c33c652839d675c1eeb0b8f3fd5b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/blocks1/blocks1-h/emit.jsonl sha256 3f13ef0a3ab618d859d86b1f2031ffe551d864961e394b2cfc2e1c3144d204dc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/capture/blocks2/blocks2-h/emit.jsonl sha256 e5fa8cb541d5e4eab4fb2faaf91db36eb674f14648898ad8f243002de88a771a
+[316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] J4 h (R30): REPRODUCES the store's record (pass 1 and 2); value -0x1.9017c8e4681f6p-30 abserr 0x1.65dacd1543ce8p-66 regions 14; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/J4-h-0-10129.pkl; capture equals R29's False
+[316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] Y4 h (R30): REPRODUCES the store's record (pass 1 and 2); value 0x1.2018ed31b447ep-27 abserr 0x1.78af331f037f8p-66 regions 4; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/Y4-h-0-10129.pkl; capture equals R29's False
+[1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] J4 h (R30): REPRODUCES the store's record (pass 1 and 2); value -0x1.e6f859d2f7c72p-33 abserr 0x1.ff3cae87aca98p-69 regions 6; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/J4-h-1-20022.pkl; capture equals R29's False
+[1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] Y4 h (R30): REPRODUCES the store's record (pass 1 and 2); value 0x1.9714e016a7982p-30 abserr 0x1.faa21d2682f6bp-69 regions 13; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/state/inputs/Y4-h-1-20022.pkl; capture equals R29's False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/blocks.json sha256 9a271fabee2c4f87e482a2e403bbf9a198424ef8e1e6c6d37a0ffabba2c8ab24; all reproduce: True

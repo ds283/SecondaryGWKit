@@ -1,0 +1,22 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_runs_07a.py final out/runs_hashed_final.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-12T20:52:51Z
+# ----
+# levin-phase-floor 07a: 07's census run directory and working records, final
+# written 2026-11-12T20:52:51Z on mps026298.phys.susx.ac.uk
+# script hash_runs_07a.py sha256 df8b8d865fa3017198c4328765c74458576d1c78fa3663b971a0af2c826e34ff
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3 HEAD 4bf50d3426dc4c9ba190760e6d30e5b7d6dd0b03 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/docs/levin-phase-floor/07/census/KEPT_ON_MAC_STUDIO.txt sha256 3d7348c11a6c0a9088755e5c973b65cc09b9dfdc8d0111532f1c8935ccc1b1ee
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137: 150 files, 4811952464 bytes
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census: 850 files, 1181778539 bytes
+# levin-phase-floor-07-census-20261108T171137: checkpoint sha256 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10 EQUAL 03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10
+# levin-phase-floor-07-census-20261108T171137: 16 region pickles
+# levin-phase-floor-07-census-20261108T171137: against 07's KEPT_ON_MAC_STUDIO.txt: 150 listed, 150 present, 0 differing or missing [], 0 not listed []
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census: against 07's KEPT_ON_MAC_STUDIO.txt (pickles and files over 2 MB): 152 listed, 0 differing or missing []; 850 files hashed in all
+# verdict: ALL HOLD
+wrote out/runs_hashed_final.txt sha256 254fba5741d189f03a6d5c31162b4454f07bff0395041b97f1f7d51c19d02a94
+# ----
+# end 2026-11-12T20:52:55Z
+# exit 0

@@ -1,0 +1,101 @@
+{
+ "tree": "h",
+ "name": "parent-1e-7-k2_302",
+ "units": [
+  {
+   "uid": "h-1e-7-2-33416",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-33416",
+   "names05": null,
+   "shard": 2,
+   "serial": 33416,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-2-21696",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-21696",
+   "names05": null,
+   "shard": 2,
+   "serial": 21696,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-2-21857",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-21857",
+   "names05": null,
+   "shard": 2,
+   "serial": 21857,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-2-1458",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-1458",
+   "names05": null,
+   "shard": 2,
+   "serial": 1458,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-2-1634",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-1634",
+   "names05": null,
+   "shard": 2,
+   "serial": 1634,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  },
+  {
+   "uid": "h-1e-7-2-2078",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-2078",
+   "names05": null,
+   "shard": 2,
+   "serial": 2078,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": null
+  }
+ ],
+ "out_dir": "state/k0/parent/parent-1e-7-k2_302",
+ "emit_fd": null,
+ "emit_file": "state/k0/parent/parent-1e-7-k2_302/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": {
+  "name": "parent",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/variants/levin_quadrature_parent.py",
+  "sha256": "4e5da371f51e6e3dc20e73579eb45e0e985e2a3b18571ee29eb86b3d3e9c93fc"
+ },
+ "instrument_07a": true
+}
