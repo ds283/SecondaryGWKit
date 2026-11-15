@@ -324,6 +324,118 @@ README §5.1's form, is written before it reports, with every deviation numbered
 user chooses; the orchestrator writes §1, §3 and the predictions' additions from that choice as §9's
 amendment.
 
+### 2.7 The extension, at §2.6's stop
+
+*Written 2026-11-15 by the orchestrator, on the user's decision at Part A's stop (the board's
+Decisions, **07b Part A stop**).* Part A stopped with one qualifying variant, (f). The orchestrator
+relayed three options: take (f); take (e) for the window mechanism alone; or extend Part A with more
+variants, scored against the references already taken. The user asked why a wider window is not the
+fix, and then: *"I am going to choose the extension"*, and *"Yes, include the adaptive window
+variant; write the extension"*.
+
+**What Part A left open** (its `log.md`, `out/tables/tables_07b.md`):
+- **(e) fixes the window mechanism** on every window carrier and on all nine dishonest R1 rows, at
+  1.31× (a)'s regions, with no new unconverged call. It leaves 11 calls converged and dishonest:
+  06b's four, v09, and the pairs' members. Those are the carriers with no window.
+- **(f) qualifies by turning those calls unconverged,** 61 against (a)'s 1 (R1 44, R2 2, V4 15), at
+  2.74× the regions. They are unconverged, not wrong: v08 under (f) is 0.0027 of its abserr from its
+  reference. Part A's log (observation 8) finds them ending with Clenshaw–Curtis leaves near the
+  windows, chased to depth 20 and untrusted at the noise level. The rate-range rule also untrusts
+  honest leaves: the honest scored leaves span ratios up to $3.4\times10^4$, the dishonest down to
+  49.4.
+- **A wider window helps slowly.** The error of the leaf beside the window falls 2.6–2.8× per
+  doubling of $\Phi_w$. At a fixed leaf the model in `_LEVIN_WINDOW_HALF_PHASE`'s comment has
+  $\ell$ at the edge growing only as $\Phi_w^{1/2}$, while the first spacing is 285–1010 $\ell$.
+  The leaf's declared error falls with its true error, so the ratio need not fall: v12's carrier is
+  7.44, 6.30 and 8.55 $e'$ at $2\pi$, $4\pi$ and $8\pi$. A fixed wider window also moves every
+  window's edge, which makes v07, v19 and R1-x317 dishonest under (b4) or (b8).
+
+**Its scope is the same calls, the same references and the same code.** Nothing in the tree changes,
+and no new call reference is read. Every new variant is scored on all 187 of §2.1's and §2.4's calls,
+at both rtols, as Part A's were.
+
+#### 2.7.1 The measurements
+
+- **(X1) (e)'s remainder, leaf by leaf.** For each of the 11 calls converged and dishonest under (e):
+  the leaf carrying the excess, whether it touches a window, and §2.2's records for it, under (e).
+  This includes `3-14501`'s two members, which (b)–(e) bring to agree at 2.0–2.4 of their abserr.
+  Part A's leaf references serve where the leaf's span is unchanged from the tree; a new leaf is
+  referenced as §2.2's were.
+- **(X2) The mechanism away from windows.** Compare the six dishonest no-window leaves with the honest
+  trusted Levin leaves of rate range above 30 from §2.2's table (the controls):
+  - the six are v09 leaf 38, item 3's leaf 5, `0-12977` leaf 2, `1-2174` leaf 2, `2-14345` leaf 5 and
+    `2-34473` leaf 102;
+  - find what separates them **that the code can compute from the leaf's own solves**. The question
+    is whether a check independent of bisection sees the common error that the leaf, its halves and
+    its quarters share.
+  - **The first candidate to test is the same span solved at a different collocation order.** Others
+    are the agent's, each with its basis: the eighths on every trusted leaf, or quantities the solve
+    already has (residual, conditioning, the tail of $p$'s Chebyshev coefficients).
+  - Each candidate is a table: its value on every leaf, with the leaf's true error over $e'$, and the
+    margin by which it separates the two groups, if it does.
+- **(X3) (f)'s chase.** For each of (f)'s 61 unconverged calls:
+  - the leaves returned at depth 20: their route (Levin, the C2 gate's fallback, a window piece, or a
+    guarded leaf); whether they descend from a leaf (f) untrusted; and whether 07a's window stop
+    could count them;
+  - $|v - {\rm ref}|/{\rm abserr}$ with `converged` set aside;
+  - and the cause, with the evidence for it.
+- **(X4) Unconverged but accurate.** For every variant, Part A's and the new ones: the calls returned
+  unconverged with $|v - {\rm ref}|/{\rm abserr} \le 1$, by set.
+
+#### 2.7.2 The variants
+
+At most six new variants. Each is a copy of the module with its diff and SHA-256 saved, as §2.3's
+were. Each states which leaves it changes, and each tied to windows shows the five no-window calls
+n0–n4 bit-identical to (a). **Each constant has a stated basis in Part A's or the extension's
+measurements, with its margin. Where that basis does not reach a class of the census, the variant says
+so.**
+- **(g) An adaptive window.** Each window's half-width is doubled from $2\pi$ while the Levin leaf
+  beside it fails (e)'s edge test (|θ′| differing by more than a factor 2 between the edge node and
+  its neighbour), up to a cap $\Phi_{\max}$.
+  - **$\Phi_{\max} = 8\pi$.** It is the widest half-width 07's calibration measured clean on family
+    (R) at rtol $10^{-9}$: all ten cases honest and converged, with abserr/request at most 0.881. At
+    $32\pi$ the cancelling case $c = 10^8$, $x_s = 0.7236$, $\omega = 0$ is not converged, and
+    $16\pi$ was never measured (`docs/levin-phase-floor/07/calibration/out/run2/calibrate_tables_rtol1e-09.md`).
+  - **(g1):** at the cap, the leaf is trusted as the tree trusts it. This is the wider window alone,
+    applied only where the edge test fails.
+  - **(g2):** at the cap, (e)'s rule applies: the leaf is untrusted and bisected.
+  - For both, report each window's $\Phi_w$ reached and spacing/$\ell$ at its final edge, and run 07's
+    family (R) at rtol $10^{-9}$ at 07's harness: value, abserr, honesty and `converged` for each case.
+    Windows merge and are cut into pieces as the tree does.
+- **(h) (e) plus a rule for the leaves away from windows,** from (X2), with its basis.
+  - If (X2) finds nothing finer, the rule is (f)'s rate range applied only to leaves touching no
+    window, at a threshold with its basis from §2.2's table and its margin.
+- **(i) (f) with the chase addressed,** from (X3), if (X3) finds a cause a variant can address.
+- **The rest** are combinations or further candidates from (X1)–(X3), at the agent's choice, each
+  with its basis. One of them is (g2) with (h)'s rule.
+
+#### 2.7.3 The tables
+
+- **§2.5's Tables 3 and 4,** extended by every new variant.
+- **Table 4 gains two columns:**
+  - (X4)'s count of unconverged calls within their abserr, for every variant;
+  - the converged-and-dishonest count split between the calls whose leaves designed the variants and
+    those that did not. The first group is V4, W2, item 3 and the pairs; the second is R1, R2 and
+    R3's other calls. Changes to the split are the agent's, with the reason.
+- **(X1)–(X3)** as tables of their own.
+
+**The qualification rule is §2.5 item 4, unchanged.** (X4) and the split are reported beside it, not
+folded into it.
+
+#### 2.7.4 Cost, and stop
+
+- **The projection comes first.** New leaf references are projected before any reading by 07a's model,
+  **with its $\gamma D_f$ term for every segment holding a stationary point** (Part A's deviation 16).
+  The replays need no projection; Part A's ran 187 calls in 167–460 s a variant.
+- **A projection of the extension beyond 12 hours in all is a stop,** reported to the orchestrator
+  before anything long runs, with what would be dropped to fit.
+- **Part A's files are not changed.** New outputs go under `out/ext/`, `scripts/ext/` and `state/ext/`.
+  `log.md`, `verification.md` and `issues.md` are appended to, under a heading **Extension (§2.7)**.
+  The log's deviations continue Part A's numbering from 24.
+- **At the end the agent reports** the extended tables, which variants qualify, and what (X1)–(X3)
+  find, and stops. **It recommends nothing.** §2.6 applies otherwise: the user chooses, and the
+  orchestrator writes §1, §3 and §9.
+
 ## 3. Tests (Part B)
 
 Written with §1 at §2's stop (§9). They include, whatever the fix:
@@ -400,7 +512,8 @@ changes in each direction; the abserr ratio against 07a's; regions and cost agai
 
 ## 7. Acceptance
 
-- **Part A:** §2.5's tables complete and its stop reached, with every replay reproducing 07a's census.
+- **Part A:** §2.5's tables complete and its stop reached, with every replay reproducing 07a's census;
+  then §2.7's extension, its tables complete and its stop reached.
 - **Part B:** §1 as amended; every test of §3 passing and every breakage caught; the seven roots
   rising only by the tests added; the LiouvilleGreen draws with no new failure.
 - **Part C:** §5's S0′–S4 and §6's U0 hold; U1–U7 scored, each a verdict against its rule.
@@ -409,7 +522,7 @@ changes in each direction; the abserr ratio against 07a's; regions and cost agai
 
 - A replay at 07a's code that does not reproduce its census record.
 - A capture that does not check against 07a's census.
-- Part A's projection beyond 36 hours, before the rest runs.
+- Part A's projection beyond 36 hours, before the rest runs; the extension's (§2.7.4) beyond 12 hours.
 - §2.2 finding that the leaves' references do not close against the call's reference (as 07a's Part A
   checked closure).
 - In Part B: an acceptance test that cannot pass without a change outside §1 as amended, or a

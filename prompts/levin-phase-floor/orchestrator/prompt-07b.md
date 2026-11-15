@@ -147,6 +147,59 @@ predictions, each threshold's basis checked against the census's classes (§0.1)
 On their word commit and push it, with Part A's records copied back as 07a's were (no pickles, nothing
 over 2 MB, by a list made first, each file checked by SHA-256). That commit is Part B's dispatch SHA.
 
+### A.5 The extension (prompt §2.7), written 2026-11-15
+
+At Part A's stop the user chose to extend it (*"I am going to choose the extension"*; *"Yes, include
+the adaptive window variant; write the extension"*). §A.4 waits until the extension stops.
+
+**Already checked at Part A's stop (§A.3), all agreeing with the agent:**
+- scope;
+- the replays of v00, v08 and v09;
+- 06b's 24;
+- v08's leaf;
+- the draws, the 74 references and the 148 scores;
+- §2.5 item 4 for all seven variants;
+- v08 under (e) and (f).
+
+**The missed stop.** The agent did not take §8's 36-hour stop: its projection of 9.92 h left out the
+direct segments, against about 307 h by 07a's model. It logged this as deviation 16. The run took
+about 31.5 h. The user accepted the run as it stands, with the dispatch: *"Yes to both; commit,
+push and dispatch the extension"*.
+
+**Before dispatch:**
+1. The extension commit is pushed; it is the **extension SHA**. Its code is Part A's:
+   `git diff --stat 436ed5d4 <extension SHA> -- AdaptiveLevin ComputeTargets LiouvilleGreen tools` is
+   empty.
+2. **On the Mac Studio, read-only:**
+   - `runregistrykit list` with nothing `running` or stale, and the lock free;
+   - the worktree `SecondaryGWKit-lpf07b-436ed5d` clean with `--ignored`;
+   - a SHA-256 list of every file under `var/levin-phase-floor-07b/measurement/` saved in your
+     scratchpad, to check at the stop that Part A's files are unchanged;
+   - a new marker, `/tmp/sgk07b_marker_X`, with its time recorded.
+3. `git fetch origin` in the Mac Studio main checkout, so that the agent can read the extension with
+   `git --no-optional-locks show <extension SHA>:prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md`.
+   **The worktree stays at `436ed5d4`**, since the code is the same.
+
+**Dispatch:** resume the Part A session, `lpf07b-part-a`, with `SendMessage`. It holds the harness,
+the captures and the leaf probes. The message gives:
+- the extension SHA, and how to read §2.7 from it;
+- §2.7 as its whole scope;
+- §A.2's rules, unchanged;
+- the 12-hour stop, with the projection made by 07a's model including $\gamma D_f$;
+- one reminder from deviation 16: the projection is reported to the laptop **before** any run over
+  ten minutes.
+
+**At the stop, before you relay, read-only:**
+1. **Scope:** `find var -newer /tmp/sgk07b_marker_X` lists only the agent's paths. Part A's files
+   match the saved list, except the three appended records, whose Part A text is unchanged as a
+   prefix. The worktree is clean.
+2. **The variants:** each new diff against the tree touches only what it says. Replay v08 and one of
+   06b's four under two new variants yourself, from captures copied read-only into your scratchpad,
+   and compare in `float.hex`.
+3. **Table 4 re-scored** by your own reader for every new variant, with (X4)'s counts and the split.
+4. **(g)'s family (R)** read from the agent's output, and one case re-run yourself.
+5. **(X2)'s separating quantity,** if one is found, recomputed on two leaves from the agent's records.
+
 ---
 
 ## B. Part B — the code, on the laptop
@@ -210,7 +263,7 @@ date corrected by counting; this directory's README row and the campaign README'
 
 ## 5. Stop and ask the user
 
-- At Part A's planned stop, always.
+- At Part A's planned stop, always, and at the extension's (§A.5).
 - At any stop condition of prompt §8 that an agent reports, with the agent's words.
 - When a premise this note or the prompt states is found false at a dispatch.
 - Before any write outside the paths named here, any deletion, and any push.
