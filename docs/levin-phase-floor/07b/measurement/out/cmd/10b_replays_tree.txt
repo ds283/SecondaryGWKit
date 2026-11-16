@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/run_replays_07b.py tree all --sets v4 pairs nowindow R1 R2 R2~o R3-aux R3-aux~o R3-own R3-own~o R3-W7 R3-W7~o W2 W2~o item3 --workers 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T14:06:20Z
+# ----
+  i3-34599-07: rc 0 ["region arrays differ: ['abserr', 'abserr_truncation', 'budget_err', 'convergence_ratio', 'declared_resolution', 'delta1', 'delta2', 'depth', 'end', 'guard_at_depth_max_07', 'guarded_07', 'node_error_signed', 'phase_err', 'phase_err_declared', 'phase_err_less_node', 'phase_err_roundoff', 'phase_limited', 'relerr', 'start', 'total_err', 'trusted', 'type', 'value', 'value_kind', 'value_own', 'window_07']", 'value: replay -0x1.393a366b2c51ep-85 census -0x1.393a3790f5b0bp-85', 'abserr: replay 0x1.fa690cf3c90e2p-110 census 0x1.288eb2e8d074bp-111', 'num_regions: replay 16 census 6', 'max_depth: replay 7 census 4']
+tree all: 187 of 188 reproduce their census record; 89 s; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/tree_summary_all.json
+# ----
+# end 2026-11-13T14:07:50Z
+# exit 0

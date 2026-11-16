@@ -1,0 +1,1 @@
+R1-x310-7 c: DIFFERS: region arrays differ: ['convergence_ratio', 'declared_resolution']; value -0x1.fc55f8bbd5f07p-96 abserr 0x1.54b27eec7d66fp-113 conv True regions 22 depth 8 windows 1 stopped 1 0.59 s

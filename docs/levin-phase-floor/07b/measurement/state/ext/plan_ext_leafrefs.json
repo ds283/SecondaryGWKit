@@ -1,0 +1,116 @@
+{
+ "label": "ext-leafrefs",
+ "backstop_s": 43200.0,
+ "check_after_s": 1800.0,
+ "stages": [
+  {
+   "name": "x1-leafrefs",
+   "max_parallel": 3,
+   "jobs": [
+    {
+     "name": "W2-1-2174-2~o",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts",
+     "requires": "state/ext/x1/W2-1-2174-2~o.json",
+     "projected_s": 582.7264493176914,
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafref_07b.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-1-2174-2~o.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/leafrefs/x1_W2-1-2174-2~o.json",
+      "--workers",
+      "2",
+      "--split-ratio",
+      "1.8"
+     ]
+    },
+    {
+     "name": "W2-2-14345-3~o",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts",
+     "requires": "state/ext/x1/W2-2-14345-3~o.json",
+     "projected_s": 614.1713906563058,
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafref_07b.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-2-14345-3~o.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/leafrefs/x1_W2-2-14345-3~o.json",
+      "--workers",
+      "2",
+      "--split-ratio",
+      "1.8"
+     ]
+    },
+    {
+     "name": "W2-2-34473-3~o",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts",
+     "requires": "state/ext/x1/W2-2-34473-3~o.json",
+     "projected_s": 494.8096137415873,
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafref_07b.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-2-34473-3~o.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/leafrefs/x1_W2-2-34473-3~o.json",
+      "--workers",
+      "2",
+      "--split-ratio",
+      "1.8"
+     ]
+    },
+    {
+     "name": "p14501_7",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts",
+     "requires": "state/ext/x1/p14501_7.json",
+     "projected_s": 686.4549909499793,
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafref_07b.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p14501_7.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/leafrefs/x1_p14501_7.json",
+      "--workers",
+      "2",
+      "--split-ratio",
+      "1.8"
+     ]
+    },
+    {
+     "name": "p14501_8",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts",
+     "requires": "state/ext/x1/p14501_8.json",
+     "projected_s": 681.0908551342402,
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafref_07b.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p14501_8.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/leafrefs/x1_p14501_8.json",
+      "--workers",
+      "2",
+      "--split-ratio",
+      "1.8"
+     ]
+    },
+    {
+     "name": "p35006_7",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts",
+     "requires": "state/ext/x1/p35006_7.json",
+     "projected_s": 648.567638804331,
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafref_07b.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p35006_7.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/leafrefs/x1_p35006_7.json",
+      "--workers",
+      "2",
+      "--split-ratio",
+      "1.8"
+     ]
+    }
+   ]
+  }
+ ],
+ "basis": "projection out/ext/x1/leafproj_x1.json (07a's model with margin, gamma D_f kept, 0 stationary segments) times 7.6, the largest actual/projected job-CPU ratio on Part A's split readings, over 2 workers"
+}

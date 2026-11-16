@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-2-21454-a3-7.pkl fcc 2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/readings/ref-R3o-2-21454-a3-7-fcc-r2.json --sid ref-R3o-2-21454-a3-7 --unit h-1e-7-2-21454 --index 3 --rtol 1e-7 --workers 2
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-14T05:25:22Z
+# ----
+{"sample": "ref-R3o-2-21454-a3-7", "route": "A", "impl": "fcc", "res": 2, "value_hex": "-0x1.f1b3dc38d5ad5p-38", "value_30": "-7.07277904256222316845752955583e-12", "wall_s": 3.6703882082365453, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-14T05:25:28Z
+# exit 0

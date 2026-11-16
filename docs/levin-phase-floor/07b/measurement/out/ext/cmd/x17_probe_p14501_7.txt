@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafprobe_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/e/p14501_7.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/probe/e_p14501_7.json --eighths --leaves 2 4 5 7 12 30 31 34 39 40 41
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:28:58Z
+# ----
+leaf 2 [0.674473, 0.725895] depth 4 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.667
+leaf 4 [0.738751, 0.741964] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.5
+leaf 5 [0.741964, 0.745178] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 4.05e-09
+leaf 7 [0.751606, 0.777317] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0
+leaf 12 [0.97015, 0.983006] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0806
+leaf 30 [0.983474, 0.99505] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0441
+leaf 31 [0.99505, 1.00663] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.5
+leaf 34 [1.07608, 1.16869] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.75
+leaf 39 [3.94691, 6.91034] depth 3 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.333
+leaf 40 [6.91034, 12.8372] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.000425
+leaf 41 [12.8372, 24.6909] depth 1 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.474
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/probe/e_p14501_7.json 809cec057e4bd9d0f7e546579d3c67fa6dfeb813ab40ea408bbd2cc88c97ccdc
+# ----
+# end 2026-11-15T23:29:01Z
+# exit 0

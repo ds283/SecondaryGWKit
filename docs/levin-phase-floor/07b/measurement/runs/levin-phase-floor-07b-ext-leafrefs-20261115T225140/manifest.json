@@ -1,0 +1,87 @@
+{
+  "argv": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+    "-B",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/run_ext.py",
+    "--run-dir",
+    "<run dir>",
+    "--plan",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/plan_ext_leafrefs.json"
+  ],
+  "campaign": "levin-phase-floor",
+  "checkpoint": "var/runs/levin-phase-floor-07b-ext-leafrefs-20261115T225140/checkpoint.jsonl",
+  "created": "2026-11-15T22:51:40+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement",
+  "expected_units": 6,
+  "git_dirty": false,
+  "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+  "heartbeat_means": "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each command's start and end, and every 60 s by a thread of the driver while its process lives.",
+  "host": {
+    "id": "d120d1cf03551e6f",
+    "machine": "arm64",
+    "name": "mps026298.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "07b",
+  "purpose": "levin-phase-floor prompt 07b extension section 2.7.1 (X1) on the Mac Studio (mps026298; Python 3.13.16): references on every non-window leaf, and on the halves, quarters and eighths of every trusted Levin non-window leaf, of six of (e)'s eleven converged-and-dishonest calls (W2-1-2174-2~o, W2-2-14345-3~o, W2-2-34473-3~o at 07a's code = (e); p14501_7 and p14501_8 under variant (e); p35006_7 at 07a's code = (e)), by tools/filon_reference.py Route B FCC at resolutions 1 and 2 (d37e633b, unchanged) through Part A's leafref_07b.py with steep segments split at 1.8; window leaves not read (no stationary segment in any span). Three readings at a time, two workers each (six processes). Reads Part A's captures read only. Ray-free, no lock, no store opened, nothing written in a tree",
+  "results": null,
+  "results_store_id": null,
+  "run_id": "levin-phase-floor-07b-ext-leafrefs-20261115T225140",
+  "scope": "6 readings (state/ext/x1/*.json); outputs out/ext/leafrefs/ and out/ext/cmd/ext-leafrefs; projected about 0.6 h wall",
+  "script": "var/levin-phase-floor-07b/measurement/scripts/ext/run_ext.py",
+  "script_sha256": "1fafe728a6ac68e702fee2154a78bcfa7d660b2298652ca2b537dea94f996fa0",
+  "unit": "commands"
+}

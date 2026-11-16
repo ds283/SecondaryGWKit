@@ -1,0 +1,31 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafprobe_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/e/W2-1-2174-2~o.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/probe/e_W2-1-2174-2~o.json --eighths --leaves 0 1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:28:58Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafprobe_07b.py", line 207, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafprobe_07b.py", line 149, in main
+    rec_, d = check(solve, a_, b_, force, a.eighths)
+              ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafprobe_07b.py", line 124, in check
+    d = {k: solve(s, force) for k, s in spans.items()}
+            ~~~~~^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafprobe_07b.py", line 101, in solve
+    d = LQ._adaptive_levin_subregion(span, f_, A, id_label="leafprobe-07b", chebyshev_order=order, rtol=rtol,
+                                     notify_label=rec["notify_label"], vectorize_cache=cache, force_direct=force)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_e.py", line 2628, in _adaptive_levin_subregion
+    data = _adaptive_levin_subregion_impl(
+        x_span,
+    ...<11 lines>...
+        guard_sign_change_phases=guard_sign_change_phases,
+    )
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_e.py", line 3047, in _adaptive_levin_subregion_impl
+    p_use = [np.isfinite(r) and r > rtol for r in p_ratios]
+                                ^^^^^^^^
+TypeError: '>' not supported between instances of 'float' and 'str'
+# ----
+# end 2026-11-15T23:29:00Z
+# exit 1

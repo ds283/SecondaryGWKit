@@ -1,0 +1,1419 @@
+{
+ "header": [
+  "# levin-phase-floor 07b Part A: the reference calls, one file each",
+  "# written 2026-11-13T14:14:10Z on mps026298.phys.susx.ac.uk",
+  "# script slice_refs_07b.py sha256 1b12600a09e3383cf4c656e6c00b1703f3ad15f51f1b07861aaa1eb07ba83c0f",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/calls_07b.json sha256 4c3b85cc5b0b0ddacb967c675561f3f9115154d7bd2059136fa38eb656726044",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/selection_07b.json sha256 4b94c1811f7b46f9f4903784ef08958b8ebcc5391f2b347045a3bc70a4f6a35d"
+ ],
+ "inputs": {
+  "ref-R1-x027": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x027.pkl",
+   "sha256": "bebdc416ef73a493e28d2452a34157999a7b72443e07dba138218b035aed1d76",
+   "bytes": 1373456,
+   "selection_sid": "R1-x027",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-0-14325",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x027-8",
+    "R1-x027-7"
+   ],
+   "replays_reproduce": {
+    "R1-x027-8": true,
+    "R1-x027-7": true
+   }
+  },
+  "ref-R1-x029": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x029.pkl",
+   "sha256": "d0d37357616e493708afe4d89f8efac3ea42905e16a379797eb2ce45ba4c5091",
+   "bytes": 1372320,
+   "selection_sid": "R1-x029",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-0-14386",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x029-8",
+    "R1-x029-7"
+   ],
+   "replays_reproduce": {
+    "R1-x029-8": true,
+    "R1-x029-7": true
+   }
+  },
+  "ref-R1-x098": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x098.pkl",
+   "sha256": "dfd58a1509b0432e38b598548ab6a10b00c12a93de2e3a4456fbf1fb70fc5400",
+   "bytes": 1380072,
+   "selection_sid": "R1-x098",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-0-38990",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x098-8",
+    "R1-x098-7"
+   ],
+   "replays_reproduce": {
+    "R1-x098-8": true,
+    "R1-x098-7": true
+   }
+  },
+  "ref-R1-x015": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x015.pkl",
+   "sha256": "ba64fc75006f68707d80eb4100268f043568e7965549f0b6c6d6448aaccaf7ff",
+   "bytes": 1381640,
+   "selection_sid": "R1-x015",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-0-14199",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x015-8",
+    "R1-x015-7"
+   ],
+   "replays_reproduce": {
+    "R1-x015-8": true,
+    "R1-x015-7": true
+   }
+  },
+  "ref-R1-x019": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x019.pkl",
+   "sha256": "ceebe618fd8e483649f14ae293a8c496f38b75af1d889f2b0bd2ac462ba9cbf1",
+   "bytes": 1369338,
+   "selection_sid": "R1-x019",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-0-14299",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x019-8",
+    "R1-x019-7"
+   ],
+   "replays_reproduce": {
+    "R1-x019-8": true,
+    "R1-x019-7": true
+   }
+  },
+  "ref-R1-x109": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x109.pkl",
+   "sha256": "063ad93814c027fbf9d443a1953b8164d9c93a9b21ad90daf8443cc723541782",
+   "bytes": 1384626,
+   "selection_sid": "R1-x109",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-1-14464",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x109-8",
+    "R1-x109-7"
+   ],
+   "replays_reproduce": {
+    "R1-x109-8": true,
+    "R1-x109-7": true
+   }
+  },
+  "ref-R1-x141": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x141.pkl",
+   "sha256": "241aca838fdf7923afdd118a5930d585fc465cb015ea5c3bce38d4384e8cbbec",
+   "bytes": 1378608,
+   "selection_sid": "R1-x141",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-1-2176",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x141-8",
+    "R1-x141-7"
+   ],
+   "replays_reproduce": {
+    "R1-x141-8": true,
+    "R1-x141-7": true
+   }
+  },
+  "ref-R1-x160": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x160.pkl",
+   "sha256": "b024c578bc880253a778b2ed3a3198d8921859cdd7ceb806e7caa48e9121a250",
+   "bytes": 1381671,
+   "selection_sid": "R1-x160",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-1-2362",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x160-8",
+    "R1-x160-7"
+   ],
+   "replays_reproduce": {
+    "R1-x160-8": true,
+    "R1-x160-7": true
+   }
+  },
+  "ref-R1-x196": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x196.pkl",
+   "sha256": "64a6775b13b4c9f66fd3ac5975c8701f95a7c31d447d0dc83fe597fff235fce6",
+   "bytes": 1387701,
+   "selection_sid": "R1-x196",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-1-38833",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x196-8",
+    "R1-x196-7"
+   ],
+   "replays_reproduce": {
+    "R1-x196-8": true,
+    "R1-x196-7": true
+   }
+  },
+  "ref-R1-x241": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x241.pkl",
+   "sha256": "1a4f3ea271c1368a7234b8a0a3245941447085107fa9744f1333d4b0593815eb",
+   "bytes": 1371668,
+   "selection_sid": "R1-x241",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-2-34711",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x241-8",
+    "R1-x241-7"
+   ],
+   "replays_reproduce": {
+    "R1-x241-8": true,
+    "R1-x241-7": true
+   }
+  },
+  "ref-R1-x295": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x295.pkl",
+   "sha256": "dca0416250538e15eb61054dfd1b79d9e8dd9dbd3c58671ad4548d92d96d379b",
+   "bytes": 1379762,
+   "selection_sid": "R1-x295",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-2-39035",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x295-8",
+    "R1-x295-7"
+   ],
+   "replays_reproduce": {
+    "R1-x295-8": true,
+    "R1-x295-7": true
+   }
+  },
+  "ref-R1-x258": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x258.pkl",
+   "sha256": "8a62db39d0b1009ce98072e789bf5b03ba731871cce031efc80261ee41b4a584",
+   "bytes": 1379700,
+   "selection_sid": "R1-x258",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-2-34872",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x258-8",
+    "R1-x258-7"
+   ],
+   "replays_reproduce": {
+    "R1-x258-8": true,
+    "R1-x258-7": true
+   }
+  },
+  "ref-R1-x390": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x390.pkl",
+   "sha256": "2b8ce8cfd7289e95d74c0136bbd7eae99a636618be354430a58dda8d5dbd1444",
+   "bytes": 1364855,
+   "selection_sid": "R1-x390",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-3-39133",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x390-8",
+    "R1-x390-7"
+   ],
+   "replays_reproduce": {
+    "R1-x390-8": true,
+    "R1-x390-7": true
+   }
+  },
+  "ref-R1-x392": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x392.pkl",
+   "sha256": "0714e3e5d15caa90c38b1eee449b3ac9e26ce81dbd890e88725cc2c2d891ad76",
+   "bytes": 1381029,
+   "selection_sid": "R1-x392",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-3-39138",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x392-8",
+    "R1-x392-7"
+   ],
+   "replays_reproduce": {
+    "R1-x392-8": true,
+    "R1-x392-7": true
+   }
+  },
+  "ref-R1-x317": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x317.pkl",
+   "sha256": "06909e1b4559ca79977909167cd80fb53f2b759cdda2923c211e4bed466ecb2e",
+   "bytes": 1387324,
+   "selection_sid": "R1-x317",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-3-14592",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x317-8",
+    "R1-x317-7"
+   ],
+   "replays_reproduce": {
+    "R1-x317-8": true,
+    "R1-x317-7": true
+   }
+  },
+  "ref-R1-x353": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x353.pkl",
+   "sha256": "64214689a45f8fb11557f5a69d31468672e56fedfb224fea602735847df48032",
+   "bytes": 1382357,
+   "selection_sid": "R1-x353",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-3-34995",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x353-8",
+    "R1-x353-7"
+   ],
+   "replays_reproduce": {
+    "R1-x353-8": true,
+    "R1-x353-7": true
+   }
+  },
+  "ref-R1-x007": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x007.pkl",
+   "sha256": "744032fceb4b3eaae955911cf654402c7e1aa219b107cd1f91f243523d10a7c1",
+   "bytes": 1353845,
+   "selection_sid": "R1-x007",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-0-13952",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x007-8",
+    "R1-x007-7"
+   ],
+   "replays_reproduce": {
+    "R1-x007-8": true,
+    "R1-x007-7": true
+   }
+  },
+  "ref-R1-x033": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x033.pkl",
+   "sha256": "384ac9a78e128caba3dcbdb46a8de29fc9f901433ebc20559d3394b7fbdea9aa",
+   "bytes": 1350436,
+   "selection_sid": "R1-x033",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-0-1777",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x033-8",
+    "R1-x033-7"
+   ],
+   "replays_reproduce": {
+    "R1-x033-8": true,
+    "R1-x033-7": true
+   }
+  },
+  "ref-R1-x044": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x044.pkl",
+   "sha256": "9b34068632c72fc83cd21cf61d9e7d6113bec50e654169c2f19655c751019636",
+   "bytes": 1364153,
+   "selection_sid": "R1-x044",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-0-1942",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x044-8",
+    "R1-x044-7"
+   ],
+   "replays_reproduce": {
+    "R1-x044-8": true,
+    "R1-x044-7": true
+   }
+  },
+  "ref-R1-x174": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x174.pkl",
+   "sha256": "f55d06d03bebc2c08b6e711aa2831bacfdcb9a9c868b5177fdd8be84ac374c4e",
+   "bytes": 1369503,
+   "selection_sid": "R1-x174",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-1-34641",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x174-8",
+    "R1-x174-7"
+   ],
+   "replays_reproduce": {
+    "R1-x174-8": true,
+    "R1-x174-7": true
+   }
+  },
+  "ref-R1-x195": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x195.pkl",
+   "sha256": "34aee51d935a6b5cdcb93592398b16795025eec6f794a0417bed341e0c1a34db",
+   "bytes": 1372600,
+   "selection_sid": "R1-x195",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-1-38145",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x195-8",
+    "R1-x195-7"
+   ],
+   "replays_reproduce": {
+    "R1-x195-8": true,
+    "R1-x195-7": true
+   }
+  },
+  "ref-R1-x165": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x165.pkl",
+   "sha256": "0633ab377632399422a583daaede9ee02cbe1385a86f12f3acd686d05166e592",
+   "bytes": 1352232,
+   "selection_sid": "R1-x165",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-1-34528",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x165-8",
+    "R1-x165-7"
+   ],
+   "replays_reproduce": {
+    "R1-x165-8": true,
+    "R1-x165-7": true
+   }
+  },
+  "ref-R1-x185": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x185.pkl",
+   "sha256": "c9fb08acdf5d6c01ee022f278594e38101e0bd0f3c2834145e0108bd76051ffc",
+   "bytes": 1348563,
+   "selection_sid": "R1-x185",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-1-35423",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x185-8",
+    "R1-x185-7"
+   ],
+   "replays_reproduce": {
+    "R1-x185-8": true,
+    "R1-x185-7": true
+   }
+  },
+  "ref-R1-x218": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x218.pkl",
+   "sha256": "82c23903eedbb055da3146a3b984259b27cdde5b48a0015125279b9b92af80d4",
+   "bytes": 1365567,
+   "selection_sid": "R1-x218",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-2-2088",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x218-8",
+    "R1-x218-7"
+   ],
+   "replays_reproduce": {
+    "R1-x218-8": true,
+    "R1-x218-7": true
+   }
+  },
+  "ref-R1-x247": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x247.pkl",
+   "sha256": "ec9581e58dc809cabe86af2e730d39b3c89ad64bb81d152635a07070bfdf752a",
+   "bytes": 1364140,
+   "selection_sid": "R1-x247",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-2-34787",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x247-8",
+    "R1-x247-7"
+   ],
+   "replays_reproduce": {
+    "R1-x247-8": true,
+    "R1-x247-7": true
+   }
+  },
+  "ref-R1-x207": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x207.pkl",
+   "sha256": "31170fa613d9c846f2e2c9642ae292bc25cf7da6347789423bdd7368c616899d",
+   "bytes": 1365406,
+   "selection_sid": "R1-x207",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-2-14011",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x207-8",
+    "R1-x207-7"
+   ],
+   "replays_reproduce": {
+    "R1-x207-8": true,
+    "R1-x207-7": true
+   }
+  },
+  "ref-R1-x285": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x285.pkl",
+   "sha256": "22c3d2a097db3aceb108f9022e4d48eb6f4d76ae2c0e36f5cde7081189945014",
+   "bytes": 1366989,
+   "selection_sid": "R1-x285",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-2-37724",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x285-8",
+    "R1-x285-7"
+   ],
+   "replays_reproduce": {
+    "R1-x285-8": true,
+    "R1-x285-7": true
+   }
+  },
+  "ref-R1-x335": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x335.pkl",
+   "sha256": "000774c370a189caeadf38ef7a1a363f87f1e7802be8b730e0eea0a6e2b023a9",
+   "bytes": 1362369,
+   "selection_sid": "R1-x335",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-3-34806",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x335-8",
+    "R1-x335-7"
+   ],
+   "replays_reproduce": {
+    "R1-x335-8": true,
+    "R1-x335-7": true
+   }
+  },
+  "ref-R1-x310": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x310.pkl",
+   "sha256": "ba93e40025ffb03bedd2ed07d6056570cd1f169b1d7239f6dd9ff38e5cf10b12",
+   "bytes": 1366299,
+   "selection_sid": "R1-x310",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-3-13934",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x310-8",
+    "R1-x310-7"
+   ],
+   "replays_reproduce": {
+    "R1-x310-8": true,
+    "R1-x310-7": true
+   }
+  },
+  "ref-R1-x311": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x311.pkl",
+   "sha256": "e7569ebd68c650717d939a68f9139b10104e65cd1f599c847f236f9b4b840f82",
+   "bytes": 1364679,
+   "selection_sid": "R1-x311",
+   "set": "R1",
+   "kind": "group",
+   "unit": "h-1e-8-3-14093",
+   "index": 1,
+   "rtol": "1e-8",
+   "replays": [
+    "R1-x311-8",
+    "R1-x311-7"
+   ],
+   "replays_reproduce": {
+    "R1-x311-8": true,
+    "R1-x311-7": true
+   }
+  },
+  "ref-R2-00": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-00.pkl",
+   "sha256": "ac8ec9c87f42dd316dc2f3ddf4f67c33cd05f86680af5a1d83759cf405d72cf1",
+   "bytes": 3582,
+   "selection_sid": "R2-00",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-0-33719",
+   "index": 6,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-00",
+    "R2-00~o"
+   ],
+   "replays_reproduce": {
+    "R2-00": true,
+    "R2-00~o": true
+   }
+  },
+  "ref-R2-01": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-01.pkl",
+   "sha256": "e0cd4699045ec42a2ccb61bedbae4d38a57a52fe0097698938d85c4721ee825c",
+   "bytes": 22332,
+   "selection_sid": "R2-01",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-7-1-11202",
+   "index": 14,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-01",
+    "R2-01~o"
+   ],
+   "replays_reproduce": {
+    "R2-01": true,
+    "R2-01~o": true
+   }
+  },
+  "ref-R2-02": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-02.pkl",
+   "sha256": "6221abfda1447df536563d7b416f4158dd6e4cd99daf3342354906df1d837f16",
+   "bytes": 1338359,
+   "selection_sid": "R2-02",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-8-1-35412",
+   "index": 0,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-02",
+    "R2-02~o"
+   ],
+   "replays_reproduce": {
+    "R2-02": true,
+    "R2-02~o": true
+   }
+  },
+  "ref-R2-03": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-03.pkl",
+   "sha256": "4eca4715cec196c37ce6ab6b70e46028d1f8eba8e60934e7cf5a9a0c4aa8e5bc",
+   "bytes": 3359,
+   "selection_sid": "R2-03",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-2-1623",
+   "index": 11,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-03",
+    "R2-03~o"
+   ],
+   "replays_reproduce": {
+    "R2-03": true,
+    "R2-03~o": true
+   }
+  },
+  "ref-R2-04": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-04.pkl",
+   "sha256": "a0421a83a8803033a2583163b5a39d07adc4a899add2d03b6b3a097a5f39dfa8",
+   "bytes": 22413,
+   "selection_sid": "R2-04",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-1-35504",
+   "index": 20,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-04",
+    "R2-04~o"
+   ],
+   "replays_reproduce": {
+    "R2-04": true,
+    "R2-04~o": true
+   }
+  },
+  "ref-R2-05": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-05.pkl",
+   "sha256": "56973c444c61a6d25819957cbca723c2a5e3e17185d07d7f5f8248d44f5167cf",
+   "bytes": 3665,
+   "selection_sid": "R2-05",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-7-3-34277",
+   "index": 14,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-05",
+    "R2-05~o"
+   ],
+   "replays_reproduce": {
+    "R2-05": true,
+    "R2-05~o": true
+   }
+  },
+  "ref-R2-06": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-06.pkl",
+   "sha256": "3d05852da3aa3c9645369397404f7e27b2c4e265a646e14b3e48974d95e1dd9d",
+   "bytes": 22333,
+   "selection_sid": "R2-06",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-0-12590",
+   "index": 16,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-06",
+    "R2-06~o"
+   ],
+   "replays_reproduce": {
+    "R2-06": true,
+    "R2-06~o": true
+   }
+  },
+  "ref-R2-07": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-07.pkl",
+   "sha256": "4436b0cc62cf98d8683ade2c16f7e487dab601c8e849976141bc89b9c680dffa",
+   "bytes": 3358,
+   "selection_sid": "R2-07",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-3-1255",
+   "index": 9,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-07",
+    "R2-07~o"
+   ],
+   "replays_reproduce": {
+    "R2-07": true,
+    "R2-07~o": true
+   }
+  },
+  "ref-R2-08": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-08.pkl",
+   "sha256": "4125e5363d0e3677360521df5541ce5621bb818ecc4249e12c1cefe395e8682c",
+   "bytes": 1338891,
+   "selection_sid": "R2-08",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-7-0-12980",
+   "index": 4,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-08",
+    "R2-08~o"
+   ],
+   "replays_reproduce": {
+    "R2-08": true,
+    "R2-08~o": true
+   }
+  },
+  "ref-R2-09": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-09.pkl",
+   "sha256": "d1570d3d6f9f1bee28cfd00dba8c4d6952c08a062a0e7a0f94cc3c966c8d02c2",
+   "bytes": 22333,
+   "selection_sid": "R2-09",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-0-14320",
+   "index": 18,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-09",
+    "R2-09~o"
+   ],
+   "replays_reproduce": {
+    "R2-09": true,
+    "R2-09~o": true
+   }
+  },
+  "ref-R2-10": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-10.pkl",
+   "sha256": "6c9b4535af88f2ea7eec1bcc0162dc7cc115294b56fc16272dd62de39d209d34",
+   "bytes": 3666,
+   "selection_sid": "R2-10",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-7-2-21758",
+   "index": 10,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-10",
+    "R2-10~o"
+   ],
+   "replays_reproduce": {
+    "R2-10": true,
+    "R2-10~o": true
+   }
+  },
+  "ref-R2-11": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-11.pkl",
+   "sha256": "b4cbf4675a0f4eeea1e5ce24e1171aac088d4c833d7292e8eaf946bbd2b9af45",
+   "bytes": 3359,
+   "selection_sid": "R2-11",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-2-34460",
+   "index": 7,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-11",
+    "R2-11~o"
+   ],
+   "replays_reproduce": {
+    "R2-11": true,
+    "R2-11~o": true
+   }
+  },
+  "ref-R2-12": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-12.pkl",
+   "sha256": "dbad75bf8e7e7be942757dca7add9fdc16b8df497da6186720b48b53798403b8",
+   "bytes": 1345180,
+   "selection_sid": "R2-12",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-7-1-1845",
+   "index": 2,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-12",
+    "R2-12~o"
+   ],
+   "replays_reproduce": {
+    "R2-12": true,
+    "R2-12~o": true
+   }
+  },
+  "ref-R2-13": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-13.pkl",
+   "sha256": "5b5778d1e4d7e30a3639811d78fb5bfb4b33be73227d2407a1d7381c2fe6dd36",
+   "bytes": 22413,
+   "selection_sid": "R2-13",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-7-3-13515",
+   "index": 22,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-13",
+    "R2-13~o"
+   ],
+   "replays_reproduce": {
+    "R2-13": true,
+    "R2-13~o": true
+   }
+  },
+  "ref-R2-14": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-14.pkl",
+   "sha256": "b4e56cbb9cc2d348b2dc3205a89df4666441e1dcecf5bec4c1408c1f9c0ccb06",
+   "bytes": 3666,
+   "selection_sid": "R2-14",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-2-21805",
+   "index": 8,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-14",
+    "R2-14~o"
+   ],
+   "replays_reproduce": {
+    "R2-14": true,
+    "R2-14~o": true
+   }
+  },
+  "ref-R2-15": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-15.pkl",
+   "sha256": "410672b725262ebca284c6ab1c4475c266600fd11efcad1bc98c9334a14ecad7",
+   "bytes": 3666,
+   "selection_sid": "R2-15",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-7-0-12952",
+   "index": 14,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-15",
+    "R2-15~o"
+   ],
+   "replays_reproduce": {
+    "R2-15": true,
+    "R2-15~o": true
+   }
+  },
+  "ref-R2-16": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-16.pkl",
+   "sha256": "80d34d4abe37692a8071fa523efbdbd10db0ebf840335bb199d74871430c148a",
+   "bytes": 1322771,
+   "selection_sid": "R2-16",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-7-3-928",
+   "index": 4,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-16",
+    "R2-16~o"
+   ],
+   "replays_reproduce": {
+    "R2-16": true,
+    "R2-16~o": true
+   }
+  },
+  "ref-R2-17": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-17.pkl",
+   "sha256": "5d62f9afd45a9c855d0c6db5ba5b0d00892ec9aeb34f997e1aee20e72478a518",
+   "bytes": 21931,
+   "selection_sid": "R2-17",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-1-11182",
+   "index": 19,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-17",
+    "R2-17~o"
+   ],
+   "replays_reproduce": {
+    "R2-17": true,
+    "R2-17~o": true
+   }
+  },
+  "ref-R2-18": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-18.pkl",
+   "sha256": "6e0939f0ef768116fe6e6c435c5fcd405b705ef87f35e9643f29448edebd9594",
+   "bytes": 3666,
+   "selection_sid": "R2-18",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-3-34325",
+   "index": 10,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-18",
+    "R2-18~o"
+   ],
+   "replays_reproduce": {
+    "R2-18": true,
+    "R2-18~o": true
+   }
+  },
+  "ref-R2-19": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-19.pkl",
+   "sha256": "45010eb21da3b44ab8aef6a1436af252a156f0dde2c62e022fae3c1b40e7bf77",
+   "bytes": 3444,
+   "selection_sid": "R2-19",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-1-34850",
+   "index": 9,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-19",
+    "R2-19~o"
+   ],
+   "replays_reproduce": {
+    "R2-19": true,
+    "R2-19~o": true
+   }
+  },
+  "ref-R2-20": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-20.pkl",
+   "sha256": "b536abd06093425092de316039d2d45a899f472210da8e58f877e2fd6b7b6572",
+   "bytes": 1331437,
+   "selection_sid": "R2-20",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-7-0-12771",
+   "index": 4,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-20",
+    "R2-20~o"
+   ],
+   "replays_reproduce": {
+    "R2-20": true,
+    "R2-20~o": true
+   }
+  },
+  "ref-R2-21": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-21.pkl",
+   "sha256": "d952849a950d97e8cd8bb7d8844584ec5ba4dd242ab2fa23034a9d085c875eaf",
+   "bytes": 21930,
+   "selection_sid": "R2-21",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-7-2-21653",
+   "index": 13,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-21",
+    "R2-21~o"
+   ],
+   "replays_reproduce": {
+    "R2-21": true,
+    "R2-21~o": true
+   }
+  },
+  "ref-R2-22": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-22.pkl",
+   "sha256": "6b7f11850df46c6054f42a2228e6a7420e9b8bb4813bc76a037cdbb086023cb0",
+   "bytes": 1333781,
+   "selection_sid": "R2-22",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-7-2-1665",
+   "index": 5,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-22",
+    "R2-22~o"
+   ],
+   "replays_reproduce": {
+    "R2-22": true,
+    "R2-22~o": true
+   }
+  },
+  "ref-R2-23": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-23.pkl",
+   "sha256": "018fa0ae95187126e1c5af2ec71eca87c44b7763ea6ba8d932e5a1594d9beb31",
+   "bytes": 22332,
+   "selection_sid": "R2-23",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-7-0-33600",
+   "index": 11,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-23",
+    "R2-23~o"
+   ],
+   "replays_reproduce": {
+    "R2-23": true,
+    "R2-23~o": true
+   }
+  },
+  "ref-R2-24": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-24.pkl",
+   "sha256": "1b6c787402eefd9aa7076bc6341aec6b99303d41cd3f136ba084fd06b83113ed",
+   "bytes": 3358,
+   "selection_sid": "R2-24",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-3-1048",
+   "index": 6,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-24",
+    "R2-24~o"
+   ],
+   "replays_reproduce": {
+    "R2-24": true,
+    "R2-24~o": true
+   }
+  },
+  "ref-R2-25": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-25.pkl",
+   "sha256": "edca493a924f81464fd588b1d911dc5b994893b4550f8c4934edb239c51b5f07",
+   "bytes": 1361245,
+   "selection_sid": "R2-25",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-8-0-1984",
+   "index": 0,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-25",
+    "R2-25~o"
+   ],
+   "replays_reproduce": {
+    "R2-25": true,
+    "R2-25~o": true
+   }
+  },
+  "ref-R2-26": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-26.pkl",
+   "sha256": "c28ed4564129e489c6fefef063e8ca25e26edb8f3c6046790a214cebcaa5d676",
+   "bytes": 3359,
+   "selection_sid": "R2-26",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-7-1-10739",
+   "index": 4,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-26",
+    "R2-26~o"
+   ],
+   "replays_reproduce": {
+    "R2-26": true,
+    "R2-26~o": true
+   }
+  },
+  "ref-R2-27": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-27.pkl",
+   "sha256": "9c169e8f7507a3a4c60ccbf5776ec542a109350c477adb723e8311e41103e880",
+   "bytes": 3443,
+   "selection_sid": "R2-27",
+   "set": "R2",
+   "kind": "analytic",
+   "unit": "h-1e-8-1-10842",
+   "index": 7,
+   "rtol": "1e-8",
+   "replays": [
+    "R2-27",
+    "R2-27~o"
+   ],
+   "replays_reproduce": {
+    "R2-27": true,
+    "R2-27~o": true
+   }
+  },
+  "ref-R2-28": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-28.pkl",
+   "sha256": "719ae661e6d09b38214b9a499536fd81cdda69180518f1f8787f24e915d067c6",
+   "bytes": 1351570,
+   "selection_sid": "R2-28",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-7-0-13757",
+   "index": 5,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-28",
+    "R2-28~o"
+   ],
+   "replays_reproduce": {
+    "R2-28": true,
+    "R2-28~o": true
+   }
+  },
+  "ref-R2-29": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-29.pkl",
+   "sha256": "371e8fce5b4f58e59af2a8cbef5701877d9aaf6a3d75750d9f6c781964f880e9",
+   "bytes": 1317138,
+   "selection_sid": "R2-29",
+   "set": "R2",
+   "kind": "group",
+   "unit": "h-1e-7-1-35330",
+   "index": 4,
+   "rtol": "1e-7",
+   "replays": [
+    "R2-29",
+    "R2-29~o"
+   ],
+   "replays_reproduce": {
+    "R2-29": true,
+    "R2-29~o": true
+   }
+  },
+  "ref-R3w-0-33950-0": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3w-0-33950-0.pkl",
+   "sha256": "378794b50a0227fd6cd9dcad579c793c3ca5fc5839f23928b852450baa3eb511",
+   "bytes": 1311889,
+   "selection_sid": "R3w-0-33950-0",
+   "set": "R3-W7",
+   "kind": "group",
+   "unit": "h-1e-8-0-33950",
+   "index": 0,
+   "rtol": "1e-8",
+   "replays": [
+    "R3w-0-33950-0",
+    "R3w-0-33950-0~o"
+   ],
+   "replays_reproduce": {
+    "R3w-0-33950-0": true,
+    "R3w-0-33950-0~o": true
+   }
+  },
+  "ref-R3w-0-2006-0": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3w-0-2006-0.pkl",
+   "sha256": "1c68acf0417f9a63f6b7de355e4160d9fc34e207db74fe6d431f0574e3fd4fcf",
+   "bytes": 1343422,
+   "selection_sid": "R3w-0-2006-0",
+   "set": "R3-W7",
+   "kind": "group",
+   "unit": "h-1e-8-0-2006",
+   "index": 0,
+   "rtol": "1e-8",
+   "replays": [
+    "R3w-0-2006-0",
+    "R3w-0-2006-0~o"
+   ],
+   "replays_reproduce": {
+    "R3w-0-2006-0": true,
+    "R3w-0-2006-0~o": true
+   }
+  },
+  "ref-R3w-3-13615-0": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3w-3-13615-0.pkl",
+   "sha256": "12feaccfd309195045b9be86368948077568df0d14d838237beaabd16c3a3681",
+   "bytes": 1340250,
+   "selection_sid": "R3w-3-13615-0",
+   "set": "R3-W7",
+   "kind": "group",
+   "unit": "h-1e-8-3-13615",
+   "index": 0,
+   "rtol": "1e-8",
+   "replays": [
+    "R3w-3-13615-0",
+    "R3w-3-13615-0~o"
+   ],
+   "replays_reproduce": {
+    "R3w-3-13615-0": true,
+    "R3w-3-13615-0~o": true
+   }
+  },
+  "ref-R3a-3-843-a5": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-3-843-a5.pkl",
+   "sha256": "b8abc12cdedfa0feee05e4083a6b302a01d7434d5741b55dba824d95b1a50a85",
+   "bytes": 3442,
+   "selection_sid": "R3a-3-843-a5",
+   "set": "R3-aux",
+   "kind": "analytic",
+   "unit": "h-1e-7-3-843",
+   "index": 5,
+   "rtol": "1e-7",
+   "replays": [
+    "R3a-3-843-a5",
+    "R3a-3-843-a5~o"
+   ],
+   "replays_reproduce": {
+    "R3a-3-843-a5": true,
+    "R3a-3-843-a5~o": true
+   }
+  },
+  "ref-R3a-3-13508-g2": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-3-13508-g2.pkl",
+   "sha256": "9f44884e6ad255343829eddbbb9b64baf5b74c80287f083f5f7d4de38c02ac3e",
+   "bytes": 1344762,
+   "selection_sid": "R3a-3-13508-g2",
+   "set": "R3-aux",
+   "kind": "group",
+   "unit": "h-1e-7-3-13508",
+   "index": 2,
+   "rtol": "1e-7",
+   "replays": [
+    "R3a-3-13508-g2",
+    "R3a-3-13508-g2~o"
+   ],
+   "replays_reproduce": {
+    "R3a-3-13508-g2": true,
+    "R3a-3-13508-g2~o": true
+   }
+  },
+  "ref-R3a-0-33666-a13": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-0-33666-a13.pkl",
+   "sha256": "522370e8b73602f6bd5cde6bc830f4a01c500f57540d354998d923c2027b1348",
+   "bytes": 3444,
+   "selection_sid": "R3a-0-33666-a13",
+   "set": "R3-aux",
+   "kind": "analytic",
+   "unit": "h-1e-7-0-33666",
+   "index": 13,
+   "rtol": "1e-7",
+   "replays": [
+    "R3a-0-33666-a13",
+    "R3a-0-33666-a13~o"
+   ],
+   "replays_reproduce": {
+    "R3a-0-33666-a13": true,
+    "R3a-0-33666-a13~o": true
+   }
+  },
+  "ref-R3a-3-39138-g2": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-3-39138-g2.pkl",
+   "sha256": "1d103a360beca358e13c918e0604f76b43f298efaa1ca1d03b29c32de82a7296",
+   "bytes": 1378763,
+   "selection_sid": "R3a-3-39138-g2",
+   "set": "R3-aux",
+   "kind": "group",
+   "unit": "h-1e-7-3-39138",
+   "index": 2,
+   "rtol": "1e-7",
+   "replays": [
+    "R3a-3-39138-g2",
+    "R3a-3-39138-g2~o"
+   ],
+   "replays_reproduce": {
+    "R3a-3-39138-g2": true,
+    "R3a-3-39138-g2~o": true
+   }
+  },
+  "ref-R3a-3-39138-g3": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-3-39138-g3.pkl",
+   "sha256": "b6d90ee627877555485f1a89b4e6067d4fc0772d2fdabb12e39b4048e15b17ae",
+   "bytes": 1378763,
+   "selection_sid": "R3a-3-39138-g3",
+   "set": "R3-aux",
+   "kind": "group",
+   "unit": "h-1e-7-3-39138",
+   "index": 3,
+   "rtol": "1e-7",
+   "replays": [
+    "R3a-3-39138-g3",
+    "R3a-3-39138-g3~o"
+   ],
+   "replays_reproduce": {
+    "R3a-3-39138-g3": true,
+    "R3a-3-39138-g3~o": true
+   }
+  },
+  "ref-R3a-2-21486-a9": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-2-21486-a9.pkl",
+   "sha256": "c8661bba8a0f7c5358890e015f7f90ed08f9d316a3771e3b804266bb39b48bbe",
+   "bytes": 3444,
+   "selection_sid": "R3a-2-21486-a9",
+   "set": "R3-aux",
+   "kind": "analytic",
+   "unit": "h-1e-7-2-21486",
+   "index": 9,
+   "rtol": "1e-7",
+   "replays": [
+    "R3a-2-21486-a9",
+    "R3a-2-21486-a9~o"
+   ],
+   "replays_reproduce": {
+    "R3a-2-21486-a9": true,
+    "R3a-2-21486-a9~o": true
+   }
+  },
+  "ref-R3o-2-21454-a3-7": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-2-21454-a3-7.pkl",
+   "sha256": "57801e989d491307cf0e6b7bfbc2965dd53d5f2c7460bb8e39c01ee7f738a0c1",
+   "bytes": 3582,
+   "selection_sid": "R3o-2-21454-a3-7",
+   "set": "R3-own",
+   "kind": "analytic",
+   "unit": "h-1e-7-2-21454",
+   "index": 3,
+   "rtol": "1e-7",
+   "replays": [
+    "R3o-2-21454-a3-7",
+    "R3o-2-21454-a3-7~o"
+   ],
+   "replays_reproduce": {
+    "R3o-2-21454-a3-7": true,
+    "R3o-2-21454-a3-7~o": true
+   }
+  },
+  "ref-R3o-3-1011-a18-7": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-3-1011-a18-7.pkl",
+   "sha256": "5be147931fb4ceb93428033a8c807348afcff109d023b48845b97892687aff22",
+   "bytes": 22332,
+   "selection_sid": "R3o-3-1011-a18-7",
+   "set": "R3-own",
+   "kind": "analytic",
+   "unit": "h-1e-7-3-1011",
+   "index": 18,
+   "rtol": "1e-7",
+   "replays": [
+    "R3o-3-1011-a18-7",
+    "R3o-3-1011-a18-7~o"
+   ],
+   "replays_reproduce": {
+    "R3o-3-1011-a18-7": true,
+    "R3o-3-1011-a18-7~o": true
+   }
+  },
+  "ref-R3o-1-35188-g0-8": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-1-35188-g0-8.pkl",
+   "sha256": "7ea8d7407f684060c45ee215e865d20546c85636084377f72255cfc08882f6ae",
+   "bytes": 1337880,
+   "selection_sid": "R3o-1-35188-g0-8",
+   "set": "R3-own",
+   "kind": "group",
+   "unit": "h-1e-8-1-35188",
+   "index": 0,
+   "rtol": "1e-8",
+   "replays": [
+    "R3o-1-35188-g0-8",
+    "R3o-1-35188-g0-8~o"
+   ],
+   "replays_reproduce": {
+    "R3o-1-35188-g0-8": true,
+    "R3o-1-35188-g0-8~o": true
+   }
+  },
+  "ref-R3p-3-14501": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3p-3-14501.pkl",
+   "sha256": "0be60cb4d863b6b9cb943d1dbf5544f595bffa8fbdd1fda94af3ec097b20c514",
+   "bytes": 1380312,
+   "selection_sid": "R3p-3-14501",
+   "set": "R3-pair",
+   "kind": "group",
+   "unit": "h-1e-7-3-14501",
+   "index": 1,
+   "rtol": "1e-7",
+   "replays": [
+    "p14501_7",
+    "p14501_8"
+   ],
+   "replays_reproduce": {
+    "p14501_7": true,
+    "p14501_8": true
+   }
+  },
+  "ref-R3p-3-35006": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3p-3-35006.pkl",
+   "sha256": "f33bda00dfda9dcb5a798ab5265dd971719b869b2b5eeb337b4becc4e31f870d",
+   "bytes": 1374552,
+   "selection_sid": "R3p-3-35006",
+   "set": "R3-pair",
+   "kind": "group",
+   "unit": "h-1e-7-3-35006",
+   "index": 1,
+   "rtol": "1e-7",
+   "replays": [
+    "p35006_7",
+    "p35006_8"
+   ],
+   "replays_reproduce": {
+    "p35006_7": true,
+    "p35006_8": true
+   }
+  }
+ }
+}

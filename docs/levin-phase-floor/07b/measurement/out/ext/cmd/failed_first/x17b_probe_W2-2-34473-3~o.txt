@@ -1,0 +1,16 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/leafprobe_ext.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/e/W2-2-34473-3~o.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/probe/e_W2-2-34473-3~o.json --eighths --leaves 0 1 2 3 4 5 6 7 9 10 11 12 13 14 15 16 17 18 19 20 21 22 27 31 48 49 60 67 68 69 70 71 72 94 95 96 97 98 99 100 101
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:29:25Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/leafprobe_ext.py", line 213, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/leafprobe_ext.py", line 95, in main
+    ov = {k: (float.fromhex(v) if isinstance(v, str) else v) for k, v in c["override"].items()}
+              ~~~~~~~~~~~~~^^^
+ValueError: invalid hexadecimal floating-point string
+# ----
+# end 2026-11-15T23:29:26Z
+# exit 1

@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/gate_hashes.py after /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/gate/gate_hashes_after.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-14T21:10:58Z
+# ----
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/gate_hashes.py:21: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "utc": datetime.datetime.utcnow().isoformat() + "Z", "kept_sha256": sha(KEPT), "cert_sha256": sha(CERT)},
+{"captures_ok": 78, "captures": 78, "copy_ok": 5, "copy": 5, "copy_extra": []} wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/gate/gate_hashes_after.json 235aa5c57dc5f4d0386f96bb70204a7ebcb870f97596b0ab301352794c1a06e5
+# ----
+# end 2026-11-14T21:10:59Z
+# exit 0

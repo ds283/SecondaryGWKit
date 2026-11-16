@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/x3_chase.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x3/x3_chase.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x3/x3_chase.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:09:49Z
+# ----
+## (X3) (f)'s unconverged calls: the leaves at depth 20 and the chase
+
+Totals: bisect unchecked, bisected for the budget: 1; bisect untrusted, exit refused by the halving test: 548; bisect untrusted, residual above floor: 4009; calls: 61; deep fallback|trusted|from_f: 1005; deep fallback|untrusted|from_f: 2956; deep fallback|untrusted|not_from_f: 2; deep levin|trusted|from_f: 35; deep levin|untrusted|from_f: 376; same_as_f: 61
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x3/x3_chase.json 51520019efade9f3e1d04fe0b6a5aaba6dfc8c3e7fab57f79355fef829f53d60 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x3/x3_chase.md 2f41fbf9d5c146bb3da44777a36abf2c3129de52d9c90dcc14dadc63e63d8550
+# ----
+# end 2026-11-15T23:09:49Z
+# exit 0

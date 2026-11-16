@@ -1,0 +1,1 @@
+200 readings of out/refs/inputs.json's 74 inputs; outputs out/refs/readings/ and out/cmd/refs

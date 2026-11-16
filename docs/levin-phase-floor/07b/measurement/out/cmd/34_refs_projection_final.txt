@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/refs_projection_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/refs_projection.json --route-a-pilot /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/pilotA/ref-R2-19-fcc-r1.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/pilotA/ref-R2-19-fcc-r2.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/pilotA/ref-R2-01-qawo-r1.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/pilotA/ref-R2-01-qawo-r2.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T16:08:19Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/refs_projection_07b.py", line 133, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/refs_projection_07b.py", line 50, in main
+    n = len(F.RouteA(call).panels(r["impl"], r["res"]))
+            ~~~~~~~~^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py", line 602, in __init__
+    self.group = call["theta"]["theta"].__self__
+                 ~~~~^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+# ----
+# end 2026-11-13T16:08:20Z
+# exit 1

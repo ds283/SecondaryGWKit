@@ -1,0 +1,57 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading ref-R2-18 qawo res 2 (tools.filon_reference)",
+  "# written 2026-11-13T16:09:27Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 3cf12125cebc8336eefd67c944a7599aab694816aa615a2a7605f17502dbc127",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-18.pkl sha256 6e0939f0ef768116fe6e6c435c5fcd405b705ef87f35e9643f29448edebd9594",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "sample": "ref-R2-18",
+ "unit": "h-1e-8-3-34325",
+ "index": 10,
+ "rtol": "1e-8",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-18.pkl",
+ "pickle_sha256": "6e0939f0ef768116fe6e6c435c5fcd405b705ef87f35e9643f29448edebd9594",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py",
+ "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+ "workers": 2,
+ "route_of": "A",
+ "route": "A",
+ "impl": "qawo",
+ "res": 2,
+ "config": {
+  "du": 0.125,
+  "Pmax": 512.0,
+  "epsrel": 1.2e-14
+ },
+ "value_hex": "-0x1.f8725b9c42165p-37",
+ "value_30": "-1.43372378250750320510646018931e-11",
+ "imag_30": "1.5240728311406340679352721615e-11",
+ "wall_s": 739.0002414998598,
+ "n_panels": 833432,
+ "u_breaks": [],
+ "K_exact": "5014254410584759/1073741824",
+ "K_hat": 4669888.327442816,
+ "K_lo": 0.0,
+ "C_exact": "0.0",
+ "stats": {
+  "panels": 833432,
+  "direct_panels": 0,
+  "neval": 20828960,
+  "ier_nonzero": 793656,
+  "ier_messages": {
+   "The occurrence of roundoff error is detected, which prevents ": 793656
+  },
+  "max_last": 0,
+  "sum_quad_abserr": 3.0269124680905534e-24
+ },
+ "process_wall_s": 741.1139943329617,
+ "rerun": false,
+ "progress_order": null,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

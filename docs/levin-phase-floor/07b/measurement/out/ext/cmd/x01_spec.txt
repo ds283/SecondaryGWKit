@@ -1,0 +1,20 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/x1_spec.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T22:48:42Z
+# ----
+W2-0-12977-5: (e) runs the tree's code; Part A's attr_W2-0-12977-5.json serves
+W2-1-2174-2: (e) runs the tree's code; Part A's attr_W2-1-2174-2.json serves
+W2-1-2174-2~o: (e) equals the tree; 2 spans, 17 points, 2 trusted Levin leaves, 0 window leaves not read
+W2-2-14345-3: (e) runs the tree's code; Part A's attr_W2-2-14345-3.json serves
+W2-2-14345-3~o: (e) equals the tree; 4 spans, 33 points, 4 trusted Levin leaves, 0 window leaves not read
+W2-2-34473-3: (e) runs the tree's code; Part A's attr_W2-2-34473-3.json serves
+W2-2-34473-3~o: (e) equals the tree; 102 spans, 390 points, 41 trusted Levin leaves, 0 window leaves not read
+p14501_7: (e) differs from the tree; 25 spans, 120 points, 11 trusted Levin leaves, 17 window leaves not read
+p14501_8: (e) differs from the tree; 20 spans, 101 points, 9 trusted Levin leaves, 17 window leaves not read
+p35006_7: (e) equals the tree; 18 spans, 110 points, 10 trusted Levin leaves, 21 window leaves not read
+v09: (e) runs the tree's code; Part A's carrier_v09.json serves
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/plan.json 7b032d5c3660d50e845749120806ef2d0b688b193c6039da71df84607ec7d35c
+# ----
+# end 2026-11-15T22:48:42Z
+# exit 0

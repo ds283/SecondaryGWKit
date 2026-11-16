@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/run_replays_07b.py 07 i3 --sids i3-34599-07 --workers 1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T14:08:01Z
+# ----
+07 i3: 1 of 1 reproduce their census record; 2 s; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/07_summary_i3.json
+# ----
+# end 2026-11-13T14:08:04Z
+# exit 0

@@ -1,0 +1,365 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/probe_all_07b.sh
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T15:15:21Z
+# ----
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 9 [5.62121, 5.63637] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0301
+leaf 23 [5.63706, 5.64637] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0385
+leaf 7 [5.60591, 5.63622] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.142
+leaf 28 [5.63721, 5.65581] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0617
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 6 [9.15527, 9.23062] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.195
+leaf 29 [9.23208, 9.29696] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.149
+leaf 6 [9.15498, 9.23032] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.154
+leaf 36 [9.23238, 9.29726] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.122
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 9 [9.19654, 9.23006] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00441
+leaf 34 [9.23264, 9.26283] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00501
+leaf 10 [9.16249, 9.22953] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0988
+leaf 37 [9.23317, 9.35393] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.24
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 8 [3.26486, 3.27717] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0068
+leaf 25 [3.27832, 3.28821] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0171
+leaf 7 [3.2523, 3.27694] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0779
+leaf 25 [3.27856, 3.31813] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.19
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 8 [9.20378, 9.22907] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00912
+leaf 27 [9.23363, 9.26157] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00973
+leaf 7 [9.17756, 9.22813] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0367
+leaf 30 [9.23458, 9.29045] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0602
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 8 [9.08331, 9.22422] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00979
+leaf 32 [9.23852, 9.33243] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0234
+leaf 7 [8.93956, 9.22128] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0705
+leaf 23 [9.24151, 9.61706] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.129
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 7 [3.26216, 3.27742] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0744
+leaf 26 [3.27807, 3.29898] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.149
+leaf 6 [3.24676, 3.27729] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.184
+leaf 29 [3.27821, 3.29912] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.108
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 12 [9.21187, 9.22907] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00167
+leaf 35 [9.23363, 9.28951] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0186
+leaf 11 [9.15933, 9.22813] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0181
+leaf 34 [9.23458, 9.34633] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0656
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 12 [9.15948, 9.23062] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.014
+leaf 35 [9.23208, 9.29696] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0288
+leaf 8 [9.15918, 9.23032] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0802
+leaf 30 [9.23238, 25.8425] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0814
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 3 [0.901948, 0.982909] depth 3 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0401
+leaf 20 [0.98357, 1.07618] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.101
+leaf 3 [0.901829, 0.982772] depth 3 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.171
+leaf 31 [0.983708, 1.07631] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.24
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 6 [3.25731, 3.27742] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.16
+leaf 20 [3.27807, 3.29898] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.171
+leaf 6 [3.25718, 3.27729] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.114
+leaf 43 [3.27821, 3.29912] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.121
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 9 [9.19504, 9.23006] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.187
+leaf 28 [9.23264, 9.26283] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0673
+leaf 10 [9.19451, 9.22953] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0667
+leaf 35 [9.23317, 9.29355] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00516
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 9 [9.17437, 9.23094] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.248
+leaf 32 [9.23176, 26.9711] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0961
+leaf 9 [9.1742, 9.23077] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.203
+leaf 33 [9.23193, 26.9711] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.257
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 11 [9.20388, 9.23122] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0869
+leaf 36 [9.23148, 29.2743] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00438
+leaf 10 [9.20383, 9.23117] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.191
+leaf 43 [9.23153, 29.2743] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00394
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 5 [5.59525, 5.63562] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.167
+leaf 25 [5.63781, 5.65419] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00192
+leaf 4 [5.55445, 5.63517] depth 4 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0747
+leaf 34 [5.63826, 5.70378] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0431
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 9 [5.63146, 5.6361] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00244
+leaf 30 [5.63733, 5.6417] depth 12 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00182
+leaf 8 [5.62658, 5.63584] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00199
+leaf 26 [5.63759, 5.64633] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.000671
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 12 [9.20371, 9.23006] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0108
+leaf 32 [9.23264, 9.26283] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00187
+leaf 8 [9.12412, 9.22953] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.227
+leaf 29 [9.23317, 9.29355] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0888
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 6 [9.21484, 9.23094] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.07
+leaf 29 [9.23176, 26.9711] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00894
+leaf 5 [9.19857, 9.23077] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.202
+leaf 28 [9.23193, 26.9711] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0121
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 7 [9.20806, 9.23122] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.17
+leaf 41 [9.23148, 29.2743] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00703
+leaf 7 [9.20801, 9.23117] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.199
+leaf 35 [9.23153, 29.2743] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00643
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 6 [5.6197, 5.63562] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00944
+leaf 22 [5.63781, 5.65419] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00903
+leaf 5 [5.60335, 5.63517] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0919
+leaf 33 [5.63826, 5.67102] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.105
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 4 [5.62387, 5.6361] depth 4 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0125
+leaf 18 [5.63733, 5.64607] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0252
+leaf 4 [5.62363, 5.63584] depth 4 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00504
+leaf 23 [5.63759, 5.65507] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0258
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 7 [9.21025, 9.22907] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00214
+leaf 21 [9.23363, 9.2476] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00151
+leaf 7 [9.19049, 9.22813] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0518
+leaf 27 [9.23458, 9.26252] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00348
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 13 [9.20427, 9.23062] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.072
+leaf 29 [9.23208, 9.26452] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.128
+leaf 7 [9.01947, 9.23032] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.152
+leaf 33 [9.23238, 25.8425] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0135
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+leaf 11 [9.22051, 9.23112] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.13
+leaf 37 [9.23158, 28.1227] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0372
+leaf 11 [9.22042, 9.23102] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.101
+leaf 35 [9.23168, 28.1227] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.026
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    f=open(c['path'],'rb'); f.seek(c['offset']); rec=cp.loads(f.read(c['length']))
+                                                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'harness'
+usage: leafprobe_07b.py [-h] --leaves LEAVES [LEAVES ...] [--eighths]
+                        [--perturb PERTURB]
+                        replay_json out_json
+leafprobe_07b.py: error: argument --perturb: expected one argument
+# ----
+# end 2026-11-13T15:17:05Z
+# exit 0

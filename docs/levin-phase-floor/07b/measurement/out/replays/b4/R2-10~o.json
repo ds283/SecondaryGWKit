@@ -1,0 +1,112 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07b Part A: replay of R2-10~o at b4",
+  "written": "2026-11-13T14:09:05Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/replay_07b.py",
+  "script_sha256": "93816b5a9d53343237e0c6218e1198e8666fdcd9dd5e687f3f4d35c772c707c0",
+  "module": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_b4.py",
+  "module_sha256": "877faea9319f0f2834b1d2da0b2095b8c2bca54736b99d6cce4ef2f02064c430",
+  "module_sha256_now": "877faea9319f0f2834b1d2da0b2095b8c2bca54736b99d6cce4ef2f02064c430",
+  "worker_sha256": "1eaa96573f613232f58a4874a3caf024d4408e9793d8dc0fba6dee33869e0333",
+  "capture": {
+   "set": "R2~o",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C17/inputs_C17.pkl",
+   "offset": 0,
+   "length": 3666,
+   "sha256": "6c9b4535af88f2ea7eec1bcc0162dc7cc115294b56fc16272dd62de39d209d34",
+   "override": {
+    "rtol": "0x1.5798ee2308c3ap-27",
+    "atol": "0x1.9f623d5a8a733p-107",
+    "from_unit": "h-1e-7-2-21758",
+    "to_unit": "h-1e-8-2-21758"
+   },
+   "census": "R2-10~o",
+   "captured_unit": "h-1e-7-2-21758"
+  },
+  "calls_manifest_sha256": "4c3b85cc5b0b0ddacb967c675561f3f9115154d7bd2059136fa38eb656726044",
+  "census_refs_sha256": "ae658a92135743daf2aa674436bb63883e13a2ecded6475c326801e9cf751ea0",
+  "variant_evidence": {
+   "name": "07b_b4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_b4.py",
+   "sha256": "877faea9319f0f2834b1d2da0b2095b8c2bca54736b99d6cce4ef2f02064c430",
+   "sha256_now": "877faea9319f0f2834b1d2da0b2095b8c2bca54736b99d6cce4ef2f02064c430",
+   "sys_modules_is_variant": true,
+   "module_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_b4.py",
+   "package_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/AdaptiveLevin/__init__.py",
+   "package_attribute_is_variant": true,
+   "package_function_is_variants": true
+  },
+  "instrument": false,
+  "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]"
+ },
+ "sid": "R2-10~o",
+ "set": "R2~o",
+ "variant": "b4",
+ "replay": {
+  "value": "-0x1.edab288f5a8d9p-35",
+  "abserr": "0x1.918ec4baae769p-74",
+  "num_regions": 1,
+  "max_depth": 0,
+  "converged": true
+ },
+ "census": {
+  "value": "-0x1.edab288f5a8d9p-35",
+  "abserr": "0x1.918ec4baae769p-74",
+  "num_regions": 1,
+  "max_depth": 0,
+  "converged": true
+ },
+ "census_which": "h",
+ "census_unit": "h-1e-8-2-21758",
+ "region_keys_differing": [],
+ "guard_keys_differing": [],
+ "problems": [],
+ "reproduces_census": true,
+ "wall_s": 0.011820540763437748,
+ "atol": "0x1.9f623d5a8a733p-107",
+ "rtol": "0x1.5798ee2308c3ap-27",
+ "x_span": [
+  "-0x1.75043b2e77dc9p+3",
+  "-0x1.9f0dfa71a73bap+2"
+ ],
+ "n_windows": 0,
+ "n_windows_stopped": 0,
+ "windows": [],
+ "stationary_points": [],
+ "num_window_pieces": 0,
+ "num_guarded_regions": 0,
+ "num_untrusted_regions": 0,
+ "num_subregion_solves": 7,
+ "regions_sha256": "ae4abae163ce6d9297b1a066eae9f2b6d3f562fbbb69b7a0f39f3e0bdf4354a9",
+ "leaves": [
+  {
+   "start": "-0x1.75043b2e77dc9p+3",
+   "end": "-0x1.9f0dfa71a73bap+2",
+   "depth": 0,
+   "type": "Levin",
+   "value": "-0x1.edab288f5a8d9p-35",
+   "value_own": "-0x1.edab288f5c5f5p-35",
+   "value_kind": "quarters",
+   "budget_err": "0x1.918ec4baae769p-74",
+   "total_err": "0x1.918ec4baae769p-74",
+   "own_err": "0x1.918ec4baae769p-74",
+   "abserr": "0x1.cfc0000000000p-75",
+   "phase_err": "0x1.918ec4baae769p-74",
+   "abserr_truncation": "0x0.0p+0",
+   "node_error_signed": null,
+   "delta1": "0x1.cfc0000000000p-75",
+   "delta2": "0x1.0000000000000p-82",
+   "convergence_ratio": "0x1.1aa292027beddp-8",
+   "declared_resolution": "0x1.d1c237b7ed267p-75",
+   "trusted": true,
+   "window": false,
+   "guarded": false,
+   "phase_limited": false,
+   "touches_window": [],
+   "edge_lo_is": [],
+   "edge_hi_is": []
+  }
+ ],
+ "ray_initialized": false
+}

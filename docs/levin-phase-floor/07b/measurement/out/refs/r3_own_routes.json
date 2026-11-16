@@ -1,0 +1,167 @@
+{
+ "note": "R3 own route changes: 07a's census record's changed solves (route_07a.record.changed_all) of each drawn call; read from 07a's unit pickles via state/census_refs_07b.pkl's pointers",
+ "calls": {
+  "R3o-2-21454-a3-7": [
+   {
+    "a": {
+     "repr": "-15.088066887331939",
+     "hex": "-0x1.e2d171a61e703p+3"
+    },
+    "b": {
+     "repr": "-12.381421185831552",
+     "hex": "-0x1.8c349a33e4bcep+3"
+    },
+    "desc": "Levin subregion",
+    "role": "Levin subregion",
+    "class": "own",
+    "forced": false,
+    "made": true,
+    "returned": true,
+    "depth": 0,
+    "V": {
+     "repr": "55.98000672441291",
+     "hex": "0x1.bfd70dc3f9b55p+5"
+    },
+    "est_07": {
+     "repr": "64.43485679200023",
+     "hex": "0x1.01bd4b1950568p+6"
+    },
+    "est_over_V": 1.151033387852384,
+    "partition": false,
+    "decision": 2,
+    "is_direct": false,
+    "lu_used": 0,
+    "n_builds": 1,
+    "builds": [
+     [
+      {
+       "repr": "64.43485679200023",
+       "hex": "0x1.01bd4b1950568p+6"
+      },
+      {
+       "repr": "55.98000672441291",
+       "hex": "0x1.bfd70dc3f9b55p+5"
+      },
+      false,
+      {
+       "repr": "59.98460060035327",
+       "hex": "0x1.dfe07647911d3p+5"
+      }
+     ]
+    ],
+    "theta_end_max": {
+     "repr": "59.98460060035327",
+     "hex": "0x1.dfe07647911d3p+5"
+    }
+   }
+  ],
+  "R3o-3-1011-a18-7": [
+   {
+    "a": {
+     "repr": "-10.067739586022146",
+     "hex": "-0x1.422aec355382ap+3"
+    },
+    "b": {
+     "repr": "-7.314379123302902",
+     "hex": "-0x1.d41ec99d48643p+2"
+    },
+    "desc": "Levin subregion",
+    "role": "Levin subregion",
+    "class": "own",
+    "forced": false,
+    "made": true,
+    "returned": true,
+    "depth": 0,
+    "V": {
+     "repr": "62.346821637079366",
+     "hex": "0x1.f2c64a6c26689p+5"
+    },
+    "est_07": {
+     "repr": "72.05181665206005",
+     "hex": "0x1.20350f6ca7f1dp+6"
+    },
+    "est_over_V": 1.1556614236323615,
+    "partition": false,
+    "decision": 2,
+    "is_direct": false,
+    "lu_used": 0,
+    "n_builds": 1,
+    "builds": [
+     [
+      {
+       "repr": "72.05181665206005",
+       "hex": "0x1.20350f6ca7f1dp+6"
+      },
+      {
+       "repr": "62.346821637079366",
+       "hex": "0x1.f2c64a6c26689p+5"
+      },
+      false,
+      {
+       "repr": "66.58946232419865",
+       "hex": "0x1.0a5b9c02f2a12p+6"
+      }
+     ]
+    ],
+    "theta_end_max": {
+     "repr": "66.58946232419865",
+     "hex": "0x1.0a5b9c02f2a12p+6"
+    }
+   }
+  ],
+  "R3o-1-35188-g0-8": [
+   {
+    "a": {
+     "repr": "28.122706595425193",
+     "hex": "0x1.c1f69b30e5acep+4"
+    },
+    "b": {
+     "repr": "29.274307340633996",
+     "hex": "0x1.d463901811364p+4"
+    },
+    "desc": "Levin left-comparison region",
+    "role": "comparison half",
+    "class": "own",
+    "forced": false,
+    "made": true,
+    "returned": true,
+    "depth": 3,
+    "V": {
+     "repr": "18.52963623404503",
+     "hex": "0x1.287963d800000p+4"
+    },
+    "est_07": {
+     "repr": "19.09127803343422",
+     "hex": "0x1.3175dff487174p+4"
+    },
+    "est_over_V": 1.0303104600810928,
+    "partition": false,
+    "decision": 1,
+    "is_direct": true,
+    "lu_used": 0,
+    "n_builds": 1,
+    "builds": [
+     [
+      {
+       "repr": "19.09127803343422",
+       "hex": "0x1.3175dff487174p+4"
+      },
+      {
+       "repr": "18.52963623404503",
+       "hex": "0x1.287963d800000p+4"
+      },
+      false,
+      {
+       "repr": "21100556.340082403",
+       "hex": "0x1.41f80c570fa3fp+24"
+      }
+     ]
+    ],
+    "theta_end_max": {
+     "repr": "21100556.340082403",
+     "hex": "0x1.41f80c570fa3fp+24"
+    }
+   }
+  ]
+ }
+}

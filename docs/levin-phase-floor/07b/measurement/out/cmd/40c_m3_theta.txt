@@ -1,0 +1,24 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/m3_theta_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/m3/theta_prime_check.json v08 v09 v12 v17 v22 i3-34599-07:07 W2-0-12977-5 W2-1-2174-2 W2-2-14345-3 W2-2-34473-3 v13 v18 v23 cal_z12 v00
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-14T21:06:33Z
+# ----
+v08              tree leaf  30 end lo(w)  87 segs  max delta 5.71e-07 (first eighth 5.71e-07)  int max 2.15e-09 weighted 8.08e-16 leaf 1.34e-17  delta* 1.72e-04  ratio 3.31e-03  fit res 3.2e-08 rad  2 s
+v09              tree leaf  38 end hi  48 segs  max delta 9.30e-09 (first eighth 9.30e-09)  int max 1.91e-11 weighted 6.07e-16 leaf 6.69e-17  delta* 1.48e-08  ratio 6.31e-01  fit res 6.9e-10 rad  0 s
+v12              tree leaf  24 end lo(w)  84 segs  max delta 4.00e-07 (first eighth 4.00e-07)  int max 2.31e-10 weighted 8.38e-16 leaf 1.30e-16  delta* 5.73e-06  ratio 6.98e-02  fit res 7.4e-09 rad  1 s
+v17              tree leaf  21 end lo(w)  84 segs  max delta 2.66e-07 (first eighth 2.66e-07)  int max 1.87e-10 weighted 7.65e-16 leaf 1.28e-16  delta* 4.00e-05  ratio 6.63e-03  fit res 9.5e-09 rad  1 s
+v22              tree leaf  26 end lo(w)  22 segs  max delta 7.26e-08 (first eighth 7.26e-08)  int max 2.63e-10 weighted 4.16e-15 leaf 1.65e-15  delta* 7.93e-03  ratio 9.16e-06  fit res 2.4e-09 rad  0 s
+i3-34599-07      07   leaf   5 end hi  18 segs  max delta 2.35e-09 (first eighth 2.35e-09)  int max 1.02e-10 weighted 5.83e-13 leaf 1.88e-13  delta* 4.52e-08  ratio 5.20e-02  fit res 4.9e-10 rad  0 s
+W2-0-12977-5     tree leaf   2 end hi  32 segs  max delta 2.73e-09 (first eighth 2.73e-09)  int max 4.22e-12 weighted 1.17e-15 leaf 4.76e-17  delta* 2.46e-07  ratio 1.11e-02  fit res 2.9e-11 rad  0 s
+W2-1-2174-2      tree leaf   2 end hi  48 segs  max delta 2.35e-09 (first eighth 2.35e-09)  int max 1.02e-10 weighted 8.55e-16 leaf 4.78e-17  delta* 6.73e-08  ratio 3.49e-02  fit res 4.9e-10 rad  1 s
+W2-2-14345-3     tree leaf   5 end lo  40 segs  max delta 1.41e-09 (first eighth 2.29e-13)  int max 7.18e-13 weighted 3.01e-16 leaf 2.15e-16  delta* 6.34e-08  ratio 2.23e-02  fit res 8.0e-10 rad  0 s
+W2-2-34473-3     tree leaf  29 end lo   1 segs  max delta 1.43e-12 (first eighth 1.43e-12)  int max 2.19e-15 weighted 2.19e-15 leaf 2.19e-15  delta* -  fit res 4.1e-13 rad  0 s
+v13              tree leaf  32 end lo(w)  89 segs  max delta 1.87e-06 (first eighth 1.87e-06)  int max 3.00e-09 weighted 7.94e-16 leaf 1.87e-16  delta* 9.64e-07  ratio 1.94e+00  fit res 9.5e-08 rad  1 s
+v18              tree leaf  24 end lo(w)  89 segs  max delta 8.64e-07 (first eighth 8.64e-07)  int max 3.99e-09 weighted 8.65e-16 leaf 2.10e-16  delta* 1.30e-06  ratio 6.65e-01  fit res 9.8e-08 rad  1 s
+v23              tree leaf  31 end lo(w)  87 segs  max delta 1.31e-06 (first eighth 1.31e-06)  int max 2.42e-09 weighted 8.58e-16 leaf 2.56e-16  delta* 3.30e-07  ratio 3.97e+00  fit res 2.9e-08 rad  1 s
+cal_z12          tree leaf   9 end hi(w)  13 segs  max delta 1.40e-07 (first eighth 1.40e-07)  int max 2.70e-10 weighted 1.43e-12 leaf 2.81e-13  delta* 1.47e-07  ratio 9.51e-01  fit res 2.9e-09 rad  0 s
+v00              tree leaf   7 end hi(w)  17 segs  max delta 1.21e-07 (first eighth 1.21e-07)  int max 1.47e-10 weighted 1.93e-13 leaf 1.92e-15  delta* 2.87e-04  ratio 4.23e-04  fit res 2.2e-09 rad  0 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/m3/theta_prime_check.json caf310da3a76a73ded77914dcd6a1dc7622c1886fead6ecaaa01a7db62271368
+# ----
+# end 2026-11-14T21:06:43Z
+# exit 0

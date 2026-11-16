@@ -1,0 +1,166 @@
+--- tree/AdaptiveLevin/levin_quadrature.py
++++ ext/variants/levin_quadrature_07b_g1.py
+@@ -535,6 +535,9 @@
+ # Delta phi_w, the largest phase span of one window piece, in every phase of the basis (prompt 07
+ # section 1.2 item 3).
+ _LEVIN_WINDOW_PIECE_PHASE = 2.0 * np.pi
++_G_PHI_MAX_07B = 8.0 * np.pi  # 07b variant g: the adaptive window's cap
++_G_RATIO_07B = 2.0  # 07b variant g: (e)'s edge test, largest rate ratio across the edge's first grid spacing
++_E_RATIO_07B = _G_RATIO_07B  # 07b variant g2: (e)'s rule at the cap
+ 
+ # The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
+ # 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
+@@ -592,6 +595,8 @@
+ 
+ INTERVAL_TYPE_LEVIN = 0
+ INTERVAL_TYPE_DIRECT = 1
++_VARIANT_07B = "g1"  # levin-phase-floor 07b extension, section 2.7.2
++_MEASURE_07B = None  # 07b variant instrument: a list while set, one record per test
+ types = {0: "Levin", 1: "direct"}
+ 
+ 
+@@ -3737,7 +3742,7 @@
+     # section 1.2 item 1: each point's own window, from the phase sampled on the scan
+     phase_on_scan = {}
+ 
+-    def window_edge(phase_index, x_p, t_p, direction):
++    def window_edge(phase_index, x_p, t_p, direction, half):
+         theta = phase_fns[phase_index]
+ 
+         def g(x):
+@@ -3747,7 +3752,7 @@
+                     "levin_quadrature: a phase returned a non-numeric value while locating "
+                     "the edge of a stationary-point window"
+                 )
+-            return abs(value - t_p) - window_half_phase
++            return abs(value - t_p) - half
+ 
+         if phase_index not in phase_on_scan:
+             sampled = _sample_vectorized(
+@@ -3763,7 +3768,7 @@
+         previous = x_p
+         for j in indices:
+             x_c = float(xs[j])
+-            if not (np.abs(theta_scan[j] - t_p) >= window_half_phase):
++            if not (np.abs(theta_scan[j] - t_p) >= half):
+                 previous = x_c
+                 continue
+             g_c = g(x_c)
+@@ -3785,8 +3790,10 @@
+         t_p = float(phase_fns[p["phase"]](p["x"]))
+         p["theta"] = t_p
+         p["theta_deriv"] = rate(p["x"])
+-        left = window_edge(p["phase"], p["x"], t_p, -1)
+-        right = window_edge(p["phase"], p["x"], t_p, +1)
++        # 07b variant (g): a per-point half-width when window_half_phase is callable
++        half = window_half_phase(p) if callable(window_half_phase) else window_half_phase
++        left = window_edge(p["phase"], p["x"], t_p, -1, half)
++        right = window_edge(p["phase"], p["x"], t_p, +1, half)
+         p["own_window"] = [left, right]
+         edges_info = []
+         for x_e in (left, right):
+@@ -3906,6 +3913,93 @@
+         if leaf.region.node_error_signed is not None:
+             node_errors.append(leaf.region.node_error_signed)
+     return val, abserr_total, math.fsum(node_errors)
++
++
++def _adapt_windows_07b(location, x_span, phase_fns, rate_fns, BasisData, chebyshev_order, vectorize_cache):
++    """07b variant (g): each window's half-width doubled from _LEVIN_WINDOW_HALF_PHASE while the Levin seed leaf beside
++    it fails (e)'s edge test, up to _G_PHI_MAX_07B (make_variants_ext.py's docstring)."""
++    if location is None or not location["windows"]:
++        return location
++    base = _LEVIN_WINDOW_HALF_PHASE
++    order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
++    lo_span, hi_span = min(x_span[0], x_span[1]), max(x_span[0], x_span[1])
++    halves = {}
++
++    def half_of(p):
++        return halves.get((p["phase"], p["x"]), base)
++
++    def edge_tests(loc):
++        gaps = []
++        cursor, prev = lo_span, None
++        for wi, w in enumerate(loc["windows"]):
++            if w["lo"] > cursor:
++                gaps.append((cursor, w["lo"], prev, wi))
++            cursor = max(cursor, w["hi"])
++            prev = wi
++        if hi_span > cursor:
++            gaps.append((cursor, hi_span, prev, None))
++        tests = []
++        for g_lo, g_hi, wl, wr in gaps:
++            grid, Dmat = chebyshev_matrices((g_lo, g_hi), order)
++            phase_span = float(BasisData.build_Levin_data(grid, Dmat, need_AmatT=False, vectorize_cache={})[4])
++            levin = phase_span >= SIX_PI
++            for wi, edge_x, nxt in ((wl, g_lo, float(grid[-2])), (wr, g_hi, float(grid[1]))):
++                if wi is None:
++                    continue
++                worst, worst_k = 1.0, 0
++                for k, rate in enumerate(rate_fns):
++                    r0 = abs(float(rate(edge_x)))
++                    r1 = abs(float(rate(nxt)))
++                    q = max(r0, r1) / min(r0, r1) if min(r0, r1) > 0.0 else float("inf")
++                    if q > worst:
++                        worst, worst_k = q, k
++                tests.append({"window": wi, "x": edge_x, "gap": (g_lo, g_hi), "levin": bool(levin),
++                              "phase_span": phase_span, "rate_ratio": worst, "phase": worst_k,
++                              "spacing": abs(nxt - edge_x), "fails": bool(levin and worst > _G_RATIO_07B)})
++        return tests
++
++    n_relocations = 0
++    while True:
++        tests = edge_tests(location)
++        grow = set()
++        for t in tests:
++            if t["fails"]:
++                for k in location["windows"][t["window"]]["points"]:
++                    p = location["points"][k]
++                    if half_of(p) < _G_PHI_MAX_07B:
++                        grow.add((p["phase"], p["x"]))
++        if not grow:
++            break
++        for key in grow:
++            halves[key] = min(2.0 * halves.get(key, base), _G_PHI_MAX_07B)
++        n_relocations += 1
++        location = _locate_stationary_points(
++            x_span,
++            phase_fns,
++            rate_fns,
++            vectorize_cache,
++            window_half_phase=half_of,
++            coalescence_lambda=_LEVIN_COALESCENCE_LAMBDA,
++            piece_phase=_LEVIN_WINDOW_PIECE_PHASE,
++        )
++    location["capped_failing_edges_07b"] = frozenset(t["x"] for t in tests if t["fails"])
++    if _MEASURE_07B is not None:
++        recs = []
++        for t in tests:
++            rate = _scalar_callable(rate_fns[t["phase"]])
++            step = 1.0e-3 * t["spacing"]
++            second = _first_difference(rate, t["x"], step, lo_span, hi_span) if step > 0.0 else float("nan")
++            ell = abs(float(rate(t["x"]))) / abs(second) if second not in (0.0,) and np.isfinite(second) else float("inf")
++            recs.append({"window": t["window"], "x": t["x"], "levin": t["levin"], "phase_span": t["phase_span"],
++                         "rate_ratio": t["rate_ratio"], "spacing": t["spacing"], "ell": ell,
++                         "spacing_over_l": t["spacing"] / ell if ell > 0.0 else float("inf"), "fails": t["fails"]})
++        wins = []
++        for wi, w in enumerate(location["windows"]):
++            pts = [location["points"][k] for k in w["points"]]
++            wins.append({"lo": w["lo"], "hi": w["hi"], "half_max": max(half_of(p) for p in pts),
++                         "half_min": min(half_of(p) for p in pts), "n_pieces": len(w["cuts"]) - 1})
++        _MEASURE_07B.append({"kind": "g", "n_relocations": n_relocations, "windows": wins, "edges": recs})
++    return location
+ 
+ 
+ def _adaptive_levin(
+@@ -4214,6 +4308,10 @@
+             window_half_phase=_LEVIN_WINDOW_HALF_PHASE,
+             coalescence_lambda=_LEVIN_COALESCENCE_LAMBDA,
+             piece_phase=_LEVIN_WINDOW_PIECE_PHASE,
++        )
++        # 07b variant (g): the adaptive window
++        location = _adapt_windows_07b(
++            location, x_span, phase_fns, rate_fns, BasisData, chebyshev_order, vectorize_cache
+         )
+ 
+     # For a basis of several phases, the nodal guard tests each phase the location skipped -- since

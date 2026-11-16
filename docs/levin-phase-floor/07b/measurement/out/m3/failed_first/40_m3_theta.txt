@@ -1,0 +1,27 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/m3_theta_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/m3/theta_prime_check.json v08 v09 v12 v17 v22 i3-34599-07:07 W2-0-12977-5 W2-1-2174-2 W2-2-14345-3 W2-2-34473-3 v13 v18 v23 cal_z12 v00
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-14T21:05:39Z
+# ----
+v08              tree leaf  30 end lo(w)  87 segs  max delta 5.71e-07 (first eighth 5.71e-07)  delta* 1.72e-04  ratio 3.31e-03  fit res 3.2e-08 rad  2 s
+v09              tree leaf  38 end hi  48 segs  max delta 9.30e-09 (first eighth 9.30e-09)  delta* 1.48e-08  ratio 6.31e-01  fit res 6.9e-10 rad  0 s
+v12              tree leaf  24 end lo(w)  84 segs  max delta 4.00e-07 (first eighth 4.00e-07)  delta* 5.73e-06  ratio 6.98e-02  fit res 7.4e-09 rad  1 s
+v17              tree leaf  21 end lo(w)  84 segs  max delta 2.66e-07 (first eighth 2.66e-07)  delta* 4.00e-05  ratio 6.63e-03  fit res 9.5e-09 rad  1 s
+v22              tree leaf  26 end lo(w)  22 segs  max delta 7.26e-08 (first eighth 7.26e-08)  delta* 7.93e-03  ratio 9.16e-06  fit res 2.4e-09 rad  0 s
+i3-34599-07      07   leaf   5 end hi  18 segs  max delta 2.35e-09 (first eighth 2.35e-09)  delta* 4.52e-08  ratio 5.20e-02  fit res 4.9e-10 rad  0 s
+W2-0-12977-5     tree leaf   2 end hi  32 segs  max delta 2.73e-09 (first eighth 2.73e-09)  delta* 2.46e-07  ratio 1.11e-02  fit res 2.9e-11 rad  0 s
+W2-1-2174-2      tree leaf   2 end hi  48 segs  max delta 2.35e-09 (first eighth 2.35e-09)  delta* 6.73e-08  ratio 3.49e-02  fit res 4.9e-10 rad  0 s
+W2-2-14345-3     tree leaf   5 end lo  40 segs  max delta 1.41e-09 (first eighth 2.29e-13)  delta* 6.34e-08  ratio 2.23e-02  fit res 8.0e-10 rad  0 s
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/m3_theta_07b.py", line 169, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/m3_theta_07b.py", line 150, in main
+    "delta_max_first_eighth": max(x["delta_max"] for x in rows
+                              ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                  if (x["b"] <= lo + (hi - lo) / 8 if side == "lo" else x["a"] >= hi - (hi - lo) / 8)),
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: max() iterable argument is empty
+# ----
+# end 2026-11-14T21:05:46Z
+# exit 1

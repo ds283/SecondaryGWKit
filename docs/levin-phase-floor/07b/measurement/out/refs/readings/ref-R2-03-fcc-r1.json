@@ -1,0 +1,45 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading ref-R2-03 fcc res 1 (tools.filon_reference)",
+  "# written 2026-11-14T05:22:47Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 3cf12125cebc8336eefd67c944a7599aab694816aa615a2a7605f17502dbc127",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-03.pkl sha256 4eca4715cec196c37ce6ab6b70e46028d1f8eba8e60934e7cf5a9a0c4aa8e5bc",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "sample": "ref-R2-03",
+ "unit": "h-1e-8-2-1623",
+ "index": 11,
+ "rtol": "1e-8",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-03.pkl",
+ "pickle_sha256": "4eca4715cec196c37ce6ab6b70e46028d1f8eba8e60934e7cf5a9a0c4aa8e5bc",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py",
+ "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+ "workers": 2,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "N": 32
+ },
+ "value_hex": "-0x1.0cf10c62fed26p-45",
+ "value_30": "-2.98585151332691221340239178946e-14",
+ "imag_30": "-1.71328031039553403265438810739e-13",
+ "wall_s": 3.322507167235017,
+ "n_panels": 69,
+ "u_breaks": [],
+ "K_exact": "-230382784744076369/2147483648",
+ "K_hat": -107280344.1174684,
+ "K_lo": 6.984919309616089e-09,
+ "C_exact": "0.0",
+ "process_wall_s": 5.281494375318289,
+ "rerun": false,
+ "progress_order": null,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

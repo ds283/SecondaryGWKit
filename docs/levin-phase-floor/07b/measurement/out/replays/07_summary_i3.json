@@ -1,0 +1,30 @@
+{
+ "variant": "07",
+ "label": "i3",
+ "n": 1,
+ "n_reproduce": 1,
+ "wall_s": 2.0541481971740723,
+ "rows": {
+  "i3-34599-07": {
+   "rc": 0,
+   "reproduces_census": true,
+   "problems": [],
+   "replay": {
+    "value": "-0x1.393a3790f5b0bp-85",
+    "abserr": "0x1.288eb2e8d074bp-111",
+    "num_regions": 6,
+    "max_depth": 4,
+    "converged": true
+   },
+   "census": {
+    "value": "-0x1.393a3790f5b0bp-85",
+    "abserr": "0x1.288eb2e8d074bp-111",
+    "num_regions": 6,
+    "max_depth": 4,
+    "converged": true
+   },
+   "wall_s": 0.10281550046056509,
+   "n_windows": 0
+  }
+ }
+}

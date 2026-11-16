@@ -1,0 +1,22 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/make_calls_07b.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T14:05:27Z
+# ----
+# levin-phase-floor 07b Part A: the replay manifest
+# written 2026-11-13T14:05:32Z on mps026298.phys.susx.ac.uk
+# script make_calls_07b.py sha256 f6de06f301d5f8c7e935ae5a0af683d3b6ae6a7da85ab90a713db6aab6ae97f7
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/state/calls_07a.json sha256 dbb6f160936632c1f7c5c35096eca17ba4eacef52ff7da2878b1c2ac767a2584
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4_capture_selection.json sha256 39a19bca0f26aa402b1405d6ccb9b272440f220dbc4df20cd740fc61812040a8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/selection_07b.json sha256 4b94c1811f7b46f9f4903784ef08958b8ebcc5391f2b347045a3bc70a4f6a35d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/captures/captures_h.json sha256 1f160136460d6a9494a0591e18dd8bdd419c92fb0e346b95aac535367a577ef9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/captures_parent.json sha256 7a0010833d1ec0ade05266d8f66eedecc8ba9fe280fe24695518aebece20a9c8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/captures_h.json sha256 38bc850c6e63bcf5f720516e9a8abe4473a1a101efc272d88d8d5459c0ade845
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/checkpoint.jsonl sha256 461df2ec66969a113e9f6d590f05a4d5b300d7c1e0cb62d05c7385d23e8de56b
+Counter({'R1': 60, 'R2': 30, 'R2~o': 30, 'v4': 25, 'R3-aux': 6, 'R3-aux~o': 6, 'nowindow': 5, 'pairs': 4, 'W2': 4, 'W2~o': 4, 'R3-own': 3, 'R3-own~o': 3, 'R3-W7': 3, 'R3-W7~o': 3, 'item3': 2})
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/calls_07b.json sha256 4c3b85cc5b0b0ddacb967c675561f3f9115154d7bd2059136fa38eb656726044; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/census_wanted_07b.json sha256 33d0d89c21c25869d471ca02b30045c114d5f07d42d12c9f5f31273e0c2c7fc9
+# ----
+# end 2026-11-13T14:05:34Z
+# exit 0

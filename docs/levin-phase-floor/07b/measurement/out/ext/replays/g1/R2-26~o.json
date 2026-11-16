@@ -1,0 +1,113 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07b extension: replay of R2-26~o at g1",
+  "written": "2026-11-15T23:15:16Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/replay_ext.py",
+  "script_sha256": "b1789e509d84a1a117e7a5af24020729bdfcccbee348b4dc43616807660a3047",
+  "variant_name": "g1",
+  "module": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/variants/levin_quadrature_07b_g1.py",
+  "module_sha256": "4561826a4ec3042552d431bb58a807272afc62aa9212b36b62ceb5da1c686be0",
+  "module_sha256_now": "4561826a4ec3042552d431bb58a807272afc62aa9212b36b62ceb5da1c686be0",
+  "worker_sha256": "1eaa96573f613232f58a4874a3caf024d4408e9793d8dc0fba6dee33869e0333",
+  "capture": {
+   "set": "R2~o",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C07/inputs_C07.pkl",
+   "offset": 0,
+   "length": 3359,
+   "sha256": "c28ed4564129e489c6fefef063e8ca25e26edb8f3c6046790a214cebcaa5d676",
+   "override": {
+    "rtol": "0x1.5798ee2308c3ap-27",
+    "atol": "0x1.9f623d5a8a733p-107",
+    "from_unit": "h-1e-7-1-10739",
+    "to_unit": "h-1e-8-1-10739"
+   },
+   "census": "R2-26~o",
+   "captured_unit": "h-1e-7-1-10739"
+  },
+  "calls_manifest_sha256": "4c3b85cc5b0b0ddacb967c675561f3f9115154d7bd2059136fa38eb656726044",
+  "census_refs_sha256": "ae658a92135743daf2aa674436bb63883e13a2ecded6475c326801e9cf751ea0",
+  "variant_evidence": {
+   "name": "07b_g1",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/variants/levin_quadrature_07b_g1.py",
+   "sha256": "4561826a4ec3042552d431bb58a807272afc62aa9212b36b62ceb5da1c686be0",
+   "sha256_now": "4561826a4ec3042552d431bb58a807272afc62aa9212b36b62ceb5da1c686be0",
+   "sys_modules_is_variant": true,
+   "module_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/variants/levin_quadrature_07b_g1.py",
+   "package_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/AdaptiveLevin/__init__.py",
+   "package_attribute_is_variant": true,
+   "package_function_is_variants": true
+  },
+  "instrument": true,
+  "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]"
+ },
+ "sid": "R2-26~o",
+ "set": "R2~o",
+ "variant": "g1",
+ "replay": {
+  "value": "0x1.6f15f1aaf5166p-36",
+  "abserr": "0x1.5dddb3bde7b6cp-79",
+  "num_regions": 1,
+  "max_depth": 0,
+  "converged": true
+ },
+ "census": {
+  "value": "0x1.6f15f1aaf5166p-36",
+  "abserr": "0x1.5dddb3bde7b6cp-79",
+  "num_regions": 1,
+  "max_depth": 0,
+  "converged": true
+ },
+ "census_which": "h",
+ "census_unit": "h-1e-8-1-10739",
+ "region_keys_differing": [],
+ "guard_keys_differing": [],
+ "problems": [],
+ "reproduces_census": true,
+ "wall_s": 0.043115041218698025,
+ "atol": "0x1.9f623d5a8a733p-107",
+ "rtol": "0x1.5798ee2308c3ap-27",
+ "x_span": [
+  "-0x1.be37b4d391944p+3",
+  "-0x1.513e576626175p+3"
+ ],
+ "n_windows": 0,
+ "n_windows_stopped": 0,
+ "windows": [],
+ "stationary_points": [],
+ "num_window_pieces": 0,
+ "num_guarded_regions": 0,
+ "num_untrusted_regions": 0,
+ "num_subregion_solves": 7,
+ "regions_sha256": "9d1664e8b112fa09ef3e876602c065f7791f1913feec2359910f25ec9bfa0c23",
+ "leaves": [
+  {
+   "start": "-0x1.be37b4d391944p+3",
+   "end": "-0x1.513e576626175p+3",
+   "depth": 0,
+   "type": "Levin",
+   "value": "0x1.6f15f1aaf5166p-36",
+   "value_own": "0x1.6f15f1aaf51b8p-36",
+   "value_kind": "quarters",
+   "budget_err": "0x1.5dddb3bde7b6cp-79",
+   "total_err": "0x1.5dddb3bde7b6cp-79",
+   "own_err": "0x1.5dddb3bde7b6cp-79",
+   "abserr": "0x1.d400000000000p-82",
+   "phase_err": "0x1.5dddb3bde7b6cp-79",
+   "abserr_truncation": "0x0.0p+0",
+   "node_error_signed": null,
+   "delta1": "0x1.d400000000000p-82",
+   "delta2": "0x1.1800000000000p-83",
+   "convergence_ratio": "0x1.3253253253253p-2",
+   "declared_resolution": "0x1.4de0c7ce0c7cep-81",
+   "trusted": true,
+   "window": false,
+   "guarded": false,
+   "phase_limited": false,
+   "touches_window": [],
+   "edge_lo_is": [],
+   "edge_hi_is": []
+  }
+ ],
+ "ray_initialized": false
+}

@@ -1,0 +1,92 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/refs_projection_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/refs_projection_noA.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T16:07:12Z
+# ----
+# levin-phase-floor 07b Part A: section 2.4's references, projected
+# written 2026-11-13T16:07:38Z on mps026298.phys.susx.ac.uk
+# script refs_projection_07b.py sha256 25b7dfa6793d22a5b80102215bb5f991c069df50957493ab433f46b086ce6797
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/refs_projection.json sha256 0512daddfc3bb920cbb4d0d0515c8b735742c631bb69b76b56b2fd350af15a1b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/inputs.json sha256 92a12c37deacd1bd03f40b621889c95ab2931ca81d9643d4eecce946c0933333
+ref-R1-x007                  B R1       qawo_r1 24 qawo_r2 83 fcc_r1 432 fcc_r2 1608 fccsplit_r1 58 fccsplit_r2 232 | QAWO+FCC total 397 s
+ref-R1-x015                  B R1       qawo_r1 18628 qawo_r2 83477 fcc_r1 976 fcc_r2 3297 fccsplit_r1 84 fccsplit_r2 337 | FCC only total 421 s
+ref-R1-x019                  B R1       qawo_r1 8816 qawo_r2 39490 fcc_r1 927 fcc_r2 3287 fccsplit_r1 78 fccsplit_r2 313 | FCC only total 391 s
+ref-R1-x027                  B R1       qawo_r1 215 qawo_r2 930 fcc_r1 441 fcc_r2 1640 fccsplit_r1 77 fccsplit_r2 307 | QAWO+FCC total 1528 s
+ref-R1-x029                  B R1       qawo_r1 207 qawo_r2 894 fcc_r1 1368 fcc_r2 5076 fccsplit_r1 79 fccsplit_r2 315 | QAWO+FCC total 1495 s
+ref-R1-x033                  B R1       qawo_r1 234 qawo_r2 1019 fcc_r1 879 fcc_r2 3263 fccsplit_r1 64 fccsplit_r2 255 | QAWO+FCC total 1572 s
+ref-R1-x044                  B R1       qawo_r1 6538 qawo_r2 29279 fcc_r1 915 fcc_r2 3284 fccsplit_r1 76 fccsplit_r2 306 | FCC only total 382 s
+ref-R1-x098                  B R1       qawo_r1 224 qawo_r2 968 fcc_r1 1369 fcc_r2 5080 fccsplit_r1 81 fccsplit_r2 326 | QAWO+FCC total 1598 s
+ref-R1-x109                  B R1       qawo_r1 667 qawo_r2 2964 fcc_r1 4227 fcc_r2 15659 fccsplit_r1 85 fccsplit_r2 340 | FCC only total 425 s
+ref-R1-x141                  B R1       qawo_r1 466 qawo_r2 2066 fcc_r1 4223 fcc_r2 15648 fccsplit_r1 78 fccsplit_r2 312 | FCC only total 391 s
+ref-R1-x160                  B R1       qawo_r1 690 qawo_r2 3057 fcc_r1 1319 fcc_r2 4885 fccsplit_r1 84 fccsplit_r2 336 | FCC only total 420 s
+ref-R1-x165                  B R1       qawo_r1 153 qawo_r2 663 fcc_r1 2701 fcc_r2 10013 fccsplit_r1 64 fccsplit_r2 255 | QAWO+FCC total 1135 s
+ref-R1-x174                  B R1       qawo_r1 313 qawo_r2 1384 fcc_r1 4220 fcc_r2 15638 fccsplit_r1 72 fccsplit_r2 289 | QAWO+FCC total 2057 s
+ref-R1-x185                  B R1       qawo_r1 37 qawo_r2 144 fcc_r1 2699 fcc_r2 10007 fccsplit_r1 60 fccsplit_r2 242 | QAWO+FCC total 482 s
+ref-R1-x195                  B R1       qawo_r1 323 qawo_r2 1427 fcc_r1 4221 fcc_r2 15639 fccsplit_r1 73 fccsplit_r2 292 | QAWO+FCC total 2114 s
+ref-R1-x196                  B R1       qawo_r1 25630 qawo_r2 115436 fcc_r1 124427 fcc_r2 460505 fccsplit_r1 86 fccsplit_r2 345 | FCC only total 431 s
+ref-R1-x207                  B R1       qawo_r1 9172 qawo_r2 41112 fcc_r1 8468 fcc_r2 31216 fccsplit_r1 75 fccsplit_r2 300 | FCC only total 375 s
+ref-R1-x218                  B R1       qawo_r1 315 qawo_r2 1397 fcc_r1 4050 fcc_r2 15008 fccsplit_r1 70 fccsplit_r2 282 | QAWO+FCC total 2065 s
+ref-R1-x241                  B R1       qawo_r1 1024 qawo_r2 4606 fcc_r1 13183 fcc_r2 48831 fccsplit_r1 77 fccsplit_r2 309 | FCC only total 387 s
+ref-R1-x247                  B R1       qawo_r1 266 qawo_r2 1176 fcc_r1 4050 fcc_r2 15007 fccsplit_r1 70 fccsplit_r2 278 | QAWO+FCC total 1790 s
+ref-R1-x258                  B R1       qawo_r1 99543 qawo_r2 446270 fcc_r1 8906 fcc_r2 31234 fccsplit_r1 86 fccsplit_r2 345 | FCC only total 431 s
+ref-R1-x285                  B R1       qawo_r1 14560 qawo_r2 65266 fcc_r1 8494 fcc_r2 31218 fccsplit_r1 77 fccsplit_r2 307 | FCC only total 384 s
+ref-R1-x295                  B R1       qawo_r1 2321 qawo_r2 10367 fcc_r1 131 fcc_r2 457 fccsplit_r1 81 fccsplit_r2 326 | FCC only total 407 s
+ref-R1-x310                  B R1       qawo_r1 678 qawo_r2 3063 fcc_r1 12649 fcc_r2 46855 fccsplit_r1 72 fccsplit_r2 289 | FCC only total 361 s
+ref-R1-x311                  B R1       qawo_r1 959 qawo_r2 4323 fcc_r1 12651 fcc_r2 46858 fccsplit_r1 74 fccsplit_r2 296 | FCC only total 370 s
+ref-R1-x317                  B R1       qawo_r1 7483 qawo_r2 33506 fcc_r1 343 fcc_r2 1151 fccsplit_r1 87 fccsplit_r2 347 | FCC only total 433 s
+ref-R1-x335                  B R1       qawo_r1 44 qawo_r2 165 fcc_r1 452 fcc_r2 1684 fccsplit_r1 65 fccsplit_r2 259 | QAWO+FCC total 532 s
+ref-R1-x353                  B R1       qawo_r1 6875 qawo_r2 30784 fcc_r1 339 fcc_r2 1145 fccsplit_r1 83 fccsplit_r2 333 | FCC only total 416 s
+ref-R1-x390                  B R1       qawo_r1 80 qawo_r2 325 fcc_r1 161 fcc_r2 605 fccsplit_r1 74 fccsplit_r2 295 | QAWO+FCC total 774 s
+ref-R1-x392                  B R1       qawo_r1 180 qawo_r2 766 fcc_r1 558 fcc_r2 2075 fccsplit_r1 83 fccsplit_r2 332 | QAWO+FCC total 1361 s
+ref-R2-02                    B R2       qawo_r1 6 qawo_r2 12 fcc_r1 12 fcc_r2 48 fccsplit_r1 28 fccsplit_r2 114 | QAWO+FCC total 160 s
+ref-R2-08                    B R2       qawo_r1 21 qawo_r2 71 fcc_r1 19 fcc_r2 77 fccsplit_r1 46 fccsplit_r2 185 | QAWO+FCC total 323 s
+ref-R2-12                    B R2       qawo_r1 4 qawo_r2 8 fcc_r1 8 fcc_r2 30 fccsplit_r1 18 fccsplit_r2 73 | QAWO+FCC total 103 s
+ref-R2-16                    B R2       qawo_r1 5 qawo_r2 10 fcc_r1 10 fcc_r2 40 fccsplit_r1 24 fccsplit_r2 95 | QAWO+FCC total 134 s
+ref-R2-20                    B R2       qawo_r1 16 qawo_r2 50 fcc_r1 18 fcc_r2 72 fccsplit_r1 43 fccsplit_r2 172 | QAWO+FCC total 281 s
+ref-R2-22                    B R2       qawo_r1 9 qawo_r2 21 fcc_r1 16 fcc_r2 65 fccsplit_r1 39 fccsplit_r2 156 | QAWO+FCC total 226 s
+ref-R2-25                    B R2       qawo_r1 7 qawo_r2 15 fcc_r1 15 fcc_r2 59 fccsplit_r1 35 fccsplit_r2 142 | QAWO+FCC total 200 s
+ref-R2-28                    B R2       qawo_r1 2021 qawo_r2 9034 fcc_r1 34 fcc_r2 98 fccsplit_r1 59 fccsplit_r2 235 | FCC only total 294 s
+ref-R2-29                    B R2       qawo_r1 8 qawo_r2 26 fcc_r1 9 fcc_r2 37 fccsplit_r1 22 fccsplit_r2 90 | QAWO+FCC total 146 s
+ref-R3a-3-13508-g2           B R3-aux   qawo_r1 12 qawo_r2 27 fcc_r1 21 fcc_r2 84 fccsplit_r1 50 fccsplit_r2 201 | QAWO+FCC total 290 s
+ref-R3a-3-39138-g2           B R3-aux   qawo_r1 102 qawo_r2 415 fcc_r1 35 fcc_r2 139 fccsplit_r1 83 fccsplit_r2 332 | QAWO+FCC total 932 s
+ref-R3a-3-39138-g3           B R3-aux   qawo_r1 102 qawo_r2 415 fcc_r1 35 fcc_r2 139 fccsplit_r1 83 fccsplit_r2 332 | QAWO+FCC total 932 s
+ref-R3o-1-35188-g0-8         B R3-own   qawo_r1 6 qawo_r2 12 fcc_r1 12 fcc_r2 48 fccsplit_r1 28 fccsplit_r2 114 | QAWO+FCC total 160 s
+ref-R3p-3-14501              B R3-pair  qawo_r1 179 qawo_r2 764 fcc_r1 557 fcc_r2 2073 fccsplit_r1 82 fccsplit_r2 329 | QAWO+FCC total 1354 s
+ref-R3p-3-35006              B R3-pair  qawo_r1 175 qawo_r2 748 fcc_r1 556 fcc_r2 2066 fccsplit_r1 78 fccsplit_r2 312 | QAWO+FCC total 1313 s
+ref-R3w-0-2006-0             B R3-W7    qawo_r1 10 qawo_r2 20 fcc_r1 19 fcc_r2 78 fccsplit_r1 47 fccsplit_r2 187 | QAWO+FCC total 263 s
+ref-R3w-0-33950-0            B R3-W7    qawo_r1 10 qawo_r2 20 fcc_r1 19 fcc_r2 78 fccsplit_r1 47 fccsplit_r2 187 | QAWO+FCC total 263 s
+ref-R3w-3-13615-0            B R3-W7    qawo_r1 10 qawo_r2 22 fcc_r1 21 fcc_r2 84 fccsplit_r1 50 fccsplit_r2 201 | QAWO+FCC total 283 s
+ref-R2-00                    A unprojected: {'panels': {'qawo_r1': 28, 'qawo_r2': 55, 'fcc_r1': 28, 'fcc_r2': 41}, 'K': 140826986.5566745, 'u_breaks': 0}
+ref-R2-01                    A unprojected: {'panels': {'qawo_r1': 55, 'qawo_r2': 269, 'fcc_r1': 36, 'fcc_r2': 54}, 'K': 4555028.124461124, 'u_breaks': 6}
+ref-R2-03                    A unprojected: {'panels': {'qawo_r1': 207242, 'qawo_r2': 1657675, 'fcc_r1': 69, 'fcc_r2': 101}, 'K': -107280344.1174684, 'u_breaks': 0}
+ref-R2-04                    A unprojected: {'panels': {'qawo_r1': 647765, 'qawo_r2': 5181862, 'fcc_r1': 69, 'fcc_r2': 100}, 'K': 148986008.142224, 'u_breaks': 9}
+ref-R2-05                    A unprojected: {'panels': {'qawo_r1': 4523, 'qawo_r2': 35884, 'fcc_r1': 69, 'fcc_r2': 101}, 'K': 2316179.5158031275, 'u_breaks': 0}
+ref-R2-06                    A unprojected: {'panels': {'qawo_r1': 30, 'qawo_r2': 65, 'fcc_r1': 30, 'fcc_r2': 45}, 'K': 313856.84721559234, 'u_breaks': 0}
+ref-R2-07                    A unprojected: {'panels': {'qawo_r1': 31, 'qawo_r2': 62, 'fcc_r1': 31, 'fcc_r2': 46}, 'K': 100000.0, 'u_breaks': 0}
+ref-R2-09                    A unprojected: {'panels': {'qawo_r1': 729939, 'qawo_r2': 5839181, 'fcc_r1': 82, 'fcc_r2': 120}, 'K': 313856.84721559234, 'u_breaks': 0}
+ref-R2-10                    A unprojected: {'panels': {'qawo_r1': 21, 'qawo_r2': 42, 'fcc_r1': 21, 'fcc_r2': 31}, 'K': 1364433.60995035, 'u_breaks': 0}
+ref-R2-11                    A unprojected: {'panels': {'qawo_r1': 127480, 'qawo_r2': 1019499, 'fcc_r1': 81, 'fcc_r2': 119}, 'K': 3091682.0425413917, 'u_breaks': 0}
+ref-R2-13                    A unprojected: {'panels': {'qawo_r1': 166689, 'qawo_r2': 1333267, 'fcc_r1': 63, 'fcc_r2': 93}, 'K': 4043427.948394169, 'u_breaks': 8}
+ref-R2-14                    A unprojected: {'panels': {'qawo_r1': 33, 'qawo_r2': 80, 'fcc_r1': 33, 'fcc_r2': 48}, 'K': 5445390.854181081, 'u_breaks': 0}
+ref-R2-15                    A unprojected: {'panels': {'qawo_r1': 259308, 'qawo_r2': 2074206, 'fcc_r1': 69, 'fcc_r2': 102}, 'K': 12690575.47826402, 'u_breaks': 0}
+ref-R2-17                    A unprojected: {'panels': {'qawo_r1': 408, 'qawo_r2': 3042, 'fcc_r1': 49, 'fcc_r2': 73}, 'K': -250825182.99204648, 'u_breaks': 6}
+ref-R2-18                    A unprojected: {'panels': {'qawo_r1': 57976, 'qawo_r2': 463507, 'fcc_r1': 72, 'fcc_r2': 106}, 'K': 4669888.327442816, 'u_breaks': 0}
+ref-R2-19                    A unprojected: {'panels': {'qawo_r1': 123405372, 'qawo_r2': 987242561, 'fcc_r1': 103, 'fcc_r2': 151}, 'K': 46001258.251062125, 'u_breaks': 0}
+ref-R2-21                    A unprojected: {'panels': {'qawo_r1': 28, 'qawo_r2': 59, 'fcc_r1': 28, 'fcc_r2': 42}, 'K': 646410161.5137757, 'u_breaks': 8}
+ref-R2-23                    A unprojected: {'panels': {'qawo_r1': 7, 'qawo_r2': 13, 'fcc_r1': 7, 'fcc_r2': 10}, 'K': 3883823.766235601, 'u_breaks': 3}
+ref-R2-24                    A unprojected: {'panels': {'qawo_r1': 15, 'qawo_r2': 29, 'fcc_r1': 15, 'fcc_r2': 21}, 'K': 100000.0, 'u_breaks': 0}
+ref-R2-26                    A unprojected: {'panels': {'qawo_r1': 14, 'qawo_r2': 28, 'fcc_r1': 14, 'fcc_r2': 21}, 'K': 985061.2054411147, 'u_breaks': 0}
+ref-R2-27                    A unprojected: {'panels': {'qawo_r1': 5, 'qawo_r2': 9, 'fcc_r1': 5, 'fcc_r2': 7}, 'K': 150713256.57481503, 'u_breaks': 0}
+ref-R3a-0-33666-a13          A unprojected: {'panels': {'qawo_r1': 17, 'qawo_r2': 33, 'fcc_r1': 17, 'fcc_r2': 25}, 'K': 12690575.47826402, 'u_breaks': 0}
+ref-R3a-2-21486-a9           A unprojected: {'panels': {'qawo_r1': 16, 'qawo_r2': 32, 'fcc_r1': 16, 'fcc_r2': 24}, 'K': 128579902.70262232, 'u_breaks': 0}
+ref-R3a-3-843-a5             A unprojected: {'panels': {'qawo_r1': 4, 'qawo_r2': 7, 'fcc_r1': 4, 'fcc_r2': 5}, 'K': 4158898.0022320943, 'u_breaks': 0}
+ref-R3o-2-21454-a3-7         A unprojected: {'panels': {'qawo_r1': 11, 'qawo_r2': 22, 'fcc_r1': 11, 'fcc_r2': 16}, 'K': 14296267.66121721, 'u_breaks': 0}
+ref-R3o-3-1011-a18-7         A unprojected: {'panels': {'qawo_r1': 13, 'qawo_r2': 25, 'fcc_r1': 13, 'fcc_r2': 19}, 'K': 100000.0, 'u_breaks': 6}
+by set (s, with margin): {'R1': 25324, 'R2': 1867, 'R3-aux': 2154, 'R3-own': 160, 'R3-pair': 2668, 'R3-W7': 809}
+projected 48 of 74 calls; total with margin 32982 s = 9.16 h
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/refs_projection_noA.json sha256 940482a21470fa954691a5e611b2a79c0d50aec29522472146af4573e59b355c
+# ----
+# end 2026-11-13T16:07:39Z
+# exit 0

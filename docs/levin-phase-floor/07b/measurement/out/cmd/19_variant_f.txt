@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/make_variants_07b.py f
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T14:29:37Z
+# ----
+f e9160f8a3cb175cf1a3f0e3169df23a49d611e03ac5d76d9ad9cf489df412d8d diff 73 lines
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/variants/variants.json dfaf04a863112b5cbf492133135851635606f5d4e127b36f1bb217be2ff6f444
+# ----
+# end 2026-11-13T14:29:37Z
+# exit 0

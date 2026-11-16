@@ -1,0 +1,11 @@
+{
+ "written": "2026-11-13T13:52:12Z",
+ "by": "07b Part A measuring agent, before any draw",
+ "generator": "numpy.random.default_rng(seed) (PCG64), numpy as installed in /Users/ds283/Documents/Code/SecondaryGWKit/venv",
+ "seeds": {
+  "R1_class_c_within_strata": 710701,
+  "R2_whole_census": 710702,
+  "R3_own_route_changes": 710703
+ },
+ "basis": "fixed integers chosen before any population was listed; each draw uses its own generator, so one draw does not depend on another"
+}

@@ -1,0 +1,131 @@
+--- tree/AdaptiveLevin/levin_quadrature.py
++++ ext/variants/levin_quadrature_07b_i.py
+@@ -535,6 +535,7 @@
+ # Delta phi_w, the largest phase span of one window piece, in every phase of the basis (prompt 07
+ # section 1.2 item 3).
+ _LEVIN_WINDOW_PIECE_PHASE = 2.0 * np.pi
++_F_RANGE_07B = 10.0  # 07b variant f: largest rate range over a trusted Levin leaf's nodes
+ 
+ # The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
+ # 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
+@@ -592,6 +593,8 @@
+ 
+ INTERVAL_TYPE_LEVIN = 0
+ INTERVAL_TYPE_DIRECT = 1
++_VARIANT_07B = "i"  # levin-phase-floor 07b extension, section 2.7.2
++_MEASURE_07B = None  # 07b variant instrument: a list while set, one record per test
+ types = {0: "Levin", 1: "direct"}
+ 
+ 
+@@ -4226,6 +4229,10 @@
+         )
+ 
+     num_evaluations = 0
++    # 07b variant: the window edges (lo and hi of each merged window), for the added trust test
++    _window_edges_07b = frozenset(
++        float(v) for w in (location["windows"] if location is not None else []) for v in (w["lo"], w["hi"])
++    )
+ 
+     num_SVD_errors = 0
+     num_order_changes = 0
+@@ -4642,6 +4649,23 @@
+             force_direct=leaf.forced_direct,
+         )
+ 
++    def _variant_test_07b(leaf, ratio, delta1, delta2, residual, nu, quarters_sum, gc):
++        # 07b variant (f): the rate's range over the leaf's own nodes
++        a = leaf.start
++        b = leaf.end
++        lo_e, hi_e = min(a, b), max(a, b)
++        grid, _ = chebyshev_matrices((lo_e, hi_e), max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER))
++        worst = 1.0
++        for rate in (rate_fns or []):
++            vals = np.abs(np.array([float(rate(x)) for x in grid]))
++            q = float(np.max(vals) / np.min(vals)) if np.min(vals) > 0.0 else float("inf")
++            worst = max(worst, q)
++        ok = worst <= _F_RANGE_07B
++        if _MEASURE_07B is not None:
++            _MEASURE_07B.append({"kind": "f", "start": a, "end": b, "depth": leaf.depth, "rate_range": worst,
++                                 "trusted": ok})
++        return ok, ratio
++
+     def _check_leaf(leaf: _levin_leaf) -> None:
+         """
+         The trust check one level down (prompts/levin-phase-floor/06c-global-error-control.md,
+@@ -4716,6 +4740,19 @@
+         trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
+             ratio < 1.0 and delta1 <= noise_yardstick
+         )
++        # 07b variant: the added trust test for every Levin leaf
++        if (
++            trusted
++            and not leaf.is_direct
++        ):
++            trusted, ratio = _variant_test_07b(
++                leaf, ratio, delta1, delta2, residual, noise_yardstick, quarters_sum,
++                ((LL, LR), (RL, RR)),
++            )
++            if not trusted and leaf.seq not in _chase_group_07b:
++                # 07b variant (i): the untrusted leaf's subtree is counted by 07a's iroff1 rule, as a window is
++                _chase_group_07b[leaf.seq] = len(_chase_counts_07b)
++                _chase_counts_07b[_chase_group_07b[leaf.seq]] = 0
+         _remove_error(leaf)
+         region._delta1 = delta1
+         region._delta2 = delta2
+@@ -4760,6 +4797,10 @@
+     # with what was true of their leaves when they stopped (reported in "stationary_windows").
+     window_counts = {}
+     windows_stopped = {}
++    # 07b variant (i): (f)-untrusted subtrees (leaf seq -> group), their iroff1 counts, the groups stopped
++    _chase_group_07b = {}
++    _chase_counts_07b = {}
++    _chase_stopped_07b = set()
+ 
+     def _floor_limit_stopped_window_leaf(leaf: _levin_leaf) -> None:
+         """
+@@ -5086,6 +5127,29 @@
+ 
+         num_splits += 1
+ 
++        # 07b variant (i): count this bisection against its (f)-untrusted subtree by 07a's rule
++        stop_chase_07b = None
++        group_07b = _chase_group_07b.pop(leaf.seq, None)
++        if group_07b is not None:
++            _chase_group_07b[left.seq] = group_07b
++            _chase_group_07b[right.seq] = group_07b
++            if _window_bisection_counts(
++                region.value_own,
++                left.region.value_own + right.region.value_own,
++                _own_error(region),
++                _own_error(left.region),
++                _own_error(right.region),
++                _cc_leaf_unresolved(left.region.abserr, left.region.resasc),
++                _cc_leaf_unresolved(right.region.abserr, right.region.resasc),
++                rtol,
++            ):
++                _chase_counts_07b[group_07b] += 1
++                if (
++                    _chase_counts_07b[group_07b] >= _LEVIN_WINDOW_IROFF1_LIMIT
++                    and group_07b not in _chase_stopped_07b
++                ):
++                    stop_chase_07b = group_07b
++
+         # The window's stopping rule (prompt 07 section 1.3; its count dqage's since prompt 07a
+         # section 1.2): count this bisection against its window if neither half's estimate is
+         # unresolved (dqage's skip), the halves change the value by at most min(1e-5, rtol)
+@@ -5131,6 +5195,15 @@
+         _add_leaf(right)
+         if stop_window is not None:
+             _stop_window(stop_window)
++        if stop_chase_07b is not None:  # 07b variant (i): the subtree stopped as a window is
++            _chase_stopped_07b.add(stop_chase_07b)
++            members_07b = [m for m in leaves.values() if _chase_group_07b.get(m.seq) == stop_chase_07b]
++            if _MEASURE_07B is not None:
++                _MEASURE_07B.append({"kind": "i_stop", "group": stop_chase_07b, "split": num_splits,
++                                     "members": len(members_07b),
++                                     "max_depth": max(m.depth for m in members_07b)})
++            for member in members_07b:
++                _floor_limit_stopped_window_leaf(member)
+ 
+     leaves_ascending = _leaves_ascending()
+     used_regions = [leaf.region for leaf in leaves_ascending]

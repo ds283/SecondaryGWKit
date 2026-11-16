@@ -1,0 +1,97 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/select_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/selection_07b.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T13:52:57Z
+# ----
+# levin-phase-floor 07b Part A: section 2.4's reference calls, selected
+# written 2026-11-13T13:53:03Z on mps026298.phys.susx.ac.uk
+# script select_07b.py sha256 91593acdccc5d13bb407d6bc19a9823c7a4af152b41699ffbc97334a94bdb213
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/seeds_07b.json sha256 6d99b42efba57fc3b72b4cc6a872d63371220cfd874657046ac4c6aee6ed24fe
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck_capture_selection.json sha256 b7e3d134703be8376dd69a3d17637ca417d8c298269733c805a1ea7eda322802
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/stop3/compare_census_calls.calls.jsonl sha256 72e929cf806c9797a0cf6bb78b06fc2c86fc5d0cc18d70dca0c98e4d26ff9a1f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/scores/moves_beyond.json sha256 7130243f68903fb783d51f3fe69daa09928a991a8661050a03958099cc7c7f1b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/scores/w7_detail.json sha256 53093decfddd8e6f490689165e569450b129cb858667c0b3a2bc74113a9ad284
+R1 allocation: {"low/0:101": {"n_rows": 38, "quota": 3, "share": 2.878787878787879}, "low/0:202": {"n_rows": 18, "quota": 2, "share": 1.3636363636363635}, "low/1:102": {"n_rows": 38, "quota": 3, "share": 2.878787878787879}, "low/1:301": {"n_rows": 16, "quota": 1, "share": 1.2121212121212122}, "low/2:2": {"n_rows": 30, "quota": 2, "share": 2.272727272727273}, "low/2:302": {"n_rows": 16, "quota": 1, "share": 1.2121212121212122}, "low/3:1": {"n_rows": 30, "quota": 2, "share": 2.272727272727273}, "low/3:201": {"n_rows": 24, "quota": 2, "share": 1.8181818181818181}, "mid/0:101": {"n_rows": 16, "quota": 1, "share": 1.2121212121212122}, "mid/0:202": {"n_rows": 30, "quota": 2, "share": 2.272727272727273}, "mid/1:102": {"n_rows": 22, "quota": 2, "share": 1.6666666666666667}, "mid/1:301": {"n_rows": 22, "quota": 2, "share": 1.6666666666666667}, "mid/2:2": {"n_rows": 31, "quota": 2, "share": 2.3484848484848486}, "mid/2:302": {"n_rows": 23, "quota": 2, "share": 1.7424242424242424}, "mid/3:1": {"n_rows": 13, "quota": 1, "share": 0.9848484848484849}, "mid/3:201": {"n_rows": 29, "quota": 2, "share": 2.196969696969697}}
+R2 population 289482 ; own population 1323
+R1-x027                      h-1e-8-0-14325     group    #1  low   0:101  k=3.14e+05 class window_both conv True regions 78 | 1e+10, 0.30208), regime Gqr, group G+q+r
+R1-x029                      h-1e-8-0-14386     group    #1  low   0:101  k=3.14e+05 class window_both conv True regions 146 | 1e+10, 0.52504), regime Gqr, group G+q+r
+R1-x098                      h-1e-8-0-38990     group    #1  low   0:101  k=3.14e+05 class window_both conv True regions 102 | 1e+10, 0.22914), regime Gqr, group G+q+r
+R1-x015                      h-1e-8-0-14199     group    #1  low   0:202  k=3.05e+07 class window_both conv True regions 28 | 9e+11, 0.91255), regime Gqr, group G+q+r
+R1-x019                      h-1e-8-0-14299     group    #1  low   0:202  k=3.05e+07 class window_both conv True regions 25 | 69e+11, 6.3166), regime Gqr, group G+q+r
+R1-x109                      h-1e-8-1-14464     group    #1  low   1:102  k=9.85e+05 class window_both conv True regions 62 | 1e+11, 0.22914), regime Gqr, group G+q+r
+R1-x141                      h-1e-8-1-2176      group    #1  low   1:102  k=9.85e+05 class window_both conv True regions 99 | 721e+11, 2.091), regime Gqr, group G+q+r
+R1-x160                      h-1e-8-1-2362      group    #1  low   1:102  k=9.85e+05 class window_both conv True regions 135 | .2861e+10, 0.1), regime Gqr, group G+q+r
+R1-x196                      h-1e-8-1-38833     group    #1  low   1:301  k=9.56e+07 class window_both conv True regions 64 | 21e+12, 4.7913), regime Gqr, group G+q+r
+R1-x241                      h-1e-8-2-34711     group    #1  low   2:2    k=3.09e+06 class window_both conv True regions 30 | 69e+11, 8.3275), regime Gqr, group G+q+r
+R1-x295                      h-1e-8-2-39035     group    #1  low   2:2    k=3.09e+06 class window_both conv True regions 110 | 1e+10, 0.22914), regime Gqr, group G+q+r
+R1-x258                      h-1e-8-2-34872     group    #1  low   2:302  k=3e+08 class window_both conv True regions 35 | 21e+12, 4.7913), regime Gqr, group G+q+r
+R1-x390                      h-1e-8-3-39133     group    #1  low   3:1    k=1e+05 class window_both conv True regions 120 | 6e+09, 0.22914), regime Gqr, group G+q+r
+R1-x392                      h-1e-8-3-39138     group    #1  low   3:1    k=1e+05 class window_both conv True regions 60 | 1e+10, 0.13184), regime Gqr, group G+q+r
+R1-x317                      h-1e-8-3-14592     group    #1  low   3:201  k=9.7e+06 class window_both conv True regions 95 | 1e+11, 0.13184), regime Gqr, group G+q+r
+R1-x353                      h-1e-8-3-34995     group    #1  low   3:201  k=9.7e+06 class window_both conv True regions 169 | 1e+11, 0.39825), regime Gqr, group G+q+r
+R1-x007                      h-1e-8-0-13952     group    #1  mid   0:101  k=3.14e+05 class window_both conv True regions 99 | 11e+10, 132.08), regime Gqr, group G+q+r
+R1-x033                      h-1e-8-0-1777      group    #1  mid   0:202  k=3.05e+07 class window_both conv True regions 35 | 69e+11, 693.47), regime Gqr, group G+q+r
+R1-x044                      h-1e-8-0-1942      group    #1  mid   0:202  k=3.05e+07 class window_both conv True regions 30 | 69e+11, 10.979), regime Gqr, group G+q+r
+R1-x174                      h-1e-8-1-34641     group    #1  mid   1:102  k=9.85e+05 class window_both conv True regions 211 | 21e+11, 14.474), regime Gqr, group G+q+r
+R1-x195                      h-1e-8-1-38145     group    #1  mid   1:102  k=9.85e+05 class window_both conv True regions 32 | 21e+11, 10.979), regime Gqr, group G+q+r
+R1-x165                      h-1e-8-1-34528     group    #1  mid   1:301  k=9.56e+07 class window_both conv True regions 23 | 51e+12, 2094.9), regime Gqr, group G+q+r
+R1-x185                      h-1e-8-1-35423     group    #1  mid   1:301  k=9.56e+07 class window_both conv True regions 31 | 51e+12, 6328.3), regime Gqr, group G+q+r
+R1-x218                      h-1e-8-2-2088      group    #1  mid   2:2    k=3.09e+06 class window_both conv True regions 34 | 21e+11, 25.156), regime Gqr, group G+q+r
+R1-x247                      h-1e-8-2-34787     group    #1  mid   2:2    k=3.09e+06 class window_both conv True regions 26 | 21e+11, 33.165), regime Gqr, group G+q+r
+R1-x207                      h-1e-8-2-14011     group    #1  mid   2:302  k=3e+08 class window_both conv True regions 35 | 21e+12, 174.13), regime Gqr, group G+q+r
+R1-x285                      h-1e-8-2-37724     group    #1  mid   2:302  k=3e+08 class window_both conv True regions 31 | 21e+12, 100.19), regime Gqr, group G+q+r
+R1-x335                      h-1e-8-3-34806     group    #1  mid   3:1    k=1e+05 class window_both conv True regions 96 | 11e+10, 14.474), regime Gqr, group G+q+r
+R1-x310                      h-1e-8-3-13934     group    #1  mid   3:201  k=9.7e+06 class window_both conv True regions 35 | 69e+11, 43.723), regime Gqr, group G+q+r
+R1-x311                      h-1e-8-3-14093     group    #1  mid   3:201  k=9.7e+06 class window_both conv True regions 31 | 69e+11, 25.156), regime Gqr, group G+q+r
+R2-00                        h-1e-8-0-33719     analytic #6  seam  0:202  k=3.05e+07 class aux_only  conv True regions 1 | analytic Y1
+R2-01                        h-1e-7-1-11202     analytic #14 seam  1:102  k=9.85e+05 class untouched conv True regions 1 | analytic Y1
+R2-02                        h-1e-8-1-35412     group    #0  seam  1:301  k=9.56e+07 class own       conv True regions 6 | 6391e+16, 1.6351e+12), regime G, group G
+R2-03                        h-1e-8-2-1623      analytic #11 mid   2:2    k=3.09e+06 class untouched conv True regions 5 | analytic J4
+R2-04                        h-1e-8-1-35504     analytic #20 mid   1:301  k=9.56e+07 class untouched conv True regions 4 | analytic Y3
+R2-05                        h-1e-7-3-34277     analytic #14 mid   3:201  k=9.7e+06 class untouched conv True regions 10 | analytic Y4
+R2-06                        h-1e-8-0-12590     analytic #16 seam  0:101  k=3.14e+05 class untouched conv True regions 1 | analytic Y2
+R2-07                        h-1e-8-3-1255      analytic #9  seam  3:1    k=1e+05 class untouched conv True regions 1 | analytic J3
+R2-08                        h-1e-7-0-12980     group    #4  mid   0:101  k=3.14e+05 class untouched conv True regions 16 | 09e+09, 526.01), regime Gqr, group G+q-r
+R2-09                        h-1e-8-0-14320     analytic #18 low   0:101  k=3.14e+05 class untouched conv True regions 9 | analytic Y3
+R2-10                        h-1e-7-2-21758     analytic #10 seam  2:2    k=3.09e+06 class untouched conv True regions 1 | analytic Y2
+R2-11                        h-1e-8-2-34460     analytic #7  mid   2:2    k=3.09e+06 class untouched conv True regions 9 | analytic J2
+R2-12                        h-1e-7-1-1845      group    #2  mid   1:301  k=9.56e+07 class untouched conv True regions 1 | 51e+12, 5.406e+09), regime Gr, group G-r
+R2-13                        h-1e-7-3-13515     analytic #22 mid   3:201  k=9.7e+06 class untouched conv True regions 2 | analytic Y4
+R2-14                        h-1e-8-2-21805     analytic #8  seam  2:2    k=3.09e+06 class untouched conv True regions 1 | analytic Y1
+R2-15                        h-1e-7-0-12952     analytic #14 mid   0:202  k=3.05e+07 class untouched conv True regions 2 | analytic Y4
+R2-16                        h-1e-7-3-928       group    #4  seam  3:201  k=9.7e+06 class untouched conv True regions 10 | +12, 2.772e+09), regime Gqr, group G-q-r
+R2-17                        h-1e-8-1-11182     analytic #19 seam  1:301  k=9.56e+07 class untouched conv True regions 2 | analytic J4
+R2-18                        h-1e-8-3-34325     analytic #10 mid   3:201  k=9.7e+06 class untouched conv True regions 3 | analytic Y2
+R2-19                        h-1e-8-1-34850     analytic #9  low   1:301  k=9.56e+07 class untouched conv True regions 3 | analytic J2
+R2-20                        h-1e-7-0-12771     group    #4  seam  0:202  k=3.05e+07 class untouched conv True regions 1 | 11, 1.7445e+05), regime Gqr, group G+q-r
+R2-21                        h-1e-7-2-21653     analytic #13 seam  2:302  k=3e+08 class untouched conv True regions 2 | analytic J1
+R2-22                        h-1e-7-2-1665      group    #5  mid   2:2    k=3.09e+06 class own       conv True regions 46 | 711e+10, 57749), regime Gqr, group G-q+r
+R2-23                        h-1e-7-0-33600     analytic #11 seam  0:101  k=3.14e+05 class untouched conv True regions 1 | analytic Y1
+R2-24                        h-1e-8-3-1048      analytic #6  seam  3:1    k=1e+05 class untouched conv True regions 1 | analytic J3
+R2-25                        h-1e-8-0-1984      group    #0  mid   0:101  k=3.14e+05 class window_h_only conv True regions 29 | 6391e+16, 1.6721e+11), regime G, group G
+R2-26                        h-1e-7-1-10739     analytic #4  seam  1:102  k=9.85e+05 class untouched conv True regions 1 | analytic J2
+R2-27                        h-1e-8-1-10842     analytic #7  seam  1:301  k=9.56e+07 class untouched conv True regions 1 | analytic J3
+R2-28                        h-1e-7-0-13757     group    #5  mid   0:202  k=3.05e+07 class untouched conv True regions 1 | 11e+10, 100.19), regime Gqr, group G-q+r
+R2-29                        h-1e-7-1-35330     group    #4  seam  1:301  k=9.56e+07 class untouched conv True regions 4 | 09, 1.2075e+06), regime Gqr, group G+q-r
+R3w-0-33950-0                h-1e-8-0-33950     group    #0  seam  0:101  k=3.14e+05 class window_both conv True regions 45 | .6391e+16, 5.406e+09), regime G, group G
+R3w-0-2006-0                 h-1e-8-0-2006      group    #0  mid   0:101  k=3.14e+05 class window_both conv True regions 43 | .6391e+16, 5.406e+09), regime G, group G
+R3w-3-13615-0                h-1e-8-3-13615     group    #0  mid   3:1    k=1e+05 class window_both conv True regions 43 | .6391e+16, 1.709e+09), regime G, group G
+R3a-3-843-a5                 h-1e-7-3-843       analytic #5  seam  3:201  k=9.7e+06 class aux_only  conv True regions 1 | analytic J2
+R3a-3-13508-g2               h-1e-7-3-13508     group    #2  mid   3:1    k=1e+05 class aux_only  conv True regions 117 | 6711e+10, 1589), regime Gqr, group G+q-r
+R3a-0-33666-a13              h-1e-7-0-33666     analytic #13 seam  0:202  k=3.05e+07 class aux_only  conv True regions 3 | analytic J4
+R3a-3-39138-g2               h-1e-7-3-39138     group    #2  low   3:1    k=1e+05 class aux_only  conv True regions 29 | 1e+10, 0.13184), regime Gqr, group G+q-r
+R3a-3-39138-g3               h-1e-7-3-39138     group    #3  low   3:1    k=1e+05 class aux_only  conv True regions 29 | 1e+10, 0.13184), regime Gqr, group G-q+r
+R3a-2-21486-a9               h-1e-7-2-21486     analytic #9  seam  2:302  k=3e+08 class aux_only  conv True regions 3 | analytic J2
+R3o-2-21454-a3-7             h-1e-7-2-21454     analytic #3  seam  2:2    k=3.09e+06 class own       conv True regions 1 | analytic Y1
+R3o-3-1011-a18-7             h-1e-7-3-1011      analytic #18 seam  3:1    k=1e+05 class own       conv True regions 1 | analytic Y3
+R3o-1-35188-g0-8             h-1e-8-1-35188     group    #0  seam  1:301  k=9.56e+07 class own       conv True regions 11 | 6391e+16, 1.6351e+12), regime G, group G
+R3p-3-14501                  h-1e-7-3-14501     group    #1  low   3:1    k=1e+05 class window_both conv True regions 36 | 1e+10, 0.17381), regime Gqr, group G+q+r
+R3p-3-35006                  h-1e-7-3-35006     group    #1  low   3:1    k=1e+05 class window_both conv True regions 39 | 1e+10, 0.69219), regime Gqr, group G+q+r
+Counter({'R1': 30, 'R2': 30, 'R3-aux': 6, 'R3-W7': 3, 'R3-own': 3, 'R3-pair': 2})
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/selection_07b.json sha256 4b94c1811f7b46f9f4903784ef08958b8ebcc5391f2b347045a3bc70a4f6a35d
+# ----
+# end 2026-11-13T13:53:04Z
+# exit 0

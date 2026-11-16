@@ -1,0 +1,19 @@
+--- tree/AdaptiveLevin/levin_quadrature.py
++++ variants/levin_quadrature_07b_b4.py
+@@ -518,7 +518,7 @@
+ # 0 and 1 -- is honest and converged. At 2 pi all ten are (err/abserr at most 0.03, abserr/request at most
+ # 0.89, no window stopped by the iroff1 rule); at 32 pi and above the cancelling case c = 1e8, x_s = 0.7236,
+ # omega = 0 is not converged. docs/levin-phase-floor/07/calibration/out/run2/calibrate_tables_rtol1e-09.md.
+-_LEVIN_WINDOW_HALF_PHASE = 2.0 * np.pi
++_LEVIN_WINDOW_HALF_PHASE = 4.0 * np.pi  # 07b variant b4: Phi_w = 4 pi
+ 
+ # Lambda_c: an interior local minimum x_m of |theta_i'| with no sign change beside it is located,
+ # and windowed like a root, when its Airy parameter lambda = |theta_i'(x_m)|^(3/2) /
+@@ -592,6 +592,7 @@
+ 
+ INTERVAL_TYPE_LEVIN = 0
+ INTERVAL_TYPE_DIRECT = 1
++_VARIANT_07B = "b4"  # levin-phase-floor 07b Part A, section 2.3
+ types = {0: "Levin", 1: "direct"}
+ 
+ 

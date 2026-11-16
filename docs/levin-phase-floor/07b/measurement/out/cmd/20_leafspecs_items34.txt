@@ -1,0 +1,5 @@
+i3-34599-07: 6 named leaves, 6 spans, 49 points; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_i3-34599-07.json
+W2-0-12977-5: 3 named leaves, 3 spans, 25 points; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-0-12977-5.json
+W2-1-2174-2: 3 named leaves, 3 spans, 25 points; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-1-2174-2.json
+W2-2-14345-3: 6 named leaves, 6 spans, 49 points; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-2-14345-3.json
+W2-2-34473-3: 45 named leaves, 103 spans, 419 points; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-2-34473-3.json

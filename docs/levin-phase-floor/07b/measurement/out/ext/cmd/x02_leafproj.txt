@@ -1,0 +1,34 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/leafproj_ext.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/leafproj_x1.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-1-2174-2~o.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-2-14345-3~o.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-2-34473-3~o.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p14501_7.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p14501_8.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p35006_7.json --calibrate /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-2-34473-3.json=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/attr_W2-2-34473-3.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-2-14345-3.json=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/attr_W2-2-14345-3.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/carrier_v09.json=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/carrier_v09.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v08.json=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/v4_v08.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v13.json=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/v4_v13.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T22:49:24Z
+# ----
+W2-1-2174-2~o    segs  2039 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 32 s r2 121 s [gamma D_f 0 s]; unsplit r1+r2 153 s
+W2-2-14345-3~o   segs  2033 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 41 s r2 121 s [gamma D_f 0 s]; unsplit r1+r2 162 s
+W2-2-34473-3~o   segs  1752 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 26 s r2 104 s [gamma D_f 0 s]; unsplit r1+r2 130 s
+p14501_7         segs  2421 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 37 s r2 144 s [gamma D_f 0 s]; unsplit r1+r2 250 s
+p14501_8         segs  2402 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 36 s r2 143 s [gamma D_f 0 s]; unsplit r1+r2 249 s
+p35006_7         segs  2287 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 35 s r2 136 s [gamma D_f 0 s]; unsplit r1+r2 249 s
+W2-2-34473-3     segs  1781 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 26 s r2 106 s [gamma D_f 0 s]; unsplit r1+r2 132 s; ACTUAL job CPU r1 198 s r2 809 s, wall 509 s  (calibration only)
+W2-2-14345-3     segs  2049 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 41 s r2 122 s [gamma D_f 0 s]; unsplit r1+r2 163 s; ACTUAL job CPU r1 172 s r2 679 s, wall 431 s  (calibration only)
+v09              segs  1053 (stationary 0, steep 0, D_f 0, of it stationary 0) -> r1 16 s r2 63 s [gamma D_f 0 s]; unsplit r1+r2 78 s; ACTUAL job CPU r1 114 s r2 465 s, wall 104 s  (calibration only)
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/leafproj_ext.py", line 152, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/leafproj_ext.py", line 96, in main
+    spec = json.loads(Path(sp).read_text())
+                      ~~~~~~~~~~~~~~~~~~^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v08.json'
+# ----
+# end 2026-11-15T22:49:40Z
+# exit 1

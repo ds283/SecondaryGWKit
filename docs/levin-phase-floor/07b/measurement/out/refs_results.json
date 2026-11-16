@@ -1,0 +1,1007 @@
+{
+ "label": "refs",
+ "results": [
+  {
+   "name": "ref-R2-18-fcc-r1",
+   "exit": 0,
+   "wall_s": 6.102102041244507
+  },
+  {
+   "name": "ref-R2-18-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.614847898483276
+  },
+  {
+   "name": "ref-R2-18-qawo-r1",
+   "exit": 0,
+   "wall_s": 96.73683881759644
+  },
+  {
+   "name": "ref-R2-18-qawo-r2",
+   "exit": 0,
+   "wall_s": 741.4498851299286
+  },
+  {
+   "name": "ref-R1-x195-qawo-r1",
+   "exit": 0,
+   "wall_s": 898.8557329177856
+  },
+  {
+   "name": "ref-R1-x218-qawo-r1",
+   "exit": 0,
+   "wall_s": 904.5979177951813
+  },
+  {
+   "name": "ref-R1-x195-fccsplit",
+   "exit": 0,
+   "wall_s": 2509.2136929035187
+  },
+  {
+   "name": "ref-R1-x195-qawo-r2",
+   "exit": 0,
+   "wall_s": 3558.7105309963226
+  },
+  {
+   "name": "ref-R1-x174-qawo-r1",
+   "exit": 0,
+   "wall_s": 863.3159160614014
+  },
+  {
+   "name": "ref-R1-x218-qawo-r2",
+   "exit": 0,
+   "wall_s": 3509.3830819129944
+  },
+  {
+   "name": "ref-R1-x218-fccsplit",
+   "exit": 0,
+   "wall_s": 2759.939754009247
+  },
+  {
+   "name": "ref-R1-x247-qawo-r1",
+   "exit": 0,
+   "wall_s": 761.8886351585388
+  },
+  {
+   "name": "ref-R1-x174-fccsplit",
+   "exit": 0,
+   "wall_s": 2499.795240879059
+  },
+  {
+   "name": "ref-R1-x174-qawo-r2",
+   "exit": 0,
+   "wall_s": 3456.3023388385773
+  },
+  {
+   "name": "ref-R1-x098-qawo-r1",
+   "exit": 0,
+   "wall_s": 607.2585515975952
+  },
+  {
+   "name": "ref-R1-x247-qawo-r2",
+   "exit": 0,
+   "wall_s": 2972.6444079875946
+  },
+  {
+   "name": "ref-R1-x247-fccsplit",
+   "exit": 0,
+   "wall_s": 2747.750188112259
+  },
+  {
+   "name": "ref-R1-x098-fccsplit",
+   "exit": 0,
+   "wall_s": 903.3745505809784
+  },
+  {
+   "name": "ref-R1-x098-qawo-r2",
+   "exit": 0,
+   "wall_s": 2351.4029610157013
+  },
+  {
+   "name": "ref-R1-x033-qawo-r1",
+   "exit": 0,
+   "wall_s": 628.5191168785095
+  },
+  {
+   "name": "ref-R1-x033-fccsplit",
+   "exit": 0,
+   "wall_s": 617.8280398845673
+  },
+  {
+   "name": "ref-R1-x027-qawo-r1",
+   "exit": 0,
+   "wall_s": 581.1553070545197
+  },
+  {
+   "name": "ref-R1-x027-fccsplit",
+   "exit": 0,
+   "wall_s": 593.9685928821564
+  },
+  {
+   "name": "ref-R1-x029-qawo-r1",
+   "exit": 0,
+   "wall_s": 553.4351518154144
+  },
+  {
+   "name": "ref-R1-x033-qawo-r2",
+   "exit": 0,
+   "wall_s": 2490.5033371448517
+  },
+  {
+   "name": "ref-R1-x027-qawo-r2",
+   "exit": 0,
+   "wall_s": 2247.7003190517426
+  },
+  {
+   "name": "ref-R1-x029-fccsplit",
+   "exit": 0,
+   "wall_s": 889.8684318065643
+  },
+  {
+   "name": "ref-R1-x392-qawo-r1",
+   "exit": 0,
+   "wall_s": 483.097932100296
+  },
+  {
+   "name": "ref-R1-x392-fccsplit",
+   "exit": 0,
+   "wall_s": 604.6550917625427
+  },
+  {
+   "name": "ref-R1-x029-qawo-r2",
+   "exit": 0,
+   "wall_s": 2191.63929104805
+  },
+  {
+   "name": "ref-R3p-3-14501-qawo-r1",
+   "exit": 0,
+   "wall_s": 482.93503522872925
+  },
+  {
+   "name": "ref-R1-x392-qawo-r2",
+   "exit": 0,
+   "wall_s": 1847.8620080947876
+  },
+  {
+   "name": "ref-R3p-3-14501-fccsplit",
+   "exit": 0,
+   "wall_s": 604.0385463237762
+  },
+  {
+   "name": "ref-R3p-3-35006-qawo-r1",
+   "exit": 0,
+   "wall_s": 473.13658905029297
+  },
+  {
+   "name": "ref-R3p-3-35006-fccsplit",
+   "exit": 0,
+   "wall_s": 583.2849729061127
+  },
+  {
+   "name": "ref-R3p-3-14501-qawo-r2",
+   "exit": 0,
+   "wall_s": 1851.58567404747
+  },
+  {
+   "name": "ref-R1-x165-qawo-r1",
+   "exit": 0,
+   "wall_s": 414.1550679206848
+  },
+  {
+   "name": "ref-R3p-3-35006-qawo-r2",
+   "exit": 0,
+   "wall_s": 1821.3237571716309
+  },
+  {
+   "name": "ref-R3a-3-39138-g2-qawo-r1",
+   "exit": 0,
+   "wall_s": 270.0033481121063
+  },
+  {
+   "name": "ref-R1-x165-fccsplit",
+   "exit": 0,
+   "wall_s": 1226.2476110458374
+  },
+  {
+   "name": "ref-R1-x165-qawo-r2",
+   "exit": 0,
+   "wall_s": 1606.775279045105
+  },
+  {
+   "name": "ref-R3a-3-39138-g3-qawo-r1",
+   "exit": 0,
+   "wall_s": 269.92592692375183
+  },
+  {
+   "name": "ref-R3a-3-39138-g2-qawo-r2",
+   "exit": 0,
+   "wall_s": 1001.2962107658386
+  },
+  {
+   "name": "ref-R3a-3-39138-g2-fccsplit",
+   "exit": 0,
+   "wall_s": 513.909411907196
+  },
+  {
+   "name": "ref-R1-x390-qawo-r1",
+   "exit": 0,
+   "wall_s": 219.7407329082489
+  },
+  {
+   "name": "ref-R3a-3-39138-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 515.5450587272644
+  },
+  {
+   "name": "ref-R3a-3-39138-g3-qawo-r2",
+   "exit": 0,
+   "wall_s": 1003.6357576847076
+  },
+  {
+   "name": "ref-R1-x335-qawo-r1",
+   "exit": 0,
+   "wall_s": 115.62957906723022
+  },
+  {
+   "name": "ref-R1-x390-fccsplit",
+   "exit": 0,
+   "wall_s": 485.57205510139465
+  },
+  {
+   "name": "ref-R1-x390-qawo-r2",
+   "exit": 0,
+   "wall_s": 778.3427019119263
+  },
+  {
+   "name": "ref-R1-x185-qawo-r1",
+   "exit": 0,
+   "wall_s": 100.28441500663757
+  },
+  {
+   "name": "ref-R1-x335-qawo-r2",
+   "exit": 0,
+   "wall_s": 380.90248107910156
+  },
+  {
+   "name": "ref-R1-x185-qawo-r2",
+   "exit": 0,
+   "wall_s": 318.7262120246887
+  },
+  {
+   "name": "ref-R1-x335-fccsplit",
+   "exit": 0,
+   "wall_s": 517.3307268619537
+  },
+  {
+   "name": "ref-R1-x317-fccsplit",
+   "exit": 0,
+   "wall_s": 584.7486639022827
+  },
+  {
+   "name": "ref-R1-x185-fccsplit",
+   "exit": 0,
+   "wall_s": 1217.6032829284668
+  },
+  {
+   "name": "ref-R1-x109-fccsplit",
+   "exit": 0,
+   "wall_s": 2658.7925510406494
+  },
+  {
+   "name": "ref-R1-x015-fccsplit",
+   "exit": 0,
+   "wall_s": 709.5063700675964
+  },
+  {
+   "name": "ref-R1-x258-fccsplit",
+   "exit": 0,
+   "wall_s": 4078.433794736862
+  },
+  {
+   "name": "ref-R1-x353-fccsplit",
+   "exit": 0,
+   "wall_s": 565.9133176803589
+  },
+  {
+   "name": "ref-R1-x160-fccsplit",
+   "exit": 0,
+   "wall_s": 991.9798767566681
+  },
+  {
+   "name": "ref-R1-x007-qawo-r1",
+   "exit": 0,
+   "wall_s": 65.2316038608551
+  },
+  {
+   "name": "ref-R1-x007-qawo-r2",
+   "exit": 0,
+   "wall_s": 182.24474596977234
+  },
+  {
+   "name": "ref-R1-x295-fccsplit",
+   "exit": 0,
+   "wall_s": 513.7214243412018
+  },
+  {
+   "name": "ref-R1-x007-fccsplit",
+   "exit": 0,
+   "wall_s": 515.5211389064789
+  },
+  {
+   "name": "ref-R1-x019-fccsplit",
+   "exit": 0,
+   "wall_s": 685.1923198699951
+  },
+  {
+   "name": "ref-R1-x141-fccsplit",
+   "exit": 0,
+   "wall_s": 2555.9833250045776
+  },
+  {
+   "name": "ref-R1-x285-fccsplit",
+   "exit": 0,
+   "wall_s": 4051.716663837433
+  },
+  {
+   "name": "ref-R1-x044-fccsplit",
+   "exit": 0,
+   "wall_s": 680.1772859096527
+  },
+  {
+   "name": "ref-R1-x241-fccsplit",
+   "exit": 0,
+   "wall_s": 7798.0638110637665
+  },
+  {
+   "name": "ref-R1-x207-fccsplit",
+   "exit": 0,
+   "wall_s": 4038.6686339378357
+  },
+  {
+   "name": "ref-R1-x311-fccsplit",
+   "exit": 0,
+   "wall_s": 8624.938925027847
+  },
+  {
+   "name": "ref-R2-08-qawo-r1",
+   "exit": 0,
+   "wall_s": 57.02940106391907
+  },
+  {
+   "name": "ref-R2-08-qawo-r2",
+   "exit": 0,
+   "wall_s": 160.98586177825928
+  },
+  {
+   "name": "ref-R2-08-fccsplit",
+   "exit": 0,
+   "wall_s": 299.0246148109436
+  },
+  {
+   "name": "ref-R2-28-fccsplit",
+   "exit": 0,
+   "wall_s": 331.56903076171875
+  },
+  {
+   "name": "ref-R3a-3-13508-g2-qawo-r1",
+   "exit": 0,
+   "wall_s": 30.0608069896698
+  },
+  {
+   "name": "ref-R3a-3-13508-g2-qawo-r2",
+   "exit": 0,
+   "wall_s": 49.91816329956055
+  },
+  {
+   "name": "ref-R3a-3-13508-g2-fccsplit",
+   "exit": 0,
+   "wall_s": 367.24468302726746
+  },
+  {
+   "name": "ref-R3w-3-13615-0-qawo-r1",
+   "exit": 0,
+   "wall_s": 16.283918857574463
+  },
+  {
+   "name": "ref-R3w-3-13615-0-qawo-r2",
+   "exit": 0,
+   "wall_s": 19.352150917053223
+  },
+  {
+   "name": "ref-R3w-3-13615-0-fccsplit",
+   "exit": 0,
+   "wall_s": 447.55825996398926
+  },
+  {
+   "name": "ref-R2-20-qawo-r1",
+   "exit": 0,
+   "wall_s": 43.304410219192505
+  },
+  {
+   "name": "ref-R2-20-qawo-r2",
+   "exit": 0,
+   "wall_s": 111.50889611244202
+  },
+  {
+   "name": "ref-R2-20-fccsplit",
+   "exit": 0,
+   "wall_s": 287.73754715919495
+  },
+  {
+   "name": "ref-R3w-0-2006-0-qawo-r1",
+   "exit": 0,
+   "wall_s": 15.28162407875061
+  },
+  {
+   "name": "ref-R3w-0-2006-0-qawo-r2",
+   "exit": 0,
+   "wall_s": 17.817514896392822
+  },
+  {
+   "name": "ref-R3w-0-2006-0-fccsplit",
+   "exit": 0,
+   "wall_s": 416.59218525886536
+  },
+  {
+   "name": "ref-R3w-0-33950-0-qawo-r1",
+   "exit": 0,
+   "wall_s": 15.273068904876709
+  },
+  {
+   "name": "ref-R3w-0-33950-0-qawo-r2",
+   "exit": 0,
+   "wall_s": 17.780752897262573
+  },
+  {
+   "name": "ref-R3w-0-33950-0-fccsplit",
+   "exit": 0,
+   "wall_s": 411.1970639228821
+  },
+  {
+   "name": "ref-R2-22-qawo-r1",
+   "exit": 0,
+   "wall_s": 24.95683217048645
+  },
+  {
+   "name": "ref-R2-22-qawo-r2",
+   "exit": 0,
+   "wall_s": 40.18343687057495
+  },
+  {
+   "name": "ref-R1-x310-fccsplit",
+   "exit": 0,
+   "wall_s": 8611.290082931519
+  },
+  {
+   "name": "ref-R2-25-qawo-r1",
+   "exit": 0,
+   "wall_s": 12.741550207138062
+  },
+  {
+   "name": "ref-R2-25-qawo-r2",
+   "exit": 0,
+   "wall_s": 15.282525062561035
+  },
+  {
+   "name": "ref-R2-22-fccsplit",
+   "exit": 0,
+   "wall_s": 282.54615116119385
+  },
+  {
+   "name": "ref-R2-05-qawo-r1",
+   "exit": 0,
+   "wall_s": 10.70672082901001
+  },
+  {
+   "name": "ref-R2-05-qawo-r2",
+   "exit": 0,
+   "wall_s": 61.1352961063385
+  },
+  {
+   "name": "ref-R2-05-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.600013017654419
+  },
+  {
+   "name": "ref-R2-05-fcc-r2",
+   "exit": 0,
+   "wall_s": 7.136358261108398
+  },
+  {
+   "name": "ref-R2-02-qawo-r1",
+   "exit": 0,
+   "wall_s": 10.183028936386108
+  },
+  {
+   "name": "ref-R2-02-qawo-r2",
+   "exit": 0,
+   "wall_s": 12.19622802734375
+  },
+  {
+   "name": "ref-R2-25-fccsplit",
+   "exit": 0,
+   "wall_s": 312.13848304748535
+  },
+  {
+   "name": "ref-R3o-1-35188-g0-8-qawo-r1",
+   "exit": 0,
+   "wall_s": 10.709443092346191
+  },
+  {
+   "name": "ref-R3o-1-35188-g0-8-qawo-r2",
+   "exit": 0,
+   "wall_s": 12.237117052078247
+  },
+  {
+   "name": "ref-R2-02-fccsplit",
+   "exit": 0,
+   "wall_s": 254.16149806976318
+  },
+  {
+   "name": "ref-R2-29-qawo-r1",
+   "exit": 0,
+   "wall_s": 24.449445247650146
+  },
+  {
+   "name": "ref-R3o-1-35188-g0-8-fccsplit",
+   "exit": 0,
+   "wall_s": 256.14346170425415
+  },
+  {
+   "name": "ref-R2-29-qawo-r2",
+   "exit": 0,
+   "wall_s": 59.06363391876221
+  },
+  {
+   "name": "ref-R2-16-qawo-r1",
+   "exit": 0,
+   "wall_s": 14.258769750595093
+  },
+  {
+   "name": "ref-R2-16-qawo-r2",
+   "exit": 0,
+   "wall_s": 19.375768899917603
+  },
+  {
+   "name": "ref-R2-29-fccsplit",
+   "exit": 0,
+   "wall_s": 104.40816831588745
+  },
+  {
+   "name": "ref-R2-12-qawo-r1",
+   "exit": 0,
+   "wall_s": 10.18572211265564
+  },
+  {
+   "name": "ref-R2-12-qawo-r2",
+   "exit": 0,
+   "wall_s": 13.243207216262817
+  },
+  {
+   "name": "ref-R2-16-fccsplit",
+   "exit": 0,
+   "wall_s": 226.192889213562
+  },
+  {
+   "name": "ref-R2-17-qawo-r1",
+   "exit": 0,
+   "wall_s": 4.077372312545776
+  },
+  {
+   "name": "ref-R2-17-qawo-r2",
+   "exit": 0,
+   "wall_s": 7.139960050582886
+  },
+  {
+   "name": "ref-R2-12-fccsplit",
+   "exit": 0,
+   "wall_s": 175.27384281158447
+  },
+  {
+   "name": "ref-R2-17-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.583659887313843
+  },
+  {
+   "name": "ref-R2-19-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.611623048782349
+  },
+  {
+   "name": "ref-R2-17-fcc-r2",
+   "exit": 0,
+   "wall_s": 7.150028944015503
+  },
+  {
+   "name": "ref-R2-19-fcc-r2",
+   "exit": 0,
+   "wall_s": 7.144161701202393
+  },
+  {
+   "name": "ref-R2-09-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.613797187805176
+  },
+  {
+   "name": "ref-R2-11-fcc-r1",
+   "exit": 0,
+   "wall_s": 6.115334749221802
+  },
+  {
+   "name": "ref-R2-09-fcc-r2",
+   "exit": 0,
+   "wall_s": 7.1430699825286865
+  },
+  {
+   "name": "ref-R2-15-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.5795018672943115
+  },
+  {
+   "name": "ref-R2-11-fcc-r2",
+   "exit": 0,
+   "wall_s": 7.629748821258545
+  },
+  {
+   "name": "ref-R2-15-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.6364452838897705
+  },
+  {
+   "name": "ref-R2-03-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.612633943557739
+  },
+  {
+   "name": "ref-R2-04-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.623425006866455
+  },
+  {
+   "name": "ref-R2-03-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.648924827575684
+  },
+  {
+   "name": "ref-R2-04-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.633760929107666
+  },
+  {
+   "name": "ref-R2-13-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.612185001373291
+  },
+  {
+   "name": "ref-R2-01-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.571449041366577
+  },
+  {
+   "name": "ref-R2-13-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.121798038482666
+  },
+  {
+   "name": "ref-R2-01-qawo-r2",
+   "exit": 0,
+   "wall_s": 4.075629949569702
+  },
+  {
+   "name": "ref-R2-01-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.1005539894104
+  },
+  {
+   "name": "ref-R2-01-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.634004831314087
+  },
+  {
+   "name": "ref-R2-14-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.0630857944488525
+  },
+  {
+   "name": "ref-R2-14-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.5681519508361816
+  },
+  {
+   "name": "ref-R2-14-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.610611915588379
+  },
+  {
+   "name": "ref-R2-07-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.0620131492614746
+  },
+  {
+   "name": "ref-R2-14-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.640285968780518
+  },
+  {
+   "name": "ref-R2-07-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.5713770389556885
+  },
+  {
+   "name": "ref-R2-07-fcc-r1",
+   "exit": 0,
+   "wall_s": 6.118640899658203
+  },
+  {
+   "name": "ref-R2-07-fcc-r2",
+   "exit": 0,
+   "wall_s": 7.142106771469116
+  },
+  {
+   "name": "ref-R2-06-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.0635859966278076
+  },
+  {
+   "name": "ref-R2-06-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.560431718826294
+  },
+  {
+   "name": "ref-R2-06-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.603171110153198
+  },
+  {
+   "name": "ref-R2-21-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.572070837020874
+  },
+  {
+   "name": "ref-R2-06-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.636866092681885
+  },
+  {
+   "name": "ref-R2-21-qawo-r2",
+   "exit": 0,
+   "wall_s": 4.064644813537598
+  },
+  {
+   "name": "ref-R2-21-fcc-r1",
+   "exit": 0,
+   "wall_s": 6.11958384513855
+  },
+  {
+   "name": "ref-R2-21-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.626942157745361
+  },
+  {
+   "name": "ref-R2-00-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.558305025100708
+  },
+  {
+   "name": "ref-R2-00-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.5600271224975586
+  },
+  {
+   "name": "ref-R2-00-fcc-r1",
+   "exit": 0,
+   "wall_s": 6.102586030960083
+  },
+  {
+   "name": "ref-R2-10-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.0604679584503174
+  },
+  {
+   "name": "ref-R2-00-fcc-r2",
+   "exit": 0,
+   "wall_s": 7.132537126541138
+  },
+  {
+   "name": "ref-R2-10-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.560663938522339
+  },
+  {
+   "name": "ref-R2-10-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.59826922416687
+  },
+  {
+   "name": "ref-R2-10-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.626165866851807
+  },
+  {
+   "name": "ref-R3a-0-33666-a13-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.0630252361297607
+  },
+  {
+   "name": "ref-R3a-0-33666-a13-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.57405686378479
+  },
+  {
+   "name": "ref-R3a-0-33666-a13-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.624778985977173
+  },
+  {
+   "name": "ref-R3a-2-21486-a9-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.0621659755706787
+  },
+  {
+   "name": "ref-R3a-0-33666-a13-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.1367270946502686
+  },
+  {
+   "name": "ref-R3a-2-21486-a9-qawo-r2",
+   "exit": 0,
+   "wall_s": 4.063532114028931
+  },
+  {
+   "name": "ref-R3a-2-21486-a9-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.597862243652344
+  },
+  {
+   "name": "ref-R2-24-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.061328887939453
+  },
+  {
+   "name": "ref-R3a-2-21486-a9-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.131973743438721
+  },
+  {
+   "name": "ref-R2-24-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.5613908767700195
+  },
+  {
+   "name": "ref-R2-24-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.593142986297607
+  },
+  {
+   "name": "ref-R2-26-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.0590410232543945
+  },
+  {
+   "name": "ref-R2-24-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.1168200969696045
+  },
+  {
+   "name": "ref-R2-26-qawo-r2",
+   "exit": 0,
+   "wall_s": 4.086813926696777
+  },
+  {
+   "name": "ref-R2-26-fcc-r1",
+   "exit": 0,
+   "wall_s": 6.127243995666504
+  },
+  {
+   "name": "ref-R3o-3-1011-a18-7-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.0617949962615967
+  },
+  {
+   "name": "ref-R2-26-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.131639003753662
+  },
+  {
+   "name": "ref-R3o-3-1011-a18-7-qawo-r2",
+   "exit": 0,
+   "wall_s": 4.080657958984375
+  },
+  {
+   "name": "ref-R3o-3-1011-a18-7-fcc-r1",
+   "exit": 0,
+   "wall_s": 6.121152877807617
+  },
+  {
+   "name": "ref-R3o-2-21454-a3-7-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.061863899230957
+  },
+  {
+   "name": "ref-R3o-3-1011-a18-7-fcc-r2",
+   "exit": 0,
+   "wall_s": 6.131595134735107
+  },
+  {
+   "name": "ref-R3o-2-21454-a3-7-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.5606632232666016
+  },
+  {
+   "name": "ref-R3o-2-21454-a3-7-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.60158371925354
+  },
+  {
+   "name": "ref-R3o-2-21454-a3-7-fcc-r2",
+   "exit": 0,
+   "wall_s": 5.617832899093628
+  },
+  {
+   "name": "ref-R2-23-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.063404083251953
+  },
+  {
+   "name": "ref-R2-23-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.5549981594085693
+  },
+  {
+   "name": "ref-R2-23-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.589288949966431
+  },
+  {
+   "name": "ref-R2-27-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.052807331085205
+  },
+  {
+   "name": "ref-R2-23-fcc-r2",
+   "exit": 0,
+   "wall_s": 5.6102800369262695
+  },
+  {
+   "name": "ref-R2-27-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.5670080184936523
+  },
+  {
+   "name": "ref-R2-27-fcc-r1",
+   "exit": 0,
+   "wall_s": 3.567164897918701
+  },
+  {
+   "name": "ref-R2-27-fcc-r2",
+   "exit": 0,
+   "wall_s": 3.5656800270080566
+  },
+  {
+   "name": "ref-R3a-3-843-a5-qawo-r1",
+   "exit": 0,
+   "wall_s": 3.564897060394287
+  },
+  {
+   "name": "ref-R3a-3-843-a5-qawo-r2",
+   "exit": 0,
+   "wall_s": 3.576871871948242
+  },
+  {
+   "name": "ref-R3a-3-843-a5-fcc-r1",
+   "exit": 0,
+   "wall_s": 5.107276916503906
+  },
+  {
+   "name": "ref-R3a-3-843-a5-fcc-r2",
+   "exit": 0,
+   "wall_s": 5.09447717666626
+  },
+  {
+   "name": "ref-R1-x196-fccsplit",
+   "exit": 0,
+   "wall_s": 83340.43447804451
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-14T21:01:41Z"
+}

@@ -1,0 +1,1 @@
+R1-x295-7 c: DIFFERS: region arrays differ: ['budget_err', 'convergence_ratio', 'declared_resolution', 'total_err']; abserr: replay 0x1.c482550c4c629p-108 census 0x1.c3f675fae8c41p-108; value 0x1.1b6abb7ccfb9cp-84 abserr 0x1.c482550c4c629p-108 conv True regions 111 depth 14 windows 1 stopped 1 2.08 s

@@ -1,0 +1,86 @@
+{
+ "sid": "W2-0-12977-5",
+ "capture": {
+  "set": "W2",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C02/inputs_C02.pkl",
+  "offset": 0,
+  "length": 1337451,
+  "sha256": "0eaebcc06847101eb05124183fe258f9a8358ad8a65bcab7d047bc7f21e85baa",
+  "override": null,
+  "census": "W2-0-12977-5"
+ },
+ "spans": [
+  [
+   "0x1.b46d8b2f5c086p+2",
+   "0x1.4dbbd9e633330p+3"
+  ],
+  [
+   "0x1.4dbbd9e633330p+3",
+   "0x1.c140ee34b861cp+3"
+  ],
+  [
+   "0x1.c140ee34b861cp+3",
+   "0x1.54258b68e15fbp+4"
+  ]
+ ],
+ "points": [
+  "0x1.b46d8b2f5c086p+2",
+  "0x1.d14ed042fd542p+2",
+  "0x1.ee3015569e9fdp+2",
+  "0x1.0588ad351ff5cp+3",
+  "0x1.13f94fbef09bap+3",
+  "0x1.2269f248c1418p+3",
+  "0x1.30da94d291e75p+3",
+  "0x1.3f4b375c628d2p+3",
+  "0x1.4dbbd9e633330p+3",
+  "0x1.5c2c7c7003d8ep+3",
+  "0x1.6a9d1ef9d47ebp+3",
+  "0x1.790dc183a5248p+3",
+  "0x1.877e640d75ca6p+3",
+  "0x1.95ef069746704p+3",
+  "0x1.a45fa92117161p+3",
+  "0x1.b2d04baae7bbep+3",
+  "0x1.c140ee34b861cp+3",
+  "0x1.de22334859ad7p+3",
+  "0x1.fb03785bfaf92p+3",
+  "0x1.0bf25eb7ce226p+4",
+  "0x1.1a6301419ec84p+4",
+  "0x1.28d3a3cb6f6e2p+4",
+  "0x1.3744465540140p+4",
+  "0x1.45b4e8df10b9ep+4",
+  "0x1.54258b68e15fbp+4"
+ ],
+ "named": [
+  {
+   "name": "tree:0:8",
+   "variant": "tree",
+   "i": 0,
+   "lo": "0x1.b46d8b2f5c086p+2",
+   "hi": "0x1.4dbbd9e633330p+3",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "tree:1:8",
+   "variant": "tree",
+   "i": 1,
+   "lo": "0x1.4dbbd9e633330p+3",
+   "hi": "0x1.c140ee34b861cp+3",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "tree:2:8",
+   "variant": "tree",
+   "i": 2,
+   "lo": "0x1.c140ee34b861cp+3",
+   "hi": "0x1.54258b68e15fbp+4",
+   "depth": 1,
+   "type": "Levin",
+   "eighths": true
+  }
+ ],
+ "all_leaves": "tree"
+}

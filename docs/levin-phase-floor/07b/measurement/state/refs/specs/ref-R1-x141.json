@@ -1,0 +1,22 @@
+{
+ "sid": "ref-R1-x141",
+ "capture": {
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x141.pkl",
+  "offset": 0,
+  "length": 1378608,
+  "sha256": "241aca838fdf7923afdd118a5930d585fc465cb015ea5c3bce38d4384e8cbbec",
+  "override": null
+ },
+ "spans": [
+  [
+   "0x1.20e4f52bd7468p+0",
+   "0x1.9d7b0833fb59fp+4"
+  ]
+ ],
+ "points": [
+  "0x1.20e4f52bd7468p+0",
+  "0x1.9d7b0833fb59fp+4"
+ ],
+ "named": [],
+ "all_leaves": null
+}

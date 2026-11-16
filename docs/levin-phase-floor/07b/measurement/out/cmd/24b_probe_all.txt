@@ -1,0 +1,167 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/probe_all_07b.sh
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T15:17:13Z
+# ----
+leaf 9 [5.62889, 5.63647] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0878
+leaf 25 [5.63696, 5.64161] depth 12 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0165
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_cal_z12.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_cal_z12.json
+leaf 7 [9.19315, 9.23084] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.151
+leaf 25 [9.23186, 9.24808] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0199
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v00.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v00.json
+leaf 9 [9.21368, 9.23044] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0126
+leaf 24 [9.23226, 9.26245] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0748
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v01.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v01.json
+leaf 8 [3.26502, 3.27734] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0704
+leaf 25 [3.27815, 3.28805] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.233
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v02.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v02.json
+leaf 9 [9.21709, 9.22974] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.000276
+leaf 26 [9.23296, 9.2609] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 4.04e-05
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v03.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v03.json
+leaf 9 [9.15583, 9.2263] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00667
+leaf 18 [9.23642, 9.33035] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0102
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v04.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v04.json
+leaf 7 [3.26225, 3.27752] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0358
+leaf 29 [3.27798, 3.29889] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.153
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v05.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v05.json
+leaf 12 [9.19533, 9.22974] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00979
+leaf 28 [9.23296, 9.2609] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0134
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v06.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v06.json
+leaf 15 [9.21305, 9.23084] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00604
+leaf 39 [9.23186, 9.24808] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0193
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v07.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v07.json
+leaf 6 [0.972884, 0.983006] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00408
+leaf 26 [0.983474, 0.99505] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0393
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v09.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v09.json
+leaf 7 [3.26746, 3.27752] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0494
+leaf 27 [3.27798, 3.28843] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0417
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v10.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v10.json
+leaf 10 [9.21293, 9.23044] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0237
+leaf 25 [9.23226, 9.24736] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0107
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v11.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v11.json
+leaf 12 [9.17449, 9.23106] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.241
+leaf 24 [9.23164, 26.9711] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0999
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v12.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v12.json
+leaf 13 [9.22784, 9.23126] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0182
+leaf 32 [9.23144, 29.2743] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00533
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v13.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v13.json
+leaf 6 [5.61575, 5.63594] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0201
+leaf 23 [5.63749, 5.65387] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.025
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v14.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v14.json
+leaf 9 [5.63164, 5.63628] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00247
+leaf 31 [5.63715, 5.64152] depth 12 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00565
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v15.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v15.json
+leaf 10 [9.20408, 9.23044] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0864
+leaf 28 [9.23226, 9.24736] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0124
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v16.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v16.json
+leaf 6 [9.21495, 9.23106] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0344
+leaf 21 [9.23164, 26.9711] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0031
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v17.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v17.json
+leaf 8 [9.2081, 9.23126] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0537
+leaf 24 [9.23144, 29.2743] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00834
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v18.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v18.json
+leaf 7 [5.62798, 5.63594] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0025
+leaf 28 [5.63749, 5.64568] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00154
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v19.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v19.json
+leaf 5 [5.63016, 5.63628] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00656
+leaf 19 [5.63715, 5.64152] depth 12 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0267
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v20.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v20.json
+leaf 8 [9.22032, 9.22974] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 1.92e-05
+leaf 23 [9.23296, 9.24693] depth 10 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00313
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v21.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v21.json
+leaf 10 [9.20448, 9.23084] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0358
+leaf 26 [9.23186, 9.75095] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.174
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v22.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v22.json
+leaf 10 [9.22058, 9.23119] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.114
+leaf 31 [9.23151, 28.1227] depth 0 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0803
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v23.json
+exists /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b8_v23.json
+leaf 0 [6.81919, 10.4292] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 6.47e-05
+leaf 1 [10.4292, 14.0392] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.796
+leaf 2 [14.0392, 21.2592] depth 1 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.173
+leaf 0 [1.75635, 7.49] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.5
+leaf 1 [7.49, 13.2236] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.000248
+leaf 2 [13.2236, 24.6909] depth 1 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.245
+leaf 0 [0.422021, 1.79632] depth 4 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.667
+leaf 1 [1.79632, 3.17061] depth 4 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.333
+leaf 2 [3.17061, 4.54491] depth 4 Levin: reproduces True {'V_P': True, 'Q': None, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': None, 'residual_is_delta1': True}; clause untrusted r 1
+leaf 3 [4.54491, 5.91921] depth 4 Levin: reproduces True {'V_P': True, 'Q': None, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': None, 'residual_is_delta1': True}; clause untrusted r inf
+leaf 4 [5.91921, 11.4164] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 3.21e-05
+leaf 5 [11.4164, 22.4108] depth 1 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0814
+leaf 0 [7.92399, 8.89995] depth 4 Levin: reproduces True {'V_P': True, 'Q': None, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': None, 'residual_is_delta1': True}; clause untrusted r 6
+leaf 1 [8.89995, 9.87591] depth 4 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 4.37e-07
+leaf 2 [9.87591, 11.8278] depth 3 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.729
+leaf 3 [11.8278, 15.7317] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.619
+leaf 4 [15.7317, 15.9757] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.218
+leaf 5 [15.9757, 16.0367] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.561
+leaf 6 [16.0367, 16.0976] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.148
+leaf 7 [16.0976, 16.1281] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.187
+leaf 8 [16.1281, 16.1586] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0569
+leaf 9 [16.1586, 16.2196] depth 8 Levin: reproduces True {'V_P': True, 'Q': None, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': None, 'residual_is_delta1': True}; clause untrusted r 2.52
+leaf 10 [16.2196, 16.4636] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.015
+leaf 11 [16.4636, 16.5856] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0437
+leaf 12 [16.5856, 16.7076] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0852
+leaf 13 [16.7076, 16.9516] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.108
+leaf 14 [16.9516, 16.9821] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0719
+leaf 15 [16.9821, 17.0126] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.17
+leaf 16 [17.0126, 17.0736] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0199
+leaf 17 [17.0736, 17.1956] depth 7 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.197
+leaf 18 [17.1956, 17.4396] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.171
+leaf 19 [17.4396, 17.6836] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.17
+leaf 20 [17.6836, 18.1716] depth 5 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.219
+leaf 21 [18.1716, 18.4156] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.00815
+leaf 22 [18.4156, 18.446] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.138
+leaf 23 [18.446, 18.4537] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.137
+leaf 28 [18.4689, 18.4765] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0253
+leaf 29 [18.4765, 18.4918] depth 10 Levin: reproduces True {'V_P': True, 'Q': None, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': None, 'residual_is_delta1': True}; clause untrusted r 3.39e+03
+leaf 32 [18.4994, 18.507] depth 11 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.114
+leaf 37 [18.5223, 18.5375] depth 10 Levin: reproduces True {'V_P': True, 'Q': None, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': None, 'residual_is_delta1': True}; clause untrusted r 174
+leaf 49 [18.568, 18.5985] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.215
+leaf 50 [18.5985, 18.629] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.162
+leaf 61 [18.6595, 18.9035] depth 6 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.216
+leaf 68 [18.934, 18.9645] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.1
+leaf 69 [18.9645, 18.995] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.17
+leaf 70 [18.995, 19.0255] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.185
+leaf 71 [19.0255, 19.056] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.128
+leaf 72 [19.056, 19.0865] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.147
+leaf 73 [19.0865, 19.1475] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0803
+leaf 95 [19.239, 19.2695] depth 9 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0377
+leaf 96 [19.2695, 19.3305] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0524
+leaf 97 [19.3305, 19.3915] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0128
+leaf 98 [19.3915, 19.4525] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.2
+leaf 99 [19.4525, 19.5135] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.235
+leaf 100 [19.5135, 19.5745] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.0202
+leaf 101 [19.5745, 19.6355] depth 8 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.026
+leaf 102 [19.6355, 23.5393] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.241
+leaf 0 [6.26722, 7.41871] depth 4 Levin: reproduces True {'V_P': True, 'Q': None, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': None, 'residual_is_delta1': True}; clause untrusted r 1
+leaf 1 [7.41871, 8.57019] depth 4 Levin: reproduces True {'V_P': True, 'Q': None, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': None, 'residual_is_delta1': True}; clause untrusted r 1.33
+leaf 2 [8.57019, 10.8732] depth 3 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.762
+leaf 3 [10.8732, 15.4791] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause noise r 0.298
+leaf 4 [15.4791, 20.085] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.117
+leaf 5 [20.085, 24.6909] depth 2 Levin: reproduces True {'V_P': True, 'Q': True, 'delta1': True, 'delta2': True, 'r': True, 'declared_resolution': True, 'residual_is_delta1': True}; clause r<1/4 r 0.109
+# ----
+# end 2026-11-13T15:18:52Z
+# exit 0

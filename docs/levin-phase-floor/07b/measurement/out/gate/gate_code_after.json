@@ -1,0 +1,42 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/gate_code_07b.py",
+  "script_sha256": "9b1ca77241abfc95dc7cb8062d7a145828c1d3d8d0f949b92f4c212ed6ac0723",
+  "host": "mps026298.phys.susx.ac.uk",
+  "utc": "2026-11-14T21:10:53Z"
+ },
+ "diff_stat": " ComputeTargets/tests/test_quadsource_integral.py | 19 +++++++++++--------\n LiouvilleGreen/bessel_phase.py                   | 11 +++++++----\n LiouvilleGreen/tests/test_three_bessel.py        |  7 ++++---\n LiouvilleGreen/three_bessel_integrals.py         |  6 ++++--\n 4 files changed, 26 insertions(+), 17 deletions(-)\n",
+ "clause1": {
+  "files": [
+   "ComputeTargets/tests/test_quadsource_integral.py",
+   "LiouvilleGreen/bessel_phase.py",
+   "LiouvilleGreen/tests/test_three_bessel.py",
+   "LiouvilleGreen/three_bessel_integrals.py"
+  ],
+  "only_89c368f2s_four": true,
+  "ast_equal_without_docstrings": {
+   "ComputeTargets/tests/test_quadsource_integral.py": true,
+   "LiouvilleGreen/bessel_phase.py": true,
+   "LiouvilleGreen/tests/test_three_bessel.py": true,
+   "LiouvilleGreen/three_bessel_integrals.py": true
+  },
+  "holds": true
+ },
+ "clause2": {
+  "checkpoint": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744/checkpoint.jsonl",
+  "sha256": "461df2ec66969a113e9f6d590f05a4d5b300d7c1e0cb62d05c7385d23e8de56b",
+  "holds": true
+ },
+ "clause3": {
+  "worktree_head": "436ed5d43ace32fcfaf5e7517de93978144d824a",
+  "worktree_status_ignored": "",
+  "main_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+  "main_status": "",
+  "holds": true
+ },
+ "clause4": {
+  "levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+  "holds": true
+ },
+ "holds": true
+}

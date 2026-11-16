@@ -1,0 +1,697 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/leafproj_ext.py",
+  "script_sha256": "7880c04651629eebfeef76d8c8959b7afa7844394353f6dc8dc2b88e7e0c4f7c",
+  "fits": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/refs_projection.json",
+  "fits_sha256": "0512daddfc3bb920cbb4d0d0515c8b735742c631bb69b76b56b2fd350af15a1b",
+  "split_ratio": 1.8
+ },
+ "fits": {
+  "fcc_r1": {
+   "n": 24,
+   "alpha_beta_gamma": [
+    0.007656822524060482,
+    1.5448684718534356e-10,
+    0.012501926644972553
+   ],
+   "max_actual_over_fit": 1.9313962828453655,
+   "min_actual_over_fit": 0.853922782627113,
+   "readings": {
+    "v00": 149.64205962512642,
+    "v01": 56.83772479183972,
+    "v02": 237.01576495869085,
+    "v03": 29.889146624598652,
+    "v04": 32.34725345764309,
+    "v05": 734.7452282919548,
+    "v06": 35.68374416604638,
+    "v07": 156.08275033300743,
+    "v08": 1405.54788800003,
+    "v09": 286.19909262517467,
+    "v10": 746.9786428329535,
+    "v11": 57.81727529130876,
+    "v12": 471.7488068751991,
+    "v13": 4588.569591165986,
+    "v14": 72.11396474996582,
+    "v15": 225.80206183390692,
+    "v16": 54.02902058325708,
+    "v17": 477.74407895840704,
+    "v18": 4323.040131624788,
+    "v19": 72.98794499970973,
+    "v20": 222.3966164169833,
+    "v21": 29.29202025011182,
+    "v22": 151.82694745901972,
+    "v23": 1493.8740202500485
+   }
+  },
+  "fcc_r2": {
+   "n": 24,
+   "alpha_beta_gamma": [
+    0.03811011151584723,
+    0.0,
+    0.05728684543969346
+   ],
+   "max_actual_over_fit": 1.5614530890880491,
+   "min_actual_over_fit": 0.853616104114823,
+   "readings": {
+    "v00": 686.7580814999528,
+    "v01": 250.91105683334172,
+    "v02": 1087.0547422496602,
+    "v03": 119.70966733293608,
+    "v04": 127.83046295912936,
+    "v05": 3390.1985248751007,
+    "v06": 142.0113145839423,
+    "v07": 689.7749714576639,
+    "v08": 6422.9661710844375,
+    "v09": 1277.2186902919784,
+    "v10": 3316.367264417,
+    "v11": 255.2273812922649,
+    "v12": 2142.4374237093143,
+    "v13": 19372.791940291878,
+    "v14": 323.9629933331162,
+    "v15": 1041.467145709321,
+    "v16": 239.28555633313954,
+    "v17": 2106.8593917498365,
+    "v18": 20508.901343499776,
+    "v19": 313.58850504178554,
+    "v20": 1041.3730570422485,
+    "v21": 116.20206812489778,
+    "v22": 693.7232557078823,
+    "v23": 6670.293683041818
+   }
+  }
+ },
+ "calls": {
+  "W2-1-2174-2~o:W2-1-2174-2~o": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-1-2174-2~o.json",
+   "spec_sha256": "c1a5664325c1633dbf1893659d849b6c1249cb07ddf981b8dd1c593b5ce4d583",
+   "counted": true,
+   "features_split": {
+    "n_seg": 2039,
+    "span_f": 6235505274.858772,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 2039,
+    "span_f": 6235505274.858772,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 16.575564677079836,
+     "with_margin_s": 32.01398400337494,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 77.7065173808125,
+     "with_margin_s": 121.33508160654385,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 16.575564677079836,
+     "with_margin_s": 32.01398400337494,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 77.7065173808125,
+     "with_margin_s": 121.33508160654385,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   }
+  },
+  "W2-2-14345-3~o:W2-2-14345-3~o": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-2-14345-3~o.json",
+   "spec_sha256": "80b34c199c8742b5725810852eea1f39ef7d9db0472e4e68db865500faea4983",
+   "counted": true,
+   "features_split": {
+    "n_seg": 2033,
+    "span_f": 35462981434.953514,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 2033,
+    "span_f": 35462981434.953514,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 21.044884385093297,
+     "with_margin_s": 40.64601147427967,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 77.47785671171741,
+     "with_margin_s": 120.97803869843239,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 21.044884385093297,
+     "with_margin_s": 40.64601147427967,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 77.47785671171741,
+     "with_margin_s": 120.97803869843239,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   }
+  },
+  "W2-2-34473-3~o:W2-2-34473-3~o": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/W2-2-34473-3~o.json",
+   "spec_sha256": "73f37eb0e7939eee97376391b27339a6b1e4a0b593195c5a5885aaf38739fbf8",
+   "counted": true,
+   "features_split": {
+    "n_seg": 1752,
+    "span_f": 158601855.29657233,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 1752,
+    "span_f": 158601855.29657233,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 13.439254962736479,
+     "with_margin_s": 25.956527079240367,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 66.76891537576434,
+     "with_margin_s": 104.25652916854577,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 13.439254962736479,
+     "with_margin_s": 25.956527079240367,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 66.76891537576434,
+     "with_margin_s": 104.25652916854577,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   }
+  },
+  "p14501_7:p14501_7": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p14501_7.json",
+   "spec_sha256": "b0e5569ad7470ae5f40679a73e638ded0049eb09c8b2e4a334fb2c6470c34dcc",
+   "counted": true,
+   "features_split": {
+    "n_seg": 2421,
+    "span_f": 2602831707.644555,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 2413,
+    "span_f": 2602831006.4763393,
+    "D_f": 619.1315933419313,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 2
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 18.939270595018478,
+     "with_margin_s": 36.57923682702122,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 92.26457997986614,
+     "with_margin_s": 144.06681342297335,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 26.618353670050528,
+     "with_margin_s": 51.41058933379888,
+     "gamma_D_f_s": 7.740337763545802,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 127.42779498234972,
+     "with_margin_s": 198.9725241108686,
+     "gamma_D_f_s": 35.468095894610364,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   }
+  },
+  "p14501_8:p14501_8": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p14501_8.json",
+   "spec_sha256": "a195c0a15ac6d04bbba3dc873720a118fb497dbe2ccdaad366163b0c73957b68",
+   "counted": true,
+   "features_split": {
+    "n_seg": 2402,
+    "span_f": 2602831707.644557,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 2394,
+    "span_f": 2602831006.4763412,
+    "D_f": 619.1315933419313,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 2
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 18.79379096706133,
+     "with_margin_s": 36.298258014355056,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 91.54048786106505,
+     "with_margin_s": 142.9361775472871,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 26.47287404209338,
+     "with_margin_s": 51.12961052113272,
+     "gamma_D_f_s": 7.740337763545802,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 126.70370286354864,
+     "with_margin_s": 197.84188823518232,
+     "gamma_D_f_s": 35.468095894610364,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   }
+  },
+  "p35006_7:p35006_7": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/ext/x1/p35006_7.json",
+   "spec_sha256": "b26b11862870fff47af01b3e9305481c4a3cc163aee941ecd004e0c411c09b8c",
+   "counted": true,
+   "features_split": {
+    "n_seg": 2287,
+    "span_f": 2553372190.339327,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 2279,
+    "span_f": 2553371410.1797056,
+    "D_f": 693.3427881885025,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 2
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 17.90561553190258,
+     "with_margin_s": 34.582839280374884,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 87.15782503674261,
+     "with_margin_s": 136.09285514181747,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 26.512481508939096,
+     "with_margin_s": 51.20610823537146,
+     "gamma_D_f_s": 8.6681206777534,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 126.5723652882967,
+     "with_margin_s": 197.63681077259184,
+     "gamma_D_f_s": 39.71942114368086,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   }
+  },
+  "W2-2-34473-3:attr_W2-2-34473-3": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-2-34473-3.json",
+   "spec_sha256": "8bce4af18467f76a3e17df8d47942eeae7e02d13e116195852aa9452efdb4d83",
+   "counted": false,
+   "features_split": {
+    "n_seg": 1781,
+    "span_f": 158601855.29657233,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 1781,
+    "span_f": 158601855.29657233,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 13.661302815934233,
+     "with_margin_s": 26.385389477520302,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 67.87410860972392,
+     "with_margin_s": 105.98223655775116,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 13.661302815934233,
+     "with_margin_s": 26.385389477520302,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 67.87410860972392,
+     "with_margin_s": 105.98223655775116,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "actual": {
+    "fcc_r1": {
+     "wall_s": 101.67548224981874,
+     "job_cpu_s": 197.6979778688401
+    },
+    "fcc_r2": {
+     "wall_s": 407.56257849978283,
+     "job_cpu_s": 808.8366309553385
+    }
+   },
+   "reading": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/attr_W2-2-34473-3.json",
+   "reading_sha256": "f857962dea70f2ad7afbf84be4e648fdfefa29aeb3583aec959c04e255ced267",
+   "reading_split_ratio": 1.8
+  },
+  "W2-2-14345-3:attr_W2-2-14345-3": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-2-14345-3.json",
+   "spec_sha256": "b8b0752f2cbc5db89307abd47db5c83dc1bd91a12eb16fcc7bb538b118eb3a14",
+   "counted": false,
+   "features_split": {
+    "n_seg": 2049,
+    "span_f": 35462981434.953514,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 2049,
+    "span_f": 35462981434.953514,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 21.16739354547827,
+     "with_margin_s": 40.88262521126171,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 78.08761849597097,
+     "with_margin_s": 121.93015312006295,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 21.16739354547827,
+     "with_margin_s": 40.88262521126171,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 78.08761849597097,
+     "with_margin_s": 121.93015312006295,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "actual": {
+    "fcc_r1": {
+     "wall_s": 88.20241204183549,
+     "job_cpu_s": 172.4131566202268
+    },
+    "fcc_r2": {
+     "wall_s": 342.63297750009224,
+     "job_cpu_s": 678.5294491653331
+    }
+   },
+   "reading": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/attr_W2-2-14345-3.json",
+   "reading_sha256": "5e2786da185ed8fa5046fd0d64fe02a5712db1b772418caf247dd293798fd52f",
+   "reading_split_ratio": 1.8
+  },
+  "v09:carrier_v09": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/carrier_v09.json",
+   "spec_sha256": "dd05c47b93cec8a457a01b5b5c27bc926a8ebe226aed8aab7dc3c8480de6a868",
+   "counted": false,
+   "features_split": {
+    "n_seg": 1053,
+    "span_f": 4258415.499318361,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 1053,
+    "span_f": 4258415.499318361,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 8.063291987020182,
+     "with_margin_s": 15.5734121712276,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 40.12994742618713,
+     "with_margin_s": 62.6610303735609,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 8.063291987020182,
+     "with_margin_s": 15.5734121712276,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 40.12994742618713,
+     "with_margin_s": 62.6610303735609,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "actual": {
+    "fcc_r1": {
+     "wall_s": 21.9513867078349,
+     "job_cpu_s": 113.7419280926697
+    },
+    "fcc_r2": {
+     "wall_s": 82.14948512520641,
+     "job_cpu_s": 464.56626771204174
+    }
+   },
+   "reading": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/carrier_v09.json",
+   "reading_sha256": "c15ec62c5f045b74b99e6827b69b958009e5d491bae1441e848c1e19148e04c8",
+   "reading_split_ratio": 1.8
+  },
+  "v08:pilot_v08": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/pilot_v08.json",
+   "spec_sha256": "b15259d2029fe615eea5e93d44d5f0c0ad8ef3b268d9f1d495a978d1c0e18dd4",
+   "counted": false,
+   "features_split": {
+    "n_seg": 1702,
+    "span_f": 296764476.6895752,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 1689,
+    "span_f": 296696148.3330078,
+    "D_f": 53553.61643534673,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 3
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 13.077758144311321,
+     "with_margin_s": 25.25833346787359,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 64.86340979997198,
+     "with_margin_s": 101.28117160095029,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 682.5015931433675,
+     "with_margin_s": 1318.1810400331399,
+     "gamma_D_f_s": 669.5233842477013,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 3132.285725818602,
+     "with_margin_s": 4890.917222485858,
+     "gamma_D_f_s": 3067.9177474683356,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "actual": {
+    "fcc_r1": {
+     "wall_s": 30.22380279097706,
+     "job_cpu_s": 164.89534945925698
+    },
+    "fcc_r2": {
+     "wall_s": 115.48640000028536,
+     "job_cpu_s": 660.1581209925935
+    }
+   },
+   "reading": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/pilot_v08_split18.json",
+   "reading_sha256": "c44a779e4bf44293b6fb8aef2f637d592f0355d99f43654fc8eb279629748d3d",
+   "reading_split_ratio": 1.8
+  },
+  "v13:v4_v13": {
+   "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v13.json",
+   "spec_sha256": "f261cd079f6a1a0dbf16da3b787d8d5d0d6a01ac3704e2bea2323eed5c9fd4d4",
+   "counted": false,
+   "features_split": {
+    "n_seg": 1807,
+    "span_f": 931288696.4350586,
+    "D_f": 0.0,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 0
+   },
+   "features_unsplit": {
+    "n_seg": 1792,
+    "span_f": 931085309.3505859,
+    "D_f": 158312.671381889,
+    "D_f_stationary": 0.0,
+    "n_stationary": 0,
+    "n_steep": 3
+   },
+   "projection_split": {
+    "fcc_r1": {
+     "fit_s": 13.979750155508892,
+     "with_margin_s": 27.000437485456793,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 68.86497150913594,
+     "with_margin_s": 107.5294224929008,
+     "gamma_D_f_s": 0.0,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "projection_unsplit": {
+    "fcc_r1": {
+     "fit_s": 1993.0782709830405,
+     "with_margin_s": 3849.4239639965126,
+     "gamma_D_f_s": 1979.2134045860219,
+     "gamma_D_f_stationary_s": 0.0
+    },
+    "fcc_r2": {
+     "fit_s": 9137.526856435656,
+     "with_margin_s": 14267.819536606465,
+     "gamma_D_f_s": 9069.233536599257,
+     "gamma_D_f_stationary_s": 0.0
+    }
+   },
+   "actual": {
+    "fcc_r1": {
+     "wall_s": 86.71472704224288,
+     "job_cpu_s": 170.12811079761013
+    },
+    "fcc_r2": {
+     "wall_s": 360.17035224987194,
+     "job_cpu_s": 712.9678480429575
+    }
+   },
+   "reading": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/v4_v13.json",
+   "reading_sha256": "3d060a334b7089ed11ca108e25f1369ea67ce3799e6987ec989f56976e306bdd",
+   "reading_split_ratio": 1.8
+  }
+ },
+ "total_with_margin_s": {
+  "fcc_r1": 206.07685667864612,
+  "fcc_r2": 769.6654955856
+ },
+ "total_unsplit_with_margin_s": {
+  "fcc_r1": 252.36283064719802,
+  "fcc_r2": 941.0208725921647
+ }
+}

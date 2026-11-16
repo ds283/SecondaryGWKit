@@ -1,0 +1,50 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/x2_tables.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x2/x2_tables.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x2/x2_tables.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:12:46Z
+# ----
+## (X2) What separates the six dishonest leaves away from windows from the honest trusted leaves
+
+Scored trusted Levin leaves (reference accuracy at most e'/100): 73; groups: honest <=30 36, honest >30 26, six 6, window carrier 5. The calls' collocation order N = 24.
+
+### Separation (smallest among the six over largest among the honest; above 1 separates)
+
+| candidate | six: min - max | honest >30: max | margin vs honest >30 | honest >30 at or above the six's min | all honest: max | margin vs all honest | honest at or above | window carriers: min |
+|---|---|---|---|---|---|---|---|---|
+| D_Q(16) | 0.204 - 9.26 | 0.304 | 0.67 | 4 | 3.18 | 0.0641 | 9 | 0.0114 |
+| D_P(16) | 0.953 - 374 | 53.2 | 0.0179 | 23 | 295 | 0.00323 | 49 | 0.949 |
+| D_Q(32) | 0.206 - 7.25 | 1.62 | 0.127 | 2 | 1.62 | 0.127 | 4 | 0.0063 |
+| D_P(32) | 0.0565 - 6.93 | 1.03 | 0.0548 | 24 | 1.47 | 0.0384 | 59 | 0.731 |
+| D_Q(40) | 0.552 - 3.97 | 1.72 | 0.321 | 1 | 1.72 | 0.321 | 2 | 0.0064 |
+| D_P(40) | 0.0166 - 3.67 | 1.01 | 0.0164 | 24 | 1.27 | 0.013 | 59 | 0.0579 |
+| D_Q(48) | 1.13 - 4.08 | 1.49 | 0.757 | 1 | 1.49 | 0.757 | 2 | 0.0181 |
+| D_P(48) | 0.484 - 6.71 | 1.1 | 0.44 | 24 | 1.21 | 0.399 | 58 | 0.935 |
+| r3 | 3.06 - 319 | 18.3 | 0.167 | 3 | 39.2 | 0.0781 | 8 | 1.13 |
+| |S3-Q|/e' | 0.561 - 4.15 | 1.9 | 0.295 | 1 | 3.97 | 0.141 | 3 | 0.0236 |
+| tail_P/e' | 0.0225 - 4.57 | 5.12 | 0.0044 | 24 | 13.1 | 0.00172 | 59 | 4.05 |
+| tail_Q/e' | 0.0166 - 0.828 | 1.31 | 0.0127 | 8 | 1.31 | 0.0127 | 10 | 3.31 |
+| tail_P_rel | 1.85e-10 - 2.8e-07 | 0.218 | 8.51e-10 | 26 | 0.218 | 8.51e-10 | 52 | 6.3e-06 |
+| tail_Q_rel | 1.73e-09 - 1.7e-08 | 0.497 | 3.48e-09 | 26 | 0.497 | 3.48e-09 | 30 | 0.219 |
+| cond_P | 253 - 3.06e+05 | 2.77e+08 | 9.12e-07 | 3 | 2.77e+08 | 9.12e-07 | 5 | 536 |
+| rate range (nodes) | 49.4 - 1.4e+05 | 1.09e+08 | 4.54e-07 | 15 | 1.09e+08 | 4.54e-07 | 15 | 537 |
+| rate range (end to end) | 49.4 - 1.4e+05 | 3.38e+04 | 0.00146 | 15 | 3.38e+04 | 0.00146 | 15 | 537 |
+| r | 0.0814 - 0.379 | 0.241 | 0.337 | 8 | 0.241 | 0.337 | 18 | 0.0031 |
+
+### Does a higher collocation order remove the error? err(Q at order N')/e' on the dishonest leaves
+
+| call | leaf | group | err(Q)/e' (N) | N'=16 | N'=32 | N'=40 | N'=48 |
+|---|---|---|---|---|---|---|---|
+| v12 | 24 | window carrier | +7.44 | +7.53 | +7.27 | +7.09 | +6.83 |
+| v17 | 21 | window carrier | -2.94 | -2.96 | -2.93 | -2.91 | -2.88 |
+| v22 | 26 | window carrier | +4.67 | +4.36 | +3.65 | +2.28 | +1.18 |
+| v23 | 31 | window carrier | -1.06 | -1.05 | -1.02 | -1.07 | -1.08 |
+| v08 | 30 | window carrier | +3.63 | +3.67 | +3.6 | +3.55 | +3.48 |
+| v09 | 38 | six | +2.66 | +3.83 | +0.463 | +3.32 | +3.79 |
+| W2-0-12977-5 | 2 | six | -2.2 | -1.91 | -2.4 | -5.8 | -5.3 |
+| W2-1-2174-2 | 2 | six | +1.36 | +1.15 | -1.63 | -1.59 | -0.382 |
+| W2-2-14345-3 | 5 | six | -6.01 | -5.75 | -7.49 | -5.46 | -9 |
+| W2-2-34473-3 | 102 | six | -1.4 | -1.69 | +1.57 | +0.641 | -0.194 |
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x2/x2_tables.json 223d09ac69519692b584df424e46ab9d3de487be8e345835c76dc1d63fae7f8d /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x2/x2_tables.md 5d53199fda2324e8393e16cb063c60921ea7bc6d8cfa3c81be372f62befcb68e
+# ----
+# end 2026-11-15T23:12:46Z
+# exit 0

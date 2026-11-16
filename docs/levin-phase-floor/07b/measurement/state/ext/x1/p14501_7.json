@@ -1,0 +1,370 @@
+{
+ "sid": "p14501_7",
+ "capture": {
+  "set": "pairs",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/state/pairs_capture/X00/inputs_X00.pkl",
+  "offset": 2752466,
+  "length": 1380312,
+  "sha256": "0be60cb4d863b6b9cb943d1dbf5544f595bffa8fbdd1fda94af3ec097b20c514",
+  "override": null,
+  "census": "p14501_7"
+ },
+ "spans": [
+  [
+   "0x1.4831d34c84efap-3",
+   "0x1.24ac7fa6b29a6p-1"
+  ],
+  [
+   "0x1.24ac7fa6b29a6p-1",
+   "0x1.5954825b96f20p-1"
+  ],
+  [
+   "0x1.5954825b96f20p-1",
+   "0x1.73a883b6091ddp-1"
+  ],
+  [
+   "0x1.73a883b6091ddp-1",
+   "0x1.7a3d840ca5a8cp-1"
+  ],
+  [
+   "0x1.7a3d840ca5a8cp-1",
+   "0x1.7be2c4224ccb8p-1"
+  ],
+  [
+   "0x1.7be2c4224ccb8p-1",
+   "0x1.7d880437f3ee4p-1"
+  ],
+  [
+   "0x1.7d880437f3ee4p-1",
+   "0x1.80d284634233cp-1"
+  ],
+  [
+   "0x1.80d284634233cp-1",
+   "0x1.8dfc85107b49ap-1"
+  ],
+  [
+   "0x1.8dfc85107b49ap-1",
+   "0x1.c2a487c55fa14p-1"
+  ],
+  [
+   "0x1.c2a487c55fa14p-1",
+   "0x1.dcf8891fd1cd1p-1"
+  ],
+  [
+   "0x1.dcf8891fd1cd1p-1",
+   "0x1.ea2289cd0ae30p-1"
+  ],
+  [
+   "0x1.ea2289cd0ae30p-1",
+   "0x1.f0b78a23a76dfp-1"
+  ],
+  [
+   "0x1.f0b78a23a76dfp-1",
+   "0x1.f74c8a7a43f8ep-1"
+  ],
+  [
+   "0x1.f789da8b09d82p-1",
+   "0x1.fd77219cebb9bp-1"
+  ],
+  [
+   "0x1.fd77219cebb9bp-1",
+   "0x1.01b2345766cdap+0"
+  ],
+  [
+   "0x1.01b2345766cdap+0",
+   "0x1.079f7b6948af2p+0"
+  ],
+  [
+   "0x1.079f7b6948af2p+0",
+   "0x1.137a098d0c724p+0"
+  ],
+  [
+   "0x1.137a098d0c724p+0",
+   "0x1.2b2f25d493f88p+0"
+  ],
+  [
+   "0x1.2b2f25d493f88p+0",
+   "0x1.5a995e63a3050p+0"
+  ],
+  [
+   "0x1.5a995e63a3050p+0",
+   "0x1.b96dcf81c11e0p+0"
+  ],
+  [
+   "0x1.b96dcf81c11e0p+0",
+   "0x1.3b8b58defea80p+1"
+  ],
+  [
+   "0x1.3b8b58defea80p+1",
+   "0x1.f9343b1b3ada0p+1"
+  ],
+  [
+   "0x1.f9343b1b3ada0p+1",
+   "0x1.ba42ffc9d99f0p+2"
+  ],
+  [
+   "0x1.ba42ffc9d99f0p+2",
+   "0x1.9aca622129018p+3"
+  ],
+  [
+   "0x1.9aca622129018p+3",
+   "0x1.8b0e134cd0b2cp+4"
+  ]
+ ],
+ "points": [
+  "0x1.4831d34c84efap-3",
+  "0x1.24ac7fa6b29a6p-1",
+  "0x1.5954825b96f20p-1",
+  "0x1.5c9f0286e5378p-1",
+  "0x1.5fe982b2337cfp-1",
+  "0x1.633402dd81c26p-1",
+  "0x1.667e8308d007ep-1",
+  "0x1.69c903341e4d6p-1",
+  "0x1.6d13835f6c92ep-1",
+  "0x1.705e038abad86p-1",
+  "0x1.73a883b6091ddp-1",
+  "0x1.7a3d840ca5a8cp-1",
+  "0x1.7a722c0f5a8d2p-1",
+  "0x1.7aa6d4120f717p-1",
+  "0x1.7adb7c14c455cp-1",
+  "0x1.7b102417793a2p-1",
+  "0x1.7b44cc1a2e1e8p-1",
+  "0x1.7b79741ce302dp-1",
+  "0x1.7bae1c1f97e72p-1",
+  "0x1.7be2c4224ccb8p-1",
+  "0x1.7c176c2501afep-1",
+  "0x1.7c4c1427b6943p-1",
+  "0x1.7c80bc2a6b788p-1",
+  "0x1.7cb5642d205cep-1",
+  "0x1.7cea0c2fd5414p-1",
+  "0x1.7d1eb4328a259p-1",
+  "0x1.7d535c353f09ep-1",
+  "0x1.7d880437f3ee4p-1",
+  "0x1.80d284634233cp-1",
+  "0x1.8277c478e9568p-1",
+  "0x1.841d048e90794p-1",
+  "0x1.85c244a4379c0p-1",
+  "0x1.876784b9debebp-1",
+  "0x1.890cc4cf85e16p-1",
+  "0x1.8ab204e52d042p-1",
+  "0x1.8c5744fad426ep-1",
+  "0x1.8dfc85107b49ap-1",
+  "0x1.c2a487c55fa14p-1",
+  "0x1.dcf8891fd1cd1p-1",
+  "0x1.ea2289cd0ae30p-1",
+  "0x1.f0b78a23a76dfp-1",
+  "0x1.f18a2a2e7aff4p-1",
+  "0x1.f25cca394e90ap-1",
+  "0x1.f32f6a4422220p-1",
+  "0x1.f4020a4ef5b36p-1",
+  "0x1.f4d4aa59c944cp-1",
+  "0x1.f5a74a649cd62p-1",
+  "0x1.f679ea6f70678p-1",
+  "0x1.f74c8a7a43f8ep-1",
+  "0x1.f75107c7dc74ap-1",
+  "0x1.f755851574f05p-1",
+  "0x1.f75af06d07492p-1",
+  "0x1.f75da618d0758p-1",
+  "0x1.f7605bc499a1fp-1",
+  "0x1.f763117062ce6p-1",
+  "0x1.f763bedb55198p-1",
+  "0x1.f7646c4647649p-1",
+  "0x1.f76519b139afap-1",
+  "0x1.f765c71c2bfacp-1",
+  "0x1.f76721f21090fp-1",
+  "0x1.f767cf5d02dc0p-1",
+  "0x1.f7687cc7f5272p-1",
+  "0x1.f76b3273be539p-1",
+  "0x1.f776092a62aa6p-1",
+  "0x1.f780dfe107013p-1",
+  "0x1.f789da8b09d82p-1",
+  "0x1.f847836d46145p-1",
+  "0x1.f9052c4f82508p-1",
+  "0x1.f9c2d531be8cbp-1",
+  "0x1.fa807e13fac8ep-1",
+  "0x1.fb3e26f637051p-1",
+  "0x1.fbfbcfd873414p-1",
+  "0x1.fcb978baaf7d8p-1",
+  "0x1.fd77219cebb9bp-1",
+  "0x1.fe34ca7f27f5ep-1",
+  "0x1.fef2736164322p-1",
+  "0x1.ffb01c43a06e5p-1",
+  "0x1.0036e292ee554p+0",
+  "0x1.0095b7040c736p+0",
+  "0x1.00f48b752a917p+0",
+  "0x1.01535fe648af8p+0",
+  "0x1.01b2345766cdap+0",
+  "0x1.079f7b6948af2p+0",
+  "0x1.137a098d0c724p+0",
+  "0x1.1670ad15fd630p+0",
+  "0x1.1967509eee53dp+0",
+  "0x1.1c5df427df44ap+0",
+  "0x1.1f5497b0d0356p+0",
+  "0x1.224b3b39c1262p+0",
+  "0x1.2541dec2b216fp+0",
+  "0x1.2838824ba307cp+0",
+  "0x1.2b2f25d493f88p+0",
+  "0x1.5a995e63a3050p+0",
+  "0x1.b96dcf81c11e0p+0",
+  "0x1.3b8b58defea80p+1",
+  "0x1.f9343b1b3ada0p+1",
+  "0x1.144f39d524f34p+2",
+  "0x1.2c04561cac798p+2",
+  "0x1.43b9726433ffcp+2",
+  "0x1.5b6e8eabbb860p+2",
+  "0x1.7323aaf3430c4p+2",
+  "0x1.8ad8c73aca928p+2",
+  "0x1.a28de3825218cp+2",
+  "0x1.ba42ffc9d99f0p+2",
+  "0x1.e9ad3858e8ab8p+2",
+  "0x1.0c8bb873fbdc0p+3",
+  "0x1.2440d4bb83624p+3",
+  "0x1.3bf5f1030ae88p+3",
+  "0x1.53ab0d4a926ecp+3",
+  "0x1.6b60299219f50p+3",
+  "0x1.831545d9a17b4p+3",
+  "0x1.9aca622129018p+3",
+  "0x1.ca349ab0380e0p+3",
+  "0x1.f99ed33f471a8p+3",
+  "0x1.148485e72b138p+4",
+  "0x1.2c39a22eb299cp+4",
+  "0x1.43eebe763a200p+4",
+  "0x1.5ba3dabdc1a64p+4",
+  "0x1.7358f705492c8p+4",
+  "0x1.8b0e134cd0b2cp+4"
+ ],
+ "named": [
+  {
+   "name": "e:2:8",
+   "variant": "e",
+   "i": 2,
+   "lo": "0x1.5954825b96f20p-1",
+   "hi": "0x1.73a883b6091ddp-1",
+   "depth": 4,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:4:8",
+   "variant": "e",
+   "i": 4,
+   "lo": "0x1.7a3d840ca5a8cp-1",
+   "hi": "0x1.7be2c4224ccb8p-1",
+   "depth": 8,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:5:8",
+   "variant": "e",
+   "i": 5,
+   "lo": "0x1.7be2c4224ccb8p-1",
+   "hi": "0x1.7d880437f3ee4p-1",
+   "depth": 8,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:7:8",
+   "variant": "e",
+   "i": 7,
+   "lo": "0x1.80d284634233cp-1",
+   "hi": "0x1.8dfc85107b49ap-1",
+   "depth": 5,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:12:8",
+   "variant": "e",
+   "i": 12,
+   "lo": "0x1.f0b78a23a76dfp-1",
+   "hi": "0x1.f74c8a7a43f8ep-1",
+   "depth": 6,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:30:8",
+   "variant": "e",
+   "i": 30,
+   "lo": "0x1.f789da8b09d82p-1",
+   "hi": "0x1.fd77219cebb9bp-1",
+   "depth": 11,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:31:8",
+   "variant": "e",
+   "i": 31,
+   "lo": "0x1.fd77219cebb9bp-1",
+   "hi": "0x1.01b2345766cdap+0",
+   "depth": 11,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:34:8",
+   "variant": "e",
+   "i": 34,
+   "lo": "0x1.137a098d0c724p+0",
+   "hi": "0x1.2b2f25d493f88p+0",
+   "depth": 8,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:39:8",
+   "variant": "e",
+   "i": 39,
+   "lo": "0x1.f9343b1b3ada0p+1",
+   "hi": "0x1.ba42ffc9d99f0p+2",
+   "depth": 3,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:40:8",
+   "variant": "e",
+   "i": 40,
+   "lo": "0x1.ba42ffc9d99f0p+2",
+   "hi": "0x1.9aca622129018p+3",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:41:8",
+   "variant": "e",
+   "i": 41,
+   "lo": "0x1.9aca622129018p+3",
+   "hi": "0x1.8b0e134cd0b2cp+4",
+   "depth": 1,
+   "type": "Levin",
+   "eighths": true
+  }
+ ],
+ "all_leaves": null,
+ "replay": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/e/p14501_7.json",
+ "replay_sha256": "e3a91216aea2e4c4b959f82ce53a3aa40e8382f6c991e478640bbc6ec857dbcb",
+ "window_leaves_not_read": [
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29
+ ]
+}

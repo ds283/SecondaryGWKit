@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/one_reading.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x195.pkl qawo 1 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/readings/ref-R1-x195-qawo-r1.json --sid ref-R1-x195 --unit h-1e-8-1-38145 --index 1 --rtol 1e-8 --workers 2
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T16:09:39Z
+# ----
+{"sample": "ref-R1-x195", "route": "B", "impl": "qawo", "res": 1, "value_hex": "-0x1.7d976883043e5p-93", "value_30": "-1.50511283789301548270475803191e-28", "wall_s": 896.515835667029, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-13T16:24:38Z
+# exit 0

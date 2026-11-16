@@ -1,0 +1,139 @@
+{
+ "sid": "v12",
+ "capture": {
+  "set": "v4",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v12.pkl",
+  "offset": 0,
+  "length": 1368762,
+  "sha256": "f2320a7bbbfd1fb371224afe4e9c676cb232452658580ba50127ff9d1c3e18ea",
+  "override": null,
+  "census": "v12"
+ },
+ "spans": [
+  [
+   "0x1.2593123f58853p+3",
+   "0x1.276278b12a4fcp+3"
+  ],
+  [
+   "0x1.259473579d1a9p+3",
+   "0x1.2763dc912eee6p+3"
+  ],
+  [
+   "0x1.25956d0bc59aap+3",
+   "0x1.2764d83cae6d7p+3"
+  ],
+  [
+   "0x1.276997be44e11p+3",
+   "0x1.af89a649ba396p+4"
+  ],
+  [
+   "0x1.276a938d7b626p+3",
+   "0x1.af89a649ba396p+4"
+  ],
+  [
+   "0x1.276bf7b4c7117p+3",
+   "0x1.af89a649ba396p+4"
+  ]
+ ],
+ "points": [
+  "0x1.2593123f58853p+3",
+  "0x1.259473579d1a9p+3",
+  "0x1.25956d0bc59aap+3",
+  "0x1.25cf5a71e2b50p+3",
+  "0x1.2606ebdbccf7ep+3",
+  "0x1.26084da6018f8p+3",
+  "0x1.260947d7ffcf5p+3",
+  "0x1.2643353e1ce9ap+3",
+  "0x1.267ac578416a8p+3",
+  "0x1.267c27f466048p+3",
+  "0x1.267d22a43a040p+3",
+  "0x1.26b7100a571e6p+3",
+  "0x1.26ee9f14b5dd2p+3",
+  "0x1.26f00242ca797p+3",
+  "0x1.26f0fd707438cp+3",
+  "0x1.272aead691532p+3",
+  "0x1.276278b12a4fcp+3",
+  "0x1.2763dc912eee6p+3",
+  "0x1.2764d83cae6d7p+3",
+  "0x1.276997be44e11p+3",
+  "0x1.276a938d7b626p+3",
+  "0x1.276bf7b4c7117p+3",
+  "0x1.6e5ece58ead34p+3",
+  "0x1.b55404f390c58p+3",
+  "0x1.b554c1cef9a67p+3",
+  "0x1.b555ccec7269cp+3",
+  "0x1.fc493b8e36b7bp+3",
+  "0x1.219f39146e54fp+4",
+  "0x1.219f78083bf54p+4",
+  "0x1.219fd1120ee11p+4",
+  "0x1.4519d461c14e0p+4",
+  "0x1.68946faf14472p+4",
+  "0x1.68948f28fb175p+4",
+  "0x1.6894bbade48d4p+4",
+  "0x1.8c0f0afc67404p+4",
+  "0x1.af89a649ba396p+4"
+ ],
+ "named": [
+  {
+   "name": "tree:12:8",
+   "variant": "tree",
+   "i": 12,
+   "lo": "0x1.25956d0bc59aap+3",
+   "hi": "0x1.2764d83cae6d7p+3",
+   "depth": 7,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "tree:24:8",
+   "variant": "tree",
+   "i": 24,
+   "lo": "0x1.276997be44e11p+3",
+   "hi": "0x1.af89a649ba396p+4",
+   "depth": 0,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "b4:9",
+   "variant": "b4",
+   "i": 9,
+   "lo": "0x1.259473579d1a9p+3",
+   "hi": "0x1.2763dc912eee6p+3",
+   "depth": 7,
+   "type": "Levin",
+   "eighths": false
+  },
+  {
+   "name": "b4:32",
+   "variant": "b4",
+   "i": 32,
+   "lo": "0x1.276a938d7b626p+3",
+   "hi": "0x1.af89a649ba396p+4",
+   "depth": 0,
+   "type": "Levin",
+   "eighths": false
+  },
+  {
+   "name": "b8:9",
+   "variant": "b8",
+   "i": 9,
+   "lo": "0x1.2593123f58853p+3",
+   "hi": "0x1.276278b12a4fcp+3",
+   "depth": 7,
+   "type": "Levin",
+   "eighths": false
+  },
+  {
+   "name": "b8:33",
+   "variant": "b8",
+   "i": 33,
+   "lo": "0x1.276bf7b4c7117p+3",
+   "hi": "0x1.af89a649ba396p+4",
+   "depth": 0,
+   "type": "Levin",
+   "eighths": false
+  }
+ ],
+ "all_leaves": null
+}

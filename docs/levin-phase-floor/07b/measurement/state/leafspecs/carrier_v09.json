@@ -1,0 +1,42 @@
+{
+ "sid": "v09",
+ "capture": {
+  "set": "v4",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v09.pkl",
+  "offset": 0,
+  "length": 1376781,
+  "sha256": "e1913065dd5f3710aea6d7e0aead1c0b6f61ea6b54b770254d5b62b29c104ca5",
+  "override": null,
+  "census": "v09"
+ },
+ "spans": [
+  [
+   "0x1.9aca622128b6bp+3",
+   "0x1.8b0e134cd0b2cp+4"
+  ]
+ ],
+ "points": [
+  "0x1.9aca622128b6bp+3",
+  "0x1.ca349ab037cc8p+3",
+  "0x1.f99ed33f46e26p+3",
+  "0x1.148485e72afc2p+4",
+  "0x1.2c39a22eb2871p+4",
+  "0x1.43eebe763a120p+4",
+  "0x1.5ba3dabdc19cep+4",
+  "0x1.7358f7054927dp+4",
+  "0x1.8b0e134cd0b2cp+4"
+ ],
+ "named": [
+  {
+   "name": "tree:38:8",
+   "variant": "tree",
+   "i": 38,
+   "lo": "0x1.9aca622128b6bp+3",
+   "hi": "0x1.8b0e134cd0b2cp+4",
+   "depth": 1,
+   "type": "Levin",
+   "eighths": true
+  }
+ ],
+ "all_leaves": null
+}

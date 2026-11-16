@@ -1,0 +1,24 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/x1_table.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/x1_table.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/x1_table.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:30:10Z
+# ----
+## (X1) (e)'s remaining converged-and-dishonest calls, leaf by leaf (at (e); errors over the call's abserr)
+
+| call | (e) = tree | ratio | leaves (window) | closure / ref acc | carrier | its err/abserr | touches a window | carrier err(Q)/e' | clause, r | M1: err(S1), err(Q), err(S3) over e' | M2 falls S1/V_P, Q/S1, S3/Q | rate range | ref acc/e' | next largest |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| W2-0-12977-5 | True | -2.2 | 3 (0) | 0.000172 / 1.39e-05 | leaf 2 | -2.2 | False | -2.2 | r<1/4, 0.173 | -2.05, -2.2, -3.57 | 1.67, 1.07, 1.63 | 1.37e+03 | 1.04e-05 | leaf 1 +1.8e-06; leaf 0 +1.7e-05 |
+| W2-1-2174-2 | True | +1.36 | 3 (0) | 4e-06 / 1.02e-06 | leaf 2 | +1.36 | False | 1.36 | r<1/4, 0.245 | 1.17, 1.36, 0.0203 | 0.608, 1.16, 0.0149 | 9.52e+04 | 7.34e-07 | leaf 1 +1.9e-06; leaf 0 -5.9e-09 |
+| W2-1-2174-2~o | True | +1.35 | 2 (0) | 3.99e-06 / 9.64e-07 | leaf 1 | +1.35 | False | 1.36 | r<1/4, 0.245 | 1.17, 1.36, 0.0203 | 0.608, 1.16, 0.0149 | 9.52e+04 | 7.34e-07 | leaf 0 -4.1e-09 |
+| W2-2-14345-3 | True | -6.01 | 6 (0) | 9.44e-05 / 3.04e-05 | leaf 5 | -6.01 | False | -6.01 | r<1/4, 0.0814 | -6.01, -6.01, -8.29 | 1.01, 1, 1.38 | 6.03e+04 | 2.57e-05 | leaf 3 -7.1e-08; leaf 1 -6.6e-09 |
+| W2-2-14345-3~o | True | -6.01 | 4 (0) | 9.44e-05 / 3.03e-05 | leaf 3 | -6.01 | False | -6.01 | r<1/4, 0.0814 | -6.01, -6.01, -8.29 | 1.01, 1, 1.38 | 6.03e+04 | 2.57e-05 | leaf 1 -3.3e-08; leaf 0 -6.8e-09 |
+| W2-2-34473-3 | True | -1.39 | 103 (0) | 2.53e-05 / 2.56e-05 | leaf 102 | -1.39 | False | -1.4 | r<1/4, 0.241 | -1.21, -1.4, -0.836 | 0.615, 1.15, 0.599 | 49.4 | 9.15e-07 | leaf 99 -5.7e-05; leaf 101 -2.7e-05 |
+| W2-2-34473-3~o | True | -1.39 | 102 (0) | 2.51e-05 / 2.55e-05 | leaf 101 | -1.39 | False | -1.4 | r<1/4, 0.241 | -1.21, -1.4, -0.836 | 0.615, 1.15, 0.599 | 49.4 | 9.15e-07 | leaf 98 -5.7e-05; leaf 100 -2.7e-05 |
+| p14501_7 | False | -2.01 | 42 (17) | by subtraction / 1.05e-05 | leaf 41 | -2.01 | False | -2.47 | noise, 0.474 | -2.72, -2.47, -0.496 | 1.24, 0.908, 0.201 | 1.4e+05 | 1.09e-05 | leaf 12 -0.00041; leaf 30 -0.00021 |
+| p14501_8 | False | -2.01 | 37 (17) | by subtraction / 1.1e-05 | leaf 36 | -2.01 | False | -2.47 | noise, 0.474 | -2.72, -2.47, -0.496 | 1.24, 0.908, 0.201 | 1.4e+05 | 1.09e-05 | leaf 6 -0.00041; leaf 24 -0.00021 |
+| p35006_7 | True | -1.08 | 39 (21) | by subtraction / 4.38e-06 | leaf 38 | -1.08 | False | -1.17 | noise, 0.807 | -1.33, -1.17, -0.511 | 1.17, 0.883, 0.435 | 1.4e+05 | 4.08e-06 | leaf 5 -0.00022; leaf 27 -8.6e-05 |
+| v09 | True | +2.21 | 39 (19) | partial: carrier only (Part A) / 9.64e-06 | leaf 38 | +2.21 | False | 2.66 | noise, 0.379 | 2.9, 2.66, 0.284 | 1.27, 0.919, 0.107 | 1.4e+05 | 1.16e-05 |  |
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/x1_table.json 70d2f59e9154beb5896f8be1afc88cd799c65ed5573735acda09e5374ad067ca /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x1/x1_table.md ea035206f3677378e52ab5427f56d0984e7957bda050575bf389d35b888e4def
+# ----
+# end 2026-11-15T23:30:11Z
+# exit 0

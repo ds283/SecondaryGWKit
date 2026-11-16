@@ -1,0 +1,45 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading ref-R3o-2-21454-a3-7 fcc res 1 (tools.filon_reference)",
+  "# written 2026-11-14T05:25:20Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 3cf12125cebc8336eefd67c944a7599aab694816aa615a2a7605f17502dbc127",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-2-21454-a3-7.pkl sha256 57801e989d491307cf0e6b7bfbc2965dd53d5f2c7460bb8e39c01ee7f738a0c1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "sample": "ref-R3o-2-21454-a3-7",
+ "unit": "h-1e-7-2-21454",
+ "index": 3,
+ "rtol": "1e-7",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-2-21454-a3-7.pkl",
+ "pickle_sha256": "57801e989d491307cf0e6b7bfbc2965dd53d5f2c7460bb8e39c01ee7f738a0c1",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py",
+ "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+ "workers": 2,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "N": 32
+ },
+ "value_hex": "-0x1.f1b3dc38d5ad3p-38",
+ "value_30": "-7.07277904256222147888254579361e-12",
+ "imag_30": "8.79242783990734858709545450852e-12",
+ "wall_s": 3.3396255830302835,
+ "n_panels": 11,
+ "u_breaks": [],
+ "K_exact": "30701001029895163/2147483648",
+ "K_hat": 14296267.66121721,
+ "K_lo": -4.656612873077393e-10,
+ "C_exact": "0.0",
+ "process_wall_s": 5.276538458187133,
+ "rerun": false,
+ "progress_order": null,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

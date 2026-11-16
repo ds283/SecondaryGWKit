@@ -1,0 +1,83 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/slice_refs_07b.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T14:14:10Z
+# ----
+ref-R1-x027: group h-1e-8-0-14325 #1 replays {'R1-x027-8': True, 'R1-x027-7': True}
+ref-R1-x029: group h-1e-8-0-14386 #1 replays {'R1-x029-8': True, 'R1-x029-7': True}
+ref-R1-x098: group h-1e-8-0-38990 #1 replays {'R1-x098-8': True, 'R1-x098-7': True}
+ref-R1-x015: group h-1e-8-0-14199 #1 replays {'R1-x015-8': True, 'R1-x015-7': True}
+ref-R1-x019: group h-1e-8-0-14299 #1 replays {'R1-x019-8': True, 'R1-x019-7': True}
+ref-R1-x109: group h-1e-8-1-14464 #1 replays {'R1-x109-8': True, 'R1-x109-7': True}
+ref-R1-x141: group h-1e-8-1-2176 #1 replays {'R1-x141-8': True, 'R1-x141-7': True}
+ref-R1-x160: group h-1e-8-1-2362 #1 replays {'R1-x160-8': True, 'R1-x160-7': True}
+ref-R1-x196: group h-1e-8-1-38833 #1 replays {'R1-x196-8': True, 'R1-x196-7': True}
+ref-R1-x241: group h-1e-8-2-34711 #1 replays {'R1-x241-8': True, 'R1-x241-7': True}
+ref-R1-x295: group h-1e-8-2-39035 #1 replays {'R1-x295-8': True, 'R1-x295-7': True}
+ref-R1-x258: group h-1e-8-2-34872 #1 replays {'R1-x258-8': True, 'R1-x258-7': True}
+ref-R1-x390: group h-1e-8-3-39133 #1 replays {'R1-x390-8': True, 'R1-x390-7': True}
+ref-R1-x392: group h-1e-8-3-39138 #1 replays {'R1-x392-8': True, 'R1-x392-7': True}
+ref-R1-x317: group h-1e-8-3-14592 #1 replays {'R1-x317-8': True, 'R1-x317-7': True}
+ref-R1-x353: group h-1e-8-3-34995 #1 replays {'R1-x353-8': True, 'R1-x353-7': True}
+ref-R1-x007: group h-1e-8-0-13952 #1 replays {'R1-x007-8': True, 'R1-x007-7': True}
+ref-R1-x033: group h-1e-8-0-1777 #1 replays {'R1-x033-8': True, 'R1-x033-7': True}
+ref-R1-x044: group h-1e-8-0-1942 #1 replays {'R1-x044-8': True, 'R1-x044-7': True}
+ref-R1-x174: group h-1e-8-1-34641 #1 replays {'R1-x174-8': True, 'R1-x174-7': True}
+ref-R1-x195: group h-1e-8-1-38145 #1 replays {'R1-x195-8': True, 'R1-x195-7': True}
+ref-R1-x165: group h-1e-8-1-34528 #1 replays {'R1-x165-8': True, 'R1-x165-7': True}
+ref-R1-x185: group h-1e-8-1-35423 #1 replays {'R1-x185-8': True, 'R1-x185-7': True}
+ref-R1-x218: group h-1e-8-2-2088 #1 replays {'R1-x218-8': True, 'R1-x218-7': True}
+ref-R1-x247: group h-1e-8-2-34787 #1 replays {'R1-x247-8': True, 'R1-x247-7': True}
+ref-R1-x207: group h-1e-8-2-14011 #1 replays {'R1-x207-8': True, 'R1-x207-7': True}
+ref-R1-x285: group h-1e-8-2-37724 #1 replays {'R1-x285-8': True, 'R1-x285-7': True}
+ref-R1-x335: group h-1e-8-3-34806 #1 replays {'R1-x335-8': True, 'R1-x335-7': True}
+ref-R1-x310: group h-1e-8-3-13934 #1 replays {'R1-x310-8': True, 'R1-x310-7': True}
+ref-R1-x311: group h-1e-8-3-14093 #1 replays {'R1-x311-8': True, 'R1-x311-7': True}
+ref-R2-00: analytic h-1e-8-0-33719 #6 replays {'R2-00': True, 'R2-00~o': True}
+ref-R2-01: analytic h-1e-7-1-11202 #14 replays {'R2-01': True, 'R2-01~o': True}
+ref-R2-02: group h-1e-8-1-35412 #0 replays {'R2-02': True, 'R2-02~o': True}
+ref-R2-03: analytic h-1e-8-2-1623 #11 replays {'R2-03': True, 'R2-03~o': True}
+ref-R2-04: analytic h-1e-8-1-35504 #20 replays {'R2-04': True, 'R2-04~o': True}
+ref-R2-05: analytic h-1e-7-3-34277 #14 replays {'R2-05': True, 'R2-05~o': True}
+ref-R2-06: analytic h-1e-8-0-12590 #16 replays {'R2-06': True, 'R2-06~o': True}
+ref-R2-07: analytic h-1e-8-3-1255 #9 replays {'R2-07': True, 'R2-07~o': True}
+ref-R2-08: group h-1e-7-0-12980 #4 replays {'R2-08': True, 'R2-08~o': True}
+ref-R2-09: analytic h-1e-8-0-14320 #18 replays {'R2-09': True, 'R2-09~o': True}
+ref-R2-10: analytic h-1e-7-2-21758 #10 replays {'R2-10': True, 'R2-10~o': True}
+ref-R2-11: analytic h-1e-8-2-34460 #7 replays {'R2-11': True, 'R2-11~o': True}
+ref-R2-12: group h-1e-7-1-1845 #2 replays {'R2-12': True, 'R2-12~o': True}
+ref-R2-13: analytic h-1e-7-3-13515 #22 replays {'R2-13': True, 'R2-13~o': True}
+ref-R2-14: analytic h-1e-8-2-21805 #8 replays {'R2-14': True, 'R2-14~o': True}
+ref-R2-15: analytic h-1e-7-0-12952 #14 replays {'R2-15': True, 'R2-15~o': True}
+ref-R2-16: group h-1e-7-3-928 #4 replays {'R2-16': True, 'R2-16~o': True}
+ref-R2-17: analytic h-1e-8-1-11182 #19 replays {'R2-17': True, 'R2-17~o': True}
+ref-R2-18: analytic h-1e-8-3-34325 #10 replays {'R2-18': True, 'R2-18~o': True}
+ref-R2-19: analytic h-1e-8-1-34850 #9 replays {'R2-19': True, 'R2-19~o': True}
+ref-R2-20: group h-1e-7-0-12771 #4 replays {'R2-20': True, 'R2-20~o': True}
+ref-R2-21: analytic h-1e-7-2-21653 #13 replays {'R2-21': True, 'R2-21~o': True}
+ref-R2-22: group h-1e-7-2-1665 #5 replays {'R2-22': True, 'R2-22~o': True}
+ref-R2-23: analytic h-1e-7-0-33600 #11 replays {'R2-23': True, 'R2-23~o': True}
+ref-R2-24: analytic h-1e-8-3-1048 #6 replays {'R2-24': True, 'R2-24~o': True}
+ref-R2-25: group h-1e-8-0-1984 #0 replays {'R2-25': True, 'R2-25~o': True}
+ref-R2-26: analytic h-1e-7-1-10739 #4 replays {'R2-26': True, 'R2-26~o': True}
+ref-R2-27: analytic h-1e-8-1-10842 #7 replays {'R2-27': True, 'R2-27~o': True}
+ref-R2-28: group h-1e-7-0-13757 #5 replays {'R2-28': True, 'R2-28~o': True}
+ref-R2-29: group h-1e-7-1-35330 #4 replays {'R2-29': True, 'R2-29~o': True}
+ref-R3w-0-33950-0: group h-1e-8-0-33950 #0 replays {'R3w-0-33950-0': True, 'R3w-0-33950-0~o': True}
+ref-R3w-0-2006-0: group h-1e-8-0-2006 #0 replays {'R3w-0-2006-0': True, 'R3w-0-2006-0~o': True}
+ref-R3w-3-13615-0: group h-1e-8-3-13615 #0 replays {'R3w-3-13615-0': True, 'R3w-3-13615-0~o': True}
+ref-R3a-3-843-a5: analytic h-1e-7-3-843 #5 replays {'R3a-3-843-a5': True, 'R3a-3-843-a5~o': True}
+ref-R3a-3-13508-g2: group h-1e-7-3-13508 #2 replays {'R3a-3-13508-g2': True, 'R3a-3-13508-g2~o': True}
+ref-R3a-0-33666-a13: analytic h-1e-7-0-33666 #13 replays {'R3a-0-33666-a13': True, 'R3a-0-33666-a13~o': True}
+ref-R3a-3-39138-g2: group h-1e-7-3-39138 #2 replays {'R3a-3-39138-g2': True, 'R3a-3-39138-g2~o': True}
+ref-R3a-3-39138-g3: group h-1e-7-3-39138 #3 replays {'R3a-3-39138-g3': True, 'R3a-3-39138-g3~o': True}
+ref-R3a-2-21486-a9: analytic h-1e-7-2-21486 #9 replays {'R3a-2-21486-a9': True, 'R3a-2-21486-a9~o': True}
+ref-R3o-2-21454-a3-7: analytic h-1e-7-2-21454 #3 replays {'R3o-2-21454-a3-7': True, 'R3o-2-21454-a3-7~o': True}
+ref-R3o-3-1011-a18-7: analytic h-1e-7-3-1011 #18 replays {'R3o-3-1011-a18-7': True, 'R3o-3-1011-a18-7~o': True}
+ref-R3o-1-35188-g0-8: group h-1e-8-1-35188 #0 replays {'R3o-1-35188-g0-8': True, 'R3o-1-35188-g0-8~o': True}
+ref-R3p-3-14501: group h-1e-7-3-14501 #1 replays {'p14501_7': True, 'p14501_8': True}
+ref-R3p-3-35006: group h-1e-7-3-35006 #1 replays {'p35006_7': True, 'p35006_8': True}
+74 inputs; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/refs/inputs.json sha256 92a12c37deacd1bd03f40b621889c95ab2931ca81d9643d4eecce946c0933333
+# ----
+# end 2026-11-13T14:14:11Z
+# exit 0

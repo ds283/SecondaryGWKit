@@ -1,0 +1,27 @@
+{
+ "label": "pilot",
+ "backstop_s": 172800.0,
+ "check_after_s": 1800.0,
+ "stages": [
+  {
+   "name": "pilot",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "pilot_v08",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts",
+     "requires": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/pilot_v08.json",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafref_07b.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/pilot_v08.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/pilot_v08.json",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  }
+ ]
+}

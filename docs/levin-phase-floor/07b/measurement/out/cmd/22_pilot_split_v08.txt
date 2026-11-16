@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafref_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/pilot_v08.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/pilot_v08_split18.json --workers 6 --split-ratio 1.8
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T15:12:19Z
+# ----
+v08 res 1: 30 pieces, 1702 segments, 129 jobs, 0 direct, in 30.2 s (job CPU 165 s)
+v08 res 2: 30 pieces, 1702 segments, 129 jobs, 0 direct, in 115.5 s (job CPU 660 s)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/pilot_v08_split18.json c44a779e4bf44293b6fb8aef2f637d592f0355d99f43654fc8eb279629748d3d
+# ----
+# end 2026-11-13T15:14:47Z
+# exit 0

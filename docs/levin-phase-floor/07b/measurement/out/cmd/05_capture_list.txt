@@ -1,0 +1,17 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/capture_list_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h_selection.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T13:54:16Z
+# ----
+# levin-phase-floor 07b Part A: the calls captured afresh at h
+# written 2026-11-13T13:54:18Z on mps026298.phys.susx.ac.uk
+# script capture_list_07b.py sha256 9ff21d5cbc2f74a2f5a58b4e048ac166b58507d3e51de5cd13bf24874cbbbbd0
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/selection_07b.json sha256 4b94c1811f7b46f9f4903784ef08958b8ebcc5391f2b347045a3bc70a4f6a35d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/w2/w2_rescore.json sha256 efdd8914ee9a41a00a2c5716618e4c78043a45379dd333a677c8f44acc16e62e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/stop3/compare_census_calls.calls.jsonl sha256 72e929cf806c9797a0cf6bb78b06fc2c86fc5d0cc18d70dca0c98e4d26ff9a1f
+46 calls on 45 units; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h_selection.json sha256 afef45e954467aed96a0e6348ae6248d1bfa8f1bf79099d2b8d0a87010c6f76d
+# ----
+# end 2026-11-13T13:54:19Z
+# exit 0

@@ -190,6 +190,74 @@ score 07a's code now and 07b's code in §6.
 5. **Docstrings and comments** that describe the trust check, the windows or the mechanism, rewritten
    to say what is now done and why, each listed by the agent with its line.
 
+**As amended at §2.7's stop (§9), the fix is variant (h).** The user: *"Go with (h), and record the
+chase as an issue"*. Every change is in `AdaptiveLevin/levin_quadrature.py`. The reference
+implementation is (h)'s variant, `docs/levin-phase-floor/07b/measurement/scripts/ext/variants/levin_quadrature_07b_h.py`
+(SHA-256 `47512022…`), with its diff against the tree, `out/ext/variants/h.diff` (`ce9cedbe…`).
+
+### 1.1 The rule
+
+In `_adaptive_levin`'s `_check_leaf`, **after** the tree's test
+`trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (ratio < 1.0 and delta1 <= noise_yardstick)`, and only
+when that test trusts a leaf that is not a Clenshaw–Curtis leaf (`not leaf.is_direct`), one more test
+runs. If it refuses, the leaf is untrusted exactly as a leaf the tree's test refuses: bisected, or at
+the depth cap declared as the tree declares an untrusted leaf there. `ratio`, `delta1`, `delta2` and
+the declaration's form are unchanged.
+- **The leaf's nodes** are `chebyshev_matrices((lo, hi), max(chebyshev_order,
+  _LEVIN_MINIMUM_ALLOWED_ORDER))` on the leaf's span, with `chebyshev_order` `_adaptive_levin`'s own,
+  as (h) computes them. The rates are every phase's, `rate_fns` (the basis's
+  `independent_phase_rates()`).
+- **A leaf touches a window** if either end equals, as a float, the `lo` or `hi` of a merged window
+  in `location["windows"]`. Bisection makes every such end exactly.
+- **The edge rule, on a leaf that touches a window.** At each end that is a window edge, for every
+  phase, $q = \max(|\theta'(x_e)|, |\theta'(x_n)|)/\min(\ldots)$, with $x_e$ the edge and $x_n$ its
+  neighbour on the grid (`grid[-2]` at `lo`, `grid[1]` at `hi`); $q = \infty$ if the minimum is 0.
+  The leaf is refused if the largest $q$ exceeds `_LEVIN_EDGE_RATE_RATIO_MAX = 2.0`. Only the edge
+  rule applies to a touching leaf.
+- **The range rule, on a leaf that touches none.** For every phase,
+  $q = \max_j|\theta'(x_j)|/\min_j|\theta'(x_j)|$ over the leaf's nodes, $\infty$ if the minimum is
+  0. The leaf is refused if the largest $q$ exceeds `_LEVIN_LEAF_RATE_RANGE_MAX = 10.0`.
+- **No rates, no test.** Where `rate_fns` is `None` there are no windows and the range rule has no
+  rate to test; the leaf is trusted as the tree trusts it. (h) relied on windows implying rates; the
+  code makes the `None` case explicit.
+- **Unchanged:** a floor-limited leaf's exemption from the trust check (`_exempt_floor_limited`, 06g),
+  which also clears a refusal; the windows and their stop; the C2 gate; `_trust_noise_yardstick`.
+
+The rule's computation is a module-level function of the leaf's span, the order, the rates and the
+touching ends, returning whether it refuses, which rule and the largest $q$, so that §3 can test it
+directly. **The code reproduces (h)'s outputs bit for bit** (§9.5, U8); a change that would alter any
+output relative to (h)'s replays is a stop.
+
+### 1.2 The constants
+
+Each is a module constant with a comment stating its basis, its margin and where the basis does not
+reach (§9.3).
+- `_LEVIN_EDGE_RATE_RATIO_MAX = 2.0`, Part A's (e).
+- `_LEVIN_LEAF_RATE_RANGE_MAX = 10.0`, Part A's (f), applied as (h) applies it.
+
+### 1.3 What it does to `converged`
+
+The tree's rule stands: a call is converged only if its budget is met, **no returned leaf is
+untrusted**, and no guarded leaf is at the depth cap. A leaf the new test refuses and that is still
+refused at the depth cap therefore leaves its call unconverged. So no call is reported converged on
+a leaf the rule refuses, which is §1 item 4.
+
+### 1.4 Diagnostics
+
+The result dict gains two counts, over the whole run of the call: `num_edge_rule_refusals` and
+`num_range_rule_refusals`, the trust checks the tree's test passed and the edge or range rule
+refused. **The fix acts in a call** if their sum is positive. Nothing else in the result changes.
+
+### 1.5 Docstrings and comments
+
+Rewritten to say what is now done and why, each listed by the agent with its line: the module
+docstring's stationary-point item (it records the trust check's blindness near a stationary point)
+and its items on the trust check; the comment above `_LEVIN_TRUST_MAX_RATIO`; the comment on
+`_LEVIN_WINDOW_HALF_PHASE`, adding that a wider window was measured not to remove the leaf's error
+(§2.7, (b4), (b8), (g1), (g2)); `_adaptive_levin`'s docstring on the trust check one level down;
+`_check_leaf`'s docstring; and `adaptive_levin_sincos`'s on `num_untrusted_regions` and the two new
+counts.
+
 ## 2. The measurement — Part A, on the Mac Studio, a planned stop
 
 **Run at the dispatch SHA, whose code is 07a's.** Nothing in the tree changes. Variants are copies of
@@ -448,6 +516,48 @@ Written with §1 at §2's stop (§9). They include, whatever the fix:
 5. **The LiouvilleGreen draws** (07a's `docs/levin-phase-floor/07a/code/lg_draws_07a.py`, run at the
    parent and the commit): no test newly failing, and every call the fix should not touch bit-identical.
 
+**As amended for (h) (§9).** In `AdaptiveLevin/tests/`, in a module the agent names:
+- **(a) The rule, directly,** on §1.1's function with constructed rates and spans:
+  - an edge $q$ of exactly 2 is not refused, and one just above is;
+  - a range $q$ of exactly 10 is not refused, and one just above is;
+  - a rate exactly 0 at a node gives $q = \infty$ and a refusal;
+  - only the ends that are window edges are tested by the edge rule;
+  - a touching leaf with a range above 10 and edge $q$ at most 2 is not refused (the range rule does
+    not apply to it), and a leaf touching none with an edge-like jump below 10 over its nodes is not
+    refused;
+  - the largest $q$ over several phases decides.
+- **(b) The edge mechanism (item 1).** A synthetic stationary-point call with a closed-form answer,
+  converged and dishonest at the parent, honest or unconverged at the commit, with
+  `num_edge_rule_refusals` positive. A starting point is 07's family (R)
+  (`docs/levin-phase-floor/07/calibration/scripts/reference.py`, `closed_R`), which is honest at the
+  parent at rtol $10^{-9}$, at the census's rtols $10^{-7}$ and $10^{-8}$, with $c$ up to $10^8$.
+- **(c) The range mechanism (item 1).** A synthetic call with no window, its phase's rate ranging by
+  more than 10 over a seed leaf, with a closed-form or independently computed answer: converged and
+  dishonest at the parent, honest or unconverged at the commit, with `num_range_rule_refusals`
+  positive.
+- **(d) At the depth cap.** A call whose refused leaf reaches a small `depth_max` is unconverged at the
+  commit, with the declaration the tree gives an untrusted leaf at the cap.
+- **(e) Not touched (item 2).** A call with no window whose rate ranges by at most 10 on every Levin
+  leaf (constant $|\theta'|$, say): bit-identical at the parent and the commit, both counts 0. A call
+  whose Clenshaw–Curtis leaves have rates ranging by more than 10: those leaves untested, the call
+  bit-identical.
+
+**If no call for (b) or (c) is found dishonest and converged at the parent,** the agent stops and asks,
+with the search it made (§8).
+
+**Breakages,** each recorded with the test that catches it, then reverted:
+- **(i)** `_LEVIN_EDGE_RATE_RATIO_MAX` set to infinity: (a) and (b) must fail;
+- **(ii)** `_LEVIN_LEAF_RATE_RANGE_MAX` set to infinity: (a) and (c) must fail;
+- **(iii)** the two rules swapped between touching and non-touching leaves: (a) must fail;
+- **(iv)** the edge's neighbour taken as the grid's far end: (a) must fail;
+- **(v)** the test applied to Clenshaw–Curtis leaves as well: (e) must fail;
+- **(vi)** a refused leaf at the cap counted as trusted in `converged`: (d) must fail.
+
+**Existing assertions.** The range rule acts on most calls with a Levin leaf (§9.2), so existing tests'
+regions, values and errors may change. Each changed assertion is listed with the refusals that change
+it. A test that goes from converged to unconverged is listed with its refused leaves at the cap and its
+honesty at both codes against the test's own expected answer; it is reported, not a stop.
+
 ## 4. Records of the code (Part B)
 
 The log `logs/07b-levin-leaf-beside-a-window.md` in README §5.1's form, with §5's and §6's predictions
@@ -532,4 +642,126 @@ changes in each direction; the abserr ratio against 07a's; regions and cost agai
 
 ## 9. Amendments at §2's stop
 
-*Written by the orchestrator from the user's choice at Part A's stop.*
+*Written by the orchestrator on 2026-11-16, at §2.7's stop, from the user's words, quoted.* Part A's
+records, with the extension's, are in `docs/levin-phase-floor/07b/measurement/`; the tables of record
+are `out/tables/tables_07b.md` and `out/ext/tables/scores_ext.md`.
+
+### 9.1 The rulings
+
+- **At §2.6's stop (2026-11-15):** *"I am going to choose the extension"*; *"Yes, include the adaptive
+  window variant; write the extension"*; and, accepting deviation 16, *"Yes to both; commit, push and
+  dispatch the extension"* (§2.7; the board's Decisions, **07b Part A stop**).
+- **At §2.7's stop (2026-11-16):** the orchestrator relayed the three qualifying variants, (f), (h) and
+  (i2), and recommended (h), with the chase recorded as an issue for a later prompt. The user:
+  *"Go with (h), and record the chase as an issue"*.
+
+### 9.2 What Part A and its extension measured
+
+**Checks.** Every replay at 07a's code reproduces its census record bit for bit, 187 of 187. The
+orchestrator's reviews (`orchestrator/prompt-07b.md` §A.3 and §A.5) re-ran replays under the tree and
+under (h) and (g2), re-scored §2.5 item 4 for every variant from the readings, and re-ran a family (R)
+case under (a), (g1) and (g2). All agree with the agent.
+
+**The mechanism.** A trusted Levin leaf carries an error common to itself, its halves and its quarters,
+which the trust check cannot see.
+- **Beside a window** (v08, v12, v17; v13, v18 and v23 smaller): the depth-0 seed leaf's first spacing
+  is 285–1010 $\ell$ at the edge, $\ell = |\theta'/\theta''|$. The error lies in the eighth beside the
+  window and falls about as $\Phi_w^{-3/2}$. A wider window helps slowly, and moves every window's
+  edge: (b4), (b8) and (g1) make v07, v19 and R1-x317 dishonest. The adaptive window reaches $8\pi$
+  with the edge still failing on 89 of the 98 calls with a window.
+- **Away from windows** (v09, `1-34599`, 06b's four, the pairs): the ends are resolved, the error is
+  still common, and nothing the code can compute from the leaf's own solves separates it (X2: 18
+  candidates, best margin 0.76; a higher collocation order moves the error erratically). Every
+  dishonest scored leaf spans a rate range of 49.4 or more over its nodes.
+
+**The qualifying variants** (§2.5 item 4), against the tree's 32 converged-and-dishonest calls on the
+187:
+
+| variant | converged and dishonest | unconverged (within abserr) | regions | wall |
+|---|---|---|---|---|
+| tree (a) | 32 (design 14, held-out 18) | 1 (1) | 1.00× | 1.00× |
+| (f) | 0 | 61 (59) | 2.74× | 2.76× |
+| **(h)** | **0** | **3 (1)** | **1.89×** | **1.76×** |
+| (i2) | 0 | 59 (57) | 2.68× | 2.68× |
+
+**(h) on the 187.**
+- Its three unconverged calls: v04, unconverged at the tree too (0.138 of its abserr there, 0.000156
+  under (h)); and R2-28 at both rtols, honest at the tree in one region (5.55e-05) and under (h) 296
+  regions at depth 20, unconverged at 1.107 of its abserr. **R2-28 is the only call (h) makes
+  unconverged, and the only call it makes less accurate.**
+- **The edge rule acts** (refuses at least one leaf) on v08, v12, v13, v17, v18, v22, v23, both members
+  of `3-14501`, and 34 of R1's 60 calls. It acts on no R2 or R3 call.
+- **The range rule acts on almost every call:** 49 of R2's 60, 58 of R1's 60, every W2 call, item 3,
+  and n1–n4 (n0 is untouched). On R2's 30 calls the regions go from 175 to 868. Neither rule acts on
+  W7's three minima-window calls.
+
+### 9.3 The constants' basis, and where it does not reach
+
+The census's Levin calls (07a): 107,416 analytic and 37,325 group at `1e-7`, 37,325 group at `1e-8`.
+Windows are at analytic roots (1,682 calls), group roots and group minima.
+- **`_LEVIN_EDGE_RATE_RATIO_MAX = 2.0`.** Next to a stationary point $\ell$ at distance $d$ is about
+  $d$, so the rate ratio across a first spacing $s$ is about $1 + s/\ell$, and 2 is a spacing of about
+  one $\ell$. **Measured:** every window-edge seed carrier has $q$ 259–905 (spacing/$\ell$ 285–1010),
+  a margin of 130 or more; the honest deep touching leaves of the controls have spacing/$\ell$ at
+  most 1.17, so some of them are refused (cost, not error). **Reach:** set on group calls with a root
+  window (V4, z12, the pairs) and scored on R1's 30 class-(c) rows at both rtols, where it acts on 34
+  of 60 and leaves none dishonest. **It does not reach** analytic calls with windows (none was
+  referenced) or minima windows (the rule acted on none of W7's three).
+- **`_LEVIN_LEAF_RATE_RANGE_MAX = 10.0`.** **Measured** on Part A's 73 scored trusted Levin leaves (V4,
+  item 3, W2): every dishonest one spans 49.4 or more, none at 30 or below is dishonest; 10 is 4.9
+  below 49.4. Honest leaves span up to $3.4\times10^4$, so the rule refuses many honest leaves: that
+  is its cost. X2 found no finer rule. **Reach:** set on group calls; scored on R1, R2 (21 analytic and
+  9 group calls) and R3 with no call converged and dishonest. **It does not reach** the analytic
+  calls, 74% of the census's Levin calls at `1e-7`, beyond R2's 21 and R3's five.
+
+### 9.4 The census's cost
+
+07a's census took 6.5 h wall. On R2, the only random draw, (h) takes the regions to about 5×, so the
+census under (h) may take of order 30 h. **§6's harness projects it** from U0's K0 run at the new code
+before the full run; a projection beyond 48 hours is a stop, reported with what would be cut to fit.
+
+### 9.5 Additions to §5's and §6's predictions
+
+- **U1 counts** a call untouched if `num_edge_rule_refusals + num_range_rule_refusals` is 0, and compares
+  value, abserr, `converged`, `num_regions` and the maximum depth. Expected to cover about a fifth of
+  the calls (R2: 11 of 60).
+- **U4 is predicted to hold,** with exactly v04 and R2-28 (both rtols) unconverged among the referenced
+  calls, R2-28 at 1.107 of its abserr.
+- **U6 is predicted to hold.** The four of 06b's 24 dishonest at 07a are honest under (h)'s replays;
+  the other 20 were not replayed, and the prediction for them rests on (h) leaving no referenced call
+  converged and dishonest.
+- **U7 is predicted to hold:** both pairs pass under (h)'s replays; the other 2,482 were not replayed.
+- **U8 — the code is (h).** Every census call that Part A replayed (§2.1's and §2.4's, both rtols)
+  equals (h)'s replay record bit for bit in value, abserr, `converged`, regions and maximum depth.
+  **Holds** if all do.
+- **S3 (§5)** names no row. A row beyond S3's bound is reported with the refusals in its calls, and S3
+  is scored as written.
+- **Descriptive, added:** the refusals by rule, class, band, $k$ and rtol, and, by the harness's
+  instrument (marked "prompt 07b"), each refused leaf's span, depth and $q$; every call newly
+  unconverged with its depth-20 leaves' routes and whether each descends from a refused leaf (X3's
+  measures, for the issue in §9.6); regions and wall against 07a's.
+
+**Part B's review** replays v08, v13 (a control the edge rule acts on), R2-22 (untouched: 45 trust checks, all
+passing the range rule) and R2-03 from copies of their captures at the code commit: each equal to (h)'s
+replay record in `float.hex`, and R2-22 equal to 07a's census too.
+
+### 9.6 The issues
+
+- **Opened at this stop, on the user's word** (*"record the chase as an issue"*):
+  `[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]`, from the agent's `issues.md`
+  item 11. Below a leaf the range rule refuses, the trust check runs at the noise level, the
+  round-off exit is not reached, and 07a's window stop counts none of the leaves, so the call is
+  chased to the depth cap and returned unconverged. Under (f), 4,374 leaves at depth 20 in 61 calls
+  (3,961 Clenshaw–Curtis fallback, 411 Levin, none a window piece); under (h), R2-28, honest in one
+  region at the tree, ends at 296 regions and 1.107 of its abserr. (i) and (i2) tried to stop it and
+  failed: (i) returned leaves dishonest, and (i2)'s stop does not reach leaves made after it. Next
+  step: a stop that follows the leaves made after it, as `_add_leaf` does for a stopped window,
+  measured on (f)'s 61 calls and on R2-28. Not assigned.
+- **The others** in the agent's `issues.md` (items 1–14) are put to the user at 07b's records commit
+  (orchestrator note §C.4), with this prompt's closing conditions.
+
+### 9.7 Stops added (into §8)
+
+- In Part B: an output of the code differing from (h)'s replay record on a call the review replays; no
+  dishonest-and-converged call found at the parent for §3 (b) or (c).
+- In Part C: the census's projection beyond 48 hours; U8 failing, before anything else is scored.

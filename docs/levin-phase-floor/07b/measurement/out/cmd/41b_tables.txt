@@ -1,0 +1,11 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/tables_07b.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-14T21:09:49Z
+# ----
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/tables/tables_07b.md 1cd49bd0f2d958220e949247b67e625e5e676a066efab6699f8b1ade23d9e754
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/tables/table3_variants.md 200642c56c19700fe32de4d8b29668ede940338c804e55e8fd1ea0fc0397fd55
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/tables/tables_07b.json 1b27eec21565db1d26534c9aea427e0600a864b865e195b171ca43ac0a2483af
+# ----
+# end 2026-11-14T21:09:49Z
+# exit 0

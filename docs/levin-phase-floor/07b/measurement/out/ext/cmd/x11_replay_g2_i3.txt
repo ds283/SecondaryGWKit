@@ -1,0 +1,9 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/run_replays_ext.py g2 i3 --instrument --sids i3-34599-h --workers 1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:18:02Z
+# ----
+g2 i3: 1 of 1 reproduce their census record; 2 s; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/replays/g2_summary_i3.json
+# ----
+# end 2026-11-15T23:18:04Z
+# exit 0

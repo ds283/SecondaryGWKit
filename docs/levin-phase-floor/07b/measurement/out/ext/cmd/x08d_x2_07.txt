@@ -1,0 +1,13 @@
+$ env PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/x2_candidates.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x2/x2_07.json 07
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:12:04Z
+# ----
+i3-34599-07         2 err/e'    +0.419 rr      8.05 | D_Q 16 2.02e-06 32 6.99e-07 40 2.63e-07 48 7.73e-07 | err Q(2N)    +0.419 | r3     5.87 |S3-Q|/e'     1.06 | tailP  0.00842 tailQ   0.0475 | cond     8.05 | repro True True
+i3-34599-07         3 err/e'  +0.00516 rr        97 | D_Q 16  0.00172 32   0.0078 40  0.00774 48  0.00219 | err Q(2N)  +0.00297 | r3     5.43 |S3-Q|/e'  0.00837 | tailP    0.168 tailQ    0.306 | cond       97 | repro True True
+i3-34599-07         4 err/e'    -0.917 rr       100 | D_Q 16   0.0221 32     1.62 40     1.72 48     1.49 | err Q(2N)    +0.576 | r3     18.3 |S3-Q|/e'      1.9 | tailP    0.268 tailQ    0.863 | cond      106 | repro True True
+i3-34599-07         5 err/e'     -4.04 rr       100 | D_Q 16     9.26 32     7.25 40     3.97 48     4.08 | err Q(2N)   +0.0329 | r3     42.6 |S3-Q|/e'     4.15 | tailP    0.148 tailQ    0.828 | cond      538 | repro True True
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/x2/x2_07.json caebf13b49e454c68b1451453180d14f6b228400055a1878800c15d1947a1c08
+# ----
+# end 2026-11-15T23:12:05Z
+# exit 0

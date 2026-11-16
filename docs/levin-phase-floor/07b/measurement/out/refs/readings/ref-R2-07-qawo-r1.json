@@ -1,0 +1,57 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading ref-R2-07 qawo res 1 (tools.filon_reference)",
+  "# written 2026-11-14T05:23:28Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading.py sha256 3cf12125cebc8336eefd67c944a7599aab694816aa615a2a7605f17502dbc127",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-07.pkl sha256 4436b0cc62cf98d8683ade2c16f7e487dab601c8e849976141bc89b9c680dffa",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "sample": "ref-R2-07",
+ "unit": "h-1e-8-3-1255",
+ "index": 9,
+ "rtol": "1e-8",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-07.pkl",
+ "pickle_sha256": "4436b0cc62cf98d8683ade2c16f7e487dab601c8e849976141bc89b9c680dffa",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/tools/filon_reference.py",
+ "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+ "workers": 2,
+ "route_of": "A",
+ "route": "A",
+ "impl": "qawo",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "Pmax": 4096.0,
+  "epsrel": 1e-13
+ },
+ "value_hex": "0x1.6df31dfcf0e05p-31",
+ "value_30": "6.65658583477737332400273939118e-10",
+ "imag_30": "2.26058772485173258190744262765e-10",
+ "wall_s": 1.373984333127737,
+ "n_panels": 240,
+ "u_breaks": [],
+ "K_exact": "100000",
+ "K_hat": 100000.0,
+ "K_lo": 0.0,
+ "C_exact": "0.0",
+ "stats": {
+  "panels": 240,
+  "direct_panels": 0,
+  "neval": 3980,
+  "ier_nonzero": 142,
+  "ier_messages": {
+   "The occurrence of roundoff error is detected, which prevents ": 142
+  },
+  "max_last": 0,
+  "sum_quad_abserr": 4.3716074305236945e-23
+ },
+ "process_wall_s": 2.9164672079496086,
+ "rerun": false,
+ "progress_order": null,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

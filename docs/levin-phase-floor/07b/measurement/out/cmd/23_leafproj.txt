@@ -1,0 +1,38 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafproj_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/leafrefs/leafproj.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_i3-34599-07.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-0-12977-5.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-1-2174-2.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-2-14345-3.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/attr_W2-2-34473-3.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_cal_z12.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v00.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v01.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v02.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v03.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v04.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v05.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v06.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v07.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v09.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v10.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v11.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v12.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v13.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v14.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v15.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v16.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v17.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v18.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v19.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v20.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v21.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v22.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/leafspecs/v4_v23.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T15:15:08Z
+# ----
+attr_i3-34599-07: {'n_seg': 1663, 'span_f': 464374557.6132952, 'D_f': 0.0, 'n_direct': 0} -> r1 25 s, r2 99 s
+attr_W2-0-12977-5: {'n_seg': 1277, 'span_f': 74116726.46333349, 'D_f': 0.0, 'n_direct': 0} -> r1 19 s, r2 76 s
+attr_W2-1-2174-2: {'n_seg': 2047, 'span_f': 6235505274.858772, 'D_f': 0.0, 'n_direct': 0} -> r1 32 s, r2 122 s
+attr_W2-2-14345-3: {'n_seg': 2049, 'span_f': 35462981434.953514, 'D_f': 0.0, 'n_direct': 0} -> r1 41 s, r2 122 s
+attr_W2-2-34473-3: {'n_seg': 1781, 'span_f': 158601855.29657233, 'D_f': 0.0, 'n_direct': 0} -> r1 26 s, r2 106 s
+v4_cal_z12: {'n_seg': 40, 'span_f': 136648.3945236206, 'D_f': 86.82814814104454, 'n_direct': 1} -> r1 3 s, r2 10 s
+v4_v00: {'n_seg': 49, 'span_f': 245228.8457994461, 'D_f': 617.2873992947003, 'n_direct': 2} -> r1 16 s, r2 58 s
+v4_v01: {'n_seg': 53, 'span_f': 141450.28044509888, 'D_f': 101.30349462470635, 'n_direct': 1} -> r1 3 s, r2 12 s
+v4_v02: {'n_seg': 42, 'span_f': 86315.40504384041, 'D_f': 136.12929392872337, 'n_direct': 2} -> r1 4 s, r2 15 s
+v4_v03: {'n_seg': 46, 'span_f': 15361.146667718887, 'D_f': 0.0, 'n_direct': 0} -> r1 1 s, r2 3 s
+v4_v04: {'n_seg': 95, 'span_f': 53284.51733636856, 'D_f': 0.0, 'n_direct': 0} -> r1 1 s, r2 6 s
+v4_v05: {'n_seg': 41, 'span_f': 168441.84563922882, 'D_f': 1240.1317939182868, 'n_direct': 2} -> r1 31 s, r2 113 s
+v4_v06: {'n_seg': 52, 'span_f': 42484.22617340088, 'D_f': 0.0, 'n_direct': 0} -> r1 1 s, r2 3 s
+v4_v07: {'n_seg': 1500, 'span_f': 30235102.751983643, 'D_f': 203.36346855473568, 'n_direct': 2} -> r1 27 s, r2 107 s
+v4_v09: {'n_seg': 60, 'span_f': 1752437.6413826942, 'D_f': 411.7611196557231, 'n_direct': 2} -> r1 11 s, r2 40 s
+v4_v10: {'n_seg': 40, 'span_f': 104725.52001571655, 'D_f': 380.88020391482, 'n_direct': 2} -> r1 10 s, r2 36 s
+v4_v11: {'n_seg': 44, 'span_f': 38573.64207458496, 'D_f': 0.0, 'n_direct': 0} -> r1 1 s, r2 3 s
+v4_v12: {'n_seg': 1595, 'span_f': 94715326.08752441, 'D_f': 18633.85823108923, 'n_direct': 3} -> r1 474 s, r2 1762 s
+v4_v13: {'n_seg': 1792, 'span_f': 931085309.3505859, 'D_f': 158312.671381889, 'n_direct': 3} -> r1 3849 s, r2 14268 s
+v4_v14: {'n_seg': 49, 'span_f': 119130.09326478839, 'D_f': 60.86284516584873, 'n_direct': 1} -> r1 2 s, r2 8 s
+v4_v15: {'n_seg': 37, 'span_f': 6438.185525894165, 'D_f': 0.0, 'n_direct': 0} -> r1 1 s, r2 2 s
+v4_v16: {'n_seg': 50, 'span_f': 122916.24607658386, 'D_f': 76.56072454924102, 'n_direct': 1} -> r1 3 s, r2 10 s
+v4_v17: {'n_seg': 1593, 'span_f': 94544806.16444159, 'D_f': 16203.308499443629, 'n_direct': 3} -> r1 415 s, r2 1544 s
+v4_v18: {'n_seg': 1792, 'span_f': 930917394.5212097, 'D_f': 164374.73522536014, 'n_direct': 3} -> r1 3996 s, r2 14810 s
+v4_v19: {'n_seg': 42, 'span_f': 24090.982018262148, 'D_f': 0.0, 'n_direct': 0} -> r1 1 s, r2 2 s
+v4_v20: {'n_seg': 39, 'span_f': 16743.784771680832, 'D_f': 0.0, 'n_direct': 0} -> r1 1 s, r2 2 s
+v4_v21: {'n_seg': 43, 'span_f': 6453.120235681534, 'D_f': 0.0, 'n_direct': 0} -> r1 1 s, r2 3 s
+v4_v22: {'n_seg': 1512, 'span_f': 31368319.214408875, 'D_f': 768.1062320771609, 'n_direct': 2} -> r1 41 s, r2 159 s
+v4_v23: {'n_seg': 1691, 'span_f': 296505341.3484192, 'D_f': 50634.38497458221, 'n_direct': 3} -> r1 1248 s, r2 4630 s
+total with margin: r1 10280 s, r2 38132 s, both 13.45 h (one reading at a time, six workers)
+# ----
+# end 2026-11-13T15:15:17Z
+# exit 0

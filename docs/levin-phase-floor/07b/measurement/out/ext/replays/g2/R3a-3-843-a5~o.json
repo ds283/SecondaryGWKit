@@ -1,0 +1,113 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07b extension: replay of R3a-3-843-a5~o at g2",
+  "written": "2026-11-15T23:17:23Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/replay_ext.py",
+  "script_sha256": "b1789e509d84a1a117e7a5af24020729bdfcccbee348b4dc43616807660a3047",
+  "variant_name": "g2",
+  "module": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/variants/levin_quadrature_07b_g2.py",
+  "module_sha256": "1550582a7892a846930d991996dce54fb2921cc6420d2d9f002b8367ff3d18d0",
+  "module_sha256_now": "1550582a7892a846930d991996dce54fb2921cc6420d2d9f002b8367ff3d18d0",
+  "worker_sha256": "1eaa96573f613232f58a4874a3caf024d4408e9793d8dc0fba6dee33869e0333",
+  "capture": {
+   "set": "R3-aux~o",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C24/inputs_C24.pkl",
+   "offset": 0,
+   "length": 3442,
+   "sha256": "b8abc12cdedfa0feee05e4083a6b302a01d7434d5741b55dba824d95b1a50a85",
+   "override": {
+    "rtol": "0x1.5798ee2308c3ap-27",
+    "atol": "0x1.9f623d5a8a733p-107",
+    "from_unit": "h-1e-7-3-843",
+    "to_unit": "h-1e-8-3-843"
+   },
+   "census": "R3a-3-843-a5~o",
+   "captured_unit": "h-1e-7-3-843"
+  },
+  "calls_manifest_sha256": "4c3b85cc5b0b0ddacb967c675561f3f9115154d7bd2059136fa38eb656726044",
+  "census_refs_sha256": "ae658a92135743daf2aa674436bb63883e13a2ecded6475c326801e9cf751ea0",
+  "variant_evidence": {
+   "name": "07b_g2",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/variants/levin_quadrature_07b_g2.py",
+   "sha256": "1550582a7892a846930d991996dce54fb2921cc6420d2d9f002b8367ff3d18d0",
+   "sha256_now": "1550582a7892a846930d991996dce54fb2921cc6420d2d9f002b8367ff3d18d0",
+   "sys_modules_is_variant": true,
+   "module_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/variants/levin_quadrature_07b_g2.py",
+   "package_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/AdaptiveLevin/__init__.py",
+   "package_attribute_is_variant": true,
+   "package_function_is_variants": true
+  },
+  "instrument": true,
+  "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]"
+ },
+ "sid": "R3a-3-843-a5~o",
+ "set": "R3-aux~o",
+ "variant": "g2",
+ "replay": {
+  "value": "-0x1.00530a13b60a0p-43",
+  "abserr": "0x1.9167c52640bc4p-80",
+  "num_regions": 1,
+  "max_depth": 0,
+  "converged": true
+ },
+ "census": {
+  "value": "-0x1.00530a13b60a0p-43",
+  "abserr": "0x1.9167c52640bc4p-80",
+  "num_regions": 1,
+  "max_depth": 0,
+  "converged": true
+ },
+ "census_which": "h",
+ "census_unit": "h-1e-8-3-843",
+ "region_keys_differing": [],
+ "guard_keys_differing": [],
+ "problems": [],
+ "reproduces_census": true,
+ "wall_s": 0.04148333286866546,
+ "atol": "0x1.9f623d5a8a733p-107",
+ "rtol": "0x1.5798ee2308c3ap-27",
+ "x_span": [
+  "-0x1.75043b2e77dc9p+3",
+  "-0x1.5a167b01ff811p+3"
+ ],
+ "n_windows": 0,
+ "n_windows_stopped": 0,
+ "windows": [],
+ "stationary_points": [],
+ "num_window_pieces": 0,
+ "num_guarded_regions": 0,
+ "num_untrusted_regions": 0,
+ "num_subregion_solves": 7,
+ "regions_sha256": "f3927a61ccd546cae11cf61b0f311392731f40de7664647d12072919268095ca",
+ "leaves": [
+  {
+   "start": "-0x1.75043b2e77dc9p+3",
+   "end": "-0x1.5a167b01ff811p+3",
+   "depth": 0,
+   "type": "Levin",
+   "value": "-0x1.00530a13b60a0p-43",
+   "value_own": "-0x1.00530a13bd450p-43",
+   "value_kind": "quarters",
+   "budget_err": "0x1.9167c52640bc4p-80",
+   "total_err": "0x1.9167c52640bc4p-80",
+   "own_err": "0x1.a872e38fc0d80p-81",
+   "abserr": "0x1.1850000000000p-81",
+   "phase_err": "0x1.a872e38fc0d80p-81",
+   "abserr_truncation": "0x0.0p+0",
+   "node_error_signed": null,
+   "delta1": "0x1.1850000000000p-81",
+   "delta2": "0x1.6ce0000000000p-82",
+   "convergence_ratio": "0x1.4d3a64585bc88p-1",
+   "declared_resolution": "0x1.9167c52640bc4p-80",
+   "trusted": true,
+   "window": false,
+   "guarded": false,
+   "phase_limited": false,
+   "touches_window": [],
+   "edge_lo_is": [],
+   "edge_hi_is": []
+  }
+ ],
+ "ray_initialized": false
+}

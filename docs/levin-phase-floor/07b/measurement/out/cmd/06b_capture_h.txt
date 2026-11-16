@@ -1,0 +1,109 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/x1_capture_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h_selection.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/captures/captures_h.json --workers 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-13T13:55:06Z
+# ----
+# levin-phase-floor 07b Part A: section 2.1 item 4 and 2.4 calls, captured at h, variant None (06c's X1 capture)
+# written 2026-11-13T13:55:06Z on mps026298.phys.susx.ac.uk
+# script x1_capture_07b.py sha256 0962cf17b21bb376c1687d6efea8514388224bf259c61e7cdb4c80a59b383c57
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d HEAD 436ed5d43ace32fcfaf5e7517de93978144d824a (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h_selection.json sha256 afef45e954467aed96a0e6348ae6248d1bfa8f1bf79099d2b8d0a87010c6f76d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 80185
+C01: pid 80187
+C02: pid 80188
+C03: pid 80189
+C04: pid 80190
+C05: pid 80191
+C06: pid 80709
+C07: pid 80795
+C08: pid 80796
+C09: pid 80859
+C10: pid 80958
+C11: pid 80963
+C12: pid 81344
+C13: pid 81380
+C14: pid 81399
+C15: pid 81419
+C16: pid 81441
+C17: pid 81457
+C18: pid 81901
+C19: pid 81920
+C20: pid 81934
+C21: pid 81938
+C22: pid 82025
+C23: pid 82029
+C24: pid 82490
+C25: pid 82563
+C26: pid 82578
+C27: pid 82579
+C28: pid 82610
+C29: pid 82641
+C30: pid 83024
+C31: pid 83262
+C32: pid 83270
+C33: pid 83306
+C34: pid 83311
+C35: pid 83579
+C36: pid 83885
+C37: pid 83959
+C38: pid 84010
+C39: pid 84029
+C40: pid 84051
+C41: pid 84181
+C42: pid 84495
+C43: pid 84553
+C44: pid 84572
+exit codes {'C01': 0, 'C00': 0, 'C04': 0, 'C05': 0, 'C02': 0, 'C03': 0, 'C07': 0, 'C09': 0, 'C06': 0, 'C08': 0, 'C11': 0, 'C10': 0, 'C12': 0, 'C14': 0, 'C13': 0, 'C15': 0, 'C16': 0, 'C17': 0, 'C19': 0, 'C21': 0, 'C18': 0, 'C20': 0, 'C23': 0, 'C22': 0, 'C24': 0, 'C26': 0, 'C25': 0, 'C28': 0, 'C27': 0, 'C29': 0, 'C30': 0, 'C32': 0, 'C33': 0, 'C34': 0, 'C31': 0, 'C35': 0, 'C36': 0, 'C37': 0, 'C38': 0, 'C40': 0, 'C39': 0, 'C41': 0, 'C42': 0, 'C44': 0, 'C43': 0}
+captured and matching the census bit for bit: 46 of 46
+   h-1e-7-0-12771 4: matches True; error None; ray_initialized False
+   h-1e-7-0-12952 14: matches True; error None; ray_initialized False
+   h-1e-7-0-12977 5: matches True; error None; ray_initialized False
+   h-1e-7-0-12980 4: matches True; error None; ray_initialized False
+   h-1e-7-0-13757 5: matches True; error None; ray_initialized False
+   h-1e-7-0-33600 11: matches True; error None; ray_initialized False
+   h-1e-7-0-33666 13: matches True; error None; ray_initialized False
+   h-1e-7-1-10739 4: matches True; error None; ray_initialized False
+   h-1e-7-1-11202 14: matches True; error None; ray_initialized False
+   h-1e-7-1-1845 2: matches True; error None; ray_initialized False
+   h-1e-7-1-2174 2: matches True; error None; ray_initialized False
+   h-1e-7-1-35330 4: matches True; error None; ray_initialized False
+   h-1e-7-2-14345 3: matches True; error None; ray_initialized False
+   h-1e-7-2-1665 5: matches True; error None; ray_initialized False
+   h-1e-7-2-21454 3: matches True; error None; ray_initialized False
+   h-1e-7-2-21486 9: matches True; error None; ray_initialized False
+   h-1e-7-2-21653 13: matches True; error None; ray_initialized False
+   h-1e-7-2-21758 10: matches True; error None; ray_initialized False
+   h-1e-7-2-34473 3: matches True; error None; ray_initialized False
+   h-1e-7-3-1011 18: matches True; error None; ray_initialized False
+   h-1e-7-3-13508 2: matches True; error None; ray_initialized False
+   h-1e-7-3-13515 22: matches True; error None; ray_initialized False
+   h-1e-7-3-34277 14: matches True; error None; ray_initialized False
+   h-1e-7-3-39138 2: matches True; error None; ray_initialized False
+   h-1e-7-3-39138 3: matches True; error None; ray_initialized False
+   h-1e-7-3-843 5: matches True; error None; ray_initialized False
+   h-1e-7-3-928 4: matches True; error None; ray_initialized False
+   h-1e-8-0-12590 16: matches True; error None; ray_initialized False
+   h-1e-8-0-14320 18: matches True; error None; ray_initialized False
+   h-1e-8-0-1984 0: matches True; error None; ray_initialized False
+   h-1e-8-0-2006 0: matches True; error None; ray_initialized False
+   h-1e-8-0-33719 6: matches True; error None; ray_initialized False
+   h-1e-8-0-33950 0: matches True; error None; ray_initialized False
+   h-1e-8-1-10842 7: matches True; error None; ray_initialized False
+   h-1e-8-1-11182 19: matches True; error None; ray_initialized False
+   h-1e-8-1-34850 9: matches True; error None; ray_initialized False
+   h-1e-8-1-35188 0: matches True; error None; ray_initialized False
+   h-1e-8-1-35412 0: matches True; error None; ray_initialized False
+   h-1e-8-1-35504 20: matches True; error None; ray_initialized False
+   h-1e-8-2-1623 11: matches True; error None; ray_initialized False
+   h-1e-8-2-21805 8: matches True; error None; ray_initialized False
+   h-1e-8-2-34460 7: matches True; error None; ray_initialized False
+   h-1e-8-3-1048 6: matches True; error None; ray_initialized False
+   h-1e-8-3-1255 9: matches True; error None; ray_initialized False
+   h-1e-8-3-13615 0: matches True; error None; ray_initialized False
+   h-1e-8-3-34325 10: matches True; error None; ray_initialized False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/captures/captures_h.json sha256 1f160136460d6a9494a0591e18dd8bdd419c92fb0e346b95aac535367a577ef9
+# ----
+# end 2026-11-13T14:04:39Z
+# exit 0

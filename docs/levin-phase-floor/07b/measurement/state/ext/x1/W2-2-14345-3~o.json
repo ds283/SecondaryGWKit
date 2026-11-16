@@ -1,0 +1,117 @@
+{
+ "sid": "W2-2-14345-3~o",
+ "capture": {
+  "set": "W2~o",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C12/inputs_C12.pkl",
+  "offset": 0,
+  "length": 1366181,
+  "sha256": "0cc9be974ec5c068f884f6e454e3af369ea62bde3970097c591a4db99e669861",
+  "override": {
+   "rtol": "0x1.5798ee2308c3ap-27",
+   "atol": "0x1.eedfcd094167ep-110",
+   "from_unit": "h-1e-7-2-14345",
+   "to_unit": "h-1e-8-2-14345"
+  },
+  "census": "W2-2-14345-3~o",
+  "captured_unit": "h-1e-7-2-14345"
+ },
+ "spans": [
+  [
+   "0x1.b026405f54b9ap-2",
+   "0x1.95d6af5a5eaf2p+1"
+  ],
+  [
+   "0x1.95d6af5a5eaf2p+1",
+   "0x1.7ad44b5469638p+2"
+  ],
+  [
+   "0x1.7ad44b5469638p+2",
+   "0x1.6d5319516ebdbp+3"
+  ],
+  [
+   "0x1.6d5319516ebdbp+3",
+   "0x1.6692804ff16adp+4"
+  ]
+ ],
+ "points": [
+  "0x1.b026405f54b9ap-2",
+  "0x1.87fc13d6e468cp-1",
+  "0x1.1bf283bf0f3a6p+0",
+  "0x1.73e6fd92ac406p+0",
+  "0x1.cbdb776649465p+0",
+  "0x1.11e7f89cf3262p+1",
+  "0x1.3de23586c1a92p+1",
+  "0x1.69dc7270902c2p+1",
+  "0x1.95d6af5a5eaf2p+1",
+  "0x1.c1d0ec442d322p+1",
+  "0x1.edcb292dfbb51p+1",
+  "0x1.0ce2b30be51c0p+2",
+  "0x1.22dfd180cc5d8p+2",
+  "0x1.38dceff5b39f0p+2",
+  "0x1.4eda0e6a9ae08p+2",
+  "0x1.64d72cdf82220p+2",
+  "0x1.7ad44b5469638p+2",
+  "0x1.a6ce883e37e68p+2",
+  "0x1.d2c8c52806698p+2",
+  "0x1.fec30211d4ec8p+2",
+  "0x1.155e9f7dd1b7cp+3",
+  "0x1.2b5bbdf2b8f94p+3",
+  "0x1.4158dc67a03acp+3",
+  "0x1.5755fadc877c4p+3",
+  "0x1.6d5319516ebdbp+3",
+  "0x1.994d563b3d40ap+3",
+  "0x1.c54793250bc3ap+3",
+  "0x1.f141d00eda46ap+3",
+  "0x1.0e9e067c5464dp+4",
+  "0x1.249b24f13ba65p+4",
+  "0x1.3a98436622e7dp+4",
+  "0x1.509561db0a295p+4",
+  "0x1.6692804ff16adp+4"
+ ],
+ "named": [
+  {
+   "name": "e:0:8",
+   "variant": "e",
+   "i": 0,
+   "lo": "0x1.b026405f54b9ap-2",
+   "hi": "0x1.95d6af5a5eaf2p+1",
+   "depth": 3,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:1:8",
+   "variant": "e",
+   "i": 1,
+   "lo": "0x1.95d6af5a5eaf2p+1",
+   "hi": "0x1.7ad44b5469638p+2",
+   "depth": 3,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:2:8",
+   "variant": "e",
+   "i": 2,
+   "lo": "0x1.7ad44b5469638p+2",
+   "hi": "0x1.6d5319516ebdbp+3",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:3:8",
+   "variant": "e",
+   "i": 3,
+   "lo": "0x1.6d5319516ebdbp+3",
+   "hi": "0x1.6692804ff16adp+4",
+   "depth": 1,
+   "type": "Levin",
+   "eighths": true
+  }
+ ],
+ "all_leaves": null,
+ "replay": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/e/W2-2-14345-3~o.json",
+ "replay_sha256": "f2c451e7ca3631336d7d5153d888fd66b98fed41d7b23a3c996bf5cc34058a3b",
+ "window_leaves_not_read": []
+}

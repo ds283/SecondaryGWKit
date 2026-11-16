@@ -1,0 +1,153 @@
+{
+ "sid": "i3-34599-07",
+ "capture": {
+  "set": "item3",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/state/refs/capture_parent2/C00/inputs_C00.pkl",
+  "offset": 0,
+  "length": 1350143,
+  "sha256": "d33ef9773b4a711e99c5ead89ca0722e4466aedd92f9f3044608aff9e19923ff",
+  "override": null,
+  "census": "i3-34599-07",
+  "replay_variant": "07"
+ },
+ "spans": [
+  [
+   "0x1.911a319d4c4f8p+2",
+   "0x1.dacc1356abb74p+2"
+  ],
+  [
+   "0x1.dacc1356abb74p+2",
+   "0x1.123efa88058f8p+3"
+  ],
+  [
+   "0x1.123efa88058f8p+3",
+   "0x1.5bf0dc4164f73p+3"
+  ],
+  [
+   "0x1.5bf0dc4164f73p+3",
+   "0x1.ef549fb423c6ap+3"
+  ],
+  [
+   "0x1.ef549fb423c6ap+3",
+   "0x1.415c3193714b0p+4"
+  ],
+  [
+   "0x1.415c3193714b0p+4",
+   "0x1.8b0e134cd0b2cp+4"
+  ]
+ ],
+ "points": [
+  "0x1.911a319d4c4f8p+2",
+  "0x1.9a506dd4783c8p+2",
+  "0x1.a386aa0ba4297p+2",
+  "0x1.acbce642d0166p+2",
+  "0x1.b5f32279fc036p+2",
+  "0x1.bf295eb127f06p+2",
+  "0x1.c85f9ae853dd5p+2",
+  "0x1.d195d71f7fca4p+2",
+  "0x1.dacc1356abb74p+2",
+  "0x1.e4024f8dd7a44p+2",
+  "0x1.ed388bc503913p+2",
+  "0x1.f66ec7fc2f7e2p+2",
+  "0x1.ffa504335b6b2p+2",
+  "0x1.046da03543ac0p+3",
+  "0x1.0908be50d9a28p+3",
+  "0x1.0da3dc6c6f990p+3",
+  "0x1.123efa88058f8p+3",
+  "0x1.1b7536bf317c8p+3",
+  "0x1.24ab72f65d697p+3",
+  "0x1.2de1af2d89566p+3",
+  "0x1.3717eb64b5436p+3",
+  "0x1.404e279be1305p+3",
+  "0x1.498463d30d1d4p+3",
+  "0x1.52baa00a390a4p+3",
+  "0x1.5bf0dc4164f73p+3",
+  "0x1.6e5d54afbcd12p+3",
+  "0x1.80c9cd1e14ab0p+3",
+  "0x1.9336458c6c84fp+3",
+  "0x1.a5a2bdfac45eep+3",
+  "0x1.b80f36691c38dp+3",
+  "0x1.ca7baed77412cp+3",
+  "0x1.dce82745cbecbp+3",
+  "0x1.ef549fb423c6ap+3",
+  "0x1.00e08c113dd04p+4",
+  "0x1.0a16c84869bd4p+4",
+  "0x1.134d047f95aa3p+4",
+  "0x1.1c8340b6c1972p+4",
+  "0x1.25b97ceded842p+4",
+  "0x1.2eefb92519711p+4",
+  "0x1.3825f55c455e0p+4",
+  "0x1.415c3193714b0p+4",
+  "0x1.4a926dca9d380p+4",
+  "0x1.53c8aa01c924fp+4",
+  "0x1.5cfee638f511ep+4",
+  "0x1.6635227020feep+4",
+  "0x1.6f6b5ea74cebep+4",
+  "0x1.78a19ade78d8dp+4",
+  "0x1.81d7d715a4c5cp+4",
+  "0x1.8b0e134cd0b2cp+4"
+ ],
+ "named": [
+  {
+   "name": "07:0:8",
+   "variant": "07",
+   "i": 0,
+   "lo": "0x1.911a319d4c4f8p+2",
+   "hi": "0x1.dacc1356abb74p+2",
+   "depth": 4,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "07:1:8",
+   "variant": "07",
+   "i": 1,
+   "lo": "0x1.dacc1356abb74p+2",
+   "hi": "0x1.123efa88058f8p+3",
+   "depth": 4,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "07:2:8",
+   "variant": "07",
+   "i": 2,
+   "lo": "0x1.123efa88058f8p+3",
+   "hi": "0x1.5bf0dc4164f73p+3",
+   "depth": 3,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "07:3:8",
+   "variant": "07",
+   "i": 3,
+   "lo": "0x1.5bf0dc4164f73p+3",
+   "hi": "0x1.ef549fb423c6ap+3",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "07:4:8",
+   "variant": "07",
+   "i": 4,
+   "lo": "0x1.ef549fb423c6ap+3",
+   "hi": "0x1.415c3193714b0p+4",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "07:5:8",
+   "variant": "07",
+   "i": 5,
+   "lo": "0x1.415c3193714b0p+4",
+   "hi": "0x1.8b0e134cd0b2cp+4",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  }
+ ],
+ "all_leaves": "07"
+}

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/replay_07b.py", line 236, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/replay_07b.py", line 222, in main
+    "leaves": leaf_records(result), "ray_initialized": ray.is_initialized()}
+              ~~~~~~~~~~~~^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/replay_07b.py", line 110, in leaf_records
+    "total_err": H(r.total_err), "own_err": H(r.own_err), "abserr": H(r.abserr), "phase_err": H(r.phase_err),
+                                              ^^^^^^^^^
+AttributeError: 'used_interval' object has no attribute 'own_err'

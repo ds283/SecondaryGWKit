@@ -1,0 +1,434 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07b Part A: leaf probe of v23 at b4",
+  "written": "2026-11-13T15:16:58Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/leafprobe_07b.py",
+  "script_sha256": "f6c3d8f72cf01336d3d26e6f32b9dd22b2950b450c20f845db0d8bfa55b42dfe",
+  "module_sha256": "877faea9319f0f2834b1d2da0b2095b8c2bca54736b99d6cce4ef2f02064c430",
+  "replay_json": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/b4/v23.json",
+  "replay_json_sha256": "e42d89c96ea916417e272b61a1a8aeb99179b3a6431ca9d9a948a4aab8f8e611",
+  "capture": {
+   "set": "v4",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4/inputs/v23.pkl",
+   "offset": 0,
+   "length": 1364726,
+   "sha256": "b36c8796f3ab8dfc90d266c4aeeb111ea5e786c473b03755eadd5ac73c25160b",
+   "override": null,
+   "census": "v23"
+  },
+  "args": {
+   "replay_json": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/b4/v23.json",
+   "out_json": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/probe/b4_v23.json",
+   "leaves": [
+    11,
+    37
+   ],
+   "eighths": false,
+   "perturb": null
+  }
+ },
+ "sid": "v23",
+ "variant": "b4",
+ "wall_s": 0.043922957964241505,
+ "leaves": [
+  {
+   "i": 11,
+   "leaf": {
+    "start": "0x1.270e6eebe54a6p+3",
+    "end": "0x1.276552d084218p+3",
+    "depth": 9,
+    "type": "Levin",
+    "value": "-0x1.49e09ca5bac76p-114",
+    "value_own": "-0x1.4a0399fbb2e52p-114",
+    "value_kind": "quarters",
+    "budget_err": "0x1.1cbe1b175dfcdp-125",
+    "total_err": "0x1.1cbe1b175dfcdp-125",
+    "own_err": "0x1.ef58c59473000p-126",
+    "abserr": "0x1.ef58c59473000p-126",
+    "phase_err": "0x1.efc1dcc4be697p-152",
+    "abserr_truncation": "0x0.0p+0",
+    "node_error_signed": null,
+    "delta1": "0x1.ef58c59473000p-126",
+    "delta2": "0x1.01f267b5a4000p-128",
+    "convergence_ratio": "0x1.0a9e7051c9395p-3",
+    "declared_resolution": "0x1.1cbe1b175dfcdp-125",
+    "trusted": true,
+    "window": false,
+    "guarded": false,
+    "phase_limited": false,
+    "touches_window": [
+     0
+    ],
+    "edge_lo_is": [],
+    "edge_hi_is": [
+     "lo"
+    ]
+   },
+   "probe": {
+    "spans": {
+     "P": [
+      "0x1.270e6eebe54a6p+3",
+      "0x1.276552d084218p+3"
+     ],
+     "L": [
+      "0x1.270e6eebe54a6p+3",
+      "0x1.2739e0de34b5fp+3"
+     ],
+     "R": [
+      "0x1.2739e0de34b5fp+3",
+      "0x1.276552d084218p+3"
+     ],
+     "LL": [
+      "0x1.270e6eebe54a6p+3",
+      "0x1.272427e50d002p+3"
+     ],
+     "LR": [
+      "0x1.272427e50d002p+3",
+      "0x1.2739e0de34b5fp+3"
+     ],
+     "RL": [
+      "0x1.2739e0de34b5fp+3",
+      "0x1.274f99d75c6bcp+3"
+     ],
+     "RR": [
+      "0x1.274f99d75c6bcp+3",
+      "0x1.276552d084218p+3"
+     ]
+    },
+    "pieces": {
+     "P": {
+      "lo": "0x1.270e6eebe54a6p+3",
+      "hi": "0x1.276552d084218p+3",
+      "value": "-0x1.4a0399fbb2e52p-114",
+      "phase_err": "0x1.efc1dcc4be697p-152",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.b27a2ea800000p+14",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "L": {
+      "lo": "0x1.270e6eebe54a6p+3",
+      "hi": "0x1.2739e0de34b5fp+3",
+      "value": "-0x1.8885b83ba762cp-119",
+      "phase_err": "0x1.984852e4e62a9p-157",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.41cac1d000000p+14",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "R": {
+      "lo": "0x1.2739e0de34b5fp+3",
+      "hi": "0x1.276552d084218p+3",
+      "value": "-0x1.3da076ad7c62ep-114",
+      "phase_err": "0x1.fc4166ee77391p-154",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.c2bdb36000000p+12",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "LL": {
+      "lo": "0x1.270e6eebe54a6p+3",
+      "hi": "0x1.272427e50d002p+3",
+      "value": "-0x1.02975097e28ecp-119",
+      "phase_err": "0x1.2df234478d174p-158",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.766597c000000p+13",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "LR": {
+      "lo": "0x1.272427e50d002p+3",
+      "hi": "0x1.2739e0de34b5fp+3",
+      "value": "-0x1.0bdccf4789b44p-120",
+      "phase_err": "0x1.47d5a05028c6bp-158",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.0d2febe000000p+13",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "RL": {
+      "lo": "0x1.2739e0de34b5fp+3",
+      "hi": "0x1.274f99d75c6bcp+3",
+      "value": "0x1.509f1548ecf99p-118",
+      "phase_err": "0x1.9119db62a7c06p-158",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.4944dce000000p+12",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "RR": {
+      "lo": "0x1.274f99d75c6bcp+3",
+      "hi": "0x1.276552d084218p+3",
+      "value": "-0x1.52a660386c5bcp-114",
+      "phase_err": "0x1.0ce33770f0fdbp-155",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.e5e35a0000000p+10",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     }
+    },
+    "V_P": "-0x1.4a0399fbb2e52p-114",
+    "S1": "-0x1.49e4a46f599dfp-114",
+    "Q": "-0x1.49e09ca5bac76p-114",
+    "delta1": "0x1.ef58c59473000p-126",
+    "delta2": "0x1.01f267b5a4000p-128",
+    "r": "0x1.0a9e7051c9395p-3",
+    "nu_B": "0x1.3dca3c8bc1b48p-151",
+    "clause": "r<1/4"
+   },
+   "reproduces": true,
+   "reproduces_detail": {
+    "V_P": true,
+    "Q": true,
+    "delta1": true,
+    "delta2": true,
+    "r": true,
+    "declared_resolution": true,
+    "residual_is_delta1": true
+   },
+   "ends": {
+    "theta_prime_a": "-0x1.3aacc5a3f0200p+22",
+    "theta_prime_b": "-0x1.a874955d80000p+16",
+    "theta_a": "-0x1.79d2abcf7360dp+37",
+    "theta_b": "-0x1.79d2af3467be2p+37",
+    "theta_mod_2pi_a": "-0x1.83f0f14cc287cp+3",
+    "theta_mod_2pi_b": "-0x1.f25c55c0842bcp+3"
+   }
+  },
+  {
+   "i": 37,
+   "leaf": {
+    "start": "0x1.27691d1d6b1b2p+3",
+    "end": "0x1.c1f69b30e5acep+4",
+    "depth": 0,
+    "type": "Levin",
+    "value": "-0x1.3abcdbb6df496p-99",
+    "value_own": "-0x1.3abce30d28f1ep-99",
+    "value_kind": "quarters",
+    "budget_err": "0x1.fa92bfdd47619p-121",
+    "total_err": "0x1.fa92bfdd47619p-121",
+    "own_err": "0x1.e7b8c94800000p-121",
+    "abserr": "0x1.e7b8c94800000p-121",
+    "phase_err": "0x1.70ae408fb5179p-121",
+    "abserr_truncation": "0x0.0p+0",
+    "node_error_signed": null,
+    "delta1": "0x1.e7b8c94800000p-121",
+    "delta2": "0x1.2265f28000000p-125",
+    "convergence_ratio": "0x1.30da988b4b808p-5",
+    "declared_resolution": "0x1.fa92bfdd47619p-121",
+    "trusted": true,
+    "window": false,
+    "guarded": false,
+    "phase_limited": false,
+    "touches_window": [
+     0
+    ],
+    "edge_lo_is": [
+     "hi"
+    ],
+    "edge_hi_is": []
+   },
+   "probe": {
+    "spans": {
+     "P": [
+      "0x1.27691d1d6b1b2p+3",
+      "0x1.c1f69b30e5acep+4"
+     ],
+     "L": [
+      "0x1.27691d1d6b1b2p+3",
+      "0x1.2ad594dfcd9d4p+4"
+     ],
+     "R": [
+      "0x1.2ad594dfcd9d4p+4",
+      "0x1.c1f69b30e5acep+4"
+     ],
+     "LL": [
+      "0x1.27691d1d6b1b2p+3",
+      "0x1.be8a236e832adp+3"
+     ],
+     "LR": [
+      "0x1.be8a236e832adp+3",
+      "0x1.2ad594dfcd9d4p+4"
+     ],
+     "RL": [
+      "0x1.2ad594dfcd9d4p+4",
+      "0x1.7666180859a51p+4"
+     ],
+     "RR": [
+      "0x1.7666180859a51p+4",
+      "0x1.c1f69b30e5acep+4"
+     ]
+    },
+    "pieces": {
+     "P": {
+      "lo": "0x1.27691d1d6b1b2p+3",
+      "hi": "0x1.c1f69b30e5acep+4",
+      "value": "-0x1.3abce30d28f1ep-99",
+      "phase_err": "0x1.70ae408fb5179p-121",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.1ace02d739e00p+28",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "L": {
+      "lo": "0x1.27691d1d6b1b2p+3",
+      "hi": "0x1.2ad594dfcd9d4p+4",
+      "value": "-0x1.0081bc9531d54p-113",
+      "phase_err": "0x1.cadf6cb826b48p-136",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.1ac110c58f800p+28",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "R": {
+      "lo": "0x1.2ad594dfcd9d4p+4",
+      "hi": "0x1.c1f69b30e5acep+4",
+      "value": "-0x1.3ab8d96753780p-99",
+      "phase_err": "0x1.1e7edcc4c99d6p-133",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.9e42354c00000p+15",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "LL": {
+      "lo": "0x1.27691d1d6b1b2p+3",
+      "hi": "0x1.be8a236e832adp+3",
+      "value": "-0x1.45151dde00b63p-114",
+      "phase_err": "0x1.c29c141cc2582p-138",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.1526cb20da400p+28",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "LR": {
+      "lo": "0x1.be8a236e832adp+3",
+      "hi": "0x1.2ad594dfcd9d4p+4",
+      "value": "-0x1.77e486cebc122p-115",
+      "phase_err": "0x1.399149d7a0b13p-141",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.6691692d50000p+22",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "RL": {
+      "lo": "0x1.2ad594dfcd9d4p+4",
+      "hi": "0x1.7666180859a51p+4",
+      "value": "0x1.cb3fe769cd8e9p-107",
+      "phase_err": "0x1.3d743491e5f31p-141",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.9a9be2b800000p+15",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     },
+     "RR": {
+      "lo": "0x1.7666180859a51p+4",
+      "hi": "0x1.c1f69b30e5acep+4",
+      "value": "-0x1.3c84198f868c3p-99",
+      "phase_err": "0x1.4773b7f30f2c9p-141",
+      "phase_err_less_node": null,
+      "node_error_signed": null,
+      "abserr_truncation": "0x0.0p+0",
+      "abserr_direct": null,
+      "phase_span": "0x1.d3294a0000000p+8",
+      "is_direct": false,
+      "lu": 1,
+      "lstsq": 0,
+      "guarded": false
+     }
+    },
+    "V_P": "-0x1.3abce30d28f1ep-99",
+    "S1": "-0x1.3abcdb6e45cccp-99",
+    "Q": "-0x1.3abcdbb6df496p-99",
+    "delta1": "0x1.e7b8c94800000p-121",
+    "delta2": "0x1.2265f28000000p-125",
+    "r": "0x1.30da988b4b808p-5",
+    "nu_B": "0x1.70c3be3c5ad48p-121",
+    "clause": "r<1/4"
+   },
+   "reproduces": true,
+   "reproduces_detail": {
+    "V_P": true,
+    "Q": true,
+    "delta1": true,
+    "delta2": true,
+    "r": true,
+    "declared_resolution": true,
+    "residual_is_delta1": true
+   },
+   "ends": {
+    "theta_prime_a": "0x1.a84cc3eda0000p+16",
+    "theta_prime_b": "0x1.0411134518d1cp+2",
+    "theta_a": "-0x1.79d2af3467be2p+37",
+    "theta_b": "-0x1.79454832fc213p+37",
+    "theta_mod_2pi_a": "-0x1.294c871c62c30p+3",
+    "theta_mod_2pi_b": "-0x1.935f399fa629fp+3"
+   }
+  }
+ ]
+}

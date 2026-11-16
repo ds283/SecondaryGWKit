@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/g_windows.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/g/g_windows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/g/g_windows.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-15T23:30:44Z
+# ----
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/ext/g_windows.py", line 74
+    if fails else f"- **{v}:** {calls} calls with windows; windows by half-width (pi): {dict(sorted(halves.items()))}; none failing."])
+                                                                                                                                     ^
+SyntaxError: closing parenthesis ']' does not match opening parenthesis '(' on line 68
+# ----
+# end 2026-11-15T23:30:44Z
+# exit 1

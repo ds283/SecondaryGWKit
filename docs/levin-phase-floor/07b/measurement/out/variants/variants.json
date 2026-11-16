@@ -1,0 +1,57 @@
+{
+ "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-436ed5d/AdaptiveLevin/levin_quadrature.py",
+ "tree_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+ "variants": {
+  "b4": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_b4.py",
+   "sha256": "877faea9319f0f2834b1d2da0b2095b8c2bca54736b99d6cce4ef2f02064c430",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/variants/b4.diff",
+   "diff_sha256": "4be03a117e19b5c5f31c4efeda7f8448b7c85896db12b26c87355cc3448e0c97",
+   "maker_sha256": "23f171fd5b0eb4352c6372cbbf50ee2856d0095df583d9e12208a0deab7523b6"
+  },
+  "b8": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_b8.py",
+   "sha256": "ef89cf1fb6285967a3b8c94778dd55771c0bb433227c48f5c00d068dbad35484",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/variants/b8.diff",
+   "diff_sha256": "261f1abe7c449d7d0166ef18b334c70ed83e55de23f83a45669dbc7060f5f70f",
+   "maker_sha256": "23f171fd5b0eb4352c6372cbbf50ee2856d0095df583d9e12208a0deab7523b6"
+  },
+  "c": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_c.py",
+   "sha256": "fd125a8da5117a5db94b1e96f1b3517ad71f8ca5dfd418383939a2877e0cc689",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/variants/c.diff",
+   "diff_sha256": "85e7c195ccf6ccb88683dcd4f5e0dc0b674ebc269d00b8a8a8b290c2e3d1307f",
+   "maker_sha256": "0f7c4adaeb25831e3ea36a38c688c2cbf9b563e12439cfadfdeebd37786dc08b"
+  },
+  "d": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_d.py",
+   "sha256": "06c7f0d8504e565a5403d145bd998a2d9ff5c783b2b0dbf144cd776777e1ce6a",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/variants/d.diff",
+   "diff_sha256": "bc6954b6ab51f5adeab2a6edc6d77e83c636edf611c7d1707eb9129719f7f8c7",
+   "maker_sha256": "0f7c4adaeb25831e3ea36a38c688c2cbf9b563e12439cfadfdeebd37786dc08b"
+  },
+  "e": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_e.py",
+   "sha256": "7df87cac6e6dff85d40c63480140ac3b24639f2f777c74401f5fddca8c1ed3e0",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/variants/e.diff",
+   "diff_sha256": "cae2ac6205782257ce3e75d74c103e75784b887a1a2957d17d0db0826d780655",
+   "maker_sha256": "0f7c4adaeb25831e3ea36a38c688c2cbf9b563e12439cfadfdeebd37786dc08b"
+  },
+  "f": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_f.py",
+   "sha256": "fbe2ea9dfde06c00b0e854ca6239ba65ae4157c75d6bf8cf276a47ac207caf96",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/variants/f.diff",
+   "diff_sha256": "c02654ac6147240549f386d7a04917a8fafa5cbdbb0e19ec05d227b5b18ef4d7",
+   "maker_sha256": "0ff56546ade9a7754559664ae1b8311fb48728b544614f711c687d169d5b31e8"
+  }
+ },
+ "superseded": {
+  "f_endrule": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/scripts/variants/levin_quadrature_07b_f.py",
+   "sha256": "e9160f8a3cb175cf1a3f0e3169df23a49d611e03ac5d76d9ad9cf489df412d8d",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/variants/f.diff",
+   "diff_sha256": "3c1e511f399ee57c25277caca6edb770dd708e201d155fc44568d66e4d206dfe",
+   "maker_sha256": "28aa9728beeaeeff2f955e0febfb6f3f5ace8bbc42371c6154024baa08963129"
+  }
+ }
+}

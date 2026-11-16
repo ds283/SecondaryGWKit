@@ -1,0 +1,72 @@
+--- tree/AdaptiveLevin/levin_quadrature.py
++++ variants/levin_quadrature_07b_c.py
+@@ -592,6 +592,8 @@
+ 
+ INTERVAL_TYPE_LEVIN = 0
+ INTERVAL_TYPE_DIRECT = 1
++_VARIANT_07B = "c"  # levin-phase-floor 07b Part A, section 2.3
++_MEASURE_07B = None  # 07b variant instrument: a list while set, one record per test
+ types = {0: "Levin", 1: "direct"}
+ 
+ 
+@@ -4226,6 +4228,10 @@
+         )
+ 
+     num_evaluations = 0
++    # 07b variant: the window edges (lo and hi of each merged window), for the added trust test
++    _window_edges_07b = frozenset(
++        float(v) for w in (location["windows"] if location is not None else []) for v in (w["lo"], w["hi"])
++    )
+ 
+     num_SVD_errors = 0
+     num_order_changes = 0
+@@ -4642,6 +4648,32 @@
+             force_direct=leaf.forced_direct,
+         )
+ 
++    def _variant_test_07b(leaf, ratio, delta1, delta2, residual, nu, quarters_sum, gc):
++        # 07b variant (c): a check two levels down for a Levin leaf touching a window
++        forced = leaf.forced_direct
++        a = leaf.start
++        b = leaf.end
++        c = leaf.break_point
++        cL = (c + a) / 2.0
++        cR = (b + c) / 2.0
++        S3 = 0.0
++        for lo, hi in ((a, cL), (cL, c), (c, cR), (cR, b)):
++            m = (hi + lo) / 2.0
++            S3 = S3 + (_solve((lo, m), "07b (c): eighth", force_direct=forced)["value"]
++                       + _solve((m, hi), "07b (c): eighth", force_direct=forced)["value"])
++        delta3 = float(np.fabs(quarters_sum - S3))
++        if not (np.isfinite(delta3) and np.isfinite(delta2)):
++            r3 = float("inf")
++        elif delta2 == 0.0:
++            r3 = 0.0 if delta3 == 0.0 else float("inf")
++        else:
++            r3 = delta3 / delta2
++        ok = r3 < _LEVIN_TRUST_MAX_RATIO or (r3 < 1.0 and delta2 <= nu)
++        if _MEASURE_07B is not None:
++            _MEASURE_07B.append({"kind": "c", "start": a, "end": b, "depth": leaf.depth, "r": ratio, "r3": r3,
++                                 "delta3": delta3, "S3": S3, "trusted": ok})
++        return ok, (max(ratio, r3) if ok else ratio)
++
+     def _check_leaf(leaf: _levin_leaf) -> None:
+         """
+         The trust check one level down (prompts/levin-phase-floor/06c-global-error-control.md,
+@@ -4716,6 +4748,16 @@
+         trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
+             ratio < 1.0 and delta1 <= noise_yardstick
+         )
++        # 07b variant: the added trust test for a Levin leaf that touches a window
++        if (
++            trusted
++            and not leaf.is_direct
++            and (leaf.start in _window_edges_07b or leaf.end in _window_edges_07b)
++        ):
++            trusted, ratio = _variant_test_07b(
++                leaf, ratio, delta1, delta2, residual, noise_yardstick, quarters_sum,
++                ((LL, LR), (RL, RR)),
++            )
+         _remove_error(leaf)
+         region._delta1 = delta1
+         region._delta2 = delta2

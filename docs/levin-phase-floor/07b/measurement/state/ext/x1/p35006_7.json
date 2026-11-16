@@ -1,0 +1,326 @@
+{
+ "sid": "p35006_7",
+ "capture": {
+  "set": "pairs",
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/measurement/state/pairs_capture/X00/inputs_X00.pkl",
+  "offset": 0,
+  "length": 1374552,
+  "sha256": "f33bda00dfda9dcb5a798ab5265dd971719b869b2b5eeb337b4becc4e31f870d",
+  "override": null,
+  "census": "p35006_7"
+ },
+ "spans": [
+  [
+   "0x1.0d52e70265d91p-1",
+   "0x1.824fb8be56adap-1"
+  ],
+  [
+   "0x1.824fb8be56adap-1",
+   "0x1.bcce219c4f17ep-1"
+  ],
+  [
+   "0x1.bcce219c4f17ep-1",
+   "0x1.da0d560b4b4d0p-1"
+  ],
+  [
+   "0x1.da0d560b4b4d0p-1",
+   "0x1.e8acf042c9679p-1"
+  ],
+  [
+   "0x1.e8acf042c9679p-1",
+   "0x1.effcbd5e8874ep-1"
+  ],
+  [
+   "0x1.effcbd5e8874ep-1",
+   "0x1.f74c8a7a47822p-1"
+  ],
+  [
+   "0x1.f789da8b03914p-1",
+   "0x1.fd77219ce573ap-1"
+  ],
+  [
+   "0x1.fd77219ce573ap-1",
+   "0x1.01b2345763ab0p+0"
+  ],
+  [
+   "0x1.01b2345763ab0p+0",
+   "0x1.079f7b69458d5p+0"
+  ],
+  [
+   "0x1.079f7b69458d5p+0",
+   "0x1.137a098d09520p+0"
+  ],
+  [
+   "0x1.137a098d09520p+0",
+   "0x1.2b2f25d490db6p+0"
+  ],
+  [
+   "0x1.2b2f25d490db6p+0",
+   "0x1.5a995e639fee2p+0"
+  ],
+  [
+   "0x1.5a995e639fee2p+0",
+   "0x1.b96dcf81be13bp+0"
+  ],
+  [
+   "0x1.b96dcf81be13bp+0",
+   "0x1.3b8b58defd2f6p+1"
+  ],
+  [
+   "0x1.3b8b58defd2f6p+1",
+   "0x1.f9343b1b397a8p+1"
+  ],
+  [
+   "0x1.f9343b1b397a8p+1",
+   "0x1.ba42ffc9d9086p+2"
+  ],
+  [
+   "0x1.ba42ffc9d9086p+2",
+   "0x1.9aca622128cf5p+3"
+  ],
+  [
+   "0x1.9aca622128cf5p+3",
+   "0x1.8b0e134cd0b2cp+4"
+  ]
+ ],
+ "points": [
+  "0x1.0d52e70265d91p-1",
+  "0x1.1bf28139e3f3ap-1",
+  "0x1.2a921b71620e4p-1",
+  "0x1.3931b5a8e028dp-1",
+  "0x1.47d14fe05e436p-1",
+  "0x1.5670ea17dc5dfp-1",
+  "0x1.6510844f5a788p-1",
+  "0x1.73b01e86d8931p-1",
+  "0x1.824fb8be56adap-1",
+  "0x1.899f85da15baep-1",
+  "0x1.90ef52f5d4c83p-1",
+  "0x1.983f201193d58p-1",
+  "0x1.9f8eed2d52e2cp-1",
+  "0x1.a6deba4911f00p-1",
+  "0x1.ae2e8764d0fd5p-1",
+  "0x1.b57e5480900aap-1",
+  "0x1.bcce219c4f17ep-1",
+  "0x1.da0d560b4b4d0p-1",
+  "0x1.e8acf042c9679p-1",
+  "0x1.effcbd5e8874ep-1",
+  "0x1.f0e6b70200568p-1",
+  "0x1.f1d0b0a578383p-1",
+  "0x1.f2baaa48f019ep-1",
+  "0x1.f3a4a3ec67fb8p-1",
+  "0x1.f48e9d8fdfdd2p-1",
+  "0x1.f578973357bedp-1",
+  "0x1.f66290d6cfa08p-1",
+  "0x1.f74c8a7a47822p-1",
+  "0x1.f74ec921191a6p-1",
+  "0x1.f75107c7eab2ap-1",
+  "0x1.f75585158de32p-1",
+  "0x1.f7605bc4a61b6p-1",
+  "0x1.f765c71c32378p-1",
+  "0x1.f76721f2153e9p-1",
+  "0x1.f767cf5d06c22p-1",
+  "0x1.f7687cc7f845ap-1",
+  "0x1.f7692a32e9c92p-1",
+  "0x1.f76980e8628aep-1",
+  "0x1.f769d79ddb4cap-1",
+  "0x1.f76a8508ccd02p-1",
+  "0x1.f76adbbe4591ep-1",
+  "0x1.f76b3273be53bp-1",
+  "0x1.f7709dcf02e08p-1",
+  "0x1.f773537ca526fp-1",
+  "0x1.f776092a476d6p-1",
+  "0x1.f780dfe0d0871p-1",
+  "0x1.f7831e8b5d49ap-1",
+  "0x1.f7855d35ea0c2p-1",
+  "0x1.f789da8b03914p-1",
+  "0x1.f847836d3fcd9p-1",
+  "0x1.f9052c4f7c09ep-1",
+  "0x1.f9c2d531b8462p-1",
+  "0x1.fa807e13f4827p-1",
+  "0x1.fb3e26f630becp-1",
+  "0x1.fbfbcfd86cfb0p-1",
+  "0x1.fcb978baa9375p-1",
+  "0x1.fd77219ce573ap-1",
+  "0x1.01b2345763ab0p+0",
+  "0x1.026fdd399fe74p+0",
+  "0x1.032d861bdc239p+0",
+  "0x1.03eb2efe185fep+0",
+  "0x1.04a8d7e0549c2p+0",
+  "0x1.056680c290d87p+0",
+  "0x1.062429a4cd14cp+0",
+  "0x1.06e1d28709510p+0",
+  "0x1.079f7b69458d5p+0",
+  "0x1.137a098d09520p+0",
+  "0x1.1670ad15fa433p+0",
+  "0x1.1967509eeb346p+0",
+  "0x1.1c5df427dc258p+0",
+  "0x1.1f5497b0cd16bp+0",
+  "0x1.224b3b39be07ep+0",
+  "0x1.2541dec2aef90p+0",
+  "0x1.2838824b9fea3p+0",
+  "0x1.2b2f25d490db6p+0",
+  "0x1.311c6ce672bdcp+0",
+  "0x1.3709b3f854a01p+0",
+  "0x1.3cf6fb0a36826p+0",
+  "0x1.42e4421c1864cp+0",
+  "0x1.48d1892dfa472p+0",
+  "0x1.4ebed03fdc297p+0",
+  "0x1.54ac1751be0bcp+0",
+  "0x1.5a995e639fee2p+0",
+  "0x1.b96dcf81be13bp+0",
+  "0x1.3b8b58defd2f6p+1",
+  "0x1.f9343b1b397a8p+1",
+  "0x1.144f39d52446ap+2",
+  "0x1.2c04561cabd00p+2",
+  "0x1.43b9726433596p+2",
+  "0x1.5b6e8eabbae2dp+2",
+  "0x1.7323aaf3426c4p+2",
+  "0x1.8ad8c73ac9f5ap+2",
+  "0x1.a28de382517f0p+2",
+  "0x1.ba42ffc9d9086p+2",
+  "0x1.e9ad3858e81b3p+2",
+  "0x1.0c8bb873fb970p+3",
+  "0x1.2440d4bb83206p+3",
+  "0x1.3bf5f1030aa9cp+3",
+  "0x1.53ab0d4a92332p+3",
+  "0x1.6b60299219bc8p+3",
+  "0x1.831545d9a145ep+3",
+  "0x1.9aca622128cf5p+3",
+  "0x1.ca349ab037e22p+3",
+  "0x1.f99ed33f46f4ep+3",
+  "0x1.148485e72b03dp+4",
+  "0x1.2c39a22eb28d3p+4",
+  "0x1.43eebe763a16ap+4",
+  "0x1.5ba3dabdc1a00p+4",
+  "0x1.7358f70549296p+4",
+  "0x1.8b0e134cd0b2cp+4"
+ ],
+ "named": [
+  {
+   "name": "e:0:8",
+   "variant": "e",
+   "i": 0,
+   "lo": "0x1.0d52e70265d91p-1",
+   "hi": "0x1.824fb8be56adap-1",
+   "depth": 1,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:1:8",
+   "variant": "e",
+   "i": 1,
+   "lo": "0x1.824fb8be56adap-1",
+   "hi": "0x1.bcce219c4f17ep-1",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:5:8",
+   "variant": "e",
+   "i": 5,
+   "lo": "0x1.effcbd5e8874ep-1",
+   "hi": "0x1.f74c8a7a47822p-1",
+   "depth": 5,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:27:8",
+   "variant": "e",
+   "i": 27,
+   "lo": "0x1.f789da8b03914p-1",
+   "hi": "0x1.fd77219ce573ap-1",
+   "depth": 11,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:29:8",
+   "variant": "e",
+   "i": 29,
+   "lo": "0x1.01b2345763ab0p+0",
+   "hi": "0x1.079f7b69458d5p+0",
+   "depth": 10,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:31:8",
+   "variant": "e",
+   "i": 31,
+   "lo": "0x1.137a098d09520p+0",
+   "hi": "0x1.2b2f25d490db6p+0",
+   "depth": 8,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:32:8",
+   "variant": "e",
+   "i": 32,
+   "lo": "0x1.2b2f25d490db6p+0",
+   "hi": "0x1.5a995e639fee2p+0",
+   "depth": 7,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:36:8",
+   "variant": "e",
+   "i": 36,
+   "lo": "0x1.f9343b1b397a8p+1",
+   "hi": "0x1.ba42ffc9d9086p+2",
+   "depth": 3,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:37:8",
+   "variant": "e",
+   "i": 37,
+   "lo": "0x1.ba42ffc9d9086p+2",
+   "hi": "0x1.9aca622128cf5p+3",
+   "depth": 2,
+   "type": "Levin",
+   "eighths": true
+  },
+  {
+   "name": "e:38:8",
+   "variant": "e",
+   "i": 38,
+   "lo": "0x1.9aca622128cf5p+3",
+   "hi": "0x1.8b0e134cd0b2cp+4",
+   "depth": 1,
+   "type": "Levin",
+   "eighths": true
+  }
+ ],
+ "all_leaves": null,
+ "replay": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/replays/e/p35006_7.json",
+ "replay_sha256": "fabeec642420813ea08e4739f424fe299f925d9b9217c5096fa19573a92c7c08",
+ "window_leaves_not_read": [
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26
+ ]
+}

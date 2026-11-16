@@ -1,0 +1,12 @@
+{
+ "label": "pilot",
+ "results": [
+  {
+   "name": "pilot_v08",
+   "exit": 0,
+   "wall_s": 3511.0690517425537
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-13T15:11:29Z"
+}
