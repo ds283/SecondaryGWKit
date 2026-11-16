@@ -261,6 +261,107 @@ date corrected by counting; this directory's README row and the campaign README'
 **Kept until the user says otherwise:** R29, R30 and R31; 07a's and 07b's census run directories
 (07b's is 08's "before"); A3 v2's scratch copy (for 08).
 
+### C.5 Addendum: Part C's dispatch
+
+*Written 2026-11-16, at Part B's landing.*
+
+**Part B** is the code commit **`5e19c4b6`**, whose parent is **`7b82a0cd`**. It was reviewed in
+07a's note §B.3's checks, as §B adapts them, all passing, and pushed on the user's word: *"Yes, push
+it and write the §C.5 addendum"*. Three orchestrator commits came before it, all pushed:
+- `a510e4ad` wrote Part A's extension (prompt §2.7), on the user's choice at §2.6's stop;
+- `c768c4ad` amended the prompt at the extension's stop (its §1, §3 and §9: the fix is variant (h);
+  `[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]` opened) and committed Part A's
+  records;
+- `7b82a0cd` amended it at Part B's stop (its §10). Under the range rule, the 1e-8 rung of
+  `test_three_bessel.py`'s `test_quadrature_refinement_is_not_a_certificate_of_phase_accuracy` is
+  already at the phase floor, so its tenfold improvement to 1e-14 is gone. The user: *"Yes, write the
+  §10 amendment"*. That one assertion is restated as a stall across the rungs.
+
+**The tree.** Part C runs at **this addendum's commit**, in the worktree
+`SecondaryGWKit-lpf07b-<this commit's short SHA>`. Its code is `5e19c4b6`'s.
+- **S0′ holds by inspection:** `git diff --stat 1ec734d7 7b82a0cd -- . ':!docs' ':!prompts'` lists
+  `CLAUDE.md` and `89c368f2`'s four files (`ComputeTargets/tests/test_quadsource_integral.py`,
+  `LiouvilleGreen/bessel_phase.py`, `LiouvilleGreen/tests/test_three_bessel.py`,
+  `LiouvilleGreen/three_bessel_integrals.py`). Each of the four is AST-equal with docstrings removed,
+  checked on the laptop. R30 is the parent rehearsal. The agent still runs the check as prompt §5
+  writes it.
+- `git diff --stat 7b82a0cd 5e19c4b6 -- . ':!docs' ':!prompts'` touches only:
+  - `AdaptiveLevin/levin_quadrature.py` (SHA-256 `8956c7b6…`);
+  - `AdaptiveLevin/tests/` (`test_levin_rate_rules.py`, new; `test_levin_leaf_values.py`,
+    `test_levin_roundoff_exit.py` and `test_levin_trust_yardstick.py`, where the range rule acts);
+  - `LiouvilleGreen/tests/test_three_bessel.py`, §10.3's one test.
+
+  Nothing under `ComputeTargets/`, `ObjectFactories/` or LiouvilleGreen's modules moved. **So outside
+  `QuadSourceIntegral` R31 is predicted to equal R30**, as §5 says.
+
+**What Part B's review found that Part C must carry:**
+- **The review's numbers, re-run on the laptop:**
+  - the seven roots at the commit: 129 (116 and the 13 added), 781, 39, 156 (1 skipped), 280, 127 and
+    64, all OK. The review's first ComputeTargets run ended after about seven minutes with no summary
+    and no traceback. Run again alone it passed 781, as the agent's run did. The cause was not found;
+  - the parent's values quoted in tests (b), (c), (d), (e1) and (e2), reproduced in `float.hex` at
+    `c768c4ad` (07a's code) in a scratch worktree. There (b) is at 7.62 and (c) at 102.8 times its
+    abserr, both converged;
+  - breakages (i), (ii), (iii) and (vi) re-applied, each caught by the tests §3 names, (ii) also by
+    §10's test;
+  - **U8, begun:** v08, v13, R2-03 and R2-22 replayed at the commit from copies of their captures, each
+    equal to (h)'s replay record in `float.hex`, leaf by leaf. v08 is honest at 0.0323 of its abserr
+    (3.16 at 07a's code), and v13 at 0.00188. R2-22, which the rules do not touch, also equals 07a's
+    census. The census scores U8 on every call Part A replayed; these four do not stand in for it.
+- **The range rule's cost.** In the LiouvilleGreen draws it acts in 3,811 of 4,320 calls, with 34,018
+  refusals. The regions go from 76,692 to 147,029 (1.92×), and the summed wall from 802.7 s to
+  1,271.2 s. On R2, §9.4's estimate is about 5×. **The census projects its wall from U0's K0 run before
+  the full run.** A projection beyond 48 hours is a stop (§9.7), reported with what would be cut to
+  fit. R31's `QuadSourceIntegral` stage may run longer than R30's; that is cost, not a stop.
+- **The edge rule never acted in the draws,** though 423 calls have a window. In Part A it acts on v08
+  and v13. The census's refusals by rule (§9.5's descriptive item) show whether it acts in production.
+  A zero count is a finding, reported, not a stop.
+- **U1 reads the two counts** (§9.5). 07a's census worker records named result keys only, so the
+  copied harness records `num_edge_rule_refusals` and `num_range_rule_refusals` on every call, marked
+  "prompt 07b", as the draws' harness `docs/levin-phase-floor/07b/code/lg_draws_07b.py` does.
+- **Not Part C's:** Part B's Observations not acted on 2 and 3. Observation 2 is marginal dishonesty
+  on synthetic no-window phases with large raw values. Observation 3 is the draws' 434 three-Bessel
+  results that are converged and dishonest against the test's oracles, which the rule does not reach.
+  They are put to the user at the records commit, with Part A's `issues.md` items 1–14 (§C.4). The
+  census scores U4 and U6 as written and attributes neither.
+
+**§C.0, re-checked read-only on the Mac Studio, 13:50 UTC, 2026-11-16:**
+- **The main checkout** is `handover-remedial` at `28ebaf07`, with `git status --short` empty.
+  `git worktree list` shows it and Part A's `SecondaryGWKit-lpf07b-436ed5d` (at `436ed5d4`), which
+  is removed at dispatch (§C.0).
+- **The registry:** 81 runs, 73 done, 4 failed and 4 killed, all from earlier prompts. Nothing is
+  `running` or stale.
+- **The lock and Ray:** `rehearsal_lock status` reports the lock free. Neither
+  `~/.raypoolkit/rehearsal-lock` nor the old `~/ScienceData/.rehearsal-lock` exists, and
+  `ray-processes` lists no Ray process of `/tmp/ray-sgk`.
+- **Load and disk:** the load is 4.57 / 4.35 / 4.14, and 133 GiB is free (86 % used).
+- **The 07b paths:**
+  - `var/levin-phase-floor-07b/` holds only Part A's `measurement/`. Its 7,645 files are the 7,479
+    copied back and the 166 kept there, which
+    `docs/levin-phase-floor/07b/measurement/KEPT_ON_MAC_STUDIO.txt` lists;
+  - there is no `rehearsal/` or `census/` yet, and no `var/datastores/levin-phase-floor-07b-*`;
+  - `var/runs/` holds Part A's four run directories, `levin-phase-floor-07b-pilot-…`, `-refs-…`,
+    `-leafrefs-…` and `-ext-leafrefs-…`. Their slugs do not collide with `r31-07b`, `k0` or
+    `census`.
+- **The inputs, by SHA-256 against their recorded lists,** 159 files, all OK:
+  - R30's five store files against `docs/levin-phase-floor/07a/rehearsal/KEPT_ON_MAC_STUDIO.txt`,
+    primary `e5f8b443…`. R30's run directory and launch log are present;
+  - 07a's census run directory `levin-phase-floor-07a-census-20261112T132744`, all 149 files against
+    `docs/levin-phase-floor/07a/census/KEPT_ON_MAC_STUDIO.txt`, checkpoint `461df2ec…` among them, and
+    149 files on disk;
+  - the scratch copy's five files against `docs/levin-phase-floor/06e/review/checks/a3v2_copy_after.sha256`,
+    with no `-wal` or `-shm`.
+- **The venv** is Python 3.13.16, with `datastorekit` 0.5.0, `raypoolkit` 0.3.0, `runregistrykit`
+  0.2.0, `ray` 2.59.0, `SQLAlchemy` 2.0.55, `numpy` 2.2.4, `scipy` 1.16.3 and `mpmath` 1.3.0. The
+  laptop's are the same.
+
+**The dispatch** waits for the user's word. Then the laptop does three things:
+1. It fetches into the Mac Studio's main checkout, which moves no working tree.
+2. It repeats §C.0's checks, removes Part A's worktree and makes the one worktree at this commit,
+   detached and with no venv.
+3. It starts the Mac Studio orchestrator session in that worktree, through the saved `MacStudio`
+   connection, with this note's §C as its brief. The folder must be trusted in the app first.
+
 ## 5. Stop and ask the user
 
 - At Part A's planned stop, always, and at the extension's (§A.5).
