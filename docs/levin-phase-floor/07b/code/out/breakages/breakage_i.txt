@@ -1,0 +1,163 @@
+.F...FF.FF.F.F
+======================================================================
+FAIL: test_b_leaf_beside_a_window (AdaptiveLevin.tests.test_levin_rate_rules.TestEdgeMechanism.test_b_leaf_beside_a_window)
+(b) theta = (c/2)(x - x_s)^2 on [0, 1], c = 1.19e9, x_s = 0.8186383592305085, f = (e^{0.744 x},
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 297, in test_b_leaf_beside_a_window
+    self.assertGreater(data["num_edge_rule_refusals"], 0)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 not greater than 0
+
+======================================================================
+FAIL: test_a1_edge_threshold (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a1_edge_threshold) (edge=0.25)
+An edge q of exactly 2 is not refused, the next double above is; at either end of the leaf.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 157, in test_a1_edge_threshold
+    self.assertEqual(above, (True, "edge", just_above))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (False, 'edge', inf) != (True, 'edge', inf)
+
+First differing element 0:
+False
+True
+
+- (False, 'edge', inf)
+?  ^^^^
+
++ (True, 'edge', inf)
+?  ^^^
+
+
+======================================================================
+FAIL: test_a1_edge_threshold (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a1_edge_threshold) (edge=0.75)
+An edge q of exactly 2 is not refused, the next double above is; at either end of the leaf.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 157, in test_a1_edge_threshold
+    self.assertEqual(above, (True, "edge", just_above))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (False, 'edge', inf) != (True, 'edge', inf)
+
+First differing element 0:
+False
+True
+
+- (False, 'edge', inf)
+?  ^^^^
+
++ (True, 'edge', inf)
+?  ^^^
+
+
+======================================================================
+FAIL: test_a3_zero_rate (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a3_zero_rate)
+A rate exactly 0 at a node tested gives q = inf and a refusal, under either rule.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 187, in test_a3_zero_rate
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        _leaf_rate_rule((A_LO, A_HI), A_ORDER, [_rate({A_LO: 0.0})], (A_LO,)),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (True, "edge", inf),
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Tuples differ: (False, 'edge', inf) != (True, 'edge', inf)
+
+First differing element 0:
+False
+True
+
+- (False, 'edge', inf)
+?  ^^^^
+
++ (True, 'edge', inf)
+?  ^^^
+
+
+======================================================================
+FAIL: test_a4_only_window_edge_ends (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a4_only_window_edge_ends)
+The edge rule tests only the ends that are window edges: a jump of 100 at the upper end's neighbour is not
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 211, in test_a4_only_window_edge_ends
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        _leaf_rate_rule((A_LO, A_HI), A_ORDER, rate, (A_HI,)),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (True, "edge", 100.0),
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Tuples differ: (False, 'edge', 100.0) != (True, 'edge', 100.0)
+
+First differing element 0:
+False
+True
+
+- (False, 'edge', 100.0)
+?  ^^^^
+
++ (True, 'edge', 100.0)
+?  ^^^
+
+
+======================================================================
+FAIL: test_a6_the_largest_q_decides (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a6_the_largest_q_decides)
+With several phases the largest q decides, under either rule, in either order of the phases.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 243, in test_a6_the_largest_q_decides
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        _leaf_rate_rule((A_LO, A_HI), A_ORDER, rates, (A_LO,)),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (True, "edge", 3.0),
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Tuples differ: (False, 'edge', 3.0) != (True, 'edge', 3.0)
+
+First differing element 0:
+False
+True
+
+- (False, 'edge', 3.0)
+?  ^^^^
+
++ (True, 'edge', 3.0)
+?  ^^^
+
+
+======================================================================
+FAIL: test_a8_order_clamped (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a8_order_clamped)
+The nodes are the solve's: chebyshev_order is clamped up to _LEVIN_MINIMUM_ALLOWED_ORDER, as the solve's.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 270, in test_a8_order_clamped
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        _leaf_rate_rule((A_LO, A_HI), 2, rate, (A_LO,)), (True, "edge", 3.0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Tuples differ: (False, 'edge', 3.0) != (True, 'edge', 3.0)
+
+First differing element 0:
+False
+True
+
+- (False, 'edge', 3.0)
+?  ^^^^
+
++ (True, 'edge', 3.0)
+?  ^^^
+
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.155s
+
+FAILED (failures=7)

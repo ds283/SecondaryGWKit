@@ -39,8 +39,19 @@ deliberate departures are:
     why the per-region tests this replaces failed where the regions' values
     cancel. Before the loop may stop, each leaf's estimate is checked one
     level down, against its grandchildren: its declared error is widened by
-    the observed convergence ratio r, and a leaf with r >= 1 is refined
-    whatever the budget says (the trust check; see _adaptive_levin()).
+    the observed convergence ratio r, and a leaf not trusted on r (r at
+    least 1/4, unless r < 1 and its differences are rounding noise) is
+    refined whatever the budget says (the trust check; see _adaptive_levin()).
+    The check sees only what a leaf, its halves and its quarters disagree on,
+    and is blind to an error all three share. So since prompts/
+    levin-phase-floor/07b-levin-leaf-beside-a-window.md a Levin leaf the
+    check trusts is also tested on its phase rates, where 07b measured such
+    a shared error on trusted leaves: beside a stationary point's window, a
+    leaf whose |theta'| at the window's edge and at the edge's grid neighbour
+    differ by more than a factor 2 is refused; away from windows, one whose
+    |theta'| ranges by more than a factor 10 over its nodes. A refused leaf
+    is refined as any untrusted leaf is (the rate rules; see
+    _leaf_rate_rule()).
 
   * The returned error estimate accounts for a round-off floor -- on a Levin
     region Chen et al.'s own eq. (151), see _roundoff_floor(); on a
@@ -119,7 +130,13 @@ deliberate departures are:
     residual, and the trust check one level down, are blind to it; a Levin region of large
     total variation was measured accepting an interior stationary point with an error estimate
     about 1e5 times too small. The gate's regression test put its point at x = 1/2, the first
-    bisection point, where bisection exposes it by construction. See the next item.
+    bisection point, where bisection exposes it by construction. See the next item. The same
+    blindness reaches a Levin leaf that only touches a stationary point's window (prompts/
+    levin-phase-floor/07b-levin-leaf-beside-a-window.md): where its first grid spacing at the
+    window's edge is many times the local scale |theta' / theta''|, the leaf, its halves and its
+    quarters miss the same part of the endpoint term, and 07b measured such leaves trusted at
+    2.7-7.4 times their declared error. The edge rule of the first item refuses them
+    (_leaf_rate_rule()).
 
   * Stationary points are located before integrating, and their neighbourhoods integrated
     directly (prompts/levin-phase-floor/07-stationary-point-guard.md; _adaptive_levin()). A basis
@@ -134,7 +151,12 @@ deliberate departures are:
     phase is left unlocated only when there is nothing to locate, its rate exactly zero at every
     finite scan sample. As a safety net, a Levin region whose phase rate changes sign on its own
     Chebyshev nodes is never returned as a Levin region. Without a closed-form rate nothing is
-    located, and that guard is the only protection.
+    located, and that guard is the only protection. A Levin leaf beside a window is trusted only
+    if, besides the trust check, its |theta'| at the window's edge and at the edge's grid
+    neighbour agree within a factor 2 (the edge rule; prompts/levin-phase-floor/
+    07b-levin-leaf-beside-a-window.md, _leaf_rate_rule()); the window's half-width is not widened
+    for it, since a wider window was measured not to remove that leaf's error (see
+    _LEVIN_WINDOW_HALF_PHASE).
 
   * A direct LU solve is used in place of the least-squares/SVD solve when the
     phase span shows the Levin super-operator to be well conditioned. Note
@@ -421,6 +443,16 @@ _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO = 0.5
 #     trusts fewer leaves than 1/2 would. 06g's tests and census report every checked leaf's r, so
 #     the value can be revisited on that evidence.
 # Until 06g the cut-off was 1, with no noise clause.
+#
+# What the test cannot see (prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md). delta1 and delta2
+# are differences between a leaf, its halves and its quarters, so an error all three share is invisible to
+# them, whatever r is. 07b's Part A measured such shared errors on trusted Levin leaves: beside a stationary
+# point's window, a leaf 2.7-7.4 times its declaration with r = 0.003-0.10, the error in the eighth beside the
+# window; and away from windows, leaves whose ends are resolved and whose error is still shared, which nothing
+# computed from the leaf's own solves separated from honest ones. So after this test trusts a Levin leaf, the
+# rate rules (_leaf_rate_rule(), _LEVIN_EDGE_RATE_RATIO_MAX and _LEVIN_LEAF_RATE_RANGE_MAX) may still refuse
+# it, and a refused leaf is untrusted exactly as one this test refuses. A Clenshaw-Curtis leaf is not tested
+# by them.
 _LEVIN_TRUST_MAX_RATIO = 0.25
 
 # The unit round-off of IEEE double precision, u = 2^-53: the bound on the relative error of one
@@ -518,6 +550,14 @@ _LEVIN_STATIONARY_SCAN_POINTS = 4097
 # 0 and 1 -- is honest and converged. At 2 pi all ten are (err/abserr at most 0.03, abserr/request at most
 # 0.89, no window stopped by the iroff1 rule); at 32 pi and above the cancelling case c = 1e8, x_s = 0.7236,
 # omega = 0 is not converged. docs/levin-phase-floor/07/calibration/out/run2/calibrate_tables_rtol1e-09.md.
+# A wider window does not remove the error of the Levin leaf beside it (prompts/levin-phase-floor/
+# 07b-levin-leaf-beside-a-window.md, section 2.7, docs/levin-phase-floor/07b/measurement/): on V4's calls the
+# leaf's error falls only 2.6-2.8 times per doubling of Phi_w, about as Phi_w^(-3/2), and its declared error
+# falls with it, so the ratio need not (v12's leaf carries 7.44, 6.30 and 8.55 e' at 2 pi, 4 pi and 8 pi); a
+# fixed 4 pi or 8 pi (variants (b4), (b8)) moves every window's edge and made honest calls dishonest (v07, v19,
+# R1-x317); and a window doubled while that leaf's edge stays unresolved, to 8 pi (variants (g1), (g2)), still
+# failed at the cap on 89 of 98 census calls with a window. So Phi_w stays 2 pi, and the leaf is refused by the
+# edge rule instead (_LEVIN_EDGE_RATE_RATIO_MAX, _leaf_rate_rule()).
 _LEVIN_WINDOW_HALF_PHASE = 2.0 * np.pi
 
 # Lambda_c: an interior local minimum x_m of |theta_i'| with no sign change beside it is located,
@@ -535,6 +575,54 @@ _LEVIN_COALESCENCE_LAMBDA = 4.0
 # Delta phi_w, the largest phase span of one window piece, in every phase of the basis (prompt 07
 # section 1.2 item 3).
 _LEVIN_WINDOW_PIECE_PHASE = 2.0 * np.pi
+
+# The rate rules on a trusted Levin leaf (prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md,
+# section 1, Part A's variant (h); see _leaf_rate_rule()). The trust check one level down cannot see an
+# error that a Levin leaf, its halves and its quarters share, and 07b's Part A measured such a common
+# error carried by trusted Levin leaves in two places (docs/levin-phase-floor/07b/measurement/,
+# out/tables/tables_07b.md and out/ext/tables/scores_ext.md): beside a stationary point's window, where
+# the leaf's first grid spacing is many times the local scale l = |theta' / theta''| of the phase's rate;
+# and away from windows, on leaves whose |theta'| spans a wide range over their nodes. After the tree's
+# trust test passes a Levin leaf, one more test runs, and a leaf it refuses is untrusted as any other.
+#
+# _LEVIN_EDGE_RATE_RATIO_MAX, the edge rule, for a Levin leaf with an end at a window's edge: refused if,
+# at such an end, any phase's |theta'| at the edge node and at its neighbour on the leaf's grid differ by
+# more than this factor.
+#   * Basis. Next to a stationary point l at distance d is about d, so the rate ratio across a first
+#     spacing s is about 1 + s / l, and 2 is a spacing of about one l: the leaf resolves the phase's rate
+#     at the edge. Part A's variant (e).
+#   * Measured. Every window-edge seed leaf that carried a dishonest call's excess (V4's v08, v12, v17)
+#     has a ratio of 259-905 there (spacing/l 285-1010), a margin of 130 or more. The honest touching
+#     leaves deep in the controls' trees have spacing/l at most 1.17, so some honest leaves are refused:
+#     a cost, not an error.
+#   * Reach. Set on group calls with a root window (V4, z12, the cross-check's two pairs), and scored on
+#     07b's 30 class-(c) rows at both rtols, where it acts on 34 of 60 calls and leaves none dishonest. It
+#     does not reach analytic calls with windows, of which none was referenced, nor minima windows: it
+#     acted on none of the three referenced calls with one.
+#   * A wider window is not the remedy: the leaf's error falls only about as Phi_w^(-3/2), its declaration
+#     falls with it, and moving every window's edge made honest calls dishonest (see the comment on
+#     _LEVIN_WINDOW_HALF_PHASE).
+#
+# _LEVIN_LEAF_RATE_RANGE_MAX, the range rule, for a Levin leaf with no end at a window's edge: refused if
+# any phase's max|theta'| / min|theta'| over the leaf's nodes exceeds this.
+#   * Basis. On Part A's 73 scored trusted Levin leaves (V4, the own-route call 1-34599 at 07's code, and
+#     06b's W2 calls), every dishonest leaf spans a range of 49.4 or more over its nodes, and none at 30 or
+#     below is dishonest; 10 is a factor 4.9 below 49.4. Part A's variant (f), applied only away from
+#     windows. Nothing finer was found: of 18 quantities the code can compute from a leaf's own solves
+#     (the extension's X2: the leaf at another collocation order, its eighths, the tail of p's Chebyshev
+#     coefficients, the operator's conditioning), the best separates the dishonest leaves from the
+#     honest ones of range above 30 with a margin of 0.76, that is, not at all.
+#   * Cost. Honest leaves span ranges up to 3.4e4, so the rule refuses many honest leaves, and acts on most
+#     calls with a Levin leaf: on 07b's random draw of 30 census calls the regions went from 175 to 868.
+#     Below a refused leaf the trust check can run at the noise level, beyond the window stop's reach, and
+#     a call can be chased to depth_max and returned unconverged
+#     ([07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]); on Part A's 187 calls one call,
+#     R2-28 at both rtols, honest in one region before, was, at 1.107 of its abserr.
+#   * Reach. Set on group calls; scored on the class-(c) rows, the random draw (21 analytic and 9 group
+#     calls) and the targeted calls with none converged and dishonest. It does not reach the analytic
+#     calls, 74 % of the census's Levin calls at rtol 1e-7, beyond those 21 and five targeted ones.
+_LEVIN_EDGE_RATE_RATIO_MAX = 2.0
+_LEVIN_LEAF_RATE_RANGE_MAX = 10.0
 
 # The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
 # 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
@@ -1231,6 +1319,81 @@ def _trust_noise_yardstick(
             )
         nu = nu + abs(node_sum)
     return float(nu)
+
+
+def _leaf_rate_rule(
+    x_span: Tuple[float, float],
+    chebyshev_order: int,
+    rate_fns: Optional[list],
+    window_edge_ends: Tuple[float, ...],
+) -> Tuple[bool, Optional[str], float]:
+    """
+    The rate rules on a Levin leaf the trust check one level down has trusted (prompts/
+    levin-phase-floor/07b-levin-leaf-beside-a-window.md, section 1.1; Part A's variant (h)). The
+    trust check sees only what the leaf, its halves and its quarters disagree on, and 07b's Part A
+    measured trusted Levin leaves carrying an error all three share, 2.7-7.4 times what they declared
+    beside a stationary point's window, and more than they declared away from one. This function refuses the
+    leaf where Part A found that error, from the closed-form phase rates alone; see the comment on
+    _LEVIN_EDGE_RATE_RATIO_MAX and _LEVIN_LEAF_RATE_RANGE_MAX for the basis of the two thresholds and
+    where it does not reach.
+
+    :param x_span: the leaf's span (lo, hi), lo < hi.
+    :param chebyshev_order: the driver's own chebyshev_order; the nodes are
+        chebyshev_matrices(x_span, max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)), descending, so
+        that grid[0] == hi and grid[-1] == lo exactly.
+    :param rate_fns: the basis's independent_phase_rates(), one callable per phase, or None.
+    :param window_edge_ends: the ends of x_span (lo, hi or both) that equal, as floats, an edge of a
+        merged stationary-point window; empty if the leaf touches no window. Bisection makes every
+        such end exactly.
+    :return: (refused, rule, q): whether the leaf is refused; which rule was applied, "edge" or
+        "range" (None when rate_fns is None); and the largest q over the phases and ends tested,
+        at least 1, +inf where a rate's minimum is 0.
+
+    * The edge rule, on a leaf that touches a window (window_edge_ends not empty), and only there: at
+      each end x_e that is a window edge, for every phase, q = max(|theta'(x_e)|, |theta'(x_n)|) /
+      min(...), +inf if the minimum is 0, with x_n the edge's neighbour on the grid (grid[-2] at lo,
+      grid[1] at hi). Refused if the largest q exceeds _LEVIN_EDGE_RATE_RATIO_MAX. An end that is not a
+      window edge is not tested, and the range rule does not apply.
+    * The range rule, on a leaf that touches none: for every phase, q = max_j |theta'(x_j)| /
+      min_j |theta'(x_j)| over the leaf's nodes, +inf if the minimum is 0. Refused if the largest q
+      exceeds _LEVIN_LEAF_RATE_RANGE_MAX.
+    * With no rates (rate_fns None) nothing is tested and nothing refused: there are then no windows,
+      and the range rule has no rate to test.
+
+    Each rate is evaluated at one float node at a time, and q formed exactly as Part A's variant formed
+    it, so that the code reproduces that variant's outputs bit for bit (07b section 9.5, U8).
+    """
+    worst = 1.0
+    if rate_fns is None:
+        return False, None, worst
+    lo, hi = x_span
+    grid, _ = chebyshev_matrices(
+        (lo, hi), max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
+    )
+    if window_edge_ends:
+        for edge_x in (lo, hi):
+            if edge_x not in window_edge_ends:
+                continue
+            neighbour = grid[-2] if edge_x == lo else grid[1]
+            for rate in rate_fns:
+                r_edge = abs(float(rate(edge_x)))
+                r_next = abs(float(rate(neighbour)))
+                q = (
+                    max(r_edge, r_next) / min(r_edge, r_next)
+                    if min(r_edge, r_next) > 0.0
+                    else float("inf")
+                )
+                worst = max(worst, q)
+        return not (worst <= _LEVIN_EDGE_RATE_RATIO_MAX), "edge", worst
+    for rate in rate_fns:
+        values = np.abs(np.array([float(rate(x)) for x in grid]))
+        q = (
+            float(np.max(values) / np.min(values))
+            if np.min(values) > 0.0
+            else float("inf")
+        )
+        worst = max(worst, q)
+    return not (worst <= _LEVIN_LEAF_RATE_RANGE_MAX), "range", worst
 
 
 class _ExactSum:
@@ -3981,9 +4144,23 @@ def _adaptive_levin(
         round-off floor, plus its Levin halves' floors, plus, on a Clenshaw-Curtis leaf, its
         Clenshaw-Curtis halves' floors less their node terms and the absolute value of those
         halves' node errors summed signed (then delta1 and delta2 are rounding noise, which nu_B
-        bounds). A trusted leaf declares max(residual, delta1) / (1 - r) as its resolution error
+        bounds) -- and, on a Levin leaf, only if the rate rules then pass it too (below). A
+        trusted leaf declares max(residual, delta1) / (1 - r) as its resolution error
         and returns Q, the finest value computed, in place of V_P; the declaration bounds Q's
         error under the same assumption that makes it bound V_P's, and is not tightened;
+      * the rate rules (prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md, section 1.1;
+        _leaf_rate_rule()). delta1 and delta2 cannot see an error the leaf, its halves and its
+        quarters share, and 07b measured such errors on trusted Levin leaves, beside windows and
+        away from them ([07a-levin-leaf-beside-a-window-understates-its-error],
+        [06b-moved-calls-declare-less-than-their-error]). So a Levin leaf the test above trusts is
+        refused if, at an end that is the edge of a stationary point's window, some phase's
+        |theta'| at the edge node and at its grid neighbour differ by more than
+        _LEVIN_EDGE_RATE_RATIO_MAX = 2 (the edge rule: the leaf does not resolve the rate's scale
+        there); or, touching no window, if some phase's |theta'| ranges by more than
+        _LEVIN_LEAF_RATE_RANGE_MAX = 10 over its nodes (the range rule). A refused leaf is untrusted
+        exactly as one the test refuses: r, delta1 and delta2 are kept, and the declaration's form
+        is unchanged. Without closed-form rates nothing is tested. "num_edge_rule_refusals" and
+        "num_range_rule_refusals" count the refusals;
       * any other leaf is untrusted: refinable whatever the budget says, and chosen before every
         trusted leaf; the loop does not stop while a refinable leaf is untrusted. One at
         depth_max declares max(residual, delta1) / (1 - r) if r < 1 and max(residual,
@@ -3995,8 +4172,13 @@ def _adaptive_levin(
     a widened error or an untrusted leaf reopens the loop. A call that stops on the budget returns
     every leaf checked or floor-limited. The grandchildren are carried forward as the children's
     halves if a leaf is later bisected. The running value sum follows each leaf's returned value
-    exactly. It does not reach an error common to a leaf and all its descendants
-    ([06b-moved-calls-declare-less-than-their-error]).
+    exactly. The check itself does not reach an error common to a leaf and all its descendants
+    ([06b-moved-calls-declare-less-than-their-error]); the rate rules refuse a Levin leaf where 07b
+    found such an error, from its phase rates, not from its solves -- 07b's measurement (its X2)
+    found nothing in a leaf's own solves that separates those leaves from honest ones. The range
+    rule refuses many honest leaves too, at a cost in work: below a refused leaf the check can run
+    at the noise level and a call be chased to depth_max
+    ([07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]).
 
     So the loop stops on exactly the quantity the call reports as "abserr", and "converged" keeps
     its formula, abserr <= max(atol, rtol*|value|), with no untrusted leaf returned. This
@@ -4225,6 +4407,14 @@ def _adaptive_levin(
             skipped["phase"] for skipped in location["skipped_phases"]
         )
 
+    # The rate rules on a trusted Levin leaf (prompt 07b section 1.1; _leaf_rate_rule()): the edges of
+    # every merged window, against which a leaf's ends are compared exactly, as floats.
+    window_edges = frozenset(
+        float(edge)
+        for stationary_window in (location["windows"] if location is not None else [])
+        for edge in (stationary_window["lo"], stationary_window["hi"])
+    )
+
     num_evaluations = 0
 
     num_SVD_errors = 0
@@ -4262,6 +4452,11 @@ def _adaptive_levin(
     # returned or bisected; and guarded leaves re-solved by the nested pair at depth_max.
     num_guarded_regions = 0
     num_guard_at_depth_max = 0
+
+    # The rate rules' counts (prompt 07b section 1.4), over the whole run of the call: the trust checks
+    # the tree's test passed and the edge rule, or the range rule, refused.
+    num_edge_rule_refusals = 0
+    num_range_rule_refusals = 0
 
     def _solve(span, description, force_direct=False):
         nonlocal num_evaluations, num_solves_direct, num_solves_lstsq, num_solves_pinv
@@ -4668,6 +4863,18 @@ def _adaptive_levin(
         breakdown measured Q's error at about 3 delta2 on Z3's sample 8, so a declaration built
         from delta2 would understate it). The running value sum is moved by Q - V_P exactly.
 
+        The rate rules (prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md, section 1.1),
+        after that test and only on a Levin leaf it trusts (not leaf.is_direct), and only when the
+        basis supplies its phases' closed-form rates: _leaf_rate_rule() on the leaf's span and nodes,
+        the edge rule if an end of the leaf is the edge of a merged stationary-point window (compared
+        exactly, as floats), else the range rule. delta1 and delta2 cannot see an error the leaf, its
+        halves and its quarters share, and 07b measured such errors on trusted Levin leaves where the
+        leaf does not resolve its rate's scale at a window's edge, and on leaves whose rate ranges
+        widely; the rules refuse those. A refused leaf is untrusted exactly as below, with r, delta1,
+        delta2 and the declaration's form unchanged, and is counted in num_edge_rule_refusals or
+        num_range_rule_refusals. A floor-limited leaf's exemption (_exempt_floor_limited()) clears a
+        refusal as it clears an untrusted verdict.
+
         Otherwise the leaf is untrusted, keeps V_P, and is refinable whatever the budget says,
         chosen before every trusted leaf; at depth_max, where it cannot be refined, it declares
         max(abserr, delta1) / (1 - r) if r < 1 and max(abserr, delta1 + delta2) if not, and the
@@ -4675,6 +4882,7 @@ def _adaptive_levin(
         is bisected.
         """
         nonlocal num_checks, num_untrusted_found
+        nonlocal num_edge_rule_refusals, num_range_rule_refusals
         if leaf.dataL is None:
             _solve_halves(leaf)
         dataL, dataR = leaf.dataL, leaf.dataR
@@ -4716,6 +4924,23 @@ def _adaptive_levin(
         trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
             ratio < 1.0 and delta1 <= noise_yardstick
         )
+        # The rate rules (prompt 07b section 1.1): on a Levin leaf the test above trusts, the edge rule
+        # if it touches a window, else the range rule. A refused leaf is untrusted exactly as one the
+        # test above refuses; ratio, delta1, delta2 and the declaration's form are unchanged.
+        if trusted and not leaf.is_direct and rate_fns is not None:
+            lo_leaf, hi_leaf = min(a, b), max(a, b)
+            refused, rule, _ = _leaf_rate_rule(
+                (lo_leaf, hi_leaf),
+                chebyshev_order,
+                rate_fns,
+                tuple(end for end in (lo_leaf, hi_leaf) if end in window_edges),
+            )
+            if refused:
+                trusted = False
+                if rule == "edge":
+                    num_edge_rule_refusals += 1
+                else:
+                    num_range_rule_refusals += 1
         _remove_error(leaf)
         region._delta1 = delta1
         region._delta2 = delta2
@@ -5391,9 +5616,16 @@ def _adaptive_levin(
         # tightening atol/rtol will not help.
         "phase_limited": num_phase_limited > 0,
         "num_phase_limited_regions": num_phase_limited,
-        # leaves returned untrusted by the trust check one level down: each is at depth_max, and
-        # declares max(residual, delta1 + delta2); the call is not converged while one is returned
+        # leaves returned untrusted by the trust check one level down, its rate rules included (prompt
+        # 07b): each is at depth_max, and declares max(residual, delta1) / (1 - r) if r < 1 and
+        # max(residual, delta1 + delta2) if not; the call is not converged while one is returned
         "num_untrusted_regions": num_untrusted,
+        # the trust checks, over the whole run of the call, that the tree's test passed and the rate
+        # rules refused (prompt 07b section 1.4; _leaf_rate_rule()): the edge rule on a Levin leaf
+        # touching a window, the range rule on one touching none. The rules act in a call if their
+        # sum is positive.
+        "num_edge_rule_refusals": int(num_edge_rule_refusals),
+        "num_range_rule_refusals": int(num_range_rule_refusals),
         "p_points": p_points,
         "num_regions": num_used_regions,
         "regions": used_regions,
@@ -5928,13 +6160,25 @@ def adaptive_levin_sincos(
           * "num_untrusted_regions" -- count of subintervals returned that failed the trust
             check one level down: their halves' and grandchildren's values do not show the error
             falling fast enough to extrapolate (r = delta2 / delta1 at least 1/4, unless r < 1 and
-            delta1 is within the subinterval's round-off floor; until 06g, r >= 1), so their
+            delta1 is within the noise yardstick built from the round-off floors; until 06g,
+            r >= 1), or, on a Levin subinterval, the rate rules refused it (below), so their
             estimate cannot be relied on. Each is at depth_max, declares max(residual, delta1) /
             (1 - r) if r < 1 and max(residual, delta1 + delta2) if not, and makes "converged" False
             (new as of 06c). Each returned used_interval carries delta1, delta2,
             convergence_ratio, trusted and declared_resolution; and value, value_kind and value_own:
             a trusted subinterval returns its quarters sum, the finest value computed, in place of
             its own solve's (as of 06g).
+          * "num_edge_rule_refusals", "num_range_rule_refusals" -- the rate rules (as of
+            prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md, when theta_deriv is
+            supplied): over the whole run, the number of trust checks that passed a Levin
+            subinterval on r and then refused it, by the edge rule (an end at the edge of a
+            stationary point's window, where |theta'| at the edge node and its grid neighbour differ
+            by more than a factor 2) or by the range rule (no end at a window's edge, |theta'|
+            ranging by more than a factor 10 over its nodes). The check cannot see an error a
+            subinterval, its halves and its quarters share, and 07b measured such errors on
+            subintervals the rules refuse. A refused subinterval is refined as any untrusted one is.
+            The rules act in a call if the sum is positive; refused subintervals still untrusted at
+            depth_max are counted in "num_untrusted_regions".
           * "num_regions" -- number of subintervals of the final partition (Levin + direct
             quadrature).
           * "num_simple_regions" -- of those, how many were handled by direct quadrature rather

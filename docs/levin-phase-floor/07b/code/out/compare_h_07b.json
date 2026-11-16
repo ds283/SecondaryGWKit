@@ -1,0 +1,247 @@
+{
+ "summary": "22 calls; identical to (h): 22; rules act in 6; of the calls where they do not, identical to the parent: 16 of 16",
+ "rows": [
+  {
+   "call": "(b)",
+   "edge": 1,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": false,
+   "value_hex": "0x1.9c4de6ecf3c4fp-14",
+   "abserr_hex": "0x1.f298b05539195p-25",
+   "regions": 16,
+   "parent_regions": 10
+  },
+  {
+   "call": "(c)",
+   "edge": 0,
+   "range": 3,
+   "identical_to_h": true,
+   "identical_to_parent": false,
+   "value_hex": "0x1.f1edc86484243p-17",
+   "abserr_hex": "0x1.056c31b4cfb57p-39",
+   "regions": 10,
+   "parent_regions": 1
+  },
+  {
+   "call": "(d)",
+   "edge": 0,
+   "range": 2,
+   "identical_to_h": true,
+   "identical_to_parent": false,
+   "value_hex": "-0x1.b5db47638a085p-4",
+   "abserr_hex": "0x1.8075aba2113acp-33",
+   "regions": 2,
+   "parent_regions": 2
+  },
+  {
+   "call": "(e1)",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.eb56afc607e00p-11",
+   "abserr_hex": "0x1.72de5e19b6d87p-39",
+   "regions": 4,
+   "parent_regions": 4
+  },
+  {
+   "call": "(e2)",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "-0x1.24a89a8b8f0cap-1",
+   "abserr_hex": "0x1.44e3e19d1ad33p-34",
+   "regions": 6,
+   "parent_regions": 6
+  },
+  {
+   "call": "yardstick test 2 exp_sin_1e3",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.84ecdddd7508fp-11",
+   "abserr_hex": "0x1.efa9a11262364p-53",
+   "regions": 1,
+   "parent_regions": 1
+  },
+  {
+   "call": "yardstick test 2 si_1000_exp",
+   "edge": 0,
+   "range": 6,
+   "identical_to_h": true,
+   "identical_to_parent": false,
+   "value_hex": "0x1.27481286ec722p-11",
+   "abserr_hex": "0x1.0a66614888113p-46",
+   "regions": 16,
+   "parent_regions": 3
+  },
+  {
+   "call": "yardstick test 2 gaussian_bump",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "-0x1.171b1880002b2p-43",
+   "abserr_hex": "0x1.78a7920ef1113p-34",
+   "regions": 10,
+   "parent_regions": 10
+  },
+  {
+   "call": "yardstick test 2 sqrt_fallback",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.15b18d049959ap-1",
+   "abserr_hex": "0x1.1d0febe92ff7dp-35",
+   "regions": 5,
+   "parent_regions": 5
+  },
+  {
+   "call": "yardstick test 2 runge_fallback",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.023a0b017c9fdp-3",
+   "abserr_hex": "0x1.3dbf8a1114a09p-35",
+   "regions": 11,
+   "parent_regions": 11
+  },
+  {
+   "call": "yardstick test 2 sinc_12b",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.1bf855dd4852dp-7",
+   "abserr_hex": "0x1.d2fe7b179c76fp-43",
+   "regions": 17,
+   "parent_regions": 17
+  },
+  {
+   "call": "yardstick test 2 noisy(A=128,k=60)",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.ad305b229e5d2p-8",
+   "abserr_hex": "0x1.0ed4db701ea64p-41",
+   "regions": 17,
+   "parent_regions": 17
+  },
+  {
+   "call": "yardstick test 2 noisy(A=512,k=60)",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.ad305b229daa8p-8",
+   "abserr_hex": "0x1.ff5844782dc6ep-41",
+   "regions": 114,
+   "parent_regions": 114
+  },
+  {
+   "call": "yardstick test 2 far(3e5)",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.23178e687a1eap+3",
+   "abserr_hex": "0x1.2614f981a9517p-17",
+   "regions": 107,
+   "parent_regions": 107
+  },
+  {
+   "call": "leaf values test 1 exp_sin_1e3",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.84ecdddd7508fp-11",
+   "abserr_hex": "0x1.efa9a11262364p-53",
+   "regions": 1,
+   "parent_regions": 1
+  },
+  {
+   "call": "leaf values test 1 si_1000_exp",
+   "edge": 0,
+   "range": 6,
+   "identical_to_h": true,
+   "identical_to_parent": false,
+   "value_hex": "0x1.27481286ec722p-11",
+   "abserr_hex": "0x1.0a66614888113p-46",
+   "regions": 16,
+   "parent_regions": 3
+  },
+  {
+   "call": "leaf values test 1 sinc_1e3",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.593418599c04bp-11",
+   "abserr_hex": "0x1.0027fd6392556p-51",
+   "regions": 5,
+   "parent_regions": 5
+  },
+  {
+   "call": "leaf values test 1 gaussian_bump",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "-0x1.171b1880002b2p-43",
+   "abserr_hex": "0x1.78a7920ef1113p-34",
+   "regions": 10,
+   "parent_regions": 10
+  },
+  {
+   "call": "leaf values test 1 sqrt_fallback(1e-08)",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.15b18d0499494p-1",
+   "abserr_hex": "0x1.a7646605bf745p-29",
+   "regions": 3,
+   "parent_regions": 3
+  },
+  {
+   "call": "leaf values test 1 sqrt_fallback(1e-10)",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.15b18d049959ap-1",
+   "abserr_hex": "0x1.1d0febe92ff7dp-35",
+   "regions": 5,
+   "parent_regions": 5
+  },
+  {
+   "call": "leaf values test 1 runge_fallback",
+   "edge": 0,
+   "range": 0,
+   "identical_to_h": true,
+   "identical_to_parent": true,
+   "value_hex": "0x1.023a0b017c9fdp-3",
+   "abserr_hex": "0x1.3dbf8a1114a09p-35",
+   "regions": 11,
+   "parent_regions": 11
+  },
+  {
+   "call": "roundoff exit test 1",
+   "edge": 0,
+   "range": 9,
+   "identical_to_h": true,
+   "identical_to_parent": false,
+   "value_hex": "0x1.18d99589c168cp-7",
+   "abserr_hex": "0x1.5be24dab94248p-47",
+   "regions": 16,
+   "parent_regions": 3
+  }
+ ]
+}

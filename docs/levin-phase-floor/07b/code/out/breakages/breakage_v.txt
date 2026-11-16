@@ -1,0 +1,20 @@
+...F.........
+======================================================================
+FAIL: test_e2_clenshaw_curtis_leaves_untested (AdaptiveLevin.tests.test_levin_rate_rules.TestNotTouched.test_e2_clenshaw_curtis_leaves_untested)
+(e) theta = 0.04 e^x on [0, 6], f = (e^{-x}, cos 3x), atol 1e-14, rtol 1e-7: the phase varies by 16.1 rad
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 459, in test_e2_clenshaw_curtis_leaves_untested
+    self.assertEqual(data["value"].hex(), E2_PARENT_VALUE.hex())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '-0x1.24a89a8b8f0ccp-1' != '-0x1.24a89a8b8f0cap-1'
+- -0x1.24a89a8b8f0ccp-1
+?                  ^
++ -0x1.24a89a8b8f0cap-1
+?                  ^
+
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.175s
+
+FAILED (failures=1)

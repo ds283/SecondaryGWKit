@@ -1,0 +1,137 @@
+F..FF.FF..F..F
+======================================================================
+FAIL: test_d_refused_at_depth_max (AdaptiveLevin.tests.test_levin_rate_rules.TestAtTheDepthCap.test_d_refused_at_depth_max)
+(d) theta = 2 e^{4x} on [0, 1.5], f = (e^{-x}, cos x), atol 1e-14, rtol 1e-7, depth_max 1: no window; the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 374, in test_d_refused_at_depth_max
+    self.assertFalse(data["converged"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_e2_clenshaw_curtis_leaves_untested (AdaptiveLevin.tests.test_levin_rate_rules.TestNotTouched.test_e2_clenshaw_curtis_leaves_untested)
+(e) theta = 0.04 e^x on [0, 6], f = (e^{-x}, cos 3x), atol 1e-14, rtol 1e-7: the phase varies by 16.1 rad
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 478, in test_e2_clenshaw_curtis_leaves_untested
+    self.assertEqual([(r.start, r.end) for r in wide], [(0.0, 3.0)])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [(0.0, 3.0)]
+
+Second list contains 1 additional elements.
+First extra element 0:
+(0.0, 3.0)
+
+- []
++ [(0.0, 3.0)]
+
+======================================================================
+FAIL: test_c_leaf_with_a_wide_rate_range (AdaptiveLevin.tests.test_levin_rate_rules.TestRangeMechanism.test_c_leaf_with_a_wide_rate_range)
+(c) (b)'s integrand on the span of (b)'s carrying leaf, [0x1.a317190ba9ba3p-2, 0x1.a317190ba9ba3p-1], as a
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 342, in test_c_leaf_with_a_wide_rate_range
+    self.assertGreater(
+    ~~~~~~~~~~~~~~~~~~^
+        _node_range(Q_THETA["theta_deriv"], *C_SPAN, Q_ORDER), 10.0 * RANGE_MAX
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: 3983.686521649258 not greater than inf
+
+======================================================================
+FAIL: test_a2_range_threshold (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a2_range_threshold)
+A range q of exactly 10 over the nodes is not refused, the next double above is.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 178, in test_a2_range_threshold
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        _leaf_rate_rule((A_LO, A_HI), A_ORDER, [_rate({interior: just_above})], ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (True, "range", just_above),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Tuples differ: (False, 'range', inf) != (True, 'range', inf)
+
+First differing element 0:
+False
+True
+
+- (False, 'range', inf)
+?  ^^^^
+
++ (True, 'range', inf)
+?  ^^^
+
+
+======================================================================
+FAIL: test_a3_zero_rate (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a3_zero_rate)
+A rate exactly 0 at a node tested gives q = inf and a refusal, under either rule.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 197, in test_a3_zero_rate
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        _leaf_rate_rule((A_LO, A_HI), A_ORDER, [_rate({float(grid[7]): 0.0})], ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (True, "range", inf),
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Tuples differ: (False, 'range', inf) != (True, 'range', inf)
+
+First differing element 0:
+False
+True
+
+- (False, 'range', inf)
+?  ^^^^
+
++ (True, 'range', inf)
+?  ^^^
+
+
+======================================================================
+FAIL: test_a6_the_largest_q_decides (AdaptiveLevin.tests.test_levin_rate_rules.TestTheRuleDirectly.test_a6_the_largest_q_decides)
+With several phases the largest q decides, under either rule, in either order of the phases.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_rate_rules.py", line 251, in test_a6_the_largest_q_decides
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        _leaf_rate_rule((A_LO, A_HI), A_ORDER, rates, ()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        (True, "range", 12.0),
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Tuples differ: (False, 'range', 12.0) != (True, 'range', 12.0)
+
+First differing element 0:
+False
+True
+
+- (False, 'range', 12.0)
+?  ^^^^
+
++ (True, 'range', 12.0)
+?  ^^^
+
+
+======================================================================
+FAIL: test_quadrature_refinement_is_not_a_certificate_of_phase_accuracy (LiouvilleGreen.tests.test_three_bessel.TestPhaseGroups.test_quadrature_refinement_is_not_a_certificate_of_phase_accuracy)
+Refining the quadrature tolerance stops improving the answer (DRAFT-PLAN.md 9 Stage 4,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/LiouvilleGreen/tests/test_three_bessel.py", line 903, in test_quadrature_refinement_is_not_a_certificate_of_phase_accuracy
+    self.assertLessEqual(max(true_errors), 2.0 * min(true_errors))
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: np.float64(1.4502288259166107e-13) not less than or equal to np.float64(1.432187701766452e-14)
+
+----------------------------------------------------------------------
+Ran 14 tests in 6.019s
+
+FAILED (failures=7)

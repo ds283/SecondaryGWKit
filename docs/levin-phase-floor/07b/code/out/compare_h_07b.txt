@@ -1,0 +1,27 @@
+script sha256 66f9a9608392796771247f97449ff0da85a9a276d08691570b5e203ea1fd0745
+git HEAD 7b82a0cdd535469b8baa42dad224ff098a60cf6d; commit module sha256 8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1
+(h) docs/levin-phase-floor/07b/measurement/scripts/ext/variants/levin_quadrature_07b_h.py sha256 475120223bd6bdd1a62c98708969c2aac700c7cacb0d2110154c09ebbc080af3; parent c768c4ad3f249c2094040601b3b5d86c93659fc0
+22 calls; identical to (h): 22; rules act in 6; of the calls where they do not, identical to the parent: 16 of 16
+
+(b): refusals edge 1 range 0; regions 10 -> 16; identical to (h) True; identical to the parent False; value 0x1.9c4de6ecf3c4fp-14 abserr 0x1.f298b05539195p-25
+(c): refusals edge 0 range 3; regions 1 -> 10; identical to (h) True; identical to the parent False; value 0x1.f1edc86484243p-17 abserr 0x1.056c31b4cfb57p-39
+(d): refusals edge 0 range 2; regions 2 -> 2; identical to (h) True; identical to the parent False; value -0x1.b5db47638a085p-4 abserr 0x1.8075aba2113acp-33
+(e1): refusals edge 0 range 0; regions 4 -> 4; identical to (h) True; identical to the parent True; value 0x1.eb56afc607e00p-11 abserr 0x1.72de5e19b6d87p-39
+(e2): refusals edge 0 range 0; regions 6 -> 6; identical to (h) True; identical to the parent True; value -0x1.24a89a8b8f0cap-1 abserr 0x1.44e3e19d1ad33p-34
+yardstick test 2 exp_sin_1e3: refusals edge 0 range 0; regions 1 -> 1; identical to (h) True; identical to the parent True; value 0x1.84ecdddd7508fp-11 abserr 0x1.efa9a11262364p-53
+yardstick test 2 si_1000_exp: refusals edge 0 range 6; regions 3 -> 16; identical to (h) True; identical to the parent False; value 0x1.27481286ec722p-11 abserr 0x1.0a66614888113p-46
+yardstick test 2 gaussian_bump: refusals edge 0 range 0; regions 10 -> 10; identical to (h) True; identical to the parent True; value -0x1.171b1880002b2p-43 abserr 0x1.78a7920ef1113p-34
+yardstick test 2 sqrt_fallback: refusals edge 0 range 0; regions 5 -> 5; identical to (h) True; identical to the parent True; value 0x1.15b18d049959ap-1 abserr 0x1.1d0febe92ff7dp-35
+yardstick test 2 runge_fallback: refusals edge 0 range 0; regions 11 -> 11; identical to (h) True; identical to the parent True; value 0x1.023a0b017c9fdp-3 abserr 0x1.3dbf8a1114a09p-35
+yardstick test 2 sinc_12b: refusals edge 0 range 0; regions 17 -> 17; identical to (h) True; identical to the parent True; value 0x1.1bf855dd4852dp-7 abserr 0x1.d2fe7b179c76fp-43
+yardstick test 2 noisy(A=128,k=60): refusals edge 0 range 0; regions 17 -> 17; identical to (h) True; identical to the parent True; value 0x1.ad305b229e5d2p-8 abserr 0x1.0ed4db701ea64p-41
+yardstick test 2 noisy(A=512,k=60): refusals edge 0 range 0; regions 114 -> 114; identical to (h) True; identical to the parent True; value 0x1.ad305b229daa8p-8 abserr 0x1.ff5844782dc6ep-41
+yardstick test 2 far(3e5): refusals edge 0 range 0; regions 107 -> 107; identical to (h) True; identical to the parent True; value 0x1.23178e687a1eap+3 abserr 0x1.2614f981a9517p-17
+leaf values test 1 exp_sin_1e3: refusals edge 0 range 0; regions 1 -> 1; identical to (h) True; identical to the parent True; value 0x1.84ecdddd7508fp-11 abserr 0x1.efa9a11262364p-53
+leaf values test 1 si_1000_exp: refusals edge 0 range 6; regions 3 -> 16; identical to (h) True; identical to the parent False; value 0x1.27481286ec722p-11 abserr 0x1.0a66614888113p-46
+leaf values test 1 sinc_1e3: refusals edge 0 range 0; regions 5 -> 5; identical to (h) True; identical to the parent True; value 0x1.593418599c04bp-11 abserr 0x1.0027fd6392556p-51
+leaf values test 1 gaussian_bump: refusals edge 0 range 0; regions 10 -> 10; identical to (h) True; identical to the parent True; value -0x1.171b1880002b2p-43 abserr 0x1.78a7920ef1113p-34
+leaf values test 1 sqrt_fallback(1e-08): refusals edge 0 range 0; regions 3 -> 3; identical to (h) True; identical to the parent True; value 0x1.15b18d0499494p-1 abserr 0x1.a7646605bf745p-29
+leaf values test 1 sqrt_fallback(1e-10): refusals edge 0 range 0; regions 5 -> 5; identical to (h) True; identical to the parent True; value 0x1.15b18d049959ap-1 abserr 0x1.1d0febe92ff7dp-35
+leaf values test 1 runge_fallback: refusals edge 0 range 0; regions 11 -> 11; identical to (h) True; identical to the parent True; value 0x1.023a0b017c9fdp-3 abserr 0x1.3dbf8a1114a09p-35
+roundoff exit test 1: refusals edge 0 range 9; regions 3 -> 16; identical to (h) True; identical to the parent False; value 0x1.18d99589c168cp-7 abserr 0x1.5be24dab94248p-47

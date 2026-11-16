@@ -491,6 +491,12 @@ GUARD_KEYS_07 = frozenset(
     )
 )
 
+# prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md section 1.4: the rate rules' two refusal counts, new
+# result keys; and the one cell of test 2 on which the rules act, with its number of range-rule refusals (section 3,
+# "Existing assertions"; the log lists it).
+RATE_RULE_KEYS_07B = frozenset(("num_edge_rule_refusals", "num_range_rule_refusals"))
+RATE_RULE_CELLS_07B = {"si_1000_exp": 6}
+
 
 class TestCodeIsTheVariants(unittest.TestCase):
 
@@ -504,6 +510,13 @@ class TestCodeIsTheVariants(unittest.TestCase):
         (cells.txt) on noisy(A=128) once on a Levin parent; on noisy(A=512) twice on a Levin parent
         and three times on a Clenshaw-Curtis parent; on far(3e5) 40 times, each on a Clenshaw-Curtis
         parent; and on none of 06g's six cells.
+
+        Since prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md (section 3, "Existing
+        assertions"): the key set also admits 07b's two refusal counts, which are compared as nothing
+        else is. The rate rules act on one cell, si_1000_exp (six range-rule refusals: 3 regions become
+        16, converged under both), and there the commit is compared with its rule refusing nothing, the
+        code path of 06m's yardstick, which is what this test certifies; on every other cell both counts
+        are 0 and the commit is compared as it runs.
         """
         parent = load_parent()
         variant = load_variant()
@@ -513,19 +526,37 @@ class TestCodeIsTheVariants(unittest.TestCase):
             name = cell[0]
             with self.subTest(cell=name):
                 new = sincos(lq, cell)
+                refusals = (
+                    new["num_edge_rule_refusals"] + new["num_range_rule_refusals"]
+                )
+                if name in RATE_RULE_CELLS_07B:
+                    self.assertEqual(new["num_edge_rule_refusals"], 0, name)
+                    self.assertEqual(
+                        new["num_range_rule_refusals"], RATE_RULE_CELLS_07B[name], name
+                    )
+                    with mock.patch.object(
+                        lq, "_leaf_rate_rule", return_value=(False, None, 1.0)
+                    ):
+                        new = sincos(lq, cell)
+                else:
+                    self.assertEqual(refusals, 0, name)
                 var = sincos(variant, cell)
                 old = sincos(parent, cell)
                 self.assertNotIn("route_06l", new)
                 # prompts/levin-phase-floor/07-stationary-point-guard.md section 3 test 12 (its section 9
                 # point 3): the key set admits the stationary-point guard's six result keys, and nothing
-                # else; every other key is compared as before
-                self.assertTrue(GUARD_KEYS_07 <= set(new), name)
+                # else; every other key is compared as before. Since 07b, also its two refusal counts.
+                self.assertTrue(GUARD_KEYS_07 | RATE_RULE_KEYS_07B <= set(new), name)
                 self.assertEqual(
-                    set(new) - GUARD_KEYS_07, set(var) - {"route_06l"}, name
+                    set(new) - GUARD_KEYS_07 - RATE_RULE_KEYS_07B,
+                    set(var) - {"route_06l"},
+                    name,
                 )
                 self.assertEqual(
                     result_record(
-                        new, exclude=("elapsed",) + tuple(sorted(GUARD_KEYS_07))
+                        new,
+                        exclude=("elapsed",)
+                        + tuple(sorted(GUARD_KEYS_07 | RATE_RULE_KEYS_07B)),
                     ),
                     result_record(var, exclude=("elapsed", "route_06l")),
                     name,
@@ -538,10 +569,14 @@ class TestCodeIsTheVariants(unittest.TestCase):
                 firings["cc"] += sum(1 for rec in fired if rec["is_direct"])
                 firings["levin"] += sum(1 for rec in fired if not rec["is_direct"])
                 if not fired:
-                    self.assertEqual(set(new) - GUARD_KEYS_07, set(old), name)
+                    self.assertEqual(
+                        set(new) - GUARD_KEYS_07 - RATE_RULE_KEYS_07B, set(old), name
+                    )
                     self.assertEqual(
                         result_record(
-                            new, exclude=("elapsed",) + tuple(sorted(GUARD_KEYS_07))
+                            new,
+                            exclude=("elapsed",)
+                            + tuple(sorted(GUARD_KEYS_07 | RATE_RULE_KEYS_07B)),
                         ),
                         result_record(old),
                         name,

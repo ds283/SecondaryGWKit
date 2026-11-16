@@ -328,6 +328,10 @@ def test1_cells():
 # requires is asserted on the cells where it is large.
 TEST1_IMPROVED = {"gaussian_bump": 100.0, "sqrt_fallback(1e-08)": 100.0}
 
+# prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md: the one cell of test 1 on which the rate rules act, with
+# its number of range-rule refusals (section 3, "Existing assertions"; the log lists it).
+TEST1_RATE_RULE_CELLS_07B = {"si_1000_exp": 6}
+
 
 def test3_sinc_problem():
     """06c's test 12b: SincIntegral, int_1^100 sin(100 x)/x, rtol 1e-10, order 12."""
@@ -390,6 +394,13 @@ class TestTrustedLeafReturnsQuarters(_HonestyMixin, unittest.TestCase):
             runge_fallback         0 -> 0                 (Q equals V_P to the last bit)
 
         (true errors against the reference rounded to a double)
+
+        Since prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md (section 3, "Existing
+        assertions"): the rate rules act on one cell, si_1000_exp, whose range rule refuses six trusted
+        Levin leaves (3 regions become 16, abserr 2.218e-11 -> 1.479e-14, the true error 1.095e-14 ->
+        5.97e-15, honest and converged under both). There the parent's abserr, converged and regions are
+        no longer asserted bit for bit; every other assertion stands. On every other cell both refusal
+        counts are 0.
         """
         parent = load_parent()
         for name, span, f, theta, kwargs, expression, identical in test1_cells():
@@ -402,7 +413,14 @@ class TestTrustedLeafReturnsQuarters(_HonestyMixin, unittest.TestCase):
                 self.assertTrue(
                     any(r.value_kind == "quarters" for r in new["regions"]), name
                 )
-                if identical:
+                # 07b: the rate rules act on si_1000_exp alone (see the docstring)
+                self.assertEqual(new["num_edge_rule_refusals"], 0, name)
+                self.assertEqual(
+                    new["num_range_rule_refusals"],
+                    TEST1_RATE_RULE_CELLS_07B.get(name, 0),
+                    name,
+                )
+                if identical and name not in TEST1_RATE_RULE_CELLS_07B:
                     self.assertEqual(new["abserr"], old["abserr"], name)
                     self.assertEqual(new["converged"], old["converged"], name)
                     self.assertEqual(

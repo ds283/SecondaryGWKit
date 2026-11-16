@@ -1,0 +1,40 @@
+{
+ "label": "h",
+ "tree": "/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/b6b9b774-6813-426e-878d-4e77594f7b51/scratchpad/07b-partB/h",
+ "tree_git_sha": "c768c4ad3f249c2094040601b3b5d86c93659fc0",
+ "levin_quadrature_sha256": "475120223bd6bdd1a62c98708969c2aac700c7cacb0d2110154c09ebbc080af3",
+ "levin_quadrature_status": "M AdaptiveLevin/levin_quadrature.py",
+ "test_module_sha256": "3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c",
+ "script_sha256": "55714b3f45563c1b8c82e8a83ba9ddd5d1ad27fde82349c8a66c578738a6cad3",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19
+ ],
+ "tests": [
+  "test_YJJ_log_singularity",
+  "test_JJJ",
+  "test_YJJ",
+  "test_abserr_bounds_truth"
+ ],
+ "unit_timeout": 1200.0,
+ "started": "2026-11-16T11:49:42",
+ "finished": "2026-11-16T11:53:42"
+}

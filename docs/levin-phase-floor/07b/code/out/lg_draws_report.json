@@ -1,0 +1,49 @@
+{
+ "units": 80,
+ "outcomes_parent_commit": {
+  "pass->pass": 80
+ },
+ "new_failures_commit": [],
+ "outcomes_parent_h": {
+  "pass->pass": 80
+ },
+ "new_failures_h": [],
+ "paired_calls": 4320,
+ "unpaired_units_or_calls": 0,
+ "untouched": 509,
+ "untouched_not_identical": 0,
+ "acted": 3811,
+ "acted_edge_calls": 0,
+ "acted_range_calls": 3811,
+ "acted_converged": {
+  "True->True": 3784,
+  "False->False": 27
+ },
+ "acted_largest_move_over_parent_abserr": 0.0997959892026117,
+ "regions_parent": 76692,
+ "regions_commit": 147029,
+ "newly_unconverged": [],
+ "h_paired_calls": 4320,
+ "h_unpaired": 0,
+ "h_not_identical": 0,
+ "honesty": {
+  "acted": {
+   "results": 1055,
+   "honest_parent": 619,
+   "honest_commit": 621,
+   "dishonest_converged_parent": 436,
+   "dishonest_converged_commit": 434,
+   "worst_commit": 4890263.117118399,
+   "worst_parent": 4859261.077433457
+  },
+  "untouched": {
+   "results": 25,
+   "honest_parent": 25,
+   "honest_commit": 25,
+   "dishonest_converged_parent": 0,
+   "dishonest_converged_commit": 0,
+   "worst_commit": 0.1438819980107889,
+   "worst_parent": 0.1438819980107889
+  }
+ }
+}

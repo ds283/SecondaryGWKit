@@ -25,11 +25,13 @@ No Ray and no datastore.
 
 import inspect
 import unittest
+from unittest import mock
 from math import exp, atan, nan
 
 import mpmath
 import numpy as np
 
+import AdaptiveLevin.levin_quadrature as levin_quadrature
 from AdaptiveLevin.levin_quadrature import (
     DEFAULT_LEVIN_MAX_DEPTH,
     _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO,
@@ -556,6 +558,14 @@ class TestRoundoffExitPremise(unittest.TestCase):
 
         The halves' floors sum to ~1e-4 of the parent's, so under the new code the region is
         bisected, and the call converges within its tolerance with no phase-limited region.
+
+        Since prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md (section 3, "Existing
+        assertions"): that is asserted of the commit with its rate rules refusing nothing (07a's code: 3
+        regions, abserr 2.218e-11, no phase-limited region). With them, the range rule refuses the
+        trusted Levin leaves whose theta' ranges by more than 10 over their nodes, nine refusals, and the
+        call ends with 16 leaves of width 1.25 at depth 4 (theta' ranging by e^1.25 = 3.5 over each),
+        nine of them found floor-limited, where the premise holds; it is converged, honest and within its
+        tolerance (abserr 9.66e-15, true error 5.0e-16), and no phase-limited region is the span.
         """
         f, theta = _test1_problem()
         ref, ref_err = _test1_reference()
@@ -582,11 +592,26 @@ class TestRoundoffExitPremise(unittest.TestCase):
         ]
         self.assertLess(floor_L + floor_R, 1e-3 * parent["regions"][0].phase_err)
 
-        new = _run(TEST1_SPAN, f, theta, **kwargs)
+        with mock.patch.object(
+            levin_quadrature, "_leaf_rate_rule", return_value=(False, None, 1.0)
+        ):
+            new = _run(TEST1_SPAN, f, theta, **kwargs)
         self.assertTrue(new["converged"])
         self.assertEqual(new["num_phase_limited_regions"], 0)
         self.assertFalse(new["phase_limited"])
         new_true_err = self._assert_honest(new, ref, ref_err, "test 1 new")
+        self.assertLessEqual(new_true_err, TEST1_RTOL * abs(ref))
+
+        # 07b: with the rate rules (see the docstring)
+        new = _run(TEST1_SPAN, f, theta, **kwargs)
+        self.assertTrue(new["converged"])
+        self.assertEqual(new["num_range_rule_refusals"], 9)
+        self.assertEqual(new["num_edge_rule_refusals"], 0)
+        self.assertEqual(new["num_phase_limited_regions"], 9)
+        self.assertTrue(
+            all(r.depth >= 1 for r in new["regions"] if r.phase_limited), new["regions"]
+        )
+        new_true_err = self._assert_honest(new, ref, ref_err, "test 1 new, 07b")
         self.assertLessEqual(new_true_err, TEST1_RTOL * abs(ref))
 
     def _check_premise_holds_problem(self, problem, label):

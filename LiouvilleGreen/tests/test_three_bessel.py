@@ -829,11 +829,12 @@ class TestPhaseGroups(unittest.TestCase):
         README 6).
 
         The positive statement is the one asserted: the true error against the closed form
-        improves from rtol 1e-8 to the tightest rung, 1e-14, and there it stays well above
-        rtol * |analytic| -- the accuracy the phases support, not the accuracy requested; the
-        declared abserr is at least the true error at every rung; and the driver reports
-        ``phase_limited`` at the tightest rung -- the region's achievable accuracy was set by the
-        round-off-plus-declared-phase floor rather than by the Levin rule. Reading "the integral
+        stalls across the rungs, rtol 1e-8 to 1e-14 (the largest at most twice the smallest), and
+        at the tightest rung it stays well above rtol * |analytic| -- the accuracy the phases
+        support, not the accuracy requested; the declared abserr is at least the true error at
+        every rung; and the driver reports ``phase_limited`` at the tightest rung -- the region's
+        achievable accuracy was set by the round-off-plus-declared-phase floor rather than by the
+        Levin rule. Reading "the integral
         matches to 1e-12" as evidence that the phases are good is the error this test exists to
         prevent.
 
@@ -844,6 +845,16 @@ class TestPhaseGroups(unittest.TestCase):
         declared 2.3e-10 against a true error of 1.0e-14 and stopped refinement. With the rule's
         own floor the value keeps moving with rtol and its true error stalls near 1e-14 (3.7e-14,
         9.7e-15 and 1.0e-14 at 1e-12, 1e-13 and 1e-14), honestly declared.
+
+        Restated by prompts/levin-phase-floor/07b-levin-leaf-beside-a-window.md, section 10. Until
+        07b it asserted that the true error improved tenfold from rtol 1e-8 to 1e-14: it fell from
+        1.42e-13 at 1e-8 (58 regions) to 7.16e-15. Under 07b's range rule (a trusted Levin leaf whose
+        |theta'| ranges by more than 10 over its nodes is refused and refined) the 1e-8 rung is
+        already at the floor, 6.99e-15 (154 regions, 49 refusals), so the coarse rung is no longer
+        worse and the premise of a tenfold improvement no longer holds; the test's purpose, that
+        refining the tolerance stops improving the answer, holds more plainly, and is what is now
+        asserted: across the five rungs the true error spreads by 1.04 (6.94e-15 to 7.24e-15),
+        against 20.3 before 07b.
 
         J000's closed form is re-derived here rather than imported from test_3bessel_analytic.py
         (prompt 08's file): int_0^inf j_0(kx) j_0(qx) j_0(sx) x^2 dx = (pi/4)/(kqs) for a triangle
@@ -888,10 +899,9 @@ class TestPhaseGroups(unittest.TestCase):
                 result.abserr, abs(result.value - analytic), f"rtol {rtol:.0e}"
             )
 
-        # it improved from the coarsest rung to the tightest
-        self.assertGreater(
-            abs(results[1.0e-8].value - analytic), 10.0 * abs(tightest - analytic)
-        )
+        # it stalled: refining the tolerance no longer improves it (07b section 10)
+        true_errors = [abs(result.value - analytic) for result in results.values()]
+        self.assertLessEqual(max(true_errors), 2.0 * min(true_errors))
 
         # and the driver says why it stopped: the floor, not the rule
         self.assertTrue(results[1.0e-14].phase_limited)
