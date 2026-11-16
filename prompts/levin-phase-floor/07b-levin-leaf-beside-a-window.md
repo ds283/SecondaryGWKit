@@ -19,7 +19,8 @@ rows as its measurement).
   dispatch SHA, whose code is 07a's. It finds why the leaf's declaration understates, scores candidate
   fixes, and takes the reference sample. **It ends at a planned stop:** the user chooses the fix with
   its tables in front of them, and the orchestrator writes it into §1 and §3 as an amendment (§9),
-  committed and pushed before Part B.
+  committed and pushed before Part B. Amended again at Part B's stop (§10): one LiouvilleGreen test's
+  assertion is restated to its purpose.
 - **Part B, §1, §3 and §4, the code:** on the laptop, by a fresh-context subagent, in the main checkout
   at `HEAD`. One commit.
 - **Part C, §5 and §6:** on the Mac Studio, after the code commit is pushed: **§5, rehearsal R31,**
@@ -636,7 +637,8 @@ changes in each direction; the abserr ratio against 07a's; regions and cost agai
 - §2.2 finding that the leaves' references do not close against the call's reference (as 07a's Part A
   checked closure).
 - In Part B: an acceptance test that cannot pass without a change outside §1 as amended, or a
-  LiouvilleGreen test failing at the commit that passes at the parent.
+  LiouvilleGreen test failing at the commit that passes at the parent (except the one test §10.3
+  allows, amended at Part B's stop).
 - In Part C: S0′ failing; a call U1 says is untouched differing from 07a's, before anything else is
   scored; a lock held.
 
@@ -765,3 +767,63 @@ replay record in `float.hex`, and R2-22 equal to 07a's census too.
 - In Part B: an output of the code differing from (h)'s replay record on a call the review replays; no
   dishonest-and-converged call found at the parent for §3 (b) or (c).
 - In Part C: the census's projection beyond 48 hours; U8 failing, before anything else is scored.
+
+## 10. Amendment at Part B's stop
+
+Written by the orchestrator on 2026-11-16, when Part B's agent stopped before its commit (§8, "a
+LiouvilleGreen test failing at the commit that passes at the parent"). Part B resumes on this text, in
+the same checkout, with its work in place.
+
+### 10.1 The stop
+
+`LiouvilleGreen/tests/test_three_bessel.py`'s
+`TestPhaseGroups.test_quadrature_refinement_is_not_a_certificate_of_phase_accuracy` fails at the
+commit and passes at the parent. It runs `quad_JJJ` on $(k, q, s) = (1.3, 1.7, 2.1)$, `max_x`
+$10^{12}$, at rtol $10^{-8}$, $10^{-10}$, $10^{-12}$, $10^{-13}$ and $10^{-14}$, against J000's closed
+form. One assertion fails: that the true error improves tenfold from the coarsest rung to the tightest
+(`6.994405055138486e-15 not greater than 7.16093850883226e-14`). The agent's true errors:
+
+| rtol | parent | commit | range-rule refusals at the commit |
+|---|---|---|---|
+| $10^{-8}$ | $1.42\times10^{-13}$ (58 regions) | $6.99\times10^{-15}$ (154 regions) | 49 |
+| $10^{-10}$ | $1.45\times10^{-13}$ | $6.94\times10^{-15}$ | 45 |
+| $10^{-12}$ | $7.19\times10^{-15}$ | $6.99\times10^{-15}$ | 34 |
+| $10^{-13}$ | $7.24\times10^{-15}$ | $7.24\times10^{-15}$ | 21 |
+| $10^{-14}$ | $7.16\times10^{-15}$ | $7.16\times10^{-15}$ | 0 |
+
+The commit equals (h)'s module at all five rungs, and the $10^{-14}$ rung is identical under both
+codes. The orchestrator reproduced the failure on the working tree. The test's other assertions hold
+at the commit: every rung is honest, the tightest rung is `phase_limited`, and the floor,
+$7.16\times10^{-15}$, is above $10^{-14}|{\rm analytic}| = 1.69\times10^{-15}$.
+
+The range rule refines the coarse rungs to the phase floor already at $10^{-8}$, so their answers are
+more accurate, at about 2.7 times the regions: the rule's cost, as §9.3 says. The test's premise, that
+the coarse rung is worse, no longer holds; its purpose, that refining the tolerance stops improving
+the answer, holds more plainly than before.
+
+### 10.2 The ruling
+
+The orchestrator recommended restating that one assertion to the test's purpose, as a stall across
+the rungs, and keeping the others. The user: *"Yes, write the §10 amendment"*. §1 is unchanged.
+
+### 10.3 What changes
+
+The paths Part B may touch gain one, for this change only:
+**`LiouvilleGreen/tests/test_three_bessel.py`, the test above.**
+- **The assertion that the true error improves tenfold** from $10^{-8}$ to $10^{-14}$ is replaced by
+  one that it **stalls**: the largest true error over the five rungs is at most twice the smallest.
+  Measured at the commit: a spread of 1.04 ($6.94$–$7.24\times10^{-15}$). At the parent it is 20.3.
+- **The other assertions stand** unchanged: honest at every rung, `phase_limited` at $10^{-14}$, and
+  the floor above $10^{-14}|{\rm analytic}|$.
+- **The docstring** says what the test now asserts and why. It records that before 07b the true error
+  fell from $1.42\times10^{-13}$ at $10^{-8}$ (58 regions) to $7.16\times10^{-15}$, and that under
+  07b's range rule the $10^{-8}$ rung is already at the floor ($6.99\times10^{-15}$, 154 regions, 49
+  refusals). It cites this section. The 06d paragraph stays as written.
+- **Breakage (ii)** (`_LEVIN_LEAF_RATE_RANGE_MAX` set to infinity) must also make this test fail,
+  through the stall assertion; recorded with the others.
+- **Only this test changes:** the module's AST, with docstrings removed, differs from the parent's
+  only in this test's function.
+
+Nothing else in `LiouvilleGreen/` changes. Every other test in its root must pass, and the
+LiouvilleGreen draws (§3 item 5) run as written. Any other LiouvilleGreen test failing at the commit
+that passes at the parent is a stop, as before.
