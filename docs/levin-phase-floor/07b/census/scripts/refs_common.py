@@ -1,0 +1,229 @@
+"""levin-phase-floor prompt 07a section 6: copied from 07's census scripts/refs_common.py (a record, not edited),
+changed only where marked "prompt 07a": ROWS is the copy in this records directory, state/rows.json (aa523d28..., copied
+from 07's state/rows.json, itself a copy of 06g's, which is no longer on this host). 07's text follows.
+
+levin-phase-floor prompt 07 section 6: copied from 06m's census scripts/refs_common.py (a record, not edited;
+docs/levin-phase-floor/06m/census/scripts/refs_common.py), changed only where marked "prompt 07": ROOT is
+var/levin-phase-floor-07/census/ (the same depth as 06m's), and G_TREE/G_SHA are 07's tree g (the worktree at Part B's
+resumed dispatch SHA e182bc7a, code adffa21b's); P_TREE/P_SHA name the parent 91472dbe (Gate V0's K0 run). ROWS stays
+06g's rows.json (aa523d28...), read only. 06m's text follows.
+
+levin-phase-floor prompt 06m section 5: copied from 06l's scripts/refs_common.py (a record, not edited;
+docs/levin-phase-floor/06l/scripts/refs_common.py), changed only where marked "prompt 06m": ROOT is
+var/levin-phase-floor-06m/census/ (one level deeper than 06l's, so the main-checkout assertion counts one level
+more), and G_TREE/G_SHA are 06m's tree (the worktree at Part B's dispatch SHA 38f6a828, code 06m's code commit
+48cf87c0's). ROWS stays 06g's rows.json (aa523d28...), read only, as in 06l. 06l's text follows.
+
+levin-phase-floor prompt 06l: copied from 06k's scripts/refs_common.py (a record, not edited; its
+copy is in state/scripts_06k_reference/), changed only where marked "prompt 06l": ROOT is
+var/levin-phase-floor-06l/ (the same depth as 06k's), and G_TREE/G_SHA are 06l's tree (the worktree
+at 06l's dispatch SHA af4c4dc1, production code 1c5336e's). 06k's text follows.
+
+levin-phase-floor prompt 06k: copied from 06j's scripts/refs_common.py (a record, not edited; its
+copy is in state/scripts_06j_reference/), changed only where marked "prompt 06k": ROOT is
+var/levin-phase-floor-06k/ (the same depth as 06j's), and G_TREE/G_SHA are 06k's tree (the worktree
+at 06k's dispatch SHA 89370609, production code 1c5336e's). 06j's text follows.
+
+levin-phase-floor prompt 06j: copied from prompt 06g's references scripts/refs_common.py (a record,
+not edited; its copy is in state/scripts_06g_reference/), changed only where marked "prompt 06j": ROOT
+is var/levin-phase-floor-06j/ (one level shallower, so the main-checkout assertion counts one level
+fewer), and G_TREE/G_SHA are 06j's tree (the worktree at 06j's dispatch SHA dfa19d98, production
+code 1c5336e's, tool b5626ecb's). Every input it names (06g's rows.json, 06h's census, 06a's census,
+the scratch copy) is read only, as in 06g. 06g's text follows.
+
+levin-phase-floor prompt 06g section 5, the references: paths and helpers shared by the references
+agent's own scripts (draw_refs.py, select_refs.py, check_captures.py, slice_refs.py, compare13.py,
+one_reading.py, compare06i.py, run_refs.py, launch_refs.py, score_refs.py). New in 06g.
+
+Everything here is read only, except ROOT (var/levin-phase-floor-06g/references/), where the
+references agent writes. The census harness (prov.py, worker.py, harness.py, ...) is the census
+agent's, copied unchanged into this directory; this module does not change it.
+
+Trees (Part B's dispatch brief):
+- G_TREE, the code worktree at Part B's dispatch SHA 1c5336e (code 06g's 3ae6f3a): the captures,
+  the Filon tool and every reading run here, with this directory second on PYTHONPATH (the captured
+  calls' pickles name the census harness's functions, e.g. ``harness._rebuild_lru_cache``);
+- nothing runs at the parent tree 4f4f9ed here.
+"""
+
+import hashlib
+import json
+import math
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent  # var/levin-phase-floor-06g/references; prompt 06j: var/levin-phase-floor-06j; prompt 06k: var/levin-phase-floor-06k; prompt 06l: var/levin-phase-floor-06l; prompt 06m: var/levin-phase-floor-06m/census; prompt 07: var/levin-phase-floor-07/census
+MAIN = Path("/Users/ds283/Documents/Code/SecondaryGWKit")
+assert HERE.parents[3] == MAIN, HERE  # prompt 06j: one level shallower than 06g's; prompt 06m: one level deeper than 06l's (parents[2])
+PYTHON = MAIN / "venv" / "bin" / "python"
+
+G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf06m-38f6a82")  # prompt 06m (06l: -lpf06l-af4c4dc; 06k: -lpf06k-8937060; 06j: -lpf06j-dfa19d9; 06g: -lpf06g-1c5336e)
+G_SHA = "38f6a828d17b41893574f7344a543ebfb1e01e85"  # prompt 06m (06l: af4c4dc1...; 06k: 89370609...; 06j: dfa19d98...; 06g: 1c5336e7e0ab8ed4495601a4033841f2df17ebdd)
+G_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-e182bc7")  # prompt 07 (06m: -lpf06m-38f6a82)
+G_SHA = "e182bc7a827142cd4f42594f1a9d8cf85ccc3a5f"  # prompt 07 (06m: 38f6a828...)
+P_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07-91472db")  # prompt 07: the parent, Gate V0's K0 run
+P_SHA = "91472dbee1daba8374b0018db1195cf6c7898bbb"  # prompt 07
+# prompt 07: 07's census g (the census agent's own run; V4's captures are checked against it), read only
+CENSUS07 = MAIN / "var" / "runs" / "levin-phase-floor-07-census-20261108T171137"
+CENSUS07_CHECKPOINT_SHA256 = "03dfe786f69343a0e86f436936161ace728630f26d687061e186d0883dd5cb10"
+
+# 06h's census, the "before" (read only)
+RUN06H = MAIN / "var" / "runs" / "levin-phase-floor-06h-census-20261101T005037"
+CHECKPOINT06H_SHA256 = (
+    "3104c18ed8b119f1798aec75be98d5b39bce641f3b5623b4c1cdc5b18b5ef372"
+)
+# 06a's census: its 1e-7 scan defines the 720 stationary-point rows (spscan.py), read only
+RUN06A = MAIN / "var" / "runs" / "levin-phase-floor-06a-census-20261027T023143"
+# the g census: the census agent's run, read only, found when it is complete
+RUNS = MAIN / "var" / "runs"
+CENSUS06G_GLOB = "levin-phase-floor-06g-census-*"
+# the census agent's rows.json, read only (equal to 06e's and 06h's)
+ROWS = MAIN / "var" / "levin-phase-floor-06g" / "census" / "state" / "rows.json"
+ROWS_SHA256 = "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417"
+ROWS = ROOT / "state" / "rows.json"  # prompt 07a: 06g's rows.json (removed from this host), as 07 copied it, same SHA-256
+
+# Z3's 30 calls (06c's depth20-tiling), the committed copy in the code worktree, read only
+Z3_RESULTS = (
+    G_TREE / "docs" / "levin-phase-floor" / "06c" / "depth20-tiling" / "results.json"
+)
+# 06i's 13 samples, its readings and scores (committed), and its inputs on this host (06e's copies
+# of depth20-tiling's captures), read only
+I06 = G_TREE / "docs" / "levin-phase-floor" / "06i"
+I06_READINGS = I06 / "out" / "readings"
+I06_SCORES = I06 / "out" / "scores.json"
+I06_SUMS = I06 / "inputs_SHA256SUMS.txt"
+I06_INPUTS = MAIN / "var" / "levin-phase-floor-06e" / "census" / "references" / "inputs"
+I06_SAMPLES = (1, 2, 3, 8, 9, 10, 13, 14, 15, 22, 23, 25, 27)
+V4_SAMPLES = (2, 8, 9, 14)
+
+# addendum 2 (the user's ruling, 2026-11-01): V8's 12 lost calls, selected by the orchestrator, read only
+V8_SAMPLE = MAIN / "var" / "levin-phase-floor-06g" / "review" / "v8_sample.json"
+V8_SAMPLE_SHA256 = "874e17db6e60afd37aba815043fb5783ffebab52c44273c7b0ba55a3c0dc9605"
+
+# 06's certified scratch copy of A3 v2, read only (hashed before and after)
+COPY_DIR = MAIN / "var" / "levin-phase-floor-06" / "wider" / "state" / "a3v2_copy"
+COPY_CERT = (
+    MAIN
+    / "var"
+    / "levin-phase-floor-06"
+    / "wider"
+    / "state"
+    / "copy_files_certified.txt"
+)
+
+RTOLS = ("1e-7", "1e-8")
+KINDS = (
+    "analytic",
+    "group",
+)  # census "other_calls" (the analytic blocks) and "calls" (groups)
+IMPLS = ("qawo", "fcc")  # tools.filon_reference.IMPLEMENTATIONS, in its order
+RESS = (1, 2)  # tools.filon_reference.RESOLUTIONS
+READING_LIMIT_S = 1800.0  # a reading over 30 minutes is stopped (the brief)
+TOOL_WORKERS = 6
+
+
+def sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def H(x):
+    """A census float ({"repr", "hex"} or a hex string) as a float, exactly."""
+    if x is None:
+        return None
+    return float.fromhex(x["hex"] if isinstance(x, dict) else x)
+
+
+def hexof(x):
+    return None if x is None else (x["hex"] if isinstance(x, dict) else x)
+
+
+def rest_of(unit):
+    """'g-1e-7-2-1627' -> '1e-7-2-1627' (each census names its units by its tree)."""
+    return unit.split("-", 1)[1]
+
+
+def parse_rest(rest):
+    """'1e-7-2-1627' -> ('1e-7', '2', '1627'); the rtol holds a '-'."""
+    parts = rest.split("-")
+    return "-".join(parts[:-2]), parts[-2], parts[-1]
+
+
+def rowkey_of(unit):
+    return "-".join(unit.rsplit("-", 2)[-2:])
+
+
+def census_run_06g():
+    """The g census's run directory: exactly one, and finished ``done``."""
+    runs = sorted(RUNS.glob(CENSUS06G_GLOB))
+    if len(runs) != 1:
+        raise SystemExit(
+            f"expected exactly one {CENSUS06G_GLOB}, found {[r.name for r in runs]}"
+        )
+    status = json.loads((runs[0] / "status.json").read_text())
+    state = status.get("state") or status.get("status")
+    if state != "done":
+        raise SystemExit(f"{runs[0].name}: state {state!r}, not done")
+    return runs[0]
+
+
+def scan06a_sp():
+    """06a's 720 stationary-point rows, as 06e's and 06h's analyse scripts read them: the rows whose
+    1e-7 unit's scan shows a sign change of theta' in any call."""
+    sp = set()
+    with open(RUN06A / "checkpoint.jsonl") as f:
+        for line in f:
+            if '"rtol": "1e-7"' not in line:
+                continue
+            d = json.loads(line)["data"]
+            if d["rtol"] != "1e-7":
+                continue
+            if any(s and s["n_sign_changes"] > 0 for s in (d.get("scan") or [])):
+                sp.add(f"{d['shard']}-{d['serial']}")
+    return sp
+
+
+def call_key(c):
+    """What a capture must reproduce of a census call record (06c's x1_capture.py's tuple)."""
+    return (
+        c["value"]["hex"],
+        c["abserr"]["hex"],
+        c["num_regions"],
+        c["max_depth"],
+        bool(c["converged"]),
+        c["notify_label"],
+    )
+
+
+def scan_checkpoint(checkpoint, wanted):
+    """{(rest, index): [(census unit, unit status, kind, call record, unit data), ...]} for
+    ``wanted``, a set of (rest, index); every record of a unit is read."""
+    want = {}
+    for rest, index in wanted:
+        want.setdefault(rest, set()).add(index)
+    found = {}
+    with open(checkpoint) as f:
+        for line in f:
+            head = line[:300]
+            if not any(f'-{r}"' in head for r in want):
+                continue
+            rec = json.loads(line)
+            unit = rec.get("unit", "")
+            rest = unit.split("-", 1)[-1]
+            if rest not in want:
+                continue
+            data = rec.get("data") or {}
+            for kind, key in (("group", "calls"), ("analytic", "other_calls")):
+                for c in data.get(key) or []:
+                    if c["index"] in want[rest]:
+                        found.setdefault((rest, c["index"]), []).append(
+                            (unit, data.get("status"), kind, c, data)
+                        )
+    return found
+
+
+def finite(x):
+    return x is not None and math.isfinite(x)

@@ -1,0 +1,70 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/capture/replay07b_r31.py check /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/replay_calls.csv
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T19:57:25Z
+# ----
+# prompt 07b r31: the replay checked against R31, record by record
+# written 2026-11-16T19:57:25Z on mps026298.phys.susx.ac.uk
+# script replay07b_r31.py sha256 ac7319caf04824e14870eb500c80c62b2d83e76d0c05532a0cfac7e723f00825
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/replay_rows.json sha256 25d5177053d2ece368115ba11c0da5460b4f1625f5fae3728ce2ad3fc26e9be1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-0/emit.jsonl sha256 9732941f4b774ba9880e07083047065db440bffbb0a1be37476833d76cfc3735
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-1/emit.jsonl sha256 3a411a2190ed4450bd26495dcca12fbe2dc7263572b39d1e31d73bd21d0bd317
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-2/emit.jsonl sha256 df5e726ef2047bb87c409aace86ba6285b755bcfaced791d5dfe66f10ae7ecc1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-3/emit.jsonl sha256 9dcd5a540a8b920d1a600d7d27889aabacedfd25f5965e567edb4519c44f1361
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-4/emit.jsonl sha256 411da5be7c7cbadc295531e7fbf7fac6e33edffa72994e32536024b1f55bd855
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-5/emit.jsonl sha256 ed7d905488008bb0f676711c5385ccff8614bca12feefc02d0fd33c7667d9fec
+records checked 452; reproduce bit for bit 452; not 0
+workers' ray_initialized at exit: {'False': 208}
+route_07a over 4295 replayed calls (solve caller || class: solves):
+  Levin left-comparison region || LU differs | not returned: 166
+  Levin left-comparison region || LU differs | returned: 19
+  Levin left-comparison region || route differs | not returned: 153
+  Levin left-comparison region || route differs | returned: 5
+  Levin left-comparison region || same | not returned: 9498
+  Levin left-comparison region || same | returned: 2225
+  Levin right-comparison region || LU differs | not returned: 15
+  Levin right-comparison region || LU differs | returned: 33
+  Levin right-comparison region || route differs | not returned: 8
+  Levin right-comparison region || route differs | returned: 2
+  Levin right-comparison region || same | not returned: 9367
+  Levin right-comparison region || same | returned: 2641
+  Levin subregion || LU differs | not returned: 38
+  Levin subregion || LU differs | returned: 5
+  Levin subregion || route differs | not returned: 15
+  Levin subregion || same | not returned: 3697
+  Levin subregion || same | returned: 538
+  left half of fallback region || same | not returned: 4523
+  left half of fallback region || same | returned: 1863
+  right half of fallback region || route differs | returned: 2
+  right half of fallback region || same | not returned: 4477
+  right half of fallback region || same | returned: 1907
+  stationary-point window piece || same | not returned: 482
+  stationary-point window piece || same | returned: 653
+  trust check: a quarter || LU differs | not returned: 119
+  trust check: a quarter || LU differs | returned: 40
+  trust check: a quarter || route differs | not returned: 132
+  trust check: a quarter || route differs | returned: 24
+  trust check: a quarter || same | not returned: 495907
+  trust check: a quarter || same | returned: 66466
+refusals over the replayed calls ({'group': 967, 'other': 3328}): {('group', 'calls acted'): 373, ('group', 'calls with an edge refusal'): 0, ('group', 'edge'): 0, ('group', 'range'): 591, ('other', 'calls acted'): 2667, ('other', 'calls with an edge refusal'): 0, ('other', 'edge'): 0, ('other', 'range'): 6733}
+the records of interest: 8; reproduced 8
+  [100000.0, 1000000.0, 1000000.0, 144627.70674226896] WKB_Levin.subintervals[1].groups[0] G+q+r: reproduces True; call index 1; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 4}
+  [316227.7660168379, 100000.0, 316227.7660168379, 996.4201622779478] WKB_Levin.subintervals[2].groups[3] G-q-r: reproduces True; call index 6; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 3}
+  [316227.7660168379, 100000.0, 316227.7660168379, 6944780.034414906] WKB_Levin.subintervals[2].groups[3] G-q-r: reproduces True; call index 6; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1}
+  [1000000.0, 100000.0, 1000000.0, 329.64045755914753] WKB_Levin.subintervals[2].groups[2] G-q+r: reproduces True; call index 5; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 2}
+  [1000000.0, 100000.0, 1000000.0, 36286.827639966534] WKB_Levin.subintervals[2].groups[2] G-q+r: reproduces True; call index 5; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 3}
+  [1000000.0, 316227.7660168379, 1000000.0, 191807016.520263] WKB_Levin.subintervals[2].groups[3] G-q-r: reproduces True; call index 6; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1}
+  [1000000.0, 1000000.0, 1000000.0, 36286.827639966534] WKB_Levin.subintervals[1].groups[3] G-q-r: reproduces True; call index 4; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1}
+  [1000000.0, 1000000.0, 1000000.0, 331553.02818648185] WKB_Levin.subintervals[1].groups[3] G-q-r: reproduces True; call index 4; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 3}
+calls with a phase skipped (location_skipped_phases non-empty) in the replayed rows: 4
+  [100000.0, 100000.0, 100000.0, 1329131612.3012946] 291e+09, z in (1.7126e+09, 1.3291e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': None, 'reason': 'zero_rate'}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] 0176e+09, z in (5.421e+09, 4.3052e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': None, 'reason': 'zero_rate'}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005] 2975e+09, z in (5.421e+09, 5.2975e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': None, 'reason': 'zero_rate'}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 13627426843.66573] 627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r: skipped [{'phase': 0, 'variation': None, 'reason': 'zero_rate'}]; points 0, guarded 0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/replay_calls.csv sha256 8e94e8b591136e502ef510a3e4a545f77ba590c96ecd4c2432665cd534eeadd2 (452 lines) and /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/replay_calls.checks.json sha256 713ed8be28bd4ab4ab1693cff90e7a89d35d9cf4456cdaae7e4d84dc22310199
+# ----
+# end 2026-11-16T19:57:26Z
+# exit 0

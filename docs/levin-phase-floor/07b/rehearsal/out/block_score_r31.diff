@@ -1,0 +1,62 @@
+1c1
+< """S4 -- O9's four blocks (prompt 07a section 5 item 6), scored on R30 against R29's block references.
+---
+> """S4 -- O9's four blocks (prompt 07b section 5 item 5, as 07a section 5 item 6), scored on R31 against R29's block references.
+2a3,4
+> [prompt 07b r31: R30's block_score_r30.py (7c92da59), changed where marked "prompt 07b r31": R31's block replays and blocks.json; R31's shard-serials; "R30" as the scored store read as R31; R30's block_scores.json (07a's rehearsal, read only) added as context with R31_equals_R30. The integrand is still compared with R29's capture, on which the references were taken.]
+> 
+25c27,28
+< Z = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal")
+---
+> Z = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal")  # prompt 07b r31
+> Z30 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal")  # prompt 07b r31: R30's scores, read only
+27,28c30,31
+< # (block, R30's shard-serial, R29's shard-serial)
+< BLOCKS = [("J4", "0-10129", "0-157"), ("Y4", "0-10129", "0-157"), ("J4", "1-20022", "1-10283"), ("Y4", "1-20022", "1-10283")]
+---
+> # (block, R31's shard-serial, R29's shard-serial)  prompt 07b r31
+> BLOCKS = [("J4", "0-10232", "0-157"), ("Y4", "0-10232", "0-157"), ("J4", "1-20127", "1-10283"), ("Y4", "1-20127", "1-10283")]
+43a47,49
+>     s30p = Z30 / "out" / "block_scores.json"  # prompt 07b r31
+>     print(f"# input {s30p} sha256 {sha256(s30p)}")
+>     s30 = json.loads(s30p.read_text())["blocks"]  # prompt 07b r31
+54c60
+<         print(f"#   tree of R30's replay: {h['header']['tree']} HEAD {h['header']['tree_head']} status {h['header']['tree_status_short']!r}; "
+---
+>         print(f"#   tree of R31's replay: {h['header']['tree']} HEAD {h['header']['tree_head']} status {h['header']['tree_status_short']!r}; "
+73a80
+>         c30 = [r for r in s30 if r["block"] == f"2pt5 {blk}" and r["key"] == b["key"]][0]  # prompt 07b r31
+75c82
+<                "capture_reproduces_R30_store": b["reproduces_store"], "integrand_bit_identical_to_R29_capture": same,
+---
+>                "capture_reproduces_R31_store": b["reproduces_store"], "integrand_bit_identical_to_R29_capture": same,
+80c87
+<                "R30": {"value": h["capture_record"]["value"], "abserr": h["capture_record"]["abserr"],
+---
+>                "R31": {"value": h["capture_record"]["value"], "abserr": h["capture_record"]["abserr"],
+87c94,96
+<                "R30_equals_R28": (h["capture_record"]["value"], h["capture_record"]["abserr"]) == (ctx["R28"]["value"], ctx["R28"]["abserr"]),
+---
+>                "R31_equals_R28": (h["capture_record"]["value"], h["capture_record"]["abserr"]) == (ctx["R28"]["value"], ctx["R28"]["abserr"]),
+>                "context_R30": {k: c30["R30"][k] for k in ("value", "abserr", "regions", "ratio")},  # prompt 07b r31
+>                "R31_equals_R30": (h["capture_record"]["value"], h["capture_record"]["abserr"]) == (c30["R30"]["value"], c30["R30"]["abserr"]),  # prompt 07b r31
+90c99
+<         print(f"\n{b['key']} 2pt5 {blk}: replay reproduces capture {row['replay_reproduces_capture']}, capture reproduces R30's store {row['capture_reproduces_R30_store']}; "
+---
+>         print(f"\n{b['key']} 2pt5 {blk}: replay reproduces capture {row['replay_reproduces_capture']}, capture reproduces R31's store {row['capture_reproduces_R31_store']}; "
+94,96c103,105
+<         print(f"  R30: value {row['R30']['value']} abserr {row['R30']['abserr']} regions {row['R30']['regions']} converged {row['R30']['converged']}: "
+<               f"|v - ref| {row['R30']['abs_v_minus_ref']} = {row['R30']['ratio']} x abserr ({'honest' if honest else 'NOT honest'}); "
+<               f"reference {row['reference']} ({row['reference_repr']}), stated error {row['stated_error']} = {row['R30']['stated_error_over_abserr']} x abserr30")
+---
+>         print(f"  R31: value {row['R31']['value']} abserr {row['R31']['abserr']} regions {row['R31']['regions']} converged {row['R31']['converged']}: "
+>               f"|v - ref| {row['R31']['abs_v_minus_ref']} = {row['R31']['ratio']} x abserr ({'honest' if honest else 'NOT honest'}); "
+>               f"reference {row['reference']} ({row['reference_repr']}), stated error {row['stated_error']} = {row['R31']['stated_error_over_abserr']} x abserr31")  # prompt 07b r31
+98c107
+<               + f"; R30 equals R28 bit for bit {row['R30_equals_R28']}")
+---
+>               + f"; R30 {row['context_R30']['ratio']} x abserr (regions {row['context_R30']['regions']}); R31 equals R28 bit for bit {row['R31_equals_R28']}; R31 equals R30 {row['R31_equals_R30']}")  # prompt 07b r31
+100c109
+<           f"{sum(r['num_guarded_regions'] == 0 for r in out)} of 4 guard no leaf; {sum(r['R30']['honest'] for r in out)} of 4 honest")
+---
+>           f"{sum(r['num_guarded_regions'] == 0 for r in out)} of 4 guard no leaf; {sum(r['R31']['honest'] for r in out)} of 4 honest")  # prompt 07b r31

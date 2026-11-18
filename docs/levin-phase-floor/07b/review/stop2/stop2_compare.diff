@@ -1,0 +1,22 @@
+1c1
+< """Orchestrator's own reader, 07a Part C stop 2. Independent of the census agent's compare scripts.
+---
+> """Orchestrator's own reader, 07b Part C stop 2 (copied from 07a's, the before census path changed to 07a's). Independent of the census agent's compare scripts.
+4c4
+<                                     run_k0.py) against 07's census checkpoint lines for the same rows, unit record and
+---
+>                                     run_k0.py) against 07a's census checkpoint lines for the same rows, unit record and
+82c82
+<         run07 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07-census-20261108T171137")
+---
+>         run07 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744")
+85,86c85,86
+<             print(f"\n##### row {k}: mine {a['unit']} status {a['status']}, 07's {b['unit']} status {b['status']}")
+<             compare(a, b, "unit record (mine first, 07 second)")
+---
+>             print(f"\n##### row {k}: mine {a['unit']} status {a['status']}, 07a's {b['unit']} status {b['status']}")
+>             compare(a, b, "unit record (mine first, 07a second)")
+89c89
+<             compare(ra, rb, "region record (mine first, 07 second)")
+---
+>             compare(ra, rb, "region record (mine first, 07a second)")

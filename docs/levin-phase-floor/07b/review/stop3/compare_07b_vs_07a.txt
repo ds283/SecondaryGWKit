@@ -1,0 +1,164 @@
+{
+ "script_sha256": "47de0084fc85ed3166739e2e31dfdf6be5e746f12e89969289b0ae196c834788",
+ "indexb_sha256": "396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253",
+ "indexa_sha256": "461df2ec66969a113e9f6d590f05a4d5b300d7c1e0cb62d05c7385d23e8de56b",
+ "totals": {
+  "units": 18560,
+  "calls_mismatch_units": 0,
+  "units_all_untouched": 5688,
+  "units_all_untouched_totals_hex_equal": 5688,
+  "calls": 289482
+ },
+ "units_not_done": [],
+ "unit_wall_s_sum": {
+  "('1e-7', '07a')": 24951.73558005877,
+  "('1e-7', '07b')": 52154.37729562214,
+  "('1e-8', '07a')": 28512.88910614187,
+  "('1e-8', '07b')": 54667.237314134836
+ },
+ "class_counts_by_rtol_kind": {
+  "('1e-7', 'analytic', 'range')": 93932,
+  "('1e-7', 'analytic', 'untouched')": 13484,
+  "('1e-7', 'group', 'edge')": 340,
+  "('1e-7', 'group', 'range')": 20711,
+  "('1e-7', 'group', 'untouched')": 16274,
+  "('1e-8', 'analytic', 'range')": 93665,
+  "('1e-8', 'analytic', 'untouched')": 13751,
+  "('1e-8', 'group', 'edge')": 334,
+  "('1e-8', 'group', 'range')": 20340,
+  "('1e-8', 'group', 'untouched')": 16651
+ },
+ "five_equal_by_class": {
+  "('edge', False)": 674,
+  "('range', False)": 228595,
+  "('range', True)": 53,
+  "('untouched', True)": 60160
+ },
+ "untouched_five_differ": 0,
+ "untouched_five_differ_list": [],
+ "untouched_with_other_record_differences": 0,
+ "untouched_other_examples": [],
+ "location_only_by_class": {},
+ "converged_07b_07a_by_class": {
+  "('edge', (False, False))": 4,
+  "('edge', (False, True))": 4,
+  "('edge', (True, True))": 666,
+  "('range', (False, False))": 138,
+  "('range', (False, True))": 194,
+  "('range', (True, False))": 5,
+  "('range', (True, True))": 228311,
+  "('untouched', (False, False))": 31,
+  "('untouched', (True, True))": 60129
+ },
+ "regions_by_class": {
+  "('edge', '07a')": 23290,
+  "('edge', '07b')": 87640,
+  "('range', '07a')": 1927252,
+  "('range', '07b')": 4993407,
+  "('untouched', '07a')": 958592,
+  "('untouched', '07b')": 958592
+ },
+ "refusals": {
+  "('1e-7', 'analytic', 'calls_edge')": 0,
+  "('1e-7', 'analytic', 'calls_range')": 93932,
+  "('1e-7', 'analytic', 'edge')": 0,
+  "('1e-7', 'analytic', 'range')": 351789,
+  "('1e-7', 'group', 'calls_edge')": 340,
+  "('1e-7', 'group', 'calls_range')": 21049,
+  "('1e-7', 'group', 'edge')": 438,
+  "('1e-7', 'group', 'range')": 53794,
+  "('1e-8', 'analytic', 'calls_edge')": 0,
+  "('1e-8', 'analytic', 'calls_range')": 93665,
+  "('1e-8', 'analytic', 'edge')": 0,
+  "('1e-8', 'analytic', 'range')": 323256,
+  "('1e-8', 'group', 'calls_edge')": 334,
+  "('1e-8', 'group', 'calls_range')": 20667,
+  "('1e-8', 'group', 'edge')": 430,
+  "('1e-8', 'group', 'range')": 53162
+ },
+ "max_depth_vs_07a_by_class": {
+  "('edge', 'deeper')": 653,
+  "('edge', 'same')": 21,
+  "('range', 'deeper')": 132651,
+  "('range', 'same')": 95996,
+  "('range', 'shallower')": 1,
+  "('untouched', 'same')": 60160
+ },
+ "only_h_07b_names": {
+  "instrument_07b": 18560,
+  "rate_rule_07b": 3188732,
+  "other_calls": 2910091,
+  "calls": 931275
+ },
+ "all_untouched_units_with_unit_other": 1,
+ "examples": [
+  [
+   "0-33600@1e-7",
+   {
+    "data:analytic_06h.parent_counterfactual.value.repr": 1,
+    "data:analytic_06h.parent_counterfactual.value.hex": 1
+   }
+  ]
+ ]
+}
+unit_other paths (units):
+   12534 data:analytic_06h.parent_counterfactual.abserr.hex
+   12534 data:analytic_06h.parent_counterfactual.abserr.repr
+   12526 data:route_07a_post_unit.n_solves
+   12524 data:analytic_06h.h.abserr.repr
+   12524 data:analytic_06h.h.abserr.hex
+   11962 data:scan_07[i].n_regions
+   11690 data:analytic_06h.h.value.repr
+   11690 data:result.analytic_rad.hex
+   11690 data:analytic_06h.h.value.hex
+   11690 data:result.analytic_rad.repr
+   11690 pickle:result_full.analytic_rad.repr
+   11690 pickle:result_full.analytic_rad.hex
+   11664 data:analytic_06h.parent_counterfactual.value.repr
+   11664 data:analytic_06h.parent_counterfactual.value.hex
+   11235 data:result.WKB_Levin_data.evaluations
+   11235 data:result.total_abserr.repr
+   11235 data:result.WKB_Levin_data.num_regions
+   11235 data:result.total_abserr.hex
+   11235 pickle:result_full.WKB_Levin_subintervals[i].groups[i].abserr
+   11235 pickle:result_full.total_abserr.hex
+   11235 pickle:result_full.WKB_Levin_data.evaluations
+   11235 pickle:result_full.WKB_Levin_subintervals[i].abserr
+   11235 pickle:result_full.WKB_Levin_data.num_regions
+   11235 pickle:result_full.WKB_Levin_subintervals[i].groups[i].evaluations
+   11235 pickle:result_full.WKB_Levin_subintervals[i].groups[i].regions
+   11235 pickle:result_full.total_abserr.repr
+   11214 pickle:result_full.WKB_Levin_subintervals[i].groups[i].value
+   11189 pickle:result_full.WKB_Levin_subintervals[i].value
+   11155 data:result.total.repr
+   11155 data:result.WKB_Levin.hex
+   11155 data:result.WKB_Levin.repr
+   11155 data:result.total.hex
+   11155 pickle:result_full.total.hex
+   11155 pickle:result_full.WKB_Levin.hex
+   11155 pickle:result_full.WKB_Levin.repr
+   11155 pickle:result_full.total.repr
+   11131 data:dispatcher_flags.G exact_remainder=True
+   11131 data:dispatcher_counts.G
+   10995 data:dispatcher_counts.T
+   10995 data:dispatcher_flags.T exact_remainder=True
+    9902 data:result.WKB_Levin_data.num_simple_regions
+    9902 pickle:result_full.WKB_Levin_subintervals[i].groups[i].simple_regions
+    9902 pickle:result_full.WKB_Levin_data.num_simple_regions
+    7797 pickle:result_full.WKB_Levin_subintervals[i].groups[i].phase_limited
+    7357 data:deep_lines_06e.n_calls
+    6323 data:w3.n_regions
+    5578 data:result.WKB_Levin_data.max_depth
+    5578 pickle:result_full.WKB_Levin_data.max_depth
+    3960 data:deep_lines_06e.lines
+    3960 pickle:deep_lines_06e
+    3288 data:w3.min_ratio
+    2979 pickle:result_full.WKB_Levin_subintervals[i].phase_limited
+    2441 data:result.total_phase_limited
+    2441 pickle:result_full.total_phase_limited
+    2224 data:route_07a_post_unit.changed[i].returned
+    2224 data:route_07a_post_unit.changed[i].builds[i][i].hex
+    2224 data:route_07a_post_unit.changed[i].theta_end_max.hex
+    2224 data:route_07a_post_unit.changed[i].builds[i][i].repr
+    2224 data:route_07a_post_unit.changed[i].est_over_V
+    2224 data:route_07a_post_unit.changed[i].made

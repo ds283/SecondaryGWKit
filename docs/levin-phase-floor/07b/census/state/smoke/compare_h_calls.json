@@ -1,0 +1,199 @@
+{
+ "header": [
+  "# levin-phase-floor 07b: h against 07a's census (levin-phase-floor-07a-census-20261112T132744), mode calls",
+  "# written 2026-11-16T20:42:54Z on mps026298.phys.susx.ac.uk",
+  "# script compare_07b.py sha256 da20d1da743d9abba51a6cd12a3ec2fccfedea33c7e678617abec2d7339195a1",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/smoke/h/units.jsonl sha256 67418a459c95b9b188e2568168a184971df7a40288bb0f7cd54c3e19b7c63a77",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/index_07a.json sha256 41fd366f2867f81447c4af2b240e75ba7b11a6a34ebb083f797ee2d2003dc80d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "calls",
+ "run_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/smoke/h",
+ "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/smoke/h/units.jsonl",
+ "source_sha256": "67418a459c95b9b188e2568168a184971df7a40288bb0f7cd54c3e19b7c63a77",
+ "run07": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744",
+ "checkpoint07_sha256": "461df2ec66969a113e9f6d590f05a4d5b300d7c1e0cb62d05c7385d23e8de56b",
+ "excluded_07": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "set_aside_new_07a": [
+  "instrument_07b",
+  "num_edge_rule_refusals",
+  "num_range_rule_refusals",
+  "rate_rule_07b"
+ ],
+ "records_skipped": [],
+ "n_units": 1,
+ "statuses": {
+  "done": 1
+ },
+ "unit_evidence_true_false": {
+  "lq_file_is_expected": [
+   1,
+   0
+  ],
+  "all_in_tree": [
+   1,
+   0
+  ],
+  "no_foreign": [
+   1,
+   0
+  ],
+  "variant_root_as_expected": [
+   1,
+   0
+  ]
+ },
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "tree-1e-8-k3_1": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  }
+ },
+ "new_keys_in_07_records": 0,
+ "phase_span_keys": 0,
+ "summary": {
+  "by_class": {
+   "untouched": 1,
+   "acted_both": 1,
+   "acted_range": 19
+  },
+  "by_class_rtol": {
+   "1e-8|group|untouched": 1,
+   "1e-8|group|acted_both": 1,
+   "1e-8|group|acted_range": 3,
+   "1e-8|analytic|acted_range": 16
+  },
+  "equal_by_class": {
+   "untouched": {
+    "equal": 1,
+    "differing": 0
+   },
+   "acted_both": {
+    "equal": 0,
+    "differing": 1
+   },
+   "acted_range": {
+    "equal": 0,
+    "differing": 19
+   }
+  },
+  "categories_by_class": {
+   "untouched": {
+    "none": 1
+   },
+   "acted_both": {
+    "call+harness": 1
+   },
+   "acted_range": {
+    "call+harness": 19
+   }
+  },
+  "units": {
+   "A": {
+    "n_all_w1": 0,
+    "n_totals_equal": 0,
+    "n_whole_equal": 0,
+    "whole_categories": {}
+   }
+  },
+  "u1_equal_by_class": {
+   "1e-8|group|untouched": {
+    "equal": 1,
+    "differing": 0
+   },
+   "1e-8|group|acted_both": {
+    "equal": 0,
+    "differing": 1
+   },
+   "1e-8|group|acted_range": {
+    "equal": 0,
+    "differing": 3
+   },
+   "1e-8|analytic|acted_range": {
+    "equal": 0,
+    "differing": 16
+   }
+  }
+ },
+ "problems": [],
+ "calls_jsonl": "state/smoke/compare_h_calls.calls.jsonl",
+ "calls_jsonl_sha256": "903834515cb8c2f86f7b3161951e25a36c22e44609126302c971e94337305a59",
+ "units": [
+  {
+   "unit": "h-1e-8-3-14501",
+   "unit_07": "h-1e-8-3-14501",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.255678d6ad810p-79",
+    "-0x1.255678c0ea5a8p-79"
+   ],
+   "total_abserr": [
+    "0x1.4cb39dc012d2ep-103",
+    "0x1.cc72d272f85b8p-103"
+   ],
+   "total_converged": [
+    true,
+    true
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false
+   },
+   "ok": true,
+   "normalised": {},
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1888,
+    "n_route_differs": 0,
+    "n_lu_differs": 0,
+    "n_partition": 0
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  }
+ ]
+}

@@ -1,0 +1,605 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/refs/refs_projection_r31.py",
+  "script_sha256": "5dc49f8a75fd3764a30e5ecd8d735fe8daf1e3423cf3657466b72cd6f4ad9180",
+  "host": "mps026298.phys.susx.ac.uk",
+  "utc": "2026-11-16T20:08:03Z",
+  "fits": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/refs_projection.json",
+  "fits_sha256": "0512daddfc3bb920cbb4d0d0515c8b735742c631bb69b76b56b2fd350af15a1b",
+  "refcap": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refcap.json",
+  "refcap_sha256": "297e7926f91372035d71815cdf5b9dc89e4f5ebf98492e1b4f0e1f32fce1c86b",
+  "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/tools/filon_reference.py",
+  "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ },
+ "calls": [
+  {
+   "key": [
+    100000.0,
+    1000000.0,
+    1000000.0,
+    144627.70674226896
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[0]",
+   "label": "G+q+r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G+q+r-h-3-20363-1.pkl",
+   "sha256": "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249",
+   "in_the_seven": false,
+   "route": "B",
+   "features": {
+    "n_seg": 1028,
+    "span_q": 3338943.791341339,
+    "span_f": 3338943.791341339,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0,
+    "n_steep": 0
+   },
+   "projection": {
+    "qawo_r1": {
+     "fit_s": 7.077153444225182,
+     "with_margin_s": 7.777373654473934
+    },
+    "qawo_r2": {
+     "fit_s": 13.68322700568022,
+     "with_margin_s": 16.660492263468747
+    },
+    "fcc_r1": {
+     "fit_s": 7.87172937763343,
+     "with_margin_s": 15.203428859525868
+    },
+    "fcc_r2": {
+     "fit_s": 39.17719463829095,
+     "with_margin_s": 61.17335158976316
+    },
+    "fccsplit_r1": {
+     "fit_s": 18.28126666666667,
+     "with_margin_s": 36.56253333333334
+    },
+    "fccsplit_r2": {
+     "fit_s": 73.12506666666668,
+     "with_margin_s": 146.25013333333337
+    }
+   },
+   "qawo": true,
+   "readings": [
+    [
+     "qawo",
+     1
+    ],
+    [
+     "qawo",
+     2
+    ],
+    [
+     "fccsplit",
+     1
+    ],
+    [
+     "fccsplit",
+     2
+    ]
+   ],
+   "total_with_margin_s": 207.2505325846094,
+   "e30_e31": [
+    "0x1.0dda08375211fp-86",
+    "0x1.74349fae30cb8p-87"
+   ]
+  },
+  {
+   "key": [
+    316227.7660168379,
+    100000.0,
+    316227.7660168379,
+    996.4201622779478
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-0-10244-6.pkl",
+   "sha256": "b37439f0e0a12c4d993c1873a753ee1748a72aef2ce044adcb010d10b37a78c5",
+   "in_the_seven": true,
+   "route": "B",
+   "features": {
+    "n_seg": 1246,
+    "span_q": 143356792.63182378,
+    "span_f": 143356792.63182378,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0,
+    "n_steep": 0
+   },
+   "projection": {
+    "qawo_r1": {
+     "fit_s": 16.462289446110162,
+     "with_margin_s": 18.091083829046294
+    },
+    "qawo_r2": {
+     "fit_s": 48.48897121246,
+     "with_margin_s": 59.03944511140476
+    },
+    "fcc_r1": {
+     "fit_s": 9.562547603895654,
+     "with_margin_s": 18.469068896695923
+    },
+    "fcc_r2": {
+     "fit_s": 47.48519894874565,
+     "with_margin_s": 74.14591058447948
+    },
+    "fccsplit_r1": {
+     "fit_s": 22.158033333333336,
+     "with_margin_s": 44.31606666666667
+    },
+    "fccsplit_r2": {
+     "fit_s": 88.63213333333334,
+     "with_margin_s": 177.26426666666669
+    }
+   },
+   "qawo": true,
+   "readings": [
+    [
+     "qawo",
+     1
+    ],
+    [
+     "qawo",
+     2
+    ],
+    [
+     "fccsplit",
+     1
+    ],
+    [
+     "fccsplit",
+     2
+    ]
+   ],
+   "total_with_margin_s": 298.7108622737844,
+   "e30_e31": [
+    "0x1.f684e5c9c0f4ep-98",
+    "0x1.c5e6e4cbd0cafp-93"
+   ]
+  },
+  {
+   "key": [
+    316227.7660168379,
+    100000.0,
+    316227.7660168379,
+    6944780.034414906
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-0-270-6.pkl",
+   "sha256": "9580193829b009451ccc1838495e2008ac6c055f45b1129484e1f5cedae88182",
+   "in_the_seven": true,
+   "route": "B",
+   "features": {
+    "n_seg": 478,
+    "span_q": 36985.6711463352,
+    "span_f": 36985.6711463352,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0,
+    "n_steep": 0
+   },
+   "projection": {
+    "qawo_r1": {
+     "fit_s": 3.2049645403650424,
+     "with_margin_s": 3.5220667428226435
+    },
+    "qawo_r2": {
+     "fit_s": 6.015348584648279,
+     "with_margin_s": 7.324198342612987
+    },
+    "fcc_r1": {
+     "fit_s": 3.6599668803006367,
+     "with_margin_s": 7.068846427949798
+    },
+    "fcc_r2": {
+     "fit_s": 18.216633304574977,
+     "with_margin_s": 28.444418346212835
+    },
+    "fccsplit_r1": {
+     "fit_s": 8.500433333333335,
+     "with_margin_s": 17.00086666666667
+    },
+    "fccsplit_r2": {
+     "fit_s": 34.00173333333334,
+     "with_margin_s": 68.00346666666668
+    }
+   },
+   "qawo": true,
+   "readings": [
+    [
+     "qawo",
+     1
+    ],
+    [
+     "qawo",
+     2
+    ],
+    [
+     "fccsplit",
+     1
+    ],
+    [
+     "fccsplit",
+     2
+    ]
+   ],
+   "total_with_margin_s": 95.85059841876898,
+   "e30_e31": [
+    "0x1.0892e337efb49p-82",
+    "0x1.eee194249bf88p-80"
+   ]
+  },
+  {
+   "key": [
+    1000000.0,
+    100000.0,
+    1000000.0,
+    329.64045755914753
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[2]",
+   "label": "G-q+r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q+r-h-1-216-5.pkl",
+   "sha256": "f540279cac44ea87181073c0e592ae9a45ee3f66b2251f4d9a5f84a50adb3ac6",
+   "in_the_seven": true,
+   "route": "B",
+   "features": {
+    "n_seg": 1342,
+    "span_q": 471371763.9906525,
+    "span_f": 471371763.9906525,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0,
+    "n_steep": 0
+   },
+   "projection": {
+    "qawo_r1": {
+     "fit_s": 35.66979045223668,
+     "with_margin_s": 39.19899302878596
+    },
+    "qawo_r2": {
+     "fit_s": 124.81576417942513,
+     "with_margin_s": 151.97380505395455
+    },
+    "fcc_r1": {
+     "fit_s": 10.348276564960278,
+     "with_margin_s": 19.986622891420087
+    },
+    "fcc_r2": {
+     "fit_s": 51.14376965426698,
+     "with_margin_s": 79.8585971142628
+    },
+    "fccsplit_r1": {
+     "fit_s": 23.865233333333336,
+     "with_margin_s": 47.73046666666667
+    },
+    "fccsplit_r2": {
+     "fit_s": 95.46093333333334,
+     "with_margin_s": 190.9218666666667
+    }
+   },
+   "qawo": true,
+   "readings": [
+    [
+     "qawo",
+     1
+    ],
+    [
+     "qawo",
+     2
+    ],
+    [
+     "fccsplit",
+     1
+    ],
+    [
+     "fccsplit",
+     2
+    ]
+   ],
+   "total_with_margin_s": 429.8251314160739,
+   "e30_e31": [
+    "0x1.a951c3c91942ep-103",
+    "0x1.3091185063da9p-97"
+   ]
+  },
+  {
+   "key": [
+    1000000.0,
+    100000.0,
+    1000000.0,
+    36286.827639966534
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[2]",
+   "label": "G-q+r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q+r-h-1-20184-5.pkl",
+   "sha256": "9ae246a662c34b2b2964d34bb112920db6fb3a2310f91df28acee8d01e97965a",
+   "in_the_seven": true,
+   "route": "B",
+   "features": {
+    "n_seg": 934,
+    "span_q": 6142465.18008127,
+    "span_f": 6142465.18008127,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0,
+    "n_steep": 0
+   },
+   "projection": {
+    "qawo_r1": {
+     "fit_s": 6.60596742804106,
+     "with_margin_s": 7.259568051203151
+    },
+    "qawo_r2": {
+     "fit_s": 13.14400685952232,
+     "with_margin_s": 16.003945889602345
+    },
+    "fcc_r1": {
+     "fit_s": 7.152421167552107,
+     "with_margin_s": 13.814159656354647
+    },
+    "fcc_r2": {
+     "fit_s": 35.59484415580131,
+     "with_margin_s": 55.57967936268365
+    },
+    "fccsplit_r1": {
+     "fit_s": 16.609633333333335,
+     "with_margin_s": 33.21926666666667
+    },
+    "fccsplit_r2": {
+     "fit_s": 66.43853333333334,
+     "with_margin_s": 132.87706666666668
+    }
+   },
+   "qawo": true,
+   "readings": [
+    [
+     "qawo",
+     1
+    ],
+    [
+     "qawo",
+     2
+    ],
+    [
+     "fccsplit",
+     1
+    ],
+    [
+     "fccsplit",
+     2
+    ]
+   ],
+   "total_with_margin_s": 189.35984727413884,
+   "e30_e31": [
+    "0x1.8c9f0f06a83e2p-92",
+    "0x1.f60513a560f89p-92"
+   ]
+  },
+  {
+   "key": [
+    1000000.0,
+    316227.7660168379,
+    1000000.0,
+    191807016.520263
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-10504-6.pkl",
+   "sha256": "7fa339ed0b1723a568b1c02523a6a2f31f28efe4b4a2144d05b267ace347b6f9",
+   "in_the_seven": true,
+   "route": "B",
+   "features": {
+    "n_seg": 290,
+    "span_q": 4102.168466562529,
+    "span_f": 4102.168466562529,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0,
+    "n_steep": 0
+   },
+   "projection": {
+    "qawo_r1": {
+     "fit_s": 1.9433967671130405,
+     "with_margin_s": 2.135678268932819
+    },
+    "qawo_r2": {
+     "fit_s": 3.645279853756099,
+     "with_margin_s": 4.4384381532565875
+    },
+    "fcc_r1": {
+     "fit_s": 2.2204791657086127,
+     "with_margin_s": 4.288625206785193
+    },
+    "fcc_r2": {
+     "fit_s": 11.051932339595696,
+     "with_margin_s": 17.25707389205381
+    },
+    "fccsplit_r1": {
+     "fit_s": 5.157166666666667,
+     "with_margin_s": 10.314333333333334
+    },
+    "fccsplit_r2": {
+     "fit_s": 20.628666666666668,
+     "with_margin_s": 41.257333333333335
+    }
+   },
+   "qawo": true,
+   "readings": [
+    [
+     "qawo",
+     1
+    ],
+    [
+     "qawo",
+     2
+    ],
+    [
+     "fccsplit",
+     1
+    ],
+    [
+     "fccsplit",
+     2
+    ]
+   ],
+   "total_with_margin_s": 58.14578308885608,
+   "e30_e31": [
+    "0x1.33b1cbc4f1280p-82",
+    "0x1.1dbe78353b57ep-80"
+   ]
+  },
+  {
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    36286.827639966534
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-209-4.pkl",
+   "sha256": "d6ea2d967ab218df05f2fd5a2e13d3de845cbea8f0412f4c1f3b158c2465632f",
+   "in_the_seven": true,
+   "route": "B",
+   "features": {
+    "n_seg": 1148,
+    "span_q": 26583458.304086376,
+    "span_f": 26583458.304086376,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0,
+    "n_steep": 0
+   },
+   "projection": {
+    "qawo_r1": {
+     "fit_s": 9.19676180585078,
+     "with_margin_s": 10.106698058618514
+    },
+    "qawo_r2": {
+     "fit_s": 20.51457539264645,
+     "with_margin_s": 24.978239743859444
+    },
+    "fcc_r1": {
+     "fit_s": 8.794139052282114,
+     "with_margin_s": 16.98496747640294
+    },
+    "fcc_r2": {
+     "fit_s": 43.750408020192616,
+     "with_margin_s": 68.31420975199232
+    },
+    "fccsplit_r1": {
+     "fit_s": 20.41526666666667,
+     "with_margin_s": 40.83053333333334
+    },
+    "fccsplit_r2": {
+     "fit_s": 81.66106666666668,
+     "with_margin_s": 163.32213333333337
+    }
+   },
+   "qawo": true,
+   "readings": [
+    [
+     "qawo",
+     1
+    ],
+    [
+     "qawo",
+     2
+    ],
+    [
+     "fccsplit",
+     1
+    ],
+    [
+     "fccsplit",
+     2
+    ]
+   ],
+   "total_with_margin_s": 239.23760446914466,
+   "e30_e31": [
+    "0x1.566c2ec4ce7bcp-96",
+    "0x1.3a9704341b92ap-95"
+   ]
+  },
+  {
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    331553.02818648185
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-171-4.pkl",
+   "sha256": "fac8529e22c1a96fc34d47fcae0b975a15d17540c10a1565dcd52fe016d81f0e",
+   "in_the_seven": true,
+   "route": "B",
+   "features": {
+    "n_seg": 956,
+    "span_q": 3000265.1962285135,
+    "span_f": 3000265.1962285135,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0,
+    "n_steep": 0
+   },
+   "projection": {
+    "qawo_r1": {
+     "fit_s": 6.575544815466993,
+     "with_margin_s": 7.226135396761148
+    },
+    "qawo_r2": {
+     "fit_s": 12.700862730621557,
+     "with_margin_s": 15.46438023538292
+    },
+    "fcc_r1": {
+     "fit_s": 7.320385834512706,
+     "with_margin_s": 14.13856598977171
+    },
+    "fcc_r2": {
+     "fit_s": 36.43326660914995,
+     "with_margin_s": 56.88883669242567
+    },
+    "fccsplit_r1": {
+     "fit_s": 17.00086666666667,
+     "with_margin_s": 34.00173333333334
+    },
+    "fccsplit_r2": {
+     "fit_s": 68.00346666666668,
+     "with_margin_s": 136.00693333333336
+    }
+   },
+   "qawo": true,
+   "readings": [
+    [
+     "qawo",
+     1
+    ],
+    [
+     "qawo",
+     2
+    ],
+    [
+     "fccsplit",
+     1
+    ],
+    [
+     "fccsplit",
+     2
+    ]
+   ],
+   "total_with_margin_s": 192.69918229881077,
+   "e30_e31": [
+    "0x1.8ced1089ffe17p-93",
+    "0x1.ec4e0570f5bcep-92"
+   ]
+  }
+ ],
+ "total_seven_with_margin_s": 1503.8290092395775,
+ "total_eight_with_margin_s": 1711.0795418241871,
+ "total_seven_x1_5_s": 2255.7435138593664,
+ "total_eight_x1_5_s": 2566.619312736281,
+ "ray_initialized": false
+}

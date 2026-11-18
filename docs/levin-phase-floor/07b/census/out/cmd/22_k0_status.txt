@@ -1,0 +1,35 @@
+$ sh -c R=/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-k0-20261116T204402\;\ cat\ \$R/status.json\;\ echo\;\ ls\ -la\ \$R\;\ shasum\ -a\ 256\ \$R/\*
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T21:01:02Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-16T21:00:33+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 24239,
+  "stage": "k0 finished: all exit 0",
+  "state": "done",
+  "units_done": 11,
+  "units_total": 11
+}
+
+total 16
+drwxr-xr-x   7 ds283 staff  224 Nov 16 21:00 .
+drwxr-xr-x 121 ds283 staff 3872 Nov 16 20:44 ..
+-rw-r--r--   1 ds283 staff 3421 Nov 16 21:00 checkpoint.jsonl
+-rw-r--r--   1 ds283 staff 4633 Nov 16 20:44 manifest.json
+-rw-r--r--   1 ds283 staff  277 Nov 16 21:00 status.json
+-rw-r--r--   1 ds283 staff    0 Nov 16 20:44 stderr.log
+-rw-r--r--   1 ds283 staff    0 Nov 16 20:44 stdout.log
+3f2f055f4083cabde88cada2aa6f435f23445a18c91fe9d5b49afb710acfd0d3  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-k0-20261116T204402/checkpoint.jsonl
+97c3b04a2b0299e3c533e843c72f070af40e615def117d6410f67f0ed66c1f73  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-k0-20261116T204402/manifest.json
+19c84bff8ec8d066dbf2fde7b83189cbf43dffe03ab24f18bedc713375f581ea  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-k0-20261116T204402/status.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-k0-20261116T204402/stderr.log
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-k0-20261116T204402/stdout.log
+# ----
+# end 2026-11-16T21:01:02Z
+# exit 0

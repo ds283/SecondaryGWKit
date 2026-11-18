@@ -1,0 +1,72 @@
+{
+ "header": [
+  "# levin-phase-floor 07b: planned stop 3, cost against 07a's census",
+  "# written 2026-11-17T13:36:42Z on mps026298.phys.susx.ac.uk",
+  "# script stop3_cost_07b.py sha256 28cf4134818b84eade45f380ee1b90f25ceb257e8b15d49310733ee240faa1cb",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input out/stop3/compare_census_calls.calls.jsonl sha256 a327106d0b0890fd9dd4b8a85dc7e64aec8340579711ff006fe86230bf25ad8d",
+  "# input out/stop3/u8.json sha256 d926dec37243e3a2552bedc809bc54a0bcad1fad20eecb8c30412c50440fd0db",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/checkpoint.jsonl sha256 396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253"
+ ],
+ "07b": {
+  "created": "2026-11-17T01:02:00+00:00",
+  "last_heartbeat": "2026-11-17T13:32:16+00:00",
+  "wall_s": 45016.0,
+  "n_records": 18560,
+  "n_over_budget": 0,
+  "unit_wall_sum_s": {
+   "1e-7": 52154.37729562214,
+   "1e-8": 54667.237314134836
+  }
+ },
+ "07a": {
+  "created": "2026-11-12T13:27:44+00:00",
+  "last_heartbeat": "2026-11-12T19:55:48+00:00",
+  "wall_s": 23284.0,
+  "n_records": 18560,
+  "n_over_budget": 0,
+  "unit_wall_sum_s": {
+   "1e-7": 24951.73558005877,
+   "1e-8": 28512.88910614187
+  }
+ },
+ "regions": {
+  "1e-7|analytic": {
+   "07b": 1081914,
+   "07a": 409957,
+   "ratio": 2.6390914169046997
+  },
+  "1e-7|group": {
+   "07b": 1906148,
+   "07a": 952395,
+   "ratio": 2.001425878968285
+  },
+  "1e-8|analytic": {
+   "07b": 1064456,
+   "07a": 479954,
+   "ratio": 2.217829208632494
+  },
+  "1e-8|group": {
+   "07b": 1987121,
+   "07a": 1066828,
+   "ratio": 1.86264421256285
+  }
+ },
+ "regions_total": {
+  "07b": 6039639,
+  "07a": 2909134,
+  "ratio": 2.07609515409053
+ },
+ "wall_ratio": 1.9333447861192234,
+ "u8_shared_census_calls": {
+  "h-1e-8-0-14299|group|1": [
+   "R1-x019-8",
+   "v12"
+  ],
+  "h-1e-7-3-14592|group|1": [
+   "R1-x317-7",
+   "v07"
+  ]
+ }
+}

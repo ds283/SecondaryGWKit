@@ -3899,3 +3899,263 @@ The board's Decisions **07a Part C**:
 - `[07a-trust-check-auxiliary-route-moves-the-declared-error]` is opened;
 - `[07a-levin-leaf-beside-a-window-understates-its-error]` stands, W4 and W6 reproduced;
 - R29 and R30 are kept, with 07's and 07a's census run directories and A3 v2's scratch copy.
+
+## 7b. The Levin leaf beside a window, and how honest the census is
+
+*Prompt 07b: Part A's measurement and its extension on the Mac Studio at 07a's code (`436ed5d4`), 2026-11-13 to
+2026-11-16; the code on the laptop (`5e19c4b6`, variant (h), resumed at its stop on prompt §10); R31, the census and
+the references for R31's seven records on the Mac Studio, 2026-11-16 to 2026-11-18, through an orchestrator session
+there, from the worktree `SecondaryGWKit-lpf07b-0a103b5` at Part C's dispatch SHA `0a103b5a`. The records are under
+[`07b/`](07b/). What stays on the Mac Studio is in [`07b/KEPT_ON_MAC_STUDIO.md`](07b/KEPT_ON_MAC_STUDIO.md).*
+
+### 7b.1 Part A and the code
+
+**Part A** ([`07b/measurement/`](07b/measurement/), its log [`07b/measurement/log.md`](07b/measurement/log.md))
+replayed 187 census calls at 07a's code: V4's 25, R1 (30 class-(c) rows, both rtols), R2 (30 calls drawn at random
+from the census, both rtols), R3 (targeted calls for W7, auxiliary routes, own route changes and the pairs), item 3 and
+the pairs. Every replay reproduces 07a's census, 187 of 187. References were read for each by `tools.filon_reference`.
+- **The mechanism:** a trusted Levin leaf carries an error common to itself, its halves and its quarters, which the
+  trust check cannot see. Beside a window (v08, v12, v17) the depth-0 leaf's first spacing is 285–1010 rate lengths
+  at the edge. Away from windows the leaf spans a wide range of $|\theta'|$: every dishonest scored leaf spans an
+  end-to-end ratio of at least 49.
+- **Honesty at 07a's code:** R1 9 of 30 rows converged and dishonest at both rtols (1.19–10.8); R2 none in 30
+  (largest 0.805).
+- **The extension (§2.7)** scored the candidate fixes against the tree's 32 converged-and-dishonest calls on the 187.
+  Three leave none dishonest; the user chose **(h)** (3 unconverged, 1.89× the regions), and the chase it leaves was
+  opened as `[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]`.
+
+**The code** ([`logs/07b-levin-leaf-beside-a-window.md`](../../prompts/levin-phase-floor/logs/07b-levin-leaf-beside-a-window.md),
+[`07b/code/`](07b/code/)): `_leaf_rate_rule` in `AdaptiveLevin/levin_quadrature.py`, applied after the trust test to a
+non-direct Levin leaf.
+- **The edge rule:** at a window edge, refused if $|\theta'|$ at the edge node and its grid neighbour differ by more
+  than `_LEVIN_EDGE_RATE_RATIO_MAX = 2.0`.
+- **The range rule:** touching no window, refused if $|\theta'|$ ranges more than `_LEVIN_LEAF_RATE_RANGE_MAX = 10.0`
+  over its nodes.
+- `converged` is unchanged; the result gains `num_edge_rule_refusals` and `num_range_rule_refusals`.
+- Equal to (h) bit for bit on 22 test calls, the stop's five rungs and 4,320 LiouvilleGreen draw calls. 13 new tests;
+  breakages (i)–(vi) caught. The seven roots 129, 781, 39, 156 (1 skipped), 280, 127 and 64.
+- **The LiouvilleGreen draws:** no test newly failing; 509 untouched calls bit-identical; the range rule acts in 3,811
+  of 4,320 calls and the edge rule in none; no `converged` change; regions 1.92×.
+
+### 7b.2 Rehearsal R31 against R30 (prompt 07b §5, Mac Studio, 2026-11-16)
+
+Records: [`07b/rehearsal/`](07b/rehearsal/). Log: [`07b/rehearsal/log.md`](07b/rehearsal/log.md).
+
+**The tree.** `SecondaryGWKit-lpf07b-0a103b5`, detached at Part C's dispatch SHA `0a103b5a`. Its code is the code commit
+`5e19c4b6`, variant (h), whose parent is `7b82a0cd`. The main checkout stayed at `28ebaf07`, and nothing was written in
+either tree.
+
+**R31.** Run `levin-phase-floor-07b-r31-07b-20261116T191849`, on host mps026298.
+- Launched 19:18:48Z: driver pid 10624, `sh` pid 10620, Ray address `local`, `/tmp/ray-sgk`, 6 cpus.
+- Finished `done`, exit 0, at 19:32:27Z: about 13.6 min, against R30's 9.7. `QuadSourceIntegral`'s stage took 1.52×.
+- Fingerprint `1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7`, taken at `0a103b5a` with `git_dirty`
+  false.
+  - Re-derived read-only by `runregistrykit store fingerprint`.
+  - Its `classes` equal R30's.
+- Store primary `5981563b…`; see [`KEPT_ON_MAC_STUDIO.txt`](07b/rehearsal/KEPT_ON_MAC_STUDIO.txt).
+- Records: [`out/r31_end_check.txt`](07b/rehearsal/out/r31_end_check.txt),
+  [`out/r31_status.json`](07b/rehearsal/out/r31_status.json) and
+  [`out/r31_fingerprint_own.txt`](07b/rehearsal/out/r31_fingerprint_own.txt).
+
+| Check (prompt 07b §5) | Measured | Verdict |
+|---|---|---|
+| S0′: `git diff --stat 1ec734d7 7b82a0cd -- . ':!docs' ':!prompts'` lists only `CLAUDE.md` and 89c368f2's four files, each AST-equal with docstrings removed ([`out/s0prime.json`](07b/rehearsal/out/s0prime.json), [`out/00-gate.txt`](07b/rehearsal/out/00-gate.txt)) | those five; the four AST-equal | **holds** |
+| R31 gives `1b332ffa…` | `1b332ffa…` twice; `classes` equal R30's | **holds** |
+| Outside `QuadSourceIntegral`: every value table identical; every other difference one of the four volatile kinds; no row in one store only ([`out/classify_non_qsi_r30_r31_labels_normalised.txt`](07b/rehearsal/out/classify_non_qsi_r30_r31_labels_normalised.txt)) | 360,462 value-table rows identical; 0 unclassified; differences are timing, `label` (job-name prefix normalised in a copy), `parents_digest` 291 and `rho_reuse` 23 | **holds** |
+| Inside it, every moved row tabulated, with the `total_converged` changes each way ([`out/qsi_tabulation_r30_r31.txt`](07b/rehearsal/out/qsi_tabulation_r30_r31.txt), [`out/qsi_rows_r30_r31.csv`](07b/rehearsal/out/qsi_rows_r30_r31.csv), `out/qsi_records_r30_r31.csv` (kept on the Mac Studio), [`out/qsi_summary_r30_r31.txt`](07b/rehearsal/out/qsi_summary_r30_r31.txt)) | 569 of 864 rows moved: `total` in 379, `total_abserr` in 386, `analytic_rad` in 548. Largest \|Δtotal\| is 0.278 of R30's abserr. Regions 114,245 → 152,117. `total_converged`: 0 up, 1 down | tabulated |
+| S3: \|t31 − t30\| ≤ e30 + e31 on every row with finite abserr in both, evaluated exactly ([`out/s3_scores.txt`](07b/rehearsal/out/s3_scores.txt)) | 864 scored; 0 violations; largest 0.128 | **holds** |
+| S1: V1's twelve locate z ≈ 10211 and are honest against 06g's references ([`out/s1_scores.txt`](07b/rehearsal/out/s1_scores.txt)) | 12 of 12 locate (within 8.5e-6; spacing ≥ 31); 12 of 12 honest, largest 0.0670 (w06); 6 equal R30, 6 moved (range refusals) and more accurate | **holds** |
+| S2: P1's two rows locate within one spacing and are honest against `p1_references` ([`out/s2_scores.txt`](07b/rehearsal/out/s2_scores.txt)) | \|x − x_s\| 7.1e-9 and 5.6e-9 against 4.1e-3; ratios 0.0202 (= R30) and 0.111 (R30 0.263) | **holds** |
+| S4: R29's four guarded 2pt5 J4/Y4 blocks each locate their root, guard no leaf, and are honest against R29's block references ([`out/block_scores.txt`](07b/rehearsal/out/block_scores.txt)) | 4 of 4 locate one root at the reference root, bit for bit; 0 guarded; ratios 4.37e-5, 5.81e-4, 2.06e-4 and 6.17e-4; each equal to R30 and R28 bit for bit | **holds** |
+| The readers on R31: exit 0, store byte-identical ([`out/readers_check.txt`](07b/rehearsal/out/readers_check.txt)) | 6 of 6 exit 0; R31 identical before and after | **holds** |
+| The lock released; `ray-processes` lists nothing ([`state/lock.log`](07b/rehearsal/state/lock.log)) | released 20:04:53Z; free; nothing listed | **holds** |
+| R30 and R31 kept; R29 and R30 unchanged ([`state/stores_sha256_final.txt`](07b/rehearsal/state/stores_sha256_final.txt)) | R29 and R30 equal to their KEPT hashes; R31 equal to its post-build hashes | **holds** |
+
+**The replay behind S1, S2 and S4, and the refusals** ([`out/cmd/r31-replay/`](07b/rehearsal/out/cmd/r31-replay/),
+[`out/replay_calls.checks.json`](07b/rehearsal/out/replay_calls.checks.json),
+[`out/blocks.json`](07b/rehearsal/out/blocks.json)).
+- R30's capture harness was run at the tree, Ray-free, under the lock, as the registered run
+  `levin-phase-floor-07b-r31-replay-20261116T195034`.
+- 208 rows: the 202 located rows, P1, the w rows, the block rows, and the 8 records of interest.
+- **452 of 452 records reproduce R31 bit for bit.**
+- **The refusals over the 4,295 replayed calls:**
+  - range rule: 591 in 373 of 967 group calls, and 6,733 in 2,667 of 3,328 analytic calls;
+  - edge rule: none.
+- No row is beyond S3's bound, so §9.5's addition names none.
+
+**Which store understates** (the user's word at stop 1; descriptive, not scored against any rule;
+[`out/refs/understates.txt`](07b/rehearsal/out/refs/understates.txt)).
+- **The records:** the 7 group records whose \|v31 − v30\| exceeds e30 + e31.
+- **The captures** were made from R31 ([`out/refcap.json`](07b/rehearsal/out/refcap.json)). Each reproduces R31 at the tree
+  and R30 at 07a's module bit for bit ([`out/refs/refcap_replay_h.json`](07b/rehearsal/out/refs/refcap_replay_h.json),
+  [`out/refs/refcap_replay_a07.json`](07b/rehearsal/out/refs/refcap_replay_a07.json)).
+- **The readings:** read by `tools/filon_reference.py` (`d37e633b`), four readings each (run
+  `levin-phase-floor-07b-r31-refs-20261116T201120`, 15 min).
+- **The rule** was fixed in [`state/refs_plan_r31.md`](07b/rehearsal/state/refs_plan_r31.md) before any reading.
+
+| Record (k, q, r; z) | label | ref (FCC r2) | R30 v / e → \|v−ref\|/e | R31 v / e → \|v−ref\|/e | s / min(e) | answer |
+|---|---|---|---|---|---|---|
+| (1e6, 1e5, 1e6; 329.64) | G−q+r | `0x1.5632c898e5fb4p-82` | `0x1.5632cafb0fb4cp-82` / `0x1.494e3de357011p-111` → **59.29** | `0x1.5632c89648947p-82` / `0x1.d79fe909f16f2p-106` → 0.0055 | 5.9e-4 | R30 understates |
+| (3.162e5, 1e5, 3.162e5; 996.42) | G−q−r | `0x1.23787817e63bap-78` | `0x1.23787936ea1b6p-78` / `0x1.01f48d18f2a15p-107` → **35.60** | `0x1.2378781644174p-78` / `0x1.d1ff6e16c79edp-103` → 0.0070 | 7.7e-5 | R30 understates |
+| (3.162e5, 1e5, 3.162e5; 6.945e6) | G−q−r | `0x1.713988d6e71e3p-78` | `0x1.71398a46846f0p-78` / `0x1.3f94350ebc856p-105` → **9.20** | `0x1.7139887db5cfep-78` / `0x1.2ae23c1b2f3d1p-102` → 0.298 | 4.4e-5 | R30 understates |
+| (1e6, 3.162e5, 1e6; 1.918e8) | G−q−r | `0x1.1fa14d5bf27f8p-83` | `0x1.1fa14e8a6665dp-83` / `0x1.ae9ef5b803440p-110` → **5.62** | `0x1.1fa14d5ef3244p-83` / `0x1.8fe6aae4f450bp-108` → 0.0150 | 3.5e-5 | R30 understates |
+| (1e6, 1e6, 1e6; 36286.8) | G−q−r | `-0x1.2842349c30c56p-88` | `-0x1.28423f2458f0ep-88` / `0x1.35355dc8dcb99p-111` → **4.36** | `-0x1.284234a1dbe00p-88` / `0x1.1c1352bde5bcfp-110` → 0.0050 | 2.2e-5 | R30 understates |
+| (1e6, 1e6, 1e6; 331553) | G−q−r | `-0x1.96e8eccadfe18p-87` | `-0x1.96e8e80d54444p-87` / `0x1.39d49df69c224p-111` → **3.87** | `-0x1.96e8ecc9c3340p-87` / `0x1.853df17bc4f6bp-110` → 0.0014 | 2.5e-5 | R30 understates |
+| (1e6, 1e5, 1e6; 36286.8) | G−q+r | `-0x1.8f8a08c933cd0p-82` | `-0x1.8f8a0ad2a0c70p-82` / `0x1.66266a174d12dp-107` → **2.91** | `-0x1.8f8a08ca38b19p-82` / `0x1.c5533eaecb7e0p-107` → 0.0045 | 3.4e-5 | R30 understates |
+
+Values and abserrs are the calls' own, unscaled by (1 + z). Every R30 and R31 record here is converged.
+
+### 7b.3 The census: 07a's census re-run at the code (prompt 07b §6)
+
+This ran on the Mac Studio (mps026298), 2026-11-16 to 2026-11-18, by Part C's census agent. The log is
+[`07b/census/log.md`](07b/census/log.md).
+- **Tree and store:** the census ran from the worktree `SecondaryGWKit-lpf07b-0a103b5`, at Part C's dispatch SHA
+  `0a103b5a`, whose code is `5e19c4b6`'s (`AdaptiveLevin/levin_quadrature.py` `8956c7b6…`).
+  - Gate U0's K0 run at the parent ran in the same tree with the parent's module installed in place of h's by
+    `variant_loader.py`. That module is `7b82a0cd`'s, `4ea1948b…`, blob `0701d2a6`, byte-identical to `1ec734d7`'s and 07a's
+    census tree's.
+  - Both read 06's certified scratch copy of A3 v2, read-only.
+- **Constraints:** Ray-free, no lock, no store built, nothing written in a tree.
+
+#### The Gate and the inputs
+
+Commands and outputs are `07b/census/out/cmd/00`–`10`.
+- **The harness:** 07a's census `scripts/`. h's docs copy, 07a's Mac Studio copy and this copy before any change hash
+  alike (214 files, list `b284121e…`; `out/cmd/00`).
+- **The trees:** h is clean with `--ignored`. The main checkout is at `28ebaf07`, clean.
+  - `git diff --stat 1ec734d7 7b82a0cd` (outside docs and prompts) lists `CLAUDE.md` and 89c368f2's four files.
+  - `5e19c4b6..0a103b5a` lists nothing.
+- **AST check:** 89c368f2's four files are AST-equal without docstrings between `1ec734d7` and `7b82a0cd`
+  ([`07b/census/out/u0/u0a_ast.txt`](07b/census/out/u0/u0a_ast.txt)).
+- **The files the K0 workers loaded**
+  ([`07b/census/out/u0/u0a_imports.txt`](07b/census/out/u0/u0a_imports.txt)):
+  - nothing changed between the parent and h;
+  - of the 07a-tree → h diff, only the two AST-equal LiouvilleGreen modules;
+  - h's own `levin_quadrature.py` was never loaded.
+- **The registry:** 84 runs, all finished, before k0.
+- **The scratch copy:** EQUAL to `copy_files_certified.txt`, and OK against 06e's `a3v2_copy_after.sha256`
+  (`out/cmd/04b`, `05b`, `06`).
+- **07a's census:** 149 of 149 files equal 07a's `KEPT_ON_MAC_STUDIO.txt`, checkpoint `461df2ec…`. Its 653 working-record
+  files and Part A's 7,645 files are hashed
+  ([`07b/census/out/runs_hashed_before.txt`](07b/census/out/runs_hashed_before.txt)).
+
+#### Gate U0 and the projection
+
+The k0 run is `levin-phase-floor-07b-k0-20261116T204402`, 11 of 11 commands, all exit 0.
+
+| clause | result | record |
+|---|---|---|
+| (1) the parent's code is 07a's | holds | [`out/u0/`](07b/census/out/u0/) |
+| (2) 07a's census reproduced at the parent | 100 of 100 K0 units bit-identical; 2,110 calls; 07b's new keys set aside, none in 07a's records | [`out/k0/compare_u0b.json`](07b/census/out/k0/compare_u0b.json) |
+| (3) the instrument changes nothing | `h-1e-8-3-14501` (the fix acts) and `h-1e-7-1-20582` (untouched) IDENTICAL on and off | [`out/u0c3/compare_instr.json`](07b/census/out/u0c3/compare_instr.json) |
+| (4) deterministic | `h-1e-8-3-14501` twice: IDENTICAL | [`out/u0c4/compare_det.json`](07b/census/out/u0c4/compare_det.json) |
+
+- **The projection:** 37,616 s central; widest margin 65,989 s; no unit over budget
+  ([`out/census_projection.json`](07b/census/out/census_projection.json)).
+- **The predictions:** `state/predictions.md` (`0c6055ac…`), written 2026-11-16T21:03:31Z, before the launch. Its blocks
+  are copied by text and checked by substring (`out/cmd/25`).
+
+#### The census
+
+- **The run:** `levin-phase-floor-07b-census-20261117T010200`, `done`:
+  - 18,560 of 18,560 units, 0 in error, 0 over budget;
+  - exit 0, stderr empty;
+  - wall 45,016 s;
+  - checkpoint `396784bc…`.
+- **Every unit's module evidence holds:**
+  - `levin_quadrature.py` is the tree's 8956c7b6, with no variant;
+  - nothing foreign was loaded and Ray was never initialised;
+  - all 16 workers' evidence holds.
+- **Stop 3:**
+  - U1's 60,160 untouched calls all equal 07a's in the five outputs
+    (`out/stop3/compare_census_calls.json`, kept on the Mac Studio);
+  - U8's 187 calls all equal (h)'s replay records ([`out/stop3/u8.json`](07b/census/out/stop3/u8.json)).
+- **The scores:**
+  - [`out/scores/summary.json`](07b/census/out/scores/summary.json);
+  - [`out/scores/u4_v4_report.md`](07b/census/out/scores/u4_v4_report.md);
+  - [`out/scores/u4_u6_scores.json`](07b/census/out/scores/u4_u6_scores.json);
+  - `out/xcheck/u7_vs_07a_pop07/xcheck.json` (kept on the Mac Studio).
+- **U1–U8 all hold** (the log's table).
+
+#### After the census and at the end
+
+- **The scratch copy:** EQUAL to its certification and to its before-hash after the census and at the end
+  (`out/cmd/41`–`43b`, `60`–`62`). There are no journal, `-wal` or `-shm` files.
+- **07a's census, its working records and Part A's records:** byte-identical before, after and at the end
+  (`out/cmd/45`, `64`, EQUAL).
+- **The trees:** h is at `0a103b5a`, clean with `--ignored`, with no `__pycache__`. The main checkout is at `28ebaf07`,
+  clean.
+- **The registry:** 86 runs, all finished. No lock was taken.
+
+### 7b.4 The review
+
+**The Mac Studio orchestrator** held the agents at planned stops 1, 2 and 3, checked each with readers of its own
+([`07b/review/`](07b/review/): `stop1/`, `stop2/`, `stop3/`, `final/` and `checks/`), and reviewed Part C in the note's
+§C.2 checks, **all passing** ([`07b/review/review.md`](07b/review/review.md)):
+- scope: the protected files (R30's store, 07a's census run directory and the scratch copy, 159 files; Part A's
+  `measurement/`, 7,645; R29, 5) unchanged by hash at each stop and at the end; the worktree clean with `--ignored`;
+  nothing written outside §C.1's paths;
+- the runs: 86 in the registry, all finished; R31's fingerprint re-run, `1b332ffa…`; R31's five store files equal the
+  rehearsal's list;
+- `tools.store_value_diff` on R30 and R31 re-run, byte-identical to the agent's JSON (`b7d508c1…`); S3, S1, S2 and S4
+  and the seven records by its own readers;
+- U0 by its own runs (two parent units equal 07a's census in every value; an edge-rule unit at h deterministic);
+- U1–U8 re-scored from the two checkpoints (07a `461df2ec…`, 07b `396784bc…`; U7's population from 07's `03dfe786…`)
+  through its own indices, every line checked by SHA-256: every verdict and scored figure equal to the agents';
+- the predictions (`0c6055ac…`) verbatim, later than every U0 output and earlier than the census's manifest;
+- the records: the rehearsal agent's 26 deviations and the census agent's 23, each classified and accepted.
+
+**One descriptive figure differs from its wording, and is recorded, not repaired:** the census agent's 605 group calls
+"moved beyond both codes' abserrs" count calls that moved by more than each abserr separately. Moves beyond the sum of
+the two abserrs are 326, 324 of them converged under both codes ([`07b/review/final/moves.txt`](07b/review/final/moves.txt)).
+Only for those does one of the two declarations fail to bound its error.
+
+It did not re-check the edge rule's depths, $q$ and analytic-window tests, the depth-20 descent analysis of the 198
+newly unconverged calls, or the band, $k$ and class breakdowns.
+
+**Also recorded, not repaired:** the rehearsal log's Result line gives R30's understatement on the seven records as
+"3.87 to 59.3"; its own table, `out/refs/understates.txt` and the review give 2.91–59.3.
+
+### 7b.5 The laptop's re-checks (2026-11-18)
+
+By the laptop orchestrator, from the copied records, against committed records the agents did not write:
+- **The copy.** The copy-back list was made on the Mac Studio first: 763 record files into the laptop's
+  `var/levin-phase-floor-07b/` and 20 run-directory files into `var/runs/`, all matching the Mac Studio's SHA-256. The
+  3,302 files left out agree with the agents' `KEPT_ON_MAC_STUDIO.txt` lists. The 763 are in [`07b/`](07b/) byte for
+  byte.
+- **U4 on v08:** 07b's value and abserr equal Part A's replay of (h) (`07b/measurement/out/ext/replays/h/v08.json`) in
+  hex; 07a's equal 07a's committed W4 scores; the readings equal 07's committed V4 readings. The ratio, recomputed
+  exactly, is 0.0323052 (07a 3.1596), within $2\times10^{-11}$ of the agent's.
+- **U4 on R2-03, R2-22 and R2-28:** 07b's value, abserr and `converged` equal Part A's (h) replays, and 07a's equal
+  Part A's capture of 07a's census. Each reference is a committed reading of Part A's to its printed 20 digits (FCC r2
+  for R2-03; FCCsplit r2 for R2-22 and R2-28). Ratios recomputed exactly, within the reference's own spread of the
+  agent's: R2-03 $3.94\times10^{-5}$ (07a $9.06\times10^{-7}$), R2-22 $4.29\times10^{-5}$ (equal at both codes),
+  R2-28 1.107 at 07b, unconverged (07a $5.55\times10^{-5}$ in one region).
+- **U6 on two calls,** from 06b's committed $S_{10}$
+  ([`06b/census/out/w2_reference.json`](06b/census/out/w2_reference.json)): `b-1e-7-2-14345` #3 at 0.828 (07a 6.01, 06b
+  5.68) and `b-1e-7-2-34473` #3 at 0.000143 (07a 1.39, 06b 0.483), each equal to the agent's.
+- **Two rehearsal rows,** read from the copied tables:
+  - a row unmoved in total, abserr and radiation term, $k = 10^5$, $q = r = 3.162\times10^5$, $z = 7.60\times10^5$: R30
+    and R31 equal in hex, and R30 equal to 07a's committed R30;
+  - the most-moved row, $k = 10^5$, $q = r = 3.162\times10^5$, $z = 12004.58$: 0.27804 of R30's abserr and S3 0.128372,
+    recomputed exactly from the hex. Its R30 value is not in a committed table (07a did not move it), so it was not
+    traced further.
+- **The 324 calls moved beyond both errors,** read read-only from the census's kept comparison on the Mac Studio: 18 are
+  referenced (Part A's R1 and V4, 06b's `0-12977` #5). On all 18 07b is honest (at most 0.054) and 07a not (1.37–10.8).
+  The largest move against 07b's abserr, `0-14199` #1 at 75×, is R1-x015: 07b at 0.0007, 07a at 2.47.
+
+### 7b.6 The user's rulings
+
+The board's Decisions **07b Part C**:
+- Part C dispatched, *"Yes, dispatch Part C"*; at stop 1 *"Yes, continue, and settle which store understates"*; at
+  stop 2 *"Yes, launch the census"*; at stop 3 *"Yes, score U1–U7"*;
+- `[07a-levin-leaf-beside-a-window-understates-its-error]`, `[06b-moved-calls-declare-less-than-their-error]`,
+  `[07-iroff1-window-stop-can-leave-a-call-dishonest]` and `[07a-trust-check-auxiliary-route-moves-the-declared-error]`
+  close;
+- `[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]` is narrowed and assigned to a 07c, with a sharper
+  Clenshaw–Curtis estimate (`[06d-cc-nested-estimate-measures-the-coarse-rule]`) as a candidate; the $6\pi$ threshold
+  (`[07-c2-gate-threshold-was-never-measured]`) to a 07d before 08;
+- the 324 calls are recorded, not opened, with a reference sample from the 306 unreferenced ones in the next census;
+- `[09-abserr-does-not-bound-phase-spline-floor]` (levin-refactor) is narrowed with the draws' 434 results;
+- `[07b-large-raw-phase-calls-can-be-marginally-dishonest]` is opened;
+- R29, R30 and R31 are kept, with 07a's and 07b's census run directories and A3 v2's scratch copy.

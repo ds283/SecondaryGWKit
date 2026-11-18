@@ -1,0 +1,57 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/s0prime.py",
+  "script_sha256": "f7e33882470b3025aa6d8009aae106a1f4830c48ad99898736ca45d5fa2b973f",
+  "host": "mps026298.phys.susx.ac.uk",
+  "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5",
+  "tree_head": "0a103b5ae0de32b568f44904a5c3dcbfca922a2e",
+  "utc": "2026-11-16T19:17:21Z"
+ },
+ "code_commit": "5e19c4b6da0731d51e0ca68cf1fa9cbf11cba80d",
+ "code_commit_parent": "7b82a0cdd535469b8baa42dad224ff098a60cf6d",
+ "parent_is_expected": true,
+ "c89c368f2_files": [
+  "ComputeTargets/tests/test_quadsource_integral.py",
+  "LiouvilleGreen/bessel_phase.py",
+  "LiouvilleGreen/tests/test_three_bessel.py",
+  "LiouvilleGreen/three_bessel_integrals.py",
+  "prompts/levin-phase-floor/IMPLEMENTATION_STATE.md"
+ ],
+ "s0prime_command": "git diff --stat 1ec734d7 7b82a0cd -- . ':!docs' ':!prompts'",
+ "s0prime_stat": " CLAUDE.md                                        | 11 ++++++++---\n ComputeTargets/tests/test_quadsource_integral.py | 19 +++++++++++--------\n LiouvilleGreen/bessel_phase.py                   | 11 +++++++----\n LiouvilleGreen/tests/test_three_bessel.py        |  7 ++++---\n LiouvilleGreen/three_bessel_integrals.py         |  6 ++++--\n 5 files changed, 34 insertions(+), 20 deletions(-)\n",
+ "s0prime": {
+  "files": [
+   "CLAUDE.md",
+   "ComputeTargets/tests/test_quadsource_integral.py",
+   "LiouvilleGreen/bessel_phase.py",
+   "LiouvilleGreen/tests/test_three_bessel.py",
+   "LiouvilleGreen/three_bessel_integrals.py"
+  ],
+  "only_CLAUDE_md_and_89c368f2s_four": true,
+  "ast_equal_without_docstrings": {
+   "ComputeTargets/tests/test_quadsource_integral.py": true,
+   "LiouvilleGreen/bessel_phase.py": true,
+   "LiouvilleGreen/tests/test_three_bessel.py": true,
+   "LiouvilleGreen/three_bessel_integrals.py": true
+  },
+  "holds": true
+ },
+ "code_commit_stat": " AdaptiveLevin/levin_quadrature.py                 | 264 +++++++++++-\n AdaptiveLevin/tests/test_levin_leaf_values.py     |  20 +-\n AdaptiveLevin/tests/test_levin_rate_rules.py      | 482 ++++++++++++++++++++++\n AdaptiveLevin/tests/test_levin_roundoff_exit.py   |  27 +-\n AdaptiveLevin/tests/test_levin_trust_yardstick.py |  47 ++-\n LiouvilleGreen/tests/test_three_bessel.py         |  28 +-\n 6 files changed, 841 insertions(+), 27 deletions(-)\n",
+ "code_commit_files": [
+  "AdaptiveLevin/levin_quadrature.py",
+  "AdaptiveLevin/tests/test_levin_leaf_values.py",
+  "AdaptiveLevin/tests/test_levin_rate_rules.py",
+  "AdaptiveLevin/tests/test_levin_roundoff_exit.py",
+  "AdaptiveLevin/tests/test_levin_trust_yardstick.py",
+  "LiouvilleGreen/tests/test_three_bessel.py"
+ ],
+ "after_code_commit_stat": "",
+ "tree": {
+  "head_is_dispatch": true,
+  "after_code_commit_empty": true,
+  "levin_quadrature_sha256": "8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1",
+  "levin_quadrature_expected": true,
+  "holds": true
+ },
+ "holds": true
+}

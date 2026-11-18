@@ -1,0 +1,450 @@
+{
+ "header": [
+  "# prompt 07b r31: the captures of the group records of interest, checked against R31",
+  "# written 2026-11-16T19:59:41Z on mps026298.phys.susx.ac.uk",
+  "# script replay07b_r31.py sha256 ac7319caf04824e14870eb500c80c62b2d83e76d0c05532a0cfac7e723f00825",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/replay_rows.json sha256 25d5177053d2ece368115ba11c0da5460b4f1625f5fae3728ce2ad3fc26e9be1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-0/emit.jsonl sha256 cb9b841457f57603bda9c0dbe65dd4c01a5517492bc2805bd35ce2f806bb4497",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-1/emit.jsonl sha256 5ff0bc9194a934f7b599e4730bfbe255c0d5896ef67d30b011318aa02527711b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-2/emit.jsonl sha256 15df6b1ba9b3918fe61f02d69a2f9f6be5c0ededeee5e0dd775a4ef969796125",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-3/emit.jsonl sha256 e21f763f64bb73f7aa0fda269b989b9a19b977e9e5d0b804fd93b20aa66bab92",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-4/emit.jsonl sha256 bb4e5ffd1cea7bdec2406f7078c36da8ef69e47dab3f75a3a3ae9b6b0185f918",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-5/emit.jsonl sha256 879bd4a21ebade0f04486387db968d2ada5b4a0719849b301dcc28461c2447ee"
+ ],
+ "captures": [
+  {
+   "key": [
+    100000.0,
+    1000000.0,
+    1000000.0,
+    144627.70674226896
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[0]",
+   "label": "G+q+r",
+   "uid": "h-1e-7-3-20363",
+   "R31": {
+    "value": "0x1.44ad9d596748dp-62",
+    "abserr": "0x1.74349fae30cb8p-87",
+    "converged": false,
+    "phase_limited": true,
+    "regions": 143,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R30": {
+    "value": "0x1.44ad9cb269157p-62",
+    "abserr": "0x1.0dda08375211fp-86",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 2,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 1,
+   "notify_label": "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.4463e+05, z in (1.7159e+10, 1.4463e+05), regime Gqr, group G+q+r",
+   "value": "0x1.263e9f583fb9ap-79",
+   "abserr": "0x1.51512994921e7p-104",
+   "converged": false,
+   "regions": 143,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 4
+   },
+   "replay_index": 1,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 4
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G+q+r-h-3-20363-1.pkl",
+   "sha256": "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249",
+   "bytes": 918346,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    316227.7660168379,
+    100000.0,
+    316227.7660168379,
+    996.4201622779478
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "uid": "h-1e-7-0-10244",
+   "R31": {
+    "value": "0x1.1be7a8ad51a37p-68",
+    "abserr": "0x1.c5e6e4cbd0cafp-93",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 38,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R30": {
+    "value": "0x1.1be7a9c67998dp-68",
+    "abserr": "0x1.f684e5c9c0f4ep-98",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 3,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 6,
+   "notify_label": "k=3.16e+05/Mpc, q=1e+05/Mpc, r=3.16e+05/Mpc @ z_response=996.42, z in (1.7126e+09, 996.42), regime Gqr, group G-q-r",
+   "value": "0x1.2378781644174p-78",
+   "abserr": "0x1.d1ff6e16c79edp-103",
+   "converged": true,
+   "regions": 38,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 3
+   },
+   "replay_index": 6,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 3
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-0-10244-6.pkl",
+   "sha256": "b37439f0e0a12c4d993c1873a753ee1748a72aef2ce044adcb010d10b37a78c5",
+   "bytes": 927124,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    316227.7660168379,
+    100000.0,
+    316227.7660168379,
+    6944780.034414906
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "uid": "h-1e-7-0-270",
+   "R31": {
+    "value": "0x1.31acb708d477dp-55",
+    "abserr": "0x1.eee194249bf88p-80",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 68,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R30": {
+    "value": "0x1.31acb88303353p-55",
+    "abserr": "0x1.0892e337efb49p-82",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 8,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 6,
+   "notify_label": "k=3.16e+05/Mpc, q=1e+05/Mpc, r=3.16e+05/Mpc @ z_response=6.9448e+06, z in (1.7126e+09, 6.9448e+06), regime Gqr, group G-q-r",
+   "value": "0x1.7139887db5cfep-78",
+   "abserr": "0x1.2ae23c1b2f3d1p-102",
+   "converged": true,
+   "regions": 68,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 1
+   },
+   "replay_index": 6,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 1
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-0-270-6.pkl",
+   "sha256": "9580193829b009451ccc1838495e2008ac6c055f45b1129484e1f5cedae88182",
+   "bytes": 895377,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    1000000.0,
+    100000.0,
+    1000000.0,
+    329.64045755914753
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[2]",
+   "label": "G-q+r",
+   "uid": "h-1e-7-1-216",
+   "R31": {
+    "value": "0x1.b9f8a06f25203p-74",
+    "abserr": "0x1.3091185063da9p-97",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 112,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R30": {
+    "value": "0x1.b9f8a38696452p-74",
+    "abserr": "0x1.a951c3c91942ep-103",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 5,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 5,
+   "notify_label": "k=1e+06/Mpc, q=1e+05/Mpc, r=1e+06/Mpc @ z_response=329.64, z in (1.7126e+09, 329.64), regime Gqr, group G-q+r",
+   "value": "0x1.5632c89648947p-82",
+   "abserr": "0x1.d79fe909f16f2p-106",
+   "converged": true,
+   "regions": 112,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 2
+   },
+   "replay_index": 5,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 2
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q+r-h-1-216-5.pkl",
+   "sha256": "f540279cac44ea87181073c0e592ae9a45ee3f66b2251f4d9a5f84a50adb3ac6",
+   "bytes": 931568,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    1000000.0,
+    100000.0,
+    1000000.0,
+    36286.827639966534
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[2]",
+   "label": "G-q+r",
+   "uid": "h-1e-7-1-20184",
+   "R31": {
+    "value": "-0x1.ba74d3014655cp-67",
+    "abserr": "0x1.f60513a560f89p-92",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 82,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R30": {
+    "value": "-0x1.ba74d54194e61p-67",
+    "abserr": "0x1.8c9f0f06a83e2p-92",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 58,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 5,
+   "notify_label": "k=1e+06/Mpc, q=1e+05/Mpc, r=1e+06/Mpc @ z_response=36287, z in (1.7126e+09, 36287), regime Gqr, group G-q+r",
+   "value": "-0x1.8f8a08ca38b19p-82",
+   "abserr": "0x1.c5533eaecb7e0p-107",
+   "converged": true,
+   "regions": 82,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 3
+   },
+   "replay_index": 5,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 3
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q+r-h-1-20184-5.pkl",
+   "sha256": "9ae246a662c34b2b2964d34bb112920db6fb3a2310f91df28acee8d01e97965a",
+   "bytes": 916485,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    1000000.0,
+    316227.7660168379,
+    1000000.0,
+    191807016.520263
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "uid": "h-1e-7-1-10504",
+   "R31": {
+    "value": "0x1.9b0b695624b27p-56",
+    "abserr": "0x1.1dbe78353b57ep-80",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 45,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R30": {
+    "value": "0x1.9b0b6b02146b6p-56",
+    "abserr": "0x1.33b1cbc4f1280p-82",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 1,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 6,
+   "notify_label": "k=1e+06/Mpc, q=3.16e+05/Mpc, r=1e+06/Mpc @ z_response=1.9181e+08, z in (5.421e+09, 1.9181e+08), regime Gqr, group G-q-r",
+   "value": "0x1.1fa14d5ef3244p-83",
+   "abserr": "0x1.8fe6aae4f450bp-108",
+   "converged": true,
+   "regions": 45,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 1
+   },
+   "replay_index": 6,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 1
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-10504-6.pkl",
+   "sha256": "7fa339ed0b1723a568b1c02523a6a2f31f28efe4b4a2144d05b267ace347b6f9",
+   "bytes": 887642,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    36286.827639966534
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[3]",
+   "label": "G-q-r",
+   "uid": "h-1e-7-1-209",
+   "R31": {
+    "value": "-0x1.4814eb28ea775p-73",
+    "abserr": "0x1.3a9704341b92ap-95",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 66,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R30": {
+    "value": "-0x1.4814f6cc68580p-73",
+    "abserr": "0x1.566c2ec4ce7bcp-96",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 6,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 4,
+   "notify_label": "k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=36287, z in (1.7159e+10, 36287), regime Gqr, group G-q-r",
+   "value": "-0x1.284234a1dbe00p-88",
+   "abserr": "0x1.1c1352bde5bcfp-110",
+   "converged": true,
+   "regions": 66,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 1
+   },
+   "replay_index": 4,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 1
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-209-4.pkl",
+   "sha256": "d6ea2d967ab218df05f2fd5a2e13d3de845cbea8f0412f4c1f3b158c2465632f",
+   "bytes": 921434,
+   "reproduces_store": true
+  },
+  {
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    331553.02818648185
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[3]",
+   "label": "G-q-r",
+   "uid": "h-1e-7-1-171",
+   "R31": {
+    "value": "-0x1.01534b8707a1fp-68",
+    "abserr": "0x1.ec4e0570f5bcep-92",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 58,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R30": {
+    "value": "-0x1.015348884cd70p-68",
+    "abserr": "0x1.8ced1089ffe17p-93",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 1,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 4,
+   "notify_label": "k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=3.3155e+05, z in (1.7159e+10, 3.3155e+05), regime Gqr, group G-q-r",
+   "value": "-0x1.96e8ecc9c3340p-87",
+   "abserr": "0x1.853df17bc4f6bp-110",
+   "converged": true,
+   "regions": 58,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 3
+   },
+   "replay_index": 4,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 3
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-171-4.pkl",
+   "sha256": "fac8529e22c1a96fc34d47fcae0b975a15d17540c10a1565dcd52fe016d81f0e",
+   "bytes": 915867,
+   "reproduces_store": true
+  }
+ ]
+}

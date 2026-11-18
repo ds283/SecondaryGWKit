@@ -1,0 +1,9 @@
+$ env\ PYTHONDONTWRITEBYTECODE=1\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B scripts/hash_store.py copy_before_07b /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T20:34:07Z
+# ----
+scripts/rec.sh: line 29: env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B: No such file or directory
+# ----
+# end 2026-11-16T20:34:07Z
+# exit 127

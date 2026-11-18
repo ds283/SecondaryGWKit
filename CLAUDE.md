@@ -261,7 +261,10 @@ RayPoolKit's `docs/rehearsal-lock.md` at `v0.3.0`. This repository's values are
   and `review/`'s `stop1/scripts/`, `stop2/scripts/`, `stop3/scripts/` and `final/scripts/` under
   `docs/levin-phase-floor/07a/`, and 07b's Part A `measurement/scripts/` (with its
   `calibration/`, `from_07a_measurement/`, `variants/` and its `superseded/`, and `ext/` and its
-  `variants/`) and `measurement/out/ext/x2/failed_first/` under `docs/levin-phase-floor/07b/`.
+  `variants/`) and `measurement/out/ext/x2/failed_first/` and Part C `rehearsal/scripts/` (with
+  its `capture/`, `gen/` and `refs/`), `rehearsal/state/`, `census/scripts/` (with its
+  `calibration/` and `variants/`) and `review/`'s `stop1/scripts/`, `stop2/scripts/`,
+  `stop3/scripts/` and `final/scripts/` under `docs/levin-phase-floor/07b/`.
   Each is byte-identical to the run it records; the outputs of the first four, of 05's and 05a's
   `scripts/`, of A4's, of 06's, of 06a's, of B2's, of 06b's, of 06d's, of 06f's, of 06j's, of
   06k's, of 06l's, of 06m's, of 07's, of 07a's and of 07b's record its SHA-256.

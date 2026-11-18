@@ -1,0 +1,545 @@
+{
+ "header": [
+  "# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/refs/understates.py sha256 14e238c5b1ef93c9df71231b54f9a54589def95607fe1be650a28727075300ba",
+  "# plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/refs_plan_r31.md sha256 2c2514b017ee1974decc6aeb295c541bfbc2c0d8eb5979a7057577c74baef096 (the rule, fixed before any reading)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/refcap_replay_h.json sha256 347357942e7f1f2b84d75a7d455e8c12e51fc401d61778a693bf1da15dddf41d",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/refcap_replay_a07.json sha256 8a7aa7de37a0cc3616fece8cb8362e0fef34dc79a955762fd83a088bd190eb93",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q+r-h-1-20184-5.json sha256 92953f1413310cd8895c20db92dfa1428bda787223d6c8a822e7110739ea9f59",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q+r-h-1-216-5.json sha256 bea6a65f616b3275a6740f6d2a22ba9c5fa3f678cdea10b3c6d78e75c413d420",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-0-10244-6.json sha256 73803782f169800381f8b69fe10904c2f2cef9f5c293062068fc70551db55031",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-0-270-6.json sha256 e68ce6faf937af3e59f31b1d6bfb62fefca60eec88d823a29e4e01ea4d68ec4e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-1-10504-6.json sha256 85c178e6bf81ef32a07e3446642b6e1a60d066f11ad733afbbf7f8f9674c1079",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-1-171-4.json sha256 0342041709d9d66b314329ecb59f3b953ea8cd0f9f83adf1c19ea39d04319207",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-1-209-4.json sha256 a00ba34a37e66aa92a8461a40add7ebecc0f9e38a620ce06d374e04c2f033857"
+ ],
+ "rows": [
+  {
+   "sid": "ref-G-q+r-h-1-20184-5",
+   "key": [
+    1000000.0,
+    100000.0,
+    1000000.0,
+    36286.827639966534
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[2]",
+   "label": "G-q+r",
+   "rtol": 1e-07,
+   "notify_label": "k=1e+06/Mpc, q=1e+05/Mpc, r=1e+06/Mpc @ z_response=36287, z in (1.7126e+09, 36287), regime Gqr, group G-q+r",
+   "pickle_sha256": "9ae246a662c34b2b2964d34bb112920db6fb3a2310f91df28acee8d01e97965a",
+   "reference": {
+    "value_hex": "-0x1.8f8a08c933cd0p-82",
+    "value_30": "-3.22745192726415906282748682997e-25",
+    "readings_30": {
+     "qawo_r1": "-3.22745192726125588627267533329e-25",
+     "qawo_r2": "-3.22745192726417531605711615468e-25",
+     "fcc_r1": "-3.22745192726121758594846195083e-25",
+     "fcc_r2": "-3.22745192726415906282748682997e-25"
+    },
+    "readings_hex": {
+     "qawo_r1": "-0x1.8f8a08c93241ep-82",
+     "qawo_r2": "-0x1.8f8a08c933cf4p-82",
+     "fcc_r1": "-0x1.8f8a08c9323cap-82",
+     "fcc_r2": "-0x1.8f8a08c933cd0p-82"
+    },
+    "stated_error": "2.95773e-37",
+    "scatter_tool": 2.957730108654204e-37,
+    "scatter_mp": "2.95773e-37",
+    "tolerance_min_e_over_100": "8.62215e-35",
+    "counts_tool": true,
+    "stated_error_over_min_e": "3.43e-5",
+    "route": "B",
+    "direct_segments": {
+     "qawo_r1": 0,
+     "qawo_r2": 0,
+     "fcc_r1": 0,
+     "fcc_r2": 0
+    },
+    "wall_s": {
+     "qawo_r1": 7.195471040904522,
+     "qawo_r2": 10.66074762493372,
+     "fcc_r1": 17.93786008283496,
+     "fcc_r2": 68.5658720000647
+    },
+    "method": "tools/filon_reference.py reference(): QAWO and FCC at resolutions 1 and 2; ref FCC r2"
+   },
+   "R30": {
+    "value": "-0x1.8f8a0ad2a0c70p-82",
+    "abserr": "0x1.66266a174d12dp-107",
+    "regions": 58,
+    "converged": true,
+    "abs_v_minus_ref": "2.5105734e-32",
+    "ratio": "2.9117722",
+    "ratio_low": "2.9117379",
+    "ratio_high": "2.9118065",
+    "verdict": "understates"
+   },
+   "R31": {
+    "value": "-0x1.8f8a08ca38b19p-82",
+    "abserr": "0x1.c5533eaecb7e0p-107",
+    "regions": 82,
+    "converged": true,
+    "abs_v_minus_ref": "4.9068465e-35",
+    "ratio": "0.0044961639",
+    "ratio_low": "0.0044690621",
+    "ratio_high": "0.0045232657",
+    "verdict": "honest"
+   },
+   "dv_over_e30_plus_e31": "1.28262",
+   "decides": true,
+   "answer": "R30 understates"
+  },
+  {
+   "sid": "ref-G-q+r-h-1-216-5",
+   "key": [
+    1000000.0,
+    100000.0,
+    1000000.0,
+    329.64045755914753
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[2]",
+   "label": "G-q+r",
+   "rtol": 1e-07,
+   "notify_label": "k=1e+06/Mpc, q=1e+05/Mpc, r=1e+06/Mpc @ z_response=329.64, z in (1.7126e+09, 329.64), regime Gqr, group G-q+r",
+   "pickle_sha256": "f540279cac44ea87181073c0e592ae9a45ee3f66b2251f4d9a5f84a50adb3ac6",
+   "reference": {
+    "value_hex": "0x1.5632c898e5fb4p-82",
+    "value_30": "2.76425644628801604983361031039e-25",
+    "readings_30": {
+     "qawo_r1": "2.76425644628514038198336812742e-25",
+     "qawo_r2": "2.76425644628802505507686149472e-25",
+     "fcc_r1": "2.76425644628511175634348547112e-25",
+     "fcc_r2": "2.76425644628801604983361031039e-25"
+    },
+    "readings_hex": {
+     "qawo_r1": "0x1.5632c898e473dp-82",
+     "qawo_r2": "0x1.5632c898e5fc7p-82",
+     "fcc_r1": "0x1.5632c898e46ffp-82",
+     "fcc_r2": "0x1.5632c898e5fb4p-82"
+    },
+    "stated_error": "2.9133e-37",
+    "scatter_tool": 2.9132987333760237e-37,
+    "scatter_mp": "2.9133e-37",
+    "tolerance_min_e_over_100": "4.95484e-36",
+    "counts_tool": true,
+    "stated_error_over_min_e": "0.000588",
+    "route": "B",
+    "direct_segments": {
+     "qawo_r1": 0,
+     "qawo_r2": 0,
+     "fcc_r1": 0,
+     "fcc_r2": 0
+    },
+    "wall_s": {
+     "qawo_r1": 35.33896750025451,
+     "qawo_r2": 120.5858097919263,
+     "fcc_r1": 22.251740334089845,
+     "fcc_r2": 83.57035912526771
+    },
+    "method": "tools/filon_reference.py reference(): QAWO and FCC at resolutions 1 and 2; ref FCC r2"
+   },
+   "R30": {
+    "value": "0x1.5632cafb0fb4cp-82",
+    "abserr": "0x1.494e3de357011p-111",
+    "regions": 5,
+    "converged": true,
+    "abs_v_minus_ref": "2.9378279e-32",
+    "ratio": "59.292079",
+    "ratio_low": "59.291491",
+    "ratio_high": "59.292667",
+    "verdict": "understates"
+   },
+   "R31": {
+    "value": "0x1.5632c89648947p-82",
+    "abserr": "0x1.d79fe909f16f2p-106",
+    "regions": 112,
+    "converged": true,
+    "abs_v_minus_ref": "1.2590044e-34",
+    "ratio": "0.0055443453",
+    "ratio_low": "0.0055315159",
+    "ratio_high": "0.0055571748",
+    "verdict": "honest"
+   },
+   "dv_over_e30_plus_e31": "1.27155",
+   "decides": true,
+   "answer": "R30 understates"
+  },
+  {
+   "sid": "ref-G-q-r-h-0-10244-6",
+   "key": [
+    316227.7660168379,
+    100000.0,
+    316227.7660168379,
+    996.4201622779478
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "rtol": 1e-07,
+   "notify_label": "k=3.16e+05/Mpc, q=1e+05/Mpc, r=3.16e+05/Mpc @ z_response=996.42, z in (1.7126e+09, 996.42), regime Gqr, group G-q-r",
+   "pickle_sha256": "b37439f0e0a12c4d993c1873a753ee1748a72aef2ce044adcb010d10b37a78c5",
+   "reference": {
+    "value_hex": "0x1.23787817e63bap-78",
+    "value_30": "3.76716898369268927385698038474e-24",
+    "readings_30": {
+     "qawo_r1": "3.76716898369222579787044740769e-24",
+     "qawo_r2": "3.76716898369269685945842600924e-24",
+     "fcc_r1": "3.76716898369221605936174310038e-24",
+     "fcc_r2": "3.76716898369268927385698038474e-24"
+    },
+    "readings_hex": {
+     "qawo_r1": "0x1.23787817e6143p-78",
+     "qawo_r2": "0x1.23787817e63c4p-78",
+     "fcc_r1": "0x1.23787817e6136p-78",
+     "fcc_r2": "0x1.23787817e63bap-78"
+    },
+    "stated_error": "4.808e-37",
+    "scatter_tool": 4.808000966829089e-37,
+    "scatter_mp": "4.808e-37",
+    "tolerance_min_e_over_100": "6.21005e-35",
+    "counts_tool": true,
+    "stated_error_over_min_e": "7.742e-5",
+    "route": "B",
+    "direct_segments": {
+     "qawo_r1": 0,
+     "qawo_r2": 0,
+     "fcc_r1": 0,
+     "fcc_r2": 0
+    },
+    "wall_s": {
+     "qawo_r1": 16.850695041939616,
+     "qawo_r2": 44.1706619579345,
+     "fcc_r1": 20.41937925014645,
+     "fcc_r2": 79.69277087505907
+    },
+    "method": "tools/filon_reference.py reference(): QAWO and FCC at resolutions 1 and 2; ref FCC r2"
+   },
+   "R30": {
+    "value": "0x1.23787936ea1b6p-78",
+    "abserr": "0x1.01f48d18f2a15p-107",
+    "regions": 3,
+    "converged": true,
+    "abs_v_minus_ref": "2.2110842e-31",
+    "ratio": "35.604948",
+    "ratio_low": "35.604871",
+    "ratio_high": "35.605025",
+    "verdict": "understates"
+   },
+   "R31": {
+    "value": "0x1.2378781644174p-78",
+    "abserr": "0x1.d1ff6e16c79edp-103",
+    "regions": 38,
+    "converged": true,
+    "abs_v_minus_ref": "1.2583007e-33",
+    "ratio": "0.0070101952",
+    "ratio_low": "0.0070075166",
+    "ratio_high": "0.0070128738",
+    "verdict": "honest"
+   },
+   "dv_over_e30_plus_e31": "1.19741",
+   "decides": true,
+   "answer": "R30 understates"
+  },
+  {
+   "sid": "ref-G-q-r-h-0-270-6",
+   "key": [
+    316227.7660168379,
+    100000.0,
+    316227.7660168379,
+    6944780.034414906
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "rtol": 1e-07,
+   "notify_label": "k=3.16e+05/Mpc, q=1e+05/Mpc, r=3.16e+05/Mpc @ z_response=6.9448e+06, z in (1.7126e+09, 6.9448e+06), regime Gqr, group G-q-r",
+   "pickle_sha256": "9580193829b009451ccc1838495e2008ac6c055f45b1129484e1f5cedae88182",
+   "reference": {
+    "value_hex": "0x1.713988d6e71e3p-78",
+    "value_30": "4.7721179706591724066020483137e-24",
+    "readings_30": {
+     "qawo_r1": "4.7721179706578182364020395888e-24",
+     "qawo_r2": "4.77211797065917728372440240823e-24",
+     "fcc_r1": "4.77211797065781117677888351892e-24",
+     "fcc_r2": "4.7721179706591724066020483137e-24"
+    },
+    "readings_hex": {
+     "qawo_r1": "0x1.713988d6e6ab0p-78",
+     "qawo_r2": "0x1.713988d6e71eap-78",
+     "fcc_r1": "0x1.713988d6e6aa6p-78",
+     "fcc_r2": "0x1.713988d6e71e3p-78"
+    },
+    "stated_error": "1.36611e-36",
+    "scatter_tool": 1.3661069455188893e-36,
+    "scatter_mp": "1.36611e-36",
+    "tolerance_min_e_over_100": "3.07743e-34",
+    "counts_tool": true,
+    "stated_error_over_min_e": "4.439e-5",
+    "route": "B",
+    "direct_segments": {
+     "qawo_r1": 0,
+     "qawo_r2": 0,
+     "fcc_r1": 0,
+     "fcc_r2": 0
+    },
+    "wall_s": {
+     "qawo_r1": 4.328306749928743,
+     "qawo_r2": 5.632668416947126,
+     "fcc_r1": 12.684472291730344,
+     "fcc_r2": 45.30352674983442
+    },
+    "method": "tools/filon_reference.py reference(): QAWO and FCC at resolutions 1 and 2; ref FCC r2"
+   },
+   "R30": {
+    "value": "0x1.71398a46846f0p-78",
+    "abserr": "0x1.3f94350ebc856p-105",
+    "regions": 8,
+    "converged": true,
+    "abs_v_minus_ref": "2.8319992e-31",
+    "ratio": "9.2024717",
+    "ratio_low": "9.2024273",
+    "ratio_high": "9.2025161",
+    "verdict": "understates"
+   },
+   "R31": {
+    "value": "0x1.7139887db5cfep-78",
+    "abserr": "0x1.2ae23c1b2f3d1p-102",
+    "regions": 68,
+    "converged": true,
+    "abs_v_minus_ref": "6.8711481e-32",
+    "ratio": "0.29841906",
+    "ratio_low": "0.29841313",
+    "ratio_high": "0.29842499",
+    "verdict": "honest"
+   },
+   "dv_over_e30_plus_e31": "1.34819",
+   "decides": true,
+   "answer": "R30 understates"
+  },
+  {
+   "sid": "ref-G-q-r-h-1-10504-6",
+   "key": [
+    1000000.0,
+    316227.7660168379,
+    1000000.0,
+    191807016.520263
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "rtol": 1e-07,
+   "notify_label": "k=1e+06/Mpc, q=3.16e+05/Mpc, r=1e+06/Mpc @ z_response=1.9181e+08, z in (5.421e+09, 1.9181e+08), regime Gqr, group G-q-r",
+   "pickle_sha256": "7fa339ed0b1723a568b1c02523a6a2f31f28efe4b4a2144d05b267ace347b6f9",
+   "reference": {
+    "value_hex": "0x1.1fa14d5bf27f8p-83",
+    "value_30": "1.16172866830965533060013195532e-25",
+    "readings_30": {
+     "qawo_r1": "1.16172866831011050438432026479e-25",
+     "qawo_r2": "1.16172866830965723292813457919e-25",
+     "fcc_r1": "1.16172866831010834034960809137e-25",
+     "fcc_r2": "1.16172866830965533060013195532e-25"
+    },
+    "readings_hex": {
+     "qawo_r1": "0x1.1fa14d5bf2fb6p-83",
+     "qawo_r2": "0x1.1fa14d5bf2800p-83",
+     "fcc_r1": "0x1.1fa14d5bf2fadp-83",
+     "fcc_r2": "0x1.1fa14d5bf27f8p-83"
+    },
+    "stated_error": "4.55174e-38",
+    "scatter_tool": 4.551737841883095e-38,
+    "scatter_mp": "4.55174e-38",
+    "tolerance_min_e_over_100": "1.29585e-35",
+    "counts_tool": true,
+    "stated_error_over_min_e": "3.513e-5",
+    "route": "B",
+    "direct_segments": {
+     "qawo_r1": 0,
+     "qawo_r2": 0,
+     "fcc_r1": 0,
+     "fcc_r2": 0
+    },
+    "wall_s": {
+     "qawo_r1": 3.2793459999375045,
+     "qawo_r2": 3.9648909592069685,
+     "fcc_r1": 9.704455541912466,
+     "fcc_r2": 29.64898179192096
+    },
+    "method": "tools/filon_reference.py reference(): QAWO and FCC at resolutions 1 and 2; ref FCC r2"
+   },
+   "R30": {
+    "value": "0x1.1fa14e8a6665dp-83",
+    "abserr": "0x1.ae9ef5b803440p-110",
+    "regions": 1,
+    "converged": true,
+    "abs_v_minus_ref": "7.2812847e-33",
+    "ratio": "5.6189137",
+    "ratio_low": "5.6188785",
+    "ratio_high": "5.6189488",
+    "verdict": "understates"
+   },
+   "R31": {
+    "value": "0x1.1fa14d5ef3244p-83",
+    "abserr": "0x1.8fe6aae4f450bp-108",
+    "regions": 45,
+    "converged": true,
+    "abs_v_minus_ref": "7.2282899e-35",
+    "ratio": "0.015016286",
+    "ratio_low": "0.01500683",
+    "ratio_high": "0.015025742",
+    "verdict": "honest"
+   },
+   "dv_over_e30_plus_e31": "1.17997",
+   "decides": true,
+   "answer": "R30 understates"
+  },
+  {
+   "sid": "ref-G-q-r-h-1-171-4",
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    331553.02818648185
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[3]",
+   "label": "G-q-r",
+   "rtol": 1e-07,
+   "notify_label": "k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=3.3155e+05, z in (1.7159e+10, 3.3155e+05), regime Gqr, group G-q-r",
+   "pickle_sha256": "fac8529e22c1a96fc34d47fcae0b975a15d17540c10a1565dcd52fe016d81f0e",
+   "reference": {
+    "value_hex": "-0x1.96e8eccadfe18p-87",
+    "value_30": "-1.02718490560278424803808640199e-26",
+    "readings_30": {
+     "qawo_r1": "-1.02718490560394303628858206917e-26",
+     "qawo_r2": "-1.02718490560276893576494161406e-26",
+     "fcc_r1": "-1.02718490560396661269110668065e-26",
+     "fcc_r2": "-1.02718490560278424803808640199e-26"
+    },
+    "readings_hex": {
+     "qawo_r1": "-0x1.96e8eccae1da4p-87",
+     "qawo_r2": "-0x1.96e8eccadfdadp-87",
+     "fcc_r1": "-0x1.96e8eccae1e48p-87",
+     "fcc_r2": "-0x1.96e8eccadfe18p-87"
+    },
+    "stated_error": "1.19768e-38",
+    "scatter_tool": 1.1976769261650665e-38,
+    "scatter_mp": "1.19768e-38",
+    "tolerance_min_e_over_100": "4.722e-36",
+    "counts_tool": true,
+    "stated_error_over_min_e": "2.536e-5",
+    "route": "B",
+    "direct_segments": {
+     "qawo_r1": 0,
+     "qawo_r2": 0,
+     "fcc_r1": 0,
+     "fcc_r2": 0
+    },
+    "wall_s": {
+     "qawo_r1": 6.93849941669032,
+     "qawo_r2": 9.702108417171985,
+     "fcc_r1": 18.50812637526542,
+     "fcc_r2": 72.93997466703877
+    },
+    "method": "tools/filon_reference.py reference(): QAWO and FCC at resolutions 1 and 2; ref FCC r2"
+   },
+   "R30": {
+    "value": "-0x1.96e8e80d54444p-87",
+    "abserr": "0x1.39d49df69c224p-111",
+    "regions": 1,
+    "converged": true,
+    "abs_v_minus_ref": "1.8259401e-33",
+    "ratio": "3.8668811",
+    "ratio_low": "3.8668557",
+    "ratio_high": "3.8669065",
+    "verdict": "understates"
+   },
+   "R31": {
+    "value": "-0x1.96e8ecc9c3340p-87",
+    "abserr": "0x1.853df17bc4f6bp-110",
+    "regions": 58,
+    "converged": true,
+    "abs_v_minus_ref": "1.6731853e-36",
+    "ratio": "0.0014284461",
+    "ratio_low": "0.0014182212",
+    "ratio_high": "0.001438671",
+    "verdict": "honest"
+   },
+   "dv_over_e30_plus_e31": "1.10997",
+   "decides": true,
+   "answer": "R30 understates"
+  },
+  {
+   "sid": "ref-G-q-r-h-1-209-4",
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    36286.827639966534
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[3]",
+   "label": "G-q-r",
+   "rtol": 1e-07,
+   "notify_label": "k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=36287, z in (1.7159e+10, 36287), regime Gqr, group G-q-r",
+   "pickle_sha256": "d6ea2d967ab218df05f2fd5a2e13d3de845cbea8f0412f4c1f3b158c2465632f",
+   "reference": {
+    "value_hex": "-0x1.2842349c30c56p-88",
+    "value_30": "-3.73930943070114050190892602571e-27",
+    "readings_30": {
+     "qawo_r1": "-3.73930943069125106593945706026e-27",
+     "qawo_r2": "-3.73930943070126801512928802191e-27",
+     "fcc_r1": "-3.73930943069100679810046313472e-27",
+     "fcc_r2": "-3.73930943070114050190892602571e-27"
+    },
+    "readings_hex": {
+     "qawo_r1": "-0x1.2842349c2d67ep-88",
+     "qawo_r2": "-0x1.2842349c30d08p-88",
+     "fcc_r1": "-0x1.2842349c2d52ap-88",
+     "fcc_r2": "-0x1.2842349c30c56p-88"
+    },
+    "stated_error": "1.02612e-38",
+    "scatter_tool": 1.0261217028824887e-38,
+    "scatter_mp": "1.02612e-38",
+    "tolerance_min_e_over_100": "4.65245e-36",
+    "counts_tool": true,
+    "stated_error_over_min_e": "2.206e-5",
+    "route": "B",
+    "direct_segments": {
+     "qawo_r1": 0,
+     "qawo_r2": 0,
+     "fcc_r1": 0,
+     "fcc_r2": 0
+    },
+    "wall_s": {
+     "qawo_r1": 9.419355041813105,
+     "qawo_r2": 16.67061425000429,
+     "fcc_r1": 20.761507584247738,
+     "fcc_r2": 80.79893349995837
+    },
+    "method": "tools/filon_reference.py reference(): QAWO and FCC at resolutions 1 and 2; ref FCC r2"
+   },
+   "R30": {
+    "value": "-0x1.28423f2458f0ep-88",
+    "abserr": "0x1.35355dc8dcb99p-111",
+    "regions": 6,
+    "converged": true,
+    "abs_v_minus_ref": "2.028363e-33",
+    "ratio": "4.3597722",
+    "ratio_low": "4.3597501",
+    "ratio_high": "4.3597943",
+    "verdict": "understates"
+   },
+   "R31": {
+    "value": "-0x1.284234a1dbe00p-88",
+    "abserr": "0x1.1c1352bde5bcfp-110",
+    "regions": 66,
+    "converged": true,
+    "abs_v_minus_ref": "4.2644114e-36",
+    "ratio": "0.0049884409",
+    "ratio_low": "0.0049764375",
+    "ratio_high": "0.0050004443",
+    "verdict": "honest"
+   },
+   "dv_over_e30_plus_e31": "1.53329",
+   "decides": true,
+   "answer": "R30 understates"
+  }
+ ],
+ "summary": {
+  "R30 understates": 7
+ }
+}

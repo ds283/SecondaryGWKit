@@ -1,0 +1,19 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5:scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_07b.py instr state/smoke/h state/smoke/h_off state/smoke/compare_instr.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T20:42:40Z
+# ----
+# levin-phase-floor 07b: Gate U0 (3), the instrument on against off, h against h_off
+# written 2026-11-16T20:42:41Z on mps026298.phys.susx.ac.uk
+# script compare_07b.py sha256 90b8436b1ced79c5f6f2d7cc0095a7c2c36eabe008e27d0a0acbcbea48743c40
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/smoke/h/units.jsonl sha256 67418a459c95b9b188e2568168a184971df7a40288bb0f7cd54c3e19b7c63a77
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/smoke/h_off/units.jsonl sha256 0e4d16a56e233f9b166b4c2746726807c2ea5e654eea84ca11c8e6c24f8ba44c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+h-1e-8-3-14501: IDENTICAL; status ['done', 'done']; calls 21; windowed 2 [(0, 1, {'minimum': 20}), (1, 1, {'root': 1})]; route-changed 2 [(2, 1, 0, True, False), (3, 1, 0, True, False)]; wall [9.716087624896318, 9.955127208959311]; differing []; excluded keys differing ['data.analytic_06h.seconds', 'data.calls[].elapsed', 'data.calls[].rate_rule_07b', 'data.calls[].route_07a', 'data.calls[].route_07a_post', 'data.cc_floor_s', 'data.checked_06g_s', 'data.declared_06h_s', 'data.deep_lines.seconds', 'data.instrument_07a', 'data.instrument_07b', 'data.other_calls[].elapsed', 'data.other_calls[].rate_rule_07b', 'data.other_calls[].route_07a', 'data.other_calls[].route_07a_post', 'data.pickle_length', 'data.pickle_record_sha256', 'data.rebuild_s', 'data.result.compute_time', 'data.route_07a_post_unit', 'data.scan_07_s', 'data.wall_s', 'data.worker_pid', 'pickle.rate_rule_07b', 'pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed', 'pickle.result_full.compute_time', 'pickle.route_07a', 'pickle.route_07a_post', 'pickle.scan_07[].scan.seconds']; on/off True/True
+worker evidence all hold True
+wrote state/smoke/compare_instr.json sha256 85ddc48d331e752cfc47ed878a614845ad59e39ce524b3d815f79c0373a59713
+# ----
+# end 2026-11-16T20:42:41Z
+# exit 0

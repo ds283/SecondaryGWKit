@@ -1,0 +1,65 @@
+15c15,23
+< Usage (any cwd): python -B launch_r31.py r31-replay
+---
+> Plan ``r31-refs`` (slug ``r31-refs``; added after the user's word at stop 1, "settle which store understates", and
+> the orchestrator's go-ahead for the seven records only; state/refs_plan_r31.md, written before any reading): for each of
+> the 7 group records whose |v31 - v30| > e30 + e31, the tool's own four readings (``python -B -m tools.filon_reference
+> PICKLE --tolerance T --unpickler ray.cloudpickle --workers 6 --out out/refs/readings/<sid>.json``; the tree's tool,
+> d37e633b...), T = min(e30, e31)/100 in the call's units (from out/refs/refcap_replay_{h,a07}.json), PYTHONPATH the tree
+> then scripts/capture; one call at a time, the cheapest first (out/refs/refs_projection_r31.json), each job's projection
+> the sum of its four readings' with margin; the run backstop at 4 h. Ray-free, no lock, no store, nothing in a tree.
+> 
+> Usage (any cwd): python -B launch_r31.py r31-replay|r31-refs
+57a66,94
+> def plan_refs():  # the seven records' references (state/refs_plan_r31.md)
+>     h = json.loads((ROOT / "out" / "refs" / "refcap_replay_h.json").read_text())["calls"]
+>     a = json.loads((ROOT / "out" / "refs" / "refcap_replay_a07.json").read_text())["calls"]
+>     proj = json.loads((ROOT / "out" / "refs" / "refs_projection_r31.json").read_text())["calls"]
+>     if not (all(x["reproduces"] for x in h) and all(x["reproduces"] for x in a)):
+>         raise SystemExit("a capture does not reproduce its store")
+>     (ROOT / "out" / "refs" / "readings").mkdir(parents=True, exist_ok=True)
+>     jobs = []
+>     for x, y, p in zip(h, a, proj):
+>         if not (x["key"] == y["key"] == p["key"] and x["record"] == y["record"] == p["record"]):
+>             raise SystemExit("the replays and the projection do not list the same calls")
+>         if not p["in_the_seven"]:
+>             continue  # the eighth (the converged change) is not read: the user asked about the seven
+>         e30, e31 = float.fromhex(y["got"]["abserr"]), float.fromhex(x["got"]["abserr"])
+>         tol = min(e30, e31) / 100.0
+>         sid = Path(x["pickle"]).stem
+>         ps = sum(p["projection"][k]["with_margin_s"] for k in ("qawo_r1", "qawo_r2", "fcc_r1", "fcc_r2"))
+>         jobs.append({"name": sid, "pythonpath": f"{TREE}:{HERE / 'capture'}", "requires": str(Path(x["pickle"]).relative_to(ROOT)),
+>                      "projected_s": ps, "tolerance_hex": tol.hex(),
+>                      "argv": [PYTHON, "-B", "-m", "tools.filon_reference", x["pickle"], "--tolerance", repr(tol),
+>                               "--unpickler", "ray.cloudpickle", "--workers", "6",
+>                               "--out", str(ROOT / "out" / "refs" / "readings" / f"{sid}.json")]})
+>     if len(jobs) != 7:
+>         raise SystemExit(f"{len(jobs)} calls, not 7")
+>     jobs.sort(key=lambda j: (j["projected_s"], j["name"]))
+>     return {"label": "r31-refs", "backstop_s": 14400.0, "check_after_s": 1800.0,
+>             "stages": [{"name": "readings", "max_parallel": 1, "jobs": jobs}]}
+> 
+> 
+69a107,116
+> PURPOSES["r31-refs"] = (
+>     "levin-phase-floor prompt 07b section 5 (Part C), the R31 rehearsal agent, on the Mac Studio (mps026298; Python 3.13.16): "
+>     "the user's word at stop 1, 'settle which store understates' (descriptive, not scored against any rule): references for "
+>     "the 7 QuadSourceIntegral group records (rtol 1e-7, Route B) whose |v31 - v30| > e30 + e31, by 07's V4 method, the "
+>     "tool's own four readings (tools/filon_reference.py d37e633b at the tree 0a103b5a: QAWO and FCC at resolutions 1 and 2; "
+>     "the reference FCC r2, its stated error the readings' scatter, T = min(e30, e31)/100). Each capture (the r31-replay "
+>     "run's refcap stage) is checked bit for bit against R31 at the tree and against R30 at 07a's module "
+>     "(out/refs/refcap_replay_{h,a07}.json). One call at a time, six worker processes; projected 842 s with margin "
+>     "(0.35 h x1.5); backstop 4 h. Ray-free, no lock, no store opened, nothing written in a tree; the decision rule is "
+>     "state/refs_plan_r31.md, written before any reading")
+74a122,123
+> SCOPES_REFS = ("7 captured calls (state/inputs/ref-*.pkl, out/refcap.json), 28 readings; outputs out/refs/readings/, "
+>                "out/cmd/r31-refs, out/r31-refs_results.json")
+83c132
+<     plan = {"r31-replay": plan_replay}[label]()
+---
+>     plan = {"r31-replay": plan_replay, "r31-refs": plan_refs}[label]()
+92c141,142
+<         script=str(SCRIPT), unit="commands", expected_units=n, checkpoint=True, results=None, scope=SCOPES[label],
+---
+>         script=str(SCRIPT), unit="commands", expected_units=n, checkpoint=True, results=None,
+>         scope=SCOPES_REFS if label == "r31-refs" else SCOPES[label],

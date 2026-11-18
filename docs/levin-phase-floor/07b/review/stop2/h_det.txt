@@ -1,0 +1,22 @@
+script ecd853247b5c57bf6bd5ca8a703be77c17f750c6ae02443d4f0ad800d0a1c087
+input 6ecde8d1073ec11786dc49f3d5d939bd9183f8c79fa3e5de3b50b3c2c6b57c25 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/review/stop2/h_run1/units.jsonl
+input 50cc3a27c3df965386f4adaef753adf5c4874a4f9ad2f9ce100d41bb1ee82b10 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/review/stop2/h_run2/units.jsonl
+unit h-1e-8-2-34906 / h-1e-8-2-34906, status done / done
+== unit record (run1, run2): 8930 / 8930 leaves, 32 differ
+        1  analytic_06h/seconds   (only first 0, only second 0)
+        5  calls/elapsed   (only first 0, only second 0)
+        1  cc_floor_s   (only first 0, only second 0)
+        1  checked_06g_s   (only first 0, only second 0)
+        1  declared_06h_s   (only first 0, only second 0)
+        1  deep_lines/seconds   (only first 0, only second 0)
+       16  other_calls/elapsed   (only first 0, only second 0)
+        1  pickle_record_sha256   (only first 0, only second 0)
+        1  rebuild_s   (only first 0, only second 0)
+        1  result/compute_time   (only first 0, only second 0)
+        1  scan_07_s   (only first 0, only second 0)
+        1  wall_s   (only first 0, only second 0)
+        1  worker_pid   (only first 0, only second 0)
+== region record (run1, run2): 145288 / 145288 leaves, 11 differ
+        5  result_full/WKB_Levin_subintervals/groups/elapsed   (only first 0, only second 0)
+        1  result_full/compute_time   (only first 0, only second 0)
+        5  scan_07/scan/seconds   (only first 0, only second 0)

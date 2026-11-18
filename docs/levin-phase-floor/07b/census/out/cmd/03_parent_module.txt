@@ -1,0 +1,27 @@
+$ bash state/parent_module.sh
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T20:34:00Z
+# ----
+== state/variants/levin_quadrature_parent.py
+-r--r--r-- 1 ds283 staff 316949 Nov 16 20:34 state/variants/levin_quadrature_parent.py
+4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  state/variants/levin_quadrature_parent.py
+== git show 7b82a0cd / 1ec734d7 / 4bf50d34, sha256
+7b82a0cd 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  -
+1ec734d7 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  -
+4bf50d34 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  -
+== blob ids: the tree entries, and the file's (git hash-object, no -w)
+7b82a0cd 0701d2a6a9442bdb88606276580421a3522cba63
+1ec734d7 0701d2a6a9442bdb88606276580421a3522cba63
+4bf50d34 0701d2a6a9442bdb88606276580421a3522cba63
+file 0701d2a6a9442bdb88606276580421a3522cba63
+== 07a's census workers' module (07a's census log: 4ea1948b...)
+"levin_quadrature_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577"
+== cmp with git show 1ec734d7 (byte-identical: no output, rc 0)
+rc 0
+== cmp with h's file (expected to differ)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/AdaptiveLevin/levin_quadrature.py state/variants/levin_quadrature_parent.py differ: char 1977, line 42
+rc 1
+# ----
+# end 2026-11-16T20:34:01Z
+# exit 0

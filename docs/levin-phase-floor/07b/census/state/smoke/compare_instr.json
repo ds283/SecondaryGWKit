@@ -1,0 +1,371 @@
+{
+ "header": [
+  "# levin-phase-floor 07b: Gate U0 (3), the instrument on against off, h against h_off",
+  "# written 2026-11-16T20:42:41Z on mps026298.phys.susx.ac.uk",
+  "# script compare_07b.py sha256 90b8436b1ced79c5f6f2d7cc0095a7c2c36eabe008e27d0a0acbcbea48743c40",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/smoke/h/units.jsonl sha256 67418a459c95b9b188e2568168a184971df7a40288bb0f7cd54c3e19b7c63a77",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/smoke/h_off/units.jsonl sha256 0e4d16a56e233f9b166b4c2746726807c2ea5e654eea84ca11c8e6c24f8ba44c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "instr",
+ "excluded": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "instrument_07a",
+  "instrument_07b",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rate_rule_07b",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "route_07a",
+  "route_07a_post",
+  "route_07a_post_unit",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "n_units": 1,
+ "n_units_identical": 1,
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "A:tree-1e-8-k3_1": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "B:tree-1e-8-k3_1": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  }
+ },
+ "units": [
+  {
+   "unit": "h-1e-8-3-14501",
+   "status": [
+    "done",
+    "done"
+   ],
+   "ok": true,
+   "differing": [],
+   "detail": [],
+   "excl_differing": [
+    "data.analytic_06h.seconds",
+    "data.calls[].elapsed",
+    "data.calls[].rate_rule_07b",
+    "data.calls[].route_07a",
+    "data.calls[].route_07a_post",
+    "data.cc_floor_s",
+    "data.checked_06g_s",
+    "data.declared_06h_s",
+    "data.deep_lines.seconds",
+    "data.instrument_07a",
+    "data.instrument_07b",
+    "data.other_calls[].elapsed",
+    "data.other_calls[].rate_rule_07b",
+    "data.other_calls[].route_07a",
+    "data.other_calls[].route_07a_post",
+    "data.pickle_length",
+    "data.pickle_record_sha256",
+    "data.rebuild_s",
+    "data.result.compute_time",
+    "data.route_07a_post_unit",
+    "data.scan_07_s",
+    "data.wall_s",
+    "data.worker_pid",
+    "pickle.rate_rule_07b",
+    "pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed",
+    "pickle.result_full.compute_time",
+    "pickle.route_07a",
+    "pickle.route_07a_post",
+    "pickle.scan_07[].scan.seconds"
+   ],
+   "n_calls": 21,
+   "n_calls_windowed": 2,
+   "n_calls_route_changed": 2,
+   "route_changes": [
+    [
+     2,
+     1,
+     0,
+     true,
+     false
+    ],
+    [
+     3,
+     1,
+     0,
+     true,
+     false
+    ]
+   ],
+   "windows": [
+    [
+     0,
+     1,
+     {
+      "minimum": 20
+     }
+    ],
+    [
+     1,
+     1,
+     {
+      "root": 1
+     }
+    ]
+   ],
+   "wall_s": [
+    9.716087624896318,
+    9.955127208959311
+   ],
+   "refusals_07b": [
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     2,
+     0,
+     2
+    ],
+    [
+     3,
+     0,
+     2
+    ],
+    [
+     4,
+     0,
+     3
+    ],
+    [
+     5,
+     0,
+     6
+    ],
+    [
+     6,
+     0,
+     7
+    ],
+    [
+     7,
+     0,
+     6
+    ],
+    [
+     8,
+     0,
+     7
+    ],
+    [
+     9,
+     0,
+     6
+    ],
+    [
+     10,
+     0,
+     7
+    ],
+    [
+     11,
+     0,
+     5
+    ],
+    [
+     12,
+     0,
+     6
+    ],
+    [
+     13,
+     0,
+     6
+    ],
+    [
+     14,
+     0,
+     6
+    ],
+    [
+     15,
+     0,
+     5
+    ],
+    [
+     16,
+     0,
+     5
+    ],
+    [
+     17,
+     0,
+     5
+    ],
+    [
+     18,
+     0,
+     5
+    ],
+    [
+     19,
+     0,
+     7
+    ],
+    [
+     20,
+     0,
+     6
+    ]
+   ],
+   "A_route_07a_on_every_call": true,
+   "B_route_07a_on_no_call": true,
+   "A_rate_rule_07b_on_every_call": true,
+   "B_rate_rule_07b_on_no_call": true,
+   "refusals": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     1,
+     2,
+     3
+    ],
+    [
+     2,
+     0,
+     2
+    ],
+    [
+     3,
+     0,
+     2
+    ],
+    [
+     4,
+     0,
+     3
+    ],
+    [
+     5,
+     0,
+     6
+    ],
+    [
+     6,
+     0,
+     7
+    ],
+    [
+     7,
+     0,
+     6
+    ],
+    [
+     8,
+     0,
+     7
+    ],
+    [
+     9,
+     0,
+     6
+    ],
+    [
+     10,
+     0,
+     7
+    ],
+    [
+     11,
+     0,
+     5
+    ],
+    [
+     12,
+     0,
+     6
+    ],
+    [
+     13,
+     0,
+     6
+    ],
+    [
+     14,
+     0,
+     6
+    ],
+    [
+     15,
+     0,
+     5
+    ],
+    [
+     16,
+     0,
+     5
+    ],
+    [
+     17,
+     0,
+     5
+    ],
+    [
+     18,
+     0,
+     5
+    ],
+    [
+     19,
+     0,
+     7
+    ],
+    [
+     20,
+     0,
+     6
+    ]
+   ]
+  }
+ ]
+}

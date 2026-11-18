@@ -1,0 +1,90 @@
+def cmd_spec_refcap(rows_path, out_path):
+    """prompt 07b r31: the capture pass for the group records of interest: each record's call identified in the replay
+    (out/replay_calls.checks.json: the one call that reproduces the record), its unit re-run with capture=[[index, label]]."""
+    rows = json.loads(Path(rows_path).read_text())["rows"]
+    checks = json.loads((REH / "out" / "replay_calls.checks.json").read_text())["checks"]
+    by = {(tuple(c["key"]), c["path"]): c for c in checks}
+    units = {}
+    for e in rows:
+        for r in e["records"]:
+            if not (r.get("changed_vs_r28") and r["kind"] == "group"):
+                continue
+            c = by[(tuple(e["key"]), r["path"])]
+            assert c["reproduces"] and c["index"] is not None, c
+            uid = f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"
+            if uid not in units:
+                units[uid] = unit_spec("h", e["R31"], capture=[])
+            units[uid]["capture"].append([c["index"], c["notify_label"]])
+    us = list(units.values())
+    ws = [[] for _ in range(min(MAX_WORKERS, len(us)))]
+    for i, u in enumerate(us):
+        ws[i % len(ws)].append(u)
+    spec = {"name": "refcap", "workers": [{"name": f"refcap-h-{i}", "tree": "h", "units": u} for i, u in enumerate(ws)]}
+    Path(out_path).write_text(json.dumps(spec, indent=1))
+    print(f"wrote {out_path} sha256 {sha256(out_path)}: {len(us)} units, {sum(len(u['capture']) for u in us)} captures")
+
+
+def cmd_refcapcheck(rows_path, out_path):
+    """prompt 07b r31: each capture of a group record of interest, checked against R31's record (the captured call's
+    stored-form value and abserr, converged and regions) and against the replay's call (index and refusals); its blob
+    extracted to state/inputs/ (not unpickled here)."""
+    rows = json.loads(Path(rows_path).read_text())["rows"]
+    uc = load_units(REH / "state" / "capture" / "refcap")
+    ur = load_units(REH / "state" / "capture" / "replay")
+    lines = header(Path(__file__).resolve(), "prompt 07b r31: the captures of the group records of interest, checked against R31",
+                   [Path(rows_path), *sorted((REH / "state" / "capture" / "refcap").glob("*/emit.jsonl"))])
+    for l in lines:
+        print(l)
+    res = []
+    ok_all = True
+    for e in rows:
+        for r in e["records"]:
+            if not (r.get("changed_vs_r28") and r["kind"] == "group"):
+                continue
+            uid = f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"
+            u, bye, _ = uc[uid]
+            ru, _, _ = ur[uid]
+            want = r["R31"]
+            z = e["key"][3]
+            cands = [c for c in u.get("calls") or [] if c["notify_label"].endswith(f"group {r['label']}")
+                     and stored_form(c, z) == (want["value"], want["abserr"])]
+            rc = [c for c in ru.get("calls") or [] if c["notify_label"].endswith(f"group {r['label']}")
+                  and stored_form(c, z) == (want["value"], want["abserr"])]
+            out = {"key": e["key"], "record": r["path"], "label": r["label"], "uid": uid, "R31": want, "R30": r["R30"],
+                   "n_candidates": len(cands), "ray_initialized": None if bye is None else bye.get("ray_initialized")}
+            ok = len(cands) == 1 and len(rc) == 1 and u["status"] == "done"
+            if ok:
+                c = cands[0]
+                out.update(index=c["index"], notify_label=c["notify_label"], value=c["value"]["hex"], abserr=c["abserr"]["hex"],
+                           converged=c["converged"], regions=c["num_regions"], refusals_07b=c.get("refusals_07b"),
+                           replay_index=rc[0]["index"], replay_refusals_07b=rc[0].get("refusals_07b"))
+                ok = (c["converged"] == want["converged"] and c["num_regions"] == want["regions"]
+                      and c["index"] == rc[0]["index"] and c.get("refusals_07b") == rc[0].get("refusals_07b"))
+                ent = [x for x in (u.get("x1_inputs") or []) if x.get("index") == c["index"]]
+                if len(ent) == 1 and not ent[0].get("error"):
+                    ent = ent[0]
+                    wdir = [p for p in (REH / "state" / "capture" / "refcap").glob(f"*/{ent['pickle']}")]
+                    assert len(wdir) == 1, wdir
+                    with open(wdir[0], "rb") as f:
+                        f.seek(ent["offset"])
+                        blob = f.read(ent["length"])
+                    if hashlib.sha256(blob).hexdigest() != ent["sha256"]:
+                        raise RuntimeError(f"{uid} {r['path']}: blob sha256 differs")
+                    dst = REH / "state" / "inputs" / f"ref-{r['label']}-h-{e['R31']['shard']}-{e['R31']['serial']}-{c['index']}.pkl"
+                    dst.parent.mkdir(parents=True, exist_ok=True)
+                    if dst.exists():
+                        raise SystemExit(f"{dst} exists")
+                    dst.write_bytes(blob)
+                    out.update(pickle=str(dst), sha256=ent["sha256"], bytes=len(blob))
+                else:
+                    ok = False
+                    out["capture_error"] = ent
+            out["reproduces_store"] = ok
+            ok_all &= ok
+            res.append(out)
+            print(f"{e['key']} {r['path']} {r['label']}: {'REPRODUCES' if ok else 'DOES NOT REPRODUCE'} R31's record; "
+                  f"value {out.get('value')} abserr {out.get('abserr')} regions {out.get('regions')} converged {out.get('converged')}; "
+                  f"refusals {out.get('refusals_07b')}; pickle {out.get('pickle')}")
+    Path(out_path).write_text(json.dumps({"header": lines, "captures": res}, indent=1))
+    print(f"wrote {out_path} sha256 {sha256(out_path)}; all reproduce: {ok_all}")
+    return 0 if ok_all else 1

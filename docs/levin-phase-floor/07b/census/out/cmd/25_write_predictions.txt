@@ -1,0 +1,32 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/write_predictions_07b.py state/predictions.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T21:03:30Z
+# ----
+s6: lines 607-622, 16 lines, 1276 chars; substring of the prompt True, of the file True
+  first: **Predictions, fixed before the run** (README §5 rule 3), copied into `state/predictions.md` unchanged,
+  last:  changes in each direction; the abserr ratio against 07a's; regions and cost against 07a's.
+s95: lines 725-748, 24 lines, 1748 chars; substring of the prompt True, of the file True
+  first: ### 9.5 Additions to §5's and §6's predictions
+  last:  replay record in `float.hex`, and R2-22 equal to 07a's census too.
+s97: lines 765-769, 5 lines, 301 chars; substring of the prompt True, of the file True
+  first: ### 9.7 Stops added (into §8)
+  last:  - In Part C: the census's projection beyond 48 hours; U8 failing, before anything else is scored.
+  contains 'U1 — nothing else moves': True
+  contains 'U2 — no Levin leaf': True
+  contains 'U3 — every phase': True
+  contains 'U4 — honest where it is referenced': True
+  contains 'U5 — the gate is consistent': True
+  contains "U6 — 06b's 24 are honest": True
+  contains 'U7 — the pairs': True
+  contains 'U8 — the code is (h)': True
+  contains '**U1 counts**': True
+  contains '**U4 is predicted to hold,**': True
+  contains '**U6 is predicted to hold.**': True
+  contains '**U7 is predicted to hold:**': True
+  contains '**Descriptive, not scored:**': True
+  contains '**Descriptive, added:**': True
+wrote state/predictions.md sha256 0c6055acdfcb2feefdd5ca589146922da4d6c9404f79b11882cd2b497615f22f; all checks HOLD
+# ----
+# end 2026-11-16T21:03:31Z
+# exit 0

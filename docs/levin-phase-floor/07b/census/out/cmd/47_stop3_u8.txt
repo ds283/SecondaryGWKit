@@ -1,0 +1,20 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_u8_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200 out/stop3/u8.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-17T13:36:24Z
+# ----
+# levin-phase-floor 07b: U8 at planned stop 3, the census against (h)'s replays
+# written 2026-11-17T13:36:24Z on mps026298.phys.susx.ac.uk
+# script score_u8_07b.py sha256 e3487208191cd482b42ce58179c015577dee70e53bc1d66bfc7f906407cfbfc2
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/census_wanted_07b.json sha256 33d0d89c21c25869d471ca02b30045c114d5f07d42d12c9f5f31273e0c2c7fc9
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/replays/h_summary_all.json sha256 b728c57d7bacb655b01516a53732868a80cc36231031f57fd08d761f177feba1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/ext/replays/h_summary_i3.json sha256 cf8909b786888acc9708b1ee8fd6dce725d2e1d8f086aa0d4f30ac8af7131e3e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/checkpoint.jsonl sha256 396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253
+calls 187 (excluded ['i3-34599-07']); distinct census calls 185; replay record equals its summary row: 187; equal in all five: 187
+U8: all equal
+wrote out/stop3/u8.json sha256 d926dec37243e3a2552bedc809bc54a0bcad1fad20eecb8c30412c50440fd0db
+# ----
+# end 2026-11-17T13:36:27Z
+# exit 0

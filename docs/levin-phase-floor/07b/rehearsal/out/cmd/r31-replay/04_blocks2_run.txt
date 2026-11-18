@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/capture/replay07b_r31.py run /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/blocks2_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T19:57:27Z
+# ----
+2026-11-16T19:57:27Z # prompt 07b r31: run blocks2
+2026-11-16T19:57:27Z # written 2026-11-16T19:57:27Z on mps026298.phys.susx.ac.uk
+2026-11-16T19:57:27Z # script replay07b_r31.py sha256 ac7319caf04824e14870eb500c80c62b2d83e76d0c05532a0cfac7e723f00825
+2026-11-16T19:57:27Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+2026-11-16T19:57:27Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-16T19:57:27Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/blocks2_spec.json sha256 2f890f7e6ae76a19964ac9d978cf9a7feaa0e40b6b3efc490f55fdd407e6803c
+2026-11-16T19:57:27Z 1 workers, 2 units, at most 6 at once
+2026-11-16T19:57:27Z start blocks2-h (h, 2 units): pid 15662
+2026-11-16T19:58:20Z end blocks2-h: rc 0 after 52.5 s
+2026-11-16T19:58:21Z done in 53.5 s; return codes {0: 1}
+# ----
+# end 2026-11-16T19:58:21Z
+# exit 0

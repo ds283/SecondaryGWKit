@@ -1,0 +1,216 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-16T19:19:06Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07b/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+echo "== lock.log tail"; tail -3 $Z/state/lock.log
+echo "== registry list"; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/r31_launch_registry_list.txt 2>&1; echo "exit $?"; grep -E "r31|running|stale|alive" $Z/out/r31_launch_registry_list.txt | cut -c1-200; tail -1 $Z/out/r31_launch_registry_list.txt
+R=$(ls -d $M/var/runs/levin-phase-floor-07b-r31-07b-* ); echo "== run dir $R"; ls -la $R
+echo "== status.json"; $M/venv/bin/python -I -B -c "import json,sys;s=json.load(open(sys.argv[1]));print(json.dumps({k:s[k] for k in s if k not in (\"fingerprint\",)},indent=1))" $R/status.json
+echo "== manifest (git, cwd, script, host)"; $M/venv/bin/python -I -B -c "import json,sys;m=json.load(open(sys.argv[1]));print(json.dumps({k:m[k] for k in m if k not in (\"argv\",\"distributions\",\"environment\")},indent=1)[:3000])" $R/manifest.json
+echo "== launch log"; cat $M/var/runs/levin-phase-floor-07b-r31.launch.log | cut -c1-200
+echo "== stdout tail"; tail -5 $R/stdout.log | cut -c1-200; echo "== stderr size"; wc -c $R/stderr.log
+echo "== Traceback count"; grep -c Traceback $M/var/runs/levin-phase-floor-07b-r31.launch.log $R/stdout.log $R/stderr.log
+echo "== pids"; ps -o pid,ppid,etime,pcpu,command -p 10620,10624 | cut -c1-120
+echo "== R31 store files"; ls -la $M/var/datastores | grep 07b-r31
+echo "== W status --short --ignored"; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== M HEAD, status"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+
+# output:
+== lock.log tail
+## lock 4 2026-11-16T19:18:55Z: set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 10624 (R31's driver; sh 10620)
+recorded pid 10624 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+== registry list
+exit 0
+   levin-phase-floor-07b-r31-07b-20261116T191849              running           -      18s  levin-phase-floor prompt 07b section 5 (Part C), R31 on the Mac Studio (mps026298; tree 0a103b5a in the work
+   levin-phase-floor-06h-phase-20261101T033514                done          84/84  15d 15h  levin-phase-floor prompt 06h section 5 on the Mac Studio (mps026298; Python 3.13.16): the phase re-measureme
+82 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 81 finished; 0 with no host recorded.
+82 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 81 finished; 0 with no host recorded.
+== run dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-07b-20261116T191849
+total 20
+drwxr-xr-x   6 ds283 staff  192 Nov 16 19:19 .
+drwxr-xr-x 118 ds283 staff 3776 Nov 16 19:18 ..
+-rw-r--r--   1 ds283 staff 5337 Nov 16 19:18 manifest.json
+-rw-r--r--   1 ds283 staff  311 Nov 16 19:19 status.json
+-rw-r--r--   1 ds283 staff    0 Nov 16 19:18 stderr.log
+-rw-r--r--   1 ds283 staff 4481 Nov 16 19:19 stdout.log
+== status.json
+{
+ "exit_code": null,
+ "heartbeat": "2026-11-16T19:19:03+00:00",
+ "host": {
+  "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+  "id": "d120d1cf03551e6f"
+ },
+ "pid": 10624,
+ "stage": "CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
+ "state": "running",
+ "units_done": 0,
+ "units_total": null
+}
+== manifest (git, cwd, script, host)
+{
+ "campaign": "levin-phase-floor",
+ "checkpoint": null,
+ "created": "2026-11-16T19:18:49+00:00",
+ "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5",
+ "expected_units": null,
+ "git_dirty": false,
+ "git_head": "0a103b5ae0de32b568f44904a5c3dcbfca922a2e",
+ "heartbeat_means": "Refreshed when the pipeline writes a line to stdout, at most once per 30 s, and the line it came from is the `stage` in status.json. RayWorkPool prints only after ray.wait has returned completed work, so a fresh heartbeat means work completed recently -- stronger than 'the parent process is alive', and a parent blocked for ever inside ray.get prints nothing and goes stale. It does NOT mean any Ray actor is progressing, and the converse does not hold: a stage that prints nothing for longer than the staleness window (one long work item, a background-model build) is reported stale while it is legitimately working. Stale means go and look.",
+ "host": {
+  "id": "d120d1cf03551e6f",
+  "machine": "arm64",
+  "name": "mps026298.phys.susx.ac.uk",
+  "python": "3.13.16",
+  "release": "27.0.0",
+  "system": "Darwin"
+ },
+ "packages": {
+  "SQLAlchemy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.0.55"
+  },
+  "datastorekit": {
+   "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+   "editable": false,
+   "requested_revision": "v0.5.0",
+   "url": "https://github.com/ds283/DatastoreKit",
+   "version": "0.5.0"
+  },
+  "numpy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.2.4"
+  },
+  "ray": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "2.59.0"
+  },
+  "raypoolkit": {
+   "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+   "editable": false,
+   "requested_revision": "v0.3.0",
+   "url": "https://github.com/ds283/RayPoolKit",
+   "version": "0.3.0"
+  },
+  "runregistrykit": {
+   "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+   "editable": false,
+   "requested_revision": "v0.2.0",
+   "url": "https://github.com/ds283/RunRegistryKit",
+   "version": "0.2.0"
+  },
+  "scipy": {
+   "commit": null,
+   "editable": false,
+   "requested_revision": null,
+   "url": null,
+   "version": "1.16.3"
+  }
+ },
+ "prompt": "07b",
+ "purpose": "levin-phase-floor prompt 07b section 5 (Part C), R31 on the Mac Studio (mps026298; tree 0a103b5a in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5, Part C's dispatch SHA, whose code is the code commit 5e19c4b6 (variant (h): after the trust test passes a non-direct Levin leaf, the edge rule or the range rule on |theta'| can refuse it), parent 7b82a0cd, levin_quadrature.py 8956c7b6, QuadSourceIntegral.py 33cb161e; Python 3.13.16): rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (R8's, R23-R30's
+== launch log
+** quadsource_atol_sweep --build: registered as levin-phase-floor-07b-r31-07b-20261116T191849
+**   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/manifest.json
+**   list it with: ./venv/bin/python -m runregistrykit list
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_ATOL' in main.py
+** quadsource_atol_sweep: replaced 1 occurrence of 'tol=DEFAULT_QUADRATURE_RTOL' in main.py
+** quadsource_atol_sweep --build: atol=1e-32 rtol=1e-07
+** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite', '--job-name', 'levin-phase-floor-07b', '--
+** quadsource_atol_sweep --build: rehearsal scope, NOT A3 v2: k = [100000.0, 316227.7660168379, 1000000.0], zend 250
+** quadsource_atol_sweep --build: bootstrapping a local Ray instance (num_cpus=6, include_dashboard=False)
+2026-11-16 19:18:56,396	INFO worker.py:2033 -- Started a local Ray instance.
+>> Created sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite" with 4 shards
+
+** BUILD ARRAY OF WAVENUMBERS TO SAMPLE
+[36m(Datastore pid=10684)[0m @@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+[36m(Datastore pid=10684)[0m |  Omega_m = 0.3111
+[36m(Datastore pid=10684)[0m |  Omega_cc = 0.6889
+[36m(Datastore pid=10684)[0m |  Omega_r = 9.139e-05
+[36m(Datastore pid=10684)[0m |  present-day energy density = 8.6e-24 g/m^3
+[36m(Datastore pid=10684)[0m |  matter-radiation equality at z = 3403
+[36m(Datastore pid=10684)[0m |  matter-Lambda equality at z = 0.3034
+[36m(Datastore pid=10682)[0m @@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+T
+[36m(Datastore pid=10682)[0m |  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+
+>> RUNNING PIPELINE FOR MODEL LambdaCDM
+
+** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM SOURCE K-SAMPLE
+   -- ALL WORK ITEMS COMPLETE in time 0.448s
+      Queue summary: 3 lookup (avg 401.5/min), 3 compute (avg 401.5/min), 3 store (avg 401.5/min)
+
+** CALCULATE HORIZON EXIT TIMES FOR LambdaCDM RESPONSE K-SAMPLE
+   -- ALL WORK ITEMS COMPLETE in time 0.0159s
+      Queue summary: 3 lookup (avg 189.1/sec), 0 compute (avg 0/day), 0 store (avg 0/day)
+      (no compute items were evaluated - all assets read from datastore)
+
+** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE
+   @@ earliest horizon exit/re-entry time is 1e+06/Mpc with z_exit=4.6349e+11
+   @@ the curvature criterion took 0.0445s over 3 wavenumbers in 2 sectors; the source grid carries 1159 samples against the 1144 a uniform 100 per decade of z would have given
+   @@ this run is named "default" (--run-label); its source grid was built by construction version 2 and tagged SourceRedshiftGrid_1159_7139cb9c
+
+** CALCULATING BACKGROUND LambdaCDM MODEL
+   @@ computed and stored new background solution in time 0.734s
+
+** BUILDING BESSEL FUNCTION SPLINES FOR LambdaCDM
+   @@ largest source k = 1e+06/Mpc, latest tau = 766.84 (for z=250), largest x=7.6684e+08, largest x +7.5% clearance=8.2436e+08
+   @@ constructed splines in time 0.00742s
+
+** CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS
+   -- ALL WORK ITEMS COMPLETE in time 0.955s
+      Queue summary: 3 lookup (avg 188.4/min), 3 compute (avg 188.4/min), 3 store (avg 188.4/min), 3 validation (avg 188.4/min)
+-- UNRESOLVED-OSCILLATION SUMMARY | matter transfer functions, numerical part
+|  no object reported unresolved oscillations (3 objects over 3 wavenumbers)
+
+** CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS
+   -- ALL WORK ITEMS COMPLETE in time 0.288s
+      Queue summary: 3 lookup (avg 10.42/sec), 3 compute (avg 10.42/sec), 3 store (avg 10.42/sec), 3 validation (avg 10.42/sec)
+
+** CALCULATE QUADRATIC SOURCE TERMS
+   -- ALL WORK ITEMS COMPLETE in time 0.966s
+      Queue summary: 6 lookup (avg 372.5/min), 6 compute (avg 372.5/min), 6 store (avg 372.5/min), 6 validation (avg 372.5/min)
+
+** CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS
+== stdout tail
+** CALCULATE QUADRATIC SOURCE TERMS
+   -- ALL WORK ITEMS COMPLETE in time 0.966s
+      Queue summary: 6 lookup (avg 372.5/min), 6 compute (avg 372.5/min), 6 store (avg 372.5/min), 6 validation (avg 372.5/min)
+
+** CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS
+== stderr size
+0 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/stderr.log
+== Traceback count
+/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31.launch.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/stdout.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/stderr.log:0
+== pids
+  PID  PPID ELAPSED  %CPU COMMAND
+10620     1   00:19   0.0 sh -c PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0
+10624 10620   00:19  63.7 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/Mac
+== R31 store files
+-rw-r--r--  1 ds283 staff   1736704 Nov 16 19:19 levin-phase-floor-07b-r31-shard0000.sqlite
+-rw-r--r--  1 ds283 staff   1638400 Nov 16 19:19 levin-phase-floor-07b-r31-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 16 19:19 levin-phase-floor-07b-r31-shard0002.sqlite
+-rw-r--r--  1 ds283 staff   1789952 Nov 16 19:19 levin-phase-floor-07b-r31-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 16 19:19 levin-phase-floor-07b-r31.sqlite
+== W status --short --ignored
+(end)
+== M HEAD, status
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end)
+# exit: 0
+# end: 2026-11-16T19:19:07Z

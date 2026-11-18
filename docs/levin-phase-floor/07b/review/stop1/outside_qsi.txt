@@ -1,0 +1,21 @@
+version ident True rows ident 1 differ 0 only 0 0 0 colsonly [] [] {}
+store_tag ident True rows ident 10 differ 0 only 0 0 0 colsonly [] [] {}
+redshift ident True rows ident 1159 differ 0 only 0 0 0 colsonly [] [] {}
+wavenumber ident True rows ident 3 differ 0 only 0 0 0 colsonly [] [] {}
+tolerance ident True rows ident 7 differ 0 only 0 0 0 colsonly [] [] {}
+LambdaCDM ident True rows ident 1 differ 0 only 0 0 0 colsonly [] [] {}
+QCD_Cosmology ident True rows ident 1 differ 0 only 0 0 0 colsonly [] [] {}
+IntegrationSolver ident True rows ident 7 differ 0 only 0 0 0 colsonly [] [] {}
+GkSourcePolicy ident True rows ident 2 differ 0 only 0 0 0 colsonly [] [] {}
+QuadSourcePolicy ident True rows ident 2 differ 0 only 0 0 0 colsonly [] [] {}
+wavenumber_exit_time ident False rows ident 0 differ 3 only 0 0 0 colsonly [] [] {'compute_time': 3}
+BackgroundModel ident False rows ident 0 differ 1 only 0 0 0 colsonly [] [] {'compute_time': 1, 'max_RHS_time': 1, 'mean_RHS_time': 1, 'min_RHS_time': 1}
+TkNumericIntegration ident False rows ident 0 differ 3 only 0 0 0 colsonly [] [] {'compute_time': 3, 'label': 3, 'max_RHS_time': 3, 'mean_RHS_time': 3, 'min_RHS_time': 3}
+TkWKBIntegration ident False rows ident 0 differ 3 only 0 0 0 colsonly [] [] {'label': 3, 'stage_1_compute_time': 3}
+GkNumericIntegration ident False rows ident 0 differ 1368 only 0 0 0 colsonly [] [] {'compute_time': 1368, 'label': 1368, 'max_RHS_time': 1368, 'mean_RHS_time': 1368, 'min_RHS_time': 1037}
+GkWKBIntegration ident False rows ident 0 differ 3477 only 0 0 0 colsonly [] [] {'label': 3477, 'metadata': 23, 'stage_1_RHS_evaluations': 23, 'stage_1_compute_time': 3474}
+GkSource ident False rows ident 0 differ 291 only 0 0 0 colsonly [] [] {'label': 291, 'parents_digest': 291}
+GkSourcePolicyData ident True rows ident 291 differ 0 only 0 0 0 colsonly [] [] {}
+QuadSource ident False rows ident 0 differ 6 only 0 0 0 colsonly [] [] {'compute_time': 6, 'label': 6}
+QuadSourceIntegral ident False rows ident 0 differ 864 only 0 0 0 colsonly [] [] 
+OneLoopIntegral ident True rows ident 0 differ 0 only 0 0 0 colsonly [] [] {}

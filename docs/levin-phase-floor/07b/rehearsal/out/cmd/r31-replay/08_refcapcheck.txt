@@ -1,0 +1,30 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/capture/replay07b_r31.py refcapcheck /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refcap.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T19:59:40Z
+# ----
+# prompt 07b r31: the captures of the group records of interest, checked against R31
+# written 2026-11-16T19:59:41Z on mps026298.phys.susx.ac.uk
+# script replay07b_r31.py sha256 ac7319caf04824e14870eb500c80c62b2d83e76d0c05532a0cfac7e723f00825
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/replay_rows.json sha256 25d5177053d2ece368115ba11c0da5460b4f1625f5fae3728ce2ad3fc26e9be1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-0/emit.jsonl sha256 cb9b841457f57603bda9c0dbe65dd4c01a5517492bc2805bd35ce2f806bb4497
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-1/emit.jsonl sha256 5ff0bc9194a934f7b599e4730bfbe255c0d5896ef67d30b011318aa02527711b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-2/emit.jsonl sha256 15df6b1ba9b3918fe61f02d69a2f9f6be5c0ededeee5e0dd775a4ef969796125
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-3/emit.jsonl sha256 e21f763f64bb73f7aa0fda269b989b9a19b977e9e5d0b804fd93b20aa66bab92
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-4/emit.jsonl sha256 bb4e5ffd1cea7bdec2406f7078c36da8ef69e47dab3f75a3a3ae9b6b0185f918
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-5/emit.jsonl sha256 879bd4a21ebade0f04486387db968d2ada5b4a0719849b301dcc28461c2447ee
+[100000.0, 1000000.0, 1000000.0, 144627.70674226896] WKB_Levin.subintervals[1].groups[0] G+q+r: REPRODUCES R31's record; value 0x1.263e9f583fb9ap-79 abserr 0x1.51512994921e7p-104 regions 143 converged False; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 4}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G+q+r-h-3-20363-1.pkl
+[316227.7660168379, 100000.0, 316227.7660168379, 996.4201622779478] WKB_Levin.subintervals[2].groups[3] G-q-r: REPRODUCES R31's record; value 0x1.2378781644174p-78 abserr 0x1.d1ff6e16c79edp-103 regions 38 converged True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 3}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-0-10244-6.pkl
+[316227.7660168379, 100000.0, 316227.7660168379, 6944780.034414906] WKB_Levin.subintervals[2].groups[3] G-q-r: REPRODUCES R31's record; value 0x1.7139887db5cfep-78 abserr 0x1.2ae23c1b2f3d1p-102 regions 68 converged True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-0-270-6.pkl
+[1000000.0, 100000.0, 1000000.0, 329.64045755914753] WKB_Levin.subintervals[2].groups[2] G-q+r: REPRODUCES R31's record; value 0x1.5632c89648947p-82 abserr 0x1.d79fe909f16f2p-106 regions 112 converged True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 2}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q+r-h-1-216-5.pkl
+[1000000.0, 100000.0, 1000000.0, 36286.827639966534] WKB_Levin.subintervals[2].groups[2] G-q+r: REPRODUCES R31's record; value -0x1.8f8a08ca38b19p-82 abserr 0x1.c5533eaecb7e0p-107 regions 82 converged True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 3}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q+r-h-1-20184-5.pkl
+[1000000.0, 316227.7660168379, 1000000.0, 191807016.520263] WKB_Levin.subintervals[2].groups[3] G-q-r: REPRODUCES R31's record; value 0x1.1fa14d5ef3244p-83 abserr 0x1.8fe6aae4f450bp-108 regions 45 converged True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-10504-6.pkl
+[1000000.0, 1000000.0, 1000000.0, 36286.827639966534] WKB_Levin.subintervals[1].groups[3] G-q-r: REPRODUCES R31's record; value -0x1.284234a1dbe00p-88 abserr 0x1.1c1352bde5bcfp-110 regions 66 converged True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-209-4.pkl
+[1000000.0, 1000000.0, 1000000.0, 331553.02818648185] WKB_Levin.subintervals[1].groups[3] G-q-r: REPRODUCES R31's record; value -0x1.96e8ecc9c3340p-87 abserr 0x1.853df17bc4f6bp-110 regions 58 converged True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 3}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-171-4.pkl
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refcap.json sha256 297e7926f91372035d71815cdf5b9dc89e4f5ebf98492e1b4f0e1f32fce1c86b; all reproduce: True
+# ----
+# end 2026-11-16T19:59:41Z
+# exit 0

@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/scripts/select_u0_units_07b.py state/k0/h
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T20:58:07Z
+# ----
+# levin-phase-floor 07b: Gate U0's clause 3 and 4 units
+# written 2026-11-16T20:58:07Z on mps026298.phys.susx.ac.uk
+# script select_u0_units_07b.py sha256 707ac5873a2b540fd966a6d537bda3d91ac7583677a5523bfd265679ba551661
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/docs/levin-phase-floor/06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699
+# input state/k0/h/units.jsonl sha256 f20b5bd2758bc416449253a8b9f52e23506487b3a406950b79e1479b26f4e11d
+K0 units at h with a Levin call: 97; the fix acts in 96; untouched in every call: 1 ['g-1e-7-1-20582']
+acts unit g-1e-8-3-14501; quiet unit g-1e-7-1-20582 (11 Levin calls, all counts 0)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/u0c3_units.json sha256 0170435322f944628960c77b69b963d3d3c64671159fdd648ad6db0511e13293
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/u0c4_units.json sha256 ef301699d21b5c1e14d716bad8a06336f384261a93665bc9387e26fe999cc563
+# ----
+# end 2026-11-16T20:58:07Z
+# exit 0

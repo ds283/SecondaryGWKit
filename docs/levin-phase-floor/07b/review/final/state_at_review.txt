@@ -1,0 +1,28 @@
+Wed Nov 18 00:31:58 UTC 2026
+predictions:
+0c6055acdfcb2feefdd5ca589146922da4d6c9404f79b11882cd2b497615f22f  var/levin-phase-floor-07b/census/state/predictions.md
+2026-11-16T21:03:31.278528+00:00
+census manifest mtime:
+2026-11-17T01:02:00.681858+00:00
+== rehearsal
+var/levin-phase-floor-07b/rehearsal/issues.md
+var/levin-phase-floor-07b/rehearsal/KEPT_ON_MAC_STUDIO.txt
+var/levin-phase-floor-07b/rehearsal/log.md
+var/levin-phase-floor-07b/rehearsal/verification.md
+1:## Part C §5: rehearsal R31 on the Mac Studio
+classified: SR 1 IC 20 UD 8
+== census
+var/levin-phase-floor-07b/census/issues.md
+var/levin-phase-floor-07b/census/KEPT_ON_MAC_STUDIO.txt
+var/levin-phase-floor-07b/census/log.md
+var/levin-phase-floor-07b/census/verification.md
+1:## Part C §6: the census at 07b's code (Mac Studio), the census agent
+classified: SR 3 IC 18 UD 1
+protected:
+protected_expected.sha256: 159 files, not OK: 0
+measurement_before.sha256: 7645 files, not OK: 0
+r29_before.sha256: 5 files, not OK: 0
+main HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff, status lines 0
+worktree HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e, --ignored lines 0
+outside allowed paths, newer than the dispatch marker:
+86 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 86 finished; 0 with no host recorded.

@@ -1,0 +1,71 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/stop3_cost_07b.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200 out/stop3/compare_census_calls.calls.jsonl out/stop3/u8.json out/stop3/cost.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-17T13:36:42Z
+# ----
+{
+ "07b": {
+  "created": "2026-11-17T01:02:00+00:00",
+  "last_heartbeat": "2026-11-17T13:32:16+00:00",
+  "wall_s": 45016.0,
+  "n_records": 18560,
+  "n_over_budget": 0,
+  "unit_wall_sum_s": {
+   "1e-7": 52154.37729562214,
+   "1e-8": 54667.237314134836
+  }
+ },
+ "07a": {
+  "created": "2026-11-12T13:27:44+00:00",
+  "last_heartbeat": "2026-11-12T19:55:48+00:00",
+  "wall_s": 23284.0,
+  "n_records": 18560,
+  "n_over_budget": 0,
+  "unit_wall_sum_s": {
+   "1e-7": 24951.73558005877,
+   "1e-8": 28512.88910614187
+  }
+ },
+ "regions": {
+  "1e-7|analytic": {
+   "07b": 1081914,
+   "07a": 409957,
+   "ratio": 2.6390914169046997
+  },
+  "1e-7|group": {
+   "07b": 1906148,
+   "07a": 952395,
+   "ratio": 2.001425878968285
+  },
+  "1e-8|analytic": {
+   "07b": 1064456,
+   "07a": 479954,
+   "ratio": 2.217829208632494
+  },
+  "1e-8|group": {
+   "07b": 1987121,
+   "07a": 1066828,
+   "ratio": 1.86264421256285
+  }
+ },
+ "regions_total": {
+  "07b": 6039639,
+  "07a": 2909134,
+  "ratio": 2.07609515409053
+ },
+ "wall_ratio": 1.9333447861192234,
+ "u8_shared_census_calls": {
+  "h-1e-8-0-14299|group|1": [
+   "R1-x019-8",
+   "v12"
+  ],
+  "h-1e-7-3-14592|group|1": [
+   "R1-x317-7",
+   "v07"
+  ]
+ }
+}
+wrote out/stop3/cost.json sha256 34f512684f06d73c5aa78ca296cc61dc9cfbb9b75597553a93c04a74c815ec21
+# ----
+# end 2026-11-17T13:37:31Z
+# exit 0

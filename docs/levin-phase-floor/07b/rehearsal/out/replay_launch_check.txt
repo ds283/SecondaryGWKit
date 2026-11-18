@@ -1,0 +1,45 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-16T19:50:40Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07b/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+D=$M/var/runs/levin-phase-floor-07b-r31-replay-20261116T195034
+cat $D/status.json; echo; ps -o pid,ppid,etime,command -p 14453 | cut -c1-150; pgrep -P 14453 | while read p; do ps -o pid,ppid,etime,command -p $p | tail -1 | cut -c1-150; pgrep -P $p | while read q; do ps -o pid,ppid,etime,command -p $q | tail -1 | cut -c1-150; pgrep -P $q | while read r; do ps -o pid,ppid,command -p $r | tail -1 | cut -c1-150; done; done; done
+ls $Z/out/cmd/r31-replay/; tail -3 $Z/out/cmd/r31-replay/*.txt | cut -c1-200
+git -C $W --no-optional-locks status --short --ignored; echo "(W end)"
+ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(no ray end)"
+
+# output:
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-16T19:50:34+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 14460,
+  "stage": "01_replay_run started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 8
+}
+
+  PID  PPID ELAPSED COMMAND
+14453     1   00:06 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-flo
+14460 14453   00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/
+14461 14460   00:07 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/
+14466 14461 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Sec
+14467 14461 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Sec
+14468 14461 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Sec
+14469 14461 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Sec
+14470 14461 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Sec
+14471 14461 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/Sec
+01_replay_run.txt
+2026-11-16T19:50:35Z start replay-h-3 (h, 35 units): pid 14469
+2026-11-16T19:50:35Z start replay-h-4 (h, 34 units): pid 14470
+2026-11-16T19:50:35Z start replay-h-5 (h, 34 units): pid 14471
+(W end)
+(no ray end)
+# exit: 0
+# end: 2026-11-16T19:50:41Z

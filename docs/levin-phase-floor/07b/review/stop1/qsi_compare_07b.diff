@@ -1,0 +1,34 @@
+1c1
+< """Orchestrator's own reader, 07a Part C stop 1: R29 against R30 inside QuadSourceIntegral.
+---
+> """Orchestrator's own reader, 07b Part C stop 1 (copied from 07a's, extended): R30 against R31 inside QuadSourceIntegral.
+12c12
+< usage: python -I -B qsi_compare.py <R29 primary> <R30 primary>
+---
+> usage: python -I -B qsi_compare_07b.py <R30 primary> <R31 primary>  (A = R30, B = R31; names below say 29/30 from 07a's copy)
+130a131,155
+>     # 07b additions: phase_limited flips; converged flips per record; |dv| vs abserrs per record
+>     flips = Counter(); conv = Counter(); beyond = []
+>     for k in A:
+>         ra = dict(levin_records(A[k][1])); rb = dict(levin_records(B[k][1]))
+>         for w in ra:
+>             x, y = ra[w], rb[w]
+>             if x.get("phase_limited") != y.get("phase_limited"):
+>                 flips[(w[0], x.get("phase_limited"), y.get("phase_limited"))] += 1
+>             if x.get("converged") != y.get("converged"):
+>                 conv[(w[0], x.get("converged"), y.get("converged"))] += 1
+>             if x["value"].hex() != y["value"].hex():
+>                 dv = abs(y["value"] - x["value"])
+>                 if dv > x["abserr"] + y["abserr"]:
+>                     beyond.append((dv / (x["abserr"] + y["abserr"]), float.fromhex(k[0]), float.fromhex(k[1]), float.fromhex(k[2]), float.fromhex(k[3]), k[5], w, x["regions"], y["regions"]))
+>     print("phase_limited flips (kind, A, B):", dict(flips))
+>     print("record converged flips (kind, A, B):", dict(conv))
+>     print("records with |dv| > abserrA + abserrB:", len(beyond))
+>     for t in sorted(beyond, reverse=True):
+>         print("   %.4g k=%g q=%g r=%g z=%r rtol=%s %s regions %s -> %s" % t)
+>     regA = sum(sum(rec.get("regions", 0) for _, rec in levin_records(A[k][1])) for k in A)
+>     regB = sum(sum(rec.get("regions", 0) for _, rec in levin_records(B[k][1])) for k in B)
+>     print("summed regions over Levin records A", regA, "B", regB)
+>     for k in down:
+>         print("  converged->unconverged row: k=%g q=%g r=%g z=%r" % (float.fromhex(k[0]), float.fromhex(k[1]), float.fromhex(k[2]), float.fromhex(k[3])))
+> 

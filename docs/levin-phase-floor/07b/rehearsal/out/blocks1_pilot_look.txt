@@ -1,0 +1,17 @@
+h-1e-7-0-10232 done calls 5 other 16
+   .3706e+13, 5.421e+09), regime G, group G -0x1.373ab14d597ffp-73 15 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0} True 0
+   09, 1.3291e+09), regime Gqr, group G+q+r 0x1.af0f9569252e6p-77 2 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0} True 0
+   09, 1.3291e+09), regime Gqr, group G+q-r -0x1.5ffa963a77f20p-79 5 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0} True 0
+   09, 1.3291e+09), regime Gqr, group G-q+r -0x1.5ffa963a77f20p-79 5 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0} True 0
+   analytic J1 0x1.361e78a08cb84p-33 3 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 2} True 0
+   analytic Y1 0x1.32e57e5242d7ap-29 4 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 2} True 0
+   analytic J2 0x1.fd16c96edc176p-29 2 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1} True 0
+h-1e-7-1-20127 done calls 5 other 16
+   3706e+13, 1.7159e+10), regime G, group G -0x1.79db166fc692dp-77 10 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0} True 0
+   10, 4.0176e+09), regime Gqr, group G+q+r 0x1.df897aee3e866p-80 3 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0} True 0
+   10, 4.0176e+09), regime Gqr, group G+q-r 0x1.c751cf497c9abp-83 5 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0} True 0
+   10, 4.0176e+09), regime Gqr, group G-q+r 0x1.c751cf497c9abp-83 5 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0} True 0
+   analytic J1 0x1.067f37cff48e5p-35 3 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1} True 0
+   analytic Y1 0x1.b254552128d89p-32 4 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1} True 0
+   analytic J2 0x1.689a29e46322ap-31 3 {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1} True 0
+bye ray_initialized False

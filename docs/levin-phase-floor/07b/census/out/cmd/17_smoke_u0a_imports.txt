@@ -1,0 +1,22 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/u0a_imports_07b.py state/smoke/parent state/smoke/u0a_imports.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T20:42:48Z
+# ----
+# levin-phase-floor 07b: Gate U0 (1), the files of h the K0 workers loaded
+# written 2026-11-16T20:42:48Z on mps026298.phys.susx.ac.uk
+# script u0a_imports_07b.py sha256 53eb874e89c7efb4e2b1e4c70772cc702cc7253414e8cd95c804a192c2dd1378
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/variants/levin_quadrature_parent.py sha256 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577
+# workers with a bye: 1; distinct files of h loaded: 101
+# variants installed (path, sha256 at hello): [('/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/variants/levin_quadrature_parent.py', '4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577')]; the parent's: True
+# h's own AdaptiveLevin/levin_quadrature.py among the files loaded: False
+# git diff --name-only 7b82a0cd 0a103b5a -- . ':!docs' ':!prompts': ['AdaptiveLevin/levin_quadrature.py', 'AdaptiveLevin/tests/test_levin_leaf_values.py', 'AdaptiveLevin/tests/test_levin_rate_rules.py', 'AdaptiveLevin/tests/test_levin_roundoff_exit.py', 'AdaptiveLevin/tests/test_levin_trust_yardstick.py', 'LiouvilleGreen/tests/test_three_bessel.py']
+# files both changed (parent to h) and loaded: [] (none expected: levin_quadrature.py is replaced)
+# git diff --name-only 4bf50d34 0a103b5a -- . ':!docs' ':!prompts' (07a's census tree to h): ['AdaptiveLevin/levin_quadrature.py', 'AdaptiveLevin/tests/test_levin_leaf_values.py', 'AdaptiveLevin/tests/test_levin_rate_rules.py', 'AdaptiveLevin/tests/test_levin_roundoff_exit.py', 'AdaptiveLevin/tests/test_levin_trust_yardstick.py', 'CLAUDE.md', 'ComputeTargets/tests/test_quadsource_integral.py', 'LiouvilleGreen/bessel_phase.py', 'LiouvilleGreen/tests/test_three_bessel.py', 'LiouvilleGreen/three_bessel_integrals.py']; loaded among them: ['LiouvilleGreen/bessel_phase.py', 'LiouvilleGreen/three_bessel_integrals.py']; of these, AST-equal without docstrings (out/u0/u0a_ast.txt): ['LiouvilleGreen/bessel_phase.py', 'LiouvilleGreen/three_bessel_integrals.py']; other: []
+# verdict: HOLDS (the code the K0 workers executed is the parent code, and the parent is 07as)
+wrote state/smoke/u0a_imports.txt sha256 871740fb1462ce254415335e73757702c23b04b2e8248781f2b8f8b704b2d6ef
+# ----
+# end 2026-11-16T20:42:48Z
+# exit 0

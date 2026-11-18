@@ -1,0 +1,446 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/refs/refcap_replay.py",
+  "script_sha256": "4f6af0d8d99a88b21ae81df935a146027302eaf49cf7b9d9b5a7788c2e17c4e1",
+  "host": "mps026298.phys.susx.ac.uk",
+  "utc": "2026-11-16T20:07:19Z",
+  "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5",
+  "tree_head": "0a103b5ae0de32b568f44904a5c3dcbfca922a2e",
+  "code": "a07",
+  "module_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/variants/levin_quadrature_1ec734d7.py",
+  "module_sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+  "refcap": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refcap.json",
+  "refcap_sha256": "297e7926f91372035d71815cdf5b9dc89e4f5ebf98492e1b4f0e1f32fce1c86b",
+  "variant_evidence": {
+   "name": "07a (1ec734d7)",
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/variants/levin_quadrature_1ec734d7.py",
+   "sha256": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "sha256_now": "4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577",
+   "sys_modules_is_variant": true,
+   "module_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/variants/levin_quadrature_1ec734d7.py",
+   "package_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/AdaptiveLevin/__init__.py",
+   "package_attribute_is_variant": true,
+   "package_function_is_variants": true
+  }
+ },
+ "calls": [
+  {
+   "key": [
+    100000.0,
+    1000000.0,
+    1000000.0,
+    144627.70674226896
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[0]",
+   "label": "G+q+r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G+q+r-h-3-20363-1.pkl",
+   "sha256": "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249",
+   "notify_label": "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.4463e+05, z in (1.7159e+10, 1.4463e+05), regime Gqr, group G+q+r",
+   "x_span": [
+    "0x1.7c38baf9a26cdp+3",
+    "0x1.790d860236f2ep+4"
+   ],
+   "rtol": 1e-07,
+   "atol": 1.478996141974767e-33,
+   "store": "R30",
+   "store_record": {
+    "value": "0x1.44ad9cb269157p-62",
+    "abserr": "0x1.0dda08375211fp-86",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 2,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "got": {
+    "value": "0x1.263e9ec0e8b1fp-79",
+    "abserr": "0x1.e91d515bc6900p-104",
+    "regions": 2,
+    "max_depth": 1,
+    "converged": true,
+    "stored_value": "0x1.44ad9cb269157p-62",
+    "stored_abserr": "0x1.0dda08375211fp-86",
+    "refusals_07b": {
+     "num_edge_rule_refusals": null,
+     "num_range_rule_refusals": null
+    }
+   },
+   "checks": {
+    "stored_value": true,
+    "stored_abserr": true,
+    "regions": true,
+    "converged": true
+   },
+   "reproduces": true,
+   "wall_s": 0.04441094398498535
+  },
+  {
+   "key": [
+    316227.7660168379,
+    100000.0,
+    316227.7660168379,
+    996.4201622779478
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-0-10244-6.pkl",
+   "sha256": "b37439f0e0a12c4d993c1873a753ee1748a72aef2ce044adcb010d10b37a78c5",
+   "notify_label": "k=3.16e+05/Mpc, q=1e+05/Mpc, r=3.16e+05/Mpc @ z_response=996.42, z in (1.7126e+09, 996.42), regime Gqr, group G-q-r",
+   "x_span": [
+    "0x1.b9ee56fe00d28p+2",
+    "0x1.542e3c75ed00ep+4"
+   ],
+   "rtol": 1e-07,
+   "atol": 1.4514952112026634e-33,
+   "store": "R30",
+   "store_record": {
+    "value": "0x1.1be7a9c67998dp-68",
+    "abserr": "0x1.f684e5c9c0f4ep-98",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 3,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "got": {
+    "value": "0x1.23787936ea1b6p-78",
+    "abserr": "0x1.01f48d18f2a15p-107",
+    "regions": 3,
+    "max_depth": 2,
+    "converged": true,
+    "stored_value": "0x1.1be7a9c67998dp-68",
+    "stored_abserr": "0x1.f684e5c9c0f4ep-98",
+    "refusals_07b": {
+     "num_edge_rule_refusals": null,
+     "num_range_rule_refusals": null
+    }
+   },
+   "checks": {
+    "stored_value": true,
+    "stored_abserr": true,
+    "regions": true,
+    "converged": true
+   },
+   "reproduces": true,
+   "wall_s": 0.05321907997131348
+  },
+  {
+   "key": [
+    316227.7660168379,
+    100000.0,
+    316227.7660168379,
+    6944780.034414906
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-0-270-6.pkl",
+   "sha256": "9580193829b009451ccc1838495e2008ac6c055f45b1129484e1f5cedae88182",
+   "notify_label": "k=3.16e+05/Mpc, q=1e+05/Mpc, r=3.16e+05/Mpc @ z_response=6.9448e+06, z in (1.7126e+09, 6.9448e+06), regime Gqr, group G-q-r",
+   "x_span": [
+    "0x1.f81cae23d421fp+3",
+    "0x1.542e3c75ed00ep+4"
+   ],
+   "rtol": 1e-07,
+   "atol": 8.671988241815716e-34,
+   "store": "R30",
+   "store_record": {
+    "value": "0x1.31acb88303353p-55",
+    "abserr": "0x1.0892e337efb49p-82",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 8,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "got": {
+    "value": "0x1.71398a46846f0p-78",
+    "abserr": "0x1.3f94350ebc856p-105",
+    "regions": 8,
+    "max_depth": 6,
+    "converged": true,
+    "stored_value": "0x1.31acb88303353p-55",
+    "stored_abserr": "0x1.0892e337efb49p-82",
+    "refusals_07b": {
+     "num_edge_rule_refusals": null,
+     "num_range_rule_refusals": null
+    }
+   },
+   "checks": {
+    "stored_value": true,
+    "stored_abserr": true,
+    "regions": true,
+    "converged": true
+   },
+   "reproduces": true,
+   "wall_s": 0.09723329544067383
+  },
+  {
+   "key": [
+    1000000.0,
+    100000.0,
+    1000000.0,
+    329.64045755914753
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[2]",
+   "label": "G-q+r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q+r-h-1-216-5.pkl",
+   "sha256": "f540279cac44ea87181073c0e592ae9a45ee3f66b2251f4d9a5f84a50adb3ac6",
+   "notify_label": "k=1e+06/Mpc, q=1e+05/Mpc, r=1e+06/Mpc @ z_response=329.64, z in (1.7126e+09, 329.64), regime Gqr, group G-q+r",
+   "x_span": [
+    "0x1.734419d9f0895p+2",
+    "0x1.542e3c75ed00ep+4"
+   ],
+   "rtol": 1e-07,
+   "atol": 1.4963140741945736e-33,
+   "store": "R30",
+   "store_record": {
+    "value": "0x1.b9f8a38696452p-74",
+    "abserr": "0x1.a951c3c91942ep-103",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 5,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "got": {
+    "value": "0x1.5632cafb0fb4cp-82",
+    "abserr": "0x1.494e3de357011p-111",
+    "regions": 5,
+    "max_depth": 4,
+    "converged": true,
+    "stored_value": "0x1.b9f8a38696452p-74",
+    "stored_abserr": "0x1.a951c3c91942ep-103",
+    "refusals_07b": {
+     "num_edge_rule_refusals": null,
+     "num_range_rule_refusals": null
+    }
+   },
+   "checks": {
+    "stored_value": true,
+    "stored_abserr": true,
+    "regions": true,
+    "converged": true
+   },
+   "reproduces": true,
+   "wall_s": 0.07141494750976562
+  },
+  {
+   "key": [
+    1000000.0,
+    100000.0,
+    1000000.0,
+    36286.827639966534
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[2]",
+   "label": "G-q+r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q+r-h-1-20184-5.pkl",
+   "sha256": "9ae246a662c34b2b2964d34bb112920db6fb3a2310f91df28acee8d01e97965a",
+   "notify_label": "k=1e+06/Mpc, q=1e+05/Mpc, r=1e+06/Mpc @ z_response=36287, z in (1.7126e+09, 36287), regime Gqr, group G-q+r",
+   "x_span": [
+    "0x1.4ff9c135a3c09p+3",
+    "0x1.542e3c75ed00ep+4"
+   ],
+   "rtol": 1e-07,
+   "atol": 1.2731717917097288e-33,
+   "store": "R30",
+   "store_record": {
+    "value": "-0x1.ba74d54194e61p-67",
+    "abserr": "0x1.8c9f0f06a83e2p-92",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 58,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "got": {
+    "value": "-0x1.8f8a0ad2a0c70p-82",
+    "abserr": "0x1.66266a174d12dp-107",
+    "regions": 58,
+    "max_depth": 16,
+    "converged": true,
+    "stored_value": "-0x1.ba74d54194e61p-67",
+    "stored_abserr": "0x1.8c9f0f06a83e2p-92",
+    "refusals_07b": {
+     "num_edge_rule_refusals": null,
+     "num_range_rule_refusals": null
+    }
+   },
+   "checks": {
+    "stored_value": true,
+    "stored_abserr": true,
+    "regions": true,
+    "converged": true
+   },
+   "reproduces": true,
+   "wall_s": 1.076098918914795
+  },
+  {
+   "key": [
+    1000000.0,
+    316227.7660168379,
+    1000000.0,
+    191807016.520263
+   ],
+   "record": "WKB_Levin.subintervals[2].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-10504-6.pkl",
+   "sha256": "7fa339ed0b1723a568b1c02523a6a2f31f28efe4b4a2144d05b267ace347b6f9",
+   "notify_label": "k=1e+06/Mpc, q=3.16e+05/Mpc, r=1e+06/Mpc @ z_response=1.9181e+08, z in (5.421e+09, 1.9181e+08), regime Gqr, group G-q-r",
+   "x_span": [
+    "0x1.3126e9cb5c308p+4",
+    "0x1.669de13c08966p+4"
+   ],
+   "rtol": 1e-07,
+   "atol": 6.651376139539528e-34,
+   "store": "R30",
+   "store_record": {
+    "value": "0x1.9b0b6b02146b6p-56",
+    "abserr": "0x1.33b1cbc4f1280p-82",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 1,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "got": {
+    "value": "0x1.1fa14e8a6665dp-83",
+    "abserr": "0x1.ae9ef5b803440p-110",
+    "regions": 1,
+    "max_depth": 0,
+    "converged": true,
+    "stored_value": "0x1.9b0b6b02146b6p-56",
+    "stored_abserr": "0x1.33b1cbc4f1280p-82",
+    "refusals_07b": {
+     "num_edge_rule_refusals": null,
+     "num_range_rule_refusals": null
+    }
+   },
+   "checks": {
+    "stored_value": true,
+    "stored_abserr": true,
+    "regions": true,
+    "converged": true
+   },
+   "reproduces": true,
+   "wall_s": 0.03459310531616211
+  },
+  {
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    36286.827639966534
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-209-4.pkl",
+   "sha256": "d6ea2d967ab218df05f2fd5a2e13d3de845cbea8f0412f4c1f3b158c2465632f",
+   "notify_label": "k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=36287, z in (1.7159e+10, 36287), regime Gqr, group G-q-r",
+   "x_span": [
+    "0x1.4ff9c135a3c09p+3",
+    "0x1.790d860236f2ep+4"
+   ],
+   "rtol": 1e-07,
+   "atol": 1.545800282394068e-33,
+   "store": "R30",
+   "store_record": {
+    "value": "-0x1.4814f6cc68580p-73",
+    "abserr": "0x1.566c2ec4ce7bcp-96",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 6,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "got": {
+    "value": "-0x1.28423f2458f0ep-88",
+    "abserr": "0x1.35355dc8dcb99p-111",
+    "regions": 6,
+    "max_depth": 4,
+    "converged": true,
+    "stored_value": "-0x1.4814f6cc68580p-73",
+    "stored_abserr": "0x1.566c2ec4ce7bcp-96",
+    "refusals_07b": {
+     "num_edge_rule_refusals": null,
+     "num_range_rule_refusals": null
+    }
+   },
+   "checks": {
+    "stored_value": true,
+    "stored_abserr": true,
+    "regions": true,
+    "converged": true
+   },
+   "reproduces": true,
+   "wall_s": 0.08060812950134277
+  },
+  {
+   "key": [
+    1000000.0,
+    1000000.0,
+    1000000.0,
+    331553.02818648185
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[3]",
+   "label": "G-q-r",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-171-4.pkl",
+   "sha256": "fac8529e22c1a96fc34d47fcae0b975a15d17540c10a1565dcd52fe016d81f0e",
+   "notify_label": "k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=3.3155e+05, z in (1.7159e+10, 3.3155e+05), regime Gqr, group G-q-r",
+   "x_span": [
+    "0x1.96c4fc3c2aa2fp+3",
+    "0x1.790d860236f2ep+4"
+   ],
+   "rtol": 1e-07,
+   "atol": 1.4342263830936182e-33,
+   "store": "R30",
+   "store_record": {
+    "value": "-0x1.015348884cd70p-68",
+    "abserr": "0x1.8ced1089ffe17p-93",
+    "converged": true,
+    "phase_limited": false,
+    "regions": 1,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "got": {
+    "value": "-0x1.96e8e80d54444p-87",
+    "abserr": "0x1.39d49df69c224p-111",
+    "regions": 1,
+    "max_depth": 0,
+    "converged": true,
+    "stored_value": "-0x1.015348884cd70p-68",
+    "stored_abserr": "0x1.8ced1089ffe17p-93",
+    "refusals_07b": {
+     "num_edge_rule_refusals": null,
+     "num_range_rule_refusals": null
+    }
+   },
+   "checks": {
+    "stored_value": true,
+    "stored_abserr": true,
+    "regions": true,
+    "converged": true
+   },
+   "reproduces": true,
+   "wall_s": 0.03452181816101074
+  }
+ ],
+ "ray_initialized": false,
+ "all_reproduce": true
+}

@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/capture/replay07b_r31.py spec blocks2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/blocks2_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T19:57:26Z
+# ----
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/blocks2_spec.json sha256 2f890f7e6ae76a19964ac9d978cf9a7feaa0e40b6b3efc490f55fdd407e6803c: 2 units
+# ----
+# end 2026-11-16T19:57:27Z
+# exit 0

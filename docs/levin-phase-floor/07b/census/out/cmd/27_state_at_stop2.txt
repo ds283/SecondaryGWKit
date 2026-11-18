@@ -1,0 +1,39 @@
+$ sh -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5\ status\ --short\ --ignored\;\ echo\ h-clean-check-end\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ main-clean-check-end\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -m\ runregistrykit\ list\ \|\ head\ -4\;\ shasum\ -a\ 256\ state/predictions.md\;\ df\ -h\ /Users/ds283/Documents/Code/SecondaryGWKit/var
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T21:03:39Z
+# ----
+h-clean-check-end
+0a103b5ae0de32b568f44904a5c3dcbfca922a2e
+28ebaf0743e0555fb2c4512ce714884005a60eff
+main-clean-check-end
+   RUN                                                        STATE      PROGRESS      AGE  PURPOSE · STAGE
+   levin-phase-floor-07b-k0-20261116T204402                   done          11/11      20m  levin-phase-floor prompt 07b section 6 on the Mac Studio (mps026298; Python 3.13.16): Gate U0's second, third and fourth clauses. (2) In the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 (h, at Part C's dispatch SHA 0a103b5a, code 5e19c4b6's) with the parent's AdaptiveLevin/levin_quadrature.py installed in place of h's by variant_loader (git show 7b82a0cd, sha256 4ea1948b, byte-identical to 07a's census module; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/variants/levin_quadrature_parent.py): 06k's 100 K0 census units (docs/levin-phase-floor/06l/out/k0/units.json, sha256 20c772f8) re-run with 07a's census harness as changed for 07b, then each unit compared bit for bit with 07a's census (levin-phase-floor-07a-census-20261112T132744, checkpoint 461df2ec) with 07b's new keys set aside. Then the same 100 units at h (levin_quadrature.py 8956c7b6) for the census's cost projection, compared call by call with 07a's; (3) one unit where the fix acts (h-1e-8-3-14501, fixed by name) and one where it does not (chosen from the K0 units at h by select_u0_units_07b.py's rule) run at h with the instruments on and off, compared bit for bit; and (4) the first unit run twice at h in two fresh workers and compared bit for bit. Every unit reads 06's certified scratch copy of A3 v2 read-only (fingerprint 0e32f24a) on a stand-in ShardedPool, 300 s per unit. No census. At most six computing processes; Ray-free, no lock, no store built, nothing written in a tree  · k0 finished: all exit 0
+   levin-phase-floor-07b-r31-refs-20261116T201120             done            7/7      52m  levin-phase-floor prompt 07b section 5 (Part C), the R31 rehearsal agent, on the Mac Studio (mps026298; Python 3.13.16): the user's word at stop 1, 'settle which store understates' (descriptive, not scored against any rule): references for the 7 QuadSourceIntegral group records (rtol 1e-7, Route B) whose |v31 - v30| > e30 + e31, by 07's V4 method, the tool's own four readings (tools/filon_reference.py d37e633b at the tree 0a103b5a: QAWO and FCC at resolutions 1 and 2; the reference FCC r2, its stated error the readings' scatter, T = min(e30, e31)/100). Each capture (the r31-replay run's refcap stage) is checked bit for bit against R31 at the tree and against R30 at 07a's module (out/refs/refcap_replay_{h,a07}.json). One call at a time, six worker processes; projected 842 s with margin (0.35 h x1.5); backstop 4 h. Ray-free, no lock, no store opened, nothing written in a tree; the decision rule is state/refs_plan_r31.md, written before any reading  · r31-refs finished: all exit 0
+   levin-phase-floor-07b-r31-replay-20261116T195034           done            8/8   1h 13m  levin-phase-floor prompt 07b section 5 (Part C), the R31 rehearsal agent, on the Mac Studio (mps026298; Python 3.13.16): the replay behind S1, S2 and S4 and the refusal counts, as 07a's rehearsal replayed R30. R30's capture harness (scripts/capture/, changed where marked 'prompt 07b r31': tree h = the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 at 0a103b5a, code 5e19c4b6; R31's store read-only through state/stores/r31; each call's num_edge_rule_refusals and num_range_rule_refusals recorded) re-runs 208 R31 rows (202 located, P1, the w rows, the two block rows, the 8 records of interest: |v31 - v30| > e30 + e31 or converged changed) and checks every record bit for bit against R31; then the four S4 blocks' pass 2 and check (each capture against R30's), and the capture of the 7 group records of interest, checked against R31. Ray-free (never initialised), at most six worker processes, under the held rehearsal lock, no store written, nothing written in a tree  · r31-replay finished: all exit 0
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__main__.py", line 696, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/venv/lib/python3.13/site-packages/runregistrykit/__main__.py", line 649, in main
+    print(
+    ~~~~~^
+        f"{marker:2} {entry['id']:{width}}  "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"{str(entry['state'] or 'unknown'):9} {_progress(entry):>9} "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"{_age(now - entry['created_epoch']):>8}  {purpose}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+BrokenPipeError: [Errno 32] Broken pipe
+Exception ignored on flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe
+0c6055acdfcb2feefdd5ca589146922da4d6c9404f79b11882cd2b497615f22f  state/predictions.md
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  800G  128G  87% /
+# ----
+# end 2026-11-16T21:03:39Z
+# exit 0

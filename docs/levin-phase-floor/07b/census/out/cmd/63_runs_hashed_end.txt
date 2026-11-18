@@ -1,0 +1,24 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/hash_runs_07b.py end out/runs_hashed_end.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T00:26:17Z
+# ----
+# levin-phase-floor 07b: 07a's census run directory and working records, and Part A's records, end
+# written 2026-11-18T00:26:17Z on mps026298.phys.susx.ac.uk
+# script hash_runs_07b.py sha256 4615d374c5c2f6268cb91ea3d8efb2a65e6df1e1fa6d25690765908567a0618b
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/docs/levin-phase-floor/07a/census/KEPT_ON_MAC_STUDIO.txt sha256 0ff1610a0d2753f6fe8db182d4ca92cfe1075408095646270ef4fc0e8bc0c2c0
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-census-20261112T132744: 149 files, 7030718103 bytes
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census: 653 files, 742625263 bytes
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement: 7645 files, 371342619 bytes
+# levin-phase-floor-07a-census-20261112T132744: checkpoint sha256 461df2ec66969a113e9f6d590f05a4d5b300d7c1e0cb62d05c7385d23e8de56b EQUAL 461df2ec66969a113e9f6d590f05a4d5b300d7c1e0cb62d05c7385d23e8de56b
+# levin-phase-floor-07a-census-20261112T132744: 16 region pickles
+# levin-phase-floor-07a-census-20261112T132744: against 07a's KEPT_ON_MAC_STUDIO.txt: 149 listed, 149 present, 0 differing or missing [], 0 not listed []
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census: against 07a's KEPT_ON_MAC_STUDIO.txt (pickles and files over 2 MB): 91 listed, 0 differing or missing []; 653 files hashed in all
+# /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement: 7645 files hashed (compared before against after)
+# verdict: ALL HOLD
+wrote out/runs_hashed_end.txt sha256 13d3992d0c47516548e6101923ee093d2dc64ebad1a71ae2de1a0bd901d1aca0
+# ----
+# end 2026-11-18T00:26:24Z
+# exit 0

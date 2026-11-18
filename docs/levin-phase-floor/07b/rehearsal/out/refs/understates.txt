@@ -1,0 +1,40 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/refs/understates.py sha256 14e238c5b1ef93c9df71231b54f9a54589def95607fe1be650a28727075300ba
+# plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/refs_plan_r31.md sha256 2c2514b017ee1974decc6aeb295c541bfbc2c0d8eb5979a7057577c74baef096 (the rule, fixed before any reading)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/refcap_replay_h.json sha256 347357942e7f1f2b84d75a7d455e8c12e51fc401d61778a693bf1da15dddf41d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/refcap_replay_a07.json sha256 8a7aa7de37a0cc3616fece8cb8362e0fef34dc79a955762fd83a088bd190eb93
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q+r-h-1-20184-5.json sha256 92953f1413310cd8895c20db92dfa1428bda787223d6c8a822e7110739ea9f59
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q+r-h-1-216-5.json sha256 bea6a65f616b3275a6740f6d2a22ba9c5fa3f678cdea10b3c6d78e75c413d420
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-0-10244-6.json sha256 73803782f169800381f8b69fe10904c2f2cef9f5c293062068fc70551db55031
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-0-270-6.json sha256 e68ce6faf937af3e59f31b1d6bfb62fefca60eec88d823a29e4e01ea4d68ec4e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-1-10504-6.json sha256 85c178e6bf81ef32a07e3446642b6e1a60d066f11ad733afbbf7f8f9674c1079
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-1-171-4.json sha256 0342041709d9d66b314329ecb59f3b953ea8cd0f9f83adf1c19ea39d04319207
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/readings/ref-G-q-r-h-1-209-4.json sha256 a00ba34a37e66aa92a8461a40add7ebecc0f9e38a620ce06d374e04c2f033857
+[1000000.0, 100000.0, 1000000.0, 36286.827639966534] G-q+r (ref-G-q+r-h-1-20184-5): ref -0x1.8f8a08c933cd0p-82 (FCC r2), stated error 2.95773e-37 = 3.43e-5 x min(e); direct segments {'qawo_r1': 0, 'qawo_r2': 0, 'fcc_r1': 0, 'fcc_r2': 0}
+    R30: v -0x1.8f8a0ad2a0c70p-82 e 0x1.66266a174d12dp-107 regions 58 converged True: |v - ref| = 2.9117722 e (with the reference's error 2.9117379 to 2.9118065): understates
+    R31: v -0x1.8f8a08ca38b19p-82 e 0x1.c5533eaecb7e0p-107 regions 82 converged True: |v - ref| = 0.0044961639 e (with the reference's error 0.0044690621 to 0.0045232657): honest
+    |v31 - v30|/(e30 + e31) 1.28262; ANSWER: R30 understates
+[1000000.0, 100000.0, 1000000.0, 329.64045755914753] G-q+r (ref-G-q+r-h-1-216-5): ref 0x1.5632c898e5fb4p-82 (FCC r2), stated error 2.9133e-37 = 0.000588 x min(e); direct segments {'qawo_r1': 0, 'qawo_r2': 0, 'fcc_r1': 0, 'fcc_r2': 0}
+    R30: v 0x1.5632cafb0fb4cp-82 e 0x1.494e3de357011p-111 regions 5 converged True: |v - ref| = 59.292079 e (with the reference's error 59.291491 to 59.292667): understates
+    R31: v 0x1.5632c89648947p-82 e 0x1.d79fe909f16f2p-106 regions 112 converged True: |v - ref| = 0.0055443453 e (with the reference's error 0.0055315159 to 0.0055571748): honest
+    |v31 - v30|/(e30 + e31) 1.27155; ANSWER: R30 understates
+[316227.7660168379, 100000.0, 316227.7660168379, 996.4201622779478] G-q-r (ref-G-q-r-h-0-10244-6): ref 0x1.23787817e63bap-78 (FCC r2), stated error 4.808e-37 = 7.742e-5 x min(e); direct segments {'qawo_r1': 0, 'qawo_r2': 0, 'fcc_r1': 0, 'fcc_r2': 0}
+    R30: v 0x1.23787936ea1b6p-78 e 0x1.01f48d18f2a15p-107 regions 3 converged True: |v - ref| = 35.604948 e (with the reference's error 35.604871 to 35.605025): understates
+    R31: v 0x1.2378781644174p-78 e 0x1.d1ff6e16c79edp-103 regions 38 converged True: |v - ref| = 0.0070101952 e (with the reference's error 0.0070075166 to 0.0070128738): honest
+    |v31 - v30|/(e30 + e31) 1.19741; ANSWER: R30 understates
+[316227.7660168379, 100000.0, 316227.7660168379, 6944780.034414906] G-q-r (ref-G-q-r-h-0-270-6): ref 0x1.713988d6e71e3p-78 (FCC r2), stated error 1.36611e-36 = 4.439e-5 x min(e); direct segments {'qawo_r1': 0, 'qawo_r2': 0, 'fcc_r1': 0, 'fcc_r2': 0}
+    R30: v 0x1.71398a46846f0p-78 e 0x1.3f94350ebc856p-105 regions 8 converged True: |v - ref| = 9.2024717 e (with the reference's error 9.2024273 to 9.2025161): understates
+    R31: v 0x1.7139887db5cfep-78 e 0x1.2ae23c1b2f3d1p-102 regions 68 converged True: |v - ref| = 0.29841906 e (with the reference's error 0.29841313 to 0.29842499): honest
+    |v31 - v30|/(e30 + e31) 1.34819; ANSWER: R30 understates
+[1000000.0, 316227.7660168379, 1000000.0, 191807016.520263] G-q-r (ref-G-q-r-h-1-10504-6): ref 0x1.1fa14d5bf27f8p-83 (FCC r2), stated error 4.55174e-38 = 3.513e-5 x min(e); direct segments {'qawo_r1': 0, 'qawo_r2': 0, 'fcc_r1': 0, 'fcc_r2': 0}
+    R30: v 0x1.1fa14e8a6665dp-83 e 0x1.ae9ef5b803440p-110 regions 1 converged True: |v - ref| = 5.6189137 e (with the reference's error 5.6188785 to 5.6189488): understates
+    R31: v 0x1.1fa14d5ef3244p-83 e 0x1.8fe6aae4f450bp-108 regions 45 converged True: |v - ref| = 0.015016286 e (with the reference's error 0.01500683 to 0.015025742): honest
+    |v31 - v30|/(e30 + e31) 1.17997; ANSWER: R30 understates
+[1000000.0, 1000000.0, 1000000.0, 331553.02818648185] G-q-r (ref-G-q-r-h-1-171-4): ref -0x1.96e8eccadfe18p-87 (FCC r2), stated error 1.19768e-38 = 2.536e-5 x min(e); direct segments {'qawo_r1': 0, 'qawo_r2': 0, 'fcc_r1': 0, 'fcc_r2': 0}
+    R30: v -0x1.96e8e80d54444p-87 e 0x1.39d49df69c224p-111 regions 1 converged True: |v - ref| = 3.8668811 e (with the reference's error 3.8668557 to 3.8669065): understates
+    R31: v -0x1.96e8ecc9c3340p-87 e 0x1.853df17bc4f6bp-110 regions 58 converged True: |v - ref| = 0.0014284461 e (with the reference's error 0.0014182212 to 0.001438671): honest
+    |v31 - v30|/(e30 + e31) 1.10997; ANSWER: R30 understates
+[1000000.0, 1000000.0, 1000000.0, 36286.827639966534] G-q-r (ref-G-q-r-h-1-209-4): ref -0x1.2842349c30c56p-88 (FCC r2), stated error 1.02612e-38 = 2.206e-5 x min(e); direct segments {'qawo_r1': 0, 'qawo_r2': 0, 'fcc_r1': 0, 'fcc_r2': 0}
+    R30: v -0x1.28423f2458f0ep-88 e 0x1.35355dc8dcb99p-111 regions 6 converged True: |v - ref| = 4.3597722 e (with the reference's error 4.3597501 to 4.3597943): understates
+    R31: v -0x1.284234a1dbe00p-88 e 0x1.1c1352bde5bcfp-110 regions 66 converged True: |v - ref| = 0.0049884409 e (with the reference's error 0.0049764375 to 0.0050004443): honest
+    |v31 - v30|/(e30 + e31) 1.53329; ANSWER: R30 understates
+SUMMARY over 7 records: {'R30 understates': 7}

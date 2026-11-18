@@ -1,0 +1,10 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/s2_score_r31.py sha256 5c499eb2ab2bca89d157f09495a8f9699b3d1f32bd19ba809c8fd616252e4055
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/p1_references/calls.json sha256 8286b1ffbe6385a116a385e244007ba7003bc66b955c9c7ceaf593566253a6b6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/s2_scores.json sha256 dc502c3316263bce32eac0f9e3a35d678d030c9e8ffaa959b7ae47575e91957b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/p1_references/p1_row1.json sha256 868e528229ba77068d7ba6eea4384eb1883fd6d0e3ae6ad189cae5a51d9b273d
+row 1 [316227.7660168379, 316227.7660168379, 316227.7660168379, 249.99999999999994]: replay reproduces R31 True; root at z 10211.317891485687 (|x - x_s| 7.09e-09 against 0.004123: within); readings count True (scatter 6.11e-37, tolerance 6.589e-33); ref -0x1.059fce809a3c4p-74; R31 value -0x1.059fce8287412p-74 abserr 0x1.7c75abe62fe62p-100: 0.0202477 x abserr; R27 561137.0; R30 0.0202477; R31 equals R28 True; R31 equals R30 True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 0}
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/rehearsal/out/p1_references/p1_row2.json sha256 22f08c69553ba81f7074052ccc209ae799ed5133c59c714567d7fb63b3335983
+row 2 [100000.0, 316227.7660168379, 316227.7660168379, 249.99999999999994]: replay reproduces R31 True; root at z 275.0085916617262 (|x - x_s| 5.56e-09 against 0.004123: within); readings count True (scatter 1.19e-36, tolerance 9.177e-33); ref 0x1.2f1af86ca7aa5p-75; R31 value 0x1.2f1af8443a3c9p-75 abserr 0x1.6bb1d93a35367p-99: 0.111158 x abserr; R27 40748.1; R30 0.263249; R31 equals R28 False; R31 equals R30 False; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 1}
+
+S2 on R31 HOLDS
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/s2_scores.json sha256 b816ee7566c7c77d3920dea1bb8c834683c84de5388ba1f7724000a08017f3ef

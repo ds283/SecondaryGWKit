@@ -1,0 +1,91 @@
+$ bash state/gate_trees.sh
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T20:32:38Z
+# ----
+== /Users/ds283/Documents/Code/SecondaryGWKit
+28ebaf0743e0555fb2c4512ce714884005a60eff
+status --short --ignored: [!! .DS_Store;!! .idea/;!! AdaptiveLevin/__pycache__/;!! AdaptiveLevin/tests/__pycache__/;!! Analytical_OmegaGW_LISA_Taiji_TianQin.pdf;!! Analytical_OmegaGW_LISA_Taiji_TianQin.png;!! ComputeTargets/__pycache__/;!! CosmologyConcepts/__pycache__/;!! CosmologyModels/GenericEOS/__pycache__/;!! CosmologyModels/LambdaCDM/__pycache__/;!! CosmologyModels/__pycache__/;!! Datastore/;!! GkSource-out/;!! LiouvilleGreen/.DS_Store;!! LiouvilleGreen/__pycache__/;!! LiouvilleGreen/tests/.DS_Store;!! LiouvilleGreen/tests/__pycache__/;!! LiouvilleGreen/tests/test_3bessel_analytic/;!! LiouvilleGreen/tests/three_bessel_debug/;!! MetadataConcepts/__pycache__/;!! ObjectFactories/__pycache__/;!! Omega_GW_sensitivity.pdf;!! Omega_GW_sensitivity.png;!! Quadrature/__pycache__/;!! Quadrature/integrators/__pycache__/;!! Quadrature/supervisors/__pycache__/;!! RayTools/;!! StoreFixtures/__pycache__/;!! Units/__pycache__/;!! __pycache__/;!! config/__pycache__/;!! docs/handover/a3-v2/findings/__pycache__/;!! profile-db.sqlite;!! test-db-qcd-shard0000.sqlite;!! test-db-qcd-shard0001.sqlite;!! test-db-qcd-shard0002.sqlite;!! test-db-qcd-shard0003.sqlite;!! test-db-qcd-shard0004.sqlite;!! test-db-qcd-shard0005.sqlite;!! test-db-qcd-shard0006.sqlite;!! test-db-qcd-shard0007.sqlite;!! test-db-qcd-shard0008.sqlite;!! test-db-qcd-shard0009.sqlite;!! test-db-qcd-shard0010.sqlite;!! test-db-qcd-shard0011.sqlite;!! test-db-qcd-shard0012.sqlite;!! test-db-qcd-shard0013.sqlite;!! test-db-qcd-shard0014.sqlite;!! test-db-qcd-shard0015.sqlite;!! test-db-qcd-shard0016.sqlite;!! test-db-qcd-shard0017.sqlite;!! test-db-qcd-shard0018.sqlite;!! test-db-qcd-shard0019.sqlite;!! test-db-qcd.sqlite;!! thirdparty/__pycache__/;!! three_bessel_debug/;!! tools/__pycache__/;!! var/;!! venv/;]
+status --short: []
+== /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+0a103b5ae0de32b568f44904a5c3dcbfca922a2e
+status --short --ignored: []
+status --short: []
+== worktree list
+/Users/ds283/Documents/Code/SecondaryGWKit                28ebaf07 [handover-remedial]
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 0a103b5a (detached HEAD)
+== git log --oneline -9 at h
+0a103b5a Write levin-phase-floor 07b's Part C dispatch
+5e19c4b6 Refuse a trusted Levin leaf by its phase rates
+7b82a0cd Amend levin-phase-floor 07b at Part B's stop
+c768c4ad Amend levin-phase-floor 07b with the fix, variant (h)
+a510e4ad Write levin-phase-floor 07b's Part A extension
+436ed5d4 Write levin-phase-floor prompt 07b and its orchestrator note
+a74e7e10 Record levin-phase-floor 07a's Part C and narrow its two issues
+89c368f2 Correct docstrings made stale by levin-phase-floor 07a's phase variation
+4bf50d34 Write levin-phase-floor 07a's Part C dispatch
+== parents: 0a103b5a^ 5e19c4b6^ 7b82a0cd^
+5e19c4b6da0731d51e0ca68cf1fa9cbf11cba80d
+7b82a0cdd535469b8baa42dad224ff098a60cf6d
+c768c4ad3f249c2094040601b3b5d86c93659fc0
+== U0 (1), S0': git diff --stat 1ec734d7 7b82a0cd -- . ':!docs' ':!prompts'
+ CLAUDE.md                                        | 11 ++++++++---
+ ComputeTargets/tests/test_quadsource_integral.py | 19 +++++++++++--------
+ LiouvilleGreen/bessel_phase.py                   | 11 +++++++----
+ LiouvilleGreen/tests/test_three_bessel.py        |  7 ++++---
+ LiouvilleGreen/three_bessel_integrals.py         |  6 ++++--
+ 5 files changed, 34 insertions(+), 20 deletions(-)
+== the same, --name-status
+M	CLAUDE.md
+M	ComputeTargets/tests/test_quadsource_integral.py
+M	LiouvilleGreen/bessel_phase.py
+M	LiouvilleGreen/tests/test_three_bessel.py
+M	LiouvilleGreen/three_bessel_integrals.py
+== git diff --stat 7b82a0cd 5e19c4b6 -- . ':!docs' ':!prompts' (the code commit)
+ AdaptiveLevin/levin_quadrature.py                 | 264 +++++++++++-
+ AdaptiveLevin/tests/test_levin_leaf_values.py     |  20 +-
+ AdaptiveLevin/tests/test_levin_rate_rules.py      | 482 ++++++++++++++++++++++
+ AdaptiveLevin/tests/test_levin_roundoff_exit.py   |  27 +-
+ AdaptiveLevin/tests/test_levin_trust_yardstick.py |  47 ++-
+ LiouvilleGreen/tests/test_three_bessel.py         |  28 +-
+ 6 files changed, 841 insertions(+), 27 deletions(-)
+== git diff --stat 5e19c4b6 0a103b5a -- . ':!docs' ':!prompts' (expected empty)
+(end)
+== git diff --stat 1ec734d7 0a103b5a -- ComputeTargets ObjectFactories RunDrivers main.py tools config CosmologyModels Quadrature requirements.txt StoreFixtures LiouvilleGreen
+ ComputeTargets/tests/test_quadsource_integral.py | 19 +++++++------
+ LiouvilleGreen/bessel_phase.py                   | 11 +++++---
+ LiouvilleGreen/tests/test_three_bessel.py        | 35 ++++++++++++++++--------
+ LiouvilleGreen/three_bessel_integrals.py         |  6 ++--
+ 4 files changed, 45 insertions(+), 26 deletions(-)
+(end)
+== module hashes (file in h; git show at each commit)
+8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/AdaptiveLevin/levin_quadrature.py
+33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/QuadSourceIntegral.py
+b492d99e27532a674a17cfcdcb30f615c43e78575828a7bfc1a950c0dd44a489  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/LiouvilleGreen/three_bessel_integrals.py
+c0108c2ea8b1e5e686075c711fcffebd1b49612802d3771ed3275d7d6c6a38d9  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/LiouvilleGreen/bessel_phase.py
+4cebf6e3bcae4f464a81cadc5e3205d53015cfc139e8f93f2fdf8dfb1d83b878  /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/AdaptiveLevin/__init__.py
+levin_quadrature.py at 1ec734d7: 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  -  blob 0701d2a6a9442bdb88606276580421a3522cba63
+levin_quadrature.py at 7b82a0cd: 4ea1948b0a45b5e3e7028c360d8b6a3165680f747391adfdb4783b6646ca2577  -  blob 0701d2a6a9442bdb88606276580421a3522cba63
+levin_quadrature.py at 5e19c4b6: 8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1  -  blob adb7b7df347b7ac9089cbfb0df7926786f308e97
+levin_quadrature.py at 0a103b5a: 8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1  -  blob adb7b7df347b7ac9089cbfb0df7926786f308e97
+AdaptiveLevin/__init__.py at 1ec734d7: 4cebf6e3bcae4f464a81cadc5e3205d53015cfc139e8f93f2fdf8dfb1d83b878  -
+AdaptiveLevin/__init__.py at 7b82a0cd: 4cebf6e3bcae4f464a81cadc5e3205d53015cfc139e8f93f2fdf8dfb1d83b878  -
+AdaptiveLevin/__init__.py at 5e19c4b6: 4cebf6e3bcae4f464a81cadc5e3205d53015cfc139e8f93f2fdf8dfb1d83b878  -
+QuadSourceIntegral.py at 1ec734d7: 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  -
+QuadSourceIntegral.py at 7b82a0cd: 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  -
+QuadSourceIntegral.py at 5e19c4b6: 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7  -
+LiouvilleGreen/three_bessel_integrals.py at 1ec734d7: d6ffac2b81f2bffe4af7bec41eb83861e7196acc3aaaac4ab9b483d6f3c3b05b  -
+LiouvilleGreen/three_bessel_integrals.py at 7b82a0cd: b492d99e27532a674a17cfcdcb30f615c43e78575828a7bfc1a950c0dd44a489  -
+LiouvilleGreen/three_bessel_integrals.py at 5e19c4b6: b492d99e27532a674a17cfcdcb30f615c43e78575828a7bfc1a950c0dd44a489  -
+LiouvilleGreen/bessel_phase.py at 1ec734d7: 01d2de604cedfd226881eaa2913d9687c00145ad6484a83e967acc72c49b69c7  -
+LiouvilleGreen/bessel_phase.py at 7b82a0cd: c0108c2ea8b1e5e686075c711fcffebd1b49612802d3771ed3275d7d6c6a38d9  -
+LiouvilleGreen/bessel_phase.py at 5e19c4b6: c0108c2ea8b1e5e686075c711fcffebd1b49612802d3771ed3275d7d6c6a38d9  -
+== __pycache__ in h (expected none)
+(end)
+== python
+3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]
+== load
+20:32  up 40 days, 11:09, 3 users, load averages: 4.08 5.06 6.24
+# ----
+# end 2026-11-16T20:32:41Z
+# exit 0

@@ -1,0 +1,20 @@
+2026-11-16T19:58:24Z # prompt 07b r31: run refcap
+2026-11-16T19:58:24Z # written 2026-11-16T19:58:24Z on mps026298.phys.susx.ac.uk
+2026-11-16T19:58:24Z # script replay07b_r31.py sha256 ac7319caf04824e14870eb500c80c62b2d83e76d0c05532a0cfac7e723f00825
+2026-11-16T19:58:24Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+2026-11-16T19:58:24Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-16T19:58:24Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/refcap_spec.json sha256 7db97f79d73077bbb75478b3c18dad647a7850e2fd972d0dc6d0f6534fa28aff
+2026-11-16T19:58:24Z 6 workers, 8 units, at most 6 at once
+2026-11-16T19:58:24Z start refcap-h-0 (h, 2 units): pid 15701
+2026-11-16T19:58:24Z start refcap-h-1 (h, 2 units): pid 15702
+2026-11-16T19:58:24Z start refcap-h-2 (h, 1 units): pid 15703
+2026-11-16T19:58:24Z start refcap-h-3 (h, 1 units): pid 15704
+2026-11-16T19:58:24Z start refcap-h-4 (h, 1 units): pid 15705
+2026-11-16T19:58:24Z start refcap-h-5 (h, 1 units): pid 15706
+2026-11-16T19:58:58Z end refcap-h-5: rc 0 after 34.3 s
+2026-11-16T19:58:59Z end refcap-h-2: rc 0 after 35.3 s
+2026-11-16T19:59:03Z end refcap-h-3: rc 0 after 39.4 s
+2026-11-16T19:59:03Z end refcap-h-4: rc 0 after 39.4 s
+2026-11-16T19:59:32Z end refcap-h-0: rc 0 after 67.6 s
+2026-11-16T19:59:39Z end refcap-h-1: rc 0 after 74.7 s
+2026-11-16T19:59:40Z done in 75.7 s; return codes {0: 6}

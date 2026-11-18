@@ -1,0 +1,6 @@
+run id      levin-phase-floor-07b-r31-refs-20261116T201120
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-refs-20261116T201120
+plan        /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/plan_r31-refs.json (7 commands)
+sh pid      18724
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/run_06j.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-refs-20261116T201120 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/plan_r31-refs.json; exit $?
+launcher    pid 18718, exiting without waiting

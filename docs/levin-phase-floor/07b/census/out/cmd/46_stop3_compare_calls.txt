@@ -1,0 +1,28 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5:scripts nice /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_07b.py calls /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200 out/stop3/compare_census_calls.json --processes 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-17T13:33:41Z
+# ----
+# levin-phase-floor 07b: levin-phase-floor-07b-census-20261117T010200 against 07a's census (levin-phase-floor-07a-census-20261112T132744), mode calls
+# written 2026-11-17T13:34:08Z on mps026298.phys.susx.ac.uk
+# script compare_07b.py sha256 da20d1da743d9abba51a6cd12a3ec2fccfedea33c7e678617abec2d7339195a1
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/checkpoint.jsonl sha256 396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/state/index_07a.json sha256 41fd366f2867f81447c4af2b240e75ba7b11a6a34ebb083f797ee2d2003dc80d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+# 18560 units to compare (0 other records skipped: []), 6 process(es); excluded: 07's ['cache_built', 'compute_time', 'elapsed', 'modules', 'pickle', 'pickle_length', 'pickle_offset', 'pickle_record_sha256', 'rebuild_s', 'route_06k', 'route_06l', 'rows_sha256', 'scripts_sha256', 'seconds', 'tree_head', 'tree_status_short', 'w2_capture_sha256', 'wall_s', 'worker', 'worker_pid', 'worker_tree'] and every key ending _s; set aside as new: ['instrument_07b', 'num_edge_rule_refusals', 'num_range_rule_refusals', 'rate_rule_07b'] (prompt 07b: 07b's)
+units 18560; problems 0 []; statuses {'done': 18560}
+calls by class: {'untouched': 60160, 'acted_range': 228648, 'acted_both': 665, 'acted_edge': 9}
+equal by class: {'untouched': {'equal': 60160, 'differing': 0}, 'acted_range': {'equal': 0, 'differing': 228648}, 'acted_both': {'equal': 0, 'differing': 665}, 'acted_edge': {'equal': 0, 'differing': 9}}
+U1's five outputs equal by rtol|kind|class: {"1e-7|analytic|untouched": {"equal": 13484, "differing": 0}, "1e-7|group|untouched": {"equal": 16274, "differing": 0}, "1e-7|group|acted_range": {"equal": 21, "differing": 20690}, "1e-7|analytic|acted_range": {"equal": 0, "differing": 93932}, "1e-7|group|acted_both": {"equal": 0, "differing": 338}, "1e-7|group|acted_edge": {"equal": 0, "differing": 2}, "1e-8|analytic|untouched": {"equal": 13751, "differing": 0}, "1e-8|group|untouched": {"equal": 16651, "differing": 0}, "1e-8|analytic|acted_range": {"equal": 0, "differing": 93665}, "1e-8|group|acted_range": {"equal": 32, "differing": 20308}, "1e-8|group|acted_both": {"equal": 0, "differing": 327}, "1e-8|group|acted_edge": {"equal": 0, "differing": 7}}
+differing categories by class: {"untouched": {"none": 60160}, "acted_range": {"call+harness": 215150, "call": 13498}, "acted_both": {"call+harness": 623, "call": 42}, "acted_edge": {"call+harness": 7, "call": 2}}
+units all of W1's classes, reading A (every solve) / B (own solves): {"A": {"n_all_w1": 5688, "n_totals_equal": 5688, "n_whole_equal": 5687, "whole_categories": {"none": 5687, "oracle": 1}}}
+new keys in 07's records 0; phase_span keys 0
+unit evidence (true, false): {'lq_file_is_expected': [18560, 0], 'all_in_tree': [18560, 0], 'no_foreign': [18560, 0], 'variant_root_as_expected': [18560, 0]}
+worker evidence: 16 workers, all hold True
+wrote out/stop3/compare_census_calls.calls.jsonl sha256 a327106d0b0890fd9dd4b8a85dc7e64aec8340579711ff006fe86230bf25ad8d
+wrote out/stop3/compare_census_calls.json sha256 dd8afb7681a7b61be9a7b792234f1bf4a2592ecebf955a05dd39ffe0ad6a5b5a
+# ----
+# end 2026-11-17T13:35:55Z
+# exit 0

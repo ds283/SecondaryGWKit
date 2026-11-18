@@ -1,0 +1,49 @@
+{
+ "tree": "h",
+ "name": "refcap-h-0",
+ "units": [
+  {
+   "uid": "h-1e-7-3-20363",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-20363",
+   "names05": null,
+   "shard": 3,
+   "serial": 20363,
+   "k_key": "3:1",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.4463e+05, z in (1.7159e+10, 1.4463e+05), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-1-209",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "1-209",
+   "names05": null,
+   "shard": 1,
+   "serial": 209,
+   "k_key": "1:201",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     4,
+     "k=1e+06/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=36287, z in (1.7159e+10, 36287), regime Gqr, group G-q-r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-0",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-0/emit.jsonl",
+ "rows_sha256": null,
+ "w2_capture_sha256": null
+}

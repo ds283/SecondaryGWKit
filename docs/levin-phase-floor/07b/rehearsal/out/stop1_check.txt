@@ -1,0 +1,54 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-16T19:37:36Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07b/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+cd $M
+echo "== stores after the comparisons"; { shasum -a 256 var/datastores/levin-phase-floor-07a-r30*.sqlite var/datastores/levin-phase-floor-07b-r31*.sqlite; ls -la var/datastores | grep -E "07a-r30|07b-r31"; } > $Z/state/store_sha256_after_diff.txt; diff $Z/state/store_sha256_before_diff.txt $Z/state/store_sha256_after_diff.txt && echo "R30 and R31 byte-identical (and same listing) before and after the comparisons"
+shasum -a 256 var/datastores/levin-phase-floor-07-r29.sqlite var/datastores/levin-phase-floor-07-r29-shard000?.sqlite | cmp - $Z/state/r29_store_sha256_before.txt && echo "R29 unchanged"
+shasum -a 256 var/datastores/handover-A3-v2-lambdacdm*.sqlite | cmp - $Z/state/a3v2_sha256_before.txt && echo "A3 v2 unchanged"
+echo "== journals / sidecars"; ls var/datastores | grep -E "07a-r30|07b-r31|07-r29" | grep -vE "\.sqlite$"; echo "(end)"
+echo "== protected listing"; diff $Z/state/protected_listing_before.txt $Z/state/protected_listing_stop1.txt && echo "protected files unchanged (mtime, size, path)"
+echo "== worktree"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"; command find $W -newer $Z/state/r31_launch_marker -not -path "*/.git/*" | head; echo "(end newer)"
+echo "== main checkout"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== registry"; cd $W; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/stop1_registry_list.txt 2>&1; echo "exit $?"; tail -1 $Z/out/stop1_registry_list.txt
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+echo "== lock dir"; ls -la ~/.raypoolkit/rehearsal-lock; cat ~/.raypoolkit/rehearsal-lock/owner 2>/dev/null; echo
+
+# output:
+== stores after the comparisons
+R30 and R31 byte-identical (and same listing) before and after the comparisons
+R29 unchanged
+A3 v2 unchanged
+== journals / sidecars
+(end)
+== protected listing
+protected files unchanged (mtime, size, path)
+== worktree
+0a103b5ae0de32b568f44904a5c3dcbfca922a2e
+(end)
+(end newer)
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end)
+== registry
+exit 0
+82 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 82 finished; 0 with no host recorded.
+== Ray processes (any)
+(end)
+== lock dir
+total 4
+drwxr-xr-x 3 ds283 staff  96 Nov 16 19:18 .
+drwxr-xr-x 3 ds283 staff  96 Nov 16 19:18 ..
+-rw-r--r-- 1 ds283 staff 395 Nov 16 19:18 owner
+project: SecondaryGWKit
+purpose: levin-phase-floor prompt 07b section 5 (Part C): rehearsal R31 on the Mac Studio (mps026298; worktree 0a103b5a, code commit 5e19c4b6, parent 7b82a0cd), fingerprint 1b332ffa required; then R31 against R30, S3, S1, S2, S4, the replay and the readers
+acquired: 2026-11-16T19:18:38+00:00
+host: mps026298
+ray_temp_dir: /tmp/ray-sgk
+ray_address: in-process
+pid: 10624
+
+# exit: 0
+# end: 2026-11-16T19:37:39Z

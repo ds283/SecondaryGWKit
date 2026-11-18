@@ -1,0 +1,13 @@
+[100000.0, 1000000.0, 1000000.0, 144627.70674226896] G+q+r (seven: False) route B: n_seg 1028, non-monotone 0 (D 0 rad), steep 0 (D_f 0); qawo_r1 8 qawo_r2 17 fcc_r1 15 fcc_r2 61 fccsplit_r1 37 fccsplit_r2 146 | QAWO+split FCC: 207 s
+[316227.7660168379, 100000.0, 316227.7660168379, 996.4201622779478] G-q-r (seven: True) route B: n_seg 1246, non-monotone 0 (D 0 rad), steep 0 (D_f 0); qawo_r1 18 qawo_r2 59 fcc_r1 18 fcc_r2 74 fccsplit_r1 44 fccsplit_r2 177 | QAWO+split FCC: 299 s
+[316227.7660168379, 100000.0, 316227.7660168379, 6944780.034414906] G-q-r (seven: True) route B: n_seg 478, non-monotone 0 (D 0 rad), steep 0 (D_f 0); qawo_r1 4 qawo_r2 7 fcc_r1 7 fcc_r2 28 fccsplit_r1 17 fccsplit_r2 68 | QAWO+split FCC: 96 s
+[1000000.0, 100000.0, 1000000.0, 329.64045755914753] G-q+r (seven: True) route B: n_seg 1342, non-monotone 0 (D 0 rad), steep 0 (D_f 0); qawo_r1 39 qawo_r2 152 fcc_r1 20 fcc_r2 80 fccsplit_r1 48 fccsplit_r2 191 | QAWO+split FCC: 430 s
+[1000000.0, 100000.0, 1000000.0, 36286.827639966534] G-q+r (seven: True) route B: n_seg 934, non-monotone 0 (D 0 rad), steep 0 (D_f 0); qawo_r1 7 qawo_r2 16 fcc_r1 14 fcc_r2 56 fccsplit_r1 33 fccsplit_r2 133 | QAWO+split FCC: 189 s
+[1000000.0, 316227.7660168379, 1000000.0, 191807016.520263] G-q-r (seven: True) route B: n_seg 290, non-monotone 0 (D 0 rad), steep 0 (D_f 0); qawo_r1 2 qawo_r2 4 fcc_r1 4 fcc_r2 17 fccsplit_r1 10 fccsplit_r2 41 | QAWO+split FCC: 58 s
+[1000000.0, 1000000.0, 1000000.0, 36286.827639966534] G-q-r (seven: True) route B: n_seg 1148, non-monotone 0 (D 0 rad), steep 0 (D_f 0); qawo_r1 10 qawo_r2 25 fcc_r1 17 fcc_r2 68 fccsplit_r1 41 fccsplit_r2 163 | QAWO+split FCC: 239 s
+[1000000.0, 1000000.0, 1000000.0, 331553.02818648185] G-q-r (seven: True) route B: n_seg 956, non-monotone 0 (D 0 rad), steep 0 (D_f 0); qawo_r1 7 qawo_r2 15 fcc_r1 14 fcc_r2 57 fccsplit_r1 34 fccsplit_r2 136 | QAWO+split FCC: 193 s
+the seven: 1504 s with margin (0.42 h), x1.5 0.63 h; all eight 1711 s (0.48 h), x1.5 0.71 h; ray initialised False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/refs/refs_projection_r31.json sha256 490a264e2772ec0dddb07c4a011637337381cbacf28578e38d8e45c6bde92ae3
+real 3.65
+user 3.19
+sys 0.36

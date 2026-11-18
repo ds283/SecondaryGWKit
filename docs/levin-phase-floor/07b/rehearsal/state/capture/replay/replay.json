@@ -1,0 +1,32 @@
+{
+ "name": "replay",
+ "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/replay_spec.json",
+ "spec_sha256": "e2abec3d08cb0a507d1778cb57321d3c8dfbd6717af7a8d7e73548906c374c01",
+ "wall_s": 408.91244101524353,
+ "workers": {
+  "replay-h-4": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-4/emit.jsonl"
+  },
+  "replay-h-5": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-5/emit.jsonl"
+  },
+  "replay-h-0": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-0/emit.jsonl"
+  },
+  "replay-h-3": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-3/emit.jsonl"
+  },
+  "replay-h-2": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-2/emit.jsonl"
+  },
+  "replay-h-1": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/replay/replay-h-1/emit.jsonl"
+  }
+ }
+}

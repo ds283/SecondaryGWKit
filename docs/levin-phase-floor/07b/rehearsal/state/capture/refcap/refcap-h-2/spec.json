@@ -1,0 +1,30 @@
+{
+ "tree": "h",
+ "name": "refcap-h-2",
+ "units": [
+  {
+   "uid": "h-1e-7-0-270",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-270",
+   "names05": null,
+   "shard": 0,
+   "serial": 270,
+   "k_key": "0:101",
+   "budget": null,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     6,
+     "k=3.16e+05/Mpc, q=1e+05/Mpc, r=3.16e+05/Mpc @ z_response=6.9448e+06, z in (1.7126e+09, 6.9448e+06), regime Gqr, group G-q-r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-2",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-2/emit.jsonl",
+ "rows_sha256": null,
+ "w2_capture_sha256": null
+}

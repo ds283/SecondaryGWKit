@@ -1,0 +1,57 @@
+1c1
+< """[prompt 07a section 5 item 5, rehearsal agent, R30: R29's s2_score_r29.py (e7430b57), changed where marked "prompt 07a r30": the replay at h (replay07a_r30.py) and R30's records; the tag R29 read as R30, with R30's call compared with R28's and R29's; outputs under the 07a rehearsal.]
+---
+> """[prompt 07b section 5 item 5, rehearsal agent, R31: R30's s2_score_r30.py (6fc3fb30), changed where marked "prompt 07b r31": the replay at h (replay07b_r31.py) and R31's records; the tag R30 read as R31, R31's call compared with R28's (stop 1) and R30's (07a's s2_scores.json); each call's refusals recorded; outputs under the 07b rehearsal.]
+2a3,4
+> [prompt 07a section 5 item 5, rehearsal agent, R30: R29's s2_score_r29.py (e7430b57), changed where marked "prompt 07a r30": the replay at h (replay07a_r30.py) and R30's records; the tag R29 read as R30, with R30's call compared with R28's and R29's; outputs under the 07a rehearsal.]
+> 
+25,26c27,28
+< Z = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal")  # prompt 07a r30
+< Z29 = R / "r29"  # prompt 07a r30: R29's s2_scores.json, for R29's call
+---
+> Z = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal")  # prompt 07b r31
+> Z30 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal")  # prompt 07b r31: R30's s2_scores.json, for R30's call
+28c30
+< import replay07a_r30 as RP  # noqa: E402  prompt 07a r30
+---
+> import replay07b_r31 as RP  # noqa: E402  prompt 07b r31
+46,48c48,50
+<     s29p = Z29 / "out" / "s2_scores.json"  # prompt 07a r30
+<     print(f"# input {s29p} sha256 {sha256(s29p)}")
+<     s29 = json.loads(s29p.read_text())["rows"]
+---
+>     s30p = Z30 / "out" / "s2_scores.json"  # prompt 07b r31
+>     print(f"# input {s30p} sha256 {sha256(s30p)}")
+>     s30 = json.loads(s30p.read_text())["rows"]
+55,56c57,58
+<         u, _, _ = units[f"h-1e-7-{e['R30']['shard']}-{e['R30']['serial']}"]  # prompt 07a r30
+<         hits = [x for x in u["calls"] if x["notify_label"].endswith("group G+q+r") and RP.stored_form(x, e["key"][3]) == (rec["R30"]["value"], rec["R30"]["abserr"])]
+---
+>         u, _, _ = units[f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"]  # prompt 07b r31
+>         hits = [x for x in u["calls"] if x["notify_label"].endswith("group G+q+r") and RP.stored_form(x, e["key"][3]) == (rec["R31"]["value"], rec["R31"]["abserr"])]  # prompt 07b r31
+71,73c73,76
+<                "R28_value_stop1": c["R28_value"], "R30_equals_R28": call["value"]["hex"] == c["R28_value"] and call["abserr"]["hex"] == c["R28_abserr"],
+<                "R30_equals_R29": [r_ for r_ in s29 if r_["p1"] == c["p1"]][0]["R29"] == None if False else (call["value"]["hex"], call["abserr"]["hex"]) == tuple([r_ for r_ in s29 if r_["p1"] == c["p1"]][0]["R29"][k_] for k_ in ("value", "abserr"))}  # prompt 07a r30
+<         for tag, v_, e_ in (("R27", c["R27_value"], c["R27_abserr"]), ("R30", call["value"]["hex"], call["abserr"]["hex"])):  # prompt 07a r30
+---
+>                "R28_value_stop1": c["R28_value"], "R31_equals_R28": call["value"]["hex"] == c["R28_value"] and call["abserr"]["hex"] == c["R28_abserr"],
+>                "R31_equals_R30": (call["value"]["hex"], call["abserr"]["hex"]) == tuple([r_ for r_ in s30 if r_["p1"] == c["p1"]][0]["R30"][k_] for k_ in ("value", "abserr")),
+>                "R30_ratio": [r_ for r_ in s30 if r_["p1"] == c["p1"]][0]["R30"]["ratio"], "refusals_07b": call.get("refusals_07b")}  # prompt 07b r31
+>         for tag, v_, e_ in (("R27", c["R27_value"], c["R27_abserr"]), ("R31", call["value"]["hex"], call["abserr"]["hex"])):  # prompt 07b r31
+77c80
+<         row["honesty_ok"] = row["counts"] and row["R30"]["honest"]  # prompt 07a r30
+---
+>         row["honesty_ok"] = row["counts"] and row["R31"]["honest"]  # prompt 07b r31
+80c83
+<         print(f"row {c['p1']} {c['key']}: replay reproduces R29 {row['replay_reproduces_record']}; root at z {row['z']} (|x - x_s| {float(row['abs_x_minus_x_s']):.3g} "
+---
+>         print(f"row {c['p1']} {c['key']}: replay reproduces R31 {row['replay_reproduces_record']}; root at z {row['z']} (|x - x_s| {float(row['abs_x_minus_x_s']):.3g} "
+82,84c85,88
+<               f"ref {row['ref_hex']}; R30 value {row['R30']['value']} abserr {row['R30']['abserr']}: {row['R30']['ratio']} x abserr; "
+<               f"R27 {row['R27']['ratio']}; R30 equals R28 {row['R30_equals_R28']}; R30 equals R29 {row['R30_equals_R29']}")  # prompt 07a r30
+<     print(f"\nS2 on R30 {'HOLDS' if holds else 'FAILS'}")  # prompt 07a r30
+---
+>               f"ref {row['ref_hex']}; R31 value {row['R31']['value']} abserr {row['R31']['abserr']}: {row['R31']['ratio']} x abserr; "
+>               f"R27 {row['R27']['ratio']}; R30 {row['R30_ratio']}; R31 equals R28 {row['R31_equals_R28']}; R31 equals R30 {row['R31_equals_R30']}; "
+>               f"refusals {row['refusals_07b']}")  # prompt 07b r31
+>     print(f"\nS2 on R31 {'HOLDS' if holds else 'FAILS'}")  # prompt 07b r31

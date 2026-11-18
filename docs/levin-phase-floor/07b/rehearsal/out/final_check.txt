@@ -1,0 +1,49 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-16T20:27:32Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07b/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+cd $M
+{ shasum -a 256 var/datastores/levin-phase-floor-07-r29.sqlite var/datastores/levin-phase-floor-07-r29-shard000?.sqlite; shasum -a 256 var/datastores/levin-phase-floor-07a-r30.sqlite var/datastores/levin-phase-floor-07a-r30-shard000?.sqlite; shasum -a 256 var/datastores/levin-phase-floor-07b-r31.sqlite var/datastores/levin-phase-floor-07b-r31-shard000?.sqlite; } > $Z/state/stores_sha256_final.txt
+head -5 $Z/state/stores_sha256_final.txt | cmp - $Z/state/r29_store_sha256_before.txt && echo "R29 unchanged (equal to 07 r29/KEPT_ON_MAC_STUDIO.txt)"
+sed -n 6,10p $Z/state/stores_sha256_final.txt | cmp - $Z/state/r30_store_sha256_before.txt && echo "R30 unchanged (equal to 07a rehearsal/KEPT_ON_MAC_STUDIO.txt)"
+sed -n 11,15p $Z/state/stores_sha256_final.txt | cmp - $Z/state/r31_store_sha256_after_build.txt && echo "R31 equal to its post-build hashes"
+shasum -a 256 var/datastores/handover-A3-v2-lambdacdm*.sqlite | cmp - $Z/state/a3v2_sha256_before.txt && echo "A3 v2 unchanged"
+shasum -a 256 var/runs/levin-phase-floor-07a-r30-07a-20261112T113806/* | cmp - $Z/state/r30_rundir_sha256_before.txt && echo "R30 run directory unchanged"
+ls var/datastores | grep -E "07a-r30|07b-r31|07-r29" | grep -vE "\.sqlite$"; echo "(no journals)"
+echo "== protected listing, before vs final (any path not under 07b/review or 07b/census counted):"; diff $Z/state/protected_listing_before.txt $Z/state/protected_listing_final.txt | grep "^[<>]" | grep -v "var/levin-phase-floor-07b/review/" | grep -v "var/levin-phase-floor-07b/census/" | wc -l; diff $Z/state/protected_listing_before.txt $Z/state/protected_listing_final.txt | grep "^[<>]" | awk "{print \$1, \$4}" | sed "s#/[^/]*\$##" | sort | uniq -c
+git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(W end)"; command find $W -newer $Z/state/r31_launch_marker -not -path "*/.git/*" | head; echo "(nothing newer in W)"
+git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(M end)"
+cd $W; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/final_registry_list.txt 2>&1; grep -E "07b-r31|running|stale" $Z/out/final_registry_list.txt | cut -c1-120; tail -1 $Z/out/final_registry_list.txt
+ls -la ~/.raypoolkit; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(no ray)"
+command find $Z -name __pycache__ | head; echo "(no pycache)"
+
+# output:
+R29 unchanged (equal to 07 r29/KEPT_ON_MAC_STUDIO.txt)
+R30 unchanged (equal to 07a rehearsal/KEPT_ON_MAC_STUDIO.txt)
+R31 equal to its post-build hashes
+A3 v2 unchanged
+R30 run directory unchanged
+(no journals)
+== protected listing, before vs final (any path not under 07b/review or 07b/census counted):
+0
+      8 > var/levin-phase-floor-07b/review/stop1
+      1 > var/levin-phase-floor-07b/review/stop1/scripts
+0a103b5ae0de32b568f44904a5c3dcbfca922a2e
+(W end)
+(nothing newer in W)
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(M end)
+   levin-phase-floor-07b-r31-refs-20261116T201120             done            7/7      16m  levin-phase-floor prompt 07b
+   levin-phase-floor-07b-r31-replay-20261116T195034           done            8/8      37m  levin-phase-floor prompt 07b
+   levin-phase-floor-07b-r31-07b-20261116T191849              done              -   1h 08m  levin-phase-floor prompt 07b
+   levin-phase-floor-06h-phase-20261101T033514                done          84/84  15d 16h  levin-phase-floor prompt 06h
+84 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 84 finished; 0 with no host recorded.
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov 16 20:04 .
+drwxr-x--- 162 ds283 staff 5184 Nov 16 20:23 ..
+(no ray)
+(no pycache)
+# exit: 0
+# end: 2026-11-16T20:27:35Z

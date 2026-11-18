@@ -196,6 +196,19 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   to report its own fit accuracy (README §6), and `adaptive_levin_sincos`'s existing but currently
   unused `theta_abserr` parameter (prompt 04) needs a caller in `LiouvilleGreen/bessel_phase.py` to
   wire the two together. Out of scope for this campaign (README §6).
+
+  **Narrowed 2026-11-18 by `levin-phase-floor` 07b** (its board's Decisions, **07b Part C**, on the
+  user's word: *"Yes, items 6–8 as revised"*): **the draws contradict the 7-of-7 measurement.** In
+  the LiouvilleGreen tests' seeded draws (`levin-phase-floor` 07a's and 07b's harness,
+  `docs/levin-phase-floor/07b/code/out/lg_draws_report.txt`), 434 of 1,080 three-Bessel results are
+  converged and further from their closed form than their `abserr`, the worst by $4.89\times10^6$;
+  436 at the parent of 07b's code, and the same population at 07a's. The tests pass on their own
+  tolerances. `levin-phase-floor` 07a's log attributes it to the fit error of the Bessel phase, which
+  the Levin `abserr` does not carry; that attribution is not measured.
+  `[08-3bessel-chebyshev-order-is-now-the-limit]` (`transfer-remedial`) is a candidate cause. The
+  production path is the same: `QuadSourceIntegral`'s analytic blocks are three-Bessel Levin
+  integrals (107,416 calls per rtol in the A3 v2 census). Not assigned.
+
 - **[09-quadsource-total-error-incomplete]** *(opened by prompt 09, 2026-09-04)* — prompt 09
   propagated the *Levin* error estimate only (its own scope, by title). `compute_QuadSource_integral`'s
   `"total"` = `numeric_quad + WKB_quad + WKB_Levin` still has no combined error bound: `WKB_Levin`'s

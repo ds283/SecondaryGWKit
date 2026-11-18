@@ -1,0 +1,13 @@
+Tue Nov 17 13:36:27 UTC 2026
+main HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff
+main status:
+worktree HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e
+worktree status --ignored:
+files under var/ and A3 v2's store newer than the dispatch marker, outside the allowed paths:
+new run dirs since dispatch:
+var/runs
+var/runs/levin-phase-floor-07b-census-20261117T010200
+var/runs/levin-phase-floor-07b-k0-20261116T204402
+var/runs/levin-phase-floor-07b-r31-07b-20261116T191849
+var/runs/levin-phase-floor-07b-r31-refs-20261116T201120
+var/runs/levin-phase-floor-07b-r31-replay-20261116T195034

@@ -1,0 +1,103 @@
+{
+ "basis": {
+  "rule": "levin-phase-floor prompt 07b section 6, Gate U0's third and fourth clauses: the units, chosen by a rule fixed before\nany is run (this docstring; new in 07b, after 07a's select_w0_units_07a.py, a record, not edited). Read only, except the\ntwo units files it writes.\n\n- **The unit where the fix acts** (clauses 3 and 4): row 3-14501 at 1e-8, ``g-1e-8-3-14501`` (run at h as\n  ``h-1e-8-3-14501``), fixed by name. Its ``G+q+r`` call #1 is Part A's ``p14501_8``, one of the two members of the pair\n  ``3-14501`` on which the edge rule acts under (h)'s replays (07b section 9.2), and its call #0 is Part A's ``n0``\n  (no window), so the unit is expected to show the edge rule and the range rule. That the fix acts in it at h (some call's\n  num_edge_rule_refusals + num_range_rule_refusals > 0) is read from the clause runs' own records (compare_07b.py prints\n  each unit's refusals); if it does not act, the clause is not met and the agent stops.\n- **The unit where the fix does not act** (clause 3): from Gate U0's K0 run at h (K0_H_DIR/units.jsonl), among the units\n  recorded ``done`` with at least one Levin call (group or analytic), those every one of whose Levin calls has both\n  counts 0; of these the one with the most Levin calls, then the most group calls, then the first in the order of 06k's\n  K0 list (docs/levin-phase-floor/06l/out/k0/units.json). If none, the script exits 1 and writes nothing (the agent\n  stops and asks).",
+  "header": [
+   "# levin-phase-floor 07b: Gate U0's clause 3 and 4 units",
+   "# written 2026-11-16T20:58:07Z on mps026298.phys.susx.ac.uk",
+   "# script select_u0_units_07b.py sha256 707ac5873a2b540fd966a6d537bda3d91ac7583677a5523bfd265679ba551661",
+   "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5 HEAD 0a103b5ae0de32b568f44904a5c3dcbfca922a2e (status --short: empty)",
+   "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+   "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/docs/levin-phase-floor/06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699",
+   "# input state/k0/h/units.jsonl sha256 f20b5bd2758bc416449253a8b9f52e23506487b3a406950b79e1479b26f4e11d"
+  ],
+  "acts_unit": "g-1e-8-3-14501",
+  "quiet_unit": "g-1e-7-1-20582",
+  "quiet_unit_calls": [
+   [
+    0,
+    "k=9.56e+07/Mpc, q=3.14e+05/Mpc, r=9.56e+07/Mpc @ z_response=4.8209e+10, z in (1.6391e+16, 1.6351e+12), regime G, group G",
+    0,
+    0,
+    8
+   ],
+   [
+    1,
+    "k=9.56e+07/Mpc, q=3.14e+05/Mpc, r=9.56e+07/Mpc @ z_response=4.8209e+10, z in (1.6351e+12, 4.8209e+10), regime Gr, group G+r",
+    0,
+    0,
+    11
+   ],
+   [
+    2,
+    "k=9.56e+07/Mpc, q=3.14e+05/Mpc, r=9.56e+07/Mpc @ z_response=4.8209e+10, z in (1.6351e+12, 4.8209e+10), regime Gr, group G-r",
+    0,
+    0,
+    13
+   ],
+   [
+    3,
+    "analytic J1",
+    0,
+    0,
+    1
+   ],
+   [
+    4,
+    "analytic Y1",
+    0,
+    0,
+    1
+   ],
+   [
+    5,
+    "analytic J2",
+    0,
+    0,
+    1
+   ],
+   [
+    6,
+    "analytic Y2",
+    0,
+    0,
+    1
+   ],
+   [
+    7,
+    "analytic J3",
+    0,
+    0,
+    1
+   ],
+   [
+    8,
+    "analytic Y3",
+    0,
+    0,
+    1
+   ],
+   [
+    9,
+    "analytic J4",
+    0,
+    0,
+    1
+   ],
+   [
+    10,
+    "analytic Y4",
+    0,
+    0,
+    1
+   ]
+  ],
+  "candidates": [
+   "g-1e-7-1-20582"
+  ]
+ },
+ "units": [
+  {
+   "uid": "g-1e-8-3-14501"
+  }
+ ]
+}

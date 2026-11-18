@@ -1,0 +1,224 @@
+script 3af4387067fd7843bc2e7b21c6b6c81dd28a0a6ebf2994845fee48243849c4c8
+inputs {
+ "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/census_wanted_07b.json": "33d0d89c21c25869d471ca02b30045c114d5f07d42d12c9f5f31273e0c2c7fc9",
+ "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/out/tables/scores_final.json": "32085de936ca3933c68caadecc07e3b6278a24bfa9a8a869d2f6b9261c00a200",
+ "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json": "73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912",
+ "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/docs/levin-phase-floor/06b/census/out/w2_reference.json": "4178395291167c5960859d8b7fe785f79039dfbc61bee09ab663abf7bf766140"
+}
+reading problems []
+U4: 186 calls {'06g': 8, '07a refs': 8, 'A:R1': 60, 'A:R2': 30, 'A:R2~o': 30, 'A:R3-W7': 3, 'A:R3-W7~o': 3, 'A:R3-aux': 6, 'A:R3-aux~o': 6, 'A:R3-own': 3, 'A:R3-own~o': 3, 'A:item3': 1, 'A:v4': 25}
+sid                    src          conv  e/r          ratio   ratio07a   e/e07a   spr/min verdict
+R1-x007-7              A:R1         T/T   0/1      1.274e-05  1.278e-05        1   1.5e-07 honest
+R1-x007-8              A:R1         T/T   0/1      0.0005518   0.000552        1   1.2e-06 honest
+R1-x015-7              A:R1         T/T   3/1      0.0007286      2.469   0.0327     1e-06 honest
+R1-x015-8              A:R1         T/T   3/1      0.0007266      2.469   0.0327     1e-06 honest
+R1-x019-7              A:R1         T/T   1/1        0.04436       3.08    0.792   1.2e-07 honest
+R1-x019-8              A:R1         T/T   1/1        0.04436       3.08    0.792   1.2e-07 honest
+R1-x027-7              A:R1         T/T   0/1       0.006049   0.006049        1   6.4e-07 honest
+R1-x027-8              A:R1         T/T   0/1        0.06095    0.06094        1   7.5e-06 honest
+R1-x029-7              A:R1         T/T   0/2       0.004005   0.003993        1     6e-07 honest
+R1-x029-8              A:R1         T/T   0/3        0.01323    0.01319        1   1.9e-06 honest
+R1-x033-7              A:R1         T/T   1/2       0.005401      10.79     2.27     8e-07 honest
+R1-x033-8              A:R1         T/T   1/2       0.005401      10.79     2.27     8e-07 honest
+R1-x044-7              A:R1         T/T   1/1        0.05368      3.312    0.752   1.3e-07 honest
+R1-x044-8              A:R1         T/T   1/1        0.05368      3.312    0.752   1.3e-07 honest
+R1-x098-7              A:R1         T/T   0/2      0.0004833  0.0004128        1   3.6e-06 honest
+R1-x098-8              A:R1         T/T   0/2      0.0004874  0.0004169        1   3.6e-06 honest
+R1-x109-7              A:R1         T/T   0/2       0.002132   0.002121        1   2.1e-07 honest
+R1-x109-8              A:R1         T/T   0/2       0.002131    0.00212        1   2.1e-07 honest
+R1-x141-7              A:R1         T/T   0/2       0.005769   0.005752        1   6.3e-09 honest
+R1-x141-8              A:R1         T/T   0/2       0.005769   0.005752        1   6.3e-09 honest
+R1-x160-7              A:R1         T/T   0/2      0.0008466     0.3975     1.15   2.3e-06 honest
+R1-x160-8              A:R1         T/T   0/2      0.0008446     0.3975     1.15   2.3e-06 honest
+R1-x165-7              A:R1         T/T   2/2       0.003001       1.37    0.132   1.5e-06 honest
+R1-x165-8              A:R1         T/T   2/2       0.003002       1.37    0.132   1.5e-06 honest
+R1-x174-7              A:R1         T/T   0/2        0.02907    0.02906        1   3.3e-07 honest
+R1-x174-8              A:R1         T/T   0/2        0.02907    0.02906        1   3.3e-07 honest
+R1-x185-7              A:R1         T/T   1/2       0.006108      3.734    0.621   1.9e-06 honest
+R1-x185-8              A:R1         T/T   1/2       0.006108      3.734    0.621   1.9e-06 honest
+R1-x195-7              A:R1         T/T   1/3       0.002415       2.03     2.21     6e-07 honest
+R1-x195-8              A:R1         T/T   1/3       0.002415       2.03     2.21     6e-07 honest
+R1-x196-7              A:R1         T/T   2/1       0.002422   0.004477  0.00119   6.8e-08 honest
+R1-x196-8              A:R1         T/T   2/2       0.002426   0.004477  0.00119   6.8e-08 honest
+R1-x207-7              A:R1         T/T   1/2        0.02349      1.863    0.198   2.3e-06 honest
+R1-x207-8              A:R1         T/T   1/2        0.02349      1.863    0.198   2.3e-06 honest
+R1-x218-7              A:R1         T/T   1/3       0.005297     0.8344    0.157   2.8e-07 honest
+R1-x218-8              A:R1         T/T   1/3       0.005297     0.8344    0.157   2.8e-07 honest
+R1-x241-7              A:R1         T/T   3/3      0.0001814   0.004978   0.0036   3.1e-07 honest
+R1-x241-8              A:R1         T/T   3/3      0.0001839   0.004978   0.0036   3.1e-07 honest
+R1-x247-7              A:R1         T/T   1/4       0.005974      1.186     0.25     6e-08 honest
+R1-x247-8              A:R1         T/T   1/4       0.005974      1.186     0.25     6e-08 honest
+R1-x258-7              A:R1         T/T   2/3       0.001507     0.3575    0.043   2.7e-06 honest
+R1-x258-8              A:R1         T/T   2/4       0.001506     0.3575    0.043   2.7e-06 honest
+R1-x285-7              A:R1         T/T   1/3       0.004721     0.8287    0.252   1.6e-06 honest
+R1-x285-8              A:R1         T/T   1/3       0.004721     0.8287    0.252   1.6e-06 honest
+R1-x295-7              A:R1         T/T   0/0        0.01384    0.01384        1   8.1e-07 honest
+R1-x295-8              A:R1         T/T   0/0        0.06791    0.06791        1   4.1e-06 honest
+R1-x310-7              A:R1         T/T   1/3       0.001857     0.2216   0.0357   2.6e-06 honest
+R1-x310-8              A:R1         T/T   1/3       0.001856     0.2216   0.0357   2.6e-06 honest
+R1-x311-7              A:R1         T/T   1/3        0.03413     0.1023   0.0244   3.3e-06 honest
+R1-x311-8              A:R1         T/T   1/3        0.03413     0.1023   0.0244   3.3e-06 honest
+R1-x317-7              A:R1         T/T   0/1      0.0004815  0.0004814        1   1.3e-07 honest
+R1-x317-8              A:R1         T/T   0/1      0.0004807  0.0004806        1   1.3e-07 honest
+R1-x335-7              A:R1         T/T   2/1         0.2556     0.1944    0.602   4.7e-07 honest
+R1-x335-8              A:R1         T/T   0/1      0.0003669  0.0003408    0.998   2.6e-06 honest
+R1-x353-7              A:R1         T/T   0/1       0.007718   0.007718        1   2.8e-07 honest
+R1-x353-8              A:R1         T/T   0/1       0.007718   0.007718        1   2.8e-07 honest
+R1-x390-7              A:R1         T/T   0/1       0.004082   0.004082        1   1.4e-07 honest
+R1-x390-8              A:R1         T/T   0/1        0.01023    0.01023        1     9e-07 honest
+R1-x392-7              A:R1         T/T   1/3       0.008451    0.02009     0.95   8.6e-07 honest
+R1-x392-8              A:R1         T/T   0/3       0.002233    0.03738     1.06     1e-05 honest
+R2-00                  A:R2         T/T   0/2         0.5423  3.809e-05 0.000249    0.0005 honest
+R2-00~o                A:R2~o       T/T   0/2         0.5423  3.809e-05 0.000249    0.0005 honest
+R2-01                  A:R2         T/T   0/2        0.02345  7.397e-06 0.000317   0.00068 honest
+R2-01~o                A:R2~o       T/T   0/2        0.02345  7.397e-06 0.000317   0.00068 honest
+R2-02                  A:R2         T/T   0/0       0.005616   0.005616        1   8.5e-12 honest
+R2-02~o                A:R2~o       T/T   0/0       0.005616   0.005616        1   8.5e-12 honest
+R2-03                  A:R2         T/T   0/3      3.941e-05   9.06e-07  0.00364    0.0016 honest
+R2-03~o                A:R2~o       T/T   0/3       0.005928  1.738e-05  0.00284    0.0011 honest
+R2-04                  A:R2         T/T   0/4        0.02453  5.887e-05  0.00246    0.0022 honest
+R2-04~o                A:R2~o       T/T   0/5       0.003077  2.906e-05  0.00711   0.00058 honest
+R2-05                  A:R2         T/T   0/1       0.004587  0.0009255   0.0798    0.0029 honest
+R2-05~o                A:R2~o       T/T   0/1        0.02641   0.002661   0.0795    0.0029 honest
+R2-06                  A:R2         T/T   0/2       0.005243  6.521e-07 9.92e-05    0.0039 honest
+R2-06~o                A:R2~o       T/T   0/2       0.005243  6.521e-07 9.92e-05    0.0039 honest
+R2-07                  A:R2         T/T   0/2         0.0113  2.569e-07 5.33e-06    0.0052 honest
+R2-07~o                A:R2~o       T/T   0/2         0.0113  2.569e-07 5.33e-06    0.0052 honest
+R2-08                  A:R2         T/T   0/0         0.7829     0.7829        1   1.2e-05 honest
+R2-08~o                A:R2~o       T/T   0/1         0.8051      0.805        1   2.8e-05 honest
+R2-09                  A:R2         T/T   0/3       0.006648  2.467e-05  0.00519   0.00095 honest
+R2-09~o                A:R2~o       T/T   0/5         0.2482  3.005e-07 4.37e-06   0.00072 honest
+R2-10                  A:R2         T/T   0/2       0.008814   0.001554    0.106    0.0071 honest
+R2-10~o                A:R2~o       T/T   0/2       0.008814   0.001554    0.106    0.0071 honest
+R2-11                  A:R2         T/T   0/4      1.305e-05  1.718e-05    0.969   1.7e-07 honest
+R2-11~o                A:R2~o       T/T   0/5      5.623e-06  9.241e-07    0.966   1.7e-07 honest
+R2-12                  A:R2         T/T   0/2        0.04358  0.0002582 0.000941   5.9e-06 honest
+R2-12~o                A:R2~o       T/T   0/2        0.04358  0.0002582 0.000941   5.9e-06 honest
+R2-13                  A:R2         T/T   0/4        0.03437  1.834e-05 0.000604    0.0014 honest
+R2-13~o                A:R2~o       T/T   0/3       0.002642  1.144e-06 0.000481    0.0018 honest
+R2-14                  A:R2         T/T   0/2       0.008827  8.473e-07  3.9e-05    0.0025 honest
+R2-14~o                A:R2~o       T/T   0/2       0.008827  8.473e-07  3.9e-05    0.0025 honest
+R2-15                  A:R2         T/T   0/3        0.03554  8.323e-05  0.00237   0.00012 honest
+R2-15~o                A:R2~o       T/T   0/3      0.0003221  3.542e-06  0.00341   0.00016 honest
+R2-16                  A:R2         T/T   0/1       0.007083   0.007428        1   4.3e-07 honest
+R2-16~o                A:R2~o       T/T   0/1       0.007083   0.007428        1   4.3e-07 honest
+R2-17                  A:R2         T/T   0/5         0.1679  0.0002481   0.0118   0.00064 honest
+R2-17~o                A:R2~o       T/T   0/5         0.1679  0.0002481   0.0118   0.00064 honest
+R2-18                  A:R2         T/T   0/3        0.01084  0.0002017  0.00416   0.00075 honest
+R2-18~o                A:R2~o       T/T   0/4        0.09158  5.346e-07  1.1e-05   0.00062 honest
+R2-19                  A:R2         T/T   0/8         0.1208  2.697e-08 6.96e-05   0.00034 honest
+R2-19~o                A:R2~o       T/T   0/8        0.03209  4.616e-06 0.000499   0.00024 honest
+R2-20                  A:R2         T/T   0/2       0.008198     0.1713    0.472   7.7e-07 honest
+R2-20~o                A:R2~o       T/T   0/2       0.008199     0.1713    0.472   7.7e-07 honest
+R2-21                  A:R2         T/T   0/2        0.01721  7.534e-06  0.00141    0.0011 honest
+R2-21~o                A:R2~o       T/T   0/2        0.01721  7.534e-06  0.00141    0.0011 honest
+R2-22                  A:R2         T/T   0/0      4.288e-05  4.288e-05        1   2.8e-07 honest
+R2-22~o                A:R2~o       T/T   0/0      4.288e-05  4.288e-05        1   2.8e-07 honest
+R2-23                  A:R2         T/T   0/0         0.1032     0.1032        1    0.0028 honest
+R2-23~o                A:R2~o       T/T   0/0         0.1032     0.1032        1    0.0028 honest
+R2-24                  A:R2         T/T   0/1        0.02225    0.00675    0.426    0.0032 honest
+R2-24~o                A:R2~o       T/T   0/1        0.02225    0.00675    0.426    0.0032 honest
+R2-25                  A:R2         T/T   0/0      0.0008481  0.0008481        1   1.4e-08 honest
+R2-25~o                A:R2~o       T/T   0/0      0.0001132  0.0001132        1     1e-09 honest
+R2-26                  A:R2         T/T   0/1       0.004676    0.05192    0.407    0.0011 honest
+R2-26~o                A:R2~o       T/T   0/1       0.004676    0.05192    0.407    0.0011 honest
+R2-27                  A:R2         T/T   0/0        0.01022    0.01022        1      0.11 honest
+R2-27~o                A:R2~o       T/T   0/0        0.01022    0.01022        1      0.11 honest
+R2-28                  A:R2         F/T   0/6          1.107   5.55e-05 0.000239   4.1e-05 unconverged
+R2-28~o                A:R2~o       F/T   0/5          1.107   5.55e-05 0.000239   4.1e-05 unconverged
+R2-29                  A:R2         T/T   0/1        0.03482   0.006652    0.192      0.03 honest
+R2-29~o                A:R2~o       T/T   0/1        0.03482   0.006652    0.192      0.03 honest
+R3a-0-33666-a13        A:R3-aux     T/T   0/0        0.02957    0.02957        1     0.014 honest
+R3a-0-33666-a13~o      A:R3-aux~o   T/T   0/0        0.02957    0.02957        1     0.014 honest
+R3a-2-21486-a9         A:R3-aux     T/T   0/0        0.01636    0.01636        1    0.0068 honest
+R3a-2-21486-a9~o       A:R3-aux~o   T/T   0/0        0.01636    0.01636        1    0.0068 honest
+R3a-3-13508-g2         A:R3-aux     T/T   0/2        0.05191    0.02042    0.251   3.8e-07 honest
+R3a-3-13508-g2~o       A:R3-aux~o   T/T   0/1        0.05191    0.05191        1   3.8e-07 honest
+R3a-3-39138-g2         A:R3-aux     T/T   0/3        0.01361    0.06406     1.35     7e-07 honest
+R3a-3-39138-g2~o       A:R3-aux~o   T/T   0/4        0.01361    0.06413     1.35     7e-07 honest
+R3a-3-39138-g3         A:R3-aux     T/T   0/3        0.01361    0.06406     1.35     7e-07 honest
+R3a-3-39138-g3~o       A:R3-aux~o   T/T   0/4        0.01361    0.06413     1.35     7e-07 honest
+R3a-3-843-a5           A:R3-aux     T/T   0/0         0.5556     0.5556        1    0.0032 honest
+R3a-3-843-a5~o         A:R3-aux~o   T/T   0/0         0.5556     0.5556        1    0.0032 honest
+R3o-1-35188-g0-8       A:R3-own     T/T   0/0        0.01087    0.01087        1     1e-11 honest
+R3o-1-35188-g0-8~o     A:R3-own~o   T/T   0/0        0.01087    0.01087        1     1e-11 honest
+R3o-2-21454-a3-7       A:R3-own     T/T   0/0        0.03323    0.03323        1    0.0047 honest
+R3o-2-21454-a3-7~o     A:R3-own~o   T/T   0/0        0.03323    0.03323        1    0.0047 honest
+R3o-3-1011-a18-7       A:R3-own     T/T   0/0       0.001307   0.001307        1   0.00027 honest
+R3o-3-1011-a18-7~o     A:R3-own~o   T/T   0/0       0.001307   0.001307        1   0.00027 honest
+R3w-0-2006-0           A:R3-W7      T/T   0/0      1.993e-05  1.993e-05        1   1.2e-08 honest
+R3w-0-2006-0~o         A:R3-W7~o    T/T   0/0       0.001454   0.001454        1   1.5e-09 honest
+R3w-0-33950-0          A:R3-W7      T/T   0/0      5.998e-06  5.998e-06        1   6.7e-08 honest
+R3w-0-33950-0~o        A:R3-W7~o    T/T   0/0        0.02587    0.02587        1   5.6e-09 honest
+R3w-3-13615-0          A:R3-W7      T/T   0/0      0.0001414  0.0001414        1   3.2e-08 honest
+R3w-3-13615-0~o        A:R3-W7~o    T/T   0/0       0.002872   0.002872        1   4.6e-09 honest
+cal_z12                A:v4         T/T   0/3      0.0004224     0.7181     1.24   4.7e-06 honest
+i3-34599-h             A:item3      T/T   0/3        0.01918    0.02009        1   3.7e-07 honest
+v00                    A:v4         T/T   0/2        0.01208    0.01967     0.98   4.1e-07 honest
+v01                    A:v4         T/T   0/1        0.02178    0.03252    0.941   1.7e-06 honest
+v02                    A:v4         T/T   0/1       0.005594   0.005717        1   9.3e-07 honest
+v03                    A:v4         T/T   0/1       0.001737   0.001751        1   6.1e-06 honest
+v04                    A:v4         F/F   0/2      0.0001556     0.1377    0.751   1.6e-07 honest
+v05                    A:v4         T/T   0/2       0.001228   0.001238        1   5.5e-07 honest
+v06                    A:v4         T/T   0/1      0.0002844  0.0002783        1   1.7e-06 honest
+v07                    A:v4         T/T   0/1      0.0004815  0.0004815        1   8.5e-08 honest
+v08                    A:v4         T/T   1/5        0.03231       3.16    0.342   1.2e-06 honest
+v09                    A:v4         T/T   0/3       0.001065      2.211     1.25   5.3e-06 honest
+v10                    A:v4         T/T   0/4       0.000139     0.1924     1.13   2.1e-06 honest
+v11                    A:v4         T/T   0/1       0.007617   0.007617        1     3e-06 honest
+v12                    A:v4         T/T   1/1        0.04436       3.08    0.792   1.2e-07 honest
+v13                    A:v4         T/T   2/4       0.001879      0.309   0.0425   3.7e-06 honest
+v14                    A:v4         T/T   0/2       0.001101   0.001021        1   2.8e-07 honest
+v15                    A:v4         T/T   0/1       0.002043   0.002042    0.999   1.4e-05 honest
+v16                    A:v4         T/T   0/0        0.03819    0.03819        1   2.8e-06 honest
+v17                    A:v4         T/T   1/2       0.004162      2.382    0.434   8.6e-07 honest
+v18                    A:v4         T/T   2/2       0.003282     0.5289   0.0627   1.2e-06 honest
+v19                    A:v4         T/T   0/1        0.04621    0.04621        1   5.1e-06 honest
+v20                    A:v4         T/T   0/0        0.01414    0.01414        1   8.2e-06 honest
+v21                    A:v4         T/T   0/1       0.008675   0.008619        1   8.5e-06 honest
+v22                    A:v4         T/T   1/1       0.001543       2.53     1.17   2.1e-07 honest
+v23                    A:v4         T/T   1/2       0.003225     0.7671    0.498   2.1e-06 honest
+z00                    06g          T/T   0/3      0.0004192     0.7181     1.24   4.7e-06 honest
+z07                    06g          T/T   0/5        0.02765  1.525e-06  7.4e-05   0.00021 honest
+z16                    06g          T/T   0/6        0.02596  6.543e-06 0.000205    0.0055 honest
+z18                    06g          T/T   0/2       0.005577  7.388e-07 3.17e-05   0.00053 honest
+z21                    06g          T/T   0/7        0.00301  3.482e-07 3.05e-05   0.00044 honest
+z24                    06g          T/T   0/4         0.0289   0.002074   0.0403   6.2e-05 honest
+z28                    06g          T/T   0/6         0.1099  6.543e-06 0.000292    0.0039 honest
+z29                    06g          T/T   0/7         0.1406  2.342e-07 7.64e-06   0.00044 honest
+r1-34599-2-1e-7        07a refs     T/T   0/3        0.01918    0.02009        1   3.7e-07 honest
+r1-34599-2-1e-8        07a refs     T/T   0/2        0.01377    0.01501        1   5.1e-07 honest
+r1-34599-3-1e-7        07a refs     T/T   0/3        0.01918    0.02009        1   3.7e-07 honest
+r1-34599-3-1e-8        07a refs     T/T   0/2        0.01377    0.01501        1   5.1e-07 honest
+r3-678-2-1e-7          07a refs     T/T   0/1       0.000234     0.4909        3   9.2e-08 honest
+r3-678-2-1e-8          07a refs     T/T   0/1       0.000234     0.4909        3   9.2e-08 honest
+r3-678-3-1e-7          07a refs     T/T   0/1       0.000234     0.4909        3   9.2e-08 honest
+r3-678-3-1e-8          07a refs     T/T   0/1       0.000234     0.4909        3   9.2e-08 honest
+U4 not honest: []  unconverged: ['R2-28', 'R2-28~o']  holds: True
+U4 readings not agreeing (min tol): ['R2-27', 'R2-27~o', 'R2-29', 'R2-29~o', 'R3a-0-33666-a13', 'R3a-0-33666-a13~o']  (own tol): ['R2-27', 'R2-27~o', 'R2-29', 'R2-29~o', 'R3a-0-33666-a13', 'R3a-0-33666-a13~o']
+U6: 24 calls
+  h-1e-7-3-38376     #4   G-q-r    conv T/T e/r 0/3    ratio 0.002659 (07a 0.002573) honest
+  h-1e-7-0-35070     #4   G-q-r    conv T/T e/r 0/2    ratio 0.001442 (07a 0.001448) honest
+  h-1e-7-1-2174      #2   G+q-r    conv T/T e/r 0/5    ratio 0.001274 (07a 1.357) honest
+  h-1e-7-2-14345     #3   G+q+r    conv T/T e/r 0/4    ratio 0.8283 (07a 6.006) honest
+  h-1e-7-3-38538     #3   G+q+r    conv T/T e/r 0/4    ratio 0.2524 (07a 0.5702) honest
+  h-1e-7-3-35004     #3   G-q+r    conv T/T e/r 0/2    ratio 0.001851 (07a 0.001703) honest
+  h-1e-7-0-38940     #3   G+q+r    conv T/T e/r 0/2    ratio 0.07215 (07a 0.07201) honest
+  h-1e-7-1-2155      #3   G+q+r    conv T/T e/r 0/4    ratio 0.008501 (07a 0.9396) honest
+  h-1e-7-2-39035     #2   G+q-r    conv T/T e/r 0/1    ratio 0.00254 (07a 0.00254) honest
+  h-1e-7-3-14587     #4   G-q-r    conv T/T e/r 0/2    ratio 0.0005812 (07a 0.04963) honest
+  h-1e-7-0-38352     #4   G-q-r    conv T/T e/r 0/4    ratio 0.01559 (07a 0.01559) honest
+  h-1e-7-1-14233     #4   G-q-r    conv T/T e/r 0/2    ratio 0.0008048 (07a 0.000807) honest
+  h-1e-7-3-37351     #1   G+q+r    conv T/T e/r 0/1    ratio 0.7308 (07a 0.7308) honest
+  h-1e-7-0-1949      #4   G-q-r    conv T/T e/r 0/5    ratio 1.771e-05 (07a 0.09988) honest
+  h-1e-7-1-37655     #2   G+q-r    conv T/T e/r 0/2    ratio 6.252e-05 (07a 7.252e-05) honest
+  h-1e-7-2-34816     #2   G+q-r    conv T/T e/r 0/4    ratio 0.1386 (07a 0.01253) honest
+  h-1e-7-3-34739     #4   G-q-r    conv T/T e/r 0/3    ratio 0.002198 (07a 0.002171) honest
+  h-1e-7-0-12977     #5   G-q+r    conv T/T e/r 0/3    ratio 0.04858 (07a 2.195) honest
+  h-1e-7-1-34769     #2   G+q-r    conv T/T e/r 0/4    ratio 0.003301 (07a 0.003295) honest
+  h-1e-7-2-34728     #3   G-q+r    conv T/T e/r 0/3    ratio 0.006702 (07a 0.006717) honest
+  h-1e-7-3-34455     #1   G+q+r    conv T/T e/r 0/0    ratio 0.0004767 (07a 0.0004767) honest
+  h-1e-7-0-2106      #2   G+q-r    conv T/T e/r 0/3    ratio 0.2098 (07a 0.2094) honest
+  h-1e-7-1-34769     #3   G-q+r    conv T/T e/r 0/4    ratio 0.003301 (07a 0.003295) honest
+  h-1e-7-2-34473     #3   G+q+r    conv T/T e/r 0/2    ratio 0.0001429 (07a 1.389) honest
+U6 not honest: []  unconverged: []  holds: True

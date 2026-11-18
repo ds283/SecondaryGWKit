@@ -1,0 +1,53 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-16T20:11:27Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+# command:
+
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07b/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+D=$M/var/runs/levin-phase-floor-07b-r31-refs-20261116T201120
+cat $D/status.json; echo
+ps -o pid,ppid,etime,command -p 18724 | cut -c1-150; for p in $(pgrep -P 18724); do ps -o pid,ppid,etime,command -p $p | tail -1 | cut -c1-200; for q in $(pgrep -P $p); do ps -o pid,ppid,etime,command -p $q | tail -1 | cut -c1-260; echo "  workers: $(pgrep -P $q | tr "\n" " ")"; done; done
+$M/venv/bin/python -I -B -c "import json;p=json.load(open(\"$Z/state/plan_r31-refs.json\"));[print(j[\"name\"], round(j[\"projected_s\"]), j[\"tolerance_hex\"]) for j in p[\"stages\"][0][\"jobs\"]]"
+ls $Z/out/cmd/r31-refs/; head -8 $Z/out/cmd/r31-refs/*.txt | cut -c1-200
+git -C $W --no-optional-locks status --short --ignored; echo "(W end)"
+ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(no ray end)"; uptime
+
+# output:
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-16T20:11:21+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 18727,
+  "stage": "ref-G-q-r-h-1-10504-6 started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 7
+}
+
+  PID  PPID ELAPSED COMMAND
+18724     1   00:07 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-flo
+18727 18724   00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehe
+18732 18727   00:06 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B -m tools.filon_reference /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-10
+  workers: 18735 18754 18755 18756 18757 18758 18759 
+ref-G-q-r-h-1-10504-6 28 0x1.1398ef2e1691fp-116
+ref-G-q-r-h-0-270-6 46 0x1.990fa012dcd3bp-112
+ref-G-q+r-h-1-20184-5 93 0x1.ca6e9c46c90ddp-114
+ref-G-q-r-h-1-171-4 94 0x1.91b3fd649ee43p-118
+ref-G-q-r-h-1-209-4 120 0x1.8bc96dcde753fp-118
+ref-G-q-r-h-0-10244-6 170 0x1.4a2ec915b1725p-114
+ref-G-q+r-h-1-216-5 291 0x1.a582de93a290cp-118
+ref-G-q-r-h-1-10504-6.txt
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -m tools.filon_reference /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G-q-r-h-1-10504
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/scripts/capture
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-16T20:11:21Z
+# ----
+(W end)
+(no ray end)
+20:11  up 40 days, 10:48, 3 users, load averages: 2.69 5.26 6.27
+# exit: 0
+# end: 2026-11-16T20:11:28Z

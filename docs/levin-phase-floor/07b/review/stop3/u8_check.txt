@@ -1,0 +1,5 @@
+script dec9200878a540dd38447348943a50c19eaa99963f179f008e11bac1b165b105
+wanted /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/census_wanted_07b.json 33d0d89c21c25869d471ca02b30045c114d5f07d42d12c9f5f31273e0c2c7fc9 ids 188
+excluded (which != h): [('i3-34599-07', '07', 'g-1e-7-1-34599')]
+results: {'edge>0': 43, 'range>0': 153, "('1e', 'analytic', True)": 53, "('1e', 'group', True)": 134}
+compared 187 fails 0

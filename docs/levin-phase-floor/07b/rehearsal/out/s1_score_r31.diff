@@ -1,0 +1,62 @@
+1c1
+< """[prompt 07a section 5 item 5, rehearsal agent, R30: R29's s1_score_r29.py (6f60c8d1), changed where marked "prompt 07a r30": R30's store, the replay at h (replay07a_r30.py), 06g's scores.json read from the 07a worktree's docs (same SHA-256 as R29 read); "29" in names read as "30".]
+---
+> """[prompt 07b section 5 item 5, rehearsal agent, R31: R30's s1_score_r30.py (0f2a0469), changed where marked "prompt 07b r31": R31's store, the replay at h (replay07b_r31.py), 06g's scores.json read from the 07b worktree's docs; the keys v29/abserr29/... renamed v31/abserr31/... (they hold R31's numbers); each call's refusals recorded; each row compared with R30's s1_scores.json.]
+2a3,4
+> [prompt 07a section 5 item 5, rehearsal agent, R30: R29's s1_score_r29.py (6f60c8d1), changed where marked "prompt 07a r30": R30's store, the replay at h (replay07a_r30.py), 06g's scores.json read from the 07a worktree's docs (same SHA-256 as R29 read); "29" in names read as "30".]
+> 
+32c34,35
+< R = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal")  # prompt 07a r30
+---
+> R = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal")  # prompt 07b r31
+> R30_S1 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal/out/s1_scores.json")  # prompt 07b r31: read only
+34c37
+< import replay07a_r30 as RP  # noqa: E402  prompt 07a r30
+---
+> import replay07b_r31 as RP  # noqa: E402  prompt 07b r31
+36c39
+< SCORES = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07a-4bf50d3/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json")  # prompt 07a r30
+---
+> SCORES = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json")  # prompt 07a r30
+48c51
+<     for f in sorted(RP.STORES["h"].parent.glob("levin-phase-floor-07a-r30*.sqlite")):  # prompt 07a r30
+---
+>     for f in sorted(RP.STORES["h"].parent.glob("levin-phase-floor-07b-r31*.sqlite")):  # prompt 07b r31
+51a55,56
+>     print(f"# input {R30_S1} sha256 {sha256(R30_S1)}")  # prompt 07b r31
+>     r30 = {r_["wid"]: r_ for r_ in json.loads(R30_S1.read_text())["rows"]}  # prompt 07b r31: its v29/abserr29 hold R30's numbers
+68c73
+<         u, _, _ = units[f"h-1e-7-{rec['shard']}-{rec['serial']}"]  # prompt 07a r30
+---
+>         u, _, _ = units[f"h-1e-7-{rec['shard']}-{rec['serial']}"]  # prompt 07a r30 (prompt 07b r31: the same uid form)
+92,93c97,101
+<                "v29": c["value"]["hex"], "abserr29": c["abserr"]["hex"], "converged29": c["converged"],
+<                "regions29": c["num_regions"], "max_depth29": c["max_depth"], "store_value28": sv, "store_abserr29": se,
+---
+>                "v31": c["value"]["hex"], "abserr31": c["abserr"]["hex"], "converged31": c["converged"],  # prompt 07b r31: names
+>                "regions31": c["num_regions"], "max_depth31": c["max_depth"], "store_value31": sv, "store_abserr31": se,
+>                "refusals_07b": c.get("refusals_07b"),  # prompt 07b r31
+>                "R30": {k_: r30[w["wid"]][k_] for k_ in ("v29", "abserr29", "regions29", "ratio_v29")},  # prompt 07b r31
+>                "equal_to_R30": (c["value"]["hex"], c["abserr"]["hex"]) == (r30[w["wid"]]["v29"], r30[w["wid"]]["abserr29"]),  # prompt 07b r31
+95c103
+<                "ratio_v29": mp.nstr(ratio, 6), "honest": honest,
+---
+>                "ratio_v31": mp.nstr(ratio, 6), "honest": honest,
+101,104c109,114
+<               f"; v29 {row['v29']} abserr29 {row['abserr29']} ref {w['ref_hex']} ({w['ref_30']}); "
+<               f"|v29 - ref|/abserr29 {row['ratio_v29']} ({'honest' if honest else 'NOT honest'}); converged {c['converged']}, "
+<               f"regions {c['num_regions']}, max depth {c['max_depth']}; 06g: R24 {w['r24']:.4g}, R23 {w['r23']:.4g}")
+<     worst = max(out, key=lambda r: float(r["ratio_v29"]))
+---
+>               f"; v31 {row['v31']} abserr31 {row['abserr31']} ref {w['ref_hex']} ({w['ref_30']}); "
+>               f"|v31 - ref|/abserr31 {row['ratio_v31']} ({'honest' if honest else 'NOT honest'}); converged {c['converged']}, "
+>               f"regions {c['num_regions']}, max depth {c['max_depth']}; refusals {row['refusals_07b']}; "
+>               f"R30: {row['R30']['ratio_v29']} (regions {row['R30']['regions29']}), equal to R30 {row['equal_to_R30']}; "
+>               f"06g: R24 {w['r24']:.4g}, R23 {w['r23']:.4g}")  # prompt 07b r31
+>     worst = max(out, key=lambda r: float(r["ratio_v31"]))
+106,107c116,117
+<           f"{sum(r['honest'] for r in out)} of 12 honest; largest |v29 - ref|/abserr29 {worst['ratio_v29']} ({worst['wid']}); "
+<           f"converged {sum(r['converged29'] for r in out)} of 12")
+---
+>           f"{sum(r['honest'] for r in out)} of 12 honest; largest |v31 - ref|/abserr31 {worst['ratio_v31']} ({worst['wid']}); "
+>           f"converged {sum(r['converged31'] for r in out)} of 12; equal to R30 {sum(r['equal_to_R30'] for r in out)} of 12")  # prompt 07b r31

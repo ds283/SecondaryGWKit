@@ -1,0 +1,130 @@
+# worker replay-h-0 evidence {"tree": "h", "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5", "expected_sha": "0a103b5ae0de32b568f44904a5c3dcbfca922a2e", "head": "0a103b5ae0de32b568f44904a5c3dcbfca922a2e", "status_short": "", "files": {"ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/__init__.py", "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/primitive_phase.py", "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/QuadSource.py", "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/QuadSourceIntegral.py", "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/GkSourcePolicyData.py", "ComputeTargets.TkSourceFunctions": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/TkSourceFunctions.py", "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/StoreFixtures/__init__.py", "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/main.py", "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/primitive_phase.py", "ComputeTargets.GkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/GkWKBIntegration.py", "ComputeTargets.TkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/TkWKBIntegration.py", "ComputeTargets.GkSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/ComputeTargets/GkSource.py", "Quadrature.integrators.WKB_phase_function": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/Quadrature/integrators/WKB_phase_function.py", "AdaptiveLevin.levin_quadrature": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/AdaptiveLevin/levin_quadrature.py", "WKB_phase_function (the producers' remote's function)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/Quadrature/integrators/WKB_phase_function.py", "LiouvilleGreen.three_bessel_integrals": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/LiouvilleGreen/three_bessel_integrals.py", "LiouvilleGreen.bessel_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/LiouvilleGreen/bessel_phase.py", "BesselPhaseGroup (QuadSourceIntegral's)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/LiouvilleGreen/three_bessel_integrals.py"}, "all_in_tree": true, "in_tree": {"ComputeTargets": true, "ComputeTargets.primitive_phase": true, "ComputeTargets.QuadSource": true, "ComputeTargets.QuadSourceIntegral": true, "ComputeTargets.GkSourcePolicyData": true, "ComputeTargets.TkSourceFunctions": true, "StoreFixtures": true, "main.py": true, "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": true, "ComputeTargets.GkWKBIntegration": true, "ComputeTargets.TkWKBIntegration": true, "ComputeTargets.GkSource": true, "Quadrature.integrators.WKB_phase_function": true, "AdaptiveLevin.levin_quadrature": true, "WKB_phase_function (the producers' remote's function)": true, "LiouvilleGreen.three_bessel_integrals": true, "LiouvilleGreen.bessel_phase": true, "BesselPhaseGroup (QuadSourceIntegral's)": true}, "PrimitivePhase_has_exact_remainder": true, "build_phase_source_mentions_exact_remainder": true, "TkSourceFunctions_exact_remainder_default": true, "producers_store_reduce_exactly": {"GkWKBIntegration": true, "TkWKBIntegration": true}, "GkWKBValue_has_theta_residual": true, "levin_has_roundoff_exit_premise_holds": true, "levin_roundoff_exit_min_floor_ratio": 0.5, "levin_adaptive_levin_has_bypass": true, "levin_has_trust_check": true, "levin_has_cc_roundoff_floor": true, "levin_has_local_atol": false, "levin_default_max_depth": 20, "levin_has_chebyshev_node_displacements": true, "levin_has_cc_node_term_parts": true, "levin_has_cc_node_error_bound_06d": false, "levin_quadrature_sha256": "8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1", "group_has_declared_error_parts": true, "three_bessel_has_two_product_error": true, "three_bessel_EXP_RELERR": 2.23e-16, "three_bessel_integrals_sha256": "b492d99e27532a674a17cfcdcb30f615c43e78575828a7bfc1a950c0dd44a489", "bessel_phase_sha256": "c0108c2ea8b1e5e686075c711fcffebd1b49612802d3771ed3275d7d6c6a38d9", "levin_trust_max_ratio_06g": 0.25, "levin_has_solve_floor_in_budget_06g": true, "levin_used_interval_has_budget_err_06g": true, "levin_used_interval_has_value_kind_06g": true, "levin_roundoff_exit_premise_signature": "(phase_err: float, phase_err_L: float, phase_err_R: float, split_could_meet_budget: bool = False) -> bool", "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5", "PYTHONDONTWRITEBYTECODE": "1", "dont_write_bytecode": true, "OMP_NUM_THREADS": "1", "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state", "pid": 14466, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "scripts_sha256": {"worker.py": "2a2536524848c220d9fb07c70971232a4fa10150b311927c6010339f07cd114e", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721", "rebuild.py": "2c6f8269fcca1b7c7135c38d82105bee73b9a18a60808272e8ce2bd561935b24", "prov.py": "1c976bf8ad8ed7d0f5886d20cf2add977df0e038df52601f9407dd09712b4e27", "run_census.py": "5f21f0727c679c575d65463f8533ed76c6033def147734a621bb245020fad5c2", "launch.py": "d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b"}}
+# worker replay-h-0 reads /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/stores/r31/handover-A3-v2-lambdacdm.sqlite
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1159_7139cb9c, response grid ResponseRedshiftGrid_97_d128e5d7
+   rebuild: largest source k = 1e+06/Mpc, latest tau = 766.84 (for z=250), largest x=7.6684e+08, largest x +7.5% clearance=8.2436e+08
+
+== unit h-1e-7-3-20371 (3-20371: shard 3, serial 20371)
+   rerun_k_G: k serial 1: 1159 GkWKBIntegration (47373 samples, 47373 kept); 24.4 s
+unit h-1e-7-3-20371: done; wall 17.404 s; rebuild 24.681 s; total -1.944541304968465e-18 abserr 2.691160230202974e-25 converged True WKB_Levin_data {'max_depth': 20, 'num_regions': 630, 'num_simple_regions': 388, 'evaluations': 5024}; policy warnings 0; cache built 4
+
+== unit h-1e-7-3-20370 (3-20370: shard 3, serial 20370)
+unit h-1e-7-3-20370: done; wall 13.029 s; rebuild 0.231 s; total 5.313957611347576e-18 abserr 5.97746390525173e-25 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 485, 'num_simple_regions': 253, 'evaluations': 3872}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-20398 (3-20398: shard 3, serial 20398)
+unit h-1e-7-3-20398: done; wall 6.664 s; rebuild 0.228 s; total -4.2217021730501875e-17 abserr 4.5629176182151955e-24 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 257, 'num_simple_regions': 92, 'evaluations': 2048}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-20489 (3-20489: shard 3, serial 20489)
+unit h-1e-7-3-20489: done; wall 11.097 s; rebuild 0.215 s; total 4.543671035996268e-17 abserr 3.680717095087074e-24 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 408, 'num_simple_regions': 232, 'evaluations': 3259}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-10097 (3-10097: shard 3, serial 10097)
+unit h-1e-7-3-10097: done; wall 8.314 s; rebuild 0.21 s; total 1.3582733792431407e-16 abserr 3.593203179971523e-23 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 277, 'num_simple_regions': 93, 'evaluations': 2211}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-20500 (3-20500: shard 3, serial 20500)
+unit h-1e-7-3-20500: done; wall 6.199 s; rebuild 0.12 s; total -4.095106289078338e-15 abserr 4.417861319833006e-22 converged True WKB_Levin_data {'max_depth': 17, 'num_regions': 204, 'num_simple_regions': 90, 'evaluations': 1627}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-10155 (3-10155: shard 3, serial 10155)
+unit h-1e-7-3-10155: done; wall 4.477 s; rebuild 0.11 s; total -3.9313038690466064e-14 abserr 3.6390255701218774e-21 converged True WKB_Levin_data {'max_depth': 13, 'num_regions': 176, 'num_simple_regions': 48, 'evaluations': 1403}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-24 (3-24: shard 3, serial 24)
+unit h-1e-7-3-24: done; wall 3.756 s; rebuild 0.107 s; total -1.645520555453647e-13 abserr 1.8476279635597837e-20 converged True WKB_Levin_data {'max_depth': 7, 'num_regions': 99, 'num_simple_regions': 19, 'evaluations': 787}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-20 (3-20: shard 3, serial 20)
+unit h-1e-7-3-20: done; wall 2.819 s; rebuild 0.102 s; total 5.49555159706436e-13 abserr 5.465881496100655e-20 converged True WKB_Levin_data {'max_depth': 7, 'num_regions': 49, 'num_simple_regions': 26, 'evaluations': 387}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-50 (3-50: shard 3, serial 50)
+unit h-1e-7-3-50: done; wall 2.48 s; rebuild 0.107 s; total 1.412898367036253e-13 abserr 1.5259202618134542e-19 converged True WKB_Levin_data {'max_depth': 7, 'num_regions': 31, 'num_simple_regions': 27, 'evaluations': 243}; policy warnings 0; cache built 1
+
+== unit h-1e-7-3-49 (3-49: shard 3, serial 49)
+unit h-1e-7-3-49: done; wall 1.214 s; rebuild 0.068 s; total 1.524213206339268e-11 abserr 8.064917333255697e-19 converged True WKB_Levin_data None; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-229 (0-229: shard 0, serial 229)
+   rerun_k_G: k serial 101: 1159 GkWKBIntegration (49177 samples, 49177 kept); 23.4 s
+unit h-1e-7-0-229: done; wall 12.73 s; rebuild 23.701 s; total 5.91858556304142e-20 abserr 6.588733897422402e-27 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 434, 'num_simple_regions': 183, 'evaluations': 3456}; policy warnings 0; cache built 4
+
+== unit h-1e-7-0-10186 (0-10186: shard 0, serial 10186)
+unit h-1e-7-0-10186: done; wall 10.413 s; rebuild 0.145 s; total 3.0880663437889796e-19 abserr 3.3384927202829584e-26 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 369, 'num_simple_regions': 134, 'evaluations': 2936}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-10182 (0-10182: shard 0, serial 10182)
+unit h-1e-7-0-10182: done; wall 9.771 s; rebuild 0.139 s; total 1.014064847839348e-18 abserr 6.232651722616968e-26 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 333, 'num_simple_regions': 131, 'evaluations': 2656}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-280 (0-280: shard 0, serial 280)
+unit h-1e-7-0-280: done; wall 6.49 s; rebuild 0.13 s; total 3.958712905232268e-19 abserr 9.116235908675446e-26 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 201, 'num_simple_regions': 51, 'evaluations': 1603}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-277 (0-277: shard 0, serial 277)
+unit h-1e-7-0-277: done; wall 9.466 s; rebuild 0.123 s; total -4.6317079068508096e-17 abserr 3.3262146926135674e-24 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 362, 'num_simple_regions': 132, 'evaluations': 2891}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-10257 (0-10257: shard 0, serial 10257)
+unit h-1e-7-0-10257: done; wall 12.872 s; rebuild 0.116 s; total 7.332696234346961e-17 abserr 6.057025944901894e-24 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 461, 'num_simple_regions': 276, 'evaluations': 3683}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-10173 (0-10173: shard 0, serial 10173)
+unit h-1e-7-0-10173: done; wall 9.752 s; rebuild 0.129 s; total -8.767817569255376e-16 abserr 6.818720169331727e-23 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 313, 'num_simple_regions': 192, 'evaluations': 2499}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-72 (0-72: shard 0, serial 72)
+unit h-1e-7-0-72: done; wall 6.492 s; rebuild 0.101 s; total 3.779732847528699e-15 abserr 4.726024055492362e-22 converged True WKB_Levin_data {'max_depth': 12, 'num_regions': 185, 'num_simple_regions': 84, 'evaluations': 1475}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-70 (0-70: shard 0, serial 70)
+unit h-1e-7-0-70: done; wall 5.564 s; rebuild 0.104 s; total -3.563118236579143e-14 abserr 2.669900621117117e-21 converged True WKB_Levin_data {'max_depth': 13, 'num_regions': 135, 'num_simple_regions': 76, 'evaluations': 1075}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-10203 (0-10203: shard 0, serial 10203)
+unit h-1e-7-0-10203: done; wall 3.139 s; rebuild 0.1 s; total -1.2928021091107493e-13 abserr 1.45806333884228e-20 converged True WKB_Levin_data {'max_depth': 7, 'num_regions': 49, 'num_simple_regions': 30, 'evaluations': 387}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-10166 (0-10166: shard 0, serial 10166)
+unit h-1e-7-0-10166: done; wall 2.643 s; rebuild 0.085 s; total 8.714588182597776e-13 abserr 1.0763938510362418e-19 converged True WKB_Levin_data {'max_depth': 3, 'num_regions': 17, 'num_simple_regions': 17, 'evaluations': 130}; policy warnings 0; cache built 1
+
+== unit h-1e-7-0-241 (0-241: shard 0, serial 241)
+unit h-1e-7-0-241: done; wall 1.832 s; rebuild 0.062 s; total -2.191244633630944e-12 abserr 2.014342659705826e-19 converged True WKB_Levin_data None; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-10462 (1-10462: shard 1, serial 10462)
+   rerun_k_G: k serial 201: 1159 GkWKBIntegration (51092 samples, 51092 kept); 24.8 s
+unit h-1e-7-1-10462: done; wall 12.908 s; rebuild 25.062 s; total -1.3918309133545683e-21 abserr 1.400211327382564e-28 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 406, 'num_simple_regions': 193, 'evaluations': 3230}; policy warnings 0; cache built 4
+
+== unit h-1e-7-1-180 (1-180: shard 1, serial 180)
+unit h-1e-7-1-180: done; wall 13.654 s; rebuild 0.145 s; total -1.289274300278841e-20 abserr 1.2451341945363465e-27 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 451, 'num_simple_regions': 226, 'evaluations': 3592}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-10457 (1-10457: shard 1, serial 10457)
+unit h-1e-7-1-10457: done; wall 8.459 s; rebuild 0.136 s; total -4.1583306534420845e-20 abserr 5.702820059874073e-27 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 290, 'num_simple_regions': 105, 'evaluations': 2310}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-20183 (1-20183: shard 1, serial 20183)
+unit h-1e-7-1-20183: done; wall 11.581 s; rebuild 0.286 s; total -1.4745417752595345e-19 abserr 1.0217298138401145e-26 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 417, 'num_simple_regions': 206, 'evaluations': 3331}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-10512 (1-10512: shard 1, serial 10512)
+unit h-1e-7-1-10512: done; wall 8.219 s; rebuild 0.123 s; total -1.699426055998553e-18 abserr 1.0652966663783247e-25 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 271, 'num_simple_regions': 111, 'evaluations': 2163}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-137 (1-137: shard 1, serial 137)
+unit h-1e-7-1-137: done; wall 11.956 s; rebuild 0.28 s; total 8.320748575685318e-18 abserr 9.250832773047979e-25 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 449, 'num_simple_regions': 201, 'evaluations': 3587}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-204 (1-204: shard 1, serial 204)
+unit h-1e-7-1-204: done; wall 5.356 s; rebuild 0.108 s; total -1.460980275692627e-17 abserr 1.340093200511738e-24 converged True WKB_Levin_data {'max_depth': 9, 'num_regions': 161, 'num_simple_regions': 44, 'evaluations': 1283}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-10506 (1-10506: shard 1, serial 10506)
+unit h-1e-7-1-10506: done; wall 7.204 s; rebuild 0.263 s; total 4.829686258915641e-17 abserr 3.3052993595121814e-24 converged True WKB_Levin_data {'max_depth': 18, 'num_regions': 238, 'num_simple_regions': 97, 'evaluations': 1899}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-20024 (1-20024: shard 1, serial 20024)
+unit h-1e-7-1-20024: done; wall 5.666 s; rebuild 0.091 s; total -4.202546464509153e-16 abserr 3.662628286116545e-23 converged True WKB_Levin_data {'max_depth': 12, 'num_regions': 180, 'num_simple_regions': 101, 'evaluations': 1435}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-158 (1-158: shard 1, serial 158)
+unit h-1e-7-1-158: done; wall 3.256 s; rebuild 0.084 s; total -2.2993787572153144e-15 abserr 2.92027697682053e-22 converged True WKB_Levin_data {'max_depth': 7, 'num_regions': 46, 'num_simple_regions': 22, 'evaluations': 363}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-20126 (1-20126: shard 1, serial 20126)
+unit h-1e-7-1-20126: done; wall 2.655 s; rebuild 0.082 s; total 3.6507338820663896e-14 abserr 4.98605956742499e-21 converged True WKB_Levin_data {'max_depth': 6, 'num_regions': 21, 'num_simple_regions': 16, 'evaluations': 163}; policy warnings 0; cache built 1
+
+== unit h-1e-7-1-10470 (1-10470: shard 1, serial 10470)
+unit h-1e-7-1-10470: done; wall 1.826 s; rebuild 0.243 s; total 4.419107648932095e-14 abserr 3.88512223446909e-21 converged True WKB_Levin_data None; policy warnings 0; cache built 1
+

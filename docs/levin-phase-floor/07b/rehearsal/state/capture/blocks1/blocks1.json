@@ -1,0 +1,12 @@
+{
+ "name": "blocks1",
+ "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/blocks1_spec.json",
+ "spec_sha256": "8ae97ae9a2e6da939c7ff2843da9bab61a588e5bc852039c3a0bd6be04a229c2",
+ "wall_s": 55.518441915512085,
+ "workers": {
+  "blocks1-h": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/blocks1/blocks1-h/emit.jsonl"
+  }
+ }
+}

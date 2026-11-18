@@ -1,0 +1,32 @@
+{
+ "name": "refcap",
+ "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/refcap_spec.json",
+ "spec_sha256": "7db97f79d73077bbb75478b3c18dad647a7850e2fd972d0dc6d0f6534fa28aff",
+ "wall_s": 75.68124485015869,
+ "workers": {
+  "refcap-h-5": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-5/emit.jsonl"
+  },
+  "refcap-h-2": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-2/emit.jsonl"
+  },
+  "refcap-h-3": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-3/emit.jsonl"
+  },
+  "refcap-h-4": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-4/emit.jsonl"
+  },
+  "refcap-h-0": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-0/emit.jsonl"
+  },
+  "refcap-h-1": {
+   "rc": 0,
+   "emit": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/capture/refcap/refcap-h-1/emit.jsonl"
+  }
+ }
+}

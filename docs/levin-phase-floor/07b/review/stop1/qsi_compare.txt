@@ -1,0 +1,43 @@
+script ef4491849f7c4ed7885176ca071ff100a92fa24594372c22614244a77302f416
+input e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30.sqlite
+input e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite
+input f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite
+input a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite
+input b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite
+input 5981563ba208f42794766a5ed341039437d675d27689a1a6a89932b1ed64fff4 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite
+input 3249a88b9bb402960f835b5c304db5b50ca194a527e6cda9eab065ba68a0a24d /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0000.sqlite
+input 90b0a437befe83722e0542944edb5b11114f46f7dc12a2c270967c7dfae2f879 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0001.sqlite
+input 8c040215d64827ba06831b0342de03024f9cdf89af3d2e76a56a09a8c3f75e77 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0002.sqlite
+input f697749e5f02df8555d62ed58a97da98b0411c355a595b1ddc983671a7593c42 /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0003.sqlite
+rows 864 864 keys equal True
+identical rows 295 moved rows 569
+  column total moved in 379 rows
+  column total_abserr moved in 386 rows
+  column total_converged moved in 1 rows
+  column analytic_rad moved in 548 rows
+  column WKB_Levin moved in 379 rows
+  column numeric_quad moved in 0 rows
+  column WKB_Levin_num_regions moved in 386 rows
+  column WKB_Levin_max_depth moved in 93 rows
+  column total_phase_limited moved in 11 rows
+total_converged up 0 down 1 converged R29 862 R30 861
+largest |dtotal|/abserr29 0.27804  /abserr30 0.23848  at k=100000.0 z=12004.580918217
+rows with |dtotal| > abserr29+abserr30: 0 (S3's quantity; not scored here)
+phase_limited flips (kind, A, B): {('analytic', False, True): 5336, ('group', False, True): 348}
+record converged flips (kind, A, B): {('group', True, False): 1}
+records with |dv| > abserrA + abserrB: 7
+   1.533 k=1e+06 q=1e+06 r=1e+06 z=36286.827639966534 rtol=-7.0 ('group', (1, 'G-q-r')) regions 6 -> 66
+   1.348 k=316228 q=100000 r=316228 z=6944780.034414906 rtol=-7.0 ('group', (2, 'G-q-r')) regions 8 -> 68
+   1.283 k=1e+06 q=100000 r=1e+06 z=36286.827639966534 rtol=-7.0 ('group', (2, 'G-q+r')) regions 58 -> 82
+   1.272 k=1e+06 q=100000 r=1e+06 z=329.64045755914753 rtol=-7.0 ('group', (2, 'G-q+r')) regions 5 -> 112
+   1.197 k=316228 q=100000 r=316228 z=996.4201622779478 rtol=-7.0 ('group', (2, 'G-q-r')) regions 3 -> 38
+   1.18 k=1e+06 q=316228 r=1e+06 z=191807016.520263 rtol=-7.0 ('group', (2, 'G-q-r')) regions 1 -> 45
+   1.11 k=1e+06 q=1e+06 r=1e+06 z=331553.02818648185 rtol=-7.0 ('group', (1, 'G-q-r')) regions 1 -> 58
+summed regions over Levin records A 144757 B 219776
+  converged->unconverged row: k=100000 q=1e+06 r=1e+06 z=144627.70674226896
+R29 group {'stationary_points': 44, 'window_pieces': 562, 'guarded_regions': 0, 'guard_at_depth_max': 0} analytic {'stationary_points': 400, 'window_pieces': 2515, 'guarded_regions': 0, 'guard_at_depth_max': 0} rows with a located point 202
+R30 group {'stationary_points': 44, 'window_pieces': 562, 'guarded_regions': 0, 'guard_at_depth_max': 0} analytic {'stationary_points': 400, 'window_pieces': 2515, 'guarded_regions': 0, 'guard_at_depth_max': 0} rows with a located point 202
+Levin records differing (non-timing): {'analytic': 8119, 'group': 1087}
+group records: value bit-equal, abserr differs, no location in either: 34
+  rel change range -0.00119 .. 6.43e-06; regions unchanged in 0
+    316227.7660168379 27520.004604907732 ('group', (1, 'G-q-r')) 1.3034926448115543e-27 1.3019417062788757e-27 50 53

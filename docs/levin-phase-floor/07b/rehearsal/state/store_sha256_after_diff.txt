@@ -1,0 +1,20 @@
+e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2  var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite
+f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700  var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite
+a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab  var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite
+b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0  var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite
+e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84  var/datastores/levin-phase-floor-07a-r30.sqlite
+3249a88b9bb402960f835b5c304db5b50ca194a527e6cda9eab065ba68a0a24d  var/datastores/levin-phase-floor-07b-r31-shard0000.sqlite
+90b0a437befe83722e0542944edb5b11114f46f7dc12a2c270967c7dfae2f879  var/datastores/levin-phase-floor-07b-r31-shard0001.sqlite
+8c040215d64827ba06831b0342de03024f9cdf89af3d2e76a56a09a8c3f75e77  var/datastores/levin-phase-floor-07b-r31-shard0002.sqlite
+f697749e5f02df8555d62ed58a97da98b0411c355a595b1ddc983671a7593c42  var/datastores/levin-phase-floor-07b-r31-shard0003.sqlite
+5981563ba208f42794766a5ed341039437d675d27689a1a6a89932b1ed64fff4  var/datastores/levin-phase-floor-07b-r31.sqlite
+-rw-r--r--  1 ds283 staff  25391104 Nov 12 11:47 levin-phase-floor-07a-r30-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25489408 Nov 12 11:47 levin-phase-floor-07a-r30-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 12 11:38 levin-phase-floor-07a-r30-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24956928 Nov 12 11:47 levin-phase-floor-07a-r30-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 12 11:38 levin-phase-floor-07a-r30.sqlite
+-rw-r--r--  1 ds283 staff  25513984 Nov 16 19:32 levin-phase-floor-07b-r31-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25554944 Nov 16 19:32 levin-phase-floor-07b-r31-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 16 19:19 levin-phase-floor-07b-r31-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24895488 Nov 16 19:32 levin-phase-floor-07b-r31-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 16 19:19 levin-phase-floor-07b-r31.sqlite

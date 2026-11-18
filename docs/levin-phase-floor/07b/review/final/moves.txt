@@ -1,0 +1,13 @@
+script e639dffdf42a243cd554a5522ead2d6007df1c657ed5ab22a04512eac01a3f10
+('  of which converged both', 'group', '1e-7', False) 1
+('  of which converged both', 'group', '1e-7', True) 138
+('  of which converged both', 'group', '1e-8', False) 1
+('  of which converged both', 'group', '1e-8', True) 186
+('moved > abserr_07a + abserr_07b', 'group', '1e-7') 139
+('moved > abserr_07a + abserr_07b', 'group', '1e-8') 187
+('moved > abserr_07a', 'group', '1e-7') 1397
+('moved > abserr_07a', 'group', '1e-8') 1275
+total moved beyond both: 326  converged both: 324
+by label: Counter({'G+q+r': 212, 'G-q-r': 62, 'G-q+r': 35, 'G+q-r': 17})
+rows total_converged (rtol, 07a, 07b): {"('1e-7', False, False)": 59, "('1e-7', True, False)": 68, "('1e-7', True, True)": 9153, "('1e-8', False, False)": 67, "('1e-8', False, True)": 4, "('1e-8', True, False)": 71, "('1e-8', True, True)": 9138}
+largest |dv|/abserr_07b among converged-both: [('0-14199@1e-8', 'group', 1, 'G+q+r', 2.4687289114752557, 75.41407096632076, True, True, 3, 1), ('0-14199@1e-7', 'group', 1, 'G+q+r', 2.468728972141441, 75.41384167988122, True, True, 3, 1), ('0-38934@1e-8', 'group', 1, 'G+q+r', 2.3438138794840304, 66.56113248886747, True, True, 3, 2), ('0-38934@1e-7', 'group', 1, 'G+q+r', 2.343813942422115, 66.5609307244064, True, True, 3, 2), ('0-14303@1e-8', 'group', 1, 'G+q+r', 2.505830381944572, 33.04793843721091, True, True, 3, 1), ('0-14303@1e-7', 'group', 1, 'G+q+r', 2.5058304434529246, 33.047894237560115, True, True, 3, 1), ('1-14046@1e-8', 'group', 1, 'G+q+r', 2.38640791720495, 16.38282752624985, True, True, 2, 2), ('1-14046@1e-7', 'group', 1, 'G+q+r', 2.386407994287893, 16.382815931821835, True, True, 2, 2), ('1-35175@1e-8', 'group', 5, 'G-q+r', 15.825868411728404, 15.742708937034385, True, True, 0, 1), ('1-11248@1e-8', 'group', 5, 'G-q+r', 17.300861653071518, 14.373236148808058, True, True, 0, 1)]

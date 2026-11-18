@@ -1,0 +1,52 @@
+1c1
+< """S3 -- consistency (prompt 07a section 5 item 4), R30 against R29, over every QuadSourceIntegral row.
+---
+> """S3 -- consistency (prompt 07b section 5 item 4), R31 against R30, over every QuadSourceIntegral row.
+3,6c3,8
+< levin-phase-floor 07a, rehearsal agent, R30. New. Reads both stores with sqlite mode=ro through tabulate_qsi_r29_r30.py's
+< reader (06g's, verbatim). The rule: every row with finite total_abserr in both has
+< |total_30 - total_29| <= total_abserr_29 + total_abserr_30. Holds if no row violates it. Evaluated exactly, in
+< fractions.Fraction on the doubles (no rounding); the ratio |d|/(e29 + e30) is printed as a float.
+---
+> levin-phase-floor 07b, rehearsal agent, R31. 07a's rehearsal agent's s3_score.py (f12ebafd...), with the store tags
+> 29 -> 30 and 30 -> 31 and the reader's module (tabulate_qsi_r30_r31.py) changed, and this docstring. Reads both stores
+> with sqlite mode=ro through tabulate_qsi_r30_r31.py's reader (06g's, verbatim). The rule: every row with finite
+> total_abserr in both has |total_31 - total_30| <= total_abserr_30 + total_abserr_31, or is one section 9 predicts to
+> move further (section 9.5: S3 names no row). Holds if no row violates it. Evaluated exactly, in fractions.Fraction on
+> the doubles (no rounding); the ratio |d|/(e30 + e31) is printed as a float.
+8c10
+<     ./venv/bin/python -I -B s3_score.py <R29 primary> <R30 primary>
+---
+>     python -B s3_score.py <R30 primary> <R31 primary>
+18c20
+< from tabulate_qsi_r29_r30 import read  # noqa: E402
+---
+> from tabulate_qsi_r30_r31 import read  # noqa: E402
+28c30
+<     tq = Path(__file__).resolve().parent / "tabulate_qsi_r29_r30.py"
+---
+>     tq = Path(__file__).resolve().parent / "tabulate_qsi_r30_r31.py"
+43,46c45,48
+<         t29, t30 = A[key]["total"], B[key]["total"]
+<         e29, e30 = A[key]["total_abserr"], B[key]["total_abserr"]
+<         if not all(isinstance(x, float) and math.isfinite(x) for x in (e29, e30, t29, t30)):
+<             not_finite.append((key, e29, e30, t29, t30))
+---
+>         t30, t31 = A[key]["total"], B[key]["total"]
+>         e30, e31 = A[key]["total_abserr"], B[key]["total_abserr"]
+>         if not all(isinstance(x, float) and math.isfinite(x) for x in (e30, e31, t30, t31)):
+>             not_finite.append((key, e30, e31, t30, t31))
+49,50c51,52
+<         d = abs(Fraction(t30) - Fraction(t29))
+<         s = Fraction(e29) + Fraction(e30)
+---
+>         d = abs(Fraction(t31) - Fraction(t30))
+>         s = Fraction(e30) + Fraction(e31)
+55c57
+<             worst = (r, key, t29.hex(), t30.hex(), e29.hex(), e30.hex())
+---
+>             worst = (r, key, t30.hex(), t31.hex(), e30.hex(), e31.hex())
+62c64
+<     print(f"largest |total_30 - total_29| / (abserr_29 + abserr_30): {worst[0]!r} at {worst[1]}; total {worst[2]} -> {worst[3]}, abserr {worst[4]} / {worst[5]}")
+---
+>     print(f"largest |total_31 - total_30| / (abserr_30 + abserr_31): {worst[0]!r} at {worst[1]}; total {worst[2]} -> {worst[3]}, abserr {worst[4]} / {worst[5]}")
