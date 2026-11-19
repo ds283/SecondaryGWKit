@@ -1,0 +1,164 @@
+script sha256 d499e3ed9556c19b753c624a2845d760535b195274d9a05d2ef1664cea4280eb
+git HEAD cff4237f77ce293f70d77e127c567868a8eb0c42; levin_quadrature.py sha256 d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6
+
+(b) A = 20.0, kappa = 4.0, eta = 1e-12: the instrumented call equals the commit's; value -0x1.5e0cdda294066p-8, abserr 0x1.53424873f8efcp-31, converged True, regions 26, max depth 8, refusals range 2 edge 0; stops 1, stopped leaves 20, bisections counted 6
+  check: seq depth lo hi route trusted refused_by_rate_rule root at_noise_level delta1/nu_B delta2/nu_B
+  count: seq depth lo hi route split root left right; STOP: root split; stopped: seq depth lo hi route split; trust-noise-bisection: seq depth lo hi route split trust_root
+  check 1 0 0 1.5 Levin False True 1 False 2000.32 0.172035
+  check 2 1 0 0.75 Levin False False 1 False 5.11081 27.4101
+  check 3 1 0.75 1.5 Levin False True 1 True 0.0178661 0.0136187
+  check 4 2 0 0.375 Levin False False 1 False 64.9949 62.959
+  check 5 2 0.375 0.75 Levin False False 1 False 9.75885 2.50667
+  check 6 3 0 0.1875 Levin True False 1 False 183.917 23.776
+  check 7 3 0.1875 0.375 Levin True False 1 False 12.8798 0.72134
+  check 8 3 0.375 0.5625 Levin False False 1 False 7.6443 33.6249
+  check 9 3 0.5625 0.75 Levin False False 1 False 7.91394 19.1852
+  check 10 4 0.375 0.46875 Levin True False 1 False 34.2605 3.55236
+  check 11 4 0.46875 0.5625 Levin False False 1 False 20.72 65.1493
+  check 12 5 0.46875 0.515625 Levin False False 1 False 45.8209 79.2906
+  check 13 5 0.515625 0.5625 Levin False False 1 False 289.62 109.135
+  count 3 1 0.75 1.5 Levin 9 1 18 19
+  check 16 6 0.46875 0.492188 CC False False 1 True 1.18822 1.44473
+  check 17 6 0.492188 0.515625 CC True False 1 True 2.35973 0.0191639
+  check 24 7 0.515625 0.527344 CC False False 1 True 2.0706 0.835423
+  check 25 7 0.527344 0.539062 CC False False 1 True 1.93855 1.57891
+  check 22 7 0.539062 0.550781 CC False False 1 True 0.0825143 1.19875
+  check 23 7 0.550781 0.5625 CC False False 1 True 0.115527 0.537282
+  check 20 4 0.5625 0.65625 Levin False False 1 False 42.9952 51.4869
+  check 21 4 0.65625 0.75 Levin False False 1 False 28.6275 16.5023
+  check 18 2 0.75 1.125 Levin False False 1 True 0.0728803 1.07019
+  check 19 2 1.125 1.5 Levin True False 1 True 0.0298951 0.0282653
+  count 16 6 0.46875 0.492188 CC 13 1 26 27
+  check 26 7 0.46875 0.480469 CC True False 1 True 3.50189 0.17201
+  check 27 7 0.480469 0.492188 CC False False 1 True 0.515317 1.34213
+  count 22 7 0.539062 0.550781 CC 14 1 28 29
+  check 28 8 0.539062 0.544922 CC True False 1 True 1.45636 0.0589432
+  check 29 8 0.544922 0.550781 CC False False 1 True 3.78248 2.87976
+  count 23 7 0.550781 0.5625 CC 15 1 30 31
+  check 30 8 0.550781 0.556641 CC True False 1 True 2.88749 0.668043
+  check 31 8 0.556641 0.5625 CC False False 1 True 1.831 1.45731
+  count 25 7 0.527344 0.539062 CC 16 1 32 33
+  check 32 8 0.527344 0.533203 CC True False 1 True 3.66437 0.607784
+  check 33 8 0.533203 0.539062 CC False False 1 True 0.560567 0.729663
+  count 24 7 0.515625 0.527344 CC 17 1 34 35
+  STOP 1 17
+  stopped 17 6 0.492188 0.515625 CC 17
+  stopped 18 2 0.75 1.125 Levin 17
+  stopped 19 2 1.125 1.5 Levin 17
+  stopped 26 7 0.46875 0.480469 CC 17
+  stopped 27 7 0.480469 0.492188 CC 17
+  stopped 28 8 0.539062 0.544922 CC 17
+  stopped 29 8 0.544922 0.550781 CC 17
+  stopped 30 8 0.550781 0.556641 CC 17
+  stopped 31 8 0.556641 0.5625 CC 17
+  stopped 32 8 0.527344 0.533203 CC 17
+  stopped 33 8 0.533203 0.539062 CC 17
+  check 34 8 0.515625 0.521484 CC True False 1 True 0.994095 0.777065
+  stopped 34 8 0.515625 0.521484 CC 17
+  check 35 8 0.521484 0.527344 CC False False 1 True 2.61454 0.90888
+  stopped 35 8 0.521484 0.527344 CC 17
+  check 36 5 0.5625 0.609375 Levin False False 1 False 2.01797 13.7867
+  check 37 5 0.609375 0.65625 Levin True False 1 False 66.4863 16.18
+  check 38 5 0.65625 0.703125 Levin False False 1 False 26.9072 12.534
+  check 39 5 0.703125 0.75 Levin True False 1 False 55.5782 7.88028
+  check 40 6 0.65625 0.679688 Levin False False 1 False 27.6392 32.1937
+  check 41 6 0.679688 0.703125 Levin False False 1 False 11.1515 18.5957
+  check 42 7 0.65625 0.667969 CC True False 1 True 0.858851 0.211617
+  stopped 42 7 0.65625 0.667969 CC 21
+  check 43 7 0.667969 0.679688 CC True False 1 True 0.169442 0.0156971
+  stopped 43 7 0.667969 0.679688 CC 21
+  check 48 7 0.5625 0.574219 CC True False 1 True 0.617299 0.117093
+  stopped 48 7 0.5625 0.574219 CC 25
+  check 49 7 0.574219 0.585938 CC False False 1 True 1.37551 1.63567
+  stopped 49 7 0.574219 0.585938 CC 25
+  check 47 6 0.585938 0.609375 Levin True False 1 False 25.1455 5.10871
+  check 44 7 0.679688 0.691406 CC False False 1 True 0.342426 1.08068
+  stopped 44 7 0.679688 0.691406 CC 25
+  check 50 8 0.691406 0.697266 CC True False 1 True 0.901656 0.414941
+  stopped 50 8 0.691406 0.697266 CC 25
+  check 51 8 0.697266 0.703125 CC False False 1 True 0.0519229 1.30121
+  stopped 51 8 0.697266 0.703125 CC 25
+  stopped by the stop itself (split 17): 11; stopped by their own check after the stop: 9: [0.515625, 0.521484375] depth 8, [0.521484375, 0.52734375] depth 8, [0.65625, 0.66796875] depth 7, [0.66796875, 0.6796875] depth 7, [0.5625, 0.57421875] depth 7, [0.57421875, 0.5859375] depth 7, [0.6796875, 0.69140625] depth 7, [0.69140625, 0.697265625] depth 8, [0.697265625, 0.703125] depth 8
+
+(c3) A = 200.0, kappa = 1.0, eta = 1e-12: the instrumented call equals the commit's; value 0x1.c08442ac306bbp-8, abserr 0x1.9d299a6b906c1p-33, converged True, regions 32, max depth 10, refusals range 0 edge 0; stops 0, stopped leaves 0, bisections counted 0
+  check: seq depth lo hi route trusted refused_by_rate_rule root at_noise_level delta1/nu_B delta2/nu_B
+  count: seq depth lo hi route split root left right; STOP: root split; stopped: seq depth lo hi route split; trust-noise-bisection: seq depth lo hi route split trust_root
+  check 1 0 0 1.5 Levin False False None False 4.151 1.6917
+  check 2 1 0 0.75 Levin False False None False 4.28193 12.5487
+  check 3 1 0.75 1.5 Levin False False None False 1.72867 8.18938
+  check 4 2 0 0.375 Levin True False None False 9.08267 1.6188
+  check 5 2 0.375 0.75 Levin False False None False 9.97761 67.0385
+  check 6 3 0.375 0.5625 Levin False False None False 126.049 95.3167
+  check 7 3 0.5625 0.75 Levin False False None False 68.3843 44.7753
+  check 8 4 0.375 0.46875 Levin False False None False 85.4742 57.4095
+  check 9 4 0.46875 0.5625 Levin False False None False 228.925 88.0496
+  check 14 5 0.375 0.421875 CC True False None True 0.498354 0.11435
+  check 22 6 0.421875 0.445312 CC False False None True 1.54434 0.531918
+  check 23 6 0.445312 0.46875 CC False False None True 0.582869 1.92081
+  check 20 6 0.46875 0.492188 CC False False None True 1.91001 0.796948
+  check 21 6 0.492188 0.515625 CC False False None True 0.0477868 0.297393
+  check 18 6 0.515625 0.539062 CC False False None True 0.215064 1.52253
+  check 19 6 0.539062 0.5625 CC True False None True 0.558863 0.296526
+  check 12 4 0.5625 0.65625 Levin True False None False 116.125 8.91848
+  check 13 4 0.65625 0.75 Levin False False None False 11.0691 6.59297
+  check 16 2 0.75 1.125 Levin True False None False 11.9569 1.50603
+  check 17 2 1.125 1.5 Levin False False None False 0.0829277 4.36949
+  trust-noise-bisection 21 6 0.492188 0.515625 CC 12 1
+  check 24 7 0.492188 0.503906 CC False False None True 0.634637 1.1965
+  check 25 7 0.503906 0.515625 CC False False None True 0.0413098 0.157613
+  trust-noise-bisection 23 6 0.445312 0.46875 CC 13 1
+  check 26 7 0.445312 0.457031 CC False False None True 1.78063 0.573172
+  check 27 7 0.457031 0.46875 CC False False None True 2.05866 0.959941
+  trust-noise-bisection 18 6 0.515625 0.539062 CC 14 1
+  check 28 7 0.515625 0.527344 CC True False None True 1.45171 0.0315726
+  check 29 7 0.527344 0.539062 CC False False None True 1.58858 1.50141
+  trust-noise-bisection 22 6 0.421875 0.445312 CC 15 1
+  check 30 7 0.421875 0.433594 CC False False None True 1.0566 1.03622
+  check 31 7 0.433594 0.445312 CC False False None True 0.0180616 0.446379
+  trust-noise-bisection 20 6 0.46875 0.492188 CC 16 1
+  check 32 7 0.46875 0.480469 CC True False None True 1.2119 0.224284
+  check 33 7 0.480469 0.492188 CC True False None True 0.386782 0.258599
+  trust-noise-bisection 31 7 0.433594 0.445312 CC 18 1
+  trust-noise-bisection 27 7 0.457031 0.46875 CC 19 1
+  trust-noise-bisection 25 7 0.503906 0.515625 CC 20 1
+  trust-noise-bisection 24 7 0.492188 0.503906 CC 21 1
+  check 36 8 0.433594 0.439453 CC False False None True 1.12789 0.862125
+  check 37 8 0.439453 0.445312 CC True False None True 0.228659 0.195259
+  check 38 8 0.457031 0.462891 CC False False None True 0.786589 0.921323
+  check 39 8 0.462891 0.46875 CC False False None True 1.14258 0.458062
+  check 42 8 0.492188 0.498047 CC False False None True 1.03478 0.482556
+  check 43 8 0.498047 0.503906 CC False False None True 1.35868 0.791404
+  check 40 8 0.503906 0.509766 CC True False None True 0.158416 0.0762565
+  check 41 8 0.509766 0.515625 CC False False None True 0.4705 0.844877
+  check 44 6 0.65625 0.679688 CC False False None True 0.189106 0.517325
+  check 45 6 0.679688 0.703125 CC False False None True 0.305175 0.60911
+  check 35 5 0.703125 0.75 Levin True False None False 77.0013 1.14739
+  trust-noise-bisection 45 6 0.679688 0.703125 CC 23 1
+  check 46 7 0.679688 0.691406 CC True False None True 0.372063 0.108028
+  check 47 7 0.691406 0.703125 CC True False None True 0.845857 0.0965363
+  trust-noise-bisection 44 6 0.65625 0.679688 CC 24 1
+  check 48 7 0.65625 0.667969 CC True False None True 0.161562 0.0849676
+  check 49 7 0.667969 0.679688 CC True False None True 0.873267 0.166573
+  trust-noise-bisection 42 8 0.492188 0.498047 CC 25 1
+  check 50 9 0.492188 0.495117 CC True False None True 0.760705 0.445229
+  check 51 9 0.495117 0.498047 CC True False None True 0.201326 0.0118805
+  trust-noise-bisection 41 8 0.509766 0.515625 CC 26 1
+  check 52 9 0.509766 0.512695 CC False False None True 1.02942 1.56049
+  check 53 9 0.512695 0.515625 CC False False None True 0.66217 0.782332
+  trust-noise-bisection 52 9 0.509766 0.512695 CC 27 1
+  check 54 10 0.509766 0.51123 CC True False None True 1.91495 0.0228121
+  check 55 10 0.51123 0.512695 CC True False None True 1.22047 0.0693449
+  trust-noise-bisection 43 8 0.498047 0.503906 CC 28 1
+  check 56 9 0.498047 0.500977 CC False False None True 0.649291 0.768613
+  check 57 9 0.500977 0.503906 CC True False None True 0.932438 0.330133
+  trust-noise-bisection 38 8 0.457031 0.462891 CC 29 1
+  check 58 9 0.457031 0.459961 CC False False None True 0.096694 0.242774
+  check 59 9 0.459961 0.462891 CC False False None True 1.74196 0.949111
+  trust-noise-bisection 59 9 0.459961 0.462891 CC 30 1
+  check 60 10 0.459961 0.461426 CC True False None True 0.339497 0.194731
+  check 61 10 0.461426 0.462891 CC True False None True 1.5619 0.200046
+  trust-noise-bisection 53 9 0.512695 0.515625 CC 31 1
+  check 62 10 0.512695 0.51416 CC False False None True 1.04586 2.27029
+  check 63 10 0.51416 0.515625 CC False False None True 0.520847 0.622051
+  bisections at the noise level below a leaf the trust test refused, with no rate-rule root: 18
+

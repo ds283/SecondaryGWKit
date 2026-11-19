@@ -1,0 +1,40 @@
+{
+ "label": "S",
+ "tree": "/private/tmp/claude-35086/-Users-ds283--claude-spares-spare-nIjlMh/cff1227b-41d0-4487-a706-efd137a71485/scratchpad/wt-S",
+ "tree_git_sha": "cff4237f77ce293f70d77e127c567868a8eb0c42",
+ "levin_quadrature_sha256": "09088683c6da28fc7e003b31a999d1120b902c221ce9f59b755673c5a7e5a6fb",
+ "levin_quadrature_status": "M AdaptiveLevin/levin_quadrature.py",
+ "test_module_sha256": "3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c",
+ "script_sha256": "1d49858f0c20d73a7bb9b8da005d8b4c5f85920eeb4c56e4f869e0592ac7957c",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19
+ ],
+ "tests": [
+  "test_YJJ_log_singularity",
+  "test_JJJ",
+  "test_YJJ",
+  "test_abserr_bounds_truth"
+ ],
+ "unit_timeout": 1200.0,
+ "started": "2026-11-19T11:44:19",
+ "finished": "2026-11-19T11:47:48"
+}

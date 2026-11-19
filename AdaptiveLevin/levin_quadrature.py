@@ -51,7 +51,18 @@ deliberate departures are:
     differ by more than a factor 2 is refused; away from windows, one whose
     |theta'| ranges by more than a factor 10 over its nodes. A refused leaf
     is refined as any untrusted leaf is (the rate rules; see
-    _leaf_rate_rule()).
+    _leaf_rate_rule()). Below it the check comes to run at the noise level,
+    where r is random and about half the leaves fail it, and 07b's census
+    measured calls chased to depth_max there. So since prompts/
+    levin-phase-floor/07c-chase-below-a-refused-leaf.md that refinement is
+    stopped as a stationary point's window is: the outermost refused leaf
+    above a leaf counts the bisections of its subtree at the noise level
+    (both differences within _LEVIN_CHASE_NOISE_FACTOR = 4 times the noise
+    yardstick), and at _LEVIN_CHASE_STOP_LIMIT = 6 of them its leaves at the
+    noise level, and every such leaf made in it later, are returned
+    floor-limited, each declaring what the tree would declare for it at
+    depth_max; a leaf of the subtree not at the noise level is refined as
+    before (the stop below a refused leaf; see _chase_at_noise_level()).
 
   * The returned error estimate accounts for a round-off floor -- on a Levin
     region Chen et al.'s own eq. (151), see _roundoff_floor(); on a
@@ -614,15 +625,68 @@ _LEVIN_WINDOW_PIECE_PHASE = 2.0 * np.pi
 #     honest ones of range above 30 with a margin of 0.76, that is, not at all.
 #   * Cost. Honest leaves span ranges up to 3.4e4, so the rule refuses many honest leaves, and acts on most
 #     calls with a Levin leaf: on 07b's random draw of 30 census calls the regions went from 175 to 868.
-#     Below a refused leaf the trust check can run at the noise level, beyond the window stop's reach, and
-#     a call can be chased to depth_max and returned unconverged
-#     ([07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]); on Part A's 187 calls one call,
-#     R2-28 at both rtols, honest in one region before, was, at 1.107 of its abserr.
+#     Below a refused leaf the trust check runs at the noise level, beyond the window stop's reach, where
+#     r is random and about half the leaves fail it, so until prompt 07c a call could be chased to
+#     depth_max and returned unconverged ([07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]:
+#     198 census calls). Since 07c that chase is stopped: see _LEVIN_CHASE_NOISE_FACTOR below. On 07b's
+#     Part A calls one call, R2-28 at both rtols, honest in one region before, was unconverged at 1.107 of
+#     its abserr; under the stop it converges at 1.143, its error carried by a trusted Levin leaf the stop
+#     does not touch ([07c-r2-28-trusted-levin-leaf-hides-a-common-error]).
 #   * Reach. Set on group calls; scored on the class-(c) rows, the random draw (21 analytic and 9 group
 #     calls) and the targeted calls with none converged and dishonest. It does not reach the analytic
 #     calls, 74 % of the census's Levin calls at rtol 1e-7, beyond those 21 and five targeted ones.
 _LEVIN_EDGE_RATE_RATIO_MAX = 2.0
 _LEVIN_LEAF_RATE_RANGE_MAX = 10.0
+
+# The stop below a refused leaf (prompts/levin-phase-floor/07c-chase-below-a-refused-leaf.md, section 1 as
+# amended by its section 9: Part A's variant (S); see _chase_at_noise_level() and _adaptive_levin()).
+# Below a leaf the rate rules refuse, the leaves are refined whatever the budget says until the trust check
+# trusts them; at the noise level its r is random, and 07c's Part A measured (docs/levin-phase-floor/07c/
+# measurement/, out/d1/d1_tables.md) the chase that follows: 192 of 07b's 198 newly unconverged census
+# calls end with every depth-20 leaf below a refused leaf, 668 Clenshaw-Curtis leaves, untrusted mostly by
+# the r >= 1 clause, the round-off exit not considered on 6,615 of their 8,664 bisections (residual above
+# the floor: the integrand carries noise the floor does not model) and refused by its halving test on
+# 2,049. So, as dqage's iroff1 counts a window's bisections at that noise level (the window stop above),
+# the outermost refused leaf above a leaf roots its subtree and counts its bisections at the noise level;
+# at _LEVIN_CHASE_STOP_LIMIT the subtree's leaves at the noise level, and every such leaf made in it later,
+# are returned floor-limited, declaring what they carry, as a stopped window's leaves are.
+#
+# _LEVIN_CHASE_NOISE_FACTOR, C: a leaf is at the noise level if its trust check found delta1 <= C nu_B and
+# delta2 <= C nu_B, nu_B the noise yardstick that check used (_trust_noise_yardstick()).
+#   * Basis. On D1's 8,664 Clenshaw-Curtis bisections below refused leaves both differences are within
+#     nu_B in 15 %, 2 nu_B in 73 %, 4 nu_B in 88 % and 10 nu_B in 97 %; delta1 / (phi_P + phi_L + phi_R)
+#     has 90th percentile 1.01, so C = 4 is about four times it.
+#   * Margin. Part A's variant (S2), C = 2, gives the same honesty table (07c's table 3: 292 honest, 4
+#     dishonest, 3 unconverged of 299 scored), one more chase call unconverged and 7 % more regions: the
+#     verdicts do not turn on C between 2 and 4.
+#   * Where it does not reach. A Levin leaf is rarely at the noise level (both differences within 4 nu_B in
+#     2,460 of the 15,445 Levin bisections below refused leaves), and is otherwise refined, not stopped:
+#     07b's variant (i), which counted and stopped leaves not at the noise level, returned Levin leaves at
+#     their r-based declaration and left two calls dishonest (07c section 0.3). Every chase call measured
+#     is a group call; the analytic calls had no chase in the sample, and where the stop acts on one it is
+#     scored only by the referenced analytic calls among Part A's (07b's R2's 21 and R3's), none of them
+#     converged and dishonest under (S).
+#
+# _LEVIN_CHASE_STOP_LIMIT: the bisections at the noise level counted against one root before it stops.
+#   * Basis. dqage's iroff1 limit, 6, as the window stop's _LEVIN_WINDOW_IROFF1_LIMIT counts at the same
+#     noise level. It is not measured: no variant of 07c's Part A changed it.
+#
+# What a stopped leaf declares. Exactly what the tree declares for the same leaf at depth_max
+# (_floor_limit_stopped_window_leaf()): an untrusted leaf max(residual, delta1) / (1 - r) if r < 1 and
+# max(residual, delta1 + delta2) if not, a trusted one its widened declaration, each with its own value V_P.
+# That was measured at call level only, not leaf by leaf against a reference: on Part A's 454 calls no
+# referenced call is converged and dishonest under (S) but R2-28, whose carrying leaf (a trusted Levin
+# leaf, delta1 / nu_B = 2.7e4) the stop does not touch ([07c-r2-28-trusted-levin-leaf-hides-a-common-error]).
+# On a Clenshaw-Curtis leaf the declaration rests on the nested pair, which 07c's D2 shows can understate
+# the fine rule's true error (in the chase stratum 5 of 14 resolved leaves above both the pair and the
+# floor; [06d-cc-nested-estimate-measures-the-coarse-rule]); the tree makes the same declaration wherever
+# the fallback declares, and the stop adds none it does not make.
+#
+# On Part A's 454 calls (S) touches 328, the other 126 bit-identical to the tree; of the 201 chase calls 5
+# stay unconverged, each a budget miss with no depth-20 leaf, untouched; it takes 0.745 of the tree's
+# regions and 0.726 of its wall, and changes no window's stop or leaves.
+_LEVIN_CHASE_NOISE_FACTOR = 4.0
+_LEVIN_CHASE_STOP_LIMIT = 6
 
 # The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
 # 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
@@ -1394,6 +1458,25 @@ def _leaf_rate_rule(
         )
         worst = max(worst, q)
     return not (worst <= _LEVIN_LEAF_RATE_RANGE_MAX), "range", worst
+
+
+def _chase_at_noise_level(delta1: float, delta2: float, noise_yardstick: float) -> bool:
+    """
+    Whether a leaf's trust check one level down found it at the noise level, for the stop below a
+    refused leaf (prompts/levin-phase-floor/07c-chase-below-a-refused-leaf.md, section 1.1): both of its
+    differences within _LEVIN_CHASE_NOISE_FACTOR times the noise yardstick nu_B that check used
+    (_trust_noise_yardstick()),
+
+        delta1 <= C nu_B   and   delta2 <= C nu_B,   C = _LEVIN_CHASE_NOISE_FACTOR.
+
+    There r = delta2 / delta1 is a ratio of rounding noise and decides nothing; see the comment on
+    _LEVIN_CHASE_NOISE_FACTOR for the basis of C. With nu_B = 0 only differences of exactly 0 are at the
+    noise level; a difference that is not finite (NaN) never is.
+    """
+    return bool(
+        delta1 <= _LEVIN_CHASE_NOISE_FACTOR * noise_yardstick
+        and delta2 <= _LEVIN_CHASE_NOISE_FACTOR * noise_yardstick
+    )
 
 
 class _ExactSum:
@@ -4176,9 +4259,32 @@ def _adaptive_levin(
     ([06b-moved-calls-declare-less-than-their-error]); the rate rules refuse a Levin leaf where 07b
     found such an error, from its phase rates, not from its solves -- 07b's measurement (its X2)
     found nothing in a leaf's own solves that separates those leaves from honest ones. The range
-    rule refuses many honest leaves too, at a cost in work: below a refused leaf the check can run
-    at the noise level and a call be chased to depth_max
-    ([07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]).
+    rule refuses many honest leaves too, at a cost in work: below a refused leaf the check comes to
+    run at the noise level, where r is random, and until prompts/levin-phase-floor/
+    07c-chase-below-a-refused-leaf.md a call could be chased to depth_max there
+    ([07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]). The stop below a refused
+    leaf (07c section 1.1) ends that chase:
+      * each leaf the rate rules refuse roots a subtree, unless it already belongs to one: its root
+        is then the outermost refused leaf above it; at every bisection both children take their
+        parent's root;
+      * a leaf is at the noise level if its trust check found delta1 and delta2 both at most
+        _LEVIN_CHASE_NOISE_FACTOR = 4 times the noise yardstick nu_B that check used
+        (_chase_at_noise_level()); a leaf not yet checked is not;
+      * each bisection of a leaf with a root, at the noise level, counts against the root, and at
+        _LEVIN_CHASE_STOP_LIMIT = 6 the root stops, once: every current leaf with that root at the
+        noise level is stopped, and every one made later is stopped when its own check finds it at
+        the noise level, as a stopped window's later leaves are. A leaf of the subtree not at the
+        noise level is not stopped, and is refined as before;
+      * a stopped leaf is returned floor-limited (_floor_limit_stopped_window_leaf(), unless it is
+        floor-limited already), exempt from the trust check, with its own value V_P, declaring
+        exactly what the tree declares for it at depth_max: max(residual, delta1) / (1 - r) if it
+        was untrusted with r < 1, max(residual, delta1 + delta2) if untrusted with r >= 1, its
+        widened declaration if trusted. It counts against the budget as a stopped window's leaf
+        does, so "converged" keeps its rule.
+    "num_chase_stops", "num_chase_stopped_leaves" and "num_chase_noise_bisections" count the roots
+    stopped, the leaves stopped and the bisections counted; a call in which no root reaches the
+    limit is the one the tree without the stop computes, bit for bit. The comment on
+    _LEVIN_CHASE_NOISE_FACTOR gives the basis of both constants and where it does not reach.
 
     So the loop stops on exactly the quantity the call reports as "abserr", and "converged" keeps
     its formula, abserr <= max(atol, rtol*|value|), with no untrusted leaf returned. This
@@ -4457,6 +4563,13 @@ def _adaptive_levin(
     # the tree's test passed and the edge rule, or the range rule, refused.
     num_edge_rule_refusals = 0
     num_range_rule_refusals = 0
+
+    # The stop's counts (prompt 07c section 1.4), over the whole run of the call: the roots stopped, the
+    # leaves stopped (at a stop and after it), and the bisections at the noise level counted against a
+    # root.
+    num_chase_stops = 0
+    num_chase_stopped_leaves = 0
+    num_chase_noise_bisections = 0
 
     def _solve(span, description, force_direct=False):
         nonlocal num_evaluations, num_solves_direct, num_solves_lstsq, num_solves_pinv
@@ -4875,6 +4988,16 @@ def _adaptive_levin(
         num_range_rule_refusals. A floor-limited leaf's exemption (_exempt_floor_limited()) clears a
         refusal as it clears an untrusted verdict.
 
+        The stop below a refused leaf (prompts/levin-phase-floor/07c-chase-below-a-refused-leaf.md,
+        section 1.1). Every check records (delta1, delta2, nu_B), from which _chase_at_noise_level()
+        decides whether the leaf is at the noise level. A leaf the rate rules refuse roots a subtree
+        unless it already belongs to one, so the root is the outermost refused leaf above it; a leaf
+        the test above refuses roots nothing, and below it nothing is counted or stopped. At the end
+        of the check, a leaf whose root has stopped and that is at the noise level is stopped
+        (returned floor-limited by _floor_limit_stopped_window_leaf()): so a leaf made after its root
+        stopped is stopped once its own check finds it at the noise level, and one not at the noise
+        level is refined as before.
+
         Otherwise the leaf is untrusted, keeps V_P, and is refinable whatever the budget says,
         chosen before every trusted leaf; at depth_max, where it cannot be refined, it declares
         max(abserr, delta1) / (1 - r) if r < 1 and max(abserr, delta1 + delta2) if not, and the
@@ -4924,6 +5047,7 @@ def _adaptive_levin(
         trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
             ratio < 1.0 and delta1 <= noise_yardstick
         )
+        refused_by_rate_rule = False
         # The rate rules (prompt 07b section 1.1): on a Levin leaf the test above trusts, the edge rule
         # if it touches a window, else the range rule. A refused leaf is untrusted exactly as one the
         # test above refuses; ratio, delta1, delta2 and the declaration's form are unchanged.
@@ -4936,11 +5060,18 @@ def _adaptive_levin(
                 tuple(end for end in (lo_leaf, hi_leaf) if end in window_edges),
             )
             if refused:
+                refused_by_rate_rule = True
                 trusted = False
                 if rule == "edge":
                     num_edge_rule_refusals += 1
                 else:
                     num_range_rule_refusals += 1
+        # The stop below a refused leaf (prompt 07c section 1.1): what this check found, for the noise
+        # level; and a leaf the rate rules refuse roots a subtree, unless it already belongs to one (its
+        # root is then the outermost refused leaf above it, taken at its bisection).
+        chase_check[leaf.seq] = (delta1, delta2, noise_yardstick)
+        if refused_by_rate_rule:
+            chase_root.setdefault(leaf.seq, leaf.seq)
         _remove_error(leaf)
         region._delta1 = delta1
         region._delta2 = delta2
@@ -4965,6 +5096,12 @@ def _adaptive_levin(
         leaf.checked = True
         num_checks += 1
         _push_candidate(leaf)
+        # The stop's reach (prompt 07c section 1.1): a leaf made after its root stopped is stopped once
+        # this check finds it at the noise level, as _add_leaf() stops a stopped window's later leaves.
+        if chase_root.get(leaf.seq) in chase_stopped and _leaf_at_chase_noise_level(
+            leaf.seq
+        ):
+            _stop_chase_leaf(leaf)
 
     def _exempt_floor_limited(leaf: _levin_leaf) -> None:
         # A floor-limited leaf is exempt from the trust check: its differences are round-off
@@ -4986,14 +5123,43 @@ def _adaptive_levin(
     window_counts = {}
     windows_stopped = {}
 
+    # The stop below a refused leaf (prompts/levin-phase-floor/07c-chase-below-a-refused-leaf.md,
+    # section 1.1; see the comment on _LEVIN_CHASE_NOISE_FACTOR): each leaf's root, the outermost leaf
+    # the rate rules refused above it (or itself), taken by both children at every bisection; what each
+    # leaf's trust check found, (delta1, delta2, nu_B); each root's count of bisections at the noise
+    # level; and the roots stopped.
+    chase_root = {}
+    chase_check = {}
+    chase_counts = {}
+    chase_stopped = set()
+
+    def _leaf_at_chase_noise_level(seq: int) -> bool:
+        # At the noise level by its own trust check (_chase_at_noise_level()); a leaf not yet checked
+        # is not.
+        if seq not in chase_check:
+            return False
+        delta1, delta2, noise_yardstick = chase_check[seq]
+        return _chase_at_noise_level(delta1, delta2, noise_yardstick)
+
+    def _stop_chase_leaf(leaf: _levin_leaf) -> None:
+        # A leaf at the noise level whose root has stopped: returned floor-limited, declaring what it
+        # carries, as a stopped window's leaf is; one already floor-limited is left as it is.
+        nonlocal num_chase_stopped_leaves
+        if leaf.region._phase_limited:
+            return
+        _floor_limit_stopped_window_leaf(leaf)
+        num_chase_stopped_leaves += 1
+
     def _floor_limit_stopped_window_leaf(leaf: _levin_leaf) -> None:
         """
-        A leaf of a window section 1.3's rule has stopped: not refinable, returned floor-limited,
-        exempt from the trust check as a floor-limited leaf is. It declares what it carries: its
-        e', except that a leaf the trust check found untrusted declares as an untrusted leaf at
-        depth_max does, max(residual, delta1) / (1 - r) if r < 1 and max(residual, delta1 +
-        delta2) if not. A trusted leaf keeps its widened declaration and returns its own value, V_P,
-        as a floor-limited leaf does.
+        A leaf of a window section 1.3's rule has stopped, or (since prompts/levin-phase-floor/
+        07c-chase-below-a-refused-leaf.md, section 1.1) a leaf at the noise level below a refused leaf
+        whose subtree has stopped: not refinable, returned floor-limited, exempt from the trust check as
+        a floor-limited leaf is. It declares what it carries: its e', except that a leaf the trust
+        check found untrusted declares as an untrusted leaf at depth_max does, max(residual, delta1) /
+        (1 - r) if r < 1 and max(residual, delta1 + delta2) if not. A trusted leaf keeps its widened
+        declaration and returns its own value, V_P, as a floor-limited leaf does. So a stopped leaf
+        declares exactly what the tree would declare for it at depth_max.
         """
         region = leaf.region
         _remove_error(leaf)
@@ -5348,6 +5514,12 @@ def _adaptive_levin(
                 ):
                     stop_window = leaf.window_index
 
+        # The stop below a refused leaf (prompt 07c section 1.1): both children take their parent's
+        # root.
+        chase_root_seq = chase_root.get(leaf.seq)
+        if chase_root_seq is not None:
+            chase_root[left.seq] = chase_root_seq
+            chase_root[right.seq] = chase_root_seq
         _remove_leaf(leaf)
         leaf.dataL = None
         leaf.dataR = None
@@ -5356,6 +5528,26 @@ def _adaptive_levin(
         _add_leaf(right)
         if stop_window is not None:
             _stop_window(stop_window)
+        # A bisection of a leaf with a root, at the noise level, counts against its root. At
+        # _LEVIN_CHASE_STOP_LIMIT the root stops, once: every current leaf with that root at the noise
+        # level is stopped, and every one made later is stopped by _check_leaf() when its check finds it
+        # at the noise level. A leaf of the subtree not at the noise level is refined as before.
+        if chase_root_seq is not None and _leaf_at_chase_noise_level(leaf.seq):
+            num_chase_noise_bisections += 1
+            chase_counts[chase_root_seq] = chase_counts.get(chase_root_seq, 0) + 1
+            if (
+                chase_counts[chase_root_seq] >= _LEVIN_CHASE_STOP_LIMIT
+                and chase_root_seq not in chase_stopped
+            ):
+                chase_stopped.add(chase_root_seq)
+                num_chase_stops += 1
+                for member in [
+                    candidate
+                    for candidate in leaves.values()
+                    if chase_root.get(candidate.seq) == chase_root_seq
+                    and _leaf_at_chase_noise_level(candidate.seq)
+                ]:
+                    _stop_chase_leaf(member)
 
     leaves_ascending = _leaves_ascending()
     used_regions = [leaf.region for leaf in leaves_ascending]
@@ -5626,6 +5818,13 @@ def _adaptive_levin(
         # sum is positive.
         "num_edge_rule_refusals": int(num_edge_rule_refusals),
         "num_range_rule_refusals": int(num_range_rule_refusals),
+        # the stop below a refused leaf (prompt 07c section 1.4), over the whole run of the call: the
+        # roots stopped, the leaves stopped at a stop or after it (each not refinable, so each returned
+        # floor-limited), and the bisections at the noise level counted against a root. The stop acts in
+        # a call if num_chase_stops is positive; a count alone changes nothing.
+        "num_chase_stops": int(num_chase_stops),
+        "num_chase_stopped_leaves": int(num_chase_stopped_leaves),
+        "num_chase_noise_bisections": int(num_chase_noise_bisections),
         "p_points": p_points,
         "num_regions": num_used_regions,
         "regions": used_regions,
@@ -6179,6 +6378,19 @@ def adaptive_levin_sincos(
             subintervals the rules refuse. A refused subinterval is refined as any untrusted one is.
             The rules act in a call if the sum is positive; refused subintervals still untrusted at
             depth_max are counted in "num_untrusted_regions".
+          * "num_chase_stops", "num_chase_stopped_leaves", "num_chase_noise_bisections" -- the stop
+            below a refused subinterval (as of prompts/levin-phase-floor/
+            07c-chase-below-a-refused-leaf.md), over the whole run. Below a subinterval the rate
+            rules refuse, the trust check comes to run at the noise level, where its ratio r is
+            random, and refinement could chase it to depth_max. So each bisection there of a
+            subinterval at the noise level (delta1 and delta2 both within 4 times the noise
+            yardstick its check used) counts against the outermost refused subinterval above it,
+            and at 6 that root stops: its subintervals at the noise level, then and later, are
+            returned floor-limited (phase_limited), each declaring what it would declare untrusted
+            or trusted at depth_max, with its own value. "num_chase_stops" counts the roots
+            stopped, "num_chase_stopped_leaves" the subintervals stopped, and
+            "num_chase_noise_bisections" the bisections counted. The stop acts in a call if
+            "num_chase_stops" is positive; otherwise the call is exactly what it was before.
           * "num_regions" -- number of subintervals of the final partition (Levin + direct
             quadrature).
           * "num_simple_regions" -- of those, how many were handled by direct quadrature rather

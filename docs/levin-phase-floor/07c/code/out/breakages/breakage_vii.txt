@@ -1,0 +1,117 @@
+FF......F.FFFF..
+======================================================================
+FAIL: test_e_stopped_leaves_declare_as_at_depth_max (AdaptiveLevin.tests.test_levin_chase_stop.TestDeclarations.test_e_stopped_leaves_declare_as_at_depth_max) (span=(0.533203125, 0.5390625))
+(e) Three leaves of (b)'s call stopped at depth 8: [0.533203125, 0.5390625], untrusted with r = 1.30;
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 482, in test_e_stopped_leaves_declare_as_at_depth_max
+    _floor_limited_own(self, region)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 221, in _floor_limited_own
+    test.assertEqual(region.value_kind, "own")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'quarters' != 'own'
+- quarters
++ own
+
+
+======================================================================
+FAIL: test_e_stopped_leaves_declare_as_at_depth_max (AdaptiveLevin.tests.test_levin_chase_stop.TestDeclarations.test_e_stopped_leaves_declare_as_at_depth_max) (span=(0.521484375, 0.52734375))
+(e) Three leaves of (b)'s call stopped at depth 8: [0.533203125, 0.5390625], untrusted with r = 1.30;
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 482, in test_e_stopped_leaves_declare_as_at_depth_max
+    _floor_limited_own(self, region)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 221, in _floor_limited_own
+    test.assertEqual(region.value_kind, "own")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'quarters' != 'own'
+- quarters
++ own
+
+
+======================================================================
+FAIL: test_d_the_outer_root_counts_and_stops (AdaptiveLevin.tests.test_levin_chase_stop.TestOutermostRoot.test_d_the_outer_root_counts_and_stops) (span=(0.75, 1.125))
+(d) In (b)'s call the range rule refuses the span [0, 1.5] and, below it, [0.75, 1.5] (e^3 = 20 over its
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 448, in test_d_the_outer_root_counts_and_stops
+    _floor_limited_own(self, region)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 221, in _floor_limited_own
+    test.assertEqual(region.value_kind, "own")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'quarters' != 'own'
+- quarters
++ own
+
+
+======================================================================
+FAIL: test_c1_leaves_made_after_the_stop (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c1_leaves_made_after_the_stop) (span=(0.521484375, 0.52734375))
+(c) item 1. In (b)'s call the root stops at the 17th bisection, the sixth at the noise level below it. The two
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 354, in test_c1_leaves_made_after_the_stop
+    _floor_limited_own(self, region)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 221, in _floor_limited_own
+    test.assertEqual(region.value_kind, "own")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'quarters' != 'own'
+- quarters
++ own
+
+
+======================================================================
+FAIL: test_c1_leaves_made_after_the_stop (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c1_leaves_made_after_the_stop) (span=(0.57421875, 0.5859375))
+(c) item 1. In (b)'s call the root stops at the 17th bisection, the sixth at the noise level below it. The two
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 354, in test_c1_leaves_made_after_the_stop
+    _floor_limited_own(self, region)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 221, in _floor_limited_own
+    test.assertEqual(region.value_kind, "own")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'quarters' != 'own'
+- quarters
++ own
+
+
+======================================================================
+FAIL: test_c1_leaves_made_after_the_stop (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c1_leaves_made_after_the_stop) (span=(0.6796875, 0.69140625))
+(c) item 1. In (b)'s call the root stops at the 17th bisection, the sixth at the noise level below it. The two
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 354, in test_c1_leaves_made_after_the_stop
+    _floor_limited_own(self, region)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 221, in _floor_limited_own
+    test.assertEqual(region.value_kind, "own")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'quarters' != 'own'
+- quarters
++ own
+
+
+======================================================================
+FAIL: test_c1_leaves_made_after_the_stop (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c1_leaves_made_after_the_stop) (span=(0.697265625, 0.703125))
+(c) item 1. In (b)'s call the root stops at the 17th bisection, the sixth at the noise level below it. The two
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 354, in test_c1_leaves_made_after_the_stop
+    _floor_limited_own(self, region)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 221, in _floor_limited_own
+    test.assertEqual(region.value_kind, "own")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'quarters' != 'own'
+- quarters
++ own
+
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.504s
+
+FAILED (failures=7)

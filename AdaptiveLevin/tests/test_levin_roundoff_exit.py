@@ -566,6 +566,15 @@ class TestRoundoffExitPremise(unittest.TestCase):
         call ends with 16 leaves of width 1.25 at depth 4 (theta' ranging by e^1.25 = 3.5 over each),
         nine of them found floor-limited, where the premise holds; it is converged, honest and within its
         tolerance (abserr 9.66e-15, true error 5.0e-16), and no phase-limited region is the span.
+
+        Since prompts/levin-phase-floor/07c-chase-below-a-refused-leaf.md (section 3, "Existing
+        assertions"): below the refused leaves the trust check runs at the noise level, and the stop below
+        a refused leaf acts: one root stopped after twelve bisections at the noise level, seven leaves
+        stopped, among them [0, 2.5] at depth 3 in place of its two depth-4 leaves. The call ends with 15
+        leaves, 11 of them phase-limited (7 by the stop, 4 by the round-off exit), every one at depth 1 or
+        more; it is converged, honest and within its tolerance (abserr 1.18e-14, true error 4.5e-16). The
+        assertion on the count of phase-limited leaves moves from 9 to 11, and the stop's counts are
+        asserted.
         """
         f, theta = _test1_problem()
         ref, ref_err = _test1_reference()
@@ -607,7 +616,11 @@ class TestRoundoffExitPremise(unittest.TestCase):
         self.assertTrue(new["converged"])
         self.assertEqual(new["num_range_rule_refusals"], 9)
         self.assertEqual(new["num_edge_rule_refusals"], 0)
-        self.assertEqual(new["num_phase_limited_regions"], 9)
+        self.assertEqual(new["num_phase_limited_regions"], 11)
+        # 07c: the stop below a refused leaf (see the docstring)
+        self.assertEqual(new["num_chase_stops"], 1)
+        self.assertEqual(new["num_chase_stopped_leaves"], 7)
+        self.assertEqual(new["num_chase_noise_bisections"], 12)
         self.assertTrue(
             all(r.depth >= 1 for r in new["regions"] if r.phase_limited), new["regions"]
         )

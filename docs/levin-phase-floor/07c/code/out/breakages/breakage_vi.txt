@@ -1,0 +1,22 @@
+...........F
+======================================================================
+FAIL: test_c3_below_a_trust_test_refusal (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c3_below_a_trust_test_refusal)
+(c) item 3. theta = 200 e^x on [0, 1.5], f = (e^{-x}, cos x) with noise eta = 1e-12, atol 1e-9, rtol 1e-7:
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 414, in test_c3_below_a_trust_test_refusal
+    self.assertEqual(tuple(data[key] for key in CHASE_KEYS), (0, 0, 0))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1, 15, 6) != (0, 0, 0)
+
+First differing element 0:
+1
+0
+
+- (1, 15, 6)
++ (0, 0, 0)
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.467s
+
+FAILED (failures=1)

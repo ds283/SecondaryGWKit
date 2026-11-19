@@ -1,0 +1,198 @@
+FFFFFFF...FFFFFFFFFF.
+======================================================================
+FAIL: test_e_stopped_leaves_declare_as_at_depth_max (AdaptiveLevin.tests.test_levin_chase_stop.TestDeclarations.test_e_stopped_leaves_declare_as_at_depth_max) (span=(0.533203125, 0.5390625))
+(e) Three leaves of (b)'s call stopped at depth 8: [0.533203125, 0.5390625], untrusted with r = 1.30;
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 479, in test_e_stopped_leaves_declare_as_at_depth_max
+    region = _region(data, span)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (0.533203125, 0.5390625) in the result
+
+======================================================================
+FAIL: test_e_stopped_leaves_declare_as_at_depth_max (AdaptiveLevin.tests.test_levin_chase_stop.TestDeclarations.test_e_stopped_leaves_declare_as_at_depth_max) (span=(0.521484375, 0.52734375))
+(e) Three leaves of (b)'s call stopped at depth 8: [0.533203125, 0.5390625], untrusted with r = 1.30;
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 479, in test_e_stopped_leaves_declare_as_at_depth_max
+    region = _region(data, span)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (0.521484375, 0.52734375) in the result
+
+======================================================================
+FAIL: test_e_stopped_leaves_declare_as_at_depth_max (AdaptiveLevin.tests.test_levin_chase_stop.TestDeclarations.test_e_stopped_leaves_declare_as_at_depth_max) (span=(0.5390625, 0.544921875))
+(e) Three leaves of (b)'s call stopped at depth 8: [0.533203125, 0.5390625], untrusted with r = 1.30;
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 479, in test_e_stopped_leaves_declare_as_at_depth_max
+    region = _region(data, span)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (0.5390625, 0.544921875) in the result
+
+======================================================================
+FAIL: test_e_stopped_leaves_declare_as_at_depth_max (AdaptiveLevin.tests.test_levin_chase_stop.TestDeclarations.test_e_stopped_leaves_declare_as_at_depth_max)
+(e) Three leaves of (b)'s call stopped at depth 8: [0.533203125, 0.5390625], untrusted with r = 1.30;
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 499, in test_e_stopped_leaves_declare_as_at_depth_max
+    _region(data, E_UNTRUSTED_R_AT_LEAST_1).convergence_ratio, 1.0
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (0.533203125, 0.5390625) in the result
+
+======================================================================
+FAIL: test_a1_at_the_threshold (AdaptiveLevin.tests.test_levin_chase_stop.TestNoiseLevel.test_a1_at_the_threshold)
+delta1 = delta2 = C nu_B is at the noise level; C is 4 (section 1.2), and so is anything below it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 251, in test_a1_at_the_threshold
+    self.assertEqual(lq._LEVIN_CHASE_NOISE_FACTOR, 4.0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: inf != 4.0
+
+======================================================================
+FAIL: test_a2_just_above (AdaptiveLevin.tests.test_levin_chase_stop.TestNoiseLevel.test_a2_just_above)
+Either difference the next double above C nu_B is not at the noise level.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 261, in test_a2_just_above
+    self.assertFalse(_chase_at_noise_level(above, at, self.NU))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_a3_zero_yardstick (AdaptiveLevin.tests.test_levin_chase_stop.TestNoiseLevel.test_a3_zero_yardstick)
+nu_B = 0: both differences 0 is at the noise level; either positive is not.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 268, in test_a3_zero_yardstick
+    self.assertTrue(_chase_at_noise_level(0.0, 0.0, 0.0))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_d_the_outer_root_counts_and_stops (AdaptiveLevin.tests.test_levin_chase_stop.TestOutermostRoot.test_d_the_outer_root_counts_and_stops) (span=(0.75, 1.125))
+(d) In (b)'s call the range rule refuses the span [0, 1.5] and, below it, [0.75, 1.5] (e^3 = 20 over its
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 446, in test_d_the_outer_root_counts_and_stops
+    region = _region(data, span)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (0.75, 1.125) in the result
+
+======================================================================
+FAIL: test_d_the_outer_root_counts_and_stops (AdaptiveLevin.tests.test_levin_chase_stop.TestOutermostRoot.test_d_the_outer_root_counts_and_stops) (span=(1.125, 1.5))
+(d) In (b)'s call the range rule refuses the span [0, 1.5] and, below it, [0.75, 1.5] (e^3 = 20 over its
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 446, in test_d_the_outer_root_counts_and_stops
+    region = _region(data, span)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (1.125, 1.5) in the result
+
+======================================================================
+FAIL: test_b_chase_below_a_refused_leaf (AdaptiveLevin.tests.test_levin_chase_stop.TestTheChase.test_b_chase_below_a_refused_leaf)
+(b) theta = 20 e^{4x} on [0, 1.5], f = (e^{-x}, cos x) with noise eta = 1e-12, atol 1e-9, rtol 1e-7, the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 295, in test_b_chase_below_a_refused_leaf
+    self.assertHonest(data, B_REF, margin=NOISE_BOUND)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 237, in assertHonest
+    self.assertLessEqual(
+    ~~~~~~~~~~~~~~~~~~~~^
+        err, data["abserr"], f"error {err:.3e} > abserr {data['abserr']:.3e}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: 1.852280798740861e-12 not less than or equal to 1.5379571680021452e-13 : error 1.852e-12 > abserr 1.538e-13
+
+======================================================================
+FAIL: test_c1_leaves_made_after_the_stop (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c1_leaves_made_after_the_stop)
+(c) item 1. In (b)'s call the root stops at the 17th bisection, the sixth at the noise level below it. The two
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 347, in test_c1_leaves_made_after_the_stop
+    self.assertGreaterEqual(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        data["num_chase_stopped_leaves"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        len(B_MADE_AT_THE_STOP) + len(B_MADE_AFTER_THE_STOP),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: 7 not greater than or equal to 9
+
+======================================================================
+FAIL: test_c2_not_at_the_noise_level (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c2_not_at_the_noise_level) (span=(0.0, 0.1875))
+(c) item 2. Six Levin leaves of the stopped subtree are not at the noise level (delta1 / nu_B from 12.9 to
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 389, in test_c2_not_at_the_noise_level
+    self.assertFalse(region.phase_limited)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_c2_not_at_the_noise_level (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c2_not_at_the_noise_level) (span=(0.1875, 0.375))
+(c) item 2. Six Levin leaves of the stopped subtree are not at the noise level (delta1 / nu_B from 12.9 to
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 389, in test_c2_not_at_the_noise_level
+    self.assertFalse(region.phase_limited)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_c2_not_at_the_noise_level (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c2_not_at_the_noise_level) (span=(0.375, 0.46875))
+(c) item 2. Six Levin leaves of the stopped subtree are not at the noise level (delta1 / nu_B from 12.9 to
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 389, in test_c2_not_at_the_noise_level
+    self.assertFalse(region.phase_limited)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_c2_not_at_the_noise_level (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c2_not_at_the_noise_level) (span=(0.5859375, 0.609375))
+(c) item 2. Six Levin leaves of the stopped subtree are not at the noise level (delta1 / nu_B from 12.9 to
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 387, in test_c2_not_at_the_noise_level
+    region = _region(data, span)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (0.5859375, 0.609375) in the result
+
+======================================================================
+FAIL: test_c2_not_at_the_noise_level (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c2_not_at_the_noise_level) (span=(0.609375, 0.65625))
+(c) item 2. Six Levin leaves of the stopped subtree are not at the noise level (delta1 / nu_B from 12.9 to
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 387, in test_c2_not_at_the_noise_level
+    region = _region(data, span)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (0.609375, 0.65625) in the result
+
+======================================================================
+FAIL: test_c2_not_at_the_noise_level (AdaptiveLevin.tests.test_levin_chase_stop.TestTheStopsReach.test_c2_not_at_the_noise_level) (span=(0.703125, 0.75))
+(c) item 2. Six Levin leaves of the stopped subtree are not at the noise level (delta1 / nu_B from 12.9 to
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 387, in test_c2_not_at_the_noise_level
+    region = _region(data, span)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_chase_stop.py", line 190, in _region
+    raise AssertionError(f"no single region {span} in the result")
+AssertionError: no single region (0.703125, 0.75) in the result
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.484s
+
+FAILED (failures=17)
