@@ -1,0 +1,141 @@
+{
+ "tree_module": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f/AdaptiveLevin/levin_quadrature.py",
+ "tree_sha256": "8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1",
+ "variants": {
+  "instr": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_instr.py",
+   "sha256": "7c0a5b866555986c0b82e3732e14b620690327abd69c95b578a7dd8c1c776e8c",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/instr.diff",
+   "diff_sha256": "afb359982fa83cf293d24b40161b40247ecde3589566b093b4a33465dba9029c",
+   "diff_lines_added": 83,
+   "diff_lines_removed": 2,
+   "note": "the D1 instrument: records and changes nothing (make_instr_07c.py)"
+  },
+  "S": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_S.py",
+   "sha256": "09088683c6da28fc7e003b31a999d1120b902c221ce9f59b755673c5a7e5a6fb",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/S.diff",
+   "diff_sha256": "ef5a6e9eb0975937a6e8aaaf575c21974fca7332d1def89e619272c4b715fcba",
+   "diff_lines_added": 44,
+   "diff_lines_removed": 0,
+   "note": "(S) noise level: delta1 and delta2 each <= C nu_B (the leaf's own trust-check yardstick). Basis (out/d1/d1_descent.json, 24,109 bisections below refused leaves in the 198 chase calls, R2-28 and R31's record): of the 8,664 Clenshaw-Curtis ones, both <= nu_B 1,288 (15%), <= 2 nu_B 6,342 (73%), <= 4 nu"
+  },
+  "S2": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_S2.py",
+   "sha256": "b7819ee225ee56cd6a84aa8d845a6ea3da708c39fdd562daca5875ba52ca9642",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/S2.diff",
+   "diff_sha256": "d5d11569a64aabb16e1ec09bb80ff95af845a7b7aae1ac72a2349c3dc5c6d5af",
+   "diff_lines_added": 44,
+   "diff_lines_removed": 0,
+   "note": "(S) noise level: delta1 and delta2 each <= C nu_B (the leaf's own trust-check yardstick). Basis (out/d1/d1_descent.json, 24,109 bisections below refused leaves in the 198 chase calls, R2-28 and R31's record): of the 8,664 Clenshaw-Curtis ones, both <= nu_B 1,288 (15%), <= 2 nu_B 6,342 (73%), <= 4 nu"
+  },
+  "N": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_N.py",
+   "sha256": "fbbdcbed3b4f00e954ff2d8f3b32eae97f8ca1b9591b0fe299fd0635a21d5e0a",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/N.diff",
+   "diff_sha256": "907d520e82e383376193014b905b5b87785bc2a9380ca0f2092886a753332ecb",
+   "diff_lines_added": 17,
+   "diff_lines_removed": 1,
+   "note": "(N) basis: D1 found 1,288 Clenshaw-Curtis and 983 Levin leaves bisected below refused leaves with delta1 <= nu_B, delta2 <= nu_B and r >= 1 (out/d1/d1_descent.json); no constant is added: nu_B is the tree's."
+  },
+  "Eg": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_Eg.py",
+   "sha256": "7d32bc1ea304d8c8eda00aaf24c6ffbd696bcdd9aee3f2cd62968938ce782990",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/Eg.diff",
+   "diff_sha256": "0ff8b4c4e32f84b60207d39af9b14ee2eee81571beb6f4aaf3e103f3fcc089f4",
+   "diff_lines_added": 33,
+   "diff_lines_removed": 0,
+   "note": "(E) estimate tail_sum4: (b-a)/2 times the sum of the last four Chebyshev coefficients of the fine interpolant. It does NOT qualify as an estimate by section 2.3's rule: on D2's sample its ratio to CC_47's true error has minimum 0.20 on the gate leaves (0.199 window, 0.228-0.493 gate group, 0.401 gat"
+  },
+  "Ea": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_Ea.py",
+   "sha256": "fd715e3d838fb69da4c33cd9eacb2fe74a34aeeae9c33539b5569eeb6fcb2e6d",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/Ea.diff",
+   "diff_sha256": "207c71110b22740d18f10e259052563bbd1423c7e336812075c77a3d74d90abf",
+   "diff_lines_added": 33,
+   "diff_lines_removed": 0,
+   "note": "(E) estimate tail_sum4: (b-a)/2 times the sum of the last four Chebyshev coefficients of the fine interpolant. It does NOT qualify as an estimate by section 2.3's rule: on D2's sample its ratio to CC_47's true error has minimum 0.20 on the gate leaves (0.199 window, 0.228-0.493 gate group, 0.401 gat"
+  },
+  "SEg": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_SEg.py",
+   "sha256": "50672dd7a29fe12b7f5dbf94483567d430f1652f9f35ef6b2e1519d539ec7bef",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/SEg.diff",
+   "diff_sha256": "0b4345e25e92d7c4587c17a28b41093e0d338278d17abcff7b61bd4e85c51b98",
+   "diff_lines_added": 72,
+   "diff_lines_removed": 0,
+   "note": "(S) noise level: delta1 and delta2 each <= C nu_B (the leaf's own trust-check yardstick). Basis (out/d1/d1_descent.json, 24,109 bisections below refused leaves in the 198 chase calls, R2-28 and R31's record): of the 8,664 Clenshaw-Curtis ones, both <= nu_B 1,288 (15%), <= 2 nu_B 6,342 (73%), <= 4 nu"
+  },
+  "SEa": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_SEa.py",
+   "sha256": "33fedbdf11890a400102363defb7e219e3d4574d33d4b8b507adc3ec11554307",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/SEa.diff",
+   "diff_sha256": "40e379ddb85bc471487b339ed1ebfd071771b95f32b94ebb47f09aa107970538",
+   "diff_lines_added": 72,
+   "diff_lines_removed": 0,
+   "note": "(S) noise level: delta1 and delta2 each <= C nu_B (the leaf's own trust-check yardstick). Basis (out/d1/d1_descent.json, 24,109 bisections below refused leaves in the 198 chase calls, R2-28 and R31's record): of the 8,664 Clenshaw-Curtis ones, both <= nu_B 1,288 (15%), <= 2 nu_B 6,342 (73%), <= 4 nu"
+  },
+  "S_i": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_S_i.py",
+   "sha256": "95beff5c5cd99ef23b4c710b18d4964bd906f72e32df599d6a2b94275d396519",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/S_i.diff",
+   "diff_sha256": "8cce219e4c698795282697117e30096809dcdd7fcbd59e023102af79b4014757",
+   "diff_lines_added": 126,
+   "diff_lines_removed": 2,
+   "note": "instrumented copy of S (table 4's descent column)"
+  },
+  "S2_i": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_S2_i.py",
+   "sha256": "ee998ebd0f659e4c253fcccd26258e9f62aa810846c00c92da40ad1227ffbe55",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/S2_i.diff",
+   "diff_sha256": "6ac5b20a58739d8aa612b39b93e6e21a0cf2cd21257764c01d77296857d693d9",
+   "diff_lines_added": 126,
+   "diff_lines_removed": 2,
+   "note": "instrumented copy of S2 (table 4's descent column)"
+  },
+  "N_i": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_N_i.py",
+   "sha256": "ebd13eb59d70eeb975d8bb7dd80e37772dd1c7b76a33f2df05a726d9aa48252b",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/N_i.diff",
+   "diff_sha256": "d6d7473b5420c1c0f0cecfdcc1bd3f16188f4915c30e4a56580ea8e4a72ca414",
+   "diff_lines_added": 99,
+   "diff_lines_removed": 3,
+   "note": "instrumented copy of N (table 4's descent column)"
+  },
+  "Eg_i": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_Eg_i.py",
+   "sha256": "cce4c3800c4307e1305b45c2cffb2499ab1f49e2f79b51d7868db21a46755938",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/Eg_i.diff",
+   "diff_sha256": "0d5f80a12a1ce6d7c7a0839b3a292ec05154218b4c609f63603790125ef50740",
+   "diff_lines_added": 115,
+   "diff_lines_removed": 2,
+   "note": "instrumented copy of Eg (table 4's descent column)"
+  },
+  "Ea_i": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_Ea_i.py",
+   "sha256": "a5c0c4e98604bf0589379d8893e87c43d7bf91e925cab2471b1db4285714a033",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/Ea_i.diff",
+   "diff_sha256": "8685878f862c24dab469b983ce708c5d022c8416825e1d77acddaa82350f5348",
+   "diff_lines_added": 115,
+   "diff_lines_removed": 2,
+   "note": "instrumented copy of Ea (table 4's descent column)"
+  },
+  "SEg_i": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_SEg_i.py",
+   "sha256": "da84893a4f01610ffcb809b561a5c0a1e2848a7d568a0f05d64c4f1fe5a2e4f3",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/SEg_i.diff",
+   "diff_sha256": "74c5326ebc69b3703ad3085980d3600e728c5dc262080aa440fa2b94544f78f6",
+   "diff_lines_added": 154,
+   "diff_lines_removed": 2,
+   "note": "instrumented copy of SEg (table 4's descent column)"
+  },
+  "SEa_i": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_SEa_i.py",
+   "sha256": "8c023d1ea1bb22e1ff5419ba7ed2b74f4bba86a4511e455a9143ae46a2eccc1a",
+   "diff": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/SEa_i.diff",
+   "diff_sha256": "f5cc6fd694a34c740908a9357059b899e680ec18de81a74164e7b167d95b6098",
+   "diff_lines_added": 154,
+   "diff_lines_removed": 2,
+   "note": "instrumented copy of SEa (table 4's descent column)"
+  }
+ }
+}

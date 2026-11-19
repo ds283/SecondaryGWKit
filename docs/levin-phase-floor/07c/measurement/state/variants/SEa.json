@@ -1,0 +1,18 @@
+{
+ "name": "SEa",
+ "options": {
+  "s": [
+   6,
+   4.0
+  ],
+  "e": [
+   "all",
+   "tail_sum4"
+  ],
+  "n": false
+ },
+ "instrumented": false,
+ "basis": "(S) noise level: delta1 and delta2 each <= C nu_B (the leaf's own trust-check yardstick). Basis (out/d1/d1_descent.json, 24,109 bisections below refused leaves in the 198 chase calls, R2-28 and R31's record): of the 8,664 Clenshaw-Curtis ones, both <= nu_B 1,288 (15%), <= 2 nu_B 6,342 (73%), <= 4 nu_B 7,665 (88%), <= 10 nu_B 8,428 (97%); their delta1 / (phi_P + phi_L + phi_R) has median 0.68 and 90th percentile 1.01; their CC_47 true errors are noise-dominated in 22,700 of 22,876 measured chase CC leaves (out/d2/d2_regimes.json). Of the 15,445 Levin ones, delta1/nu_B has median 47 (both <= 4 nu_B: 2,460), so a Levin leaf is rarely at the noise level and is then refined, not stopped (07b's (i)). LIMIT 6: dqage's iroff1 limit, as 07a's window stop counts at the same noise level; not measured here. Reach: set on group calls (all the chase's); analytic calls have no chase in section 2.1's sample. C=4. (E) estimate tail_sum4: (b-a)/2 times the sum of the last four Chebyshev coefficients of the fine interpolant. It does NOT qualify as an estimate by section 2.3's rule: on D2's sample its ratio to CC_47's true error has minimum 0.20 on the gate leaves (0.199 window, 0.228-0.493 gate group, 0.401 gate analytic) and 0.081 over the 22,876 measured chase leaves (out/d2/d2_table.md, out/d2/d2_regimes.json); it is the candidate closest to a bound (pair 0.020, nest3 0.004, tail_max4x2 0.118). Run, flagged, so that the tables show what a sharper estimate does; no constant is set: the estimate is used as it is. Scope: all.",
+ "sha256": "33fedbdf11890a400102363defb7e219e3d4574d33d4b8b507adc3ec11554307",
+ "generator_sha256": "31bb4a3b1a0b005495174c80be99ffe276997b55daea6af43628b8ad8d757fe9"
+}

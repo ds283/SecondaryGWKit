@@ -1,0 +1,15 @@
+{
+ "name": "S2_i",
+ "options": {
+  "s": [
+   6,
+   2.0
+  ],
+  "e": null,
+  "n": false
+ },
+ "instrumented": true,
+ "basis": "instrumented copy of S2 (table 4's descent column)",
+ "sha256": "ee998ebd0f659e4c253fcccd26258e9f62aa810846c00c92da40ad1227ffbe55",
+ "generator_sha256": "31bb4a3b1a0b005495174c80be99ffe276997b55daea6af43628b8ad8d757fe9"
+}

@@ -1,0 +1,15 @@
+{
+ "name": "Eg_i",
+ "options": {
+  "s": null,
+  "e": [
+   "gate",
+   "tail_sum4"
+  ],
+  "n": false
+ },
+ "instrumented": true,
+ "basis": "instrumented copy of Eg (table 4's descent column)",
+ "sha256": "cce4c3800c4307e1305b45c2cffb2499ab1f49e2f79b51d7868db21a46755938",
+ "generator_sha256": "31bb4a3b1a0b005495174c80be99ffe276997b55daea6af43628b8ad8d757fe9"
+}

@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/register_variant_07c.py S \(S\)\ noise\ level:\ delta1\ and\ delta2\ each\ \<=\ C\ nu_B\ \(the\ leaf\'s\ own\ trust-check\ yardstick\).\ Basis\ \(out/d1/d1_descent.json\,\ 24\,109\ bisections\ below\ refused\ leaves\ in\ the\ 198\ chase\ calls\,\ R2-28\ and\ R31\'s\ record\):\ of\ the\ 8\,664\ Clenshaw-Curtis\ ones\,\ both\ \<=\ nu_B\ 1\,288\ \(15%\)\,\ \<=\ 2\ nu_B\ 6\,342\ \(73%\)\,\ \<=\ 4\ nu
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:30:37Z
+# ----
+S: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_S.py sha256 09088683c6da28fc7e003b31a999d1120b902c221ce9f59b755673c5a7e5a6fb; diff /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/S.diff (+44 -0)
+# ----
+# end 2026-11-18T11:30:37Z
+# exit 0

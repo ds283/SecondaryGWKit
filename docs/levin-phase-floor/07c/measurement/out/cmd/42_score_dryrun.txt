@@ -1,0 +1,49 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/score_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/tables_test/scores_dryrun.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/tables_test/scores_dryrun.md tree S S2 N Eg Ea SEg SEa
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T14:51:33Z
+# ----
+## Table 3: honesty on every referenced call (07's rule; scored if the reference's spread <= min(abserr)/100)
+
+| variant | referenced | not scored | converged & honest | converged & dishonest | unconverged (ratio) |
+|---|---|---|---|---|---|
+| tree | 184 | 6 | 173 | 0 | 5 (a:R2-28 1.11, a:R2-28~o 1.11, a:v04 0.000156, c-1e-7-0-13757-5 1.11, c-1e-8-0-13757-5 1.11) |
+| S | 184 | 6 | 173 | 4 (a:R2-28, a:R2-28~o, c-1e-7-0-13757-5, c-1e-8-0-13757-5) | 1 (a:v04 0.000156) |
+| S2 | 184 | 6 | 173 | 4 (a:R2-28, a:R2-28~o, c-1e-7-0-13757-5, c-1e-8-0-13757-5) | 1 (a:v04 0.000156) |
+| N | 184 | 6 | 174 | 0 | 4 (a:R2-28 1.11, a:R2-28~o 1.11, c-1e-7-0-13757-5 1.11, c-1e-8-0-13757-5 1.11) |
+| Eg | 184 | 6 | 168 | 0 | 10 (a:R1-x029-7 0.004, a:R1-x029-8 0.0146, a:R1-x098-7 0.000498, a:R1-x098-8 0.000502, a:R2-28 1.1, a:R2-28~o 1.1, a:v04 0.000148, a:v05 0.00114, c-1e-7-0-13757-5 1.1, c-1e-8-0-13757-5 1.1) |
+| Ea | 184 | 6 | 168 | 0 | 10 (a:R1-x029-7 0.004, a:R1-x029-8 0.0146, a:R1-x098-7 0.000498, a:R1-x098-8 0.000502, a:R2-28 1.1, a:R2-28~o 1.1, a:v04 0.000148, a:v05 0.00114, c-1e-7-0-13757-5 1.1, c-1e-8-0-13757-5 1.1) |
+| SEg | 184 | 6 | 168 | 4 (a:R2-28, a:R2-28~o, c-1e-7-0-13757-5, c-1e-8-0-13757-5) | 6 (a:R1-x029-7 0.004, a:R1-x029-8 0.0146, a:R1-x098-7 0.000498, a:R1-x098-8 0.000502, a:v04 0.000148, a:v05 0.00114) |
+| SEa | 184 | 6 | 168 | 4 (a:R2-28, a:R2-28~o, c-1e-7-0-13757-5, c-1e-8-0-13757-5) | 6 (a:R1-x029-7 0.004, a:R1-x029-8 0.0146, a:R1-x098-7 0.000499, a:R1-x098-8 0.000503, a:v04 0.000148, a:v05 0.00114) |
+
+## Table 4: the chase (198 calls and item 2's three)
+
+| variant | calls | unconverged | of which every depth-20 leaf below a refused leaf | regions | wall s |
+|---|---|---|---|---|---|
+| tree | 201 | 201 | 195 | 27939 | 604 |
+| S | 201 | 5 | 0 | 17488 | 357 |
+| S2 | 201 | 6 | 0 | 19295 | 399 |
+| N | 201 | 21 | 19 | 23625 | 505 |
+| Eg | 201 | 186 | 182 | 40518 | 970 |
+| Ea | 201 | 186 | 182 | 40546 | 967 |
+| SEg | 201 | 4 | 0 | 24737 | 592 |
+| SEa | 201 | 4 | 0 | 24765 | 592 |
+
+## Table 5: cost and reach on every call of section 2.1
+
+| variant | calls | regions | regions / tree | wall s | wall / tree | calls touched |
+|---|---|---|---|---|---|---|
+| tree | 454 | 50407 | 1.000 | 1055 | 1.000 | 0 |
+| S | 454 | 37539 | 0.745 | 766 | 0.726 | 326 |
+| S2 | 454 | 40142 | 0.796 | 815 | 0.773 | 309 |
+| N | 454 | 44546 | 0.884 | 927 | 0.879 | 429 |
+| Eg | 454 | 66161 | 1.313 | 1513 | 1.435 | 385 |
+| Ea | 454 | 66123 | 1.312 | 1511 | 1.432 | 396 |
+| SEg | 454 | 46670 | 0.926 | 1058 | 1.003 | 395 |
+| SEa | 454 | 46632 | 0.925 | 1093 | 1.036 | 401 |
+
+## Qualification
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/tables_test/scores_dryrun.json 5254f4cc39de0cd2f4206a6884097c3860dde1e448004313e3a626de0aaa0f6a /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/tables_test/scores_dryrun.md 817f186afc55c958ca0cf129a3ca49415903a9f64da6bc2744160160f488a85b
+# ----
+# end 2026-11-18T14:51:35Z
+# exit 0

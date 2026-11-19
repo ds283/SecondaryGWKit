@@ -1,0 +1,15 @@
+{
+ "name": "S",
+ "options": {
+  "s": [
+   6,
+   4.0
+  ],
+  "e": null,
+  "n": false
+ },
+ "instrumented": false,
+ "basis": "(S) noise level: delta1 and delta2 each <= C nu_B (the leaf's own trust-check yardstick). Basis (out/d1/d1_descent.json, 24,109 bisections below refused leaves in the 198 chase calls, R2-28 and R31's record): of the 8,664 Clenshaw-Curtis ones, both <= nu_B 1,288 (15%), <= 2 nu_B 6,342 (73%), <= 4 nu_B 7,665 (88%), <= 10 nu_B 8,428 (97%); their delta1 / (phi_P + phi_L + phi_R) has median 0.68 and 90th percentile 1.01; their CC_47 true errors are noise-dominated in 22,700 of 22,876 measured chase CC leaves (out/d2/d2_regimes.json). Of the 15,445 Levin ones, delta1/nu_B has median 47 (both <= 4 nu_B: 2,460), so a Levin leaf is rarely at the noise level and is then refined, not stopped (07b's (i)). LIMIT 6: dqage's iroff1 limit, as 07a's window stop counts at the same noise level; not measured here. Reach: set on group calls (all the chase's); analytic calls have no chase in section 2.1's sample. C=4.",
+ "sha256": "09088683c6da28fc7e003b31a999d1120b902c221ce9f59b755673c5a7e5a6fb",
+ "generator_sha256": "31bb4a3b1a0b005495174c80be99ffe276997b55daea6af43628b8ad8d757fe9"
+}

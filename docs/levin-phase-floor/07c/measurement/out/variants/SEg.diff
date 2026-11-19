@@ -1,0 +1,177 @@
+--- tree/AdaptiveLevin/levin_quadrature.py
++++ scripts/variants/levin_quadrature_07c_SEg.py
+@@ -623,6 +623,11 @@
+ #     calls, 74 % of the census's Levin calls at rtol 1e-7, beyond those 21 and five targeted ones.
+ _LEVIN_EDGE_RATE_RATIO_MAX = 2.0
+ _LEVIN_LEAF_RATE_RANGE_MAX = 10.0
++_VARIANT_07C = 'SEg'  # 07c variant: its name
++_MEASURE_07C = None  # 07c variant: unused (replay_07c.py's instrument hook)
++_S07C = (6, 4.0)  # 07c variant (S): (LIMIT, NOISE_FACTOR) or None
++_E07C = ('gate', 'tail_sum4')  # 07c variant (E): (SCOPE, ESTIMATE) or None
++_N07C = False  # 07c variant (N)
+ 
+ # The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
+ # 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
+@@ -3269,6 +3274,27 @@
+     }
+ 
+ 
++def _e07c_estimate(x_span, f, BasisData, chebyshev_order, value_fine, integrand_fine, vectorize_cache):
++    """07c variant (E): the sharper estimate of CC_{2N-1}'s error (see make_variants_07c.py)."""
++    kind = _E07C[1]
++    if kind == "nest3":
++        order3 = 4 * chebyshev_order - 3
++        grid3, _ = chebyshev_matrices(x_span, order3)
++        f3 = np.vstack([_sample_vectorized(func, grid3, vectorize_cache, ("f", id(func))) for func in f])
++        basis3 = np.array([BasisData.eval_basis_and_arguments(x)[0] for x in grid3]).T
++        value3 = float(np.dot(_cc_weights(x_span, order3), np.sum(f3 * basis3, axis=0)))
++        return float(np.fabs(value3 - value_fine))
++    if kind == "tail_sum4":
++        n = integrand_fine.shape[0]
++        j = np.arange(n)
++        wts = np.ones(n)
++        wts[0] = wts[-1] = 0.5
++        ck = np.array([(2.0 / (n - 1)) * np.sum(wts * integrand_fine * np.cos(np.pi * j * k / (n - 1))) for k in range(n - 4, n)])
++        ck[-1] *= 0.5
++        return float(0.5 * np.fabs(x_span[1] - x_span[0]) * np.sum(np.abs(ck)))
++    raise RuntimeError("07c variant (E): unknown estimate")
++
++
+ def _adaptive_levin_subregion_cc(
+     x_span: Tuple[float, float],
+     f,
+@@ -3279,6 +3305,7 @@
+     notify_label: Optional[str],
+     id_label,
+     vectorize_cache: Optional[dict] = None,
++    forced: bool = False,  # 07c variant (E): called from _oriented_cc()
+ ):
+     """
+     Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
+@@ -3370,6 +3397,9 @@
+     value_coarse = float(np.dot(w_coarse, integrand_fine[::2]))
+ 
+     abserr_direct = float(np.fabs(value_fine - value_coarse))
++    abserr_pair_07c = abserr_direct  # 07c variant (E)
++    if _E07C is not None and (_E07C[0] == "all" or not forced):  # 07c variant (E)
++        abserr_direct = _e07c_estimate(x_span, f, BasisData, chebyshev_order, value_fine, integrand_fine, vectorize_cache)
+ 
+     # Round-off floor of this rule, derived from what it computes (_cc_roundoff_floor();
+     # prompts/levin-phase-floor/06d-cc-roundoff-floor.md), from the fine-grid samples already in
+@@ -3465,6 +3495,7 @@
+     return {
+         "value": value_fine,
+         "abserr_direct": abserr_direct,
++        "abserr_pair_07c": abserr_pair_07c,  # 07c variant (E)
+         "resasc": resasc,
+         "p_sample": None,
+         "p_ratios": None,
+@@ -3637,6 +3668,7 @@
+             notify_label,
+             id_label,
+             vectorize_cache=vectorize_cache,
++            forced=True,  # 07c variant (E)
+         )
+ 
+     ascending = (b, a)
+@@ -3659,6 +3691,7 @@
+         notify_label,
+         id_label,
+         vectorize_cache=vectorize_cache,
++        forced=True,  # 07c variant (E)
+     )
+     data["value"] = -data["value"]
+     if data.get("node_error_signed") is not None:
+@@ -4924,6 +4957,7 @@
+         trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
+             ratio < 1.0 and delta1 <= noise_yardstick
+         )
++        refused_07c = False  # 07c variant (S)
+         # The rate rules (prompt 07b section 1.1): on a Levin leaf the test above trusts, the edge rule
+         # if it touches a window, else the range rule. A refused leaf is untrusted exactly as one the
+         # test above refuses; ratio, delta1, delta2 and the declaration's form are unchanged.
+@@ -4936,11 +4970,15 @@
+                 tuple(end for end in (lo_leaf, hi_leaf) if end in window_edges),
+             )
+             if refused:
++                refused_07c = True  # 07c variant (S)
+                 trusted = False
+                 if rule == "edge":
+                     num_edge_rule_refusals += 1
+                 else:
+                     num_range_rule_refusals += 1
++        _s07c_nu[leaf.seq] = (delta1, delta2, noise_yardstick)  # 07c variant (S)
++        if refused_07c:  # 07c variant (S): a refused leaf roots a subtree, unless one above it does
++            _s07c_root.setdefault(leaf.seq, leaf.seq)
+         _remove_error(leaf)
+         region._delta1 = delta1
+         region._delta2 = delta2
+@@ -4965,6 +5003,8 @@
+         leaf.checked = True
+         num_checks += 1
+         _push_candidate(leaf)
++        if _s07c_root.get(leaf.seq) in _s07c_stopped and _s07c_noise(leaf.seq):  # 07c variant (S): made after the stop
++            _s07c_stop_leaf(leaf)
+ 
+     def _exempt_floor_limited(leaf: _levin_leaf) -> None:
+         # A floor-limited leaf is exempt from the trust check: its differences are round-off
+@@ -4985,6 +5025,23 @@
+     # with what was true of their leaves when they stopped (reported in "stationary_windows").
+     window_counts = {}
+     windows_stopped = {}
++    _s07c_root = {}  # 07c variant (S): leaf seq -> the outermost refused leaf above it (or itself)
++    _s07c_nu = {}  # 07c variant (S): leaf seq -> (delta1, delta2, nu_B) of its trust check
++    _s07c_count = {}  # 07c variant (S): root -> bisections counted
++    _s07c_stopped = set()  # 07c variant (S): roots stopped
++    _s07c_n = {"stops": 0, "stopped_leaves": 0, "counted": 0}  # 07c variant (S)
++
++    def _s07c_noise(seq):  # 07c variant (S): at the noise level, from the leaf's own trust check
++        if seq not in _s07c_nu:
++            return False
++        d1_, d2_, nu_ = _s07c_nu[seq]
++        return bool(d1_ <= _S07C[1] * nu_ and d2_ <= _S07C[1] * nu_)
++
++    def _s07c_stop_leaf(leaf):  # 07c variant (S): floor-limited as a stopped window's leaf
++        if leaf.region._phase_limited:
++            return
++        _floor_limit_stopped_window_leaf(leaf)
++        _s07c_n["stopped_leaves"] += 1
+ 
+     def _floor_limit_stopped_window_leaf(leaf: _levin_leaf) -> None:
+         """
+@@ -5348,6 +5405,10 @@
+                 ):
+                     stop_window = leaf.window_index
+ 
++        _s07c_r = _s07c_root.get(leaf.seq)  # 07c variant (S)
++        if _s07c_r is not None:
++            _s07c_root[left.seq] = _s07c_r
++            _s07c_root[right.seq] = _s07c_r
+         _remove_leaf(leaf)
+         leaf.dataL = None
+         leaf.dataR = None
+@@ -5356,6 +5417,14 @@
+         _add_leaf(right)
+         if stop_window is not None:
+             _stop_window(stop_window)
++        if _s07c_r is not None and _s07c_noise(leaf.seq):  # 07c variant (S): a noise-level bisection below a refused leaf
++            _s07c_n["counted"] += 1
++            _s07c_count[_s07c_r] = _s07c_count.get(_s07c_r, 0) + 1
++            if _s07c_count[_s07c_r] >= _S07C[0] and _s07c_r not in _s07c_stopped:
++                _s07c_stopped.add(_s07c_r)
++                _s07c_n["stops"] += 1
++                for _m in [m for m in leaves.values() if _s07c_root.get(m.seq) == _s07c_r and _s07c_noise(m.seq)]:
++                    _s07c_stop_leaf(_m)
+ 
+     leaves_ascending = _leaves_ascending()
+     used_regions = [leaf.region for leaf in leaves_ascending]
+@@ -5626,6 +5695,9 @@
+         # sum is positive.
+         "num_edge_rule_refusals": int(num_edge_rule_refusals),
+         "num_range_rule_refusals": int(num_range_rule_refusals),
++        "num_s07c_stops": int(_s07c_n["stops"]),  # 07c variant (S)
++        "num_s07c_stopped_leaves": int(_s07c_n["stopped_leaves"]),  # 07c variant (S)
++        "num_s07c_counted": int(_s07c_n["counted"]),  # 07c variant (S)
+         "p_points": p_points,
+         "num_regions": num_used_regions,
+         "regions": used_regions,

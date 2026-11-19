@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-18T11:01:23+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 81087,
+  "stage": "capture-r5 finished: all exit 0",
+  "state": "done",
+  "units_done": 1,
+  "units_total": 1
+}

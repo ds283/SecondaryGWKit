@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/make_calls_07c.py base
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:02:06Z
+# ----
+Counter({'chase': 198, 'parta:R1': 60, 'parta:R2': 30, 'parta:R2~o': 30, 'parta:v4': 25, 'chase~o': 8, 'parta:R3-aux': 6, 'parta:R3-aux~o': 6, 'parta:nowindow': 5, 'parta:pairs': 4, 'parta:W2': 4, 'parta:W2~o': 4, 'parta:R3-own': 3, 'parta:R3-own~o': 3, 'parta:R3-W7': 3, 'parta:R3-W7~o': 3, 'parta:item3': 1, 'r31': 1})
+394 calls; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/calls_07c.json sha256 fcdbeffcab81dd5dbadb6693c7d6c84c38458aee2250144d9df5c1f875d49a16
+# ----
+# end 2026-11-18T11:02:06Z
+# exit 0

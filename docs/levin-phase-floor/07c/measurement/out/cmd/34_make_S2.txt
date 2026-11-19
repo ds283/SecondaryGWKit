@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/make_variants_07c.py S2 --s 6 2 --basis \(S\)\ noise\ level:\ delta1\ and\ delta2\ each\ \<=\ C\ nu_B\ \(the\ leaf\'s\ own\ trust-check\ yardstick\).\ Basis\ \(out/d1/d1_descent.json\,\ 24\,109\ bisections\ below\ refused\ leaves\ in\ the\ 198\ chase\ calls\,\ R2-28\ and\ R31\'s\ record\):\ of\ the\ 8\,664\ Clenshaw-Curtis\ ones\,\ both\ \<=\ nu_B\ 1\,288\ \(15%\)\,\ \<=\ 2\ nu_B\ 6\,342\ \(73%\)\,\ \<=\ 4\ nu_B\ 7\,665\ \(88%\)\,\ \<=\ 10\ nu_B\ 8\,428\ \(97%\)\;\ their\ delta1\ /\ \(phi_P\ +\ phi_L\ +\ phi_R\)\ has\ median\ 0.68\ and\ 90th\ percentile\ 1.01\;\ their\ CC_47\ true\ errors\ are\ noise-dominated\ in\ 22\,700\ of\ 22\,876\ measured\ chase\ CC\ leaves\ \(out/d2/d2_regimes.json\).\ Of\ the\ 15\,445\ Levin\ ones\,\ delta1/nu_B\ has\ median\ 47\ \(both\ \<=\ 4\ nu_B:\ 2\,460\)\,\ so\ a\ Levin\ leaf\ is\ rarely\ at\ the\ noise\ level\ and\ is\ then\ refined\,\ not\ stopped\ \(07b\'s\ \(i\)\).\ LIMIT\ 6:\ dqage\'s\ iroff1\ limit\,\ as\ 07a\'s\ window\ stop\ counts\ at\ the\ same\ noise\ level\;\ not\ measured\ here.\ Reach:\ set\ on\ group\ calls\ \(all\ the\ chase\'s\)\;\ analytic\ calls\ have\ no\ chase\ in\ section\ 2.1\'s\ sample.\ C=2\,\ for\ the\ sensitivity\ of\ C.
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:30:25Z
+# ----
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_S2.py sha256 b7819ee225ee56cd6a84aa8d845a6ea3da708c39fdd562daca5875ba52ca9642
+# ----
+# end 2026-11-18T11:30:25Z
+# exit 0

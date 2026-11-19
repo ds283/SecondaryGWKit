@@ -1,0 +1,1 @@
+r31-3-20363-1 N_i: DIFFERS: value: replay 0x1.263e9f583e64ep-79 census 0x1.263e9f583fb9ap-79; abserr: replay 0x1.513eb9d444f14p-104 census 0x1.51512994921e7p-104; num_regions: replay 135 census 143; value 0x1.263e9f583e64ep-79 abserr 0x1.513eb9d444f14p-104 conv False regions 135 depth 20 windows 0 stopped 0 2.74 s

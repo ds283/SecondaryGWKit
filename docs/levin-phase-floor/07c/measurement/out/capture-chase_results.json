@@ -1,0 +1,12 @@
+{
+ "label": "capture-chase",
+ "results": [
+  {
+   "name": "x1_capture_chase",
+   "exit": 0,
+   "wall_s": 1934.460727930069
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-18T10:51:00Z"
+}

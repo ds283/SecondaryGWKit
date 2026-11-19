@@ -1,0 +1,64 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/d2_table_07c.py d2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/leafcc_d2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/d2/d2_table.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/d2/d2_table.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:28:51Z
+# ----
+| stratum | n | resolved | V/6pi | candidate | ratio min | median | max | below 1 | est <= floor | true > max(est, floor) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| chase|group | 25 | 14 | 0.00314-0.875 | pair | 0.0245 | 0.71 | 2.96 | 8 | 19 | 5 |
+| chase|group | 25 | 14 | 0.00314-0.875 | nest3 | 0.166 | 0.509 | 3.27 | 12 | 20 | 6 |
+| chase|group | 25 | 14 | 0.00314-0.875 | tail_sum4 | 0.343 | 2.04 | 20.9 | 4 | 15 | 2 |
+| chase|group | 25 | 14 | 0.00314-0.875 | tail_max4x2 | 0.327 | 1.66 | 22.3 | 3 | 15 | 1 |
+| chase|group | 25 | 14 | 0.00314-0.875 | dqk21 | 2.05e-05 | 0.00242 | 0.0109 | 14 | 25 | 6 |
+| chase|group | 25 | 14 | 0.00314-0.875 | pair_sq | 2.15e-15 | 6.44e-13 | 5.74e-12 | 14 | 25 | 6 |
+| gate_q1|analytic | 6 | 4 | 0.125-0.22 | pair | 0.0588 | 0.0769 | 0.111 | 4 | 6 | 0 |
+| gate_q1|analytic | 6 | 4 | 0.125-0.22 | nest3 | 0.111 | 0.154 | 0.176 | 4 | 6 | 0 |
+| gate_q1|analytic | 6 | 4 | 0.125-0.22 | tail_sum4 | 0.401 | 0.905 | 1.08 | 2 | 6 | 0 |
+| gate_q1|analytic | 6 | 4 | 0.125-0.22 | tail_max4x2 | 0.399 | 0.919 | 0.922 | 4 | 6 | 0 |
+| gate_q1|analytic | 6 | 4 | 0.125-0.22 | dqk21 | 2.53e-06 | 2.99e-06 | 8.32e-06 | 4 | 6 | 0 |
+| gate_q1|analytic | 6 | 4 | 0.125-0.22 | pair_sq | 1.04e-17 | 1.79e-17 | 7.79e-17 | 4 | 6 | 0 |
+| gate_q1|group | 25 | 11 | 0.0331-0.238 | pair | 0.141 | 0.723 | 24.7 | 8 | 21 | 3 |
+| gate_q1|group | 25 | 11 | 0.0331-0.238 | nest3 | 0.0957 | 0.743 | 1.47 | 6 | 18 | 3 |
+| gate_q1|group | 25 | 11 | 0.0331-0.238 | tail_sum4 | 0.264 | 1.45 | 45.9 | 3 | 12 | 2 |
+| gate_q1|group | 25 | 11 | 0.0331-0.238 | tail_max4x2 | 0.374 | 1.82 | 37.9 | 3 | 12 | 2 |
+| gate_q1|group | 25 | 11 | 0.0331-0.238 | dqk21 | 9.89e-05 | 0.000892 | 3.36 | 10 | 24 | 5 |
+| gate_q1|group | 25 | 11 | 0.0331-0.238 | pair_sq | 7.37e-15 | 2.33e-13 | 5.71e-08 | 11 | 25 | 6 |
+| gate_q2|analytic | 5 | 2 | 0.259-0.306 | pair | 3.77 | 3.77 | 3.77 | 0 | 5 | 0 |
+| gate_q2|analytic | 5 | 2 | 0.259-0.306 | nest3 | 0.231 | 0.231 | 0.231 | 2 | 5 | 0 |
+| gate_q2|analytic | 5 | 2 | 0.259-0.306 | tail_sum4 | 1.55 | 1.55 | 1.55 | 0 | 5 | 0 |
+| gate_q2|analytic | 5 | 2 | 0.259-0.306 | tail_max4x2 | 1.49 | 1.49 | 1.49 | 0 | 5 | 0 |
+| gate_q2|analytic | 5 | 2 | 0.259-0.306 | dqk21 | 0.000711 | 0.000711 | 0.000711 | 2 | 5 | 0 |
+| gate_q2|analytic | 5 | 2 | 0.259-0.306 | pair_sq | 1.67e-14 | 1.67e-14 | 1.67e-14 | 2 | 5 | 0 |
+| gate_q2|group | 25 | 16 | 0.268-0.485 | pair | 0.0382 | 0.654 | 9.24 | 12 | 16 | 11 |
+| gate_q2|group | 25 | 16 | 0.268-0.485 | nest3 | 0.0625 | 0.597 | 1.15 | 13 | 19 | 13 |
+| gate_q2|group | 25 | 16 | 0.268-0.485 | tail_sum4 | 0.228 | 1.84 | 138 | 5 | 8 | 4 |
+| gate_q2|group | 25 | 16 | 0.268-0.485 | tail_max4x2 | 0.166 | 1.43 | 147 | 6 | 9 | 5 |
+| gate_q2|group | 25 | 16 | 0.268-0.485 | dqk21 | 1.47e-05 | 0.000788 | 0.152 | 16 | 22 | 16 |
+| gate_q2|group | 25 | 16 | 0.268-0.485 | pair_sq | 7.12e-16 | 1.05e-13 | 3.13e-10 | 16 | 25 | 16 |
+| gate_q3|analytic | 2 | 0 | 0.529-0.529 | pair | - | - | - | - | 0 | 0 |
+| gate_q3|analytic | 2 | 0 | 0.529-0.529 | nest3 | - | - | - | - | 2 | 0 |
+| gate_q3|analytic | 2 | 0 | 0.529-0.529 | tail_sum4 | - | - | - | - | 2 | 0 |
+| gate_q3|analytic | 2 | 0 | 0.529-0.529 | tail_max4x2 | - | - | - | - | 2 | 0 |
+| gate_q3|analytic | 2 | 0 | 0.529-0.529 | dqk21 | - | - | - | - | 0 | 0 |
+| gate_q3|analytic | 2 | 0 | 0.529-0.529 | pair_sq | - | - | - | - | 2 | 0 |
+| gate_q3|group | 25 | 15 | 0.511-0.742 | pair | 0.0199 | 0.601 | 19.2 | 11 | 22 | 7 |
+| gate_q3|group | 25 | 15 | 0.511-0.742 | nest3 | 0.0632 | 0.514 | 1.25 | 14 | 20 | 7 |
+| gate_q3|group | 25 | 15 | 0.511-0.742 | tail_sum4 | 0.493 | 1.17 | 20.4 | 5 | 8 | 4 |
+| gate_q3|group | 25 | 15 | 0.511-0.742 | tail_max4x2 | 0.382 | 1.18 | 27.5 | 7 | 11 | 4 |
+| gate_q3|group | 25 | 15 | 0.511-0.742 | dqk21 | 7.17e-06 | 0.00152 | 0.151 | 15 | 24 | 8 |
+| gate_q3|group | 25 | 15 | 0.511-0.742 | pair_sq | 3.23e-16 | 3.2e-13 | 1.48e-10 | 15 | 25 | 8 |
+| gate_q4|group | 25 | 14 | 0.755-0.996 | pair | 0.206 | 3.17 | 78.1 | 5 | 17 | 5 |
+| gate_q4|group | 25 | 14 | 0.755-0.996 | nest3 | 0.044 | 0.843 | 1.71 | 10 | 19 | 5 |
+| gate_q4|group | 25 | 14 | 0.755-0.996 | tail_sum4 | 0.221 | 1.18 | 128 | 6 | 10 | 4 |
+| gate_q4|group | 25 | 14 | 0.755-0.996 | tail_max4x2 | 0.22 | 1.22 | 111 | 6 | 12 | 4 |
+| gate_q4|group | 25 | 14 | 0.755-0.996 | dqk21 | 0.000144 | 0.0123 | 5.41 | 13 | 23 | 8 |
+| gate_q4|group | 25 | 14 | 0.755-0.996 | pair_sq | 1.04e-14 | 4.67e-12 | 4.69e-08 | 14 | 25 | 9 |
+| window|group | 25 | 19 | 1.8e-05-0.25 | pair | 0.0351 | 0.312 | 3.89 | 16 | 1 | 18 |
+| window|group | 25 | 19 | 1.8e-05-0.25 | nest3 | 0.00408 | 0.752 | 2.46 | 13 | 0 | 16 |
+| window|group | 25 | 19 | 1.8e-05-0.25 | tail_sum4 | 0.199 | 1.16 | 4.88 | 7 | 0 | 7 |
+| window|group | 25 | 19 | 1.8e-05-0.25 | tail_max4x2 | 0.118 | 1.33 | 3.71 | 8 | 0 | 8 |
+| window|group | 25 | 19 | 1.8e-05-0.25 | dqk21 | 0.000342 | 0.0374 | 0.965 | 19 | 5 | 23 |
+| window|group | 25 | 19 | 1.8e-05-0.25 | pair_sq | 4.05e-13 | 4.89e-10 | 1.83e-07 | 19 | 25 | 25 |
+# ----
+# end 2026-11-18T11:28:51Z
+# exit 0

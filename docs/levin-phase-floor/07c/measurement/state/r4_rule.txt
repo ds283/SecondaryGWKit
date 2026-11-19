@@ -1,0 +1,24 @@
+levin-phase-floor prompt 07c Part A, section 2.5: the reference draws R4 and R5, by a rule fixed here and written to
+state/ before the draw. New in 07c.
+
+**The unit drawn is an integrand** (shard, serial, kind, index): one reading scores every call of it, at both rtols.
+
+**R5** (``draw_refs_07c.py r5``): the population is the 306 unreferenced calls of state/populations_07c.json
+``moved_beyond_sum`` (moved by more than the sum of the two codes' abserrs, converged under both, not referenced by 07b's
+U4 or U6). Each integrand's strata are its group label, its k (the notify label's ``k=``) and which code declares the
+smaller abserr on its first call in rtol order 1e-7, 1e-8 (``07a`` or ``07b``). Every call of the 306 belonging to a drawn
+integrand is scored.
+
+**R4** (``draw_refs_07c.py r4 D1_DESCENT_JSON``): the population is the chase's 103 integrands (state/populations_07c.json
+``chase``) less R2-28's (h-...-0-13757 #5, already referenced). Each integrand's strata are its group label, its k and the
+refused ancestor's depth: the smallest depth of a rate-rule-refused ancestor of any of its depth-20 leaves, over its chase
+calls, from Part A's own descent analysis (D1_DESCENT_JSON, written by d1_descent_07c.py), ``none`` where no depth-20
+leaf descends from a refused leaf.
+
+**The rule (both):** ``rng = numpy.random.default_rng(seed)`` with the seed of state/seeds_07c.json; ``order =
+rng.permutation(n)`` over the integrands sorted by key. Pass 1 (coverage) walks the order and takes an integrand if it
+brings a value of any stratum variable not yet taken. Pass 2 (fill) walks the order again and takes integrands not yet
+taken until 30 are taken. The order is kept, so a cut would take a prefix of each pass.
+
+Writes state/<draw>_rule.txt (this rule, before the draw) and state/selection_<draw>.json. Refuses to overwrite.
+Usage: python -B draw_refs_07c.py r5 | r4 D1_DESCENT_JSON

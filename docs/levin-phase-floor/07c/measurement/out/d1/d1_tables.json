@@ -1,0 +1,37 @@
+{
+ "descent": {
+  "calls": 198,
+  "all_depth20_below_refused": 192,
+  "no_depth20": 6,
+  "depth20_leaves": 668,
+  "depth20_routes": {
+   "cc_gate": 668
+  },
+  "shallowest_refused_depth_of_depth20_leaves": {
+   "0": 482,
+   "1": 90,
+   "2": 92,
+   "3": 4
+  },
+  "nearest_refused_depth_of_depth20_leaves": {
+   "0": 250,
+   "1": 136,
+   "2": 254,
+   "3": 28
+  },
+  "calls_by_min_refused_depth": {
+   "0": 129,
+   "1": 31,
+   "2": 30,
+   "3": 2,
+   "None": 6
+  }
+ },
+ "agree": {
+  "n_depth20": 198,
+  "descends_from_refused": 198,
+  "routes": 198,
+  "refused_depths_nearest": 139,
+  "refused_depths_shallowest": 198
+ }
+}

@@ -1,0 +1,1 @@
+a:R1-x098-7 S: DIFFERS: region arrays differ: ['phase_limited', 'trusted', 'value', 'value_kind']; value: replay 0x1.36cddbddb3ac0p-88 census 0x1.36cddbddb3ca0p-88; value 0x1.36cddbddb3ac0p-88 abserr 0x1.717d1e65b5f3dp-110 conv True regions 117 depth 13 windows 1 stopped 1 2.49 s

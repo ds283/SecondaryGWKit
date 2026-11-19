@@ -19,7 +19,8 @@ Earlier, at 07b's extension stop: *"Go with (h), and record the chase as an issu
   dispatch SHA, whose code is 07b's. It measures the chase at census scale and the Clenshaw–Curtis
   estimate, scores candidate fixes, and takes two reference samples. **It ends at a planned stop:**
   the user chooses the fix with its tables in front of them, and the orchestrator writes it into §1
-  and §3 as an amendment (§9), committed and pushed before Part B.
+  and §3 as an amendment (§9), committed and pushed before Part B. Amended at that stop (§9): the fix
+  is variant (S), after an extension of Part A on R2-28.
 - **Part B, §1, §3 and §4, the code:** on the laptop, by a fresh-context subagent, in the main checkout
   at `HEAD`. One commit.
 - **Part C, §5 and §6:** on the Mac Studio, after the code commit is pushed: **§5, rehearsal R32,**
@@ -188,6 +189,76 @@ the user ruled that the next census takes a reference sample of them (§2.5, R5)
    estimate or the window's stop, rewritten to say what is now done and why, each listed by the agent
    with its line.
 
+**As amended at §2.7's stop (§9), the fix is variant (S).** The user: *"I would choose S and open
+`R2-28` as an issue that is othogonal to the fix that S is providing"*. Every change is in
+`AdaptiveLevin/levin_quadrature.py`. The reference implementation is (S)'s variant,
+`docs/levin-phase-floor/07c/measurement/scripts/variants/levin_quadrature_07c_S.py` (SHA-256
+`09088683…`), with its diff against the tree, `out/variants/S.diff` (`ef5a6e9e…`). Every line the
+diff adds is marked `# 07c variant (S)`; the names below replace the variant's.
+
+### 1.1 The stop
+
+Inside `_adaptive_levin`, as (S) does it:
+- **At the noise level.** A leaf is at the noise level if its trust check one level down found
+  $\delta_1 \le C\,\nu_B$ and $\delta_2 \le C\,\nu_B$, with $\nu_B$ the yardstick that check used
+  (`_trust_noise_yardstick`'s value in `_check_leaf`) and $C$ = `_LEVIN_CHASE_NOISE_FACTOR`. A leaf
+  not yet checked is not at the noise level. The test is a module-level function of
+  $(\delta_1, \delta_2, \nu_B)$, so that §3 can test it directly.
+- **The subtree's root.** In `_check_leaf`, a leaf a rate rule refuses (07b's `_leaf_rate_rule`, edge
+  or range) roots a subtree, **unless it already belongs to one**: the root is the outermost refused
+  leaf. At each bisection both children take their parent's root.
+- **The count.** At each bisection of a leaf that has a root and is at the noise level, the root's
+  count rises by one. When it reaches `_LEVIN_CHASE_STOP_LIMIT` the root stops, once: every current
+  leaf with that root that is at the noise level is stopped.
+- **Its reach.** At the end of `_check_leaf`, a leaf whose root has stopped and that is at the noise
+  level is stopped. So a leaf made after the stop is stopped once its own check finds it at the noise
+  level, as `_add_leaf` stops a stopped window's later leaves. **A leaf of the subtree not at the
+  noise level is not stopped:** it is refined as before (07b's (i), §0.3).
+- **A stopped leaf** goes through `_floor_limit_stopped_window_leaf`, unchanged, unless it is already
+  floor-limited. It is returned floor-limited, exempt from the trust check, with its own value $V_P$;
+  an untrusted one declares as an untrusted leaf at `depth_max` declares,
+  $\max({\rm residual}, \delta_1)/(1-r)$ if $r < 1$ and $\max({\rm residual}, \delta_1 + \delta_2)$ if
+  not; a trusted one keeps its widened declaration.
+- **Unchanged:** the trust test, 07b's rate rules and their constants, the windows and their stop, the
+  C2 gate, the round-off exit, `_exempt_floor_limited`, the fallback's estimate. A call in which no
+  root reaches the limit is bit-identical to the tree's: the count alone changes nothing.
+
+**The code reproduces (S)'s outputs bit for bit** (§9.5, Y8); a change that would alter any output
+relative to (S)'s replays is a stop.
+
+### 1.2 The constants
+
+Each is a module constant with a comment stating its basis, its margin and where the basis does not
+reach (§9.3).
+- `_LEVIN_CHASE_NOISE_FACTOR = 4.0`, (S)'s $C$.
+- `_LEVIN_CHASE_STOP_LIMIT = 6`, (S)'s limit.
+
+### 1.3 What it does to `converged` and to the declarations
+
+The tree's rule stands: a call is converged only if its budget is met, no returned leaf is untrusted,
+and no guarded leaf is at the depth cap. A stopped leaf is floor-limited, not untrusted, so its
+declaration counts against the budget as a stopped window's leaf does. A stopped leaf declares
+exactly what the tree would declare for it at `depth_max` (§1.1). §9.3 states what §2 measured of
+those declarations, and where it does not reach.
+
+### 1.4 Diagnostics
+
+The result dict gains three counts, over the whole run of the call: `num_chase_stops` (roots stopped),
+`num_chase_stopped_leaves` (leaves stopped, at the stop and after it) and
+`num_chase_noise_bisections` (bisections counted). They are (S)'s `num_s07c_stops`,
+`num_s07c_stopped_leaves` and `num_s07c_counted`. **The fix acts in a call** if `num_chase_stops` is
+positive. Nothing else in the result changes.
+
+### 1.5 Docstrings and comments
+
+Rewritten to say what is now done and why, each listed by the agent with its line: the module
+docstring's item on the trust check and the rate rules; the comment block above
+`_LEVIN_EDGE_RATE_RATIO_MAX` where it names the chase
+(`[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]`); `_adaptive_levin`'s docstring
+where it says a call can be chased to `depth_max`; `_check_leaf`'s docstring;
+`_floor_limit_stopped_window_leaf`'s docstring, which now also stops a chase's leaf; and
+`adaptive_levin_sincos`'s docstring on the three new counts.
+
 ## 2. The measurement — Part A, on the Mac Studio, a planned stop
 
 **Run at the dispatch SHA, whose code is 07b's.** Nothing in the tree changes. Variants are copies of
@@ -336,6 +407,54 @@ Written with §1 at §2's stop (§9). They include, whatever the fix:
    parent and the commit): no test newly failing, and every call the fix should not touch
    bit-identical.
 
+**As amended for (S) (§9).** In `AdaptiveLevin/tests/`, in a module the agent names. Item 3 does not
+apply: (S) has no estimate.
+- **(a) The noise level, directly,** on §1.1's function: $\delta_1 = \delta_2 = C\nu_B$ is at the noise
+  level; either just above is not; $\nu_B = 0$ with both differences 0 is, and with either positive is
+  not.
+- **(b) The chase (item 1).** A synthetic call in which a rate rule refuses a leaf whose subtree
+  reaches the noise level: unconverged at the depth cap at the parent, with every depth-20 leaf below
+  the refused leaf; converged at the commit; honest against a closed-form or independently computed
+  answer; `num_chase_stops` and `num_chase_stopped_leaves` positive. The chase needs integrand noise
+  the floor does not model (Part A's `issues.md` items 1 and 12): a starting point is 07b's range
+  mechanism in `test_levin_rate_rules.py` (c), with the integrand perturbed by a deterministic noise
+  of stated size, the answer's error from that noise bounded and stated. A shallow `depth_max` is
+  allowed if the call keeps the chase's shape.
+- **(c) The stop's reach (item 2).** On (b)'s call or another, instrumented by the test only through
+  the result's regions and counts:
+  - a leaf made after its root stopped, at the noise level, is returned floor-limited;
+  - a leaf of a stopped subtree not at the noise level is not stopped, and is refined or returned as
+    at the parent;
+  - a leaf at the noise level below a leaf the trust test refused, with no rate-rule refusal above
+    it, is not counted and not stopped.
+- **(d) The outermost root.** A refused leaf below a refused leaf: its bisections count against the
+  outer root, and the stop is the outer root's.
+- **(e) The declarations.** A stopped leaf that was untrusted declares
+  $\max({\rm residual}, \delta_1)/(1-r)$ (or the $r \ge 1$ form) and returns $V_P$; one that was
+  trusted keeps its widened declaration; each equals what the parent declares for the same leaf at
+  `depth_max`.
+- **(f) Not touched (item 4).** A call with no rate-rule refusal, and a call with refusals whose
+  subtrees never reach the limit: bit-identical at the parent and the commit, `num_chase_stops` 0.
+
+**If no call for (b) is found unconverged by a chase at the parent and converged and honest at the
+commit,** the agent stops and asks, with the search it made (§8).
+
+**Breakages,** each recorded with the test that catches it, then reverted:
+- **(i)** `_LEVIN_CHASE_STOP_LIMIT` set to infinity: (b) and (c) must fail;
+- **(ii)** `_LEVIN_CHASE_NOISE_FACTOR` set to infinity (every checked leaf at the noise level): (a)
+  and (c) must fail;
+- **(iii)** the stop not reaching leaves made after it: (c) must fail;
+- **(iv)** children not taking their parent's root: (b) or (c) must fail;
+- **(v)** the innermost refused leaf as the root: (d) must fail;
+- **(vi)** bisections counted below any untrusted leaf, not only a refused one: (c) or (f) must fail;
+- **(vii)** a stopped untrusted leaf keeping its quarters' value and the trusted declaration: (e) must
+  fail.
+
+**Existing assertions.** (S) acts only where a refused leaf's subtree reaches the limit, so most
+existing tests should not move. Each changed assertion is listed with the stops that change it. A test
+that goes from unconverged to converged, or the reverse, is listed with its honesty at both codes
+against the test's own expected answer; it is reported, not a stop.
+
 ## 4. Records of the code (Part B)
 
 The log `logs/07c-chase-below-a-refused-leaf.md` in README §5.1's form, with §5's and §6's predictions
@@ -406,7 +525,7 @@ the sum of the two codes' abserrs (**the sum**, not each separately); regions an
 - **Part A:** §2.6's tables complete and its stop reached, with every replay reproducing 07b's census.
 - **Part B:** §1 as amended; every test of §3 passing and every breakage caught; the seven roots rising
   only by the tests added; the LiouvilleGreen draws with no new failure.
-- **Part C:** §5's S0′–S4 and §6's Y0 hold; Y1–Y8 scored, each a verdict against its rule.
+- **Part C:** §5's S0′–S4 and §6's Y0 hold; Y1–Y9 scored (Y9 added in §9.5), each a verdict against its rule.
 
 ## 8. Stop conditions — stop and ask
 
@@ -418,3 +537,188 @@ the sum of the two codes' abserrs (**the sum**, not each separately); regions an
   from the chosen variant's replay record on a call the review replays.
 - In Part C: S0′ failing; the census's projection beyond 48 hours; a call Y1 says is untouched
   differing from 07b's, or Y8 failing, before anything else is scored; a lock held.
+
+## 9. Amendments at §2's stop
+
+*Written by the orchestrator on 2026-11-19, at §2.7's stop and after Part A's extension on R2-28, from
+the user's words, quoted.* Part A's records, with the extension's, are in
+`docs/levin-phase-floor/07c/measurement/`. The tables of record are `out/tables/scores_07c.md`,
+`out/d1/d1_tables.md`, `out/d2/d2_table.md`, `out/variants/reach.md` and `out/r2-28/summary.md`. What stays on the
+Mac Studio, among it every variant's replays but the tree's and (S)'s, is in
+`docs/levin-phase-floor/07c/KEPT_ON_MAC_STUDIO.md`.
+
+### 9.1 The rulings
+
+- **At §2.7's stop (2026-11-19):** the orchestrator relayed §2.6's tables. N, Eg and Ea qualify. S, S2,
+  SEg and SEa fail on R2-28 alone, converged at 1.12–1.14 of their abserr, while every 07b-lineage code
+  is off by the same −2.30×10⁻³⁷. The user: *"Yes, investigate R2-28 first. The S family look to be
+  close to the solution we need, and R2-28 doesn't appear to be their fault. So saying the don't
+  qualify is a legalistic rather then useful reading of the evidence."* Part A's agent was given the
+  extension: where the error sits, why, why 07a's code was right, and whether it is one call or a
+  class. §2.6's qualification rule was not changed.
+- **After the extension (2026-11-19):** *"I would choose S and open `R2-28` as an issue that is
+  othogonal to the fix that S is providing, unless your evaluation is different. We can look at
+  `R2-28` later; it's still a relatively small error in the big picture, and the fix is to find a way
+  of surfacing the true error"*. The orchestrator's evaluation was the same.
+
+### 9.2 What Part A and its extension measured
+
+**Checks.** Every replay at 07b's code reproduces its census record bit for bit, 454 of 454. The
+orchestrator's re-checks (`orchestrator/prompt-07c.md` §A.3) re-ran four replays in `float.hex`,
+recounted D1's descent by interval containment, re-drew D2's sample and R4's and R5's selections from
+their seeds, re-measured three D2 leaves, re-scored every scored call in exact `Fraction`s from the
+readings, and re-ran S and N on two chase calls. All agree with the agent. For the extension, it
+re-measured R2-28's carrying leaf against its own Gauss–Legendre reference under the tree and under
+S, and recounted the class count from the scores. Both agree.
+
+**The chase (D1).** 192 of the 198 newly unconverged calls end with every depth-20 leaf (668, all
+Clenshaw–Curtis) below a leaf a rate rule refused, as 07b's census agent found. Below refused leaves
+there are 24,109 bisections, 15,445 Levin and 8,664 Clenshaw–Curtis.
+- The Clenshaw–Curtis leaves sit at the noise level: $\delta_1/\nu_B$ has median 0.65–0.96 by cause.
+  Most are untrusted by the $r \ge 1$ clause, which is random there. The round-off exit is not
+  considered in 6,615 (residual above the floor), and the halving test refuses 2,049.
+- The chase is mostly Levin bisection: $\delta_1/\nu_B$ has median 47 on its 15,445 Levin
+  bisections (`issues.md` item 4).
+- The six calls with no depth-20 leaf miss their budget at 1.000–1.005 of their request.
+
+**The Clenshaw–Curtis estimate (D2).** The fallback's pair is CC₂₄/CC₄₇ (deviation 5). No candidate
+estimate bounds CC₄₇'s true error on every sampled leaf. The minimum ratios are: the pair 0.0199,
+the third nested rule 0.00408, the tail of the coefficients 0.199 (`tail_sum4`) and 0.118
+(`tail_max4x2`). E was run with `tail_sum4`, flagged as having no bound basis.
+
+**The variants** (§2.6; 454 calls; 305 referenced, 299 scored):
+
+| variant | table 3: honest / dishonest / unconverged | chase unconverged of 201 (every depth-20 leaf below a refused leaf) | regions / tree | wall / tree |
+|---|---|---|---|---|
+| tree | 235 / 0 / 64 | 201 (195) | 1.000 | 1.000 |
+| **S** | **292 / 4 / 3** | **5 (0)** | **0.745** | **0.726** |
+| S2 | 292 / 4 / 3 | 6 (0) | 0.796 | 0.773 |
+| N | 285 / 0 / 14 | 21 (19) | 0.884 | 0.879 |
+| Eg, Ea | 228 / 0 / 71 | 186 (182) | 1.313, 1.312 | 1.435, 1.432 |
+| SEg, SEa | 287 / 4 / 8 | 4 (0) | 0.926, 0.925 | 1.003, 1.036 |
+
+The four dishonest rows under S, S2, SEg and SEa are R2-28 at both rtols, each scored twice (its
+census call `c-*-0-13757-5` and Part A's `a:R2-28`).
+
+**R2-28 (the extension).**
+- **Where the error sits.** One leaf carries it: a depth-4 trusted Levin leaf on
+  [22.3567, 23.5393] (tree leaf 295, S's 99). Its error is −2.338×10⁻³⁷ against an $e'$ of
+  1.874×10⁻³⁷, so 1.25 of its $e'$. Every one of the eight codes makes this leaf, with the same value
+  in hex. The rest of each partition errs by +3.6×10⁻³⁹, 0.018 of the call's abserr.
+- **Why.** This is 07b's mechanism, an error common to the leaf's halves and quarters. Halves and
+  quarters agree, so $r = 0.0048$, partly by cancellation. $e' \approx \delta_1$ is the difference of
+  two same-signed errors. $q = 3.26$ is below the range rule's 10. Levin solves at $N \pm 8$ on its
+  pieces scatter by about $10^{-37}$, $10^3$–$10^4$ times their floor. So the error is neither
+  truncation nor modelled by the floor. Integrand noise and collocation were not separated.
+- **Why 07a's code was right.** Its one region's error is −4.82×10⁻³⁸, in one quarter, not
+  cancellation. Its $e'$, 8.68×10⁻³⁴, is the root's floor and covers the error 18,000 times over.
+- **One call or a class.** Of the 299 scored calls, only R2-28 has every code's error above its
+  abserr. Four others share an error across all eight codes at 0.54–0.83 of the abserr. At leaf level
+  this was measured on R2-28 only.
+- **The stop is not involved:** S does not stop the carrying leaf ($\delta_1/\nu_B = 2.7\times10^4$).
+
+**S on Part A's 454 calls.**
+- **Reach.** It touches 328; the other 126 are bit-identical to the tree. Of R2's 60 random calls it
+  touches 13. It changes no window's stop or leaves; in 41 windows only the split counter at which the
+  stop fell moves.
+- **The chase.** None of the 201 chase calls ends with every depth-20 leaf below a refused leaf. The
+  five still unconverged are five of the six budget misses, untouched and bit-identical to the tree.
+  The sixth, `c-1e-8-0-33997-4`, converges.
+- **Honesty.** Its three unconverged referenced calls are `c-1e-8-3-13490-2` (0.0086),
+  `c-1e-8-3-13615-3` (0.0083) and v04 (0.000156). R31's record converges at 86 regions (143 at the
+  tree), honest at 0.053.
+
+### 9.3 The constants' basis, and where it does not reach
+
+- **`_LEVIN_CHASE_NOISE_FACTOR = 4.0`.** Measured on D1's 8,664 Clenshaw–Curtis bisections below
+  refused leaves. Both differences are within $\nu_B$ in 15%, $2\nu_B$ in 73%, $4\nu_B$ in 88% and
+  $10\nu_B$ in 97%. $\delta_1/(\phi_P + \phi_L + \phi_R)$ has 90th percentile 1.01, so 4 is about four
+  times it.
+  - **S2 ($C = 2$)** gives the same table 3, one more chase call unconverged and 7% more regions: the
+    verdicts do not turn on $C$ between 2 and 4.
+  - **A Levin leaf is rarely at the noise level:** both differences are within $4\nu_B$ in 2,460 of
+    15,445 Levin bisections. Otherwise it is refined, not stopped (§0.3's lesson from (i)).
+- **`_LEVIN_CHASE_STOP_LIMIT = 6`.** This is dqage's `iroff1` limit, as 07a's window stop counts at the
+  same noise level. **It is not measured here:** no variant changed it.
+- **Reach.** Every chase call in §2.1 is a group call. The analytic calls have no chase in the sample.
+  Where S acts on an analytic call, it is scored only by the referenced analytic calls among Part A's
+  (R2's 21, R3's), none of them converged and dishonest under S.
+- **The declarations (§1 item 4).**
+  - **What was not measured:** a stopped leaf's declaration against a reference, leaf by leaf. It was
+    measured at call level only: no referenced call is converged and dishonest under S except R2-28,
+    whose carrying leaf S does not stop.
+  - **A stopped leaf declares exactly what the tree declares** for the same leaf at `depth_max`. On a
+    Clenshaw–Curtis leaf that declaration rests on the pair. D2 shows the pair can understate CC₄₇'s
+    true error: in the chase stratum, 5 of 14 resolved leaves have a true error above both the pair
+    and the floor. This is `[06d-cc-nested-estimate-measures-the-coarse-rule]`'s, and holds at the
+    tree wherever the fallback declares. S adds no declaration the tree does not make, and no
+    candidate measured here would bound it.
+
+### 9.4 The census's cost
+
+07b's census took 45,016 s (12.5 h). On Part A's 454 calls S takes 0.745 of the tree's regions and
+0.726 of its wall. **§6's harness projects the census** from Y0's K0 run at the new code; beyond 48
+hours is a stop, as §6 says.
+
+### 9.5 Additions to §5's and §6's predictions
+
+- **Y1 counts** a call untouched if `num_chase_stops` is 0, and compares value, abserr, `converged`,
+  `num_regions` and the maximum depth. Every call with no rate-rule refusal is untouched (07b's U1:
+  60,160 calls); on Part A's 454, 126 are, and on R2's 60 random calls, 47.
+- **Y4, on the user's ruling.** R2-28 is predicted converged and dishonest at 1.143 of its abserr at
+  both rtols (its census call `c-1e-7-0-13757-5` and `c-1e-8-0-13757-5`). Its error is the carrying
+  leaf's (§9.2), not the stop's, and belongs to the issue opened in §9.6. **Y4 holds** if every other
+  referenced call is honest or unconverged; R2-28 is reported with its ratio against that issue. Any
+  other referenced call converged and dishonest fails Y4.
+- **Y6 and Y7 are predicted to hold.** 06b's W2 calls and the two pairs that Part A replayed are honest
+  under S. The rest were not replayed; the prediction rests on S leaving no other referenced call
+  converged and dishonest.
+- **Y8 — the code is (S).** Every census call that Part A replayed (§2.1's, both rtols) equals (S)'s
+  replay record bit for bit in value, abserr, `converged`, regions and maximum depth. **Holds** if all
+  do.
+- **Y9 — the chase ends.** No call is unconverged with every depth-20 leaf below a leaf a rate rule
+  refused. Of 07b's 198 newly unconverged calls, exactly five stay unconverged: `c-1e-8-1-2229-4`,
+  `c-1e-8-3-13490-2`, `c-1e-8-3-13490-3`, `c-1e-8-3-13615-2` and `c-1e-8-3-13615-3`, each untouched
+  and equal to 07b's call. **Holds** if both are true. Y9 is the header's closing condition for
+  `[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]`, and is scored with Y1–Y8 (§7).
+- **S3 (§5).** R31's record (`G+q+r` at $(10^5, 10^6, 10^6)$, $z = 144627.7$) is predicted to converge
+  at 86 regions, honest at 0.053 of its abserr. Its row is named as predicted to move, with
+  `total_converged` possibly false → true. Any other row beyond S3's bound is reported with the stops
+  in its calls.
+- **Descriptive, added:** the stops by class, band, $k$ and rtol; by the harness's instrument (marked
+  "prompt 07c"), each stopped leaf's route (Clenshaw–Curtis or Levin), depth and declaration, and its
+  share of its call's abserr; `converged` changes against 07b's in each direction, with the calls
+  newly unconverged listed (none is expected).
+
+**Part B's review** replays from copies of their captures at the code commit:
+- R2-28, equal to (S)'s replay record in `float.hex` (value `-0x1.654fbbd987ff2p-96`, abserr
+  `0x1.11de231bf47dap-122`, 100 regions, depth 13, converged);
+- one other chase call, `c-1e-8-1-2113-1`, equal to (S)'s record;
+- `c-1e-8-1-2229-4` (untouched), equal to (S)'s record and to 07b's census.
+
+### 9.6 The issues
+
+- **Opened at this stop, on the user's word** (*"open `R2-28` as an issue that is othogonal to the fix
+  that S is providing … the fix is to find a way of surfacing the true error"*):
+  `[07c-r2-28-trusted-levin-leaf-hides-a-common-error]`, from the agent's `issues.md` items 7, 11 and
+  12.
+  - A trusted Levin leaf whose rate range is under the range rule's 10 can carry an error common to
+    its halves and quarters. Its trust check then sees $r \ll 1$ and declares $e' \approx \delta_1$,
+    below the error.
+  - On R2-28 one depth-4 leaf is 1.25 of its $e'$, and the call's error is 1.10–1.14 of the abserr
+    under every 07b-lineage code. 07a's code was honest only because its single region's floor was
+    $10^4$ above the error.
+  - Levin solves at low $|\theta'|$ scatter at $10^3$–$10^4$ times their floor, which the floor does not
+    model.
+  - Next step: a way to surface the leaf's true error. Not assigned.
+- `[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]` closes, and
+  `[06d-cc-nested-estimate-measures-the-coarse-rule]` is narrowed by §2.3's measurement, in 07c's
+  records commit, on the user's word, as the header says.
+- **The others** in the agent's `issues.md` (items 1–12) are put to the user at 07c's records commit
+  (orchestrator note §C.4).
+
+### 9.7 Stops added (into §8)
+
+- **In Part B:** an output of the code differing from (S)'s replay record on a call the review replays;
+  no call found for §3 (b).
+- **In Part C:** Y8 failing, before anything else is scored.

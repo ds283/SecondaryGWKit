@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/draw_refs_07c.py r5
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T10:24:55Z
+# ----
+# levin-phase-floor 07c Part A: the R5 draw
+# written 2026-11-18T10:24:55Z on mps026298.phys.susx.ac.uk
+# script draw_refs_07c.py sha256 439c1636ff1689641f76e68998462cb4a3e8134121d7bfaee785a05ad79425ea
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/seeds_07c.json sha256 05f428f30b87077a8197633eb50e56fe8bf215f7fa350f71982aaf405c8e2323
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/populations_07c.json sha256 33910d7116da61c58d3470f0b2d5d705c35ed66c74dd158c80d95f608348342f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/r5_rule.txt sha256 084269e72b68a4a6a5e4ea9f4229eeecd23eed8362c4156fec8dcdcaf5ba4964
+r5: population 194 integrands; taken 30 (9 in pass 1), 43 calls
+population strata: {'label': {'G+q+r': 102, 'G+q-r': 15, 'G-q+r': 30, 'G-q-r': 47}, 'k': {'1e+05': 17, '3.05e+07': 30, '3.09e+06': 29, '3.14e+05': 21, '3e+08': 20, '9.56e+07': 33, '9.7e+06': 4, '9.85e+05': 40}, 'smaller': {'07a': 97, '07b': 97}}
+taken strata: {'label': {'G+q+r': 16, 'G+q-r': 2, 'G-q+r': 3, 'G-q-r': 9}, 'k': {'1e+05': 6, '3.05e+07': 4, '3.09e+06': 3, '3.14e+05': 5, '3e+08': 3, '9.56e+07': 3, '9.7e+06': 1, '9.85e+05': 5}, 'smaller': {'07a': 16, '07b': 14}}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/selection_r5.json sha256 e901adffe476e28890f6fe3cd9f8aae6644f4c4bee97029b8dd041cc0cfead58
+# ----
+# end 2026-11-18T10:24:56Z
+# exit 0

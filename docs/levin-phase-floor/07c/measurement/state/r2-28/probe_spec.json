@@ -1,0 +1,20 @@
+[
+ {
+  "name": "tree:295",
+  "lo": "0x1.65b4fd067cd45p+4",
+  "hi": "0x1.78a11e65a7f80p+4",
+  "note": "tree leaf 295, depth 4, trusted Levin: the largest error"
+ },
+ {
+  "name": "tree:294",
+  "lo": "0x1.5c3eec56e7428p+4",
+  "hi": "0x1.65b4fd067cd45p+4",
+  "note": "tree leaf 294, depth 5, trusted Levin: its neighbour"
+ },
+ {
+  "name": "07a:0",
+  "lo": "0x1.277c21cbd6f40p+2",
+  "hi": "0x1.78a11e65a7f80p+4",
+  "note": "07a's one region, depth 0, trusted Levin"
+ }
+]

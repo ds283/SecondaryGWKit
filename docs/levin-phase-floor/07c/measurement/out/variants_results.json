@@ -1,0 +1,77 @@
+{
+ "label": "variants",
+ "results": [
+  {
+   "name": "replays_S_vplain",
+   "exit": 0,
+   "wall_s": 880.4638481140137
+  },
+  {
+   "name": "replays_S2_vplain",
+   "exit": 0,
+   "wall_s": 901.4379029273987
+  },
+  {
+   "name": "replays_N_vplain",
+   "exit": 0,
+   "wall_s": 951.281537771225
+  },
+  {
+   "name": "replays_Eg_vplain",
+   "exit": 0,
+   "wall_s": 1243.8154261112213
+  },
+  {
+   "name": "replays_Ea_vplain",
+   "exit": 0,
+   "wall_s": 1239.9708120822906
+  },
+  {
+   "name": "replays_SEg_vplain",
+   "exit": 0,
+   "wall_s": 1040.8947477340698
+  },
+  {
+   "name": "replays_SEa_vplain",
+   "exit": 0,
+   "wall_s": 1087.7232129573822
+  },
+  {
+   "name": "replays_S_i_vinstr",
+   "exit": 0,
+   "wall_s": 486.38246512413025
+  },
+  {
+   "name": "replays_S2_i_vinstr",
+   "exit": 0,
+   "wall_s": 526.4406759738922
+  },
+  {
+   "name": "replays_N_i_vinstr",
+   "exit": 0,
+   "wall_s": 568.6627740859985
+  },
+  {
+   "name": "replays_Eg_i_vinstr",
+   "exit": 0,
+   "wall_s": 774.9664351940155
+  },
+  {
+   "name": "replays_Ea_i_vinstr",
+   "exit": 0,
+   "wall_s": 869.8706409931183
+  },
+  {
+   "name": "replays_SEg_i_vinstr",
+   "exit": 0,
+   "wall_s": 575.1426219940186
+  },
+  {
+   "name": "replays_SEa_i_vinstr",
+   "exit": 0,
+   "wall_s": 560.2975780963898
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-18T14:47:07Z"
+}

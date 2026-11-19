@@ -1,0 +1,1 @@
+a:R1-x044-7 Eg: DIFFERS: region arrays differ: ['abserr', 'budget_err', 'declared_resolution', 'relerr', 'total_err']; section 1.5 entries differ: ['stationary_windows']; abserr: replay 0x1.66ce5db3ea622p-114 census 0x1.65721c3935a07p-114; value 0x1.082fb9e0a741fp-94 abserr 0x1.66ce5db3ea622p-114 conv True regions 89 depth 11 windows 1 stopped 1 1.74 s

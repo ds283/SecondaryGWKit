@@ -1,0 +1,622 @@
+{
+ "label": "refs2",
+ "results": [
+  {
+   "name": "ref-R5-2-14404-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 4136.546304941177
+  },
+  {
+   "name": "ref-R5-2-34718-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 4245.218236923218
+  },
+  {
+   "name": "ref-R5-2-38199-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 4266.628129005432
+  },
+  {
+   "name": "ref-R4-1-2367-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 1451.9519770145416
+  },
+  {
+   "name": "ref-R5-1-2040-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 1394.4441800117493
+  },
+  {
+   "name": "ref-R5-2-2186-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 2986.9869418144226
+  },
+  {
+   "name": "ref-R5-2-38649-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 2971.651855945587
+  },
+  {
+   "name": "ref-R5-0-35112-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 744.9591009616852
+  },
+  {
+   "name": "ref-R5-1-34525-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 1243.7584879398346
+  },
+  {
+   "name": "ref-R5-1-14045-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 1362.396957397461
+  },
+  {
+   "name": "ref-R5-0-2269-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 702.9095089435577
+  },
+  {
+   "name": "ref-R5-0-1941-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 669.357950925827
+  },
+  {
+   "name": "ref-R5-0-2016-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 661.1706659793854
+  },
+  {
+   "name": "ref-R5-3-14096-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 538.7349486351013
+  },
+  {
+   "name": "ref-R4-1-2217-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 521.4509551525116
+  },
+  {
+   "name": "ref-R4-3-35033-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 603.7509260177612
+  },
+  {
+   "name": "ref-R4-3-35033-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 493.9686758518219
+  },
+  {
+   "name": "ref-R4-3-34863-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 508.9444921016693
+  },
+  {
+   "name": "ref-R5-0-14318-g3-qawo-r2",
+   "exit": 0,
+   "wall_s": 2107.1233718395233
+  },
+  {
+   "name": "ref-R4-1-14242-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 468.35482907295227
+  },
+  {
+   "name": "ref-R5-3-35006-g4-qawo-r2",
+   "exit": 0,
+   "wall_s": 3369.6556828022003
+  },
+  {
+   "name": "ref-R4-2-2303-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 469.5952820777893
+  },
+  {
+   "name": "ref-R5-3-35006-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 453.31488013267517
+  },
+  {
+   "name": "ref-R4-0-13774-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 442.46927309036255
+  },
+  {
+   "name": "ref-R4-2-14011-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 444.74385380744934
+  },
+  {
+   "name": "ref-R4-1-37672-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 421.2134850025177
+  },
+  {
+   "name": "ref-R5-3-35020-g1-qawo-r2",
+   "exit": 0,
+   "wall_s": 1823.4996230602264
+  },
+  {
+   "name": "ref-R4-1-34591-g1-qawo-r2",
+   "exit": 0,
+   "wall_s": 1781.8381090164185
+  },
+  {
+   "name": "ref-R5-3-35020-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 437.7716112136841
+  },
+  {
+   "name": "ref-R4-2-34655-g6-fccsplit",
+   "exit": 0,
+   "wall_s": 369.392529964447
+  },
+  {
+   "name": "ref-R5-2-38635-g6-fccsplit",
+   "exit": 0,
+   "wall_s": 399.5612859725952
+  },
+  {
+   "name": "ref-R4-0-1862-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 422.97768926620483
+  },
+  {
+   "name": "ref-R5-0-14318-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 390.50963711738586
+  },
+  {
+   "name": "ref-R5-1-37676-g3-qawo-r2",
+   "exit": 0,
+   "wall_s": 1475.210333108902
+  },
+  {
+   "name": "ref-R4-2-13634-g1-qawo-r2",
+   "exit": 0,
+   "wall_s": 1614.2319676876068
+  },
+  {
+   "name": "ref-R5-1-37676-g2-qawo-r2",
+   "exit": 0,
+   "wall_s": 1487.456477880478
+  },
+  {
+   "name": "ref-R5-3-34802-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 382.8701980113983
+  },
+  {
+   "name": "ref-R5-3-34796-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 391.54877614974976
+  },
+  {
+   "name": "ref-R4-1-1761-g6-fccsplit",
+   "exit": 0,
+   "wall_s": 334.89656805992126
+  },
+  {
+   "name": "ref-R5-1-37676-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 369.53395414352417
+  },
+  {
+   "name": "ref-R5-1-37676-g2-fccsplit",
+   "exit": 0,
+   "wall_s": 366.9845378398895
+  },
+  {
+   "name": "ref-R4-0-13757-g6-fccsplit",
+   "exit": 0,
+   "wall_s": 310.749046087265
+  },
+  {
+   "name": "ref-R4-2-36987-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 353.5283172130585
+  },
+  {
+   "name": "ref-R4-1-34591-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 370.8475592136383
+  },
+  {
+   "name": "ref-R4-1-1759-g5-fccsplit",
+   "exit": 0,
+   "wall_s": 318.73527908325195
+  },
+  {
+   "name": "ref-R4-2-13634-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 370.12304306030273
+  },
+  {
+   "name": "ref-R4-3-37347-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 450.0739326477051
+  },
+  {
+   "name": "ref-R4-1-1759-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 296.63299083709717
+  },
+  {
+   "name": "ref-R4-2-34464-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 325.22771191596985
+  },
+  {
+   "name": "ref-R4-0-12688-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 340.2607579231262
+  },
+  {
+   "name": "ref-R5-1-34594-g2-fccsplit",
+   "exit": 0,
+   "wall_s": 320.7538900375366
+  },
+  {
+   "name": "ref-R4-2-34464-g3-qawo-r2",
+   "exit": 0,
+   "wall_s": 1256.5531442165375
+  },
+  {
+   "name": "ref-R4-3-13490-g2-fccsplit",
+   "exit": 0,
+   "wall_s": 316.652596950531
+  },
+  {
+   "name": "ref-R5-3-34796-g1-qawo-r2",
+   "exit": 0,
+   "wall_s": 1210.4259099960327
+  },
+  {
+   "name": "ref-R4-1-1841-g5-fccsplit",
+   "exit": 0,
+   "wall_s": 245.97175192832947
+  },
+  {
+   "name": "ref-R4-2-1370-g2-fccsplit",
+   "exit": 0,
+   "wall_s": 314.16941571235657
+  },
+  {
+   "name": "ref-R5-1-1728-g5-fccsplit",
+   "exit": 0,
+   "wall_s": 307.5094439983368
+  },
+  {
+   "name": "ref-R4-3-13615-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 305.9697461128235
+  },
+  {
+   "name": "ref-R5-3-13615-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 305.94806694984436
+  },
+  {
+   "name": "ref-R5-0-1784-g6-fccsplit",
+   "exit": 0,
+   "wall_s": 273.3880739212036
+  },
+  {
+   "name": "ref-R4-1-11189-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 281.9897301197052
+  },
+  {
+   "name": "ref-R31-3-20363-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 281.4362208843231
+  },
+  {
+   "name": "ref-R4-2-1375-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 198.93258619308472
+  },
+  {
+   "name": "ref-R5-0-33996-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 247.88907480239868
+  },
+  {
+   "name": "ref-R4-3-35033-g3-qawo-r2",
+   "exit": 0,
+   "wall_s": 659.5826058387756
+  },
+  {
+   "name": "ref-R5-3-35006-g4-qawo-r1",
+   "exit": 0,
+   "wall_s": 857.0648267269135
+  },
+  {
+   "name": "ref-R4-0-12723-g5-fccsplit",
+   "exit": 0,
+   "wall_s": 240.02922010421753
+  },
+  {
+   "name": "ref-R5-1-34525-g1-qawo-r2",
+   "exit": 0,
+   "wall_s": 662.9482038021088
+  },
+  {
+   "name": "ref-R4-0-33929-g3-fccsplit",
+   "exit": 0,
+   "wall_s": 242.5828287601471
+  },
+  {
+   "name": "ref-R5-0-12584-g1-fccsplit",
+   "exit": 0,
+   "wall_s": 240.82506895065308
+  },
+  {
+   "name": "ref-R5-0-12660-g6-fccsplit",
+   "exit": 0,
+   "wall_s": 203.11192917823792
+  },
+  {
+   "name": "ref-R5-3-1151-g4-fccsplit",
+   "exit": 0,
+   "wall_s": 184.3382649421692
+  },
+  {
+   "name": "ref-R5-3-34802-g4-qawo-r2",
+   "exit": 0,
+   "wall_s": 585.0263049602509
+  },
+  {
+   "name": "ref-R5-0-14318-g3-qawo-r1",
+   "exit": 0,
+   "wall_s": 544.2354538440704
+  },
+  {
+   "name": "ref-R5-3-35020-g1-qawo-r1",
+   "exit": 0,
+   "wall_s": 459.2271509170532
+  },
+  {
+   "name": "ref-R4-1-34591-g1-qawo-r1",
+   "exit": 0,
+   "wall_s": 445.3804728984833
+  },
+  {
+   "name": "ref-R4-2-13634-g1-qawo-r1",
+   "exit": 0,
+   "wall_s": 418.4577798843384
+  },
+  {
+   "name": "ref-R5-1-37676-g3-qawo-r1",
+   "exit": 0,
+   "wall_s": 385.3547570705414
+  },
+  {
+   "name": "ref-R5-1-37676-g2-qawo-r1",
+   "exit": 0,
+   "wall_s": 383.3849792480469
+  },
+  {
+   "name": "ref-R4-2-1375-g4-qawo-r2",
+   "exit": 0,
+   "wall_s": 314.68438816070557
+  },
+  {
+   "name": "ref-R4-0-12688-g1-qawo-r2",
+   "exit": 0,
+   "wall_s": 292.2257993221283
+  },
+  {
+   "name": "ref-R5-1-11062-g6-fccsplit",
+   "exit": 0,
+   "wall_s": 109.42800879478455
+  },
+  {
+   "name": "ref-R4-2-34464-g3-qawo-r1",
+   "exit": 0,
+   "wall_s": 326.29882407188416
+  },
+  {
+   "name": "ref-R5-3-34796-g1-qawo-r1",
+   "exit": 0,
+   "wall_s": 316.0987648963928
+  },
+  {
+   "name": "ref-R4-3-35033-g3-qawo-r1",
+   "exit": 0,
+   "wall_s": 189.87055730819702
+  },
+  {
+   "name": "ref-R5-1-34594-g2-qawo-r2",
+   "exit": 0,
+   "wall_s": 149.6962571144104
+  },
+  {
+   "name": "ref-R5-1-34525-g1-qawo-r1",
+   "exit": 0,
+   "wall_s": 183.26463913917542
+  },
+  {
+   "name": "ref-R5-3-34802-g4-qawo-r1",
+   "exit": 0,
+   "wall_s": 164.9015829563141
+  },
+  {
+   "name": "ref-R5-1-1728-g5-qawo-r2",
+   "exit": 0,
+   "wall_s": 135.86557531356812
+  },
+  {
+   "name": "ref-R4-2-1370-g2-qawo-r2",
+   "exit": 0,
+   "wall_s": 94.15595698356628
+  },
+  {
+   "name": "ref-R5-3-13615-g4-qawo-r2",
+   "exit": 0,
+   "wall_s": 88.6365430355072
+  },
+  {
+   "name": "ref-R5-0-1784-g6-qawo-r2",
+   "exit": 0,
+   "wall_s": 89.64335203170776
+  },
+  {
+   "name": "ref-R4-3-13490-g2-qawo-r2",
+   "exit": 0,
+   "wall_s": 81.42530465126038
+  },
+  {
+   "name": "ref-R4-0-12688-g1-qawo-r1",
+   "exit": 0,
+   "wall_s": 88.0039930343628
+  },
+  {
+   "name": "ref-R4-2-1375-g4-qawo-r1",
+   "exit": 0,
+   "wall_s": 90.053631067276
+  },
+  {
+   "name": "ref-R4-3-13615-g3-qawo-r2",
+   "exit": 0,
+   "wall_s": 65.6857841014862
+  },
+  {
+   "name": "ref-R4-3-37347-g3-qawo-r2",
+   "exit": 0,
+   "wall_s": 43.808825731277466
+  },
+  {
+   "name": "ref-R5-1-1728-g5-qawo-r1",
+   "exit": 0,
+   "wall_s": 49.87139892578125
+  },
+  {
+   "name": "ref-R5-1-34594-g2-qawo-r1",
+   "exit": 0,
+   "wall_s": 54.46629500389099
+  },
+  {
+   "name": "ref-R4-1-11189-g4-qawo-r2",
+   "exit": 0,
+   "wall_s": 33.07714796066284
+  },
+  {
+   "name": "ref-R31-3-20363-g1-qawo-r2",
+   "exit": 0,
+   "wall_s": 30.037471055984497
+  },
+  {
+   "name": "ref-R5-3-13615-g4-qawo-r1",
+   "exit": 0,
+   "wall_s": 38.69000291824341
+  },
+  {
+   "name": "ref-R4-2-1370-g2-qawo-r1",
+   "exit": 0,
+   "wall_s": 40.219197273254395
+  },
+  {
+   "name": "ref-R5-0-33996-g4-qawo-r2",
+   "exit": 0,
+   "wall_s": 22.89847230911255
+  },
+  {
+   "name": "ref-R4-3-13490-g2-qawo-r1",
+   "exit": 0,
+   "wall_s": 36.6534469127655
+  },
+  {
+   "name": "ref-R5-0-1784-g6-qawo-r1",
+   "exit": 0,
+   "wall_s": 37.68701481819153
+  },
+  {
+   "name": "ref-R4-3-37347-g3-qawo-r1",
+   "exit": 0,
+   "wall_s": 29.989376068115234
+  },
+  {
+   "name": "ref-R4-3-13615-g3-qawo-r1",
+   "exit": 0,
+   "wall_s": 33.042561054229736
+  },
+  {
+   "name": "ref-R4-0-12723-g5-qawo-r2",
+   "exit": 0,
+   "wall_s": 22.33429503440857
+  },
+  {
+   "name": "ref-R5-0-12584-g1-qawo-r2",
+   "exit": 0,
+   "wall_s": 20.336169004440308
+  },
+  {
+   "name": "ref-R4-0-33929-g3-qawo-r2",
+   "exit": 0,
+   "wall_s": 21.876161098480225
+  },
+  {
+   "name": "ref-R5-0-12660-g6-qawo-r2",
+   "exit": 0,
+   "wall_s": 21.358736991882324
+  },
+  {
+   "name": "ref-R5-3-1151-g4-qawo-r2",
+   "exit": 0,
+   "wall_s": 16.307239294052124
+  },
+  {
+   "name": "ref-R4-1-11189-g4-qawo-r1",
+   "exit": 0,
+   "wall_s": 21.89941906929016
+  },
+  {
+   "name": "ref-R31-3-20363-g1-qawo-r1",
+   "exit": 0,
+   "wall_s": 20.369736194610596
+  },
+  {
+   "name": "ref-R5-0-33996-g4-qawo-r1",
+   "exit": 0,
+   "wall_s": 16.79691791534424
+  },
+  {
+   "name": "ref-R4-0-12723-g5-qawo-r1",
+   "exit": 0,
+   "wall_s": 16.7951340675354
+  },
+  {
+   "name": "ref-R4-0-33929-g3-qawo-r1",
+   "exit": 0,
+   "wall_s": 16.29512906074524
+  },
+  {
+   "name": "ref-R5-0-12584-g1-qawo-r1",
+   "exit": 0,
+   "wall_s": 15.2913818359375
+  },
+  {
+   "name": "ref-R5-1-11062-g6-qawo-r2",
+   "exit": 0,
+   "wall_s": 10.716147899627686
+  },
+  {
+   "name": "ref-R5-0-12660-g6-qawo-r1",
+   "exit": 0,
+   "wall_s": 15.321935892105103
+  },
+  {
+   "name": "ref-R5-1-11062-g6-qawo-r1",
+   "exit": 0,
+   "wall_s": 8.16122317314148
+  },
+  {
+   "name": "ref-R5-3-1151-g4-qawo-r1",
+   "exit": 0,
+   "wall_s": 12.251187086105347
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-19T06:15:38Z"
+}

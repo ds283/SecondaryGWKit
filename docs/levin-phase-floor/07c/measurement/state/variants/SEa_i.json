@@ -1,0 +1,18 @@
+{
+ "name": "SEa_i",
+ "options": {
+  "s": [
+   6,
+   4.0
+  ],
+  "e": [
+   "all",
+   "tail_sum4"
+  ],
+  "n": false
+ },
+ "instrumented": true,
+ "basis": "instrumented copy of SEa (table 4's descent column)",
+ "sha256": "8c023d1ea1bb22e1ff5419ba7ed2b74f4bba86a4511e455a9143ae46a2eccc1a",
+ "generator_sha256": "31bb4a3b1a0b005495174c80be99ffe276997b55daea6af43628b8ad8d757fe9"
+}

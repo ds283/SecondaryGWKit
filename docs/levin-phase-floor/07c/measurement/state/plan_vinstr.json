@@ -1,0 +1,187 @@
+{
+ "label": "vinstr",
+ "sets": [
+  "chase",
+  "parta:R2",
+  "parta:R2~o",
+  "r31"
+ ],
+ "n_calls": 259,
+ "stages": [
+  {
+   "name": "S_i",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "replays_S_i_vinstr",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_replays_07c.py",
+      "S_i",
+      "vinstr",
+      "--sets",
+      "chase",
+      "parta:R2",
+      "parta:R2~o",
+      "r31",
+      "--workers",
+      "6",
+      "--instrument"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "S2_i",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "replays_S2_i_vinstr",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_replays_07c.py",
+      "S2_i",
+      "vinstr",
+      "--sets",
+      "chase",
+      "parta:R2",
+      "parta:R2~o",
+      "r31",
+      "--workers",
+      "6",
+      "--instrument"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "N_i",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "replays_N_i_vinstr",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_replays_07c.py",
+      "N_i",
+      "vinstr",
+      "--sets",
+      "chase",
+      "parta:R2",
+      "parta:R2~o",
+      "r31",
+      "--workers",
+      "6",
+      "--instrument"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Eg_i",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "replays_Eg_i_vinstr",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_replays_07c.py",
+      "Eg_i",
+      "vinstr",
+      "--sets",
+      "chase",
+      "parta:R2",
+      "parta:R2~o",
+      "r31",
+      "--workers",
+      "6",
+      "--instrument"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Ea_i",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "replays_Ea_i_vinstr",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_replays_07c.py",
+      "Ea_i",
+      "vinstr",
+      "--sets",
+      "chase",
+      "parta:R2",
+      "parta:R2~o",
+      "r31",
+      "--workers",
+      "6",
+      "--instrument"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "SEg_i",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "replays_SEg_i_vinstr",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_replays_07c.py",
+      "SEg_i",
+      "vinstr",
+      "--sets",
+      "chase",
+      "parta:R2",
+      "parta:R2~o",
+      "r31",
+      "--workers",
+      "6",
+      "--instrument"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "SEa_i",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "replays_SEa_i_vinstr",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_replays_07c.py",
+      "SEa_i",
+      "vinstr",
+      "--sets",
+      "chase",
+      "parta:R2",
+      "parta:R2~o",
+      "r31",
+      "--workers",
+      "6",
+      "--instrument"
+     ]
+    }
+   ]
+  }
+ ]
+}

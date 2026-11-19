@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/d1_descent_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/d1/d1_descent.json --chase
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:14:05Z
+# ----
+{"calls": 201, "all_depth20_below_refused": 195, "no_depth20": 6, "depth20_leaves": 690}
+below by route|cause: {'levin|residual_above_floor': 14037, 'levin|halving_test': 1408, 'cc_gate|residual_above_floor': 6615, 'levin|floor_limited': 2023, 'cc_gate|halving_test': 2049, 'cc_gate|floor_limited': 3856}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/d1/d1_descent.json
+# ----
+# end 2026-11-18T11:14:06Z
+# exit 0

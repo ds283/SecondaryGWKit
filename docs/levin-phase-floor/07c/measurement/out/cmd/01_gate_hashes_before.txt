@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/gate_hashes_07c.py before /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/gate/gate_hashes_before.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T10:10:13Z
+# ----
+{"census": [151, 151], "parta": [166, 166], "r31": [6, 6], "copy": [5, 5], "census_checkpoint": "396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253", "census_run_extra": [], "census_run_missing": [], "census_run_files": [150, 150], "copy_extra": []} wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/gate/gate_hashes_before.json c8fc6494119fd3b6134ad5d076f5fff423ec687eb1021310e1d0ad357d89e8a6
+# ----
+# end 2026-11-18T10:10:20Z
+# exit 0

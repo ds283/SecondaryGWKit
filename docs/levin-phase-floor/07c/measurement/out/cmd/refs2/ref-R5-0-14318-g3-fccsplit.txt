@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/leafref_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/refs/specs/ref-R5-0-14318-g3.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/refs/readings/ref-R5-0-14318-g3-fccsplit.json --workers 2 --split-ratio 1.8
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T03:52:22Z
+# ----
+ref-R5-0-14318-g3 res 1: 1 pieces, 1906 segments, 120 jobs, 0 direct, in 77.5 s (job CPU 151 s)
+ref-R5-0-14318-g3 res 2: 1 pieces, 1906 segments, 120 jobs, 0 direct, in 310.5 s (job CPU 615 s)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/refs/readings/ref-R5-0-14318-g3-fccsplit.json 31a0ad5a55f4a12bff877366759a403e510972086f11ec0b17a5dd84f2258274
+# ----
+# end 2026-11-19T03:58:52Z
+# exit 0

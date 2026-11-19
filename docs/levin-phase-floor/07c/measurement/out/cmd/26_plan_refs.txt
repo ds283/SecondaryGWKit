@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/plan_refs_07c.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:25:21Z
+# ----
+123 readings over 61 integrands; projected job wall 106429 s; two at a time x1.2: 17.74 h
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/plan_refs.json
+# ----
+# end 2026-11-18T11:25:23Z
+# exit 0

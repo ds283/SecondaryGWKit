@@ -1,0 +1,18 @@
+{
+ "written_utc": "2026-11-18T10:24:13.656680+00:00",
+ "note": "levin-phase-floor 07c Part A: every draw's seed, written before any draw. Each draw uses numpy.random.default_rng(seed) and records its order.",
+ "seeds": {
+  "R4": {
+   "seed": 707304,
+   "draws": "about 30 of the chase's 103 integrands (section 2.5 R4), stratified by group label, k and the refused ancestor's depth"
+  },
+  "R5": {
+   "seed": 707305,
+   "draws": "about 30 of the 306 unreferenced calls moved beyond the sum of the two codes' abserrs (section 2.5 R5), stratified by group label, k and which code declares the smaller abserr"
+  },
+  "D2": {
+   "seed": 707302,
+   "draws": "the Clenshaw-Curtis leaf sample of section 2.3, by stratum"
+  }
+ }
+}

@@ -1,0 +1,12 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/r2_28_probe_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/r2-28/spec.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/r2-28/probe_spec.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/r2-28/probe.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T09:33:50Z
+# ----
+tree:295 [22.3567, 23.5393]: driver V_P -2.1342656974026193e-29 Q -2.1342657159606124e-29; |theta'| 372.7..1216
+tree:294 [21.7654, 22.3567]: driver V_P 2.5358328445064136e-31 Q 2.5358329322197872e-31; |theta'| 1216..2197
+07a:0 [4.61695, 23.5393]: driver V_P -1.7616814858918795e-29 Q -1.7616814934852841e-29; |theta'| 372.7..2.145e+10
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/r2-28/probe.json b3b663dcc76967b98335523852a4318b45ed46c0c233d82406f401f5f7e2137e
+# ----
+# end 2026-11-19T09:33:52Z
+# exit 0

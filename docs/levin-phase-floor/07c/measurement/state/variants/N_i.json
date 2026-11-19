@@ -1,0 +1,12 @@
+{
+ "name": "N_i",
+ "options": {
+  "s": null,
+  "e": null,
+  "n": true
+ },
+ "instrumented": true,
+ "basis": "instrumented copy of N (table 4's descent column)",
+ "sha256": "ebd13eb59d70eeb975d8bb7dd80e37772dd1c7b76a33f2df05a726d9aa48252b",
+ "generator_sha256": "31bb4a3b1a0b005495174c80be99ffe276997b55daea6af43628b8ad8d757fe9"
+}

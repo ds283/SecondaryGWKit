@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/populations_07c.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T10:15:17Z
+# ----
+# levin-phase-floor 07c Part A: the populations of section 2.1
+# written 2026-11-18T10:15:23Z on mps026298.phys.susx.ac.uk
+# script populations_07c.py sha256 ff9763eebb62ec2c19512f5440e295715215a685f4f6833e349cb38f691e9cc0
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/out/stop3/compare_census_calls.calls.jsonl sha256 a327106d0b0890fd9dd4b8a85dc7e64aec8340579711ff006fe86230bf25ad8d
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f/docs/levin-phase-floor/07b/census/out/scores/summary.json sha256 e886a3fe0a6437ded1fa9ba4ac891604236c6fe9c6c93167175a31153c89ff91
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f/docs/levin-phase-floor/07b/census/out/scores/u4_u6_scores.json sha256 18cbcffb0ef804e5ff6040bcc0444f5f468d92ec304516672c415d9c50683a19
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f/docs/levin-phase-floor/07b/census/out/scores/u4_v4_scores.json sha256 2a2f7d9bc36f4069d5561c46438df277050f968028c24aecd275792194987230
+calls read 289482; chase 198 (equals the census agent's list: True); moved beyond the sum 326, converged both 324, referenced 18, unreferenced 306
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/populations_07c.json sha256 33910d7116da61c58d3470f0b2d5d705c35ed66c74dd158c80d95f608348342f
+# ----
+# end 2026-11-18T10:15:24Z
+# exit 0

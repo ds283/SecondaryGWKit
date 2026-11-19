@@ -1,0 +1,1 @@
+a:v08 Eg: DIFFERS: region arrays differ: ['abserr', 'budget_err', 'declared_resolution', 'relerr', 'total_err']; abserr: replay 0x1.c9b85d0081f70p-121 census 0x1.c35d1a64ba31bp-121; value -0x1.bab692dc260c7p-102 abserr 0x1.c9b85d0081f70p-121 conv True regions 75 depth 11 windows 1 stopped 1 1.32 s

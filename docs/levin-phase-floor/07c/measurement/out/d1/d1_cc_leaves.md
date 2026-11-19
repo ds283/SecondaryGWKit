@@ -1,0 +1,5 @@
+| cause | n | reproduce | resolved | true <= floor | max(true, ref err) <= floor | candidate <= floor | true/pair min-med-max | true/floor min-med-max |
+|---|---|---|---|---|---|---|---|---|
+| floor_limited | 3856 | 3856 | 1474 | 3071 | 2648 | dqk21 3856, nest3 3408, pair 3856, pair_sq 3856, tail_max4x2 1990, tail_sum4 1896 | 0.0022-1.3-8.5e+02 | 3e-05-0.3-13 |
+| halving_test | 2049 | 2049 | 880 | 1554 | 1512 | dqk21 2049, nest3 1987, pair 2049, pair_sq 2049, tail_max4x2 1542, tail_sum4 1546 | 0.0036-1.8-7.4e+02 | 0.0001-0.13-2.3 |
+| residual_above_floor | 6615 | 6615 | 2349 | 2968 | 1159 | dqk21 6521, nest3 3410, pair_sq 6615, tail_max4x2 159, tail_sum4 105 | 0.00021-0.36-10 | 0.00063-1.1-2.2e+05 |

@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/d2_population_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/d1/d1_descent.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:26:24Z
+# ----
+population by stratum: {'chase|group': 14212, 'gate_q1|analytic': 6, 'gate_q1|group': 4531, 'gate_q2|analytic': 5, 'gate_q2|group': 2931, 'gate_q3|analytic': 2, 'gate_q3|group': 1346, 'gate_q4|group': 1285, 'window|group': 2392}
+taken by stratum: {'chase|group': 25, 'gate_q1|analytic': 6, 'gate_q1|group': 25, 'gate_q2|analytic': 5, 'gate_q2|group': 25, 'gate_q3|analytic': 2, 'gate_q3|group': 25, 'gate_q4|group': 25, 'window|group': 25}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/selection_d2.json c4beb6663084fe0fcb57ccaf8bd69f563ad83c3700e75e24af77c9db358afc6b
+# ----
+# end 2026-11-18T11:26:38Z
+# exit 0

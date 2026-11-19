@@ -1,0 +1,87 @@
+{
+  "argv": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+    "-B",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_06j.py",
+    "--run-dir",
+    "<run dir>",
+    "--plan",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/plan_refs2.json"
+  ],
+  "campaign": "levin-phase-floor",
+  "checkpoint": "var/runs/levin-phase-floor-07c-refs2-20261118T235323/checkpoint.jsonl",
+  "created": "2026-11-18T23:53:23+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement",
+  "expected_units": 123,
+  "git_dirty": false,
+  "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+  "heartbeat_means": "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each command's start and end, and every 60 s by a thread of the driver while its process lives.",
+  "host": {
+    "id": "d120d1cf03551e6f",
+    "machine": "arm64",
+    "name": "mps026298.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "07c",
+  "purpose": "levin-phase-floor prompt 07c Part A section 2.5 on the Mac Studio (mps026298; Python 3.13.16), second launch: the references R4 (30 chase integrands), R5 (30 of the 306 unreferenced moved calls' integrands) and R31's record, read by 07's V4 method with tools/filon_reference.py (d37e633b): split FCC at resolutions 1 and 2 (leafref_07c.py v2, split ratio 1.8) and QAWO at 1 and 2 (one_reading.py) where projected at 30 minutes or less; the same 123 readings, rule, seeds and projection model as the first launch (levin-phase-floor-07c-refs-20261118T112553, which took no reading: leafref_07c.py v1 named a loader module not on the path, deviation 23); three at a time, two workers each (six processes; nothing else running), on the laptop orchestrator's ruling (b); projected 11.8 h elapsed with 1.2 margin; backstop 74,784 s, wall-clock (run_06j.py v2 backstop_divisor 3), ending by Part A's 36 h less 1.5 h. Ray-free, no lock, no store opened, nothing written in a tree.",
+  "results": null,
+  "results_store_id": null,
+  "run_id": "levin-phase-floor-07c-refs2-20261118T235323",
+  "scope": "61 integrands, 123 readings (state/plan_refs2.json, from state/plan_refs.json); outputs var/levin-phase-floor-07c/measurement/out/refs/readings/.",
+  "script": "var/levin-phase-floor-07c/measurement/scripts/run_06j.py",
+  "script_sha256": "2df4fbd7aab119a6cf47e53f639b5b27f4d7155b3a8308506304496288105483",
+  "unit": "commands"
+}

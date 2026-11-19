@@ -1,0 +1,17 @@
+{
+ "label": "base",
+ "results": [
+  {
+   "name": "replays_tree_base",
+   "exit": 0,
+   "wall_s": 335.26446890830994
+  },
+  {
+   "name": "replays_instr_base",
+   "exit": 0,
+   "wall_s": 332.03182315826416
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-18T11:13:50Z"
+}

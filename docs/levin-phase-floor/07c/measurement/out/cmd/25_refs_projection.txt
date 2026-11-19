@@ -1,0 +1,80 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/refs_projection_07c.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:22:10Z
+# ----
+# levin-phase-floor 07c Part A: R4 and R5, projected
+# written 2026-11-18T11:24:33Z on mps026298.phys.susx.ac.uk
+# script refs_projection_07c.py sha256 3706a4b457f8037f37f347c7ba35a5cca0287914efc4be7d686adfe962c06d29
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/census/out/refs/refs_projection.json sha256 0512daddfc3bb920cbb4d0d0515c8b735742c631bb69b76b56b2fd350af15a1b
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/refs/inputs.json sha256 ee0effd64f0f7532261e05ceafbfa25ebb86424f6f064250ff3a44226827b02a
+split-FCC fit: {"1": {"a_g": [0.02544422582424098, 0.012734042106280857], "n": 48, "max_actual_over_fit": 2.6830180653101166, "min_actual_over_fit": 0.8065360464049455, "median_actual_over_fit": 1.0837842231607675}, "2": {"a_g": [0.10488438241043095, 0.05736796479480825], "n": 48, "max_actual_over_fit": 2.588139109957747, "min_actual_over_fit": 0.8278197865102074, "median_actual_over_fit": 1.044208921160655}}
+ref-R5-2-14404-g1            n_seg 2398 n_split  2402 D_nonmono 5.4e+04 qawo no  fccsplit_r1 2008 fccsplit_r2 8666 | 10674 s
+ref-R5-2-38199-g1            n_seg 2350 n_split  2354 D_nonmono 5.4e+04 qawo no  fccsplit_r1 2005 fccsplit_r2 8653 | 10658 s
+ref-R5-2-34718-g1            n_seg 2254 n_split  2258 D_nonmono 5.4e+04 qawo no  fccsplit_r1 1998 fccsplit_r2 8627 | 10625 s
+ref-R5-2-2186-g1             n_seg 2244 n_split  2251 D_nonmono 3.83e+04 qawo no  fccsplit_r1 1461 fccsplit_r2 6293 | 7754 s
+ref-R5-2-38649-g1            n_seg 2148 n_split  2155 D_nonmono 3.83e+04 qawo no  fccsplit_r1 1454 fccsplit_r2 6267 | 7721 s
+ref-R5-1-34525-g1            n_seg 1746 n_split  1750 D_nonmono 1.72e+04 qawo yes fccsplit_r1 707 fccsplit_r2 3028 qawo_r1 67 qawo_r2 277 | 4079 s
+ref-R4-1-2367-g1             n_seg 2586 n_split  2590 D_nonmono 1.72e+04 qawo no  fccsplit_r1 764 fccsplit_r2 3256 | 4021 s
+ref-R5-1-2040-g1             n_seg 2226 n_split  2230 D_nonmono 1.72e+04 qawo no  fccsplit_r1 740 fccsplit_r2 3159 | 3899 s
+ref-R5-1-14045-g1            n_seg 2202 n_split  2206 D_nonmono 1.72e+04 qawo no  fccsplit_r1 738 fccsplit_r2 3152 | 3890 s
+ref-R5-3-35006-g4            n_seg 2192 n_split  2192 D_nonmono 0 qawo yes fccsplit_r1 150 fccsplit_r2 595 qawo_r1 316 qawo_r2 1379 | 2440 s
+ref-R5-0-35112-g1            n_seg 2534 n_split  2538 D_nonmono 5.48e+03 qawo no  fccsplit_r1 360 fccsplit_r2 1503 | 1863 s
+ref-R5-0-2269-g1             n_seg 2318 n_split  2322 D_nonmono 5.48e+03 qawo no  fccsplit_r1 346 fccsplit_r2 1444 | 1790 s
+ref-R5-0-1941-g1             n_seg 2102 n_split  2106 D_nonmono 5.48e+03 qawo no  fccsplit_r1 331 fccsplit_r2 1385 | 1716 s
+ref-R5-0-14318-g3            n_seg 1906 n_split  1906 D_nonmono 0 qawo yes fccsplit_r1 130 fccsplit_r2 517 qawo_r1 200 qawo_r2 863 | 1710 s
+ref-R5-0-2016-g1             n_seg 2054 n_split  2058 D_nonmono 5.48e+03 qawo no  fccsplit_r1 328 fccsplit_r2 1372 | 1700 s
+ref-R5-3-35020-g1            n_seg 2048 n_split  2048 D_nonmono 0 qawo yes fccsplit_r1 140 fccsplit_r2 556 qawo_r1 170 qawo_r2 727 | 1594 s
+ref-R4-1-34591-g1            n_seg 1622 n_split  1622 D_nonmono 0 qawo yes fccsplit_r1 111 fccsplit_r2 440 qawo_r1 166 qawo_r2 717 | 1435 s
+ref-R4-2-13634-g1            n_seg 1622 n_split  1622 D_nonmono 0 qawo yes fccsplit_r1 111 fccsplit_r2 440 qawo_r1 155 qawo_r2 668 | 1375 s
+ref-R5-1-37676-g2            n_seg 1724 n_split  1724 D_nonmono 0 qawo yes fccsplit_r1 118 fccsplit_r2 468 qawo_r1 143 qawo_r2 608 | 1337 s
+ref-R5-1-37676-g3            n_seg 1724 n_split  1724 D_nonmono 0 qawo yes fccsplit_r1 118 fccsplit_r2 468 qawo_r1 143 qawo_r2 608 | 1337 s
+ref-R5-3-34796-g1            n_seg 1784 n_split  1784 D_nonmono 0 qawo yes fccsplit_r1 122 fccsplit_r2 484 qawo_r1 119 qawo_r2 500 | 1225 s
+ref-R4-3-35033-g3            n_seg 2494 n_split  2494 D_nonmono 0 qawo yes fccsplit_r1 170 fccsplit_r2 677 qawo_r1 73 qawo_r2 281 | 1201 s
+ref-R4-2-34464-g3            n_seg 1474 n_split  1474 D_nonmono 0 qawo yes fccsplit_r1 101 fccsplit_r2 400 qawo_r1 120 qawo_r2 514 | 1135 s
+ref-R5-3-14096-g1            n_seg 2052 n_split  2056 D_nonmono 1.75e+03 qawo no  fccsplit_r1 200 fccsplit_r2 817 | 1017 s
+ref-R5-3-34802-g4            n_seg 1762 n_split  1762 D_nonmono 0 qawo yes fccsplit_r1 120 fccsplit_r2 478 qawo_r1 62 qawo_r2 246 | 906 s
+ref-R4-1-2217-g1             n_seg 2590 n_split  2590 D_nonmono 0 qawo no  fccsplit_r1 177 fccsplit_r2 703 | 880 s
+ref-R4-3-35033-g1            n_seg 2494 n_split  2494 D_nonmono 0 qawo no  fccsplit_r1 170 fccsplit_r2 677 | 847 s
+ref-R4-1-14242-g3            n_seg 2442 n_split  2442 D_nonmono 0 qawo no  fccsplit_r1 167 fccsplit_r2 663 | 830 s
+ref-R4-3-34863-g3            n_seg 2442 n_split  2442 D_nonmono 0 qawo no  fccsplit_r1 167 fccsplit_r2 663 | 830 s
+ref-R4-2-2303-g3             n_seg 2438 n_split  2438 D_nonmono 0 qawo no  fccsplit_r1 166 fccsplit_r2 662 | 828 s
+ref-R4-0-13774-g4            n_seg 2110 n_split  2110 D_nonmono 0 qawo no  fccsplit_r1 144 fccsplit_r2 573 | 717 s
+ref-R4-2-14011-g3            n_seg 2110 n_split  2110 D_nonmono 0 qawo no  fccsplit_r1 144 fccsplit_r2 573 | 717 s
+ref-R4-1-37672-g3            n_seg 2052 n_split  2052 D_nonmono 0 qawo no  fccsplit_r1 140 fccsplit_r2 557 | 697 s
+ref-R4-2-34655-g6            n_seg 2028 n_split  2028 D_nonmono 0 qawo no  fccsplit_r1 138 fccsplit_r2 551 | 689 s
+ref-R5-2-38635-g6            n_seg 2012 n_split  2012 D_nonmono 0 qawo no  fccsplit_r1 137 fccsplit_r2 546 | 684 s
+ref-R4-0-1862-g1             n_seg 1990 n_split  1990 D_nonmono 0 qawo no  fccsplit_r1 136 fccsplit_r2 540 | 676 s
+ref-R4-0-12688-g1            n_seg 1438 n_split  1438 D_nonmono 0 qawo yes fccsplit_r1 98 fccsplit_r2 390 qawo_r1 33 qawo_r2 124 | 645 s
+ref-R4-3-37347-g3            n_seg 1622 n_split  1622 D_nonmono 0 qawo yes fccsplit_r1 111 fccsplit_r2 440 qawo_r1 12 qawo_r2 27 | 591 s
+ref-R4-1-1761-g6             n_seg 1692 n_split  1692 D_nonmono 0 qawo no  fccsplit_r1 116 fccsplit_r2 459 | 575 s
+ref-R4-0-13757-g6            n_seg 1652 n_split  1652 D_nonmono 0 qawo no  fccsplit_r1 113 fccsplit_r2 448 | 561 s
+ref-R5-1-34594-g2            n_seg 1388 n_split  1388 D_nonmono 0 qawo yes fccsplit_r1 95 fccsplit_r2 377 qawo_r1 21 qawo_r2 68 | 560 s
+ref-R4-2-36987-g3            n_seg 1622 n_split  1622 D_nonmono 0 qawo no  fccsplit_r1 111 fccsplit_r2 440 | 551 s
+ref-R4-1-1759-g4             n_seg 1544 n_split  1544 D_nonmono 0 qawo no  fccsplit_r1 105 fccsplit_r2 419 | 525 s
+ref-R4-1-1759-g5             n_seg 1544 n_split  1544 D_nonmono 0 qawo no  fccsplit_r1 105 fccsplit_r2 419 | 525 s
+ref-R5-1-1728-g5             n_seg 1306 n_split  1306 D_nonmono 0 qawo yes fccsplit_r1 89 fccsplit_r2 355 qawo_r1 19 qawo_r2 61 | 523 s
+ref-R4-3-13490-g2            n_seg 1350 n_split  1350 D_nonmono 0 qawo yes fccsplit_r1 92 fccsplit_r2 366 qawo_r1 14 qawo_r2 40 | 512 s
+ref-R4-2-1375-g4             n_seg 1016 n_split  1016 D_nonmono 0 qawo yes fccsplit_r1 69 fccsplit_r2 276 qawo_r1 33 qawo_r2 131 | 509 s
+ref-R4-2-1370-g2             n_seg 1318 n_split  1318 D_nonmono 0 qawo yes fccsplit_r1 90 fccsplit_r2 358 qawo_r1 15 qawo_r2 45 | 507 s
+ref-R5-3-13615-g4            n_seg 1302 n_split  1302 D_nonmono 0 qawo yes fccsplit_r1 89 fccsplit_r2 353 qawo_r1 14 qawo_r2 42 | 499 s
+ref-R4-3-13615-g3            n_seg 1302 n_split  1302 D_nonmono 0 qawo yes fccsplit_r1 89 fccsplit_r2 353 qawo_r1 13 qawo_r2 33 | 488 s
+ref-R5-0-1784-g6             n_seg 1182 n_split  1182 D_nonmono 0 qawo yes fccsplit_r1 81 fccsplit_r2 321 qawo_r1 14 qawo_r2 42 | 457 s
+ref-R4-1-1841-g5             n_seg 1330 n_split  1330 D_nonmono 0 qawo no  fccsplit_r1 91 fccsplit_r2 361 | 452 s
+ref-R4-1-11189-g4            n_seg 1054 n_split  1054 D_nonmono 0 qawo yes fccsplit_r1 72 fccsplit_r2 286 qawo_r1 8 qawo_r2 18 | 384 s
+ref-R31-3-20363-g1           n_seg 1028 n_split  1028 D_nonmono 0 qawo yes fccsplit_r1 70 fccsplit_r2 279 qawo_r1 8 qawo_r2 17 | 374 s
+ref-R5-0-33996-g4            n_seg  824 n_split   824 D_nonmono 0 qawo yes fccsplit_r1 56 fccsplit_r2 224 qawo_r1 6 qawo_r2 13 | 299 s
+ref-R4-0-12723-g5            n_seg  798 n_split   798 D_nonmono 0 qawo yes fccsplit_r1 54 fccsplit_r2 217 qawo_r1 6 qawo_r2 12 | 289 s
+ref-R4-0-33929-g3            n_seg  782 n_split   782 D_nonmono 0 qawo yes fccsplit_r1 53 fccsplit_r2 212 qawo_r1 6 qawo_r2 12 | 283 s
+ref-R5-0-12584-g1            n_seg  740 n_split   740 D_nonmono 0 qawo yes fccsplit_r1 51 fccsplit_r2 201 qawo_r1 5 qawo_r2 11 | 268 s
+ref-R5-0-12660-g6            n_seg  702 n_split   702 D_nonmono 0 qawo yes fccsplit_r1 48 fccsplit_r2 191 qawo_r1 5 qawo_r2 11 | 255 s
+ref-R5-3-1151-g4             n_seg  534 n_split   534 D_nonmono 0 qawo yes fccsplit_r1 36 fccsplit_r2 145 qawo_r1 4 qawo_r2 8 | 194 s
+ref-R5-1-11062-g6            n_seg  298 n_split   298 D_nonmono 0 qawo yes fccsplit_r1 20 fccsplit_r2 81 qawo_r1 2 qawo_r2 5 | 108 s
+job wall 106429 s (29.56 h); by draw {'R31': 374, 'R4': 24275, 'R5': 81781}; longest reading 8666 s
+elapsed, 3 at once, x1.2: 42572 s = 11.83 h
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/refs/refs_projection.json sha256 77effdb59cbc37b5094c9546b6f28412028e884f25c229bd53fbcb0cca7bd81f
+# ----
+# end 2026-11-18T11:24:34Z
+# exit 0

@@ -1,0 +1,84 @@
+--- tree/AdaptiveLevin/levin_quadrature.py
++++ scripts/variants/levin_quadrature_07c_Ea.py
+@@ -623,6 +623,11 @@
+ #     calls, 74 % of the census's Levin calls at rtol 1e-7, beyond those 21 and five targeted ones.
+ _LEVIN_EDGE_RATE_RATIO_MAX = 2.0
+ _LEVIN_LEAF_RATE_RANGE_MAX = 10.0
++_VARIANT_07C = 'Ea'  # 07c variant: its name
++_MEASURE_07C = None  # 07c variant: unused (replay_07c.py's instrument hook)
++_S07C = None  # 07c variant (S): (LIMIT, NOISE_FACTOR) or None
++_E07C = ('all', 'tail_sum4')  # 07c variant (E): (SCOPE, ESTIMATE) or None
++_N07C = False  # 07c variant (N)
+ 
+ # The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
+ # 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
+@@ -3269,6 +3274,27 @@
+     }
+ 
+ 
++def _e07c_estimate(x_span, f, BasisData, chebyshev_order, value_fine, integrand_fine, vectorize_cache):
++    """07c variant (E): the sharper estimate of CC_{2N-1}'s error (see make_variants_07c.py)."""
++    kind = _E07C[1]
++    if kind == "nest3":
++        order3 = 4 * chebyshev_order - 3
++        grid3, _ = chebyshev_matrices(x_span, order3)
++        f3 = np.vstack([_sample_vectorized(func, grid3, vectorize_cache, ("f", id(func))) for func in f])
++        basis3 = np.array([BasisData.eval_basis_and_arguments(x)[0] for x in grid3]).T
++        value3 = float(np.dot(_cc_weights(x_span, order3), np.sum(f3 * basis3, axis=0)))
++        return float(np.fabs(value3 - value_fine))
++    if kind == "tail_sum4":
++        n = integrand_fine.shape[0]
++        j = np.arange(n)
++        wts = np.ones(n)
++        wts[0] = wts[-1] = 0.5
++        ck = np.array([(2.0 / (n - 1)) * np.sum(wts * integrand_fine * np.cos(np.pi * j * k / (n - 1))) for k in range(n - 4, n)])
++        ck[-1] *= 0.5
++        return float(0.5 * np.fabs(x_span[1] - x_span[0]) * np.sum(np.abs(ck)))
++    raise RuntimeError("07c variant (E): unknown estimate")
++
++
+ def _adaptive_levin_subregion_cc(
+     x_span: Tuple[float, float],
+     f,
+@@ -3279,6 +3305,7 @@
+     notify_label: Optional[str],
+     id_label,
+     vectorize_cache: Optional[dict] = None,
++    forced: bool = False,  # 07c variant (E): called from _oriented_cc()
+ ):
+     """
+     Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
+@@ -3370,6 +3397,9 @@
+     value_coarse = float(np.dot(w_coarse, integrand_fine[::2]))
+ 
+     abserr_direct = float(np.fabs(value_fine - value_coarse))
++    abserr_pair_07c = abserr_direct  # 07c variant (E)
++    if _E07C is not None and (_E07C[0] == "all" or not forced):  # 07c variant (E)
++        abserr_direct = _e07c_estimate(x_span, f, BasisData, chebyshev_order, value_fine, integrand_fine, vectorize_cache)
+ 
+     # Round-off floor of this rule, derived from what it computes (_cc_roundoff_floor();
+     # prompts/levin-phase-floor/06d-cc-roundoff-floor.md), from the fine-grid samples already in
+@@ -3465,6 +3495,7 @@
+     return {
+         "value": value_fine,
+         "abserr_direct": abserr_direct,
++        "abserr_pair_07c": abserr_pair_07c,  # 07c variant (E)
+         "resasc": resasc,
+         "p_sample": None,
+         "p_ratios": None,
+@@ -3637,6 +3668,7 @@
+             notify_label,
+             id_label,
+             vectorize_cache=vectorize_cache,
++            forced=True,  # 07c variant (E)
+         )
+ 
+     ascending = (b, a)
+@@ -3659,6 +3691,7 @@
+         notify_label,
+         id_label,
+         vectorize_cache=vectorize_cache,
++        forced=True,  # 07c variant (E)
+     )
+     data["value"] = -data["value"]
+     if data.get("node_error_signed") is not None:

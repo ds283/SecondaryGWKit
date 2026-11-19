@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/register_variant_07c.py N \(N\)\ basis:\ D1\ found\ 1\,288\ Clenshaw-Curtis\ and\ 983\ Levin\ leaves\ bisected\ below\ refused\ leaves\ with\ delta1\ \<=\ nu_B\,\ delta2\ \<=\ nu_B\ and\ r\ \>=\ 1\ \(out/d1/d1_descent.json\)\;\ no\ constant\ is\ added:\ nu_B\ is\ the\ tree\'s.
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:30:38Z
+# ----
+N: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_N.py sha256 fbbdcbed3b4f00e954ff2d8f3b32eae97f8ca1b9591b0fe299fd0635a21d5e0a; diff /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/N.diff (+17 -1)
+# ----
+# end 2026-11-18T11:30:38Z
+# exit 0

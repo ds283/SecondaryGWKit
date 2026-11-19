@@ -1,0 +1,31 @@
+{
+ "tree": "h",
+ "name": "C96",
+ "units": [
+  {
+   "uid": "h-1e-8-1-1841",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "1-1841",
+   "names05": null,
+   "shard": 1,
+   "serial": 1841,
+   "k_key": "1:301",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     5,
+     "k=9.56e+07/Mpc, q=3.14e+05/Mpc, r=9.56e+07/Mpc @ z_response=1205.3, z in (5.406e+09, 1205.3), regime Gqr, group G-q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_chase/C96",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_chase/C96/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

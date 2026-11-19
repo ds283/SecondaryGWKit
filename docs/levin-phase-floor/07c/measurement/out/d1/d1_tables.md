@@ -1,0 +1,92 @@
+# D1: the chase, measured (table 1)
+
+## 1. The descent analysis against the census agent's (the 198 chase calls)
+
+- calls 198; every depth-20 leaf below a refused leaf: **192** (census agent: 192); no depth-20 leaf: 6 (census agent: 6); depth-20 leaves 668 (census agent: 668), by route {'cc_gate': 668}
+- per call, agreeing with the census agent's record: n_depth20 198/198, descends_from_refused 198/198, routes 198/198, refused_depths_nearest 139/198, refused_depths_shallowest 198/198
+- refused-ancestor depth of the depth-20 leaves, shallowest: {'0': 482, '1': 90, '2': 92, '3': 4}; nearest: {'0': 250, '1': 136, '2': 254, '3': 28}; calls by their shallowest: {'0': 129, '1': 31, '2': 30, '3': 2, 'None': 6}
+- item 2: a:R2-28 depth-20 10 {'cc_gate': 10}, all below a refused leaf True, refused leaves 6, regions 296; a:R2-28~o depth-20 10 {'cc_gate': 10}, all below a refused leaf True, refused leaves 5, regions 297; r31-3-20363-1 depth-20 2 {'cc_gate': 2}, all below a refused leaf True, refused leaves 4, regions 143
+
+## 2. Every leaf chosen below a refused leaf (the 198 chase calls, R2-28 at both rtols, R31's record)
+
+Cause: `residual_above_floor` (the round-off exit not considered), `halving_test` (considered; the halving test refused),
+`budget_clause`, `floor_limited` (chosen and found floor-limited: not bisected). The refused leaves' own bisections are
+apart: 278.
+
+| route | cause | n | why untrusted / budget | clause r>=1 / noise (r<1, delta1>nu_B) / rate rule | delta1/nu_B min/med/90%/99%/max | delta2/nu_B | delta1/request |
+|---|---|---|---|---|---|---|---|
+| cc_gate | floor_limited | 3856 | 3856 / 0 | 3126 / 730 / 0 | 0.000691 / 0.654 / 1.01 / 1.28 / 4.71 | 0.0143 / 0.844 / 1.96 / 5.26 / 9.26 | 4.61e-17 / 6.34e-11 / 1.34e-07 / 1.11e-05 / 0.00113 |
+| cc_gate | halving_test | 2049 | 2049 / 0 | 1456 / 593 / 0 | 0.0326 / 0.961 / 1.01 / 1.1 / 2.08 | 0.257 / 0.969 / 2.44 / 4.82 / 8.33 | 5.04e-16 / 1.05e-10 / 1.05e-07 / 1.6e-05 / 0.00113 |
+| cc_gate | residual_above_floor | 6615 | 6615 / 0 | 5642 / 973 / 0 | 0.00149 / 0.953 / 1.08 / 1.53e+03 / 1.22e+05 | 0.13 / 1.28 / 4.79 / 640 / 1.57e+05 | 2.79e-17 / 1.92e-11 / 8.65e-08 / 2.18e-05 / 0.000971 |
+| levin | floor_limited | 2023 | 2023 / 0 | 2023 / 0 / 0 | 0 / 0.0263 / 0.212 / 0.541 / 0.894 | 9.25e-13 / 0.251 / 122 / 353 / 832 | 0 / 1.21e-14 / 5.77e-11 / 4.05e-08 / 8.39e-06 |
+| levin | halving_test | 1408 | 1408 / 0 | 1009 / 0 / 399 | 0 / 2.06e-05 / 0.108 / 0.712 / 0.946 | 0 / 4.58e-05 / 0.261 / 7.91 / 310 | 0 / 9.35e-15 / 7.46e-10 / 1.28e-06 / 0.000184 |
+| levin | residual_above_floor | 14037 | 14035 / 2 | 6734 / 7213 / 88 | 0.362 / 65.9 / 6.1e+03 / 1.71e+05 / 2.6e+08 | 5.2e-05 / 84 / 6.72e+03 / 2.15e+05 / 8.62e+07 | 2.89e-15 / 3.17e-10 / 1.76e-06 / 0.00216 / 0.539 |
+
+Bisections (not floor-limited): 24109, by route {'levin': 15445, 'cc_gate': 8664}; by depth (CC) {3: 14, 4: 34, 5: 24, 6: 14, 7: 6, 8: 2, 9: 4, 10: 26, 11: 386, 12: 1406, 13: 1791, 14: 1416, 15: 1247, 16: 973, 17: 503, 18: 473, 19: 345}; (Levin) {1: 262, 2: 627, 3: 1192, 4: 1044, 5: 1358, 6: 1615, 7: 1590, 8: 1573, 9: 1515, 10: 1808, 11: 1775, 12: 900, 13: 186}
+
+## 3. The chase's Clenshaw-Curtis leaves: CC_47's true error against |CC_47 - CC_24| and the floor
+
+From leafcc_07c.py (reference: the better of CC_185/GL and a 600-point Chebyshev least-squares fit; out/d1/d1_cc_leaves.md).
+
+| cause | n | reproduce | resolved | true <= floor | max(true, ref err) <= floor | candidate <= floor | true/pair min-med-max | true/floor min-med-max |
+|---|---|---|---|---|---|---|---|---|
+| floor_limited | 3856 | 3856 | 1474 | 3071 | 2648 | dqk21 3856, nest3 3408, pair 3856, pair_sq 3856, tail_max4x2 1990, tail_sum4 1896 | 0.0022-1.3-8.5e+02 | 3e-05-0.3-13 |
+| halving_test | 2049 | 2049 | 880 | 1554 | 1512 | dqk21 2049, nest3 1987, pair 2049, pair_sq 2049, tail_max4x2 1542, tail_sum4 1546 | 0.0036-1.8-7.4e+02 | 0.0001-0.13-2.3 |
+| residual_above_floor | 6615 | 6615 | 2349 | 2968 | 1159 | dqk21 6521, nest3 3410, pair_sq 6615, tail_max4x2 159, tail_sum4 105 | 0.00021-0.36-10 | 0.00063-1.1-2.2e+05 |
+
+## 4. The calls with no depth-20 leaf, leaf by leaf
+
+- **c-1e-8-0-33997-4**: abserr 9.664e-34 = 1.002 of the request 9.645e-34, converged False, 246 leaves, sum e' 9.593e-34; refused leaves 1 at depths {'1': 1}. Largest e' first:
+  - depth 7 levin: e' 5.41e-35 (5.6%), floor 1.65e-38, residual 5.31e-35, trusted True, phase_limited False
+  - depth 7 cc_gate: e' 4.88e-35 (5.1%), floor 6.57e-37, residual 1.05e-35, trusted True, phase_limited False
+  - depth 5 levin: e' 4.57e-35 (4.8%), floor 1.09e-38, residual 3.75e-35, trusted True, phase_limited False
+  - depth 7 levin: e' 4.41e-35 (4.6%), floor 2.97e-38, residual 4.27e-35, trusted True, phase_limited False
+  - depth 7 levin: e' 4.36e-35 (4.5%), floor 4.13e-38, residual 4.21e-35, trusted True, phase_limited False
+  - depth 7 levin: e' 4.03e-35 (4.2%), floor 3.7e-38, residual 3.92e-35, trusted True, phase_limited False
+  - depth 7 levin: e' 3.69e-35 (3.9%), floor 1.21e-38, residual 3.67e-35, trusted True, phase_limited False
+  - depth 6 levin: e' 3.48e-35 (3.6%), floor 7.76e-38, residual 3.22e-35, trusted True, phase_limited False
+- **c-1e-8-1-2229-4**: abserr 1.869e-33 = 1.001 of the request 1.867e-33, converged False, 135 leaves, sum e' 1.867e-33; refused leaves 3 at depths {'2': 3}. Largest e' first:
+  - depth 7 levin: e' 4.9e-34 (26.2%), floor 4.75e-39, residual 4.63e-34, trusted True, phase_limited False
+  - depth 7 levin: e' 2.3e-34 (12.3%), floor 8.84e-39, residual 2.3e-34, trusted True, phase_limited False
+  - depth 7 levin: e' 1.99e-34 (10.6%), floor 2.65e-39, residual 1.54e-34, trusted True, phase_limited False
+  - depth 7 levin: e' 1.72e-34 (9.2%), floor 3.53e-39, residual 1.63e-34, trusted True, phase_limited False
+  - depth 7 levin: e' 1.54e-34 (8.2%), floor 5.53e-39, residual 1.4e-34, trusted True, phase_limited False
+  - depth 7 levin: e' 1.2e-34 (6.4%), floor 1.22e-38, residual 1.19e-34, trusted True, phase_limited False
+  - depth 7 levin: e' 1.06e-34 (5.7%), floor 3.05e-39, residual 1.04e-34, trusted True, phase_limited False
+  - depth 7 levin: e' 1.04e-34 (5.6%), floor 1.04e-38, residual 1.04e-34, trusted True, phase_limited False
+- **c-1e-8-3-13490-2**: abserr 1.276e-32 = 1 of the request 1.276e-32, converged False, 618 leaves, sum e' 1.276e-32; refused leaves 1 at depths {'2': 1}. Largest e' first:
+  - depth 10 cc_gate: e' 1.06e-34 (0.8%), floor 3.5e-36, residual 4.31e-36, trusted True, phase_limited False
+  - depth 11 cc_gate: e' 1.04e-34 (0.8%), floor 7.91e-37, residual 6.89e-36, trusted True, phase_limited False
+  - depth 11 cc_gate: e' 1.04e-34 (0.8%), floor 8.32e-37, residual 8.53e-36, trusted True, phase_limited False
+  - depth 11 cc_gate: e' 1.04e-34 (0.8%), floor 1.55e-35, residual 4.73e-37, trusted True, phase_limited False
+  - depth 6 levin: e' 1.04e-34 (0.8%), floor 3.14e-37, residual 9.55e-35, trusted True, phase_limited False
+  - depth 13 cc_gate: e' 1e-34 (0.8%), floor 1.22e-35, residual 1.91e-36, trusted True, phase_limited False
+  - depth 10 cc_gate: e' 9.98e-35 (0.8%), floor 2.32e-35, residual 1.86e-35, trusted True, phase_limited False
+  - depth 9 cc_gate: e' 9.85e-35 (0.8%), floor 8.75e-36, residual 1.05e-35, trusted True, phase_limited False
+- **c-1e-8-3-13490-3**: abserr 1.276e-32 = 1 of the request 1.276e-32, converged False, 618 leaves, sum e' 1.276e-32; refused leaves 1 at depths {'2': 1}. Largest e' first:
+  - depth 10 cc_gate: e' 1.06e-34 (0.8%), floor 3.5e-36, residual 4.31e-36, trusted True, phase_limited False
+  - depth 11 cc_gate: e' 1.04e-34 (0.8%), floor 7.91e-37, residual 6.89e-36, trusted True, phase_limited False
+  - depth 11 cc_gate: e' 1.04e-34 (0.8%), floor 8.32e-37, residual 8.53e-36, trusted True, phase_limited False
+  - depth 11 cc_gate: e' 1.04e-34 (0.8%), floor 1.55e-35, residual 4.73e-37, trusted True, phase_limited False
+  - depth 6 levin: e' 1.04e-34 (0.8%), floor 3.14e-37, residual 9.55e-35, trusted True, phase_limited False
+  - depth 13 cc_gate: e' 1e-34 (0.8%), floor 1.22e-35, residual 1.91e-36, trusted True, phase_limited False
+  - depth 10 cc_gate: e' 9.98e-35 (0.8%), floor 2.32e-35, residual 1.86e-35, trusted True, phase_limited False
+  - depth 9 cc_gate: e' 9.85e-35 (0.8%), floor 8.75e-36, residual 1.05e-35, trusted True, phase_limited False
+- **c-1e-8-3-13615-2**: abserr 4.602e-32 = 1.005 of the request 4.581e-32, converged False, 332 leaves, sum e' 4.574e-32; refused leaves 1 at depths {'2': 1}. Largest e' first:
+  - depth 6 levin: e' 2.39e-33 (5.2%), floor 4.21e-37, residual 1.87e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 2.05e-33 (4.5%), floor 8.24e-37, residual 1.91e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 2.01e-33 (4.4%), floor 7.8e-37, residual 1.91e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.85e-33 (4.0%), floor 3.88e-37, residual 1.59e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.85e-33 (4.0%), floor 8.71e-37, residual 1.84e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.82e-33 (4.0%), floor 4.54e-37, residual 1.79e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.59e-33 (3.5%), floor 5.62e-37, residual 1.55e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.52e-33 (3.3%), floor 9.21e-37, residual 1.49e-33, trusted True, phase_limited False
+- **c-1e-8-3-13615-3**: abserr 4.602e-32 = 1.005 of the request 4.581e-32, converged False, 332 leaves, sum e' 4.574e-32; refused leaves 1 at depths {'2': 1}. Largest e' first:
+  - depth 6 levin: e' 2.39e-33 (5.2%), floor 4.21e-37, residual 1.87e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 2.05e-33 (4.5%), floor 8.24e-37, residual 1.91e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 2.01e-33 (4.4%), floor 7.8e-37, residual 1.91e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.85e-33 (4.0%), floor 3.88e-37, residual 1.59e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.85e-33 (4.0%), floor 8.71e-37, residual 1.84e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.82e-33 (4.0%), floor 4.54e-37, residual 1.79e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.59e-33 (3.5%), floor 5.62e-37, residual 1.55e-33, trusted True, phase_limited False
+  - depth 8 levin: e' 1.52e-33 (3.3%), floor 9.21e-37, residual 1.49e-33, trusted True, phase_limited False

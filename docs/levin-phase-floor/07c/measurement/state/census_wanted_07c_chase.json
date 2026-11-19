@@ -1,0 +1,68 @@
+{
+ "header": [
+  "# levin-phase-floor 07c Part A: the counterparts wanted (chase)",
+  "# written 2026-11-18T11:01:44Z on mps026298.phys.susx.ac.uk",
+  "# script extract_census_refs_extra_07c.py sha256 8eb630dc33a26330bef4fd58796da5c3237719a59ddddd2267e02ef7fbf798fa",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/populations_07c.json sha256 33910d7116da61c58d3470f0b2d5d705c35ed66c74dd158c80d95f608348342f"
+ ],
+ "wanted": {
+  "x-1e-8-0-1891-3": {
+   "set": "chase~o",
+   "unit": "h-1e-8-0-1891",
+   "kind": "group",
+   "index": 3,
+   "counterpart_of": "h-1e-7-0-1891"
+  },
+  "x-1e-7-0-33997-4": {
+   "set": "chase~o",
+   "unit": "h-1e-7-0-33997",
+   "kind": "group",
+   "index": 4,
+   "counterpart_of": "h-1e-8-0-33997"
+  },
+  "x-1e-7-1-2229-4": {
+   "set": "chase~o",
+   "unit": "h-1e-7-1-2229",
+   "kind": "group",
+   "index": 4,
+   "counterpart_of": "h-1e-8-1-2229"
+  },
+  "x-1e-7-3-13490-2": {
+   "set": "chase~o",
+   "unit": "h-1e-7-3-13490",
+   "kind": "group",
+   "index": 2,
+   "counterpart_of": "h-1e-8-3-13490"
+  },
+  "x-1e-7-3-13490-3": {
+   "set": "chase~o",
+   "unit": "h-1e-7-3-13490",
+   "kind": "group",
+   "index": 3,
+   "counterpart_of": "h-1e-8-3-13490"
+  },
+  "x-1e-7-3-13615-2": {
+   "set": "chase~o",
+   "unit": "h-1e-7-3-13615",
+   "kind": "group",
+   "index": 2,
+   "counterpart_of": "h-1e-8-3-13615"
+  },
+  "x-1e-7-3-13615-3": {
+   "set": "chase~o",
+   "unit": "h-1e-7-3-13615",
+   "kind": "group",
+   "index": 3,
+   "counterpart_of": "h-1e-8-3-13615"
+  },
+  "x-1e-8-3-13910-1": {
+   "set": "chase~o",
+   "unit": "h-1e-8-3-13910",
+   "kind": "group",
+   "index": 1,
+   "counterpart_of": "h-1e-7-3-13910"
+  }
+ }
+}

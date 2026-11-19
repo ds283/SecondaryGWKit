@@ -1,0 +1,13 @@
+{
+  "exit_code": 143,
+  "heartbeat": "2026-11-18T23:48:00+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 88299,
+  "stage": "elapsed 44527 s; running ref-R5-2-14404-g1-fccsplit for 44527 s (projected 10674 s); commands done 0/123; projected finish P 129624 s (summed projection 106429 s); P >= 129600 s: ",
+  "state": "killed",
+  "units_done": 0,
+  "units_total": 123
+}

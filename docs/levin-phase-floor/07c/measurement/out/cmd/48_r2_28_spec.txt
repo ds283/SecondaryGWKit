@@ -1,0 +1,16 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/r2_28_spec_07c.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T09:26:47Z
+# ----
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/r2_28_spec_07c.py", line 69, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/r2_28_spec_07c.py", line 52, in main
+    assert c == cap, (v, sid, c)
+           ^^^^^^^^
+AssertionError: ('tree', 'a:R2-28~o', {'path': '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C04/inputs_C04.pkl', 'offset': 0, 'length': 1351570, 'sha256': '719ae661e6d09b38214b9a499536fd81cdda69180518f1f8787f24e915d067c6', 'override': {'rtol': '0x1.5798ee2308c3ap-27', 'atol': '0x1.e076dec55ce75p-110', 'from_unit': 'h-1e-7-0-13757', 'to_unit': 'h-1e-8-0-13757'}})
+# ----
+# end 2026-11-19T09:26:47Z
+# exit 1

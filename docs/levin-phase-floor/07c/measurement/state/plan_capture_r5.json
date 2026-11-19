@@ -1,0 +1,25 @@
+{
+ "label": "capture-r5",
+ "stages": [
+  {
+   "name": "capture",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "x1_capture_r5",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/x1_capture_07c.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_selection_r5.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_r5",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/captures/captures_r5.json",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  }
+ ]
+}

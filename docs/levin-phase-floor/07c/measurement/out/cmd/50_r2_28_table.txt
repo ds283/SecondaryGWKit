@@ -1,0 +1,457 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/r2_28_table_07c.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T09:33:25Z
+# ----
+# R2-28: every leaf against its own reference (extension, question 1)
+
+- Call reference (07b Part A, fccsplit r2): -1.7616814886668874185e-29; this reading's whole span: r2 -1.7616814886660587304e-29, r1 -1.7616814886672026678e-29, stated error 2.2e-41; r2 minus 07b's 8.29e-42
+
+## tree|a:R2-28: 296 regions, value -1.7616815116722301e-29, abserr 2.078e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 44 | 7.061e-41 | 4.52e-42 | 3.96e-40 |
+| direct_trusted | 188 | -1.813e-42 | 6.23e-42 | 9.62e-39 |
+| direct_untrusted | 2 | -3.47e-45 | 3.52e-45 | 3.78e-44 |
+| levin_floor_limited | 16 | -2.333e-42 | 1.9e-41 | 2.65e-41 |
+| levin_trusted | 46 | -2.301e-37 | 1.15e-40 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 295 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 294 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 48 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 3.63e-41 | 0.987 | 0 range |
+| 40 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 39 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 150 | 14 | direct_floor_limited | [21.5493901, 21.550545] | 2.85e-41 | 8.5e-44 | 2.84e-41 | 1.004 | 0 range |
+| 270 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 2.46e-41 | -1.014 | 0 range |
+| 137 | 14 | direct_floor_limited | [21.5309112, 21.5320661] | 2.43e-41 | 8.6e-44 | 2.4e-41 | 1.01 | 0 range |
+| 73 | 12 | direct_trusted | [21.3357279, 21.3403476] | -2.34e-41 | 1.2e-43 | 2.02e-40 | -0.116 | 0 range |
+| 103 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 2.31e-41 | -1.013 | 0 range |
+| 57 | 13 | direct_trusted | [21.250263, 21.2525729] | -2.16e-41 | 9e-44 | 6.08e-41 | -0.355 | 0 range |
+| 139 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+
+## tree|a:R2-28~o: 297 regions, value -1.7616815116722021e-29, abserr 2.078e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 44 | 7.061e-41 | 4.52e-42 | 3.96e-40 |
+| direct_trusted | 188 | -1.813e-42 | 6.23e-42 | 9.62e-39 |
+| direct_untrusted | 2 | -3.47e-45 | 3.52e-45 | 3.78e-44 |
+| levin_floor_limited | 16 | -2.528e-42 | 1.88e-41 | 2.6e-41 |
+| levin_trusted | 47 | -2.301e-37 | 1.15e-40 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 296 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 295 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 49 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 3.63e-41 | 0.987 | 0 range |
+| 41 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 40 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 151 | 14 | direct_floor_limited | [21.5493901, 21.550545] | 2.85e-41 | 8.5e-44 | 2.84e-41 | 1.004 | 0 range |
+| 271 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 2.46e-41 | -1.014 | 0 range |
+| 138 | 14 | direct_floor_limited | [21.5309112, 21.5320661] | 2.43e-41 | 8.6e-44 | 2.4e-41 | 1.01 | 0 range |
+| 74 | 12 | direct_trusted | [21.3357279, 21.3403476] | -2.34e-41 | 1.2e-43 | 2.02e-40 | -0.116 | 0 range |
+| 104 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 2.31e-41 | -1.013 | 0 range |
+| 58 | 13 | direct_trusted | [21.250263, 21.2525729] | -2.16e-41 | 9e-44 | 6.08e-41 | -0.355 | 0 range |
+| 140 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+
+## S|a:R2-28: 100 regions, value -1.7616815116735241e-29, abserr 2.012e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 62 | 4.63e-41 | 8.11e-42 | 3.3e-39 |
+| levin_floor_limited | 12 | 1.002e-41 | 2.74e-41 | 1.43e-40 |
+| levin_trusted | 26 | -2.301e-37 | 5.02e-41 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 99 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 98 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 42 | 12 | direct_floor_limited | [21.3357279, 21.3403476] | 3.99e-41 | 1.2e-43 | 2.02e-40 | 0.197 | 0 range |
+| 24 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 3.63e-41 | 0.987 | 0 range |
+| 16 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 15 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 35 | 12 | direct_floor_limited | [21.3033898, 21.3080096] | 3.06e-41 | 4.2e-44 | 7.62e-41 | 0.402 | 0 range |
+| 91 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 7.79e-41 | -0.321 | 0 range |
+| 25 | 12 | direct_floor_limited | [21.2294743, 21.234094] | -2.08e-41 | 7.7e-44 | 6.73e-41 | -0.309 | 0 range |
+| 64 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+| 26 | 12 | direct_floor_limited | [21.234094, 21.2387137] | -1.93e-41 | 9.5e-44 | 1.21e-40 | -0.159 | 0 range |
+| 28 | 12 | direct_floor_limited | [21.2433334, 21.2479532] | 1.84e-41 | 1.6e-43 | 1.02e-40 | 0.18 | 0 range |
+
+## S|a:R2-28~o: 100 regions, value -1.7616815116734972e-29, abserr 2.012e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 62 | 4.63e-41 | 8.11e-42 | 3.3e-39 |
+| levin_floor_limited | 12 | 1.029e-41 | 2.74e-41 | 1.42e-40 |
+| levin_trusted | 26 | -2.301e-37 | 5.02e-41 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 99 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 98 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 42 | 12 | direct_floor_limited | [21.3357279, 21.3403476] | 3.99e-41 | 1.2e-43 | 2.02e-40 | 0.197 | 0 range |
+| 24 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 3.63e-41 | 0.987 | 0 range |
+| 16 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 15 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 35 | 12 | direct_floor_limited | [21.3033898, 21.3080096] | 3.06e-41 | 4.2e-44 | 7.62e-41 | 0.402 | 0 range |
+| 91 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 7.79e-41 | -0.321 | 0 range |
+| 25 | 12 | direct_floor_limited | [21.2294743, 21.234094] | -2.08e-41 | 7.7e-44 | 6.73e-41 | -0.309 | 0 range |
+| 64 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+| 26 | 12 | direct_floor_limited | [21.234094, 21.2387137] | -1.93e-41 | 9.5e-44 | 1.21e-40 | -0.159 | 0 range |
+| 28 | 12 | direct_floor_limited | [21.2433334, 21.2479532] | 1.84e-41 | 1.6e-43 | 1.02e-40 | 0.18 | 0 range |
+
+## S2|a:R2-28: 133 regions, value -1.761681511673111e-29, abserr 2.054e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 81 | 6.374e-41 | 9.02e-42 | 7.5e-39 |
+| levin_floor_limited | 21 | -5.275e-42 | 4.9e-41 | 1.04e-40 |
+| levin_trusted | 31 | -2.301e-37 | 6.94e-41 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 132 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 131 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 58 | 12 | direct_floor_limited | [21.3357279, 21.3403476] | 3.99e-41 | 1.2e-43 | 2.02e-40 | 0.197 | 0 range |
+| 38 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 3.63e-41 | 0.987 | 0 range |
+| 30 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 29 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 51 | 12 | direct_floor_limited | [21.3033898, 21.3080096] | 3.06e-41 | 4.2e-44 | 7.62e-41 | 0.402 | 0 range |
+| 123 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 7.79e-41 | -0.321 | 0 range |
+| 79 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 7.97e-41 | -0.293 | 0 range |
+| 41 | 14 | direct_floor_limited | [21.2329391, 21.234094] | 2.34e-41 | 4.6e-44 | 1.27e-40 | 0.184 | 0 range |
+| 90 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+| 71 | 14 | direct_floor_limited | [21.4246576, 21.4258125] | -2e-41 | 3e-44 | 8.71e-41 | -0.23 | 0 range |
+
+## S2|a:R2-28~o: 133 regions, value -1.7616815116730841e-29, abserr 2.054e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 81 | 6.374e-41 | 9.02e-42 | 7.5e-39 |
+| levin_floor_limited | 21 | -5.008e-42 | 4.9e-41 | 1.04e-40 |
+| levin_trusted | 31 | -2.301e-37 | 6.94e-41 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 132 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 131 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 58 | 12 | direct_floor_limited | [21.3357279, 21.3403476] | 3.99e-41 | 1.2e-43 | 2.02e-40 | 0.197 | 0 range |
+| 38 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 3.63e-41 | 0.987 | 0 range |
+| 30 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 29 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 51 | 12 | direct_floor_limited | [21.3033898, 21.3080096] | 3.06e-41 | 4.2e-44 | 7.62e-41 | 0.402 | 0 range |
+| 123 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 7.79e-41 | -0.321 | 0 range |
+| 79 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 7.97e-41 | -0.293 | 0 range |
+| 41 | 14 | direct_floor_limited | [21.2329391, 21.234094] | 2.34e-41 | 4.6e-44 | 1.27e-40 | 0.184 | 0 range |
+| 90 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+| 71 | 14 | direct_floor_limited | [21.4246576, 21.4258125] | -2e-41 | 3e-44 | 8.71e-41 | -0.23 | 0 range |
+
+## N|a:R2-28: 263 regions, value -1.7616815116785688e-29, abserr 2.076e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 31 | 2.835e-41 | 3.28e-42 | 2.97e-40 |
+| direct_trusted | 170 | -2.121e-41 | 7.28e-42 | 9.43e-39 |
+| direct_untrusted | 1 | -4.809e-45 | 1.57e-45 | 2.36e-44 |
+| levin_floor_limited | 6 | -1.761e-42 | 6.52e-42 | 8.73e-43 |
+| levin_trusted | 55 | -2.301e-37 | 1.27e-40 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 262 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range, 1 range |
+| 261 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range, 1 range |
+| 39 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 1 range, 3 range |
+| 38 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 1 range, 3 range |
+| 145 | 14 | direct_floor_limited | [21.5493901, 21.550545] | 2.85e-41 | 8.5e-44 | 2.84e-41 | 1.004 | 0 range, 1 range |
+| 244 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 2.46e-41 | -1.014 | 0 range, 1 range |
+| 132 | 14 | direct_floor_limited | [21.5309112, 21.5320661] | 2.43e-41 | 8.6e-44 | 2.4e-41 | 1.01 | 0 range, 1 range |
+| 72 | 12 | direct_trusted | [21.3357279, 21.3403476] | -2.34e-41 | 1.2e-43 | 2.02e-40 | -0.116 | 0 range, 1 range |
+| 99 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 2.31e-41 | -1.013 | 0 range, 1 range |
+| 56 | 13 | direct_trusted | [21.250263, 21.2525729] | -2.16e-41 | 9e-44 | 6.08e-41 | -0.355 | 0 range, 1 range |
+| 134 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range, 1 range |
+| 217 | 14 | direct_floor_limited | [21.6926015, 21.6937564] | 1.97e-41 | 6.9e-44 | 1.96e-41 | 1.004 | 0 range, 1 range |
+
+## N|a:R2-28~o: 263 regions, value -1.7616815116783989e-29, abserr 2.076e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 31 | 2.835e-41 | 3.28e-42 | 2.97e-40 |
+| direct_trusted | 170 | -2.121e-41 | 7.28e-42 | 9.43e-39 |
+| direct_untrusted | 1 | -4.809e-45 | 1.57e-45 | 2.36e-44 |
+| levin_floor_limited | 6 | -1.761e-42 | 6.52e-42 | 8.73e-43 |
+| levin_trusted | 55 | -2.301e-37 | 1.27e-40 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 262 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range, 1 range |
+| 261 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range, 1 range |
+| 39 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 1 range, 3 range |
+| 38 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 1 range, 3 range |
+| 145 | 14 | direct_floor_limited | [21.5493901, 21.550545] | 2.85e-41 | 8.5e-44 | 2.84e-41 | 1.004 | 0 range, 1 range |
+| 244 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 2.46e-41 | -1.014 | 0 range, 1 range |
+| 132 | 14 | direct_floor_limited | [21.5309112, 21.5320661] | 2.43e-41 | 8.6e-44 | 2.4e-41 | 1.01 | 0 range, 1 range |
+| 72 | 12 | direct_trusted | [21.3357279, 21.3403476] | -2.34e-41 | 1.2e-43 | 2.02e-40 | -0.116 | 0 range, 1 range |
+| 99 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 2.31e-41 | -1.013 | 0 range, 1 range |
+| 56 | 13 | direct_trusted | [21.250263, 21.2525729] | -2.16e-41 | 9e-44 | 6.08e-41 | -0.355 | 0 range, 1 range |
+| 134 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range, 1 range |
+| 217 | 14 | direct_floor_limited | [21.6926015, 21.6937564] | 1.97e-41 | 6.9e-44 | 1.96e-41 | 1.004 | 0 range, 1 range |
+
+## Eg|a:R2-28: 359 regions, value -1.7616815116888526e-29, abserr 2.088e-37
+- call error against 07b's reference -2.302e-37; sum of the leaves' errors -2.302e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 35 | -7.252e-41 | 3.05e-42 | 3.49e-40 |
+| direct_trusted | 259 | -2.492e-41 | 9.22e-42 | 1.08e-38 |
+| direct_untrusted | 3 | -2.859e-45 | 7.57e-45 | 7.75e-43 |
+| levin_floor_limited | 16 | -2.333e-42 | 1.9e-41 | 2.65e-41 |
+| levin_trusted | 46 | -2.301e-37 | 1.15e-40 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 358 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 357 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 40 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 39 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 183 | 14 | direct_floor_limited | [21.5493901, 21.550545] | 2.85e-41 | 8.5e-44 | 2.84e-41 | 1.004 | 0 range |
+| 329 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 2.46e-41 | -1.014 | 0 range |
+| 63 | 14 | direct_floor_limited | [21.2618123, 21.2629673] | -2.44e-41 | 6.2e-44 | 2.44e-41 | -1.001 | 0 range |
+| 50 | 13 | direct_trusted | [21.2271644, 21.2294743] | -2.44e-41 | 1.4e-43 | 9.54e-41 | -0.255 | 0 range |
+| 155 | 14 | direct_floor_limited | [21.5309112, 21.5320661] | 2.43e-41 | 8.6e-44 | 2.4e-41 | 1.01 | 0 range |
+| 79 | 12 | direct_trusted | [21.3357279, 21.3403476] | -2.34e-41 | 1.2e-43 | 2.29e-40 | -0.102 | 0 range |
+| 115 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 2.31e-41 | -1.013 | 0 range |
+| 60 | 13 | direct_trusted | [21.250263, 21.2525729] | -2.16e-41 | 9e-44 | 6.08e-41 | -0.355 | 0 range |
+
+## Eg|a:R2-28~o: 360 regions, value -1.7616815116888246e-29, abserr 2.088e-37
+- call error against 07b's reference -2.302e-37; sum of the leaves' errors -2.302e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 35 | -7.252e-41 | 3.05e-42 | 3.49e-40 |
+| direct_trusted | 259 | -2.492e-41 | 9.22e-42 | 1.08e-38 |
+| direct_untrusted | 3 | -2.859e-45 | 7.57e-45 | 7.75e-43 |
+| levin_floor_limited | 16 | -2.528e-42 | 1.88e-41 | 2.6e-41 |
+| levin_trusted | 47 | -2.301e-37 | 1.15e-40 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 359 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 358 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 41 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 40 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 184 | 14 | direct_floor_limited | [21.5493901, 21.550545] | 2.85e-41 | 8.5e-44 | 2.84e-41 | 1.004 | 0 range |
+| 330 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 2.46e-41 | -1.014 | 0 range |
+| 64 | 14 | direct_floor_limited | [21.2618123, 21.2629673] | -2.44e-41 | 6.2e-44 | 2.44e-41 | -1.001 | 0 range |
+| 51 | 13 | direct_trusted | [21.2271644, 21.2294743] | -2.44e-41 | 1.4e-43 | 9.54e-41 | -0.255 | 0 range |
+| 156 | 14 | direct_floor_limited | [21.5309112, 21.5320661] | 2.43e-41 | 8.6e-44 | 2.4e-41 | 1.01 | 0 range |
+| 80 | 12 | direct_trusted | [21.3357279, 21.3403476] | -2.34e-41 | 1.2e-43 | 2.29e-40 | -0.102 | 0 range |
+| 116 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 2.31e-41 | -1.013 | 0 range |
+| 61 | 13 | direct_trusted | [21.250263, 21.2525729] | -2.16e-41 | 9e-44 | 6.08e-41 | -0.355 | 0 range |
+
+## Ea|a:R2-28: 359 regions, value -1.7616815116888526e-29, abserr 2.088e-37
+- call error against 07b's reference -2.302e-37; sum of the leaves' errors -2.302e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 35 | -7.252e-41 | 3.05e-42 | 3.49e-40 |
+| direct_trusted | 259 | -2.492e-41 | 9.22e-42 | 1.08e-38 |
+| direct_untrusted | 3 | -2.859e-45 | 7.57e-45 | 7.75e-43 |
+| levin_floor_limited | 16 | -2.333e-42 | 1.9e-41 | 2.65e-41 |
+| levin_trusted | 46 | -2.301e-37 | 1.15e-40 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 358 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 357 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 40 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 39 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 183 | 14 | direct_floor_limited | [21.5493901, 21.550545] | 2.85e-41 | 8.5e-44 | 2.84e-41 | 1.004 | 0 range |
+| 329 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 2.46e-41 | -1.014 | 0 range |
+| 63 | 14 | direct_floor_limited | [21.2618123, 21.2629673] | -2.44e-41 | 6.2e-44 | 2.44e-41 | -1.001 | 0 range |
+| 50 | 13 | direct_trusted | [21.2271644, 21.2294743] | -2.44e-41 | 1.4e-43 | 9.54e-41 | -0.255 | 0 range |
+| 155 | 14 | direct_floor_limited | [21.5309112, 21.5320661] | 2.43e-41 | 8.6e-44 | 2.4e-41 | 1.01 | 0 range |
+| 79 | 12 | direct_trusted | [21.3357279, 21.3403476] | -2.34e-41 | 1.2e-43 | 2.29e-40 | -0.102 | 0 range |
+| 115 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 2.31e-41 | -1.013 | 0 range |
+| 60 | 13 | direct_trusted | [21.250263, 21.2525729] | -2.16e-41 | 9e-44 | 6.08e-41 | -0.355 | 0 range |
+
+## Ea|a:R2-28~o: 360 regions, value -1.7616815116888246e-29, abserr 2.088e-37
+- call error against 07b's reference -2.302e-37; sum of the leaves' errors -2.302e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 35 | -7.252e-41 | 3.05e-42 | 3.49e-40 |
+| direct_trusted | 259 | -2.492e-41 | 9.22e-42 | 1.08e-38 |
+| direct_untrusted | 3 | -2.859e-45 | 7.57e-45 | 7.75e-43 |
+| levin_floor_limited | 16 | -2.528e-42 | 1.88e-41 | 2.6e-41 |
+| levin_trusted | 47 | -2.301e-37 | 1.15e-40 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 359 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 358 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 41 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 40 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 184 | 14 | direct_floor_limited | [21.5493901, 21.550545] | 2.85e-41 | 8.5e-44 | 2.84e-41 | 1.004 | 0 range |
+| 330 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 2.46e-41 | -1.014 | 0 range |
+| 64 | 14 | direct_floor_limited | [21.2618123, 21.2629673] | -2.44e-41 | 6.2e-44 | 2.44e-41 | -1.001 | 0 range |
+| 51 | 13 | direct_trusted | [21.2271644, 21.2294743] | -2.44e-41 | 1.4e-43 | 9.54e-41 | -0.255 | 0 range |
+| 156 | 14 | direct_floor_limited | [21.5309112, 21.5320661] | 2.43e-41 | 8.6e-44 | 2.4e-41 | 1.01 | 0 range |
+| 80 | 12 | direct_trusted | [21.3357279, 21.3403476] | -2.34e-41 | 1.2e-43 | 2.29e-40 | -0.102 | 0 range |
+| 116 | 14 | direct_floor_limited | [21.5089675, 21.5101224] | -2.34e-41 | 2.7e-43 | 2.31e-41 | -1.013 | 0 range |
+| 61 | 13 | direct_trusted | [21.250263, 21.2525729] | -2.16e-41 | 9e-44 | 6.08e-41 | -0.355 | 0 range |
+
+## SEg|a:R2-28: 100 regions, value -1.7616815116735241e-29, abserr 2.019e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 62 | 4.63e-41 | 8.11e-42 | 3.98e-39 |
+| levin_floor_limited | 12 | 1.002e-41 | 2.74e-41 | 1.43e-40 |
+| levin_trusted | 26 | -2.301e-37 | 5.02e-41 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 99 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 98 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 42 | 12 | direct_floor_limited | [21.3357279, 21.3403476] | 3.99e-41 | 1.2e-43 | 2.29e-40 | 0.174 | 0 range |
+| 24 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 4.21e-41 | 0.85 | 0 range |
+| 16 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 15 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 35 | 12 | direct_floor_limited | [21.3033898, 21.3080096] | 3.06e-41 | 4.2e-44 | 7.62e-41 | 0.402 | 0 range |
+| 91 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 7.79e-41 | -0.321 | 0 range |
+| 25 | 12 | direct_floor_limited | [21.2294743, 21.234094] | -2.08e-41 | 7.7e-44 | 6.73e-41 | -0.309 | 0 range |
+| 64 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+| 26 | 12 | direct_floor_limited | [21.234094, 21.2387137] | -1.93e-41 | 9.5e-44 | 1.21e-40 | -0.159 | 0 range |
+| 28 | 12 | direct_floor_limited | [21.2433334, 21.2479532] | 1.84e-41 | 1.6e-43 | 1.02e-40 | 0.18 | 0 range |
+
+## SEg|a:R2-28~o: 100 regions, value -1.7616815116734972e-29, abserr 2.019e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 62 | 4.63e-41 | 8.11e-42 | 3.98e-39 |
+| levin_floor_limited | 12 | 1.029e-41 | 2.74e-41 | 1.42e-40 |
+| levin_trusted | 26 | -2.301e-37 | 5.02e-41 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 99 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 98 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 42 | 12 | direct_floor_limited | [21.3357279, 21.3403476] | 3.99e-41 | 1.2e-43 | 2.29e-40 | 0.174 | 0 range |
+| 24 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 4.21e-41 | 0.85 | 0 range |
+| 16 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 15 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 35 | 12 | direct_floor_limited | [21.3033898, 21.3080096] | 3.06e-41 | 4.2e-44 | 7.62e-41 | 0.402 | 0 range |
+| 91 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 7.79e-41 | -0.321 | 0 range |
+| 25 | 12 | direct_floor_limited | [21.2294743, 21.234094] | -2.08e-41 | 7.7e-44 | 6.73e-41 | -0.309 | 0 range |
+| 64 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+| 26 | 12 | direct_floor_limited | [21.234094, 21.2387137] | -1.93e-41 | 9.5e-44 | 1.21e-40 | -0.159 | 0 range |
+| 28 | 12 | direct_floor_limited | [21.2433334, 21.2479532] | 1.84e-41 | 1.6e-43 | 1.02e-40 | 0.18 | 0 range |
+
+## SEa|a:R2-28: 100 regions, value -1.7616815116735241e-29, abserr 2.019e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 62 | 4.63e-41 | 8.11e-42 | 3.98e-39 |
+| levin_floor_limited | 12 | 1.002e-41 | 2.74e-41 | 1.43e-40 |
+| levin_trusted | 26 | -2.301e-37 | 5.02e-41 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 99 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 98 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 42 | 12 | direct_floor_limited | [21.3357279, 21.3403476] | 3.99e-41 | 1.2e-43 | 2.29e-40 | 0.174 | 0 range |
+| 24 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 4.21e-41 | 0.85 | 0 range |
+| 16 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 15 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 35 | 12 | direct_floor_limited | [21.3033898, 21.3080096] | 3.06e-41 | 4.2e-44 | 7.62e-41 | 0.402 | 0 range |
+| 91 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 7.79e-41 | -0.321 | 0 range |
+| 25 | 12 | direct_floor_limited | [21.2294743, 21.234094] | -2.08e-41 | 7.7e-44 | 6.73e-41 | -0.309 | 0 range |
+| 64 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+| 26 | 12 | direct_floor_limited | [21.234094, 21.2387137] | -1.93e-41 | 9.5e-44 | 1.21e-40 | -0.159 | 0 range |
+| 28 | 12 | direct_floor_limited | [21.2433334, 21.2479532] | 1.84e-41 | 1.6e-43 | 1.02e-40 | 0.18 | 0 range |
+
+## SEa|a:R2-28~o: 100 regions, value -1.7616815116734972e-29, abserr 2.019e-37
+- call error against 07b's reference -2.301e-37; sum of the leaves' errors -2.301e-37
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| direct_floor_limited | 62 | 4.63e-41 | 8.11e-42 | 3.98e-39 |
+| levin_floor_limited | 12 | 1.029e-41 | 2.74e-41 | 1.42e-40 |
+| levin_trusted | 26 | -2.301e-37 | 5.02e-41 | 1.98e-37 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 99 | 4 | levin_trusted | [22.3566866, 23.5393356] | -2.34e-37 | 2.9e-42 | 1.87e-37 | -1.247 | 0 range |
+| 98 | 5 | levin_trusted | [21.7653621, 22.3566866] | 3.71e-39 | 3.2e-42 | 8.77e-39 | 0.422 | 0 range |
+| 42 | 12 | direct_floor_limited | [21.3357279, 21.3403476] | 3.99e-41 | 1.2e-43 | 2.29e-40 | 0.174 | 0 range |
+| 24 | 12 | direct_floor_limited | [21.2248546, 21.2294743] | 3.58e-41 | 2.2e-43 | 4.21e-41 | 0.85 | 0 range |
+| 16 | 12 | levin_trusted | [20.9107134, 20.9153331] | -3.44e-41 | 3.2e-43 | 3.41e-41 | -1.008 | 0 range, 3 range |
+| 15 | 12 | levin_trusted | [20.9060937, 20.9107134] | -3.4e-41 | 2.9e-43 | 3.5e-41 | -0.971 | 0 range, 3 range |
+| 35 | 12 | direct_floor_limited | [21.3033898, 21.3080096] | 3.06e-41 | 4.2e-44 | 7.62e-41 | 0.402 | 0 range |
+| 91 | 12 | direct_floor_limited | [21.7099254, 21.7145452] | -2.5e-41 | 6.3e-43 | 7.79e-41 | -0.321 | 0 range |
+| 25 | 12 | direct_floor_limited | [21.2294743, 21.234094] | -2.08e-41 | 7.7e-44 | 6.73e-41 | -0.309 | 0 range |
+| 64 | 11 | levin_trusted | [21.534376, 21.5436154] | -2.03e-41 | 2.3e-43 | 2.25e-41 | -0.902 | 0 range |
+| 26 | 12 | direct_floor_limited | [21.234094, 21.2387137] | -1.93e-41 | 9.5e-44 | 1.21e-40 | -0.159 | 0 range |
+| 28 | 12 | direct_floor_limited | [21.2433334, 21.2479532] | 1.84e-41 | 1.6e-43 | 1.02e-40 | 0.18 | 0 range |
+
+## 07a|a:R2-28: 1 regions, value -1.7616814934852841e-29, abserr 8.682e-34
+- call error against 07b's reference -4.818e-38; sum of the leaves' errors -4.819e-38
+
+| kind | n | sum of errors | sum of stated ref errors | sum of e' |
+|---|---|---|---|---|
+| levin_trusted | 1 | -4.819e-38 | 2.2e-41 | 8.68e-34 |
+
+Largest |error| first:
+
+| i | depth | kind | span | error | ref err | e' | error/e' | refused ancestors (depth, rule) |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 0 | levin_trusted | [4.61695142, 23.5393356] | -4.82e-38 | 2.2e-41 | 8.68e-34 | -0.0 | - |
+
+# ----
+# end 2026-11-19T09:33:25Z
+# exit 0

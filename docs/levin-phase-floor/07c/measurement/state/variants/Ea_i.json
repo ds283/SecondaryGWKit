@@ -1,0 +1,15 @@
+{
+ "name": "Ea_i",
+ "options": {
+  "s": null,
+  "e": [
+   "all",
+   "tail_sum4"
+  ],
+  "n": false
+ },
+ "instrumented": true,
+ "basis": "instrumented copy of Ea (table 4's descent column)",
+ "sha256": "a5c0c4e98604bf0589379d8893e87c43d7bf91e925cab2471b1db4285714a033",
+ "generator_sha256": "31bb4a3b1a0b005495174c80be99ffe276997b55daea6af43628b8ad8d757fe9"
+}

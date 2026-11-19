@@ -1,0 +1,131 @@
+{
+ "header": [
+  "# levin-phase-floor 07c Part A: the counterparts wanted (r5)",
+  "# written 2026-11-18T11:01:51Z on mps026298.phys.susx.ac.uk",
+  "# script extract_census_refs_extra_07c.py sha256 8eb630dc33a26330bef4fd58796da5c3237719a59ddddd2267e02ef7fbf798fa",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/selection_r5.json sha256 e901adffe476e28890f6fe3cd9f8aae6644f4c4bee97029b8dd041cc0cfead58"
+ ],
+ "wanted": {
+  "x-1e-7-0-12584-1": {
+   "set": "r5~o",
+   "unit": "h-1e-7-0-12584",
+   "kind": "group",
+   "index": 1,
+   "counterpart_of": "h-1e-8-0-12584"
+  },
+  "x-1e-7-0-12660-6": {
+   "set": "r5~o",
+   "unit": "h-1e-7-0-12660",
+   "kind": "group",
+   "index": 6,
+   "counterpart_of": "h-1e-8-0-12660"
+  },
+  "x-1e-7-0-14318-3": {
+   "set": "r5~o",
+   "unit": "h-1e-7-0-14318",
+   "kind": "group",
+   "index": 3,
+   "counterpart_of": "h-1e-8-0-14318"
+  },
+  "x-1e-8-0-1784-6": {
+   "set": "r5~o",
+   "unit": "h-1e-8-0-1784",
+   "kind": "group",
+   "index": 6,
+   "counterpart_of": "h-1e-7-0-1784"
+  },
+  "x-1e-7-0-33996-4": {
+   "set": "r5~o",
+   "unit": "h-1e-7-0-33996",
+   "kind": "group",
+   "index": 4,
+   "counterpart_of": "h-1e-8-0-33996"
+  },
+  "x-1e-7-1-11062-6": {
+   "set": "r5~o",
+   "unit": "h-1e-7-1-11062",
+   "kind": "group",
+   "index": 6,
+   "counterpart_of": "h-1e-8-1-11062"
+  },
+  "x-1e-7-1-1728-5": {
+   "set": "r5~o",
+   "unit": "h-1e-7-1-1728",
+   "kind": "group",
+   "index": 5,
+   "counterpart_of": "h-1e-8-1-1728"
+  },
+  "x-1e-7-1-34594-2": {
+   "set": "r5~o",
+   "unit": "h-1e-7-1-34594",
+   "kind": "group",
+   "index": 2,
+   "counterpart_of": "h-1e-8-1-34594"
+  },
+  "x-1e-7-1-37676-2": {
+   "set": "r5~o",
+   "unit": "h-1e-7-1-37676",
+   "kind": "group",
+   "index": 2,
+   "counterpart_of": "h-1e-8-1-37676"
+  },
+  "x-1e-7-1-37676-3": {
+   "set": "r5~o",
+   "unit": "h-1e-7-1-37676",
+   "kind": "group",
+   "index": 3,
+   "counterpart_of": "h-1e-8-1-37676"
+  },
+  "x-1e-7-3-1151-4": {
+   "set": "r5~o",
+   "unit": "h-1e-7-3-1151",
+   "kind": "group",
+   "index": 4,
+   "counterpart_of": "h-1e-8-3-1151"
+  },
+  "x-1e-8-3-13615-4": {
+   "set": "r5~o",
+   "unit": "h-1e-8-3-13615",
+   "kind": "group",
+   "index": 4,
+   "counterpart_of": "h-1e-7-3-13615"
+  },
+  "x-1e-8-3-14096-1": {
+   "set": "r5~o",
+   "unit": "h-1e-8-3-14096",
+   "kind": "group",
+   "index": 1,
+   "counterpart_of": "h-1e-7-3-14096"
+  },
+  "x-1e-7-3-34796-1": {
+   "set": "r5~o",
+   "unit": "h-1e-7-3-34796",
+   "kind": "group",
+   "index": 1,
+   "counterpart_of": "h-1e-8-3-34796"
+  },
+  "x-1e-7-3-34802-4": {
+   "set": "r5~o",
+   "unit": "h-1e-7-3-34802",
+   "kind": "group",
+   "index": 4,
+   "counterpart_of": "h-1e-8-3-34802"
+  },
+  "x-1e-7-3-35006-4": {
+   "set": "r5~o",
+   "unit": "h-1e-7-3-35006",
+   "kind": "group",
+   "index": 4,
+   "counterpart_of": "h-1e-8-3-35006"
+  },
+  "x-1e-7-3-35020-1": {
+   "set": "r5~o",
+   "unit": "h-1e-7-3-35020",
+   "kind": "group",
+   "index": 1,
+   "counterpart_of": "h-1e-8-3-35020"
+  }
+ }
+}

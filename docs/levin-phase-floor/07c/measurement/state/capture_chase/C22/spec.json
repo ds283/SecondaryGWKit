@@ -1,0 +1,35 @@
+{
+ "tree": "h",
+ "name": "C22",
+ "units": [
+  {
+   "uid": "h-1e-7-1-1759",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "1-1759",
+   "names05": null,
+   "shard": 1,
+   "serial": 1759,
+   "k_key": "1:301",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     4,
+     "k=9.56e+07/Mpc, q=3.09e+06/Mpc, r=9.56e+07/Mpc @ z_response=1205.3, z in (5.2861e+10, 1205.3), regime Gqr, group G+q-r"
+    ],
+    [
+     5,
+     "k=9.56e+07/Mpc, q=3.09e+06/Mpc, r=9.56e+07/Mpc @ z_response=1205.3, z in (5.2861e+10, 1205.3), regime Gqr, group G-q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_chase/C22",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_chase/C22/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

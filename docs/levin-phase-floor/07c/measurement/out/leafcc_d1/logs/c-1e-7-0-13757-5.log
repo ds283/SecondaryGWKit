@@ -1,0 +1,3 @@
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/leafcc_07c.py:139: RuntimeWarning: divide by zero encountered in divide
+  wk = np.where(kk % 2 == 0, 2.0 / (1.0 - kk.astype(float) ** 2), 0.0)
+c-1e-7-0-13757-5.json: 416 leaves, 226 reproduce, 151 resolved, 26.7 s

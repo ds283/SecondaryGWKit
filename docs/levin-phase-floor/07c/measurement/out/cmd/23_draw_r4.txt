@@ -1,0 +1,21 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/draw_refs_07c.py r4 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/d1/d1_descent.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:22:04Z
+# ----
+# levin-phase-floor 07c Part A: the R4 draw
+# written 2026-11-18T11:22:04Z on mps026298.phys.susx.ac.uk
+# script draw_refs_07c.py sha256 439c1636ff1689641f76e68998462cb4a3e8134121d7bfaee785a05ad79425ea
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/seeds_07c.json sha256 05f428f30b87077a8197633eb50e56fe8bf215f7fa350f71982aaf405c8e2323
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/populations_07c.json sha256 33910d7116da61c58d3470f0b2d5d705c35ed66c74dd158c80d95f608348342f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/d1/d1_descent.json sha256 c8c4ac013ef54106b9ab8d461916548fbc69d5a4f0ad4a98fe8c7366457f4695
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/r4_rule.txt sha256 084269e72b68a4a6a5e4ea9f4229eeecd23eed8362c4156fec8dcdcaf5ba4964
+r4: population 102 integrands; taken 30 (10 in pass 1), 58 calls
+population strata: {'label': {'G+q+r': 27, 'G+q-r': 24, 'G-q+r': 29, 'G-q-r': 22}, 'k': {'1e+05': 11, '3.05e+07': 16, '3.09e+06': 8, '3.14e+05': 7, '3e+08': 19, '9.56e+07': 23, '9.7e+06': 12, '9.85e+05': 6}, 'refused_depth': {'0': 64, '1': 16, '2': 15, '3': 1, 'none': 6}}
+taken strata: {'label': {'G+q+r': 11, 'G+q-r': 4, 'G-q+r': 10, 'G-q-r': 5}, 'k': {'1e+05': 5, '3.05e+07': 5, '3.09e+06': 2, '3.14e+05': 1, '3e+08': 6, '9.56e+07': 8, '9.7e+06': 1, '9.85e+05': 2}, 'refused_depth': {'0': 17, '1': 5, '2': 5, '3': 1, 'none': 2}}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/selection_r4.json sha256 01918f2b0b94744f3a7b2b1f5ac8bcb5a5d4b1ed81e081597ec7c26cfcf33c75
+# ----
+# end 2026-11-18T11:22:04Z
+# exit 0

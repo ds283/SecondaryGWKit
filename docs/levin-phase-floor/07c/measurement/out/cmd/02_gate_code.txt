@@ -1,0 +1,16 @@
+$ bash -c git\ --no-optional-locks\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ diff\ --stat\ 5e19c4b6\ 2fd979fd\ --\ AdaptiveLevin\ ComputeTargets\ LiouvilleGreen\ tools\;\ echo\ \"\[diff\ --stat\ end\]\"\;\ git\ --no-optional-locks\ status\ --short\ --ignored\;\ echo\ \"\[status\ end\]\"\;\ shasum\ -a\ 256\ AdaptiveLevin/levin_quadrature.py\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ --no-optional-locks\ rev-parse\ HEAD\;\ git\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ --no-optional-locks\ status\ --short\;\ echo\ \"\[main\ status\ end\]\"\;\ cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ ./venv/bin/python\ -B\ -m\ runregistrykit\ list\ \|\ tail\ -1\;\ ls\ ~/.raypoolkit\ 2\>\&1\;\ df\ -h\ /\ \|\ tail\ -1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T10:10:25Z
+# ----
+2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f
+[diff --stat end]
+[status end]
+8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1  AdaptiveLevin/levin_quadrature.py
+28ebaf0743e0555fb2c4512ce714884005a60eff
+[main status end]
+86 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 86 finished; 0 with no host recorded.
+/dev/disk3s3s1  927G  812G  116G  88% /
+# ----
+# end 2026-11-18T10:10:26Z
+# exit 0

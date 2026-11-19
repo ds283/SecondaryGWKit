@@ -1,0 +1,12 @@
+{
+ "name": "N",
+ "options": {
+  "s": null,
+  "e": null,
+  "n": true
+ },
+ "instrumented": false,
+ "basis": "(N) basis: D1 found 1,288 Clenshaw-Curtis and 983 Levin leaves bisected below refused leaves with delta1 <= nu_B, delta2 <= nu_B and r >= 1 (out/d1/d1_descent.json); no constant is added: nu_B is the tree's.",
+ "sha256": "fbbdcbed3b4f00e954ff2d8f3b32eae97f8ca1b9591b0fe299fd0635a21d5e0a",
+ "generator_sha256": "31bb4a3b1a0b005495174c80be99ffe276997b55daea6af43628b8ad8d757fe9"
+}

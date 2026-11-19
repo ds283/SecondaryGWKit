@@ -1,0 +1,327 @@
+--- tree/AdaptiveLevin/levin_quadrature.py
++++ scripts/variants/levin_quadrature_07c_SEg_i.py
+@@ -623,6 +623,12 @@
+ #     calls, 74 % of the census's Levin calls at rtol 1e-7, beyond those 21 and five targeted ones.
+ _LEVIN_EDGE_RATE_RATIO_MAX = 2.0
+ _LEVIN_LEAF_RATE_RANGE_MAX = 10.0
++_VARIANT_07C = 'SEg_i'  # 07c variant: its name
++_MEASURE_07C = None  # 07c variant: unused (replay_07c.py's instrument hook)
++_S07C = (6, 4.0)  # 07c variant (S): (LIMIT, NOISE_FACTOR) or None
++_E07C = ('gate', 'tail_sum4')  # 07c variant (E): (SCOPE, ESTIMATE) or None
++_N07C = False  # 07c variant (N)
++_MEASURE_07C = None  # 07c instrument: a list set by the caller, or None
+ 
+ # The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
+ # 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
+@@ -3269,6 +3275,27 @@
+     }
+ 
+ 
++def _e07c_estimate(x_span, f, BasisData, chebyshev_order, value_fine, integrand_fine, vectorize_cache):
++    """07c variant (E): the sharper estimate of CC_{2N-1}'s error (see make_variants_07c.py)."""
++    kind = _E07C[1]
++    if kind == "nest3":
++        order3 = 4 * chebyshev_order - 3
++        grid3, _ = chebyshev_matrices(x_span, order3)
++        f3 = np.vstack([_sample_vectorized(func, grid3, vectorize_cache, ("f", id(func))) for func in f])
++        basis3 = np.array([BasisData.eval_basis_and_arguments(x)[0] for x in grid3]).T
++        value3 = float(np.dot(_cc_weights(x_span, order3), np.sum(f3 * basis3, axis=0)))
++        return float(np.fabs(value3 - value_fine))
++    if kind == "tail_sum4":
++        n = integrand_fine.shape[0]
++        j = np.arange(n)
++        wts = np.ones(n)
++        wts[0] = wts[-1] = 0.5
++        ck = np.array([(2.0 / (n - 1)) * np.sum(wts * integrand_fine * np.cos(np.pi * j * k / (n - 1))) for k in range(n - 4, n)])
++        ck[-1] *= 0.5
++        return float(0.5 * np.fabs(x_span[1] - x_span[0]) * np.sum(np.abs(ck)))
++    raise RuntimeError("07c variant (E): unknown estimate")
++
++
+ def _adaptive_levin_subregion_cc(
+     x_span: Tuple[float, float],
+     f,
+@@ -3279,6 +3306,7 @@
+     notify_label: Optional[str],
+     id_label,
+     vectorize_cache: Optional[dict] = None,
++    forced: bool = False,  # 07c variant (E): called from _oriented_cc()
+ ):
+     """
+     Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
+@@ -3370,6 +3398,9 @@
+     value_coarse = float(np.dot(w_coarse, integrand_fine[::2]))
+ 
+     abserr_direct = float(np.fabs(value_fine - value_coarse))
++    abserr_pair_07c = abserr_direct  # 07c variant (E)
++    if _E07C is not None and (_E07C[0] == "all" or not forced):  # 07c variant (E)
++        abserr_direct = _e07c_estimate(x_span, f, BasisData, chebyshev_order, value_fine, integrand_fine, vectorize_cache)
+ 
+     # Round-off floor of this rule, derived from what it computes (_cc_roundoff_floor();
+     # prompts/levin-phase-floor/06d-cc-roundoff-floor.md), from the fine-grid samples already in
+@@ -3465,6 +3496,7 @@
+     return {
+         "value": value_fine,
+         "abserr_direct": abserr_direct,
++        "abserr_pair_07c": abserr_pair_07c,  # 07c variant (E)
+         "resasc": resasc,
+         "p_sample": None,
+         "p_ratios": None,
+@@ -3637,6 +3669,7 @@
+             notify_label,
+             id_label,
+             vectorize_cache=vectorize_cache,
++            forced=True,  # 07c variant (E)
+         )
+ 
+     ascending = (b, a)
+@@ -3659,6 +3692,7 @@
+         notify_label,
+         id_label,
+         vectorize_cache=vectorize_cache,
++        forced=True,  # 07c variant (E)
+     )
+     data["value"] = -data["value"]
+     if data.get("node_error_signed") is not None:
+@@ -4497,6 +4531,20 @@
+         return solve_data
+ 
+     seq_counter = 0
++    _m07c = _MEASURE_07C  # 07c instrument
++
++    def _route07c(leaf):  # 07c instrument: a leaf's route
++        if leaf.region.guard_at_depth_max:
++            return "guarded"
++        if leaf.region.window:
++            return "window"
++        if leaf.is_direct:
++            return "cc_gate"
++        return "levin"
++
++    def _req07c():  # 07c instrument: the running request and error (pure)
++        v_, e_, n_ = _running_sums()
++        return float(max(atol, rtol * np.fabs(v_))), float(e_), float(n_)
+ 
+     def _make_leaf(
+         a,
+@@ -4924,23 +4972,31 @@
+         trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
+             ratio < 1.0 and delta1 <= noise_yardstick
+         )
++        _test07c = bool(trusted)  # 07c instrument
++        _rr07c = None  # 07c instrument
++        refused_07c = False  # 07c variant (S)
+         # The rate rules (prompt 07b section 1.1): on a Levin leaf the test above trusts, the edge rule
+         # if it touches a window, else the range rule. A refused leaf is untrusted exactly as one the
+         # test above refuses; ratio, delta1, delta2 and the declaration's form are unchanged.
+         if trusted and not leaf.is_direct and rate_fns is not None:
+             lo_leaf, hi_leaf = min(a, b), max(a, b)
+-            refused, rule, _ = _leaf_rate_rule(
++            refused, rule, _q07c = _leaf_rate_rule(  # 07c instrument: q kept (the tree discards it)
+                 (lo_leaf, hi_leaf),
+                 chebyshev_order,
+                 rate_fns,
+                 tuple(end for end in (lo_leaf, hi_leaf) if end in window_edges),
+             )
++            _rr07c = {"refused": bool(refused), "rule": rule, "q": float(_q07c)}  # 07c instrument
+             if refused:
++                refused_07c = True  # 07c variant (S)
+                 trusted = False
+                 if rule == "edge":
+                     num_edge_rule_refusals += 1
+                 else:
+                     num_range_rule_refusals += 1
++        _s07c_nu[leaf.seq] = (delta1, delta2, noise_yardstick)  # 07c variant (S)
++        if refused_07c:  # 07c variant (S): a refused leaf roots a subtree, unless one above it does
++            _s07c_root.setdefault(leaf.seq, leaf.seq)
+         _remove_error(leaf)
+         region._delta1 = delta1
+         region._delta2 = delta2
+@@ -4960,11 +5016,26 @@
+             else:
+                 region._declared_resolution = None
+         _restore_error(leaf)
++        if _m07c is not None:  # 07c instrument: the check
++            _rq, _ep, _nd = _req07c()
++            _m07c.append({"kind": "check", "seq": leaf.seq, "start": a, "end": b, "depth": leaf.depth,
++                          "route": _route07c(leaf), "window_index": leaf.window_index,
++                          "delta1": delta1, "delta2": delta2, "r": ratio, "nu_B": noise_yardstick,
++                          "residual": residual, "floor": region.phase_err,
++                          "floor_less_node": region.phase_err_less_node, "resasc": region.resasc,
++                          "own_value": own_value, "halves_sum": halves_sum, "quarters_sum": quarters_sum,
++                          "trusted_by_test": _test07c,
++                          "clause_failed": None if _test07c else ("r>=1" if not ratio < 1.0 else "noise"),
++                          "rate_rule": _rr07c, "trusted": bool(trusted),
++                          "declared_resolution": region._declared_resolution,
++                          "request": _rq, "call_eprime": _ep, "call_node": _nd})
+         if trusted:
+             _set_value(leaf, quarters_sum, "quarters")
+         leaf.checked = True
+         num_checks += 1
+         _push_candidate(leaf)
++        if _s07c_root.get(leaf.seq) in _s07c_stopped and _s07c_noise(leaf.seq):  # 07c variant (S): made after the stop
++            _s07c_stop_leaf(leaf)
+ 
+     def _exempt_floor_limited(leaf: _levin_leaf) -> None:
+         # A floor-limited leaf is exempt from the trust check: its differences are round-off
+@@ -4985,6 +5056,23 @@
+     # with what was true of their leaves when they stopped (reported in "stationary_windows").
+     window_counts = {}
+     windows_stopped = {}
++    _s07c_root = {}  # 07c variant (S): leaf seq -> the outermost refused leaf above it (or itself)
++    _s07c_nu = {}  # 07c variant (S): leaf seq -> (delta1, delta2, nu_B) of its trust check
++    _s07c_count = {}  # 07c variant (S): root -> bisections counted
++    _s07c_stopped = set()  # 07c variant (S): roots stopped
++    _s07c_n = {"stops": 0, "stopped_leaves": 0, "counted": 0}  # 07c variant (S)
++
++    def _s07c_noise(seq):  # 07c variant (S): at the noise level, from the leaf's own trust check
++        if seq not in _s07c_nu:
++            return False
++        d1_, d2_, nu_ = _s07c_nu[seq]
++        return bool(d1_ <= _S07C[1] * nu_ and d2_ <= _S07C[1] * nu_)
++
++    def _s07c_stop_leaf(leaf):  # 07c variant (S): floor-limited as a stopped window's leaf
++        if leaf.region._phase_limited:
++            return
++        _floor_limit_stopped_window_leaf(leaf)
++        _s07c_n["stopped_leaves"] += 1
+ 
+     def _floor_limit_stopped_window_leaf(leaf: _levin_leaf) -> None:
+         """
+@@ -5029,6 +5117,8 @@
+         }
+         for member in members:
+             _floor_limit_stopped_window_leaf(member)
++        if _m07c is not None:  # 07c instrument: a window stopped
++            _m07c.append({"kind": "stop_window", "window_index": window_index, "n_members": len(members)})
+ 
+     def _split_could_meet_budget(leaf: _levin_leaf) -> bool:
+         """
+@@ -5086,6 +5176,10 @@
+     # x_span.
+     if location is None or not location["windows"]:
+         _add_leaf(_make_leaf(x_span[0], x_span[1], 0, None, {}, {}, {}))
++        if _m07c is not None:  # 07c instrument: the seed
++            for _lf in leaves.values():
++                _m07c.append({"kind": "seed", "seq": _lf.seq, "start": _lf.start, "end": _lf.end,
++                              "route": _route07c(_lf), "window_index": _lf.window_index})
+     else:
+         lo_span, hi_span = min(x_span[0], x_span[1]), max(x_span[0], x_span[1])
+         seed_spans = []
+@@ -5116,6 +5210,10 @@
+                     window_index=seed_window_index,
+                 )
+             )
++        if _m07c is not None:  # 07c instrument: the seeds
++            for _lf in sorted(leaves.values(), key=lambda _x: _x.seq):
++                _m07c.append({"kind": "seed", "seq": _lf.seq, "start": _lf.start, "end": _lf.end,
++                              "route": _route07c(_lf), "window_index": _lf.window_index})
+ 
+     running_stop = False
+     node_limited = False
+@@ -5215,6 +5313,19 @@
+         if leaf is None:
+             break
+         region = leaf.region
++        _exit07c = None  # 07c instrument
++        if _m07c is not None:  # 07c instrument: the leaf chosen
++            _rq, _ep, _nd = _req07c()
++            _pop07c = {"kind": "pop", "seq": leaf.seq, "start": leaf.start, "end": leaf.end, "depth": leaf.depth,
++                       "route": _route07c(leaf), "why": "untrusted" if region._trusted is False else "budget",
++                       "trusted": region._trusted, "checked": bool(leaf.checked), "residual": region.abserr,
++                       "floor": region.phase_err, "floor_less_node": region.phase_err_less_node,
++                       "eprime": _error_for_ordering(leaf.error), "window": bool(region.window),
++                       "guarded": bool(leaf.guarded),
++                       "exit_considered": bool(not region.window and not leaf.guarded
++                                                and np.isfinite(region.phase_err) and region.abserr <= region.phase_err),
++                       "request": _rq, "call_eprime": _ep, "call_node": _nd}
++            _m07c.append(_pop07c)
+ 
+         # Floor-limited? Its round-off floor is finite, its residual (the step-(4) residual on the
+         # Levin branch, the nested-pair estimate on the fallback branch) is already down at that
+@@ -5254,12 +5365,21 @@
+             else:
+                 if leaf.dataL is None:
+                     _solve_halves(leaf)
++                _scmb07c = _split_could_meet_budget(leaf)  # 07c instrument: evaluated once, passed as before
+                 floor_limited = _roundoff_exit_premise_holds(
+                     region.phase_err_roundoff,
+                     _solve_floor_roundoff(leaf.dataL),
+                     _solve_floor_roundoff(leaf.dataR),
+-                    split_could_meet_budget=_split_could_meet_budget(leaf),
++                    split_could_meet_budget=_scmb07c,
+                 )
++                if _m07c is not None:  # 07c instrument: the exit's two tests
++                    _exit07c = {"halves_floor_roundoff": _solve_floor_roundoff(leaf.dataL) + _solve_floor_roundoff(leaf.dataR),
++                                "floor_roundoff": region.phase_err_roundoff,
++                                "halving_holds": bool((_solve_floor_roundoff(leaf.dataL) + _solve_floor_roundoff(leaf.dataR))
++                                                       >= _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO * region.phase_err_roundoff),
++                                "split_could_meet_budget": bool(_scmb07c), "floor_limited": bool(floor_limited)}
++            if _m07c is not None:  # 07c instrument: the exit's outcome on the pop record
++                _pop07c["exit"] = _exit07c
+             if floor_limited:
+                 region._phase_limited = True
+                 _exempt_floor_limited(leaf)
+@@ -5310,6 +5430,16 @@
+         )
+ 
+         num_splits += 1
++        if _m07c is not None:  # 07c instrument: the split
++            _rq, _ep, _nd = _req07c()
++            _m07c.append({"kind": "split", "seq": leaf.seq, "left": left.seq, "right": right.seq,
++                          "depth": leaf.depth, "route": _route07c(leaf),
++                          "parent_own_value": region.value_own, "parent_value": leaf.value,
++                          "left_own_value": left.region.value_own, "right_own_value": right.region.value_own,
++                          "parent_floor_roundoff": region.phase_err_roundoff,
++                          "halves_floor_roundoff": left.region.phase_err_roundoff + right.region.phase_err_roundoff,
++                          "left_route": _route07c(left), "right_route": _route07c(right),
++                          "request": _rq, "call_eprime": _ep, "call_node": _nd})
+ 
+         # The window's stopping rule (prompt 07 section 1.3; its count dqage's since prompt 07a
+         # section 1.2): count this bisection against its window if neither half's estimate is
+@@ -5348,6 +5478,10 @@
+                 ):
+                     stop_window = leaf.window_index
+ 
++        _s07c_r = _s07c_root.get(leaf.seq)  # 07c variant (S)
++        if _s07c_r is not None:
++            _s07c_root[left.seq] = _s07c_r
++            _s07c_root[right.seq] = _s07c_r
+         _remove_leaf(leaf)
+         leaf.dataL = None
+         leaf.dataR = None
+@@ -5356,9 +5490,24 @@
+         _add_leaf(right)
+         if stop_window is not None:
+             _stop_window(stop_window)
++        if _s07c_r is not None and _s07c_noise(leaf.seq):  # 07c variant (S): a noise-level bisection below a refused leaf
++            _s07c_n["counted"] += 1
++            _s07c_count[_s07c_r] = _s07c_count.get(_s07c_r, 0) + 1
++            if _s07c_count[_s07c_r] >= _S07C[0] and _s07c_r not in _s07c_stopped:
++                _s07c_stopped.add(_s07c_r)
++                _s07c_n["stops"] += 1
++                for _m in [m for m in leaves.values() if _s07c_root.get(m.seq) == _s07c_r and _s07c_noise(m.seq)]:
++                    _s07c_stop_leaf(_m)
+ 
+     leaves_ascending = _leaves_ascending()
+     used_regions = [leaf.region for leaf in leaves_ascending]
++    if _m07c is not None:  # 07c instrument: the returned leaves
++        for _lf in leaves_ascending:
++            _m07c.append({"kind": "final", "seq": _lf.seq, "start": _lf.start, "end": _lf.end,
++                          "depth": _lf.depth, "route": _route07c(_lf), "trusted": _lf.region._trusted,
++                          "value_kind": _lf.region._value_kind, "phase_limited": bool(_lf.region._phase_limited),
++                          "residual": _lf.region.abserr, "floor": _lf.region.phase_err,
++                          "eprime": _error_for_ordering(_lf.error), "value": _lf.value})
+     num_used_regions = len(used_regions)
+     num_simple_regions = sum(1 for leaf in leaves_ascending if leaf.is_direct)
+ 
+@@ -5626,6 +5775,9 @@
+         # sum is positive.
+         "num_edge_rule_refusals": int(num_edge_rule_refusals),
+         "num_range_rule_refusals": int(num_range_rule_refusals),
++        "num_s07c_stops": int(_s07c_n["stops"]),  # 07c variant (S)
++        "num_s07c_stopped_leaves": int(_s07c_n["stopped_leaves"]),  # 07c variant (S)
++        "num_s07c_counted": int(_s07c_n["counted"]),  # 07c variant (S)
+         "p_points": p_points,
+         "num_regions": num_used_regions,
+         "regions": used_regions,

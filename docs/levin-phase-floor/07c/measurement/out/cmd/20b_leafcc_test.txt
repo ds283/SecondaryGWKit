@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/leafcc_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/leafcc_d1/r31-3-20363-1.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/leafcc_test/r31-3-20363-1.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:16:10Z
+# ----
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/leafcc_07c.py:139: RuntimeWarning: divide by zero encountered in divide
+  wk = np.where(kk % 2 == 0, 2.0 / (1.0 - kk.astype(float) ** 2), 0.0)
+r31-3-20363-1.json: 122 leaves, 84 reproduce, 30 resolved, 7.5 s
+# ----
+# end 2026-11-18T11:16:20Z
+# exit 0

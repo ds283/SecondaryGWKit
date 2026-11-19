@@ -1,0 +1,361 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/x1_capture_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_selection_chase.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_chase /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/captures/captures_chase.json --workers 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T10:18:45Z
+# ----
+# levin-phase-floor 07c Part A: section 2.1 items 1 and 4, captured at h, variant None (06c's X1 capture)
+# written 2026-11-18T10:18:45Z on mps026298.phys.susx.ac.uk
+# script x1_capture_07c.py sha256 e7cb9339d85db0ddd5bbff3ab3bb149a54e89ef31a978e97b9e784e9ce187763
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_selection_chase.json sha256 0e18c4b146a377eac0713526ca3f1009f7762685ea8156975cedb46bc2e21fed
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 76177
+C01: pid 76178
+C02: pid 76179
+C03: pid 76180
+C04: pid 76181
+C05: pid 76182
+C06: pid 76318
+C07: pid 76329
+C08: pid 76335
+C09: pid 76338
+C10: pid 76351
+C11: pid 76406
+C12: pid 76495
+C13: pid 76500
+C14: pid 76509
+C15: pid 76511
+C16: pid 76738
+C17: pid 76755
+C18: pid 76799
+C19: pid 76818
+C20: pid 76841
+C21: pid 76861
+C22: pid 76881
+C23: pid 76886
+C24: pid 76954
+C25: pid 76957
+C26: pid 76967
+C27: pid 76977
+C28: pid 76984
+C29: pid 77001
+C30: pid 77061
+C31: pid 77068
+C32: pid 77073
+C33: pid 77092
+C34: pid 77117
+C35: pid 77126
+C36: pid 77432
+C37: pid 77436
+C38: pid 77466
+C39: pid 77473
+C40: pid 77498
+C41: pid 77506
+C42: pid 77564
+C43: pid 77565
+C44: pid 77575
+C45: pid 77584
+C46: pid 77591
+C47: pid 77602
+C48: pid 77633
+C49: pid 77647
+C50: pid 77652
+C51: pid 77661
+C52: pid 77675
+C53: pid 77739
+C54: pid 77796
+C55: pid 77814
+C56: pid 77815
+C57: pid 77831
+C58: pid 77840
+C59: pid 78050
+C60: pid 78149
+C61: pid 78189
+C62: pid 78192
+C63: pid 78204
+C64: pid 78214
+C65: pid 78233
+C66: pid 78265
+C67: pid 78273
+C68: pid 78284
+C69: pid 78293
+C70: pid 78298
+C71: pid 78337
+C72: pid 78377
+C73: pid 78382
+C74: pid 78396
+C75: pid 78406
+C76: pid 78445
+C77: pid 78458
+C78: pid 78754
+C79: pid 78774
+C80: pid 78792
+C81: pid 78824
+C82: pid 78856
+C83: pid 78876
+C84: pid 78994
+C85: pid 79026
+C86: pid 79029
+C87: pid 79065
+C88: pid 79074
+C89: pid 79118
+C90: pid 79172
+C91: pid 79184
+C92: pid 79190
+C93: pid 79204
+C94: pid 79216
+C95: pid 79236
+C96: pid 79289
+C97: pid 79299
+C98: pid 79308
+C99: pid 79335
+C100: pid 79527
+C101: pid 79538
+C102: pid 79557
+C103: pid 79565
+C104: pid 79575
+C105: pid 79591
+C106: pid 79599
+C107: pid 79610
+C108: pid 79629
+C109: pid 79635
+C110: pid 79648
+C111: pid 79658
+C112: pid 79667
+C113: pid 79703
+C114: pid 79785
+C115: pid 79795
+C116: pid 79803
+C117: pid 79810
+C118: pid 79823
+C119: pid 79839
+C120: pid 79851
+C121: pid 80046
+C122: pid 80052
+C123: pid 80059
+C124: pid 80070
+C125: pid 80087
+C126: pid 80104
+C127: pid 80129
+C128: pid 80132
+C129: pid 80140
+C130: pid 80150
+C131: pid 80167
+C132: pid 80183
+C133: pid 80200
+C134: pid 80210
+C135: pid 80214
+C136: pid 80220
+C137: pid 80305
+C138: pid 80318
+C139: pid 80321
+C140: pid 80330
+C141: pid 80342
+C142: pid 80345
+C143: pid 80987
+exit codes {'C02': 0, 'C03': 0, 'C00': 0, 'C01': 0, 'C04': 0, 'C05': 0, 'C07': 0, 'C06': 0, 'C08': 0, 'C09': 0, 'C10': 0, 'C11': 0, 'C12': 0, 'C13': 0, 'C15': 0, 'C14': 0, 'C17': 0, 'C16': 0, 'C18': 0, 'C19': 0, 'C20': 0, 'C21': 0, 'C22': 0, 'C23': 0, 'C25': 0, 'C24': 0, 'C26': 0, 'C27': 0, 'C28': 0, 'C29': 0, 'C30': 0, 'C31': 0, 'C32': 0, 'C33': 0, 'C34': 0, 'C35': 0, 'C37': 0, 'C39': 0, 'C38': 0, 'C36': 0, 'C40': 0, 'C41': 0, 'C42': 0, 'C43': 0, 'C45': 0, 'C44': 0, 'C46': 0, 'C47': 0, 'C48': 0, 'C50': 0, 'C51': 0, 'C49': 0, 'C52': 0, 'C53': 0, 'C54': 0, 'C58': 0, 'C56': 0, 'C55': 0, 'C57': 0, 'C59': 0, 'C60': 0, 'C61': 0, 'C62': 0, 'C63': 0, 'C64': 0, 'C65': 0, 'C66': 0, 'C67': 0, 'C68': 0, 'C69': 0, 'C70': 0, 'C71': 0, 'C73': 0, 'C72': 0, 'C74': 0, 'C75': 0, 'C77': 0, 'C76': 0, 'C78': 0, 'C79': 0, 'C80': 0, 'C81': 0, 'C82': 0, 'C83': 0, 'C84': 0, 'C86': 0, 'C85': 0, 'C88': 0, 'C87': 0, 'C89': 0, 'C90': 0, 'C91': 0, 'C92': 0, 'C93': 0, 'C94': 0, 'C95': 0, 'C96': 0, 'C97': 0, 'C98': 0, 'C99': 0, 'C100': 0, 'C101': 0, 'C102': 0, 'C103': 0, 'C104': 0, 'C105': 0, 'C106': 0, 'C107': 0, 'C109': 0, 'C108': 0, 'C110': 0, 'C111': 0, 'C112': 0, 'C113': 0, 'C114': 0, 'C115': 0, 'C117': 0, 'C116': 0, 'C118': 0, 'C119': 0, 'C120': 0, 'C123': 0, 'C122': 0, 'C121': 0, 'C124': 0, 'C125': 0, 'C126': 0, 'C128': 0, 'C127': 0, 'C129': 0, 'C130': 0, 'C131': 0, 'C133': 0, 'C134': 0, 'C132': 0, 'C135': 0, 'C136': 0, 'C137': 0, 'C140': 0, 'C139': 0, 'C138': 0, 'C141': 0, 'C142': 0, 'C143': 0}
+captured and matching the census bit for bit: 198 of 198
+   h-1e-7-0-12688 1: matches True; error None; ray_initialized False
+   h-1e-7-0-12710 5: matches True; error None; ray_initialized False
+   h-1e-7-0-12723 5: matches True; error None; ray_initialized False
+   h-1e-7-0-12748 5: matches True; error None; ray_initialized False
+   h-1e-7-0-13757 5: matches True; error None; ray_initialized False
+   h-1e-7-0-13757 6: matches True; error None; ray_initialized False
+   h-1e-7-0-13763 2: matches True; error None; ray_initialized False
+   h-1e-7-0-13763 3: matches True; error None; ray_initialized False
+   h-1e-7-0-13774 4: matches True; error None; ray_initialized False
+   h-1e-7-0-1859 6: matches True; error None; ray_initialized False
+   h-1e-7-0-1862 1: matches True; error None; ray_initialized False
+   h-1e-7-0-1864 2: matches True; error None; ray_initialized False
+   h-1e-7-0-1864 3: matches True; error None; ray_initialized False
+   h-1e-7-0-1888 2: matches True; error None; ray_initialized False
+   h-1e-7-0-1888 3: matches True; error None; ray_initialized False
+   h-1e-8-1-2367 1: matches True; error None; ray_initialized False
+   h-1e-8-1-34529 2: matches True; error None; ray_initialized False
+   h-1e-8-1-34529 3: matches True; error None; ray_initialized False
+   h-1e-8-1-34529 4: matches True; error None; ray_initialized False
+   h-1e-8-1-34534 3: matches True; error None; ray_initialized False
+   h-1e-8-1-34557 3: matches True; error None; ray_initialized False
+   h-1e-8-1-34587 5: matches True; error None; ray_initialized False
+   h-1e-8-1-34591 1: matches True; error None; ray_initialized False
+   h-1e-8-1-34591 4: matches True; error None; ray_initialized False
+   h-1e-8-1-34606 6: matches True; error None; ray_initialized False
+   h-1e-8-1-34607 3: matches True; error None; ray_initialized False
+   h-1e-8-1-34774 5: matches True; error None; ray_initialized False
+   h-1e-8-1-35408 3: matches True; error None; ray_initialized False
+   h-1e-7-0-1891 3: matches True; error None; ray_initialized False
+   h-1e-8-1-37672 3: matches True; error None; ray_initialized False
+   h-1e-8-2-1289 4: matches True; error None; ray_initialized False
+   h-1e-8-2-13634 1: matches True; error None; ray_initialized False
+   h-1e-8-2-1370 2: matches True; error None; ray_initialized False
+   h-1e-8-2-1370 3: matches True; error None; ray_initialized False
+   h-1e-8-2-1375 4: matches True; error None; ray_initialized False
+   h-1e-8-2-14011 2: matches True; error None; ray_initialized False
+   h-1e-8-2-14011 3: matches True; error None; ray_initialized False
+   h-1e-8-2-1483 6: matches True; error None; ray_initialized False
+   h-1e-8-2-2079 3: matches True; error None; ray_initialized False
+   h-1e-8-2-21893 1: matches True; error None; ray_initialized False
+   h-1e-8-2-2303 3: matches True; error None; ray_initialized False
+   h-1e-7-0-33929 2: matches True; error None; ray_initialized False
+   h-1e-7-0-33929 3: matches True; error None; ray_initialized False
+   h-1e-8-2-2331 4: matches True; error None; ray_initialized False
+   h-1e-8-2-2331 6: matches True; error None; ray_initialized False
+   h-1e-8-2-34463 2: matches True; error None; ray_initialized False
+   h-1e-8-2-34463 3: matches True; error None; ray_initialized False
+   h-1e-8-2-34464 3: matches True; error None; ray_initialized False
+   h-1e-8-2-34564 1: matches True; error None; ray_initialized False
+   h-1e-8-2-34564 4: matches True; error None; ray_initialized False
+   h-1e-8-2-34573 3: matches True; error None; ray_initialized False
+   h-1e-8-2-34655 6: matches True; error None; ray_initialized False
+   h-1e-8-2-36987 3: matches True; error None; ray_initialized False
+   h-1e-8-2-36987 5: matches True; error None; ray_initialized False
+   h-1e-8-2-36987 6: matches True; error None; ray_initialized False
+   h-1e-8-2-36995 2: matches True; error None; ray_initialized False
+   h-1e-8-2-36995 3: matches True; error None; ray_initialized False
+   h-1e-8-2-38300 6: matches True; error None; ray_initialized False
+   h-1e-8-2-39046 6: matches True; error None; ray_initialized False
+   h-1e-7-0-33952 4: matches True; error None; ray_initialized False
+   h-1e-8-3-1224 1: matches True; error None; ray_initialized False
+   h-1e-8-3-13490 2: matches True; error None; ray_initialized False
+   h-1e-8-3-13490 3: matches True; error None; ray_initialized False
+   h-1e-8-3-13615 2: matches True; error None; ray_initialized False
+   h-1e-8-3-13615 3: matches True; error None; ray_initialized False
+   h-1e-8-3-13620 4: matches True; error None; ray_initialized False
+   h-1e-8-3-34214 2: matches True; error None; ray_initialized False
+   h-1e-8-3-34214 3: matches True; error None; ray_initialized False
+   h-1e-8-3-34230 1: matches True; error None; ray_initialized False
+   h-1e-8-3-34339 4: matches True; error None; ray_initialized False
+   h-1e-8-3-34756 1: matches True; error None; ray_initialized False
+   h-1e-8-3-34863 2: matches True; error None; ray_initialized False
+   h-1e-8-3-34863 3: matches True; error None; ray_initialized False
+   h-1e-8-3-35033 1: matches True; error None; ray_initialized False
+   h-1e-8-3-35033 2: matches True; error None; ray_initialized False
+   h-1e-8-3-35033 3: matches True; error None; ray_initialized False
+   h-1e-7-0-34920 4: matches True; error None; ray_initialized False
+   h-1e-8-3-37317 5: matches True; error None; ray_initialized False
+   h-1e-8-3-37347 2: matches True; error None; ray_initialized False
+   h-1e-8-3-37347 3: matches True; error None; ray_initialized False
+   h-1e-8-3-37356 2: matches True; error None; ray_initialized False
+   h-1e-8-3-37356 3: matches True; error None; ray_initialized False
+   h-1e-8-3-38238 4: matches True; error None; ray_initialized False
+   h-1e-7-0-38346 2: matches True; error None; ray_initialized False
+   h-1e-7-0-38346 3: matches True; error None; ray_initialized False
+   h-1e-7-0-38945 4: matches True; error None; ray_initialized False
+   h-1e-7-1-11189 1: matches True; error None; ray_initialized False
+   h-1e-7-1-11189 4: matches True; error None; ray_initialized False
+   h-1e-7-1-14041 4: matches True; error None; ray_initialized False
+   h-1e-7-1-14242 2: matches True; error None; ray_initialized False
+   h-1e-7-1-14242 3: matches True; error None; ray_initialized False
+   h-1e-7-1-14245 5: matches True; error None; ray_initialized False
+   h-1e-7-1-1755 5: matches True; error None; ray_initialized False
+   h-1e-7-1-1759 4: matches True; error None; ray_initialized False
+   h-1e-7-1-1759 5: matches True; error None; ray_initialized False
+   h-1e-7-1-1761 6: matches True; error None; ray_initialized False
+   h-1e-7-1-1762 1: matches True; error None; ray_initialized False
+   h-1e-7-1-1841 5: matches True; error None; ray_initialized False
+   h-1e-7-1-2113 1: matches True; error None; ray_initialized False
+   h-1e-7-1-2217 1: matches True; error None; ray_initialized False
+   h-1e-7-1-2367 1: matches True; error None; ray_initialized False
+   h-1e-7-1-34529 2: matches True; error None; ray_initialized False
+   h-1e-7-1-34529 3: matches True; error None; ray_initialized False
+   h-1e-7-1-34529 4: matches True; error None; ray_initialized False
+   h-1e-7-1-34534 3: matches True; error None; ray_initialized False
+   h-1e-7-1-34557 3: matches True; error None; ray_initialized False
+   h-1e-7-1-34587 5: matches True; error None; ray_initialized False
+   h-1e-7-1-34591 1: matches True; error None; ray_initialized False
+   h-1e-7-1-34591 4: matches True; error None; ray_initialized False
+   h-1e-7-1-34606 6: matches True; error None; ray_initialized False
+   h-1e-7-1-34607 3: matches True; error None; ray_initialized False
+   h-1e-7-1-34774 5: matches True; error None; ray_initialized False
+   h-1e-7-1-35408 3: matches True; error None; ray_initialized False
+   h-1e-7-1-37672 3: matches True; error None; ray_initialized False
+   h-1e-7-2-1289 4: matches True; error None; ray_initialized False
+   h-1e-7-2-13634 1: matches True; error None; ray_initialized False
+   h-1e-7-2-1370 2: matches True; error None; ray_initialized False
+   h-1e-7-2-1370 3: matches True; error None; ray_initialized False
+   h-1e-7-2-1375 4: matches True; error None; ray_initialized False
+   h-1e-7-2-14011 2: matches True; error None; ray_initialized False
+   h-1e-7-2-14011 3: matches True; error None; ray_initialized False
+   h-1e-7-2-1483 6: matches True; error None; ray_initialized False
+   h-1e-7-2-2079 3: matches True; error None; ray_initialized False
+   h-1e-7-2-21893 1: matches True; error None; ray_initialized False
+   h-1e-7-2-2303 3: matches True; error None; ray_initialized False
+   h-1e-7-2-2331 4: matches True; error None; ray_initialized False
+   h-1e-7-2-2331 6: matches True; error None; ray_initialized False
+   h-1e-7-2-34463 2: matches True; error None; ray_initialized False
+   h-1e-7-2-34463 3: matches True; error None; ray_initialized False
+   h-1e-7-2-34464 3: matches True; error None; ray_initialized False
+   h-1e-7-2-34564 1: matches True; error None; ray_initialized False
+   h-1e-7-2-34564 4: matches True; error None; ray_initialized False
+   h-1e-7-2-34573 3: matches True; error None; ray_initialized False
+   h-1e-7-2-34655 6: matches True; error None; ray_initialized False
+   h-1e-7-2-36987 3: matches True; error None; ray_initialized False
+   h-1e-7-2-36987 5: matches True; error None; ray_initialized False
+   h-1e-7-2-36987 6: matches True; error None; ray_initialized False
+   h-1e-7-2-36995 2: matches True; error None; ray_initialized False
+   h-1e-7-2-36995 3: matches True; error None; ray_initialized False
+   h-1e-7-2-38300 6: matches True; error None; ray_initialized False
+   h-1e-7-2-39046 6: matches True; error None; ray_initialized False
+   h-1e-7-3-1224 1: matches True; error None; ray_initialized False
+   h-1e-7-3-13620 4: matches True; error None; ray_initialized False
+   h-1e-7-3-13910 1: matches True; error None; ray_initialized False
+   h-1e-7-3-34214 2: matches True; error None; ray_initialized False
+   h-1e-7-3-34214 3: matches True; error None; ray_initialized False
+   h-1e-7-3-34230 1: matches True; error None; ray_initialized False
+   h-1e-7-3-34339 4: matches True; error None; ray_initialized False
+   h-1e-7-3-34756 1: matches True; error None; ray_initialized False
+   h-1e-7-3-34863 2: matches True; error None; ray_initialized False
+   h-1e-7-3-34863 3: matches True; error None; ray_initialized False
+   h-1e-7-3-35033 1: matches True; error None; ray_initialized False
+   h-1e-7-3-35033 2: matches True; error None; ray_initialized False
+   h-1e-7-3-35033 3: matches True; error None; ray_initialized False
+   h-1e-7-3-37317 5: matches True; error None; ray_initialized False
+   h-1e-7-3-37347 2: matches True; error None; ray_initialized False
+   h-1e-7-3-37347 3: matches True; error None; ray_initialized False
+   h-1e-7-3-37356 2: matches True; error None; ray_initialized False
+   h-1e-7-3-37356 3: matches True; error None; ray_initialized False
+   h-1e-7-3-38238 4: matches True; error None; ray_initialized False
+   h-1e-8-0-12688 1: matches True; error None; ray_initialized False
+   h-1e-8-0-12710 5: matches True; error None; ray_initialized False
+   h-1e-8-0-12723 5: matches True; error None; ray_initialized False
+   h-1e-8-0-12748 5: matches True; error None; ray_initialized False
+   h-1e-8-0-13757 5: matches True; error None; ray_initialized False
+   h-1e-8-0-13757 6: matches True; error None; ray_initialized False
+   h-1e-8-0-13763 2: matches True; error None; ray_initialized False
+   h-1e-8-0-13763 3: matches True; error None; ray_initialized False
+   h-1e-8-0-13774 4: matches True; error None; ray_initialized False
+   h-1e-8-0-1859 6: matches True; error None; ray_initialized False
+   h-1e-8-0-1862 1: matches True; error None; ray_initialized False
+   h-1e-8-0-1864 2: matches True; error None; ray_initialized False
+   h-1e-8-0-1864 3: matches True; error None; ray_initialized False
+   h-1e-8-0-1888 2: matches True; error None; ray_initialized False
+   h-1e-8-0-1888 3: matches True; error None; ray_initialized False
+   h-1e-8-0-33929 2: matches True; error None; ray_initialized False
+   h-1e-8-0-33929 3: matches True; error None; ray_initialized False
+   h-1e-8-0-33952 4: matches True; error None; ray_initialized False
+   h-1e-8-0-33997 4: matches True; error None; ray_initialized False
+   h-1e-8-0-34920 4: matches True; error None; ray_initialized False
+   h-1e-8-0-38346 2: matches True; error None; ray_initialized False
+   h-1e-8-0-38346 3: matches True; error None; ray_initialized False
+   h-1e-8-0-38945 4: matches True; error None; ray_initialized False
+   h-1e-8-1-11189 1: matches True; error None; ray_initialized False
+   h-1e-8-1-11189 4: matches True; error None; ray_initialized False
+   h-1e-8-1-14041 4: matches True; error None; ray_initialized False
+   h-1e-8-1-14242 2: matches True; error None; ray_initialized False
+   h-1e-8-1-14242 3: matches True; error None; ray_initialized False
+   h-1e-8-1-14245 5: matches True; error None; ray_initialized False
+   h-1e-8-1-1755 5: matches True; error None; ray_initialized False
+   h-1e-8-1-1759 4: matches True; error None; ray_initialized False
+   h-1e-8-1-1759 5: matches True; error None; ray_initialized False
+   h-1e-8-1-1761 6: matches True; error None; ray_initialized False
+   h-1e-8-1-1762 1: matches True; error None; ray_initialized False
+   h-1e-8-1-1841 5: matches True; error None; ray_initialized False
+   h-1e-8-1-2113 1: matches True; error None; ray_initialized False
+   h-1e-8-1-2217 1: matches True; error None; ray_initialized False
+   h-1e-8-1-2229 4: matches True; error None; ray_initialized False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/captures/captures_chase.json sha256 ac9178bcdeb4ee90c4830420db58e63a9283fc28701b5dfc630e32a417bd348b
+# ----
+# end 2026-11-18T10:50:59Z
+# exit 0

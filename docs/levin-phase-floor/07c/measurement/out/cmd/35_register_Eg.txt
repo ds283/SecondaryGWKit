@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/register_variant_07c.py Eg \(E\)\ estimate\ tail_sum4:\ \(b-a\)/2\ times\ the\ sum\ of\ the\ last\ four\ Chebyshev\ coefficients\ of\ the\ fine\ interpolant.\ It\ does\ NOT\ qualify\ as\ an\ estimate\ by\ section\ 2.3\'s\ rule:\ on\ D2\'s\ sample\ its\ ratio\ to\ CC_47\'s\ true\ error\ has\ minimum\ 0.20\ on\ the\ gate\ leaves\ \(0.199\ window\,\ 0.228-0.493\ gate\ group\,\ 0.401\ gat
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:30:38Z
+# ----
+Eg: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_Eg.py sha256 7d32bc1ea304d8c8eda00aaf24c6ffbd696bcdd9aee3f2cd62968938ce782990; diff /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/Eg.diff (+33 -0)
+# ----
+# end 2026-11-18T11:30:38Z
+# exit 0

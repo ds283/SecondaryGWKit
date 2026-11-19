@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/r2_28_spec_07c.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T09:26:57Z
+# ----
+1999 points, 261 subdivided leaves; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/r2-28/spec.json 7336643e94137ee56880a52d618f5c931f64ae8a19e54d79ab35d8c47f495999
+# ----
+# end 2026-11-19T09:26:57Z
+# exit 0

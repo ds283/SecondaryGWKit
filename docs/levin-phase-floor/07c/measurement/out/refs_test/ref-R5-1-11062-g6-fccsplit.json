@@ -1,0 +1,111 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07b Part A: piece references of ref-R5-1-11062-g6",
+  "written": "2026-11-18T23:49:48Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/leafref_07c.py",
+  "script_sha256": "ee9762e1dd7d3bbdf20a1ddcac7e003dab2217c4e28c5650a259c878098c27be",
+  "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f/tools/filon_reference.py",
+  "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+  "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/refs/specs/ref-R5-1-11062-g6.json",
+  "spec_sha256": "d69f345b93a63ae4362ae2a432bad38957756ca10eee53fa69cded721c851f9f",
+  "capture": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/refs/inputs/ref-R5-1-11062-g6.pkl",
+   "offset": 0,
+   "length": 1300318,
+   "sha256": "94a6a488b9ffb7778467484ed953c96c0b235e46e937d2545b84b466fabfdf7f",
+   "override": null
+  },
+  "workers": 2
+ },
+ "sid": "ref-R5-1-11062-g6",
+ "n_points": 2,
+ "n_production_edges": 299,
+ "n_edges": 299,
+ "n_tables": 3,
+ "split_ratio": 1.8,
+ "n_split_edges": 0,
+ "pieces": [
+  {
+   "lo": "0x1.2fa9f86d57a9fp+4",
+   "hi": "0x1.6692804ff16adp+4",
+   "n_segments": 298
+  }
+ ],
+ "readings": {
+  "1": {
+   "res": 1,
+   "wall_s": 22.561159542296082,
+   "n_jobs": 19,
+   "job_wall_s": [
+    3.7094597090035677,
+    3.7199012502096593,
+    2.010148874949664,
+    2.0041392920538783,
+    2.0134774995967746,
+    2.0079752076417208,
+    2.0251057501882315,
+    2.0003674579784274,
+    2.0796692497096956,
+    2.0574736250564456,
+    2.041454792022705,
+    2.014755208045244,
+    1.9951908751390874,
+    2.0294168749824166,
+    2.025231000036001,
+    2.044344041030854,
+    1.9896134999580681,
+    2.024393292143941,
+    1.2152269589714706
+   ],
+   "pieces": [
+    {
+     "k": 0,
+     "value_30": "-1.52749544846748209063617787966e-25",
+     "imag_30": "6.22590460192416375301886386279e-26",
+     "fit_noise_var": 2.927753145265618e-76,
+     "jittered_minus_smooth": -5.198418529731271e-38,
+     "direct_segments": 0,
+     "job_wall_s": 41.00734445871785
+    }
+   ]
+  },
+  "2": {
+   "res": 2,
+   "wall_s": 81.95663687540218,
+   "n_jobs": 19,
+   "job_wall_s": [
+    9.845085458364338,
+    9.796531375031918,
+    8.103779542259872,
+    8.185249750036746,
+    8.109136292245239,
+    8.185181041713804,
+    8.110312417149544,
+    8.193055167328566,
+    8.097610167227685,
+    8.179012124892324,
+    8.120505791157484,
+    8.183412250131369,
+    8.147974042221904,
+    8.195534707978368,
+    8.293107667006552,
+    8.522515333257616,
+    8.453701582737267,
+    8.624707666691393,
+    5.192025125026703
+   ],
+   "pieces": [
+    {
+     "k": 0,
+     "value_30": "-1.52749544846763171754576201364e-25",
+     "imag_30": "6.22590460192572942222897476672e-26",
+     "fit_noise_var": 2.835284482825357e-76,
+     "jittered_minus_smooth": -1.5132290656463759e-38,
+     "direct_segments": 0,
+     "job_wall_s": 156.5384375024587
+    }
+   ]
+  }
+ }
+}

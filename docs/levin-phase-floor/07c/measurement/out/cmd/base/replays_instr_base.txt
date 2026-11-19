@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/run_replays_07c.py instr base --sets chase 'chase~o' parta:R1 parta:R2 'parta:R2~o' parta:R3-W7 'parta:R3-W7~o' parta:R3-aux 'parta:R3-aux~o' parta:R3-own 'parta:R3-own~o' parta:W2 'parta:W2~o' parta:item3 parta:nowindow parta:pairs parta:v4 r31 r5 'r5~o' --workers 6 --instrument
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:08:18Z
+# ----
+instr base: 454 of 454 reproduce their census record; 332 s; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/replays/instr_summary_base.json
+# ----
+# end 2026-11-18T11:13:50Z
+# exit 0

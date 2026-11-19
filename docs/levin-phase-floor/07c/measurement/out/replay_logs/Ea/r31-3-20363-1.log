@@ -1,0 +1,1 @@
+r31-3-20363-1 Ea: DIFFERS: value: replay 0x1.263e9f583f581p-79 census 0x1.263e9f583fb9ap-79; abserr: replay 0x1.517e5aa3df6f2p-104 census 0x1.51512994921e7p-104; num_regions: replay 207 census 143; value 0x1.263e9f583f581p-79 abserr 0x1.517e5aa3df6f2p-104 conv False regions 207 depth 20 windows 0 stopped 0 4.83 s

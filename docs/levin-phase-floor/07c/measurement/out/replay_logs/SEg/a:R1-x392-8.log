@@ -1,0 +1,1 @@
+a:R1-x392-8 SEg: DIFFERS: region arrays differ: ['abserr', 'budget_err', 'declared_resolution', 'relerr', 'total_err']; section 1.5 entries differ: ['stationary_windows']; abserr: replay 0x1.2e0093372fd2bp-109 census 0x1.da890a8beb2e0p-110; value -0x1.e6304acbd4ee3p-83 abserr 0x1.2e0093372fd2bp-109 conv True regions 96 depth 14 windows 1 stopped 1 1.89 s

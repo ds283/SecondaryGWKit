@@ -1,0 +1,35 @@
+{
+ "tree": "h",
+ "name": "C75",
+ "units": [
+  {
+   "uid": "h-1e-8-0-13757",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "0-13757",
+   "names05": null,
+   "shard": 0,
+   "serial": 13757,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     5,
+     "k=3.05e+07/Mpc, q=9.85e+05/Mpc, r=3.05e+07/Mpc @ z_response=100.19, z in (1.6711e+10, 100.19), regime Gqr, group G-q+r"
+    ],
+    [
+     6,
+     "k=3.05e+07/Mpc, q=9.85e+05/Mpc, r=3.05e+07/Mpc @ z_response=100.19, z in (1.6711e+10, 100.19), regime Gqr, group G-q-r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_chase/C75",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/capture_chase/C75/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

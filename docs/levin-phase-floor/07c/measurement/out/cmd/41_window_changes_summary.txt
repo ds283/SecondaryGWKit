@@ -1,0 +1,15 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json\nd=json.load(open(\'/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/reach.json\'))\nfor v,x in d.items():\n    w=x[\'windows_changed\']\n    cnt=[e for e in w if \'n_windows\' in e]\n    per=[e for e in w if \'lo\' in e]\n    only_after=[e for e in per if e[\'tree\'] and e[\'variant\'] and all(e[\'tree\'][f]==e[\'variant\'][f] for f in (\'stopped\',\'iroff1_count\',\'leaves_at_stop\'))]\n    stop_flip=[e for e in per if (e[\'tree\'] or {}).get(\'stopped\')!=(e[\'variant\'] or {}).get(\'stopped\')]\n    las=[e for e in per if e[\'tree\'] and e[\'variant\'] and e[\'tree\'][\'leaves_at_stop\']!=e[\'variant\'][\'leaves_at_stop\']]\n    appear=[e for e in per if not e[\'tree\'] or not e[\'variant\']]\n    print(f\'{v}: windows changed {len(per)} in {len(set(e["sid"] for e in per))} calls; only stopped_after_split (the split count at which the same stop fell) {len(only_after)}; stopped flips {len(stop_flip)}; leaves_at_stop differs {len(las)}; window present in one only {len(appear)}; calls whose n_windows or n_windows_stopped differ {len(cnt)}\')\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T14:50:25Z
+# ----
+S: windows changed 41 in 41 calls; only stopped_after_split (the split count at which the same stop fell) 41; stopped flips 0; leaves_at_stop differs 0; window present in one only 0; calls whose n_windows or n_windows_stopped differ 0
+S2: windows changed 31 in 31 calls; only stopped_after_split (the split count at which the same stop fell) 31; stopped flips 0; leaves_at_stop differs 0; window present in one only 0; calls whose n_windows or n_windows_stopped differ 0
+N: windows changed 76 in 76 calls; only stopped_after_split (the split count at which the same stop fell) 68; stopped flips 0; leaves_at_stop differs 7; window present in one only 0; calls whose n_windows or n_windows_stopped differ 0
+Eg: windows changed 79 in 79 calls; only stopped_after_split (the split count at which the same stop fell) 74; stopped flips 0; leaves_at_stop differs 5; window present in one only 0; calls whose n_windows or n_windows_stopped differ 0
+Ea: windows changed 127 in 127 calls; only stopped_after_split (the split count at which the same stop fell) 14; stopped flips 1; leaves_at_stop differs 107; window present in one only 0; calls whose n_windows or n_windows_stopped differ 1
+SEg: windows changed 82 in 82 calls; only stopped_after_split (the split count at which the same stop fell) 77; stopped flips 0; leaves_at_stop differs 5; window present in one only 0; calls whose n_windows or n_windows_stopped differ 0
+SEa: windows changed 127 in 127 calls; only stopped_after_split (the split count at which the same stop fell) 14; stopped flips 1; leaves_at_stop differs 107; window present in one only 0; calls whose n_windows or n_windows_stopped differ 1
+# ----
+# end 2026-11-18T14:50:25Z
+# exit 0

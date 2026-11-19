@@ -1,0 +1,6 @@
+# levin-phase-floor 07c Part A: capture selection r5
+# written 2026-11-18T10:35:18Z on mps026298.phys.susx.ac.uk
+# script capture_selection_07c.py sha256 428103dab8b172754b54eaddb83075b940caf87da8154a843c14b9201d66432b
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/census_refs_07c.pkl sha256 b6c676df8fc29e37df0f2c466fcbbdda014d261ac8b2559603fab5375f9e4521

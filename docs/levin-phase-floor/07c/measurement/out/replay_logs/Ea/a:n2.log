@@ -1,0 +1,1 @@
+a:n2 Ea: DIFFERS: region arrays differ: ['abserr', 'budget_err', 'declared_resolution', 'relerr', 'total_err']; abserr: replay 0x1.6383353ad9729p-109 census 0x1.6617b9564db20p-109; value -0x1.0cf1a57202827p-82 abserr 0x1.6383353ad9729p-109 conv True regions 73 depth 14 windows 0 stopped 0 1.51 s

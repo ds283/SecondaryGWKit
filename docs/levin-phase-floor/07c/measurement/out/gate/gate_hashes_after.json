@@ -1,0 +1,2679 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/gate_hashes_07c.py",
+  "script_sha256": "75a49ff20291dd163c066abeb6f215970b731c716a915f4b234fef4ef2b18fa3",
+  "label": "after",
+  "host": "mps026298.phys.susx.ac.uk",
+  "utc": "2026-11-19T06:17:43.186705+00:00",
+  "kept_sha256": {
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/KEPT_ON_MAC_STUDIO.txt": "98f66fd074c1f116a13224a35fb3c5956ddba8a2f2d9c0f5c3cfdaed98f9c9b1",
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/KEPT_ON_MAC_STUDIO.txt": "fa0aadbb3699a5f8b74c2abe7179a24da33a1d291b14d4b1ce729fba9df7e6a6",
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/KEPT_ON_MAC_STUDIO.txt": "1454e8eb70c3da8837077b1cbef8eac4ba9001c7049fd084a34c7519c7b079a9",
+   "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/copy_files_certified.txt": "6e50cb3e8eb87e0d2e669b9ae64466ca8b251b0b295b6240ffc1c06e9ff3b50b"
+  }
+ },
+ "census": [
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/census/out/stop3/compare_census_calls.calls.jsonl",
+   "want": "a327106d0b0890fd9dd4b8a85dc7e64aec8340579711ff006fe86230bf25ad8d",
+   "got": "a327106d0b0890fd9dd4b8a85dc7e64aec8340579711ff006fe86230bf25ad8d",
+   "size_want": 598783276,
+   "size": 598783276,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/checkpoint.jsonl",
+   "want": "396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253",
+   "got": "396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253",
+   "size_want": 3340128029,
+   "size": 3340128029,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-7-k0_101.jsonl",
+   "want": "cfd9dbe12f911e3cd5bf27c04305b05aa7644029ec6797ec2cfbe29156a79c6e",
+   "got": "cfd9dbe12f911e3cd5bf27c04305b05aa7644029ec6797ec2cfbe29156a79c6e",
+   "size_want": 258438,
+   "size": 258438,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-7-k0_202.jsonl",
+   "want": "fe4c0c5c6e1321a6b7549e22f4071ddb371d5510cc66c0947c845d45d85d2ac6",
+   "got": "fe4c0c5c6e1321a6b7549e22f4071ddb371d5510cc66c0947c845d45d85d2ac6",
+   "size_want": 269786,
+   "size": 269786,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-7-k1_102.jsonl",
+   "want": "bb09e7e7b8b81a57faebe20903886c2ffd242c4467e6f474cfb26b8edc5aa46d",
+   "got": "bb09e7e7b8b81a57faebe20903886c2ffd242c4467e6f474cfb26b8edc5aa46d",
+   "size_want": 261129,
+   "size": 261129,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-7-k1_301.jsonl",
+   "want": "46a9966f06e4e483db23442c40a31ce839d771a50b5209a6efd64d4cf79d9ead",
+   "got": "46a9966f06e4e483db23442c40a31ce839d771a50b5209a6efd64d4cf79d9ead",
+   "size_want": 272477,
+   "size": 272477,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-7-k2_2.jsonl",
+   "want": "c3fc3c376cae04a0fbe9021f40eff0ff526013b6983a9a15c69dca73c1c7d852",
+   "got": "c3fc3c376cae04a0fbe9021f40eff0ff526013b6983a9a15c69dca73c1c7d852",
+   "size_want": 263881,
+   "size": 263881,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-7-k2_302.jsonl",
+   "want": "1e7f200c73d3223602f93ed76a3dfc6278cb50766b1493aaa39f11bedce2a1e6",
+   "got": "1e7f200c73d3223602f93ed76a3dfc6278cb50766b1493aaa39f11bedce2a1e6",
+   "size_want": 275002,
+   "size": 275002,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-7-k3_1.jsonl",
+   "want": "cfbd5a073697de9f5fe249f09e785d4a0dd791dacb9cc8ea06dc46f8af6ccc9b",
+   "got": "cfbd5a073697de9f5fe249f09e785d4a0dd791dacb9cc8ea06dc46f8af6ccc9b",
+   "size_want": 254997,
+   "size": 254997,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-7-k3_201.jsonl",
+   "want": "7cd287f7b0441ad6628bd5bafdaaf2c3de53d572b59979a12f49aac2f92f47ed",
+   "got": "7cd287f7b0441ad6628bd5bafdaaf2c3de53d572b59979a12f49aac2f92f47ed",
+   "size_want": 266999,
+   "size": 266999,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-8-k0_101.jsonl",
+   "want": "4d1296b8c48fea517c632d5f810745988297728792d61ec244d7271e1038601d",
+   "got": "4d1296b8c48fea517c632d5f810745988297728792d61ec244d7271e1038601d",
+   "size_want": 258457,
+   "size": 258457,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-8-k0_202.jsonl",
+   "want": "cc5f5a52f2d67df7db81e07ce99b1d22da803bca3e030123e9de06c22936b984",
+   "got": "cc5f5a52f2d67df7db81e07ce99b1d22da803bca3e030123e9de06c22936b984",
+   "size_want": 269799,
+   "size": 269799,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-8-k1_102.jsonl",
+   "want": "73a7271a3fcb29300beae3c1c1bffcdc7c25d4173af280b81a3ee51c84064e67",
+   "got": "73a7271a3fcb29300beae3c1c1bffcdc7c25d4173af280b81a3ee51c84064e67",
+   "size_want": 261103,
+   "size": 261103,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-8-k1_301.jsonl",
+   "want": "4360419c03164ff4677c6fcd205be6960983b9eab8b62f91f05e63bc29519c9f",
+   "got": "4360419c03164ff4677c6fcd205be6960983b9eab8b62f91f05e63bc29519c9f",
+   "size_want": 272470,
+   "size": 272470,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-8-k2_2.jsonl",
+   "want": "cfbcee109fd5acf9e8ceccebd257ebf2f3b575f095f19a9aed609e07ca4a791e",
+   "got": "cfbcee109fd5acf9e8ceccebd257ebf2f3b575f095f19a9aed609e07ca4a791e",
+   "size_want": 263855,
+   "size": 263855,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-8-k2_302.jsonl",
+   "want": "d4ed1a0ffd934043be125c7dc99c30e063a25802c16680e3364eade5db42f9c0",
+   "got": "d4ed1a0ffd934043be125c7dc99c30e063a25802c16680e3364eade5db42f9c0",
+   "size_want": 274995,
+   "size": 274995,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-8-k3_1.jsonl",
+   "want": "f66f06cebfbd77b365ed58754f0b6afa14d05dc4325026ad596ef5c393064a8a",
+   "got": "f66f06cebfbd77b365ed58754f0b6afa14d05dc4325026ad596ef5c393064a8a",
+   "size_want": 254984,
+   "size": 254984,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/events_1e-8-k3_201.jsonl",
+   "want": "95aa0570ff004db85bb81e4ec42a44a9ff6eb62618709ad1ed7e2babc8ee199d",
+   "got": "95aa0570ff004db85bb81e4ec42a44a9ff6eb62618709ad1ed7e2babc8ee199d",
+   "size_want": 266972,
+   "size": 266972,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/manifest.json",
+   "want": "59c741ec4ed942a99e761d1e91c2b40f354323bc423c159a60b0ba008db69d64",
+   "got": "59c741ec4ed942a99e761d1e91c2b40f354323bc423c159a60b0ba008db69d64",
+   "size_want": 4277,
+   "size": 4277,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/monitor.log",
+   "want": "1dab15dcf2749dbd5605224986d539f02996f7effc63815ff97dddecdb7a3e65",
+   "got": "1dab15dcf2749dbd5605224986d539f02996f7effc63815ff97dddecdb7a3e65",
+   "size_want": 2262,
+   "size": 2262,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-7-k0_101.pkl",
+   "want": "85fcbf99ea44114d10bf97c1400e0fe2dbb86c1fbc56048e854dd37dfb897425",
+   "got": "85fcbf99ea44114d10bf97c1400e0fe2dbb86c1fbc56048e854dd37dfb897425",
+   "size_want": 452561448,
+   "size": 452561448,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-7-k0_202.pkl",
+   "want": "55e5f497e2e8baad6f3cfab68a231f15b006451d501035bc01ca6a63c1615e75",
+   "got": "55e5f497e2e8baad6f3cfab68a231f15b006451d501035bc01ca6a63c1615e75",
+   "size_want": 502729180,
+   "size": 502729180,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-7-k1_102.pkl",
+   "want": "8c113889bdd9902c682e9b938209401a91a8d285dcf977aee9fb08a804444d2a",
+   "got": "8c113889bdd9902c682e9b938209401a91a8d285dcf977aee9fb08a804444d2a",
+   "size_want": 474929899,
+   "size": 474929899,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-7-k1_301.pkl",
+   "want": "a1f7f082e12f69e361e1e7048839e40d65279ee676c1ed72eb3688c69c3c7303",
+   "got": "a1f7f082e12f69e361e1e7048839e40d65279ee676c1ed72eb3688c69c3c7303",
+   "size_want": 511177379,
+   "size": 511177379,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-7-k2_2.pkl",
+   "want": "896452d61f244b867a0e74c9db59281ebe347530620e398c4a759fb19df62531",
+   "got": "896452d61f244b867a0e74c9db59281ebe347530620e398c4a759fb19df62531",
+   "size_want": 496205036,
+   "size": 496205036,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-7-k2_302.pkl",
+   "want": "51f9aafcc3b913caad812b8e4800d3c2251b42f120b3b14b017da25a52462628",
+   "got": "51f9aafcc3b913caad812b8e4800d3c2251b42f120b3b14b017da25a52462628",
+   "size_want": 509147667,
+   "size": 509147667,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-7-k3_1.pkl",
+   "want": "8229bc6b546bdaaca80a5f4e4f8382b3dcd6f7e273fe2045dbc9a389a2a0998c",
+   "got": "8229bc6b546bdaaca80a5f4e4f8382b3dcd6f7e273fe2045dbc9a389a2a0998c",
+   "size_want": 436426273,
+   "size": 436426273,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-7-k3_201.pkl",
+   "want": "8f1b64cf811dba99141996e6503866b4ebbde9cb7151e4282d567ba34cfa900f",
+   "got": "8f1b64cf811dba99141996e6503866b4ebbde9cb7151e4282d567ba34cfa900f",
+   "size_want": 503780131,
+   "size": 503780131,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-8-k0_101.pkl",
+   "want": "315c311df8ead3beca5823c6aa8deae5f2bc0e9abde62fd9f6fbae77edbd28af",
+   "got": "315c311df8ead3beca5823c6aa8deae5f2bc0e9abde62fd9f6fbae77edbd28af",
+   "size_want": 432087389,
+   "size": 432087389,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-8-k0_202.pkl",
+   "want": "4a6862af8e30887521888655ea390cbc7c13c33b78cef4ad2b7dc402eba4f393",
+   "got": "4a6862af8e30887521888655ea390cbc7c13c33b78cef4ad2b7dc402eba4f393",
+   "size_want": 457579357,
+   "size": 457579357,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-8-k1_102.pkl",
+   "want": "e37d9c578b889eec0465df7754ecf930c45eec6e5bac78ea68b4e2c1361abde5",
+   "got": "e37d9c578b889eec0465df7754ecf930c45eec6e5bac78ea68b4e2c1361abde5",
+   "size_want": 451040213,
+   "size": 451040213,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-8-k1_301.pkl",
+   "want": "6bfee7a8363b4954b1faae75068730ea380c6729e81625d34da0bb1979e678cb",
+   "got": "6bfee7a8363b4954b1faae75068730ea380c6729e81625d34da0bb1979e678cb",
+   "size_want": 465629989,
+   "size": 465629989,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-8-k2_2.pkl",
+   "want": "69c0d2042cd9c0dc97d433867fc35b7da806af70ca2f758ee9690421b67a1ab0",
+   "got": "69c0d2042cd9c0dc97d433867fc35b7da806af70ca2f758ee9690421b67a1ab0",
+   "size_want": 464446987,
+   "size": 464446987,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-8-k2_302.pkl",
+   "want": "eaa3cb4a0e5d1c3f27d352c28b2f2aa26f2603dea61f0dba0deabfea1bdc267e",
+   "got": "eaa3cb4a0e5d1c3f27d352c28b2f2aa26f2603dea61f0dba0deabfea1bdc267e",
+   "size_want": 463348879,
+   "size": 463348879,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-8-k3_1.pkl",
+   "want": "b7f9f7d73890908d043db46d0791b6afde1f2048cb999f654865974be512d156",
+   "got": "b7f9f7d73890908d043db46d0791b6afde1f2048cb999f654865974be512d156",
+   "size_want": 415711188,
+   "size": 415711188,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/regions_1e-8-k3_201.pkl",
+   "want": "37f5cafa5ea4efb9221375ac4fdefda551dd115e0393bf5bd170c16f864cd360",
+   "got": "37f5cafa5ea4efb9221375ac4fdefda551dd115e0393bf5bd170c16f864cd360",
+   "size_want": 459391459,
+   "size": 459391459,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-7-k0_101.json",
+   "want": "e7432f84e99224364db8530d1625cbc5333fd303255cbeeba735c09cedce144d",
+   "got": "e7432f84e99224364db8530d1625cbc5333fd303255cbeeba735c09cedce144d",
+   "size_want": 278446,
+   "size": 278446,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-7-k0_202.json",
+   "want": "4cbb6e47adfe2e1b1319a19ad9f82168d630e5880c9394e64d71191270f21eec",
+   "got": "4cbb6e47adfe2e1b1319a19ad9f82168d630e5880c9394e64d71191270f21eec",
+   "size_want": 278329,
+   "size": 278329,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-7-k1_102.json",
+   "want": "de3d0f7ccceb2ad60cb34c862997bd4d121db67043b948b52ca9e0dcd85589c0",
+   "got": "de3d0f7ccceb2ad60cb34c862997bd4d121db67043b948b52ca9e0dcd85589c0",
+   "size_want": 278357,
+   "size": 278357,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-7-k1_301.json",
+   "want": "9d597b2ae2c7dbec8d283adc484b979110e28fa215b8ea76d44439bf8b037951",
+   "got": "9d597b2ae2c7dbec8d283adc484b979110e28fa215b8ea76d44439bf8b037951",
+   "size_want": 278583,
+   "size": 278583,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-7-k2_2.json",
+   "want": "b8d0772312c3d9f64653af081d4874d63b0e6fe488b37c42afcf2253f04bc687",
+   "got": "b8d0772312c3d9f64653af081d4874d63b0e6fe488b37c42afcf2253f04bc687",
+   "size_want": 275733,
+   "size": 275733,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-7-k2_302.json",
+   "want": "dd514bdc6de996a07ae1b209a279683b14538f751a3dd1adc708f7d637724e79",
+   "got": "dd514bdc6de996a07ae1b209a279683b14538f751a3dd1adc708f7d637724e79",
+   "size_want": 278016,
+   "size": 278016,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-7-k3_1.json",
+   "want": "444e00825ab8887b6190e0921c0c4b4805b319c8e37d801dab7adec8a51c29a8",
+   "got": "444e00825ab8887b6190e0921c0c4b4805b319c8e37d801dab7adec8a51c29a8",
+   "size_want": 272805,
+   "size": 272805,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-7-k3_201.json",
+   "want": "fc4d90b8035010f0e32948f5025c02a2c3b2f5d180959f00a87896713656cdba",
+   "got": "fc4d90b8035010f0e32948f5025c02a2c3b2f5d180959f00a87896713656cdba",
+   "size_want": 275168,
+   "size": 275168,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-8-k0_101.json",
+   "want": "3c5ef6edf95f59cb4349f6930953f487ca9972ffe07d392234c436d06c7bc188",
+   "got": "3c5ef6edf95f59cb4349f6930953f487ca9972ffe07d392234c436d06c7bc188",
+   "size_want": 280766,
+   "size": 280766,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-8-k0_202.json",
+   "want": "94635fec56df153d071916ae8215bb722cecce9719aa0257131ba6dca4dc3435",
+   "got": "94635fec56df153d071916ae8215bb722cecce9719aa0257131ba6dca4dc3435",
+   "size_want": 280649,
+   "size": 280649,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-8-k1_102.json",
+   "want": "721e6ee50688fd9971e16d16c9a90b754cda39c5e95dac4a2cf3590143c90300",
+   "got": "721e6ee50688fd9971e16d16c9a90b754cda39c5e95dac4a2cf3590143c90300",
+   "size_want": 280677,
+   "size": 280677,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-8-k1_301.json",
+   "want": "f59c544166e9aa88696604769f81ad5e94c12011e42f773c79d886b62db2554b",
+   "got": "f59c544166e9aa88696604769f81ad5e94c12011e42f773c79d886b62db2554b",
+   "size_want": 280903,
+   "size": 280903,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-8-k2_2.json",
+   "want": "e86ca6660f8bd9019340a959814b2f0b8cff47062037bff47ae7d756bd414664",
+   "got": "e86ca6660f8bd9019340a959814b2f0b8cff47062037bff47ae7d756bd414664",
+   "size_want": 278053,
+   "size": 278053,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-8-k2_302.json",
+   "want": "94d12e3f63a9ca0fac5b7acbf2624801632e8cc190ffdae7ebe13656cd8342d8",
+   "got": "94d12e3f63a9ca0fac5b7acbf2624801632e8cc190ffdae7ebe13656cd8342d8",
+   "size_want": 280336,
+   "size": 280336,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-8-k3_1.json",
+   "want": "0aabd353c81180ff21d0a449649dce37414184471fcdc8c39bb6c9097c600631",
+   "got": "0aabd353c81180ff21d0a449649dce37414184471fcdc8c39bb6c9097c600631",
+   "size_want": 275125,
+   "size": 275125,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/spec_1e-8-k3_201.json",
+   "want": "9a2a3aa33b1061cd7ee5aefbe75eecf2c66596947967d22c4ac13e0fa2d2e2f8",
+   "got": "9a2a3aa33b1061cd7ee5aefbe75eecf2c66596947967d22c4ac13e0fa2d2e2f8",
+   "size_want": 277488,
+   "size": 277488,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/status.json",
+   "want": "b048fd1d22d82842a0fd45fa4d328de349d5808d5884ad874077d777462d3d25",
+   "got": "b048fd1d22d82842a0fd45fa4d328de349d5808d5884ad874077d777462d3d25",
+   "size_want": 306,
+   "size": 306,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/stderr.log",
+   "want": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "got": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "size_want": 0,
+   "size": 0,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/stdout.log",
+   "want": "8192e354200278cb06cdf5ec9cf1a689e87b7f9fd8ddaebe7fb19eaf07901393",
+   "got": "8192e354200278cb06cdf5ec9cf1a689e87b7f9fd8ddaebe7fb19eaf07901393",
+   "size_want": 3339,
+   "size": 3339,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_101.log",
+   "want": "34b9371617e9906cdeb9dd15093dff355507627ba8999dcb4609b2772e485b74",
+   "got": "34b9371617e9906cdeb9dd15093dff355507627ba8999dcb4609b2772e485b74",
+   "size_want": 556906,
+   "size": 556906,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_101_bye.json",
+   "want": "8604f4f663931ed1b9113ab49d389b73797996ba0a35d17c52ef7d7ac2fe0c97",
+   "got": "8604f4f663931ed1b9113ab49d389b73797996ba0a35d17c52ef7d7ac2fe0c97",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_101_context.json",
+   "want": "5d951405e92b25aa141014f62e6b141fabc529063f5f4ee424a1829349a99936",
+   "got": "5d951405e92b25aa141014f62e6b141fabc529063f5f4ee424a1829349a99936",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_101_hello.json",
+   "want": "8426be8f65571e5172ee5d38ff7fd15eb1c139f45cf5044b76b2f01104f0a3da",
+   "got": "8426be8f65571e5172ee5d38ff7fd15eb1c139f45cf5044b76b2f01104f0a3da",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_101_levin_logging.json",
+   "want": "f90cf19d156ffda936f1fb987ad45e170bd3f1c28f3f9ff61c720394de9fbff3",
+   "got": "f90cf19d156ffda936f1fb987ad45e170bd3f1c28f3f9ff61c720394de9fbff3",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_101_store.json",
+   "want": "eee06c9cb50205c1e27372e704c08df94e8e9c37a9ca7882db473acf985017f0",
+   "got": "eee06c9cb50205c1e27372e704c08df94e8e9c37a9ca7882db473acf985017f0",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_202.log",
+   "want": "510a22c40f2208487a7f8abe211e1439703403089be8cfe446face2b528c0e96",
+   "got": "510a22c40f2208487a7f8abe211e1439703403089be8cfe446face2b528c0e96",
+   "size_want": 536972,
+   "size": 536972,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_202_bye.json",
+   "want": "5bad5c253c6cbaf0a879f9f617a38a803f857625d7597b012e07bf9f2fb97e5e",
+   "got": "5bad5c253c6cbaf0a879f9f617a38a803f857625d7597b012e07bf9f2fb97e5e",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_202_context.json",
+   "want": "87b97932f2c2b9092e97694b4caecefb48da5492ed2b2a2c37e4471c2781347e",
+   "got": "87b97932f2c2b9092e97694b4caecefb48da5492ed2b2a2c37e4471c2781347e",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_202_hello.json",
+   "want": "b40949f3c91b5e1c28042cd6aa63b4ab4409c28e42cc4f48c7f7594f1b95a388",
+   "got": "b40949f3c91b5e1c28042cd6aa63b4ab4409c28e42cc4f48c7f7594f1b95a388",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_202_levin_logging.json",
+   "want": "2fd4c4321c849c063efc8a24f16e98f6dcd979c99784142b6a651d3509ce8450",
+   "got": "2fd4c4321c849c063efc8a24f16e98f6dcd979c99784142b6a651d3509ce8450",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k0_202_store.json",
+   "want": "896119160bd7928487086c1f4872eb5d008d0ca0415998aee49738d628b5b1ed",
+   "got": "896119160bd7928487086c1f4872eb5d008d0ca0415998aee49738d628b5b1ed",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_102.log",
+   "want": "4ac5a39b7d734fc1d299a12a1251c59a0b2a6babc4c672cfa312f02ed05b3ccd",
+   "got": "4ac5a39b7d734fc1d299a12a1251c59a0b2a6babc4c672cfa312f02ed05b3ccd",
+   "size_want": 496394,
+   "size": 496394,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_102_bye.json",
+   "want": "b6d801de5b7aff9abf71e2c6440bc5b2548c11c883d9286dd8b7fda7d691b473",
+   "got": "b6d801de5b7aff9abf71e2c6440bc5b2548c11c883d9286dd8b7fda7d691b473",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_102_context.json",
+   "want": "906b3193b23afbe6f24a3f47846670c2a61ee1cc95a16decddccfb66f31c8118",
+   "got": "906b3193b23afbe6f24a3f47846670c2a61ee1cc95a16decddccfb66f31c8118",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_102_hello.json",
+   "want": "e5c69c62edf9515f18751a1376f8c5401f49872f0dcea42c4ceed410aca64f0b",
+   "got": "e5c69c62edf9515f18751a1376f8c5401f49872f0dcea42c4ceed410aca64f0b",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_102_levin_logging.json",
+   "want": "44ea412eea6326b3c8a935946547873ae6da183283d40d8671ced7e74b1ae7ff",
+   "got": "44ea412eea6326b3c8a935946547873ae6da183283d40d8671ced7e74b1ae7ff",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_102_store.json",
+   "want": "7ba23223eafb676c6f8fefd307a1f004755b6016022c8174b342d51a1b2add52",
+   "got": "7ba23223eafb676c6f8fefd307a1f004755b6016022c8174b342d51a1b2add52",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_301.log",
+   "want": "e196d28c1700d333204c2a617e92b0176d08ff019db858a7b730b1a27e7b481e",
+   "got": "e196d28c1700d333204c2a617e92b0176d08ff019db858a7b730b1a27e7b481e",
+   "size_want": 599406,
+   "size": 599406,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_301_bye.json",
+   "want": "7a796533f58a338cb4deff6f81c06f4ebf1ac1a75affaae6113aba1ba7248394",
+   "got": "7a796533f58a338cb4deff6f81c06f4ebf1ac1a75affaae6113aba1ba7248394",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_301_context.json",
+   "want": "a79449a678d5d1863d2941ed7ead711e62424db6ae74a6fccc1bc418a5ac90a7",
+   "got": "a79449a678d5d1863d2941ed7ead711e62424db6ae74a6fccc1bc418a5ac90a7",
+   "size_want": 479,
+   "size": 479,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_301_hello.json",
+   "want": "0a43ea6b4618bbf46fde6e14915ebe19c65df4bd17bc95616d3040d083b8efd9",
+   "got": "0a43ea6b4618bbf46fde6e14915ebe19c65df4bd17bc95616d3040d083b8efd9",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_301_levin_logging.json",
+   "want": "7d96447c107228f15d99473a40a6135ed5e1bdb230bc8318a333667f984cb4d3",
+   "got": "7d96447c107228f15d99473a40a6135ed5e1bdb230bc8318a333667f984cb4d3",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k1_301_store.json",
+   "want": "51e924f34d2193f014d19942cca60b6aa8ef236d2531daf207d327a94628a202",
+   "got": "51e924f34d2193f014d19942cca60b6aa8ef236d2531daf207d327a94628a202",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_2.log",
+   "want": "f8ef326f131d13314d028076c9206dbd378e219e49468571d9cebce4f220ae83",
+   "got": "f8ef326f131d13314d028076c9206dbd378e219e49468571d9cebce4f220ae83",
+   "size_want": 370008,
+   "size": 370008,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_2_bye.json",
+   "want": "472282fe900fd10ce5b0e9112992ec6685a8eb21b5a06d282ee38fdefd7af06c",
+   "got": "472282fe900fd10ce5b0e9112992ec6685a8eb21b5a06d282ee38fdefd7af06c",
+   "size_want": 14100,
+   "size": 14100,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_2_context.json",
+   "want": "3f44a124e241baffa58afc1a5ba91ff3d94728631fe54a911280b01c23b95352",
+   "got": "3f44a124e241baffa58afc1a5ba91ff3d94728631fe54a911280b01c23b95352",
+   "size_want": 478,
+   "size": 478,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_2_hello.json",
+   "want": "4be5ddbe924c753401af35f4393a7fb39b0f9cec045062341fb8d532b54770f4",
+   "got": "4be5ddbe924c753401af35f4393a7fb39b0f9cec045062341fb8d532b54770f4",
+   "size_want": 6836,
+   "size": 6836,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_2_levin_logging.json",
+   "want": "381cf3f3d4e47f5970cacdd930019e7ca925d5eb52d859e6fc4750a643bdc5a2",
+   "got": "381cf3f3d4e47f5970cacdd930019e7ca925d5eb52d859e6fc4750a643bdc5a2",
+   "size_want": 147,
+   "size": 147,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_2_store.json",
+   "want": "7c9d10d783800535d25047f89ae013c4cbcc86ff2e67c424748931001805bf5f",
+   "got": "7c9d10d783800535d25047f89ae013c4cbcc86ff2e67c424748931001805bf5f",
+   "size_want": 177,
+   "size": 177,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_302.log",
+   "want": "8a6a6c7d1ab44258d85161f80bad72eb7bb0299f72f5ae82eca9b7f46969fbc9",
+   "got": "8a6a6c7d1ab44258d85161f80bad72eb7bb0299f72f5ae82eca9b7f46969fbc9",
+   "size_want": 640554,
+   "size": 640554,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_302_bye.json",
+   "want": "2d1c12dc2072f97d5c8f9839ad607841838a450f3bd20bcb61580f569d930153",
+   "got": "2d1c12dc2072f97d5c8f9839ad607841838a450f3bd20bcb61580f569d930153",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_302_context.json",
+   "want": "5b5b069bea31284d4d31ae026c051b87cd3c2051188ac5718498eeaf0fc3a8ae",
+   "got": "5b5b069bea31284d4d31ae026c051b87cd3c2051188ac5718498eeaf0fc3a8ae",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_302_hello.json",
+   "want": "a98ebd4f1af3feb75e54d25b0eadba239725c09544e6b169ca8afdb29a58fc89",
+   "got": "a98ebd4f1af3feb75e54d25b0eadba239725c09544e6b169ca8afdb29a58fc89",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_302_levin_logging.json",
+   "want": "e33c6500519b032ca3e22e3ca89510c4a9046b4b9b71bdfabfbc860e7cccde29",
+   "got": "e33c6500519b032ca3e22e3ca89510c4a9046b4b9b71bdfabfbc860e7cccde29",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k2_302_store.json",
+   "want": "4e9ede2f82a99f354e04eafe7d43773b9d68a5aff0bc291250ebc987fe7a0267",
+   "got": "4e9ede2f82a99f354e04eafe7d43773b9d68a5aff0bc291250ebc987fe7a0267",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_1.log",
+   "want": "f513762ef074400904548e37bd3c1c7ace1f22ec3cd9cce27c8d307d54f07c44",
+   "got": "f513762ef074400904548e37bd3c1c7ace1f22ec3cd9cce27c8d307d54f07c44",
+   "size_want": 610917,
+   "size": 610917,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_1_bye.json",
+   "want": "bb59d5e507a90fe284514a756d719e7339ec08299d99485e407894ddd5bbdc95",
+   "got": "bb59d5e507a90fe284514a756d719e7339ec08299d99485e407894ddd5bbdc95",
+   "size_want": 14100,
+   "size": 14100,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_1_context.json",
+   "want": "ab20b4c7c76022b2c57061c8e18db4c4aeb092a59b010ecbb3fe91b7c5c4bff5",
+   "got": "ab20b4c7c76022b2c57061c8e18db4c4aeb092a59b010ecbb3fe91b7c5c4bff5",
+   "size_want": 478,
+   "size": 478,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_1_hello.json",
+   "want": "7e8bbe438c20d17d0b5a532b8467f4a441c29bbaac03e910d0661f721a50487d",
+   "got": "7e8bbe438c20d17d0b5a532b8467f4a441c29bbaac03e910d0661f721a50487d",
+   "size_want": 6836,
+   "size": 6836,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_1_levin_logging.json",
+   "want": "502197a1f3f2ebff036fe2a93ded10c6ffcb6a26d992a68706215f1fe61d3c04",
+   "got": "502197a1f3f2ebff036fe2a93ded10c6ffcb6a26d992a68706215f1fe61d3c04",
+   "size_want": 147,
+   "size": 147,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_1_store.json",
+   "want": "27295406ba5f8f80c8a29684ec972029b3318ec6d12d27cb190da7d5d9dfa065",
+   "got": "27295406ba5f8f80c8a29684ec972029b3318ec6d12d27cb190da7d5d9dfa065",
+   "size_want": 177,
+   "size": 177,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_201.log",
+   "want": "d69e9bf582471444c097a6713959b0440476e6eeefe9535daa3d1dd09eb84829",
+   "got": "d69e9bf582471444c097a6713959b0440476e6eeefe9535daa3d1dd09eb84829",
+   "size_want": 367368,
+   "size": 367368,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_201_bye.json",
+   "want": "13f7117a0816c018658d42609af2bc6c4d91b79d1380445a65b96d477e689165",
+   "got": "13f7117a0816c018658d42609af2bc6c4d91b79d1380445a65b96d477e689165",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_201_context.json",
+   "want": "8822ba8ac6919469c4409fe8bc46397dda1a9f1d8808f9e7337fccf85b33de0d",
+   "got": "8822ba8ac6919469c4409fe8bc46397dda1a9f1d8808f9e7337fccf85b33de0d",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_201_hello.json",
+   "want": "64a305bd563e8f49ac86e37cfc455e0a22c8acfb98fada2fc62f82d267e49d1e",
+   "got": "64a305bd563e8f49ac86e37cfc455e0a22c8acfb98fada2fc62f82d267e49d1e",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_201_levin_logging.json",
+   "want": "7d1b4a5d427ad9b418e4f6f72eec11ccd61b77c70840d54d8ade8f0063832e53",
+   "got": "7d1b4a5d427ad9b418e4f6f72eec11ccd61b77c70840d54d8ade8f0063832e53",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-7-k3_201_store.json",
+   "want": "9ce45afed38b416559a5abfc43a04833085c96c9b52a8d429e412e4c9d3b9a28",
+   "got": "9ce45afed38b416559a5abfc43a04833085c96c9b52a8d429e412e4c9d3b9a28",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_101.log",
+   "want": "ba7892f30b234662c1c50b57afbe37b8225a201a65dc30b6cada394ee958a14e",
+   "got": "ba7892f30b234662c1c50b57afbe37b8225a201a65dc30b6cada394ee958a14e",
+   "size_want": 544280,
+   "size": 544280,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_101_bye.json",
+   "want": "eb80a8e840f2107936a58f94bbb619ea25e691cf6bd63c710e2e716bed6df61d",
+   "got": "eb80a8e840f2107936a58f94bbb619ea25e691cf6bd63c710e2e716bed6df61d",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_101_context.json",
+   "want": "ed1e32e80c2fd42bc5a12d2e812f772467b39d3987f14a28c96c8676bb8694e8",
+   "got": "ed1e32e80c2fd42bc5a12d2e812f772467b39d3987f14a28c96c8676bb8694e8",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_101_hello.json",
+   "want": "ebd36e50aebf33c5f3e05324281000008be281698461cf016f8f39b6bc4c52f6",
+   "got": "ebd36e50aebf33c5f3e05324281000008be281698461cf016f8f39b6bc4c52f6",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_101_levin_logging.json",
+   "want": "0bfac55a4f765ba059660964d3149eb1c7616c1613a489a0771bd0985219e1e7",
+   "got": "0bfac55a4f765ba059660964d3149eb1c7616c1613a489a0771bd0985219e1e7",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_101_store.json",
+   "want": "2f9c89870bb7b27092bf1679fdfa04196adc3507db4bae3e418bfdfe14391ddd",
+   "got": "2f9c89870bb7b27092bf1679fdfa04196adc3507db4bae3e418bfdfe14391ddd",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_202.log",
+   "want": "fa1b20a572f40bd1d0bbd9af37785aa5f8fcb981b839551b854492fcae221fa5",
+   "got": "fa1b20a572f40bd1d0bbd9af37785aa5f8fcb981b839551b854492fcae221fa5",
+   "size_want": 523172,
+   "size": 523172,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_202_bye.json",
+   "want": "e3e2a3aa3b02263dcaaa1a08eaaedc90d835615000e7c6e7ad72e756561eb7d7",
+   "got": "e3e2a3aa3b02263dcaaa1a08eaaedc90d835615000e7c6e7ad72e756561eb7d7",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_202_context.json",
+   "want": "e814d7fcc1d89f32c38d572ee4cb49139118da1e2b0ef12a7b0d3eeb7bac003c",
+   "got": "e814d7fcc1d89f32c38d572ee4cb49139118da1e2b0ef12a7b0d3eeb7bac003c",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_202_hello.json",
+   "want": "6f17984539752bb970b9c79a6fbce95e8e1f1c172b322a1c40350592c6e31bd6",
+   "got": "6f17984539752bb970b9c79a6fbce95e8e1f1c172b322a1c40350592c6e31bd6",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_202_levin_logging.json",
+   "want": "b5bebe67bdb2ccb4de9985669cc5175997f7c4e53982bce7deff5b8c94e49ceb",
+   "got": "b5bebe67bdb2ccb4de9985669cc5175997f7c4e53982bce7deff5b8c94e49ceb",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k0_202_store.json",
+   "want": "239c7b8dab3dde363be2c1322d61a76e3601215714224d60c68f5b9d4b713cef",
+   "got": "239c7b8dab3dde363be2c1322d61a76e3601215714224d60c68f5b9d4b713cef",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_102.log",
+   "want": "6d23b875063b5b2f2c7abc8698b8267eacd70a65ebde7ae0531d995b225aa6e1",
+   "got": "6d23b875063b5b2f2c7abc8698b8267eacd70a65ebde7ae0531d995b225aa6e1",
+   "size_want": 483461,
+   "size": 483461,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_102_bye.json",
+   "want": "3a1ac57c73588a87dbf4aabf3c6b898ca381ac4680bc054441ca8c827af42a9f",
+   "got": "3a1ac57c73588a87dbf4aabf3c6b898ca381ac4680bc054441ca8c827af42a9f",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_102_context.json",
+   "want": "7d314c4a510542d6e332f9fb006335df84810f6f2e82b3dce432619f2566a612",
+   "got": "7d314c4a510542d6e332f9fb006335df84810f6f2e82b3dce432619f2566a612",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_102_hello.json",
+   "want": "d169de18a5176a55191249c85d2df720b6219546b145c9d341626138ffac3250",
+   "got": "d169de18a5176a55191249c85d2df720b6219546b145c9d341626138ffac3250",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_102_levin_logging.json",
+   "want": "18d007458ccb4ddef184f608b2b2a9ad5e08c05f4854da1a01fd94f831d10860",
+   "got": "18d007458ccb4ddef184f608b2b2a9ad5e08c05f4854da1a01fd94f831d10860",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_102_store.json",
+   "want": "7e4c57d659cfe89b07aaa212b4c655918abdc9c2444a1a0c5d60e6ea6b9c83a2",
+   "got": "7e4c57d659cfe89b07aaa212b4c655918abdc9c2444a1a0c5d60e6ea6b9c83a2",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_301.log",
+   "want": "769e1498ffa4176c2f9410835fd90b022725eacc598e6f72bdf2143b2f1b76c4",
+   "got": "769e1498ffa4176c2f9410835fd90b022725eacc598e6f72bdf2143b2f1b76c4",
+   "size_want": 584351,
+   "size": 584351,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_301_bye.json",
+   "want": "ead318af801472a6e1756035c756efab706c7583a16b72b01ac722dd85aa2203",
+   "got": "ead318af801472a6e1756035c756efab706c7583a16b72b01ac722dd85aa2203",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_301_context.json",
+   "want": "6c709bf92ebb2d63b49f5259053106a013b737f5d94587c4ef2fc5fffe0c3d98",
+   "got": "6c709bf92ebb2d63b49f5259053106a013b737f5d94587c4ef2fc5fffe0c3d98",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_301_hello.json",
+   "want": "886205b1ac9f047321898f050a8a43c403fc595f9e289bae5a164b349604fb7a",
+   "got": "886205b1ac9f047321898f050a8a43c403fc595f9e289bae5a164b349604fb7a",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_301_levin_logging.json",
+   "want": "f71f7e8a7ae130b10279df309e11c69ba8826f63d40e9a93e23ae47520a669a1",
+   "got": "f71f7e8a7ae130b10279df309e11c69ba8826f63d40e9a93e23ae47520a669a1",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k1_301_store.json",
+   "want": "bc68667974a940073c01e2545cbdfba81e73b7c4c881158b885fc008d097c635",
+   "got": "bc68667974a940073c01e2545cbdfba81e73b7c4c881158b885fc008d097c635",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_2.log",
+   "want": "518b523ccd2d9934847f6e45a9de106b6ce6590e587e2053bad0d13a21c11791",
+   "got": "518b523ccd2d9934847f6e45a9de106b6ce6590e587e2053bad0d13a21c11791",
+   "size_want": 355006,
+   "size": 355006,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_2_bye.json",
+   "want": "afabd81b59b7ac8a3ba8c5833204beacbafc0a84c11fd1c4264bdf443a030a03",
+   "got": "afabd81b59b7ac8a3ba8c5833204beacbafc0a84c11fd1c4264bdf443a030a03",
+   "size_want": 14100,
+   "size": 14100,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_2_context.json",
+   "want": "16ba765f64d35ece398e0d317a813d51b775a0129939c8c3b08d8bffafec98cc",
+   "got": "16ba765f64d35ece398e0d317a813d51b775a0129939c8c3b08d8bffafec98cc",
+   "size_want": 478,
+   "size": 478,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_2_hello.json",
+   "want": "0789c2fb426a180fa4c4872eb1d54980b603c5df82c084f2ba1a12343352e5ca",
+   "got": "0789c2fb426a180fa4c4872eb1d54980b603c5df82c084f2ba1a12343352e5ca",
+   "size_want": 6836,
+   "size": 6836,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_2_levin_logging.json",
+   "want": "c16d0c108f3cce06a097b4b87a0ed5dc330de5452f902330c15866c68dea9547",
+   "got": "c16d0c108f3cce06a097b4b87a0ed5dc330de5452f902330c15866c68dea9547",
+   "size_want": 147,
+   "size": 147,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_2_store.json",
+   "want": "0bfb8665f82477a2fbd6eac3a92320e48bdbb2954c08d56cc6d40dbb480f4159",
+   "got": "0bfb8665f82477a2fbd6eac3a92320e48bdbb2954c08d56cc6d40dbb480f4159",
+   "size_want": 177,
+   "size": 177,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_302.log",
+   "want": "43cb8545f7571a32cef940d5c4a22338a628b863f71503ca0f5227c4e93c4f0a",
+   "got": "43cb8545f7571a32cef940d5c4a22338a628b863f71503ca0f5227c4e93c4f0a",
+   "size_want": 626083,
+   "size": 626083,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_302_bye.json",
+   "want": "3a5f81770aae01032d9126aa1d67b92217e2d6adcd4a72b66acabc3af4a439ae",
+   "got": "3a5f81770aae01032d9126aa1d67b92217e2d6adcd4a72b66acabc3af4a439ae",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_302_context.json",
+   "want": "88c664ef199dfd6fee409098eba73f161c4963b573b2a1be7bacf31b2f79b4d3",
+   "got": "88c664ef199dfd6fee409098eba73f161c4963b573b2a1be7bacf31b2f79b4d3",
+   "size_want": 479,
+   "size": 479,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_302_hello.json",
+   "want": "b25af5044ae79eff1e39e5b3e99cdc2ae95b070a6c84ef6580e6453b9f58b3a7",
+   "got": "b25af5044ae79eff1e39e5b3e99cdc2ae95b070a6c84ef6580e6453b9f58b3a7",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_302_levin_logging.json",
+   "want": "0679105074a89014679bc055e5f5e5e9d48d6ebc272d35b41cf0a87f10675297",
+   "got": "0679105074a89014679bc055e5f5e5e9d48d6ebc272d35b41cf0a87f10675297",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k2_302_store.json",
+   "want": "10461dd0bec7641dd400897f6e9f378cfd3305dbd668f7113577c29eec390f32",
+   "got": "10461dd0bec7641dd400897f6e9f378cfd3305dbd668f7113577c29eec390f32",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_1.log",
+   "want": "6581c75803bb442deb146b744d52322b4bd194c82f108ff77197e000dea8c745",
+   "got": "6581c75803bb442deb146b744d52322b4bd194c82f108ff77197e000dea8c745",
+   "size_want": 598508,
+   "size": 598508,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_1_bye.json",
+   "want": "ae11ad5033044cd1e88e13952e8c393681830de4e31047155ea02956c156cfb1",
+   "got": "ae11ad5033044cd1e88e13952e8c393681830de4e31047155ea02956c156cfb1",
+   "size_want": 14100,
+   "size": 14100,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_1_context.json",
+   "want": "cb33c6d5070c70882c2e183f663b7d7e9ae8d814f7b77d47abb03030e968afb3",
+   "got": "cb33c6d5070c70882c2e183f663b7d7e9ae8d814f7b77d47abb03030e968afb3",
+   "size_want": 478,
+   "size": 478,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_1_hello.json",
+   "want": "d08fa9c5287575081dbdc7bdc1bb38f200ecf935d465257900bde9304093ebd9",
+   "got": "d08fa9c5287575081dbdc7bdc1bb38f200ecf935d465257900bde9304093ebd9",
+   "size_want": 6836,
+   "size": 6836,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_1_levin_logging.json",
+   "want": "6866295d46c731d7ff94073adab27c348a6fefa82ffe0090f695dcac37fa58fa",
+   "got": "6866295d46c731d7ff94073adab27c348a6fefa82ffe0090f695dcac37fa58fa",
+   "size_want": 147,
+   "size": 147,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_1_store.json",
+   "want": "77f3f53f0d27d76995c116f6b5dea2dece28ed54f9c755e0e1d0d1cdeb08d1ee",
+   "got": "77f3f53f0d27d76995c116f6b5dea2dece28ed54f9c755e0e1d0d1cdeb08d1ee",
+   "size_want": 177,
+   "size": 177,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_201.log",
+   "want": "4ed54050dc3032365c54d3a3c4db7c86adc5932ff698b370e94bfa32b20d37b3",
+   "got": "4ed54050dc3032365c54d3a3c4db7c86adc5932ff698b370e94bfa32b20d37b3",
+   "size_want": 352270,
+   "size": 352270,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_201_bye.json",
+   "want": "648b036e39f20cd9078bb0eb7d34d8723836e2ac11f81093ef6b335ccee37258",
+   "got": "648b036e39f20cd9078bb0eb7d34d8723836e2ac11f81093ef6b335ccee37258",
+   "size_want": 14102,
+   "size": 14102,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_201_context.json",
+   "want": "910ce157daf4c191cd7504954caea3bd3564e27e4660755594b7cd356422bc62",
+   "got": "910ce157daf4c191cd7504954caea3bd3564e27e4660755594b7cd356422bc62",
+   "size_want": 480,
+   "size": 480,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_201_hello.json",
+   "want": "54533e2f7fd9888ddd010e68d771860f6ba86217c0cf52e1b98a9f4d23f542ce",
+   "got": "54533e2f7fd9888ddd010e68d771860f6ba86217c0cf52e1b98a9f4d23f542ce",
+   "size_want": 6838,
+   "size": 6838,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_201_levin_logging.json",
+   "want": "042df4097e6b34284e95a4e200156dd886abf240a66e72b4a4af9991dfe2b798",
+   "got": "042df4097e6b34284e95a4e200156dd886abf240a66e72b4a4af9991dfe2b798",
+   "size_want": 149,
+   "size": 149,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/worker_1e-8-k3_201_store.json",
+   "want": "b626efe169f93a58badaf4d38bba0760b9ab01aad1fae1beec81e258c48dcd72",
+   "got": "b626efe169f93a58badaf4d38bba0760b9ab01aad1fae1beec81e258c48dcd72",
+   "size_want": 179,
+   "size": 179,
+   "ok": true
+  }
+ ],
+ "census_run_files_listed": 150,
+ "census_run_files_present": 150,
+ "census_run_extra": [],
+ "census_run_missing": [],
+ "census_checkpoint": "396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253",
+ "parta": [
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C00/inputs_C00.pkl",
+   "want": "b536abd06093425092de316039d2d45a899f472210da8e58f877e2fd6b7b6572",
+   "got": "b536abd06093425092de316039d2d45a899f472210da8e58f877e2fd6b7b6572",
+   "size_want": 1331437,
+   "size": 1331437,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C00/regions_C00.pkl",
+   "want": "1ed526180a1e9fe5e5c9834396f603e58f87edd55dba3d89bb8c3585039c0a64",
+   "got": "1ed526180a1e9fe5e5c9834396f603e58f87edd55dba3d89bb8c3585039c0a64",
+   "size_want": 195964,
+   "size": 195964,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C01/inputs_C01.pkl",
+   "want": "410672b725262ebca284c6ab1c4475c266600fd11efcad1bc98c9334a14ecad7",
+   "got": "410672b725262ebca284c6ab1c4475c266600fd11efcad1bc98c9334a14ecad7",
+   "size_want": 3666,
+   "size": 3666,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C01/regions_C01.pkl",
+   "want": "624dc615043c312cc9fe039266a5aaabaf0cbec1abfbd8fca9382ddf68cbaa98",
+   "got": "624dc615043c312cc9fe039266a5aaabaf0cbec1abfbd8fca9382ddf68cbaa98",
+   "size_want": 200682,
+   "size": 200682,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C02/inputs_C02.pkl",
+   "want": "0eaebcc06847101eb05124183fe258f9a8358ad8a65bcab7d047bc7f21e85baa",
+   "got": "0eaebcc06847101eb05124183fe258f9a8358ad8a65bcab7d047bc7f21e85baa",
+   "size_want": 1337451,
+   "size": 1337451,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C02/regions_C02.pkl",
+   "want": "798487693bba61d0a43ee1a713bf6083171fded037e070e3a55937178ee8d8d4",
+   "got": "798487693bba61d0a43ee1a713bf6083171fded037e070e3a55937178ee8d8d4",
+   "size_want": 556594,
+   "size": 556594,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C03/inputs_C03.pkl",
+   "want": "4125e5363d0e3677360521df5541ce5621bb818ecc4249e12c1cefe395e8682c",
+   "got": "4125e5363d0e3677360521df5541ce5621bb818ecc4249e12c1cefe395e8682c",
+   "size_want": 1338891,
+   "size": 1338891,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C03/regions_C03.pkl",
+   "want": "700ddfc7872bfd44734b4bdf82423839bde911ed7083bbc142532a14c0a4d76b",
+   "got": "700ddfc7872bfd44734b4bdf82423839bde911ed7083bbc142532a14c0a4d76b",
+   "size_want": 605687,
+   "size": 605687,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C04/inputs_C04.pkl",
+   "want": "719ae661e6d09b38214b9a499536fd81cdda69180518f1f8787f24e915d067c6",
+   "got": "719ae661e6d09b38214b9a499536fd81cdda69180518f1f8787f24e915d067c6",
+   "size_want": 1351570,
+   "size": 1351570,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C04/regions_C04.pkl",
+   "want": "fb12b89bbec0cbcbada3e62bc376568f3c31e88bd677a0800a626f3560b72ba9",
+   "got": "fb12b89bbec0cbcbada3e62bc376568f3c31e88bd677a0800a626f3560b72ba9",
+   "size_want": 221918,
+   "size": 221918,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C05/inputs_C05.pkl",
+   "want": "018fa0ae95187126e1c5af2ec71eca87c44b7763ea6ba8d932e5a1594d9beb31",
+   "got": "018fa0ae95187126e1c5af2ec71eca87c44b7763ea6ba8d932e5a1594d9beb31",
+   "size_want": 22332,
+   "size": 22332,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C05/regions_C05.pkl",
+   "want": "df9816a635cbcbc7034c69e4bd5443c17ed063098233d70fdf8ce99169164e24",
+   "got": "df9816a635cbcbc7034c69e4bd5443c17ed063098233d70fdf8ce99169164e24",
+   "size_want": 139353,
+   "size": 139353,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C06/inputs_C06.pkl",
+   "want": "522370e8b73602f6bd5cde6bc830f4a01c500f57540d354998d923c2027b1348",
+   "got": "522370e8b73602f6bd5cde6bc830f4a01c500f57540d354998d923c2027b1348",
+   "size_want": 3444,
+   "size": 3444,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C06/regions_C06.pkl",
+   "want": "ecf5436eac4b21427f000d76e615ae38064a02e9d8498f05b85b78fd5ec0b714",
+   "got": "ecf5436eac4b21427f000d76e615ae38064a02e9d8498f05b85b78fd5ec0b714",
+   "size_want": 258923,
+   "size": 258923,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C07/inputs_C07.pkl",
+   "want": "c28ed4564129e489c6fefef063e8ca25e26edb8f3c6046790a214cebcaa5d676",
+   "got": "c28ed4564129e489c6fefef063e8ca25e26edb8f3c6046790a214cebcaa5d676",
+   "size_want": 3359,
+   "size": 3359,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C07/regions_C07.pkl",
+   "want": "c33e98b1a9db90c49caff4c986a1da8b7334b0d19a419db413a452e3bbf7355c",
+   "got": "c33e98b1a9db90c49caff4c986a1da8b7334b0d19a419db413a452e3bbf7355c",
+   "size_want": 125320,
+   "size": 125320,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C08/inputs_C08.pkl",
+   "want": "e0cd4699045ec42a2ccb61bedbae4d38a57a52fe0097698938d85c4721ee825c",
+   "got": "e0cd4699045ec42a2ccb61bedbae4d38a57a52fe0097698938d85c4721ee825c",
+   "size_want": 22332,
+   "size": 22332,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C08/regions_C08.pkl",
+   "want": "3c366d1602306d2ace3dfb7632fe02231d503f9156b6209fcc3b0077b933d0fc",
+   "got": "3c366d1602306d2ace3dfb7632fe02231d503f9156b6209fcc3b0077b933d0fc",
+   "size_want": 376303,
+   "size": 376303,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C09/inputs_C09.pkl",
+   "want": "dbad75bf8e7e7be942757dca7add9fdc16b8df497da6186720b48b53798403b8",
+   "got": "dbad75bf8e7e7be942757dca7add9fdc16b8df497da6186720b48b53798403b8",
+   "size_want": 1345180,
+   "size": 1345180,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C09/regions_C09.pkl",
+   "want": "cc204328d7ad453207b070fca590b2dc85012ade2eddf62ee180b0e90681ff4c",
+   "got": "cc204328d7ad453207b070fca590b2dc85012ade2eddf62ee180b0e90681ff4c",
+   "size_want": 215999,
+   "size": 215999,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C10/inputs_C10.pkl",
+   "want": "e25c7848146918483d692ecd96a41cf7daeb459d30410e7886b588595c71d236",
+   "got": "e25c7848146918483d692ecd96a41cf7daeb459d30410e7886b588595c71d236",
+   "size_want": 1366702,
+   "size": 1366702,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C10/regions_C10.pkl",
+   "want": "2893169ed001af450c539389fb8ca539580a2328b8af64f8062ee003e0f9273a",
+   "got": "2893169ed001af450c539389fb8ca539580a2328b8af64f8062ee003e0f9273a",
+   "size_want": 304980,
+   "size": 304980,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C11/inputs_C11.pkl",
+   "want": "371e8fce5b4f58e59af2a8cbef5701877d9aaf6a3d75750d9f6c781964f880e9",
+   "got": "371e8fce5b4f58e59af2a8cbef5701877d9aaf6a3d75750d9f6c781964f880e9",
+   "size_want": 1317138,
+   "size": 1317138,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C11/regions_C11.pkl",
+   "want": "74adb0a4dad630e340df42d9020c1b6b77738e1413d2a34f5990bd89ef856cba",
+   "got": "74adb0a4dad630e340df42d9020c1b6b77738e1413d2a34f5990bd89ef856cba",
+   "size_want": 145485,
+   "size": 145485,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C12/inputs_C12.pkl",
+   "want": "0cc9be974ec5c068f884f6e454e3af369ea62bde3970097c591a4db99e669861",
+   "got": "0cc9be974ec5c068f884f6e454e3af369ea62bde3970097c591a4db99e669861",
+   "size_want": 1366181,
+   "size": 1366181,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C12/regions_C12.pkl",
+   "want": "9fa8de48e1ae777f8f7bba28d5b1d28f72a6c4ee1b0a81fa7b9871be9643da88",
+   "got": "9fa8de48e1ae777f8f7bba28d5b1d28f72a6c4ee1b0a81fa7b9871be9643da88",
+   "size_want": 448356,
+   "size": 448356,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C13/inputs_C13.pkl",
+   "want": "6b7f11850df46c6054f42a2228e6a7420e9b8bb4813bc76a037cdbb086023cb0",
+   "got": "6b7f11850df46c6054f42a2228e6a7420e9b8bb4813bc76a037cdbb086023cb0",
+   "size_want": 1333781,
+   "size": 1333781,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C13/regions_C13.pkl",
+   "want": "59948e49879debb1446f92e62e0c72a5ec9a81106b7a4a86694a38d176ce8279",
+   "got": "59948e49879debb1446f92e62e0c72a5ec9a81106b7a4a86694a38d176ce8279",
+   "size_want": 312767,
+   "size": 312767,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C14/inputs_C14.pkl",
+   "want": "57801e989d491307cf0e6b7bfbc2965dd53d5f2c7460bb8e39c01ee7f738a0c1",
+   "got": "57801e989d491307cf0e6b7bfbc2965dd53d5f2c7460bb8e39c01ee7f738a0c1",
+   "size_want": 3582,
+   "size": 3582,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C14/regions_C14.pkl",
+   "want": "03bf0905d8a7259acb847216cb3fbcda82e8f1cf3a83adab15eee1b025cde759",
+   "got": "03bf0905d8a7259acb847216cb3fbcda82e8f1cf3a83adab15eee1b025cde759",
+   "size_want": 111471,
+   "size": 111471,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C15/inputs_C15.pkl",
+   "want": "c8661bba8a0f7c5358890e015f7f90ed08f9d316a3771e3b804266bb39b48bbe",
+   "got": "c8661bba8a0f7c5358890e015f7f90ed08f9d316a3771e3b804266bb39b48bbe",
+   "size_want": 3444,
+   "size": 3444,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C15/regions_C15.pkl",
+   "want": "f80d32d5eaaf59bc6f98f9338ca26db484d18168525347234ff434a2bb1a5d35",
+   "got": "f80d32d5eaaf59bc6f98f9338ca26db484d18168525347234ff434a2bb1a5d35",
+   "size_want": 169293,
+   "size": 169293,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C16/inputs_C16.pkl",
+   "want": "d952849a950d97e8cd8bb7d8844584ec5ba4dd242ab2fa23034a9d085c875eaf",
+   "got": "d952849a950d97e8cd8bb7d8844584ec5ba4dd242ab2fa23034a9d085c875eaf",
+   "size_want": 21930,
+   "size": 21930,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C16/regions_C16.pkl",
+   "want": "cd7fc2a3a4bcd9d45ee5de0f3ce5d9f2645793bdb09697a3cb00973b0717b0de",
+   "got": "cd7fc2a3a4bcd9d45ee5de0f3ce5d9f2645793bdb09697a3cb00973b0717b0de",
+   "size_want": 248050,
+   "size": 248050,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C17/inputs_C17.pkl",
+   "want": "6c9b4535af88f2ea7eec1bcc0162dc7cc115294b56fc16272dd62de39d209d34",
+   "got": "6c9b4535af88f2ea7eec1bcc0162dc7cc115294b56fc16272dd62de39d209d34",
+   "size_want": 3666,
+   "size": 3666,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C17/regions_C17.pkl",
+   "want": "95fb59177ff9b6cdd106c48d388c045363f4c5e3d63caf07ac73eca4a1b29555",
+   "got": "95fb59177ff9b6cdd106c48d388c045363f4c5e3d63caf07ac73eca4a1b29555",
+   "size_want": 382821,
+   "size": 382821,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C18/inputs_C18.pkl",
+   "want": "511acdd3a4be943725925b8a06ef6fc8d636f225de587fbd78d662622a5759ed",
+   "got": "511acdd3a4be943725925b8a06ef6fc8d636f225de587fbd78d662622a5759ed",
+   "size_want": 1345889,
+   "size": 1345889,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C18/regions_C18.pkl",
+   "want": "92f92f6e413511d00e292ac4abfa952065ccf812cd6d60339c560b7e86ddd8a7",
+   "got": "92f92f6e413511d00e292ac4abfa952065ccf812cd6d60339c560b7e86ddd8a7",
+   "size_want": 588634,
+   "size": 588634,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C19/inputs_C19.pkl",
+   "want": "5be147931fb4ceb93428033a8c807348afcff109d023b48845b97892687aff22",
+   "got": "5be147931fb4ceb93428033a8c807348afcff109d023b48845b97892687aff22",
+   "size_want": 22332,
+   "size": 22332,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C19/regions_C19.pkl",
+   "want": "447217a455697aae49ea2884211032561406e1ac4b04b9f144d6fb477bca0fe0",
+   "got": "447217a455697aae49ea2884211032561406e1ac4b04b9f144d6fb477bca0fe0",
+   "size_want": 154894,
+   "size": 154894,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C20/inputs_C20.pkl",
+   "want": "9f44884e6ad255343829eddbbb9b64baf5b74c80287f083f5f7d4de38c02ac3e",
+   "got": "9f44884e6ad255343829eddbbb9b64baf5b74c80287f083f5f7d4de38c02ac3e",
+   "size_want": 1344762,
+   "size": 1344762,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C20/regions_C20.pkl",
+   "want": "5d810518d4fb5f8a3e02636d861224d0df17389e521d348f2208db1a1631083a",
+   "got": "5d810518d4fb5f8a3e02636d861224d0df17389e521d348f2208db1a1631083a",
+   "size_want": 575865,
+   "size": 575865,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C21/inputs_C21.pkl",
+   "want": "5b5778d1e4d7e30a3639811d78fb5bfb4b33be73227d2407a1d7381c2fe6dd36",
+   "got": "5b5778d1e4d7e30a3639811d78fb5bfb4b33be73227d2407a1d7381c2fe6dd36",
+   "size_want": 22413,
+   "size": 22413,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C21/regions_C21.pkl",
+   "want": "51f8b36cbf04dd8095bf283476695fa357b9d22737ba1b721126c2d2588139c7",
+   "got": "51f8b36cbf04dd8095bf283476695fa357b9d22737ba1b721126c2d2588139c7",
+   "size_want": 435751,
+   "size": 435751,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C22/inputs_C22.pkl",
+   "want": "56973c444c61a6d25819957cbca723c2a5e3e17185d07d7f5f8248d44f5167cf",
+   "got": "56973c444c61a6d25819957cbca723c2a5e3e17185d07d7f5f8248d44f5167cf",
+   "size_want": 3665,
+   "size": 3665,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C22/regions_C22.pkl",
+   "want": "4d341dd8f62a2b931ceaa1dcf7cebf281770bb4581638731a25c233bf140bd84",
+   "got": "4d341dd8f62a2b931ceaa1dcf7cebf281770bb4581638731a25c233bf140bd84",
+   "size_want": 399589,
+   "size": 399589,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C23/inputs_C23.pkl",
+   "want": "4d47ff8e5ee679177dbb6a039f82f325e2d6075fddac9e1433c6a40f0d0ba6a2",
+   "got": "4d47ff8e5ee679177dbb6a039f82f325e2d6075fddac9e1433c6a40f0d0ba6a2",
+   "size_want": 2757526,
+   "size": 2757526,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C23/regions_C23.pkl",
+   "want": "0c7348bf962286388dbf759bfcae1a6ddeed01b693fae58d18e1c6c92b7734fc",
+   "got": "0c7348bf962286388dbf759bfcae1a6ddeed01b693fae58d18e1c6c92b7734fc",
+   "size_want": 369570,
+   "size": 369570,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C24/inputs_C24.pkl",
+   "want": "b8abc12cdedfa0feee05e4083a6b302a01d7434d5741b55dba824d95b1a50a85",
+   "got": "b8abc12cdedfa0feee05e4083a6b302a01d7434d5741b55dba824d95b1a50a85",
+   "size_want": 3442,
+   "size": 3442,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C24/regions_C24.pkl",
+   "want": "962a9d8e0cc14375e395f51f62cd313606687b94494a3babfeebc2c436411ecf",
+   "got": "962a9d8e0cc14375e395f51f62cd313606687b94494a3babfeebc2c436411ecf",
+   "size_want": 77058,
+   "size": 77058,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C25/inputs_C25.pkl",
+   "want": "80d34d4abe37692a8071fa523efbdbd10db0ebf840335bb199d74871430c148a",
+   "got": "80d34d4abe37692a8071fa523efbdbd10db0ebf840335bb199d74871430c148a",
+   "size_want": 1322771,
+   "size": 1322771,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C25/regions_C25.pkl",
+   "want": "297feb7409f7c45b702e48bbe86b43cb2bef45cc473d90f58049dc8f6b9b4e67",
+   "got": "297feb7409f7c45b702e48bbe86b43cb2bef45cc473d90f58049dc8f6b9b4e67",
+   "size_want": 211305,
+   "size": 211305,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C26/inputs_C26.pkl",
+   "want": "3d05852da3aa3c9645369397404f7e27b2c4e265a646e14b3e48974d95e1dd9d",
+   "got": "3d05852da3aa3c9645369397404f7e27b2c4e265a646e14b3e48974d95e1dd9d",
+   "size_want": 22333,
+   "size": 22333,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C26/regions_C26.pkl",
+   "want": "47126742c45f37d30e94756c8cc375340d765664a6a43d7a2ef10c91f7b3c456",
+   "got": "47126742c45f37d30e94756c8cc375340d765664a6a43d7a2ef10c91f7b3c456",
+   "size_want": 174596,
+   "size": 174596,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C27/inputs_C27.pkl",
+   "want": "d1570d3d6f9f1bee28cfd00dba8c4d6952c08a062a0e7a0f94cc3c966c8d02c2",
+   "got": "d1570d3d6f9f1bee28cfd00dba8c4d6952c08a062a0e7a0f94cc3c966c8d02c2",
+   "size_want": 22333,
+   "size": 22333,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C27/regions_C27.pkl",
+   "want": "c643a86cf4940b40864d7740107f924b27e6c140d55b78d725b1b53ed574eca6",
+   "got": "c643a86cf4940b40864d7740107f924b27e6c140d55b78d725b1b53ed574eca6",
+   "size_want": 393346,
+   "size": 393346,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C28/inputs_C28.pkl",
+   "want": "edca493a924f81464fd588b1d911dc5b994893b4550f8c4934edb239c51b5f07",
+   "got": "edca493a924f81464fd588b1d911dc5b994893b4550f8c4934edb239c51b5f07",
+   "size_want": 1361245,
+   "size": 1361245,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C28/regions_C28.pkl",
+   "want": "fa5d9fac96bc85d707f2c934d2d8c19eee887e627fe28dc3302b7c469f3ba8c6",
+   "got": "fa5d9fac96bc85d707f2c934d2d8c19eee887e627fe28dc3302b7c469f3ba8c6",
+   "size_want": 235008,
+   "size": 235008,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C29/inputs_C29.pkl",
+   "want": "1c68acf0417f9a63f6b7de355e4160d9fc34e207db74fe6d431f0574e3fd4fcf",
+   "got": "1c68acf0417f9a63f6b7de355e4160d9fc34e207db74fe6d431f0574e3fd4fcf",
+   "size_want": 1343422,
+   "size": 1343422,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C29/regions_C29.pkl",
+   "want": "b2ee63d037d1768bdd1793747c070360c79fadbc309213d087a75b5921eb22b9",
+   "got": "b2ee63d037d1768bdd1793747c070360c79fadbc309213d087a75b5921eb22b9",
+   "size_want": 537262,
+   "size": 537262,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C30/inputs_C30.pkl",
+   "want": "ac8ec9c87f42dd316dc2f3ddf4f67c33cd05f86680af5a1d83759cf405d72cf1",
+   "got": "ac8ec9c87f42dd316dc2f3ddf4f67c33cd05f86680af5a1d83759cf405d72cf1",
+   "size_want": 3582,
+   "size": 3582,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C30/regions_C30.pkl",
+   "want": "b866016db5bae76f3bffa395f572a34972f08e30bd4ac3872c11bfd1b6dd71a8",
+   "got": "b866016db5bae76f3bffa395f572a34972f08e30bd4ac3872c11bfd1b6dd71a8",
+   "size_want": 175544,
+   "size": 175544,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C31/inputs_C31.pkl",
+   "want": "378794b50a0227fd6cd9dcad579c793c3ca5fc5839f23928b852450baa3eb511",
+   "got": "378794b50a0227fd6cd9dcad579c793c3ca5fc5839f23928b852450baa3eb511",
+   "size_want": 1311889,
+   "size": 1311889,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C31/regions_C31.pkl",
+   "want": "2e4aba72d7dae9587485956c3a066cc43b3fcfaa0c9f5de4c8e8b5249bcea1f0",
+   "got": "2e4aba72d7dae9587485956c3a066cc43b3fcfaa0c9f5de4c8e8b5249bcea1f0",
+   "size_want": 483519,
+   "size": 483519,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C32/inputs_C32.pkl",
+   "want": "9c169e8f7507a3a4c60ccbf5776ec542a109350c477adb723e8311e41103e880",
+   "got": "9c169e8f7507a3a4c60ccbf5776ec542a109350c477adb723e8311e41103e880",
+   "size_want": 3443,
+   "size": 3443,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C32/regions_C32.pkl",
+   "want": "e90aff6a4a1d11fa7d5cf69af4bf83773ebdeb34bf6d7b81268349b6fd51bb2a",
+   "got": "e90aff6a4a1d11fa7d5cf69af4bf83773ebdeb34bf6d7b81268349b6fd51bb2a",
+   "size_want": 145003,
+   "size": 145003,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C33/inputs_C33.pkl",
+   "want": "5d62f9afd45a9c855d0c6db5ba5b0d00892ec9aeb34f997e1aee20e72478a518",
+   "got": "5d62f9afd45a9c855d0c6db5ba5b0d00892ec9aeb34f997e1aee20e72478a518",
+   "size_want": 21931,
+   "size": 21931,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C33/regions_C33.pkl",
+   "want": "ecc4f2ed45ad43cf29350e4841b728741019eb5de44ca624b217c4fd16f2059d",
+   "got": "ecc4f2ed45ad43cf29350e4841b728741019eb5de44ca624b217c4fd16f2059d",
+   "size_want": 230791,
+   "size": 230791,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C34/inputs_C34.pkl",
+   "want": "45010eb21da3b44ab8aef6a1436af252a156f0dde2c62e022fae3c1b40e7bf77",
+   "got": "45010eb21da3b44ab8aef6a1436af252a156f0dde2c62e022fae3c1b40e7bf77",
+   "size_want": 3444,
+   "size": 3444,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C34/regions_C34.pkl",
+   "want": "9b4f704c36bc7019138c6888211ffe5dd61150acc09681479045e3b92d900d00",
+   "got": "9b4f704c36bc7019138c6888211ffe5dd61150acc09681479045e3b92d900d00",
+   "size_want": 197230,
+   "size": 197230,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C35/inputs_C35.pkl",
+   "want": "7ea8d7407f684060c45ee215e865d20546c85636084377f72255cfc08882f6ae",
+   "got": "7ea8d7407f684060c45ee215e865d20546c85636084377f72255cfc08882f6ae",
+   "size_want": 1337880,
+   "size": 1337880,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C35/regions_C35.pkl",
+   "want": "cc826fbf6532dc72726281c7829a110fe4c5c7abd3a3a831243cf29f9821706d",
+   "got": "cc826fbf6532dc72726281c7829a110fe4c5c7abd3a3a831243cf29f9821706d",
+   "size_want": 406410,
+   "size": 406410,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C36/inputs_C36.pkl",
+   "want": "6221abfda1447df536563d7b416f4158dd6e4cd99daf3342354906df1d837f16",
+   "got": "6221abfda1447df536563d7b416f4158dd6e4cd99daf3342354906df1d837f16",
+   "size_want": 1338359,
+   "size": 1338359,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C36/regions_C36.pkl",
+   "want": "514265a4ba30b72c1ffc5b5d336a4e8395e24c33b7f8c46883a67288722a6d6f",
+   "got": "514265a4ba30b72c1ffc5b5d336a4e8395e24c33b7f8c46883a67288722a6d6f",
+   "size_want": 210590,
+   "size": 210590,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C37/inputs_C37.pkl",
+   "want": "a0421a83a8803033a2583163b5a39d07adc4a899add2d03b6b3a097a5f39dfa8",
+   "got": "a0421a83a8803033a2583163b5a39d07adc4a899add2d03b6b3a097a5f39dfa8",
+   "size_want": 22413,
+   "size": 22413,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C37/regions_C37.pkl",
+   "want": "7ade2da9dd6886f64c8a74f1315f0954971d3f07c2d40df98e947e03a9b4c7d6",
+   "got": "7ade2da9dd6886f64c8a74f1315f0954971d3f07c2d40df98e947e03a9b4c7d6",
+   "size_want": 206001,
+   "size": 206001,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C38/inputs_C38.pkl",
+   "want": "4eca4715cec196c37ce6ab6b70e46028d1f8eba8e60934e7cf5a9a0c4aa8e5bc",
+   "got": "4eca4715cec196c37ce6ab6b70e46028d1f8eba8e60934e7cf5a9a0c4aa8e5bc",
+   "size_want": 3359,
+   "size": 3359,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C38/regions_C38.pkl",
+   "want": "2ac5bf1b90fdcdfb222cc23371007bcf38ad98a8dcb5666f54fb5a96f186aff6",
+   "got": "2ac5bf1b90fdcdfb222cc23371007bcf38ad98a8dcb5666f54fb5a96f186aff6",
+   "size_want": 210482,
+   "size": 210482,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C39/inputs_C39.pkl",
+   "want": "b4e56cbb9cc2d348b2dc3205a89df4666441e1dcecf5bec4c1408c1f9c0ccb06",
+   "got": "b4e56cbb9cc2d348b2dc3205a89df4666441e1dcecf5bec4c1408c1f9c0ccb06",
+   "size_want": 3666,
+   "size": 3666,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C39/regions_C39.pkl",
+   "want": "df41cc0491b7dd3de3097118f20bf51ed2e08e4b7304aadddd665a10b5100f08",
+   "got": "df41cc0491b7dd3de3097118f20bf51ed2e08e4b7304aadddd665a10b5100f08",
+   "size_want": 346434,
+   "size": 346434,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C40/inputs_C40.pkl",
+   "want": "b4cbf4675a0f4eeea1e5ce24e1171aac088d4c833d7292e8eaf946bbd2b9af45",
+   "got": "b4cbf4675a0f4eeea1e5ce24e1171aac088d4c833d7292e8eaf946bbd2b9af45",
+   "size_want": 3359,
+   "size": 3359,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C40/regions_C40.pkl",
+   "want": "16b96b55600c5ef7fb30e34e56062b2229a47cd095c32244964c131ca231d496",
+   "got": "16b96b55600c5ef7fb30e34e56062b2229a47cd095c32244964c131ca231d496",
+   "size_want": 214753,
+   "size": 214753,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C41/inputs_C41.pkl",
+   "want": "1b6c787402eefd9aa7076bc6341aec6b99303d41cd3f136ba084fd06b83113ed",
+   "got": "1b6c787402eefd9aa7076bc6341aec6b99303d41cd3f136ba084fd06b83113ed",
+   "size_want": 3358,
+   "size": 3358,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C41/regions_C41.pkl",
+   "want": "cfd0bc3352ebcdb5a5d56325358e10d940526464369917096a430b28d56ce18f",
+   "got": "cfd0bc3352ebcdb5a5d56325358e10d940526464369917096a430b28d56ce18f",
+   "size_want": 153745,
+   "size": 153745,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C42/inputs_C42.pkl",
+   "want": "4436b0cc62cf98d8683ade2c16f7e487dab601c8e849976141bc89b9c680dffa",
+   "got": "4436b0cc62cf98d8683ade2c16f7e487dab601c8e849976141bc89b9c680dffa",
+   "size_want": 3358,
+   "size": 3358,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C42/regions_C42.pkl",
+   "want": "bb1811c68504592802c3ff9e77153f7b1ecd1c160e8b59044c69f453195c9600",
+   "got": "bb1811c68504592802c3ff9e77153f7b1ecd1c160e8b59044c69f453195c9600",
+   "size_want": 275199,
+   "size": 275199,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C43/inputs_C43.pkl",
+   "want": "12feaccfd309195045b9be86368948077568df0d14d838237beaabd16c3a3681",
+   "got": "12feaccfd309195045b9be86368948077568df0d14d838237beaabd16c3a3681",
+   "size_want": 1340250,
+   "size": 1340250,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C43/regions_C43.pkl",
+   "want": "9e6ee4e0b32fc25c41f5cbc85e21d8e773b5706e08c6c8d6da3dd872b677ad84",
+   "got": "9e6ee4e0b32fc25c41f5cbc85e21d8e773b5706e08c6c8d6da3dd872b677ad84",
+   "size_want": 1005398,
+   "size": 1005398,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C44/inputs_C44.pkl",
+   "want": "6e0939f0ef768116fe6e6c435c5fcd405b705ef87f35e9643f29448edebd9594",
+   "got": "6e0939f0ef768116fe6e6c435c5fcd405b705ef87f35e9643f29448edebd9594",
+   "size_want": 3666,
+   "size": 3666,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/capture_h/C44/regions_C44.pkl",
+   "want": "cfb8731083b9f2192e579df52c0e16681f9653abc101080029d8e706fa1c35b6",
+   "got": "cfb8731083b9f2192e579df52c0e16681f9653abc101080029d8e706fa1c35b6",
+   "size_want": 233197,
+   "size": 233197,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/census_refs_07b.pkl",
+   "want": "ae658a92135743daf2aa674436bb63883e13a2ecded6475c326801e9cf751ea0",
+   "got": "ae658a92135743daf2aa674436bb63883e13a2ecded6475c326801e9cf751ea0",
+   "size_want": 3328837,
+   "size": 3328837,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x007.pkl",
+   "want": "744032fceb4b3eaae955911cf654402c7e1aa219b107cd1f91f243523d10a7c1",
+   "got": "744032fceb4b3eaae955911cf654402c7e1aa219b107cd1f91f243523d10a7c1",
+   "size_want": 1353845,
+   "size": 1353845,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x015.pkl",
+   "want": "ba64fc75006f68707d80eb4100268f043568e7965549f0b6c6d6448aaccaf7ff",
+   "got": "ba64fc75006f68707d80eb4100268f043568e7965549f0b6c6d6448aaccaf7ff",
+   "size_want": 1381640,
+   "size": 1381640,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x019.pkl",
+   "want": "ceebe618fd8e483649f14ae293a8c496f38b75af1d889f2b0bd2ac462ba9cbf1",
+   "got": "ceebe618fd8e483649f14ae293a8c496f38b75af1d889f2b0bd2ac462ba9cbf1",
+   "size_want": 1369338,
+   "size": 1369338,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x027.pkl",
+   "want": "bebdc416ef73a493e28d2452a34157999a7b72443e07dba138218b035aed1d76",
+   "got": "bebdc416ef73a493e28d2452a34157999a7b72443e07dba138218b035aed1d76",
+   "size_want": 1373456,
+   "size": 1373456,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x029.pkl",
+   "want": "d0d37357616e493708afe4d89f8efac3ea42905e16a379797eb2ce45ba4c5091",
+   "got": "d0d37357616e493708afe4d89f8efac3ea42905e16a379797eb2ce45ba4c5091",
+   "size_want": 1372320,
+   "size": 1372320,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x033.pkl",
+   "want": "384ac9a78e128caba3dcbdb46a8de29fc9f901433ebc20559d3394b7fbdea9aa",
+   "got": "384ac9a78e128caba3dcbdb46a8de29fc9f901433ebc20559d3394b7fbdea9aa",
+   "size_want": 1350436,
+   "size": 1350436,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x044.pkl",
+   "want": "9b34068632c72fc83cd21cf61d9e7d6113bec50e654169c2f19655c751019636",
+   "got": "9b34068632c72fc83cd21cf61d9e7d6113bec50e654169c2f19655c751019636",
+   "size_want": 1364153,
+   "size": 1364153,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x098.pkl",
+   "want": "dfd58a1509b0432e38b598548ab6a10b00c12a93de2e3a4456fbf1fb70fc5400",
+   "got": "dfd58a1509b0432e38b598548ab6a10b00c12a93de2e3a4456fbf1fb70fc5400",
+   "size_want": 1380072,
+   "size": 1380072,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x109.pkl",
+   "want": "063ad93814c027fbf9d443a1953b8164d9c93a9b21ad90daf8443cc723541782",
+   "got": "063ad93814c027fbf9d443a1953b8164d9c93a9b21ad90daf8443cc723541782",
+   "size_want": 1384626,
+   "size": 1384626,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x141.pkl",
+   "want": "241aca838fdf7923afdd118a5930d585fc465cb015ea5c3bce38d4384e8cbbec",
+   "got": "241aca838fdf7923afdd118a5930d585fc465cb015ea5c3bce38d4384e8cbbec",
+   "size_want": 1378608,
+   "size": 1378608,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x160.pkl",
+   "want": "b024c578bc880253a778b2ed3a3198d8921859cdd7ceb806e7caa48e9121a250",
+   "got": "b024c578bc880253a778b2ed3a3198d8921859cdd7ceb806e7caa48e9121a250",
+   "size_want": 1381671,
+   "size": 1381671,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x165.pkl",
+   "want": "0633ab377632399422a583daaede9ee02cbe1385a86f12f3acd686d05166e592",
+   "got": "0633ab377632399422a583daaede9ee02cbe1385a86f12f3acd686d05166e592",
+   "size_want": 1352232,
+   "size": 1352232,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x174.pkl",
+   "want": "f55d06d03bebc2c08b6e711aa2831bacfdcb9a9c868b5177fdd8be84ac374c4e",
+   "got": "f55d06d03bebc2c08b6e711aa2831bacfdcb9a9c868b5177fdd8be84ac374c4e",
+   "size_want": 1369503,
+   "size": 1369503,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x185.pkl",
+   "want": "c9fb08acdf5d6c01ee022f278594e38101e0bd0f3c2834145e0108bd76051ffc",
+   "got": "c9fb08acdf5d6c01ee022f278594e38101e0bd0f3c2834145e0108bd76051ffc",
+   "size_want": 1348563,
+   "size": 1348563,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x195.pkl",
+   "want": "34aee51d935a6b5cdcb93592398b16795025eec6f794a0417bed341e0c1a34db",
+   "got": "34aee51d935a6b5cdcb93592398b16795025eec6f794a0417bed341e0c1a34db",
+   "size_want": 1372600,
+   "size": 1372600,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x196.pkl",
+   "want": "64a6775b13b4c9f66fd3ac5975c8701f95a7c31d447d0dc83fe597fff235fce6",
+   "got": "64a6775b13b4c9f66fd3ac5975c8701f95a7c31d447d0dc83fe597fff235fce6",
+   "size_want": 1387701,
+   "size": 1387701,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x207.pkl",
+   "want": "31170fa613d9c846f2e2c9642ae292bc25cf7da6347789423bdd7368c616899d",
+   "got": "31170fa613d9c846f2e2c9642ae292bc25cf7da6347789423bdd7368c616899d",
+   "size_want": 1365406,
+   "size": 1365406,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x218.pkl",
+   "want": "82c23903eedbb055da3146a3b984259b27cdde5b48a0015125279b9b92af80d4",
+   "got": "82c23903eedbb055da3146a3b984259b27cdde5b48a0015125279b9b92af80d4",
+   "size_want": 1365567,
+   "size": 1365567,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x241.pkl",
+   "want": "1a4f3ea271c1368a7234b8a0a3245941447085107fa9744f1333d4b0593815eb",
+   "got": "1a4f3ea271c1368a7234b8a0a3245941447085107fa9744f1333d4b0593815eb",
+   "size_want": 1371668,
+   "size": 1371668,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x247.pkl",
+   "want": "ec9581e58dc809cabe86af2e730d39b3c89ad64bb81d152635a07070bfdf752a",
+   "got": "ec9581e58dc809cabe86af2e730d39b3c89ad64bb81d152635a07070bfdf752a",
+   "size_want": 1364140,
+   "size": 1364140,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x258.pkl",
+   "want": "8a62db39d0b1009ce98072e789bf5b03ba731871cce031efc80261ee41b4a584",
+   "got": "8a62db39d0b1009ce98072e789bf5b03ba731871cce031efc80261ee41b4a584",
+   "size_want": 1379700,
+   "size": 1379700,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x285.pkl",
+   "want": "22c3d2a097db3aceb108f9022e4d48eb6f4d76ae2c0e36f5cde7081189945014",
+   "got": "22c3d2a097db3aceb108f9022e4d48eb6f4d76ae2c0e36f5cde7081189945014",
+   "size_want": 1366989,
+   "size": 1366989,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x295.pkl",
+   "want": "dca0416250538e15eb61054dfd1b79d9e8dd9dbd3c58671ad4548d92d96d379b",
+   "got": "dca0416250538e15eb61054dfd1b79d9e8dd9dbd3c58671ad4548d92d96d379b",
+   "size_want": 1379762,
+   "size": 1379762,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x310.pkl",
+   "want": "ba93e40025ffb03bedd2ed07d6056570cd1f169b1d7239f6dd9ff38e5cf10b12",
+   "got": "ba93e40025ffb03bedd2ed07d6056570cd1f169b1d7239f6dd9ff38e5cf10b12",
+   "size_want": 1366299,
+   "size": 1366299,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x311.pkl",
+   "want": "e7569ebd68c650717d939a68f9139b10104e65cd1f599c847f236f9b4b840f82",
+   "got": "e7569ebd68c650717d939a68f9139b10104e65cd1f599c847f236f9b4b840f82",
+   "size_want": 1364679,
+   "size": 1364679,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x317.pkl",
+   "want": "06909e1b4559ca79977909167cd80fb53f2b759cdda2923c211e4bed466ecb2e",
+   "got": "06909e1b4559ca79977909167cd80fb53f2b759cdda2923c211e4bed466ecb2e",
+   "size_want": 1387324,
+   "size": 1387324,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x335.pkl",
+   "want": "000774c370a189caeadf38ef7a1a363f87f1e7802be8b730e0eea0a6e2b023a9",
+   "got": "000774c370a189caeadf38ef7a1a363f87f1e7802be8b730e0eea0a6e2b023a9",
+   "size_want": 1362369,
+   "size": 1362369,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x353.pkl",
+   "want": "64214689a45f8fb11557f5a69d31468672e56fedfb224fea602735847df48032",
+   "got": "64214689a45f8fb11557f5a69d31468672e56fedfb224fea602735847df48032",
+   "size_want": 1382357,
+   "size": 1382357,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x390.pkl",
+   "want": "2b8ce8cfd7289e95d74c0136bbd7eae99a636618be354430a58dda8d5dbd1444",
+   "got": "2b8ce8cfd7289e95d74c0136bbd7eae99a636618be354430a58dda8d5dbd1444",
+   "size_want": 1364855,
+   "size": 1364855,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R1-x392.pkl",
+   "want": "0714e3e5d15caa90c38b1eee449b3ac9e26ce81dbd890e88725cc2c2d891ad76",
+   "got": "0714e3e5d15caa90c38b1eee449b3ac9e26ce81dbd890e88725cc2c2d891ad76",
+   "size_want": 1381029,
+   "size": 1381029,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-00.pkl",
+   "want": "ac8ec9c87f42dd316dc2f3ddf4f67c33cd05f86680af5a1d83759cf405d72cf1",
+   "got": "ac8ec9c87f42dd316dc2f3ddf4f67c33cd05f86680af5a1d83759cf405d72cf1",
+   "size_want": 3582,
+   "size": 3582,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-01.pkl",
+   "want": "e0cd4699045ec42a2ccb61bedbae4d38a57a52fe0097698938d85c4721ee825c",
+   "got": "e0cd4699045ec42a2ccb61bedbae4d38a57a52fe0097698938d85c4721ee825c",
+   "size_want": 22332,
+   "size": 22332,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-02.pkl",
+   "want": "6221abfda1447df536563d7b416f4158dd6e4cd99daf3342354906df1d837f16",
+   "got": "6221abfda1447df536563d7b416f4158dd6e4cd99daf3342354906df1d837f16",
+   "size_want": 1338359,
+   "size": 1338359,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-03.pkl",
+   "want": "4eca4715cec196c37ce6ab6b70e46028d1f8eba8e60934e7cf5a9a0c4aa8e5bc",
+   "got": "4eca4715cec196c37ce6ab6b70e46028d1f8eba8e60934e7cf5a9a0c4aa8e5bc",
+   "size_want": 3359,
+   "size": 3359,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-04.pkl",
+   "want": "a0421a83a8803033a2583163b5a39d07adc4a899add2d03b6b3a097a5f39dfa8",
+   "got": "a0421a83a8803033a2583163b5a39d07adc4a899add2d03b6b3a097a5f39dfa8",
+   "size_want": 22413,
+   "size": 22413,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-05.pkl",
+   "want": "56973c444c61a6d25819957cbca723c2a5e3e17185d07d7f5f8248d44f5167cf",
+   "got": "56973c444c61a6d25819957cbca723c2a5e3e17185d07d7f5f8248d44f5167cf",
+   "size_want": 3665,
+   "size": 3665,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-06.pkl",
+   "want": "3d05852da3aa3c9645369397404f7e27b2c4e265a646e14b3e48974d95e1dd9d",
+   "got": "3d05852da3aa3c9645369397404f7e27b2c4e265a646e14b3e48974d95e1dd9d",
+   "size_want": 22333,
+   "size": 22333,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-07.pkl",
+   "want": "4436b0cc62cf98d8683ade2c16f7e487dab601c8e849976141bc89b9c680dffa",
+   "got": "4436b0cc62cf98d8683ade2c16f7e487dab601c8e849976141bc89b9c680dffa",
+   "size_want": 3358,
+   "size": 3358,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-08.pkl",
+   "want": "4125e5363d0e3677360521df5541ce5621bb818ecc4249e12c1cefe395e8682c",
+   "got": "4125e5363d0e3677360521df5541ce5621bb818ecc4249e12c1cefe395e8682c",
+   "size_want": 1338891,
+   "size": 1338891,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-09.pkl",
+   "want": "d1570d3d6f9f1bee28cfd00dba8c4d6952c08a062a0e7a0f94cc3c966c8d02c2",
+   "got": "d1570d3d6f9f1bee28cfd00dba8c4d6952c08a062a0e7a0f94cc3c966c8d02c2",
+   "size_want": 22333,
+   "size": 22333,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-10.pkl",
+   "want": "6c9b4535af88f2ea7eec1bcc0162dc7cc115294b56fc16272dd62de39d209d34",
+   "got": "6c9b4535af88f2ea7eec1bcc0162dc7cc115294b56fc16272dd62de39d209d34",
+   "size_want": 3666,
+   "size": 3666,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-11.pkl",
+   "want": "b4cbf4675a0f4eeea1e5ce24e1171aac088d4c833d7292e8eaf946bbd2b9af45",
+   "got": "b4cbf4675a0f4eeea1e5ce24e1171aac088d4c833d7292e8eaf946bbd2b9af45",
+   "size_want": 3359,
+   "size": 3359,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-12.pkl",
+   "want": "dbad75bf8e7e7be942757dca7add9fdc16b8df497da6186720b48b53798403b8",
+   "got": "dbad75bf8e7e7be942757dca7add9fdc16b8df497da6186720b48b53798403b8",
+   "size_want": 1345180,
+   "size": 1345180,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-13.pkl",
+   "want": "5b5778d1e4d7e30a3639811d78fb5bfb4b33be73227d2407a1d7381c2fe6dd36",
+   "got": "5b5778d1e4d7e30a3639811d78fb5bfb4b33be73227d2407a1d7381c2fe6dd36",
+   "size_want": 22413,
+   "size": 22413,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-14.pkl",
+   "want": "b4e56cbb9cc2d348b2dc3205a89df4666441e1dcecf5bec4c1408c1f9c0ccb06",
+   "got": "b4e56cbb9cc2d348b2dc3205a89df4666441e1dcecf5bec4c1408c1f9c0ccb06",
+   "size_want": 3666,
+   "size": 3666,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-15.pkl",
+   "want": "410672b725262ebca284c6ab1c4475c266600fd11efcad1bc98c9334a14ecad7",
+   "got": "410672b725262ebca284c6ab1c4475c266600fd11efcad1bc98c9334a14ecad7",
+   "size_want": 3666,
+   "size": 3666,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-16.pkl",
+   "want": "80d34d4abe37692a8071fa523efbdbd10db0ebf840335bb199d74871430c148a",
+   "got": "80d34d4abe37692a8071fa523efbdbd10db0ebf840335bb199d74871430c148a",
+   "size_want": 1322771,
+   "size": 1322771,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-17.pkl",
+   "want": "5d62f9afd45a9c855d0c6db5ba5b0d00892ec9aeb34f997e1aee20e72478a518",
+   "got": "5d62f9afd45a9c855d0c6db5ba5b0d00892ec9aeb34f997e1aee20e72478a518",
+   "size_want": 21931,
+   "size": 21931,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-18.pkl",
+   "want": "6e0939f0ef768116fe6e6c435c5fcd405b705ef87f35e9643f29448edebd9594",
+   "got": "6e0939f0ef768116fe6e6c435c5fcd405b705ef87f35e9643f29448edebd9594",
+   "size_want": 3666,
+   "size": 3666,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-19.pkl",
+   "want": "45010eb21da3b44ab8aef6a1436af252a156f0dde2c62e022fae3c1b40e7bf77",
+   "got": "45010eb21da3b44ab8aef6a1436af252a156f0dde2c62e022fae3c1b40e7bf77",
+   "size_want": 3444,
+   "size": 3444,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-20.pkl",
+   "want": "b536abd06093425092de316039d2d45a899f472210da8e58f877e2fd6b7b6572",
+   "got": "b536abd06093425092de316039d2d45a899f472210da8e58f877e2fd6b7b6572",
+   "size_want": 1331437,
+   "size": 1331437,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-21.pkl",
+   "want": "d952849a950d97e8cd8bb7d8844584ec5ba4dd242ab2fa23034a9d085c875eaf",
+   "got": "d952849a950d97e8cd8bb7d8844584ec5ba4dd242ab2fa23034a9d085c875eaf",
+   "size_want": 21930,
+   "size": 21930,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-22.pkl",
+   "want": "6b7f11850df46c6054f42a2228e6a7420e9b8bb4813bc76a037cdbb086023cb0",
+   "got": "6b7f11850df46c6054f42a2228e6a7420e9b8bb4813bc76a037cdbb086023cb0",
+   "size_want": 1333781,
+   "size": 1333781,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-23.pkl",
+   "want": "018fa0ae95187126e1c5af2ec71eca87c44b7763ea6ba8d932e5a1594d9beb31",
+   "got": "018fa0ae95187126e1c5af2ec71eca87c44b7763ea6ba8d932e5a1594d9beb31",
+   "size_want": 22332,
+   "size": 22332,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-24.pkl",
+   "want": "1b6c787402eefd9aa7076bc6341aec6b99303d41cd3f136ba084fd06b83113ed",
+   "got": "1b6c787402eefd9aa7076bc6341aec6b99303d41cd3f136ba084fd06b83113ed",
+   "size_want": 3358,
+   "size": 3358,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-25.pkl",
+   "want": "edca493a924f81464fd588b1d911dc5b994893b4550f8c4934edb239c51b5f07",
+   "got": "edca493a924f81464fd588b1d911dc5b994893b4550f8c4934edb239c51b5f07",
+   "size_want": 1361245,
+   "size": 1361245,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-26.pkl",
+   "want": "c28ed4564129e489c6fefef063e8ca25e26edb8f3c6046790a214cebcaa5d676",
+   "got": "c28ed4564129e489c6fefef063e8ca25e26edb8f3c6046790a214cebcaa5d676",
+   "size_want": 3359,
+   "size": 3359,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-27.pkl",
+   "want": "9c169e8f7507a3a4c60ccbf5776ec542a109350c477adb723e8311e41103e880",
+   "got": "9c169e8f7507a3a4c60ccbf5776ec542a109350c477adb723e8311e41103e880",
+   "size_want": 3443,
+   "size": 3443,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-28.pkl",
+   "want": "719ae661e6d09b38214b9a499536fd81cdda69180518f1f8787f24e915d067c6",
+   "got": "719ae661e6d09b38214b9a499536fd81cdda69180518f1f8787f24e915d067c6",
+   "size_want": 1351570,
+   "size": 1351570,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R2-29.pkl",
+   "want": "371e8fce5b4f58e59af2a8cbef5701877d9aaf6a3d75750d9f6c781964f880e9",
+   "got": "371e8fce5b4f58e59af2a8cbef5701877d9aaf6a3d75750d9f6c781964f880e9",
+   "size_want": 1317138,
+   "size": 1317138,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-0-33666-a13.pkl",
+   "want": "522370e8b73602f6bd5cde6bc830f4a01c500f57540d354998d923c2027b1348",
+   "got": "522370e8b73602f6bd5cde6bc830f4a01c500f57540d354998d923c2027b1348",
+   "size_want": 3444,
+   "size": 3444,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-2-21486-a9.pkl",
+   "want": "c8661bba8a0f7c5358890e015f7f90ed08f9d316a3771e3b804266bb39b48bbe",
+   "got": "c8661bba8a0f7c5358890e015f7f90ed08f9d316a3771e3b804266bb39b48bbe",
+   "size_want": 3444,
+   "size": 3444,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-3-13508-g2.pkl",
+   "want": "9f44884e6ad255343829eddbbb9b64baf5b74c80287f083f5f7d4de38c02ac3e",
+   "got": "9f44884e6ad255343829eddbbb9b64baf5b74c80287f083f5f7d4de38c02ac3e",
+   "size_want": 1344762,
+   "size": 1344762,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-3-39138-g2.pkl",
+   "want": "1d103a360beca358e13c918e0604f76b43f298efaa1ca1d03b29c32de82a7296",
+   "got": "1d103a360beca358e13c918e0604f76b43f298efaa1ca1d03b29c32de82a7296",
+   "size_want": 1378763,
+   "size": 1378763,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-3-39138-g3.pkl",
+   "want": "b6d90ee627877555485f1a89b4e6067d4fc0772d2fdabb12e39b4048e15b17ae",
+   "got": "b6d90ee627877555485f1a89b4e6067d4fc0772d2fdabb12e39b4048e15b17ae",
+   "size_want": 1378763,
+   "size": 1378763,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3a-3-843-a5.pkl",
+   "want": "b8abc12cdedfa0feee05e4083a6b302a01d7434d5741b55dba824d95b1a50a85",
+   "got": "b8abc12cdedfa0feee05e4083a6b302a01d7434d5741b55dba824d95b1a50a85",
+   "size_want": 3442,
+   "size": 3442,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-1-35188-g0-8.pkl",
+   "want": "7ea8d7407f684060c45ee215e865d20546c85636084377f72255cfc08882f6ae",
+   "got": "7ea8d7407f684060c45ee215e865d20546c85636084377f72255cfc08882f6ae",
+   "size_want": 1337880,
+   "size": 1337880,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-2-21454-a3-7.pkl",
+   "want": "57801e989d491307cf0e6b7bfbc2965dd53d5f2c7460bb8e39c01ee7f738a0c1",
+   "got": "57801e989d491307cf0e6b7bfbc2965dd53d5f2c7460bb8e39c01ee7f738a0c1",
+   "size_want": 3582,
+   "size": 3582,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3o-3-1011-a18-7.pkl",
+   "want": "5be147931fb4ceb93428033a8c807348afcff109d023b48845b97892687aff22",
+   "got": "5be147931fb4ceb93428033a8c807348afcff109d023b48845b97892687aff22",
+   "size_want": 22332,
+   "size": 22332,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3p-3-14501.pkl",
+   "want": "0be60cb4d863b6b9cb943d1dbf5544f595bffa8fbdd1fda94af3ec097b20c514",
+   "got": "0be60cb4d863b6b9cb943d1dbf5544f595bffa8fbdd1fda94af3ec097b20c514",
+   "size_want": 1380312,
+   "size": 1380312,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3p-3-35006.pkl",
+   "want": "f33bda00dfda9dcb5a798ab5265dd971719b869b2b5eeb337b4becc4e31f870d",
+   "got": "f33bda00dfda9dcb5a798ab5265dd971719b869b2b5eeb337b4becc4e31f870d",
+   "size_want": 1374552,
+   "size": 1374552,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3w-0-2006-0.pkl",
+   "want": "1c68acf0417f9a63f6b7de355e4160d9fc34e207db74fe6d431f0574e3fd4fcf",
+   "got": "1c68acf0417f9a63f6b7de355e4160d9fc34e207db74fe6d431f0574e3fd4fcf",
+   "size_want": 1343422,
+   "size": 1343422,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3w-0-33950-0.pkl",
+   "want": "378794b50a0227fd6cd9dcad579c793c3ca5fc5839f23928b852450baa3eb511",
+   "got": "378794b50a0227fd6cd9dcad579c793c3ca5fc5839f23928b852450baa3eb511",
+   "size_want": 1311889,
+   "size": 1311889,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/refs/inputs/ref-R3w-3-13615-0.pkl",
+   "want": "12feaccfd309195045b9be86368948077568df0d14d838237beaabd16c3a3681",
+   "got": "12feaccfd309195045b9be86368948077568df0d14d838237beaabd16c3a3681",
+   "size_want": 1340250,
+   "size": 1340250,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/measurement/state/rows.json",
+   "want": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+   "got": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+   "size_want": 7796457,
+   "size": 7796457,
+   "ok": true
+  }
+ ],
+ "r31": [
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G+q+r-h-3-20363-1.pkl",
+   "want": "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249",
+   "got": "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249",
+   "size_want": 918346,
+   "size": 918346,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0000.sqlite",
+   "want": "3249a88b9bb402960f835b5c304db5b50ca194a527e6cda9eab065ba68a0a24d",
+   "got": "3249a88b9bb402960f835b5c304db5b50ca194a527e6cda9eab065ba68a0a24d",
+   "size_want": 25513984,
+   "size": 25513984,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0001.sqlite",
+   "want": "90b0a437befe83722e0542944edb5b11114f46f7dc12a2c270967c7dfae2f879",
+   "got": "90b0a437befe83722e0542944edb5b11114f46f7dc12a2c270967c7dfae2f879",
+   "size_want": 25554944,
+   "size": 25554944,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0002.sqlite",
+   "want": "8c040215d64827ba06831b0342de03024f9cdf89af3d2e76a56a09a8c3f75e77",
+   "got": "8c040215d64827ba06831b0342de03024f9cdf89af3d2e76a56a09a8c3f75e77",
+   "size_want": 1077248,
+   "size": 1077248,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0003.sqlite",
+   "want": "f697749e5f02df8555d62ed58a97da98b0411c355a595b1ddc983671a7593c42",
+   "got": "f697749e5f02df8555d62ed58a97da98b0411c355a595b1ddc983671a7593c42",
+   "size_want": 24895488,
+   "size": 24895488,
+   "ok": true
+  },
+  {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite",
+   "want": "5981563ba208f42794766a5ed341039437d675d27689a1a6a89932b1ed64fff4",
+   "got": "5981563ba208f42794766a5ed341039437d675d27689a1a6a89932b1ed64fff4",
+   "size_want": 36864,
+   "size": 36864,
+   "ok": true
+  }
+ ],
+ "copy": [
+  {
+   "path": "handover-A3-v2-lambdacdm.sqlite",
+   "want": "1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522",
+   "got": "1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522",
+   "size": 36864,
+   "mtime_ns": 1793053176103501769,
+   "ok": true
+  },
+  {
+   "path": "handover-A3-v2-lambdacdm-shard0000.sqlite",
+   "want": "bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17",
+   "got": "bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17",
+   "size": 106340352,
+   "mtime_ns": 1793053177002995298,
+   "ok": true
+  },
+  {
+   "path": "handover-A3-v2-lambdacdm-shard0001.sqlite",
+   "want": "aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05",
+   "got": "aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05",
+   "size": 107569152,
+   "mtime_ns": 1793053177006611629,
+   "ok": true
+  },
+  {
+   "path": "handover-A3-v2-lambdacdm-shard0002.sqlite",
+   "want": "5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66",
+   "got": "5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66",
+   "size": 107429888,
+   "mtime_ns": 1793053177010231252,
+   "ok": true
+  },
+  {
+   "path": "handover-A3-v2-lambdacdm-shard0003.sqlite",
+   "want": "ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de",
+   "got": "ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de",
+   "size": 105791488,
+   "mtime_ns": 1793053177013929166,
+   "ok": true
+  }
+ ],
+ "copy_extra": [],
+ "summary": {
+  "census": [
+   151,
+   151
+  ],
+  "parta": [
+   166,
+   166
+  ],
+  "r31": [
+   6,
+   6
+  ],
+  "copy": [
+   5,
+   5
+  ],
+  "census_checkpoint": "396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253",
+  "census_run_extra": [],
+  "census_run_missing": [],
+  "census_run_files": [
+   150,
+   150
+  ],
+  "copy_extra": []
+ }
+}

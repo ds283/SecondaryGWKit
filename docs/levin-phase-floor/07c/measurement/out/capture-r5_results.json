@@ -1,0 +1,12 @@
+{
+ "label": "capture-r5",
+ "results": [
+  {
+   "name": "x1_capture_r5",
+   "exit": 0,
+   "wall_s": 594.5991649627686
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-18T11:01:23Z"
+}

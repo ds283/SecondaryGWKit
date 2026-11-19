@@ -1,0 +1,62 @@
+--- tree/AdaptiveLevin/levin_quadrature.py
++++ scripts/variants/levin_quadrature_07c_N.py
+@@ -623,6 +623,11 @@
+ #     calls, 74 % of the census's Levin calls at rtol 1e-7, beyond those 21 and five targeted ones.
+ _LEVIN_EDGE_RATE_RATIO_MAX = 2.0
+ _LEVIN_LEAF_RATE_RANGE_MAX = 10.0
++_VARIANT_07C = 'N'  # 07c variant: its name
++_MEASURE_07C = None  # 07c variant: unused (replay_07c.py's instrument hook)
++_S07C = None  # 07c variant (S): (LIMIT, NOISE_FACTOR) or None
++_E07C = None  # 07c variant (E): (SCOPE, ESTIMATE) or None
++_N07C = True  # 07c variant (N)
+ 
+ # The stopping rule for window leaves: QUADPACK's iroff1, counted per window (prompts/levin-phase-floor/
+ # 07-stationary-point-guard.md section 1.3; its count made dqage's, with a value test no looser than
+@@ -4457,6 +4462,7 @@
+     # the tree's test passed and the edge rule, or the range rule, refused.
+     num_edge_rule_refusals = 0
+     num_range_rule_refusals = 0
++    num_n07c_trusted = 0  # 07c variant (N)
+ 
+     def _solve(span, description, force_direct=False):
+         nonlocal num_evaluations, num_solves_direct, num_solves_lstsq, num_solves_pinv
+@@ -4883,6 +4889,7 @@
+         """
+         nonlocal num_checks, num_untrusted_found
+         nonlocal num_edge_rule_refusals, num_range_rule_refusals
++        nonlocal num_n07c_trusted  # 07c variant (N)
+         if leaf.dataL is None:
+             _solve_halves(leaf)
+         dataL, dataR = leaf.dataL, leaf.dataR
+@@ -4924,6 +4931,10 @@
+         trusted = ratio < _LEVIN_TRUST_MAX_RATIO or (
+             ratio < 1.0 and delta1 <= noise_yardstick
+         )
++        _n07c = False  # 07c variant (N)
++        if _N07C and not trusted and delta1 <= noise_yardstick and delta2 <= noise_yardstick:
++            trusted = True
++            _n07c = True
+         # The rate rules (prompt 07b section 1.1): on a Levin leaf the test above trusts, the edge rule
+         # if it touches a window, else the range rule. A refused leaf is untrusted exactly as one the
+         # test above refuses; ratio, delta1, delta2 and the declaration's form are unchanged.
+@@ -4947,7 +4958,11 @@
+         region._convergence_ratio = ratio
+         if trusted:
+             region._trusted = True
+-            region._declared_resolution = max(residual, delta1) / (1.0 - ratio)
++            if _n07c:  # 07c variant (N): no geometric factor
++                num_n07c_trusted += 1
++                region._declared_resolution = max(residual, delta1 + delta2)
++            else:
++                region._declared_resolution = max(residual, delta1) / (1.0 - ratio)
+         else:
+             region._trusted = False
+             num_untrusted_found += 1
+@@ -5626,6 +5641,7 @@
+         # sum is positive.
+         "num_edge_rule_refusals": int(num_edge_rule_refusals),
+         "num_range_rule_refusals": int(num_range_rule_refusals),
++        "num_n07c_trusted": int(num_n07c_trusted),  # 07c variant (N)
+         "p_points": p_points,
+         "num_regions": num_used_regions,
+         "regions": used_regions,

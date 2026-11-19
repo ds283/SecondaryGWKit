@@ -1,0 +1,836 @@
+{
+ "header": [
+  "# levin-phase-floor 07c Part A: the R5 draw",
+  "# written 2026-11-18T10:24:55Z on mps026298.phys.susx.ac.uk",
+  "# script draw_refs_07c.py sha256 439c1636ff1689641f76e68998462cb4a3e8134121d7bfaee785a05ad79425ea",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f HEAD 2fd979fd95fa4d4ff3ac750e0c4094d83d744f7f (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/seeds_07c.json sha256 05f428f30b87077a8197633eb50e56fe8bf215f7fa350f71982aaf405c8e2323",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/populations_07c.json sha256 33910d7116da61c58d3470f0b2d5d705c35ed66c74dd158c80d95f608348342f",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/r5_rule.txt sha256 084269e72b68a4a6a5e4ea9f4229eeecd23eed8362c4156fec8dcdcaf5ba4964"
+ ],
+ "seed": 707305,
+ "rule_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/r5_rule.txt",
+ "rule_sha256": "084269e72b68a4a6a5e4ea9f4229eeecd23eed8362c4156fec8dcdcaf5ba4964",
+ "population_integrands": 194,
+ "population_calls": 306,
+ "order": [
+  "0-1941-g1",
+  "1-1728-g5",
+  "2-34718-g1",
+  "0-33996-g4",
+  "3-13615-g4",
+  "2-38649-g1",
+  "0-2016-g1",
+  "0-14318-g3",
+  "3-34796-g1",
+  "0-2269-g1",
+  "1-34525-g1",
+  "3-34802-g4",
+  "2-2186-g1",
+  "2-14404-g1",
+  "1-2040-g1",
+  "0-12660-g6",
+  "2-38199-g1",
+  "1-34594-g2",
+  "0-35112-g1",
+  "1-37676-g3",
+  "3-14096-g1",
+  "3-35006-g4",
+  "0-1784-g6",
+  "2-38635-g6",
+  "1-14045-g1",
+  "1-37676-g2",
+  "1-11062-g6",
+  "3-35020-g1",
+  "3-1151-g4",
+  "0-12584-g1",
+  "1-11233-g3",
+  "2-39050-g1",
+  "0-34915-g1",
+  "1-11233-g5",
+  "3-34067-g4",
+  "0-36823-g1",
+  "1-11236-g6",
+  "1-35227-g4",
+  "2-37521-g1",
+  "1-34594-g3",
+  "2-21958-g3",
+  "2-21972-g6",
+  "0-14303-g1",
+  "0-14300-g1",
+  "3-36003-g4",
+  "0-12858-g6",
+  "3-13806-g6",
+  "1-34604-g1",
+  "1-34645-g1",
+  "1-34605-g1",
+  "1-34510-g1",
+  "0-38941-g4",
+  "2-34819-g5",
+  "0-38936-g3",
+  "1-37666-g1",
+  "2-34883-g5",
+  "1-2168-g1",
+  "2-1558-g1",
+  "1-10990-g6",
+  "1-34628-g1",
+  "1-2152-g1",
+  "0-1772-g1",
+  "1-2266-g1",
+  "1-2046-g6",
+  "0-13763-g1",
+  "2-13623-g1",
+  "2-2093-g1",
+  "2-38648-g1",
+  "1-14242-g1",
+  "1-38834-g1",
+  "1-2022-g6",
+  "0-38934-g1",
+  "1-34770-g1",
+  "2-34887-g1",
+  "2-35082-g1",
+  "2-1296-g5",
+  "0-2310-g1",
+  "1-11248-g5",
+  "2-34662-g5",
+  "2-33468-g6",
+  "1-2259-g6",
+  "1-38840-g1",
+  "2-34906-g1",
+  "0-1791-g6",
+  "0-14437-g1",
+  "1-34595-g5",
+  "3-13528-g4",
+  "1-37667-g1",
+  "0-12870-g1",
+  "0-12879-g4",
+  "3-13931-g3",
+  "1-34514-g1",
+  "1-1751-g3",
+  "1-2038-g1",
+  "1-34614-g1",
+  "0-1977-g1",
+  "0-36818-g6",
+  "1-35465-g3",
+  "3-37348-g4",
+  "2-1445-g5",
+  "0-33693-g6",
+  "2-34785-g1",
+  "1-2364-g1",
+  "2-21954-g3",
+  "2-34679-g1",
+  "1-34547-g1",
+  "0-14297-g6",
+  "0-14162-g3",
+  "1-35446-g2",
+  "0-1876-g1",
+  "2-34676-g1",
+  "2-1294-g5",
+  "0-12676-g6",
+  "1-2120-g3",
+  "3-34176-g4",
+  "2-34978-g1",
+  "0-14275-g6",
+  "1-37616-g5",
+  "1-2218-g5",
+  "2-14356-g1",
+  "1-11137-g4",
+  "1-35280-g3",
+  "0-35079-g1",
+  "0-36804-g1",
+  "1-2120-g2",
+  "2-35095-g1",
+  "1-35356-g5",
+  "2-34839-g1",
+  "0-38936-g2",
+  "1-35411-g4",
+  "1-35225-g4",
+  "2-1684-g5",
+  "0-1869-g1",
+  "0-14318-g2",
+  "2-39043-g3",
+  "1-14046-g1",
+  "0-12702-g6",
+  "1-35512-g5",
+  "2-21644-g6",
+  "3-1910-g1",
+  "2-34878-g1",
+  "2-34729-g1",
+  "0-12753-g3",
+  "2-21954-g4",
+  "0-35075-g1",
+  "1-34540-g4",
+  "0-1885-g5",
+  "3-34246-g4",
+  "2-39041-g3",
+  "3-38541-g4",
+  "1-35280-g2",
+  "2-1524-g3",
+  "1-2150-g1",
+  "0-2073-g1",
+  "3-34972-g2",
+  "1-2167-g1",
+  "2-13663-g1",
+  "1-1743-g1",
+  "0-1800-g1",
+  "0-2253-g1",
+  "3-34362-g4",
+  "1-14572-g1",
+  "1-35446-g3",
+  "2-13657-g6",
+  "0-12753-g2",
+  "3-34267-g1",
+  "2-1383-g5",
+  "1-10945-g4",
+  "0-1776-g1",
+  "2-34704-g4",
+  "1-34540-g6",
+  "1-34503-g4",
+  "1-14456-g1",
+  "2-34822-g1",
+  "1-34618-g1",
+  "1-11155-g6",
+  "1-35175-g4",
+  "2-14014-g1",
+  "1-35140-g5",
+  "1-11059-g4",
+  "2-1547-g5",
+  "3-34972-g3",
+  "0-12710-g6",
+  "2-35099-g1",
+  "0-1793-g5",
+  "1-1766-g1",
+  "0-37211-g1",
+  "0-33949-g4",
+  "2-37513-g1",
+  "1-35175-g5",
+  "1-35381-g1",
+  "1-38138-g6",
+  "1-14454-g1",
+  "0-2074-g1"
+ ],
+ "taken": [
+  "0-1941-g1",
+  "1-1728-g5",
+  "2-34718-g1",
+  "0-33996-g4",
+  "3-13615-g4",
+  "2-38649-g1",
+  "1-34525-g1",
+  "1-34594-g2",
+  "3-14096-g1",
+  "0-2016-g1",
+  "0-14318-g3",
+  "3-34796-g1",
+  "0-2269-g1",
+  "3-34802-g4",
+  "2-2186-g1",
+  "2-14404-g1",
+  "1-2040-g1",
+  "0-12660-g6",
+  "2-38199-g1",
+  "0-35112-g1",
+  "1-37676-g3",
+  "3-35006-g4",
+  "0-1784-g6",
+  "2-38635-g6",
+  "1-14045-g1",
+  "1-37676-g2",
+  "1-11062-g6",
+  "3-35020-g1",
+  "3-1151-g4",
+  "0-12584-g1"
+ ],
+ "pass": {
+  "0-1941-g1": 1,
+  "1-1728-g5": 1,
+  "2-34718-g1": 1,
+  "0-33996-g4": 1,
+  "3-13615-g4": 1,
+  "2-38649-g1": 1,
+  "1-34525-g1": 1,
+  "1-34594-g2": 1,
+  "3-14096-g1": 1,
+  "0-2016-g1": 2,
+  "0-14318-g3": 2,
+  "3-34796-g1": 2,
+  "0-2269-g1": 2,
+  "3-34802-g4": 2,
+  "2-2186-g1": 2,
+  "2-14404-g1": 2,
+  "1-2040-g1": 2,
+  "0-12660-g6": 2,
+  "2-38199-g1": 2,
+  "0-35112-g1": 2,
+  "1-37676-g3": 2,
+  "3-35006-g4": 2,
+  "0-1784-g6": 2,
+  "2-38635-g6": 2,
+  "1-14045-g1": 2,
+  "1-37676-g2": 2,
+  "1-11062-g6": 2,
+  "3-35020-g1": 2,
+  "3-1151-g4": 2,
+  "0-12584-g1": 2
+ },
+ "strata": {
+  "0-1941-g1": {
+   "label": "G+q+r",
+   "k": "3.05e+07",
+   "smaller": "07a"
+  },
+  "1-1728-g5": {
+   "label": "G-q+r",
+   "k": "9.85e+05",
+   "smaller": "07a"
+  },
+  "2-34718-g1": {
+   "label": "G+q+r",
+   "k": "3e+08",
+   "smaller": "07b"
+  },
+  "0-33996-g4": {
+   "label": "G-q-r",
+   "k": "3.14e+05",
+   "smaller": "07b"
+  },
+  "3-13615-g4": {
+   "label": "G-q-r",
+   "k": "1e+05",
+   "smaller": "07a"
+  },
+  "2-38649-g1": {
+   "label": "G+q+r",
+   "k": "3.09e+06",
+   "smaller": "07b"
+  },
+  "1-34525-g1": {
+   "label": "G+q+r",
+   "k": "9.56e+07",
+   "smaller": "07b"
+  },
+  "1-34594-g2": {
+   "label": "G+q-r",
+   "k": "9.85e+05",
+   "smaller": "07a"
+  },
+  "3-14096-g1": {
+   "label": "G+q+r",
+   "k": "9.7e+06",
+   "smaller": "07a"
+  },
+  "0-2016-g1": {
+   "label": "G+q+r",
+   "k": "3.05e+07",
+   "smaller": "07a"
+  },
+  "0-14318-g3": {
+   "label": "G-q+r",
+   "k": "3.14e+05",
+   "smaller": "07b"
+  },
+  "3-34796-g1": {
+   "label": "G+q+r",
+   "k": "1e+05",
+   "smaller": "07b"
+  },
+  "0-2269-g1": {
+   "label": "G+q+r",
+   "k": "3.05e+07",
+   "smaller": "07b"
+  },
+  "3-34802-g4": {
+   "label": "G-q-r",
+   "k": "1e+05",
+   "smaller": "07a"
+  },
+  "2-2186-g1": {
+   "label": "G+q+r",
+   "k": "3.09e+06",
+   "smaller": "07b"
+  },
+  "2-14404-g1": {
+   "label": "G+q+r",
+   "k": "3e+08",
+   "smaller": "07b"
+  },
+  "1-2040-g1": {
+   "label": "G+q+r",
+   "k": "9.56e+07",
+   "smaller": "07b"
+  },
+  "0-12660-g6": {
+   "label": "G-q-r",
+   "k": "3.14e+05",
+   "smaller": "07a"
+  },
+  "2-38199-g1": {
+   "label": "G+q+r",
+   "k": "3e+08",
+   "smaller": "07b"
+  },
+  "0-35112-g1": {
+   "label": "G+q+r",
+   "k": "3.05e+07",
+   "smaller": "07b"
+  },
+  "1-37676-g3": {
+   "label": "G-q+r",
+   "k": "9.85e+05",
+   "smaller": "07a"
+  },
+  "3-35006-g4": {
+   "label": "G-q-r",
+   "k": "1e+05",
+   "smaller": "07a"
+  },
+  "0-1784-g6": {
+   "label": "G-q-r",
+   "k": "3.14e+05",
+   "smaller": "07a"
+  },
+  "2-38635-g6": {
+   "label": "G-q-r",
+   "k": "3.09e+06",
+   "smaller": "07a"
+  },
+  "1-14045-g1": {
+   "label": "G+q+r",
+   "k": "9.56e+07",
+   "smaller": "07b"
+  },
+  "1-37676-g2": {
+   "label": "G+q-r",
+   "k": "9.85e+05",
+   "smaller": "07a"
+  },
+  "1-11062-g6": {
+   "label": "G-q-r",
+   "k": "9.85e+05",
+   "smaller": "07a"
+  },
+  "3-35020-g1": {
+   "label": "G+q+r",
+   "k": "1e+05",
+   "smaller": "07a"
+  },
+  "3-1151-g4": {
+   "label": "G-q-r",
+   "k": "1e+05",
+   "smaller": "07a"
+  },
+  "0-12584-g1": {
+   "label": "G+q+r",
+   "k": "3.14e+05",
+   "smaller": "07b"
+  }
+ },
+ "calls": {
+  "0-1941-g1": [
+   {
+    "unit": "h-1e-7-0-1941",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=19.081, z in (5.169e+11, 19.081), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-0-1941",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=19.081, z in (5.169e+11, 19.081), regime Gqr, group G+q+r"
+   }
+  ],
+  "1-1728-g5": [
+   {
+    "unit": "h-1e-8-1-1728",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 5,
+    "label": "k=9.85e+05/Mpc, q=3.14e+05/Mpc, r=9.85e+05/Mpc @ z_response=1589, z in (5.406e+09, 1589), regime Gqr, group G-q+r"
+   }
+  ],
+  "2-34718-g1": [
+   {
+    "unit": "h-1e-7-2-34718",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=33.165, z in (5.1721e+12, 33.165), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-2-34718",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=33.165, z in (5.1721e+12, 33.165), regime Gqr, group G+q+r"
+   }
+  ],
+  "0-33996-g4": [
+   {
+    "unit": "h-1e-8-0-33996",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 4,
+    "label": "k=3.14e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=4.809e+06, z in (5.2861e+10, 4.809e+06), regime Gqr, group G-q-r"
+   }
+  ],
+  "3-13615-g4": [
+   {
+    "unit": "h-1e-7-3-13615",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 4,
+    "label": "k=1e+05/Mpc, q=1e+05/Mpc, r=1e+05/Mpc @ z_response=526.01, z in (1.709e+09, 526.01), regime Gqr, group G-q-r"
+   }
+  ],
+  "2-38649-g1": [
+   {
+    "unit": "h-1e-7-2-38649",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=3.6343, z in (1.6721e+11, 3.6343), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-2-38649",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=3.6343, z in (1.6721e+11, 3.6343), regime Gqr, group G+q+r"
+   }
+  ],
+  "1-34525-g1": [
+   {
+    "unit": "h-1e-7-1-34525",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=3641, z in (1.6351e+12, 3641), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-1-34525",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=3641, z in (1.6351e+12, 3641), regime Gqr, group G+q+r"
+   }
+  ],
+  "1-34594-g2": [
+   {
+    "unit": "h-1e-8-1-34594",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 2,
+    "label": "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=2094.9, z in (1.6711e+10, 2094.9), regime Gqr, group G+q-r"
+   }
+  ],
+  "3-14096-g1": [
+   {
+    "unit": "h-1e-7-3-14096",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=9.7e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=10.979, z in (1.6721e+11, 10.979), regime Gqr, group G+q+r"
+   }
+  ],
+  "0-2016-g1": [
+   {
+    "unit": "h-1e-7-0-2016",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=33.165, z in (5.169e+11, 33.165), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-0-2016",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=33.165, z in (5.169e+11, 33.165), regime Gqr, group G+q+r"
+   }
+  ],
+  "0-14318-g3": [
+   {
+    "unit": "h-1e-8-0-14318",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 3,
+    "label": "k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=1.5861, z in (5.406e+09, 1.5861), regime Gqr, group G-q+r"
+   }
+  ],
+  "3-34796-g1": [
+   {
+    "unit": "h-1e-8-3-34796",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=1e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=75.993, z in (5.2861e+10, 75.993), regime Gqr, group G+q+r"
+   }
+  ],
+  "0-2269-g1": [
+   {
+    "unit": "h-1e-7-0-2269",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1.5861, z in (5.169e+11, 1.5861), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-0-2269",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1.5861, z in (5.169e+11, 1.5861), regime Gqr, group G+q+r"
+   }
+  ],
+  "3-34802-g4": [
+   {
+    "unit": "h-1e-8-3-34802",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 4,
+    "label": "k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=8.3275, z in (5.406e+09, 8.3275), regime Gqr, group G-q-r"
+   }
+  ],
+  "2-2186-g1": [
+   {
+    "unit": "h-1e-7-2-2186",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=1.2031, z in (1.6721e+11, 1.2031), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-2-2186",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=1.2031, z in (1.6721e+11, 1.2031), regime Gqr, group G+q+r"
+   }
+  ],
+  "2-14404-g1": [
+   {
+    "unit": "h-1e-7-2-14404",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=6.3166, z in (5.1721e+12, 6.3166), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-2-14404",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=6.3166, z in (5.1721e+12, 6.3166), regime Gqr, group G+q+r"
+   }
+  ],
+  "1-2040-g1": [
+   {
+    "unit": "h-1e-7-1-2040",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=14.474, z in (1.6351e+12, 14.474), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-1-2040",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=14.474, z in (1.6351e+12, 14.474), regime Gqr, group G+q+r"
+   }
+  ],
+  "0-12660-g6": [
+   {
+    "unit": "h-1e-8-0-12660",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 6,
+    "label": "k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=5.2699e+05, z in (1.709e+09, 5.2699e+05), regime Gqr, group G-q-r"
+   }
+  ],
+  "2-38199-g1": [
+   {
+    "unit": "h-1e-7-2-38199",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=10.979, z in (5.1721e+12, 10.979), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-2-38199",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=10.979, z in (5.1721e+12, 10.979), regime Gqr, group G+q+r"
+   }
+  ],
+  "0-35112-g1": [
+   {
+    "unit": "h-1e-7-0-35112",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.13184, z in (5.169e+11, 0.13184), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-0-35112",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.13184, z in (5.169e+11, 0.13184), regime Gqr, group G+q+r"
+   }
+  ],
+  "1-37676-g3": [
+   {
+    "unit": "h-1e-8-1-37676",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 3,
+    "label": "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=43.723, z in (1.6711e+10, 43.723), regime Gqr, group G-q+r"
+   }
+  ],
+  "3-35006-g4": [
+   {
+    "unit": "h-1e-8-3-35006",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 4,
+    "label": "k=1e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=0.69219, z in (5.2861e+10, 0.69219), regime Gqr, group G-q-r"
+   }
+  ],
+  "0-1784-g6": [
+   {
+    "unit": "h-1e-7-0-1784",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 6,
+    "label": "k=3.14e+05/Mpc, q=1e+05/Mpc, r=3.14e+05/Mpc @ z_response=2094.9, z in (1.709e+09, 2094.9), regime Gqr, group G-q-r"
+   }
+  ],
+  "2-38635-g6": [
+   {
+    "unit": "h-1e-7-2-38635",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 6,
+    "label": "k=3.09e+06/Mpc, q=9.85e+05/Mpc, r=3.09e+06/Mpc @ z_response=1.5861, z in (1.6711e+10, 1.5861), regime Gqr, group G-q-r"
+   },
+   {
+    "unit": "h-1e-8-2-38635",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 6,
+    "label": "k=3.09e+06/Mpc, q=9.85e+05/Mpc, r=3.09e+06/Mpc @ z_response=1.5861, z in (1.6711e+10, 1.5861), regime Gqr, group G-q-r"
+   }
+  ],
+  "1-14045-g1": [
+   {
+    "unit": "h-1e-7-1-14045",
+    "rtol": "1e-7",
+    "kind": "group",
+    "index": 1,
+    "label": "k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=19.081, z in (1.6351e+12, 19.081), regime Gqr, group G+q+r"
+   },
+   {
+    "unit": "h-1e-8-1-14045",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=19.081, z in (1.6351e+12, 19.081), regime Gqr, group G+q+r"
+   }
+  ],
+  "1-37676-g2": [
+   {
+    "unit": "h-1e-8-1-37676",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 2,
+    "label": "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=43.723, z in (1.6711e+10, 43.723), regime Gqr, group G+q-r"
+   }
+  ],
+  "1-11062-g6": [
+   {
+    "unit": "h-1e-8-1-11062",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 6,
+    "label": "k=9.85e+05/Mpc, q=3.14e+05/Mpc, r=9.85e+05/Mpc @ z_response=1.7477e+08, z in (5.406e+09, 1.7477e+08), regime Gqr, group G-q-r"
+   }
+  ],
+  "3-35020-g1": [
+   {
+    "unit": "h-1e-8-3-35020",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=1e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=3.6343, z in (5.2861e+10, 3.6343), regime Gqr, group G+q+r"
+   }
+  ],
+  "3-1151-g4": [
+   {
+    "unit": "h-1e-8-3-1151",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 4,
+    "label": "k=1e+05/Mpc, q=1e+05/Mpc, r=1e+05/Mpc @ z_response=3.6477e+06, z in (1.709e+09, 3.6477e+06), regime Gqr, group G-q-r"
+   }
+  ],
+  "0-12584-g1": [
+   {
+    "unit": "h-1e-8-0-12584",
+    "rtol": "1e-8",
+    "kind": "group",
+    "index": 1,
+    "label": "k=3.14e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=3.6477e+06, z in (1.6711e+10, 3.6477e+06), regime Gqr, group G+q+r"
+   }
+  ]
+ },
+ "population_strata_counts": {
+  "label": {
+   "G+q+r": 102,
+   "G+q-r": 15,
+   "G-q+r": 30,
+   "G-q-r": 47
+  },
+  "k": {
+   "1e+05": 17,
+   "3.05e+07": 30,
+   "3.09e+06": 29,
+   "3.14e+05": 21,
+   "3e+08": 20,
+   "9.56e+07": 33,
+   "9.7e+06": 4,
+   "9.85e+05": 40
+  },
+  "smaller": {
+   "07a": 97,
+   "07b": 97
+  }
+ },
+ "taken_strata_counts": {
+  "label": {
+   "G+q+r": 16,
+   "G+q-r": 2,
+   "G-q+r": 3,
+   "G-q-r": 9
+  },
+  "k": {
+   "1e+05": 6,
+   "3.05e+07": 4,
+   "3.09e+06": 3,
+   "3.14e+05": 5,
+   "3e+08": 3,
+   "9.56e+07": 3,
+   "9.7e+06": 1,
+   "9.85e+05": 5
+  },
+  "smaller": {
+   "07a": 16,
+   "07b": 14
+  }
+ }
+}

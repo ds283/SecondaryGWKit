@@ -1,0 +1,74 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/d2_regimes_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/d2/d2_regimes.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/leafcc_d2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/leafcc_d1:chase_all
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:29:27Z
+# ----
+| stratum|regime | n | resolved | s_CC/floor median | candidate | est/true min | median | below 1 | max(est,floor)/true min | below 1 |
+|---|---|---|---|---|---|---|---|---|---|
+| chase_all|noise | 22700 | 8952 | 1.11 | pair | 0 | 0.884 | 4896 | 0.00229 | 2422 |
+| chase_all|noise | 22700 | 8952 | 1.11 | nest3 | 0.000371 | 0.518 | 6907 | 0.0424 | 3539 |
+| chase_all|noise | 22700 | 8952 | 1.11 | tail_sum4 | 0.0814 | 1.91 | 1735 | 0.367 | 891 |
+| chase_all|noise | 22700 | 8952 | 1.11 | tail_max4x2 | 0.0627 | 1.81 | 1991 | 0.338 | 973 |
+| chase_all|truncation | 176 | 176 | 0.297 | pair | 0.00277 | 0.231 | 172 | 0.222 | 122 |
+| chase_all|truncation | 176 | 176 | 0.297 | nest3 | 0.187 | 0.454 | 172 | 0.699 | 120 |
+| chase_all|truncation | 176 | 176 | 0.297 | tail_sum4 | 0.163 | 0.266 | 176 | 0.288 | 124 |
+| chase_all|truncation | 176 | 176 | 0.297 | tail_max4x2 | 0.189 | 0.303 | 176 | 0.277 | 124 |
+| chase|group|noise | 24 | 13 | 0.357 | pair | 0.0245 | 0.798 | 7 | 0.54 | 3 |
+| chase|group|noise | 24 | 13 | 0.357 | nest3 | 0.166 | 0.563 | 11 | 0.282 | 4 |
+| chase|group|noise | 24 | 13 | 0.357 | tail_sum4 | 0.56 | 2.11 | 3 | 0.914 | 1 |
+| chase|group|noise | 24 | 13 | 0.357 | tail_max4x2 | 0.637 | 1.7 | 2 | 1.04 | 0 |
+| chase|group|truncation | 1 | 1 | 0.281 | pair | 0.151 | 0.151 | 1 | 0.754 | 1 |
+| chase|group|truncation | 1 | 1 | 0.281 | nest3 | 0.454 | 0.454 | 1 | 0.754 | 1 |
+| chase|group|truncation | 1 | 1 | 0.281 | tail_sum4 | 0.343 | 0.343 | 1 | 0.754 | 1 |
+| chase|group|truncation | 1 | 1 | 0.281 | tail_max4x2 | 0.327 | 0.327 | 1 | 0.754 | 1 |
+| gate_q1|analytic|noise | 2 | 0 | 0.0231 | pair | - | - | - | - | - |
+| gate_q1|analytic|noise | 2 | 0 | 0.0231 | nest3 | - | - | - | - | - |
+| gate_q1|analytic|noise | 2 | 0 | 0.0231 | tail_sum4 | - | - | - | - | - |
+| gate_q1|analytic|noise | 2 | 0 | 0.0231 | tail_max4x2 | - | - | - | - | - |
+| gate_q1|analytic|truncation | 4 | 4 | 0.0221 | pair | 0.0588 | 0.0769 | 4 | 6.38 | 0 |
+| gate_q1|analytic|truncation | 4 | 4 | 0.0221 | nest3 | 0.111 | 0.154 | 4 | 6.38 | 0 |
+| gate_q1|analytic|truncation | 4 | 4 | 0.0221 | tail_sum4 | 0.401 | 0.905 | 2 | 6.38 | 0 |
+| gate_q1|analytic|truncation | 4 | 4 | 0.0221 | tail_max4x2 | 0.399 | 0.919 | 4 | 6.38 | 0 |
+| gate_q1|group|noise | 25 | 11 | 0.619 | pair | 0.141 | 0.723 | 8 | 0.446 | 3 |
+| gate_q1|group|noise | 25 | 11 | 0.619 | nest3 | 0.0957 | 0.743 | 6 | 0.421 | 3 |
+| gate_q1|group|noise | 25 | 11 | 0.619 | tail_sum4 | 0.264 | 1.45 | 3 | 0.937 | 2 |
+| gate_q1|group|noise | 25 | 11 | 0.619 | tail_max4x2 | 0.374 | 1.82 | 3 | 0.673 | 2 |
+| gate_q2|analytic|noise | 3 | 0 | 0.0271 | pair | - | - | - | - | - |
+| gate_q2|analytic|noise | 3 | 0 | 0.0271 | nest3 | - | - | - | - | - |
+| gate_q2|analytic|noise | 3 | 0 | 0.0271 | tail_sum4 | - | - | - | - | - |
+| gate_q2|analytic|noise | 3 | 0 | 0.0271 | tail_max4x2 | - | - | - | - | - |
+| gate_q2|analytic|truncation | 2 | 2 | 0.0228 | pair | 3.77 | 3.77 | 0 | 14 | 0 |
+| gate_q2|analytic|truncation | 2 | 2 | 0.0228 | nest3 | 0.231 | 0.231 | 2 | 14 | 0 |
+| gate_q2|analytic|truncation | 2 | 2 | 0.0228 | tail_sum4 | 1.55 | 1.55 | 0 | 14 | 0 |
+| gate_q2|analytic|truncation | 2 | 2 | 0.0228 | tail_max4x2 | 1.49 | 1.49 | 0 | 14 | 0 |
+| gate_q2|group|noise | 24 | 15 | 1.52 | pair | 0.0382 | 0.713 | 11 | 0.477 | 9 |
+| gate_q2|group|noise | 24 | 15 | 1.52 | nest3 | 0.0625 | 0.702 | 12 | 0.477 | 10 |
+| gate_q2|group|noise | 24 | 15 | 1.52 | tail_sum4 | 0.369 | 1.99 | 4 | 0.799 | 3 |
+| gate_q2|group|noise | 24 | 15 | 1.52 | tail_max4x2 | 0.291 | 1.6 | 5 | 0.799 | 4 |
+| gate_q2|group|truncation | 1 | 1 | 0.507 | pair | 0.128 | 0.128 | 1 | 0.596 | 1 |
+| gate_q2|group|truncation | 1 | 1 | 0.507 | nest3 | 0.176 | 0.176 | 1 | 0.596 | 1 |
+| gate_q2|group|truncation | 1 | 1 | 0.507 | tail_sum4 | 0.228 | 0.228 | 1 | 0.596 | 1 |
+| gate_q2|group|truncation | 1 | 1 | 0.507 | tail_max4x2 | 0.166 | 0.166 | 1 | 0.596 | 1 |
+| gate_q3|analytic|noise | 2 | 0 | 242 | pair | - | - | - | - | - |
+| gate_q3|analytic|noise | 2 | 0 | 242 | nest3 | - | - | - | - | - |
+| gate_q3|analytic|noise | 2 | 0 | 242 | tail_sum4 | - | - | - | - | - |
+| gate_q3|analytic|noise | 2 | 0 | 242 | tail_max4x2 | - | - | - | - | - |
+| gate_q3|group|noise | 25 | 15 | 0.786 | pair | 0.0199 | 0.601 | 11 | 0.266 | 7 |
+| gate_q3|group|noise | 25 | 15 | 0.786 | nest3 | 0.0632 | 0.514 | 14 | 0.62 | 7 |
+| gate_q3|group|noise | 25 | 15 | 0.786 | tail_sum4 | 0.493 | 1.17 | 5 | 0.534 | 4 |
+| gate_q3|group|noise | 25 | 15 | 0.786 | tail_max4x2 | 0.382 | 1.18 | 7 | 0.6 | 4 |
+| gate_q4|group|noise | 23 | 12 | 0.772 | pair | 0.251 | 3.78 | 4 | 0.799 | 3 |
+| gate_q4|group|noise | 23 | 12 | 0.772 | nest3 | 0.044 | 0.871 | 8 | 0.799 | 4 |
+| gate_q4|group|noise | 23 | 12 | 0.772 | tail_sum4 | 0.31 | 2.1 | 4 | 0.865 | 3 |
+| gate_q4|group|noise | 23 | 12 | 0.772 | tail_max4x2 | 0.22 | 1.89 | 4 | 0.831 | 3 |
+| gate_q4|group|truncation | 2 | 2 | 0.254 | pair | 0.206 | 2.17 | 1 | 0.852 | 1 |
+| gate_q4|group|truncation | 2 | 2 | 0.254 | nest3 | 0.241 | 0.395 | 2 | 0.852 | 1 |
+| gate_q4|group|truncation | 2 | 2 | 0.254 | tail_sum4 | 0.221 | 0.374 | 2 | 0.852 | 1 |
+| gate_q4|group|truncation | 2 | 2 | 0.254 | tail_max4x2 | 0.238 | 0.369 | 2 | 0.852 | 1 |
+| window|group|noise | 25 | 19 | 484 | pair | 0.0351 | 0.312 | 16 | 0.0351 | 16 |
+| window|group|noise | 25 | 19 | 484 | nest3 | 0.00408 | 0.752 | 13 | 0.00408 | 13 |
+| window|group|noise | 25 | 19 | 484 | tail_sum4 | 0.199 | 1.16 | 7 | 0.199 | 7 |
+| window|group|noise | 25 | 19 | 484 | tail_max4x2 | 0.118 | 1.33 | 8 | 0.118 | 8 |
+# ----
+# end 2026-11-18T11:29:27Z
+# exit 0

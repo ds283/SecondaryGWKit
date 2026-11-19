@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/register_variant_07c.py S2_i instrumented\ copy\ of\ S2\ \(table\ 4\'s\ descent\ column\)
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-2fd979f
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-18T11:30:40Z
+# ----
+S2_i: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/scripts/variants/levin_quadrature_07c_S2_i.py sha256 ee998ebd0f659e4c253fcccd26258e9f62aa810846c00c92da40ad1227ffbe55; diff /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/variants/S2_i.diff (+126 -2)
+# ----
+# end 2026-11-18T11:30:40Z
+# exit 0
