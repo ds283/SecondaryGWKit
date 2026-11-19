@@ -214,6 +214,120 @@ date corrected by counting; this directory's README row and the campaign README'
 **Kept until the user says otherwise:** R29, R30, R31 and R32; 07a's, 07b's and 07c's census run
 directories (07c's is 07d's "before"); A3 v2's scratch copy (for 08).
 
+### C.5 Addendum: Part C's dispatch
+
+*Written 2026-11-19, at Part B's landing.*
+
+**Part B** is the code commit **`67b5af74`**, whose parent is **`cff4237f`**. It was reviewed in
+07a's note §B.3's checks, as §B adapts them, all passing, and pushed on the user's word: *"Yes, push
+it and write the §C addendum"*. One orchestrator commit came between the prompt (`2fd979fd`) and it,
+pushed: `cff4237f` amended the prompt at Part A's stop (its §1, §3 and §9: the fix is variant (S);
+`[07c-r2-28-trusted-levin-leaf-hides-a-common-error]` opened) and committed Part A's records.
+
+**The tree.** Part C runs at **this addendum's commit**, in the worktree
+`SecondaryGWKit-lpf07c-<this commit's short SHA>`. Its code is `67b5af74`'s.
+- **S0′ holds by inspection:** `git diff --stat 5e19c4b6 cff4237f -- . ':!docs' ':!prompts'` lists
+  only `CLAUDE.md`, whose `black` paragraph gained 07b Part C's and 07c Part A's record directories.
+  The build imports nothing that changed. R31 is the parent rehearsal. The agent still runs the check
+  as prompt §5 writes it.
+- `git diff --stat cff4237f 67b5af74 -- . ':!docs' ':!prompts'` touches only:
+  - `AdaptiveLevin/levin_quadrature.py` (SHA-256 `d141a80b…`);
+  - `AdaptiveLevin/tests/` (`test_levin_chase_stop.py`, new; `test_levin_roundoff_exit.py` and
+    `test_levin_trust_yardstick.py`, where the stop acts).
+
+  Nothing under `ComputeTargets/`, `ObjectFactories/` or `LiouvilleGreen/` moved. **So outside
+  `QuadSourceIntegral` R32 is predicted to equal R31**, as §5 says.
+
+**What Part B's review found that Part C must carry:**
+- **The review's numbers, re-run on the laptop:**
+  - the seven roots at the commit: 141 (129 and the 12 added), 781, 39, 156 (1 skipped), 280, 127 and
+    64, all OK;
+  - the parent's values quoted in tests (b), (c3), (e), (f1) and (f2), reproduced in `float.hex` at
+    the parent's own module (`8956c7b6…`, `5e19c4b6`'s). There (b) is unconverged at 100 regions, with
+    six depth-20 Clenshaw–Curtis leaves, all untrusted, below its refused leaf;
+  - breakages (i), (ii), (iii) and (v) re-applied, each caught by the tests §3 names;
+  - **Y8, begun:** R2-28, `c-1e-8-1-2113-1` and `c-1e-8-1-2229-4` replayed at the commit from copies
+    of their captures, each checked by SHA-256 against `calls_07c.json`. Each equals (S)'s replay
+    record in `float.hex`, leaf by leaf and in `regions_sha256`. The counts (`num_chase_stops`,
+    `num_chase_stopped_leaves`, `num_chase_noise_bisections`) are (1, 69, 6), (1, 19, 9) and
+    (0, 0, 9). R2-28 is converged at 1.1434 of its abserr, scored in exact fractions, as §9.5
+    predicts. `c-1e-8-1-2229-4`, which the stop does not touch, also equals 07b's census. The census
+    scores Y8 on every call Part A replayed; these three do not stand in for it.
+- **Calls newly unconverged.** §9.5 lists them as descriptive and expects none. In the
+  LiouvilleGreen draws the stop acts in 3,051 of 4,320 calls, and **26 go from converged to
+  unconverged**, none the other way (the log's Observations 5; the same under (S)). They are
+  analytic Bessel calls at rtol $10^{-8}$ and $10^{-10}$, the class §9.3 says Part A's basis does not
+  reach. The orchestrator attributed three of them leaf by leaf:
+  - in each, essentially all of the call's abserr is one stopped Clenshaw–Curtis leaf;
+  - that leaf's $\delta_1$ is $10^{-17}$–$10^{-15}$. Its declaration is §1.1's
+    $\max(\text{residual}, \delta_1)/(1-r)$, where the residual is $|{\rm CC}_{47} - {\rm CC}_{24}|$
+    (`[06d-cc-nested-estimate-measures-the-coarse-rule]`'s overstatement) and $r$ is 0.81–0.97;
+  - at the parent the same interval was refined into two to four trusted Clenshaw–Curtis leaves,
+    declaring $10^{-14}$–$10^{-10}$ in all;
+  - the abserr goes to 1.008–10.7 times the request, while the value moves at most $4.4\times10^{-4}$
+    of the parent's abserr. These are overstatements, not errors.
+
+  On Part A's 454 census calls (S) turns none converged → unconverged. **Whether the census has any is
+  the measurement.** A newly unconverged call is not a stop and changes no verdict: Y4, Y6 and Y7 count
+  an unconverged call as passing, and Y9 is about depth-20 leaves. Report each one with §9.5's
+  instrument: the stopped leaf carrying the most of its abserr, that leaf's route, depth, $r$ and
+  share. These go to the user at the records commit, with the agent's Observations 4 and 5.
+- **The stop's cost.** In the draws the regions go from 147,029 to 140,896 (0.958×), and the summed
+  wall from 1,220.9 s to 1,177.3 s. On Part A's 454 calls, (S) took 0.745× the regions. **The census
+  projects its wall from Y0's K0 run before the full run** (§9.4). A projection beyond 48 hours is a
+  stop, reported with what would be cut to fit.
+- **Y1 reads the counts** (§9.5). 07b's census worker records named result keys only. So the copied
+  harness records `num_chase_stops`, `num_chase_stopped_leaves` and `num_chase_noise_bisections` on
+  every call, marked "prompt 07c", as the draws' harness
+  `docs/levin-phase-floor/07c/code/lg_draws_07c.py` does. A call is untouched if `num_chase_stops` is
+  0.
+- **Not Part C's:** Part B's Observations not acted on 1–4:
+  - 1: on synthetic noise, the trust check chases with no rate-rule refusal;
+  - 2: noise above $4\nu_B$ escapes both exits (Part A's proposed
+    `[07c-integrand-noise-above-the-cc-floor]`);
+  - 3: a range-refused Levin leaf at the noise level is itself stopped, and returned on its
+    $r$-based declaration;
+  - 4: stopped Clenshaw–Curtis leaves near $6\pi$ declare CC₂₄'s error.
+
+  They are put to the user at the records commit, with Part A's `issues.md` items 1–12 (§C.4). The
+  census scores Y4 and Y6 as written and attributes neither.
+
+**§C.0, re-checked read-only on the Mac Studio, 13:42 UTC, 2026-11-19:**
+- **The main checkout** is `handover-remedial` at `28ebaf07`, with `git status --short` empty.
+  `git worktree list` shows it and Part A's `SecondaryGWKit-lpf07c-2fd979f` (at `2fd979fd`). That
+  worktree is removed at dispatch (§C.0).
+- **The registry:** 92 runs, all finished. Nothing is `running` or stale.
+- **The lock and Ray:** `rehearsal_lock status` reports the lock free. Neither
+  `~/.raypoolkit/rehearsal-lock` nor the old `~/ScienceData/.rehearsal-lock` exists, and
+  `ray-processes` lists no Ray process of `/tmp/ray-sgk`.
+- **Load and disk:** the load is 8.54 / 8.79 / 8.47, all of it system services and applications
+  (`CategoriesService`, `WindowServer`, `SetStoreUpdateService`, Mail). 106 GiB is free (89 % used);
+  07b's census run directory is 10.9 GB.
+- **The 07c paths:**
+  - `var/levin-phase-floor-07c/` holds only Part A's `measurement/`, 17,111 files;
+  - there is no `rehearsal/` or `census/` yet, and no `var/datastores/levin-phase-floor-07c-*`;
+  - `var/runs/` holds Part A's six run directories: `levin-phase-floor-07c-base-…`,
+    `-capture-chase-…`, `-capture-r5-…`, `-refs-…`, `-refs2-…` and `-variants-…`. Their slugs do not
+    collide with `r32-07c`, `k0` or `census`.
+- **The inputs, by SHA-256 against their recorded lists,** 160 files, all OK:
+  - R31's five store files against `docs/levin-phase-floor/07b/rehearsal/KEPT_ON_MAC_STUDIO.txt`,
+    primary `5981563b…`;
+  - 07b's census run directory `levin-phase-floor-07b-census-20261117T010200`: all 150 files against
+    `docs/levin-phase-floor/07b/census/KEPT_ON_MAC_STUDIO.txt`, checkpoint `396784bc…` among them,
+    and 150 files on disk;
+  - the scratch copy's five files against `docs/levin-phase-floor/06e/review/checks/a3v2_copy_after.sha256`.
+
+  None of the store directories holds a `-wal` or `-shm` file.
+- **The venv** is Python 3.13.16, with `datastorekit` 0.5.0, `raypoolkit` 0.3.0, `runregistrykit`
+  0.2.0, `ray` 2.59.0, `SQLAlchemy` 2.0.55, `numpy` 2.2.4, `scipy` 1.16.3 and `mpmath` 1.3.0.
+
+**The dispatch** waits for the user's word. Then the laptop does three things:
+1. It fetches into the Mac Studio's main checkout, which moves no working tree.
+2. It repeats §C.0's checks, removes Part A's worktree and makes the one worktree at this commit,
+   detached and with no venv.
+3. It starts the Mac Studio orchestrator session in that worktree, through the saved `MacStudio`
+   connection, with this note's §C as its brief. The folder must be trusted in the app first.
+
 ## 5. Stop and ask the user
 
 - At Part A's planned stop, always.
