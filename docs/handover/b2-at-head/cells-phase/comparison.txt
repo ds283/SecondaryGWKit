@@ -1,0 +1,22 @@
+R together 980
+  as run N+9/8 +3.471375e-03  total 9.23464663104318900e-13  abserr 2.260e-20  regions 125  depth 7 (2:Gqr:G-q+r)  integral 5.5 s  load 4.8
+  phase  N+9/8 +3.471330e-03  total 9.23464700005606160e-13  abserr 2.260e-20  regions 320  depth 10 (2:Gqr:G-q-r)  integral 14.8 s  load 4.9
+  |dtotal/total| 4.00e-08
+    r      z_min 332.3  regions 8 -> 8  depth 4 -> 4  |dv|/(err+err) 0
+    G+r    z_min 294.1  regions 16 -> 16  depth 5 -> 5  |dv|/(err+err) 0
+    G-r    z_min 294.1  regions 22 -> 22  depth 7 -> 7  |dv|/(err+err) 0
+    G+q+r  z_min 6.07  regions 11 -> 22  depth 5 -> 5  |dv|/(err+err) 2.74e+03
+    G+q-r  z_min 6.07  regions 25 -> 78  depth 7 -> 8  |dv|/(err+err) 901
+    G-q+r  z_min 6.07  regions 27 -> 73  depth 7 -> 9  |dv|/(err+err) 618
+    G-q-r  z_min 6.07  regions 16 -> 101  depth 6 -> 10  |dv|/(err+err) 4.4e+04
+R together 1e+08
+  as run N+9/8 -3.249084e-04  total 9.64973974137196026e-27  abserr 4.528e-35  regions 20131  depth 20 (2:Gqr:G+q-r)  integral 480.7 s  load 11.5
+  phase  N+9/8 -3.249084e-04  total 9.64973974137170915e-27  abserr 4.528e-35  regions 20032  depth 20 (2:Gqr:G+q-r)  integral 494.9 s  load 6.0
+  |dtotal/total| 2.60e-14
+    r      z_min 3.401e+07  regions 7 -> 7  depth 4 -> 4  |dv|/(err+err) 0
+    G+r    z_min 3.011e+07  regions 16 -> 16  depth 5 -> 5  |dv|/(err+err) 0
+    G-r    z_min 3.011e+07  regions 16 -> 16  depth 6 -> 6  |dv|/(err+err) 0
+    G+q+r  z_min 6.07  regions 669 -> 640  depth 19 -> 19  |dv|/(err+err) 0.00399
+    G+q-r  z_min 6.07  regions 7531 -> 7151  depth 20 -> 20  |dv|/(err+err) 0.0136
+    G-q+r  z_min 6.07  regions 5599 -> 6385  depth 20 -> 20  |dv|/(err+err) 0.00701
+    G-q-r  z_min 6.07  regions 6293 -> 5817  depth 20 -> 20  |dv|/(err+err) 0.0896

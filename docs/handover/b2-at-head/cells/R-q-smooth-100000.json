@@ -1,0 +1,436 @@
+{
+ "object": "R",
+ "shape": "q-smooth",
+ "x_resp": 100000.0,
+ "status": "ok",
+ "delegated": null,
+ "total": 8.675939423825678e-18,
+ "total_abserr": 2.4323771869455626e-28,
+ "numeric_quad": -5.412067069550881e-18,
+ "WKB_Levin": 1.408800649337656e-17,
+ "analytic_rad": 8.675851852944322e-18,
+ "declared": 2.8035894075814094e-11,
+ "converged": false,
+ "phase_limited": true,
+ "Levin_fraction": 1.6238018507469496,
+ "Levin_regions_from_metadata": 1906,
+ "handover": {
+  "Tq": {
+   "z_init": 307.13656553386227,
+   "z_switch": 300.12844708579695,
+   "handover_continuity": [
+    {
+     "z": 300.12844708579695,
+     "dT_rel": 2.320890980167505e-15,
+     "dTprime_rel": -6.349698986799657e-06
+    },
+    {
+     "z": 293.2797181087506,
+     "dT_rel": -3.4718827851283853e-16,
+     "dTprime_rel": -8.461675098605012e-06
+    },
+    {
+     "z": 286.5867535208048,
+     "dT_rel": -3.2568629587414344e-15,
+     "dTprime_rel": -8.570865398726235e-06
+    }
+   ]
+  },
+  "Tr": {
+   "z_init": 33894.02220872486,
+   "z_switch": 33122.534562826935,
+   "handover_continuity": [
+    {
+     "z": 33122.534562826935,
+     "dT_rel": -2.5420195988701152e-15,
+     "dTprime_rel": -6.352101290445247e-06
+    },
+    {
+     "z": 32368.60681655409,
+     "dT_rel": -3.182788036902691e-15,
+     "dTprime_rel": -8.463405029952753e-06
+    },
+    {
+     "z": 31631.839287453116,
+     "dT_rel": -3.1208656838621847e-15,
+     "dTprime_rel": -8.56885469986144e-06
+    }
+   ]
+  }
+ },
+ "breakpoints": [
+  {
+   "factor": "G",
+   "z": 255101.04081632654,
+   "inside_range": true
+  },
+  {
+   "factor": "Tq",
+   "z": 300.12844708579695,
+   "inside_range": true
+  },
+  {
+   "factor": "Tr",
+   "z": 33122.534562826935,
+   "inside_range": true
+  }
+ ],
+ "partition_subintervals": [
+  {
+   "z_max": 166586197.9926881,
+   "z_min": 255101.04081632636,
+   "regime": [
+    false,
+    false,
+    false
+   ],
+   "method": "quad"
+  },
+  {
+   "z_max": 255101.04081632636,
+   "z_min": 33122.534562826935,
+   "regime": [
+    true,
+    false,
+    false
+   ],
+   "method": "Levin"
+  },
+  {
+   "z_max": 33122.534562826935,
+   "z_min": 300.12844708579695,
+   "regime": [
+    true,
+    false,
+    true
+   ],
+   "method": "Levin"
+  },
+  {
+   "z_max": 300.12844708579695,
+   "z_min": 5.480462205189675,
+   "regime": [
+    true,
+    true,
+    true
+   ],
+   "method": "Levin"
+  }
+ ],
+ "phase_objects": {
+  "G": {
+   "class": "PrimitivePhase",
+   "module": "ComputeTargets.primitive_phase",
+   "exact_remainder": true,
+   "leading_class": "TablePrimitive",
+   "sign": -1
+  },
+  "G_sin_amplitude_owner": "BesselPhaseGk",
+  "G_numeric_Gk_owner": "BesselPhaseGk",
+  "source_owner": "ZSplineWrapper",
+  "Tq": {
+   "class": "PrimitivePhase",
+   "module": "ComputeTargets.primitive_phase",
+   "exact_remainder": true,
+   "leading_class": "TablePrimitive",
+   "sign": 1,
+   "object_class": "TkSourceFunctions",
+   "z_init": 307.13656553386227,
+   "crossover_z": 300.12844708579695,
+   "WKB_region_top": 300.12844708579695,
+   "accessor_owners": {
+    "T": "TkSourceFunctions",
+    "dT_dz": "TkSourceFunctions",
+    "M": "TkSourceFunctions",
+    "phase": "PrimitivePhase",
+    "omega": "TkSourceFunctions",
+    "dlnM_dz": "TkSourceFunctions"
+   }
+  },
+  "Tr": {
+   "class": "PrimitivePhase",
+   "module": "ComputeTargets.primitive_phase",
+   "exact_remainder": true,
+   "leading_class": "TablePrimitive",
+   "sign": 1,
+   "object_class": "TkSourceFunctions",
+   "z_init": 33894.02220872486,
+   "crossover_z": 33122.534562826935,
+   "WKB_region_top": 33122.534562826935,
+   "accessor_owners": {
+    "T": "TkSourceFunctions",
+    "dT_dz": "TkSourceFunctions",
+    "M": "TkSourceFunctions",
+    "phase": "PrimitivePhase",
+    "omega": "TkSourceFunctions",
+    "dlnM_dz": "TkSourceFunctions"
+   }
+  }
+ },
+ "construction_ok": true,
+ "setup_time": 0.11215158412232995,
+ "check_time": 0.0332889158744365,
+ "integral_time": 34.58340958412737,
+ "loadavg_before": [
+  4.96923828125,
+  7.43310546875,
+  8.62646484375
+ ],
+ "loadavg_after": [
+  4.564453125,
+  7.04052734375,
+  8.43310546875
+ ],
+ "instrumented": true,
+ "host": "mps026088.phys.susx.ac.uk",
+ "pid": 85882,
+ "b2_cells_sha256": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931",
+ "realistic_large_x_sha256": "c1cd3598c23a52051a0eb2695bf67977265383b5fa02977fb61d8251c2cd98a3",
+ "REF_ATOL": 1e-45,
+ "REF_RTOL": 1e-12,
+ "groups": [
+  {
+   "subinterval": 0,
+   "regime": "G",
+   "z_max": 255101.04081632636,
+   "z_min": 33122.534562826935,
+   "label": "G",
+   "num_regions": 197,
+   "num_simple_regions": 197,
+   "max_depth": 11,
+   "max_region_depth": 11,
+   "num_phase_limited_regions": 65,
+   "converged": true,
+   "phase_limited": true,
+   "value": 2.9876749271084e-17,
+   "abserr": 2.9597611536627105e-29,
+   "raw_value": 4.6102806134966936e-18,
+   "raw_abserr": 4.5672068749856736e-30,
+   "evaluations": 1575,
+   "elapsed": 2.863937082933262,
+   "depth_histogram": {
+    "6": 9,
+    "7": 60,
+    "8": 78,
+    "9": 39,
+    "10": 9,
+    "11": 2
+   },
+   "deepest_count": 2,
+   "deepest_z": [
+    35445.53671402824,
+    35516.27248634163
+   ]
+  },
+  {
+   "subinterval": 1,
+   "regime": "Gr",
+   "z_max": 33122.534562826935,
+   "z_min": 300.12844708579695,
+   "label": "G+r",
+   "num_regions": 653,
+   "num_simple_regions": 652,
+   "max_depth": 17,
+   "max_region_depth": 17,
+   "num_phase_limited_regions": 653,
+   "converged": false,
+   "phase_limited": true,
+   "value": -1.1683542465637662e-17,
+   "abserr": 5.91394634094591e-29,
+   "raw_value": -1.8028872163286844e-18,
+   "raw_abserr": 9.125809477308441e-30,
+   "evaluations": 2611,
+   "elapsed": 12.410564916906878,
+   "depth_histogram": {
+    "6": 1,
+    "7": 10,
+    "8": 99,
+    "9": 176,
+    "10": 109,
+    "11": 85,
+    "12": 87,
+    "13": 39,
+    "14": 17,
+    "15": 23,
+    "16": 5,
+    "17": 2
+   },
+   "deepest_count": 2,
+   "deepest_z": [
+    329.2483272580749,
+    329.27201462867805
+   ]
+  },
+  {
+   "subinterval": 1,
+   "regime": "Gr",
+   "z_max": 33122.534562826935,
+   "z_min": 300.12844708579695,
+   "label": "G-r",
+   "num_regions": 1040,
+   "num_simple_regions": 1021,
+   "max_depth": 20,
+   "max_region_depth": 20,
+   "num_phase_limited_regions": 984,
+   "converged": false,
+   "phase_limited": true,
+   "value": -3.0607494030852206e-18,
+   "abserr": 1.415281693553929e-28,
+   "raw_value": -4.723041823520111e-19,
+   "raw_abserr": 2.1839209129567096e-29,
+   "evaluations": 4047,
+   "elapsed": 18.359462624881417,
+   "depth_histogram": {
+    "7": 14,
+    "8": 86,
+    "9": 137,
+    "10": 130,
+    "11": 150,
+    "12": 315,
+    "13": 64,
+    "14": 19,
+    "15": 19,
+    "16": 22,
+    "17": 1,
+    "18": 5,
+    "19": 22,
+    "20": 56
+   },
+   "deepest_count": 56,
+   "deepest_z": [
+    345.8290253727921,
+    419.6963158749851
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 300.12844708579695,
+   "z_min": 5.480462205189675,
+   "label": "G+q+r",
+   "num_regions": 4,
+   "num_simple_regions": 0,
+   "max_depth": 2,
+   "max_region_depth": 2,
+   "num_phase_limited_regions": 4,
+   "converged": false,
+   "phase_limited": true,
+   "value": 1.991332637591591e-19,
+   "abserr": 2.234769327966981e-30,
+   "raw_value": 3.072825015470184e-20,
+   "raw_abserr": 3.448472126227872e-31,
+   "evaluations": 15,
+   "elapsed": 0.07494737510569394,
+   "depth_histogram": {
+    "2": 4
+   },
+   "deepest_count": 4,
+   "deepest_z": [
+    5.480462205189675,
+    300.12844708579695
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 300.12844708579695,
+   "z_min": 5.480462205189675,
+   "label": "G+q-r",
+   "num_regions": 4,
+   "num_simple_regions": 0,
+   "max_depth": 2,
+   "max_region_depth": 2,
+   "num_phase_limited_regions": 4,
+   "converged": false,
+   "phase_limited": true,
+   "value": -8.958519632978433e-20,
+   "abserr": 2.234822501587674e-30,
+   "raw_value": -1.3823889946930455e-20,
+   "raw_abserr": 3.448554178431881e-31,
+   "evaluations": 15,
+   "elapsed": 0.024695541942492127,
+   "depth_histogram": {
+    "2": 4
+   },
+   "deepest_count": 4,
+   "deepest_z": [
+    5.480462205189675,
+    300.12844708579695
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 300.12844708579695,
+   "z_min": 5.480462205189675,
+   "label": "G-q+r",
+   "num_regions": 4,
+   "num_simple_regions": 0,
+   "max_depth": 2,
+   "max_region_depth": 2,
+   "num_phase_limited_regions": 4,
+   "converged": false,
+   "phase_limited": true,
+   "value": -1.4762159348570603e-18,
+   "abserr": 2.2348457317403044e-30,
+   "raw_value": -2.277948529157193e-19,
+   "raw_abserr": 3.448590024876e-31,
+   "evaluations": 15,
+   "elapsed": 0.023812292143702507,
+   "depth_histogram": {
+    "2": 4
+   },
+   "deepest_count": 4,
+   "deepest_z": [
+    5.480462205189675,
+    300.12844708579695
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 300.12844708579695,
+   "z_min": 5.480462205189675,
+   "label": "G-q-r",
+   "num_regions": 4,
+   "num_simple_regions": 0,
+   "max_depth": 2,
+   "max_region_depth": 2,
+   "num_phase_limited_regions": 4,
+   "converged": false,
+   "phase_limited": true,
+   "value": 3.222169584431297e-19,
+   "abserr": 2.2347935699673417e-30,
+   "raw_value": 4.9721292747466734e-20,
+   "raw_abserr": 3.4485095340540324e-31,
+   "evaluations": 15,
+   "elapsed": 0.023607541108503938,
+   "depth_histogram": {
+    "2": 4
+   },
+   "deepest_count": 4,
+   "deepest_z": [
+    5.480462205189675,
+    300.12844708579695
+   ]
+  }
+ ],
+ "Levin_regions": 1906,
+ "phase_limited_regions": 1718,
+ "max_depth": 20,
+ "max_depth_group": "1:Gr:G-r",
+ "ref": {
+  "u": 0.01,
+  "v": 1.0999999999999999,
+  "x": 157459.1643244434,
+  "x_min": 0.006125406362804968,
+  "z_resp": 5.480462205189676,
+  "predicted": 8.675851852941953e-18,
+  "predicted_no_head": 8.675754210431138e-18,
+  "vs_eq25": 0.0003461554022819205,
+  "eq25_note": ""
+ },
+ "reference_time": 0.02959570800885558,
+ "N_plus_9_8": -1.1355339609275816e-05,
+ "cell_wall": 34.759685039520264
+}

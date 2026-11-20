@@ -737,6 +737,23 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   removes. That attribution is the laptop orchestrator's inference, not A4's measurement.
   [`docs/handover/GK-PHASE-COST-GROWTH.md`](../../docs/handover/GK-PHASE-COST-GROWTH.md) §2–§4.
 
+  **Narrowed 2026-11-20, from the laptop (at `HEAD` `together` grows 161×, and not from the
+  fixture).** This is the re-run of A4's arm P that the narrowing above asked for: B2's `R` ladder,
+  re-run at `c1a91d73` with B2's unchanged `b2_cells.py` ([`B2-AT-HEAD.md`](../../docs/handover/B2-AT-HEAD.md) §4).
+  Levin regions from 980 to the top rung, `together` / `T-first` / `q-smooth`: **161 / 8.8 / 1.4×**
+  (125 → 20,131, 49 → 432, 1,473 → 2,078). B2 had 6.5 / 3.4 / 1.8× on the same cells, and A4's arm
+  P 6.26 / 3.29 / 2.16×. `R|together|1e8` takes 20,131 regions at depth 20 in 481 s, against B2's
+  286 in 4.5 s. Almost all of it is the four `G±q±r` calls on $z\in(6.07, 3.01\times10^7)$: three
+  at depth 20, with 2,448–3,276 regions each at the deepest level, none converged. With $T$'s
+  Levin derivative taken from the phase the cell takes 20,032 regions at depth 20 and its total
+  agrees to $2.6\times10^{-14}$, so this is not `[13-the-tlg-term-depends-on-the-levin-subdivision]`'s
+  mismatch. It is the driver at `rtol = 1e-12` on a consistent integrand. The exact flavour now
+  grows too: `E` 4.7 / 4.0 / 4.1× (B2 1.3 / 1.9 / 1.8×). The `R` ladder costs 821 s against B2's
+  68.5 s, the `E` ladder 33.6 s against 6.0 s. **Not measured:** whether `together` $10^8$'s
+  values are honest (no reference was taken there), and which `levin-phase-floor` prompt since A4
+  raised the cost. **Next step:** both of those, before B2a's Part B, whose cost the $10^8$ cells
+  dominate. The depth cap is `levin-phase-floor` 08's.
+
 - **[09-two-readers-plot-the-radiation-form-under-the-w-label]** *(opened 2026-10-25 by prompt 09,
   on reading the readers; not acted on, by `CLAUDE.md` rule 4)* — `extract_GkSource_data.py` (its
   log–log $G_k$ plot, `plot_Gk`) and `extract_QuadSourceIntegral_data.py` (`plot_Gk`, its `GkSource.pdf`)
@@ -985,6 +1002,27 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
      production's version.
 
   Both come before E1.
+
+  **Narrowed 2026-11-20, from the laptop (at `HEAD` the effect on $N$ is small; the declared errors
+  still miss it).** The orchestrator re-ran B2's `R` and `E` ladders at `c1a91d73` with B2's
+  unchanged `b2_cells.py`, and took a Filon reference on two calls ([`B2-AT-HEAD.md`](../../docs/handover/B2-AT-HEAD.md)):
+  - at `HEAD` the `R` cells reach probe13's consistent values without the fixture changing:
+    `together` 980 gives $N_R+9/8 = +3.4714\times10^{-3}$ (B2 $+3.623\times10^{-3}$, probe13
+    $+3.471\times10^{-3}$), and probe13's other three places agree to $\le5\times10^{-9}$;
+  - with the derivative taken from the phase, `together` 980's $N$ moves by $4.5\times10^{-8}$
+    and `together` $10^8$'s by nothing visible. So `HEAD`'s driver subdivides the mismatch almost
+    away;
+  - its declared errors do not see what is left. On `together` 980, $z\in(6.07, 294.1)$, `G+q+r`
+    and `G-q+r` lie $5.3\times10^3$ and $1.2\times10^3$ times their declared errors from the
+    reference, and `G+q+r` says it converged. With the derivative from the phase they agree with the
+    reference to the last digit and to $0.012\times$. Between the two arms the four `G±q±r` calls
+    move by 618–44,000 times their summed declared errors. B2's driver was $1.9\times10^8$ and
+    $2.9\times10^6$ times its declared errors from the reference on the same two calls.
+
+  **Impact now:** a declared error on an `R`-like cell with both $T$s oscillatory is not an error
+  bar until the fixture is self-consistent; the values themselves are off by $\le5\times10^{-8}$
+  in $N$ at `HEAD`. B2a's Part A removes the cause. **Next step:** unchanged (item 1 above, B2a);
+  item 2 is unchanged too.
 
 ---
 

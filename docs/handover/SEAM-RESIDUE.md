@@ -407,6 +407,15 @@ unaffected:** `f` is read only on the all-smooth sub-interval, where no Levin ca
 is 97 % of `together`'s residue at 980 once the derivative is made consistent
 ($3.375\times10^{-3}$ of $3.471\times10^{-3}$; 93 % as run). `[13-the-tlg-term-depends-on-the-levin-subdivision]`
 carries the next step: make the fixture's $T$ self-consistent before E1.
+
+### 4.8 At `HEAD` (2026-11-20)
+
+*Added later, from a laptop re-run outside the registered run:* [`B2-AT-HEAD.md`](B2-AT-HEAD.md).
+It changes none of §3's numbers. At `c1a91d73` the `R` cells reach §4.7's consistent-derivative
+values without the fixture changing (`together` 980: $N_R+9/8 = +3.4714\times10^{-3}$), and the
+mismatch moves $N$ by $\le5\times10^{-8}$. The Levin driver's declared errors still do not cover
+it: on `together` 980 two group calls lie $1.2$–$5.3\times10^3$ times their declared errors from a
+Filon reference, and agree with it once the derivative is consistent.
 ---
 
 ## 5. Against the earlier records

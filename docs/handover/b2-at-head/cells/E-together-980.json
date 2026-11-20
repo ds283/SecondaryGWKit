@@ -1,0 +1,376 @@
+{
+ "object": "E",
+ "shape": "together",
+ "x_resp": 980.0,
+ "status": "ok",
+ "delegated": null,
+ "total": 9.26322986810268e-13,
+ "total_abserr": 2.106476862200182e-24,
+ "numeric_quad": 4.488885097685004e-12,
+ "WKB_Levin": -3.562562110874736e-12,
+ "analytic_rad": 9.263229868103658e-13,
+ "declared": 8.691835702236394e-12,
+ "converged": false,
+ "phase_limited": true,
+ "Levin_fraction": 3.8459178511181973,
+ "Levin_regions_from_metadata": 11,
+ "handover": {
+  "Tq": {
+   "z_init": 300.973834223185,
+   "z_switch": 300.973834223185,
+   "handover_continuity": []
+  },
+  "Tr": {
+   "z_init": 361.3686010678221,
+   "z_switch": 361.3686010678221,
+   "handover_continuity": []
+  }
+ },
+ "breakpoints": [
+  {
+   "factor": "G",
+   "z": 332.3333333333333,
+   "inside_range": true
+  },
+  {
+   "factor": "Tq",
+   "z": 300.973834223185,
+   "inside_range": true
+  },
+  {
+   "factor": "Tr",
+   "z": 361.3686010678221,
+   "inside_range": true
+  }
+ ],
+ "partition_subintervals": [
+  {
+   "z_max": 1780956.9092309182,
+   "z_min": 361.3686010678221,
+   "regime": [
+    false,
+    false,
+    false
+   ],
+   "method": "quad"
+  },
+  {
+   "z_max": 361.3686010678221,
+   "z_min": 332.3333333333334,
+   "regime": [
+    false,
+    false,
+    true
+   ],
+   "method": "Levin"
+  },
+  {
+   "z_max": 332.3333333333334,
+   "z_min": 300.973834223185,
+   "regime": [
+    true,
+    false,
+    true
+   ],
+   "method": "Levin"
+  },
+  {
+   "z_max": 300.973834223185,
+   "z_min": 6.069595132934192,
+   "regime": [
+    true,
+    true,
+    true
+   ],
+   "method": "Levin"
+  }
+ ],
+ "phase_objects": {
+  "G": {
+   "class": "_ExactPhase",
+   "module": "ComputeTargets.tests.test_phase_groups",
+   "exact_remainder": null,
+   "leading_class": null,
+   "sign": null
+  },
+  "G_sin_amplitude_owner": "ExactGk",
+  "G_numeric_Gk_owner": "ExactGk",
+  "source_owner": "function",
+  "Tq": {
+   "class": "_ExactPhase",
+   "module": "ComputeTargets.tests.test_phase_groups",
+   "exact_remainder": null,
+   "leading_class": null,
+   "sign": null,
+   "object_class": "ExactTkFunctions",
+   "z_init": 300.973834223185,
+   "crossover_z": 300.973834223185,
+   "WKB_region_top": 300.973834223185,
+   "accessor_owners": {
+    "T": "ExactTkFunctions",
+    "dT_dz": "ExactTkFunctions",
+    "M": "ExactTkFunctions",
+    "phase": "_ExactPhase",
+    "omega": "ExactTkFunctions",
+    "dlnM_dz": "ExactTkFunctions"
+   }
+  },
+  "Tr": {
+   "class": "_ExactPhase",
+   "module": "ComputeTargets.tests.test_phase_groups",
+   "exact_remainder": null,
+   "leading_class": null,
+   "sign": null,
+   "object_class": "ExactTkFunctions",
+   "z_init": 361.3686010678221,
+   "crossover_z": 361.3686010678221,
+   "WKB_region_top": 361.3686010678221,
+   "accessor_owners": {
+    "T": "ExactTkFunctions",
+    "dT_dz": "ExactTkFunctions",
+    "M": "ExactTkFunctions",
+    "phase": "_ExactPhase",
+    "omega": "ExactTkFunctions",
+    "dlnM_dz": "ExactTkFunctions"
+   }
+  }
+ },
+ "construction_ok": true,
+ "setup_time": 0.022591625107452273,
+ "check_time": 1.6124919056892395e-05,
+ "integral_time": 2.177323166979477,
+ "loadavg_before": [
+  17.13232421875,
+  18.40625,
+  15.53125
+ ],
+ "loadavg_after": [
+  17.44189453125,
+  18.44921875,
+  15.56298828125
+ ],
+ "instrumented": true,
+ "host": "mps026088.phys.susx.ac.uk",
+ "pid": 86657,
+ "b2_cells_sha256": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931",
+ "realistic_large_x_sha256": "c1cd3598c23a52051a0eb2695bf67977265383b5fa02977fb61d8251c2cd98a3",
+ "REF_ATOL": 1e-45,
+ "REF_RTOL": 1e-12,
+ "groups": [
+  {
+   "subinterval": 0,
+   "regime": "r",
+   "z_max": 361.3686010678221,
+   "z_min": 332.3333333333334,
+   "label": "r",
+   "num_regions": 1,
+   "num_simple_regions": 1,
+   "max_depth": 0,
+   "max_region_depth": 0,
+   "num_phase_limited_regions": 0,
+   "converged": true,
+   "phase_limited": false,
+   "value": -1.0397933011352836e-12,
+   "abserr": 1.0769276308398227e-25,
+   "raw_value": -1.4707961086644627e-13,
+   "raw_abserr": 1.5233229210296382e-26,
+   "evaluations": 7,
+   "elapsed": 0.07363537489436567,
+   "depth_histogram": {
+    "0": 1
+   },
+   "deepest_count": 1,
+   "deepest_z": [
+    332.3333333333334,
+    361.3686010678221
+   ]
+  },
+  {
+   "subinterval": 1,
+   "regime": "Gr",
+   "z_max": 332.3333333333334,
+   "z_min": 300.973834223185,
+   "label": "G+r",
+   "num_regions": 1,
+   "num_simple_regions": 1,
+   "max_depth": 0,
+   "max_region_depth": 0,
+   "num_phase_limited_regions": 0,
+   "converged": true,
+   "phase_limited": false,
+   "value": 8.302298128645422e-13,
+   "abserr": 4.7337951631617194e-26,
+   "raw_value": 1.1743668445691603e-13,
+   "raw_abserr": 6.69599188376292e-27,
+   "evaluations": 7,
+   "elapsed": 0.06913029192946851,
+   "depth_histogram": {
+    "0": 1
+   },
+   "deepest_count": 1,
+   "deepest_z": [
+    300.973834223185,
+    332.3333333333334
+   ]
+  },
+  {
+   "subinterval": 1,
+   "regime": "Gr",
+   "z_max": 332.3333333333334,
+   "z_min": 300.973834223185,
+   "label": "G-r",
+   "num_regions": 1,
+   "num_simple_regions": 1,
+   "max_depth": 0,
+   "max_region_depth": 0,
+   "num_phase_limited_regions": 0,
+   "converged": true,
+   "phase_limited": false,
+   "value": 4.757226163862626e-13,
+   "abserr": 5.121923854084596e-26,
+   "raw_value": 6.729135225439944e-14,
+   "raw_abserr": 7.245003084015042e-27,
+   "evaluations": 7,
+   "elapsed": 0.06126537499949336,
+   "depth_histogram": {
+    "0": 1
+   },
+   "deepest_count": 1,
+   "deepest_z": [
+    300.973834223185,
+    332.3333333333334
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 300.973834223185,
+   "z_min": 6.069595132934192,
+   "label": "G+q+r",
+   "num_regions": 1,
+   "num_simple_regions": 0,
+   "max_depth": 0,
+   "max_region_depth": 0,
+   "num_phase_limited_regions": 1,
+   "converged": true,
+   "phase_limited": true,
+   "value": -3.1403701891810584e-12,
+   "abserr": 3.3878446238202056e-25,
+   "raw_value": -4.4420792564929624e-13,
+   "raw_abserr": 4.792133863561294e-26,
+   "evaluations": 7,
+   "elapsed": 0.07797029195353389,
+   "depth_histogram": {
+    "0": 1
+   },
+   "deepest_count": 1,
+   "deepest_z": [
+    6.069595132934192,
+    300.973834223185
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 300.973834223185,
+   "z_min": 6.069595132934192,
+   "label": "G+q-r",
+   "num_regions": 2,
+   "num_simple_regions": 0,
+   "max_depth": 1,
+   "max_region_depth": 1,
+   "num_phase_limited_regions": 2,
+   "converged": false,
+   "phase_limited": true,
+   "value": 2.0046221318337093e-14,
+   "abserr": 6.269795659927793e-26,
+   "raw_value": 2.8355543622223e-15,
+   "raw_abserr": 8.868677119456983e-27,
+   "evaluations": 7,
+   "elapsed": 0.06745424983091652,
+   "depth_histogram": {
+    "1": 2
+   },
+   "deepest_count": 2,
+   "deepest_z": [
+    6.069595132934192,
+    300.973834223185
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 300.973834223185,
+   "z_min": 6.069595132934192,
+   "label": "G-q+r",
+   "num_regions": 2,
+   "num_simple_regions": 0,
+   "max_depth": 1,
+   "max_region_depth": 1,
+   "num_phase_limited_regions": 2,
+   "converged": true,
+   "phase_limited": true,
+   "value": -5.440500069696314e-13,
+   "abserr": 6.881293638480164e-26,
+   "raw_value": -7.695631740425095e-14,
+   "raw_abserr": 9.733645999645987e-27,
+   "evaluations": 15,
+   "elapsed": 0.07747220806777477,
+   "depth_histogram": {
+    "1": 2
+   },
+   "deepest_count": 2,
+   "deepest_z": [
+    6.069595132934192,
+    300.973834223185
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 300.973834223185,
+   "z_min": 6.069595132934192,
+   "label": "G-q-r",
+   "num_regions": 3,
+   "num_simple_regions": 0,
+   "max_depth": 2,
+   "max_region_depth": 2,
+   "num_phase_limited_regions": 2,
+   "converged": true,
+   "phase_limited": true,
+   "value": -1.6434726415790427e-13,
+   "abserr": 3.874945242648309e-26,
+   "raw_value": -2.3247054614525418e-14,
+   "raw_abserr": 5.48114166339825e-27,
+   "evaluations": 23,
+   "elapsed": 0.0822013751603663,
+   "depth_histogram": {
+    "1": 1,
+    "2": 2
+   },
+   "deepest_count": 2,
+   "deepest_z": [
+    6.069595132934192,
+    45.20425033151935
+   ]
+  }
+ ],
+ "Levin_regions": 11,
+ "phase_limited_regions": 7,
+ "max_depth": 2,
+ "max_depth_group": "2:Gqr:G-q-r",
+ "ref": {
+  "u": 0.9090909090909091,
+  "v": 1.0909090909090908,
+  "x": 1555.9589754660415,
+  "x_min": 0.006176451415828349,
+  "z_resp": 6.069595132934193,
+  "predicted": 9.263229868103486e-13,
+  "predicted_no_head": 9.264387967101262e-13,
+  "vs_eq25": 0.09666173646468068,
+  "eq25_note": ""
+ },
+ "reference_time": 0.02683754195459187,
+ "N_plus_9_8": 9.792167077193881e-14,
+ "cell_wall": 2.226970672607422
+}

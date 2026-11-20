@@ -1,0 +1,9 @@
+arm base
+G+q+r z in (6.0696, 294.106) edges tolerant, 973 edges, 3 tables
+  ref -4.17264753622703123e-13 scatter 3.335e-28
+  HEAD -4.17264755661912955e-13 abserr 3.823e-25 conv True regions 11  |HEAD-ref|/abserr 5.33e+03
+  B2   -4.17282100268148252e-13 abserr 9.280e-26 conv True regions 1  |B2-ref|/abserr 1.87e+08
+G-q+r z in (6.0696, 294.106) edges tolerant, 973 edges, 3 tables
+  ref -3.92789907767563613e-14 scatter 2.067e-28
+  HEAD -3.92789908308120261e-14 abserr 4.679e-26 conv False regions 27  |HEAD-ref|/abserr 1.16e+03
+  B2   -3.92791074348448767e-14 abserr 4.049e-26 conv False regions 1  |B2-ref|/abserr 2.88e+06

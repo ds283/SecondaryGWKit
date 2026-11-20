@@ -1,0 +1,10 @@
+arm phase
+G+q+r z in (6.0696, 294.106) edges tolerant, 973 edges, 3 tables
+  ref -4.17264753622703123e-13 scatter 3.335e-28
+  HEAD -4.17264753622703123e-13 abserr 3.611e-25 conv True regions 22  |HEAD-ref|/abserr 0
+  B2   -4.17282100268148252e-13 abserr 9.280e-26 conv True regions 1  |B2-ref|/abserr 1.87e+08
+G-q+r z in (6.0696, 294.106) edges tolerant, 973 edges, 3 tables
+  ref -3.92789907767563613e-14 scatter 2.067e-28
+  HEAD -3.92789907767568409e-14 abserr 4.068e-26 conv False regions 73  |HEAD-ref|/abserr 0.0118
+  B2   -3.92791074348448767e-14 abserr 4.049e-26 conv False regions 1  |B2-ref|/abserr 2.88e+06
+PYTHONPATH=. ./venv/bin/python  together 980 G+q+r,G-q+r phase  1446.21s user 2.93s system 99% cpu 24:12.96 total

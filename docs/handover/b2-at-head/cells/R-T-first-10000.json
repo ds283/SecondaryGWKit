@@ -1,0 +1,420 @@
+{
+ "object": "R",
+ "shape": "T-first",
+ "x_resp": 10000.0,
+ "status": "ok",
+ "delegated": null,
+ "total": 7.758908895507033e-13,
+ "total_abserr": 2.2563293517038315e-21,
+ "numeric_quad": 6.635576618902328e-13,
+ "WKB_Levin": 1.1233322766047042e-13,
+ "analytic_rad": 7.758817086773073e-13,
+ "declared": 2.9080498071196697e-09,
+ "converged": false,
+ "phase_limited": true,
+ "Levin_fraction": 0.14477967092192492,
+ "Levin_regions_from_metadata": 104,
+ "handover": {
+  "Tq": {
+   "z_init": 3080.365655338623,
+   "z_switch": 3010.211186366521,
+   "handover_continuity": [
+    {
+     "z": 3010.211186366521,
+     "dT_rel": -4.973580207369641e-15,
+     "dTprime_rel": -6.3529555621378855e-06
+    },
+    {
+     "z": 2941.653947346095,
+     "dT_rel": -3.1828694350839167e-15,
+     "dTprime_rel": -8.464019199045618e-06
+    },
+    {
+     "z": 2874.657573615811,
+     "dT_rel": -1.7877489183143826e-15,
+     "dTprime_rel": -8.568137044851099e-06
+    }
+   ]
+  },
+  "Tr": {
+   "z_init": 3696.638786406349,
+   "z_switch": 3612.478777341096,
+   "handover_continuity": [
+    {
+     "z": 3612.478777341096,
+     "dT_rel": -1.4367918711420378e-15,
+     "dTprime_rel": -6.352016886956935e-06
+    },
+    {
+     "z": 3530.234289919527,
+     "dT_rel": -3.529992358551939e-15,
+     "dTprime_rel": -8.463344319005838e-06
+    },
+    {
+     "z": 3449.8617259623024,
+     "dT_rel": 6.362905921986627e-15,
+     "dTprime_rel": -8.568925528480624e-06
+    }
+   ]
+  }
+ },
+ "breakpoints": [
+  {
+   "factor": "G",
+   "z": 2550.020408163265,
+   "inside_range": true
+  },
+  {
+   "factor": "Tq",
+   "z": 3010.211186366521,
+   "inside_range": true
+  },
+  {
+   "factor": "Tr",
+   "z": 3612.478777341096,
+   "inside_range": true
+  }
+ ],
+ "partition_subintervals": [
+  {
+   "z_max": 18173038.890111398,
+   "z_min": 3612.478777341096,
+   "regime": [
+    false,
+    false,
+    false
+   ],
+   "method": "quad"
+  },
+  {
+   "z_max": 3612.478777341096,
+   "z_min": 3010.211186366521,
+   "regime": [
+    false,
+    false,
+    true
+   ],
+   "method": "Levin"
+  },
+  {
+   "z_max": 3010.211186366521,
+   "z_min": 2550.020408163265,
+   "regime": [
+    false,
+    true,
+    true
+   ],
+   "method": "Levin"
+  },
+  {
+   "z_max": 2550.020408163265,
+   "z_min": 6.069595132934192,
+   "regime": [
+    true,
+    true,
+    true
+   ],
+   "method": "Levin"
+  }
+ ],
+ "phase_objects": {
+  "G": {
+   "class": "PrimitivePhase",
+   "module": "ComputeTargets.primitive_phase",
+   "exact_remainder": true,
+   "leading_class": "TablePrimitive",
+   "sign": -1
+  },
+  "G_sin_amplitude_owner": "BesselPhaseGk",
+  "G_numeric_Gk_owner": "BesselPhaseGk",
+  "source_owner": "ZSplineWrapper",
+  "Tq": {
+   "class": "PrimitivePhase",
+   "module": "ComputeTargets.primitive_phase",
+   "exact_remainder": true,
+   "leading_class": "TablePrimitive",
+   "sign": 1,
+   "object_class": "TkSourceFunctions",
+   "z_init": 3080.365655338623,
+   "crossover_z": 3010.211186366521,
+   "WKB_region_top": 3010.211186366521,
+   "accessor_owners": {
+    "T": "TkSourceFunctions",
+    "dT_dz": "TkSourceFunctions",
+    "M": "TkSourceFunctions",
+    "phase": "PrimitivePhase",
+    "omega": "TkSourceFunctions",
+    "dlnM_dz": "TkSourceFunctions"
+   }
+  },
+  "Tr": {
+   "class": "PrimitivePhase",
+   "module": "ComputeTargets.primitive_phase",
+   "exact_remainder": true,
+   "leading_class": "TablePrimitive",
+   "sign": 1,
+   "object_class": "TkSourceFunctions",
+   "z_init": 3696.638786406349,
+   "crossover_z": 3612.478777341096,
+   "WKB_region_top": 3612.478777341096,
+   "accessor_owners": {
+    "T": "TkSourceFunctions",
+    "dT_dz": "TkSourceFunctions",
+    "M": "TkSourceFunctions",
+    "phase": "PrimitivePhase",
+    "omega": "TkSourceFunctions",
+    "dlnM_dz": "TkSourceFunctions"
+   }
+  }
+ },
+ "construction_ok": true,
+ "setup_time": 0.09907075017690659,
+ "check_time": 0.031489166896790266,
+ "integral_time": 4.819846957921982,
+ "loadavg_before": [
+  4.2548828125,
+  7.97802734375,
+  8.91015625
+ ],
+ "loadavg_after": [
+  4.234375,
+  7.91162109375,
+  8.88134765625
+ ],
+ "instrumented": true,
+ "host": "mps026088.phys.susx.ac.uk",
+ "pid": 85817,
+ "b2_cells_sha256": "0a8ae0ebdf6ff0727a46d3f8b02eca14ae2aa51df329a4d266674ca04519f931",
+ "realistic_large_x_sha256": "c1cd3598c23a52051a0eb2695bf67977265383b5fa02977fb61d8251c2cd98a3",
+ "REF_ATOL": 1e-45,
+ "REF_RTOL": 1e-12,
+ "groups": [
+  {
+   "subinterval": 0,
+   "regime": "r",
+   "z_max": 3612.478777341096,
+   "z_min": 3010.211186366521,
+   "label": "r",
+   "num_regions": 17,
+   "num_simple_regions": 17,
+   "max_depth": 5,
+   "max_region_depth": 5,
+   "num_phase_limited_regions": 9,
+   "converged": true,
+   "phase_limited": true,
+   "value": 6.496034675212792e-14,
+   "abserr": 4.826961737809671e-26,
+   "raw_value": 9.188694052578158e-15,
+   "raw_abserr": 6.827776763796472e-27,
+   "evaluations": 135,
+   "elapsed": 0.6172962919808924,
+   "depth_histogram": {
+    "3": 3,
+    "4": 6,
+    "5": 8
+   },
+   "deepest_count": 8,
+   "deepest_z": [
+    3297.628156677795,
+    3571.534981788983
+   ]
+  },
+  {
+   "subinterval": 1,
+   "regime": "qr",
+   "z_max": 3010.211186366521,
+   "z_min": 2550.020408163265,
+   "label": "q+r",
+   "num_regions": 2,
+   "num_simple_regions": 2,
+   "max_depth": 1,
+   "max_region_depth": 1,
+   "num_phase_limited_regions": 0,
+   "converged": true,
+   "phase_limited": false,
+   "value": 7.700426501353485e-15,
+   "abserr": 1.4493229573728611e-27,
+   "raw_value": 1.089231611790684e-15,
+   "raw_abserr": 2.0500791489757185e-28,
+   "evaluations": 15,
+   "elapsed": 0.12885341700166464,
+   "depth_histogram": {
+    "1": 2
+   },
+   "deepest_count": 2,
+   "deepest_z": [
+    2550.020408163265,
+    3010.211186366521
+   ]
+  },
+  {
+   "subinterval": 1,
+   "regime": "qr",
+   "z_max": 3010.211186366521,
+   "z_min": 2550.020408163265,
+   "label": "q-r",
+   "num_regions": 1,
+   "num_simple_regions": 1,
+   "max_depth": 0,
+   "max_region_depth": 0,
+   "num_phase_limited_regions": 0,
+   "converged": true,
+   "phase_limited": false,
+   "value": 2.1673728619454883e-14,
+   "abserr": 8.632466637184509e-27,
+   "raw_value": 3.065766597932367e-15,
+   "raw_abserr": 1.2210694495034901e-27,
+   "evaluations": 7,
+   "elapsed": 0.015341541962698102,
+   "depth_histogram": {
+    "0": 1
+   },
+   "deepest_count": 1,
+   "deepest_z": [
+    2550.020408163265,
+    3010.211186366521
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 2550.020408163265,
+   "z_min": 6.069595132934192,
+   "label": "G+q+r",
+   "num_regions": 20,
+   "num_simple_regions": 16,
+   "max_depth": 7,
+   "max_region_depth": 7,
+   "num_phase_limited_regions": 18,
+   "converged": false,
+   "phase_limited": true,
+   "value": 1.4222181780254894e-15,
+   "abserr": 1.5884500700569751e-27,
+   "raw_value": 2.0117392174270187e-16,
+   "raw_abserr": 2.2468755850771026e-28,
+   "evaluations": 159,
+   "elapsed": 1.1146695828065276,
+   "depth_histogram": {
+    "2": 3,
+    "3": 1,
+    "7": 16
+   },
+   "deepest_count": 16,
+   "deepest_z": [
+    1220.9375455022755,
+    2550.020408163265
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 2550.020408163265,
+   "z_min": 6.069595132934192,
+   "label": "G+q-r",
+   "num_regions": 24,
+   "num_simple_regions": 21,
+   "max_depth": 6,
+   "max_region_depth": 6,
+   "num_phase_limited_regions": 7,
+   "converged": true,
+   "phase_limited": true,
+   "value": -1.4477397202784954e-14,
+   "abserr": 1.3185878715319216e-26,
+   "raw_value": -2.047839647187292e-15,
+   "raw_abserr": 1.8651533033188698e-27,
+   "evaluations": 191,
+   "elapsed": 0.857786666136235,
+   "depth_histogram": {
+    "2": 2,
+    "3": 1,
+    "5": 3,
+    "6": 18
+   },
+   "deepest_count": 18,
+   "deepest_z": [
+    336.00426150631927,
+    2121.25566750147
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 2550.020408163265,
+   "z_min": 6.069595132934192,
+   "label": "G-q+r",
+   "num_regions": 36,
+   "num_simple_regions": 33,
+   "max_depth": 9,
+   "max_region_depth": 9,
+   "num_phase_limited_regions": 15,
+   "converged": true,
+   "phase_limited": true,
+   "value": 3.4419500787658165e-14,
+   "abserr": 3.081831530446685e-26,
+   "raw_value": 4.86866647105611e-15,
+   "raw_abserr": 4.359275846066151e-27,
+   "evaluations": 287,
+   "elapsed": 1.126390540972352,
+   "depth_histogram": {
+    "3": 2,
+    "4": 2,
+    "5": 14,
+    "6": 8,
+    "7": 7,
+    "8": 1,
+    "9": 2
+   },
+   "deepest_count": 2,
+   "deepest_z": [
+    6.402417923672946,
+    6.5746597548707735
+   ]
+  },
+  {
+   "subinterval": 2,
+   "regime": "Gqr",
+   "z_max": 2550.020408163265,
+   "z_min": 6.069595132934192,
+   "label": "G-q-r",
+   "num_regions": 4,
+   "num_simple_regions": 0,
+   "max_depth": 2,
+   "max_region_depth": 2,
+   "num_phase_limited_regions": 2,
+   "converged": true,
+   "phase_limited": true,
+   "value": -3.3655959753645563e-15,
+   "abserr": 3.276656584128539e-27,
+   "raw_value": -4.760662968782607e-16,
+   "raw_abserr": 4.634857474177001e-28,
+   "evaluations": 31,
+   "elapsed": 0.028451416175812483,
+   "depth_histogram": {
+    "2": 4
+   },
+   "deepest_count": 4,
+   "deepest_z": [
+    6.069595132934192,
+    2550.020408163265
+   ]
+  }
+ ],
+ "Levin_regions": 104,
+ "phase_limited_regions": 51,
+ "max_depth": 9,
+ "max_depth_group": "2:Gqr:G-q+r",
+ "ref": {
+  "u": 10.0,
+  "v": 12.0,
+  "x": 1443.3756729740642,
+  "x_min": 0.0005614955832571229,
+  "z_resp": 6.069595132934193,
+  "predicted": 7.758817086773195e-13,
+  "predicted_no_head": 7.758832547383068e-13,
+  "vs_eq25": 4.815338907166896e-05,
+  "eq25_note": " (no cos term)"
+ },
+ "reference_time": 0.02687829197384417,
+ "N_plus_9_8": -1.331192943609949e-05,
+ "cell_wall": 4.977667808532715
+}
