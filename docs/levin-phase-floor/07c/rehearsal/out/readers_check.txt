@@ -1,0 +1,44 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-19T14:49:02Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+cd $M
+echo "== R32 store before and after the readers"; { shasum -a 256 var/datastores/levin-phase-floor-07c-r32.sqlite var/datastores/levin-phase-floor-07c-r32-shard000?.sqlite; ls -la var/datastores | grep 07c-r32; } > $Z/state/r32_store_sha256_after_reads.txt; cmp $Z/state/r32_store_sha256_before_reads.txt $Z/state/r32_store_sha256_after_reads.txt && echo "R32 identical before and after the readers (hashes, sizes, mtimes; no journal)"
+echo "== R32 against its after-build hashes"; shasum -a 256 var/datastores/levin-phase-floor-07c-r32.sqlite var/datastores/levin-phase-floor-07c-r32-shard000?.sqlite | cmp - $Z/state/r32_store_sha256_after_build.txt && echo "R32 unchanged since its build"
+echo "== exits"; grep -c "^exit 0;" $Z/out/readers.txt; grep -c "identical before and after" $Z/out/readers.txt
+echo "== Traceback in reader logs"; grep -c Traceback $Z/extract/*.log
+echo "== warnings in reader logs"; grep -ihE "warn" $Z/extract/*.log | sed 's/\x1b\[[0-9;]*m//g' | cut -c1-160 | sort | uniq -c | head
+echo "== extract"; du -sh $Z/extract; find $Z/extract -type f | wc -l; find $Z/extract -type f -size +2M | head; echo "(end big)"
+echo "== worktree"; git -C $W --no-optional-locks status --short --ignored; echo "(end)"; command find $W -newer $Z/state/readers_marker -not -path "*/.git/*" | head; echo "(end newer)"
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+# output:
+== R32 store before and after the readers
+R32 identical before and after the readers (hashes, sizes, mtimes; no journal)
+== R32 against its after-build hashes
+R32 unchanged since its build
+== exits
+6
+6
+== Traceback in reader logs
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/extract/extract_GkSource_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/extract/extract_GkWKB_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/extract/extract_Gk_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/extract/extract_QuadSourceIntegral_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/extract/extract_TkWKB_data.log:0
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/extract/extract_tensor_source_data.log:0
+== warnings in reader logs
+      6 !! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+      1 (plot_Gk pid=33626) /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/extract_GkSource_data.py:671: MatplotlibDeprecationWarning: The x parameter as flo
+      1 (plot_Gk pid=33673) /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/extract_GkSource_data.py:671: MatplotlibDeprecationWarning: The x parameter as flo
+== extract
+175M	/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/extract
+3122
+(end big)
+== worktree
+(end)
+(end newer)
+== Ray processes (any)
+(end)
+# exit: 0
+# end: 2026-11-19T14:49:03Z

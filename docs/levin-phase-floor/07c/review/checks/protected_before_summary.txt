@@ -1,0 +1,4 @@
+expected-160 exit 0
+07b census run dir files on disk: 150
+extra files hashed: 17277
+done

@@ -1,0 +1,26 @@
+$ sh -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c\ status\ --short\ --ignored\;\ echo\ tree-clean-check-end\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ main-clean-check-end\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c\ -name\ __pycache__\ -not\ -path\ \'\*/.git/\*\'\;\ find\ scripts\ -name\ __pycache__\;\ echo\ pycache-check-end\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -m\ runregistrykit\ list\ \>\ out/registry_at_stop3.txt\;\ tail\ -1\ out/registry_at_stop3.txt\;\ grep\ levin-phase-floor-07c\ out/registry_at_stop3.txt\ \|\ cut\ -c1-100\;\ shasum\ -a\ 256\ state/predictions.md\;\ ls\ -la\ state/predictions.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-20T08:21:06Z
+# ----
+tree-clean-check-end
+cc3368ce69d42fd6871d6264fd30efa65dd00cea
+28ebaf0743e0555fb2c4512ce714884005a60eff
+main-clean-check-end
+pycache-check-end
+96 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 96 finished; 0 with no host recorded.
+   levin-phase-floor-07c-census-20261119T201419               done      18560/18560  12h 06m  levin-
+   levin-phase-floor-07c-k0-20261119T151009                   done          11/11  17h 10m  levin-ph
+   levin-phase-floor-07c-r32-replay-20261119T143558           done            8/8  17h 45m  levin-ph
+   levin-phase-floor-07c-r32-07c-20261119T140417              done              -  18h 16m  levin-ph
+   levin-phase-floor-07c-refs2-20261118T235323                done        123/123   1d 08h  levin-ph
+   levin-phase-floor-07c-variants-20261118T113152             done          14/14   1d 20h  levin-ph
+   levin-phase-floor-07c-refs-20261118T112553                 killed        0/123   1d 20h  levin-ph
+   levin-phase-floor-07c-base-20261118T110242                 done            2/2   1d 21h  levin-ph
+   levin-phase-floor-07c-capture-r5-20261118T105127           done            1/1   1d 21h  levin-ph
+   levin-phase-floor-07c-capture-chase-20261118T101845        done            1/1   1d 22h  levin-ph
+cad4fd7f1060ef3344a854bf6b3b2ba6f9702091323cfc5b472d413c9a8a0c79  state/predictions.md
+-r--r--r-- 1 ds283 staff 16211 Nov 19 15:30 state/predictions.md
+# ----
+# end 2026-11-20T08:21:06Z
+# exit 0

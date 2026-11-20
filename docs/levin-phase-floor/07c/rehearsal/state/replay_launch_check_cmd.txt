@@ -1,0 +1,9 @@
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+D=$M/var/runs/levin-phase-floor-07c-r32-replay-20261119T143558
+echo "== status.json"; cat $D/status.json; echo
+echo "== registry"; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/replay_launch_registry_list.txt 2>&1; echo "exit $?"; grep "r32-replay" $Z/out/replay_launch_registry_list.txt | cut -c1-160; tail -1 $Z/out/replay_launch_registry_list.txt
+echo "== stdout"; tail -5 $D/stdout.log | cut -c1-200; echo "== stderr"; wc -c < $D/stderr.log
+echo "== processes"; ps -o pid,ppid,etime,command -p 30401 | cut -c1-160; pgrep -P 30401 | while read p; do ps -o pid,ppid,etime,command -p $p | tail -1 | cut -c1-200; pgrep -P $p | while read q; do ps -o pid,ppid,etime,command -p $q | tail -1 | cut -c1-200; echo "   workers of $q: $(pgrep -P $q | tr '\n' ' ')"; done; done
+echo "== driver.log"; tail -8 $Z/state/capture/replay/driver.log 2>&1 | cut -c1-200
+echo "== W status --short --ignored"; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"

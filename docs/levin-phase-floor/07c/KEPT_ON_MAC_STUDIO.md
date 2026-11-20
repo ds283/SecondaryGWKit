@@ -33,3 +33,54 @@ Mac Studio against that list on 2026-11-19, and all matched.
 
 **Also kept on the Mac Studio, from earlier prompts:** R29's, R30's and R31's stores; 07a's and 07b's census run
 directories; A3 v2's scratch copy `var/levin-phase-floor-06/wider/state/a3v2_copy/`, for 08.
+
+## Part C
+
+The copy-back list was made on the Mac Studio on 2026-11-20 before anything was copied: every file under
+`var/levin-phase-floor-07c/{rehearsal,census,review}/` except what the three agents' lists keep, and the R32, R32-replay
+and k0 run directories with R32's launch log. **688 record files** came into the laptop's `var/levin-phase-floor-07c/`
+and are in this directory's `rehearsal/`, `census/` and `review/` byte for byte; **15 run-directory files** came into the
+laptop's `var/runs/`. Every one matches the Mac Studio's SHA-256.
+
+**Left out by the agents' lists (3,307 files under the three directories):** the rehearsal's 3,178, the census's 95 and
+the review's 34. Each list, with SHA-256 and size, is the agent's `KEPT_ON_MAC_STUDIO.txt`, and every hash it gives was
+re-checked on the Mac Studio before the copy (325 files, all equal):
+
+| List | SHA-256 |
+|---|---|
+| [`rehearsal/`](rehearsal/KEPT_ON_MAC_STUDIO.txt) (R32) | `ae5e0ca6…` |
+| [`census/`](census/KEPT_ON_MAC_STUDIO.txt) | `3a97e742…` |
+| [`review/`](review/KEPT_ON_MAC_STUDIO.txt) | `8f12e902…` |
+
+- **The rehearsal's:** the readers' `extract/` (3,122 files, unseeded random subsamples), `state/capture/` and
+  `state/inputs/` whole, the value diff of R31 against R32 (`c42c6d77…`, 40 MB) with its copy whose job names are
+  normalised, and the protected listings.
+- **The census's:** K0's, the smoke runs' and Y0's pickles and raw worker streams, `state/index_07b.json`,
+  `state/rows.json`, `state/score_07c_units.json`, and stop 3's comparison by call,
+  `out/stop3/compare_census_calls.calls.jsonl` (668 MB) with its `.json`.
+- **The review's:** the four checkpoints' extracts and byte indices (`final/`), `stop3/calls_07{b,c}.jsonl`, its re-run
+  of the value diff (`stop1/svd_r31_r32.json`, equal to the rehearsal's), three identical hash listings of the
+  protected files (`checks/extra_*.sha256`) and stop 2's raw re-runs.
+
+**Left out by the orchestrator (4 files):**
+- three of the census's four listings of the files it protects. Their bodies (17,801 lines) equal
+  [`census/out/runs_hashed_before.txt`](census/out/runs_hashed_before.txt)'s line for line, and each header's verdict is
+  ALL HOLD; only the header's time differs:
+
+  | File | Bytes | SHA-256 |
+  |---|---|---|
+  | `census/out/runs_hashed_stop2.txt` | 2,083,081 | `d27e8eb199d7d30623063214bbb9e1642a85ab10025b48ea87d78b94853a21e7` |
+  | `census/out/runs_hashed_after.txt` | 2,083,081 | `9c867bf16213e2112d484ddffe5a3aa53c6a246f44ed14dc8be647364748e286` |
+  | `census/out/runs_hashed_end.txt` | 2,083,079 | `1668003a3d9a60a485c03e6225db5c9f98bb3407102839b12f831302f1eccaf7` |
+
+- `census/state/variants/levin_quadrature_parent.py` (334,493 bytes, `8956c7b6…`), which is
+  `git show cff4237f:AdaptiveLevin/levin_quadrature.py` byte for byte.
+
+**Kept on the Mac Studio only:**
+- **The R32 store,** `var/datastores/levin-phase-floor-07c-r32*.sqlite`, five files, primary `4dd39837…`, fingerprint
+  `1b332ffa…`, listed in the rehearsal's list.
+- **07c's census run directory,** `var/runs/levin-phase-floor-07c-census-20261119T201419/`, 149 files, 10.66 GB,
+  checkpoint `33d94ce2…`. **It is prompt 07d's "before".** The census's list gives every file.
+
+**Also kept, from earlier prompts,** until the user says otherwise: R29's, R30's and R31's stores; 07a's and 07b's census
+run directories; A3 v2's scratch copy `var/levin-phase-floor-06/wider/state/a3v2_copy/`, for 08.

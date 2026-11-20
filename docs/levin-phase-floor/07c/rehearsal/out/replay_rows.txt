@@ -1,0 +1,20 @@
+# prompt 07c r32: the rows to replay, the four-block rows and the records of interest
+# written 2026-11-19T14:33:59Z on mps026298.phys.susx.ac.uk
+# script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/docs/levin-phase-floor/06g/references/v1/out/v1_rows.json sha256 2df277bce398565b835040b62b0bf024e32745c85fecc4a1da7c595299d5b4d0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/qsi_records_r31_r32.csv sha256 6d184d4808d8223123ddedf55b65c8daacde68f63259b8e070f6c78d26a5dbd2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32-shard0000.sqlite sha256 4f557b5edb0b6d9d8352d9ae0ac5c218084b472d104c295cc5d428b193964bd4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32-shard0001.sqlite sha256 d4b3a6e6fa41237c2b3e874e88b37e32f4df31a895d8f46bea447c71069fd50f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32-shard0002.sqlite sha256 55fcaba7c5a3b51950247cee85cef237ef38914f92b96ce53733f0390db2fc2f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32-shard0003.sqlite sha256 f78b4b42ebc389ad9359237d98895ec221ede19d7351048300f26e1ebaeb413a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32.sqlite sha256 4dd398374ebe3051de925220f39dc04d2b9c6a30d5adf88febd8fede32e08b13
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0000.sqlite sha256 3249a88b9bb402960f835b5c304db5b50ca194a527e6cda9eab065ba68a0a24d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0001.sqlite sha256 90b0a437befe83722e0542944edb5b11114f46f7dc12a2c270967c7dfae2f879
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0002.sqlite sha256 8c040215d64827ba06831b0342de03024f9cdf89af3d2e76a56a09a8c3f75e77
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0003.sqlite sha256 f697749e5f02df8555d62ed58a97da98b0411c355a595b1ddc983671a7593c42
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite sha256 5981563ba208f42794766a5ed341039437d675d27689a1a6a89932b1ed64fff4
+records of interest (R32 vs R31) 1 in 1 rows, all kept: 1
+rows 203 (touched 203; with a located record 202; P1 2; w 12; block rows 2); records 445, nonzero 444 (group 44, analytic 400)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json sha256 5e8fa671c95a1d15b69e3e9cc8d2f881e864e574e0bfb18dd602796d9aff87df

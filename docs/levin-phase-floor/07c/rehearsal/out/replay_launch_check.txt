@@ -1,0 +1,57 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-19T14:36:07Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+D=$M/var/runs/levin-phase-floor-07c-r32-replay-20261119T143558
+echo "== status.json"; cat $D/status.json; echo
+echo "== registry"; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/replay_launch_registry_list.txt 2>&1; echo "exit $?"; grep "r32-replay" $Z/out/replay_launch_registry_list.txt | cut -c1-160; tail -1 $Z/out/replay_launch_registry_list.txt
+echo "== stdout"; tail -5 $D/stdout.log | cut -c1-200; echo "== stderr"; wc -c < $D/stderr.log
+echo "== processes"; ps -o pid,ppid,etime,command -p 30401 | cut -c1-160; pgrep -P 30401 | while read p; do ps -o pid,ppid,etime,command -p $p | tail -1 | cut -c1-200; pgrep -P $p | while read q; do ps -o pid,ppid,etime,command -p $q | tail -1 | cut -c1-200; echo "   workers of $q: $(pgrep -P $q | tr '\n' ' ')"; done; done
+echo "== driver.log"; tail -8 $Z/state/capture/replay/driver.log 2>&1 | cut -c1-200
+echo "== W status --short --ignored"; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+# output:
+== status.json
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-19T14:35:59+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 30405,
+  "stage": "01_replay_run started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 8
+}
+
+== registry
+exit 0
+   levin-phase-floor-07c-r32-replay-20261119T143558           running         0/8       9s  levin-phase-floor prompt 07c section 5 (Part C), the R32 rehearsal a
+94 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 1 alive, 93 finished; 0 with no host recorded.
+== stdout
+== stderr
+0
+== processes
+  PID  PPID ELAPSED COMMAND
+30401     1   00:09 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/reh
+30405 30401   00:09 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehe
+30410 30405   00:09 /opt/local/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehe
+   workers of 30410: 30416 30417 30418 30419 30420 30421 
+== driver.log
+2026-11-19T14:35:59Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_spec.json sha256 89542d40e191bbef3b0e8d009d22522adba10c4239f63871677e8d2fb73159
+2026-11-19T14:35:59Z 6 workers, 203 units, at most 6 at once
+2026-11-19T14:35:59Z start replay-h-0 (h, 34 units): pid 30416
+2026-11-19T14:35:59Z start replay-h-1 (h, 34 units): pid 30417
+2026-11-19T14:35:59Z start replay-h-2 (h, 34 units): pid 30418
+2026-11-19T14:35:59Z start replay-h-3 (h, 34 units): pid 30419
+2026-11-19T14:35:59Z start replay-h-4 (h, 34 units): pid 30420
+2026-11-19T14:35:59Z start replay-h-5 (h, 33 units): pid 30421
+== W status --short --ignored
+(end)
+== Ray processes (any)
+(end)
+# exit: 0
+# end: 2026-11-19T14:36:09Z

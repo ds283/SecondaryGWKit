@@ -1,0 +1,46 @@
+# levin-phase-floor 07c Part C, orchestrator's review: files kept on the Mac Studio, not copied back to git.
+# Directory: /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/ (Mac Studio). Written 2026-11-20T09:41:37Z.
+# Why each stays:
+#  - final/extract_07{,a,b,c}.jsonl, final/index07{,a,b,c}.json, stop3/calls_07{b,c}.jsonl: compact extracts and byte indices
+#    derived from the four census checkpoints (which stay here); regenerable by final/scripts/{build_index,extract}.py and
+#    final/scripts/stop3_y1_y8.py; useless without the checkpoints.
+#  - stop1/svd_r31_r32.json: tools.store_value_diff R31 R32 --json, byte-identical to the rehearsal agent's (c42c6d77...).
+#  - checks/extra_{before,stop2,stop3}.sha256: hash listings of 17,277 protected files, identical to one another; the
+#    summaries and check files that are copied back record the result.
+#  - stop2/{h1,h2,parent}/ worker outputs and stop2/ck07b_lines.jsonl: raw re-run records and checkpoint lines;
+#    stop2/compare_stop2.txt (copied back) records the comparison.
+# sha256  bytes  path
+71c18d73c861a0ccd38b36cdc56fad2b00aead987a8a025145ab39f5c57c0554  172065431  final/extract_07.jsonl
+6766b159f53f04462140ba7dc239c39426804e214beff937990417bf676c4e51  172063143  final/extract_07a.jsonl
+7654ed52183fc90b24f5abcdd5c788f87ec43910e0560bded1592bd65d79aa80  170477362  final/extract_07b.jsonl
+df174c7f2d5659497e65040de6785e09847ea3fcd6ec9562cdb9ae6a40f165d1  167922102  final/extract_07c.jsonl
+c747015bf0014b0fd4a1c6ccc210b594f91baa673d9afca35b3179eb8c8f75ac  1938864  final/index07.json
+a10cf3544d3601a0ec21dab79116842f684cd9e1a89f7d57322c18a66efdb238  1941317  final/index07a.json
+284bc2221fd95cac3ade53e70ec489ddf436db4755152b1f4a349ba2a8168172  1941737  final/index07b.json
+dbc5b855bbc3d1a4c16e908042aaf2bd09d3034a74ab40a8e2f901d992a4cdda  1941922  final/index07c.json
+7f1d143d606d0c3a0aec3e72e56df6a69e3507de64a08ddeaa1809646d1653f3  81760654  stop3/calls_07b.jsonl
+dec96211d8e5dc6f150310fde8c231b55e0ecc69cda1fba43554d028dcfc5e54  210966666  stop3/calls_07c.jsonl
+c42c6d7726fb66be72d8d4f696da246ae5b275d9e78e5e2b50cf2ffef45e79cd  40652826  stop1/svd_r31_r32.json
+ee928839b787515ef2684ea1a2d0306cbbcb2de52b0c44821f3cd2589b9e51dd  2462229  checks/extra_before.sha256
+ee928839b787515ef2684ea1a2d0306cbbcb2de52b0c44821f3cd2589b9e51dd  2462229  checks/extra_stop2.sha256
+ee928839b787515ef2684ea1a2d0306cbbcb2de52b0c44821f3cd2589b9e51dd  2462229  checks/extra_stop3.sha256
+bb26c48d4f891792ed161f006e43e30f82faa1f63a1f95f5f7e043d7e32f1f53  772691  stop2/ck07b_lines.jsonl
+1255550fc546ec11af7e9d85d8e20846e3f9882c4b892c620f959482ad60ddc3  300373  stop2/h1/tree-1e-8-k0_202/emit.jsonl
+b6375a5885aade1df007a512b56de12849efe72b41e26b06966148065cadc29e  390155  stop2/h1/tree-1e-8-k0_202/regions_tree-1e-8-k0_202.pkl
+a493fe344ef8cb621d30a01554fe59824c9f5827ab187f16a1b6a01d01edb3d2  772  stop2/h1/tree-1e-8-k0_202/spec.json
+8afaf804efb7943da9aed861ed33003c3b725edaa9cd5abfa39ab90658e393eb  8568  stop2/h1/tree-1e-8-k0_202/worker.log
+fcbb1c20ae33de3e4e0f10ae4ec14f67a3d295df3c33a3a039bd36651bb17987  274561  stop2/h1/units.jsonl
+b3630eddca303e6fe98df187c4e291f20f147c6d44e80dacf536793f98958c22  300375  stop2/h2/tree-1e-8-k0_202/emit.jsonl
+8587c726e3e0b0d9c3dbb78be6d1f2f9cc734187fd6d3f5c3af36438348798d9  390155  stop2/h2/tree-1e-8-k0_202/regions_tree-1e-8-k0_202.pkl
+24fd162ec3543b41a25d7e4c7ee4fa398fd6d8656e51fc4697911aa8c7298326  772  stop2/h2/tree-1e-8-k0_202/spec.json
+da0b9d6fc6cbb7703eaf28ffe8b731687c4f960325777065a73ad206b508610f  8567  stop2/h2/tree-1e-8-k0_202/worker.log
+d7c4d7ad326c25094fb35617aba5d3a1580cfe732cb12fc424c0672b355f5e57  274564  stop2/h2/units.jsonl
+83291ecc714731235b01bf53250a5488252983267ca3bd03e00ec639299e8750  278463  stop2/parent/parent-1e-8-k0_202/emit.jsonl
+b9e6c27425a11711214c7359cdc1990631edcc2aae179492431bb0d4bf166807  720589  stop2/parent/parent-1e-8-k0_202/regions_parent-1e-8-k0_202.pkl
+9ab14182e88bc37a12fb5865f31e81bb192c8225c0a1fbe27d2bdbc9e6766a42  1013  stop2/parent/parent-1e-8-k0_202/spec.json
+d2555b794c747b3fc81d21021cc49addc41cb0cd4a2eb283ede62719f7aa23b9  9368  stop2/parent/parent-1e-8-k0_202/worker.log
+51452582ec2d37bfd6c7c8c06dc13afb21e760d143041ca52e17f6072e4e3c7e  280241  stop2/parent/parent-1e-8-k3_1/emit.jsonl
+17f5c7f87678bf6253b79a2f54af9989c03faa634607fad2074b2595a1b70be6  677210  stop2/parent/parent-1e-8-k3_1/regions_parent-1e-8-k3_1.pkl
+6a0f1ec4a70965dba11b5aed44ebc4fcb605d588d60834d2f130bdde07b79c02  1008  stop2/parent/parent-1e-8-k3_1/spec.json
+c0826a22debd55078af688b30cb4eebd4e91262e1a9468c553d599e9a8606cc3  10612  stop2/parent/parent-1e-8-k3_1/worker.log
+5eb82c60d300608fe9df6e4e5509876aab88d6435eab313725ec9b95255fa200  504171  stop2/parent/units.jsonl

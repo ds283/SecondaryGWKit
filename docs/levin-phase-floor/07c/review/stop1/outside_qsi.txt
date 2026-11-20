@@ -1,0 +1,41 @@
+version identical rows id/diff 1 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+store_tag identical rows id/diff 10 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+redshift identical rows id/diff 1159 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+wavenumber identical rows id/diff 3 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+tolerance identical rows id/diff 7 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+LambdaCDM identical rows id/diff 1 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+QCD_Cosmology identical rows id/diff 1 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+IntegrationSolver identical rows id/diff 7 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+GkSourcePolicy identical rows id/diff 2 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+QuadSourcePolicy identical rows id/diff 2 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+wavenumber_exit_time differ rows id/diff 0 3 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {'compute_time': (3, [])}
+BackgroundModel differ rows id/diff 0 1 only 0 0 unm 0 colonly [] [] values {"BackgroundModelValue": {"identical": 1159, "differ": 0, "only_in_a": [], "only_in_b": [], "unmatched": [], "columns_only_in_a": [], "columns_only_in_b": [], " unres []
+   cols {'compute_time': (1, []), 'max_RHS_time': (1, []), 'mean_RHS_time': (1, []), 'min_RHS_time': (1, [])}
+TkNumericIntegration differ rows id/diff 0 3 only 0 0 unm 0 colonly [] [] values {"TkNumericValue": {"identical": 1478, "differ": 0, "only_in_a": [], "only_in_b": [], "unmatched": [], "columns_only_in_a": [], "columns_only_in_b": [], "column unres []
+   cols {'compute_time': (3, []), 'label': (3, []), 'max_RHS_time': (3, []), 'mean_RHS_time': (3, []), 'min_RHS_time': (2, [])}
+TkWKBIntegration differ rows id/diff 0 3 only 0 0 unm 0 colonly [] [] values {"TkWKBValue": {"identical": 2209, "differ": 0, "only_in_a": [], "only_in_b": [], "unmatched": [], "columns_only_in_a": [], "columns_only_in_b": [], "columns":  unres []
+   cols {'label': (3, []), 'stage_1_compute_time': (3, [])}
+GkNumericIntegration differ rows id/diff 0 1368 only 0 0 unm 0 colonly [] [] values {"GkNumericValue": {"identical": 35874, "differ": 0, "only_in_a": [], "only_in_b": [], "unmatched": [], "columns_only_in_a": [], "columns_only_in_b": [], "colum unres []
+   cols {'compute_time': (1368, []), 'label': (1368, []), 'max_RHS_time': (1368, []), 'mean_RHS_time': (1368, []), 'min_RHS_time': (974, [])}
+GkWKBIntegration differ rows id/diff 0 3477 only 0 0 unm 0 colonly [] [] values {"GkWKBValue": {"identical": 147642, "differ": 0, "only_in_a": [], "only_in_b": [], "unmatched": [], "columns_only_in_a": [], "columns_only_in_b": [], "columns" unres []
+   cols {'label': (3477, []), 'metadata': (26, ['rho_evals', 'rho_reused']), 'stage_1_RHS_evaluations': (26, []), 'stage_1_compute_time': (3474, [])}
+GkSource differ rows id/diff 0 291 only 0 0 unm 0 colonly [] [] values {"GkSourceValue": {"identical": 169653, "differ": 0, "only_in_a": [], "only_in_b": [], "unmatched": [], "columns_only_in_a": [], "columns_only_in_b": [], "colum unres []
+   cols {'label': (291, []), 'parents_digest': (291, [])}
+GkSourcePolicyData identical rows id/diff 291 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}
+QuadSource differ rows id/diff 0 6 only 0 0 unm 0 colonly [] [] values {"QuadSourceValue": {"identical": 2447, "differ": 0, "only_in_a": [], "only_in_b": [], "unmatched": [], "columns_only_in_a": [], "columns_only_in_b": [], "colum unres []
+   cols {'compute_time': (6, []), 'label': (6, [])}
+QuadSourceIntegral differ rows id/diff 0 864 only 0 0 unm 0 colonly [] [] values - unres []
+OneLoopIntegral identical rows id/diff 0 0 only 0 0 unm 0 colonly [] [] values {} unres []
+   cols {}

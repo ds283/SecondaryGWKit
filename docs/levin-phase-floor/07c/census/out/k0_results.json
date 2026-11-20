@@ -1,0 +1,62 @@
+{
+ "label": "k0",
+ "results": [
+  {
+   "name": "41_k0_run_parent",
+   "exit": 0,
+   "wall_s": 497.22096586227417
+  },
+  {
+   "name": "51_k0_compare_parent_whole",
+   "exit": 0,
+   "wall_s": 3.5444087982177734
+  },
+  {
+   "name": "61_k0_run_h",
+   "exit": 0,
+   "wall_s": 489.13696217536926
+  },
+  {
+   "name": "71_k0_compare_h_calls",
+   "exit": 0,
+   "wall_s": 5.045835971832275
+  },
+  {
+   "name": "75_y0_select",
+   "exit": 0,
+   "wall_s": 1.0117590427398682
+  },
+  {
+   "name": "82_y0c3_off",
+   "exit": 0,
+   "wall_s": 80.19213700294495
+  },
+  {
+   "name": "81_y0c3_on",
+   "exit": 0,
+   "wall_s": 80.7194230556488
+  },
+  {
+   "name": "85_y0c3_compare_instr",
+   "exit": 0,
+   "wall_s": 2.043475866317749
+  },
+  {
+   "name": "91_y0c4_run1",
+   "exit": 0,
+   "wall_s": 74.05444312095642
+  },
+  {
+   "name": "92_y0c4_run2",
+   "exit": 0,
+   "wall_s": 74.05488991737366
+  },
+  {
+   "name": "95_y0c4_compare_det",
+   "exit": 0,
+   "wall_s": 1.0309970378875732
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-19T15:29:28Z"
+}

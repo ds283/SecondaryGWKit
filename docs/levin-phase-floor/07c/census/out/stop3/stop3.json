@@ -1,0 +1,2998 @@
+{
+ "header": [
+  "# levin-phase-floor 07c: planned stop 3, descriptive (Y1's counts, converged against 07b, the newly unconverged calls, cost)",
+  "# written 2026-11-20T08:19:46Z on mps026298.phys.susx.ac.uk",
+  "# script stop3_07c.py sha256 6f1a867e5189953ee144ab16e8b236786e6626ad59b280eafd8577b636d26a9d",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input out/stop3/compare_census_calls.calls.jsonl sha256 ee36f0d7257ea8503b7135307489571becfc983c0d7a4cac325f1181fdc856fe",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/out/census_projection.json sha256 ad795082226d482ff9957545fc9095bc5fa34388979d0d8f1f41f75684bfb961"
+ ],
+ "y1_counts": {
+  "1e-7|analytic|acted|differing": 28688,
+  "1e-7|analytic|acted|equal": 5707,
+  "1e-7|analytic|untouched|equal": 73021,
+  "1e-7|group|acted|differing": 12344,
+  "1e-7|group|acted|equal": 206,
+  "1e-7|group|untouched|equal": 24775,
+  "1e-8|analytic|acted|differing": 18580,
+  "1e-8|analytic|acted|equal": 4684,
+  "1e-8|analytic|untouched|equal": 84152,
+  "1e-8|group|acted|differing": 11760,
+  "1e-8|group|acted|equal": 203,
+  "1e-8|group|untouched|equal": 25362
+ },
+ "converged_changes": {
+  "1e-7|analytic|07b True -> 07c True": 107416,
+  "1e-7|group|07b False -> 07c False": 82,
+  "1e-7|group|07b False -> 07c True": 97,
+  "1e-7|group|07b True -> 07c True": 37146,
+  "1e-8|analytic|07b True -> 07c True": 107416,
+  "1e-8|group|07b False -> 07c False": 96,
+  "1e-8|group|07b False -> 07c True": 96,
+  "1e-8|group|07b True -> 07c True": 37133
+ },
+ "newly_unconverged": [],
+ "newly_unconverged_counts": {},
+ "newly_unconverged_by_carrier_route": {},
+ "newly_converged": [
+  {
+   "unit": "h-1e-7-0-33929",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    30,
+    40
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-33929",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    30,
+    40
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-1289",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    61,
+    143
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-33952",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    89,
+    157
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-12710",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    124,
+    225
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-11189",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    97,
+    149
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-11189",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    86,
+    123
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-21893",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    72,
+    124
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-12723",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    72,
+    88
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-12748",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    76,
+    203
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-1370",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    75,
+    156
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-1370",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    75,
+    156
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-1375",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    41,
+    92
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-12688",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    71,
+    118
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-1483",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    85,
+    122
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-35408",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    87,
+    107
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-1891",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    88,
+    129
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34591",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    54,
+    84
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34591",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    50,
+    82
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-13634",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    87,
+    133
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-36987",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    78,
+    180
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-36987",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    67,
+    102
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-36987",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    61,
+    130
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-1755",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    101,
+    176
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-34463",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    83,
+    113
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-34463",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    83,
+    113
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-1888",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    76,
+    169
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-1888",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    76,
+    169
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34529",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    90,
+    149
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34529",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    90,
+    149
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34529",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    77,
+    166
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-1759",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    53,
+    92
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-1759",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    90,
+    113
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-1841",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    73,
+    131
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-34564",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    106,
+    163
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-34564",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    48,
+    78
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-1862",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    77,
+    158
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-1761",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    69,
+    114
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-36995",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    65,
+    115
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-36995",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    65,
+    115
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-1762",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    94,
+    169
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-34573",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    48,
+    69
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34606",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    59,
+    92
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34587",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    95,
+    203
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34607",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    103,
+    185
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-34464",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    69,
+    89
+   ],
+   "max_depth": [
+    16,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-1859",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    27,
+    48
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-1864",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    88,
+    128
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-1864",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    88,
+    128
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34557",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    74,
+    124
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34534",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    73,
+    117
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-13774",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    26,
+    92
+   ],
+   "max_depth": [
+    10,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-14011",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    31,
+    59
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-14011",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    31,
+    59
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-13757",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    100,
+    296
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-13757",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    70,
+    148
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-2113",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    231,
+    239
+   ],
+   "max_depth": [
+    18,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-2079",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    66,
+    145
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-14041",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    74,
+    200
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-34655",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    65,
+    183
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-13763",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    92,
+    193
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-13763",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    92,
+    193
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-34774",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    86,
+    128
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-38346",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    89,
+    99
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-38346",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    89,
+    99
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-37672",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    57,
+    96
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-38945",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    97,
+    145
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-38300",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    71,
+    123
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-14242",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    104,
+    123
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-14242",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    104,
+    123
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-2217",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    111,
+    184
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-0-34920",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    97,
+    148
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-2303",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    66,
+    90
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-14245",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    48,
+    80
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-39046",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    82,
+    144
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-2331",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    79,
+    133
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-2-2331",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    42,
+    83
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-1-2367",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    105,
+    161
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-34230",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    63,
+    147
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-1224",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    114,
+    157
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-34214",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    78,
+    93
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-34214",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    78,
+    93
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-37347",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    69,
+    116
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-37347",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    69,
+    116
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-34339",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    93,
+    146
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-13620",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    78,
+    120
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-13910",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    106,
+    155
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-37317",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    69,
+    113
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-37356",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    70,
+    94
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-37356",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    70,
+    94
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-35033",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    53,
+    76
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-35033",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    56,
+    84
+   ],
+   "max_depth": [
+    16,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-35033",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    56,
+    84
+   ],
+   "max_depth": [
+    16,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-34756",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    158,
+    228
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-38238",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    70,
+    126
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-34863",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    91,
+    128
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-7-3-34863",
+   "rtol": "1e-7",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    91,
+    128
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-33929",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    30,
+    40
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-33929",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    30,
+    40
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-1289",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    61,
+    143
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-33952",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    89,
+    157
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-33997",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    239,
+    246
+   ],
+   "max_depth": [
+    13,
+    13
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-11189",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    97,
+    149
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-11189",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    86,
+    123
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-21893",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    72,
+    124
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-12710",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    132,
+    233
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-12748",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    76,
+    203
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-1370",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    75,
+    156
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-1370",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    75,
+    156
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-12723",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    86,
+    102
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-12688",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    71,
+    118
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-1375",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    41,
+    92
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-1483",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    85,
+    122
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-35408",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    100,
+    120
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34591",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    54,
+    84
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34591",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    50,
+    82
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-36987",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    78,
+    180
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-36987",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    67,
+    102
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-36987",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    61,
+    131
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-13634",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    87,
+    133
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-1755",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    101,
+    176
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-1888",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    76,
+    169
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-1888",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    76,
+    169
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34529",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    90,
+    148
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34529",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    90,
+    148
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34529",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    77,
+    166
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-1759",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    53,
+    93
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-1759",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    91,
+    114
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-1841",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    73,
+    131
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-34463",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    83,
+    113
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-34463",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    83,
+    113
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-36995",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    65,
+    115
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-36995",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    65,
+    115
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-1862",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    87,
+    158
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-34573",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    48,
+    69
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-1761",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    69,
+    113
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-1762",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    94,
+    167
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34606",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    59,
+    92
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34587",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    95,
+    203
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-34564",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    106,
+    163
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-34564",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    48,
+    78
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34607",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    103,
+    185
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-1859",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    27,
+    49
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-1864",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    88,
+    128
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-1864",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    88,
+    128
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-14011",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    31,
+    59
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-14011",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    31,
+    59
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34557",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    74,
+    124
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34534",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    73,
+    117
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-13774",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    26,
+    92
+   ],
+   "max_depth": [
+    10,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-34464",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    70,
+    90
+   ],
+   "max_depth": [
+    16,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-13757",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    100,
+    297
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-13757",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    70,
+    148
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-2079",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    66,
+    146
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-14041",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    74,
+    199
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-34655",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    65,
+    183
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-13763",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    92,
+    193
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-13763",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    92,
+    193
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-34774",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    86,
+    128
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-2113",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    228,
+    236
+   ],
+   "max_depth": [
+    18,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-37672",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    57,
+    96
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-38300",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    71,
+    123
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-38346",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    90,
+    100
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-38346",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    90,
+    100
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-14242",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    105,
+    124
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-14242",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    105,
+    124
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-2303",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    66,
+    90
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-34920",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    97,
+    148
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-0-38945",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    97,
+    144
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-39046",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    81,
+    143
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-14245",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    48,
+    80
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-2331",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    79,
+    133
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-2-2331",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 6,
+   "class": "acted",
+   "regions": [
+    42,
+    83
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-2367",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    107,
+    163
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-1-2217",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    111,
+    184
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-1224",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    114,
+    157
+   ],
+   "max_depth": [
+    12,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-34230",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    73,
+    157
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-34214",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    78,
+    93
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-34214",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    78,
+    93
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-37347",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    69,
+    116
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-37347",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    69,
+    116
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-34339",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    93,
+    146
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-13620",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    78,
+    120
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-37317",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 5,
+   "class": "acted",
+   "regions": [
+    69,
+    113
+   ],
+   "max_depth": [
+    15,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-37356",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    70,
+    94
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-37356",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    70,
+    94
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-35033",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    54,
+    77
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-35033",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    56,
+    82
+   ],
+   "max_depth": [
+    16,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-35033",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    56,
+    82
+   ],
+   "max_depth": [
+    16,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-34756",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 1,
+   "class": "acted",
+   "regions": [
+    156,
+    226
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-38238",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 4,
+   "class": "acted",
+   "regions": [
+    70,
+    124
+   ],
+   "max_depth": [
+    14,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-34863",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 2,
+   "class": "acted",
+   "regions": [
+    90,
+    129
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  },
+  {
+   "unit": "h-1e-8-3-34863",
+   "rtol": "1e-8",
+   "kind": "group",
+   "index": 3,
+   "class": "acted",
+   "regions": [
+    90,
+    129
+   ],
+   "max_depth": [
+    13,
+    20
+   ]
+  }
+ ],
+ "newly_converged_counts": {
+  "1e-7|group": 97,
+  "1e-8|group": 96
+ },
+ "regions": {
+  "1e-7|analytic": {
+   "07c": 1043600,
+   "07b": 1081914,
+   "ratio": 0.964586834073688
+  },
+  "1e-7|group": {
+   "07c": 1682729,
+   "07b": 1906148,
+   "ratio": 0.8827903184852383
+  },
+  "1e-8|analytic": {
+   "07c": 1039403,
+   "07b": 1064456,
+   "ratio": 0.9764640342109021
+  },
+  "1e-8|group": {
+   "07c": 1770477,
+   "07b": 1987121,
+   "ratio": 0.8909759395628147
+  }
+ },
+ "regions_total": {
+  "07c": 5536209,
+  "07b": 6039639,
+  "ratio": 0.9166456803130121
+ },
+ "07c": {
+  "created": "2026-11-19T20:14:19+00:00",
+  "last_heartbeat": "2026-11-20T08:12:19+00:00",
+  "wall_s": 43080.0,
+  "n_records": 18560,
+  "n_over_budget": 0,
+  "unit_wall_sum_s": {
+   "1e-7": 49405.32654713793,
+   "1e-8": 49325.3470669901
+  },
+  "largest_unit_wall_s": 39.997990290634334
+ },
+ "07b": {
+  "created": "2026-11-17T01:02:00+00:00",
+  "last_heartbeat": "2026-11-17T13:32:16+00:00",
+  "wall_s": 45016.0,
+  "n_records": 18560,
+  "n_over_budget": 0,
+  "unit_wall_sum_s": {
+   "1e-7": 52154.37729562214,
+   "1e-8": 54667.237314134836
+  },
+  "largest_unit_wall_s": 40.075091999955475
+ },
+ "wall_against_projection": {
+  "wall_s": 43080.0,
+  "central_s": 43311.82356403733,
+  "wall_over_central": 0.9946475686091911,
+  "central_x_shortfall_s": 51832.94424443969,
+  "highest_s": 46285.4527835663,
+  "wall_over_07b_census": 0.9569930691309757
+ }
+}

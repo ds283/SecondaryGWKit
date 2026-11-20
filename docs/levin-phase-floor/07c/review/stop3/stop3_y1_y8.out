@@ -1,0 +1,456 @@
+script ac717bf905479768d7f0a8d9058c91eb1597ded41d2f52f5c27c1aa3123c793b
+  levin-phase-floor-07b-census-20261117T010200 2000
+  levin-phase-floor-07b-census-20261117T010200 4000
+  levin-phase-floor-07b-census-20261117T010200 6000
+  levin-phase-floor-07b-census-20261117T010200 8000
+  levin-phase-floor-07b-census-20261117T010200 10000
+  levin-phase-floor-07b-census-20261117T010200 12000
+  levin-phase-floor-07b-census-20261117T010200 14000
+  levin-phase-floor-07b-census-20261117T010200 16000
+  levin-phase-floor-07b-census-20261117T010200 18000
+  levin-phase-floor-07c-census-20261119T201419 2000
+  levin-phase-floor-07c-census-20261119T201419 4000
+  levin-phase-floor-07c-census-20261119T201419 6000
+  levin-phase-floor-07c-census-20261119T201419 8000
+  levin-phase-floor-07c-census-20261119T201419 10000
+  levin-phase-floor-07c-census-20261119T201419 12000
+  levin-phase-floor-07c-census-20261119T201419 14000
+  levin-phase-floor-07c-census-20261119T201419 16000
+  levin-phase-floor-07c-census-20261119T201419 18000
+{
+ "units_07b": 18560,
+ "units_07c": 18560,
+ "dup_07b": [],
+ "dup_07c": [],
+ "unit_sets_equal": true,
+ "status_not_done_07c": [],
+ "label_class_mismatch_07b": {},
+ "label_class_mismatch_07c": {},
+ "y1": {
+  "1e-7 analytic": {
+   "untouched": 73021,
+   "untouched_equal": 73021,
+   "touched": 34395,
+   "touched_equal_five": 5707
+  },
+  "1e-7 group": {
+   "untouched": 24775,
+   "untouched_equal": 24775,
+   "touched": 12550,
+   "touched_equal_five": 206
+  },
+  "1e-8 analytic": {
+   "untouched": 84152,
+   "untouched_equal": 84152,
+   "touched": 23264,
+   "touched_equal_five": 4684
+  },
+  "1e-8 group": {
+   "untouched": 25362,
+   "untouched_equal": 25362,
+   "touched": 11963,
+   "touched_equal_five": 203
+  }
+ },
+ "y1_untouched_differing": [],
+ "y1_all_untouched_equal": true,
+ "calls_missing_chase_counts": 0,
+ "units_with_call_key_mismatch": [],
+ "units_untouched_in_every_call": 8508,
+ "of_which_totals_equal_hex": 8508,
+ "of_which_totals_differ": [],
+ "converged_transitions": {
+  "1e-7 analytic": {
+   "True->True": 107416
+  },
+  "1e-7 group": {
+   "True->True": 37146,
+   "False->False": 82,
+   "False->True": 97
+  },
+  "1e-8 analytic": {
+   "True->True": 107416
+  },
+  "1e-8 group": {
+   "True->True": 37133,
+   "False->False": 96,
+   "False->True": 96
+  }
+ },
+ "newly_converged_count_by_class": {
+  "1e-7 group": 97,
+  "1e-8 group": 96
+ },
+ "y8": {
+  "ids": 347,
+  "equal": 347,
+  "equal_and_stop_acted_in_census": 247,
+  "unlocated": 106,
+  "skipped_r31": 1
+ },
+ "y8_distinct_census_calls": 342,
+ "y8_failures": [
+  [
+   "a:R2-06.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-06~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-07.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-07~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-09.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-09~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-11.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-11~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-24.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-24~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-26.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R2-26~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R3a-3-13508-g2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R3a-3-13508-g2~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R3a-3-39138-g2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R3a-3-39138-g2~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R3a-3-39138-g3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R3a-3-39138-g3~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R3o-3-1011-a18-7.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:R3o-3-1011-a18-7~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:W2-1-2174-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:W2-1-2174-2~o.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:i3-34599-h.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:n1.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:n3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "a:n4.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-13763-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-13763-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-1864-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-1864-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-1888-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-1888-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-33929-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-33929-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-38346-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-0-38346-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-1-14242-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-1-14242-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-1-34529-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-1-34529-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-2-1370-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-2-1370-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-2-14011-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-2-14011-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-2-34463-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-2-34463-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-2-36995-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-2-36995-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-34214-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-34214-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-34863-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-34863-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-35033-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-35033-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-37347-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-37347-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-37356-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-7-3-37356-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-13763-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-13763-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-1864-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-1864-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-1888-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-1888-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-33929-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-33929-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-38346-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-0-38346-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-1-14242-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-1-14242-3.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-1-34529-2.json",
+   "07b match count",
+   2
+  ],
+  [
+   "c-1e-8-1-34529-3.json",
+   "07b match count",
+   2
+  ],
+  [
+
+newly unconverged: 0
+exit 0

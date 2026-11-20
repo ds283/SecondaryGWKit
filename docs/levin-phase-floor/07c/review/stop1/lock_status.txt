@@ -1,0 +1,10 @@
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: levin-phase-floor prompt 07c section 5 (Part C): rehearsal R32 on the Mac Studio (mps026298; worktree cc3368ce, code commit 67b5af74, parent cff4237f), fingerprint 1b332ffa required; then R32 against R31, S3, S1, S2, S4 and the readers
+    acquired: 2026-11-19T14:03:59+00:00
+    host: mps026298
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 19463
+owner pid 19463: NOT alive
+Ray processes of /tmp/ray-sgk: none

@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py run /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:43:54Z
+# ----
+2026-11-19T14:43:55Z # prompt 07c r32: run refcap
+2026-11-19T14:43:55Z # written 2026-11-19T14:43:54Z on mps026298.phys.susx.ac.uk
+2026-11-19T14:43:55Z # script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+2026-11-19T14:43:55Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+2026-11-19T14:43:55Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-19T14:43:55Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json sha256 cb963f571332b9b7b990844ffc4e48b0d8e7f4bf52c842b31a796aff776d1767
+2026-11-19T14:43:55Z 1 workers, 1 units, at most 6 at once
+2026-11-19T14:43:55Z start refcap-h-0 (h, 1 units): pid 32333
+2026-11-19T14:44:28Z end refcap-h-0: rc 0 after 33.2 s
+2026-11-19T14:44:29Z done in 34.2 s; return codes {0: 1}
+# ----
+# end 2026-11-19T14:44:29Z
+# exit 0

@@ -1,0 +1,21 @@
+# levin-phase-floor 07c: census units at the tree h under the variant parent, instrument_07a, instrument_07b and instrument_07c True
+# written 2026-11-19T15:33:40Z on mps026298.phys.susx.ac.uk
+# script run_k0.py sha256 d2b495afa6f92740806f15e5e1348db91f222fca8dc97d5c075547fe38f65c58
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/stop2/units_parent.json sha256 4ea1d6ffb35e2f50cf0692cfa44a7ead370d6cfea89acb07767f97b15cfe8a0e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/variants/levin_quadrature_parent.py sha256 8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1
+# variant {"name": "parent", "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/variants/levin_quadrature_parent.py", "sha256": "8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1"}
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c at cc3368ce69d42fd6871d6264fd30efa65dd00cea
+# 2 units in 2 workers: parent-1e-8-k0_202 (1), parent-1e-8-k3_1 (1)
+parent-1e-8-k0_202: pid 45931 (1 units)
+parent-1e-8-k3_1: pid 45932 (1 units)
+parent-1e-8-k3_1: exit 0 after 71.8 s
+parent-1e-8-k0_202: exit 0 after 73.3 s
+exit codes {parent-1e-8-k0_202: 0, parent-1e-8-k3_1: 0}
+refused: []
+bye parent-1e-8-k0_202: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+bye parent-1e-8-k3_1: ray_initialized False; foreign modules []; by root {'own tree': 101, 'variant': 1, 'python': 265, 'scripts': 9, 'no file': 41, 'venv': 1438}
+units done 2 of 2; not done []; wall 74 s
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/stop2/parent/units.jsonl sha256 5eb82c60d300608fe9df6e4e5509876aab88d6435eab313725ec9b95255fa200

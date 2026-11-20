@@ -1,0 +1,41 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_refs_partA_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419 out/scores/y4b_scores.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-20T09:32:09Z
+# ----
+{
+ "n": 122,
+ "by_set": {
+  "R4": {
+   "honest": 58,
+   "unconverged": 2
+  },
+  "R2-28": {
+   "converged and NOT honest": 2
+  },
+  "R5": {
+   "honest": 60
+  }
+ },
+ "converged_dishonest": [
+  "c-1e-7-0-13757-5",
+  "c-1e-8-0-13757-5"
+ ],
+ "converged_dishonest_ratios": {
+  "c-1e-7-0-13757-5": 1.1434356254583664,
+  "c-1e-8-0-13757-5": 1.1434372078292643
+ },
+ "converged_dishonest_other_than_r2_28": [],
+ "unconverged": {
+  "c-1e-8-3-13490-2": 0.008589444051944829,
+  "c-1e-8-3-13615-3": 0.008341059941097616
+ },
+ "not_scored": [],
+ "max_ratio_honest": 0.4161445037295802,
+ "n_distinct_census_calls": 122,
+ "verdict_equals_partA_S": 122
+}
+wrote out/scores/y4b_scores.json sha256 4b49f0c52a98f29cdf0bcd4c62f3c29b6bc397af527540bee96fb13abaadc5e4
+# ----
+# end 2026-11-20T09:32:16Z
+# exit 0

@@ -1,0 +1,187 @@
+{
+ "header": [
+  "# levin-phase-floor 07c: h against 07b's census (levin-phase-floor-07b-census-20261117T010200), mode calls",
+  "# written 2026-11-19T15:09:18Z on mps026298.phys.susx.ac.uk",
+  "# script compare_07c.py sha256 10da6b817629f5bd1320ee391bc5eb6ee6a3f409566fd543ec8ddc6d50112706",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/smoke/h/units.jsonl sha256 eabc7d52a9dfc56bb295923f8820d44523a3a55f91a1479f9c87674c71cac505",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/index_07b.json sha256 8e941b812d990696c6e1097998aea09809ebcaa8609606728d68fe90f88f09b8",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "calls",
+ "run_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/smoke/h",
+ "source": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/smoke/h/units.jsonl",
+ "source_sha256": "eabc7d52a9dfc56bb295923f8820d44523a3a55f91a1479f9c87674c71cac505",
+ "run07": "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200",
+ "checkpoint07_sha256": "396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253",
+ "excluded_07": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "set_aside_new_07a": [
+  "chase_07c",
+  "instrument_07c",
+  "num_chase_noise_bisections",
+  "num_chase_stopped_leaves",
+  "num_chase_stops"
+ ],
+ "records_skipped": [],
+ "n_units": 1,
+ "statuses": {
+  "done": 1
+ },
+ "unit_evidence_true_false": {
+  "lq_file_is_expected": [
+   1,
+   0
+  ],
+  "all_in_tree": [
+   1,
+   0
+  ],
+  "no_foreign": [
+   1,
+   0
+  ],
+  "variant_root_as_expected": [
+   1,
+   0
+  ]
+ },
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "tree-1e-8-k0_202": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  }
+ },
+ "new_keys_in_07_records": 0,
+ "phase_span_keys": 0,
+ "summary": {
+  "by_class": {
+   "untouched": 19,
+   "acted": 2
+  },
+  "by_class_rtol": {
+   "1e-8|group|untouched": 3,
+   "1e-8|group|acted": 2,
+   "1e-8|analytic|untouched": 16
+  },
+  "equal_by_class": {
+   "untouched": {
+    "equal": 19,
+    "differing": 0
+   },
+   "acted": {
+    "equal": 0,
+    "differing": 2
+   }
+  },
+  "categories_by_class": {
+   "untouched": {
+    "none": 19
+   },
+   "acted": {
+    "call+harness": 2
+   }
+  },
+  "units": {
+   "A": {
+    "n_all_w1": 0,
+    "n_totals_equal": 0,
+    "n_whole_equal": 0,
+    "whole_categories": {}
+   }
+  },
+  "u1_equal_by_class": {
+   "1e-8|group|untouched": {
+    "equal": 3,
+    "differing": 0
+   },
+   "1e-8|group|acted": {
+    "equal": 0,
+    "differing": 2
+   },
+   "1e-8|analytic|untouched": {
+    "equal": 16,
+    "differing": 0
+   }
+  }
+ },
+ "problems": [],
+ "calls_jsonl": "state/smoke/compare_h_calls.calls.jsonl",
+ "calls_jsonl_sha256": "37ed3d4e130303380ef4f02560df3bc664b66c9781c1199fa58fde05fde0a898",
+ "units": [
+  {
+   "unit": "h-1e-8-0-33929",
+   "unit_07": "h-1e-8-0-33929",
+   "status": "done",
+   "rtol": "1e-8",
+   "status_07": "done",
+   "matched": true,
+   "total": [
+    "-0x1.5b2779f62ee46p-66",
+    "-0x1.5b2779f62ee4bp-66"
+   ],
+   "total_abserr": [
+    "0x1.06ad81945499ep-84",
+    "0x1.06ad817bb3f14p-84"
+   ],
+   "total_converged": [
+    true,
+    false
+   ],
+   "totals_equal": false,
+   "all_w1": {
+    "A": false
+   },
+   "ok": true,
+   "normalised": {},
+   "new_keys_in_07_records": 0,
+   "phase_span_keys": 0,
+   "post_unit": {
+    "n_solves": 1010,
+    "n_route_differs": 4,
+    "n_lu_differs": 8,
+    "n_partition": 8
+   },
+   "evidence": {
+    "lq_file_is_expected": true,
+    "all_in_tree": true,
+    "no_foreign": true,
+    "variant_root_as_expected": true
+   }
+  }
+ ]
+}

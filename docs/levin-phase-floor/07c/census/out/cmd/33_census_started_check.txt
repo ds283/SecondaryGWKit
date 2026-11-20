@@ -1,0 +1,59 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/status.json\;\ echo\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419\ \|\ head\ -30\;\ PID=\$\(grep\ -o\ \'\"pid\":\ \[0-9\]\*\'\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/status.json\ \|\ grep\ -o\ \'\[0-9\]\*\'\)\;\ kill\ -0\ \$PID\ \&\&\ echo\ \"pid\ \$PID\ answers\ kill\ -0\"\;\ ps\ -o\ pid\,ppid\,etime\,command\ -p\ 90730\ \|\ cut\ -c1-150\;\ pgrep\ -P\ 90730\;\ head\ -c\ 600\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/stdout.log\;\ echo\;\ wc\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/stderr.log\;\ head\ -c\ 400\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/checkpoint.jsonl\ 2\>/dev/null\;\ echo
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T20:14:55Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-19T20:14:20+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 90737,
+  "stage": "started worker 1e-7-k2_302 (1160 units)",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 18560
+}
+
+total 1844
+drwxr-xr-x  48 ds283 staff   1536 Nov 19 20:14 .
+drwxr-xr-x 133 ds283 staff   4256 Nov 19 20:14 ..
+-rw-r--r--   1 ds283 staff   4371 Nov 19 20:14 manifest.json
+-rw-r--r--   1 ds283 staff      0 Nov 19 20:14 regions_1e-7-k0_101.pkl
+-rw-r--r--   1 ds283 staff      0 Nov 19 20:14 regions_1e-7-k0_202.pkl
+-rw-r--r--   1 ds283 staff      0 Nov 19 20:14 regions_1e-7-k1_102.pkl
+-rw-r--r--   1 ds283 staff      0 Nov 19 20:14 regions_1e-7-k1_301.pkl
+-rw-r--r--   1 ds283 staff      0 Nov 19 20:14 regions_1e-7-k2_2.pkl
+-rw-r--r--   1 ds283 staff      0 Nov 19 20:14 regions_1e-7-k2_302.pkl
+-rw-r--r--   1 ds283 staff 278446 Nov 19 20:14 spec_1e-7-k0_101.json
+-rw-r--r--   1 ds283 staff 278329 Nov 19 20:14 spec_1e-7-k0_202.json
+-rw-r--r--   1 ds283 staff 278357 Nov 19 20:14 spec_1e-7-k1_102.json
+-rw-r--r--   1 ds283 staff 278583 Nov 19 20:14 spec_1e-7-k1_301.json
+-rw-r--r--   1 ds283 staff 275733 Nov 19 20:14 spec_1e-7-k2_2.json
+-rw-r--r--   1 ds283 staff 278016 Nov 19 20:14 spec_1e-7-k2_302.json
+-rw-r--r--   1 ds283 staff    301 Nov 19 20:14 status.json
+-rw-r--r--   1 ds283 staff      0 Nov 19 20:14 stderr.log
+-rw-r--r--   1 ds283 staff   2354 Nov 19 20:14 stdout.log
+-rw-r--r--   1 ds283 staff    480 Nov 19 20:14 worker_1e-7-k0_101_context.json
+-rw-r--r--   1 ds283 staff   6958 Nov 19 20:14 worker_1e-7-k0_101_hello.json
+-rw-r--r--   1 ds283 staff    149 Nov 19 20:14 worker_1e-7-k0_101_levin_logging.json
+-rw-r--r--   1 ds283 staff    179 Nov 19 20:14 worker_1e-7-k0_101_store.json
+-rw-r--r--   1 ds283 staff   8203 Nov 19 20:14 worker_1e-7-k0_101.log
+-rw-r--r--   1 ds283 staff    479 Nov 19 20:14 worker_1e-7-k0_202_context.json
+-rw-r--r--   1 ds283 staff   6958 Nov 19 20:14 worker_1e-7-k0_202_hello.json
+-rw-r--r--   1 ds283 staff    149 Nov 19 20:14 worker_1e-7-k0_202_levin_logging.json
+-rw-r--r--   1 ds283 staff    179 Nov 19 20:14 worker_1e-7-k0_202_store.json
+-rw-r--r--   1 ds283 staff   8203 Nov 19 20:14 worker_1e-7-k0_202.log
+-rw-r--r--   1 ds283 staff    480 Nov 19 20:14 worker_1e-7-k1_102_context.json
+pid 90737 answers kill -0
+  PID  PPID ELAPSED COMMAND
+90730     1   00:36 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-flo
+90737
+# run_census header {"script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts/run_census.py", "script_sha256": "a4ac7ba703fd05495c8eaeeb4fe880517dfc2032bc096950de73f4be5fe9ca61", "scripts_sha256": {"run_census.py": "a4ac7ba703fd05495c8eaeeb4fe880517dfc2032bc096950de73f4be5fe9ca61", "worker.py": "b1fd6cf8b7f051c8aef36e724c5eee683eb23cf7c8bd8772a446fca48ac8c183", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721", "rebuild.py": "dd6aafca422ccc0106
+0 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/stderr.log
+
+# ----
+# end 2026-11-19T20:14:55Z
+# exit 0

@@ -1,0 +1,386 @@
+{
+ "header": [
+  "# levin-phase-floor 07c: Gate Y0 (4), determinism, run1 against run2",
+  "# written 2026-11-19T15:29:26Z on mps026298.phys.susx.ac.uk",
+  "# script compare_07c.py sha256 10da6b817629f5bd1320ee391bc5eb6ee6a3f409566fd543ec8ddc6d50112706",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/y0c4/run1/units.jsonl sha256 549ccab28c90100ad816f654d95dbf271e924c5f02568cd4bd22ce5ea19b79a1",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/y0c4/run2/units.jsonl sha256 137bae4e88c59cbdd8af376056c64c047b97086a28587e21f187e32d5a88cb3c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7"
+ ],
+ "mode": "det",
+ "excluded": [
+  "cache_built",
+  "compute_time",
+  "elapsed",
+  "modules",
+  "pickle",
+  "pickle_length",
+  "pickle_offset",
+  "pickle_record_sha256",
+  "rebuild_s",
+  "route_06k",
+  "route_06l",
+  "rows_sha256",
+  "scripts_sha256",
+  "seconds",
+  "tree_head",
+  "tree_status_short",
+  "w2_capture_sha256",
+  "wall_s",
+  "worker",
+  "worker_pid",
+  "worker_tree",
+  "*_s"
+ ],
+ "n_units": 1,
+ "n_units_identical": 1,
+ "worker_evidence_all_hold": true,
+ "worker_evidence": {
+  "A:tree-1e-8-k0_202": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  },
+  "B:tree-1e-8-k0_202": {
+   "tree": "h",
+   "hello": true,
+   "levin_quadrature_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6",
+   "lq_file": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/AdaptiveLevin/levin_quadrature.py",
+   "tree_file_is_h": true,
+   "all_in_tree": true,
+   "tree_head_clean": true,
+   "bye": true,
+   "ray_not_initialized": true,
+   "no_foreign_modules": true,
+   "lq_is_h": true,
+   "variant_none": true
+  }
+ },
+ "units": [
+  {
+   "unit": "h-1e-8-0-33929",
+   "status": [
+    "done",
+    "done"
+   ],
+   "ok": true,
+   "differing": [],
+   "detail": [],
+   "excl_differing": [
+    "data.analytic_06h.seconds",
+    "data.calls[].elapsed",
+    "data.cc_floor_s",
+    "data.checked_06g_s",
+    "data.declared_06h_s",
+    "data.deep_lines.seconds",
+    "data.other_calls[].elapsed",
+    "data.pickle_record_sha256",
+    "data.rebuild_s",
+    "data.result.compute_time",
+    "data.scan_07_s",
+    "data.wall_s",
+    "data.worker_pid",
+    "pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed",
+    "pickle.result_full.compute_time",
+    "pickle.scan_07[].scan.seconds"
+   ],
+   "n_calls": 21,
+   "n_calls_windowed": 2,
+   "n_calls_route_changed": 10,
+   "route_changes": [
+    [
+     7,
+     1,
+     0,
+     true,
+     false
+    ],
+    [
+     8,
+     1,
+     0,
+     true,
+     false
+    ],
+    [
+     9,
+     1,
+     0,
+     true,
+     false
+    ],
+    [
+     10,
+     1,
+     0,
+     true,
+     false
+    ],
+    [
+     11,
+     0,
+     2,
+     true,
+     false
+    ],
+    [
+     12,
+     0,
+     2,
+     true,
+     false
+    ],
+    [
+     15,
+     0,
+     1,
+     true,
+     false
+    ],
+    [
+     16,
+     0,
+     1,
+     true,
+     false
+    ],
+    [
+     17,
+     0,
+     1,
+     true,
+     false
+    ],
+    [
+     18,
+     0,
+     1,
+     true,
+     false
+    ]
+   ],
+   "windows": [
+    [
+     19,
+     1,
+     {
+      "root": 1
+     }
+    ],
+    [
+     20,
+     1,
+     {
+      "root": 1
+     }
+    ]
+   ],
+   "wall_s": [
+    5.5079320832155645,
+    5.524594208225608
+   ],
+   "refusals_07b": [
+    [
+     2,
+     0,
+     1
+    ],
+    [
+     3,
+     0,
+     1
+    ],
+    [
+     4,
+     0,
+     1
+    ],
+    [
+     5,
+     0,
+     2
+    ],
+    [
+     6,
+     0,
+     3
+    ],
+    [
+     7,
+     0,
+     3
+    ],
+    [
+     8,
+     0,
+     2
+    ],
+    [
+     9,
+     0,
+     3
+    ],
+    [
+     10,
+     0,
+     2
+    ],
+    [
+     11,
+     0,
+     3
+    ],
+    [
+     12,
+     0,
+     3
+    ],
+    [
+     13,
+     0,
+     2
+    ],
+    [
+     14,
+     0,
+     4
+    ],
+    [
+     15,
+     0,
+     4
+    ],
+    [
+     16,
+     0,
+     3
+    ],
+    [
+     17,
+     0,
+     4
+    ],
+    [
+     18,
+     0,
+     3
+    ]
+   ],
+   "stops_07c": [
+    [
+     2,
+     1,
+     10,
+     6
+    ],
+    [
+     3,
+     1,
+     10,
+     6
+    ],
+    [
+     4,
+     0,
+     0,
+     3
+    ],
+    [
+     5,
+     0,
+     0,
+     2
+    ],
+    [
+     6,
+     0,
+     0,
+     3
+    ],
+    [
+     7,
+     0,
+     0,
+     2
+    ],
+    [
+     8,
+     0,
+     0,
+     1
+    ],
+    [
+     9,
+     0,
+     0,
+     2
+    ],
+    [
+     10,
+     0,
+     0,
+     1
+    ],
+    [
+     11,
+     0,
+     0,
+     5
+    ],
+    [
+     12,
+     0,
+     0,
+     3
+    ],
+    [
+     13,
+     0,
+     0,
+     3
+    ],
+    [
+     14,
+     0,
+     0,
+     4
+    ],
+    [
+     15,
+     0,
+     0,
+     5
+    ],
+    [
+     16,
+     0,
+     0,
+     6
+    ],
+    [
+     17,
+     0,
+     0,
+     5
+    ],
+    [
+     18,
+     0,
+     0,
+     6
+    ]
+   ]
+  }
+ ]
+}

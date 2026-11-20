@@ -1,0 +1,71 @@
+1c1
+< """S4 -- O9's four blocks (prompt 07b section 5 item 5, as 07a section 5 item 6), scored on R31 against R29's block references.
+---
+> """[prompt 07c section 5 item 5 (S4), rehearsal agent, R32: 07b's rehearsal block_score_r31.py (fcb8b436), changed where marked "prompt 07c r32" (and the store tags shifted R30 -> R31, R31 -> R32 by scripts/gen/make_scores_07c.py): R32's block replays and blocks.json; R32's shard-serials; R31's block_scores.json (07b's rehearsal, read only, key R31) as context with R32_equals_R31. The integrand is still compared with R29's capture, on which the references were taken.]
+2a3,4
+> S4 -- O9's four blocks (prompt 07b section 5 item 5, as 07a section 5 item 6), scored on R31 against R29's block references.
+> 
+27,28c29,30
+< Z = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal")  # prompt 07b r31
+< Z30 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal")  # prompt 07b r31: R30's scores, read only
+---
+> Z = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal")  # prompt 07c r32
+> Z31 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal")  # prompt 07c r32: R31's scores, read only
+30,31c32,33
+< # (block, R31's shard-serial, R29's shard-serial)  prompt 07b r31
+< BLOCKS = [("J4", "0-10232", "0-157"), ("Y4", "0-10232", "0-157"), ("J4", "1-20127", "1-10283"), ("Y4", "1-20127", "1-10283")]
+---
+> # (block, R32's shard-serial, R29's shard-serial)  prompt 07b r31
+> BLOCKS = [("J4", "0-10172", "0-157"), ("Y4", "0-10172", "0-157"), ("J4", "1-20068", "1-10283"), ("Y4", "1-20068", "1-10283")]  # prompt 07c r32: R32's serials
+47,49c49,51
+<     s30p = Z30 / "out" / "block_scores.json"  # prompt 07b r31
+<     print(f"# input {s30p} sha256 {sha256(s30p)}")
+<     s30 = json.loads(s30p.read_text())["blocks"]  # prompt 07b r31
+---
+>     s31p = Z31 / "out" / "block_scores.json"  # prompt 07b r31
+>     print(f"# input {s31p} sha256 {sha256(s31p)}")
+>     s31 = json.loads(s31p.read_text())["blocks"]  # prompt 07b r31
+60c62
+<         print(f"#   tree of R31's replay: {h['header']['tree']} HEAD {h['header']['tree_head']} status {h['header']['tree_status_short']!r}; "
+---
+>         print(f"#   tree of R32's replay: {h['header']['tree']} HEAD {h['header']['tree_head']} status {h['header']['tree_status_short']!r}; "
+80c82
+<         c30 = [r for r in s30 if r["block"] == f"2pt5 {blk}" and r["key"] == b["key"]][0]  # prompt 07b r31
+---
+>         c31 = [r for r in s31 if r["block"] == f"2pt5 {blk}" and r["key"] == b["key"]][0]  # prompt 07b r31
+82c84
+<                "capture_reproduces_R31_store": b["reproduces_store"], "integrand_bit_identical_to_R29_capture": same,
+---
+>                "capture_reproduces_R32_store": b["reproduces_store"], "integrand_bit_identical_to_R29_capture": same,
+87c89
+<                "R31": {"value": h["capture_record"]["value"], "abserr": h["capture_record"]["abserr"],
+---
+>                "R32": {"value": h["capture_record"]["value"], "abserr": h["capture_record"]["abserr"],
+94,96c96,98
+<                "R31_equals_R28": (h["capture_record"]["value"], h["capture_record"]["abserr"]) == (ctx["R28"]["value"], ctx["R28"]["abserr"]),
+<                "context_R30": {k: c30["R30"][k] for k in ("value", "abserr", "regions", "ratio")},  # prompt 07b r31
+<                "R31_equals_R30": (h["capture_record"]["value"], h["capture_record"]["abserr"]) == (c30["R30"]["value"], c30["R30"]["abserr"]),  # prompt 07b r31
+---
+>                "R32_equals_R28": (h["capture_record"]["value"], h["capture_record"]["abserr"]) == (ctx["R28"]["value"], ctx["R28"]["abserr"]),
+>                "context_R31": {k: c31["R31"][k] for k in ("value", "abserr", "regions", "ratio")},  # prompt 07b r31
+>                "R32_equals_R31": (h["capture_record"]["value"], h["capture_record"]["abserr"]) == (c31["R31"]["value"], c31["R31"]["abserr"]),  # prompt 07b r31
+99c101
+<         print(f"\n{b['key']} 2pt5 {blk}: replay reproduces capture {row['replay_reproduces_capture']}, capture reproduces R31's store {row['capture_reproduces_R31_store']}; "
+---
+>         print(f"\n{b['key']} 2pt5 {blk}: replay reproduces capture {row['replay_reproduces_capture']}, capture reproduces R32's store {row['capture_reproduces_R32_store']}; "
+103,105c105,107
+<         print(f"  R31: value {row['R31']['value']} abserr {row['R31']['abserr']} regions {row['R31']['regions']} converged {row['R31']['converged']}: "
+<               f"|v - ref| {row['R31']['abs_v_minus_ref']} = {row['R31']['ratio']} x abserr ({'honest' if honest else 'NOT honest'}); "
+<               f"reference {row['reference']} ({row['reference_repr']}), stated error {row['stated_error']} = {row['R31']['stated_error_over_abserr']} x abserr31")  # prompt 07b r31
+---
+>         print(f"  R32: value {row['R32']['value']} abserr {row['R32']['abserr']} regions {row['R32']['regions']} converged {row['R32']['converged']}: "
+>               f"|v - ref| {row['R32']['abs_v_minus_ref']} = {row['R32']['ratio']} x abserr ({'honest' if honest else 'NOT honest'}); "
+>               f"reference {row['reference']} ({row['reference_repr']}), stated error {row['stated_error']} = {row['R32']['stated_error_over_abserr']} x abserr32")  # prompt 07b r31
+107c109
+<               + f"; R30 {row['context_R30']['ratio']} x abserr (regions {row['context_R30']['regions']}); R31 equals R28 bit for bit {row['R31_equals_R28']}; R31 equals R30 {row['R31_equals_R30']}")  # prompt 07b r31
+---
+>               + f"; R31 {row['context_R31']['ratio']} x abserr (regions {row['context_R31']['regions']}); R32 equals R28 bit for bit {row['R32_equals_R28']}; R32 equals R31 {row['R32_equals_R31']}")  # prompt 07b r31
+109c111
+<           f"{sum(r['num_guarded_regions'] == 0 for r in out)} of 4 guard no leaf; {sum(r['R31']['honest'] for r in out)} of 4 honest")  # prompt 07b r31
+---
+>           f"{sum(r['num_guarded_regions'] == 0 for r in out)} of 4 guard no leaf; {sum(r['R32']['honest'] for r in out)} of 4 honest")  # prompt 07b r31

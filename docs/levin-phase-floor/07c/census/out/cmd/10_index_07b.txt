@@ -1,0 +1,17 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/index_07b_07c.py state/index_07b.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:04:02Z
+# ----
+# levin-phase-floor 07c: an index of 07b's census checkpoint
+# written 2026-11-19T15:04:02Z on mps026298.phys.susx.ac.uk
+# script index_07b_07c.py sha256 c180974c72af7604288c4941f109815c0cd5fc69791046f40a018c38383d7d54
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/checkpoint.jsonl sha256 396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253
+units 18560; statuses {'done': 18560}; wall_s max 40.1 p99 17.5 median 5.88 sum 106822
+rebuild_s max 56.8 p99 0.31 median 0.044 sum 2048
+wrote state/index_07b.json sha256 8e941b812d990696c6e1097998aea09809ebcaa8609606728d68fe90f88f09b8
+# ----
+# end 2026-11-19T15:04:32Z
+# exit 0

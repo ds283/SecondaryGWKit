@@ -1,0 +1,21 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts/select_y0_units_07c.py state/k0/h
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:26:46Z
+# ----
+# levin-phase-floor 07c: Gate Y0's clause 3 and 4 units
+# written 2026-11-19T15:26:46Z on mps026298.phys.susx.ac.uk
+# script select_y0_units_07c.py sha256 9820c0d8bbf669ea183bd74800ecb9f56daad0113df6064d450ce10c403ccda8
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/docs/levin-phase-floor/06l/out/k0/units.json sha256 20c772f8dc466968c0dbd4888a1d4bac7507e25a61d8860c8b75a496b3266699
+# input state/k0/h/units.jsonl sha256 9c78a529d1ab2f157b4c2e9d73141143c74bcb5ef1a5f12a642e18d016773185
+K0 units at h with a Levin call: 97; the fix acts in 81; untouched in every call: 16; with a counted bisection: 15
+acts unit g-1e-8-0-33929; quiet unit g-1e-8-3-14505 (21 Levin calls, all stops 0, 20 with a counted bisection)
+K0 units at h where the fix acts: ['g-1e-7-0-12727', 'g-1e-7-0-12778', 'g-1e-7-0-12935', 'g-1e-7-0-12959', 'g-1e-7-0-14529', 'g-1e-7-0-1814', 'g-1e-7-0-1873', 'g-1e-7-0-2108', 'g-1e-7-0-33730', 'g-1e-7-0-33997', 'g-1e-7-0-37211', 'g-1e-7-0-37232', 'g-1e-7-1-11214', 'g-1e-7-1-11233', 'g-1e-7-1-14039', 'g-1e-7-1-2142', 'g-1e-7-1-35052', 'g-1e-7-1-35492', 'g-1e-7-1-35497', 'g-1e-7-1-37614', 'g-1e-7-2-1427', 'g-1e-7-2-1448', 'g-1e-7-2-1458', 'g-1e-7-2-1634', 'g-1e-7-2-2078', 'g-1e-7-2-21696', 'g-1e-7-2-21857', 'g-1e-7-2-35010', 'g-1e-7-3-1188', 'g-1e-7-3-13481', 'g-1e-7-3-13606', 'g-1e-7-3-13829', 'g-1e-7-3-34254', 'g-1e-7-3-34298', 'g-1e-7-3-34738', 'g-1e-7-3-34748', 'g-1e-7-3-34950', 'g-1e-7-3-34969', 'g-1e-7-3-35986', 'g-1e-7-3-38477', 'g-1e-8-0-12617', 'g-1e-8-0-12681', 'g-1e-8-0-12778', 'g-1e-8-0-12959', 'g-1e-8-0-12965', 'g-1e-8-0-13772', 'g-1e-8-0-13954', 'g-1e-8-0-14054', 'g-1e-8-0-1873', 'g-1e-8-0-2106', 'g-1e-8-0-2108', 'g-1e-8-0-33730', 'g-1e-8-0-34037', 'g-1e-8-0-35102', 'g-1e-8-0-38451', 'g-1e-8-1-14543', 'g-1e-8-1-2158', 'g-1e-8-1-2177', 'g-1e-8-1-34781', 'g-1e-8-1-35136', 'g-1e-8-1-35446', 'g-1e-8-1-35480', 'g-1e-8-1-37676', 'g-1e-8-2-13642', 'g-1e-8-2-1391', 'g-1e-8-2-1626', 'g-1e-8-2-21692', 'g-1e-8-2-21897', 'g-1e-8-2-34906', 'g-1e-8-2-39047', 'g-1e-8-3-1264', 'g-1e-8-3-13600', 'g-1e-8-3-13606', 'g-1e-8-3-13830', 'g-1e-8-3-14589', 'g-1e-8-3-2324', 'g-1e-8-3-34272', 'g-1e-8-3-34298', 'g-1e-8-3-34739', 'g-1e-8-3-37323', 'g-1e-8-3-37338']
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/y0c3_units.json sha256 146e1c5927bc1529a9ce7c01a6b92418ff71266fc8ddd9f6091a6b2506dac2e7
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/y0c4_units.json sha256 95c6fbd4e543654966ebe2a2f0516941178ec1795dbfbda9e4bbc5a3fbe7dbe2
+# ----
+# end 2026-11-19T15:26:47Z
+# exit 0

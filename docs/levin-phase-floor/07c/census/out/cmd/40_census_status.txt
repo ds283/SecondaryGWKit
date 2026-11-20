@@ -1,0 +1,34 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/status.json\;\ echo\;\ tail\ -6\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/stdout.log\;\ wc\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/stderr.log\;\ ls\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419\ \|\ wc\ -l\;\ du\ -sh\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419\;\ grep\ -c\ overbudget\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/checkpoint.jsonl\;\ cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/monitor.log\ 2\>/dev/null\ \|\ tail\ -3\;\ df\ -h\ /Users/ds283/Documents/Code/SecondaryGWKit/var
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-20T08:15:47Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-20T08:12:19+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 90737,
+  "stage": "18560 units recorded; last h-1e-8-3-39148 done",
+  "state": "done",
+  "units_done": 18560,
+  "units_total": 18560
+}
+
+# worker 1e-8-k1_102 exit 0
+# worker 1e-8-k3_1 exit 0
+# worker 1e-8-k3_201 exit 0
+# over budget in the two sets: 0 []
+
+== run ends: 18560 of 18560 units recorded; units in error 0; problems []
+0 /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/stderr.log
+149
+10G	/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419
+0
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  832G   95G  90% /
+# ----
+# end 2026-11-20T08:16:14Z
+# exit 0

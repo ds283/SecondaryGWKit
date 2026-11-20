@@ -1,0 +1,28 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/ast_check_07c.py out/y0/y0a_ast.txt
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:00:48Z
+# ----
+# levin-phase-floor 07c: Gate Y0 (1), the parent's code is 07b's (S0', AST check)
+# written 2026-11-19T15:00:48Z on mps026298.phys.susx.ac.uk
+# script ast_check_07c.py sha256 bd0ae2c46c0a87292f6f8b070a5ad78fa1a213c4b7063747515aa13345627d1a
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# S0': git diff --name-only 5e19c4b6 cff4237f -- . ':!docs' ':!prompts': 1 files
+  CLAUDE.md: expected (CLAUDE.md, not code)
+# S0' lists only CLAUDE.md: True
+# the build imports none of S0''s files: True
+# files differing between 07b's census tree 0a103b5a and h cc3368ce outside docs/ and prompts/: 5
+  AdaptiveLevin/levin_quadrature.py: replaced in the K0 run at the parent by the parent's file (variant_loader); h's own at the code
+  AdaptiveLevin/tests/test_levin_chase_stop.py: a test module (not imported by the harness)
+  AdaptiveLevin/tests/test_levin_roundoff_exit.py: a test module (not imported by the harness)
+  AdaptiveLevin/tests/test_levin_trust_yardstick.py: a test module (not imported by the harness)
+  CLAUDE.md: not code
+# AdaptiveLevin/levin_quadrature.py at cff4237f sha256 8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1, at 5e19c4b6 8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1: byte-identical True
+# '__doc__' read in h's .py files outside docs/, prompts/ and tests: 1 lines
+  ./RunDrivers/quadsource_atol_sweep.py:1008:    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+# verdict: HOLDS
+wrote out/y0/y0a_ast.txt sha256 c7e2e6f5bc50a5ab0647f0e9f057e4cb34f64cd4a3db77e72e0b10922a53390e
+# ----
+# end 2026-11-19T15:00:50Z
+# exit 0

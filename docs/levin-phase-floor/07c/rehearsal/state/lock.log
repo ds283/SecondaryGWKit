@@ -1,0 +1,37 @@
+## lock 1 (look) 2026-11-19T14:02:59Z: status --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+exit 0
+## lock 2 (look) 2026-11-19T14:03:00Z: ray-processes --ray-temp-dir /tmp/ray-sgk
+exit 0
+## lock 3 2026-11-19T14:03:58Z: acquire --project SecondaryGWKit --purpose <as below> --ray-temp-dir /tmp/ray-sgk --ray-address in-process
+acquired the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock) for SecondaryGWKit: levin-phase-floor prompt 07c section 5 (Part C): rehearsal R32 on the Mac Studio (mps026298; worktree cc3368ce, code commit 67b5af74, parent cff4237f), fingerprint 1b332ffa required; then R32 against R31, S3, S1, S2, S4 and the readers
+exit 0
+## lock 4 2026-11-19T14:04:23Z: set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 19463 (R32's driver; sh 19451)
+recorded pid 19463 in /Users/ds283/.raypoolkit/rehearsal-lock/owner
+exit 0
+## lock 5 (look) 2026-11-19T14:21:53Z: ray-processes --ray-temp-dir /tmp/ray-sgk (after R32's end)
+exit 0
+## lock 6 (look) 2026-11-19T14:21:55Z: status --ray-temp-dir /tmp/ray-sgk --ray-address in-process (at stop 1)
+lock: HELD (/Users/ds283/.raypoolkit/rehearsal-lock)
+    project: SecondaryGWKit
+    purpose: levin-phase-floor prompt 07c section 5 (Part C): rehearsal R32 on the Mac Studio (mps026298; worktree cc3368ce, code commit 67b5af74, parent cff4237f), fingerprint 1b332ffa required; then R32 against R31, S3, S1, S2, S4 and the readers
+    acquired: 2026-11-19T14:03:59+00:00
+    host: mps026298
+    ray_temp_dir: /tmp/ray-sgk
+    ray_address: in-process
+    pid: 19463
+owner pid 19463: NOT alive
+Ray processes of /tmp/ray-sgk: none
+exit 0
+## lock 7 (look) 2026-11-19T14:49:12Z: ray-processes --ray-temp-dir /tmp/ray-sgk (after the readers)
+exit 0
+## lock 8 2026-11-19T14:49:20Z: release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk
+released the rehearsal lock (/Users/ds283/.raypoolkit/rehearsal-lock)
+exit 0
+## lock 9 (look) 2026-11-19T14:49:28Z: status --ray-temp-dir /tmp/ray-sgk --ray-address in-process (after the release)
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes of /tmp/ray-sgk: none
+exit 0
+## lock 10 (look) 2026-11-19T14:49:29Z: ray-processes --ray-temp-dir /tmp/ray-sgk (after the release)
+exit 0

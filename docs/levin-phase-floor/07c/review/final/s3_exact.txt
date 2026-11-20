@@ -1,0 +1,3 @@
+rows 864 finite in both 864 total moved 251 violations 0
+largest ratio 5.25051e-06 at k=1000000.0 q=100000.0 r=1000000.0 z=437173.16766605136 rtol=-7.0
+named row rtol -7.0 conv 0 -> 1 ratio 7.00193e-08

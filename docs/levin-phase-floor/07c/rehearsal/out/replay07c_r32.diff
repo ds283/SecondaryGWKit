@@ -1,0 +1,195 @@
+1c1,11
+< """[prompt 07b section 5 rehearsal agent, R31: R30's replay07a_r30.py (c7ff4d85), changed where marked "prompt 07b r31"
+---
+> """[prompt 07c section 5 rehearsal agent, R32: 07b's rehearsal replay07b_r31.py (ac7319ca), changed where marked
+> "prompt 07c r32" (and, throughout, the store tags shifted: R30 -> R31, R31 -> R32, r30 -> r31, r31 -> r32, in names, keys
+> and labels; by scripts/gen/make_replay07c_r32.py): one tree h (cc3368ce, code 67b5af74) reading R32 (R31 read for the
+> record); the rows: every R32 row with a nonzero count, P1's two rows, the w rows, the two block rows, and the rows holding
+> a record of interest (out/qsi_records_r31_r32.csv: a Levin record whose |value_32 - value_31| exceeds abserr_31 +
+> abserr_32, exactly, or whose converged changed); the check also reports each call's chase stops (worker.py's chase_07c)
+> beside its refusals and sums them over the replayed calls; the blockcheck compares each capture's blob with R31's
+> (state/inputs/ of 07b's rehearsal); refcapspec and refcapcheck capture the group calls of the records of interest and
+> check each capture against R32 (and its chase counts against the replay's).]
+> 
+> [prompt 07b section 5 rehearsal agent, R31: R30's replay07a_r30.py (c7ff4d85), changed where marked "prompt 07b r31"
+58,63c68,73
+< REH = MAIN / "var" / "levin-phase-floor-07b" / "rehearsal"  # prompt 07b r31
+< STORES = {"h": MAIN / "var" / "datastores" / "levin-phase-floor-07b-r31.sqlite"}  # prompt 07b r31
+< TAG = {"h": "R31"}  # prompt 07b r31
+< R30_STORE = MAIN / "var" / "datastores" / "levin-phase-floor-07a-r30.sqlite"  # prompt 07b r31: R30, the parent rehearsal, read for the record
+< R30_REH = MAIN / "var" / "levin-phase-floor-07a" / "rehearsal"  # prompt 07b r31: R30's block captures (read only)
+< W = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5")  # prompt 07b r31
+---
+> REH = MAIN / "var" / "levin-phase-floor-07c" / "rehearsal"  # prompt 07c r32
+> STORES = {"h": MAIN / "var" / "datastores" / "levin-phase-floor-07c-r32.sqlite"}  # prompt 07c r32
+> TAG = {"h": "R32"}  # prompt 07c r32
+> R31_STORE = MAIN / "var" / "datastores" / "levin-phase-floor-07b-r31.sqlite"  # prompt 07c r32: R31, the parent rehearsal, read for the record
+> R31_REH = MAIN / "var" / "levin-phase-floor-07b" / "rehearsal"  # prompt 07c r32: R31's block captures (read only)
+> W = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c")  # prompt 07c r32
+137,139c147,149
+<     rec_csv = REH / "out" / "qsi_records_r30_r31.csv"  # prompt 07a r30
+<     ins = [v1_rows, rec_csv] + sorted(STORES["h"].parent.glob("levin-phase-floor-07b-r31*.sqlite")) + sorted(R30_STORE.parent.glob("levin-phase-floor-07a-r30*.sqlite"))  # prompt 07b r31
+<     lines = header(Path(__file__).resolve(), "prompt 07b r31: the rows to replay, the four-block rows and the records of interest", ins)
+---
+>     rec_csv = REH / "out" / "qsi_records_r31_r32.csv"  # prompt 07a r30
+>     ins = [v1_rows, rec_csv] + sorted(STORES["h"].parent.glob("levin-phase-floor-07c-r32*.sqlite")) + sorted(R31_STORE.parent.glob("levin-phase-floor-07b-r31*.sqlite"))  # prompt 07c r32
+>     lines = header(Path(__file__).resolve(), "prompt 07c r32: the rows to replay, the four-block rows and the records of interest", ins)
+141c151
+<     data30 = read_store(R30_STORE)  # prompt 07a r30
+---
+>     data31 = read_store(R31_STORE)  # prompt 07a r30
+154,155c164,165
+<     # |value_31 - value_30| exceeds abserr_30 + abserr_31 (exactly, in Fractions of the stored doubles), and every Levin
+<     # record whose converged changed (out/qsi_records_r30_r31.csv)
+---
+>     # |value_32 - value_31| exceeds abserr_31 + abserr_32 (exactly, in Fractions of the stored doubles), and every Levin
+>     # record whose converged changed (out/qsi_records_r31_r32.csv)
+161c171
+<             if r_["converged_30"] != r_["converged_31"]:
+---
+>             if r_["converged_31"] != r_["converged_32"]:
+163,165c173,175
+<             if r_["value_30"] not in ("", "None") and r_["value_31"] not in ("", "None"):
+<                 v0, v1 = _F(float.fromhex(r_["value_30"])), _F(float.fromhex(r_["value_31"]))
+<                 if abs(v1 - v0) > _F(float.fromhex(r_["abserr_30"])) + _F(float.fromhex(r_["abserr_31"])):
+---
+>             if r_["value_31"] not in ("", "None") and r_["value_32"] not in ("", "None"):
+>                 v0, v1 = _F(float.fromhex(r_["value_31"])), _F(float.fromhex(r_["value_32"]))
+>                 if abs(v1 - v0) > _F(float.fromhex(r_["abserr_31"])) + _F(float.fromhex(r_["abserr_32"])):
+176,177c186,187
+<         e["R30"] = {k_: data30[key][k_] for k_ in ("shard", "serial", "k_exit_serial", "total", "total_abserr", "analytic_rad", "log10_rtol")}  # prompt 07a r30
+<         recs30 = {name: rec for _, name, rec, _ in levin_records(data30[key]["metadata"])}  # prompt 07a r30
+---
+>         e["R31"] = {k_: data31[key][k_] for k_ in ("shard", "serial", "k_exit_serial", "total", "total_abserr", "analytic_rad", "log10_rtol")}  # prompt 07a r30
+>         recs31 = {name: rec for _, name, rec, _ in levin_records(data31[key]["metadata"])}  # prompt 07a r30
+188c198
+<                                  "R31": fieldsof(rec), "R30": fieldsof(recs30[name])})  # prompt 07a r30
+---
+>                                  "R32": fieldsof(rec), "R31": fieldsof(recs31[name])})  # prompt 07a r30
+196c206
+<     print(f"records of interest (R31 vs R30) {len(changed)} in {len(chg_keys)} rows, all kept: {sum(1 for e in rows for r in e['records'] if r['changed_vs_r28'])}")
+---
+>     print(f"records of interest (R32 vs R31) {len(changed)} in {len(chg_keys)} rows, all kept: {sum(1 for e in rows for r in e['records'] if r['changed_vs_r28'])}")
+245c255
+<     for l in header(Path(__file__).resolve(), f"prompt 07b r31: run {spec['name']}", [Path(spec_path)]):
+---
+>     for l in header(Path(__file__).resolve(), f"prompt 07c r32: run {spec['name']}", [Path(spec_path)]):
+299c309
+<             ws[i % MAX_WORKERS].append(unit_spec("h", e["R31"]))  # prompt 07a r30
+---
+>             ws[i % MAX_WORKERS].append(unit_spec("h", e["R32"]))  # prompt 07a r30
+330c340
+<     lines = header(Path(__file__).resolve(), "prompt 07b r31: the replay checked against R31, record by record",
+---
+>     lines = header(Path(__file__).resolve(), "prompt 07c r32: the replay checked against R32, record by record",
+341c351
+<         uid = f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"  # prompt 07a r30
+---
+>         uid = f"h-1e-7-{e['R32']['shard']}-{e['R32']['serial']}"  # prompt 07a r30
+346,347c356,357
+<                   and u["result"]["total"]["hex"] == e["R31"]["total"]
+<                   and u["result"]["analytic_rad"]["hex"] == e["R31"]["analytic_rad"])  # prompt 07a r30
+---
+>                   and u["result"]["total"]["hex"] == e["R32"]["total"]
+>                   and u["result"]["analytic_rad"]["hex"] == e["R32"]["analytic_rad"])  # prompt 07a r30
+359c369
+<             want = r["R31"]  # prompt 07a r30
+---
+>             want = r["R32"]  # prompt 07a r30
+380c390,391
+<                            "refusals_07b": (c or {}).get("refusals_07b")})  # prompt 07b r31
+---
+>                            "refusals_07b": (c or {}).get("refusals_07b"),  # prompt 07b r31
+>                            "chase_07c": (c or {}).get("chase_07c")})  # prompt 07c r32
+418c429
+<         u, _, _ = units[f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"]
+---
+>         u, _, _ = units[f"h-1e-7-{e['R32']['shard']}-{e['R32']['serial']}"]
+436c447
+<         u, _, _ = units[f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"]
+---
+>         u, _, _ = units[f"h-1e-7-{e['R32']['shard']}-{e['R32']['serial']}"]
+448a460,477
+>     # prompt 07c r32: the chase stop's counts (prompt 07c section 1.4) over every replayed call, by kind
+>     ch = Counter()
+>     for e in rows:
+>         if not (e["touched"] or e["p1"] or e["wid"]):
+>             continue
+>         u, _, _ = units[f"h-1e-7-{e['R32']['shard']}-{e['R32']['serial']}"]
+>         for kind_, cl in (("group", u.get("calls") or []), ("other", u.get("other_calls") or [])):
+>             for c in cl:
+>                 cs = c.get("chase_07c") or {}
+>                 if cs.get("num_chase_stops") is None:
+>                     ch[(kind_, "<no count>")] += 1
+>                     continue
+>                 for k_ in ("num_chase_stops", "num_chase_stopped_leaves", "num_chase_noise_bisections"):
+>                     ch[(kind_, k_)] += cs[k_]
+>                 ch[(kind_, "calls with a chase stop")] += cs["num_chase_stops"] > 0
+>                 rf = c.get("refusals_07b") or {}
+>                 ch[(kind_, "calls with a rate-rule refusal")] += ((rf.get("num_edge_rule_refusals") or 0) + (rf.get("num_range_rule_refusals") or 0)) > 0
+>     print(f"chase stops over the replayed calls: {dict(sorted(ch.items()))}")  # prompt 07c r32
+452c481
+<         print(f"  {c['key']} {c['path']} {c['label']}: reproduces {c['reproduces']}; call index {c['index']}; refusals {c['refusals_07b']}")
+---
+>         print(f"  {c['key']} {c['path']} {c['label']}: reproduces {c['reproduces']}; call index {c['index']}; refusals {c['refusals_07b']}; chase {c['chase_07c']}")  # prompt 07c r32
+466c495
+<     lines = header(Path(__file__).resolve(), "prompt 07b r31: the four blocks at h, checked against R31, and each capture against R30's",
+---
+>     lines = header(Path(__file__).resolve(), "prompt 07c r32: the four blocks at h, checked against R32, and each capture against R31's",
+509,512c538,541
+<                     # prompt 07b r31: R30's capture of the same block (its h pickle), compared byte for byte
+<                     p30 = R30_REH / "state" / "inputs" / f"{blk}-h-{e['R30']['shard']}-{e['R30']['serial']}.pkl"
+<                     b30 = p30.read_bytes()
+<                     out.update(r30_pickle=str(p30), r30_sha256=hashlib.sha256(b30).hexdigest(), capture_equals_r30=(b30 == blob))
+---
+>                     # prompt 07b r31: R31's capture of the same block (its h pickle), compared byte for byte
+>                     p31 = R31_REH / "state" / "inputs" / f"{blk}-h-{e['R31']['shard']}-{e['R31']['serial']}.pkl"
+>                     b31 = p31.read_bytes()
+>                     out.update(r31_pickle=str(p31), r31_sha256=hashlib.sha256(b31).hexdigest(), capture_equals_r31=(b31 == blob))
+523c552
+<                       f"capture equals R30's {out.get('capture_equals_r30')}")
+---
+>                       f"capture equals R31's {out.get('capture_equals_r31')}")
+542c571
+<             uid = f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"
+---
+>             uid = f"h-1e-7-{e['R32']['shard']}-{e['R32']['serial']}"
+544c573
+<                 units[uid] = unit_spec("h", e["R31"], capture=[])
+---
+>                 units[uid] = unit_spec("h", e["R32"], capture=[])
+556c585
+<     """prompt 07b r31: each capture of a group record of interest, checked against R31's record (the captured call's
+---
+>     """prompt 07b r31: each capture of a group record of interest, checked against R32's record (the captured call's
+562c591
+<     lines = header(Path(__file__).resolve(), "prompt 07b r31: the captures of the group records of interest, checked against R31",
+---
+>     lines = header(Path(__file__).resolve(), "prompt 07c r32: the captures of the group records of interest, checked against R32",
+572c601
+<             uid = f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"
+---
+>             uid = f"h-1e-7-{e['R32']['shard']}-{e['R32']['serial']}"
+575c604
+<             want = r["R31"]
+---
+>             want = r["R32"]
+581c610
+<             out = {"key": e["key"], "record": r["path"], "label": r["label"], "uid": uid, "R31": want, "R30": r["R30"],
+---
+>             out = {"key": e["key"], "record": r["path"], "label": r["label"], "uid": uid, "R32": want, "R31": r["R31"],
+587a617
+>                            chase_07c=c.get("chase_07c"), replay_chase_07c=rc[0].get("chase_07c"),  # prompt 07c r32
+590c620,621
+<                       and c["index"] == rc[0]["index"] and c.get("refusals_07b") == rc[0].get("refusals_07b"))
+---
+>                       and c["index"] == rc[0]["index"] and c.get("refusals_07b") == rc[0].get("refusals_07b")
+>                       and c.get("chase_07c") == rc[0].get("chase_07c"))  # prompt 07c r32
+601c632
+<                     dst = REH / "state" / "inputs" / f"ref-{r['label']}-h-{e['R31']['shard']}-{e['R31']['serial']}-{c['index']}.pkl"
+---
+>                     dst = REH / "state" / "inputs" / f"ref-{r['label']}-h-{e['R32']['shard']}-{e['R32']['serial']}-{c['index']}.pkl"
+613c644
+<             print(f"{e['key']} {r['path']} {r['label']}: {'REPRODUCES' if ok else 'DOES NOT REPRODUCE'} R31's record; "
+---
+>             print(f"{e['key']} {r['path']} {r['label']}: {'REPRODUCES' if ok else 'DOES NOT REPRODUCE'} R32's record; "

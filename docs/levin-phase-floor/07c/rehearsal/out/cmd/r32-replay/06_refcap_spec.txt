@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py refcapspec /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:43:53Z
+# ----
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json sha256 cb963f571332b9b7b990844ffc4e48b0d8e7f4bf52c842b31a796aff776d1767: 1 units, 1 captures
+# ----
+# end 2026-11-19T14:43:54Z
+# exit 0

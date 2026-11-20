@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts/compare_07c.py det state/y0c4/run1 state/y0c4/run2 out/y0c4/compare_det.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:29:26Z
+# ----
+# levin-phase-floor 07c: Gate Y0 (4), determinism, run1 against run2
+# written 2026-11-19T15:29:26Z on mps026298.phys.susx.ac.uk
+# script compare_07c.py sha256 10da6b817629f5bd1320ee391bc5eb6ee6a3f409566fd543ec8ddc6d50112706
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/y0c4/run1/units.jsonl sha256 549ccab28c90100ad816f654d95dbf271e924c5f02568cd4bd22ce5ea19b79a1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/y0c4/run2/units.jsonl sha256 137bae4e88c59cbdd8af376056c64c047b97086a28587e21f187e32d5a88cb3c
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+h-1e-8-0-33929: IDENTICAL; status ['done', 'done']; calls 21; windowed 2 [(19, 1, {'root': 1}), (20, 1, {'root': 1})]; route-changed 10 [(7, 1, 0, True, False), (8, 1, 0, True, False), (9, 1, 0, True, False), (10, 1, 0, True, False), (11, 0, 2, True, False), (12, 0, 2, True, False), (15, 0, 1, True, False), (16, 0, 1, True, False), (17, 0, 1, True, False), (18, 0, 1, True, False)]; wall [5.5079320832155645, 5.524594208225608]; differing []; excluded keys differing ['data.analytic_06h.seconds', 'data.calls[].elapsed', 'data.cc_floor_s', 'data.checked_06g_s', 'data.declared_06h_s', 'data.deep_lines.seconds', 'data.other_calls[].elapsed', 'data.pickle_record_sha256', 'data.rebuild_s', 'data.result.compute_time', 'data.scan_07_s', 'data.wall_s', 'data.worker_pid', 'pickle.result_full.WKB_Levin_subintervals[].groups[].elapsed', 'pickle.result_full.compute_time', 'pickle.scan_07[].scan.seconds']; stops (index, stops, stopped leaves, counted) [(2, 1, 10, 6), (3, 1, 10, 6), (4, 0, 0, 3), (5, 0, 0, 2), (6, 0, 0, 3), (7, 0, 0, 2), (8, 0, 0, 1), (9, 0, 0, 2), (10, 0, 0, 1), (11, 0, 0, 5), (12, 0, 0, 3), (13, 0, 0, 3), (14, 0, 0, 4), (15, 0, 0, 5), (16, 0, 0, 6), (17, 0, 0, 5), (18, 0, 0, 6)]
+worker evidence all hold True
+wrote out/y0c4/compare_det.json sha256 e852f5cea303b19a66686c14515a9afc9c72952693107e906c7254a61826b4b5
+# ----
+# end 2026-11-19T15:29:27Z
+# exit 0

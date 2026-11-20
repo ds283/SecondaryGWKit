@@ -1,0 +1,47 @@
+{
+ "label": "r32-replay",
+ "results": [
+  {
+   "name": "01_replay_run",
+   "exit": 0,
+   "wall_s": 411.5444848537445
+  },
+  {
+   "name": "02_replay_check",
+   "exit": 0,
+   "wall_s": 1.0246520042419434
+  },
+  {
+   "name": "03_blocks2_spec",
+   "exit": 0,
+   "wall_s": 0.5123200416564941
+  },
+  {
+   "name": "04_blocks2_run",
+   "exit": 0,
+   "wall_s": 58.02469992637634
+  },
+  {
+   "name": "05_blockcheck",
+   "exit": 0,
+   "wall_s": 0.5114719867706299
+  },
+  {
+   "name": "06_refcap_spec",
+   "exit": 0,
+   "wall_s": 0.5122420787811279
+  },
+  {
+   "name": "07_refcap_run",
+   "exit": 0,
+   "wall_s": 34.800615310668945
+  },
+  {
+   "name": "08_refcapcheck",
+   "exit": 0,
+   "wall_s": 1.0099050998687744
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-19T14:44:31Z"
+}

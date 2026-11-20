@@ -1,0 +1,15 @@
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+cd $M
+echo "== stores"; shasum -a 256 var/datastores/levin-phase-floor-07-r29.sqlite var/datastores/levin-phase-floor-07-r29-shard000?.sqlite var/datastores/levin-phase-floor-07a-r30.sqlite var/datastores/levin-phase-floor-07a-r30-shard000?.sqlite var/datastores/levin-phase-floor-07b-r31.sqlite var/datastores/levin-phase-floor-07b-r31-shard000?.sqlite > $Z/state/stores_sha256_final.txt; cmp $Z/state/stores_sha256_final.txt $Z/state/stores_sha256_before.txt && echo "R29, R30, R31 equal to their before-hashes (R31 equal to 07b's KEPT)"
+shasum -a 256 var/datastores/levin-phase-floor-07c-r32.sqlite var/datastores/levin-phase-floor-07c-r32-shard000?.sqlite | tee $Z/state/r32_store_sha256_final.txt | cmp - $Z/state/r32_store_sha256_after_build.txt && echo "R32 equal to its after-build hashes"
+shasum -a 256 var/datastores/handover-A3-v2-lambdacdm* | cmp - $Z/state/a3v2_sha256_before.txt && echo "A3 v2 unchanged"
+ls -la var/datastores | grep -E "07-r29|07a-r30|07b-r31|07c-r32|A3-v2"
+echo "== R31 run dir"; shasum -a 256 var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/* var/runs/levin-phase-floor-07b-r31.launch.log | cmp - $Z/state/r31_rundir_sha256_before.txt && echo "R31 run dir unchanged"
+echo "== protected listing, before against end (outside 07c/review/)"; diff $Z/state/protected_listing_before.txt $Z/state/protected_listing_end.txt | grep -E "^[<>]" | grep -v "var/levin-phase-floor-07c/review/" | head; echo "(end)"; diff $Z/state/protected_listing_before.txt $Z/state/protected_listing_end.txt | grep -E "^[<>]" | grep -c "var/levin-phase-floor-07c/review/"
+echo "== registry"; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/final_registry_list.txt 2>&1; echo "exit $?"; grep -E "07c-r32" $Z/out/final_registry_list.txt | cut -c1-120; tail -1 $Z/out/final_registry_list.txt
+echo "== lock dir"; ls -la ~/.raypoolkit
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+echo "== worktree"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"; command find $W -newer $Z/state/r32_launch_marker -not -path "*/.git/*" | head; echo "(end newer)"
+echo "== main checkout"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== pycache in the records"; command find $Z -name __pycache__ | head; echo "(end)"
+echo "== /tmp/ray-sgk"; ls -d /tmp/ray-sgk 2>&1; ls /tmp/ray-sgk 2>&1 | head -5

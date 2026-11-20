@@ -1,0 +1,13 @@
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+echo "== lock.log tail"; tail -3 $Z/state/lock.log
+echo "== registry list"; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/r32_launch_registry_list.txt 2>&1; echo "exit $?"; grep -E "r32" $Z/out/r32_launch_registry_list.txt | cut -c1-200; tail -1 $Z/out/r32_launch_registry_list.txt
+R=$(ls -d $M/var/runs/levin-phase-floor-07c-r32-07c-* ); echo "== run dir $R"; ls -la $R
+echo "== status.json"; $M/venv/bin/python -I -B -c "import json,sys;s=json.load(open(sys.argv[1]));print(json.dumps({k:s[k] for k in s if k not in (\"fingerprint\",)},indent=1))" $R/status.json
+echo "== manifest (git, cwd, script, host)"; $M/venv/bin/python -I -B -c "import json,sys;m=json.load(open(sys.argv[1]));print(json.dumps({k:m[k] for k in m if k not in (\"argv\",\"distributions\",\"environment\",\"packages\")},indent=1)[:3000])" $R/manifest.json
+echo "== launch log"; cat $M/var/runs/levin-phase-floor-07c-r32.launch.log | cut -c1-200 | head -60
+echo "== stdout tail"; tail -5 $R/stdout.log | cut -c1-200; echo "== stderr size"; wc -c $R/stderr.log
+echo "== Traceback count"; grep -c Traceback $M/var/runs/levin-phase-floor-07c-r32.launch.log $R/stdout.log $R/stderr.log
+echo "== pids"; ps -o pid,ppid,etime,pcpu,command -p 19451,19463 | cut -c1-120
+echo "== R32 store files"; ls -la $M/var/datastores | grep 07c-r32
+echo "== W status --short --ignored"; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== M HEAD, status"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"

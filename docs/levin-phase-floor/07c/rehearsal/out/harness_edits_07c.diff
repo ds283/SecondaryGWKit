@@ -1,0 +1,26 @@
+1c1,3
+< """[prompt 07b section 5 rehearsal agent, R31: R30's copy (b4cd02b9), changed where marked "prompt 07b r31": one tree, h (0a103b5a, code 5e19c4b6), reading R31; the parents assertion unchanged (the same depth).]
+---
+> """[prompt 07c section 5 rehearsal agent, R32: 07b's rehearsal copy (1c976bf8), changed where marked "prompt 07c r32": one tree, h (cc3368ce, code 67b5af74), reading R32; the parents assertion unchanged (the same depth).]
+> 
+> [prompt 07b section 5 rehearsal agent, R31: R30's copy (b4cd02b9), changed where marked "prompt 07b r31": one tree, h (0a103b5a, code 5e19c4b6), reading R31; the parents assertion unchanged (the same depth).]
+309a312,319
+> # prompt 07c r32: R31's tree and store are kept above, by name, for the record; one tree, h, the worktree at Part C's
+> # dispatch SHA cc3368ce (code 67b5af74, R32's tree), reading R32 through a directory of symbolic links in
+> # var/levin-phase-floor-07c/rehearsal/state/stores/r32 (as R31's), opened read-only
+> H07B_TREE, H07B_SHA = H_TREE, H_SHA  # prompt 07c r32: not used
+> H_TREE = Path("/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c")  # prompt 07c r32
+> H_SHA = "cc3368ce69d42fd6871d6264fd30efa65dd00cea"  # prompt 07c r32 (code 67b5af74)
+> TREES = {"h": (H_TREE, H_SHA)}  # prompt 07c r32
+> STORE_DIR_BY_TREE = {"h": MAIN / "var" / "levin-phase-floor-07c" / "rehearsal" / "state" / "stores" / "r32"}  # prompt 07c r32
+1c1
+< """[prompt 07b section 5 rehearsal agent, R31: R30's copy (63c28b49), changed where marked "prompt 07b r31": each summarised call (group and other) gains ``refusals_07b``, the result dict's num_edge_rule_refusals and num_range_rule_refusals (prompt 07b section 1.4), read after the timed section. Nothing else changes; route_07a is kept as R30 ran it (a pass-through; its 07 estimate is descriptive only).]
+---
+> """[prompt 07c section 5 rehearsal agent, R32: 07b's rehearsal copy (2a253652), changed where marked "prompt 07c r32": each summarised call (group and other) gains ``chase_07c``, the result dict's num_chase_stops, num_chase_stopped_leaves and num_chase_noise_bisections (prompt 07c section 1.4), read after the timed section, beside refusals_07b. Nothing else changes.]
+2a3,4
+> [prompt 07b section 5 rehearsal agent, R31: R30's copy (63c28b49), changed where marked "prompt 07b r31": each summarised call (group and other) gains ``refusals_07b``, the result dict's num_edge_rule_refusals and num_range_rule_refusals (prompt 07b section 1.4), read after the timed section. Nothing else changes; route_07a is kept as R30 ran it (a pass-through; its 07 estimate is descriptive only).]
+> 
+1706a1709,1711
+>     # prompt 07c r32: the chase stop's three counts (prompt 07c section 1.4), from the call's own result dict (None where absent)
+>     out["chase_07c"] = {k_: (int(res_[k_]) if k_ in res_ else None)
+>                         for k_ in ("num_chase_stops", "num_chase_stopped_leaves", "num_chase_noise_bisections")}

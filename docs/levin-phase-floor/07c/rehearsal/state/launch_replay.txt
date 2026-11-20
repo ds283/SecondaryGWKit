@@ -1,0 +1,6 @@
+run id      levin-phase-floor-07c-r32-replay-20261119T143558
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-r32-replay-20261119T143558
+plan        /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/plan_r32-replay.json (8 commands)
+sh pid      30401
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/run_06j.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-r32-replay-20261119T143558 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/plan_r32-replay.json; exit $?
+launcher    pid 30397, exiting without waiting

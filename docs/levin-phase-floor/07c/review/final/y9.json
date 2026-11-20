@@ -1,0 +1,3681 @@
+{
+ "script_sha256": "31fd4a374663fc1d85e62dde25c82905833cd893a1dda4ff24248982445c5583",
+ "inputs": {
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/final/extract_07c.jsonl": "df174c7f2d5659497e65040de6785e09847ea3fcd6ec9562cdb9ae6a40f165d1",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/final/extract_07b.jsonl": "7654ed52183fc90b24f5abcdd5c788f87ec43910e0560bded1592bd65d79aa80",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/final/y7_conv.json": "ca9389ef8356f5a2e7cb0f1902e8585c601946323f5b83e030b4694f25fada96",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/final/index07c.json": "dbc5b855bbc3d1a4c16e908042aaf2bd09d3034a74ab40a8e2f901d992a4cdda",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/final/index07b.json": "284bc2221fd95cac3ade53e70ec489ddf436db4755152b1f4a349ba2a8168172"
+ },
+ "checkpoints": {
+  "07c": "33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e",
+  "07b": "396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253"
+ },
+ "clause_i": {
+  "holds": true,
+  "chase_calls": [],
+  "unconverged_without_depth20": [
+   "c-1e-8-0-12591-4",
+   "c-1e-8-0-12783-4",
+   "c-1e-8-0-1989-4",
+   "c-1e-7-0-33995-5",
+   "c-1e-8-1-2229-4",
+   "c-1e-8-3-13490-2",
+   "c-1e-8-3-13490-3",
+   "c-1e-8-3-13615-2",
+   "c-1e-8-3-13615-3",
+   "c-1e-8-3-34417-4",
+   "c-1e-8-3-35036-4"
+  ],
+  "summary_07c": {
+   "n": 178,
+   "by_rtol_kind": {
+    "1e-8 group": 96,
+    "1e-7 group": 82
+   },
+   "n_with_depth20": 167,
+   "n_without_depth20": 11,
+   "n_all_depth20_below": 0,
+   "n_some_depth20_below": 0,
+   "depth20_leaves": 714,
+   "depth20_below": 0,
+   "self_refused": 0,
+   "refused_depth_unknown": 0,
+   "stop_acted": 53,
+   "all_below_shallowest_depths": {},
+   "width_ratio_min_max_n": null
+  },
+  "summary_07b": {
+   "n": 371,
+   "by_rtol_kind": {
+    "1e-8 group": 192,
+    "1e-7 group": 179
+   },
+   "n_with_depth20": 359,
+   "n_without_depth20": 12,
+   "n_all_depth20_below": 192,
+   "n_some_depth20_below": 0,
+   "depth20_leaves": 1382,
+   "depth20_below": 668,
+   "self_refused": 0,
+   "refused_depth_unknown": 0,
+   "stop_acted": 0,
+   "all_below_shallowest_depths": {
+    "0": 129,
+    "1": 31,
+    "2": 30,
+    "3": 2
+   },
+   "width_ratio_min_max_n": [
+    0.9999999996026163,
+    1.0000000002719758,
+    335
+   ]
+  }
+ },
+ "clause_ii": {
+  "holds": true,
+  "n_198": 198,
+  "converge_at_07c": 193,
+  "stay_unconverged": [
+   "c-1e-8-1-2229-4",
+   "c-1e-8-3-13490-2",
+   "c-1e-8-3-13490-3",
+   "c-1e-8-3-13615-2",
+   "c-1e-8-3-13615-3"
+  ],
+  "five": {
+   "c-1e-8-1-2229-4": {
+    "in_198": true,
+    "unconverged_07c": true,
+    "num_chase_stops": 0,
+    "equal_07b": true,
+    "differs_in": []
+   },
+   "c-1e-8-3-13490-2": {
+    "in_198": true,
+    "unconverged_07c": true,
+    "num_chase_stops": 0,
+    "equal_07b": true,
+    "differs_in": []
+   },
+   "c-1e-8-3-13490-3": {
+    "in_198": true,
+    "unconverged_07c": true,
+    "num_chase_stops": 0,
+    "equal_07b": true,
+    "differs_in": []
+   },
+   "c-1e-8-3-13615-2": {
+    "in_198": true,
+    "unconverged_07c": true,
+    "num_chase_stops": 0,
+    "equal_07b": true,
+    "differs_in": []
+   },
+   "c-1e-8-3-13615-3": {
+    "in_198": true,
+    "unconverged_07c": true,
+    "num_chase_stops": 0,
+    "equal_07b": true,
+    "differs_in": []
+   }
+  },
+  "extra_beyond_five": [],
+  "five_missing": []
+ },
+ "holds": true,
+ "calibration_07b_198": {
+  "n": 198,
+  "all_below": 192,
+  "depth20_leaves_of_all_below": 668,
+  "no_depth20": 6,
+  "shallowest": {
+   "0": 129,
+   "1": 31,
+   "2": 30,
+   "3": 2
+  },
+  "depth20_leaves": 668
+ },
+ "still_unconverged_07c": [
+  {
+   "id": "c-1e-7-0-12780-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 106,
+   "max_depth": 20,
+   "n_depth20": 10,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 10
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-13772-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 125,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-14277-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 76,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 4,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-0-14277-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 76,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 4,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-0-14381-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 5,
+   "num_regions": 159,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-1867-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 130,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-1965-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 256,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-1966-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 117,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-2008-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 183,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-0-2008-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 183,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-0-2272-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 79,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-2272-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 79,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-2309-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 118,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-2309-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 118,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-33995-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 239,
+   "max_depth": 13,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-38451-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 175,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-38451-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 175,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-0-38454-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 110,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 2,
+   "chase_stopped_leaves": 23,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-0-38999-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 238,
+   "max_depth": 20,
+   "n_depth20": 54,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 54
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-11117-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 123,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-11221-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 78,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-11221-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 78,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-11282-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 105,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-11282-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 105,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-14235-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 157,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-2136-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 160,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-2160-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 154,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 24,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-1-34611-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 102,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 6,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-1-34611-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 102,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 6,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-1-35176-6",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 157,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-35408-6",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 60,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-1-37614-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 255,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 12,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-1-37614-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 255,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 12,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-1-37619-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 150,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-1337-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 245,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-1565-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 104,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-21646-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 110,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-21740-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 70,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-21740-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 70,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-21962-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 111,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-34464-6",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 66,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-34702-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 85,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 2,
+   "chase_stopped_leaves": 14,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-2-34708-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 127,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-34708-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 127,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-34824-6",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 5,
+   "num_regions": 166,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 6,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-2-34832-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 106,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 4,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-2-35010-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 76,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-2-35058-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 138,
+   "max_depth": 20,
+   "n_depth20": 8,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 8
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-1260-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 91,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-1260-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 91,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-13524-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 165,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-13524-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 165,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-13617-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 201,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-13617-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 201,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-13832-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 142,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-13832-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 181,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 6,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-13904-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 83,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-13905-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 212,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-13910-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 142,
+   "max_depth": 20,
+   "n_depth20": 10,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 10
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-13910-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 142,
+   "max_depth": 20,
+   "n_depth20": 10,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 10
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-14103-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 121,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-14147-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 5,
+   "num_regions": 99,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-14493-1",
+   "label": "G+q+r",
+   "edge": 2,
+   "range": 1,
+   "num_regions": 171,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 11,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-2326-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 146,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-2348-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 99,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-2348-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 99,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-34402-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 114,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-34402-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 114,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-34738-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 120,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-34738-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 120,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-34923-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 96,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 6,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-34923-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 96,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 6,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-34962-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 57,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-34962-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 57,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-37322-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 118,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-37322-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 118,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-37324-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 128,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-38023-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 140,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-38435-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 164,
+   "max_depth": 20,
+   "n_depth20": 12,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 12
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-38435-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 164,
+   "max_depth": 20,
+   "n_depth20": 12,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 12
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-7-3-38439-1",
+   "label": "G+q+r",
+   "edge": 2,
+   "range": 1,
+   "num_regions": 183,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-7-3-38904-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 5,
+   "num_regions": 135,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-12591-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 404,
+   "max_depth": 15,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-12780-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 114,
+   "max_depth": 20,
+   "n_depth20": 10,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 10
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-12783-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 596,
+   "max_depth": 14,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 21,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-13772-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 125,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-14277-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 78,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 4,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-14277-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 78,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 4,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-14381-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 5,
+   "num_regions": 160,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-1867-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 149,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-1891-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 149,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-1965-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 255,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-1966-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 4,
+   "num_regions": 117,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 4,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-1989-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 329,
+   "max_depth": 18,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 9,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-2008-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 183,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-2008-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 183,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-2272-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 75,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-2272-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 75,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-2309-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 116,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-2309-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 116,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-33995-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 825,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-0-38451-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 5,
+   "num_regions": 172,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-38451-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 5,
+   "num_regions": 172,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-38454-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 127,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 17,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-0-38999-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 245,
+   "max_depth": 20,
+   "n_depth20": 54,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 54
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-11117-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 123,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-11221-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 78,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-11221-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 78,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-11282-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 105,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-11282-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 105,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-14233-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 145,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 10,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-1-14235-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 153,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-1-1750-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 181,
+   "max_depth": 20,
+   "n_depth20": 14,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 14
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-2136-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 158,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-2160-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 153,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 24,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-1-2229-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 135,
+   "max_depth": 16,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": true,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-34611-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 117,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-34611-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 117,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-35176-6",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 171,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-35408-6",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 69,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-1-37614-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 259,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 12,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-1-37614-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 259,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 12,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-1-37619-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 147,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-1337-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 245,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-1565-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 104,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-21646-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 110,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-21740-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 70,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-21740-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 70,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-21962-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 111,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-34464-6",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 66,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-34702-3",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 87,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-2-34708-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 127,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-34708-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 127,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-34824-6",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 5,
+   "num_regions": 165,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 2,
+   "chase_stopped_leaves": 10,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-2-34832-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 106,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-2-35010-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 76,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-2-35058-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 137,
+   "max_depth": 20,
+   "n_depth20": 8,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 8
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-1260-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 102,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-1260-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 102,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13490-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 618,
+   "max_depth": 16,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": true,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13490-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 618,
+   "max_depth": 16,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": true,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13524-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 165,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13524-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 165,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13615-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 332,
+   "max_depth": 19,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": true,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13615-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 332,
+   "max_depth": 19,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": true,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13617-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 215,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13617-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 215,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13832-4",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 142,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13832-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 4,
+   "num_regions": 180,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 2,
+   "chase_stopped_leaves": 13,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-3-13904-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 83,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13905-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 232,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13910-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 159,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-13910-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 154,
+   "max_depth": 20,
+   "n_depth20": 10,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 10
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-3-13910-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 154,
+   "max_depth": 20,
+   "n_depth20": 10,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 5,
+   "routes": {
+    "CC": 10
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-3-14103-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 137,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-14147-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 4,
+   "num_regions": 99,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-14493-1",
+   "label": "G+q+r",
+   "edge": 2,
+   "range": 1,
+   "num_regions": 169,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 11,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-3-2326-1",
+   "label": "G+q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 148,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-2348-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 108,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-2348-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 108,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34402-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 122,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34402-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 122,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34417-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 271,
+   "max_depth": 16,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34738-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 120,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34738-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 120,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34923-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 115,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34923-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 115,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34962-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 56,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-34962-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 56,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-35036-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 1,
+   "num_regions": 152,
+   "max_depth": 14,
+   "n_depth20": 0,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {},
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-3-37322-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 115,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-37322-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 115,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-37324-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 135,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-38023-4",
+   "label": "G-q-r",
+   "edge": 0,
+   "range": 0,
+   "num_regions": 145,
+   "max_depth": 20,
+   "n_depth20": 2,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 2
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  },
+  {
+   "id": "c-1e-8-3-38435-2",
+   "label": "G+q-r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 163,
+   "max_depth": 20,
+   "n_depth20": 12,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 12
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-3-38435-3",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 2,
+   "num_regions": 163,
+   "max_depth": 20,
+   "n_depth20": 12,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 12
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-3-38439-1",
+   "label": "G+q+r",
+   "edge": 2,
+   "range": 1,
+   "num_regions": 182,
+   "max_depth": 20,
+   "n_depth20": 6,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 1,
+   "chase_stopped_leaves": 7,
+   "routes": {
+    "CC": 6
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": false
+  },
+  {
+   "id": "c-1e-8-3-38904-5",
+   "label": "G-q+r",
+   "edge": 0,
+   "range": 3,
+   "num_regions": 136,
+   "max_depth": 20,
+   "n_depth20": 4,
+   "n_depth20_below_refused": 0,
+   "n_self_refused": 0,
+   "all_depth20_below": false,
+   "chase_stops": 0,
+   "chase_stopped_leaves": 0,
+   "routes": {
+    "CC": 4
+   },
+   "shallowest_refused_depth": null,
+   "in_198": false,
+   "equal_07b": true
+  }
+ ]
+}

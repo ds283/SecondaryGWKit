@@ -1,0 +1,110 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-19T14:03:38Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+cd $M
+echo "== R29, R30, R31 store sha256 (before)"; shasum -a 256 var/datastores/levin-phase-floor-07-r29.sqlite var/datastores/levin-phase-floor-07-r29-shard000?.sqlite var/datastores/levin-phase-floor-07a-r30.sqlite var/datastores/levin-phase-floor-07a-r30-shard000?.sqlite var/datastores/levin-phase-floor-07b-r31.sqlite var/datastores/levin-phase-floor-07b-r31-shard000?.sqlite > $Z/state/stores_sha256_before.txt; cat $Z/state/stores_sha256_before.txt
+echo "== against 07b rehearsal's state/stores_sha256_final.txt (R29, R30, R31)"; diff $Z/state/stores_sha256_before.txt $W/docs/levin-phase-floor/07b/rehearsal/state/stores_sha256_final.txt && echo "R29, R30, R31 equal to 07b rehearsal's final hashes (15 files)"
+grep "var/datastores/levin-phase-floor-07b-r31" $W/docs/levin-phase-floor/07b/rehearsal/KEPT_ON_MAC_STUDIO.txt | awk "{print \$1\"  \"\$3}" | sort -k2 > $Z/state/r31_kept_expected.txt; grep 07b-r31 $Z/state/stores_sha256_before.txt | sort -k2 | diff - $Z/state/r31_kept_expected.txt && echo "R31 store equal to 07b rehearsal/KEPT_ON_MAC_STUDIO.txt (5 files)"
+echo "== A3 v2 sha256 (before)"; shasum -a 256 var/datastores/handover-A3-v2-lambdacdm* > $Z/state/a3v2_sha256_before.txt; cat $Z/state/a3v2_sha256_before.txt
+echo "== sidecar / journal files of R29, R30, R31"; ls -la var/datastores/ | grep -E "07-r29|07a-r30|07b-r31"
+echo "== R31 run dir"; ls -la var/runs/levin-phase-floor-07b-r31-07b-20261116T191849 var/runs/levin-phase-floor-07b-r31.launch.log; shasum -a 256 var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/* var/runs/levin-phase-floor-07b-r31.launch.log > $Z/state/r31_rundir_sha256_before.txt; cat $Z/state/r31_rundir_sha256_before.txt
+echo "== R31 status.json state/exit/fingerprint"; $M/venv/bin/python -I -B -c "import json;s=json.load(open(\"var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/status.json\"));print(s.get(\"state\"), s.get(\"exit_code\"), s[\"fingerprint\"][\"digest\"])"
+echo "== R31 manifest argv"; $M/venv/bin/python -I -B -c "import json;m=json.load(open(\"var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/manifest.json\"));print(json.dumps({k:m[k] for k in m if k in (\"argv\",\"cwd\",\"git_head\",\"script\",\"script_sha256\")},indent=1))"
+echo "== ray processes on the machine (any temp dir)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+# output:
+== R29, R30, R31 store sha256 (before)
+28a83aa0cdf5dfb7b11b3b3007332f58b7fff5f22e9e4dac071c47b699b666b9  var/datastores/levin-phase-floor-07-r29.sqlite
+dcf3f6c869767cf21d32aa4a3ca8d3e5c812fb30b02d99ec8abf258772ac8874  var/datastores/levin-phase-floor-07-r29-shard0000.sqlite
+1ecb46e4899b38fb855c7f56ec82217915d95bfb751e77b9433555104849f3ec  var/datastores/levin-phase-floor-07-r29-shard0001.sqlite
+7c0bd4c7f7bba8ccb996422e1bccccce72ab43cc9b9433ee02e6c64d3bee5fc2  var/datastores/levin-phase-floor-07-r29-shard0002.sqlite
+897ab3575f5ef67365a97f2f78db15d85ec3a65dcd16d3c319294c4c410781ca  var/datastores/levin-phase-floor-07-r29-shard0003.sqlite
+e5f8b4433a1c4593229fc3b51debf4c1edd9c03ea34a30841f6646c1ae567f84  var/datastores/levin-phase-floor-07a-r30.sqlite
+e6af492ea1756edb14609b13a2ecbc62ae5559f7e439842c28079e6a179707d2  var/datastores/levin-phase-floor-07a-r30-shard0000.sqlite
+f29d54848b55579625d18401a883eeb3132874e38595ed6dd6845530feff5700  var/datastores/levin-phase-floor-07a-r30-shard0001.sqlite
+a66de66657ca54b163bb705b6a1319494253e2f97644f2202f45a83c94279cab  var/datastores/levin-phase-floor-07a-r30-shard0002.sqlite
+b23b013b8e5404ee84491d2b8dd91bbf3242d133c289b6413433e94beb2304a0  var/datastores/levin-phase-floor-07a-r30-shard0003.sqlite
+5981563ba208f42794766a5ed341039437d675d27689a1a6a89932b1ed64fff4  var/datastores/levin-phase-floor-07b-r31.sqlite
+3249a88b9bb402960f835b5c304db5b50ca194a527e6cda9eab065ba68a0a24d  var/datastores/levin-phase-floor-07b-r31-shard0000.sqlite
+90b0a437befe83722e0542944edb5b11114f46f7dc12a2c270967c7dfae2f879  var/datastores/levin-phase-floor-07b-r31-shard0001.sqlite
+8c040215d64827ba06831b0342de03024f9cdf89af3d2e76a56a09a8c3f75e77  var/datastores/levin-phase-floor-07b-r31-shard0002.sqlite
+f697749e5f02df8555d62ed58a97da98b0411c355a595b1ddc983671a7593c42  var/datastores/levin-phase-floor-07b-r31-shard0003.sqlite
+== against 07b rehearsal's state/stores_sha256_final.txt (R29, R30, R31)
+R29, R30, R31 equal to 07b rehearsal's final hashes (15 files)
+R31 store equal to 07b rehearsal/KEPT_ON_MAC_STUDIO.txt (5 files)
+== A3 v2 sha256 (before)
+b311698f9ce296ab6ec35e208659eedbdb59d8cdf61d748360093e9e3d9ee6f5  var/datastores/handover-A3-v2-lambdacdm-shard0000.sqlite
+c5e341ce1937ea94accb1877d42abd27ba2dd1f524381c128ec5d205ecb41d0e  var/datastores/handover-A3-v2-lambdacdm-shard0001.sqlite
+175a67318801af909d0bf60f9d4506a6c0b9e76f8f01e8063b6cc56f3063a3c6  var/datastores/handover-A3-v2-lambdacdm-shard0002.sqlite
+76b83fb360e2449928654737e9d15a7ac187bc843ea30aacef2c7a7cd20c0cb1  var/datastores/handover-A3-v2-lambdacdm-shard0003.sqlite
+3201f6a588f8972319657dda3cf1188ac7225f508c8fc5b43605d7048f0bdef6  var/datastores/handover-A3-v2-lambdacdm.manifest.json
+1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522  var/datastores/handover-A3-v2-lambdacdm.sqlite
+== sidecar / journal files of R29, R30, R31
+-rw-r--r--  1 ds283 staff  25411584 Nov  8 12:44 levin-phase-floor-07-r29-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25464832 Nov  8 12:44 levin-phase-floor-07-r29-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  8 12:34 levin-phase-floor-07-r29-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24875008 Nov  8 12:44 levin-phase-floor-07-r29-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  8 12:34 levin-phase-floor-07-r29.sqlite
+-rw-r--r--  1 ds283 staff  25391104 Nov 12 11:47 levin-phase-floor-07a-r30-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25489408 Nov 12 11:47 levin-phase-floor-07a-r30-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 12 11:38 levin-phase-floor-07a-r30-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24956928 Nov 12 11:47 levin-phase-floor-07a-r30-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 12 11:38 levin-phase-floor-07a-r30.sqlite
+-rw-r--r--  1 ds283 staff  25513984 Nov 16 19:32 levin-phase-floor-07b-r31-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25554944 Nov 16 19:32 levin-phase-floor-07b-r31-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 16 19:19 levin-phase-floor-07b-r31-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24895488 Nov 16 19:32 levin-phase-floor-07b-r31-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 16 19:19 levin-phase-floor-07b-r31.sqlite
+== R31 run dir
+-rw-r--r-- 1 ds283 staff 8730 Nov 16 19:32 var/runs/levin-phase-floor-07b-r31.launch.log
+
+var/runs/levin-phase-floor-07b-r31-07b-20261116T191849:
+total 32
+drwxr-xr-x   6 ds283 staff   192 Nov 16 19:32 .
+drwxr-xr-x 128 ds283 staff  4096 Nov 18 23:53 ..
+-rw-r--r--   1 ds283 staff  5337 Nov 16 19:18 manifest.json
+-rw-r--r--   1 ds283 staff 10321 Nov 16 19:32 status.json
+-rw-r--r--   1 ds283 staff     0 Nov 16 19:18 stderr.log
+-rw-r--r--   1 ds283 staff  8629 Nov 16 19:32 stdout.log
+436c1cc9ec2695bd1e5a0a14723cf9e7a5edb67d63c454e351cf6b89926528f6  var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/manifest.json
+53c33c8b1078dd711ee3e89d55ed535b54123c373d386fe9a35add793d35ff62  var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/status.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/stderr.log
+a934641c99642bc74f12cf10438286bd984c7a7aa0b3e41108bf5bb492604879  var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/stdout.log
+7ac55e25ab63c9686c141a75e5e2900b91fb0cf9562c71f2bb72c68d6789c4ca  var/runs/levin-phase-floor-07b-r31.launch.log
+== R31 status.json state/exit/fingerprint
+done 0 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7
+== R31 manifest argv
+{
+ "argv": [
+  "RunDrivers/quadsource_atol_sweep.py",
+  "--build",
+  "--rehearsal",
+  "--database",
+  "/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite",
+  "--job-name",
+  "levin-phase-floor-07b",
+  "--atol",
+  "1e-32",
+  "--rtol",
+  "1e-7",
+  "--cpus",
+  "6",
+  "--register",
+  "r31-07b",
+  "--purpose",
+  "levin-phase-floor prompt 07b section 5 (Part C), R31 on the Mac Studio (mps026298; tree 0a103b5a in the worktree /Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5, Part C's dispatch SHA, whose code is the code commit 5e19c4b6 (variant (h): after the trust test passes a non-direct Levin leaf, the edge rule or the range rule on |theta'| can refuse it), parent 7b82a0cd, levin_quadrature.py 8956c7b6, QuadSourceIntegral.py 33cb161e; Python 3.13.16): rehearsal build at the code commit (3 k over 1e5-1e6/Mpc, zend 250, atol 1e-32 rtol 1e-7, 6 cpus) straight through to done; its fingerprint must equal 1b332ffa948a3dbdfd51cf81af2d281ac9c3ba5440f994209f1dbc775dce8df7 (R8's, R23-R30's); compared with the parent rehearsal R30 (levin-phase-floor-07a-r30-07a-20261112T113806, built at 4bf50d34, code 1ec734d7, the code commit's parent's code), from which it should differ only inside QuadSourceIntegral",
+  "--campaign",
+  "levin-phase-floor",
+  "--prompt",
+  "07b"
+ ],
+ "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5",
+ "git_head": "0a103b5ae0de32b568f44904a5c3dcbfca922a2e",
+ "script": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5/RunDrivers/quadsource_atol_sweep.py",
+ "script_sha256": "b0135218ede395a56ad526a64427537cdebe5a1f34169885072378fd91d94f19"
+}
+== ray processes on the machine (any temp dir)
+(end)
+# exit: 0
+# end: 2026-11-19T14:03:41Z

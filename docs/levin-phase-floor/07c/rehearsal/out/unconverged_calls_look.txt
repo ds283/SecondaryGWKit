@@ -1,0 +1,5 @@
+# read-only look (saved): every unconverged call in the replay's 203 rows, with its chase-stop and refusal counts; and whether the two rows unconverged in R32 are among the replayed rows
+R32-unconverged row (1000000.0, 316227.7660168379, 1000000.0, 434.65132503921666) replayed: False
+R32-unconverged row (316227.7660168379, 316227.7660168379, 316227.7660168379, 573.1146466584687) replayed: True
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 573.1146466584687] group 21e+09, 573.11), regime Gqr, group G-q-r regions 70 max_depth 20 n_at_depth_max 2 refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 2} chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 5}
+unconverged calls in the replayed rows: 1

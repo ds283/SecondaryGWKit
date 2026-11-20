@@ -1,0 +1,10 @@
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+cd $M
+echo "== R32 store before and after the readers"; { shasum -a 256 var/datastores/levin-phase-floor-07c-r32.sqlite var/datastores/levin-phase-floor-07c-r32-shard000?.sqlite; ls -la var/datastores | grep 07c-r32; } > $Z/state/r32_store_sha256_after_reads.txt; cmp $Z/state/r32_store_sha256_before_reads.txt $Z/state/r32_store_sha256_after_reads.txt && echo "R32 identical before and after the readers (hashes, sizes, mtimes; no journal)"
+echo "== R32 against its after-build hashes"; shasum -a 256 var/datastores/levin-phase-floor-07c-r32.sqlite var/datastores/levin-phase-floor-07c-r32-shard000?.sqlite | cmp - $Z/state/r32_store_sha256_after_build.txt && echo "R32 unchanged since its build"
+echo "== exits"; grep -c "^exit 0;" $Z/out/readers.txt; grep -c "identical before and after" $Z/out/readers.txt
+echo "== Traceback in reader logs"; grep -c Traceback $Z/extract/*.log
+echo "== warnings in reader logs"; grep -ihE "warn" $Z/extract/*.log | sed 's/\x1b\[[0-9;]*m//g' | cut -c1-160 | sort | uniq -c | head
+echo "== extract"; du -sh $Z/extract; find $Z/extract -type f | wc -l; find $Z/extract -type f -size +2M | head; echo "(end big)"
+echo "== worktree"; git -C $W --no-optional-locks status --short --ignored; echo "(end)"; command find $W -newer $Z/state/readers_marker -not -path "*/.git/*" | head; echo "(end newer)"
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"

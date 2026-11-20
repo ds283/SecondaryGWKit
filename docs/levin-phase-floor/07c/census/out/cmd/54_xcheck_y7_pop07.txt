@@ -1,0 +1,194 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c:scripts /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/xcheck_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419 07b 07 out/xcheck/y7_vs_07b_pop07
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-20T09:32:34Z
+# ----
+# levin-phase-floor 07c: the cross-rtol check at 07c, before 07b, population 07
+# written 2026-11-20T09:32:37Z on mps026298.phys.susx.ac.uk
+# script xcheck_07c.py sha256 7b435b231e126132e82c8917384ba95c816b0e462739bdcb92cb09838387dccf
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/xcheck_rule_20261109.md sha256 e06a105856046714465fdac0e89d282ee2ed167faca0885b840dadb2f3db8504
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/index_07b.json sha256 8e941b812d990696c6e1097998aea09809ebcaa8609606728d68fe90f88f09b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07/census/state/v4_selection.json sha256 15a4391b8e49c547a0557bc20829faf5c2323f0e826420ef0e21d694b134d6c8
+# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json sha256 73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/checkpoint.jsonl sha256 33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e (h's census, read before)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-census-20261117T010200/checkpoint.jsonl sha256 396784bcf2dff82267f37caf3b547c786aaac86e7abacd37afab72596cd88253 (the before, 07b, checked before)
+{
+ "A": {
+  "population_calls": 4968,
+  "pairs": 2484,
+  "unpaired": [],
+  "overall": {
+   "pairs": 2484,
+   "r_g<=1": 2484,
+   "r_m<=1": 2484
+  },
+  "by_kind": {
+   "G": {
+    "pairs": 236,
+    "r_g<=1": 236,
+    "r_m<=1": 236
+   },
+   "G+q+r": {
+    "pairs": 720,
+    "r_g<=1": 720,
+    "r_m<=1": 720
+   },
+   "analytic J4": {
+    "pairs": 764,
+    "r_g<=1": 764,
+    "r_m<=1": 764
+   },
+   "analytic Y4": {
+    "pairs": 764,
+    "r_g<=1": 764,
+    "r_m<=1": 764
+   }
+  },
+  "by_band": {
+   "low": {
+    "pairs": 735,
+    "r_g<=1": 735,
+    "r_m<=1": 735
+   },
+   "mid": {
+    "pairs": 935,
+    "r_g<=1": 935,
+    "r_m<=1": 935
+   },
+   "seam": {
+    "pairs": 814,
+    "r_g<=1": 814,
+    "r_m<=1": 814
+   }
+  },
+  "by_k": {
+   "100000.0": {
+    "pairs": 341,
+    "r_g<=1": 341,
+    "r_m<=1": 341
+   },
+   "313856.84721559234": {
+    "pairs": 433,
+    "r_g<=1": 433,
+    "r_m<=1": 433
+   },
+   "985061.2054411147": {
+    "pairs": 281,
+    "r_g<=1": 281,
+    "r_m<=1": 281
+   },
+   "3091682.0425413917": {
+    "pairs": 289,
+    "r_g<=1": 289,
+    "r_m<=1": 289
+   },
+   "9703455.784651041": {
+    "pairs": 299,
+    "r_g<=1": 299,
+    "r_m<=1": 299
+   },
+   "30454960.396664713": {
+    "pairs": 296,
+    "r_g<=1": 296,
+    "r_m<=1": 296
+   },
+   "95584978.52172911": {
+    "pairs": 283,
+    "r_g<=1": 283,
+    "r_m<=1": 283
+   },
+   "300000000.0000001": {
+    "pairs": 262,
+    "r_g<=1": 262,
+    "r_m<=1": 262
+   }
+  },
+  "dist": {
+   "r_g": {
+    "n": 2484,
+    "q0": 0.0,
+    "q10": 0.0,
+    "q50": 2.1911917998121102e-07,
+    "q90": 0.0007468334692069122,
+    "q99": 0.09342882363428553,
+    "q100": 0.46712587895460517,
+    "bins": {
+     "<=0.01": 2354,
+     "(0.01,0.1]": 107,
+     "(0.1,1]": 23,
+     "(1,10]": 0,
+     ">10": 0
+    }
+   },
+   "r_m": {
+    "n": 2484,
+    "q0": 0.0,
+    "q10": 0.0,
+    "q50": 4.267848815255325e-07,
+    "q90": 0.0007468334692069122,
+    "q99": 0.09342882363428553,
+    "q100": 0.46712587895460517,
+    "bins": {
+     "<=0.01": 2354,
+     "(0.01,0.1]": 107,
+     "(0.1,1]": 23,
+     "(1,10]": 0,
+     ">10": 0
+    }
+   },
+   "d8_g": {
+    "n": 2484,
+    "q0": 0.0,
+    "q10": 0.0,
+    "q50": 0.0,
+    "q90": 8.070839324322799e-07,
+    "q99": 2.00055656813724e-05,
+    "q100": 0.023843548679352063,
+    "bins": {
+     "<=0.01": 2483,
+     "(0.01,0.1]": 1,
+     "(0.1,1]": 0,
+     "(1,10]": 0,
+     ">10": 0
+    }
+   },
+   "d8_m": {
+    "n": 2484,
+    "q0": 0.0,
+    "q10": 0.0,
+    "q50": 0.0,
+    "q90": 8.07223504737572e-07,
+    "q99": 2.00025063244353e-05,
+    "q100": 0.023783398721193564,
+    "bins": {
+     "<=0.01": 2483,
+     "(0.01,0.1]": 1,
+     "(0.1,1]": 0,
+     "(1,10]": 0,
+     ">10": 0
+    }
+   }
+  }
+ },
+ "B": {
+  "n_listed_calls": 0,
+  "by_class": {},
+  "by_class_rtol": {},
+  "by_class_band_k": {},
+  "by_class_kind": {},
+  "in_v4": [],
+  "row_totals_summary": {
+   "rows": 0,
+   "dtotal_over_abserr_06m": null,
+   "dtotal_over_abserr_g": null
+  }
+ },
+ "unchanged": true
+}
+wrote out/xcheck/y7_vs_07b_pop07/xcheck.json sha256 2de68b9a81200c313beca07d0f0fb33c117d1b9b0e4497363fc2eaadef40cedc
+# ----
+# end 2026-11-20T09:33:04Z
+# exit 0

@@ -1,0 +1,50 @@
+1,2c1,2
+< ** quadsource_atol_sweep --build: registered as levin-phase-floor-07b-r31-07b-20261116T191849
+< **   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/manifest.json
+---
+> ** quadsource_atol_sweep --build: registered as levin-phase-floor-07c-r32-07c-20261119T140417
+> **   manifest /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-r32-07c-20261119T140417/manifest.json
+9c9
+< ** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite', '--job-name', 'levin-phase-floor-07b', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+---
+> ** quadsource_atol_sweep --build: main.py argv = ['--database', '/Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32.sqlite', '--job-name', 'levin-phase-floor-07c', '--shards', '4', '--zend', '250', '--source-samples-log10z', '100']
+14c14
+<    -- ALL WORK ITEMS COMPLETE in time 0.448s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 0.587s
+16c16
+<    -- ALL WORK ITEMS COMPLETE in time 0.0159s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 0.0224s
+21c21
+<    -- ALL WORK ITEMS COMPLETE in time 0.955s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 1.05s
+23c23
+<    -- ALL WORK ITEMS COMPLETE in time 0.288s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 0.308s
+25c25
+<    -- ALL WORK ITEMS COMPLETE in time 0.966s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 1.11s
+27c27
+<    -- ALL WORK ITEMS COMPLETE in time 21.7s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 29.4s
+29c29
+<    -- ALL WORK ITEMS COMPLETE in time 1m 1.69s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 1m 6.33s
+31c31
+<    -- ALL WORK ITEMS COMPLETE in time 21.9s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 23.7s
+33c33
+<    -- ALL WORK ITEMS COMPLETE in time 8.39s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 9.3s
+36c36
+<    -- ALL WORK ITEMS COMPLETE in time 11m 28.6s
+---
+>    -- ALL WORK ITEMS COMPLETE in time 11m 19s

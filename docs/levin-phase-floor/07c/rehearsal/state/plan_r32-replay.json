@@ -1,0 +1,156 @@
+{
+ "label": "r32-replay",
+ "stages": [
+  {
+   "name": "replay_run",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "01_replay_run",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py",
+      "run",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_spec.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "replay_check",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "02_replay_check",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py",
+      "check",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/replay",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/replay_calls.csv"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "blocks2_spec",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "03_blocks2_spec",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py",
+      "spec",
+      "blocks2",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/blocks2_spec.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "blocks2_run",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "04_blocks2_run",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py",
+      "run",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/blocks2_spec.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "blockcheck",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "05_blockcheck",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py",
+      "blockcheck",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/blocks.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "refcap_spec",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "06_refcap_spec",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py",
+      "refcapspec",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "refcap_run",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "07_refcap_run",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py",
+      "run",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "refcapcheck",
+   "max_parallel": 1,
+   "stop_on_fail": true,
+   "jobs": [
+    {
+     "name": "08_refcapcheck",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py",
+      "refcapcheck",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/refcap.json"
+     ]
+    }
+   ]
+  }
+ ]
+}

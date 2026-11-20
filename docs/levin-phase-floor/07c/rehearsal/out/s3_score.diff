@@ -1,0 +1,75 @@
+1c1
+< """S3 -- consistency (prompt 07b section 5 item 4), R31 against R30, over every QuadSourceIntegral row.
+---
+> """S3 -- consistency (prompt 07c section 5 item 4), R32 against R31, over every QuadSourceIntegral row.
+3,8c3,11
+< levin-phase-floor 07b, rehearsal agent, R31. 07a's rehearsal agent's s3_score.py (f12ebafd...), with the store tags
+< 29 -> 30 and 30 -> 31 and the reader's module (tabulate_qsi_r30_r31.py) changed, and this docstring. Reads both stores
+< with sqlite mode=ro through tabulate_qsi_r30_r31.py's reader (06g's, verbatim). The rule: every row with finite
+< total_abserr in both has |total_31 - total_30| <= total_abserr_30 + total_abserr_31, or is one section 9 predicts to
+< move further (section 9.5: S3 names no row). Holds if no row violates it. Evaluated exactly, in fractions.Fraction on
+< the doubles (no rounding); the ratio |d|/(e30 + e31) is printed as a float.
+---
+> levin-phase-floor 07c, rehearsal agent, R32. 07b's rehearsal agent's s3_score.py (f6396428...), with the store tags
+> 30 -> 31 and 31 -> 32 and the reader's module (tabulate_qsi_r31_r32.py) changed, section 9.5's named row added, and
+> this docstring (by gen/make_s3_score.py). Reads both stores with sqlite mode=ro through tabulate_qsi_r31_r32.py's
+> reader (06g's, verbatim). The rule: every row with finite total_abserr in both has
+> |total_32 - total_31| <= total_abserr_31 + total_abserr_32, or is one section 9 predicts to move further. Section 9.5
+> names one row, R31's record G+q+r at (k, q, r) = (1e5, 1e6, 1e6), z = 144627.7 (predicted to converge at 86
+> regions, with total_converged possibly false -> true); it is listed whether or not it is beyond the bound. Holds if no
+> row other than a named one violates it. Evaluated exactly, in fractions.Fraction on the doubles (no rounding); the
+> ratio |d|/(e31 + e32) is printed as a float.
+10c13
+<     python -B s3_score.py <R30 primary> <R31 primary>
+---
+>     python -B s3_score.py <R31 primary> <R32 primary>
+20c23
+< from tabulate_qsi_r30_r31 import read  # noqa: E402
+---
+> from tabulate_qsi_r31_r32 import read  # noqa: E402
+26a30,32
+> NAMED = {(100000.0, 1000000.0, 1000000.0, 144627.70674226896)}  # prompt 07c section 9.5 (S3's named row)
+> 
+> 
+30c36
+<     tq = Path(__file__).resolve().parent / "tabulate_qsi_r30_r31.py"
+---
+>     tq = Path(__file__).resolve().parent / "tabulate_qsi_r31_r32.py"
+42a49
+>     named = []  # prompt 07c
+45,48c52,55
+<         t30, t31 = A[key]["total"], B[key]["total"]
+<         e30, e31 = A[key]["total_abserr"], B[key]["total_abserr"]
+<         if not all(isinstance(x, float) and math.isfinite(x) for x in (e30, e31, t30, t31)):
+<             not_finite.append((key, e30, e31, t30, t31))
+---
+>         t31, t32 = A[key]["total"], B[key]["total"]
+>         e31, e32 = A[key]["total_abserr"], B[key]["total_abserr"]
+>         if not all(isinstance(x, float) and math.isfinite(x) for x in (e31, e32, t31, t32)):
+>             not_finite.append((key, e31, e32, t31, t32))
+51,52c58,59
+<         d = abs(Fraction(t31) - Fraction(t30))
+<         s = Fraction(e30) + Fraction(e31)
+---
+>         d = abs(Fraction(t32) - Fraction(t31))
+>         s = Fraction(e31) + Fraction(e32)
+54c61,63
+<         viol += not ok
+---
+>         if key in NAMED:  # prompt 07c: a named row is listed, and does not count as a violation
+>             named.append({"key": list(key), "ratio": float(d / s) if s else 0.0, "within_bound": ok, "t31": t31.hex(), "t32": t32.hex(), "e31": e31.hex(), "e32": e32.hex()})
+>         viol += (not ok) and key not in NAMED
+57c66
+<             worst = (r, key, t30.hex(), t31.hex(), e30.hex(), e31.hex())
+---
+>             worst = (r, key, t31.hex(), t32.hex(), e31.hex(), e32.hex())
+64c73,75
+<     print(f"largest |total_31 - total_30| / (abserr_30 + abserr_31): {worst[0]!r} at {worst[1]}; total {worst[2]} -> {worst[3]}, abserr {worst[4]} / {worst[5]}")
+---
+>     print(f"largest |total_32 - total_31| / (abserr_31 + abserr_32): {worst[0]!r} at {worst[1]}; total {worst[2]} -> {worst[3]}, abserr {worst[4]} / {worst[5]}")
+>     for x in named:  # prompt 07c
+>         print(f"  section 9.5's named row {x['key']}: |d|/(e31 + e32) {x['ratio']!r}, within the bound {x['within_bound']}; total {x['t31']} -> {x['t32']}, abserr {x['e31']} / {x['e32']}")
+67c78
+<     dst.write_text(json.dumps({"holds": viol == 0, "rows_scored": scored, "violations": viol, "moved": rows}, indent=1))
+---
+>     dst.write_text(json.dumps({"holds": viol == 0, "rows_scored": scored, "violations": viol, "moved": rows, "named_9_5": named}, indent=1))

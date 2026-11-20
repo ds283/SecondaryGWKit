@@ -1,0 +1,38 @@
+== parent re-run vs 07b census
+script d95e1070c1ecee8ebba1c88fb80057cf7b85cf5e61e7335cb2965743d58c9813
+h-1e-8-0-2108 calls A 23 B 23 keys equal True differing 0 totals equal True True B chase stops {}
+h-1e-8-3-14505 calls A 21 B 21 keys equal True differing 0 totals equal True True B chase stops {}
+== h run1 vs h run2
+script d95e1070c1ecee8ebba1c88fb80057cf7b85cf5e61e7335cb2965743d58c9813
+h-1e-8-0-33929 calls A 21 B 21 keys equal True differing 0 totals equal True True B chase stops {('calls', 2): 1, ('calls', 3): 1}
+== agent y0c4 run1 (A) vs my h run1 (B), and B vs (S) replays
+script d95e1070c1ecee8ebba1c88fb80057cf7b85cf5e61e7335cb2965743d58c9813
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/stop2/scripts/compare_stop2.py", line 21, in <module>
+    A, B = load(sys.argv[1]), load(sys.argv[2])
+           ~~~~^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/stop2/scripts/compare_stop2.py", line 8, in load
+    for line in open(p):
+                ~~~~^^^
+FileNotFoundError: [Errno 2] No such file or directory: '../census/state/y0c4/run1/units.jsonl'
+== 07b census (A) vs my h run1 (B): expected to differ where the stop acts
+script d95e1070c1ecee8ebba1c88fb80057cf7b85cf5e61e7335cb2965743d58c9813
+h-1e-8-0-33929 calls A 21 B 21 keys equal True differing 2 totals equal False True B chase stops {('calls', 2): 1, ('calls', 3): 1}
+   diff ('calls', 2) ('0x1.1617415d13a46p-97', '0x1.d96691a636c0dp-123', False, 40, 20, None) ('0x1.1617415d13a85p-97', '0x1.d967ec5777bb6p-123', True, 30, 15, 1)
+   diff ('calls', 3) ('0x1.1617415d13a46p-97', '0x1.d96691a636c0dp-123', False, 40, 20, None) ('0x1.1617415d13a85p-97', '0x1.d967ec5777bb6p-123', True, 30, 15, 1)
+== agent y0c4 run1 (A) vs my h run1 (B), and B vs (S) replays
+script d95e1070c1ecee8ebba1c88fb80057cf7b85cf5e61e7335cb2965743d58c9813
+h-1e-8-0-33929 calls A 21 B 21 keys equal True differing 0 totals equal True True B chase stops {('calls', 2): 1, ('calls', 3): 1}
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/stop2/scripts/compare_stop2.py", line 37, in <module>
+    s = (hx(r["value"]), hx(r["abserr"]), r["converged"], r["num_regions"], r["max_depth"])
+         ~~^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/review/stop2/scripts/compare_stop2.py", line 14, in hx
+    return float(x).hex() if x is not None else None
+           ~~~~~^^^
+ValueError: could not convert string to float: '0x1.1617415d13a85p-97'
+== (rerun after hx fix for hex strings) agent y0c4 run1 (A) vs my h run1 (B), and B vs (S) replays
+script 2128d008912422f2a77c593354b8918b879e014f00b9d925c01e18170d49dfc4
+h-1e-8-0-33929 calls A 21 B 21 keys equal True differing 0 totals equal True True B chase stops {('calls', 2): 1, ('calls', 3): 1}
+  vs (S) replay c-1e-8-0-33929-2.json calls equal
+  vs (S) replay c-1e-8-0-33929-3.json calls equal

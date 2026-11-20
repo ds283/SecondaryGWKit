@@ -1,0 +1,22 @@
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+echo "== hostname"; hostname
+echo "== main checkout HEAD / status --short"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== worktree HEAD / status --short --ignored"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"
+echo "== worktree log -6"; git -C $W --no-optional-locks log --oneline -6
+echo "== 67b5af74 and its parent"; git -C $W --no-optional-locks rev-parse 67b5af74 67b5af74^
+echo "== S0prime (section 5 item 1 as written): git diff --stat 5e19c4b6 cff4237f -- . :!docs :!prompts"; git -C $W --no-optional-locks diff --stat 5e19c4b6 cff4237f -- . ":!docs" ":!prompts"; echo "(end S0prime)"
+echo "== code commit: git diff --stat cff4237f 67b5af74 -- . :!docs :!prompts"; git -C $W --no-optional-locks diff --stat cff4237f 67b5af74 -- . ":!docs" ":!prompts"
+echo "== after the code commit: git diff --stat 67b5af74 cc3368ce -- . :!docs :!prompts"; git -C $W --no-optional-locks diff --stat 67b5af74 cc3368ce -- . ":!docs" ":!prompts"; echo "(end)"
+echo "== 0a103b5a (R31 tree)..cc3368ce outside docs/prompts"; git -C $W --no-optional-locks diff --stat 0a103b5a cc3368ce -- . ":!docs" ":!prompts"; echo "(end)"
+echo "== 0a103b5a..cc3368ce under ComputeTargets ObjectFactories LiouvilleGreen RunDrivers main.py tools config CosmologyModels requirements.txt"; git -C $W --no-optional-locks diff --stat 0a103b5a cc3368ce -- ComputeTargets ObjectFactories LiouvilleGreen RunDrivers main.py tools config CosmologyModels requirements.txt; echo "(end)"
+echo "== key file hashes in the worktree"; cd $W && shasum -a 256 AdaptiveLevin/levin_quadrature.py ComputeTargets/QuadSourceIntegral.py RunDrivers/quadsource_atol_sweep.py main.py tools/store_value_diff.py
+echo "== the variant (S) constants"; grep -n "_LEVIN_CHASE_NOISE_FACTOR =\|_LEVIN_CHASE_STOP_LIMIT =" $W/AdaptiveLevin/levin_quadrature.py
+echo "== worktree list"; git -C $W --no-optional-locks worktree list
+echo "== python"; $M/venv/bin/python -B -c "import sys; print(sys.version)"
+echo "== auth token"; ls -l ~/.ray/auth_token
+echo "== lock dir"; ls -la ~/.raypoolkit; ls -d ~/ScienceData/.rehearsal-lock 2>&1
+echo "== load / disk"; uptime; df -h $M | tail -1
+echo "== R30/R31/R32 stores"; ls -l $M/var/datastores/ | grep -E "07a-r30|07b-r31|07c-r32"
+echo "== runs named r32"; ls $M/var/runs | grep -E "r32" ; echo "(end)"
+echo "== var/levin-phase-floor-07c"; ls -la $M/var/levin-phase-floor-07c
+echo "== ray processes on the machine (any temp dir)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"

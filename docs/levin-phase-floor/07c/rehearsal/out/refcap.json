@@ -1,0 +1,77 @@
+{
+ "header": [
+  "# prompt 07c r32: the captures of the group records of interest, checked against R32",
+  "# written 2026-11-19T14:44:30Z on mps026298.phys.susx.ac.uk",
+  "# script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json sha256 5e8fa671c95a1d15b69e3e9cc8d2f881e864e574e0bfb18dd602796d9aff87df",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/refcap/refcap-h-0/emit.jsonl sha256 155a5d8830bb6830d17617950f00cce987fc3ce24eebacd0b14c86de32d74671"
+ ],
+ "captures": [
+  {
+   "key": [
+    100000.0,
+    1000000.0,
+    1000000.0,
+    144627.70674226896
+   ],
+   "record": "WKB_Levin.subintervals[1].groups[0]",
+   "label": "G+q+r",
+   "uid": "h-1e-7-3-122",
+   "R32": {
+    "value": "0x1.44ad9d59665e8p-62",
+    "abserr": "0x1.741c57c6295e9p-87",
+    "converged": true,
+    "phase_limited": true,
+    "regions": 86,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "R31": {
+    "value": "0x1.44ad9d596748dp-62",
+    "abserr": "0x1.74349fae30cb8p-87",
+    "converged": false,
+    "phase_limited": true,
+    "regions": 143,
+    "stationary_points": 0,
+    "window_pieces": 0,
+    "guarded_regions": 0,
+    "guard_at_depth_max": 0
+   },
+   "n_candidates": 1,
+   "ray_initialized": false,
+   "index": 1,
+   "notify_label": "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.4463e+05, z in (1.7159e+10, 1.4463e+05), regime Gqr, group G+q+r",
+   "value": "0x1.263e9f583ee54p-79",
+   "abserr": "0x1.513b2851b5963p-104",
+   "converged": true,
+   "regions": 86,
+   "refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 4
+   },
+   "chase_07c": {
+    "num_chase_stops": 2,
+    "num_chase_stopped_leaves": 28,
+    "num_chase_noise_bisections": 12
+   },
+   "replay_chase_07c": {
+    "num_chase_stops": 2,
+    "num_chase_stopped_leaves": 28,
+    "num_chase_noise_bisections": 12
+   },
+   "replay_index": 1,
+   "replay_refusals_07b": {
+    "num_edge_rule_refusals": 0,
+    "num_range_rule_refusals": 4
+   },
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/inputs/ref-G+q+r-h-3-122-1.pkl",
+   "sha256": "fb4a2902b0e036575a484a7e88fc36a358385c014005776def30727a5c8b3b45",
+   "bytes": 918200,
+   "reproduces_store": true
+  }
+ ]
+}

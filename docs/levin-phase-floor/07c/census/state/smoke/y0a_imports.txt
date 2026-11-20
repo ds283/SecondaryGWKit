@@ -1,0 +1,114 @@
+# levin-phase-floor 07c: Gate Y0 (1), the files of h the K0 workers loaded
+# written 2026-11-19T15:09:19Z on mps026298.phys.susx.ac.uk
+# script y0a_imports_07c.py sha256 96dd1c1d4d4e92afff9fc2713bf1b179a3c64639a22e6d1c4f9d7bd1adc3f4ca
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/variants/levin_quadrature_parent.py sha256 8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1
+# workers with a bye: 1; distinct files of h loaded: 101
+# variants installed (path, sha256 at hello): [('/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/variants/levin_quadrature_parent.py', '8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1')]; the parent's: True
+# h's own AdaptiveLevin/levin_quadrature.py among the files loaded: False
+# git diff --name-only cff4237f cc3368ce -- . ':!docs' ':!prompts': ['AdaptiveLevin/levin_quadrature.py', 'AdaptiveLevin/tests/test_levin_chase_stop.py', 'AdaptiveLevin/tests/test_levin_roundoff_exit.py', 'AdaptiveLevin/tests/test_levin_trust_yardstick.py']
+# files both changed (parent to h) and loaded: [] (none expected: levin_quadrature.py is replaced)
+# git diff --name-only 0a103b5a cc3368ce -- . ':!docs' ':!prompts' (07b's census tree to h): ['AdaptiveLevin/levin_quadrature.py', 'AdaptiveLevin/tests/test_levin_chase_stop.py', 'AdaptiveLevin/tests/test_levin_roundoff_exit.py', 'AdaptiveLevin/tests/test_levin_trust_yardstick.py', 'CLAUDE.md']; loaded among them: [] (none expected)
+# verdict: HOLDS (the code the K0 workers executed is the parent code, and the parent is 07bs)
+AdaptiveLevin/__init__.py
+ComputeTargets/BackgroundModel.py
+ComputeTargets/GkNumericIntegration.py
+ComputeTargets/GkSource.py
+ComputeTargets/GkSourcePolicyData.py
+ComputeTargets/GkWKBIntegration.py
+ComputeTargets/OneLoopIntegral.py
+ComputeTargets/QuadSource.py
+ComputeTargets/QuadSourceIntegral.py
+ComputeTargets/TkNumericIntegration.py
+ComputeTargets/TkSourceFunctions.py
+ComputeTargets/TkWKBIntegration.py
+ComputeTargets/WKB_Gk.py
+ComputeTargets/WKB_Tk.py
+ComputeTargets/__init__.py
+ComputeTargets/analytic_Gk.py
+ComputeTargets/analytic_Tk.py
+ComputeTargets/cumulative_table.py
+ComputeTargets/handover.py
+ComputeTargets/phase_groups.py
+ComputeTargets/phase_residual.py
+ComputeTargets/primitive_phase.py
+ComputeTargets/spline_wrappers.py
+ComputeTargets/tests/__init__.py
+ComputeTargets/tests/test_main_plumbing.py
+CosmologyConcepts/__init__.py
+CosmologyConcepts/redshift.py
+CosmologyConcepts/wavenumber.py
+CosmologyModels/GenericEOS/GenericEOS.py
+CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py
+CosmologyModels/GenericEOS/QCD_Cosmology.py
+CosmologyModels/GenericEOS/QCD_EOS.py
+CosmologyModels/GenericEOS/__init__.py
+CosmologyModels/LambdaCDM/LambdaCDM.py
+CosmologyModels/LambdaCDM/Planck.py
+CosmologyModels/LambdaCDM/__init__.py
+CosmologyModels/__init__.py
+CosmologyModels/base.py
+CosmologyModels/model_ids.py
+LiouvilleGreen/WKBtools.py
+LiouvilleGreen/__init__.py
+LiouvilleGreen/bessel_near_region.py
+LiouvilleGreen/bessel_phase.py
+LiouvilleGreen/bessel_tail.py
+LiouvilleGreen/constants.py
+LiouvilleGreen/integration_tools.py
+LiouvilleGreen/phase_spline.py
+LiouvilleGreen/range_reduce_mod_2pi.py
+LiouvilleGreen/three_bessel_integrals.py
+MetadataConcepts/GkSourcePolicy.py
+MetadataConcepts/QuadSourcePolicy.py
+MetadataConcepts/__init__.py
+MetadataConcepts/store_tag.py
+MetadataConcepts/tolerance.py
+MetadataConcepts/version.py
+ObjectFactories/BackgroundModel.py
+ObjectFactories/GkNumericIntegration.py
+ObjectFactories/GkSource.py
+ObjectFactories/GkSourcePolicy.py
+ObjectFactories/GkSourcePolicyData.py
+ObjectFactories/GkWKBIntegration.py
+ObjectFactories/LambdaCDM.py
+ObjectFactories/OneLoopIntegral.py
+ObjectFactories/QCD_Cosmology.py
+ObjectFactories/QuadSource.py
+ObjectFactories/QuadSourceIntegral.py
+ObjectFactories/QuadSourcePolicy.py
+ObjectFactories/TkNumericIntegration.py
+ObjectFactories/TkWKBIntegration.py
+ObjectFactories/__init__.py
+ObjectFactories/integration_metadata.py
+ObjectFactories/redshift.py
+ObjectFactories/store_tag.py
+ObjectFactories/tolerance.py
+ObjectFactories/version.py
+ObjectFactories/wavenumber.py
+Quadrature/__init__.py
+Quadrature/integration_metadata.py
+Quadrature/integrators/WKB_phase_function.py
+Quadrature/integrators/__init__.py
+Quadrature/integrators/numeric_with_phase_cut.py
+Quadrature/simple_quadrature.py
+Quadrature/supervisors/__init__.py
+Quadrature/supervisors/base.py
+Quadrature/supervisors/numeric.py
+StoreFixtures/__init__.py
+StoreFixtures/standin_pool.py
+Units/Mpc_units.py
+Units/__init__.py
+Units/base.py
+config/__init__.py
+config/datastore.py
+config/defaults.py
+config/model_list.py
+config/ray_local.py
+config/sharding.py
+constants.py
+extract_common.py
+tools/__init__.py
+tools/inventory_report.py
+utilities.py

@@ -1,0 +1,22 @@
+$ sh -c cd\ /Users/ds283/Documents/Code/SecondaryGWKit\ \&\&\ shasum\ -a\ 256\ -c\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/docs/levin-phase-floor/06e/review/checks/a3v2_copy_after.sha256\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:00:02Z
+# ----
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0000.sqlite: OK
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0001.sqlite: OK
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0002.sqlite: OK
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm-shard0003.sqlite: OK
+var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite: OK
+shasum: WARNING: 1 line is improperly formatted
+total 417156
+drwxr-xr-x  7 ds283 staff       224 Oct 26 22:19 .
+drwxr-xr-x 12 ds283 staff       384 Nov 10 10:00 ..
+-rw-r--r--  1 ds283 staff 106340352 Oct 26 22:19 handover-A3-v2-lambdacdm-shard0000.sqlite
+-rw-r--r--  1 ds283 staff 107569152 Oct 26 22:19 handover-A3-v2-lambdacdm-shard0001.sqlite
+-rw-r--r--  1 ds283 staff 107429888 Oct 26 22:19 handover-A3-v2-lambdacdm-shard0002.sqlite
+-rw-r--r--  1 ds283 staff 105791488 Oct 26 22:19 handover-A3-v2-lambdacdm-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Oct 26 22:19 handover-A3-v2-lambdacdm.sqlite
+# ----
+# end 2026-11-19T15:00:04Z
+# exit 0

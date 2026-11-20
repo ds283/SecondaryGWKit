@@ -1,0 +1,18 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/s3_score.py sha256 8355d77696cb76857d6c0682618aa3ca373211f3fac23df56f5c8a904241844d
+# module /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/tabulate_qsi_r31_r32.py sha256 8e0c91a76b8838d130fcf1c5778d4e0e221f39ad9092f0a400283527ed30d862
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0000.sqlite sha256 3249a88b9bb402960f835b5c304db5b50ca194a527e6cda9eab065ba68a0a24d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0001.sqlite sha256 90b0a437befe83722e0542944edb5b11114f46f7dc12a2c270967c7dfae2f879
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0002.sqlite sha256 8c040215d64827ba06831b0342de03024f9cdf89af3d2e76a56a09a8c3f75e77
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31-shard0003.sqlite sha256 f697749e5f02df8555d62ed58a97da98b0411c355a595b1ddc983671a7593c42
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07b-r31.sqlite sha256 5981563ba208f42794766a5ed341039437d675d27689a1a6a89932b1ed64fff4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32-shard0000.sqlite sha256 4f557b5edb0b6d9d8352d9ae0ac5c218084b472d104c295cc5d428b193964bd4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32-shard0001.sqlite sha256 d4b3a6e6fa41237c2b3e874e88b37e32f4df31a895d8f46bea447c71069fd50f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32-shard0002.sqlite sha256 55fcaba7c5a3b51950247cee85cef237ef38914f92b96ce53733f0390db2fc2f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32-shard0003.sqlite sha256 f78b4b42ebc389ad9359237d98895ec221ede19d7351048300f26e1ebaeb413a
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32.sqlite sha256 4dd398374ebe3051de925220f39dc04d2b9c6a30d5adf88febd8fede32e08b13
+rows 864; scored (finite total_abserr and total in both) 864; not scored 0
+rows with total moved: 251; violations 0
+largest |total_32 - total_31| / (abserr_31 + abserr_32): 5.250509802149596e-06 at (1000000.0, 100000.0, 1000000.0, 437173.16766605136); total 0x1.bbd3abbb3ec41p-61 -> 0x1.bbd3abbb42acap-61, abserr 0x1.6b7ae6e0d982ep-83 / 0x1.6b77903f57c56p-83
+  section 9.5's named row [100000.0, 1000000.0, 1000000.0, 144627.70674226896]: |d|/(e31 + e32) 7.00192802218668e-08, within the bound True; total -0x1.9b02aff92ee1cp-56 -> -0x1.9b02aff92ee56p-56, abserr 0x1.8afc37a695913p-80 / 0x1.8afc072210fd3p-80
+S3 HOLDS
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s3_scores.json sha256 060bee095a5627861c95e28dd5b7da9a5af937463cb51a6497b14bc9f4dd9856

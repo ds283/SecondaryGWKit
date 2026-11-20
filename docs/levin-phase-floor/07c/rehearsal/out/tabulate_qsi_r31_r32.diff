@@ -1,0 +1,159 @@
+1c1
+< """R31 against R30 inside QuadSourceIntegral: tabulate every row that moved.
+---
+> """R32 against R31 inside QuadSourceIntegral: tabulate every row that moved.
+3,9c3,10
+< levin-phase-floor 07b, rehearsal agent, prompt 07b section 5 item 3 ("inside it, every moved row
+< tabulated, with the rows whose total_converged changes in each direction"). 07a's rehearsal
+< agent's tabulate_qsi_r29_r30.py (adff0052...), with the store tags 29 -> 30 and 30 -> 31 in every
+< name, label and column, TREES, RUNS, the DEPTH_MAX comment and this docstring changed; nothing
+< else. Its store reader (`read`), `flatten`, `bits`, `col_kind`, `leaf_kind` and `fields` are the
+< verbatim copy (from 07's R29 tabulate_qsi_guard_r29.py, 47e18cbe..., from 06m's
+< qsi_identity_r24_r25.py, 06g's), unchanged here, so the field classification is 06g's:
+---
+> levin-phase-floor 07c, rehearsal agent, prompt 07c section 5 item 3 ("inside it, every moved row
+> tabulated, with the rows whose total_converged changes in each direction"). 07b's rehearsal
+> agent's tabulate_qsi_r30_r31.py (a7dc4941...), with the store tags 30 -> 31 and 31 -> 32 in every
+> name, label and column, TREES, RUNS, the DEPTH_MAX comment and this docstring changed, by
+> gen/make_tabulate_qsi_r31_r32.py; nothing else. Its store reader (`read`), `flatten`, `bits`,
+> `col_kind`, `leaf_kind` and `fields` are the verbatim copy (from 07's R29 tabulate_qsi_guard_r29.py,
+> 47e18cbe..., from 06m's qsi_identity_r24_r25.py, 06g's), unchanged here, so the field
+> classification is 06g's:
+20,23c21,24
+<   record (group and analytic block) of BOTH stores (ComputeTargets is the same at 4bf50d34 and
+<   0a103b5a). Their presence in exactly the Levin records is asserted in both. The store does not
+<   keep 07b's two new counts (num_edge_rule_refusals, num_range_rule_refusals): QuadSourceIntegral
+<   does not write them, and the field sets of the two stores are asserted equal as before.
+---
+>   record (group and analytic block) of BOTH stores (ComputeTargets is the same at 0a103b5a and
+>   cc3368ce). Their presence in exactly the Levin records is asserted in both. The store does not
+>   keep 07b's refusal counts or 07c's chase-stop count: QuadSourceIntegral does not write them, and
+>   the field sets of the two stores are asserted equal as before.
+27c28
+< tabulated into <rows csv>: total, total_abserr, |dtotal| against R30's and R31's total_abserr,
+---
+> tabulated into <rows csv>: total, total_abserr, |dtotal| against R31's and R32's total_abserr,
+38c39
+<     python -B tabulate_qsi_r30_r31.py <R30 primary> <R31 primary> <store_value_diff json> <rows csv> <records csv>
+---
+>     python -B tabulate_qsi_r31_r32.py <R31 primary> <R32 primary> <store_value_diff json> <rows csv> <records csv>
+53c54
+<     "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5",  # R31's tree, 0a103b5a (code 5e19c4b6)
+---
+>     "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",  # R32's tree, cc3368ce (code 67b5af74)
+56,57c57,58
+<     "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07a-r30-07a-20261112T113806",
+<     "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-07b-20261116T191849",
+---
+>     "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07b-r31-07b-20261116T191849",
+>     "/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-r32-07c-20261119T140417",
+60c61
+< DEPTH_MAX = 20  # DEFAULT_LEVIN_MAX_DEPTH (unchanged by 5e19c4b6; levin_quadrature.py line 265 at 0a103b5a)
+---
+> DEPTH_MAX = 20  # DEFAULT_LEVIN_MAX_DEPTH (unchanged by 67b5af74; levin_quadrature.py at cc3368ce)
+236,237c237,238
+<     print(f"A = R30 {a_path}: {len(A)} rows, {len(cols_a)} columns")
+<     print(f"B = R31 {b_path}: {len(B)} rows, {len(cols_b)} columns")
+---
+>     print(f"A = R31 {a_path}: {len(A)} rows, {len(cols_a)} columns")
+>     print(f"B = R32 {b_path}: {len(B)} rows, {len(cols_b)} columns")
+355,359c356,358
+<                 "value_30": hx(ra.get("value")), "value_31": hx(rb.get("value")),
+<                 "abserr_30": hx(ra.get("abserr")), "abserr_31": hx(rb.get("abserr")),
+<                 "abs_dvalue_over_abserr30": repr(ratio(abs(rb["value"] - ra["value"]), ra["abserr"]))
+<                 if isinstance(ra.get("value"), float) and isinstance(rb.get("value"), float) else "",
+<                 "abs_dvalue_over_abserr31": repr(ratio(abs(rb["value"] - ra["value"]), rb["abserr"]))
+---
+>                 "value_31": hx(ra.get("value")), "value_32": hx(rb.get("value")),
+>                 "abserr_31": hx(ra.get("abserr")), "abserr_32": hx(rb.get("abserr")),
+>                 "abs_dvalue_over_abserr31": repr(ratio(abs(rb["value"] - ra["value"]), ra["abserr"]))
+361,365c360,366
+<                 "converged_30": ra.get("converged"), "converged_31": rb.get("converged"),
+<                 "phase_limited_30": ra.get("phase_limited"), "phase_limited_31": rb.get("phase_limited"),
+<                 "regions_30": ra.get("regions"), "regions_31": rb.get("regions"),
+<                 **{f"{g}_30": ra[g] for g in GUARD_LEAVES},
+<                 **{f"{g}_31": rb[g] for g in GUARD_LEAVES},
+---
+>                 "abs_dvalue_over_abserr32": repr(ratio(abs(rb["value"] - ra["value"]), rb["abserr"]))
+>                 if isinstance(ra.get("value"), float) and isinstance(rb.get("value"), float) else "",
+>                 "converged_31": ra.get("converged"), "converged_32": rb.get("converged"),
+>                 "phase_limited_31": ra.get("phase_limited"), "phase_limited_32": rb.get("phase_limited"),
+>                 "regions_31": ra.get("regions"), "regions_32": rb.get("regions"),
+>                 **{f"{g}_31": ra[g] for g in GUARD_LEAVES},
+>                 **{f"{g}_32": rb[g] for g in GUARD_LEAVES},
+379,380c380,381
+<             "total_30": hx(a["total"]), "total_31": hx(b["total"]),
+<             "total_abserr_30": hx(a["total_abserr"]), "total_abserr_31": hx(b["total_abserr"]),
+---
+>             "total_31": hx(a["total"]), "total_32": hx(b["total"]),
+>             "total_abserr_31": hx(a["total_abserr"]), "total_abserr_32": hx(b["total_abserr"]),
+382,383c383,384
+<             "abs_dtotal_over_abserr30": repr(ratio(dT, a["total_abserr"])),
+<             "abs_dtotal_over_abserr31": repr(ratio(dT, b["total_abserr"])),
+---
+>             "abs_dtotal_over_abserr31": repr(ratio(dT, a["total_abserr"])),
+>             "abs_dtotal_over_abserr32": repr(ratio(dT, b["total_abserr"])),
+387,391c388,392
+<             "total_converged_30": ca, "total_converged_31": cb,
+<             "WKB_Levin_num_regions_30": a["WKB_Levin_num_regions"], "WKB_Levin_num_regions_31": b["WKB_Levin_num_regions"],
+<             "WKB_Levin_max_depth_30": a["WKB_Levin_max_depth"], "WKB_Levin_max_depth_31": b["WKB_Levin_max_depth"],
+<             "group_calls_unconverged_30": sum(1 for r in recs_a if r[0] == "group" and not r[2]["converged"]),
+<             "group_calls_unconverged_31": sum(1 for r in recs_b if r[0] == "group" and not r[2]["converged"]),
+---
+>             "total_converged_31": ca, "total_converged_32": cb,
+>             "WKB_Levin_num_regions_31": a["WKB_Levin_num_regions"], "WKB_Levin_num_regions_32": b["WKB_Levin_num_regions"],
+>             "WKB_Levin_max_depth_31": a["WKB_Levin_max_depth"], "WKB_Levin_max_depth_32": b["WKB_Levin_max_depth"],
+>             "group_calls_unconverged_31": sum(1 for r in recs_a if r[0] == "group" and not r[2]["converged"]),
+>             "group_calls_unconverged_32": sum(1 for r in recs_b if r[0] == "group" and not r[2]["converged"]),
+393c394
+<         for st, tag in ((0, "30"), (1, "31")):
+---
+>         for st, tag in ((0, "31"), (1, "32")):
+398,400c399,401
+<             "analytic_rad_30": hx(a["analytic_rad"]), "analytic_rad_31": hx(b["analytic_rad"]),
+<             "analytic_abserr_30": hx(ea_a), "analytic_abserr_31": hx(ea_b),
+<             "abs_drad_over_abserr30": repr(ratio(dR, ea_a)), "abs_drad_over_abserr31": repr(ratio(dR, ea_b)),
+---
+>             "analytic_rad_31": hx(a["analytic_rad"]), "analytic_rad_32": hx(b["analytic_rad"]),
+>             "analytic_abserr_31": hx(ea_a), "analytic_abserr_32": hx(ea_b),
+>             "abs_drad_over_abserr31": repr(ratio(dR, ea_a)), "abs_drad_over_abserr32": repr(ratio(dR, ea_b)),
+402c403
+<             "analytic_converged_30": an_ca, "analytic_converged_31": an_cb,
+---
+>             "analytic_converged_31": an_ca, "analytic_converged_32": an_cb,
+409c410
+<     for st, tag in ((0, "R30"), (1, "R31")):
+---
+>     for st, tag in ((0, "R31"), (1, "R32")):
+426,427c427,428
+<     print(f"WKB_Levin_num_regions summed: R30 {regions_sum[0]}, R31 {regions_sum[1]}; unconverged group calls: "
+<           f"R30 {unconv_groups[0]}, R31 {unconv_groups[1]}; rows at max depth {DEPTH_MAX}: R30 {rows_at_depth_max[0]}, R31 {rows_at_depth_max[1]}")
+---
+>     print(f"WKB_Levin_num_regions summed: R31 {regions_sum[0]}, R32 {regions_sum[1]}; unconverged group calls: "
+>           f"R31 {unconv_groups[0]}, R32 {unconv_groups[1]}; rows at max depth {DEPTH_MAX}: R31 {rows_at_depth_max[0]}, R32 {rows_at_depth_max[1]}")
+433,434c434,435
+<         for col in ("abs_dtotal_over_abserr30", "abs_dtotal_over_abserr31", "s3_abs_dtotal_over_sum_abserr",
+<                     "abs_drad_over_abserr30", "abs_drad_over_abserr31"):
+---
+>         for col in ("abs_dtotal_over_abserr31", "abs_dtotal_over_abserr32", "s3_abs_dtotal_over_sum_abserr",
+>                     "abs_drad_over_abserr31", "abs_drad_over_abserr32"):
+437,443c438,444
+<                   f"total {big['total_30']} -> {big['total_31']}, abserr {big['total_abserr_30']} -> {big['total_abserr_31']}")
+<         print(f"  moved rows with |dtotal|/abserr30 > 1: {sum(fnum(r['abs_dtotal_over_abserr30']) > 1 for r in rows_out)}; "
+<               f"> abserr31: {sum(fnum(r['abs_dtotal_over_abserr31']) > 1 for r in rows_out)}; "
+<               f"> abserr30+abserr31: {sum(fnum(r['s3_abs_dtotal_over_sum_abserr']) > 1 for r in rows_out)}")
+<         print(f"  moved rows with regions changed: {sum(r['WKB_Levin_num_regions_30'] != r['WKB_Levin_num_regions_31'] for r in rows_out)}; "
+<               f"max depth changed: {sum(r['WKB_Levin_max_depth_30'] != r['WKB_Levin_max_depth_31'] for r in rows_out)}")
+<         for st, tag in (("30", "R30"), ("31", "R31")):
+---
+>                   f"total {big['total_31']} -> {big['total_32']}, abserr {big['total_abserr_31']} -> {big['total_abserr_32']}")
+>         print(f"  moved rows with |dtotal|/abserr31 > 1: {sum(fnum(r['abs_dtotal_over_abserr31']) > 1 for r in rows_out)}; "
+>               f"> abserr32: {sum(fnum(r['abs_dtotal_over_abserr32']) > 1 for r in rows_out)}; "
+>               f"> abserr31+abserr32: {sum(fnum(r['s3_abs_dtotal_over_sum_abserr']) > 1 for r in rows_out)}")
+>         print(f"  moved rows with regions changed: {sum(r['WKB_Levin_num_regions_31'] != r['WKB_Levin_num_regions_32'] for r in rows_out)}; "
+>               f"max depth changed: {sum(r['WKB_Levin_max_depth_31'] != r['WKB_Levin_max_depth_32'] for r in rows_out)}")
+>         for st, tag in (("31", "R31"), ("32", "R32")):
+450c451
+<     print(f"total_converged: R30 {sum(bool(A[k]['total_converged']) for k in keys)}, R31 {sum(bool(B[k]['total_converged']) for k in keys)}")
+---
+>     print(f"total_converged: R31 {sum(bool(A[k]['total_converged']) for k in keys)}, R32 {sum(bool(B[k]['total_converged']) for k in keys)}")

@@ -1,0 +1,28 @@
+$ env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c:scripts nice /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/compare_07c.py calls /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419 out/stop3/compare_census_calls.json --processes 6
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-20T08:16:20Z
+# ----
+# levin-phase-floor 07c: levin-phase-floor-07c-census-20261119T201419 against 07b's census (levin-phase-floor-07b-census-20261117T010200), mode calls
+# written 2026-11-20T08:16:49Z on mps026298.phys.susx.ac.uk
+# script compare_07c.py sha256 10da6b817629f5bd1320ee391bc5eb6ee6a3f409566fd543ec8ddc6d50112706
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/checkpoint.jsonl sha256 33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/index_07b.json sha256 8e941b812d990696c6e1097998aea09809ebcaa8609606728d68fe90f88f09b8
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts/compare_k0.py sha256 85cf39b178e149614af23fa90b8d8bdb7ebc42e317fbc9b3c0f6f3ba532c19d7
+# 18560 units to compare (0 other records skipped: []), 6 process(es); excluded: 07's ['cache_built', 'compute_time', 'elapsed', 'modules', 'pickle', 'pickle_length', 'pickle_offset', 'pickle_record_sha256', 'rebuild_s', 'route_06k', 'route_06l', 'rows_sha256', 'scripts_sha256', 'seconds', 'tree_head', 'tree_status_short', 'w2_capture_sha256', 'wall_s', 'worker', 'worker_pid', 'worker_tree'] and every key ending _s; set aside as new: ['chase_07c', 'instrument_07c', 'num_chase_noise_bisections', 'num_chase_stopped_leaves', 'num_chase_stops'] (prompt 07c: 07c's)
+units 18560; problems 0 []; statuses {'done': 18560}
+calls by class: {'untouched': 207310, 'acted': 82172}
+equal by class: {'untouched': {'equal': 207310, 'differing': 0}, 'acted': {'equal': 0, 'differing': 82172}}
+U1's five outputs equal by rtol|kind|class: {"1e-7|analytic|untouched": {"equal": 73021, "differing": 0}, "1e-7|group|untouched": {"equal": 24775, "differing": 0}, "1e-7|group|acted": {"equal": 206, "differing": 12344}, "1e-7|analytic|acted": {"equal": 5707, "differing": 28688}, "1e-8|analytic|untouched": {"equal": 84152, "differing": 0}, "1e-8|group|untouched": {"equal": 25362, "differing": 0}, "1e-8|group|acted": {"equal": 203, "differing": 11760}, "1e-8|analytic|acted": {"equal": 4684, "differing": 18580}}
+differing categories by class: {"untouched": {"none": 207310}, "acted": {"call+harness": 64332, "call": 17840}}
+units all of W1's classes, reading A (every solve) / B (own solves): {"A": {"n_all_w1": 8508, "n_totals_equal": 8508, "n_whole_equal": 8495, "whole_categories": {"none": 8495, "call+oracle": 9, "oracle": 2, "call": 2}}}
+new keys in 07's records 0; phase_span keys 0
+unit evidence (true, false): {'lq_file_is_expected': [18560, 0], 'all_in_tree': [18560, 0], 'no_foreign': [18560, 0], 'variant_root_as_expected': [18560, 0]}
+worker evidence: 16 workers, all hold True
+wrote out/stop3/compare_census_calls.calls.jsonl sha256 ee36f0d7257ea8503b7135307489571becfc983c0d7a4cac325f1181fdc856fe
+wrote out/stop3/compare_census_calls.json sha256 015fdfd41a5b37f98fbe0adb96495f46671c14e997e5442c7d981a9f5855ec84
+# ----
+# end 2026-11-20T08:18:42Z
+# exit 0

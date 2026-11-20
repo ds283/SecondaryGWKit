@@ -1,0 +1,33 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009/status.json\;\ echo\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009\;\ ps\ -o\ pid\,ppid\,etime\,command\ -p\ 39687\;\ pgrep\ -P\ 39687\;\ ls\ out/cmd/k0
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:10:34Z
+# ----
+{
+  "exit_code": null,
+  "heartbeat": "2026-11-19T15:10:09+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 39691,
+  "stage": "41_k0_run_parent started",
+  "state": "running",
+  "units_done": 0,
+  "units_total": 11
+}
+
+total 12
+drwxr-xr-x   6 ds283 staff  192 Nov 19 15:10 .
+drwxr-xr-x 132 ds283 staff 4224 Nov 19 15:10 ..
+-rw-r--r--   1 ds283 staff 4633 Nov 19 15:10 manifest.json
+-rw-r--r--   1 ds283 staff  283 Nov 19 15:10 status.json
+-rw-r--r--   1 ds283 staff    0 Nov 19 15:10 stderr.log
+-rw-r--r--   1 ds283 staff    0 Nov 19 15:10 stdout.log
+  PID  PPID ELAPSED COMMAND
+39687     1   00:25 sh -c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/scripts/run_06j.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/state/plan_k0.json; exit $?
+39691
+41_k0_run_parent.txt
+# ----
+# end 2026-11-19T15:10:34Z
+# exit 0

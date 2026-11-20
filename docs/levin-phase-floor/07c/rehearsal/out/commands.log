@@ -1,0 +1,299 @@
+# Every command of the rehearsal agent for R32 (levin-phase-floor 07c, prompt section 5, Part C), verbatim or by its exact form, in order. Outputs are in the files named.
+# Main checkout M=/Users/ds283/Documents/Code/SecondaryGWKit at 28ebaf07 (not moved; no tree runs there). Worktree W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c, detached at cc3368ce (code 67b5af74, parent cff4237f); nothing written in it.
+# Z = $M/var/levin-phase-floor-07c/rehearsal. Every Python command: cwd W, $M/venv/bin/python -B, PYTHONPATH=W (a stdlib-only reader may add -I, noted). The interactive shell is zsh; multi-line commands run under sh via rec.sh or bash -c.
+## --- turn 1 (dispatch: the gate and R32's launch) ---
+## read: CLAUDE.md; W/prompts/levin-phase-floor/README.md sections 3-5.1; 07c-chase-below-a-refused-leaf.md sections 5, 7, 8, 9; 07b-levin-leaf-beside-a-window.md sections 5, 9.5-10; 07a-window-stop-and-phase-variation.md section 5; W/docs/levin-phase-floor/07b/rehearsal/{log.md, scripts/rec.sh, scripts/launch_r31.py, scripts/s0prime.py, scripts/protected_listing.sh, state/launch_r31.txt, state/lock.log, out/r31_launch_check.txt, out/00-gate.txt (commands), out/02-stores-before.txt (commands), state/protected_paths.txt, KEPT_ON_MAC_STUDIO.txt}; M/var/levin-phase-floor-07b/rehearsal/out/commands.log lines 1-80; R31's manifest argv and status.json (read only)
+## survey (read only): hostname mps026298; 14:01:44Z; W HEAD cc3368ce, status --short --ignored empty; M HEAD 28ebaf07, status --short empty; M/var/levin-phase-floor-07c holds measurement/ and review/ (no rehearsal); no 07c-r32 store; no r32 run
+## mkdir -p Z/out Z/scripts Z/state; sed of W/docs/levin-phase-floor/07b/rehearsal/scripts/rec.sh (R=...07b/rehearsal -> R=...07c/rehearsal) -> Z/scripts/rec.sh (43c59f3b); diff -> Z/out/rec_sh.diff
+## (cwd W) Z/scripts/rec.sh 00-gate "$(cat Z/state/gate_cmd.txt)" -> out/00-gate.txt (W cc3368ce clean --ignored; M 28ebaf07 clean; 67b5af74^ = cff4237f; S0prime stat as section 5 item 1 writes it: CLAUDE.md only; code commit cff4237f..67b5af74 outside docs/prompts: levin_quadrature.py and three AdaptiveLevin tests; 67b5af74..cc3368ce outside docs/prompts: empty; 0a103b5a..cc3368ce under the build's paths: empty; levin_quadrature.py d141a80b, QuadSourceIntegral.py 33cb161e, launcher b0135218, main.py a5d47f5f, store_value_diff.py 7997af85 (the last four R31's tree's); constants 4.0 and 6; auth_token 600; ~/.raypoolkit empty; no Ray process)
+## read only: ps -Ao pid,pcpu,etime,command -r | head (load 27 from Spotlight mdworker_shared, transient; printed, not saved); git diff 5e19c4b6 cff4237f -- CLAUDE.md (the black paragraph only; printed, not saved)
+## Write Z/scripts/s0prime.py (17f73ca4; after 07b's f7e33882, no AST clause)
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/s0prime.py Z/out/s0prime.json > Z/out/s0prime.txt 2>&1   # exit 0: S0prime HOLDS (CLAUDE.md only; nothing the build imports); tree clauses hold; s0prime.json 04f5fdb8
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B -m runregistrykit list > Z/out/01-registry-list.txt   # exit 0: 92 runs, 92 finished; nothing running or stale
+## lock 1 (look): (cwd W) echo header >> Z/state/lock.log; PYTHONPATH=W M/venv/bin/python -B -m raypoolkit.rehearsal_lock status --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> Z/state/lock.log 2>&1; echo "exit $?" >> Z/state/lock.log   -> free; Ray processes none; exit 0
+## lock 2 (look): (cwd W) echo header >> ...; PYTHONPATH=W M/venv/bin/python -B -m raypoolkit.rehearsal_lock ray-processes --ray-temp-dir /tmp/ray-sgk >> Z/state/lock.log 2>&1; echo "exit $?" >> ...   -> nothing listed, exit 0
+## Write Z/state/protected_paths.txt (07c measurement/ and review/, var/levin-phase-floor-07b/, -07a/, -07/, 06's a3v2_copy/, every var/runs/levin-phase-floor-07* entry: 35); sed of 07b's protected_listing.sh -> Z/scripts/protected_listing.sh (path, R31's store added); diff -> Z/out/protected_listing.diff
+## Z/scripts/protected_listing.sh Z/state/protected_listing_before.txt   # 46,832 lines
+## (cwd W) Z/scripts/rec.sh 02-stores-before "$(cat Z/state/stores_before_cmd.txt)" -> out/02-stores-before.txt, state/stores_sha256_before.txt (R29, R30, R31 equal to 07b rehearsal's state/stores_sha256_final.txt; R31 equal to 07b's KEPT, primary 5981563b), state/a3v2_sha256_before.txt, state/r31_rundir_sha256_before.txt; R31 done, exit 0, 1b332ffa; R31's manifest argv printed (R32's command line is R31's but for --database, --job-name, --register, --purpose, --prompt); no Ray process
+## lock 3: (cwd W) [in the same zsh command as, and after, a heredoc `cat >> Z/out/commands.log` that had exited; deviation draft 4] echo header >> Z/state/lock.log; PYTHONPATH=W M/venv/bin/python -B -m raypoolkit.rehearsal_lock acquire --project SecondaryGWKit --purpose "levin-phase-floor prompt 07c section 5 (Part C): rehearsal R32 on the Mac Studio (mps026298; worktree cc3368ce, code commit 67b5af74, parent cff4237f), fingerprint 1b332ffa required; then R32 against R31, S3, S1, S2, S4 and the readers" --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> Z/state/lock.log 2>&1; echo "exit $?" >> Z/state/lock.log   -> acquired 14:03:58Z, exit 0
+## touch Z/state/r32_launch_marker; R32 launch (cwd W; zsh; PURPOSE_R32 set first, its text in Z/state/purpose_r32.txt and the manifest):
+cd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c && nohup sh -c "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -u RunDrivers/quadsource_atol_sweep.py \
+    --build --rehearsal \
+    --database /Users/ds283/Documents/Code/SecondaryGWKit/var/datastores/levin-phase-floor-07c-r32.sqlite \
+    --job-name levin-phase-floor-07c --atol 1e-32 --rtol 1e-7 --cpus 6 \
+    --register r32-07c --purpose \"\$0\" --campaign levin-phase-floor --prompt 07c; \
+  echo \"** driver exit status \$?\"" "$PURPOSE_R32" \
+  > /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-r32.launch.log 2>&1 &
+SHPID=$!; echo "sh pid $SHPID launched $(date -u +%Y-%m-%dT%H:%M:%SZ)" > Z/state/launch_r32.txt; disown; print -r -- "$PURPOSE_R32" > Z/state/purpose_r32.txt
+##   result: sh pid 19451, 14:04:16Z; pgrep -P 19451 -> 19463 (driver)
+## lock 4: (cwd W) echo header >> Z/state/lock.log; PYTHONPATH=W M/venv/bin/python -B -m raypoolkit.rehearsal_lock set-pid --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk 19463 >> Z/state/lock.log 2>&1; echo "exit $?" >> Z/state/lock.log   -> recorded pid 19463, exit 0
+## (cwd W) Z/scripts/rec.sh r32_launch_check "$(cat Z/state/r32_launch_check_cmd.txt)" -> out/r32_launch_check.txt, out/r32_launch_registry_list.txt (R32 levin-phase-floor-07c-r32-07c-20261119T140417 running, 93 runs: 1 alive; status running pid 19463 heartbeat 14:04:31Z stage "CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS"; manifest git_head cc3368ce git_dirty false, cwd W, created 14:04:17Z, launcher b0135218; Ray started 14:04:24 (local), store with 4 shards; Traceback 0; stderr empty; both pids alive; W clean (status --short --ignored empty); M 28ebaf07 clean)
+## --- end of turn 1 (R32 running; driver 19463, sh 19451; lock held) ---
+## --- turn 2 (resumed: R32's driver 19463 exited 14:18:18Z; status done, exit 0, 1b332ffa..., per the orchestrator) ---
+## (cwd W) Z/scripts/rec.sh r32_end_check "$(cat Z/state/r32_end_check_cmd.txt)" -> out/r32_end_check.txt, out/r32_status.json (copy), out/r32_end_registry_list.txt, state/r32_store_sha256_after_build.txt, state/stores_sha256_after_build.txt (done, exit 0, heartbeat 14:18:01Z; digest 1b332ffa True; problems {}; taken at cc3368ce, git_dirty false; classes equal R31's (21 classes; QSI 864, 8913eda5); created 14:04:17Z; launcher b0135218; 19463 and 19451 gone; "** driver exit status 0"; Traceback/WARNING/ERROR 0 in the launch log, stdout and stderr; QSI stage 11m 19s; 93 runs all finished; W clean, nothing newer than the launch marker; M clean; R29, R30, R31 and R31's run directory unchanged; no Ray process)
+## (cwd W) PYTHONPATH=W /usr/bin/time -p M/venv/bin/python -B -m runregistrykit store fingerprint M/var/datastores/levin-phase-floor-07c-r32.sqlite > Z/out/r32_fingerprint_own.txt 2>&1   # exit 0, 4.07 s: digest 1b332ffa..., format 6; "recorded: none recorded (the sidecar is absent)"; R32 re-hashed -> state/r32_store_sha256_after_fingerprint.txt, cmp equal to after_build
+## (bash process substitution) diff of the stage lines of R31's and R32's stdout.log -> Z/out/stage_timings_r31_r32.diff (QSI 11m 28.6s -> 11m 19s; GkNumeric 21.7s -> 29.4s; others within 5 s); shasum + ls -la of R31 and R32 -> Z/state/store_sha256_before_diff.txt; cmp of 07b's five comparison scripts, docs copy against var copy: equal
+## (cwd W) /usr/bin/time -p env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=W M/venv/bin/python -B -m tools.store_value_diff M/var/datastores/levin-phase-floor-07b-r31.sqlite M/var/datastores/levin-phase-floor-07c-r32.sqlite --json > Z/out/store_value_diff_r31_r32.json 2> Z/out/store_value_diff_r31_r32.json.stderr; echo "exit $?" >> ...stderr   # exit 1 (differences), 16.5 s, c42c6d77; W clean after
+## cp M/var/levin-phase-floor-07b/rehearsal/scripts/classify_non_qsi.py Z/scripts/ (26690e61, unchanged)
+## python -I -B heredoc (six asserted single replacements: prefixes 07a- -> 07b-, 07b- -> 07c-, docstring) on 07b's normalise_jobname_labels.py (bdc2d44d) -> Z/scripts/normalise_jobname_labels.py (93a0b27e); diff -> Z/out/normalise_jobname_labels.diff
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/normalise_jobname_labels.py Z/out/store_value_diff_r31_r32.json Z/out/store_value_diff_r31_r32.labels_normalised.json > Z/out/normalise_jobname_labels.txt 2>&1   # exit 0; 6012 labels; output 0854fed3
+## (cwd W) for each of the raw and normalised JSON: a shell-written header (script sha, input sha, W HEAD), then PYTHONPATH=W M/venv/bin/python -B Z/scripts/classify_non_qsi.py <json> >> Z/out/classify_non_qsi_r31_r32[_labels_normalised].txt 2> ....stderr; echo "exit $?" >> ...   # raw: exit 1, 5148 UNCLASSIFIED, all `label` (the job-name prefix); normalised: exit 0, 0 UNCLASSIFIED, every value table identical (360,462 value-table rows), no row in one store only
+## (read only, printed) grep/awk counts of the raw classifier's UNCLASSIFIED (all `label`: 3+3+1368+3477+291+6 = 5148) and the normalised value-table rows (360,462)
+## Write Z/scripts/gen/make_tabulate_qsi_r31_r32.py; python -I -B run: first run aborted on its own assertion before writing anything (GUARD_LEAVES is at index 58, not 57; deviation 12); two asserted replacements in the generator (the index; a meaningless assert line removed); second run: 72 tag shifts -> Z/scripts/tabulate_qsi_r31_r32.py (8e0c91a7; generator e8be0f00), parses; diff -> Z/out/tabulate_qsi_r31_r32.diff
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/tabulate_qsi_r31_r32.py M/var/datastores/levin-phase-floor-07b-r31.sqlite M/var/datastores/levin-phase-floor-07c-r32.sqlite Z/out/store_value_diff_r31_r32.json Z/out/qsi_rows_r31_r32.csv Z/out/qsi_records_r31_r32.csv > Z/out/qsi_tabulation_r31_r32.txt 2> ...stderr   # exit 0: 559 unmoved, 305 moved; total moved 251, total_abserr 252, analytic_rad 106; total_converged 1 up / 0 down; rows 29decfad, records 6d184d48
+## Write Z/scripts/gen/make_qsi_summary_r31_r32.py; python -I -B run: 161 tag shifts, tree path, docstring -> Z/scripts/qsi_summary_r31_r32.py (907b9950; generator 7190ccf5); diff -> Z/out/qsi_summary_r31_r32.diff
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/qsi_summary_r31_r32.py Z/out/qsi_rows_r31_r32.csv Z/out/qsi_records_r31_r32.csv > Z/out/qsi_summary_r31_r32.txt 2>&1   # exit 0
+## python -I -B heredoc (read only) on the two CSVs: rows unconverged in either store and their unconverged group records -> Z/out/stop1_unconverged_look.txt (tee)
+## lock 5 (look): (cwd W) echo header >> Z/state/lock.log; ... ray-processes --ray-temp-dir /tmp/ray-sgk >> Z/state/lock.log 2>&1; echo "exit $?" >> ...   -> nothing listed, exit 0
+## lock 6 (look): (cwd W) echo header >> ...; ... status --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> ...   -> HELD by SecondaryGWKit, owner 19463 not alive, Ray processes none, exit 0
+## Z/scripts/protected_listing.sh Z/state/protected_listing_stop1.txt   # 46,832; differs from before only in var/levin-phase-floor-07c/review/checks/ (the orchestrator's)
+## (cwd W) Z/scripts/rec.sh stop1_check "$(cat Z/state/stop1_check_cmd.txt)" -> out/stop1_check.txt, out/stop1_registry_list.txt, state/store_sha256_after_diff.txt (R31 and R32 byte-identical before and after the comparisons; R32 equal to its after-build hashes; R29, R30, R31 and A3 v2 unchanged; protected listing differs only under 07c/review/; W clean, nothing newer; M clean; 93 runs all finished; no Ray process; lock owner file SecondaryGWKit pid 19463; no __pycache__ in the records)
+## --- end of turn 2: STOP 1 (lock held; S3, S1, S2, S4 and the readers not run) ---
+## --- turn 3 (resumed: the user's word at stop 1, "Yes, continue the rehearsal agent"; the orchestrator's note: tabulate the two group records whose phase_limited went False -> True) ---
+## read: W/docs/levin-phase-floor/07b/rehearsal/verification.md; 07b's rehearsal scripts (var copies): s3_score.py, s1_score_r31.py, s2_score_r31.py, block_score_r31.py (heads), gen/make_replay07b_r31.py, capture/replay07b_r31.py (whole), capture/prov.py and worker.py (the "prompt 07b r31" marks); W/docs/levin-phase-floor/07c/measurement/{out/tables/scores_07c.json (r31-3-20363-1), scripts/make_calls_07c.py lines 20-110, scripts/score_07c.py lines 1-95, KEPT_ON_MAC_STUDIO.txt (grep)}
+## Write Z/scripts/gen/make_s3_score.py; python -I -B run: the first output had the reader module shifted twice (tabulate_qsi_r32_r32; deviation 18), the generator corrected by one asserted replacement and re-run (28 tag shifts) -> Z/scripts/s3_score.py (8355d776; generator 96954584); diff -> Z/out/s3_score.diff
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/s3_score.py M/var/datastores/levin-phase-floor-07b-r31.sqlite M/var/datastores/levin-phase-floor-07c-r32.sqlite > Z/out/s3_scores.txt 2>&1   # exit 0: 864 scored, 251 moved, 0 violations, largest 5.2505e-06 at (1e6, 1e5, 1e6, z 437173.17); the named row 7.0019e-08, within the bound; S3 HOLDS; s3_scores.json 060bee09
+## cp -p M/var/levin-phase-floor-07b/rehearsal/scripts/capture/* Z/scripts/capture/; shasum -> Z/state/capture_harness_r31_sha256.txt (equal to 07b's on-disk harness)
+## Write Z/scripts/gen/edit_harness_07c.py; python -I -B run: asserted replacements in Z/scripts/capture/prov.py (tree h = W at cc3368ce; STORE_DIR_BY_TREE h -> state/stores/r32; docstring) and worker.py (chase_07c; docstring); diff -> Z/out/harness_edits_07c.diff; both parse
+## mkdir Z/state/stores/r32; symbolic links handover-A3-v2-lambdacdm*.sqlite and levin-phase-floor-07c-r32-shard000?.sqlite -> R32's files (as R31's)
+## Write Z/scripts/gen/make_replay07c_r32.py; python -I -B run: 79 tag shifts, asserted replacements -> Z/scripts/capture/replay07c_r32.py (a4addf1e), parses; diff -> Z/out/replay07c_r32.diff; a read-only grep audit of residual tags (printed)
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/capture/replay07c_r32.py rows Z/state/replay_rows.json > Z/out/replay_rows.txt   # exit 0: 203 rows (202 located, P1 2, w 12, block rows 2), 1 record of interest in 1 row; 445 records (444 nonzero: group 44, analytic 400); 5e8fa671
+## spec replay -> Z/state/replay_spec.json (203 units); spec blocks1 -> Z/state/blocks1_spec.json (2 units) (printed)
+## pilot: touch Z/state/blocks1_marker; (cwd W) PYTHONPATH=W /usr/bin/time -p M/venv/bin/python -B ... run Z/state/blocks1_spec.json > Z/out/blocks1_run.txt   # exit 0, 56.6 s, 1 worker rc 0
+## python -I -B look at blocks1's emit.jsonl -> Z/out/blocks1_pilot_look.txt (refusals_07b, chase_07c and route_07a in every call; 0 chase stops; Ray not initialised)
+## cp -p M/var/levin-phase-floor-07b/rehearsal/scripts/run_06j.py Z/scripts/run_06j.py (6227aea4, unchanged); Write Z/scripts/launch_r32.py (145c59c8; after 07b's launch_r31.py; plan r32-replay); diff -> Z/out/launch_r32.diff
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B -m runregistrykit list > Z/out/replay_prelaunch_registry_list.txt   # 93 runs, 93 finished
+## touch Z/state/replay_launch_marker; (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/launch_r32.py r32-replay > Z/state/launch_replay.txt   # exit 0: run levin-phase-floor-07c-r32-replay-20261119T143558, sh 30401, plan state/plan_r32-replay.json (8 commands)
+## (cwd W) Z/scripts/rec.sh replay_launch_check "$(cat Z/state/replay_launch_check_cmd.txt)" -> Z/out/replay_launch_check.txt (running, driver pid 30405, stage 01_replay_run started; harness driver 30410 with six workers 30416-30421; W clean; no Ray process)
+## Write Z/scripts/phase_limited_flips.py (the orchestrator's note); (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/phase_limited_flips.py Z/out/qsi_records_r31_r32.csv Z/out/phase_limited_flips.json > Z/out/phase_limited_flips.txt   # exit 0: 2 records, both at (1e5, 3.162e5, 3.162e5; z 755.687), G+q-r and G-q+r, False -> True, converged both, regions 38 -> 36, |dv|/(e31+e32) 5.47e-08
+## read: 07b's rehearsal s1_score_r31.py (body), s2_score_r31.py (body), block_score_r31.py (body), run_block_reference_r31.sh, block_reference_r30.py (head), run_readers_worktree.sh; keys of 07b's s1/s2/block_scores.json (printed)
+## Write Z/scripts/gen/make_scores_07c.py; python -I -B run -> Z/scripts/s1_score_r32.py, s2_score_r32.py, block_score_r32.py (tag shifts 39, 37, 45); each parses; diffs -> Z/out/{s1_score,s2_score,block_score}_r32.diff
+## read only (printed): Part A's readings of ref-R31-3-20363-g1 (keys, the fccsplit pieces, qawo r1's pickle and SHA-256); cmp of scores_07c.json var against docs: equal
+## Write Z/scripts/s3_record_r32.py (section 9.5's S3 prediction); one python -I -B heredoc of four asserted replacements (total_converged read from the rows CSV, not the metadata)
+## Write Z/scripts/run_block_reference_r32.sh (after 07b's; diff -> Z/out/run_block_reference_r32.diff); cp -p 07b's block_reference_r30.py (efac125e) and run_readers_worktree.sh (ec96cf09), unchanged
+## read only: cat of the r32-replay run's status.json (running, 01_replay_run) -- the one look before handing back
+## --- end of turn 3 part 1 (the r32-replay run running, sh 30401, driver 30405; lock held) ---
+=================== r32-replay/01_replay_run (out/cmd/r32-replay/01_replay_run.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py run /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:35:59Z
+# ----
+2026-11-19T14:35:59Z # prompt 07c r32: run replay
+2026-11-19T14:35:59Z # written 2026-11-19T14:35:59Z on mps026298.phys.susx.ac.uk
+2026-11-19T14:35:59Z # script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+2026-11-19T14:35:59Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+2026-11-19T14:35:59Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-19T14:35:59Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_spec.json sha256 89542d40e191bbef3b0e8d009d22522adba10c4239f63871677e8d2fb731597b
+2026-11-19T14:35:59Z 6 workers, 203 units, at most 6 at once
+2026-11-19T14:35:59Z start replay-h-0 (h, 34 units): pid 30416
+2026-11-19T14:35:59Z start replay-h-1 (h, 34 units): pid 30417
+2026-11-19T14:35:59Z start replay-h-2 (h, 34 units): pid 30418
+2026-11-19T14:35:59Z start replay-h-3 (h, 34 units): pid 30419
+2026-11-19T14:35:59Z start replay-h-4 (h, 34 units): pid 30420
+2026-11-19T14:35:59Z start replay-h-5 (h, 33 units): pid 30421
+2026-11-19T14:42:20Z end replay-h-2: rc 0 after 380.9 s
+2026-11-19T14:42:26Z end replay-h-1: rc 0 after 386.9 s
+2026-11-19T14:42:30Z end replay-h-3: rc 0 after 391.0 s
+2026-11-19T14:42:40Z end replay-h-4: rc 0 after 401.0 s
+2026-11-19T14:42:47Z end replay-h-0: rc 0 after 408.0 s
+2026-11-19T14:42:49Z end replay-h-5: rc 0 after 410.0 s
+2026-11-19T14:42:50Z done in 411.1 s; return codes {0: 6}
+# ----
+# end 2026-11-19T14:42:50Z
+# exit 0
+=================== r32-replay/02_replay_check (out/cmd/r32-replay/02_replay_check.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py check /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/replay /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/replay_calls.csv
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:42:51Z
+# ----
+# prompt 07c r32: the replay checked against R32, record by record
+# written 2026-11-19T14:42:51Z on mps026298.phys.susx.ac.uk
+# script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json sha256 5e8fa671c95a1d15b69e3e9cc8d2f881e864e574e0bfb18dd602796d9aff87df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/replay/replay-h-0/emit.jsonl sha256 0b594cd443333a14481ae541f124fdcf8a74b066d04c8c53a798b84dc0e98637
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/replay/replay-h-1/emit.jsonl sha256 ce1e3893fa26a154a69b25126591a12585971a28d8160d8233983982d5442510
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/replay/replay-h-2/emit.jsonl sha256 bb35aa39061fc5afd118dc1faa66cc0158d2e9065ca7e01ed1ded677e308e4d1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/replay/replay-h-3/emit.jsonl sha256 85ae98c77eac0ebdf18fa4185ecfac83ec7d83a5f74462e4751f09ac1eef28bf
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/replay/replay-h-4/emit.jsonl sha256 aa859305d5d09e96c6213f0ab007f9543c5dbc6aa5082d27f031797c3dc22a3d
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/replay/replay-h-5/emit.jsonl sha256 44908fd2051670c017c417653dd7d52ccb71c43a180fc8832f01412b821f7e41
+records checked 445; reproduce bit for bit 445; not 0
+workers' ray_initialized at exit: {'False': 203}
+route_07a over 4180 replayed calls (solve caller || class: solves):
+  Levin left-comparison region || LU differs | not returned: 162
+  Levin left-comparison region || LU differs | returned: 18
+  Levin left-comparison region || route differs | not returned: 150
+  Levin left-comparison region || route differs | returned: 4
+  Levin left-comparison region || same | not returned: 9198
+  Levin left-comparison region || same | returned: 2166
+  Levin right-comparison region || LU differs | not returned: 14
+  Levin right-comparison region || LU differs | returned: 33
+  Levin right-comparison region || route differs | not returned: 8
+  Levin right-comparison region || route differs | returned: 2
+  Levin right-comparison region || same | not returned: 9062
+  Levin right-comparison region || same | returned: 2579
+  Levin subregion || LU differs | not returned: 38
+  Levin subregion || LU differs | returned: 5
+  Levin subregion || route differs | not returned: 15
+  Levin subregion || same | not returned: 3582
+  Levin subregion || same | returned: 538
+  left half of fallback region || same | not returned: 4237
+  left half of fallback region || same | returned: 1754
+  right half of fallback region || route differs | returned: 2
+  right half of fallback region || same | not returned: 4203
+  right half of fallback region || same | returned: 1786
+  stationary-point window piece || same | not returned: 482
+  stationary-point window piece || same | returned: 653
+  trust check: a quarter || LU differs | not returned: 115
+  trust check: a quarter || LU differs | returned: 37
+  trust check: a quarter || route differs | not returned: 125
+  trust check: a quarter || route differs | returned: 24
+  trust check: a quarter || same | not returned: 459500
+  trust check: a quarter || same | returned: 61419
+refusals over the replayed calls ({'group': 932, 'other': 3248}): {('group', 'calls acted'): 359, ('group', 'calls with an edge refusal'): 0, ('group', 'edge'): 0, ('group', 'range'): 567, ('other', 'calls acted'): 2587, ('other', 'calls with an edge refusal'): 0, ('other', 'edge'): 0, ('other', 'range'): 6517}
+chase stops over the replayed calls: {('group', 'calls with a chase stop'): 164, ('group', 'calls with a rate-rule refusal'): 359, ('group', 'num_chase_noise_bisections'): 1589, ('group', 'num_chase_stopped_leaves'): 4061, ('group', 'num_chase_stops'): 180, ('other', 'calls with a chase stop'): 225, ('other', 'calls with a rate-rule refusal'): 2587, ('other', 'num_chase_noise_bisections'): 8888, ('other', 'num_chase_stopped_leaves'): 1539, ('other', 'num_chase_stops'): 225}
+the records of interest: 1; reproduced 1
+  [100000.0, 1000000.0, 1000000.0, 144627.70674226896] WKB_Levin.subintervals[1].groups[0] G+q+r: reproduces True; call index 1; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 4}; chase {'num_chase_stops': 2, 'num_chase_stopped_leaves': 28, 'num_chase_noise_bisections': 12}
+calls with a phase skipped (location_skipped_phases non-empty) in the replayed rows: 4
+  [100000.0, 100000.0, 100000.0, 1329131612.3012946] 291e+09, z in (1.7126e+09, 1.3291e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': None, 'reason': 'zero_rate'}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 4017630440.8276954] 0176e+09, z in (5.421e+09, 4.3052e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': None, 'reason': 'zero_rate'}]; points 0, guarded 0
+  [316227.7660168379, 316227.7660168379, 316227.7660168379, 5297494147.272005] 2975e+09, z in (5.421e+09, 5.2975e+09), regime qr, group q-r: skipped [{'phase': 0, 'variation': None, 'reason': 'zero_rate'}]; points 0, guarded 0
+  [1000000.0, 1000000.0, 1000000.0, 13627426843.66573] 627e+10, z in (1.7159e+10, 1.3627e+10), regime qr, group q-r: skipped [{'phase': 0, 'variation': None, 'reason': 'zero_rate'}]; points 0, guarded 0
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/replay_calls.csv sha256 259a6ea1af8be2804609c5a2dd71209864438e5a2c8eff10f9083541df925143 (445 lines) and /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/replay_calls.checks.json sha256 650b714333f1adcf91f018789818fd675f5b09701de627179979e745de043c22
+# ----
+# end 2026-11-19T14:42:52Z
+# exit 0
+=================== r32-replay/03_blocks2_spec (out/cmd/r32-replay/03_blocks2_spec.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py spec blocks2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/blocks2_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:42:52Z
+# ----
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/blocks2_spec.json sha256 2b034084f1705aef4d5e5c4fb36c972df77b500d2e92a138fbcabced827e3a5b: 2 units
+# ----
+# end 2026-11-19T14:42:53Z
+# exit 0
+=================== r32-replay/04_blocks2_run (out/cmd/r32-replay/04_blocks2_run.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py run /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/blocks2_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:42:54Z
+# ----
+2026-11-19T14:42:54Z # prompt 07c r32: run blocks2
+2026-11-19T14:42:54Z # written 2026-11-19T14:42:54Z on mps026298.phys.susx.ac.uk
+2026-11-19T14:42:54Z # script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+2026-11-19T14:42:54Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+2026-11-19T14:42:54Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-19T14:42:54Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/blocks2_spec.json sha256 2b034084f1705aef4d5e5c4fb36c972df77b500d2e92a138fbcabced827e3a5b
+2026-11-19T14:42:54Z 1 workers, 2 units, at most 6 at once
+2026-11-19T14:42:54Z start blocks2-h (h, 2 units): pid 32157
+2026-11-19T14:43:50Z end blocks2-h: rc 0 after 56.3 s
+2026-11-19T14:43:51Z done in 57.3 s; return codes {0: 1}
+# ----
+# end 2026-11-19T14:43:52Z
+# exit 0
+=================== r32-replay/05_blockcheck (out/cmd/r32-replay/05_blockcheck.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py blockcheck /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/blocks.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:43:52Z
+# ----
+# prompt 07c r32: the four blocks at h, checked against R32, and each capture against R31's
+# written 2026-11-19T14:43:52Z on mps026298.phys.susx.ac.uk
+# script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json sha256 5e8fa671c95a1d15b69e3e9cc8d2f881e864e574e0bfb18dd602796d9aff87df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/blocks1/blocks1-h/emit.jsonl sha256 17f81ae39aa57f44cf2fe54399b483ce646a70f9d4674fdeda622d5d88a747aa
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/blocks2/blocks2-h/emit.jsonl sha256 3436d469e1f6e4a06f9fb72d6e8181cee685c371c2f34e4e0e3d6bbc9783531c
+[316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] J4 h (R32): REPRODUCES the store's record (pass 1 and 2); value -0x1.9017c8e4681f6p-30 abserr 0x1.65dacd1543ce8p-66 regions 14; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/inputs/J4-h-0-10172.pkl; capture equals R31's False
+[316227.7660168379, 316227.7660168379, 316227.7660168379, 1329131612.3012946] Y4 h (R32): REPRODUCES the store's record (pass 1 and 2); value 0x1.2018ed31b447ep-27 abserr 0x1.78af331f037f8p-66 regions 4; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/inputs/Y4-h-0-10172.pkl; capture equals R31's False
+[1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] J4 h (R32): REPRODUCES the store's record (pass 1 and 2); value -0x1.e6f859d2f7c72p-33 abserr 0x1.ff3cae87aca98p-69 regions 6; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/inputs/J4-h-1-20068.pkl; capture equals R31's False
+[1000000.0, 1000000.0, 1000000.0, 4017630440.8276954] Y4 h (R32): REPRODUCES the store's record (pass 1 and 2); value 0x1.9714e016a7982p-30 abserr 0x1.faa21d2682f6bp-69 regions 13; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/inputs/Y4-h-1-20068.pkl; capture equals R31's False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/blocks.json sha256 c8d379f30f2d430400e685c75d2edacf61b42e111df101238d00e71bad50b36c; all reproduce: True
+# ----
+# end 2026-11-19T14:43:53Z
+# exit 0
+=================== r32-replay/06_refcap_spec (out/cmd/r32-replay/06_refcap_spec.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py refcapspec /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:43:53Z
+# ----
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json sha256 cb963f571332b9b7b990844ffc4e48b0d8e7f4bf52c842b31a796aff776d1767: 1 units, 1 captures
+# ----
+# end 2026-11-19T14:43:54Z
+# exit 0
+=================== r32-replay/07_refcap_run (out/cmd/r32-replay/07_refcap_run.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py run /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:43:54Z
+# ----
+2026-11-19T14:43:55Z # prompt 07c r32: run refcap
+2026-11-19T14:43:55Z # written 2026-11-19T14:43:54Z on mps026298.phys.susx.ac.uk
+2026-11-19T14:43:55Z # script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+2026-11-19T14:43:55Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+2026-11-19T14:43:55Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-19T14:43:55Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/refcap_spec.json sha256 cb963f571332b9b7b990844ffc4e48b0d8e7f4bf52c842b31a796aff776d1767
+2026-11-19T14:43:55Z 1 workers, 1 units, at most 6 at once
+2026-11-19T14:43:55Z start refcap-h-0 (h, 1 units): pid 32333
+2026-11-19T14:44:28Z end refcap-h-0: rc 0 after 33.2 s
+2026-11-19T14:44:29Z done in 34.2 s; return codes {0: 1}
+# ----
+# end 2026-11-19T14:44:29Z
+# exit 0
+=================== r32-replay/08_refcapcheck (out/cmd/r32-replay/08_refcapcheck.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py refcapcheck /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/refcap.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:44:29Z
+# ----
+# prompt 07c r32: the captures of the group records of interest, checked against R32
+# written 2026-11-19T14:44:30Z on mps026298.phys.susx.ac.uk
+# script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json sha256 5e8fa671c95a1d15b69e3e9cc8d2f881e864e574e0bfb18dd602796d9aff87df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/capture/refcap/refcap-h-0/emit.jsonl sha256 155a5d8830bb6830d17617950f00cce987fc3ce24eebacd0b14c86de32d74671
+[100000.0, 1000000.0, 1000000.0, 144627.70674226896] WKB_Levin.subintervals[1].groups[0] G+q+r: REPRODUCES R32's record; value 0x1.263e9f583ee54p-79 abserr 0x1.513b2851b5963p-104 regions 86 converged True; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 4}; pickle /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/inputs/ref-G+q+r-h-3-122-1.pkl
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/refcap.json sha256 41464ffcbcee7f76c406cd5d8b0dca57645537cca00b789a4556f766b9637a87; all reproduce: True
+# ----
+# end 2026-11-19T14:44:30Z
+# exit 0
+## --- turn 3 part 2 (resumed: the r32-replay run's driver 30405 exited 14:44:31Z; done, exit 0, 8 of 8, per the orchestrator; deviation 21 accepted) ---
+## cp of the r32-replay run's status.json -> Z/out/r32-replay_status.json (done, exit 0, 8/8); read the eight outputs under Z/out/cmd/r32-replay/ (printed): 445 of 445 records reproduce R32 bit for bit, Ray uninitialised in 203 workers; blockcheck all reproduce, each capture's blob differs from R31's; refcapcheck reproduces R32's record
+## python -I -B read-only look (printed): blocks.json's capture_equals_* in 07c's, 07b's and 07a's rehearsals (False in all three; equal lengths); a byte diff of R32's and R31's J4 block capture and of the S3 record's captures (printed): the blobs differ in the unit name, the tree path and str hashes (_name_hash), and the record captures differ in length
+## (cwd W) bash Z/scripts/run_block_reference_r32.sh > Z/out/block_reference_run.txt 2>&1   # exit 0; four exit 0, 14:45:48-14:45:51Z
+## (cwd W) for the R32 capture Z/state/inputs/ref-G+q+r-h-3-122-1.pkl and R31's (07b's rehearsal state/inputs/ref-G+q+r-h-3-20363-1.pkl, read only): env PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 PYTHONPATH=W:Z/scripts/capture M/venv/bin/python -B Z/scripts/block_reference_r30.py W <pkl> Z/out/s3_record/<R32|R31>-<name>.json > ....txt 2>&1   # both exit 0
+## python -I -B heredoc of six asserted replacements in Z/scripts/s3_record_r32.py: the integrand compared by the two block_reference samples (1001 points, x_span, kw) in place of blob equality, which is reported (deviation 24) -> 4330f394
+## (cwd W) PYTHONPATH=W M/venv/bin/python -B Z/scripts/s3_record_r32.py Z/out/s3_record.json > Z/out/s3_record.txt 2>&1   # exit 0: converged at 86 regions (depth 16), equal to Part A's (S) record bit for bit; integrand bit-identical to the reference's capture; spread 1.115e-06 of abserr, scored; |v - ref|/abserr 0.05331484572900594, honest; HOLDS
+## (cwd W) for s in s1_score_r32 s2_score_r32 block_score_r32: PYTHONPATH=W M/venv/bin/python -B Z/scripts/$s.py > Z/out/{s1_scores,s2_scores,block_scores}.txt 2>&1   # each exit 0: S1 HOLDS (12/12, largest 0.0670 w06, 8 equal R31); S2 HOLDS (0.0202, 0.111); S4 HOLDS (4/4)
+## python -I -B read-only (printed): S1's per-row ratios against R31's, regions and counts
+## R32 hashes + ls -la -> Z/state/r32_store_sha256_before_reads.txt; touch Z/state/readers_marker
+## readers (lock held; cwd W): READERS_TREE=W READERS_PYTHON=M/venv/bin/python /usr/bin/time -p bash Z/scripts/run_readers_worktree.sh M/var/datastores/levin-phase-floor-07c-r32.sqlite Z/extract > Z/out/readers.txt 2>&1   # exit 0, 136.6 s; 6 / 6 exit 0, each store-identical
+## (cwd W) Z/scripts/rec.sh readers_check "$(cat Z/state/readers_check_cmd.txt)" -> Z/out/readers_check.txt (R32 identical; 6 exits 0; 0 Tracebacks; six shard-count warnings and two MatplotlibDeprecationWarnings, as 07b's; extract 175M, 3122 files, none over 2 MB; W clean, nothing newer; no Ray process)
+## (read only) grep of 07b's readers_check and extract logs for the MatplotlibDeprecationWarning (2 in extract_GkSource_data.log there too)
+## python (cwd W, PYTHONPATH=W, -B) heredoc, read only -> tee Z/out/unconverged_calls_look.txt: the unconverged calls in the replayed rows (1: (3.162e5)^3 z 573.11 G-q-r, 70 regions, depth 20, 2 range refusals, 0 chase stops, 5 noise bisections); the row (1e6, 3.162e5, 1e6; z 434.65) is not among the replayed rows
+## lock 7 (look): (cwd W) echo header >> Z/state/lock.log; ... ray-processes --ray-temp-dir /tmp/ray-sgk >> ...; echo "exit $?" >> ...   -> nothing listed, exit 0
+## lock 8: (cwd W) echo header >> Z/state/lock.log; PYTHONPATH=W M/venv/bin/python -B -m raypoolkit.rehearsal_lock release --project SecondaryGWKit --ray-temp-dir /tmp/ray-sgk >> Z/state/lock.log 2>&1; echo "exit $?" >> ...   -> released 14:49:20Z, exit 0
+## lock 9 (look): ... status --ray-temp-dir /tmp/ray-sgk --ray-address in-process >> ...   -> free; Ray processes none; exit 0
+## lock 10 (look): ... ray-processes --ray-temp-dir /tmp/ray-sgk >> ...   -> nothing listed, exit 0
+## Z/scripts/protected_listing.sh Z/state/protected_listing_end.txt   # 46,841; differs from before only under var/levin-phase-floor-07c/review/ (13 lines; the orchestrator's)
+## (cwd W) Z/scripts/rec.sh final_check "$(cat Z/state/final_check_cmd.txt)" -> Z/out/final_check.txt, Z/out/final_registry_list.txt, Z/state/stores_sha256_final.txt, Z/state/r32_store_sha256_final.txt (R29, R30, R31 equal to before; R32 equal to after-build; A3 v2 unchanged; R31's run directory unchanged; 94 runs all finished; ~/.raypoolkit empty; no Ray process; W cc3368ce clean, nothing newer; M 28ebaf07 clean; no __pycache__)
+## find of pickles and files over 2 MB under Z (outside extract/), with shasum and size, and du of state/capture, state/inputs, extract and out (printed) -> KEPT_ON_MAC_STUDIO.txt
+## Write Z/{KEPT_ON_MAC_STUDIO.txt, issues.md, log.md, verification.md}
+## --- end of turn 3 ---
+## python (cwd W, PYTHONPATH=W, -B) heredoc, read only -> tee Z/out/chase_without_refusal_look.txt: 4180 replayed calls; with a chase stop and no rate-rule refusal: 0
+## python -I -B heredoc: two asserted replacements in Z/log.md (that check's result; deviation 28)

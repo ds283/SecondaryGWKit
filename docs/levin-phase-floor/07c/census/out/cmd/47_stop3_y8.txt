@@ -1,0 +1,22 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/score_y8_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419 out/stop3/y8.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-20T08:18:55Z
+# ----
+# levin-phase-floor 07c: Y8 at planned stop 3, the census against (S)'s replays
+# written 2026-11-20T08:18:55Z on mps026298.phys.susx.ac.uk
+# script score_y8_07c.py sha256 7cb09e99687ce2a017e309513a49923bd3f81cbde0b8948a1a9decaddbe6be74
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/census_refs_07c.json sha256 a93e9dc9ed47532b48c52671c837520d3c0219a1851024cb51a026ef7286e9f3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/census_wanted_07c.json sha256 9d0b6db225958e7deec1fe73e2bef7b3099641548d6b744f1daa225f798d9993
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/census_wanted_07c_chase.json sha256 6e92dc5c9a62769f6b45cc7faf12477c68d9d3703f2f7418a2a64a97fbbe23b5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/census_wanted_07c_r5.json sha256 daf3486c5111d187e10b2d3155ed24b9daaec9bd6dca5db93e08de794f1c37cc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/replays/S_summary_vplain.json sha256 ab389208542edd61e86668f561dac96941add1dd94abbb2b406dee447a6d84d0
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/checkpoint.jsonl sha256 33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e
+ids 454; calls 453 (excluded ['r31-3-20363-1']); distinct census calls 448; replay modules ['09088683c6da28fc7e003b31a999d1120b902c221ce9f59b755673c5a7e5a6fb']; replay record equals its summary row: 453; equal in all five: 453; the stop acted (census) in 327
+Y8: all equal
+wrote out/stop3/y8.json sha256 4d05145e9dce0461d25441ba641f4f317fa7df5ac3f2a01f4b8b661c483146fc
+# ----
+# end 2026-11-20T08:18:59Z
+# exit 0

@@ -1,0 +1,29 @@
+script 1204d140b85c6602bc7d2d212c4d597d889480491d94cc75acdcaaf4b666fb39
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s1_scores.json a056bd90fda28619aa5786394b3ebb52440baabe4279a2f101ac430eb3b4190a
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s2_scores.json d2d15163be33dc8fface425b7a07a3f96afa6e0ac0c182b2db1b04db7fbd9124
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/block_scores.json 62606c249eed5afc3c464d00426d942d60486956babe3eddcf9d8760b439062b
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/s1_scores.json 32763e493b63ffaeee49e67f5d62680d8d9426b3d7c32443725cd95963616998
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/s2_scores.json b816ee7566c7c77d3920dea1bb8c834683c84de5388ba1f7724000a08017f3ef
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/out/block_scores.json 55cbe9f6d95d4d1c75278bbe08af6dc8e93a4b4e44333097ff7f1376252b4266
+input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c/docs/levin-phase-floor/06g/references/out/scores_stage3/scores.json 73c18680d266b1a0fdf11123c104d20e822658047dd7c36e1c814db9ffcad912
+S1 w00 ratio 0.0361742 (agent 0.0361742) conv True loc True equal_R31 True (agent True) chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 0}
+S1 w01 ratio 0.000311303 (agent 0.000311303) conv True loc True equal_R31 True (agent True) chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 0}
+S1 w02 ratio 0.0349917 (agent 0.0349917) conv True loc True equal_R31 True (agent True) chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 0}
+S1 w03 ratio 4.35878e-05 (agent 4.35878e-5) conv True loc True equal_R31 True (agent True) chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 0}
+S1 w04 ratio 0.000370221 (agent 0.000370221) conv True loc True equal_R31 True (agent True) chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 0}
+S1 w05 ratio 0.018685 (agent 0.018685) conv True loc True equal_R31 True (agent True) chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 0}
+S1 w06 ratio 0.0670125 (agent 0.0670125) conv True loc True equal_R31 True (agent True) chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 0}
+S1 w07 ratio 0.00297081 (agent 0.00297081) conv True loc True equal_R31 True (agent True) chase {'num_chase_stops': 0, 'num_chase_stopped_leaves': 0, 'num_chase_noise_bisections': 0}
+S1 w08 ratio 0.000474137 (agent 0.000474137) conv True loc True equal_R31 False (agent False) chase {'num_chase_stops': 1, 'num_chase_stopped_leaves': 25, 'num_chase_noise_bisections': 6}
+S1 w09 ratio 0.020798 (agent 0.020798) conv True loc True equal_R31 False (agent False) chase {'num_chase_stops': 1, 'num_chase_stopped_leaves': 32, 'num_chase_noise_bisections': 6}
+S1 w10 ratio 0.0132531 (agent 0.0132531) conv True loc True equal_R31 False (agent False) chase {'num_chase_stops': 1, 'num_chase_stopped_leaves': 30, 'num_chase_noise_bisections': 6}
+S1 w11 ratio 0.00194838 (agent 0.00194838) conv True loc True equal_R31 False (agent False) chase {'num_chase_stops': 1, 'num_chase_stopped_leaves': 16, 'num_chase_noise_bisections': 6}
+S1 holds True worst 0.06701254714976868
+S2 row1 ratio 0.0202477 (agent 0.0202477) loc True ref same as R31's review True ref found in p1_row file False ([]) equal_R31 True
+S2 row2 ratio 0.11116 (agent 0.11116) loc True ref same as R31's review True ref found in p1_row file False ([]) equal_R31 False
+S2 holds True
+S4 2pt5 J4 1.32913e+09 ratio 4.3663e-05 (agent 4.3663e-5) loc True guarded 0 ref equal to R31 review's True value/abserr equal R31 True
+S4 2pt5 Y4 1.32913e+09 ratio 0.000580725 (agent 0.000580725) loc True guarded 0 ref equal to R31 review's True value/abserr equal R31 True
+S4 2pt5 J4 4.01763e+09 ratio 0.000206301 (agent 0.000206301) loc True guarded 0 ref equal to R31 review's True value/abserr equal R31 True
+S4 2pt5 Y4 4.01763e+09 ratio 0.000616817 (agent 0.000616817) loc True guarded 0 ref equal to R31 review's True value/abserr equal R31 True
+S4 holds True

@@ -1,0 +1,102 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/stop3_07c.py /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419 out/stop3/compare_census_calls.calls.jsonl out/stop3/stop3.json out/stop3/newly_unconverged.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-20T08:19:46Z
+# ----
+{
+ "y1_counts": {
+  "1e-7|analytic|acted|differing": 28688,
+  "1e-7|analytic|acted|equal": 5707,
+  "1e-7|analytic|untouched|equal": 73021,
+  "1e-7|group|acted|differing": 12344,
+  "1e-7|group|acted|equal": 206,
+  "1e-7|group|untouched|equal": 24775,
+  "1e-8|analytic|acted|differing": 18580,
+  "1e-8|analytic|acted|equal": 4684,
+  "1e-8|analytic|untouched|equal": 84152,
+  "1e-8|group|acted|differing": 11760,
+  "1e-8|group|acted|equal": 203,
+  "1e-8|group|untouched|equal": 25362
+ },
+ "converged_changes": {
+  "1e-7|analytic|07b True -> 07c True": 107416,
+  "1e-7|group|07b False -> 07c False": 82,
+  "1e-7|group|07b False -> 07c True": 97,
+  "1e-7|group|07b True -> 07c True": 37146,
+  "1e-8|analytic|07b True -> 07c True": 107416,
+  "1e-8|group|07b False -> 07c False": 96,
+  "1e-8|group|07b False -> 07c True": 96,
+  "1e-8|group|07b True -> 07c True": 37133
+ },
+ "newly_unconverged_counts": {},
+ "newly_unconverged_by_carrier_route": {},
+ "newly_converged_counts": {
+  "1e-7|group": 97,
+  "1e-8|group": 96
+ },
+ "regions": {
+  "1e-7|analytic": {
+   "07c": 1043600,
+   "07b": 1081914,
+   "ratio": 0.964586834073688
+  },
+  "1e-7|group": {
+   "07c": 1682729,
+   "07b": 1906148,
+   "ratio": 0.8827903184852383
+  },
+  "1e-8|analytic": {
+   "07c": 1039403,
+   "07b": 1064456,
+   "ratio": 0.9764640342109021
+  },
+  "1e-8|group": {
+   "07c": 1770477,
+   "07b": 1987121,
+   "ratio": 0.8909759395628147
+  }
+ },
+ "regions_total": {
+  "07c": 5536209,
+  "07b": 6039639,
+  "ratio": 0.9166456803130121
+ },
+ "07c": {
+  "created": "2026-11-19T20:14:19+00:00",
+  "last_heartbeat": "2026-11-20T08:12:19+00:00",
+  "wall_s": 43080.0,
+  "n_records": 18560,
+  "n_over_budget": 0,
+  "unit_wall_sum_s": {
+   "1e-7": 49405.32654713793,
+   "1e-8": 49325.3470669901
+  },
+  "largest_unit_wall_s": 39.997990290634334
+ },
+ "07b": {
+  "created": "2026-11-17T01:02:00+00:00",
+  "last_heartbeat": "2026-11-17T13:32:16+00:00",
+  "wall_s": 45016.0,
+  "n_records": 18560,
+  "n_over_budget": 0,
+  "unit_wall_sum_s": {
+   "1e-7": 52154.37729562214,
+   "1e-8": 54667.237314134836
+  },
+  "largest_unit_wall_s": 40.075091999955475
+ },
+ "wall_against_projection": {
+  "wall_s": 43080.0,
+  "central_s": 43311.82356403733,
+  "wall_over_central": 0.9946475686091911,
+  "central_x_shortfall_s": 51832.94424443969,
+  "highest_s": 46285.4527835663,
+  "wall_over_07b_census": 0.9569930691309757
+ }
+}
+newly unconverged: 0; newly converged: 193
+wrote out/stop3/stop3.json sha256 ba5222ff61f17503c683608b6b1ffaa16ad996ab1bb3e7989e2071192e8efe80
+wrote out/stop3/newly_unconverged.md sha256 2bbc11294541097c772af9e5fb5b1fbb7215887f68e2132419219213f6e8533b
+# ----
+# end 2026-11-20T08:20:35Z
+# exit 0

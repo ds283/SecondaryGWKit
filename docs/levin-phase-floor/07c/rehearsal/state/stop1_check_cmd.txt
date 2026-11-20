@@ -1,0 +1,13 @@
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+cd $M
+echo "== R31, R32 store sha256 and listing after the comparisons"; { shasum -a 256 var/datastores/levin-phase-floor-07b-r31.sqlite var/datastores/levin-phase-floor-07b-r31-shard000?.sqlite var/datastores/levin-phase-floor-07c-r32.sqlite var/datastores/levin-phase-floor-07c-r32-shard000?.sqlite; ls -la var/datastores | grep -E "07b-r31|07c-r32"; } > $Z/state/store_sha256_after_diff.txt; cmp $Z/state/store_sha256_before_diff.txt $Z/state/store_sha256_after_diff.txt && echo "R31 and R32 byte-identical before and after the comparisons (no journal or sidecar)"
+echo "== R32 against its after-build hashes"; shasum -a 256 var/datastores/levin-phase-floor-07c-r32.sqlite var/datastores/levin-phase-floor-07c-r32-shard000?.sqlite | cmp - $Z/state/r32_store_sha256_after_build.txt && echo "R32 unchanged since its build"
+echo "== R29, R30, R31"; shasum -a 256 var/datastores/levin-phase-floor-07-r29.sqlite var/datastores/levin-phase-floor-07-r29-shard000?.sqlite var/datastores/levin-phase-floor-07a-r30.sqlite var/datastores/levin-phase-floor-07a-r30-shard000?.sqlite var/datastores/levin-phase-floor-07b-r31.sqlite var/datastores/levin-phase-floor-07b-r31-shard000?.sqlite | cmp - $Z/state/stores_sha256_before.txt && echo "R29, R30, R31 unchanged"
+echo "== A3 v2"; shasum -a 256 var/datastores/handover-A3-v2-lambdacdm* | cmp - $Z/state/a3v2_sha256_before.txt && echo "A3 v2 unchanged"
+echo "== protected listing"; diff $Z/state/protected_listing_before.txt $Z/state/protected_listing_stop1.txt | grep -E "^[<>]" | grep -vc "var/levin-phase-floor-07c/review/" ; echo "(lines differing outside 07c/review/, above)"
+echo "== worktree"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"; command find $W -newer $Z/state/r32_launch_marker -not -path "*/.git/*" | head; echo "(end newer)"
+echo "== main checkout"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== registry"; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/stop1_registry_list.txt 2>&1; echo "exit $?"; tail -1 $Z/out/stop1_registry_list.txt
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+echo "== lock owner file"; cat ~/.raypoolkit/rehearsal-lock/owner 2>&1 | head -12
+echo "== pycache in records"; command find $Z -name __pycache__ | head; echo "(end)"

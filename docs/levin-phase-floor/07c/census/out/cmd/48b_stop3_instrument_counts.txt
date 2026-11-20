@@ -1,0 +1,9 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B -c $'\nimport json,collections\nc=collections.Counter()\nfor l in open(\'out/stop3/compare_census_calls.calls.jsonl\'):\n    x=json.loads(l); ch=x.get(\'chase_07c\')\n    c[\'err\' if x[\'chase_07c_error\'] else (\'none\' if ch is None else (\'eq\' if ch[\'counts_equal_result\'] else \'NEQ\'))]+=1\n    if ch: c[\'fail\' if ch.get(\'fail\') else \'nofail\']+=1; c[\'not_returned\']+=ch.get(\'n_not_returned\') or 0\n    c[\'no_counts\']+= x[\'class\']==\'no_counts\'\nprint(\'calls whose instrument counts equal the result (eq), unequal (NEQ), in error (err), absent (none):\', dict(c))\n'
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-20T08:21:23Z
+# ----
+calls whose instrument counts equal the result (eq), unequal (NEQ), in error (err), absent (none): {'eq': 289482, 'nofail': 289482, 'not_returned': 0, 'no_counts': 0}
+# ----
+# end 2026-11-20T08:21:27Z
+# exit 0

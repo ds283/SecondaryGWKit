@@ -1,0 +1,12 @@
+2,4c2,4
+< # prompt 07b r31: R30's run_block_reference_r30.sh (4a2bd2c3) for R31: block_reference_r30.py (R30's, unchanged; no
+< # --reference) on R31's four block captures at the tree h (0a103b5a), one process each, at most four at once. Ray-free.
+< Z=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal
+---
+> # prompt 07c r32: 07b's rehearsal run_block_reference_r31.sh (687b4d81) for R32: block_reference_r30.py (R30's, unchanged;
+> # no --reference) on R32's four block captures at the tree h (cc3368ce), one process each, at most four at once. Ray-free.
+> Z=/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+6c6
+< T=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5
+---
+> T=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c

@@ -1,0 +1,55 @@
+{
+ "script_sha256": "59a5c4c705e8d4e2b4d6c3db2ca5fff54cee14f4b9239d2bfeda8376920194b5",
+ "index_sha256": "dbc5b855bbc3d1a4c16e908042aaf2bd09d3034a74ab40a8e2f901d992a4cdda",
+ "checkpoint_sha256": "33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e",
+ "counts": {
+  "units": 18560,
+  "units_done": 18560,
+  "calls": 289482,
+  "scanned_analytic_1e-7": 107416,
+  "y3_scored": 182066,
+  "scanned_group_1e-7": 37325,
+  "scanned_group_1e-8": 37325,
+  "y3_with_change_or_root": 3122,
+  "pickles_read": 1945,
+  "pickle_scan_keyed_by_kind": 1945,
+  "y2_calls_with_sign_change": 3122,
+  "y2_calls_with_nonempty_grid_set": 0,
+  "y2_sign_changes": 3122
+ },
+ "Y2": {
+  "n": 0,
+  "holds": true,
+  "violations": [],
+  "ends_levin": [],
+  "n_grid_mismatch": 0,
+  "grid_mismatch": [],
+  "nonlevin_by_tag": {},
+  "scan_listings_by_how_branch": {
+   "('ends', 'CC')": 2734
+  }
+ },
+ "Y3": {
+  "n": 0,
+  "holds": true,
+  "violations": [],
+  "skipped_by_reason": {
+   "zero_rate": 784
+  },
+  "bad_reason": [],
+  "skipped_with_sign_change": [],
+  "calls_with_end_points": 0
+ },
+ "Y5": {
+  "sums": {
+   "cc_with_levin_half": 0,
+   "partition_nonforced": 0,
+   "partition_forced": 18238,
+   "num_guarded_regions": 0
+  },
+  "holds": true,
+  "calls_with_forced": 4416,
+  "calls": {},
+  "n_calls": {}
+ }
+}

@@ -1,0 +1,8 @@
+# read-only look at stop 1 (saved): rows unconverged in either store, and their group records whose converged is False in either
+row ('100000.0', '1000000.0', '1000000.0', '144627.70674226896') conv False -> True regions 321 -> 264 depth 20 -> 16 |dT|/(e31+e32) 7.00192802218668e-08 total_moved True
+   rec WKB_Levin.subintervals[1].groups[0] G+q+r conv False -> True regions 143 -> 86 v 0x1.44ad9d596748dp-62 -> 0x1.44ad9d59665e8p-62 e 0x1.74349fae30cb8p-87 -> 0x1.741c57c6295e9p-87 |dv|/e31 1.9211561468936133e-05 |dv|/e32 1.921645829888546e-05
+row ('316227.7660168379', '316227.7660168379', '316227.7660168379', '573.1146466584687') conv False -> False regions 272 -> 272 depth 20 -> 20 |dT|/(e31+e32) 0.0 total_moved False
+row ('1000000.0', '316227.7660168379', '1000000.0', '434.65132503921666') conv False -> False regions 566 -> 430 depth 20 -> 20 |dT|/(e31+e32) 9.615480982616452e-08 total_moved True
+   rec WKB_Levin.subintervals[2].groups[3] G-q-r conv False -> False regions 102 -> 100 v 0x1.310effeda4f54p-76 -> 0x1.310effeda546bp-76 e 0x1.573c2dbb2b3e0p-100 -> 0x1.573c3023eaf7dp-100 |dv|/e31 3.620369049509879e-06 |dv|/e32 3.6203686617618077e-06
+rows listed: 3
+columns of the records csv: ['k', 'q', 'r', 'z_response', 'kind', 'record', 'label', 'fields_differing', 'value_31', 'value_32', 'abserr_31', 'abserr_32', 'abs_dvalue_over_abserr31', 'abs_dvalue_over_abserr32', 'converged_31', 'converged_32', 'phase_limited_31', 'phase_limited_32', 'regions_31', 'regions_32', 'stationary_points_31', 'window_pieces_31', 'guarded_regions_31', 'guard_at_depth_max_31', 'stationary_points_32', 'window_pieces_32', 'guarded_regions_32', 'guard_at_depth_max_32']

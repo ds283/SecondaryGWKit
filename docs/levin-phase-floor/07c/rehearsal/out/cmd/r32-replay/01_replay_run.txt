@@ -1,0 +1,29 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/capture/replay07c_r32.py run /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_spec.json
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T14:35:59Z
+# ----
+2026-11-19T14:35:59Z # prompt 07c r32: run replay
+2026-11-19T14:35:59Z # written 2026-11-19T14:35:59Z on mps026298.phys.susx.ac.uk
+2026-11-19T14:35:59Z # script replay07c_r32.py sha256 a4addf1ea8f25129d7ea7029b0be3f0d928c970ead3563bf4c36d54226d2fb45
+2026-11-19T14:35:59Z # tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c HEAD cc3368ce69d42fd6871d6264fd30efa65dd00cea (status --short: empty)
+2026-11-19T14:35:59Z # main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+2026-11-19T14:35:59Z # input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_spec.json sha256 89542d40e191bbef3b0e8d009d22522adba10c4239f63871677e8d2fb731597b
+2026-11-19T14:35:59Z 6 workers, 203 units, at most 6 at once
+2026-11-19T14:35:59Z start replay-h-0 (h, 34 units): pid 30416
+2026-11-19T14:35:59Z start replay-h-1 (h, 34 units): pid 30417
+2026-11-19T14:35:59Z start replay-h-2 (h, 34 units): pid 30418
+2026-11-19T14:35:59Z start replay-h-3 (h, 34 units): pid 30419
+2026-11-19T14:35:59Z start replay-h-4 (h, 34 units): pid 30420
+2026-11-19T14:35:59Z start replay-h-5 (h, 33 units): pid 30421
+2026-11-19T14:42:20Z end replay-h-2: rc 0 after 380.9 s
+2026-11-19T14:42:26Z end replay-h-1: rc 0 after 386.9 s
+2026-11-19T14:42:30Z end replay-h-3: rc 0 after 391.0 s
+2026-11-19T14:42:40Z end replay-h-4: rc 0 after 401.0 s
+2026-11-19T14:42:47Z end replay-h-0: rc 0 after 408.0 s
+2026-11-19T14:42:49Z end replay-h-5: rc 0 after 410.0 s
+2026-11-19T14:42:50Z done in 411.1 s; return codes {0: 6}
+# ----
+# end 2026-11-19T14:42:50Z
+# exit 0

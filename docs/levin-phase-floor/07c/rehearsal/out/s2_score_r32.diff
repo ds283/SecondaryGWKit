@@ -1,0 +1,59 @@
+1c1
+< """[prompt 07b section 5 item 5, rehearsal agent, R31: R30's s2_score_r30.py (6fc3fb30), changed where marked "prompt 07b r31": the replay at h (replay07b_r31.py) and R31's records; the tag R30 read as R31, R31's call compared with R28's (stop 1) and R30's (07a's s2_scores.json); each call's refusals recorded; outputs under the 07b rehearsal.]
+---
+> """[prompt 07c section 5 item 5, rehearsal agent, R32: 07b's rehearsal s2_score_r31.py (5c499eb2), changed where marked "prompt 07c r32" (and the store tags shifted R30 -> R31, R31 -> R32 by scripts/gen/make_scores_07c.py): the replay at h (replay07c_r32.py) and R32's records; R32's call compared with R28's (stop 1) and R31's (07b's rehearsal s2_scores.json, key R31); each call's chase stops recorded; outputs under the 07c rehearsal.]
+2a3,4
+> [prompt 07b section 5 item 5, rehearsal agent, R31: R30's s2_score_r30.py (6fc3fb30), changed where marked "prompt 07b r31": the replay at h (replay07b_r31.py) and R31's records; the tag R30 read as R31, R31's call compared with R28's (stop 1) and R30's (07a's s2_scores.json); each call's refusals recorded; outputs under the 07b rehearsal.]
+> 
+27,28c29,30
+< Z = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal")  # prompt 07b r31
+< Z30 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07a/rehearsal")  # prompt 07b r31: R30's s2_scores.json, for R30's call
+---
+> Z = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal")  # prompt 07c r32
+> Z31 = Path("/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal")  # prompt 07c r32: R31's s2_scores.json, for R31's call
+30c32
+< import replay07b_r31 as RP  # noqa: E402  prompt 07b r31
+---
+> import replay07c_r32 as RP  # noqa: E402  prompt 07c r32
+48,50c50,52
+<     s30p = Z30 / "out" / "s2_scores.json"  # prompt 07b r31
+<     print(f"# input {s30p} sha256 {sha256(s30p)}")
+<     s30 = json.loads(s30p.read_text())["rows"]
+---
+>     s31p = Z31 / "out" / "s2_scores.json"  # prompt 07b r31
+>     print(f"# input {s31p} sha256 {sha256(s31p)}")
+>     s31 = json.loads(s31p.read_text())["rows"]
+57,58c59,60
+<         u, _, _ = units[f"h-1e-7-{e['R31']['shard']}-{e['R31']['serial']}"]  # prompt 07b r31
+<         hits = [x for x in u["calls"] if x["notify_label"].endswith("group G+q+r") and RP.stored_form(x, e["key"][3]) == (rec["R31"]["value"], rec["R31"]["abserr"])]  # prompt 07b r31
+---
+>         u, _, _ = units[f"h-1e-7-{e['R32']['shard']}-{e['R32']['serial']}"]  # prompt 07b r31
+>         hits = [x for x in u["calls"] if x["notify_label"].endswith("group G+q+r") and RP.stored_form(x, e["key"][3]) == (rec["R32"]["value"], rec["R32"]["abserr"])]  # prompt 07b r31
+73,76c75,78
+<                "R28_value_stop1": c["R28_value"], "R31_equals_R28": call["value"]["hex"] == c["R28_value"] and call["abserr"]["hex"] == c["R28_abserr"],
+<                "R31_equals_R30": (call["value"]["hex"], call["abserr"]["hex"]) == tuple([r_ for r_ in s30 if r_["p1"] == c["p1"]][0]["R30"][k_] for k_ in ("value", "abserr")),
+<                "R30_ratio": [r_ for r_ in s30 if r_["p1"] == c["p1"]][0]["R30"]["ratio"], "refusals_07b": call.get("refusals_07b")}  # prompt 07b r31
+<         for tag, v_, e_ in (("R27", c["R27_value"], c["R27_abserr"]), ("R31", call["value"]["hex"], call["abserr"]["hex"])):  # prompt 07b r31
+---
+>                "R28_value_stop1": c["R28_value"], "R32_equals_R28": call["value"]["hex"] == c["R28_value"] and call["abserr"]["hex"] == c["R28_abserr"],
+>                "R32_equals_R31": (call["value"]["hex"], call["abserr"]["hex"]) == tuple([r_ for r_ in s31 if r_["p1"] == c["p1"]][0]["R31"][k_] for k_ in ("value", "abserr")),
+>                "R31_ratio": [r_ for r_ in s31 if r_["p1"] == c["p1"]][0]["R31"]["ratio"], "refusals_07b": call.get("refusals_07b"), "chase_07c": call.get("chase_07c")}  # prompt 07c r32
+>         for tag, v_, e_ in (("R27", c["R27_value"], c["R27_abserr"]), ("R32", call["value"]["hex"], call["abserr"]["hex"])):  # prompt 07b r31
+80c82
+<         row["honesty_ok"] = row["counts"] and row["R31"]["honest"]  # prompt 07b r31
+---
+>         row["honesty_ok"] = row["counts"] and row["R32"]["honest"]  # prompt 07b r31
+83c85
+<         print(f"row {c['p1']} {c['key']}: replay reproduces R31 {row['replay_reproduces_record']}; root at z {row['z']} (|x - x_s| {float(row['abs_x_minus_x_s']):.3g} "
+---
+>         print(f"row {c['p1']} {c['key']}: replay reproduces R32 {row['replay_reproduces_record']}; root at z {row['z']} (|x - x_s| {float(row['abs_x_minus_x_s']):.3g} "
+85,88c87,90
+<               f"ref {row['ref_hex']}; R31 value {row['R31']['value']} abserr {row['R31']['abserr']}: {row['R31']['ratio']} x abserr; "
+<               f"R27 {row['R27']['ratio']}; R30 {row['R30_ratio']}; R31 equals R28 {row['R31_equals_R28']}; R31 equals R30 {row['R31_equals_R30']}; "
+<               f"refusals {row['refusals_07b']}")  # prompt 07b r31
+<     print(f"\nS2 on R31 {'HOLDS' if holds else 'FAILS'}")  # prompt 07b r31
+---
+>               f"ref {row['ref_hex']}; R32 value {row['R32']['value']} abserr {row['R32']['abserr']}: {row['R32']['ratio']} x abserr; "
+>               f"R27 {row['R27']['ratio']}; R31 {row['R31_ratio']}; R32 equals R28 {row['R32_equals_R28']}; R32 equals R31 {row['R32_equals_R31']}; "
+>               f"refusals {row['refusals_07b']}; chase {row['chase_07c']}")  # prompt 07c r32
+>     print(f"\nS2 on R32 {'HOLDS' if holds else 'FAILS'}")  # prompt 07b r31

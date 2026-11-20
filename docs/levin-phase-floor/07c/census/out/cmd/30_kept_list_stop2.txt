@@ -1,0 +1,9 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/kept_list_07c.py KEPT_ON_MAC_STUDIO.txt levin-phase-floor-07c-k0-20261119T151009
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:32:42Z
+# ----
+wrote KEPT_ON_MAC_STUDIO.txt (66 lines) sha256 bccfa7da8d1498f0226b646b41aac05a74b1beeb311af8af6736ab9661cafadf
+# ----
+# end 2026-11-19T15:32:42Z
+# exit 0

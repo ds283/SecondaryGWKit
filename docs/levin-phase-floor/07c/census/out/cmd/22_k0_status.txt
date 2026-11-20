@@ -1,0 +1,35 @@
+$ sh -c cat\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009/status.json\;\ echo\;\ ls\ -la\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009\;\ shasum\ -a\ 256\ /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009/\*
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:29:49Z
+# ----
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-19T15:29:28+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 39691,
+  "stage": "k0 finished: all exit 0",
+  "state": "done",
+  "units_done": 11,
+  "units_total": 11
+}
+
+total 16
+drwxr-xr-x   7 ds283 staff  224 Nov 19 15:29 .
+drwxr-xr-x 132 ds283 staff 4224 Nov 19 15:10 ..
+-rw-r--r--   1 ds283 staff 3420 Nov 19 15:29 checkpoint.jsonl
+-rw-r--r--   1 ds283 staff 4633 Nov 19 15:10 manifest.json
+-rw-r--r--   1 ds283 staff  277 Nov 19 15:29 status.json
+-rw-r--r--   1 ds283 staff    0 Nov 19 15:10 stderr.log
+-rw-r--r--   1 ds283 staff    0 Nov 19 15:10 stdout.log
+1cdc934e179cf1c8f85bd284bdb5d3460a453582ff337efcf5040e694edfca22  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009/checkpoint.jsonl
+c9ed4eac4cdd581cb91a9ef4d064cb7b60daba6c918c4e466ee9cd43a6fc7d69  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009/manifest.json
+fbebd207ef858c6e4c966f1ff72c6375998513c5ca3a945323e246e7d4e6c78c  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009/status.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009/stderr.log
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-k0-20261119T151009/stdout.log
+# ----
+# end 2026-11-19T15:29:49Z
+# exit 0

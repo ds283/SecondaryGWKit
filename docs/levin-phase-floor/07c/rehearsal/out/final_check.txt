@@ -1,0 +1,84 @@
+# host: mps026298.phys.susx.ac.uk
+# start: 2026-11-19T14:50:08Z
+# cwd: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+# command:
+M=/Users/ds283/Documents/Code/SecondaryGWKit; Z=$M/var/levin-phase-floor-07c/rehearsal; W=/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c
+cd $M
+echo "== stores"; shasum -a 256 var/datastores/levin-phase-floor-07-r29.sqlite var/datastores/levin-phase-floor-07-r29-shard000?.sqlite var/datastores/levin-phase-floor-07a-r30.sqlite var/datastores/levin-phase-floor-07a-r30-shard000?.sqlite var/datastores/levin-phase-floor-07b-r31.sqlite var/datastores/levin-phase-floor-07b-r31-shard000?.sqlite > $Z/state/stores_sha256_final.txt; cmp $Z/state/stores_sha256_final.txt $Z/state/stores_sha256_before.txt && echo "R29, R30, R31 equal to their before-hashes (R31 equal to 07b's KEPT)"
+shasum -a 256 var/datastores/levin-phase-floor-07c-r32.sqlite var/datastores/levin-phase-floor-07c-r32-shard000?.sqlite | tee $Z/state/r32_store_sha256_final.txt | cmp - $Z/state/r32_store_sha256_after_build.txt && echo "R32 equal to its after-build hashes"
+shasum -a 256 var/datastores/handover-A3-v2-lambdacdm* | cmp - $Z/state/a3v2_sha256_before.txt && echo "A3 v2 unchanged"
+ls -la var/datastores | grep -E "07-r29|07a-r30|07b-r31|07c-r32|A3-v2"
+echo "== R31 run dir"; shasum -a 256 var/runs/levin-phase-floor-07b-r31-07b-20261116T191849/* var/runs/levin-phase-floor-07b-r31.launch.log | cmp - $Z/state/r31_rundir_sha256_before.txt && echo "R31 run dir unchanged"
+echo "== protected listing, before against end (outside 07c/review/)"; diff $Z/state/protected_listing_before.txt $Z/state/protected_listing_end.txt | grep -E "^[<>]" | grep -v "var/levin-phase-floor-07c/review/" | head; echo "(end)"; diff $Z/state/protected_listing_before.txt $Z/state/protected_listing_end.txt | grep -E "^[<>]" | grep -c "var/levin-phase-floor-07c/review/"
+echo "== registry"; PYTHONPATH=$W $M/venv/bin/python -B -m runregistrykit list > $Z/out/final_registry_list.txt 2>&1; echo "exit $?"; grep -E "07c-r32" $Z/out/final_registry_list.txt | cut -c1-120; tail -1 $Z/out/final_registry_list.txt
+echo "== lock dir"; ls -la ~/.raypoolkit
+echo "== Ray processes (any)"; ps -Ao pid,command | grep -iE "ray::|raylet|gcs_server" | grep -v grep | cut -c1-160; echo "(end)"
+echo "== worktree"; git -C $W --no-optional-locks rev-parse HEAD; git -C $W --no-optional-locks status --short --ignored; echo "(end)"; command find $W -newer $Z/state/r32_launch_marker -not -path "*/.git/*" | head; echo "(end newer)"
+echo "== main checkout"; git -C $M --no-optional-locks rev-parse HEAD; git -C $M --no-optional-locks status --short; echo "(end)"
+echo "== pycache in the records"; command find $Z -name __pycache__ | head; echo "(end)"
+echo "== /tmp/ray-sgk"; ls -d /tmp/ray-sgk 2>&1; ls /tmp/ray-sgk 2>&1 | head -5
+# output:
+== stores
+R29, R30, R31 equal to their before-hashes (R31 equal to 07b's KEPT)
+R32 equal to its after-build hashes
+A3 v2 unchanged
+-rw-r--r--  1 ds283 staff 106340352 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0000.sqlite
+-rw-r--r--  1 ds283 staff 107569152 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0001.sqlite
+-rw-r--r--  1 ds283 staff 107429888 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0002.sqlite
+-rw-r--r--  1 ds283 staff 105791488 Oct 24 21:56 handover-A3-v2-lambdacdm-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     10519 Oct 25 00:34 handover-A3-v2-lambdacdm.manifest.json
+-rw-r--r--  1 ds283 staff     36864 Oct 22 21:12 handover-A3-v2-lambdacdm.sqlite
+-rw-r--r--  1 ds283 staff  25411584 Nov  8 12:44 levin-phase-floor-07-r29-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25464832 Nov  8 12:44 levin-phase-floor-07-r29-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov  8 12:34 levin-phase-floor-07-r29-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24875008 Nov  8 12:44 levin-phase-floor-07-r29-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov  8 12:34 levin-phase-floor-07-r29.sqlite
+-rw-r--r--  1 ds283 staff  25391104 Nov 12 11:47 levin-phase-floor-07a-r30-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25489408 Nov 12 11:47 levin-phase-floor-07a-r30-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 12 11:38 levin-phase-floor-07a-r30-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24956928 Nov 12 11:47 levin-phase-floor-07a-r30-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 12 11:38 levin-phase-floor-07a-r30.sqlite
+-rw-r--r--  1 ds283 staff  25513984 Nov 16 19:32 levin-phase-floor-07b-r31-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25554944 Nov 16 19:32 levin-phase-floor-07b-r31-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 16 19:19 levin-phase-floor-07b-r31-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24895488 Nov 16 19:32 levin-phase-floor-07b-r31-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 16 19:19 levin-phase-floor-07b-r31.sqlite
+-rw-r--r--  1 ds283 staff  25518080 Nov 19 14:17 levin-phase-floor-07c-r32-shard0000.sqlite
+-rw-r--r--  1 ds283 staff  25452544 Nov 19 14:17 levin-phase-floor-07c-r32-shard0001.sqlite
+-rw-r--r--  1 ds283 staff   1077248 Nov 19 14:04 levin-phase-floor-07c-r32-shard0002.sqlite
+-rw-r--r--  1 ds283 staff  24924160 Nov 19 14:17 levin-phase-floor-07c-r32-shard0003.sqlite
+-rw-r--r--  1 ds283 staff     36864 Nov 19 14:04 levin-phase-floor-07c-r32.sqlite
+== R31 run dir
+R31 run dir unchanged
+== protected listing, before against end (outside 07c/review/)
+(end)
+13
+== registry
+exit 0
+   levin-phase-floor-07c-r32-replay-20261119T143558           done            8/8      14m  levin-phase-floor prompt 07c
+   levin-phase-floor-07c-r32-07c-20261119T140417              done              -      46m  levin-phase-floor prompt 07c
+94 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 94 finished; 0 with no host recorded.
+== lock dir
+total 0
+drwxr-xr-x   2 ds283 staff   64 Nov 19 14:49 .
+drwxr-x--- 162 ds283 staff 5184 Nov 19 14:48 ..
+== Ray processes (any)
+(end)
+== worktree
+cc3368ce69d42fd6871d6264fd30efa65dd00cea
+(end)
+(end newer)
+== main checkout
+28ebaf0743e0555fb2c4512ce714884005a60eff
+(end)
+== pycache in the records
+(end)
+== /tmp/ray-sgk
+/tmp/ray-sgk
+session_2026-10-25_10-50-09_138224_46020
+session_2026-10-25_10-51-06_087475_46672
+session_2026-10-25_10-54-01_339900_48224
+session_2026-10-25_10-54-38_261201_48682
+session_2026-10-25_10-55-00_205981_49005
+# exit: 0
+# end: 2026-11-19T14:50:12Z

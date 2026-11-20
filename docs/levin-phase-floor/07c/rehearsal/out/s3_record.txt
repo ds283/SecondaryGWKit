@@ -1,0 +1,161 @@
+# script /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/s3_record_r32.py sha256 4330f39459fc27e2a19e872f0a964de22754b3ad65229fb1aa02301c7063f448
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s3_record/R32-ref-G+q+r-h-3-122-1.json sha256 a2be5ec49d8de669d26bd5debcdf279fd5c2194234ed9c19535a4d189d7f7877
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s3_record/R31-ref-G+q+r-h-3-20363-1.json sha256 b5af712d3b60ae518ffc50b31f0fb35759a3c83f0d6bc70a298a16c8cd2e897f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/qsi_rows_r31_r32.csv sha256 29decfad11da1b5bb19c69de0fd2b059e847a9bc5111ce86bfa5ed980905b9d6
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/replay_rows.json sha256 5e8fa671c95a1d15b69e3e9cc8d2f881e864e574e0bfb18dd602796d9aff87df
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/replay_calls.checks.json sha256 650b714333f1adcf91f018789818fd675f5b09701de627179979e745de043c22
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/refcap.json sha256 41464ffcbcee7f76c406cd5d8b0dca57645537cca00b789a4556f766b9637a87
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/tables/scores_07c.json sha256 f2f10ea3fb451669ccbf6de136c67322413f59615330594d5a87ac3beeedb3c5
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07b/rehearsal/state/inputs/ref-G+q+r-h-3-20363-1.pkl sha256 df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/refs/inputs/ref-R31-3-20363-g1.pkl sha256 df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/refs/readings/ref-R31-3-20363-g1-fccsplit.json sha256 11d788d1c5e41889b1aa0ee831ceac03d7e2d3e702ef7a1a7b17d07455490083
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/refs/readings/ref-R31-3-20363-g1-qawo-r1.json sha256 846c1e2aa576f56c44483cbeb0f2fbd2399efd448a564e1794fef99e334187f4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/refs/readings/ref-R31-3-20363-g1-qawo-r2.json sha256 1d918ee86b56600b411aca3f13bbab39b08373f44edf8564fbb1fabcbb7b833d
+{
+ "key": [
+  100000.0,
+  1000000.0,
+  1000000.0,
+  144627.70674226896
+ ],
+ "record": "WKB_Levin.subintervals[1].groups[0]",
+ "label": "G+q+r",
+ "store": {
+  "R31": {
+   "value": "0x1.44ad9d596748dp-62",
+   "abserr": "0x1.74349fae30cb8p-87",
+   "converged": false,
+   "regions": 143,
+   "row_total_converged": "False"
+  },
+  "R32": {
+   "value": "0x1.44ad9d59665e8p-62",
+   "abserr": "0x1.741c57c6295e9p-87",
+   "converged": true,
+   "regions": 86,
+   "row_total_converged": "True"
+  }
+ },
+ "call": {
+  "uid": "h-1e-7-3-122",
+  "index": 1,
+  "notify_label": "k=1e+05/Mpc, q=1e+06/Mpc, r=1e+06/Mpc @ z_response=1.4463e+05, z in (1.7159e+10, 1.4463e+05), regime Gqr, group G+q+r",
+  "value": "0x1.263e9f583ee54p-79",
+  "abserr": "0x1.513b2851b5963p-104",
+  "converged": true,
+  "num_regions": 86,
+  "max_depth": 16,
+  "refusals_07b": {
+   "num_edge_rule_refusals": 0,
+   "num_range_rule_refusals": 4
+  },
+  "chase_07c": {
+   "num_chase_stops": 2,
+   "num_chase_stopped_leaves": 28,
+   "num_chase_noise_bisections": 12
+  },
+  "replay_reproduces_record": true,
+  "ray_initialized": false
+ },
+ "capture": {
+  "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/inputs/ref-G+q+r-h-3-122-1.pkl",
+  "sha256": "fb4a2902b0e036575a484a7e88fc36a358385c014005776def30727a5c8b3b45",
+  "reproduces_store": true,
+  "index": 1,
+  "equals_R31_capture": [
+   false,
+   false
+  ],
+  "R31_capture_sha256": [
+   "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249",
+   "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249"
+  ],
+  "R31_capture_sha256_expected": "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249",
+  "samples": {
+   "R32_json": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s3_record/R32-ref-G+q+r-h-3-122-1.json",
+   "R31_json": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s3_record/R31-ref-G+q+r-h-3-20363-1.json",
+   "R32_pickle_is_refcap": true,
+   "R31_pickle_sha256": "df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249",
+   "samples_bit_identical_1001": true,
+   "x_span_equal": true,
+   "kw_equal": true,
+   "R32_replay_reproduces_capture": true,
+   "R31_capture_replayed_at_tree": {
+    "value": "0x1.263e9f583ee54p-79",
+    "abserr": "0x1.513b2851b5963p-104",
+    "num_regions": 86,
+    "converged": true,
+    "phase_limited": true,
+    "seconds": 1.4496729373931885,
+    "stationary_points": 0,
+    "num_guarded_regions": 0,
+    "location_skipped_phases": [],
+    "points": []
+   },
+   "R31_capture_record": {
+    "value": "0x1.263e9f583fb9ap-79",
+    "abserr": "0x1.51512994921e7p-104",
+    "num_regions": 143,
+    "converged": false,
+    "max_depth": 20
+   },
+   "R31_capture_replay_equals_call": true,
+   "ray_initialized": [
+    false,
+    false
+   ]
+  },
+  "same_integrand_as_reference_capture": true
+ },
+ "partA_S": {
+  "record": {
+   "value": "0x1.263e9f583ee54p-79",
+   "abserr": "0x1.513b2851b5963p-104",
+   "converged": true,
+   "regions": 86,
+   "max_depth": 16
+  },
+  "equal": {
+   "value": true,
+   "abserr": true,
+   "converged": true,
+   "regions": true,
+   "max_depth": true
+  },
+  "equal_all": true,
+  "partA_ratio_S": 0.05331484572900594
+ },
+ "reference": {
+  "key": "ref-R31-3-20363-g1",
+  "basis": "fccsplit-r1+fccsplit-r2+qawo-r1+qawo-r2",
+  "ref_decimal_30": "1.9015112786324758e-24",
+  "readings": {
+   "fccsplit-r1": "1.9015112786324035e-24",
+   "fccsplit-r2": "1.9015112786324758e-24",
+   "qawo-r1": "1.9015112786324053e-24",
+   "qawo-r2": "1.9015112786324733e-24"
+  },
+  "spread": 7.242014878612813e-38,
+  "spread_over_abserr": 1.115042263032498e-06,
+  "scored": true
+ },
+ "ratio": 0.05331484572900594,
+ "honest": true,
+ "prediction": {
+  "converged_at_86_regions": true,
+  "honest": true,
+  "ratio_predicted": 0.053,
+  "holds": true
+ }
+}
+
+R31: value 0x1.44ad9d596748dp-62 abserr 0x1.74349fae30cb8p-87 converged False regions 143; R32: value 0x1.44ad9d59665e8p-62 abserr 0x1.741c57c6295e9p-87 converged True regions 86 (row total_converged False -> True)
+the call: value 0x1.263e9f583ee54p-79 abserr 0x1.513b2851b5963p-104 converged True regions 86 max depth 16; refusals {'num_edge_rule_refusals': 0, 'num_range_rule_refusals': 4}; chase {'num_chase_stops': 2, 'num_chase_stopped_leaves': 28, 'num_chase_noise_bisections': 12}; replay reproduces R32 True
+capture from R32 byte-equal to R31's (07b rehearsal, Part A copy): [False, False] (not expected: unit name, tree path, str hashes)
+integrand: {'R32_json': '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s3_record/R32-ref-G+q+r-h-3-122-1.json', 'R31_json': '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s3_record/R31-ref-G+q+r-h-3-20363-1.json', 'R32_pickle_is_refcap': True, 'R31_pickle_sha256': 'df2d478f91034ad60f1ee125e7d760c7a8b7a8f2c659644b60eeb65c9ac3a249', 'samples_bit_identical_1001': True, 'x_span_equal': True, 'kw_equal': True, 'R32_replay_reproduces_capture': True, 'R31_capture_replay_equals_call': True, 'ray_initialized': [False, False]}
+same integrand as the reference's capture: True
+equal to Part A's (S) record bit for bit: {'value': True, 'abserr': True, 'converged': True, 'regions': True, 'max_depth': True}
+reference ref-R31-3-20363-g1: 1.9015112786324758e-24 (fccsplit r2), spread 7.242e-38 = 1.115e-06 of abserr: scored True
+|v - ref| / abserr = 0.05331484572900594 (Part A's (S): 0.05331484572900594): honest
+section 9.5's S3 prediction (converged at 86 regions, honest at 0.053): HOLDS
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/s3_record.json sha256 fe9e810b5f59319fb40c95e498ab0718dc99f22aa689f344a1cdaf7964ef7623

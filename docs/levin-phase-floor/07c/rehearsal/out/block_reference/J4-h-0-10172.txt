@@ -1,0 +1,54 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/block_reference_r30.py",
+  "script_sha256": "efac125ed5f5136526dc45dc784e8de46f991640ddcefa94554e22bf1642d856",
+  "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/state/inputs/J4-h-0-10172.pkl",
+  "pickle_sha256": "6624185b1de4a834dbec79d5436ddcc92c977a7c11e52e180b63b25af0ed49f1",
+  "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+  "tree_head": "cc3368ce69d42fd6871d6264fd30efa65dd00cea",
+  "tree_status_short": "",
+  "levin_quadrature_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6",
+  "host": "mps026298.phys.susx.ac.uk",
+  "written": "2026-11-19T14:45:50Z"
+ },
+ "unit": "h-1e-7-0-10172",
+ "notify_label": "analytic J4",
+ "x_span": [
+  "-0x1.67024facbe2cdp+3",
+  "-0x1.fd8529ab2fd96p+2"
+ ],
+ "kw": {
+  "atol": "0x1.9f623d5a8a733p-107",
+  "rtol": "0x1.ad7f29abcaf48p-24",
+  "chebyshev_order": 24,
+  "notify_label": "analytic J4"
+ },
+ "capture_record": {
+  "value": "-0x1.9017c8e4681f6p-30",
+  "abserr": "0x1.65dacd1543ce8p-66",
+  "num_regions": 14,
+  "converged": true,
+  "max_depth": 10
+ },
+ "replay": {
+  "value": "-0x1.9017c8e4681f6p-30",
+  "abserr": "0x1.65dacd1543ce8p-66",
+  "num_regions": 14,
+  "converged": true,
+  "phase_limited": true,
+  "seconds": 0.9429728984832764,
+  "stationary_points": 1,
+  "num_guarded_regions": 0,
+  "location_skipped_phases": [],
+  "points": [
+   {
+    "x": "-0x1.523259af83ecdp+3",
+    "kind": "root",
+    "found_as": "root",
+    "phase": 0
+   }
+  ]
+ },
+ "replay_reproduces_capture": true,
+ "ray_initialized": false
+}

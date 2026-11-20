@@ -1,0 +1,37 @@
+$ env PYTHONDONTWRITEBYTECODE=1 /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B scripts/write_predictions_07c.py state/predictions.md
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:30:24Z
+# ----
+s6: lines 502-521, 20 lines, 1693 chars; substring of the prompt True, of the file True
+  first: **Predictions, fixed before the run** (README §5 rule 3), copied into `state/predictions.md` unchanged,
+  last:  the sum of the two codes' abserrs (**the sum**, not each separately); regions and cost against 07b's.
+s95: lines 663-697, 35 lines, 2760 chars; substring of the prompt True, of the file True
+  first: ### 9.5 Additions to §5's and §6's predictions
+  last:  - `c-1e-8-1-2229-4` (untouched), equal to (S)'s record and to 07b's census.
+s97: lines 720-724, 5 lines, 223 chars; substring of the prompt True, of the file True
+  first: ### 9.7 Stops added (into §8)
+  last:  - **In Part C:** Y8 failing, before anything else is scored.
+s8: lines 538-539, 2 lines, 178 chars; substring of the prompt True, of the file True
+  first: - In Part C: S0′ failing; the census's projection beyond 48 hours; a call Y1 says is untouched
+  last:    differing from 07b's, or Y8 failing, before anything else is scored; a lock held.
+  contains 'Y1 — nothing else moves': True
+  contains 'Y2 — no Levin leaf': True
+  contains 'Y3 — every phase': True
+  contains 'Y4 — honest where it is referenced': True
+  contains 'Y5 — the gate is consistent': True
+  contains "Y6 — 06b's 24 are honest": True
+  contains 'Y7 — the pairs': True
+  contains 'Y8 — the code is the chosen variant': True
+  contains '**Y1 counts**': True
+  contains "**Y4, on the user's ruling.**": True
+  contains '**Y6 and Y7 are predicted to hold.**': True
+  contains '**Y8 — the code is (S).**': True
+  contains '**Y9 — the chase ends.**': True
+  contains '**Descriptive, not scored:**': True
+  contains '**Descriptive, added:**': True
+  contains 'In Part C:** Y8 failing': True
+wrote state/predictions.md sha256 cad4fd7f1060ef3344a854bf6b3b2ba6f9702091323cfc5b472d413c9a8a0c79; all checks HOLD
+# ----
+# end 2026-11-19T15:30:24Z
+# exit 0

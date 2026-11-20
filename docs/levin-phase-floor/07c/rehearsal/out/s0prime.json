@@ -1,0 +1,42 @@
+{
+ "header": {
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/scripts/s0prime.py",
+  "script_sha256": "17f73ca45c118e889f969b4fd2386c13789546a43706069ee76dff7a15496fb1",
+  "host": "mps026298.phys.susx.ac.uk",
+  "tree": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c",
+  "tree_head": "cc3368ce69d42fd6871d6264fd30efa65dd00cea",
+  "utc": "2026-11-19T14:02:46Z"
+ },
+ "code_commit": "67b5af747d1f443262b8a737c69197b74140fbff",
+ "code_commit_parent": "cff4237f77ce293f70d77e127c567868a8eb0c42",
+ "parent_is_expected": true,
+ "s0prime_command": "git diff --stat 5e19c4b6 cff4237f -- . ':!docs' ':!prompts'",
+ "s0prime_stat": " CLAUDE.md | 11 +++++++++--\n 1 file changed, 9 insertions(+), 2 deletions(-)\n",
+ "s0prime": {
+  "files": [
+   "CLAUDE.md"
+  ],
+  "files_the_build_imports": [],
+  "only_CLAUDE_md_as_the_dispatch_expects": true,
+  "holds": true
+ },
+ "code_commit_stat": " AdaptiveLevin/levin_quadrature.py                 | 240 +++++++++-\n AdaptiveLevin/tests/test_levin_chase_stop.py      | 544 ++++++++++++++++++++++\n AdaptiveLevin/tests/test_levin_roundoff_exit.py   |  15 +-\n AdaptiveLevin/tests/test_levin_trust_yardstick.py |  48 +-\n 4 files changed, 826 insertions(+), 21 deletions(-)\n",
+ "code_commit_files": [
+  "AdaptiveLevin/levin_quadrature.py",
+  "AdaptiveLevin/tests/test_levin_chase_stop.py",
+  "AdaptiveLevin/tests/test_levin_roundoff_exit.py",
+  "AdaptiveLevin/tests/test_levin_trust_yardstick.py"
+ ],
+ "after_code_commit_stat": "",
+ "r31_tree_to_dispatch_build_paths_stat": "",
+ "tree": {
+  "head_is_dispatch": true,
+  "code_commit_touches_only_levin_quadrature_and_its_tests": true,
+  "after_code_commit_empty": true,
+  "r31_tree_to_dispatch_build_paths_empty": true,
+  "levin_quadrature_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6",
+  "levin_quadrature_expected": true,
+  "holds": true
+ },
+ "holds": true
+}

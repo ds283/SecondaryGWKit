@@ -1,0 +1,193 @@
+1c1
+< """Summaries of the R31-against-R30 tabulation (tabulate_qsi_r30_r31.py's two CSVs), for stop 1.
+---
+> """Summaries of the R32-against-R31 tabulation (tabulate_qsi_r31_r32.py's two CSVs), for stop 1.
+3,9c3,10
+< levin-phase-floor 07b, rehearsal agent, prompt 07b section 5 item 3. 07a's rehearsal agent's
+< qsi_summary_r29_r30.py (cc7bc729...), with the store tags 29 -> 30 and 30 -> 31, the tree path and
+< this docstring changed, and one new function, `additions_07b` (called at the end of main), which
+< adds: the |dtotal|/abserr bands on rows whose total moved; regions per moved row and by (k, q, r);
+< max-depth changes and the rows at depth 20; the analytic and group records' regions; the group
+< records whose value moved, against both abserrs; and the group records' abserr ratios. Reads only
+< the two CSVs.
+---
+> levin-phase-floor 07c, rehearsal agent, prompt 07c section 5 item 3. 07b's rehearsal agent's
+> qsi_summary_r30_r31.py (50d33417...), with the store tags 30 -> 31 and 31 -> 32, the tree path and
+> this docstring changed by gen/make_qsi_summary_r31_r32.py; nothing else. Its function
+> `additions_07b` (called at the end of main) is 07b's, its name and heading kept: the |dtotal|/abserr
+> bands on rows whose total moved; regions per moved row and by (k, q, r); max-depth changes and the
+> rows at depth 20; the analytic and group records' regions; the group records whose value moved,
+> against both abserrs; the Levin records whose converged changed; and the group records' abserr
+> ratios. Reads only the two CSVs.
+11c12
+<     python -B qsi_summary_r30_r31.py <rows csv> <records csv>
+---
+>     python -B qsi_summary_r31_r32.py <rows csv> <records csv>
+35c36
+<     t = "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07b-0a103b5"
+---
+>     t = "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c"
+53,58c54,59
+<     for r in sorted(tm, key=lambda r: -float(r["abs_dtotal_over_abserr30"])):
+<         print(f"  {key(r)} |dT|/e30 {float(r['abs_dtotal_over_abserr30']):.3e} |dT|/e31 {float(r['abs_dtotal_over_abserr31']):.3e} "
+<               f"S3 {float(r['s3_abs_dtotal_over_sum_abserr']):.3e} e30 {r['total_abserr_30']} e31 {r['total_abserr_31']} "
+<               f"reg {r['WKB_Levin_num_regions_30']}->{r['WKB_Levin_num_regions_31']} depth {r['WKB_Levin_max_depth_30']}->{r['WKB_Levin_max_depth_31']} "
+<               f"conv {r['total_converged_30']}->{r['total_converged_31']} grp sp/wp/gr 30 {r['group_stationary_points_30']}/{r['group_window_pieces_30']}/{r['group_guarded_regions_30']} "
+<               f"31 {r['group_stationary_points_31']}/{r['group_window_pieces_31']}/{r['group_guarded_regions_31']}")
+---
+>     for r in sorted(tm, key=lambda r: -float(r["abs_dtotal_over_abserr31"])):
+>         print(f"  {key(r)} |dT|/e31 {float(r['abs_dtotal_over_abserr31']):.3e} |dT|/e32 {float(r['abs_dtotal_over_abserr32']):.3e} "
+>               f"S3 {float(r['s3_abs_dtotal_over_sum_abserr']):.3e} e31 {r['total_abserr_31']} e32 {r['total_abserr_32']} "
+>               f"reg {r['WKB_Levin_num_regions_31']}->{r['WKB_Levin_num_regions_32']} depth {r['WKB_Levin_max_depth_31']}->{r['WKB_Levin_max_depth_32']} "
+>               f"conv {r['total_converged_31']}->{r['total_converged_32']} grp sp/wp/gr 31 {r['group_stationary_points_31']}/{r['group_window_pieces_31']}/{r['group_guarded_regions_31']} "
+>               f"32 {r['group_stationary_points_32']}/{r['group_window_pieces_32']}/{r['group_guarded_regions_32']}")
+63,66c64,67
+<         if r["WKB_Levin_num_regions_30"] != r["WKB_Levin_num_regions_31"] or r["WKB_Levin_max_depth_30"] != r["WKB_Levin_max_depth_31"]:
+<             print(f"  {key(r)} reg {r['WKB_Levin_num_regions_30']}->{r['WKB_Levin_num_regions_31']} depth "
+<                   f"{r['WKB_Levin_max_depth_30']}->{r['WKB_Levin_max_depth_31']} total moved {not T(r['total_bit_identical'])} "
+<                   f"|dT|/e30 {float(r['abs_dtotal_over_abserr30']):.3e} conv {r['total_converged_30']}->{r['total_converged_31']}")
+---
+>         if r["WKB_Levin_num_regions_31"] != r["WKB_Levin_num_regions_32"] or r["WKB_Levin_max_depth_31"] != r["WKB_Levin_max_depth_32"]:
+>             print(f"  {key(r)} reg {r['WKB_Levin_num_regions_31']}->{r['WKB_Levin_num_regions_32']} depth "
+>                   f"{r['WKB_Levin_max_depth_31']}->{r['WKB_Levin_max_depth_32']} total moved {not T(r['total_bit_identical'])} "
+>                   f"|dT|/e31 {float(r['abs_dtotal_over_abserr31']):.3e} conv {r['total_converged_31']}->{r['total_converged_32']}")
+70,74c71,75
+<         c29 = tuple(int(x[f"{g}_30"]) for g in ("stationary_points", "window_pieces", "guarded_regions", "guard_at_depth_max"))
+<         c30 = tuple(int(x[f"{g}_31"]) for g in ("stationary_points", "window_pieces", "guarded_regions", "guard_at_depth_max"))
+<         if c29 != c30:
+<             gc[(x["kind"], x["record"].split(".", 1)[1] if x["kind"] == "analytic" else x["label"], c29, c30,
+<                 x["converged_30"], x["converged_31"])] += 1
+---
+>         c29 = tuple(int(x[f"{g}_31"]) for g in ("stationary_points", "window_pieces", "guarded_regions", "guard_at_depth_max"))
+>         c31 = tuple(int(x[f"{g}_32"]) for g in ("stationary_points", "window_pieces", "guarded_regions", "guard_at_depth_max"))
+>         if c29 != c31:
+>             gc[(x["kind"], x["record"].split(".", 1)[1] if x["kind"] == "analytic" else x["label"], c29, c31,
+>                 x["converged_31"], x["converged_32"])] += 1
+83,85c84,86
+<             a, b = float.fromhex(x["abserr_30"]), float.fromhex(x["abserr_31"])
+<             print(f"  {key(x)} {x['record']} {x['label']} fields {sorted(f)} abserr {x['abserr_30']} -> {x['abserr_31']} "
+<                   f"rel {(b - a) / a:+.3e} regions {x['regions_30']}->{x['regions_31']} sp {x['stationary_points_30']}/{x['stationary_points_31']}")
+---
+>             a, b = float.fromhex(x["abserr_31"]), float.fromhex(x["abserr_32"])
+>             print(f"  {key(x)} {x['record']} {x['label']} fields {sorted(f)} abserr {x['abserr_31']} -> {x['abserr_32']} "
+>                   f"rel {(b - a) / a:+.3e} regions {x['regions_31']}->{x['regions_32']} sp {x['stationary_points_31']}/{x['stationary_points_32']}")
+90,93c91,94
+<             print(f"  {key(x)} {x['record']} {x['label']} |dv|/e30 {float(x['abs_dvalue_over_abserr30']):.3e} "
+<                   f"|dv|/e31 {float(x['abs_dvalue_over_abserr31']):.3e} regions {x['regions_30']}->{x['regions_31']} "
+<                   f"sp {x['stationary_points_30']}/{x['stationary_points_31']} wp {x['window_pieces_30']}/{x['window_pieces_31']} "
+<                   f"conv {x['converged_30']}->{x['converged_31']} pl {x['phase_limited_30']}->{x['phase_limited_31']}")
+---
+>             print(f"  {key(x)} {x['record']} {x['label']} |dv|/e31 {float(x['abs_dvalue_over_abserr31']):.3e} "
+>                   f"|dv|/e32 {float(x['abs_dvalue_over_abserr32']):.3e} regions {x['regions_31']}->{x['regions_32']} "
+>                   f"sp {x['stationary_points_31']}/{x['stationary_points_32']} wp {x['window_pieces_31']}/{x['window_pieces_32']} "
+>                   f"conv {x['converged_31']}->{x['converged_32']} pl {x['phase_limited_31']}->{x['phase_limited_32']}")
+97c98
+<         if x["phase_limited_30"] != x["phase_limited_31"]:
+---
+>         if x["phase_limited_31"] != x["phase_limited_32"]:
+99c100
+<                 x["phase_limited_30"], x["phase_limited_31"])] += 1
+---
+>                 x["phase_limited_31"], x["phase_limited_32"])] += 1
+107c108
+<         a, b = float.fromhex(x["abserr_30"]), float.fromhex(x["abserr_31"])
+---
+>         a, b = float.fromhex(x["abserr_31"]), float.fromhex(x["abserr_32"])
+110c111
+<         bc[(x["record"].split(".", 1)[1], x["regions_30"] != x["regions_31"], band)] += 1
+---
+>         bc[(x["record"].split(".", 1)[1], x["regions_31"] != x["regions_32"], band)] += 1
+123c124
+<     for col in ("abs_dtotal_over_abserr30", "abs_dtotal_over_abserr31", "s3_abs_dtotal_over_sum_abserr"):
+---
+>     for col in ("abs_dtotal_over_abserr31", "abs_dtotal_over_abserr32", "s3_abs_dtotal_over_sum_abserr"):
+130,131c131,132
+<     reg = [(int(r["WKB_Levin_num_regions_30"]), int(r["WKB_Levin_num_regions_31"])) for r in rows
+<            if r["WKB_Levin_num_regions_30"] not in ("", "None")]
+---
+>     reg = [(int(r["WKB_Levin_num_regions_31"]), int(r["WKB_Levin_num_regions_32"])) for r in rows
+>            if r["WKB_Levin_num_regions_31"] not in ("", "None")]
+133c134
+<     print(f"moved rows with WKB_Levin regions: {len(reg)}; R31 more {up}, fewer {dn}, equal {eq}; "
+---
+>     print(f"moved rows with WKB_Levin regions: {len(reg)}; R32 more {up}, fewer {dn}, equal {eq}; "
+138,141c139,142
+<     dep = Counter((int(r["WKB_Levin_max_depth_30"]), int(r["WKB_Levin_max_depth_31"])) for r in rows
+<                   if r["WKB_Levin_max_depth_30"] not in ("", "None") and r["WKB_Levin_max_depth_30"] != r["WKB_Levin_max_depth_31"])
+<     print(f"  max-depth changes (R30 -> R31: rows): {dict(sorted(dep.items()))}")
+<     for st in ("30", "31"):
+---
+>     dep = Counter((int(r["WKB_Levin_max_depth_31"]), int(r["WKB_Levin_max_depth_32"])) for r in rows
+>                   if r["WKB_Levin_max_depth_31"] not in ("", "None") and r["WKB_Levin_max_depth_31"] != r["WKB_Levin_max_depth_32"])
+>     print(f"  max-depth changes (R31 -> R32: rows): {dict(sorted(dep.items()))}")
+>     for st in ("31", "32"):
+151,153c152,154
+<         if r["WKB_Levin_num_regions_30"] not in ("", "None"):
+<             d[2] += int(r["WKB_Levin_num_regions_30"]); d[3] += int(r["WKB_Levin_num_regions_31"])
+<     print("moved rows by (k, q, r): rows moved, total moved, WKB regions R30 -> R31")
+---
+>         if r["WKB_Levin_num_regions_31"] not in ("", "None"):
+>             d[2] += int(r["WKB_Levin_num_regions_31"]); d[3] += int(r["WKB_Levin_num_regions_32"])
+>     print("moved rows by (k, q, r): rows moved, total moved, WKB regions R31 -> R32")
+157c158
+<     an = [(int(x["regions_30"]), int(x["regions_31"])) for x in recs if x["kind"] == "analytic"]
+---
+>     an = [(int(x["regions_31"]), int(x["regions_32"])) for x in recs if x["kind"] == "analytic"]
+159c160
+<     gr = [(int(x["regions_30"]), int(x["regions_31"])) for x in recs if x["kind"] == "group"]
+---
+>     gr = [(int(x["regions_31"]), int(x["regions_32"])) for x in recs if x["kind"] == "group"]
+162,163c163,164
+<     xs = sorted(float(x["abs_dvalue_over_abserr30"]) for x in gv)
+<     ys = sorted(float(x["abs_dvalue_over_abserr31"]) for x in gv)
+---
+>     xs = sorted(float(x["abs_dvalue_over_abserr31"]) for x in gv)
+>     ys = sorted(float(x["abs_dvalue_over_abserr32"]) for x in gv)
+165,179c166,180
+<         print(f"group records whose value moved: {len(gv)}; |dv|/e30 median {xs[len(xs)//2]:.3e} max {xs[-1]:.3e}; "
+<               f"|dv|/e31 median {ys[len(ys)//2]:.3e} max {ys[-1]:.3e}; |dv|/e30 > 1: {sum(x > 1 for x in xs)}; |dv|/e31 > 1: {sum(y > 1 for y in ys)}")
+<         for x in sorted(gv, key=lambda x: -max(float(x["abs_dvalue_over_abserr30"]), float(x["abs_dvalue_over_abserr31"])))[:10]:
+<             print(f"  top: {(x['k'], x['q'], x['r'], x['z_response'])} {x['record']} {x['label']} |dv|/e30 {float(x['abs_dvalue_over_abserr30']):.3e} "
+<                   f"|dv|/e31 {float(x['abs_dvalue_over_abserr31']):.3e} regions {x['regions_30']}->{x['regions_31']} conv {x['converged_30']}->{x['converged_31']}")
+<     both = [x for x in gv if float(x["abs_dvalue_over_abserr30"]) * float.fromhex(x["abserr_30"])
+<             > float.fromhex(x["abserr_30"]) + float.fromhex(x["abserr_31"])]
+<     print(f"group records whose |dv| exceeds abserr30 + abserr31 (record-level S3 form, float arithmetic): {len(both)}")
+<     for x in sorted(both, key=lambda x: -abs(float.fromhex(x["value_31"]) - float.fromhex(x["value_30"]))
+<                     / (float.fromhex(x["abserr_30"]) + float.fromhex(x["abserr_31"]))):
+<         d = abs(float.fromhex(x["value_31"]) - float.fromhex(x["value_30"]))
+<         print(f"  {(x['k'], x['q'], x['r'], x['z_response'])} {x['record']} {x['label']} |dv|/(e30+e31) "
+<               f"{d / (float.fromhex(x['abserr_30']) + float.fromhex(x['abserr_31'])):.3e} v30 {x['value_30']} v31 {x['value_31']} "
+<               f"e30 {x['abserr_30']} e31 {x['abserr_31']} regions {x['regions_30']}->{x['regions_31']} conv {x['converged_30']}->{x['converged_31']}")
+<     cd = [x for x in recs if x["converged_30"] != x["converged_31"]]
+---
+>         print(f"group records whose value moved: {len(gv)}; |dv|/e31 median {xs[len(xs)//2]:.3e} max {xs[-1]:.3e}; "
+>               f"|dv|/e32 median {ys[len(ys)//2]:.3e} max {ys[-1]:.3e}; |dv|/e31 > 1: {sum(x > 1 for x in xs)}; |dv|/e32 > 1: {sum(y > 1 for y in ys)}")
+>         for x in sorted(gv, key=lambda x: -max(float(x["abs_dvalue_over_abserr31"]), float(x["abs_dvalue_over_abserr32"])))[:10]:
+>             print(f"  top: {(x['k'], x['q'], x['r'], x['z_response'])} {x['record']} {x['label']} |dv|/e31 {float(x['abs_dvalue_over_abserr31']):.3e} "
+>                   f"|dv|/e32 {float(x['abs_dvalue_over_abserr32']):.3e} regions {x['regions_31']}->{x['regions_32']} conv {x['converged_31']}->{x['converged_32']}")
+>     both = [x for x in gv if float(x["abs_dvalue_over_abserr31"]) * float.fromhex(x["abserr_31"])
+>             > float.fromhex(x["abserr_31"]) + float.fromhex(x["abserr_32"])]
+>     print(f"group records whose |dv| exceeds abserr31 + abserr32 (record-level S3 form, float arithmetic): {len(both)}")
+>     for x in sorted(both, key=lambda x: -abs(float.fromhex(x["value_32"]) - float.fromhex(x["value_31"]))
+>                     / (float.fromhex(x["abserr_31"]) + float.fromhex(x["abserr_32"]))):
+>         d = abs(float.fromhex(x["value_32"]) - float.fromhex(x["value_31"]))
+>         print(f"  {(x['k'], x['q'], x['r'], x['z_response'])} {x['record']} {x['label']} |dv|/(e31+e32) "
+>               f"{d / (float.fromhex(x['abserr_31']) + float.fromhex(x['abserr_32'])):.3e} v31 {x['value_31']} v32 {x['value_32']} "
+>               f"e31 {x['abserr_31']} e32 {x['abserr_32']} regions {x['regions_31']}->{x['regions_32']} conv {x['converged_31']}->{x['converged_32']}")
+>     cd = [x for x in recs if x["converged_31"] != x["converged_32"]]
+182,186c183,187
+<         print(f"  {(x['k'], x['q'], x['r'], x['z_response'])} {x['kind']} {x['record']} {x['label']} conv {x['converged_30']}->{x['converged_31']} "
+<               f"v {x['value_30']} -> {x['value_31']} e {x['abserr_30']} -> {x['abserr_31']} regions {x['regions_30']}->{x['regions_31']} "
+<               f"pl {x['phase_limited_30']}->{x['phase_limited_31']} sp {x['stationary_points_30']}/{x['stationary_points_31']} wp {x['window_pieces_30']}/{x['window_pieces_31']}")
+<     ab = sorted(float.fromhex(x["abserr_31"]) / float.fromhex(x["abserr_30"]) for x in recs
+<                 if x["kind"] == "group" and float.fromhex(x["abserr_30"]) > 0)
+---
+>         print(f"  {(x['k'], x['q'], x['r'], x['z_response'])} {x['kind']} {x['record']} {x['label']} conv {x['converged_31']}->{x['converged_32']} "
+>               f"v {x['value_31']} -> {x['value_32']} e {x['abserr_31']} -> {x['abserr_32']} regions {x['regions_31']}->{x['regions_32']} "
+>               f"pl {x['phase_limited_31']}->{x['phase_limited_32']} sp {x['stationary_points_31']}/{x['stationary_points_32']} wp {x['window_pieces_31']}/{x['window_pieces_32']}")
+>     ab = sorted(float.fromhex(x["abserr_32"]) / float.fromhex(x["abserr_31"]) for x in recs
+>                 if x["kind"] == "group" and float.fromhex(x["abserr_31"]) > 0)
+188c189
+<         print(f"group records differing: abserr31/abserr30 min {ab[0]:.3e} median {ab[len(ab)//2]:.3e} max {ab[-1]:.3e}; "
+---
+>         print(f"group records differing: abserr32/abserr31 min {ab[0]:.3e} median {ab[len(ab)//2]:.3e} max {ab[-1]:.3e}; "

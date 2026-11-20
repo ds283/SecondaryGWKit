@@ -1,0 +1,20 @@
+$ sh -c git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c\ status\ --short\ --ignored\;\ echo\ tree-clean-check-end\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ rev-parse\ HEAD\;\ git\ --no-optional-locks\ -C\ /Users/ds283/Documents/Code/SecondaryGWKit\ status\ --short\;\ echo\ main-clean-check-end\;\ find\ /Users/ds283/Documents/Code/SecondaryGWKit-lpf07c-cc3368c\ -name\ __pycache__\ -not\ -path\ \'\*/.git/\*\'\;\ echo\ pycache-check-end\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -m\ runregistrykit\ list\ \>\ out/registry_at_stop2.txt\;\ tail\ -1\ out/registry_at_stop2.txt\;\ grep\ levin-phase-floor-07c-k0\ out/registry_at_stop2.txt\ \|\ cut\ -c1-110\;\ shasum\ -a\ 256\ state/predictions.md\;\ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python\ -B\ -c\ \"import\ os\,datetime\;s=os.stat\(\'state/predictions.md\'\)\;print\(\'predictions.md\ mtime\'\,\ datetime.datetime.fromtimestamp\(s.st_mtime\,\ datetime.timezone.utc\).isoformat\(\)\,\ oct\(s.st_mode\)\)\"\;\ df\ -h\ /Users/ds283/Documents/Code/SecondaryGWKit/var\;\ uptime
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-19T15:30:56Z
+# ----
+tree-clean-check-end
+cc3368ce69d42fd6871d6264fd30efa65dd00cea
+28ebaf0743e0555fb2c4512ce714884005a60eff
+main-clean-check-end
+pycache-check-end
+95 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 95 finished; 0 with no host recorded.
+   levin-phase-floor-07c-k0-20261119T151009                   done          11/11      21m  levin-phase-floor 
+cad4fd7f1060ef3344a854bf6b3b2ba6f9702091323cfc5b472d413c9a8a0c79  state/predictions.md
+predictions.md mtime 2026-11-19T15:30:24.709924+00:00 0o100444
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk3s3s1  927G  824G  104G  89% /
+15:30  up 43 days,  6:07, 1 user, load averages: 9.55 13.39 11.77
+# ----
+# end 2026-11-19T15:30:57Z
+# exit 0
