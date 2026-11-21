@@ -754,6 +754,29 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   raised the cost. **Next step:** both of those, before B2a's Part B, whose cost the $10^8$ cells
   dominate. The depth cap is `levin-phase-floor` 08's.
 
+  **Narrowed 2026-11-21, from the laptop (the cost is 06e's commit, and on this cell it buys
+  neither honesty nor $N$).** Both of the last narrowing's questions answered, on `R|together|1e8`
+  ([`B2-AT-HEAD.md`](../../docs/handover/B2-AT-HEAD.md) §7). Filon references for its four
+  `G±q±r` calls put `HEAD` at 0.06–0.49 times its declared errors on each, so it is honest there. A
+  ladder of the 13 code trees from B2's `d88faec8` to 07c's `67b5af74` (the cell run on each, B2's
+  tree reproducing B2's checkpoint exactly) puts the growth in one commit: `levin-phase-floor`
+  06e's `f4d8e173` takes the cell from 1,085 regions at depth 13 in 30 s to 25,639 at depth 20 in
+  665 s, and 06g and 06m bring it to `HEAD`'s 20,131. The tree before it, 06d's `3d70db93`, was
+  honest on all four calls, its cell $2.5\times10^{-13}$ of the total from the truth against a
+  declared $4.8\times10^{-9}$, and its $N$ is `HEAD`'s to $2.2\times10^{-13}$. What 06e's cost buys
+  is declared errors 50 times smaller, 100–330 times by `HEAD`, while the true errors stay of the
+  same order and no call meets the harness's `rtol = 1e-12`: three of the four calls subdivide to
+  the depth cap for a per-call `rtol` they do not reach, on groups that are 0.3–4.3% of the cell
+  total. The $10^7$ cells grow far less under 06e (1.6× and 1.2×), so the 161× is the $10^8$
+  rung's. Also found: in B2's own tree this cell is outside its declared error,
+  $8.3\times10^{-8}$ of its total against $3.9\times10^{-8}$, through one call integrated in one
+  region; B2a's Part B re-runs it at `HEAD`. **Not shown:** whether 06e's change is needed
+  elsewhere; it was made for its own measured reason, on its own census. **Next step:**
+  `levin-phase-floor` 08, whose question this now is: whether a call should subdivide to the depth
+  cap for a per-call `rtol` it cannot reach (G2's L2 as reopened, the depth cap, Q5). This cell is
+  a measured case for it. Nothing here blocks B2a: its `together` $10^8$ cells are honest at
+  `HEAD`, at about 480 s each on the laptop.
+
 - **[09-two-readers-plot-the-radiation-form-under-the-w-label]** *(opened 2026-10-25 by prompt 09,
   on reading the readers; not acted on, by `CLAUDE.md` rule 4)* — `extract_GkSource_data.py` (its
   log–log $G_k$ plot, `plot_Gk`) and `extract_QuadSourceIntegral_data.py` (`plot_Gk`, its `GkSource.pdf`)

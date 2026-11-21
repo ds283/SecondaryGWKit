@@ -1,0 +1,2 @@
+AdaptiveLevin/levin_quadrature.py /private/tmp/claude-35086/-Users-ds283--claude-spares-spare-nIjlMh/cff1227b-41d0-4487-a706-efd137a71485/scratchpad/ladder-trees/5e19c4b6/AdaptiveLevin/levin_quadrature.py matches 5e19c4b6 8956c7b6a8ec285f8898353eed65f4039a02b42edc6927565be3896cda52def1
+ComputeTargets/QuadSourceIntegral.py /private/tmp/claude-35086/-Users-ds283--claude-spares-spare-nIjlMh/cff1227b-41d0-4487-a706-efd137a71485/scratchpad/ladder-trees/5e19c4b6/ComputeTargets/QuadSourceIntegral.py matches 5e19c4b6 33cb161e5aedbfa11f68fbf768b20144fa57b1e47ec2436405e4d00cf66076d7
