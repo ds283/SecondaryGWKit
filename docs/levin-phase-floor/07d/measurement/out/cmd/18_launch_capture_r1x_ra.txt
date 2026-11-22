@@ -1,0 +1,6 @@
+run id      levin-phase-floor-07d-capture-r1x-ra-20261122T100747
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07d-capture-r1x-ra-20261122T100747
+plan        /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/plan_capture_r1x_ra.json (2 commands)
+sh pid      67958
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/run_07d.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07d-capture-r1x-ra-20261122T100747 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/plan_capture_r1x_ra.json; exit $?
+launcher    pid 67952, exiting without waiting

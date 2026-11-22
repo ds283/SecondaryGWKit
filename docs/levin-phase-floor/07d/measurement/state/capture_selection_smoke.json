@@ -1,0 +1,14 @@
+[
+ {
+  "unit": "h-1e-7-0-10670",
+  "index": 13,
+  "notify_label": "analytic J4",
+  "census_value": "0x1.38162f81050abp-37",
+  "census_abserr": "0x1.906058249b6bep-82",
+  "census_num_regions": 2,
+  "census_max_depth": 1,
+  "census_converged": true,
+  "census_unit_budget_s": 300.0,
+  "sid": "h-1e-7-0-10670|a13"
+ }
+]

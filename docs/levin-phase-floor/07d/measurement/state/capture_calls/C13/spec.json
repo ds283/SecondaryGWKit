@@ -1,0 +1,202 @@
+{
+ "tree": "h",
+ "name": "C13",
+ "units": [
+  {
+   "uid": "h-1e-8-2-21787",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-21787",
+   "names05": null,
+   "shard": 2,
+   "serial": 21787,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     3,
+     "k=3e+08/Mpc, q=3.14e+05/Mpc, r=3e+08/Mpc @ z_response=5.2796e+08, z in (5.406e+09, 5.2796e+08), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-21799",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-21799",
+   "names05": null,
+   "shard": 2,
+   "serial": 21799,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=3e+08/Mpc, q=3.14e+05/Mpc, r=3e+08/Mpc @ z_response=1.3257e+08, z in (5.1721e+12, 5.406e+09), regime Gr, group G+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-21833",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-21833",
+   "names05": null,
+   "shard": 2,
+   "serial": 21833,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     2,
+     "k=3e+08/Mpc, q=9.56e+07/Mpc, r=3e+08/Mpc @ z_response=1.7477e+08, z in (5.1721e+12, 1.6351e+12), regime Gr, group G-r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-21963",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-21963",
+   "names05": null,
+   "shard": 2,
+   "serial": 21963,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     11,
+     "analytic J3"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-2335",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-2335",
+   "names05": null,
+   "shard": 2,
+   "serial": 2335,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     3,
+     "k=3e+08/Mpc, q=3.09e+06/Mpc, r=3e+08/Mpc @ z_response=0.1, z in (5.2861e+10, 0.1), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-33431",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-33431",
+   "names05": null,
+   "shard": 2,
+   "serial": 33431,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-33475",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-33475",
+   "names05": null,
+   "shard": 2,
+   "serial": 33475,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     14,
+     "analytic Y2"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-34880",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-34880",
+   "names05": null,
+   "shard": 2,
+   "serial": 34880,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     13,
+     "analytic J4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-36993",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-36993",
+   "names05": null,
+   "shard": 2,
+   "serial": 36993,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=3e+08/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=1205.3, z in (5.1721e+12, 1205.3), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-38644",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-38644",
+   "names05": null,
+   "shard": 2,
+   "serial": 38644,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     5,
+     "k=3e+08/Mpc, q=9.56e+07/Mpc, r=3e+08/Mpc @ z_response=0.91255, z in (1.6351e+12, 0.91255), regime Gqr, group G-q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C13",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C13/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

@@ -1,0 +1,107 @@
+{
+ "tree": "h",
+ "name": "C05",
+ "units": [
+  {
+   "uid": "h-1e-7-2-13628",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-13628",
+   "names05": null,
+   "shard": 2,
+   "serial": 13628,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     7,
+     "analytic J1"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-2-1577",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-1577",
+   "names05": null,
+   "shard": 2,
+   "serial": 1577,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     18,
+     "analytic Y2"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-2-1701",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-1701",
+   "names05": null,
+   "shard": 2,
+   "serial": 1701,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     17,
+     "analytic J2"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-2-35084",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "2-35084",
+   "names05": null,
+   "shard": 2,
+   "serial": 35084,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     10,
+     "analytic Y2"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-2-13626",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "2-13626",
+   "names05": null,
+   "shard": 2,
+   "serial": 13626,
+   "k_key": "2:302",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     15,
+     "analytic J1"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_ra/C05",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_ra/C05/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

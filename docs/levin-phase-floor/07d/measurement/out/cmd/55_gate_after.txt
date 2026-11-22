@@ -1,0 +1,58 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/gate_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:58:58Z
+# ----
+## trees
+worktree HEAD 49ce96429da797efe55f546d65a23ebcd0099f33
+worktree status --short --ignored: empty
+main HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff
+main status --short: empty
+code diff 67b5af74..HEAD: empty
+## the module
+levin_quadrature.py sha256 d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6 lines 6459
+  SIX_PI: line 296
+  _LEVIN_ROUNDOFF_EXIT_MIN_FLOOR_RATIO: line 408
+  _LEVIN_DIRECT_SOLVE_PHASE_SPAN: line 544
+  _LEVIN_CHASE_NOISE_FACTOR: line 688
+  _LEVIN_WINDOW_IROFF1_LIMIT: line 733
+  _DQK21_SATURATION_FACTOR: line 743
+  _levin_G0_G1: line 837
+  _roundoff_floor: line 859
+  _cc_node_term_parts: line 967
+  _cc_roundoff_floor: line 1074
+  _declared_endpoint_phase_err: line 1147
+  _cc_leaf_unresolved: line 1223
+  _window_bisection_counts: line 1248
+  theta_prime_on_fine_grid: line 2791
+  _adaptive_levin_subregion: line 2842
+  _adaptive_levin_subregion_impl: line 2914
+  _adaptive_levin_subregion_cc: line 3355
+  _oriented_cc: line 3688
+  _locate_stationary_points: line 3779
+  _adaptive_levin: line 4157
+  _add_leaf: line 4842
+  _check_leaf: line 4953
+  _floor_limit_stopped_window_leaf: line 5153
+  _stop_window: line 5184
+  adaptive_levin_sincos: line 6182
+code readers of SIX_PI (ast Load): [(3055, '_adaptive_levin_subregion_impl')]
+QuadSourceIntegral CHEBYSHEV_ORDER: [(71, 'CHEBYSHEV_ORDER = 24')]
+## the machine
+103 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 103 finished; 0 with no host recorded.
+lock: free (/Users/ds283/.raypoolkit/rehearsal-lock does not exist)
+Ray processes: no temp dir given
+
+12:59  up 46 days,  3:35, 1 user, load averages: 3.17 6.75 8.12
+/dev/disk3s3s1  927G  864G   64G  94% /
+## inputs
+/Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/checkpoint.jsonl: sha256 33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e size 3498056160; listed 33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e 3498056160: MATCH
+/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/census/out/stop3/compare_census_calls.calls.jsonl: sha256 ee36f0d7257ea8503b7135307489571becfc983c0d7a4cac325f1181fdc856fe size 668317925; listed ee36f0d7257ea8503b7135307489571becfc983c0d7a4cac325f1181fdc856fe 668317925: MATCH
+scratch copy handover-A3-v2-lambdacdm.sqlite: MATCH 1542e05c02571e10905e5cbead2619694a437d58b6113502b0ae1dc6a1b06522
+scratch copy handover-A3-v2-lambdacdm-shard0000.sqlite: MATCH bb007a4c11d4c6ce73962611405694d279942902fcab179cf34dc6490e22ef17
+scratch copy handover-A3-v2-lambdacdm-shard0001.sqlite: MATCH aae63ccde9296c914f0ba5f2adc91544773998355cd53a3290cf2a84c25ffb05
+scratch copy handover-A3-v2-lambdacdm-shard0002.sqlite: MATCH 5e2bda9baf1c41b394c171f81b7535240085680c4befbd3b6717c0a07e4c2a66
+scratch copy handover-A3-v2-lambdacdm-shard0003.sqlite: MATCH ecc3330df911285b48e1fcfbe386c924ccfae69eba0428b0b492751b17dfd3de
+# ----
+# end 2026-11-22T12:59:04Z
+# exit 0

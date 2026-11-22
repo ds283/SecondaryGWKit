@@ -1,0 +1,39 @@
+leaves (distinct): 2291
+('analytic', '1-4') {'47 better': 1, '93 better': 32, 'D vs CC47: bounded': 90, 'D vs CC93: bounded': 90, 'cannot tell': 57, 'n': 90}
+   CC47 err / CC93 err where CC47 err > 3 eps: n 36 median 1.14e+04 p10 1 p90 9.17e+06
+   nest3N4 D / CC93 true err where > eps: median 2.24e+06 p01 103 min 103
+('analytic', '5+') {'93 better': 24, 'D vs CC47: bounded': 41, 'D vs CC93: bounded': 41, 'cannot tell': 17, 'n': 41}
+   CC47 err / CC93 err where CC47 err > 3 eps: n 26 median 4.37e+05 p10 65.9 p90 1e+07
+   nest3N4 D / CC93 true err where > eps: median 3e+11 p01 378 min 378
+('analytic', 'none') {'47 better': 21, '93 better': 243, 'D vs CC47: bounded': 723, 'D vs CC93: bounded': 723, 'cannot tell': 459, 'n': 723}
+   CC47 err / CC93 err where CC47 err > 3 eps: n 295 median 159 p10 1.28 p90 8.73e+06
+   nest3N4 D / CC93 true err where > eps: median 4.26e+03 p01 12.5 min 12
+('group', '1-4') {'47 better': 19, '93 better': 144, 'D vs CC47: bounded': 432, 'D vs CC47: undecided': 29, 'D vs CC93: bounded': 432, 'D vs CC93: undecided': 29, 'cannot tell': 298, 'n': 461}
+   CC47 err / CC93 err where CC47 err > 3 eps: n 213 median 2.48 p10 0.958 p90 75.2
+   nest3N4 D / CC93 true err where > eps: median 8.65 p01 0.792 min 0.488
+('group', '5+') {'47 better': 14, '93 better': 448, 'D vs CC47: bounded': 497, 'D vs CC93: bounded': 497, 'cannot tell': 35, 'n': 497}
+   CC47 err / CC93 err where CC47 err > 3 eps: n 464 median 15.6 p10 2.83 p90 129
+   nest3N4 D / CC93 true err where > eps: median 1.84e+03 p01 31.4 min 9.29
+('group', 'none') {'47 better': 31, '93 better': 96, 'D vs CC47: bounded': 476, 'D vs CC47: undecided': 3, 'D vs CC93: bounded': 479, 'cannot tell': 352, 'n': 479}
+   CC47 err / CC93 err where CC47 err > 3 eps: n 159 median 1.72 p10 0.745 p90 4.67
+   nest3N4 D / CC93 true err where > eps: median 5.97 p01 2.26 min 1.15
+
+D-T: per band and kind -- distinct leaves; CC47, CC93, V_P true errors over the leaf's request share
+gate_q1    analytic n  80 | CC47 more accurate than V_P  28, less   0 | within request share: CC47  80 CC93  80 V_P  80 | median err/share CC47 1e-07 CC93 1.5e-07 V_P 4.8e-07 | p90 CC47 2.4e-06 CC93 2.2e-06 V_P 6.9e-06
+gate_q1    group    n 178 | CC47 more accurate than V_P  59, less  17 | within request share: CC47 173 CC93 178 V_P 144 | median err/share CC47 0.00014 CC93 6.4e-05 V_P 0.00037 | p90 CC47 0.23 CC93 0.045 V_P 3.7
+gate_q2    analytic n  80 | CC47 more accurate than V_P  12, less  14 | within request share: CC47  80 CC93  80 V_P  80 | median err/share CC47 2.4e-07 CC93 1.8e-07 V_P 3.6e-07 | p90 CC47 4.2e-06 CC93 2.9e-06 V_P 3.6e-06
+gate_q2    group    n 180 | CC47 more accurate than V_P  39, less  43 | within request share: CC47 179 CC93 180 V_P 167 | median err/share CC47 4.2e-05 CC93 2.3e-05 V_P 6.1e-05 | p90 CC47 0.086 CC93 0.011 V_P 0.54
+gate_q3    analytic n  80 | CC47 more accurate than V_P  10, less  12 | within request share: CC47  80 CC93  80 V_P  80 | median err/share CC47 7.6e-07 CC93 6.1e-07 V_P 9.5e-07 | p90 CC47 1.3e-05 CC93 9.2e-06 V_P 1.3e-05
+gate_q3    group    n 179 | CC47 more accurate than V_P  50, less  56 | within request share: CC47 177 CC93 179 V_P 159 | median err/share CC47 2.9e-05 CC93 1.4e-05 V_P 2.3e-05 | p90 CC47 0.064 CC93 0.0078 V_P 1.3
+gate_q4    analytic n  80 | CC47 more accurate than V_P   3, less  21 | within request share: CC47  80 CC93  80 V_P  80 | median err/share CC47 7.8e-07 CC93 8.6e-07 V_P 7.8e-07 | p90 CC47 1.4e-05 CC93 1.1e-05 V_P 9.2e-06
+gate_q4    group    n 176 | CC47 more accurate than V_P  22, less  70 | within request share: CC47 174 CC93 176 V_P 171 | median err/share CC47 3.7e-05 CC93 2e-05 V_P 1.7e-05 | p90 CC47 0.013 CC93 0.0039 V_P 0.016
+band_6_8   analytic n  80 | CC47 more accurate than V_P   4, less  25 | within request share: CC47  80 CC93  80 V_P  80 | median err/share CC47 6e-07 CC93 7.5e-07 V_P 2.7e-07 | p90 CC47 7.1e-06 CC93 8.8e-06 V_P 2.5e-06
+band_6_8   group    n  97 | CC47 more accurate than V_P  73, less  10 | within request share: CC47  96 CC93  97 V_P  83 | median err/share CC47 5e-05 CC93 2.5e-05 V_P 0.0015 | p90 CC47 0.073 CC93 0.022 V_P 2.2
+band_8_10  analytic n  81 | CC47 more accurate than V_P   4, less  34 | within request share: CC47  81 CC93  81 V_P  81 | median err/share CC47 4.3e-06 CC93 1.4e-06 V_P 9.6e-07 | p90 CC47 0.00012 CC93 1.7e-05 V_P 3e-05
+band_8_10  group    n  97 | CC47 more accurate than V_P  75, less  13 | within request share: CC47  95 CC93  97 V_P  84 | median err/share CC47 0.0011 CC93 0.00019 V_P 0.011 | p90 CC47 0.28 CC93 0.023 V_P 2.6
+band_10_12 analytic n  80 | CC47 more accurate than V_P   0, less  60 | within request share: CC47  80 CC93  80 V_P  80 | median err/share CC47 5.6e-05 CC93 1.4e-06 V_P 1.1e-06 | p90 CC47 0.011 CC93 1.3e-05 V_P 1e-05
+band_10_12 group    n 107 | CC47 more accurate than V_P  80, less   0 | within request share: CC47 107 CC93 107 V_P 100 | median err/share CC47 2.6e-05 CC93 6e-06 V_P 0.00031 | p90 CC47 0.011 CC93 0.0012 V_P 0.4
+band_12_16 analytic n  83 | CC47 more accurate than V_P   0, less  83 | within request share: CC47  62 CC93  83 V_P  83 | median err/share CC47 0.19 CC93 1.1e-06 V_P 4.3e-07 | p90 CC47 29 CC93 1.3e-05 V_P 7.3e-06
+band_12_16 group    n 127 | CC47 more accurate than V_P 101, less  10 | within request share: CC47 125 CC93 127 V_P 119 | median err/share CC47 4.8e-05 CC93 1.1e-05 V_P 0.00039 | p90 CC47 0.039 CC93 0.0092 V_P 0.69
+band_16_20 analytic n  84 | CC47 more accurate than V_P   0, less  84 | within request share: CC47  10 CC93  84 V_P  84 | median err/share CC47 19 CC93 3.7e-06 V_P 2.1e-06 | p90 CC47 9.7e+02 CC93 4.2e-05 V_P 6.9e-05
+band_16_20 group    n 136 | CC47 more accurate than V_P  71, less  50 | within request share: CC47 135 CC93 136 V_P 131 | median err/share CC47 5.4e-05 CC93 1.6e-06 V_P 8.3e-05 | p90 CC47 0.083 CC93 0.0033 V_P 0.17

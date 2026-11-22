@@ -1,0 +1,8 @@
+{
+ "form": "nest3",
+ "scope": "all",
+ "T_pi": 12,
+ "kappa": 4.0,
+ "basis": "Ea with the threshold at 12 pi. **Not bounded on both sides:** the Levin solve understates on 85 of 430 decided leaves with V >= 12 pi (34 with the trust check). Run, flagged, so that the tables show a threshold between 6 pi and 20 pi.",
+ "name": "ET12"
+}

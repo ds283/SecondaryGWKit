@@ -1,0 +1,17 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/ridealong_07d.py 1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:07:45Z
+# ----
+# levin-phase-floor 07d Part A: top-up round 1, with its units' analytic calls
+# written 2026-11-22T10:07:45Z on mps026298.phys.susx.ac.uk
+# script ridealong_07d.py sha256 9ae64a4d798ee50f48ef0fe0bb96047ff2ec794c9f8cfe0838f0939eb3d9383c
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_calls_07d_r1.json sha256 44877a0fecaaf3e6fb97ce081fa74ef7104196e9bca43d54c606769c5c335133
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_index_07d.pkl sha256 da8a7a6504151131558754d5bacc542fa90ff7e5829218043081de20dba3f481
+99 drawn, 1460 ride along: 1559 calls in 99 units
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_calls_07d_r1x.json a7512f3114d0a1aff2a3e3094aa280db3be91451c24513f921fca79f6b453525; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_07d_r1x.json 9f9d6ec20145443675f12adf87d4b88ba98d0f4915b27b073114cc08b087a8a0
+# ----
+# end 2026-11-22T10:07:47Z
+# exit 0

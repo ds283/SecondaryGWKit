@@ -1,0 +1,16 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/extract_census_07d.py ra
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:20:20Z
+# ----
+# levin-phase-floor 07d Part A: 07c census records of the replays_ra
+# written 2026-11-22T10:20:26Z on mps026298.phys.susx.ac.uk
+# script extract_census_07d.py sha256 e05a80f584352210ed9b165d5d86866d1850359b49930342446175f2c763416f
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_wanted_07d_ra.json sha256 1e648094ca7d6618fc311976e1978bc8bfe2671ad593fc266ea6b3288eb0702e
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/checkpoint.jsonl sha256 33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e
+60 records from 58 units; wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_refs_07d_ra.pkl 38df0b0c19d5b547e6fdd099232908f9b1d5ce9c6df486205108a15e50c63fc0; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/census_refs_07d_ra.json 77637e89d56a86617dbbb403e12f807bdd44f5a372a217893f31d6e4fcd8d670
+# ----
+# end 2026-11-22T10:20:29Z
+# exit 0

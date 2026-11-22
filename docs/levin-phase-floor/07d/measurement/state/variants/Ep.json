@@ -1,0 +1,8 @@
+{
+ "form": "pair",
+ "scope": "all",
+ "T_pi": 6,
+ "kappa": 4.0,
+ "basis": "pairN4 on every Clenshaw-Curtis solve: the tree's pair with the noise term, no extra evaluation. **Does not qualify** (D-E: understates on 5 scored leaves, all with 59-82 knots inside; 4 of the 176): run, flagged with no bound basis, to show the noise term alone.",
+ "name": "Ep"
+}

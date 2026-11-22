@@ -1,0 +1,1 @@
+295 units (unit = A3 v2 row x rtol) of 07c's census, 306 calls (160 group, 146 analytic); inputs pickled under var/levin-phase-floor-07d/measurement/state/capture_calls/.

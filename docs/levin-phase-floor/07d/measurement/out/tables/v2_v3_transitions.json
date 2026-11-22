@@ -1,0 +1,421 @@
+{
+ "header": [
+  "# levin-phase-floor 07d Part A: leaf verdicts, reference v2 to v3",
+  "# written 2026-11-22T10:07:32Z on mps026298.phys.susx.ac.uk",
+  "# script v2_v3_transitions_07d.py sha256 a89cba8f8040e7694b6285e92741cebe81bd8bda99b44976e68c48db858393ff",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/leaves_v2_superseded/fill_state.json sha256 ef7a44388e452e10f39a18e8cf67061eb2c11220e4ab511a6313190578db1dff",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/leaves/fill_state.json sha256 3693a986bdf73565f441f167af76747e6b3815aff3673cd13b2390e20fab5ced"
+ ],
+ "n_both": 2264,
+ "only_v2": 1060,
+ "only_v3": 0,
+ "total": {
+  "bounded->bounded": 2188,
+  "undecided->bounded": 195,
+  "undecided->understates": 126,
+  "understates->understates": 592,
+  "undecided->undecided": 1416,
+  "understates->undecided": 9,
+  "bounded->undecided": 2
+ },
+ "by_stratum_route": {
+  "band_10_12|analytic|1e-7|cc": {
+   "bounded->bounded": 6
+  },
+  "band_10_12|analytic|1e-7|levin": {
+   "undecided->bounded": 6
+  },
+  "band_10_12|analytic|1e-8|cc": {
+   "bounded->bounded": 6
+  },
+  "band_10_12|analytic|1e-8|levin": {
+   "undecided->bounded": 6
+  },
+  "band_10_12|group|1e-7|cc": {
+   "bounded->bounded": 60
+  },
+  "band_10_12|group|1e-7|levin": {
+   "bounded->bounded": 22,
+   "undecided->understates": 5,
+   "understates->understates": 16,
+   "undecided->undecided": 15,
+   "undecided->bounded": 2
+  },
+  "band_10_12|group|1e-8|cc": {
+   "bounded->bounded": 60
+  },
+  "band_10_12|group|1e-8|levin": {
+   "bounded->bounded": 23,
+   "undecided->undecided": 14,
+   "understates->understates": 16,
+   "undecided->bounded": 2,
+   "undecided->understates": 5
+  },
+  "band_12_16|analytic|1e-7|cc": {
+   "bounded->bounded": 14
+  },
+  "band_12_16|analytic|1e-7|levin": {
+   "undecided->bounded": 13,
+   "undecided->undecided": 1
+  },
+  "band_12_16|analytic|1e-8|cc": {
+   "bounded->bounded": 14
+  },
+  "band_12_16|analytic|1e-8|levin": {
+   "undecided->bounded": 13,
+   "undecided->undecided": 1
+  },
+  "band_12_16|group|1e-7|cc": {
+   "bounded->bounded": 80
+  },
+  "band_12_16|group|1e-7|levin": {
+   "bounded->bounded": 15,
+   "understates->understates": 15,
+   "undecided->undecided": 26,
+   "undecided->understates": 14,
+   "undecided->bounded": 9,
+   "understates->undecided": 1
+  },
+  "band_12_16|group|1e-8|cc": {
+   "bounded->bounded": 80
+  },
+  "band_12_16|group|1e-8|levin": {
+   "bounded->bounded": 16,
+   "undecided->bounded": 6,
+   "undecided->undecided": 33,
+   "understates->understates": 18,
+   "undecided->understates": 7
+  },
+  "band_16_20|analytic|1e-7|cc": {
+   "bounded->bounded": 7
+  },
+  "band_16_20|analytic|1e-7|levin": {
+   "undecided->bounded": 7
+  },
+  "band_16_20|analytic|1e-8|cc": {
+   "bounded->bounded": 7
+  },
+  "band_16_20|analytic|1e-8|levin": {
+   "undecided->bounded": 7
+  },
+  "band_16_20|group|1e-7|cc": {
+   "bounded->bounded": 80
+  },
+  "band_16_20|group|1e-7|levin": {
+   "undecided->undecided": 30,
+   "bounded->bounded": 19,
+   "undecided->understates": 11,
+   "understates->understates": 13,
+   "undecided->bounded": 7
+  },
+  "band_16_20|group|1e-8|cc": {
+   "bounded->bounded": 80
+  },
+  "band_16_20|group|1e-8|levin": {
+   "undecided->undecided": 32,
+   "undecided->understates": 7,
+   "bounded->bounded": 15,
+   "understates->understates": 21,
+   "undecided->bounded": 5
+  },
+  "band_6_8|analytic|1e-7|cc": {
+   "bounded->bounded": 15
+  },
+  "band_6_8|analytic|1e-7|levin": {
+   "undecided->bounded": 14,
+   "bounded->bounded": 1
+  },
+  "band_6_8|analytic|1e-8|cc": {
+   "bounded->bounded": 15
+  },
+  "band_6_8|analytic|1e-8|levin": {
+   "undecided->bounded": 14,
+   "bounded->bounded": 1
+  },
+  "band_6_8|group|1e-7|cc": {
+   "bounded->bounded": 54,
+   "undecided->bounded": 4,
+   "understates->understates": 2
+  },
+  "band_6_8|group|1e-7|levin": {
+   "bounded->bounded": 20,
+   "understates->understates": 26,
+   "undecided->understates": 4,
+   "undecided->undecided": 10
+  },
+  "band_6_8|group|1e-8|cc": {
+   "bounded->bounded": 54,
+   "undecided->bounded": 3,
+   "understates->understates": 3
+  },
+  "band_6_8|group|1e-8|levin": {
+   "bounded->bounded": 23,
+   "understates->understates": 20,
+   "undecided->undecided": 10,
+   "undecided->understates": 6,
+   "undecided->bounded": 1
+  },
+  "band_8_10|analytic|1e-7|cc": {
+   "bounded->bounded": 3
+  },
+  "band_8_10|analytic|1e-7|levin": {
+   "undecided->bounded": 3
+  },
+  "band_8_10|analytic|1e-8|cc": {
+   "bounded->bounded": 3
+  },
+  "band_8_10|analytic|1e-8|levin": {
+   "undecided->bounded": 3
+  },
+  "band_8_10|group|1e-7|cc": {
+   "bounded->bounded": 60
+  },
+  "band_8_10|group|1e-7|levin": {
+   "bounded->bounded": 24,
+   "understates->undecided": 1,
+   "understates->understates": 23,
+   "undecided->undecided": 10,
+   "undecided->bounded": 1,
+   "undecided->understates": 1
+  },
+  "band_8_10|group|1e-8|cc": {
+   "bounded->bounded": 60
+  },
+  "band_8_10|group|1e-8|levin": {
+   "undecided->undecided": 10,
+   "understates->understates": 28,
+   "bounded->bounded": 21,
+   "undecided->bounded": 1
+  },
+  "chase|analytic|1e-7|cc": {
+   "bounded->bounded": 31
+  },
+  "chase|analytic|1e-7|levin": {
+   "bounded->bounded": 30,
+   "undecided->bounded": 1
+  },
+  "chase|analytic|1e-8|cc": {
+   "bounded->bounded": 8
+  },
+  "chase|analytic|1e-8|levin": {
+   "bounded->bounded": 8
+  },
+  "chase|group|1e-7|cc": {
+   "undecided->undecided": 51,
+   "bounded->bounded": 31,
+   "bounded->undecided": 2,
+   "undecided->understates": 3,
+   "understates->understates": 3,
+   "undecided->bounded": 8
+  },
+  "chase|group|1e-7|levin": {
+   "undecided->undecided": 73,
+   "understates->understates": 16,
+   "bounded->bounded": 1,
+   "understates->undecided": 1,
+   "undecided->understates": 7
+  },
+  "chase|group|1e-8|cc": {
+   "undecided->undecided": 59,
+   "bounded->bounded": 31,
+   "undecided->bounded": 10,
+   "understates->undecided": 1,
+   "undecided->understates": 3,
+   "understates->understates": 3
+  },
+  "chase|group|1e-8|levin": {
+   "undecided->undecided": 72,
+   "understates->understates": 19,
+   "undecided->understates": 10,
+   "understates->undecided": 1,
+   "bounded->bounded": 5
+  },
+  "gate_q1|analytic|1e-7|cc": {
+   "bounded->bounded": 43
+  },
+  "gate_q1|analytic|1e-7|levin": {
+   "bounded->bounded": 43
+  },
+  "gate_q1|analytic|1e-8|cc": {
+   "bounded->bounded": 57
+  },
+  "gate_q1|analytic|1e-8|levin": {
+   "bounded->bounded": 57
+  },
+  "gate_q1|group|1e-7|cc": {
+   "undecided->undecided": 68,
+   "bounded->bounded": 36,
+   "understates->understates": 14
+  },
+  "gate_q1|group|1e-7|levin": {
+   "understates->understates": 26,
+   "undecided->undecided": 73,
+   "bounded->bounded": 19
+  },
+  "gate_q1|group|1e-8|cc": {
+   "undecided->undecided": 37,
+   "understates->understates": 7,
+   "bounded->bounded": 36
+  },
+  "gate_q1|group|1e-8|levin": {
+   "undecided->undecided": 38,
+   "understates->understates": 27,
+   "bounded->bounded": 15
+  },
+  "gate_q2|analytic|1e-7|cc": {
+   "bounded->bounded": 32
+  },
+  "gate_q2|analytic|1e-7|levin": {
+   "bounded->bounded": 30,
+   "undecided->bounded": 2
+  },
+  "gate_q2|analytic|1e-8|cc": {
+   "bounded->bounded": 42
+  },
+  "gate_q2|analytic|1e-8|levin": {
+   "bounded->bounded": 40,
+   "undecided->bounded": 2
+  },
+  "gate_q2|group|1e-7|cc": {
+   "bounded->bounded": 36,
+   "undecided->undecided": 43,
+   "understates->understates": 4
+  },
+  "gate_q2|group|1e-7|levin": {
+   "understates->understates": 22,
+   "undecided->undecided": 55,
+   "bounded->bounded": 5,
+   "undecided->understates": 1
+  },
+  "gate_q2|group|1e-8|cc": {
+   "undecided->undecided": 81,
+   "bounded->bounded": 43,
+   "undecided->bounded": 1,
+   "understates->understates": 5,
+   "understates->undecided": 1
+  },
+  "gate_q2|group|1e-8|levin": {
+   "undecided->undecided": 89,
+   "understates->understates": 26,
+   "bounded->bounded": 14,
+   "understates->undecided": 1,
+   "undecided->understates": 1
+  },
+  "gate_q3|analytic|1e-7|cc": {
+   "bounded->bounded": 11
+  },
+  "gate_q3|analytic|1e-7|levin": {
+   "bounded->bounded": 8,
+   "undecided->bounded": 3
+  },
+  "gate_q3|analytic|1e-8|cc": {
+   "bounded->bounded": 13
+  },
+  "gate_q3|analytic|1e-8|levin": {
+   "bounded->bounded": 11,
+   "undecided->bounded": 2
+  },
+  "gate_q3|group|1e-7|cc": {
+   "undecided->undecided": 56,
+   "understates->understates": 12,
+   "undecided->understates": 1,
+   "bounded->bounded": 25,
+   "undecided->bounded": 4
+  },
+  "gate_q3|group|1e-7|levin": {
+   "undecided->undecided": 57,
+   "understates->understates": 22,
+   "bounded->bounded": 14,
+   "undecided->understates": 5
+  },
+  "gate_q3|group|1e-8|cc": {
+   "undecided->understates": 3,
+   "undecided->undecided": 52,
+   "bounded->bounded": 27,
+   "understates->understates": 7,
+   "undecided->bounded": 5
+  },
+  "gate_q3|group|1e-8|levin": {
+   "undecided->understates": 6,
+   "undecided->undecided": 54,
+   "understates->understates": 23,
+   "bounded->bounded": 10,
+   "undecided->bounded": 1
+  },
+  "gate_q4|analytic|1e-7|cc": {
+   "bounded->bounded": 4
+  },
+  "gate_q4|analytic|1e-7|levin": {
+   "undecided->bounded": 4
+  },
+  "gate_q4|analytic|1e-8|cc": {
+   "bounded->bounded": 4
+  },
+  "gate_q4|analytic|1e-8|levin": {
+   "undecided->bounded": 4
+  },
+  "gate_q4|group|1e-7|cc": {
+   "undecided->bounded": 10,
+   "undecided->undecided": 57,
+   "bounded->bounded": 26,
+   "understates->understates": 5,
+   "undecided->understates": 4
+  },
+  "gate_q4|group|1e-7|levin": {
+   "undecided->undecided": 62,
+   "understates->understates": 21,
+   "undecided->understates": 9,
+   "bounded->bounded": 9,
+   "understates->undecided": 1
+  },
+  "gate_q4|group|1e-8|cc": {
+   "undecided->undecided": 51,
+   "undecided->understates": 3,
+   "undecided->bounded": 11,
+   "bounded->bounded": 29,
+   "understates->understates": 4
+  },
+  "gate_q4|group|1e-8|levin": {
+   "undecided->undecided": 65,
+   "undecided->understates": 10,
+   "understates->understates": 18,
+   "bounded->bounded": 4,
+   "understates->undecided": 1
+  },
+  "window|analytic|1e-7|cc": {
+   "bounded->bounded": 60
+  },
+  "window|analytic|1e-7|levin": {
+   "bounded->bounded": 60
+  },
+  "window|analytic|1e-8|cc": {
+   "bounded->bounded": 60
+  },
+  "window|analytic|1e-8|levin": {
+   "bounded->bounded": 60
+  },
+  "window|group|1e-7|cc": {
+   "understates->understates": 22,
+   "bounded->bounded": 20,
+   "undecided->undecided": 18
+  },
+  "window|group|1e-7|levin": {
+   "understates->understates": 31,
+   "bounded->bounded": 27,
+   "undecided->undecided": 2
+  },
+  "window|group|1e-8|cc": {
+   "understates->understates": 24,
+   "bounded->bounded": 27,
+   "undecided->undecided": 9
+  },
+  "window|group|1e-8|levin": {
+   "bounded->bounded": 28,
+   "understates->understates": 30,
+   "undecided->undecided": 2
+  }
+ },
+ "bounded_understates_moves": []
+}

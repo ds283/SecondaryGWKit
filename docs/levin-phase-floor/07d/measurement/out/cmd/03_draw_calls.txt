@@ -1,0 +1,18 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/draw_calls_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T09:11:27Z
+# ----
+# levin-phase-floor 07d Part A: section 2.1 item 1's call sample, round 0
+# written 2026-11-22T09:11:28Z on mps026298.phys.susx.ac.uk
+# script draw_calls_07d.py sha256 5eb12ef602c0da2de000bd93b60639487530ac07efca50531ec57a3a7eef675e
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_index_07d.pkl sha256 da8a7a6504151131558754d5bacc542fa90ff7e5829218043081de20dba3f481
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/seeds_07d.json sha256 732fc0cfbf5b2210bf40635583dc208d96b165ca3fd975ce66bddccdab8a2708
+306 calls in 295 units; by kind/rtol: {('analytic', '1e-7'): 80, ('group', '1e-7'): 80, ('group', '1e-8'): 80, ('analytic', '1e-8'): 66}
+cells with fewer than N_PER: {'analytic|1e-8|k1|Ccc': 2, 'analytic|1e-8|k2|Ccc': 1, 'analytic|1e-8|k3|Ccc': 3}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_calls_07d.json 164f6031e0a5e208ab1539ea94064478cb6c3a9fed098210b8a169fd7bbfcd2e; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_07d.json 25ee4d17d19996b1354a1d8bdbf2f9b3ab950f57c831d1187b54086fcedc6555
+# ----
+# end 2026-11-22T09:11:30Z
+# exit 0

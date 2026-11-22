@@ -1,0 +1,8 @@
+{
+ "form": "nest3",
+ "scope": "gate",
+ "T_pi": 6,
+ "kappa": 4.0,
+ "basis": "(E-gate): nest3N4, the one zero-understatement candidate on every D-E stratum (928 scored leaves) and on 07c's 176 truncation-dominated chase leaves; kappa 4 from D-N (sigma_own/sigma p05 0.69); margin: 0 understatements on n scored leaves bounds the rate at about 3/n, 3/40 a stratum (3/8 for the analytic chase at 1e-8, exhausted at 8). Gate solves only.",
+ "name": "Eg"
+}

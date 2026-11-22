@@ -1,0 +1,54 @@
+{
+ "header": [
+  "# levin-phase-floor 07d Part A: Route A cost per panel (no values kept)",
+  "# written 2026-11-22T12:04:09Z on mps026298.phys.susx.ac.uk",
+  "# script refs_costA_07d.py sha256 e39db2bf58b1e775aaa002d5320df37a9023320858e2090705cfb4d19194646c",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/inputs_ra.json sha256 badde96fbd1c7b721246ca9e761f6eff6455641472f859eb664c134d5a0eccc4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/inputs_rt.json sha256 84c6d2ea5b3ee2a0ed44811d5f12f1445a75aab380b1d8c262a9ad3b2f722ad4",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "np": {
+  "fcc": 6,
+  "qawo": 40
+ },
+ "rows": {
+  "rt-h-1e-7-2-36958-a19": {
+   "K_abs": 478284.8764786171,
+   "per_panel_s": {
+    "fcc_r1": 0.3542397153408577,
+    "qawo_r1": 0.003688666969537735,
+    "fcc_r2": 0.11587378468054037,
+    "qawo_r2": 0.0029488326981663704
+   }
+  },
+  "rt-h-1e-7-2-21989-a12": {
+   "K_abs": 8112903.5761344265,
+   "per_panel_s": {
+    "fcc_r1": 0.0693722222155581,
+    "qawo_r1": 0.0012113749980926514,
+    "fcc_r2": 0.10290141667549808,
+    "qawo_r2": 0.001220999751240015
+   }
+  },
+  "ra-h-1e-7-1-14573-a10": {
+   "K_abs": 95584978.52172911,
+   "per_panel_s": {
+    "fcc_r1": 0.06949282631588478,
+    "qawo_r1": 0.0012343749403953552,
+    "fcc_r2": 0.10497321522173782,
+    "qawo_r2": 0.0012064590118825436
+   }
+  },
+  "rt-h-1e-8-2-34874-a8": {
+   "K_abs": 300000000.0000001,
+   "per_panel_s": {
+    "fcc_r1": 0.07038278466401,
+    "qawo_r1": 0.0012614158913493156,
+    "fcc_r2": 0.10469572215030591,
+    "qawo_r2": 0.0011966670863330364
+   }
+  }
+ }
+}

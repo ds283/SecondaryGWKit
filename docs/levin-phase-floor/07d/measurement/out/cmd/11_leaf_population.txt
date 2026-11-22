@@ -1,0 +1,60 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leaf_population_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T09:38:25Z
+# ----
+# levin-phase-floor 07d Part A: the leaf strata and their seeded order
+# written 2026-11-22T09:38:35Z on mps026298.phys.susx.ac.uk
+# script leaf_population_07d.py sha256 e8584d27fe69696ed8a3cbe91e459286b45d85f514ac29ba9ba02e0862479c72
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/leaves/population.json sha256 9d05407f633cbc5465fe0b59aba31e73a95c963dac8691a19b1e8b3862811ae1
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/seeds_07d.json sha256 732fc0cfbf5b2210bf40635583dc208d96b165ca3fd975ce66bddccdab8a2708
+  band_10_12|analytic|1e-7: 6
+  band_10_12|analytic|1e-8: 6
+  band_10_12|group|1e-7: 213
+  band_10_12|group|1e-8: 229
+  band_12_16|analytic|1e-7: 14
+  band_12_16|analytic|1e-8: 14
+  band_12_16|group|1e-7: 549
+  band_12_16|group|1e-8: 563
+  band_16_20|analytic|1e-7: 7
+  band_16_20|analytic|1e-8: 7
+  band_16_20|group|1e-7: 530
+  band_16_20|group|1e-8: 530
+  band_6_8|analytic|1e-7: 15
+  band_6_8|analytic|1e-8: 15
+  band_6_8|group|1e-7: 197
+  band_6_8|group|1e-8: 205
+  band_8_10|analytic|1e-7: 3
+  band_8_10|analytic|1e-8: 3
+  band_8_10|group|1e-7: 209
+  band_8_10|group|1e-8: 213
+  chase|analytic|1e-7: 31
+  chase|analytic|1e-8: 8
+  chase|group|1e-7: 1622
+  chase|group|1e-8: 1624
+  gate_q1|analytic|1e-7: 43
+  gate_q1|analytic|1e-8: 57
+  gate_q1|group|1e-7: 735
+  gate_q1|group|1e-8: 1005
+  gate_q2|analytic|1e-7: 32
+  gate_q2|analytic|1e-8: 42
+  gate_q2|group|1e-7: 484
+  gate_q2|group|1e-8: 553
+  gate_q3|analytic|1e-7: 11
+  gate_q3|analytic|1e-8: 13
+  gate_q3|group|1e-7: 226
+  gate_q3|group|1e-8: 248
+  gate_q4|analytic|1e-7: 4
+  gate_q4|analytic|1e-8: 4
+  gate_q4|group|1e-7: 358
+  gate_q4|group|1e-8: 370
+  window|analytic|1e-7: 257
+  window|analytic|1e-8: 257
+  window|group|1e-7: 710
+  window|group|1e-8: 841
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_leaves_07d.json 4bfaf1d32ae99400e08a48510e5fbe1f1aa597c18a6e1ff37efa4575cb7d968b
+# ----
+# end 2026-11-22T09:38:37Z
+# exit 0

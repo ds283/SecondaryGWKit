@@ -1,0 +1,126 @@
+{
+ "tree": "h",
+ "name": "C00",
+ "units": [
+  {
+   "uid": "h-1e-7-0-12767",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-12767",
+   "names05": null,
+   "shard": 0,
+   "serial": 12767,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-12851",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-12851",
+   "names05": null,
+   "shard": 0,
+   "serial": 12851,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-12859",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-12859",
+   "names05": null,
+   "shard": 0,
+   "serial": 12859,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-1824",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-1824",
+   "names05": null,
+   "shard": 0,
+   "serial": 1824,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     12,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-38350",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-38350",
+   "names05": null,
+   "shard": 0,
+   "serial": 38350,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     18,
+     "analytic Y3"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-38461",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-38461",
+   "names05": null,
+   "shard": 0,
+   "serial": 38461,
+   "k_key": "0:101",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     16,
+     "analytic Y2"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_ra/C00",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_ra/C00/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

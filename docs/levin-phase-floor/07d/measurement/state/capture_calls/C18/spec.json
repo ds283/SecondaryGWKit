@@ -1,0 +1,221 @@
+{
+ "tree": "h",
+ "name": "C18",
+ "units": [
+  {
+   "uid": "h-1e-8-3-1913",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-1913",
+   "names05": null,
+   "shard": 3,
+   "serial": 1913,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     13,
+     "analytic J4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-2321",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-2321",
+   "names05": null,
+   "shard": 3,
+   "serial": 2321,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     4,
+     "k=9.7e+06/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=0.30208, z in (1.6351e+12, 0.30208), regime Gqr, group G-q-r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-34094",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-34094",
+   "names05": null,
+   "shard": 3,
+   "serial": 34094,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     3,
+     "k=9.7e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=2.7669e+06, z in (5.169e+11, 2.7669e+06), regime Gqr, group G-q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-34200",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-34200",
+   "names05": null,
+   "shard": 3,
+   "serial": 34200,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     19,
+     "analytic J4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-34450",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-34450",
+   "names05": null,
+   "shard": 3,
+   "serial": 34450,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-34933",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-34933",
+   "names05": null,
+   "shard": 3,
+   "serial": 34933,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=9.7e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=3.6343, z in (1.6721e+11, 3.6343), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-34942",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-34942",
+   "names05": null,
+   "shard": 3,
+   "serial": 34942,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=9.7e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.91255, z in (5.169e+11, 0.91255), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-38905",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-38905",
+   "names05": null,
+   "shard": 3,
+   "serial": 38905,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     8,
+     "analytic Y2"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-39147",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-39147",
+   "names05": null,
+   "shard": 3,
+   "serial": 39147,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     0,
+     "k=9.7e+06/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=0.1, z in (1.6391e+16, 1.6351e+12), regime G, group G"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-650",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-650",
+   "names05": null,
+   "shard": 3,
+   "serial": 650,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     3,
+     "k=9.7e+06/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=4.8209e+10, z in (1.6351e+12, 4.8209e+10), regime Gqr, group G-q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-854",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-854",
+   "names05": null,
+   "shard": 3,
+   "serial": 854,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     5,
+     "k=9.7e+06/Mpc, q=3.09e+06/Mpc, r=9.7e+06/Mpc @ z_response=3.0414e+10, z in (5.2861e+10, 3.0414e+10), regime Gqr, group G-q+r"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C18",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C18/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

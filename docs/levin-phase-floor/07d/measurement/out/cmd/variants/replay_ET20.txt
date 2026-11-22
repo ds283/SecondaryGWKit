@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/run_replays_07d.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/replays /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/sids_variants_07d.txt ET20
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:49:23Z
+# ----
+ET20: 4220 of 4220 written; 407 reproduce their census record; exit codes {0: 0, 1: 0, 3: 0, 5: 0, 4: 0, 2: 0}
+wall 877 s
+# ----
+# end 2026-11-22T11:04:01Z
+# exit 0

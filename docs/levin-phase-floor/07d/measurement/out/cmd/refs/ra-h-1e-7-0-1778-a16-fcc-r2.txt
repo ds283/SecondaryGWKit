@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/one_reading_07d.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/ra-h-1e-7-0-1778-a16.pkl fcc 2 /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/readings/ra-h-1e-7-0-1778-a16-fcc-r2.json --sid ra-h-1e-7-0-1778-a16 --unit h-1e-7-0-1778 --index 16 --rtol 1e-07 --workers 2
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:51:50Z
+# ----
+{"sample": "ra-h-1e-7-0-1778-a16", "route": "A", "impl": "fcc", "res": 2, "value_hex": "-0x1.5d22d9b7556a0p-40", "value_30": "-1.24038072110282226931235155683e-12", "wall_s": 5.99475016631186, "ray_initialized": [false, false]}
+# ----
+# end 2026-11-22T12:52:00Z
+# exit 0

@@ -1,0 +1,924 @@
+{
+ "tree": "h",
+ "name": "C07",
+ "units": [
+  {
+   "uid": "h-1e-7-3-1246",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-1246",
+   "names05": null,
+   "shard": 3,
+   "serial": 1246,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     7,
+     "analytic J1"
+    ],
+    [
+     8,
+     "analytic Y1"
+    ],
+    [
+     9,
+     "analytic J2"
+    ],
+    [
+     10,
+     "analytic Y2"
+    ],
+    [
+     11,
+     "analytic J3"
+    ],
+    [
+     12,
+     "analytic Y3"
+    ],
+    [
+     13,
+     "analytic J4"
+    ],
+    [
+     14,
+     "analytic Y4"
+    ],
+    [
+     15,
+     "analytic J1"
+    ],
+    [
+     16,
+     "analytic Y1"
+    ],
+    [
+     17,
+     "analytic J2"
+    ],
+    [
+     18,
+     "analytic Y2"
+    ],
+    [
+     19,
+     "analytic J3"
+    ],
+    [
+     20,
+     "analytic Y3"
+    ],
+    [
+     21,
+     "analytic J4"
+    ],
+    [
+     22,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-3-14493",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-14493",
+   "names05": null,
+   "shard": 3,
+   "serial": 14493,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     5,
+     "analytic J1"
+    ],
+    [
+     6,
+     "analytic Y1"
+    ],
+    [
+     7,
+     "analytic J2"
+    ],
+    [
+     8,
+     "analytic Y2"
+    ],
+    [
+     9,
+     "analytic J3"
+    ],
+    [
+     10,
+     "analytic Y3"
+    ],
+    [
+     11,
+     "analytic J4"
+    ],
+    [
+     12,
+     "analytic Y4"
+    ],
+    [
+     13,
+     "analytic J1"
+    ],
+    [
+     14,
+     "analytic Y1"
+    ],
+    [
+     15,
+     "analytic J2"
+    ],
+    [
+     16,
+     "analytic Y2"
+    ],
+    [
+     17,
+     "analytic J3"
+    ],
+    [
+     18,
+     "analytic Y3"
+    ],
+    [
+     19,
+     "analytic J4"
+    ],
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-3-1920",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-1920",
+   "names05": null,
+   "shard": 3,
+   "serial": 1920,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     5,
+     "analytic J1"
+    ],
+    [
+     6,
+     "analytic Y1"
+    ],
+    [
+     7,
+     "analytic J2"
+    ],
+    [
+     8,
+     "analytic Y2"
+    ],
+    [
+     9,
+     "analytic J3"
+    ],
+    [
+     10,
+     "analytic Y3"
+    ],
+    [
+     11,
+     "analytic J4"
+    ],
+    [
+     12,
+     "analytic Y4"
+    ],
+    [
+     13,
+     "analytic J1"
+    ],
+    [
+     14,
+     "analytic Y1"
+    ],
+    [
+     15,
+     "analytic J2"
+    ],
+    [
+     16,
+     "analytic Y2"
+    ],
+    [
+     17,
+     "analytic J3"
+    ],
+    [
+     18,
+     "analytic Y3"
+    ],
+    [
+     19,
+     "analytic J4"
+    ],
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-3-34186",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-34186",
+   "names05": null,
+   "shard": 3,
+   "serial": 34186,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     7,
+     "analytic J1"
+    ],
+    [
+     8,
+     "analytic Y1"
+    ],
+    [
+     9,
+     "analytic J2"
+    ],
+    [
+     10,
+     "analytic Y2"
+    ],
+    [
+     11,
+     "analytic J3"
+    ],
+    [
+     12,
+     "analytic Y3"
+    ],
+    [
+     13,
+     "analytic J4"
+    ],
+    [
+     14,
+     "analytic Y4"
+    ],
+    [
+     15,
+     "analytic J1"
+    ],
+    [
+     16,
+     "analytic Y1"
+    ],
+    [
+     17,
+     "analytic J2"
+    ],
+    [
+     18,
+     "analytic Y2"
+    ],
+    [
+     19,
+     "analytic J3"
+    ],
+    [
+     20,
+     "analytic Y3"
+    ],
+    [
+     21,
+     "analytic J4"
+    ],
+    [
+     22,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-3-35978",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-35978",
+   "names05": null,
+   "shard": 3,
+   "serial": 35978,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     5,
+     "analytic J1"
+    ],
+    [
+     6,
+     "analytic Y1"
+    ],
+    [
+     7,
+     "analytic J2"
+    ],
+    [
+     8,
+     "analytic Y2"
+    ],
+    [
+     9,
+     "analytic J3"
+    ],
+    [
+     10,
+     "analytic Y3"
+    ],
+    [
+     11,
+     "analytic J4"
+    ],
+    [
+     12,
+     "analytic Y4"
+    ],
+    [
+     13,
+     "analytic J1"
+    ],
+    [
+     14,
+     "analytic Y1"
+    ],
+    [
+     15,
+     "analytic J2"
+    ],
+    [
+     16,
+     "analytic Y2"
+    ],
+    [
+     17,
+     "analytic J3"
+    ],
+    [
+     18,
+     "analytic Y3"
+    ],
+    [
+     19,
+     "analytic J4"
+    ],
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-3-37359",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-37359",
+   "names05": null,
+   "shard": 3,
+   "serial": 37359,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     5,
+     "analytic J1"
+    ],
+    [
+     6,
+     "analytic Y1"
+    ],
+    [
+     7,
+     "analytic J2"
+    ],
+    [
+     8,
+     "analytic Y2"
+    ],
+    [
+     9,
+     "analytic J3"
+    ],
+    [
+     10,
+     "analytic Y3"
+    ],
+    [
+     11,
+     "analytic J4"
+    ],
+    [
+     12,
+     "analytic Y4"
+    ],
+    [
+     13,
+     "analytic J1"
+    ],
+    [
+     14,
+     "analytic Y1"
+    ],
+    [
+     15,
+     "analytic J2"
+    ],
+    [
+     17,
+     "analytic J3"
+    ],
+    [
+     18,
+     "analytic Y3"
+    ],
+    [
+     19,
+     "analytic J4"
+    ],
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-3-38435",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "3-38435",
+   "names05": null,
+   "shard": 3,
+   "serial": 38435,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     5,
+     "analytic J1"
+    ],
+    [
+     6,
+     "analytic Y1"
+    ],
+    [
+     7,
+     "analytic J2"
+    ],
+    [
+     8,
+     "analytic Y2"
+    ],
+    [
+     9,
+     "analytic J3"
+    ],
+    [
+     10,
+     "analytic Y3"
+    ],
+    [
+     11,
+     "analytic J4"
+    ],
+    [
+     12,
+     "analytic Y4"
+    ],
+    [
+     13,
+     "analytic J1"
+    ],
+    [
+     14,
+     "analytic Y1"
+    ],
+    [
+     15,
+     "analytic J2"
+    ],
+    [
+     16,
+     "analytic Y2"
+    ],
+    [
+     17,
+     "analytic J3"
+    ],
+    [
+     18,
+     "analytic Y3"
+    ],
+    [
+     19,
+     "analytic J4"
+    ],
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-1024",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-1024",
+   "names05": null,
+   "shard": 3,
+   "serial": 1024,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     5,
+     "analytic J1"
+    ],
+    [
+     6,
+     "analytic Y1"
+    ],
+    [
+     7,
+     "analytic J2"
+    ],
+    [
+     8,
+     "analytic Y2"
+    ],
+    [
+     9,
+     "analytic J3"
+    ],
+    [
+     10,
+     "analytic Y3"
+    ],
+    [
+     11,
+     "analytic J4"
+    ],
+    [
+     12,
+     "analytic Y4"
+    ],
+    [
+     13,
+     "analytic J1"
+    ],
+    [
+     14,
+     "analytic Y1"
+    ],
+    [
+     15,
+     "analytic J2"
+    ],
+    [
+     16,
+     "analytic Y2"
+    ],
+    [
+     17,
+     "analytic J3"
+    ],
+    [
+     18,
+     "analytic Y3"
+    ],
+    [
+     19,
+     "analytic J4"
+    ],
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-13493",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-13493",
+   "names05": null,
+   "shard": 3,
+   "serial": 13493,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     7,
+     "analytic J1"
+    ],
+    [
+     8,
+     "analytic Y1"
+    ],
+    [
+     9,
+     "analytic J2"
+    ],
+    [
+     10,
+     "analytic Y2"
+    ],
+    [
+     11,
+     "analytic J3"
+    ],
+    [
+     12,
+     "analytic Y3"
+    ],
+    [
+     13,
+     "analytic J4"
+    ],
+    [
+     14,
+     "analytic Y4"
+    ],
+    [
+     15,
+     "analytic J1"
+    ],
+    [
+     16,
+     "analytic Y1"
+    ],
+    [
+     17,
+     "analytic J2"
+    ],
+    [
+     18,
+     "analytic Y2"
+    ],
+    [
+     19,
+     "analytic J3"
+    ],
+    [
+     20,
+     "analytic Y3"
+    ],
+    [
+     21,
+     "analytic J4"
+    ],
+    [
+     22,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-34968",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-34968",
+   "names05": null,
+   "shard": 3,
+   "serial": 34968,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     5,
+     "analytic J1"
+    ],
+    [
+     6,
+     "analytic Y1"
+    ],
+    [
+     7,
+     "analytic J2"
+    ],
+    [
+     8,
+     "analytic Y2"
+    ],
+    [
+     9,
+     "analytic J3"
+    ],
+    [
+     10,
+     "analytic Y3"
+    ],
+    [
+     11,
+     "analytic J4"
+    ],
+    [
+     12,
+     "analytic Y4"
+    ],
+    [
+     13,
+     "analytic J1"
+    ],
+    [
+     14,
+     "analytic Y1"
+    ],
+    [
+     15,
+     "analytic J2"
+    ],
+    [
+     16,
+     "analytic Y2"
+    ],
+    [
+     17,
+     "analytic J3"
+    ],
+    [
+     18,
+     "analytic Y3"
+    ],
+    [
+     19,
+     "analytic J4"
+    ],
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-38439",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-38439",
+   "names05": null,
+   "shard": 3,
+   "serial": 38439,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     5,
+     "analytic J1"
+    ],
+    [
+     6,
+     "analytic Y1"
+    ],
+    [
+     7,
+     "analytic J2"
+    ],
+    [
+     8,
+     "analytic Y2"
+    ],
+    [
+     9,
+     "analytic J3"
+    ],
+    [
+     10,
+     "analytic Y3"
+    ],
+    [
+     11,
+     "analytic J4"
+    ],
+    [
+     12,
+     "analytic Y4"
+    ],
+    [
+     13,
+     "analytic J1"
+    ],
+    [
+     14,
+     "analytic Y1"
+    ],
+    [
+     15,
+     "analytic J2"
+    ],
+    [
+     16,
+     "analytic Y2"
+    ],
+    [
+     17,
+     "analytic J3"
+    ],
+    [
+     18,
+     "analytic Y3"
+    ],
+    [
+     19,
+     "analytic J4"
+    ],
+    [
+     20,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-727",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-727",
+   "names05": null,
+   "shard": 3,
+   "serial": 727,
+   "k_key": "3:201",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     0,
+     "analytic J1"
+    ],
+    [
+     1,
+     "analytic Y1"
+    ],
+    [
+     2,
+     "analytic J2"
+    ],
+    [
+     3,
+     "analytic Y2"
+    ],
+    [
+     4,
+     "analytic J3"
+    ],
+    [
+     5,
+     "analytic Y3"
+    ],
+    [
+     6,
+     "analytic J4"
+    ],
+    [
+     7,
+     "analytic Y4"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_r1x/C07",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_r1x/C07/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

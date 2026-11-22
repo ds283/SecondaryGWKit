@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafref_07d.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/specs/rt-h-1e-8-1-10922-g3.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/smoke/rt-h-1e-8-1-10922-g3-fccsplit-r1.json --res 1 --workers 2 --split-ratio 1.8
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:06:21Z
+# ----
+rt-h-1e-8-1-10922-g3 res 1: 1 pieces, 404 segments, 26 jobs, 0 direct, in 30.6 s (job CPU 56 s)
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/smoke/rt-h-1e-8-1-10922-g3-fccsplit-r1.json 8a099e5bfb01841b8efea73bf794e80f16410a81f98fcf06c4ce622a606753be
+# ----
+# end 2026-11-22T12:06:54Z
+# exit 0

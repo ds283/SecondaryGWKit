@@ -1,0 +1,12 @@
+{
+ "label": "capture-calls",
+ "results": [
+  {
+   "name": "x1_capture_calls",
+   "exit": 0,
+   "wall_s": 1121.4780130386353
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-22T09:32:40Z"
+}

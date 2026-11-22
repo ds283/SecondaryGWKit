@@ -1,0 +1,13 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/refs_costA_07d.py rt-h-1e-7-2-36958-a19 rt-h-1e-7-2-21989-a12 ra-h-1e-7-1-14573-a10 rt-h-1e-8-2-34874-a8
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:04:02Z
+# ----
+rt-h-1e-7-2-36958-a19 {"K_abs": 478284.8764786171, "per_panel_s": {"fcc_r1": 0.3542397153408577, "qawo_r1": 0.003688666969537735, "fcc_r2": 0.11587378468054037, "qawo_r2": 0.0029488326981663704}}
+rt-h-1e-7-2-21989-a12 {"K_abs": 8112903.5761344265, "per_panel_s": {"fcc_r1": 0.0693722222155581, "qawo_r1": 0.0012113749980926514, "fcc_r2": 0.10290141667549808, "qawo_r2": 0.001220999751240015}}
+ra-h-1e-7-1-14573-a10 {"K_abs": 95584978.52172911, "per_panel_s": {"fcc_r1": 0.06949282631588478, "qawo_r1": 0.0012343749403953552, "fcc_r2": 0.10497321522173782, "qawo_r2": 0.0012064590118825436}}
+rt-h-1e-8-2-34874-a8 {"K_abs": 300000000.0000001, "per_panel_s": {"fcc_r1": 0.07038278466401, "qawo_r1": 0.0012614158913493156, "fcc_r2": 0.10469572215030591, "qawo_r2": 0.0011966670863330364}}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/costA.json e762816b187d4056fc8b9ea22f0dfa5b9ce323e5885ac2a40117ad0c80714065
+# ----
+# end 2026-11-22T12:04:11Z
+# exit 0

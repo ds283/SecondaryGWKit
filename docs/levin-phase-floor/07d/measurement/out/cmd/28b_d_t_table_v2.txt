@@ -1,0 +1,25 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/d_t_table_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:32:20Z
+# ----
+## Thresholds (Rule A reads no threshold at 07c's code: no change at any T)
+
+| T | Levin above: n / understates (with the trust check, beside) | CC below (tree): n / understates / both sides bounded | CC below (pairN4): n / understates / both sides bounded | CC below (pairN3): n / understates / both sides bounded | CC below (nest3N4): n / understates / both sides bounded | CC below (tail4N4): n / understates / both sides bounded | CC below (chopN4): n / understates / both sides bounded | CC below (pairtailN4): n / understates / both sides bounded | CC below (pairDecl): n / understates / both sides bounded |
+|---|---|---|---|---|---|---|---|---|---|
+| 3pi | 1487 / 315 (131) | 518 / 25 / no | 518 / 3 / no | 518 / 3 / no | 518 / 0 / no | 518 / 2 / no | 518 / 2 / no | 518 / 2 / no | 518 / 0 / no |
+| 4pi | 1309 / 284 (119) | 696 / 37 / no | 696 / 3 / no | 696 / 3 / no | 696 / 0 / no | 696 / 2 / no | 696 / 2 / no | 696 / 2 / no | 696 / 0 / no |
+| 5pi | 1123 / 243 (92) | 882 / 53 / no | 882 / 5 / no | 882 / 5 / no | 882 / 0 / no | 882 / 4 / no | 882 / 4 / no | 882 / 4 / no | 882 / 0 / no |
+| 6pi | 972 / 207 (69) | 1033 / 61 / no | 1033 / 5 / no | 1033 / 5 / no | 1033 / 0 / no | 1033 / 4 / no | 1033 / 4 / no | 1033 / 4 / no | 1033 / 0 / no |
+| 7pi | 898 / 184 (58) | 1107 / 62 / no | 1107 / 5 / no | 1107 / 5 / no | 1107 / 0 / no | 1107 / 4 / no | 1107 / 4 / no | 1107 / 4 / no | 1107 / 0 / no |
+| 8pi | 795 / 162 (50) | 1210 / 62 / no | 1210 / 5 / no | 1210 / 5 / no | 1210 / 0 / no | 1210 / 4 / no | 1210 / 4 / no | 1210 / 4 / no | 1210 / 0 / no |
+| 10pi | 617 / 121 (45) | 1388 / 62 / no | 1388 / 5 / no | 1388 / 5 / no | 1388 / 0 / no | 1388 / 4 / no | 1388 / 4 / no | 1388 / 4 / no | 1388 / 0 / no |
+| 12pi | 430 / 85 (34) | 1575 / 62 / no | 1575 / 5 / no | 1575 / 5 / no | 1575 / 0 / no | 1575 / 4 / no | 1575 / 4 / no | 1575 / 4 / no | 1575 / 0 / no |
+| 14pi | 346 / 71 (31) | 1659 / 62 / no | 1659 / 5 / no | 1659 / 5 / no | 1659 / 0 / no | 1659 / 4 / no | 1659 / 4 / no | 1659 / 4 / no | 1659 / 0 / no |
+| 16pi | 220 / 41 (20) | 1785 / 62 / no | 1785 / 5 / no | 1785 / 5 / no | 1785 / 0 / no | 1785 / 4 / no | 1785 / 4 / no | 1785 / 4 / no | 1785 / 0 / no |
+| 18pi | 109 / 20 (11) | 1896 / 62 / no | 1896 / 5 / no | 1896 / 5 / no | 1896 / 0 / no | 1896 / 4 / no | 1896 / 4 / no | 1896 / 4 / no | 1896 / 0 / no |
+| 20pi | 0 / 0 (0) | 2005 / 62 / no | 2005 / 5 / no | 2005 / 5 / no | 2005 / 0 / yes | 2005 / 4 / no | 2005 / 4 / no | 2005 / 4 / no | 2005 / 0 / yes |
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/tables/d_t.json 379d2b585b347492bfeb1c9c9c0fb9405b3b80cdad16e19efea708b352d09404
+# ----
+# end 2026-11-22T10:32:22Z
+# exit 0

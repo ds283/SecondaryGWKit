@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/causes_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:58:38Z
+# ----
+114 leaves: knots 68, noise 46; window pieces among them: noise 32, knots 11
+
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/tables/causes.json d269d0f599eb43f5582f8ce965b69fb54bbdae6dfc2a66f62313a16545309dd3
+# ----
+# end 2026-11-22T12:58:40Z
+# exit 0

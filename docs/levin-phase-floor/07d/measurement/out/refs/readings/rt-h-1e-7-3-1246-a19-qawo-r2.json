@@ -1,0 +1,69 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading rt-h-1e-7-3-1246-a19 qawo res 2 (tools.filon_reference)",
+  "# written 2026-11-22T12:53:46Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading_07d.py sha256 daf6d5f73484126bd0dc3ad8ca00ec463047930a24fb4d2d229b090fd48c3ea1",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-3-1246-a19.pkl sha256 9fa8c07e69f24dca4a54579e6c8d12a929933e372fcca3167e11b3e33da5770e",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "sample": "rt-h-1e-7-3-1246-a19",
+ "unit": "h-1e-7-3-1246",
+ "index": 19,
+ "rtol": "1e-07",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-3-1246-a19.pkl",
+ "pickle_sha256": "9fa8c07e69f24dca4a54579e6c8d12a929933e372fcca3167e11b3e33da5770e",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py",
+ "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+ "workers": 2,
+ "route_of": "A",
+ "route": "A",
+ "impl": "qawo",
+ "res": 2,
+ "config": {
+  "du": 0.125,
+  "Pmax": 512.0,
+  "epsrel": 1.2e-14
+ },
+ "value_hex": "0x1.de1cbf78d8bc3p-40",
+ "value_30": "1.69859609624627301185519109499e-12",
+ "imag_30": "-8.05261894645421447416988564689e-13",
+ "wall_s": 4.249671290628612,
+ "n_panels": 2987,
+ "u_breaks": [
+  -11.943375016782927,
+  -11.905367884987085,
+  -11.493469724990652,
+  -11.45546259319481,
+  -11.043564433198377,
+  -11.005557301402536,
+  -10.555652009610261,
+  -10.105746717817986,
+  -9.655841426025713,
+  -9.205936134233438,
+  -8.756030842441163
+ ],
+ "K_exact": "15823758216044361/1073741824",
+ "K_hat": 14737023.241859265,
+ "K_lo": 9.313225746154785e-10,
+ "C_exact": "0.0",
+ "stats": {
+  "panels": 2987,
+  "direct_panels": 0,
+  "neval": 72837,
+  "ier_nonzero": 2923,
+  "ier_messages": {
+   "The occurrence of roundoff error is detected, which prevents ": 2923
+  },
+  "max_last": 24,
+  "sum_quad_abserr": 1.00778838794917e-24
+ },
+ "process_wall_s": 6.668222791980952,
+ "rerun": false,
+ "progress_order": null,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

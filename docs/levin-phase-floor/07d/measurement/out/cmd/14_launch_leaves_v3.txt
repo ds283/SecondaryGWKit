@@ -1,0 +1,6 @@
+run id      levin-phase-floor-07d-leaves-v3-20261122T095839
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07d-leaves-v3-20261122T095839
+plan        /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/plan_leaves_v3.json (1 commands)
+sh pid      65065
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/run_07d.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07d-leaves-v3-20261122T095839 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/plan_leaves_v3.json; exit $?
+launcher    pid 65059, exiting without waiting

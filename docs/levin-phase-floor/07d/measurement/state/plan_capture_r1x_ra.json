@@ -1,0 +1,39 @@
+{
+ "label": "capture-r1x-ra",
+ "stages": [
+  {
+   "name": "capture",
+   "max_parallel": 1,
+   "jobs": [
+    {
+     "name": "x1_capture_r1x",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/x1_capture_07d.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_07d_r1x.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_r1x",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures/captures_r1x.json",
+      "--workers",
+      "6"
+     ]
+    },
+    {
+     "name": "x1_capture_ra",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/x1_capture_07d.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_ra.json",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_ra",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures/captures_ra.json",
+      "--workers",
+      "6"
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+levin-phase-floor 07d Part A: the leaf reference and its stated error (sections 2.2-2.4), fixed before any leaf reading.
+Written 2026-11-22, before leafcc_07d.py was run on any leaf. The implementation is scripts/leafcc_07d.py.
+
+The integrand g = sum_i f_i b_i(theta) as the driver evaluates it (f by _sample_vectorized, b by
+_Basis_SinCos.eval_basis_and_arguments, so theta_mod_2pi where the phase dict supplies it).
+
+1. Least squares. g at M = 4096 Chebyshev points of the first kind on the leaf, fitted by Chebyshev least squares at
+   degrees d_hi = max(32, ceil(V/2) + 32) and d_lo = d_hi - 8 (V the leaf's phase variation as the driver computes it).
+   Each fit is integrated exactly (fsum of c_k times the integral of T_k). ref = I(d_hi).
+   eps_LS = |I(d_hi) - I(d_lo)| + 2 s_LS, with s_LS = sigma_hat (b - a)/2 sqrt(q^T (A^T A)^-1 q): the standard deviation
+   the fit's integral carries from independent sample noise of RMS sigma_hat (A the Chebyshev Vandermonde matrix at the
+   points, q_k the integral of T_k on [-1, 1]); sigma_hat is the d_hi fit's residual RMS times sqrt(M/(M - d_hi - 1)).
+2. The check, a second rule: composite Gauss-Legendre with 32 points a panel, on the leaf split at its interior
+   amplitude-table and phase-spline knots (tools.filon_reference.production_edges, where it reads the call) and then
+   halved until there are at least 32 panels, summed by fsum. Its noise s_GL = sigma_hat sqrt(sum_j w_j^2).
+   The check passes if |ref - GL| <= |I(d_hi) - I(d_lo)| + 3 sqrt(s_LS^2 + s_GL^2).
+3. The stated error: eps_ref = eps_LS if the check passes; eps_LS + |ref - GL| if it does not.
+4. Verdicts (prompt section 2.3): a declaration D of a rule whose value is v is "bounded" if D >= |v - ref| + eps_ref,
+   "understates" if D < |v - ref| - eps_ref, and "undecided" otherwise. A leaf is scored if the tree's declaration's
+   verdict (max(|CC_{2N-1} - CC_N|, phase_err) on CC_{2N-1}) is not undecided. In section 2.4 each route is scored the
+   same way: the Clenshaw-Curtis route by each declaration on CC_{2N-1}; the Levin route by its own declaration
+   max(|V_P - (V_L + V_R)|, phase_err) + abserr_truncation on V_P.

@@ -1,0 +1,312 @@
+{
+ "header": [
+  "# levin-phase-floor 07d Part A: the replay manifest (ra)",
+  "# written 2026-11-22T10:20:19Z on mps026298.phys.susx.ac.uk",
+  "# script make_calls_07d.py sha256 7ad313aacb5f4dc5b2966273ff165c888752cd124d4343689a788c49a39ae096",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures/captures_ra.json sha256 55c2346fd5391eef5bddaf50ca014c7ae3ee5b4aac9db3dbfd9e5fbbca2fece7"
+ ],
+ "wanted": {
+  "h-1e-7-0-12767|a20": {
+   "unit": "h-1e-7-0-12767",
+   "kind": "analytic",
+   "index": 20
+  },
+  "h-1e-8-0-12767|a20": {
+   "unit": "h-1e-8-0-12767",
+   "kind": "analytic",
+   "index": 20
+  },
+  "h-1e-7-0-12851|a20": {
+   "unit": "h-1e-7-0-12851",
+   "kind": "analytic",
+   "index": 20
+  },
+  "h-1e-8-0-12851|a20": {
+   "unit": "h-1e-8-0-12851",
+   "kind": "analytic",
+   "index": 20
+  },
+  "h-1e-7-0-12859|a20": {
+   "unit": "h-1e-7-0-12859",
+   "kind": "analytic",
+   "index": 20
+  },
+  "h-1e-8-0-12859|a20": {
+   "unit": "h-1e-8-0-12859",
+   "kind": "analytic",
+   "index": 20
+  },
+  "h-1e-7-0-1824|a12": {
+   "unit": "h-1e-7-0-1824",
+   "kind": "analytic",
+   "index": 12
+  },
+  "h-1e-8-0-1824|a12": {
+   "unit": "h-1e-8-0-1824",
+   "kind": "analytic",
+   "index": 12
+  },
+  "h-1e-7-0-38350|a18": {
+   "unit": "h-1e-7-0-38350",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-8-0-38350|a18": {
+   "unit": "h-1e-8-0-38350",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-7-0-38461|a16": {
+   "unit": "h-1e-7-0-38461",
+   "kind": "analytic",
+   "index": 16
+  },
+  "h-1e-8-0-38461|a16": {
+   "unit": "h-1e-8-0-38461",
+   "kind": "analytic",
+   "index": 16
+  },
+  "h-1e-7-0-1778|a16": {
+   "unit": "h-1e-7-0-1778",
+   "kind": "analytic",
+   "index": 16
+  },
+  "h-1e-8-0-1778|a16": {
+   "unit": "h-1e-8-0-1778",
+   "kind": "analytic",
+   "index": 16
+  },
+  "h-1e-7-0-2098|a20": {
+   "unit": "h-1e-7-0-2098",
+   "kind": "analytic",
+   "index": 20
+  },
+  "h-1e-8-0-2098|a20": {
+   "unit": "h-1e-8-0-2098",
+   "kind": "analytic",
+   "index": 20
+  },
+  "h-1e-7-0-34041|a11": {
+   "unit": "h-1e-7-0-34041",
+   "kind": "analytic",
+   "index": 11
+  },
+  "h-1e-8-0-34041|a11": {
+   "unit": "h-1e-8-0-34041",
+   "kind": "analytic",
+   "index": 11
+  },
+  "h-1e-8-0-33914|a14": {
+   "unit": "h-1e-8-0-33914",
+   "kind": "analytic",
+   "index": 14
+  },
+  "h-1e-7-0-33914|a14": {
+   "unit": "h-1e-7-0-33914",
+   "kind": "analytic",
+   "index": 14
+  },
+  "h-1e-7-1-35261|a14": {
+   "unit": "h-1e-7-1-35261",
+   "kind": "analytic",
+   "index": 14
+  },
+  "h-1e-8-1-35261|a14": {
+   "unit": "h-1e-8-1-35261",
+   "kind": "analytic",
+   "index": 14
+  },
+  "h-1e-8-1-38143|a19": {
+   "unit": "h-1e-8-1-38143",
+   "kind": "analytic",
+   "index": 19
+  },
+  "h-1e-7-1-38143|a19": {
+   "unit": "h-1e-7-1-38143",
+   "kind": "analytic",
+   "index": 19
+  },
+  "h-1e-7-1-14573|a10": {
+   "unit": "h-1e-7-1-14573",
+   "kind": "analytic",
+   "index": 10
+  },
+  "h-1e-8-1-14573|a10": {
+   "unit": "h-1e-8-1-14573",
+   "kind": "analytic",
+   "index": 10
+  },
+  "h-1e-7-1-34528|a18": {
+   "unit": "h-1e-7-1-34528",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-8-1-34528|a18": {
+   "unit": "h-1e-8-1-34528",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-7-1-34528|a16": {
+   "unit": "h-1e-7-1-34528",
+   "kind": "analytic",
+   "index": 16
+  },
+  "h-1e-8-1-34528|a16": {
+   "unit": "h-1e-8-1-34528",
+   "kind": "analytic",
+   "index": 16
+  },
+  "h-1e-7-1-35127|a6": {
+   "unit": "h-1e-7-1-35127",
+   "kind": "analytic",
+   "index": 6
+  },
+  "h-1e-8-1-35127|a6": {
+   "unit": "h-1e-8-1-35127",
+   "kind": "analytic",
+   "index": 6
+  },
+  "h-1e-7-1-38741|a18": {
+   "unit": "h-1e-7-1-38741",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-8-1-38741|a18": {
+   "unit": "h-1e-8-1-38741",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-8-2-34576|a11": {
+   "unit": "h-1e-8-2-34576",
+   "kind": "analytic",
+   "index": 11
+  },
+  "h-1e-7-2-34576|a11": {
+   "unit": "h-1e-7-2-34576",
+   "kind": "analytic",
+   "index": 11
+  },
+  "h-1e-7-2-13628|a7": {
+   "unit": "h-1e-7-2-13628",
+   "kind": "analytic",
+   "index": 7
+  },
+  "h-1e-8-2-13628|a7": {
+   "unit": "h-1e-8-2-13628",
+   "kind": "analytic",
+   "index": 7
+  },
+  "h-1e-7-2-1577|a18": {
+   "unit": "h-1e-7-2-1577",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-8-2-1577|a18": {
+   "unit": "h-1e-8-2-1577",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-7-2-1701|a17": {
+   "unit": "h-1e-7-2-1701",
+   "kind": "analytic",
+   "index": 17
+  },
+  "h-1e-8-2-1701|a17": {
+   "unit": "h-1e-8-2-1701",
+   "kind": "analytic",
+   "index": 17
+  },
+  "h-1e-7-2-35084|a10": {
+   "unit": "h-1e-7-2-35084",
+   "kind": "analytic",
+   "index": 10
+  },
+  "h-1e-8-2-35084|a10": {
+   "unit": "h-1e-8-2-35084",
+   "kind": "analytic",
+   "index": 10
+  },
+  "h-1e-8-2-13626|a15": {
+   "unit": "h-1e-8-2-13626",
+   "kind": "analytic",
+   "index": 15
+  },
+  "h-1e-7-2-13626|a15": {
+   "unit": "h-1e-7-2-13626",
+   "kind": "analytic",
+   "index": 15
+  },
+  "h-1e-7-3-13482|a7": {
+   "unit": "h-1e-7-3-13482",
+   "kind": "analytic",
+   "index": 7
+  },
+  "h-1e-8-3-13482|a7": {
+   "unit": "h-1e-8-3-13482",
+   "kind": "analytic",
+   "index": 7
+  },
+  "h-1e-7-3-13521|a12": {
+   "unit": "h-1e-7-3-13521",
+   "kind": "analytic",
+   "index": 12
+  },
+  "h-1e-8-3-13521|a12": {
+   "unit": "h-1e-8-3-13521",
+   "kind": "analytic",
+   "index": 12
+  },
+  "h-1e-7-3-1227|a14": {
+   "unit": "h-1e-7-3-1227",
+   "kind": "analytic",
+   "index": 14
+  },
+  "h-1e-8-3-1227|a14": {
+   "unit": "h-1e-8-3-1227",
+   "kind": "analytic",
+   "index": 14
+  },
+  "h-1e-7-3-35995|a21": {
+   "unit": "h-1e-7-3-35995",
+   "kind": "analytic",
+   "index": 21
+  },
+  "h-1e-8-3-35995|a21": {
+   "unit": "h-1e-8-3-35995",
+   "kind": "analytic",
+   "index": 21
+  },
+  "h-1e-7-3-37359|a18": {
+   "unit": "h-1e-7-3-37359",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-8-3-37359|a18": {
+   "unit": "h-1e-8-3-37359",
+   "kind": "analytic",
+   "index": 18
+  },
+  "h-1e-7-3-38240|a5": {
+   "unit": "h-1e-7-3-38240",
+   "kind": "analytic",
+   "index": 5
+  },
+  "h-1e-8-3-38240|a5": {
+   "unit": "h-1e-8-3-38240",
+   "kind": "analytic",
+   "index": 5
+  },
+  "h-1e-8-3-1275|a8": {
+   "unit": "h-1e-8-3-1275",
+   "kind": "analytic",
+   "index": 8
+  },
+  "h-1e-7-3-1275|a8": {
+   "unit": "h-1e-7-3-1275",
+   "kind": "analytic",
+   "index": 8
+  }
+ }
+}

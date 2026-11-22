@@ -1,0 +1,45 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading ra-h-1e-7-2-35084-a10 fcc res 2 (tools.filon_reference)",
+  "# written 2026-11-22T12:51:53Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading_07d.py sha256 daf6d5f73484126bd0dc3ad8ca00ec463047930a24fb4d2d229b090fd48c3ea1",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/ra-h-1e-7-2-35084-a10.pkl sha256 458872c2a67f8956d9562747585a894a6cc51158293051e825be91cda888d12c",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "sample": "ra-h-1e-7-2-35084-a10",
+ "unit": "h-1e-7-2-35084",
+ "index": 10,
+ "rtol": "1e-07",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/ra-h-1e-7-2-35084-a10.pkl",
+ "pickle_sha256": "458872c2a67f8956d9562747585a894a6cc51158293051e825be91cda888d12c",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py",
+ "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+ "workers": 2,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 2,
+ "config": {
+  "du": 0.17,
+  "N": 48
+ },
+ "value_hex": "-0x1.0c643b32ed47cp-46",
+ "value_30": "-1.48987227168735947619687711972e-14",
+ "imag_30": "-1.11753612852011622860823893507e-15",
+ "wall_s": 3.8285580002702773,
+ "n_panels": 132,
+ "u_breaks": [],
+ "K_exact": "4362866419494311127/34359738368",
+ "K_hat": 126976124.57833925,
+ "K_lo": 6.257323548197746e-09,
+ "C_exact": "0.0",
+ "process_wall_s": 7.173606957774609,
+ "rerun": false,
+ "progress_order": null,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

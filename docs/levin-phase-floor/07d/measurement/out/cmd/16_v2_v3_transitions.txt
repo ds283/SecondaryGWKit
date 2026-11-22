@@ -1,0 +1,18 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/v2_v3_transitions_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:07:30Z
+# ----
+| window|group|1e-8|cc | 27 | 24 | 9 | 0 | 0 | 0 | 0 | 0 | 0 |
+| window|group|1e-8|levin | 28 | 30 | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| **all** | 2188 | 592 | 1416 | 195 | 126 | 2 | 9 | 0 | 0 |
+
+## Leaves moving between bounded and understates (0)
+
+| stratum | rank | route | v2 | v3 | start | end | eps v2 | eps v3 |
+|---|---|---|---|---|---|---|---|---|
+totals: {'bounded->bounded': 2188, 'undecided->bounded': 195, 'undecided->understates': 126, 'understates->understates': 592, 'undecided->undecided': 1416, 'understates->undecided': 9, 'bounded->undecided': 2}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/tables/v2_v3_transitions.json e29d2e62b994fa15c43265faf7b7f8cb75a914f81476d9977913f04ee84bddc4
+# ----
+# end 2026-11-22T10:07:33Z
+# exit 0

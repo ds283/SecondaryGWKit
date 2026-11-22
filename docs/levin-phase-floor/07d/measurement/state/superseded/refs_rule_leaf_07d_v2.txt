@@ -1,0 +1,26 @@
+levin-phase-floor 07d Part A: the leaf reference and its stated error (sections 2.2-2.4), v2, fixed before any leaf of the
+sample was read. v1 (state/superseded/refs_rule_leaf_07d_v1.txt) was tried on six test leaves only (out/leaves_test/,
+which no table reads); its global fit could not represent a leaf with interior knots and on the one-knot test leaf it
+shared CC_{2N-1}'s knot-induced error (log deviation 5). The implementation is scripts/leafcc_07d.py (v2).
+
+The integrand g = sum_i f_i b_i(theta) as the driver evaluates it (f by _sample_vectorized, b by
+_Basis_SinCos.eval_basis_and_arguments, so theta_mod_2pi where the phase dict supplies it).
+
+1. The leaf's pieces: the leaf split at its interior knots (tools.filon_reference.production_edges for a group call; for an
+   analytic block, the breakpoints of every near-region interpolant its arguments reach and every x_star crossing; one
+   piece where none, or where the knots cannot be read).
+2. Least squares on each piece. One piece: M = 4096 Chebyshev points of the first kind, degrees d_hi = max(32,
+   ceil(V/2) + 32), d_lo = d_hi - 8 (V the leaf's phase variation as the driver computes it). Several pieces: on each,
+   M_p = max(96, round(4096 len_p / width)) points, d_hi,p = min(max(16, ceil(V len_p / (2 width)) + 16), M_p // 3),
+   d_lo,p = d_hi,p - 4. Each fit is integrated exactly (fsum of c_k times the integral of T_k). ref = sum_p I_p(d_hi,p).
+   dI = sum_p |I_p(d_hi,p) - I_p(d_lo,p)|. s_LS = sigma_hat sqrt(sum_p (len_p/2)^2 q_p^T (A_p^T A_p)^-1 q_p): the standard
+   deviation the integral carries from independent sample noise of RMS sigma_hat (the pooled residual RMS of the d_hi
+   fits, sum r^2 over sum (M_p - d_hi,p - 1)). eps_LS = dI + 2 s_LS.
+3. The check, a second rule: composite Gauss-Legendre, 32 points a panel, on the pieces halved until there are at least 32
+   panels (fsum); s_GL = sigma_hat sqrt(sum w^2). The check passes if |ref - GL| <= dI + 3 sqrt(s_LS^2 + s_GL^2).
+4. The stated error: eps_ref = eps_LS if the check passes; eps_LS + |ref - GL| if it does not.
+5. Verdicts (prompt section 2.3): a declaration D of a rule whose value is v is "bounded" if D >= |v - ref| + eps_ref,
+   "understates" if D < |v - ref| - eps_ref, "undecided" otherwise. A leaf is scored if the tree's declaration's verdict
+   is not undecided: max(|CC_{2N-1} - CC_N|, phase_err) on CC_{2N-1} for a Clenshaw-Curtis stratum; for a Levin band
+   (above 6 pi, the tree's route the Levin solve) the Levin solve's own declaration max(|V_P - (V_L + V_R)|, phase_err) +
+   abserr_truncation on V_P. In section 2.4 each route is scored the same way on every leaf.

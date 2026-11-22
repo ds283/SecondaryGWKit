@@ -1,0 +1,392 @@
+{
+ "tree": "h",
+ "name": "C02",
+ "units": [
+  {
+   "uid": "h-1e-7-0-10670",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-10670",
+   "names05": null,
+   "shard": 0,
+   "serial": 10670,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     13,
+     "analytic J4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-12613",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-12613",
+   "names05": null,
+   "shard": 0,
+   "serial": 12613,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     6,
+     "analytic Y1"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-12647",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-12647",
+   "names05": null,
+   "shard": 0,
+   "serial": 12647,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     11,
+     "analytic J3"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-12886",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-12886",
+   "names05": null,
+   "shard": 0,
+   "serial": 12886,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     1,
+     "k=3.05e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=6328.3, z in (1.6351e+12, 6328.3), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-12925",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-12925",
+   "names05": null,
+   "shard": 0,
+   "serial": 12925,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     19,
+     "analytic J4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-12951",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-12951",
+   "names05": null,
+   "shard": 0,
+   "serial": 12951,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     4,
+     "k=3.05e+07/Mpc, q=3.09e+06/Mpc, r=3.05e+07/Mpc @ z_response=6328.3, z in (5.2861e+10, 6328.3), regime Gqr, group G+q-r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-1863",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-1863",
+   "names05": null,
+   "shard": 0,
+   "serial": 1863,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     4,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=302.64, z in (5.169e+11, 302.64), regime Gqr, group G-q-r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-2070",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-2070",
+   "names05": null,
+   "shard": 0,
+   "serial": 2070,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     5,
+     "k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=100.19, z in (1.709e+09, 100.19), regime Gqr, group G-q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-2099",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-2099",
+   "names05": null,
+   "shard": 0,
+   "serial": 2099,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     2,
+     "k=3.05e+07/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=10.979, z in (5.1721e+12, 10.979), regime Gqr, group G+q-r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-2249",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-2249",
+   "names05": null,
+   "shard": 0,
+   "serial": 2249,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     2,
+     "k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=1.5861, z in (5.169e+11, 1.709e+09), regime Gr, group G-r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-2267",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-2267",
+   "names05": null,
+   "shard": 0,
+   "serial": 2267,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     18,
+     "analytic Y3"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-2268",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-2268",
+   "names05": null,
+   "shard": 0,
+   "serial": 2268,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     4,
+     "k=3.05e+07/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=2.7567, z in (5.169e+11, 2.7567), regime Gqr, group G-q-r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-2275",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-2275",
+   "names05": null,
+   "shard": 0,
+   "serial": 2275,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     7,
+     "analytic J2"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-33803",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-33803",
+   "names05": null,
+   "shard": 0,
+   "serial": 33803,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     22,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-33941",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-33941",
+   "names05": null,
+   "shard": 0,
+   "serial": 33941,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     19,
+     "analytic J4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-34031",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-34031",
+   "names05": null,
+   "shard": 0,
+   "serial": 34031,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     10,
+     "analytic Y2"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-34036",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-34036",
+   "names05": null,
+   "shard": 0,
+   "serial": 34036,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     12,
+     "analytic Y4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-34045",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-34045",
+   "names05": null,
+   "shard": 0,
+   "serial": 34045,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     3,
+     "k=3.05e+07/Mpc, q=9.7e+06/Mpc, r=3.05e+07/Mpc @ z_response=8.3583e+06, z in (1.6721e+11, 8.3583e+06), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-36824",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-36824",
+   "names05": null,
+   "shard": 0,
+   "serial": 36824,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     11,
+     "analytic J4"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-7-0-36826",
+   "tree": "h",
+   "rtol": "1e-7",
+   "row": "0-36826",
+   "names05": null,
+   "shard": 0,
+   "serial": 36826,
+   "k_key": "0:202",
+   "budget": 300.0,
+   "scan": true,
+   "w3": true,
+   "capture": [
+    [
+     16,
+     "analytic Y2"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C02",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C02/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}

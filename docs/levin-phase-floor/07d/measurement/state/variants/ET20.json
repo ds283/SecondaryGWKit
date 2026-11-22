@@ -1,0 +1,8 @@
+{
+ "form": "nest3",
+ "scope": "all",
+ "T_pi": 20,
+ "kappa": 4.0,
+ "basis": "(ET): Ea with the threshold at 20 pi, the one grid value at which D-T finds both routes bounded under nest3N4 - vacuously on the Levin side, since D-T's bands end at 20 pi; the Levin solve understates on leaves of every band below it. Clenshaw-Curtis under nest3N4 understates on no leaf with V < 20 pi (2,005 decided). Flagged: its Levin side has no measured basis above 20 pi.",
+ "name": "ET20"
+}

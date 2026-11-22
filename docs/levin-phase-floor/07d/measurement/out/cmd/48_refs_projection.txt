@@ -1,0 +1,82 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/refs_projection_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:05:01Z
+# ----
+# levin-phase-floor 07d Part A: (Ra) and (Rt), projected
+# written 2026-11-22T12:05:01Z on mps026298.phys.susx.ac.uk
+# script refs_projection_07d.py sha256 b69a38623e7ccc5918c6c5482cdc3a73a0cadc66b453c66e9edba5a6aaa12a2b
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/refs/refs_projection.json sha256 77effdb59cbc37b5094c9546b6f28412028e884f25c229bd53fbcb0cca7bd81f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/costA.json sha256 e762816b187d4056fc8b9ea22f0dfa5b9ce323e5885ac2a40117ad0c80714065
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/inputs_ra.json sha256 badde96fbd1c7b721246ca9e761f6eff6455641472f859eb664c134d5a0eccc4
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/inputs_rt.json sha256 84c6d2ea5b3ee2a0ed44811d5f12f1445a75aab380b1d8c262a9ad3b2f722ad4
+Route A wall per panel (largest measured): {'fcc_r1': 0.3542397153408577, 'fcc_r2': 0.11587378468054037, 'qawo_r1': 0.003688666969537735, 'qawo_r2': 0.0029488326981663704}
+ra-h-1e-8-2-34576-a11        A fcc_r1 37 fcc_r2 18 qawo_r1 1209 | 1264 s; dropped ['qawo_r2'] (7.72e+03 s)
+rt-h-1e-8-3-38473-g1         B fccsplit_r1 173 fccsplit_r2 703 qawo_r1 58 qawo_r2 228 | 1162 s; dropped [] (0 s)
+rt-h-1e-7-3-34972-g4         B fccsplit_r1 123 fccsplit_r2 490 qawo_r1 80 qawo_r2 325 | 1018 s; dropped [] (0 s)
+rt-h-1e-8-2-34839-g3         B fccsplit_r1 160 fccsplit_r2 635 | 795 s; dropped ['qawo_r1', 'qawo_r2'] (1.33e+04 s)
+rt-h-1e-8-1-2266-g3          B fccsplit_r1 159 fccsplit_r2 630 | 789 s; dropped ['qawo_r1', 'qawo_r2'] (2.06e+05 s)
+rt-h-1e-7-1-38744-g3         B fccsplit_r1 137 fccsplit_r2 546 | 684 s; dropped ['qawo_r1', 'qawo_r2'] (2.92e+05 s)
+rt-h-1e-7-2-36958-a19        A fcc_r1 40 fcc_r2 19 qawo_r1 78 qawo_r2 487 | 624 s; dropped [] (0 s)
+rt-h-1e-7-1-35390-a15        A fcc_r1 35 fcc_r2 17 qawo_r1 75 qawo_r2 464 | 591 s; dropped [] (0 s)
+rt-h-1e-8-0-1940-g5          B fccsplit_r1 114 fccsplit_r2 452 | 566 s; dropped ['qawo_r1', 'qawo_r2'] (2.57e+04 s)
+rt-h-1e-7-2-1501-g3          B fccsplit_r1 90 fccsplit_r2 358 qawo_r1 10 qawo_r2 20 | 478 s; dropped [] (0 s)
+rt-h-1e-7-0-12975-g0         B fccsplit_r1 90 fccsplit_r2 356 qawo_r1 10 qawo_r2 20 | 475 s; dropped [] (0 s)
+ra-h-1e-7-0-12859-a20        A fcc_r1 32 fcc_r2 16 qawo_r1 58 qawo_r2 360 | 466 s; dropped [] (0 s)
+ra-h-1e-7-1-35261-a14        A fcc_r1 23 fcc_r2 11 qawo_r1 42 qawo_r2 259 | 335 s; dropped [] (0 s)
+ra-h-1e-7-0-12767-a20        A fcc_r1 21 fcc_r2 10 qawo_r1 41 qawo_r2 258 | 330 s; dropped [] (0 s)
+rt-h-1e-7-0-34045-g3         B fccsplit_r1 60 fccsplit_r2 238 qawo_r1 6 qawo_r2 14 | 318 s; dropped [] (0 s)
+rt-h-1e-8-2-21782-g4         B fccsplit_r1 52 fccsplit_r2 206 qawo_r1 6 qawo_r2 12 | 275 s; dropped [] (0 s)
+ra-h-1e-7-0-12851-a20        A fcc_r1 28 fcc_r2 13 qawo_r1 28 qawo_r2 169 | 238 s; dropped [] (0 s)
+ra-h-1e-7-3-13482-a7         A fcc_r1 36 fcc_r2 17 qawo_r1 26 qawo_r2 156 | 235 s; dropped [] (0 s)
+rt-h-1e-7-1-10781-g4         B fccsplit_r1 44 fccsplit_r2 175 qawo_r1 5 qawo_r2 10 | 234 s; dropped [] (0 s)
+rt-h-1e-7-2-21919-g1         B fccsplit_r1 42 fccsplit_r2 165 qawo_r1 4 qawo_r2 9 | 220 s; dropped [] (0 s)
+rt-h-1e-8-1-35461-a16        A fcc_r1 33 fcc_r2 16 qawo_r1 22 qawo_r2 127 | 198 s; dropped [] (0 s)
+rt-h-1e-8-0-36825-g2         B fccsplit_r1 35 fccsplit_r2 139 qawo_r1 4 qawo_r2 8 | 186 s; dropped [] (0 s)
+ra-h-1e-7-3-1227-a14         A fcc_r1 27 fcc_r2 13 qawo_r1 20 qawo_r2 115 | 174 s; dropped [] (0 s)
+rt-h-1e-8-1-10922-g3         B fccsplit_r1 28 fccsplit_r2 110 qawo_r1 3 qawo_r2 6 | 146 s; dropped [] (0 s)
+rt-h-1e-7-0-34041-a5         A fcc_r1 30 fcc_r2 14 qawo_r1 14 qawo_r2 77 | 135 s; dropped [] (0 s)
+rt-h-1e-8-0-12644-a7         A fcc_r1 34 fcc_r2 16 qawo_r1 13 qawo_r2 68 | 131 s; dropped [] (0 s)
+rt-h-1e-7-0-12921-a20        A fcc_r1 29 fcc_r2 14 qawo_r1 11 qawo_r2 58 | 111 s; dropped [] (0 s)
+ra-h-1e-8-0-33914-a14        A fcc_r1 24 fcc_r2 12 qawo_r1 10 qawo_r2 52 | 98 s; dropped [] (0 s)
+ra-h-1e-7-0-34041-a11        A fcc_r1 30 fcc_r2 14 qawo_r1 8 qawo_r2 40 | 92 s; dropped [] (0 s)
+rt-h-1e-8-2-34874-a8         A fcc_r1 61 fcc_r2 29 | 90 s; dropped ['qawo_r1', 'qawo_r2'] (4.24e+07 s)
+ra-h-1e-7-1-14573-a10        A fcc_r1 60 fcc_r2 29 | 89 s; dropped ['qawo_r1', 'qawo_r2'] (1.8e+07 s)
+ra-h-1e-7-1-35127-a6         A fcc_r1 30 fcc_r2 15 qawo_r1 7 qawo_r2 36 | 88 s; dropped [] (0 s)
+ra-h-1e-7-1-38741-a18        A fcc_r1 56 fcc_r2 27 | 83 s; dropped ['qawo_r1', 'qawo_r2'] (1.06e+07 s)
+ra-h-1e-7-3-13521-a12        A fcc_r1 36 fcc_r2 17 qawo_r1 6 qawo_r2 23 | 82 s; dropped [] (0 s)
+ra-h-1e-7-3-38240-a5         A fcc_r1 55 fcc_r2 26 | 81 s; dropped ['qawo_r1', 'qawo_r2'] (6.22e+07 s)
+rt-h-1e-7-3-1920-a11         A fcc_r1 53 fcc_r2 25 | 78 s; dropped ['qawo_r1', 'qawo_r2'] (6.62e+06 s)
+rt-h-1e-8-3-38439-a17        A fcc_r1 52 fcc_r2 25 | 77 s; dropped ['qawo_r1', 'qawo_r2'] (1.72e+06 s)
+ra-h-1e-7-0-2098-a20         A fcc_r1 49 fcc_r2 23 | 73 s; dropped ['qawo_r1', 'qawo_r2'] (2.9e+06 s)
+ra-h-1e-7-1-34528-a18        A fcc_r1 48 fcc_r2 23 | 71 s; dropped ['qawo_r1', 'qawo_r2'] (2.26e+05 s)
+ra-h-1e-7-1-34528-a16        A fcc_r1 48 fcc_r2 23 | 71 s; dropped ['qawo_r1', 'qawo_r2'] (2.26e+05 s)
+ra-h-1e-7-3-37359-a18        A fcc_r1 48 fcc_r2 23 | 71 s; dropped ['qawo_r1', 'qawo_r2'] (2.61e+05 s)
+ra-h-1e-7-2-35084-a10        A fcc_r1 48 fcc_r2 23 | 71 s; dropped ['qawo_r1', 'qawo_r2'] (1.8e+07 s)
+ra-h-1e-7-0-1778-a16         A fcc_r1 48 fcc_r2 23 | 71 s; dropped ['qawo_r1', 'qawo_r2'] (1.58e+05 s)
+ra-h-1e-7-2-13628-a7         A fcc_r1 47 fcc_r2 23 | 69 s; dropped ['qawo_r1', 'qawo_r2'] (1.71e+06 s)
+ra-h-1e-7-0-38350-a18        A fcc_r1 44 fcc_r2 21 | 65 s; dropped ['qawo_r1', 'qawo_r2'] (5.39e+04 s)
+ra-h-1e-7-0-38461-a16        A fcc_r1 44 fcc_r2 21 | 65 s; dropped ['qawo_r1', 'qawo_r2'] (6.35e+04 s)
+ra-h-1e-8-2-13626-a15        A fcc_r1 44 fcc_r2 21 | 65 s; dropped ['qawo_r1', 'qawo_r2'] (1.13e+06 s)
+ra-h-1e-7-2-1577-a18         A fcc_r1 43 fcc_r2 22 | 64 s; dropped ['qawo_r1', 'qawo_r2'] (3.65e+04 s)
+ra-h-1e-8-1-38143-a19        A fcc_r1 41 fcc_r2 20 | 61 s; dropped ['qawo_r1', 'qawo_r2'] (6.43e+05 s)
+ra-h-1e-8-3-1275-a8          A fcc_r1 23 fcc_r2 11 qawo_r1 5 qawo_r2 21 | 60 s; dropped [] (0 s)
+ra-h-1e-7-0-1824-a12         A fcc_r1 39 fcc_r2 19 | 57 s; dropped ['qawo_r1', 'qawo_r2'] (1.41e+05 s)
+ra-h-1e-7-2-1701-a17         A fcc_r1 38 fcc_r2 18 | 56 s; dropped ['qawo_r1', 'qawo_r2'] (1.8e+05 s)
+ra-h-1e-7-3-35995-a21        A fcc_r1 38 fcc_r2 18 | 56 s; dropped ['qawo_r1', 'qawo_r2'] (1.34e+04 s)
+rt-h-1e-7-1-35327-a8         A fcc_r1 24 fcc_r2 12 qawo_r1 4 qawo_r2 15 | 55 s; dropped [] (0 s)
+rt-h-1e-7-3-1246-a19         A fcc_r1 23 fcc_r2 11 qawo_r1 3 qawo_r2 13 | 51 s; dropped [] (0 s)
+rt-h-1e-7-2-21989-a12        A fcc_r1 22 fcc_r2 11 qawo_r1 2 qawo_r2 3 | 38 s; dropped [] (0 s)
+rt-h-1e-8-3-1024-a17         A fcc_r1 21 fcc_r2 10 qawo_r1 2 qawo_r2 3 | 36 s; dropped [] (0 s)
+rt-h-1e-8-2-21661-a17        A fcc_r1 15 fcc_r2 7 qawo_r1 1 qawo_r2 2 | 26 s; dropped [] (0 s)
+rt-h-1e-8-0-33654-a21        A fcc_r1 8 fcc_r2 4 qawo_r1 1 qawo_r2 1 | 13 s; dropped [] (0 s)
+rt-h-1e-8-1-10776-a12        A fcc_r1 4 fcc_r2 2 qawo_r1 0 qawo_r2 0 | 7 s; dropped [] (0 s)
+by set and route: {"ra|A": {"n": 30, "readings": 83, "wall_s": 4701.09627462551, "qawo_dropped": 37}, "rt|A": {"n": 16, "readings": 58, "wall_s": 2260.7122941004345, "qawo_dropped": 6}, "rt|B": {"n": 14, "readings": 48, "wall_s": 7345.545796669302, "qawo_dropped": 8}}
+189 readings; job wall 14307 s (3.97 h); longest reading 1209 s
+elapsed, 3 at once, x1.2: 5723 s = 1.59 h; with 07c's measured 0.65 on split FCC: 1.34 h
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/refs_projection_07d.json sha256 e61768935a180437a382baebde039212a15ff6e08fc11d2ffd1b941fe5332f44
+# ----
+# end 2026-11-22T12:05:02Z
+# exit 0

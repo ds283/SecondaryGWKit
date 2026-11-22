@@ -1,0 +1,31 @@
+[
+ {
+  "unit": "h-1e-7-0-10670",
+  "index": 13,
+  "notify_label": "analytic J4",
+  "census_value": "0x1.38162f81050abp-37",
+  "census_abserr": "0x1.906058249b6bep-82",
+  "census_num_regions": 2,
+  "census_max_depth": 1,
+  "census_converged": true,
+  "census_unit_budget_s": 300.0,
+  "sid": "h-1e-7-0-10670|a13",
+  "capture_worker": "C00",
+  "capture_unit_status": "done",
+  "capture_ray_initialized": false,
+  "dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures_test/smoke/C00",
+  "pickle": "inputs_C00.pkl",
+  "offset": 0,
+  "length": 3443,
+  "sha256": "8afd9c78791876b745e3cd145bedd186760f2b23c39de4a1c57ba81d4f4ea1bc",
+  "capture_record": {
+   "value": "0x1.38162f81050abp-37",
+   "abserr": "0x1.906058249b6bep-82",
+   "num_regions": 2,
+   "max_depth": 1,
+   "converged": true
+  },
+  "capture_matches_census": true,
+  "capture_error": null
+ }
+]

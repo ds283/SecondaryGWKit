@@ -1,0 +1,45 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading ra-h-1e-8-2-34576-a11 fcc res 2 (tools.filon_reference)",
+  "# written 2026-11-22T12:53:04Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading_07d.py sha256 daf6d5f73484126bd0dc3ad8ca00ec463047930a24fb4d2d229b090fd48c3ea1",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/ra-h-1e-8-2-34576-a11.pkl sha256 a19b4d9d1b1f870512cdd96c99fb2dbdb91c52dc2d1ed1818cf59bd6009273c6",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "sample": "ra-h-1e-8-2-34576-a11",
+ "unit": "h-1e-8-2-34576",
+ "index": 11,
+ "rtol": "1e-08",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/ra-h-1e-8-2-34576-a11.pkl",
+ "pickle_sha256": "a19b4d9d1b1f870512cdd96c99fb2dbdb91c52dc2d1ed1818cf59bd6009273c6",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py",
+ "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+ "workers": 2,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 2,
+ "config": {
+  "du": 0.17,
+  "N": 48
+ },
+ "value_hex": "0x1.453402d75d67bp-35",
+ "value_30": "3.69713198272534478911251807335e-11",
+ "imag_30": "1.20234101512531263189690465959e-11",
+ "wall_s": 5.088671708013862,
+ "n_panels": 103,
+ "u_breaks": [],
+ "K_exact": "161334782849454305/34359738368",
+ "K_hat": 4695460.166824467,
+ "K_lo": 2.9103830456733704e-11,
+ "C_exact": "0.0",
+ "process_wall_s": 7.391955459024757,
+ "rerun": false,
+ "progress_order": null,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

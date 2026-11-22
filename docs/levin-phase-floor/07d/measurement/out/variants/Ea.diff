@@ -1,0 +1,160 @@
+--- tree/levin_quadrature.py
++++ levin_quadrature_07d_Ea.py
+@@ -294,6 +294,14 @@
+ # monotone under bisection, so 6 pi did not mean one thing. The number 6 pi is unchanged by 07a,
+ # and has not been measured ([07-c2-gate-threshold-was-never-measured]).
+ SIX_PI = 6.0 * np.pi
++
++# prompt 07d Part A variant 'Ea' (scripts/make_variants_07d.py; not production code)
++_VARIANT_07D = 'Ea'
++_E07D_FORM = 'nest3'
++_E07D_SCOPE = 'all'
++_E07D_KAPPA = 4.0
++_T07D_THRESHOLD = 6.0 * np.pi
++_C07D = {"num_07d_route_changed": 0, "num_07d_cc_new_estimate": 0, "num_07d_noise_term_larger": 0, "num_07d_nest_resampled": 0}
+ 
+ # Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every Levin region's
+ # estimate (a Clenshaw-Curtis fallback region carries its own floor, _cc_roundoff_floor(), since
+@@ -3052,7 +3060,9 @@
+             vectorize_cache=vectorize_cache,
+         )
+ 
+-    if phase_span < SIX_PI:
++    if SIX_PI <= phase_span < _T07D_THRESHOLD:  # prompt 07d variant: a route the tree would not take
++        _C07D["num_07d_route_changed"] += 1
++    if phase_span < _T07D_THRESHOLD:  # prompt 07d variant (the tree: SIX_PI)
+         return _adaptive_levin_subregion_cc(
+             x_span,
+             f,
+@@ -3352,6 +3362,40 @@
+     }
+ 
+ 
++def _standard_chop_07d(coeffs, tol):
++    """prompt 07d variant: Chebfun's standardChop (Aurentz and Trefethen 2017), transcribed from
++    state/standardChop_rule.md of 07d Part A's records; returns the 1-based cutoff, n if it does not chop."""
++    n = len(coeffs)
++    if tol >= 1:
++        return 1
++    if n < 17:
++        return n
++    b = np.abs(np.asarray(coeffs, dtype=float))
++    m = np.maximum.accumulate(b[::-1])[::-1].copy()
++    if m[0] == 0:
++        return 1
++    env = m / m[0]
++    plateau_point = None
++    j2 = None
++    for j in range(2, n + 1):
++        j2 = int(round(1.25 * j + 5))
++        if j2 > n:
++            return n
++        e1, e2 = env[j - 1], env[j2 - 1]
++        r = 3 * (1 - np.log(e1) / np.log(tol)) if e1 > 0 else 0.0
++        if e1 == 0 or e2 / e1 > r:
++            plateau_point = j - 1
++            break
++    if env[plateau_point - 1] == 0:
++        return plateau_point
++    j3 = int(np.sum(env >= tol ** (7 / 6)))
++    if j3 < j2:
++        j2 = j3 + 1
++        env[j2 - 1] = tol ** (7 / 6)
++    cc = np.log10(env[:j2]) + np.linspace(0, (-1 / 3) * np.log10(tol), j2)
++    return max(int(np.argmin(cc)) + 1 - 1, 1)
++
++
+ def _adaptive_levin_subregion_cc(
+     x_span: Tuple[float, float],
+     f,
+@@ -3362,6 +3406,7 @@
+     notify_label: Optional[str],
+     id_label,
+     vectorize_cache: Optional[dict] = None,
++    scope_07d: str = "gate",  # prompt 07d variant: "gate" from the C2 gate, "forced" from _oriented_cc
+ ):
+     """
+     Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
+@@ -3545,6 +3590,43 @@
+     integrand_mean = value_fine / weight_sum if weight_sum != 0.0 else 0.0
+     resasc = float(np.sum(np.fabs(w_fine) * np.fabs(integrand_fine - integrand_mean)))
+ 
++    # prompt 07d variant: the estimate with its noise term (scripts/make_variants_07d.py's docstring)
++    if _E07D_FORM is not None and (scope_07d == "gate" or _E07D_SCOPE == "all"):
++        nf_ = integrand_fine.shape[0]
++        jj_ = np.arange(nf_)
++        wt_ = np.ones(nf_)
++        wt_[0] = wt_[-1] = 0.5
++        ck_ = np.array([(2.0 / (nf_ - 1)) * np.sum(wt_ * integrand_fine * np.cos(np.pi * jj_ * k_ / (nf_ - 1))) for k_ in range(nf_)])
++        ck_[0] *= 0.5
++        ck_[-1] *= 0.5
++        cut_ = _standard_chop_07d(ck_, 2.0 ** -52)
++        tail_ = ck_[cut_:] if cut_ < nf_ else ck_[-8:]
++        s_own_ = float(np.sqrt(np.mean(tail_ * tail_)) * np.sqrt((nf_ - 1) / 2.0)) * float(np.sqrt(np.sum(w_fine * w_fine)))
++        if _E07D_FORM == "nest3":
++            grid3_, _ = chebyshev_matrices(x_span, 2 * fine_order - 1)
++            if np.array_equal(grid3_[::2], fine_grid):
++                odd_ = grid3_[1::2]
++                f_odd_ = np.vstack([_sample_vectorized(func, odd_, vectorize_cache, ("f", id(func))) for func in f])
++                b_odd_ = np.array([BasisData.eval_basis_and_arguments(x)[0] for x in odd_]).T
++                g3_ = np.empty(grid3_.shape[0])
++                g3_[::2] = integrand_fine
++                g3_[1::2] = np.sum(f_odd_ * b_odd_, axis=0)
++            else:
++                _C07D["num_07d_nest_resampled"] += 1
++                f3_ = np.vstack([_sample_vectorized(func, grid3_, vectorize_cache, ("f", id(func))) for func in f])
++                b3_ = np.array([BasisData.eval_basis_and_arguments(x)[0] for x in grid3_]).T
++                g3_ = np.sum(f3_ * b3_, axis=0)
++            est_ = float(np.fabs(float(np.dot(_cc_weights(x_span, 2 * fine_order - 1), g3_)) - value_fine))
++        else:
++            est_ = abserr_direct
++        noise_ = _E07D_KAPPA * s_own_
++        _C07D["num_07d_cc_new_estimate"] += 1
++        if noise_ > est_:
++            _C07D["num_07d_noise_term_larger"] += 1
++        abserr_direct = est_ + noise_
++        round_off_err = round_off_err + noise_
++        round_off_err_less_node = round_off_err_less_node + noise_
++
+     return {
+         "value": value_fine,
+         "abserr_direct": abserr_direct,
+@@ -3720,6 +3802,7 @@
+             notify_label,
+             id_label,
+             vectorize_cache=vectorize_cache,
++            scope_07d="forced",  # prompt 07d variant
+         )
+ 
+     ascending = (b, a)
+@@ -3742,6 +3825,7 @@
+         notify_label,
+         id_label,
+         vectorize_cache=vectorize_cache,
++        scope_07d="forced",  # prompt 07d variant
+     )
+     data["value"] = -data["value"]
+     if data.get("node_error_signed") is not None:
+@@ -6179,7 +6263,7 @@
+         json.dump(payload, handle, indent=4, sort_keys=True)
+ 
+ 
+-def adaptive_levin_sincos(
++def _adaptive_levin_sincos_tree_07d(
+     x_span: Tuple[float, float],
+     f,
+     theta: dict,
+@@ -6457,3 +6541,13 @@
+         emit_diagnostics=emit_diagnostics,
+         diagnostics_path=diagnostics_path,
+     )
++
++
++def adaptive_levin_sincos(*args, **kwargs):
++    """prompt 07d variant: the tree's adaptive_levin_sincos (renamed _adaptive_levin_sincos_tree_07d), with the variant's
++    counters reset before the call and added to its result as num_07d_* keys."""
++    for k_ in _C07D:
++        _C07D[k_] = 0
++    result = _adaptive_levin_sincos_tree_07d(*args, **kwargs)
++    result.update(dict(_C07D))
++    return result

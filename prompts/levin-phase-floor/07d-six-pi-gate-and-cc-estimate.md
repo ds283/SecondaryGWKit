@@ -23,6 +23,9 @@
   planned stop.** There the user chooses the estimate, its noise term and the threshold with the tables
   in front of them. The orchestrator writes the choice into §1, §3 and §9 as an amendment, committed and
   pushed before Part B.
+- **Part A′, §9.2, a second measurement,** added at Part A's stop on the user's word (§9.1): on the
+  Mac Studio, Ray-free, in a fresh worktree at the amendment's SHA, whose code is still 07c's. It ends
+  at a planned stop, where the user makes the choice Part A's stop was for.
 - **Part B, §1, §3 and §4, the code:** on the laptop, by a fresh-context subagent, in the main checkout
   at `HEAD`. One commit.
 - **Part C, §5 and §6:** on the Mac Studio, after the code commit is pushed. **§5 is rehearsal R33,**
@@ -395,8 +398,10 @@ $16\pi$, the agent states:
 - **what Rule A does at $T$:** the phases it would skip or locate that it does not at $6\pi$, counted on
   §2.1's calls.
 
-Rule A reads `SIX_PI` by name. A variant that moves the threshold moves Rule A with it, unless it says
-otherwise and gives its basis.
+~~Rule A reads `SIX_PI` by name. A variant that moves the threshold moves Rule A with it, unless it says
+otherwise and gives its basis.~~ **Corrected at §2's stop (§9.1 item 7):** at 07c's code Rule A reads no
+threshold. 07a replaced it, and `_locate_stationary_points` locates every phase whose rate is not
+identically zero. A threshold variant does not move it.
 
 ### 2.5 The variants
 
@@ -615,4 +620,228 @@ with §9's additions:
 
 ## 9. Amendments at §2's stop
 
-*Written by the orchestrator at §2.8's stop, from the user's words, quoted.* Empty until then.
+*Written by the orchestrator at §2.8's stop, from the user's words, quoted.*
+
+### 9.1 At Part A's stop, 2026-11-22: a second measurement first
+
+**The user's words.** At the stop, after the orchestrator's account of the results:
+- *"We are going to want to do that measurement, but first some more things to consider:"*
+  - *"if we are going to estimate the CC quadrature on the CC93 rule, we should check whether it is
+    better to return that value rather than CC47"*;
+  - *"can we determine the location of what you're calling the "knots" so that we bisect the intervals at
+    a knot rather than elsewhere? is that a better strategy?"*;
+  - *"if the region is small enough that bisection is not gaining much, it seems better to pass the
+    whole thing to CC. Does this argue that the 6pi gate is in fact somewhat too small?"*
+- On the orchestrator's five-item scope: *"I'd like all 5 in the amendment, unless there is a reason
+  not to."*
+
+So no estimate or threshold is chosen yet. §1 and §3 stay unwritten until Part A′'s stop.
+
+**What Part A found, and what the orchestrator's checks added.** Part A's records are in
+`docs/levin-phase-floor/07d/measurement/`, with the orchestrator's check scripts and their outputs in
+its `orchestrator_check/`.
+1. **D-E stands.** nest3N4 — $|{\rm CC}_{4N-3} - {\rm CC}_{2N-1}|$ plus $4 s_{\rm own}$, where
+   $s_{\rm own} = \sigma_{\rm own}\sqrt{\sum w_j^2}$ and $\sigma_{\rm own}$ is read from the plateau of
+   the leaf's own 47 Chebyshev coefficients (`state/candidates_07d.json`) — understates on no scored
+   leaf. The tree's pair understates on 114 of 928: 68 by knots, 46 by noise.
+2. **The leaf reference understates its error on knotted leaves.** The orchestrator's composite
+   Gauss–Legendre reference, split at the knots and taken at 8 to 256 panels a piece, disagrees with
+   Part A's v3 reference by more than $\epsilon_{\rm ref}$ on leaves holding one listed knot, by up to
+   100× on band leaves. On `band_10_12|group|1e-7` #3 it moves by $4\times10^{-41}$ between 16 and 64
+   panels, far above the noise, and settles by 256. v3's 32-panel check cannot see such structure. What
+   the structure is has not been established.
+3. **D-T's Levin route is not the tree's.** As §2.4 said, the Levin solve ran without the gate, and
+   **so did its halves and quarters** (`leafcc_07d.py`). In the tree, `_check_leaf` solves them through
+   the gate. A $6.4\pi$ leaf's halves ($3.2\pi$) and quarters ($1.6\pi$) go to Clenshaw–Curtis. So
+   table 3's residual is the tree's only where the halves reach $6\pi$ (about $V \ge 12\pi$), and its
+   trust check only where the quarters do (about $V \ge 24\pi$).
+   The fault is §2.4's wording, not the agent's.
+4. **Table 3's `levin_tc` column leaves out the floor.** The tree declares
+   $\max(\delta_1/(1-r), \text{phase\_err}) + \text{truncation}$ on a trusted Levin leaf (`total_err`).
+   The column used $\delta_1/(1-r) + \text{truncation}$.
+5. **Against the orchestrator's reference, 14 of the 37 trusted, or $r<1$, band leaves that table 3's
+   `levin_tc` counts as understating still understate** (rows, some of them one leaf drawn in two
+   strata). Items 3 and 4 account for all of them:
+   - **Six analytic leaves, $11.6\pi$ to $18.6\pi$:** each is bounded by its floor, at 7 to 31 times its
+     true error.
+   - **Three group leaves, at $6.4\pi$ to $7.5\pi$, with 5 to 7 knots:** here the Levin halves and
+     quarters share one error. On the first, $V_P$ is out by $1.45\times10^{-35}$, the halves by
+     $7.8\times10^{-36}$ and the quarters by $7.9\times10^{-36}$, so $r = 0.011$. ${\rm CC}_{47}$ on
+     the whole leaf is out by $5.4\times10^{-37}$. The tree would not solve these halves by Levin.
+
+   So D-T does not show the tree's Levin route understating, and it does not show that it is honest.
+   At the call level, table 4 at $6\pi$ has 410 calls honest; the 4 dishonest are R2-28's.
+6. **The orchestrator's reading of Part A's leaf records**, against v3's references
+   (`orchestrator_check/mycc93.*` and `mylevknots.*`):
+   - **${\rm CC}_{93}$ is the better value.** On leaves where the reference can tell, it is closer than
+     ${\rm CC}_{47}$ on 448 against 14 group leaves with 5+ knots, 144 against 19 with 1–4, 96 against
+     31 with none, and 299 against 22 analytic. The median gain is 16×, 2.5× and 1.7× on those group
+     classes, and $1.6\times10^2$ to $4\times10^5$ on analytic leaves.
+   - **nest3N4 bounds ${\rm CC}_{93}$'s error with no understatement, and loosely.** The median
+     $D/\text{true}$ is 6 and 9 on group leaves with no knots and with 1–4, $1.8\times10^3$ with 5+, and
+     $4\times10^3$ to $3\times10^{11}$ on analytic leaves. That looseness is the likely cause of ET20's
+     cost: 1.68× the regions, 2.67× the wall and 74 calls unconverged.
+   - **On group leaves, the knots decide between the routes:**
+
+     | knots in leaf | leaves | $V_P$ worse than ${\rm CC}_{93}$ | $V_P$ better |
+     |---|---|---|---|
+     | none | 20 | 0 | 6 |
+     | 1–4 | 209 | 110 | 13 |
+     | 5+ | 335 | 332 | 1 |
+
+     Above the gate the median is 5 to 18 knots a group leaf by band (maximum 183).
+   - **On analytic leaves, $V_P$ beats ${\rm CC}_{47}$ above $6\pi$.** ${\rm CC}_{47}$ meets the
+     leaf's share of the request on only 10 of 84 leaves at $16$–$20\pi$. ${\rm CC}_{93}$ meets it on
+     every leaf to $20\pi$, within about 2× of $V_P$.
+7. **Rule A reads no threshold** at 07c's code (Part A's deviation 2). §2.4 is corrected in place, and
+   §2.7's Rule A column is dropped.
+
+### 9.2 Part A′ — the measurement
+
+**Run at the amendment's SHA, whose code is 07c's,** in a new worktree, with records in
+`var/levin-phase-floor-07d/measurement-a2/`. Otherwise it runs as §2:
+- variants in `scripts/variants/`;
+- every output carrying the SHA-256 of its script and module;
+- every seed written before its draw, and every selection before any solve.
+
+**Part A's records are its inputs, read-only:** its captures, selections, leaf records, call references
+and variant replays. Nothing in `var/levin-phase-floor-07d/measurement/` is written. **No call is
+re-captured, and no call reference is re-read,** except as item 6 says.
+
+**0. The leaf references, revised before anything is scored.** v4:
+- **The method:** composite Gauss–Legendre on the leaf split at its knots (`production_edges`; the whole
+  leaf where none are known), at a stated order.
+- **Its stated error:** the panel count a piece is doubled from 8 until two successive doublings
+  agree within 3× their combined noise, at most 512 a piece. $\epsilon_{\rm ref}$ is the last
+  doubling's change plus twice the noise term. A leaf that does not settle is reported, not scored.
+- **The rule is fixed in `state/` before any reading.**
+
+Every leaf of Part A's D-E and D-T samples is re-referenced by v4, and so are item 3's new band and
+item 1's leaves. Part A's tables 2 and 3 are re-scored on v4, with every verdict that changes from v3
+tabulated, and nest3N4's qualification re-stated. v3's numbers are kept beside v4's, not replaced.
+
+**1. The threshold, with the Levin route as the tree runs it (the corrected D-T).** For each $T$ on the
+grid $4\pi, 6\pi, 8\pi, 10\pi, 12\pi, 16\pi, 20\pi$, on every band leaf, Part A's and item 3's:
+- **On the Levin side ($V \ge T$),** the leaf is solved as `_check_leaf` would check it under a gate at
+  $T$:
+  - $V_P$ by the Levin solve, and its halves and quarters each by the route the gate at $T$ sends them;
+  - $\delta_1$, $\delta_2$, $r$, the noise yardstick (`_trust_noise_yardstick`) and the rate rules
+    (`_leaf_rate_rule`), each by the tree's own function;
+  - the tree's trust verdict, and on a trusted leaf the value it returns ($Q$) with the declaration
+    `total_err` forms: $\max(\delta_1/(1-r), \text{phase\_err}) + \text{truncation}$.
+
+  **A trusted leaf is scored.** An untrusted one is counted, with $r$ and $\delta_1$, as a leaf the tree
+  would bisect, and is not scored as a declaration. The depth-cap form is reported beside, not scored.
+- **The reproduction is checked against the tree** before it is used. An instrumented variant at
+  $6\pi$ records every check on Part A's replayed calls ($r$, $\delta_1$, $\delta_2$, $\nu_B$, trusted).
+  The reproduction equals it bit for bit on at least 200 checked leaves, group and analytic.
+- **On the Clenshaw–Curtis side ($V < T$),** ${\rm CC}_{47}$ under the tree's declaration and nest3N4,
+  and ${\rm CC}_{93}$ under each declaration of item 2.
+- **The Clenshaw–Curtis sub-solves inside a Levin check** take the value the variant returns:
+  ${\rm CC}_{47}$ under the tree's fallback, ${\rm CC}_{93}$ under item 2's.
+- **For each $T$, the verdict:** whether each side is bounded on every scored leaf of its bands, by
+  call kind (group or analytic), under the tree's fallback and under each qualifying item-2 declaration.
+  **A side with no scored leaf is "vacuous", not "bounded"**, and is never a reason to choose $T$.
+
+**2. ${\rm CC}_{93}$ as the returned value.** On every leaf of Part A's D-E and D-T samples, and item 3's:
+- ${\rm CC}_{47}$'s and ${\rm CC}_{93}$'s true errors against v4, with which is closer where v4 can tell.
+- **Candidate declarations of ${\rm CC}_{93}$'s own error,** each with its basis and its cost in
+  evaluations beyond the 93:
+  - nest3N4 as it stands (no cost);
+  - $|{\rm CC}_{185} - {\rm CC}_{93}|$ plus $\kappa s_{\rm own,93}$ (92 evaluations; Part A recorded
+    ${\rm CC}_{185}$ on every leaf);
+  - a coefficient tail of the 93-point interpolant read with its plateau, as Part A's chopN4 (no cost);
+  - others at the agent's choice.
+
+  $s_{\rm own,93}$ is read from the 93 samples as Part A read $s_{\rm own}$ from 47. $\kappa$ is set
+  by D-N's measurement, as Part A set it, with its basis.
+- **Scored and qualified as §2.3,** against ${\rm CC}_{93}$'s true error, by stratum.
+- **Each candidate's overstatement,** median and maximum $D/\text{true}$, beside its verdict.
+
+**3. The routes by call kind and knots.** Items 1 and 2's tables are given split by group and
+analytic, and by knots in the leaf (none, 1–4, 5+), with:
+- $V_P$'s, $Q$'s, ${\rm CC}_{47}$'s and ${\rm CC}_{93}$'s true errors against the leaf's share of
+  the request;
+- which route is the more accurate, where v4 can tell.
+
+**A new band, $[20\pi, 32\pi)$,** is drawn and filled as §2.4's, with a seed written first, so that
+$T = 20\pi$ is tested on both sides.
+
+The agent states whether a gate that reads the knots as well as $V$ is supported, and on what. **No
+production code knows the knots.** `production_edges` is test tooling, which walks the integrand's
+closures and fits `QuadSourceIntegral`'s layout only. A gate or a bisection that reads them needs the
+integrand provider to declare them. §0.6's last bullet applies: the user rules on that scope at the
+stop.
+
+**4. The knots by type.** `production_edges` merges five kinds of knot:
+- each phase spline's knots;
+- the Green's function amplitude spline's knots;
+- the cumulative tables' nodes;
+- their nearest-node switch midpoints;
+- their declared breaks.
+
+For each kind, on the group leaves of items 1 and 2:
+- **its count a leaf,** by band;
+- **its continuity, measured:** the jump at the knot in the value and in the first three derivatives of
+  each ingredient it belongs to, from one-sided evaluations or fits, against the noise;
+- **the error it carries:** the change in ${\rm CC}_{47}$'s, ${\rm CC}_{93}$'s and $V_P$'s true error
+  when the leaf is split at that kind's knots alone.
+
+**And a bisection that uses them,** run as a variant (item 6's (K)):
+- a leaf holding a knot in the middle half of its span is bisected at the knot nearest its midpoint;
+- every other leaf is bisected at its midpoint, as the tree does;
+- the knots are supplied by the harness, from `production_edges`, restricted to the kinds the
+  measurement above finds to carry error, with that restriction's basis;
+- on calls where `production_edges` does not apply, the variant bisects as the tree does.
+
+**5. The cost of each route, at each $T$.**
+- **Per leaf, by band:** evaluations and wall for:
+  - Clenshaw–Curtis, at 47, 93 and 185 points;
+  - the Levin solve alone;
+  - the Levin leaf as the tree checks it (its halves and quarters by their routes at $T$).
+- **Per call:** item 6's table, from the variants.
+
+**6. The variants, at most eight,** each run on every call of §2.1 at both rtols, as §2.5:
+- **(V93):** ${\rm CC}_{93}$ returned on every Clenshaw–Curtis leaf, with item 2's best qualifying
+  declaration, gate at $6\pi$. If none qualifies, the best candidate is used, flagged as having no
+  bound basis.
+- **(V93-T):** (V93) at each $T$ item 1 finds bounded on both sides under it, at most three values.
+- **(K):** item 4's bisection on (V93), gate at $6\pi$.
+- **(KT):** (K) at the best (V93-T) threshold, if any.
+- **(G):** a gate that reads the knots, if item 3 supports one, with its basis. The harness supplies
+  the knots.
+- **Others at the agent's choice,** up to eight in all, each with its basis.
+
+**New call references** only where a variant's route-changed calls fall in an (Rt) stratum with no call:
+- at most 30, drawn with a seed written first;
+- read by §2.6's rule, projected first.
+
+Part A's Ea, Eg, ET12, ET20, Ep and T20 replays are carried over for comparison, not re-run.
+
+**The projection comes first:** item 0's references, item 3's new band and item 6's runs. Beyond 36
+hours in all is a stop, reported with what would be dropped to fit.
+
+### 9.3 Part A′'s tables and stop
+
+**The tables, fixed before the run:**
+1. **v4 against v3:** every leaf whose verdict changes, by table and stratum.
+2. **(D-E on v4):** §2.3's table re-scored, for ${\rm CC}_{47}$'s candidates.
+3. **(${\rm CC}_{93}$):** item 2's table, and ${\rm CC}_{93}$ against ${\rm CC}_{47}$.
+4. **(D-T as the tree runs it):** item 1's table, by band, route, call kind, knots and $T$, with each
+   $T$'s verdict.
+5. **(Knots):** item 4's table by kind.
+6. **(Cost):** item 5's per-leaf table.
+7. **Honesty and convergence:** §2.7's tables 4 and 5 for item 6's variants, beside Part A's.
+
+**A variant qualifies** if:
+- on table 7, no referenced call is converged and dishonest that is not so at the tree;
+- its declaration qualifies on table 2 or 3, against the value it returns;
+- its threshold is bounded, not vacuous, on both sides on table 4.
+
+**Stop and report,** as §2.8: the tables, which variants qualify, what each item found, and the
+causes of any understatement. **It recommends nothing.** The user chooses at the stop, and the
+orchestrator writes §1, §3 and §9.4.
+
+**Stop conditions,** beside §8's:
+- the reproduction of `_check_leaf` failing its check against the tree;
+- more than a tenth of a stratum's leaves left unsettled by v4.

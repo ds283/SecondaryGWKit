@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafcc_07d.py", line 482, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafcc_07d.py", line 410, in main
+    sh_err.append(float(np.dot(LQ._cc_weights(sp, fine), g_on(gsg))) - (ref - gl_small(lo, sp[0]) + gl_small(hi, sp[1])))
+                                                         ~~~~^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafcc_07d.py", line 212, in g_on
+    fs = f_on(grid)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafcc_07d.py", line 209, in f_on
+    return np.vstack([LQ._sample_vectorized(fn, grid, cache, ("f", id(fn))) for fn in f])
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/AdaptiveLevin/levin_quadrature.py", line 2494, in _sample_vectorized
+    return np.array([func(x) for x in grid], dtype=float)
+                     ~~~~^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/QuadSourceIntegral.py", line 1234, in <lambda>
+    f=[lambda x: 0.0, lambda x: -Levin_f(x)],
+                                 ~~~~~~~^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/QuadSourceIntegral.py", line 1156, in Levin_f
+    B = mod_Gk(x1) * mod_Tk(x2) * mod_Tk(x3)
+                     ~~~~~~^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/LiouvilleGreen/bessel_phase.py", line 524, in __call__
+    raw_x, log_x = self._resolve(x, is_log)
+                   ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/LiouvilleGreen/bessel_phase.py", line 310, in _resolve
+    raise ValueError(
+        f"x={raw_x:.5g} too small (minimum value={self._min_x:.5g})"
+    )
+ValueError: x=2.425 too small (minimum value=2.4495)

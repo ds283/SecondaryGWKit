@@ -1,0 +1,31 @@
+{
+ "title": "levin-phase-floor 07d Part A: every draw's seed, written before any draw",
+ "written": "2026-11-22T09:06:35Z",
+ "seeds": {
+  "CALLS": {
+   "seed": 707401,
+   "use": "section 2.1 item 1, the stratified call sample from 07c's census (and any top-up draw: seed + round)"
+  },
+  "LEAVES": {
+   "seed": 707402,
+   "use": "sections 2.2/2.3, the leaf strata's seeded order (D-N's sample is D-E's first leaves)"
+  },
+  "BANDS": {
+   "seed": 707403,
+   "use": "section 2.4, the V bands' seeded order (the four quarters below 6 pi share D-E's gate order)"
+  },
+  "RT": {
+   "seed": 707404,
+   "use": "section 2.6 (Rt), route-changed calls"
+  },
+  "RA": {
+   "seed": 707405,
+   "use": "section 2.6 (Ra), analytic calls the chase stop acts in"
+  },
+  "SHIFTS": {
+   "seed": 707406,
+   "use": "section 2.2, the fractional node shifts of D-N's structure test"
+  }
+ },
+ "rule": "numpy.random.default_rng(seed + i), i the stratum's index in sorted order of stratum names, unless the drawing script states otherwise"
+}

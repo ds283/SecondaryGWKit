@@ -1,0 +1,39 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/refs_inputs_07d.py ra /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_ra_07d.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:00:51Z
+# ----
+ra-h-1e-7-1-14573-a10 A {'panels_fcc_r1': 113, 'panels_qawo_r1': 439831262, 'panels_fcc_r2': 165, 'panels_qawo_r2': 3518645583, 'K_abs': 95584978.52172911}
+ra-h-1e-7-3-13521-a12 A {'panels_fcc_r1': 67, 'panels_qawo_r1': 1008, 'panels_fcc_r2': 98, 'panels_qawo_r2': 5272, 'K_abs': 15470.053837925152}
+ra-h-1e-7-0-12859-a20 A {'panels_fcc_r1': 61, 'panels_qawo_r1': 10509, 'panels_fcc_r2': 91, 'panels_qawo_r2': 81348, 'K_abs': 823593.8570437771}
+ra-h-1e-7-3-13482-a7 A {'panels_fcc_r1': 67, 'panels_qawo_r1': 4765, 'panels_fcc_r2': 98, 'panels_qawo_r2': 35372, 'K_abs': 100000.0}
+ra-h-1e-8-2-13626-a15 A {'panels_fcc_r1': 83, 'panels_qawo_r1': 27564866, 'panels_fcc_r2': 121, 'panels_qawo_r2': 220515421, 'K_abs': 478807373.5662258}
+ra-h-1e-7-2-1701-a17 A {'panels_fcc_r1': 71, 'panels_qawo_r1': 4408794, 'panels_fcc_r2': 105, 'panels_qawo_r2': 35267438, 'K_abs': 127363644.59524201}
+ra-h-1e-8-2-34576-a11 A {'panels_fcc_r1': 70, 'panels_qawo_r1': 218513, 'panels_fcc_r2': 103, 'panels_qawo_r2': 1745115, 'K_abs': 4695460.166824467}
+ra-h-1e-7-3-38240-a5 A {'panels_fcc_r1': 103, 'panels_qawo_r1': 1521063600, 'panels_fcc_r2': 151, 'panels_qawo_r2': 12168504610, 'K_abs': 356113617.2984266}
+ra-h-1e-8-0-33914-a14 A {'panels_fcc_r1': 46, 'panels_qawo_r1': 1738, 'panels_fcc_r2': 68, 'panels_qawo_r2': 11685, 'K_abs': 376865121.9104403}
+ra-h-1e-7-0-12851-a20 A {'panels_fcc_r1': 52, 'panels_qawo_r1': 5068, 'panels_fcc_r2': 77, 'panels_qawo_r2': 38193, 'K_abs': 3256110.0718044164}
+ra-h-1e-7-3-1227-a14 A {'panels_fcc_r1': 50, 'panels_qawo_r1': 3544, 'panels_fcc_r2': 74, 'panels_qawo_r2': 25933, 'K_abs': 120075481.94466083}
+ra-h-1e-7-0-2098-a20 A {'panels_fcc_r1': 93, 'panels_qawo_r1': 70876211, 'panels_fcc_r2': 135, 'panels_qawo_r2': 567005845, 'K_abs': 46253156.52032847}
+ra-h-1e-7-0-38350-a18 A {'panels_fcc_r1': 83, 'panels_qawo_r1': 1317600, 'panels_fcc_r2': 122, 'panels_qawo_r2': 10537177, 'K_abs': 313856.84721559234}
+ra-h-1e-8-3-1275-a8 A {'panels_fcc_r1': 43, 'panels_qawo_r1': 838, 'panels_fcc_r2': 64, 'panels_qawo_r2': 4753, 'K_abs': 15486953.92921588}
+ra-h-1e-7-2-1577-a18 A {'panels_fcc_r1': 80, 'panels_qawo_r1': 892421, 'panels_fcc_r2': 124, 'panels_qawo_r2': 7136206, 'K_abs': 181980932.32311723}
+ra-h-1e-7-2-13628-a7 A {'panels_fcc_r1': 88, 'panels_qawo_r1': 41846815, 'panels_fcc_r2': 130, 'panels_qawo_r2': 334770776, 'K_abs': 478807373.5662258}
+ra-h-1e-7-2-35084-a10 A {'panels_fcc_r1': 90, 'panels_qawo_r1': 439831135, 'panels_fcc_r2': 132, 'panels_qawo_r2': 3518645215, 'K_abs': 126976124.57833925}
+ra-h-1e-7-3-35995-a21 A {'panels_fcc_r1': 71, 'panels_qawo_r1': 327413, 'panels_fcc_r2': 103, 'panels_qawo_r2': 2616314, 'K_abs': 3919957.6400862024}
+ra-h-1e-8-1-38143-a19 A {'panels_fcc_r1': 78, 'panels_qawo_r1': 15708944, 'panels_fcc_r2': 114, 'panels_qawo_r2': 125668150, 'K_abs': 34181297.96090641}
+ra-h-1e-7-0-38461-a16 A {'panels_fcc_r1': 83, 'panels_qawo_r1': 1553329, 'panels_fcc_r2': 122, 'panels_qawo_r2': 12423022, 'K_abs': 313856.84721559234}
+ra-h-1e-7-1-35261-a14 A {'panels_fcc_r1': 44, 'panels_qawo_r1': 7530, 'panels_fcc_r2': 64, 'panels_qawo_r2': 58456, 'K_abs': 111357087.3654509}
+ra-h-1e-7-0-12767-a20 A {'panels_fcc_r1': 39, 'panels_qawo_r1': 7485, 'panels_fcc_r2': 58, 'panels_qawo_r2': 58372, 'K_abs': 110058169.3127942}
+ra-h-1e-7-0-1824-a12 A {'panels_fcc_r1': 73, 'panels_qawo_r1': 3446042, 'panels_fcc_r2': 107, 'panels_qawo_r2': 27565261, 'K_abs': 34852502.31913193}
+ra-h-1e-7-1-34528-a18 A {'panels_fcc_r1': 90, 'panels_qawo_r1': 5532423, 'panels_fcc_r2': 133, 'panels_qawo_r2': 44255539, 'K_abs': 95584978.52172911}
+ra-h-1e-7-1-38741-a18 A {'panels_fcc_r1': 105, 'panels_qawo_r1': 259046114, 'panels_fcc_r2': 155, 'panels_qawo_r2': 2072364348, 'K_abs': 95584978.52172911}
+ra-h-1e-7-1-34528-a16 A {'panels_fcc_r1': 90, 'panels_qawo_r1': 5532423, 'panels_fcc_r2': 133, 'panels_qawo_r2': 44255539, 'K_abs': 95584978.52172911}
+ra-h-1e-7-0-34041-a11 A {'panels_fcc_r1': 56, 'panels_qawo_r1': 1440, 'panels_fcc_r2': 82, 'panels_qawo_r2': 9139, 'K_abs': 79917065.76334508}
+ra-h-1e-7-3-37359-a18 A {'panels_fcc_r1': 90, 'panels_qawo_r1': 6385247, 'panels_fcc_r2': 133, 'panels_qawo_r2': 51078000, 'K_abs': 9703455.784651041}
+ra-h-1e-7-0-1778-a16 A {'panels_fcc_r1': 90, 'panels_qawo_r1': 3862480, 'panels_fcc_r2': 132, 'panels_qawo_r2': 30896060, 'K_abs': 30454960.396664713}
+ra-h-1e-7-1-35127-a6 A {'panels_fcc_r1': 57, 'panels_qawo_r1': 1327, 'panels_fcc_r2': 84, 'panels_qawo_r2': 8136, 'K_abs': 205957004.6817389}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/inputs_ra.json badde96fbd1c7b721246ca9e761f6eff6455641472f859eb664c134d5a0eccc4
+# ----
+# end 2026-11-22T12:00:56Z
+# exit 0

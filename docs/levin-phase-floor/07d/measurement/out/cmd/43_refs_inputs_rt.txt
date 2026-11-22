@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/refs_inputs_07d.py rt /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_rt_07d.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T11:59:44Z
+# ----
+rt-h-1e-7-0-12921-a20 A {'panels_fcc_r1': 54, 'panels_fcc_r2': 80, 'panels_qawo_r1': 1934, 'panels_qawo_r2': 13097}
+rt-h-1e-7-0-34041-a5 A {'panels_fcc_r1': 56, 'panels_fcc_r2': 82, 'panels_qawo_r1': 2482, 'panels_qawo_r2': 17493}
+rt-h-1e-8-0-33654-a21 A {'panels_fcc_r1': 15, 'panels_fcc_r2': 21, 'panels_qawo_r1': 113, 'panels_qawo_r2': 217}
+rt-h-1e-8-0-12644-a7 A {'panels_fcc_r1': 64, 'panels_fcc_r2': 94, 'panels_qawo_r1': 2264, 'panels_qawo_r2': 15366}
+rt-h-1e-7-1-35390-a15 A {'panels_fcc_r1': 66, 'panels_fcc_r2': 96, 'panels_qawo_r1': 13482, 'panels_qawo_r2': 104988}
+rt-h-1e-7-1-35327-a8 A {'panels_fcc_r1': 46, 'panels_fcc_r2': 67, 'panels_qawo_r1': 670, 'panels_qawo_r2': 3376}
+rt-h-1e-8-1-10776-a12 A {'panels_fcc_r1': 7, 'panels_fcc_r2': 13, 'panels_qawo_r1': 61, 'panels_qawo_r2': 90}
+rt-h-1e-8-1-35461-a16 A {'panels_fcc_r1': 62, 'panels_fcc_r2': 91, 'panels_qawo_r1': 3944, 'panels_qawo_r2': 28744}
+rt-h-1e-7-2-21989-a12 A {'panels_fcc_r1': 42, 'panels_fcc_r2': 61, 'panels_qawo_r1': 331, 'panels_qawo_r2': 735}
+rt-h-1e-7-2-36958-a19 A {'panels_fcc_r1': 75, 'panels_fcc_r2': 110, 'panels_qawo_r1': 14176, 'panels_qawo_r2': 110073}
+rt-h-1e-8-2-21661-a17 A {'panels_fcc_r1': 29, 'panels_fcc_r2': 42, 'panels_qawo_r1': 230, 'panels_qawo_r2': 432}
+# ----
+# end 2026-11-22T18:40:02Z
+# exit 137

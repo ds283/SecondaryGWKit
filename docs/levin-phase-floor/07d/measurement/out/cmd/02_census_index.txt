@@ -1,0 +1,46 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/census_index_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T09:07:00Z
+# ----
+# levin-phase-floor 07d Part A: 07c's census, one row per call
+# written 2026-11-22T09:07:30Z on mps026298.phys.susx.ac.uk
+# script census_index_07d.py sha256 94b00f6dbe7114ef3f19c974ab57587ff9d47139978333f4bb737e10e90644f8
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07c-census-20261119T201419/checkpoint.jsonl sha256 33d94ce21077cd23f29da65ef967b64676db6722c081b999946bbc91c822a38e
+{
+ "units_done": 18560,
+ "status": {
+  "done": 18560
+ },
+ "n_calls": 289482,
+ "by_kind_rtol_band": {
+  "analytic|1e-7|k0": 26672,
+  "analytic|1e-7|k1": 27184,
+  "analytic|1e-7|k2": 27608,
+  "analytic|1e-7|k3": 25952,
+  "analytic|1e-8|k0": 26672,
+  "analytic|1e-8|k1": 27184,
+  "analytic|1e-8|k2": 27608,
+  "analytic|1e-8|k3": 25952,
+  "group|1e-7|k0": 9022,
+  "group|1e-7|k1": 9610,
+  "group|1e-7|k2": 10243,
+  "group|1e-7|k3": 8450,
+  "group|1e-8|k0": 9022,
+  "group|1e-8|k1": 9610,
+  "group|1e-8|k2": 10243,
+  "group|1e-8|k3": 8450
+ },
+ "n_chase_acted": 82172,
+ "n_chase_acted_analytic": 57659,
+ "n_with_cc": 126067,
+ "n_with_levin": 263079,
+ "n_with_windows": 7300,
+ "n_guard_at_depth_max": 0,
+ "pickle_sha256": "da8a7a6504151131558754d5bacc542fa90ff7e5829218043081de20dba3f481"
+}
+# ----
+# end 2026-11-22T09:07:34Z
+# exit 0

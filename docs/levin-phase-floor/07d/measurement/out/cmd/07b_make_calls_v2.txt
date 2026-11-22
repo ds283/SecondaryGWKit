@@ -1,0 +1,22 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/make_calls_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T09:34:28Z
+# ----
+# levin-phase-floor 07d Part A: the replay manifest (calls)
+# written 2026-11-22T09:34:28Z on mps026298.phys.susx.ac.uk
+# script make_calls_07d.py sha256 7ad313aacb5f4dc5b2966273ff165c888752cd124d4343689a788c49a39ae096
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures/captures_calls.json sha256 db93a5e810b9260f793c6d7aaeb234b428ec32a51000a23c9257afce21430a93
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/census_refs_07c.json sha256 a93e9dc9ed47532b48c52671c837520d3c0219a1851024cb51a026ef7286e9f3
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/census_refs_07c_chase.json sha256 04532d17b907cafaf153af42bd640fb27bfd6dd4c3d5632a7bf72c5ee91cedbc
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/census_refs_07c_r5.json sha256 78ecdcbba98558f033ecedfe0bdf1e12adfc8fd8c466b26b74529e278e10d058
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/calls_07c.json sha256 fcdbeffcab81dd5dbadb6693c7d6c84c38458aee2250144d9df5c1f875d49a16
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/rehearsal/out/refcap.json sha256 41464ffcbcee7f76c406cd5d8b0dca57645537cca00b789a4556f766b9637a87
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/state/calls_07c_r5.json sha256 7a469f20775d20e7087d1a2e6ee304f982fb093dc1c49e59f661a905c15ad383
+1054 manifest entries, by set: {'calls': 300, 'calls~o': 300, 'R:chase': 198, 'R:chase~o': 8, 'R:parta:v4': 25, 'R:parta:pairs': 4, 'R:parta:nowindow': 5, 'R:parta:R1': 60, 'R:parta:item3': 1, 'R:parta:R2': 30, 'R:parta:R2~o': 30, 'R:parta:W2': 4, 'R:parta:W2~o': 4, 'R:parta:R3-aux': 6, 'R:parta:R3-aux~o': 6, 'R:parta:R3-own': 3, 'R:parta:R3-own~o': 3, 'R:parta:R3-W7': 3, 'R:parta:R3-W7~o': 3, 'R:r31': 1, 'R:r5': 43, 'R:r5~o': 17}; 1040 census records wanted
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/calls_07d.json c2aa40d90a20a2afbd47d5d7a36b70826fd3666e8c43ce1354e686345399621c; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_wanted_07d.json e7c2939f669dd19075908a31a64ec4ce030efa8ba1fbeaf5730b5d845b98b02d
+# ----
+# end 2026-11-22T09:34:30Z
+# exit 0

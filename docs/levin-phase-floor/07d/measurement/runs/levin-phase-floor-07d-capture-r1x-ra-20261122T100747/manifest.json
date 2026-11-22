@@ -1,0 +1,87 @@
+{
+  "argv": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+    "-B",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/run_07d.py",
+    "--run-dir",
+    "<run dir>",
+    "--plan",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/plan_capture_r1x_ra.json"
+  ],
+  "campaign": "levin-phase-floor",
+  "checkpoint": "var/runs/levin-phase-floor-07d-capture-r1x-ra-20261122T100747/checkpoint.jsonl",
+  "created": "2026-11-22T10:07:47+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement",
+  "expected_units": 2,
+  "git_dirty": false,
+  "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+  "heartbeat_means": "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each command's start and end, and every 60 s by a thread of the driver while its process lives.",
+  "host": {
+    "id": "d120d1cf03551e6f",
+    "machine": "arm64",
+    "name": "mps026298.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "07d",
+  "purpose": "levin-phase-floor prompt 07d Part A (sections 2.1 and 2.6) on the Mac Studio (mps026298): capture (1) the analytic top-up round 1 (99 drawn analytic calls and every other analytic call of their units, state/capture_selection_07d_r1x.json) and (2) section 2.6's (Ra) sample (30 analytic calls the chase stop acts in, state/capture_selection_ra.json), each unit re-run at the worktree SecondaryGWKit-lpf07d-49ce964 (07c's code) in 07c's census worker (x1_capture_07d.py, units grouped by k_key), Ray-free, six workers, reading A3 v2's certified scratch copy read-only; each capture must equal 07c's census record bit for bit. Estimated 15-40 min.",
+  "results": null,
+  "results_store_id": null,
+  "run_id": "levin-phase-floor-07d-capture-r1x-ra-20261122T100747",
+  "scope": "About 130 units of 07c's census; inputs pickled under var/levin-phase-floor-07d/measurement/state/capture_r1x/ and capture_ra/.",
+  "script": "var/levin-phase-floor-07d/measurement/scripts/run_07d.py",
+  "script_sha256": "2df4fbd7aab119a6cf47e53f639b5b27f4d7155b3a8308506304496288105483",
+  "unit": "commands"
+}

@@ -1,0 +1,17 @@
+{
+ "label": "capture-r1x-ra",
+ "results": [
+  {
+   "name": "x1_capture_r1x",
+   "exit": 0,
+   "wall_s": 492.91551899909973
+  },
+  {
+   "name": "x1_capture_ra",
+   "exit": 0,
+   "wall_s": 226.379380941391
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-22T10:19:47Z"
+}

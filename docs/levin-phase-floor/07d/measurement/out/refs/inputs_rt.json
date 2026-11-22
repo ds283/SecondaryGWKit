@@ -1,0 +1,608 @@
+{
+ "header": [
+  "# levin-phase-floor 07d Part A: reference inputs (rt)",
+  "# written 2026-11-22T12:03:30Z on mps026298.phys.susx.ac.uk",
+  "# script refs_inputs_07d.py sha256 57dd210793e81edb59310d46b90a81cd73fe5884dbc086e34a01eb9f1227261f",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_rt_07d.json sha256 c7bd5c64855ba8bb3dbc186789bdca99e4bb9e250cff2a6a3362f02375e00221"
+ ],
+ "inputs": {
+  "rt-h-1e-7-0-12921-a20": {
+   "sid": "h-1e-7-0-12921|a20",
+   "unit": "h-1e-7-0-12921",
+   "index": 20,
+   "rtol": 1e-07,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-0-12921-a20.pkl",
+   "pickle_sha256": "dc8be3f0b2219462b87cd590e87c2ea1369565fdaf458d91b00a929f14d327da",
+   "notify_label": "analytic Y4",
+   "features": {
+    "panels_fcc_r1": 54,
+    "panels_qawo_r1": 1934,
+    "panels_fcc_r2": 80,
+    "panels_qawo_r2": 13097,
+    "K_abs": 823593.8570437771
+   }
+  },
+  "rt-h-1e-7-0-34041-a5": {
+   "sid": "h-1e-7-0-34041|a5",
+   "unit": "h-1e-7-0-34041",
+   "index": 5,
+   "rtol": 1e-07,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-0-34041-a5.pkl",
+   "pickle_sha256": "13eafb0db741395b7da72a9d568a1e223efe615705997bb1453bafaf709d03d9",
+   "notify_label": "analytic J1",
+   "features": {
+    "panels_fcc_r1": 56,
+    "panels_qawo_r1": 2482,
+    "panels_fcc_r2": 82,
+    "panels_qawo_r2": 17493,
+    "K_abs": 140826986.5566745
+   }
+  },
+  "rt-h-1e-8-0-33654-a21": {
+   "sid": "h-1e-8-0-33654|a21",
+   "unit": "h-1e-8-0-33654",
+   "index": 21,
+   "rtol": 1e-08,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-0-33654-a21.pkl",
+   "pickle_sha256": "caa17c09b103ffd7e536f78324a73ca6f654a0a2229f1a13e81efa68a8729d82",
+   "notify_label": "analytic J4",
+   "features": {
+    "panels_fcc_r1": 15,
+    "panels_qawo_r1": 113,
+    "panels_fcc_r2": 21,
+    "panels_qawo_r2": 217,
+    "K_abs": 12303055.461361265
+   }
+  },
+  "rt-h-1e-8-0-12644-a7": {
+   "sid": "h-1e-8-0-12644|a7",
+   "unit": "h-1e-8-0-12644",
+   "index": 7,
+   "rtol": 1e-08,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-0-12644-a7.pkl",
+   "pickle_sha256": "e7306173df3ec870be70671a9449f4868d55650e1b1a222cc46dd25b9aa35c43",
+   "notify_label": "analytic J2",
+   "features": {
+    "panels_fcc_r1": 64,
+    "panels_qawo_r1": 2264,
+    "panels_fcc_r2": 94,
+    "panels_qawo_r2": 15366,
+    "K_abs": 30454960.396664713
+   }
+  },
+  "rt-h-1e-7-1-35390-a15": {
+   "sid": "h-1e-7-1-35390|a15",
+   "unit": "h-1e-7-1-35390",
+   "index": 15,
+   "rtol": 1e-07,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-1-35390-a15.pkl",
+   "pickle_sha256": "34d368d08dab29ac2f2b5eb08495ab89033e233d5c3a662218d7b9a8120d0219",
+   "notify_label": "analytic J2",
+   "features": {
+    "panels_fcc_r1": 66,
+    "panels_qawo_r1": 13482,
+    "panels_fcc_r2": 96,
+    "panels_qawo_r2": 104988,
+    "K_abs": 985061.2054411147
+   }
+  },
+  "rt-h-1e-7-1-35327-a8": {
+   "sid": "h-1e-7-1-35327|a8",
+   "unit": "h-1e-7-1-35327",
+   "index": 8,
+   "rtol": 1e-07,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-1-35327-a8.pkl",
+   "pickle_sha256": "dda98d85b786b44c7805fe9cf835da563634e8ee8ccafa755a279091b64e5b1d",
+   "notify_label": "analytic Y1",
+   "features": {
+    "panels_fcc_r1": 46,
+    "panels_qawo_r1": 670,
+    "panels_fcc_r2": 67,
+    "panels_qawo_r2": 3376,
+    "K_abs": 1611521.584489762
+   }
+  },
+  "rt-h-1e-8-1-10776-a12": {
+   "sid": "h-1e-8-1-10776|a12",
+   "unit": "h-1e-8-1-10776",
+   "index": 12,
+   "rtol": 1e-08,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-1-10776-a12.pkl",
+   "pickle_sha256": "e0a76d76029d51d3e4791a1353e13645df93cf2bb518e8c6df0cc11c1b3eb60e",
+   "notify_label": "analytic Y1",
+   "features": {
+    "panels_fcc_r1": 7,
+    "panels_qawo_r1": 61,
+    "panels_fcc_r2": 13,
+    "panels_qawo_r2": 90,
+    "K_abs": 1734991.892797729
+   }
+  },
+  "rt-h-1e-8-1-35461-a16": {
+   "sid": "h-1e-8-1-35461|a16",
+   "unit": "h-1e-8-1-35461",
+   "index": 16,
+   "rtol": 1e-08,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-1-35461-a16.pkl",
+   "pickle_sha256": "e5efc752c0b4fa9591a85e4a2bba08e1ba51d2bcb90af91de35ca15fd8b81f67",
+   "notify_label": "analytic Y2",
+   "features": {
+    "panels_fcc_r1": 62,
+    "panels_qawo_r1": 3944,
+    "panels_fcc_r2": 91,
+    "panels_qawo_r2": 28744,
+    "K_abs": 985061.2054411147
+   }
+  },
+  "rt-h-1e-7-2-21989-a12": {
+   "sid": "h-1e-7-2-21989|a12",
+   "unit": "h-1e-7-2-21989",
+   "index": 12,
+   "rtol": 1e-07,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-2-21989-a12.pkl",
+   "pickle_sha256": "ab610d5fbe23bb10b5cea7d14002daa77e5de800b3d9a40b710f76ecea082cc1",
+   "notify_label": "analytic Y4",
+   "features": {
+    "panels_fcc_r1": 42,
+    "panels_qawo_r1": 331,
+    "panels_fcc_r2": 61,
+    "panels_qawo_r2": 735,
+    "K_abs": 8112903.5761344265
+   }
+  },
+  "rt-h-1e-7-2-36958-a19": {
+   "sid": "h-1e-7-2-36958|a19",
+   "unit": "h-1e-7-2-36958",
+   "index": 19,
+   "rtol": 1e-07,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-2-36958-a19.pkl",
+   "pickle_sha256": "6928a352affb325647cab083f43e9c27113f9a9661026b2976b19764b2220abf",
+   "notify_label": "analytic J4",
+   "features": {
+    "panels_fcc_r1": 75,
+    "panels_qawo_r1": 14176,
+    "panels_fcc_r2": 110,
+    "panels_qawo_r2": 110073,
+    "K_abs": 478284.8764786171
+   }
+  },
+  "rt-h-1e-8-2-21661-a17": {
+   "sid": "h-1e-8-2-21661|a17",
+   "unit": "h-1e-8-2-21661",
+   "index": 17,
+   "rtol": 1e-08,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-2-21661-a17.pkl",
+   "pickle_sha256": "48838dbd0a9e33437d990b9acc969a5eeb05ed272d011a8abb38495c840095a1",
+   "notify_label": "analytic J2",
+   "features": {
+    "panels_fcc_r1": 29,
+    "panels_qawo_r1": 230,
+    "panels_fcc_r2": 42,
+    "panels_qawo_r2": 432,
+    "K_abs": 144378098.82628608
+   }
+  },
+  "rt-h-1e-8-2-34874-a8": {
+   "sid": "h-1e-8-2-34874|a8",
+   "unit": "h-1e-8-2-34874",
+   "index": 8,
+   "rtol": 1e-08,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-2-34874-a8.pkl",
+   "pickle_sha256": "c0b575541fa53c13677447b439874afd16c9e5655c768a2e8d700ef1f11e0549",
+   "notify_label": "analytic Y2",
+   "features": {
+    "panels_fcc_r1": 115,
+    "panels_qawo_r1": 1036182248,
+    "panels_fcc_r2": 169,
+    "panels_qawo_r2": 8289453223,
+    "K_abs": 300000000.0000001
+   }
+  },
+  "rt-h-1e-7-3-1920-a11": {
+   "sid": "h-1e-7-3-1920|a11",
+   "unit": "h-1e-7-3-1920",
+   "index": 11,
+   "rtol": 1e-07,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-3-1920-a11.pkl",
+   "pickle_sha256": "d17a27061329f138de5b4e15b3dad88bc2f3a0739f23e00060426453d9b6b8c0",
+   "notify_label": "analytic J4",
+   "features": {
+    "panels_fcc_r1": 99,
+    "panels_qawo_r1": 161743336,
+    "panels_fcc_r2": 146,
+    "panels_qawo_r2": 1293942624,
+    "K_abs": 100668570.37535875
+   }
+  },
+  "rt-h-1e-7-3-1246-a19": {
+   "sid": "h-1e-7-3-1246|a19",
+   "unit": "h-1e-7-3-1246",
+   "index": 19,
+   "rtol": 1e-07,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-3-1246-a19.pkl",
+   "pickle_sha256": "9fa8c07e69f24dca4a54579e6c8d12a929933e372fcca3167e11b3e33da5770e",
+   "notify_label": "analytic J3",
+   "features": {
+    "panels_fcc_r1": 44,
+    "panels_qawo_r1": 602,
+    "panels_fcc_r2": 64,
+    "panels_qawo_r2": 2987,
+    "K_abs": 14737023.241859265
+   }
+  },
+  "rt-h-1e-8-3-1024-a17": {
+   "sid": "h-1e-8-3-1024|a17",
+   "unit": "h-1e-8-3-1024",
+   "index": 17,
+   "rtol": 1e-08,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-3-1024-a17.pkl",
+   "pickle_sha256": "ad586202fb9eef612555962edccb83e7c49b642cfd831fa2a61e178e23998a23",
+   "notify_label": "analytic J3",
+   "features": {
+    "panels_fcc_r1": 39,
+    "panels_qawo_r1": 306,
+    "panels_fcc_r2": 58,
+    "panels_qawo_r2": 706,
+    "K_abs": 9703455.784651041
+   }
+  },
+  "rt-h-1e-8-3-38439-a17": {
+   "sid": "h-1e-8-3-38439|a17",
+   "unit": "h-1e-8-3-38439",
+   "index": 17,
+   "rtol": 1e-08,
+   "route": "A",
+   "kind": "analytic",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-3-38439-a17.pkl",
+   "pickle_sha256": "18bfff832f91563fc777f582b7fb80a1edc42830212de56da5bcf9ddf5771c7b",
+   "notify_label": "analytic J3",
+   "features": {
+    "panels_fcc_r1": 98,
+    "panels_qawo_r1": 42144779,
+    "panels_fcc_r2": 144,
+    "panels_qawo_r2": 337154087,
+    "K_abs": 9703455.784651041
+   }
+  },
+  "rt-h-1e-7-0-34045-g3": {
+   "sid": "h-1e-7-0-34045|g3",
+   "unit": "h-1e-7-0-34045",
+   "index": 3,
+   "rtol": 1e-07,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-0-34045-g3.pkl",
+   "pickle_sha256": "e5551bc65ebc51682dce9253415b9dcf69b36506ce1106c8ab473d1fae5dc257",
+   "notify_label": "k=3.05e+07/Mpc, q=9.7e+06/Mpc, r=3.05e+07/Mpc @ z_response=8.3583e+06, z in (1.6721e+11, 8.3583e+06), regime Gqr, group G+q+r",
+   "features": {
+    "n_seg": 876.0,
+    "span_q": 403179.9656021497,
+    "span_f": 403179.9656021497,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 876.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-7-0-12975-g0": {
+   "sid": "h-1e-7-0-12975|g0",
+   "unit": "h-1e-7-0-12975",
+   "index": 0,
+   "rtol": 1e-07,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-0-12975-g0.pkl",
+   "pickle_sha256": "b809ac2a72516bf1a6bc2593b58fd22be2ed09ad5d03c7e9777a5d675ed63eb3",
+   "notify_label": "k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=1589, z in (1.6391e+16, 5.406e+09), regime G, group G",
+   "features": {
+    "n_seg": 1312.0,
+    "span_q": 26.909100726246834,
+    "span_f": 26.909100726246834,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 1312.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-8-0-36825-g2": {
+   "sid": "h-1e-8-0-36825|g2",
+   "unit": "h-1e-8-0-36825",
+   "index": 2,
+   "rtol": 1e-08,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-0-36825-g2.pkl",
+   "pickle_sha256": "8b9048f26f96ee608fcdd01902c9b9014efcf450bddc0600eb2849d28d48f543",
+   "notify_label": "k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=693.47, z in (5.169e+11, 1.709e+09), regime Gr, group G-r",
+   "features": {
+    "n_seg": 512.0,
+    "span_q": 12985.15512084961,
+    "span_f": 12985.15512084961,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 512.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-8-0-1940-g5": {
+   "sid": "h-1e-8-0-1940|g5",
+   "unit": "h-1e-8-0-1940",
+   "index": 5,
+   "rtol": 1e-08,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-0-1940-g5.pkl",
+   "pickle_sha256": "ae3c40f9710f2454fcbc082a852120ce7400f7822d57629dfbd646342d23310b",
+   "notify_label": "k=3.05e+07/Mpc, q=3.14e+05/Mpc, r=3.05e+07/Mpc @ z_response=25.156, z in (5.406e+09, 25.156), regime Gqr, group G-q+r",
+   "features": {
+    "n_seg": 1666.0,
+    "span_q": 75125664911.95729,
+    "span_f": 75125664911.95729,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 1666.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-7-1-38744-g3": {
+   "sid": "h-1e-7-1-38744|g3",
+   "unit": "h-1e-7-1-38744",
+   "index": 3,
+   "rtol": 1e-07,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-1-38744-g3.pkl",
+   "pickle_sha256": "f6454f68d50fca6ee02f73f1d2b6b43ebaea0d7cec7ea724076871fc199d4fc7",
+   "notify_label": "k=9.56e+07/Mpc, q=9.85e+05/Mpc, r=9.56e+07/Mpc @ z_response=1.5861, z in (1.6711e+10, 1.5861), regime Gqr, group G+q+r",
+   "features": {
+    "n_seg": 2012.0,
+    "span_q": 856107339504.4486,
+    "span_f": 856107339504.4486,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 2012.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-7-1-10781-g4": {
+   "sid": "h-1e-7-1-10781|g4",
+   "unit": "h-1e-7-1-10781",
+   "index": 4,
+   "rtol": 1e-07,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-1-10781-g4.pkl",
+   "pickle_sha256": "f3829199fedba4491c7a4b4e40e984e74ad7df8ce2c5206abcb73a0e4a77d599",
+   "notify_label": "k=9.85e+05/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=3.6545e+09, z in (5.1721e+12, 3.6545e+09), regime Gqr, group G-q-r",
+   "features": {
+    "n_seg": 646.0,
+    "span_q": 44027.97354535685,
+    "span_f": 44027.97354535685,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 646.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-8-1-2266-g3": {
+   "sid": "h-1e-8-1-2266|g3",
+   "unit": "h-1e-8-1-2266",
+   "index": 3,
+   "rtol": 1e-08,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-1-2266-g3.pkl",
+   "pickle_sha256": "5c65bc09c7a48c01175620d0e39dab0b27e9c80e311649c663b5f9c075100248",
+   "notify_label": "k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=4.7913, z in (1.6351e+12, 4.7913), regime Gqr, group G-q+r",
+   "features": {
+    "n_seg": 2322.0,
+    "span_q": 605059498106.5024,
+    "span_f": 605059498106.5024,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 2322.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-8-1-10922-g3": {
+   "sid": "h-1e-8-1-10922|g3",
+   "unit": "h-1e-8-1-10922",
+   "index": 3,
+   "rtol": 1e-08,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-1-10922-g3.pkl",
+   "pickle_sha256": "c2d213da8beb11532861640a4f5b9884d148153c633a39fe7a829ef819273f61",
+   "notify_label": "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=1.7477e+08, z in (1.6711e+10, 1.7477e+08), regime Gqr, group G-q+r",
+   "features": {
+    "n_seg": 404.0,
+    "span_q": 2585.0071083003404,
+    "span_f": 2585.0071083003404,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 404.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-7-2-1501-g3": {
+   "sid": "h-1e-7-2-1501|g3",
+   "unit": "h-1e-7-2-1501",
+   "index": 3,
+   "rtol": 1e-07,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-2-1501-g3.pkl",
+   "pickle_sha256": "b71ee99692c5dc7e3c73ceb5977bf6a85bfee3e6b3ace9195765ad205f9dc117",
+   "notify_label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=1.5919e+06, z in (5.1721e+12, 1.5919e+06), regime Gqr, group G-q+r",
+   "features": {
+    "n_seg": 1318.0,
+    "span_q": 899653.34452526,
+    "span_f": 899653.34452526,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 1318.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-7-2-21919-g1": {
+   "sid": "h-1e-7-2-21919|g1",
+   "unit": "h-1e-7-2-21919",
+   "index": 1,
+   "rtol": 1e-07,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-2-21919-g1.pkl",
+   "pickle_sha256": "b5c1aa988f19059b51f9bed6c68db40e71b6ff76ed1673657c9e63ec01e49cad",
+   "notify_label": "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=5.7856e+07, z in (5.2861e+10, 5.7856e+07), regime Gqr, group G+q+r",
+   "features": {
+    "n_seg": 608.0,
+    "span_q": 3826.8159988406624,
+    "span_f": 3826.8159988406624,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 608.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-8-2-34839-g3": {
+   "sid": "h-1e-8-2-34839|g3",
+   "unit": "h-1e-8-2-34839",
+   "index": 3,
+   "rtol": 1e-08,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-2-34839-g3.pkl",
+   "pickle_sha256": "be5ac1e771f742231e40da682564596805b485fcc2a51c5f700ea1d1f27c2910",
+   "notify_label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.39825, z in (1.6721e+11, 0.39825), regime Gqr, group G-q+r",
+   "features": {
+    "n_seg": 2340.0,
+    "span_q": 38852353241.24415,
+    "span_f": 38852353241.24415,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 2340.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-8-2-21782-g4": {
+   "sid": "h-1e-8-2-21782|g4",
+   "unit": "h-1e-8-2-21782",
+   "index": 4,
+   "rtol": 1e-08,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-2-21782-g4.pkl",
+   "pickle_sha256": "5d64c1a15724844762385d234139a5c5ff9a905f5a92bb36a9b993edfa6574af",
+   "notify_label": "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1.0056e+08, z in (5.169e+11, 1.0056e+08), regime Gqr, group G-q-r",
+   "features": {
+    "n_seg": 758.0,
+    "span_q": 176303.83897842473,
+    "span_f": 176303.83897842473,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 758.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-7-3-34972-g4": {
+   "sid": "h-1e-7-3-34972|g4",
+   "unit": "h-1e-7-3-34972",
+   "index": 4,
+   "rtol": 1e-07,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-7-3-34972-g4.pkl",
+   "pickle_sha256": "b3ce64dae185c6c77871e32c09e3df2ad3ba9a29bc9550af88f08ad014062623",
+   "notify_label": "k=1e+05/Mpc, q=1e+05/Mpc, r=1e+05/Mpc @ z_response=1.5861, z in (1.709e+09, 1.5861), regime Gqr, group G-q-r",
+   "features": {
+    "n_seg": 1806.0,
+    "span_q": 1065155797.6953635,
+    "span_f": 1065155797.6953635,
+    "D_q": 0.0,
+    "D_f": 0.0,
+    "n_nonmono": 0.0,
+    "n_steep": 0.0,
+    "n_split": 1806.0,
+    "D_nonmono": 0.0
+   }
+  },
+  "rt-h-1e-8-3-38473-g1": {
+   "sid": "h-1e-8-3-38473|g1",
+   "unit": "h-1e-8-3-38473",
+   "index": 1,
+   "rtol": 1e-08,
+   "route": "B",
+   "kind": "group",
+   "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-3-38473-g1.pkl",
+   "pickle_sha256": "d8a6d8196ec32b4bab973521e5404c22283ee1ed2a02a67179f740b2407ad8a4",
+   "notify_label": "k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=1.5861, z in (5.406e+09, 1.5861), regime Gqr, group G+q+r",
+   "features": {
+    "n_seg": 1906.0,
+    "span_q": 710312565.8472003,
+    "span_f": 710307037.1426895,
+    "D_q": 1237.6975924913293,
+    "D_f": 5384.247642972578,
+    "n_nonmono": 1.0,
+    "n_steep": 2.0,
+    "n_split": 1913.0,
+    "D_nonmono": 1237.6975924913293
+   }
+  }
+ }
+}

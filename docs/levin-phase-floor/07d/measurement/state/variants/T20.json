@@ -1,0 +1,8 @@
+{
+ "form": null,
+ "scope": null,
+ "T_pi": 20,
+ "kappa": null,
+ "basis": "the threshold at 20 pi under the tree's estimate. **No bound basis:** the tree's declaration understates below every T (62 of 2,005 decided leaves with V < 20 pi). Run, flagged, for the route change alone.",
+ "name": "T20"
+}

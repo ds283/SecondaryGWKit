@@ -1,0 +1,81 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07b Part A: piece references of rt-h-1e-8-1-10922-g3",
+  "written": "2026-11-22T12:06:23Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafref_07d.py",
+  "script_sha256": "bbe688e92af09189f0824efe63da21ef06e606fc76930e108c18a9f8da7ef7ab",
+  "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py",
+  "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+  "spec": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/specs/rt-h-1e-8-1-10922-g3.json",
+  "spec_sha256": "58464373ea1ac080d552a24d76616097a19910e53c6849a5ca907f3a8033a969",
+  "capture": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C05/inputs_C05.pkl",
+   "offset": 1377551,
+   "length": 1302800,
+   "sha256": "c2d213da8beb11532861640a4f5b9884d148153c633a39fe7a829ef819273f61",
+   "override": null
+  },
+  "workers": 2
+ },
+ "sid": "rt-h-1e-8-1-10922-g3",
+ "n_points": 2,
+ "n_production_edges": 405,
+ "n_edges": 405,
+ "n_tables": 3,
+ "split_ratio": 1.8,
+ "n_split_edges": 0,
+ "pieces": [
+  {
+   "lo": "0x1.2fa9f86d57a9fp+4",
+   "hi": "0x1.78a11e65a7f80p+4",
+   "n_segments": 404
+  }
+ ],
+ "readings": {
+  "1": {
+   "res": 1,
+   "wall_s": 30.568208125419915,
+   "n_jobs": 26,
+   "job_wall_s": [
+    3.7855402496643364,
+    3.776421833317727,
+    2.1082308748736978,
+    2.1065946663729846,
+    2.0912560001015663,
+    2.1095597916282713,
+    2.0962186250835657,
+    2.0847249580547214,
+    2.0848911250941455,
+    2.089990375097841,
+    2.098147790879011,
+    2.0976374591700733,
+    2.103577167261392,
+    2.122990167234093,
+    2.1095531657338142,
+    2.1065016253851354,
+    2.092799459118396,
+    2.1132333329878747,
+    2.119679665658623,
+    2.132382542360574,
+    2.083667542319745,
+    2.1123331249691546,
+    2.1032580411992967,
+    2.1169842495583,
+    2.0723912082612514,
+    0.5406695827841759
+   ],
+   "pieces": [
+    {
+     "k": 0,
+     "value_30": "-2.5085730708334212908781623275e-25",
+     "imag_30": "-1.31189865311569574141686985215e-25",
+     "fit_noise_var": 1.2342070114375943e-77,
+     "jittered_minus_smooth": -4.299586916894467e-39,
+     "direct_segments": 0,
+     "job_wall_s": 56.45923462416977
+    }
+   ]
+  }
+ }
+}

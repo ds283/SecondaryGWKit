@@ -1,0 +1,120 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/fill_leaves_07d.py --max-rounds 8
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T09:44:41Z
+# ----
+round 1: 1775 leaves in 493 calls, 361 s, nonzero exits {'d_h-1e-8-2-21986_g4': 1, 'd_h-1e-7-1-14572_g1': 1, 'd_h-1e-7-2-21986_g4': 1, 'd_h-1e-7-3-1188_g2': 1, 'd_h-1e-7-1-2236_g1': 1, 'd_h-1e-7-2-36958_g1': 1, 'd_h-1e-8-1-10802_g4': 1, 'd_h-1e-8-0-33705_g1': 1, 'd_h-1e-8-2-34580_g1': 1, 'd_h-1e-7-3-34094_g3': 1, 'd_h-1e-7-1-34629_g1': 1, 'd_h-1e-8-2-35009_g1': 1, 'd_h-1e-8-3-38473_g1': 1, 'd_h-1e-7-3-36013_g4': 1, 'd_h-1e-7-2-37926_g1': 1, 'd_h-1e-8-1-38741_g4': 1, 'd_h-1e-7-1-38741_g4': 1, 'd_h-1e-8-3-38898_g3': 1, 'd_h-1e-7-2-34559_g1': 1, 'd_h-1e-8-1-2160_g4': 1, 'd_h-1e-8-3-38477_g1': 1, 'd_h-1e-8-0-14201_g4': 1, 'd_h-1e-7-0-37229_g1': 1, 'd_h-1e-7-3-38477_g1': 1, 'd_h-1e-7-2-34899_g1': 1, 'd_h-1e-7-0-2268_g4': 1, 'd_h-1e-7-3-34972_g4': 1, 'd_h-1e-8-3-34103_g1': 1, 'd_h-1e-8-1-35185_g4': 1, 'd_h-1e-7-0-12777_g1': 1, 'd_h-1e-8-0-2067_g1': 1, 'd_h-1e-8-2-37926_g1': 1, 'd_h-1e-8-2-1501_g3': 1, 'd_h-1e-7-2-21634_g1': 1, 'd_h-1e-8-3-13820_g3': 1, 'd_h-1e-7-0-2249_g2': 1, 'd_h-1e-7-0-2067_g1': 1, 'd_h-1e-8-2-33326_g0': 1, 'd_h-1e-7-0-12767_g3': 1, 'd_h-1e-7-2-21710_g6': 1, 'd_h-1e-7-1-35302_g2': 1, 'd_h-1e-7-1-11178_a13': 1, 'd_h-1e-7-0-34045_g3': 1, 'd_h-1e-8-1-38744_g3': 1, 'd_h-1e-7-2-21833_g2': 1, 'd_h-1e-8-3-650_g3': 1, 'd_h-1e-7-2-1370_a16': 1, 'd_h-1e-7-2-33326_g0': 1, 'd_h-1e-8-2-1370_a16': 1, 'd_h-1e-8-1-2368_g4': 1, 'd_h-1e-7-0-1940_g5': 1, 'd_h-1e-8-3-1269_a15': 1, 'd_h-1e-7-3-1269_a15': 1, 'd_h-1e-7-1-2356_a13': 1, 'd_h-1e-8-1-1833_a15': 1, 'd_h-1e-7-1-1833_a15': 1, 'd_h-1e-8-1-2356_a13': 1}
+   band_10_12|analytic|1e-7: measured 6 of 6, scored 0
+   band_10_12|analytic|1e-8: measured 6 of 6, scored 0
+   band_10_12|group|1e-7: measured 60 of 213, scored 24
+   band_10_12|group|1e-8: measured 60 of 229, scored 31
+   band_12_16|analytic|1e-7: measured 14 of 14, scored 0
+   band_12_16|analytic|1e-8: measured 14 of 14, scored 0
+   band_12_16|group|1e-7: measured 60 of 549, scored 18
+   band_12_16|group|1e-8: measured 60 of 563, scored 19
+   band_16_20|analytic|1e-7: measured 7 of 7, scored 0
+   band_16_20|analytic|1e-8: measured 7 of 7, scored 0
+   band_16_20|group|1e-7: measured 60 of 530, scored 19
+   band_16_20|group|1e-8: measured 60 of 530, scored 17
+   band_6_8|analytic|1e-7: measured 15 of 15, scored 0
+   band_6_8|analytic|1e-8: measured 15 of 15, scored 0
+   band_6_8|group|1e-7: measured 60 of 197, scored 31
+   band_6_8|group|1e-8: measured 60 of 205, scored 34
+   band_8_10|analytic|1e-7: measured 3 of 3, scored 0
+   band_8_10|analytic|1e-8: measured 3 of 3, scored 0
+   band_8_10|group|1e-7: measured 60 of 209, scored 31
+   band_8_10|group|1e-8: measured 60 of 213, scored 41
+   chase|analytic|1e-7: measured 31 of 31, scored 31
+   chase|analytic|1e-8: measured 8 of 8, scored 8
+   chase|group|1e-7: measured 60 of 1622, scored 16
+   chase|group|1e-8: measured 60 of 1624, scored 16
+   gate_q1|analytic|1e-7: measured 43 of 43, scored 43
+   gate_q1|analytic|1e-8: measured 57 of 57, scored 57
+   gate_q1|group|1e-7: measured 60 of 735, scored 20
+   gate_q1|group|1e-8: measured 60 of 1005, scored 26
+   gate_q2|analytic|1e-7: measured 32 of 32, scored 31
+   gate_q2|analytic|1e-8: measured 42 of 42, scored 41
+   gate_q2|group|1e-7: measured 60 of 484, scored 23
+   gate_q2|group|1e-8: measured 60 of 553, scored 16
+   gate_q3|analytic|1e-7: measured 11 of 11, scored 10
+   gate_q3|analytic|1e-8: measured 13 of 13, scored 12
+   gate_q3|group|1e-7: measured 60 of 226, scored 16
+   gate_q3|group|1e-8: measured 60 of 248, scored 19
+   gate_q4|analytic|1e-7: measured 4 of 4, scored 3
+   gate_q4|analytic|1e-8: measured 4 of 4, scored 4
+   gate_q4|group|1e-7: measured 60 of 358, scored 14
+   gate_q4|group|1e-8: measured 60 of 370, scored 15
+   window|analytic|1e-7: measured 60 of 257, scored 60
+   window|analytic|1e-8: measured 60 of 257, scored 60
+   window|group|1e-7: measured 60 of 710, scored 34
+   window|group|1e-8: measured 60 of 841, scored 43
+round 2: 1549 leaves in 274 calls, 248 s, nonzero exits {'d_h-1e-7-3-14504_g4': 1, 'd_h-1e-7-1-10781_g4': 1, 'd_h-1e-8-0-34007_g2': 1, 'd_h-1e-7-1-1750_g1': 1, 'd_h-1e-7-0-33952_g4': 1, 'd_h-1e-8-2-13664_g1': 1, 'd_h-1e-7-2-21799_g1': 1, 'd_h-1e-7-2-34476_g1': 1, 'd_h-1e-8-2-1294_g5': 1, 'd_h-1e-7-0-1863_g4': 1, 'd_h-1e-8-0-33952_g4': 1, 'd_h-1e-8-2-34476_g1': 1, 'd_h-1e-8-2-21799_g1': 1, 'd_h-1e-7-0-2239_g1': 1, 'd_h-1e-7-3-2321_g4': 1, 'd_h-1e-7-1-2158_g2': 1, 'd_h-1e-8-2-34559_g1': 1, 'd_h-1e-7-0-12841_g3': 1, 'd_h-1e-7-2-13674_g4': 1, 'd_h-1e-8-3-34174_g1': 1, 'd_h-1e-7-2-35009_g1': 1, 'd_h-1e-8-3-38798_g1': 1, 'd_h-1e-7-3-13490_g4': 1, 'd_h-1e-7-2-1501_g3': 1, 'd_h-1e-8-3-854_g5': 1, 'd_h-1e-7-0-12654_g4': 1, 'd_h-1e-7-0-12636_g4': 1, 'd_h-1e-8-3-13821_g4': 1, 'd_h-1e-7-1-38744_g3': 1, 'd_h-1e-8-0-34045_g3': 1, 'd_h-1e-8-2-33204_g1': 1, 'd_h-1e-7-0-12577_g4': 1, 'd_h-1e-8-3-37355_g2': 1, 'd_h-1e-8-2-34899_g1': 1, 'd_h-1e-7-2-2335_g3': 1, 'd_h-1e-7-2-33204_g1': 1, 'd_h-1e-8-3-36013_g4': 1}
+   band_10_12|group|1e-7: measured 112 of 213, scored 45
+   band_10_12|group|1e-8: measured 83 of 229, scored 47
+   band_12_16|group|1e-7: measured 156 of 549, scored 54
+   band_12_16|group|1e-8: measured 147 of 563, scored 56
+   band_16_20|group|1e-7: measured 147 of 530, scored 48
+   band_16_20|group|1e-8: measured 166 of 530, scored 64
+   band_6_8|group|1e-7: measured 83 of 197, scored 44
+   band_6_8|group|1e-8: measured 80 of 205, scored 41
+   band_8_10|group|1e-7: measured 83 of 209, scored 46
+   chase|group|1e-7: measured 178 of 1622, scored 48
+   chase|group|1e-8: measured 178 of 1624, scored 49
+   gate_q1|group|1e-7: measured 138 of 735, scored 47
+   gate_q1|group|1e-8: measured 102 of 1005, scored 45
+   gate_q2|group|1e-7: measured 118 of 484, scored 46
+   gate_q2|group|1e-8: measured 178 of 553, scored 56
+   gate_q3|group|1e-7: measured 178 of 226, scored 46
+   gate_q3|group|1e-8: measured 147 of 248, scored 46
+   gate_q4|group|1e-7: measured 205 of 358, scored 51
+   gate_q4|group|1e-8: measured 190 of 370, scored 52
+   window|group|1e-7: measured 80 of 710, scored 52
+final:
+   band_10_12|analytic|1e-7: population 6, measured 6, scored 0: exhausted
+   band_10_12|analytic|1e-8: population 6, measured 6, scored 0: exhausted
+   band_10_12|group|1e-7: population 213, measured 112, scored 45: filled
+   band_10_12|group|1e-8: population 229, measured 83, scored 47: filled
+   band_12_16|analytic|1e-7: population 14, measured 14, scored 0: exhausted
+   band_12_16|analytic|1e-8: population 14, measured 14, scored 0: exhausted
+   band_12_16|group|1e-7: population 549, measured 156, scored 54: filled
+   band_12_16|group|1e-8: population 563, measured 147, scored 56: filled
+   band_16_20|analytic|1e-7: population 7, measured 7, scored 0: exhausted
+   band_16_20|analytic|1e-8: population 7, measured 7, scored 0: exhausted
+   band_16_20|group|1e-7: population 530, measured 147, scored 48: filled
+   band_16_20|group|1e-8: population 530, measured 166, scored 64: filled
+   band_6_8|analytic|1e-7: population 15, measured 15, scored 0: exhausted
+   band_6_8|analytic|1e-8: population 15, measured 15, scored 0: exhausted
+   band_6_8|group|1e-7: population 197, measured 83, scored 44: filled
+   band_6_8|group|1e-8: population 205, measured 80, scored 41: filled
+   band_8_10|analytic|1e-7: population 3, measured 3, scored 0: exhausted
+   band_8_10|analytic|1e-8: population 3, measured 3, scored 0: exhausted
+   band_8_10|group|1e-7: population 209, measured 83, scored 46: filled
+   band_8_10|group|1e-8: population 213, measured 60, scored 41: filled
+   chase|analytic|1e-7: population 31, measured 31, scored 31: exhausted
+   chase|analytic|1e-8: population 8, measured 8, scored 8: exhausted
+   chase|group|1e-7: population 1622, measured 178, scored 48: filled
+   chase|group|1e-8: population 1624, measured 178, scored 49: filled
+   gate_q1|analytic|1e-7: population 43, measured 43, scored 43: filled
+   gate_q1|analytic|1e-8: population 57, measured 57, scored 57: filled
+   gate_q1|group|1e-7: population 735, measured 138, scored 47: filled
+   gate_q1|group|1e-8: population 1005, measured 102, scored 45: filled
+   gate_q2|analytic|1e-7: population 32, measured 32, scored 31: exhausted
+   gate_q2|analytic|1e-8: population 42, measured 42, scored 41: filled
+   gate_q2|group|1e-7: population 484, measured 118, scored 46: filled
+   gate_q2|group|1e-8: population 553, measured 178, scored 56: filled
+   gate_q3|analytic|1e-7: population 11, measured 11, scored 10: exhausted
+   gate_q3|analytic|1e-8: population 13, measured 13, scored 12: exhausted
+   gate_q3|group|1e-7: population 226, measured 178, scored 46: filled
+   gate_q3|group|1e-8: population 248, measured 147, scored 46: filled
+   gate_q4|analytic|1e-7: population 4, measured 4, scored 3: exhausted
+   gate_q4|analytic|1e-8: population 4, measured 4, scored 4: exhausted
+   gate_q4|group|1e-7: population 358, measured 205, scored 51: filled
+   gate_q4|group|1e-8: population 370, measured 190, scored 52: filled
+   window|analytic|1e-7: population 257, measured 60, scored 60: filled
+   window|analytic|1e-8: population 257, measured 60, scored 60: filled
+   window|group|1e-7: population 710, measured 80, scored 52: filled
+   window|group|1e-8: population 841, measured 60, scored 43: filled
+# ----
+# end 2026-11-22T09:54:52Z
+# exit 0

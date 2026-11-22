@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/trunc176_table_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:31:32Z
+# ----
+| candidate | bounded | understates | undecided |
+|---|---|---|---|
+| tree | 28 | 22 | 126 |
+| pairN4 | 154 | 4 | 18 |
+| pairN3 | 154 | 4 | 18 |
+| nest3N4 | 158 | 0 | 18 |
+| tail4N4 | 154 | 4 | 18 |
+| chopN4 | 172 | 4 | 0 |
+| pairtailN4 | 154 | 4 | 18 |
+| pairDecl | 0 | 0 | 0 |
+
+Causes of the tree's understatements: knot 8, noise 4, noise 3-4 s_CC 10
+# ----
+# end 2026-11-22T10:31:33Z
+# exit 0

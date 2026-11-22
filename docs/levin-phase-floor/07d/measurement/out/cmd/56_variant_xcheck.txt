@@ -1,0 +1,22 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/variant_xcheck_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T13:01:57Z
+# ----
+# levin-phase-floor 07d Part A: Ea's declaration against nest3 + 4 s_own
+# written 2026-11-22T13:01:58Z on mps026298.phys.susx.ac.uk
+# script variant_xcheck_07d.py sha256 cc9c075cbe5fb3f996823b712173b9a4fa6b247fb706341b8f12e99185cc0c55
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/replays_test/xcheck_variant_leaves.json sha256 7348935ed19e2cc12030d9cb1bd40ab83b6d1408f81f5737b9a71a948c4d593f
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/replays_test/xcheck_spec.json sha256 85711441d37341bbbef58dcc8d82a8acd3a898b79bb89cbeba4e9d1cd8593d09
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/replays_test/xcheck_out.json sha256 c327fd41ccf3c8594a276aa5629627fdb8cf20f02a143acfde2f3dea63ca3701
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/replays_test/Ea/R_c-1e-7-0-13757-5.json sha256 37bcdf3f81ef4ee6019702776ae71074128d0aad274809f2da09a767e0936628
+[0x1.53603cb24b09cp+4, 0x1.537328d3aa34ep+4] variant abserr 7.045297e-41 nest3+4s 7.051637e-41 | phase_err 7.222687e-41 floor+4s 7.229027e-41 | rel -8.99e-04 -8.77e-04
+[0x1.537328d3aa34ep+4, 0x1.538614f509600p+4] variant abserr 7.301211e-41 nest3+4s 7.296527e-41 | phase_err 7.419211e-41 floor+4s 7.414527e-41 | rel 6.42e-04 6.32e-04
+[0x1.538614f509600p+4, 0x1.53990116688b2p+4] variant abserr 6.553826e-41 nest3+4s 6.555786e-41 | phase_err 6.658633e-41 floor+4s 6.660602e-41 | rel -2.99e-04 -2.96e-04
+[0x1.53990116688b2p+4, 0x1.53abed37c7b65p+4] variant abserr 1.252245e-40 nest3+4s 1.252276e-40 | phase_err 1.513631e-40 floor+4s 1.513662e-40 | rel -2.48e-05 -2.05e-05
+4 leaves; largest |relative difference| 8.99e-04
+# ----
+# end 2026-11-22T13:02:00Z
+# exit 0

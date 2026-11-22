@@ -1,0 +1,228 @@
+{
+ "header": [
+  "# levin-phase-floor 07d Part A: the variants' replays of the 4,220 calls",
+  "# written 2026-11-22T11:49:08Z on mps026298.phys.susx.ac.uk",
+  "# script variants_summary_07d.py sha256 bd02d5d44a01d8f6f85dd7c6d61573cbaf7ca3b4ce19a4e569e03e2692ae918d",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/variants/variants.json sha256 fa2588dbcfc6b263b9fb19a2d0b687e3dac2f710bbd5e5328e86221dcfd5358e"
+ ],
+ "variants_json": {
+  "tree_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6",
+  "script_sha256": "af0d61359a7792bcb7df66211cc8729af15e11407a5fe236b2a6fee575ab1ad0",
+  "variants": {
+   "Eg": {
+    "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/variants/levin_quadrature_07d_Eg.py",
+    "sha256": "3eea0e3166348920d18464c54da85c068a3539b55952b3f35ff2263e36d5c2ee",
+    "form": "nest3",
+    "scope": "gate",
+    "T_pi": 6,
+    "kappa": 4.0
+   },
+   "Ea": {
+    "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/variants/levin_quadrature_07d_Ea.py",
+    "sha256": "8f76bd62aaaa4c893dd70d4b05182c5fa944592e2f6c6d7324b5834a7d77a9d6",
+    "form": "nest3",
+    "scope": "all",
+    "T_pi": 6,
+    "kappa": 4.0
+   },
+   "ET20": {
+    "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/variants/levin_quadrature_07d_ET20.py",
+    "sha256": "f1573c3f9239a0008fe74f4dbe72f3ee804d1d326c26a2072ebe0d024bfa98b4",
+    "form": "nest3",
+    "scope": "all",
+    "T_pi": 20,
+    "kappa": 4.0
+   },
+   "ET12": {
+    "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/variants/levin_quadrature_07d_ET12.py",
+    "sha256": "d51fd0ab79df43ca939b2fa195e9e260589ade02239ac588f78399d9e6be6936",
+    "form": "nest3",
+    "scope": "all",
+    "T_pi": 12,
+    "kappa": 4.0
+   },
+   "Ep": {
+    "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/variants/levin_quadrature_07d_Ep.py",
+    "sha256": "41d6be6d6b824bae44599f51bc4bdef7eb3fb3fa45baaacc49a4faad3a4904f3",
+    "form": "pair",
+    "scope": "all",
+    "T_pi": 6,
+    "kappa": 4.0
+   },
+   "T20": {
+    "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/variants/levin_quadrature_07d_T20.py",
+    "sha256": "1e6049cf1aa074db9813caec5b95be42477688ad0082adcac0009a6c41bc8060",
+    "form": null,
+    "scope": null,
+    "T_pi": 20,
+    "kappa": null
+   }
+  }
+ },
+ "table": {
+  "Eg": {
+   "written": 4220,
+   "untouched": 972,
+   "untouched_reproduce": 972,
+   "untouched_not_reproducing": [],
+   "touched": 3248,
+   "route_changes": 0,
+   "calls_route_changed": 0,
+   "cc_redeclared": 197510,
+   "value_differs_tree": 1230,
+   "regions_differ_tree": 1148,
+   "depth_differs_tree": 662,
+   "converged_differs_tree": 7,
+   "solves": 716176,
+   "solves_tree": 745136,
+   "wall": 2198.374522413593,
+   "wall_tree": 1678.8504844838753,
+   "converged_false": 2,
+   "converged_false_tree": 9,
+   "abserr_ratio_tree": {
+    "min": 1.1821488581727709e-05,
+    "p10": 0.4249216564162068,
+    "median": 1.0,
+    "p90": 1.2652135614649396,
+    "max": 1214606.4446214836
+   }
+  },
+  "Ea": {
+   "written": 4220,
+   "untouched": 813,
+   "untouched_reproduce": 813,
+   "untouched_not_reproducing": [],
+   "touched": 3407,
+   "route_changes": 0,
+   "calls_route_changed": 0,
+   "cc_redeclared": 218202,
+   "value_differs_tree": 1287,
+   "regions_differ_tree": 1229,
+   "depth_differs_tree": 684,
+   "converged_differs_tree": 7,
+   "solves": 700128,
+   "solves_tree": 745136,
+   "wall": 2228.352164430078,
+   "wall_tree": 1678.8504844838753,
+   "converged_false": 2,
+   "converged_false_tree": 9,
+   "abserr_ratio_tree": {
+    "min": 1.1821488581727709e-05,
+    "p10": 0.4249216564162068,
+    "median": 1.0,
+    "p90": 1.2790410243987704,
+    "max": 1214606.4446214836
+   }
+  },
+  "ET20": {
+   "written": 4220,
+   "untouched": 407,
+   "untouched_reproduce": 407,
+   "untouched_not_reproducing": [],
+   "touched": 3813,
+   "route_changes": 120147,
+   "calls_route_changed": 3500,
+   "cc_redeclared": 557938,
+   "value_differs_tree": 2703,
+   "regions_differ_tree": 2452,
+   "depth_differs_tree": 2084,
+   "converged_differs_tree": 81,
+   "solves": 981756,
+   "solves_tree": 745136,
+   "wall": 4490.073795538396,
+   "wall_tree": 1678.8504844838753,
+   "converged_false": 76,
+   "converged_false_tree": 9,
+   "abserr_ratio_tree": {
+    "min": 3.2517281690359387e-05,
+    "p10": 0.958243597275319,
+    "median": 1.2669607738666073,
+    "p90": 4323.312357201232,
+    "max": 166774236.37031686
+   }
+  },
+  "ET12": {
+   "written": 4220,
+   "untouched": 533,
+   "untouched_reproduce": 533,
+   "untouched_not_reproducing": [],
+   "touched": 3687,
+   "route_changes": 49628,
+   "calls_route_changed": 3328,
+   "cc_redeclared": 272039,
+   "value_differs_tree": 2035,
+   "regions_differ_tree": 1641,
+   "depth_differs_tree": 1066,
+   "converged_differs_tree": 9,
+   "solves": 704708,
+   "solves_tree": 745136,
+   "wall": 2536.1511770468205,
+   "wall_tree": 1678.8504844838753,
+   "converged_false": 4,
+   "converged_false_tree": 9,
+   "abserr_ratio_tree": {
+    "min": 3.2517281690359387e-05,
+    "p10": 0.5067308050333215,
+    "median": 1.0,
+    "p90": 4.8596918463163306,
+    "max": 1214606.4446214836
+   }
+  },
+  "Ep": {
+   "written": 4220,
+   "untouched": 813,
+   "untouched_reproduce": 813,
+   "untouched_not_reproducing": [],
+   "touched": 3407,
+   "route_changes": 0,
+   "calls_route_changed": 0,
+   "cc_redeclared": 231446,
+   "value_differs_tree": 981,
+   "regions_differ_tree": 909,
+   "depth_differs_tree": 432,
+   "converged_differs_tree": 7,
+   "solves": 712360,
+   "solves_tree": 745136,
+   "wall": 1631.2334929155186,
+   "wall_tree": 1678.8504844838753,
+   "converged_false": 2,
+   "converged_false_tree": 9,
+   "abserr_ratio_tree": {
+    "min": 1.1821488581727709e-05,
+    "p10": 1.0,
+    "median": 1.0,
+    "p90": 1.2763343296938594,
+    "max": 251.09845537823202
+   }
+  },
+  "T20": {
+   "written": 4220,
+   "untouched": 720,
+   "untouched_reproduce": 720,
+   "untouched_not_reproducing": [],
+   "touched": 3500,
+   "route_changes": 127988,
+   "calls_route_changed": 3500,
+   "cc_redeclared": 0,
+   "value_differs_tree": 2547,
+   "regions_differ_tree": 2329,
+   "depth_differs_tree": 2094,
+   "converged_differs_tree": 118,
+   "solves": 3050468,
+   "solves_tree": 745136,
+   "wall": 9670.778784143738,
+   "wall_tree": 1678.8504844838753,
+   "converged_false": 119,
+   "converged_false_tree": 9,
+   "abserr_ratio_tree": {
+    "min": 0.00708664456045172,
+    "p10": 1.0,
+    "median": 1.2596655508988914,
+    "p90": 11935.423592704925,
+    "max": 202442052.0244899
+   }
+  }
+ }
+}

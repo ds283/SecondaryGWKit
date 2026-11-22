@@ -1,0 +1,66 @@
+{
+ "title": "levin-phase-floor 07d Part A: the candidate estimates of section 2.3, fixed after D-N and before any is scored",
+ "written": "2026-11-22T10:28:45Z",
+ "d_n_table_sha256": "7c37a6d4ed8c9f5f1b52cd149b076f6893d534f5ffe4b405561d6cda460b789b",
+ "constants": {
+  "TAIL_K": 8
+ },
+ "candidates": {
+  "tree": {
+   "estimate": "pair",
+   "noise": null,
+   "extra_evals": 0,
+   "basis": "07c's code: max(|CC_{2N-1} - CC_N|, floor)"
+  },
+  "pairN4": {
+   "estimate": "pair",
+   "noise": "s_own",
+   "kappa": 4.0,
+   "extra_evals": 0,
+   "basis": "the pair plus a noise term; D-N (out/tables/d_n.md): the scatter is theta_mod_2pi's, independent node to node (lag-1 autocorrelation -0.016 group, 0.03 analytic), so CC_{2N-1} carries a noise error of standard deviation s_CC = sigma sqrt(sum w^2). sigma from the leaf's own 47 samples (standardChop's plateau) against the least-squares sigma: group median 0.98, p05 0.69, p01 0.54 (618 chopped of 994); analytic median 1.70, p05 0.88 (314 of 448). kappa = 4 makes kappa sigma_own / sigma >= 2.8 on 95% of chopped group leaves (P(|Z| > 2.8) = 0.5%); kappa = 3 is run beside it as the sensitivity. Where standardChop does not chop, sigma_own is read from the last 8 coefficients (truncation included, an upper reading)."
+  },
+  "pairN3": {
+   "estimate": "pair",
+   "noise": "s_own",
+   "kappa": 3.0,
+   "extra_evals": 0,
+   "basis": "pairN4 at kappa 3, the sensitivity"
+  },
+  "nest3N4": {
+   "estimate": "nest3",
+   "noise": "s_own",
+   "kappa": 4.0,
+   "extra_evals": 46,
+   "basis": "a third nested rule |CC_{4N-3} - CC_{2N-1}| (2N - 2 more evaluations) plus the noise term (as pairN4)"
+  },
+  "tail4N4": {
+   "estimate": "tail_sum4",
+   "noise": "s_own",
+   "kappa": 4.0,
+   "extra_evals": 0,
+   "basis": "07c's coefficient tail, (b - a)/2 sum of the last four |c_k| of the fine interpolant, plus the noise term"
+  },
+  "chopN4": {
+   "estimate": "chop_tail",
+   "noise": "s_own",
+   "kappa": 4.0,
+   "extra_evals": 0,
+   "basis": "the coefficient tail read with its plateau (Chebfun's standardChop, state/standardChop_rule.md, tol 2^-52): the decaying part as truncation, (b - a)/2 sum of |c_k| over the four coefficients up to the cutoff (tail_sum4 where it does not chop), the plateau as noise (the noise term)"
+  },
+  "pairtailN4": {
+   "estimate": "pair_or_tail4",
+   "noise": "s_own",
+   "kappa": 4.0,
+   "extra_evals": 0,
+   "basis": "max(pair, tail_sum4) plus the noise term: the larger of the two zero-cost truncation readings"
+  },
+  "pairDecl": {
+   "estimate": "pair",
+   "noise": "s_decl",
+   "kappa": 1.0,
+   "extra_evals": 0,
+   "applies": "analytic blocks (the only calls declaring theta_abserr)",
+   "basis": "the pair plus a noise term the caller declares: max(theta_abserr at the leaf's ends) x rms|f| x sqrt(sum w^2). D-N: declared theta_abserr x rms|f| over the measured sigma_g has median 4.1 on analytic leaves; group calls declare nothing (it would need a provider change, prompt section 0.6)"
+  }
+ }
+}

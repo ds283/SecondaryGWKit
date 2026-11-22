@@ -1,0 +1,149 @@
+# worker C03 evidence {"tree": "h", "tree_path": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964", "expected_sha": "49ce96429da797efe55f546d65a23ebcd0099f33", "head": "49ce96429da797efe55f546d65a23ebcd0099f33", "status_short": "", "files": {"ComputeTargets": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/__init__.py", "ComputeTargets.primitive_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/primitive_phase.py", "ComputeTargets.QuadSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/QuadSource.py", "ComputeTargets.QuadSourceIntegral": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/QuadSourceIntegral.py", "ComputeTargets.GkSourcePolicyData": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/GkSourcePolicyData.py", "ComputeTargets.TkSourceFunctions": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/TkSourceFunctions.py", "StoreFixtures": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/StoreFixtures/__init__.py", "main.py": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/main.py", "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/primitive_phase.py", "ComputeTargets.GkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/GkWKBIntegration.py", "ComputeTargets.TkWKBIntegration": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/TkWKBIntegration.py", "ComputeTargets.GkSource": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/GkSource.py", "Quadrature.integrators.WKB_phase_function": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/integrators/WKB_phase_function.py", "AdaptiveLevin.levin_quadrature": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/AdaptiveLevin/levin_quadrature.py", "WKB_phase_function (the producers' remote's function)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/integrators/WKB_phase_function.py", "LiouvilleGreen.three_bessel_integrals": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/LiouvilleGreen/three_bessel_integrals.py", "LiouvilleGreen.bessel_phase": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/LiouvilleGreen/bessel_phase.py", "BesselPhaseGroup (QuadSourceIntegral's)": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/LiouvilleGreen/three_bessel_integrals.py"}, "all_in_tree": true, "in_tree": {"ComputeTargets": true, "ComputeTargets.primitive_phase": true, "ComputeTargets.QuadSource": true, "ComputeTargets.QuadSourceIntegral": true, "ComputeTargets.GkSourcePolicyData": true, "ComputeTargets.TkSourceFunctions": true, "StoreFixtures": true, "main.py": true, "theta_mod_2pi (dispatch.ORIG_THETA_MOD_2PI)": true, "ComputeTargets.GkWKBIntegration": true, "ComputeTargets.TkWKBIntegration": true, "ComputeTargets.GkSource": true, "Quadrature.integrators.WKB_phase_function": true, "AdaptiveLevin.levin_quadrature": true, "WKB_phase_function (the producers' remote's function)": true, "LiouvilleGreen.three_bessel_integrals": true, "LiouvilleGreen.bessel_phase": true, "BesselPhaseGroup (QuadSourceIntegral's)": true}, "PrimitivePhase_has_exact_remainder": true, "build_phase_source_mentions_exact_remainder": true, "TkSourceFunctions_exact_remainder_default": true, "producers_store_reduce_exactly": {"GkWKBIntegration": true, "TkWKBIntegration": true}, "GkWKBValue_has_theta_residual": true, "levin_has_roundoff_exit_premise_holds": true, "levin_roundoff_exit_min_floor_ratio": 0.5, "levin_adaptive_levin_has_bypass": true, "levin_has_trust_check": true, "levin_has_cc_roundoff_floor": true, "levin_has_local_atol": false, "levin_default_max_depth": 20, "levin_has_chebyshev_node_displacements": true, "levin_has_cc_node_term_parts": true, "levin_has_cc_node_error_bound_06d": false, "levin_quadrature_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6", "group_has_declared_error_parts": true, "three_bessel_has_two_product_error": true, "three_bessel_EXP_RELERR": 2.23e-16, "three_bessel_integrals_sha256": "b492d99e27532a674a17cfcdcb30f615c43e78575828a7bfc1a950c0dd44a489", "bessel_phase_sha256": "c0108c2ea8b1e5e686075c711fcffebd1b49612802d3771ed3275d7d6c6a38d9", "levin_trust_max_ratio_06g": 0.25, "levin_has_solve_floor_in_budget_06g": true, "levin_used_interval_has_budget_err_06g": true, "levin_used_interval_has_value_kind_06g": true, "levin_roundoff_exit_premise_signature": "(phase_err: float, phase_err_L: float, phase_err_R: float, split_could_meet_budget: bool = False) -> bool", "PYTHONPATH": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964", "PYTHONDONTWRITEBYTECODE": "1", "dont_write_bytecode": true, "OMP_NUM_THREADS": "1", "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement", "pid": 57009, "host": "mps026298.phys.susx.ac.uk", "python": "3.13.16 (main, Oct  3 2026, 08:14:15) [Clang 21.0.0 (clang-2100.3.34.2)]", "variant_06k": null, "levin_quadrature_tree_file_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6", "levin_has_locate_stationary_points_07": true, "levin_has_nodal_guard_07": true, "levin_has_changes_sign_07": true, "levin_window_half_phase_07": 6.283185307179586, "levin_coalescence_lambda_07": 4.0, "levin_scan_points_07": 4097, "levin_quadrature_file_07": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/AdaptiveLevin/levin_quadrature.py", "levin_has_leaf_rate_rule_07b": true, "levin_edge_rate_ratio_max_07b": 2.0, "levin_leaf_rate_range_max_07b": 10.0, "levin_has_chase_at_noise_level_07c": true, "levin_chase_noise_factor_07c": 4.0, "levin_chase_stop_limit_07c": 6, "scripts_sha256": {"worker.py": "b1fd6cf8b7f051c8aef36e724c5eee683eb23cf7c8bd8772a446fca48ac8c183", "dispatch.py": "14506766b415121f6a052f465efbb991afefc859b916c1b08a7b191547f5990b", "harness.py": "17f66120b9b63f452a427532d74d28e2698769b2a1c60449a86e0c8abae76721", "rebuild.py": "dd6aafca422ccc0106fa436308431a92fe5e5c904700b505b6c0130d3268d212", "prov.py": "752c700dc3f1b5ca7b3f0b7998e50d8e04dd2bad5e90b9ff75bd4243a9e0b4a6", "run_census.py": "a4ac7ba703fd05495c8eaeeb4fe880517dfc2032bc096950de73f4be5fe9ca61", "launch.py": "d3d5c515bcea7e21be5d76f10bd63de0f69cd78d533cd9132504264055814b1e", "rerun.py": "6efcfa1191e5fac0b80e0a563de3bc8a04e4cda91237eda538fc53008993fc8e", "spscan.py": "ce3a96aba8e074262d5d83932d28b67d9df4c5cf010a5e0df288d2e64b247f0b", "variant_loader.py": "1cb49a13b22a25395d524b870344c39b7719f183ea35bf695637113bd42e607f"}}
+# worker C03 reads /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite
+!! WARNING: number of shards read from database (=4) does not match specified number of shards (=10)
+>> Opened existing sharded datastore "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-06/wider/state/a3v2_copy/handover-A3-v2-lambdacdm.sqlite" read-only with 4 shards (version label "2025.1.1", serial 1)
+@@ LambdaCDM model "Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.139e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3403
+|  matter-Lambda equality at z = 0.3034
+@@ Parametrized equation-of-state LambdaCDM-like model "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038) | Planck2018 68% central values TT+TE+EE+lowP+lensing+BAO"
+|  equation of state = "QCD equation of state in Saikawa & Shirai parametrization (arXiv:1803.01038)", max_z = 1e+20
+|  Omega_m = 0.3111
+|  Omega_cc = 0.6889
+|  Omega_r = 9.129e-05
+|  present-day energy density = 8.6e-24 g/m^3
+|  matter-radiation equality at z = 3407
+|  matter-Lambda equality at z = 0.3034
+   rebuild: source grid SourceRedshiftGrid_1740_8d1d43b6, response grid ResponseRedshiftGrid_145_c51d43ac
+   rebuild: largest source k = 3e+08/Mpc, latest tau = 13728 (for z=0.1), largest x=4.1184e+12, largest x +7.5% clearance=4.4273e+12
+
+== unit h-1e-7-0-38934 (0-38934: shard 0, serial 38934)
+   rerun_k_G: k serial 202: 1740 GkWKBIntegration (118493 samples, 118493 kept); 54.7 s
+unit h-1e-7-0-38934: done; wall 11.69 s; rebuild 55.178 s; total -3.4026633353025393e-28 abserr 9.95795190937169e-34 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 320, 'num_simple_regions': 112, 'evaluations': 2542}; policy warnings 0; cache built 4; scan 0.13 s
+
+== unit h-1e-8-0-12577 (0-12577: shard 0, serial 12577)
+unit h-1e-8-0-12577: done; wall 4.992 s; rebuild 0.446 s; total 1.9654714847580443e-21 abserr 4.4397240435700516e-27 converged True WKB_Levin_data {'max_depth': 13, 'num_regions': 190, 'num_simple_regions': 39, 'evaluations': 1515}; policy warnings 0; cache built 3
+
+== unit h-1e-8-0-12644 (0-12644: shard 0, serial 12644)
+unit h-1e-8-0-12644: done; wall 9.469 s; rebuild 0.168 s; total 6.342632252809479e-23 abserr 9.532767316970822e-28 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 277, 'num_simple_regions': 120, 'evaluations': 2211}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-12647 (0-12647: shard 0, serial 12647)
+unit h-1e-8-0-12647: done; wall 9.796 s; rebuild 0.377 s; total -7.202170734057068e-23 abserr 1.7571161176366498e-27 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 345, 'num_simple_regions': 146, 'evaluations': 2753}; policy warnings 0; cache built 3
+
+== unit h-1e-8-0-12671 (0-12671: shard 0, serial 12671)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The integral is probably divergent, or slowly convergent.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The integral is probably divergent, or slowly convergent.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+unit h-1e-8-0-12671: done; wall 5.183 s; rebuild 0.202 s; total -6.366464028897191e-23 abserr 2.5528941279505725e-27 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 239, 'num_simple_regions': 88, 'evaluations': 1905}; policy warnings 0; cache built 2
+
+== unit h-1e-8-0-12706 (0-12706: shard 0, serial 12706)
+unit h-1e-8-0-12706: done; wall 7.17 s; rebuild 0.177 s; total -2.5505358416502777e-23 abserr 1.6342756780648752e-28 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 251, 'num_simple_regions': 73, 'evaluations': 2001}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-12745 (0-12745: shard 0, serial 12745)
+unit h-1e-8-0-12745: done; wall 4.824 s; rebuild 0.3 s; total 2.3652185714646205e-22 abserr 8.691124577475763e-27 converged True WKB_Levin_data {'max_depth': 14, 'num_regions': 219, 'num_simple_regions': 48, 'evaluations': 1745}; policy warnings 0; cache built 3
+
+== unit h-1e-8-0-12777 (0-12777: shard 0, serial 12777)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The integral is probably divergent, or slowly convergent.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The integral is probably divergent, or slowly convergent.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+unit h-1e-8-0-12777: done; wall 4.8 s; rebuild 0.164 s; total 2.590958982536436e-22 abserr 2.3341940676582303e-27 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 254, 'num_simple_regions': 71, 'evaluations': 2025}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-14201 (0-14201: shard 0, serial 14201)
+unit h-1e-8-0-14201: done; wall 13.138 s; rebuild 0.203 s; total -8.081688512892161e-29 abserr 1.8507457480200895e-34 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 487, 'num_simple_regions': 187, 'evaluations': 3878}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-1940 (0-1940: shard 0, serial 1940)
+unit h-1e-8-0-1940: done; wall 9.577 s; rebuild 0.219 s; total 4.236253052776265e-27 abserr 7.473744058549656e-32 converged True WKB_Levin_data {'max_depth': 20, 'num_regions': 350, 'num_simple_regions': 148, 'evaluations': 2793}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-1941 (0-1941: shard 0, serial 1941)
+unit h-1e-8-0-1941: done; wall 10.627 s; rebuild 0.218 s; total 3.260769314082887e-27 abserr 1.8509376068177112e-32 converged True WKB_Levin_data {'max_depth': 13, 'num_regions': 304, 'num_simple_regions': 91, 'evaluations': 2414}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-1967 (0-1967: shard 0, serial 1967)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The integral is probably divergent, or slowly convergent.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The integral is probably divergent, or slowly convergent.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+unit h-1e-8-0-1967: done; wall 6.332 s; rebuild 0.223 s; total 1.5656783283836714e-27 abserr 1.600079915158208e-32 converged True WKB_Levin_data {'max_depth': 16, 'num_regions': 234, 'num_simple_regions': 67, 'evaluations': 1865}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-2239 (0-2239: shard 0, serial 2239)
+unit h-1e-8-0-2239: done; wall 7.268 s; rebuild 0.213 s; total -3.571649073543656e-28 abserr 8.470995507707362e-34 converged True WKB_Levin_data {'max_depth': 13, 'num_regions': 213, 'num_simple_regions': 56, 'evaluations': 1687}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-2252 (0-2252: shard 0, serial 2252)
+unit h-1e-8-0-2252: done; wall 7.847 s; rebuild 0.218 s; total -1.0855652446996213e-28 abserr 2.4998465735391037e-34 converged True WKB_Levin_data {'max_depth': 13, 'num_regions': 264, 'num_simple_regions': 70, 'evaluations': 2094}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-33597 (0-33597: shard 0, serial 33597)
+unit h-1e-8-0-33597: done; wall 5.48 s; rebuild 0.126 s; total -7.045676612447776e-19 abserr 2.150094527618479e-24 converged True WKB_Levin_data {'max_depth': 13, 'num_regions': 158, 'num_simple_regions': 51, 'evaluations': 1259}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-33879 (0-33879: shard 0, serial 33879)
+unit h-1e-8-0-33879: done; wall 6.555 s; rebuild 0.131 s; total -8.643370360431926e-20 abserr 7.778903374057372e-25 converged True WKB_Levin_data {'max_depth': 13, 'num_regions': 214, 'num_simple_regions': 102, 'evaluations': 1707}; policy warnings 0; cache built 1
+
+== unit h-1e-8-0-33952 (0-33952: shard 0, serial 33952)
+unit h-1e-8-0-33952: done; wall 6.132 s; rebuild 0.311 s; total 2.9201445223967256e-22 abserr 2.725085172364409e-28 converged True WKB_Levin_data {'max_depth': 15, 'num_regions': 232, 'num_simple_regions': 65, 'evaluations': 1851}; policy warnings 0; cache built 3
+
+== unit h-1e-8-0-36825 (0-36825: shard 0, serial 36825)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The integral is probably divergent, or slowly convergent.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The maximum number of subdivisions (100) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/Quadrature/simple_quadrature.py:92: IntegrationWarning: The integral is probably divergent, or slowly convergent.
+  value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
+unit h-1e-8-0-36825: done; wall 6.072 s; rebuild 0.201 s; total 1.1633057845202173e-25 abserr 1.1779760506753821e-30 converged True WKB_Levin_data {'max_depth': 12, 'num_regions': 222, 'num_simple_regions': 77, 'evaluations': 1769}; policy warnings 0; cache built 1
+

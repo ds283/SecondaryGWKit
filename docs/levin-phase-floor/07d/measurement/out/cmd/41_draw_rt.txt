@@ -1,0 +1,19 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/draw_rt_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T11:49:09Z
+# ----
+# levin-phase-floor 07d Part A: section 2.6's (Rt) draw
+# written 2026-11-22T11:49:15Z on mps026298.phys.susx.ac.uk
+# script draw_rt_07d.py sha256 b0d9b73abf5c80cd700364d9077138adfa21ec69cf72c0928a2b42b0787fec8d
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_index_07d.pkl sha256 da8a7a6504151131558754d5bacc542fa90ff7e5829218043081de20dba3f481
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/seeds_07d.json sha256 732fc0cfbf5b2210bf40635583dc208d96b165ca3fd975ce66bddccdab8a2708
+population: {'Levin->CC|analytic|k0|1e-7': 231, 'Levin->CC|analytic|k0|1e-8': 125, 'Levin->CC|analytic|k1|1e-7': 222, 'Levin->CC|analytic|k1|1e-8': 104, 'Levin->CC|analytic|k2|1e-7': 216, 'Levin->CC|analytic|k2|1e-8': 129, 'Levin->CC|analytic|k3|1e-7': 210, 'Levin->CC|analytic|k3|1e-8': 138, 'Levin->CC|group|k0|1e-7': 18, 'Levin->CC|group|k0|1e-8': 16, 'Levin->CC|group|k1|1e-7': 19, 'Levin->CC|group|k1|1e-8': 20, 'Levin->CC|group|k2|1e-7': 19, 'Levin->CC|group|k2|1e-8': 20, 'Levin->CC|group|k3|1e-7': 14, 'Levin->CC|group|k3|1e-8': 16} total 1517
+(Ra) integrands with a route change left out: 18
+taken: {'Levin->CC|analytic|k0|1e-7': 2, 'Levin->CC|analytic|k0|1e-8': 2, 'Levin->CC|analytic|k1|1e-7': 2, 'Levin->CC|analytic|k1|1e-8': 2, 'Levin->CC|analytic|k2|1e-7': 2, 'Levin->CC|analytic|k2|1e-8': 2, 'Levin->CC|analytic|k3|1e-7': 2, 'Levin->CC|analytic|k3|1e-8': 2, 'Levin->CC|group|k0|1e-7': 2, 'Levin->CC|group|k0|1e-8': 2, 'Levin->CC|group|k1|1e-7': 2, 'Levin->CC|group|k1|1e-8': 2, 'Levin->CC|group|k2|1e-7': 2, 'Levin->CC|group|k2|1e-8': 2, 'Levin->CC|group|k3|1e-7': 1, 'Levin->CC|group|k3|1e-8': 1} total 30 by kind {'analytic': 16, 'group': 14}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_rt_07d.json c7bd5c64855ba8bb3dbc186789bdca99e4bb9e250cff2a6a3362f02375e00221
+# ----
+# end 2026-11-22T11:49:17Z
+# exit 0

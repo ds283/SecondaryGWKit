@@ -1,0 +1,13 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/replay_07d.py Ea /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/replays_test d:h-1e-7-0-10670\|a13 d:h-1e-7-0-12577\|g4 R:r31 R:c-1e-7-0-13757-5
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:35:32Z
+# ----
+d:h-1e-7-0-10670|a13 Ea: DIFFERS: region arrays differ: ['abserr', 'budget_err', 'phase_err', 'phase_err_less_node', 'phase_err_roundoff', 'relerr', 'total_err']; abserr: replay 0x1.d87dcfcadaecdp-82 census 0x1.906058249b6bep-82; value 0x1.38162f81050abp-37 abserr 0x1.d87dcfcadaecdp-82 conv True regions 2 depth 1 chase 0/0/1 stopped recorded 0 0.12 s
+d:h-1e-7-0-12577|g4 Ea: REPRODUCES; value 0x1.60e9c2671ce18p-101 abserr 0x1.612c754daa016p-125 conv True regions 37 depth 10 chase 0/0/4 stopped recorded 0 0.68 s
+R:r31 Ea: DIFFERS: value: replay 0x1.263e9f583e644p-79 R32 0x1.263e9f583ee54p-79; abserr: replay 0x1.5139f4112a1fep-104 R32 0x1.513b2851b5963p-104; num_regions: replay 81 R32 86; num_chase_stopped_leaves: replay 17 R32 28; value 0x1.263e9f583e644p-79 abserr 0x1.5139f4112a1fep-104 conv True regions 81 depth 13 chase 2/17/12 stopped recorded 17 1.98 s
+R:c-1e-7-0-13757-5 Ea: DIFFERS: region arrays differ: ['abserr', 'abserr_truncation', 'budget_err', 'convergence_ratio', 'declared_resolution', 'delta1', 'delta2', 'depth', 'end', 'guard_at_depth_max_07', 'guarded_07', 'node_error_signed', 'phase_err', 'phase_err_declared', 'phase_err_less_node', 'phase_err_roundoff', 'phase_limited', 'relerr', 'start', 'total_err', 'trusted', 'type', 'value', 'value_kind', 'value_own', 'window_07']; value: replay -0x1.654fbbd987c64p-96 census -0x1.654fbbd987ff2p-96; abserr: replay 0x1.140fa2b27f6ccp-122 census 0x1.11de231bf47dap-122; num_regions: replay 90 census 100; max_depth: replay 12 census 13; num_chase_stopped_leaves: replay 59 census 69; value -0x1.654fbbd987c64p-96 abserr 0x1.140fa2b27f6ccp-122 conv True regions 90 depth 12 chase 1/59/6 stopped recorded 59 2.96 s
+1 of 4 reproduce their census record
+# ----
+# end 2026-11-22T10:35:42Z
+# exit 0

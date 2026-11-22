@@ -1,0 +1,779 @@
+{
+ "header": [
+  "# levin-phase-floor 07d Part A: section 2.6's (Rt) draw",
+  "# written 2026-11-22T11:49:15Z on mps026298.phys.susx.ac.uk",
+  "# script draw_rt_07d.py sha256 b0d9b73abf5c80cd700364d9077138adfa21ec69cf72c0928a2b42b0787fec8d",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_index_07d.pkl sha256 da8a7a6504151131558754d5bacc542fa90ff7e5829218043081de20dba3f481",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/seeds_07d.json sha256 732fc0cfbf5b2210bf40635583dc208d96b165ca3fd975ce66bddccdab8a2708"
+ ],
+ "seed": 707404,
+ "base": 1,
+ "total": 30,
+ "variants_read": [
+  "ET20",
+  "ET12",
+  "T20"
+ ],
+ "population": {
+  "Levin->CC|analytic|k0|1e-7": 231,
+  "Levin->CC|analytic|k0|1e-8": 125,
+  "Levin->CC|analytic|k1|1e-7": 222,
+  "Levin->CC|analytic|k1|1e-8": 104,
+  "Levin->CC|analytic|k2|1e-7": 216,
+  "Levin->CC|analytic|k2|1e-8": 129,
+  "Levin->CC|analytic|k3|1e-7": 210,
+  "Levin->CC|analytic|k3|1e-8": 138,
+  "Levin->CC|group|k0|1e-7": 18,
+  "Levin->CC|group|k0|1e-8": 16,
+  "Levin->CC|group|k1|1e-7": 19,
+  "Levin->CC|group|k1|1e-8": 20,
+  "Levin->CC|group|k2|1e-7": 19,
+  "Levin->CC|group|k2|1e-8": 20,
+  "Levin->CC|group|k3|1e-7": 14,
+  "Levin->CC|group|k3|1e-8": 16
+ },
+ "reverse_direction_population": 0,
+ "ra_integrands_route_changed_left_out": 18,
+ "taken": {
+  "Levin->CC|analytic|k0|1e-7": 2,
+  "Levin->CC|analytic|k0|1e-8": 2,
+  "Levin->CC|analytic|k1|1e-7": 2,
+  "Levin->CC|analytic|k1|1e-8": 2,
+  "Levin->CC|analytic|k2|1e-7": 2,
+  "Levin->CC|analytic|k2|1e-8": 2,
+  "Levin->CC|analytic|k3|1e-7": 2,
+  "Levin->CC|analytic|k3|1e-8": 2,
+  "Levin->CC|group|k0|1e-7": 2,
+  "Levin->CC|group|k0|1e-8": 2,
+  "Levin->CC|group|k1|1e-7": 2,
+  "Levin->CC|group|k1|1e-8": 2,
+  "Levin->CC|group|k2|1e-7": 2,
+  "Levin->CC|group|k2|1e-8": 2,
+  "Levin->CC|group|k3|1e-7": 1,
+  "Levin->CC|group|k3|1e-8": 1
+ },
+ "selection": [
+  {
+   "sid": "h-1e-7-0-12921|a20",
+   "counterpart_sid": "h-1e-8-0-12921|a20",
+   "unit": "h-1e-7-0-12921",
+   "index": 20,
+   "kind": "analytic",
+   "k_band": 0,
+   "rtol": "1e-7",
+   "notify_label": "analytic Y4",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-7-0-12921|a20": {
+     "ET20": 4,
+     "ET12": 1,
+     "T20": 4
+    },
+    "h-1e-8-0-12921|a20": {
+     "ET20": 4,
+     "ET12": 1,
+     "T20": 4
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k0|1e-7"
+  },
+  {
+   "sid": "h-1e-7-0-34041|a5",
+   "counterpart_sid": "h-1e-8-0-34041|a5",
+   "unit": "h-1e-7-0-34041",
+   "index": 5,
+   "kind": "analytic",
+   "k_band": 0,
+   "rtol": "1e-7",
+   "notify_label": "analytic J1",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-7-0-34041|a5": {
+     "ET20": 1,
+     "ET12": 1,
+     "T20": 1
+    },
+    "h-1e-8-0-34041|a5": {
+     "ET20": 1,
+     "ET12": 1,
+     "T20": 1
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k0|1e-7"
+  },
+  {
+   "sid": "h-1e-8-0-33654|a21",
+   "counterpart_sid": "h-1e-7-0-33654|a21",
+   "unit": "h-1e-8-0-33654",
+   "index": 21,
+   "kind": "analytic",
+   "k_band": 0,
+   "rtol": "1e-8",
+   "notify_label": "analytic J4",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-8-0-33654|a21": {
+     "ET20": 3,
+     "ET12": 2,
+     "T20": 3
+    },
+    "h-1e-7-0-33654|a21": {
+     "ET20": 3,
+     "ET12": 2,
+     "T20": 3
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k0|1e-8"
+  },
+  {
+   "sid": "h-1e-8-0-12644|a7",
+   "counterpart_sid": "h-1e-7-0-12644|a7",
+   "unit": "h-1e-8-0-12644",
+   "index": 7,
+   "kind": "analytic",
+   "k_band": 0,
+   "rtol": "1e-8",
+   "notify_label": "analytic J2",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-8-0-12644|a7": {
+     "ET20": 5,
+     "ET12": 2,
+     "T20": 5
+    },
+    "h-1e-7-0-12644|a7": {
+     "ET20": 5,
+     "ET12": 2,
+     "T20": 5
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k0|1e-8"
+  },
+  {
+   "sid": "h-1e-7-1-35390|a15",
+   "counterpart_sid": "h-1e-8-1-35390|a15",
+   "unit": "h-1e-7-1-35390",
+   "index": 15,
+   "kind": "analytic",
+   "k_band": 1,
+   "rtol": "1e-7",
+   "notify_label": "analytic J2",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-7-1-35390|a15": {
+     "ET20": 3,
+     "ET12": 2,
+     "T20": 15
+    },
+    "h-1e-8-1-35390|a15": {
+     "ET20": 3,
+     "ET12": 2,
+     "T20": 15
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k1|1e-7"
+  },
+  {
+   "sid": "h-1e-7-1-35327|a8",
+   "counterpart_sid": "h-1e-8-1-35327|a8",
+   "unit": "h-1e-7-1-35327",
+   "index": 8,
+   "kind": "analytic",
+   "k_band": 1,
+   "rtol": "1e-7",
+   "notify_label": "analytic Y1",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-7-1-35327|a8": {
+     "ET20": 11,
+     "ET12": 1,
+     "T20": 11
+    },
+    "h-1e-8-1-35327|a8": {
+     "ET20": 11,
+     "ET12": 1,
+     "T20": 11
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k1|1e-7"
+  },
+  {
+   "sid": "h-1e-8-1-10776|a12",
+   "counterpart_sid": "h-1e-7-1-10776|a12",
+   "unit": "h-1e-8-1-10776",
+   "index": 12,
+   "kind": "analytic",
+   "k_band": 1,
+   "rtol": "1e-8",
+   "notify_label": "analytic Y1",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-8-1-10776|a12": {
+     "ET20": 4,
+     "ET12": 3,
+     "T20": 4
+    },
+    "h-1e-7-1-10776|a12": {
+     "ET20": 4,
+     "ET12": 3,
+     "T20": 4
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k1|1e-8"
+  },
+  {
+   "sid": "h-1e-8-1-35461|a16",
+   "counterpart_sid": "h-1e-7-1-35461|a16",
+   "unit": "h-1e-8-1-35461",
+   "index": 16,
+   "kind": "analytic",
+   "k_band": 1,
+   "rtol": "1e-8",
+   "notify_label": "analytic Y2",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-8-1-35461|a16": {
+     "ET20": 2,
+     "ET12": 1,
+     "T20": 4
+    },
+    "h-1e-7-1-35461|a16": {
+     "ET20": 2,
+     "ET12": 1,
+     "T20": 4
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k1|1e-8"
+  },
+  {
+   "sid": "h-1e-7-2-21989|a12",
+   "counterpart_sid": "h-1e-8-2-21989|a12",
+   "unit": "h-1e-7-2-21989",
+   "index": 12,
+   "kind": "analytic",
+   "k_band": 2,
+   "rtol": "1e-7",
+   "notify_label": "analytic Y4",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-7-2-21989|a12": {
+     "ET20": 4,
+     "ET12": 3,
+     "T20": 4
+    },
+    "h-1e-8-2-21989|a12": {
+     "ET20": 4,
+     "ET12": 3,
+     "T20": 4
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k2|1e-7"
+  },
+  {
+   "sid": "h-1e-7-2-36958|a19",
+   "counterpart_sid": "h-1e-8-2-36958|a19",
+   "unit": "h-1e-7-2-36958",
+   "index": 19,
+   "kind": "analytic",
+   "k_band": 2,
+   "rtol": "1e-7",
+   "notify_label": "analytic J4",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-7-2-36958|a19": {
+     "ET20": 0,
+     "ET12": 0,
+     "T20": 0
+    },
+    "h-1e-8-2-36958|a19": {
+     "ET20": 5,
+     "ET12": 0,
+     "T20": 5
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k2|1e-7"
+  },
+  {
+   "sid": "h-1e-8-2-21661|a17",
+   "counterpart_sid": "h-1e-7-2-21661|a17",
+   "unit": "h-1e-8-2-21661",
+   "index": 17,
+   "kind": "analytic",
+   "k_band": 2,
+   "rtol": "1e-8",
+   "notify_label": "analytic J2",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-8-2-21661|a17": {
+     "ET20": 6,
+     "ET12": 3,
+     "T20": 6
+    },
+    "h-1e-7-2-21661|a17": {
+     "ET20": 6,
+     "ET12": 3,
+     "T20": 6
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k2|1e-8"
+  },
+  {
+   "sid": "h-1e-8-2-34874|a8",
+   "counterpart_sid": "h-1e-7-2-34874|a8",
+   "unit": "h-1e-8-2-34874",
+   "index": 8,
+   "kind": "analytic",
+   "k_band": 2,
+   "rtol": "1e-8",
+   "notify_label": "analytic Y2",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-8-2-34874|a8": {
+     "ET20": 9,
+     "ET12": 3,
+     "T20": 9
+    },
+    "h-1e-7-2-34874|a8": {
+     "ET20": 9,
+     "ET12": 3,
+     "T20": 9
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k2|1e-8"
+  },
+  {
+   "sid": "h-1e-7-3-1920|a11",
+   "counterpart_sid": "h-1e-8-3-1920|a11",
+   "unit": "h-1e-7-3-1920",
+   "index": 11,
+   "kind": "analytic",
+   "k_band": 3,
+   "rtol": "1e-7",
+   "notify_label": "analytic J4",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-7-3-1920|a11": {
+     "ET20": 10,
+     "ET12": 4,
+     "T20": 10
+    },
+    "h-1e-8-3-1920|a11": {
+     "ET20": 10,
+     "ET12": 4,
+     "T20": 10
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k3|1e-7"
+  },
+  {
+   "sid": "h-1e-7-3-1246|a19",
+   "counterpart_sid": "h-1e-8-3-1246|a19",
+   "unit": "h-1e-7-3-1246",
+   "index": 19,
+   "kind": "analytic",
+   "k_band": 3,
+   "rtol": "1e-7",
+   "notify_label": "analytic J3",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-7-3-1246|a19": {
+     "ET20": 1,
+     "ET12": 0,
+     "T20": 1
+    },
+    "h-1e-8-3-1246|a19": {
+     "ET20": 1,
+     "ET12": 0,
+     "T20": 1
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k3|1e-7"
+  },
+  {
+   "sid": "h-1e-8-3-1024|a17",
+   "counterpart_sid": "h-1e-7-3-1024|a17",
+   "unit": "h-1e-8-3-1024",
+   "index": 17,
+   "kind": "analytic",
+   "k_band": 3,
+   "rtol": "1e-8",
+   "notify_label": "analytic J3",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-8-3-1024|a17": {
+     "ET20": 5,
+     "ET12": 3,
+     "T20": 5
+    },
+    "h-1e-7-3-1024|a17": {
+     "ET20": 5,
+     "ET12": 3,
+     "T20": 5
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k3|1e-8"
+  },
+  {
+   "sid": "h-1e-8-3-38439|a17",
+   "counterpart_sid": "h-1e-7-3-38439|a17",
+   "unit": "h-1e-8-3-38439",
+   "index": 17,
+   "kind": "analytic",
+   "k_band": 3,
+   "rtol": "1e-8",
+   "notify_label": "analytic J3",
+   "set": "r1x",
+   "route_changed": {
+    "h-1e-8-3-38439|a17": {
+     "ET20": 4,
+     "ET12": 1,
+     "T20": 5
+    },
+    "h-1e-7-3-38439|a17": {
+     "ET20": 4,
+     "ET12": 1,
+     "T20": 5
+    }
+   },
+   "rt_stratum": "Levin->CC|analytic|k3|1e-8"
+  },
+  {
+   "sid": "h-1e-7-0-34045|g3",
+   "counterpart_sid": "h-1e-8-0-34045|g3",
+   "unit": "h-1e-7-0-34045",
+   "index": 3,
+   "kind": "group",
+   "k_band": 0,
+   "rtol": "1e-7",
+   "notify_label": "k=3.05e+07/Mpc, q=9.7e+06/Mpc, r=3.05e+07/Mpc @ z_response=8.3583e+06, z in (1.6721e+11, 8.3583e+06), regime Gqr, group G+q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-7-0-34045|g3": {
+     "ET20": 67,
+     "ET12": 47,
+     "T20": 67
+    },
+    "h-1e-8-0-34045|g3": {
+     "ET20": 67,
+     "ET12": 47,
+     "T20": 67
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k0|1e-7"
+  },
+  {
+   "sid": "h-1e-7-0-12975|g0",
+   "counterpart_sid": "h-1e-8-0-12975|g0",
+   "unit": "h-1e-7-0-12975",
+   "index": 0,
+   "kind": "group",
+   "k_band": 0,
+   "rtol": "1e-7",
+   "notify_label": "k=3.14e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=1589, z in (1.6391e+16, 5.406e+09), regime G, group G",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-7-0-12975|g0": {
+     "ET20": 1,
+     "ET12": 1,
+     "T20": 1
+    },
+    "h-1e-8-0-12975|g0": {
+     "ET20": 1,
+     "ET12": 1,
+     "T20": 1
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k0|1e-7"
+  },
+  {
+   "sid": "h-1e-8-0-36825|g2",
+   "counterpart_sid": "h-1e-7-0-36825|g2",
+   "unit": "h-1e-8-0-36825",
+   "index": 2,
+   "kind": "group",
+   "k_band": 0,
+   "rtol": "1e-8",
+   "notify_label": "k=3.05e+07/Mpc, q=1e+05/Mpc, r=3.05e+07/Mpc @ z_response=693.47, z in (5.169e+11, 1.709e+09), regime Gr, group G-r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-8-0-36825|g2": {
+     "ET20": 151,
+     "ET12": 92,
+     "T20": 151
+    },
+    "h-1e-7-0-36825|g2": {
+     "ET20": 151,
+     "ET12": 92,
+     "T20": 151
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k0|1e-8"
+  },
+  {
+   "sid": "h-1e-8-0-1940|g5",
+   "counterpart_sid": "h-1e-7-0-1940|g5",
+   "unit": "h-1e-8-0-1940",
+   "index": 5,
+   "kind": "group",
+   "k_band": 0,
+   "rtol": "1e-8",
+   "notify_label": "k=3.05e+07/Mpc, q=3.14e+05/Mpc, r=3.05e+07/Mpc @ z_response=25.156, z in (5.406e+09, 25.156), regime Gqr, group G-q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-8-0-1940|g5": {
+     "ET20": 532,
+     "ET12": 55,
+     "T20": 532
+    },
+    "h-1e-7-0-1940|g5": {
+     "ET20": 532,
+     "ET12": 55,
+     "T20": 532
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k0|1e-8"
+  },
+  {
+   "sid": "h-1e-7-1-38744|g3",
+   "counterpart_sid": "h-1e-8-1-38744|g3",
+   "unit": "h-1e-7-1-38744",
+   "index": 3,
+   "kind": "group",
+   "k_band": 1,
+   "rtol": "1e-7",
+   "notify_label": "k=9.56e+07/Mpc, q=9.85e+05/Mpc, r=9.56e+07/Mpc @ z_response=1.5861, z in (1.6711e+10, 1.5861), regime Gqr, group G+q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-7-1-38744|g3": {
+     "ET20": 38,
+     "ET12": 24,
+     "T20": 556
+    },
+    "h-1e-8-1-38744|g3": {
+     "ET20": 38,
+     "ET12": 24,
+     "T20": 556
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k1|1e-7"
+  },
+  {
+   "sid": "h-1e-7-1-10781|g4",
+   "counterpart_sid": "h-1e-8-1-10781|g4",
+   "unit": "h-1e-7-1-10781",
+   "index": 4,
+   "kind": "group",
+   "k_band": 1,
+   "rtol": "1e-7",
+   "notify_label": "k=9.85e+05/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=3.6545e+09, z in (5.1721e+12, 3.6545e+09), regime Gqr, group G-q-r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-7-1-10781|g4": {
+     "ET20": 136,
+     "ET12": 90,
+     "T20": 136
+    },
+    "h-1e-8-1-10781|g4": {
+     "ET20": 136,
+     "ET12": 90,
+     "T20": 136
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k1|1e-7"
+  },
+  {
+   "sid": "h-1e-8-1-2266|g3",
+   "counterpart_sid": "h-1e-7-1-2266|g3",
+   "unit": "h-1e-8-1-2266",
+   "index": 3,
+   "kind": "group",
+   "k_band": 1,
+   "rtol": "1e-8",
+   "notify_label": "k=9.56e+07/Mpc, q=9.56e+07/Mpc, r=9.56e+07/Mpc @ z_response=4.7913, z in (1.6351e+12, 4.7913), regime Gqr, group G-q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-8-1-2266|g3": {
+     "ET20": 216,
+     "ET12": 113,
+     "T20": 216
+    },
+    "h-1e-7-1-2266|g3": {
+     "ET20": 216,
+     "ET12": 113,
+     "T20": 216
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k1|1e-8"
+  },
+  {
+   "sid": "h-1e-8-1-10922|g3",
+   "counterpart_sid": "h-1e-7-1-10922|g3",
+   "unit": "h-1e-8-1-10922",
+   "index": 3,
+   "kind": "group",
+   "k_band": 1,
+   "rtol": "1e-8",
+   "notify_label": "k=9.85e+05/Mpc, q=9.85e+05/Mpc, r=9.85e+05/Mpc @ z_response=1.7477e+08, z in (1.6711e+10, 1.7477e+08), regime Gqr, group G-q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-8-1-10922|g3": {
+     "ET20": 91,
+     "ET12": 68,
+     "T20": 58
+    },
+    "h-1e-7-1-10922|g3": {
+     "ET20": 58,
+     "ET12": 45,
+     "T20": 58
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k1|1e-8"
+  },
+  {
+   "sid": "h-1e-7-2-1501|g3",
+   "counterpart_sid": "h-1e-8-2-1501|g3",
+   "unit": "h-1e-7-2-1501",
+   "index": 3,
+   "kind": "group",
+   "k_band": 2,
+   "rtol": "1e-7",
+   "notify_label": "k=3.09e+06/Mpc, q=3e+08/Mpc, r=3e+08/Mpc @ z_response=1.5919e+06, z in (5.1721e+12, 1.5919e+06), regime Gqr, group G-q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-7-2-1501|g3": {
+     "ET20": 81,
+     "ET12": 60,
+     "T20": 81
+    },
+    "h-1e-8-2-1501|g3": {
+     "ET20": 81,
+     "ET12": 60,
+     "T20": 81
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k2|1e-7"
+  },
+  {
+   "sid": "h-1e-7-2-21919|g1",
+   "counterpart_sid": "h-1e-8-2-21919|g1",
+   "unit": "h-1e-7-2-21919",
+   "index": 1,
+   "kind": "group",
+   "k_band": 2,
+   "rtol": "1e-7",
+   "notify_label": "k=3.09e+06/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=5.7856e+07, z in (5.2861e+10, 5.7856e+07), regime Gqr, group G+q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-7-2-21919|g1": {
+     "ET20": 55,
+     "ET12": 40,
+     "T20": 55
+    },
+    "h-1e-8-2-21919|g1": {
+     "ET20": 55,
+     "ET12": 40,
+     "T20": 55
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k2|1e-7"
+  },
+  {
+   "sid": "h-1e-8-2-34839|g3",
+   "counterpart_sid": "h-1e-7-2-34839|g3",
+   "unit": "h-1e-8-2-34839",
+   "index": 3,
+   "kind": "group",
+   "k_band": 2,
+   "rtol": "1e-8",
+   "notify_label": "k=3.09e+06/Mpc, q=9.7e+06/Mpc, r=9.7e+06/Mpc @ z_response=0.39825, z in (1.6721e+11, 0.39825), regime Gqr, group G-q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-8-2-34839|g3": {
+     "ET20": 75,
+     "ET12": 32,
+     "T20": 75
+    },
+    "h-1e-7-2-34839|g3": {
+     "ET20": 75,
+     "ET12": 32,
+     "T20": 75
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k2|1e-8"
+  },
+  {
+   "sid": "h-1e-8-2-21782|g4",
+   "counterpart_sid": "h-1e-7-2-21782|g4",
+   "unit": "h-1e-8-2-21782",
+   "index": 4,
+   "kind": "group",
+   "k_band": 2,
+   "rtol": "1e-8",
+   "notify_label": "k=3.09e+06/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=1.0056e+08, z in (5.169e+11, 1.0056e+08), regime Gqr, group G-q-r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-8-2-21782|g4": {
+     "ET20": 48,
+     "ET12": 32,
+     "T20": 48
+    },
+    "h-1e-7-2-21782|g4": {
+     "ET20": 48,
+     "ET12": 32,
+     "T20": 48
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k2|1e-8"
+  },
+  {
+   "sid": "h-1e-7-3-34972|g4",
+   "counterpart_sid": "h-1e-8-3-34972|g4",
+   "unit": "h-1e-7-3-34972",
+   "index": 4,
+   "kind": "group",
+   "k_band": 3,
+   "rtol": "1e-7",
+   "notify_label": "k=1e+05/Mpc, q=1e+05/Mpc, r=1e+05/Mpc @ z_response=1.5861, z in (1.709e+09, 1.5861), regime Gqr, group G-q-r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-7-3-34972|g4": {
+     "ET20": 112,
+     "ET12": 72,
+     "T20": 112
+    },
+    "h-1e-8-3-34972|g4": {
+     "ET20": 115,
+     "ET12": 75,
+     "T20": 115
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k3|1e-7"
+  },
+  {
+   "sid": "h-1e-8-3-38473|g1",
+   "counterpart_sid": "h-1e-7-3-38473|g1",
+   "unit": "h-1e-8-3-38473",
+   "index": 1,
+   "kind": "group",
+   "k_band": 3,
+   "rtol": "1e-8",
+   "notify_label": "k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=1.5861, z in (5.406e+09, 1.5861), regime Gqr, group G+q+r",
+   "set": "calls",
+   "route_changed": {
+    "h-1e-8-3-38473|g1": {
+     "ET20": 77,
+     "ET12": 56,
+     "T20": 77
+    },
+    "h-1e-7-3-38473|g1": {
+     "ET20": 77,
+     "ET12": 56,
+     "T20": 77
+    }
+   },
+   "rt_stratum": "Levin->CC|group|k3|1e-8"
+  }
+ ]
+}

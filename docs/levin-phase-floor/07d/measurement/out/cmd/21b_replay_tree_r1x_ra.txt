@@ -1,0 +1,10 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/run_replays_07d.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/replays /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/sids_r1x_ra_07d.txt tree
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:21:14Z
+# ----
+tree: 3166 of 3166 written; 3166 reproduce their census record; exit codes {2: 0, 3: 0, 1: 0, 5: 0, 0: 0, 4: 0}
+wall 92 s
+# ----
+# end 2026-11-22T10:22:47Z
+# exit 0

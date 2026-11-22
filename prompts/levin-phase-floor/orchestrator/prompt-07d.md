@@ -103,7 +103,7 @@ Re-check each at dispatch.
   | `_adaptive_levin_subregion_impl` (the gate at `:3055`) | 2914 |
   | `_adaptive_levin_subregion_cc` | 3355 |
   | `_oriented_cc` | 3688 |
-  | `_locate_stationary_points` (Rule A reads `SIX_PI` at `:3806`) | 3779 |
+  | `_locate_stationary_points` (it reads no threshold; `:3806` is its docstring's account of the Rule A 07a replaced — corrected at Part A's stop) | 3779 |
   | `_adaptive_levin` | 4157 |
   | `_add_leaf` | 4842 |
   | `_check_leaf` | 4953 |
@@ -203,6 +203,10 @@ Read over `ssh macstudio-tunnel`, read-only, with scratch readers of your own:
 
 ### A.4 After the user's choice
 
+**At Part A's stop the user chose a second measurement first** (prompt §9.1), so this section applies at
+Part A′'s stop (§A′). Part A's records were copied back in the amendment commit, by the rule of the last
+paragraph below.
+
 Write prompt §1, §3 and §9 from the user's words, quoted. They cover:
 - the estimate, its noise term and the threshold, with each constant's basis and margin;
 - what the change does to the declarations, `converged`, the round-off exit, the window's count and the
@@ -215,9 +219,76 @@ Write prompt §1, §3 and §9 from the user's words, quoted. They cover:
 at the stop. §9 names every file outside `AdaptiveLevin/`, and §5 states what R33 then moves outside
 `QuadSourceIntegral`.
 
-Show the text to the user. On their word commit and push it, with Part A's records copied back as
+Show the text to the user. On their word commit and push it, with Part A′'s records copied back as
 07c's were: no pickles and nothing over 2 MB, by a list made first, each file checked by SHA-256. That
 commit is Part B's dispatch SHA.
+
+---
+
+## A′. Part A′ — the second measurement, on the Mac Studio
+
+### A′.0 What it is, and what it inherits
+
+Prompt §9.2, added at Part A's stop on the user's word (§9.1). Its scope is §9.2 and §9.3. Its
+inputs are Part A's records on the Mac Studio, read-only:
+- `var/levin-phase-floor-07d/measurement/`: its captures, selections, leaf records, call references and
+  variant replays;
+- its registered runs `levin-phase-floor-07d-*`, all `done`.
+
+The orchestrator's checks at Part A's stop are in `docs/levin-phase-floor/07d/measurement/orchestrator_check/`,
+committed. The three facts they found that §9.2 is built on:
+- v3's leaf reference understates its error on knotted leaves;
+- D-T's halves and quarters ran without the gate;
+- `levin_tc` left out the floor.
+
+Give the agent the scripts that show each.
+
+### A′.1 Before you dispatch
+
+1. **The amendment's SHA:** prompt §9 and this section committed and pushed, with Part A's records.
+2. **The user's word that the Mac Studio is free** (§0 item 6).
+3. **On the Mac Studio, read-only:** as §A.1 item 3, with no `var/levin-phase-floor-07d/measurement-a2`,
+   and Part A's records unchanged against its `KEPT_ON_MAC_STUDIO.txt` and the copy-back's SHA-256
+   list.
+4. **The worktrees:** remove `SecondaryGWKit-lpf07d-49ce964` if clean; fetch; add
+   `SecondaryGWKit-lpf07d-<amendment short SHA>` detached at the amendment's SHA, with no venv. Check
+   that `git diff --stat 67b5af74 <amendment SHA> -- AdaptiveLevin ComputeTargets LiouvilleGreen tools`
+   is empty.
+5. **The marker,** as §A.1 item 5.
+6. **Part A's session** (`lpf07d-part-a`) is not reused. Archive it only on the user's word.
+
+### A′.2 Dispatch
+
+As §A.2, to a fresh session in the new worktree, with:
+- prompt §9.2 and §9.3 as its whole scope, and §9.1 as its background;
+- §A′.0;
+- Part A's records as its inputs, read-only;
+- every write in `var/levin-phase-floor-07d/measurement-a2/` and its own registered run directories.
+
+The projection comes to you before anything long runs.
+
+### A′.3 At the stop, before you relay
+
+As §A.3 items 1, 6 and 7, and:
+1. **v4's references:**
+   - on four leaves, two of them knotted, re-reference yourself by an independent rule (a different
+     Gauss–Legendre order, or a doubling taken one step further);
+   - check that each lies within the two references' combined stated errors.
+2. **The reproduction of `_check_leaf`:**
+   - its check against the instrumented variant re-read from the agent's records;
+   - on two leaves, one each side of $12\pi$, the sub-solves' routes at $T = 6\pi$ and $T = 12\pi$
+     re-derived yourself from their phase variations.
+3. **Item 1's verdicts:** one $T$'s verdict re-scored by your own reader from the per-leaf records,
+   with the vacuous cases checked to be named as such.
+4. **${\rm CC}_{93}$:** each candidate's understatement count re-read; on three leaves, $s_{\rm own,93}$
+   recomputed yourself.
+5. **The knots:**
+   - on two leaves, the count of each kind re-derived;
+   - one jump re-measured yourself;
+   - (K)'s bisection points on one call re-derived from the knots.
+6. **The cost table:** one leaf's evaluation counts re-derived from the module's counters.
+
+Then relay as §0 item 2, and §A.4 applies.
 
 ---
 
@@ -324,7 +395,7 @@ As 07c's note §C.4:
 
 ## 5. Stop and ask the user
 
-- At Part A's planned stop, always.
+- At Part A's planned stop, always; and at Part A′'s.
 - Before any dispatch, for the word that the Mac Studio is free.
 - At any stop condition of prompt §8 that an agent reports, with the agent's words.
 - When a premise this note or the prompt states is found false at a dispatch.

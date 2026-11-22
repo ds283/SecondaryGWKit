@@ -1,0 +1,30 @@
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafcc_07d.py", line 482, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafcc_07d.py", line 410, in main
+    sh_err.append(float(np.dot(LQ._cc_weights(sp, fine), g_on(gsg))) - (ref - gl_small(lo, sp[0]) + gl_small(hi, sp[1])))
+                                                         ~~~~^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafcc_07d.py", line 212, in g_on
+    fs = f_on(grid)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/leafcc_07d.py", line 209, in f_on
+    return np.vstack([LQ._sample_vectorized(fn, grid, cache, ("f", id(fn))) for fn in f])
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/AdaptiveLevin/levin_quadrature.py", line 2494, in _sample_vectorized
+    return np.array([func(x) for x in grid], dtype=float)
+                     ~~~~^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/phase_groups.py", line 528, in component
+    return terms_at(log_z)[index][slot]
+           ~~~~~~~~^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/phase_groups.py", line 488, in terms_at
+    Tr_values = r_factor.values(log_z, one_plus_z)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/phase_groups.py", line 388, in values
+    M = self._f.M(log_z, z_is_log=True)
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/TkSourceFunctions.py", line 805, in M
+    self._check_WKB(raw_z, "the T_k LG amplitude")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/ComputeTargets/TkSourceFunctions.py", line 743, in _check_WKB
+    raise RuntimeError(
+    ...<3 lines>...
+    )
+RuntimeError: TkSourceFunctions: the T_k LG amplitude evaluated above the top of the WKB region (z=5.1801e+12, WKB region = (5.1721e+12, 0.1), switch node z=5.1721e+12, z_init=5.1744e+12)

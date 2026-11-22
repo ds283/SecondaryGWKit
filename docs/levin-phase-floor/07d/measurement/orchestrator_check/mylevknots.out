@@ -1,0 +1,12 @@
+group band leaves, knots 1-4  n 209 | V_P worse than CC93 110, better  13 | median err/share V_P 2.7e-05 CC93 5.5e-06 | V_P over its share 2
+group band leaves, knots 5+   n 335 | V_P worse than CC93 332, better   1 | median err/share V_P 0.0066 CC93 2.5e-05 | V_P over its share 45
+group band leaves, knots none n  20 | V_P worse than CC93   0, better   6 | median err/share V_P 3.7e-06 CC93 1.1e-05 | V_P over its share 0
+band_10_12 knots per group leaf: n 107 none 6 unknown 0 median 7 p90 28 max 125
+band_12_16 knots per group leaf: n 127 none 1 unknown 0 median 5 p90 29 max 71
+band_16_20 knots per group leaf: n 136 none 5 unknown 0 median 5 p90 19 max 120
+band_6_8   knots per group leaf: n 97 none 6 unknown 0 median 12 p90 42 max 183
+band_8_10  knots per group leaf: n 97 none 2 unknown 0 median 18 p90 47 max 79
+gate_q1    knots per group leaf: n 178 none 105 unknown 0 median 0 p90 26 max 300
+gate_q2    knots per group leaf: n 180 none 106 unknown 0 median 0 p90 20 max 102
+gate_q3    knots per group leaf: n 179 none 71 unknown 0 median 1 p90 31 max 325
+gate_q4    knots per group leaf: n 176 none 86 unknown 0 median 1 p90 18 max 92

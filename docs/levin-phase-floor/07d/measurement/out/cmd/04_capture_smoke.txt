@@ -1,0 +1,20 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/x1_capture_07d.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_smoke.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures_test/smoke /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures_test/smoke.json --workers 1
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T09:11:40Z
+# ----
+# levin-phase-floor 07d Part A: section 2.1, captured at h, variant None (06c X1 capture)
+# written 2026-11-22T09:11:40Z on mps026298.phys.susx.ac.uk
+# script x1_capture_07d.py sha256 b88ab760e66dc834c83bbf8e721d6d7661cc96af1217fa084a4b33bf0aacd852
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_smoke.json sha256 506d1854e0a1ca50db2cbb1df14f97bc49ef4f9832c0dccc0e36e111290a82fd
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 56558
+exit codes {'C00': 0}
+captured and matching the census bit for bit: 1 of 1
+   h-1e-7-0-10670 13: matches True; error None; ray_initialized False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures_test/smoke.json sha256 0bf541ebd1c1e435d36f710011ed0223270af26b14b5ccb6cf13953c462bf87d
+# ----
+# end 2026-11-22T09:12:43Z
+# exit 0

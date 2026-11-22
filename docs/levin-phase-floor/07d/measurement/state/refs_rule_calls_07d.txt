@@ -1,0 +1,17 @@
+levin-phase-floor 07d Part A: the call references of section 2.6, (Ra) and (Rt), and their scoring; fixed before any
+reading. By 07's V4 method as 07c Part A read it, with tools/filon_reference.py of the tree (07c's).
+
+1. The readings, of each drawn integrand once (it scores the integrand's calls at both rtols, under every code):
+   - an analytic block (the tool's Route A, ``route_of(call) == "A"``): FCC at resolutions 1 and 2 (one_reading.py
+     IMPL fcc RES 1, 2); QAWO at 1 and 2 (one_reading.py qawo) where each projects at 30 minutes or less;
+   - a group call (Route B): split FCC (leafref_07c.py's method, the call's whole span as one span, --split-ratio 1.8) at
+     resolutions 1 and 2; QAWO at 1 and 2 where each projects at 30 minutes or less; fccsplit where a segment holds a
+     stationary point is the same reading (the tool integrates such a segment directly).
+2. The reference is FCC resolution 2 (Route A) or split FCC resolution 2 (Route B). Its stated error is the spread of every
+   reading taken of the integrand (largest minus smallest value).
+3. Scored (07's rule, 07b's W4): a call is scored if its reference's stated error is at most min(abserr)/100, the minimum
+   over the codes scored on it (the tree, i.e. 07c's census record, and every variant). Otherwise it is reported, not scored.
+4. Verdicts: converged and |v - ref|/abserr <= 1: honest; converged and > 1: dishonest; not converged: unconverged, with
+   the ratio reported.
+5. A reading that fails or is stopped is recorded; its integrand is scored from the readings that finished if FCC (or
+   split FCC) resolution 2 is among them, and reported unreferenced otherwise.

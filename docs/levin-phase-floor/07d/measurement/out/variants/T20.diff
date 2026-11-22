@@ -1,0 +1,75 @@
+--- tree/levin_quadrature.py
++++ levin_quadrature_07d_T20.py
+@@ -294,6 +294,14 @@
+ # monotone under bisection, so 6 pi did not mean one thing. The number 6 pi is unchanged by 07a,
+ # and has not been measured ([07-c2-gate-threshold-was-never-measured]).
+ SIX_PI = 6.0 * np.pi
++
++# prompt 07d Part A variant 'T20' (scripts/make_variants_07d.py; not production code)
++_VARIANT_07D = 'T20'
++_E07D_FORM = None
++_E07D_SCOPE = None
++_E07D_KAPPA = None
++_T07D_THRESHOLD = 20.0 * np.pi
++_C07D = {"num_07d_route_changed": 0, "num_07d_cc_new_estimate": 0, "num_07d_noise_term_larger": 0, "num_07d_nest_resampled": 0}
+ 
+ # Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every Levin region's
+ # estimate (a Clenshaw-Curtis fallback region carries its own floor, _cc_roundoff_floor(), since
+@@ -3052,7 +3060,9 @@
+             vectorize_cache=vectorize_cache,
+         )
+ 
+-    if phase_span < SIX_PI:
++    if SIX_PI <= phase_span < _T07D_THRESHOLD:  # prompt 07d variant: a route the tree would not take
++        _C07D["num_07d_route_changed"] += 1
++    if phase_span < _T07D_THRESHOLD:  # prompt 07d variant (the tree: SIX_PI)
+         return _adaptive_levin_subregion_cc(
+             x_span,
+             f,
+@@ -3362,6 +3372,7 @@
+     notify_label: Optional[str],
+     id_label,
+     vectorize_cache: Optional[dict] = None,
++    scope_07d: str = "gate",  # prompt 07d variant: "gate" from the C2 gate, "forced" from _oriented_cc
+ ):
+     """
+     Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
+@@ -3720,6 +3731,7 @@
+             notify_label,
+             id_label,
+             vectorize_cache=vectorize_cache,
++            scope_07d="forced",  # prompt 07d variant
+         )
+ 
+     ascending = (b, a)
+@@ -3742,6 +3754,7 @@
+         notify_label,
+         id_label,
+         vectorize_cache=vectorize_cache,
++        scope_07d="forced",  # prompt 07d variant
+     )
+     data["value"] = -data["value"]
+     if data.get("node_error_signed") is not None:
+@@ -6179,7 +6192,7 @@
+         json.dump(payload, handle, indent=4, sort_keys=True)
+ 
+ 
+-def adaptive_levin_sincos(
++def _adaptive_levin_sincos_tree_07d(
+     x_span: Tuple[float, float],
+     f,
+     theta: dict,
+@@ -6457,3 +6470,13 @@
+         emit_diagnostics=emit_diagnostics,
+         diagnostics_path=diagnostics_path,
+     )
++
++
++def adaptive_levin_sincos(*args, **kwargs):
++    """prompt 07d variant: the tree's adaptive_levin_sincos (renamed _adaptive_levin_sincos_tree_07d), with the variant's
++    counters reset before the call and added to its result as num_07d_* keys."""
++    for k_ in _C07D:
++        _C07D[k_] = 0
++    result = _adaptive_levin_sincos_tree_07d(*args, **kwargs)
++    result.update(dict(_C07D))
++    return result

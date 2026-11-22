@@ -1,0 +1,37 @@
+{
+ "label": "variants",
+ "results": [
+  {
+   "name": "replay_Eg",
+   "exit": 0,
+   "wall_s": 382.6510329246521
+  },
+  {
+   "name": "replay_Ea",
+   "exit": 0,
+   "wall_s": 388.9255268573761
+  },
+  {
+   "name": "replay_ET20",
+   "exit": 0,
+   "wall_s": 878.0715198516846
+  },
+  {
+   "name": "replay_ET12",
+   "exit": 0,
+   "wall_s": 457.4947099685669
+  },
+  {
+   "name": "replay_Ep",
+   "exit": 0,
+   "wall_s": 290.1555440425873
+  },
+  {
+   "name": "replay_T20",
+   "exit": 0,
+   "wall_s": 1793.0384500026703
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-22T11:46:24Z"
+}

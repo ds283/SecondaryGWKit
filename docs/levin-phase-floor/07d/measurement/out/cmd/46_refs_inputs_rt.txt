@@ -1,0 +1,39 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/refs_inputs_07d.py rt /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_rt_07d.json
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:03:12Z
+# ----
+rt-h-1e-7-0-12921-a20 A {'panels_fcc_r1': 54, 'panels_qawo_r1': 1934, 'panels_fcc_r2': 80, 'panels_qawo_r2': 13097, 'K_abs': 823593.8570437771}
+rt-h-1e-7-0-34041-a5 A {'panels_fcc_r1': 56, 'panels_qawo_r1': 2482, 'panels_fcc_r2': 82, 'panels_qawo_r2': 17493, 'K_abs': 140826986.5566745}
+rt-h-1e-8-0-33654-a21 A {'panels_fcc_r1': 15, 'panels_qawo_r1': 113, 'panels_fcc_r2': 21, 'panels_qawo_r2': 217, 'K_abs': 12303055.461361265}
+rt-h-1e-8-0-12644-a7 A {'panels_fcc_r1': 64, 'panels_qawo_r1': 2264, 'panels_fcc_r2': 94, 'panels_qawo_r2': 15366, 'K_abs': 30454960.396664713}
+rt-h-1e-7-1-35390-a15 A {'panels_fcc_r1': 66, 'panels_qawo_r1': 13482, 'panels_fcc_r2': 96, 'panels_qawo_r2': 104988, 'K_abs': 985061.2054411147}
+rt-h-1e-7-1-35327-a8 A {'panels_fcc_r1': 46, 'panels_qawo_r1': 670, 'panels_fcc_r2': 67, 'panels_qawo_r2': 3376, 'K_abs': 1611521.584489762}
+rt-h-1e-8-1-10776-a12 A {'panels_fcc_r1': 7, 'panels_qawo_r1': 61, 'panels_fcc_r2': 13, 'panels_qawo_r2': 90, 'K_abs': 1734991.892797729}
+rt-h-1e-8-1-35461-a16 A {'panels_fcc_r1': 62, 'panels_qawo_r1': 3944, 'panels_fcc_r2': 91, 'panels_qawo_r2': 28744, 'K_abs': 985061.2054411147}
+rt-h-1e-7-2-21989-a12 A {'panels_fcc_r1': 42, 'panels_qawo_r1': 331, 'panels_fcc_r2': 61, 'panels_qawo_r2': 735, 'K_abs': 8112903.5761344265}
+rt-h-1e-7-2-36958-a19 A {'panels_fcc_r1': 75, 'panels_qawo_r1': 14176, 'panels_fcc_r2': 110, 'panels_qawo_r2': 110073, 'K_abs': 478284.8764786171}
+rt-h-1e-8-2-21661-a17 A {'panels_fcc_r1': 29, 'panels_qawo_r1': 230, 'panels_fcc_r2': 42, 'panels_qawo_r2': 432, 'K_abs': 144378098.82628608}
+rt-h-1e-8-2-34874-a8 A {'panels_fcc_r1': 115, 'panels_qawo_r1': 1036182248, 'panels_fcc_r2': 169, 'panels_qawo_r2': 8289453223, 'K_abs': 300000000.0000001}
+rt-h-1e-7-3-1920-a11 A {'panels_fcc_r1': 99, 'panels_qawo_r1': 161743336, 'panels_fcc_r2': 146, 'panels_qawo_r2': 1293942624, 'K_abs': 100668570.37535875}
+rt-h-1e-7-3-1246-a19 A {'panels_fcc_r1': 44, 'panels_qawo_r1': 602, 'panels_fcc_r2': 64, 'panels_qawo_r2': 2987, 'K_abs': 14737023.241859265}
+rt-h-1e-8-3-1024-a17 A {'panels_fcc_r1': 39, 'panels_qawo_r1': 306, 'panels_fcc_r2': 58, 'panels_qawo_r2': 706, 'K_abs': 9703455.784651041}
+rt-h-1e-8-3-38439-a17 A {'panels_fcc_r1': 98, 'panels_qawo_r1': 42144779, 'panels_fcc_r2': 144, 'panels_qawo_r2': 337154087, 'K_abs': 9703455.784651041}
+rt-h-1e-7-0-34045-g3 B {'n_seg': 876.0, 'span_q': 403179.9656021497, 'span_f': 403179.9656021497, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 876.0, 'D_nonmono': 0.0}
+rt-h-1e-7-0-12975-g0 B {'n_seg': 1312.0, 'span_q': 26.909100726246834, 'span_f': 26.909100726246834, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 1312.0, 'D_nonmono': 0.0}
+rt-h-1e-8-0-36825-g2 B {'n_seg': 512.0, 'span_q': 12985.15512084961, 'span_f': 12985.15512084961, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 512.0, 'D_nonmono': 0.0}
+rt-h-1e-8-0-1940-g5 B {'n_seg': 1666.0, 'span_q': 75125664911.95729, 'span_f': 75125664911.95729, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 1666.0, 'D_nonmono': 0.0}
+rt-h-1e-7-1-38744-g3 B {'n_seg': 2012.0, 'span_q': 856107339504.4486, 'span_f': 856107339504.4486, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 2012.0, 'D_nonmono': 0.0}
+rt-h-1e-7-1-10781-g4 B {'n_seg': 646.0, 'span_q': 44027.97354535685, 'span_f': 44027.97354535685, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 646.0, 'D_nonmono': 0.0}
+rt-h-1e-8-1-2266-g3 B {'n_seg': 2322.0, 'span_q': 605059498106.5024, 'span_f': 605059498106.5024, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 2322.0, 'D_nonmono': 0.0}
+rt-h-1e-8-1-10922-g3 B {'n_seg': 404.0, 'span_q': 2585.0071083003404, 'span_f': 2585.0071083003404, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 404.0, 'D_nonmono': 0.0}
+rt-h-1e-7-2-1501-g3 B {'n_seg': 1318.0, 'span_q': 899653.34452526, 'span_f': 899653.34452526, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 1318.0, 'D_nonmono': 0.0}
+rt-h-1e-7-2-21919-g1 B {'n_seg': 608.0, 'span_q': 3826.8159988406624, 'span_f': 3826.8159988406624, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 608.0, 'D_nonmono': 0.0}
+rt-h-1e-8-2-34839-g3 B {'n_seg': 2340.0, 'span_q': 38852353241.24415, 'span_f': 38852353241.24415, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 2340.0, 'D_nonmono': 0.0}
+rt-h-1e-8-2-21782-g4 B {'n_seg': 758.0, 'span_q': 176303.83897842473, 'span_f': 176303.83897842473, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 758.0, 'D_nonmono': 0.0}
+rt-h-1e-7-3-34972-g4 B {'n_seg': 1806.0, 'span_q': 1065155797.6953635, 'span_f': 1065155797.6953635, 'D_q': 0.0, 'D_f': 0.0, 'n_nonmono': 0.0, 'n_steep': 0.0, 'n_split': 1806.0, 'D_nonmono': 0.0}
+rt-h-1e-8-3-38473-g1 B {'n_seg': 1906.0, 'span_q': 710312565.8472003, 'span_f': 710307037.1426895, 'D_q': 1237.6975924913293, 'D_f': 5384.247642972578, 'n_nonmono': 1.0, 'n_steep': 2.0, 'n_split': 1913.0, 'D_nonmono': 1237.6975924913293}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/refs/inputs_rt.json 84c6d2ea5b3ee2a0ed44811d5f12f1445a75aab380b1d8c262a9ad3b2f722ad4
+# ----
+# end 2026-11-22T12:03:32Z
+# exit 0

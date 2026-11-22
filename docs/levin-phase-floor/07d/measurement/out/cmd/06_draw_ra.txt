@@ -1,0 +1,18 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/draw_ra_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T09:21:45Z
+# ----
+# levin-phase-floor 07d Part A: section 2.6's (Ra) draw
+# written 2026-11-22T09:21:46Z on mps026298.phys.susx.ac.uk
+# script draw_ra_07d.py sha256 8fd3145e7c87fdc198ea99d8da7bb4a427432d76ceac1af88f79ee7373cb4a3a
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_index_07d.pkl sha256 da8a7a6504151131558754d5bacc542fa90ff7e5829218043081de20dba3f481
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/seeds_07d.json sha256 732fc0cfbf5b2210bf40635583dc208d96b165ca3fd975ce66bddccdab8a2708
+population by stratum: {'Levin|T|s1': 7826, 'Levin|T|s2': 6304, 'Levin|T|s3': 517, 'Levin|U|s1': 21297, 'Levin|U|s2': 21217, 'Levin|U|s3': 423, 'direct|T|s2': 50, 'direct|T|s3': 24, 'direct|U|s2': 1}
+taken: {'Levin|T|s1': 4, 'Levin|T|s2': 4, 'Levin|T|s3': 4, 'Levin|U|s1': 4, 'Levin|U|s2': 4, 'Levin|U|s3': 3, 'direct|T|s2': 3, 'direct|T|s3': 3, 'direct|U|s2': 1} total 30 by rtol {'1e-7': 25, '1e-8': 5}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_ra_07d.json 3af68ab24bdcedc07950d2ad94a90acbeecc9d3cf6c9898b421618e912060156; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_ra.json 074160a0921f151badc66f5140270380a9cd65268babd6589b040050c4e658b2
+# ----
+# end 2026-11-22T09:21:47Z
+# exit 0

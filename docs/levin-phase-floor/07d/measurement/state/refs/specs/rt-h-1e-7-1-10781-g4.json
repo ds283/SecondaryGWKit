@@ -1,0 +1,20 @@
+{
+ "sid": "rt-h-1e-7-1-10781-g4",
+ "capture": {
+  "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C04/inputs_C04.pkl",
+  "offset": 1331126,
+  "length": 1332354,
+  "sha256": "f3829199fedba4491c7a4b4e40e984e74ad7df8ce2c5206abcb73a0e4a77d599",
+  "override": null
+ },
+ "spans": [
+  [
+   "0x1.604ebc67c4dd8p+4",
+   "0x1.d463901811304p+4"
+  ]
+ ],
+ "points": [
+  "0x1.604ebc67c4dd8p+4",
+  "0x1.d463901811304p+4"
+ ]
+}

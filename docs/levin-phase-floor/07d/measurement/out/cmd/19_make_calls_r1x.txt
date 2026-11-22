@@ -1,0 +1,16 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/make_calls_07d.py --extra r1x
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:20:06Z
+# ----
+# levin-phase-floor 07d Part A: the replay manifest (r1x)
+# written 2026-11-22T10:20:07Z on mps026298.phys.susx.ac.uk
+# script make_calls_07d.py sha256 7ad313aacb5f4dc5b2966273ff165c888752cd124d4343689a788c49a39ae096
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures/captures_r1x.json sha256 61e6835f29df6901e845ed0716b90d9920b3c4b54ca7810853c620cff87f9aea
+3118 manifest entries, by set: {'r1x': 1559, 'r1x~o': 1559}; 3118 census records wanted
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/calls_07d_r1x.json fd3a8f83547eca76379d709cdbbdea40159a2162cf4d0d58001712d4500f09ad; /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_wanted_07d_r1x.json 2a5f4d97a3365c3a455c0fbe29053da750fd738668e1a3ea33c99979e40cdb5b
+# ----
+# end 2026-11-22T10:20:08Z
+# exit 0

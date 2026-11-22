@@ -1,0 +1,87 @@
+{
+  "argv": [
+    "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+    "-B",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/run_07d.py",
+    "--run-dir",
+    "<run dir>",
+    "--plan",
+    "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/plan_leaves.json"
+  ],
+  "campaign": "levin-phase-floor",
+  "checkpoint": "var/runs/levin-phase-floor-07d-leaves-20261122T094441/checkpoint.jsonl",
+  "created": "2026-11-22T09:44:41+00:00",
+  "cwd": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement",
+  "expected_units": 1,
+  "git_dirty": false,
+  "git_head": "28ebaf0743e0555fb2c4512ce714884005a60eff",
+  "heartbeat_means": "Refreshed by the launcher once with the sh pid, by the driver at start with its own pid, at each command's start and end, and every 60 s by a thread of the driver while its process lives.",
+  "host": {
+    "id": "d120d1cf03551e6f",
+    "machine": "arm64",
+    "name": "mps026298.phys.susx.ac.uk",
+    "python": "3.13.16",
+    "release": "27.0.0",
+    "system": "Darwin"
+  },
+  "packages": {
+    "SQLAlchemy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.0.55"
+    },
+    "datastorekit": {
+      "commit": "f47b9a255e9ad58e0d0eaf85644f53b575884d31",
+      "editable": false,
+      "requested_revision": "v0.5.0",
+      "url": "https://github.com/ds283/DatastoreKit",
+      "version": "0.5.0"
+    },
+    "numpy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.2.4"
+    },
+    "ray": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "2.59.0"
+    },
+    "raypoolkit": {
+      "commit": "67a75b97a656accb98195a4bda93f64e6a5f3fb2",
+      "editable": false,
+      "requested_revision": "v0.3.0",
+      "url": "https://github.com/ds283/RayPoolKit",
+      "version": "0.3.0"
+    },
+    "runregistrykit": {
+      "commit": "0bae3a3c501a8264ee4be5bc24f06422af38720f",
+      "editable": false,
+      "requested_revision": "v0.2.0",
+      "url": "https://github.com/ds283/RunRegistryKit",
+      "version": "0.2.0"
+    },
+    "scipy": {
+      "commit": null,
+      "editable": false,
+      "requested_revision": null,
+      "url": null,
+      "version": "1.16.3"
+    }
+  },
+  "prompt": "07d",
+  "purpose": "levin-phase-floor prompt 07d Part A (sections 2.2-2.4: D-N, D-E, D-T) on the Mac Studio (mps026298): fill the leaf strata (state/selection_leaves_07d.json: 44 strata, Clenshaw-Curtis gate quarters, chase, window, and Levin V bands 6-20 pi, by kind and rtol) in their seeded order to 40 scored leaves or exhaustion, each leaf solved both ways on its own span and read against the leaf reference of state/refs_rule_leaf_07d.txt (v2), by scripts/leafcc_07d.py at the worktree SecondaryGWKit-lpf07d-49ce964 (07c's code), six processes at once, Ray-free, from the captures only. Estimated 10-30 min.",
+  "results": null,
+  "results_store_id": null,
+  "run_id": "levin-phase-floor-07d-leaves-20261122T094441",
+  "scope": "The leaves of section 2.1 item 1's 600 replayed calls (both rtols), at most 600 measured a stratum; outputs under var/levin-phase-floor-07d/measurement/out/leaves/.",
+  "script": "var/levin-phase-floor-07d/measurement/scripts/run_07d.py",
+  "script_sha256": "2df4fbd7aab119a6cf47e53f639b5b27f4d7155b3a8308506304496288105483",
+  "unit": "commands"
+}

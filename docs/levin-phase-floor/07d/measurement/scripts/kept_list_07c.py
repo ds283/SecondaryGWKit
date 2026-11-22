@@ -1,0 +1,57 @@
+"""levin-phase-floor prompt 07c section 6: the list of files kept on the Mac Studio only (not copied to the laptop):
+every file of the census and k0 run directories, and every pickle and every file over 2 MB under
+var/levin-phase-floor-07c/census/, each with its SHA-256 and size. Copied from 07b's kept_list_07b.py (a record, not edited; it was copied from 07a's kept_list_07a.py), changed only in its run directories, its paths and its title. Read only.
+Usage: python -B kept_list_07c.py OUT_TXT [RUN_ID ...] (the run directories: the k0 run, and the census run once it exists)"""
+import os
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from prov import MAIN, WIDER, sha256  # noqa: E402
+
+RUNS = ["levin-phase-floor-07b-census-20261117T010200",  # prompt 07b
+        "levin-phase-floor-07b-k0-20261116T204402"]  # prompt 07b
+RUNS = None  # prompt 07c: the run ids are given on the command line (sys.argv[2:])
+
+
+def main():
+    out_p = Path(sys.argv[1])
+    runs = sys.argv[2:]  # prompt 07c
+    L = ["# levin-phase-floor 07c census agent: files kept on the Mac Studio only (mps026298), not copied to the laptop.",
+         f"# sha256  size_bytes  path. Written by scripts/kept_list_07c.py (sha256 {sha256(Path(__file__))})."]
+    L += ["", "## pickles, files over 2 MB, and the raw worker streams and unit records under state/ (emit.jsonl, units.jsonl) and state/smoke/y8_on_07b_census.json, under var/levin-phase-floor-07c/census/"]
+    n = 0
+    for root, _d, files in sorted(os.walk(WIDER)):
+        for f in sorted(files):
+            p = Path(root) / f
+            if p == out_p.resolve():
+                continue
+            s = p.stat().st_size
+            # prompt 07c: also kept here by judgment, not size: the raw worker streams and unit records of the Y0 and
+            # smoke runs (emit.jsonl, units.jsonl under state/; their verdicts are in out/), and the smoke dry run of the
+            # Y8 scorer against 07b's census (state/smoke/y8_on_07b_census.json)
+            raw = p.relative_to(WIDER).parts[0] == "state" and f in ("emit.jsonl", "units.jsonl")
+            raw |= str(p.relative_to(WIDER)) == "state/smoke/y8_on_07b_census.json"
+            if f.endswith(".pkl") or s > 2 * 1024 * 1024 or raw:
+                L.append(f"{sha256(p)}  {s}  {p.relative_to(WIDER)}")
+                n += 1
+    L.append(f"# {n} files")
+    for run in runs:  # prompt 07c (07b: RUNS)
+        d = MAIN / "var" / "runs" / run
+        L += ["", f"## run directory var/runs/{run}/ (every file)"]
+        tot = cnt = 0
+        for root, _d, files in sorted(os.walk(d)):
+            for f in sorted(files):
+                p = Path(root) / f
+                s = p.stat().st_size
+                L.append(f"{sha256(p)}  {s}  {p.relative_to(d.parent)}")
+                tot += s
+                cnt += 1
+        L.append(f"# {cnt} files, {tot} bytes")
+    out_p.write_text("\n".join(L) + "\n")
+    print(f"wrote {out_p} ({len(L)} lines) sha256 {sha256(out_p)}")
+
+
+if __name__ == "__main__":
+    main()

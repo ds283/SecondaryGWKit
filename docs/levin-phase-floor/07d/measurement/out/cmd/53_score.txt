@@ -1,0 +1,49 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/../../../venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/score_07d.py Eg Ea ET20 ET12 Ep T20
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T12:57:01Z
+# ----
+levin-phase-floor 07d Part A: tables 4 and 5, and the qualification
+written 2026-11-22T12:57:18Z on mps026298.phys.susx.ac.uk
+script score_07d.py sha256 b37808c2a5ad55bd9b28e14403644a9ad186ee49f7faa1af90be44f0473b7d93
+tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07c/measurement/out/tables/scores_07c.json sha256 f2f10ea3fb451669ccbf6de136c67322413f59615330594d5a87ac3beeedb3c5
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/tables/d_e.json sha256 c8269db1a296d2a895eccd0f42e47b1ce33563cf4981324dd7ba2a93fa23a4eb
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/tables/d_t.json sha256 379d2b585b347492bfeb1c9c9c0fb9405b3b80cdad16e19efea708b352d09404
+
+Referenced calls: 425, scored 417.
+
+## Table 4 (honesty), every scored call
+
+| code | converged & honest | converged & dishonest | unconverged |
+|---|---|---|---|
+| tree | 410 | 4 | 3 |
+| Eg | 412 | 4 | 1 |
+| Ea | 412 | 4 | 1 |
+| ET20 | 385 | 0 | 32 |
+| ET12 | 413 | 1 | 3 |
+| Ep | 412 | 4 | 1 |
+| T20 | 373 | 1 | 43 |
+
+### by set
+
+| set | code | honest | dishonest | unconverged |
+|---|---|---|---|---|
+| Ra | tree | 60 | 0 | 0 |
+| Ra | Eg | 60 | 0 | 0 |
+| Ra | Ea | 60 | 0 | 0 |
+| Ra | ET20 | 60 | 0 | 0 |
+| Ra | ET12 | 60 | 0 | 0 |
+| Ra | Ep | 60 | 0 | 0 |
+| Ra | T20 | 59 | 0 | 1 |
+| Rt | tree | 60 | 0 | 0 |
+| Rt | Eg | 60 | 0 | 0 |
+| Rt | Ea | 60 | 0 | 0 |
+| Rt | ET20 | 58 | 0 | 2 |
+| Rt | ET12 | 60 | 0 | 0 |
+| Rt | Ep | 60 | 0 | 0 |
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/tables/scores_07d.json e3e332d1f7bff669841e15b1e2b53f99cd6c1555f911df5c11e2ee1c2016d421
+# ----
+# end 2026-11-22T12:57:21Z
+# exit 0

@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "heartbeat": "2026-11-22T10:06:54+00:00",
+  "host": {
+    "boot": "C58A0F92-923F-471F-B32E-B1B9F5D0A848",
+    "id": "d120d1cf03551e6f"
+  },
+  "pid": 65067,
+  "stage": "leaves-v3 finished: all exit 0",
+  "state": "done",
+  "units_done": 1,
+  "units_total": 1
+}

@@ -1,0 +1,22 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/d_e_table_07d.py
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:28:59Z
+# ----
+levin-phase-floor 07d Part A: D-E, the candidate estimates scored
+written 2026-11-22T10:29:00Z on mps026298.phys.susx.ac.uk
+script d_e_table_07d.py sha256 abe1db3a756a749da62cb89b35c17bedf3a08b97304ddebd9766d58948b343e4
+tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/candidates_07d.json sha256 d73b208e76d77043a05605a9f44de15af31337f34960b6dd629ce92dd2718bee
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/leaves/fill_state.json sha256 266ad8af9284955fc76dcf3d1b86dbc6e4fb11103bec0e8a426b05d56f8d54c4
+input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/selection_leaves_07d.json sha256 c4c01873c2eb874be25ac4d51f3fac6562b0e10b9c6e39fb827d2beb04ba8327
+
+| stratum | drawn | scored | candidate | bounded | understates | undecided | D/true min | median | max | est <= floor | extra evals |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| chase|analytic|1e-7 | 40 | 40 | tree | 40 | 0 | 0 | 6.62 | 96.8 | 1.2e+06 | 36 | 0 |
+qualifies: {'tree': False, 'pairN4': False, 'pairN3': False, 'nest3N4': True, 'tail4N4': False, 'chopN4': False, 'pairtailN4': False, 'pairDecl': True}
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/tables/d_e.json c8269db1a296d2a895eccd0f42e47b1ce33563cf4981324dd7ba2a93fa23a4eb
+# ----
+# end 2026-11-22T10:29:01Z
+# exit 0

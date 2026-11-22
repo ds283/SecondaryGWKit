@@ -1,0 +1,54 @@
+{
+ "header": [
+  "# levin-phase-floor 06g: Filon reading rt-h-1e-8-3-38439-a17 fcc res 1 (tools.filon_reference)",
+  "# written 2026-11-22T12:48:41Z on mps026298.phys.susx.ac.uk",
+  "# script one_reading_07d.py sha256 daf6d5f73484126bd0dc3ad8ca00ec463047930a24fb4d2d229b090fd48c3ea1",
+  "# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-3-38439-a17.pkl sha256 18bfff832f91563fc777f582b7fb80a1edc42830212de56da5bcf9ddf5771c7b",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py sha256 d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be"
+ ],
+ "sample": "rt-h-1e-8-3-38439-a17",
+ "unit": "h-1e-8-3-38439",
+ "index": 17,
+ "rtol": "1e-08",
+ "pickle": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/refs/inputs/rt-h-1e-8-3-38439-a17.pkl",
+ "pickle_sha256": "18bfff832f91563fc777f582b7fb80a1edc42830212de56da5bcf9ddf5771c7b",
+ "tool": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964/tools/filon_reference.py",
+ "tool_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+ "workers": 2,
+ "route_of": "A",
+ "route": "A",
+ "impl": "fcc",
+ "res": 1,
+ "config": {
+  "du": 0.25,
+  "N": 32
+ },
+ "value_hex": "-0x1.044ab5971c727p-37",
+ "value_30": "-7.39793885451675199680186973954e-12",
+ "imag_30": "-6.8968760232867423007462166656e-12",
+ "wall_s": 4.105953791178763,
+ "n_panels": 98,
+ "u_breaks": [
+  -14.192901475744298,
+  -13.742996183952023,
+  -13.29309089215975,
+  -12.843185600367475,
+  -12.3932803085752,
+  -11.943375016782927,
+  -11.493469724990652,
+  -11.043564433198377
+ ],
+ "K_exact": "40699243411385/4194304",
+ "K_hat": 9703455.784651041,
+ "K_lo": 0.0,
+ "C_exact": "0.0",
+ "process_wall_s": 6.3556576250121,
+ "rerun": false,
+ "progress_order": null,
+ "ray_initialized": [
+  false,
+  false
+ ]
+}

@@ -1,0 +1,57 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/x1_capture_07d.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_ra.json /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_ra /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures/captures_ra.json --workers 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:16:01Z
+# ----
+# levin-phase-floor 07d Part A: section 2.1, captured at h, variant None (06c X1 capture)
+# written 2026-11-22T10:16:01Z on mps026298.phys.susx.ac.uk
+# script x1_capture_07d.py sha256 9dfe5bee1369e0d004f8f60a71967f4a57365cc4781e68fc00bf2b62cb993002
+# tree h: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964 HEAD 49ce96429da797efe55f546d65a23ebcd0099f33 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_selection_ra.json sha256 074160a0921f151badc66f5140270380a9cd65268babd6589b040050c4e658b2
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/rows.json sha256 aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417
+C00: pid 68946
+C01: pid 68947
+C02: pid 68948
+C03: pid 68949
+C04: pid 68950
+C05: pid 68951
+C06: pid 69021
+C07: pid 69035
+exit codes {'C04': 0, 'C02': 0, 'C01': 0, 'C05': 0, 'C03': 0, 'C06': 0, 'C00': 0, 'C07': 0}
+captured and matching the census bit for bit: 30 of 30
+   h-1e-7-0-12767 20: matches True; error None; ray_initialized False
+   h-1e-7-0-12851 20: matches True; error None; ray_initialized False
+   h-1e-7-0-12859 20: matches True; error None; ray_initialized False
+   h-1e-7-0-1824 12: matches True; error None; ray_initialized False
+   h-1e-7-0-38350 18: matches True; error None; ray_initialized False
+   h-1e-7-0-38461 16: matches True; error None; ray_initialized False
+   h-1e-7-0-1778 16: matches True; error None; ray_initialized False
+   h-1e-7-0-2098 20: matches True; error None; ray_initialized False
+   h-1e-7-0-34041 11: matches True; error None; ray_initialized False
+   h-1e-8-0-33914 14: matches True; error None; ray_initialized False
+   h-1e-7-1-35261 14: matches True; error None; ray_initialized False
+   h-1e-8-1-38143 19: matches True; error None; ray_initialized False
+   h-1e-7-1-14573 10: matches True; error None; ray_initialized False
+   h-1e-7-1-34528 18: matches True; error None; ray_initialized False
+   h-1e-7-1-34528 16: matches True; error None; ray_initialized False
+   h-1e-7-1-35127 6: matches True; error None; ray_initialized False
+   h-1e-7-1-38741 18: matches True; error None; ray_initialized False
+   h-1e-8-2-34576 11: matches True; error None; ray_initialized False
+   h-1e-7-2-13628 7: matches True; error None; ray_initialized False
+   h-1e-7-2-1577 18: matches True; error None; ray_initialized False
+   h-1e-7-2-1701 17: matches True; error None; ray_initialized False
+   h-1e-7-2-35084 10: matches True; error None; ray_initialized False
+   h-1e-8-2-13626 15: matches True; error None; ray_initialized False
+   h-1e-7-3-13482 7: matches True; error None; ray_initialized False
+   h-1e-7-3-13521 12: matches True; error None; ray_initialized False
+   h-1e-7-3-1227 14: matches True; error None; ray_initialized False
+   h-1e-7-3-35995 21: matches True; error None; ray_initialized False
+   h-1e-7-3-37359 18: matches True; error None; ray_initialized False
+   h-1e-7-3-38240 5: matches True; error None; ray_initialized False
+   h-1e-8-3-1275 8: matches True; error None; ray_initialized False
+wrote /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/captures/captures_ra.json sha256 55c2346fd5391eef5bddaf50ca014c7ae3ee5b4aac9db3dbfd9e5fbbca2fece7
+# ----
+# end 2026-11-22T10:19:47Z
+# exit 0

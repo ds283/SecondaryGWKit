@@ -1,0 +1,70 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/scripts/fill_leaves_07d.py --max-rounds 10
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-49ce964
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-22T10:23:16Z
+# ----
+round 3: 609 leaves in 584 calls, 259 s, nonzero exits {}
+   band_10_12|analytic|1e-7: measured 51 of 68, scored 51
+   band_10_12|analytic|1e-8: measured 51 of 68, scored 51
+   band_12_16|analytic|1e-7: measured 52 of 131, scored 50
+   band_12_16|analytic|1e-8: measured 52 of 131, scored 49
+   band_16_20|analytic|1e-7: measured 50 of 99, scored 48
+   band_16_20|analytic|1e-8: measured 50 of 99, scored 47
+   band_6_8|analytic|1e-7: measured 48 of 75, scored 48
+   band_6_8|analytic|1e-8: measured 48 of 75, scored 48
+   band_8_10|analytic|1e-7: measured 52 of 97, scored 51
+   band_8_10|analytic|1e-8: measured 52 of 97, scored 51
+   chase|analytic|1e-7: measured 51 of 71, scored 51
+   gate_q2|analytic|1e-7: measured 52 of 402, scored 52
+   gate_q3|analytic|1e-7: measured 49 of 166, scored 49
+   gate_q3|analytic|1e-8: measured 49 of 168, scored 49
+   gate_q4|analytic|1e-7: measured 46 of 46, scored 46
+   gate_q4|analytic|1e-8: measured 41 of 41, scored 41
+final:
+   band_10_12|analytic|1e-7: population 68, measured 51, scored 51: filled
+   band_10_12|analytic|1e-8: population 68, measured 51, scored 51: filled
+   band_10_12|group|1e-7: population 213, measured 60, scored 45: filled
+   band_10_12|group|1e-8: population 229, measured 60, scored 46: filled
+   band_12_16|analytic|1e-7: population 131, measured 52, scored 50: filled
+   band_12_16|analytic|1e-8: population 131, measured 52, scored 49: filled
+   band_12_16|group|1e-7: population 549, measured 80, scored 53: filled
+   band_12_16|group|1e-8: population 563, measured 80, scored 47: filled
+   band_16_20|analytic|1e-7: population 99, measured 50, scored 48: filled
+   band_16_20|analytic|1e-8: population 99, measured 50, scored 47: filled
+   band_16_20|group|1e-7: population 530, measured 80, scored 50: filled
+   band_16_20|group|1e-8: population 530, measured 80, scored 48: filled
+   band_6_8|analytic|1e-7: population 75, measured 48, scored 48: filled
+   band_6_8|analytic|1e-8: population 75, measured 48, scored 48: filled
+   band_6_8|group|1e-7: population 197, measured 60, scored 50: filled
+   band_6_8|group|1e-8: population 205, measured 60, scored 50: filled
+   band_8_10|analytic|1e-7: population 97, measured 52, scored 51: filled
+   band_8_10|analytic|1e-8: population 97, measured 52, scored 51: filled
+   band_8_10|group|1e-7: population 209, measured 60, scored 49: filled
+   band_8_10|group|1e-8: population 213, measured 60, scored 50: filled
+   chase|analytic|1e-7: population 71, measured 51, scored 51: filled
+   chase|analytic|1e-8: population 8, measured 8, scored 8: exhausted
+   chase|group|1e-7: population 1622, measured 98, scored 45: filled
+   chase|group|1e-8: population 1624, measured 107, scored 47: filled
+   gate_q1|analytic|1e-7: population 433, measured 43, scored 43: filled
+   gate_q1|analytic|1e-8: population 482, measured 57, scored 57: filled
+   gate_q1|group|1e-7: population 735, measured 118, scored 50: filled
+   gate_q1|group|1e-8: population 1005, measured 80, scored 43: filled
+   gate_q2|analytic|1e-7: population 402, measured 52, scored 52: filled
+   gate_q2|analytic|1e-8: population 457, measured 42, scored 42: filled
+   gate_q2|group|1e-7: population 484, measured 83, scored 40: filled
+   gate_q2|group|1e-8: population 553, measured 131, scored 49: filled
+   gate_q3|analytic|1e-7: population 166, measured 49, scored 49: filled
+   gate_q3|analytic|1e-8: population 168, measured 49, scored 49: filled
+   gate_q3|group|1e-7: population 226, measured 98, scored 42: filled
+   gate_q3|group|1e-8: population 248, measured 94, scored 42: filled
+   gate_q4|analytic|1e-7: population 46, measured 46, scored 46: filled
+   gate_q4|analytic|1e-8: population 41, measured 41, scored 41: filled
+   gate_q4|group|1e-7: population 358, measured 102, scored 45: filled
+   gate_q4|group|1e-8: population 370, measured 98, scored 47: filled
+   window|analytic|1e-7: population 530, measured 60, scored 60: filled
+   window|analytic|1e-8: population 530, measured 60, scored 60: filled
+   window|group|1e-7: population 710, measured 60, scored 42: filled
+   window|group|1e-8: population 841, measured 60, scored 51: filled
+# ----
+# end 2026-11-22T10:27:37Z
+# exit 0

@@ -1,0 +1,8 @@
+{
+ "form": "nest3",
+ "scope": "all",
+ "T_pi": 6,
+ "kappa": 4.0,
+ "basis": "(E-all): as Eg on every Clenshaw-Curtis solve, window pieces, guarded leaves at depth_max and the chase's stopped leaves included. D-E's window and chase strata are its basis there; guarded leaves at the cap: none in 07c's census, so no basis and none to touch.",
+ "name": "Ea"
+}

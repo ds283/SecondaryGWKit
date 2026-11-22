@@ -1,0 +1,107 @@
+{
+ "tree": "h",
+ "name": "C16",
+ "units": [
+  {
+   "uid": "h-1e-8-3-36003",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-36003",
+   "names05": null,
+   "shard": 3,
+   "serial": 36003,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     10,
+     "analytic Y3"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-38473",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-38473",
+   "names05": null,
+   "shard": 3,
+   "serial": 38473,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=3.14e+05/Mpc, r=3.14e+05/Mpc @ z_response=1.5861, z in (5.406e+09, 1.5861), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-38477",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-38477",
+   "names05": null,
+   "shard": 3,
+   "serial": 38477,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     1,
+     "k=1e+05/Mpc, q=3.05e+07/Mpc, r=3.05e+07/Mpc @ z_response=0.69219, z in (5.169e+11, 0.69219), regime Gqr, group G+q+r"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-39138",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-39138",
+   "names05": null,
+   "shard": 3,
+   "serial": 39138,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     0,
+     "k=1e+05/Mpc, q=3.09e+06/Mpc, r=3.09e+06/Mpc @ z_response=0.13184, z in (1.6391e+16, 5.2861e+10), regime G, group G"
+    ]
+   ]
+  },
+  {
+   "uid": "h-1e-8-3-764",
+   "tree": "h",
+   "rtol": "1e-8",
+   "row": "3-764",
+   "names05": null,
+   "shard": 3,
+   "serial": 764,
+   "k_key": "3:1",
+   "budget": 300.0,
+   "scan": false,
+   "w3": false,
+   "capture": [
+    [
+     5,
+     "analytic Y3"
+    ]
+   ]
+  }
+ ],
+ "out_dir": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C16",
+ "emit_fd": null,
+ "emit_file": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/capture_calls/C16/emit.jsonl",
+ "rows_sha256": "aa523d283f1dae26a5127434557ea04ca8217f8c4de058a7d415d736f17f6417",
+ "w2_capture_sha256": null,
+ "variant": null
+}
