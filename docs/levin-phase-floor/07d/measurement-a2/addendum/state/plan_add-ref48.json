@@ -1,0 +1,83 @@
+{
+ "label": "add-ref48",
+ "stages": [
+  {
+   "name": "ref48",
+   "max_parallel": 6,
+   "jobs": [
+    {
+     "name": "ref48_0",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/ref48_add.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/out/ref48",
+      "0",
+      "6"
+     ]
+    },
+    {
+     "name": "ref48_1",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/ref48_add.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/out/ref48",
+      "1",
+      "6"
+     ]
+    },
+    {
+     "name": "ref48_2",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/ref48_add.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/out/ref48",
+      "2",
+      "6"
+     ]
+    },
+    {
+     "name": "ref48_3",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/ref48_add.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/out/ref48",
+      "3",
+      "6"
+     ]
+    },
+    {
+     "name": "ref48_4",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/ref48_add.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/out/ref48",
+      "4",
+      "6"
+     ]
+    },
+    {
+     "name": "ref48_5",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/ref48_add.py",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/out/ref48",
+      "5",
+      "6"
+     ]
+    }
+   ]
+  }
+ ]
+}

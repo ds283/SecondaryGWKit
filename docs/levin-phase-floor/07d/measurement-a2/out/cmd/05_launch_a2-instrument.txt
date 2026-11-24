@@ -1,0 +1,6 @@
+run id      levin-phase-floor-07d-a2-instrument-20261123T022323
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07d-a2-instrument-20261123T022323
+plan        /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/state/plan_a2-instrument.json (1 commands)
+sh pid      53744
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/run_07d.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07d-a2-instrument-20261123T022323 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/state/plan_a2-instrument.json; exit $?
+launcher    pid 53739, exiting without waiting

@@ -1,0 +1,8 @@
+('returned', 'nest3N4') {'bounded': 3252, 'undecided': 2}
+('returned', 'nest93') {'bounded': 3249, 'undecided': 5}
+('returned', 'pair93') {'bounded': 3245, 'undecided': 9}
+('returned', 'tail93') {'bounded': 3249, 'undecided': 5}
+('visited', 'nest3N4') {'bounded': 388}
+('visited', 'nest93') {'bounded': 388}
+('visited', 'pair93') {'bounded': 388}
+('visited', 'tail93') {'bounded': 388}

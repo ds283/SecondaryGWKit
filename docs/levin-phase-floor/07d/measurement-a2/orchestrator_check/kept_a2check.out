@@ -1,0 +1,19 @@
+copyback list entries 37531 match 37531
+kept lists 14 entries 2203 match 2191
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r27-shard0000.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r27-shard0001.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r27-shard0002.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r27-shard0003.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r27.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r28-shard0000.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r28-shard0001.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r28-shard0002.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r28-shard0003.sqlite', 'missing')
+('var/levin-phase-floor-07/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/datastores/levin-phase-floor-07-r28.sqlite', 'missing')
+('var/levin-phase-floor-07b/rehearsal/KEPT_ON_MAC_STUDIO.txt', 'var/levin-phase-floor-07b/rehearsal/out/commands.log', 'differs')
+('var/levin-phase-floor-07c/measurement/KEPT_ON_MAC_STUDIO.txt', 'var/levin-phase-floor-07c/measurement/out/commands.log', 'differs')
+copy handover-A3-v2-lambdacdm.sqlite MATCH
+copy handover-A3-v2-lambdacdm-shard0000.sqlite MATCH
+copy handover-A3-v2-lambdacdm-shard0001.sqlite MATCH
+copy handover-A3-v2-lambdacdm-shard0002.sqlite MATCH
+copy handover-A3-v2-lambdacdm-shard0003.sqlite MATCH

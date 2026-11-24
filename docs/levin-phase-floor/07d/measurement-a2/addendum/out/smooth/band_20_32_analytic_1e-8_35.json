@@ -1,0 +1,58 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07d Part A' addendum: smooth-phase reference on band_20_32|analytic|1e-8#35",
+  "written": "2026-11-24T10:39:30Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/smooth_add.py",
+  "script_sha256": "c0d6369a822a37bc997943ea4028d5e1a4ab444de7bf81c38de3124c82640e0e",
+  "filon_reference_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+  "leaf_record": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/leaves_a2/nb1/d_h-1e-8-2-21661_a7.json"
+ },
+ "id": "band_20_32|analytic|1e-8#35",
+ "route": "A",
+ "n_edges": null,
+ "error": null,
+ "wall_s": 2.0890736669971375,
+ "value_hex": "0x1.500f068f07a64p-47",
+ "value_30": "9.32750248783197406669197676892e-15",
+ "scatter": 2.106290625005542e-29,
+ "fit_noise_1sigma": 0.0,
+ "eps_s": 2.106290625005542e-29,
+ "counts": null,
+ "readings": [
+  {
+   "impl": "qawo",
+   "res": 1,
+   "value_hex": "0x1.500f068f07a5bp-47",
+   "value_30": "9.32750248783195950416396847647e-15",
+   "imag_30": "4.23453522055694540924122259423e-14",
+   "wall_s": 0.07295291700575035
+  },
+  {
+   "impl": "qawo",
+   "res": 2,
+   "value_hex": "0x1.500f068f07a69p-47",
+   "value_30": "9.32750248783198056707021853189e-15",
+   "imag_30": "4.23453522055694707350759536968e-14",
+   "wall_s": 0.15675408400420565
+  },
+  {
+   "impl": "fcc",
+   "res": 1,
+   "value_hex": "0x1.500f068f07a5dp-47",
+   "value_30": "9.32750248783196205070066051983e-15",
+   "imag_30": "4.23453522055694862297633084736e-14",
+   "wall_s": 0.5812827500049025
+  },
+  {
+   "impl": "fcc",
+   "res": 2,
+   "value_hex": "0x1.500f068f07a64p-47",
+   "value_30": "9.32750248783197406669197676892e-15",
+   "imag_30": "4.23453522055694739995779371981e-14",
+   "wall_s": 1.277969500006293
+  }
+ ],
+ "tmap": null,
+ "jitter": null
+}

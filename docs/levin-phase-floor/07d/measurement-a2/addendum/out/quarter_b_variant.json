@@ -1,0 +1,32 @@
+{
+ "sid": "R:a:W2-0-12977-5",
+ "mode": "variant",
+ "quarters": {
+  "RR (cR, b), sixth": {
+   "start": "0x1.4218c03c9c906p+4",
+   "end": "0x1.45b4e8df10b9ep+4",
+   "V_over_pi": 10.25630539412343,
+   "value": "0x1.5757cc0930388p-79",
+   "abserr_direct": 4.0902858694854404e-33,
+   "phase_err": 3.992230593943002e-33,
+   "declared": 4.0902858694854404e-33
+  },
+  "RL (c, cR), fifth": {
+   "start": "0x1.3e7c979a2866fp+4",
+   "end": "0x1.4218c03c9c906p+4",
+   "V_over_pi": 12.852743907021,
+   "value": "-0x1.002ee0ea09b33p-77",
+   "abserr_direct": 3.0005811028535707e-33,
+   "phase_err": 2.944196969957436e-33,
+   "declared": 3.0005811028535707e-33
+  }
+ },
+ "header": [
+  "# levin-phase-floor 07d Part A' addendum: item B.2, the quarters (variant)",
+  "# written 2026-11-24T11:07:43Z on mps026298.phys.susx.ac.uk",
+  "# script quarter_b.py sha256 7b7bda4ff446d647f1724279ed22db40812e9802b5fdb2fb67bbd8b6058cd209",
+  "# tree: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3 HEAD c2c57a36cbad3780986baceb807dcb447975b498 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/replays/V93T12/R_a_W2-0-12977-5.json sha256 d2714eeebaebb0251b44930c699973690cc518d6848f56ac33c795f80626a6de"
+ ]
+}

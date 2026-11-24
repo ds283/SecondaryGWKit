@@ -1,0 +1,35 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/ref48_add.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/out/ref48 5 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-24T10:31:42Z
+# ----
+band_10_12|group|1e-8#3 1024 noise 30.3 s
+band_20_32v|group|1e-7#65 1024 noise 31.8 s
+band_20_32|group|1e-7#92 1024 noise 32.8 s
+band_20_32|group|1e-8#75 1024 noise 30.5 s
+band_20_32v|group|1e-8#86 1024 noise 22.2 s
+band_20_32|group|1e-8#22 1024 noise 22.8 s
+band_8_10|group|1e-7#32 1024 noise 23.3 s
+band_10_12|group|1e-7#18 1024 noise 14.9 s
+band_10_12|group|1e-7#33 1024 noise 14.3 s
+band_10_12|group|1e-8#48 1024 noise 18.2 s
+band_16_20|group|1e-8#32 1024 noise 15.8 s
+band_20_32|group|1e-7#78 1024 noise 15.1 s
+band_20_32|group|1e-8#45 1024 noise 14.3 s
+band_6_8|group|1e-7#39 1024 noise 14.5 s
+band_6_8|group|1e-8#33 1024 noise 14.5 s
+band_8_10|group|1e-7#41 1024 noise 14.4 s
+band_10_12|group|1e-7#52 1024 noise 7.3 s
+band_10_12|group|1e-8#59 1024 noise 7.2 s
+band_16_20|analytic|1e-8#26 1024 noise 5.0 s
+band_20_32|analytic|1e-7#15 1024 noise 4.9 s
+band_20_32|analytic|1e-7#49 1024 noise 5.2 s
+band_20_32|analytic|1e-8#11 1024 noise 5.1 s
+band_20_32|analytic|1e-8#49 1024 noise 5.1 s
+band_20_32|analytic|1e-8#84 1024 noise 5.1 s
+band_6_8|group|1e-7#3 1024 noise 4.9 s
+gate_q2|group|1e-7#19 1024 noise 7.2 s
+# ----
+# end 2026-11-24T10:38:12Z
+# exit 0

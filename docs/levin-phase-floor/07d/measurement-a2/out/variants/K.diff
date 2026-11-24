@@ -1,0 +1,264 @@
+--- tree/levin_quadrature.py
++++ variants/levin_quadrature_a2_K.py
+@@ -293,7 +293,99 @@
+ # up to 8.43x high with |theta'| weighted to one end, 0.47x on a narrow central bump) and not
+ # monotone under bisection, so 6 pi did not mean one thing. The number 6 pi is unchanged by 07a,
+ # and has not been measured ([07-c2-gate-threshold-was-never-measured]).
+-SIX_PI = 6.0 * np.pi
++SIX_PI = 6.0 * np.pi  # Part A' variant K: the gate at 6.0 pi (the tree: 6 pi)
++
++# levin-phase-floor 07d Part A' variant K (scripts/make_variants_a2.py; not production code)
++_VARIANT_A2 = 'K'
++_A2_EST = 'pair93'  # the declaration of CC_{4N-3}'s error (out/tables/t3_cc93.md)
++_A2_KAPPA = 4.0
++_A2_KNOTS_ON = True  # (K) bisect at a supplied knot in a leaf's middle half
++_A2_GATE_KNOTS = None  # (G) None, or the minimum knot count that sends a region to Clenshaw-Curtis
++_A2_KNOTS = None  # set by the harness per call: a sorted numpy array of knots, or None (bisect as the tree)
++_A2_C = {}
++
++
++def _a2_count(key):
++    _A2_C[key] = _A2_C.get(key, 0) + 1
++
++
++def _a2_break(a, b):
++    # Part A' (K): the knot nearest the midpoint if one lies in the span's middle half; else the tree's midpoint
++    if _A2_KNOTS_ON and _A2_KNOTS is not None:
++        lo, hi = min(a, b), max(a, b)
++        q = 0.25 * (hi - lo)
++        i0 = int(np.searchsorted(_A2_KNOTS, lo + q, side="left"))
++        i1 = int(np.searchsorted(_A2_KNOTS, hi - q, side="right"))
++        if i1 > i0:
++            mid = 0.5 * (lo + hi)
++            ks = _A2_KNOTS[i0:i1]
++            k = float(ks[int(np.argmin(np.abs(ks - mid)))])
++            if lo < k < hi:
++                _a2_count("num_a2_knot_breaks")
++                return k
++    return (b + a) / 2.0
++
++
++def _a2_knots_in(a, b):
++    if _A2_KNOTS is None:
++        return None
++    lo, hi = min(a, b), max(a, b)
++    return int(np.searchsorted(_A2_KNOTS, hi, side="left") - np.searchsorted(_A2_KNOTS, lo, side="right"))
++
++
++def _a2_standard_chop(coeffs, tol):
++    # Chebfun's standardChop, as Part A's variants transcribed it (07d Part A's make_variants_07d.py)
++    n = len(coeffs)
++    if tol >= 1:
++        return 1
++    if n < 17:
++        return n
++    b = np.abs(np.asarray(coeffs, dtype=float))
++    m = np.maximum.accumulate(b[::-1])[::-1].copy()
++    if m[0] == 0:
++        return 1
++    env = m / m[0]
++    plateau_point = None
++    j2 = None
++    for j in range(2, n + 1):
++        j2 = int(round(1.25 * j + 5))
++        if j2 > n:
++            return n
++        e1, e2 = env[j - 1], env[j2 - 1]
++        r = 3 * (1 - np.log(e1) / np.log(tol)) if e1 > 0 else 0.0
++        if e1 == 0 or e2 / e1 > r:
++            plateau_point = j - 1
++            break
++    if env[plateau_point - 1] == 0:
++        return plateau_point
++    j3 = int(np.sum(env >= tol ** (7 / 6)))
++    if j3 < j2:
++        j2 = j3 + 1
++        env[j2 - 1] = tol ** (7 / 6)
++    cc = np.log10(env[:j2]) + np.linspace(0, (-1 / 3) * np.log10(tol), j2)
++    return max(int(np.argmin(cc)) + 1 - 1, 1)
++
++
++def _a2_coeffs(g):
++    # Chebyshev coefficients of the interpolant at the n Lobatto points (07d Part A's leafcc_07d.dct1_coeffs)
++    n = len(g)
++    j = np.arange(n)
++    wts = np.ones(n)
++    wts[0] = wts[-1] = 0.5
++    gj = np.asarray(g, dtype=float)[::-1]
++    ck = np.array([(2.0 / (n - 1)) * np.sum(wts * gj * np.cos(np.pi * j * k / (n - 1))) for k in range(n)])
++    ck[0] *= 0.5
++    ck[-1] *= 0.5
++    return ck
++
++
++def _a2_s_own(g, w):
++    # s_own as 07d Part A defined it: the plateau's rms (else the last 8 coefficients'), x sqrt((n - 1)/2) sqrt(sum w^2)
++    ck = _a2_coeffs(g)
++    n = len(ck)
++    cut = _a2_standard_chop(ck, 2.0 ** -52)
++    tail = ck[cut:] if cut < n else ck[-8:]
++    return float(np.sqrt(np.mean(tail * tail)) * np.sqrt((n - 1) / 2.0)) * float(np.sqrt(np.sum(w * w))), ck, cut
+ 
+ # Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every Levin region's
+ # estimate (a Clenshaw-Curtis fallback region carries its own floor, _cc_roundoff_floor(), since
+@@ -2094,7 +2186,7 @@
+ 
+     @property
+     def break_point(self) -> float:
+-        return (self.end + self.start) / 2.0
++        return _a2_break(self.start, self.end)  # Part A' (K); the tree: (self.end + self.start) / 2.0
+ 
+     @property
+     def error(self) -> float:
+@@ -3052,7 +3144,15 @@
+             vectorize_cache=vectorize_cache,
+         )
+ 
+-    if phase_span < SIX_PI:
++    if 6.0 * np.pi <= phase_span < SIX_PI:  # Part A': a route the tree would not take
++        _a2_count("num_a2_route_changed")
++    _a2_cc = phase_span < SIX_PI
++    if not _a2_cc and _A2_GATE_KNOTS is not None:  # Part A' (G): a region holding enough knots goes to CC
++        _kn = _a2_knots_in(x_span[0], x_span[1])
++        if _kn is not None and _kn >= _A2_GATE_KNOTS:
++            _a2_count("num_a2_gate_knots")
++            _a2_cc = True
++    if _a2_cc:  # Part A' (the tree: phase_span < SIX_PI)
+         return _adaptive_levin_subregion_cc(
+             x_span,
+             f,
+@@ -3544,6 +3644,91 @@
+     weight_sum = float(np.sum(w_fine))
+     integrand_mean = value_fine / weight_sum if weight_sum != 0.0 else 0.0
+     resasc = float(np.sum(np.fabs(w_fine) * np.fabs(integrand_fine - integrand_mean)))
++
++    # Part A' (V93): CC_{4N-3} returned, with its own floor, node term, declared term and resasc on the 93-point grid,
++    # and the declaration _A2_EST with its noise term added to the floors too (07d Part A's deviation 9)
++    _a2_count("num_a2_cc93")
++    o93_ = 2 * fine_order - 1
++    grid93_, D93_ = chebyshev_matrices(x_span, o93_)
++    if np.array_equal(grid93_[::2], fine_grid):
++        odd_ = grid93_[1::2]
++        f_odd_ = np.vstack([_sample_vectorized(func, odd_, vectorize_cache, ("f", id(func))) for func in f])
++        ba_odd_ = [BasisData.eval_basis_and_arguments(x) for x in odd_]
++        f93_ = np.empty((f_fine.shape[0], grid93_.shape[0]))
++        f93_[:, ::2] = f_fine
++        f93_[:, 1::2] = f_odd_
++        b93_ = np.empty((basis_fine.shape[0], grid93_.shape[0]))
++        b93_[:, ::2] = basis_fine
++        b93_[:, 1::2] = np.array([v for v, _ in ba_odd_]).T
++        a93_ = np.empty((arguments_fine.shape[0], grid93_.shape[0]))
++        a93_[:, ::2] = arguments_fine
++        a93_[:, 1::2] = np.array([v for _, v in ba_odd_], dtype=float).T
++    else:
++        _a2_count("num_a2_resampled")
++        f93_ = np.vstack([_sample_vectorized(func, grid93_, vectorize_cache, ("f", id(func))) for func in f])
++        ba_ = [BasisData.eval_basis_and_arguments(x) for x in grid93_]
++        b93_ = np.array([v for v, _ in ba_]).T
++        a93_ = np.array([v for _, v in ba_], dtype=float).T
++    g93_ = np.sum(f93_ * b93_, axis=0)
++    w93_ = _cc_weights(x_span, o93_)
++    value93_ = float(np.dot(w93_, g93_))
++    fp93_ = np.vstack([np.matmul(D93_, row) for row in f93_])
++    fpp93_ = np.vstack([np.matmul(D93_, row) for row in fp93_])
++    thp93_, eta93_ = BasisData.theta_prime_on_fine_grid(grid93_, D93_, theta_prime_fine, a93_, vectorize_cache)
++    thpp93_ = np.matmul(D93_, thp93_)
++    disp93_, dispabs93_ = _chebyshev_node_displacements(x_span, o93_)
++    E93_, Rg93_, R293_, Rc93_ = _cc_node_term_parts(w93_, disp93_, dispabs93_, f93_, fp93_, fpp93_, b93_,
++                                                    BasisData.basis_derivative(b93_), a93_, thp93_, thpp93_, eta93_)
++    nb93_ = Rg93_ + R293_ + Rc93_
++    r93_ = _cc_roundoff_floor(w93_, f93_, b93_, a93_, abs(E93_) + nb93_)
++    r93ln_ = _cc_roundoff_floor(w93_, f93_, b93_, a93_, nb93_)
++    fscale93_ = float(np.max(np.sqrt(np.sum(f93_ * f93_, axis=0))))
++    decl93_ = _declared_endpoint_phase_err(BasisData, x_span[0], x_span[1], 0.5 * fscale93_ * width, 0.5 * fscale93_ * width)
++    mean93_ = value93_ / float(np.sum(w93_)) if float(np.sum(w93_)) != 0.0 else 0.0
++    resasc93_ = float(np.sum(np.fabs(w93_) * np.fabs(g93_ - mean93_)))
++    s93_, ck93_, cut93_ = _a2_s_own(g93_, w93_)
++    if _A2_EST == "nest3N4":
++        est_ = float(np.fabs(value93_ - value_fine))
++        noise_ = 4.0 * _a2_s_own(integrand_fine, w_fine)[0]
++    elif _A2_EST == "nest93":
++        est_ = float(np.fabs(value93_ - value_fine))
++        noise_ = _A2_KAPPA * s93_
++    elif _A2_EST == "chop93":
++        if cut93_ < len(ck93_):
++            est_ = 0.5 * width * float(np.sum(np.abs(ck93_[max(cut93_ - 4, 0):cut93_])))
++        else:
++            est_ = 0.5 * width * float(np.sum(np.abs(ck93_[-4:])))
++        noise_ = _A2_KAPPA * s93_
++    elif _A2_EST == "tail93":
++        est_ = 0.5 * width * float(np.sum(np.abs(ck93_[-4:])))
++        noise_ = _A2_KAPPA * s93_
++    elif _A2_EST == "pair93":
++        o185_ = 2 * o93_ - 1
++        grid185_, _ = chebyshev_matrices(x_span, o185_)
++        if np.array_equal(grid185_[::2], grid93_):
++            odd2_ = grid185_[1::2]
++            f2_ = np.vstack([_sample_vectorized(func, odd2_, vectorize_cache, ("f", id(func))) for func in f])
++            b2_ = np.array([BasisData.eval_basis_and_arguments(x)[0] for x in odd2_]).T
++            g185_ = np.empty(grid185_.shape[0])
++            g185_[::2] = g93_
++            g185_[1::2] = np.sum(f2_ * b2_, axis=0)
++        else:
++            _a2_count("num_a2_resampled")
++            f2_ = np.vstack([_sample_vectorized(func, grid185_, vectorize_cache, ("f", id(func))) for func in f])
++            b2_ = np.array([BasisData.eval_basis_and_arguments(x)[0] for x in grid185_]).T
++            g185_ = np.sum(f2_ * b2_, axis=0)
++        est_ = float(np.fabs(float(np.dot(_cc_weights(x_span, o185_), g185_)) - value93_))
++        noise_ = _A2_KAPPA * s93_
++    else:
++        raise RuntimeError("Part A' variant: unknown _A2_EST")
++    value_fine = value93_
++    abserr_direct = est_ + noise_
++    round_off_err = r93_ + noise_
++    round_off_err_less_node = r93ln_ + noise_
++    declared_err = decl93_
++    E = E93_
++    node_bound = nb93_
++    resasc = resasc93_
+ 
+     return {
+         "value": value_fine,
+@@ -4747,7 +4932,7 @@
+             if halves is not None:
+                 dataL, dataR = halves
+             else:
+-                c = (b + a) / 2.0
++                c = _a2_break(a, b)  # Part A' (K); the tree: (b + a) / 2.0
+                 dataL = _solve((a, c), "Levin left-comparison region")
+                 dataR = _solve((c, b), "Levin right-comparison region")
+ 
+@@ -5012,8 +5197,8 @@
+         a = leaf.start
+         b = leaf.end
+         c = leaf.break_point
+-        cL = (c + a) / 2.0
+-        cR = (b + c) / 2.0
++        cL = _a2_break(a, c)  # Part A' (K); the tree: (c + a) / 2.0
++        cR = _a2_break(c, b)  # Part A' (K); the tree: (b + c) / 2.0
+         forced = leaf.forced_direct
+         LL = _solve((a, cL), "trust check: left half of left half", force_direct=forced)
+         LR = _solve(
+@@ -6179,7 +6364,7 @@
+         json.dump(payload, handle, indent=4, sort_keys=True)
+ 
+ 
+-def adaptive_levin_sincos(
++def _adaptive_levin_sincos_tree_a2(
+     x_span: Tuple[float, float],
+     f,
+     theta: dict,
+@@ -6457,3 +6642,13 @@
+         emit_diagnostics=emit_diagnostics,
+         diagnostics_path=diagnostics_path,
+     )
++
++
++
++def adaptive_levin_sincos(*args, **kwargs):
++    # Part A' variant: the tree's function, with this variant's counts (num_a2_*) added to its result
++    _A2_C.clear()
++    result = _adaptive_levin_sincos_tree_a2(*args, **kwargs)
++    for k, v in _A2_C.items():
++        result[k] = v
++    return result

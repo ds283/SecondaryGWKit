@@ -1,0 +1,26 @@
+{
+ "n": 3642,
+ "value_equal": 3642,
+ "verdicts": {
+  "bounded": 3636,
+  "undecided": 6
+ },
+ "verdicts_table3": {
+  "bounded": 3633,
+  "undecided": 9
+ },
+ "verdict_changes": {
+  "undecided->bounded": 3
+ },
+ "understates_ids": [],
+ "D_over_table3": {
+  "min": 0.5734995977652706,
+  "median": 1.0,
+  "max": 1.5227490369020535
+ },
+ "floor93_over_floor47": {
+  "min": 1.00167564958608,
+  "median": 4.64700974613964,
+  "max": 15275532701001.12
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "label": "a2-instrument",
+ "results": [
+  {
+   "name": "replay_I6",
+   "exit": 0,
+   "wall_s": 297.28699684143066
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-23T02:28:21Z"
+}

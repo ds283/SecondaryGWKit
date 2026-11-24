@@ -1,0 +1,14 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/dissect_b.py measure 1 6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-24T10:51:07Z
+# ----
+1 ('0x1.d34db960fd311p+3', '0x1.d51bcdb23745cp+3') V/pi 701 2048
+7 ('0x1.3ae06ef7b43d8p+4', '0x1.3bc779205147ep+4') V/pi 4.37 1024
+13 ('0x1.3cae8348ee524p+4', '0x1.3d958d718b5cap+4') V/pi 3.91 1024
+19 ('0x1.43e6d48dd6a52p+4', '0x1.45b4e8df10b9ep+4') V/pi 4.84 1024
+25 ('0x1.4951118184e35p+4', '0x1.4ced3a23f90ccp+4') V/pi 6.53 1024
+# ----
+# end 2026-11-24T10:57:39Z
+# exit 0

@@ -1,0 +1,27 @@
+== 2b routes
+band_10_12|group|1e-7#0 V/pi own 10.861 record 10.861 subs V/pi [5.5, 5.36, 2.77, 2.73, 2.7, 2.66]
+   T=6pi mine own levin subs ['cc', 'cc', 'cc', 'cc', 'cc', 'cc'] | record [('cc47', 'levin', ['cc', 'cc', 'cc', 'cc', 'cc', 'cc']), ('cc93', 'levin', ['cc', 'cc', 'cc', 'cc', 'cc', 'cc'])] -> AGREE
+   T=12pi mine own cc subs ['cc', 'cc', 'cc', 'cc', 'cc', 'cc'] | record no check (V<T: the leaf itself goes to CC) -> AGREE
+band_12_16|group|1e-7#0 V/pi own 13.057 record 13.057 subs V/pi [6.7, 6.35, 3.4, 3.31, 3.22, 3.13]
+   T=6pi mine own levin subs ['levin', 'levin', 'cc', 'cc', 'cc', 'cc'] | record [('cc47', 'levin', ['levin', 'levin', 'cc', 'cc', 'cc', 'cc']), ('cc93', 'levin', ['levin', 'levin', 'cc', 'cc', 'cc', 'cc'])] -> AGREE
+   T=12pi mine own levin subs ['cc', 'cc', 'cc', 'cc', 'cc', 'cc'] | record [('cc47', 'levin', ['cc', 'cc', 'cc', 'cc', 'cc', 'cc']), ('cc93', 'levin', ['cc', 'cc', 'cc', 'cc', 'cc', 'cc'])] -> AGREE
+== 4b s_own93
+band_10_12|group|1e-7#0: cut 93, mine s_own93 2.64899e-37 record 2.64258e-37 ratio 1.0024; CC93 mine==record True
+band_10_12|analytic|1e-7#0: cut 61, mine s_own93 4.20263e-25 record 6.24068e-25 ratio 0.6734; CC93 mine==record True
+band_12_16|analytic|1e-7#0: cut 93, mine s_own93 1.16963e-26 record 3.27883e-26 ratio 0.3567; CC93 mine==record True
+== 5 knots
+band_10_12|group|1e-7#0 mine {'phase': 2, 'G': 2, 'node': 2, 'mid': 3, 'break': 0, 'all': 5} record {'phase': 2, 'G': 2, 'node': 2, 'mid': 3, 'break': 0, 'all': 5} record n_knots 5
+   phase==G==node sets: True
+   mid knot 23.13627536875968: |f0(x+u)-f0(x-u)|/|f0| at 1 ulp = 2.43e-15; record fit jump/|f0| 1.87e-16
+   mid knot 23.13627536875968: |f0(x+u)-f0(x-u)|/|f0| at 64 ulp = 2.11e-13; record fit jump/|f0| 1.87e-16
+band_20_32|group|1e-8#50 mine {'phase': 1, 'G': 1, 'node': 1, 'mid': 2, 'break': 0, 'all': 3} record {'phase': 1, 'G': 1, 'node': 1, 'mid': 2, 'break': 0, 'all': 3} record n_knots 3
+   phase==G==node sets: True
+   mid knot 23.85026783074349: |f0(x+u)-f0(x-u)|/|f0| at 1 ulp = 3.83e-15; record fit jump/|f0| 5.04e-15
+   mid knot 23.85026783074349: |f0(x+u)-f0(x-u)|/|f0| at 64 ulp = 4e-15; record fit jump/|f0| 5.04e-15
+== 5c K split points
+knots mine 3479 supplied 1627
+leaves 83 splits re-derived {'knot': 0, 'mid': 0} problems [('split not a leaf edge', 4.8909462405271835, 23.53933562955308, 14.211370266402652)] 1
+== 6 cost counters
+band_10_12|group|1e-7#0: CC solve (force_direct): f-sample points per component 47
+band_10_12|group|1e-7#0: one Levin solve (gate off): f-sample points per component 24
+record points: {'cc47': 47, 'cc93': 93, 'cc185': 185, 'levin_solve': 24}

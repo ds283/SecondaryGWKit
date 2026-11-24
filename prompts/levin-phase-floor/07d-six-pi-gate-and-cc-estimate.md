@@ -14,6 +14,10 @@
   `[07c-chase-stop-acts-on-unreferenced-analytic-calls]` go in its sample, and
   `[07c-stopped-leaf-declaration-overstates]` is left to 08. The user: *"Yes, write 07d on that
   scope"*.
+- **Amended 2026-11-22 (§9.1)** at Part A's stop: a second measurement, Part A′, first.
+- **Amended 2026-11-24 (§9.4)** at Part A′'s stop: the fix is variant V93T10, ${\rm CC}_{93}$
+  returned with $|{\rm CC}_{185} - {\rm CC}_{93}|$ plus a noise term and the gate at $10\pi$. §1 and §3
+  are written. The user: *"Go with V93T10, and put the blind spot in 08"*.
 
 **Where it runs:** in three parts, as 07b and 07c did.
 - **Part A, §2, the measurement:** on the Mac Studio, Ray-free, with no lock, in a worktree at the
@@ -32,8 +36,8 @@
   under the lock, against 07c's R32. **§6 is the census,** Ray-free, on 06's certified scratch copy of
   A3 v2, with 07c's census as the "before". **This census is 08's "before".**
 
-The records of Parts A and C are committed on the laptop afterwards. Part A's go in with §9's
-amendment, and Part C's in 07d's records commit.
+The records of Parts A, A′ and C are committed on the laptop afterwards. Part A's and Part A′'s go in
+with §9's amendments, and Part C's in 07d's records commit.
 
 **Closes, in its records commit, on the user's word:**
 - **`[06d-cc-nested-estimate-measures-the-coarse-rule]`**, if:
@@ -256,6 +260,119 @@ for, scored at 07c's code and under every variant.
    leaves whose declaration the noise term or the new estimate set.
 6. **Docstrings and comments** that describe the gate, the fallback's estimate or its floor, rewritten
    to say what is now done and why. The agent lists each with its line.
+
+**As amended at Part A′'s stop (§9.4), the fix is variant V93T10.** The user: *"Go with V93T10, and
+put the blind spot in 08"*. Every change is in `AdaptiveLevin/levin_quadrature.py`; no integrand
+provider changes. The reference implementation is Part A′'s variant,
+`docs/levin-phase-floor/07d/measurement-a2/scripts/variants/levin_quadrature_a2_V93T10.py` (SHA-256
+`f85976fc…`), with its diff against the tree, `out/variants/V93T10.diff` (`a2cb1c85…`). Every line
+the diff adds is marked `Part A'`. The names below replace the variant's, and its module-level
+counter `_A2_C` is replaced by counts carried in the result dicts. The variant's knot machinery
+(`_a2_break`, `_a2_knots_in`, `_A2_KNOTS*`, `_A2_GATE_KNOTS`) is inert in V93T10 and is not carried.
+Nor is its wrapper of `adaptive_levin_sincos`: the counts are added in `_adaptive_levin`'s result, as
+07c's were, and `adaptive_levin_sincos`'s body is unchanged.
+
+### 1.1 The fallback: ${\rm CC}_{4N-3}$ returned, with a nested estimate and a noise term
+
+In `_adaptive_levin_subregion_cc`, with $N$ = `chebyshev_order` ($2N-1 = 47$, $4N-3 = 93$ and
+$8N-7 = 185$ at production's $N = 24$):
+- **The samples.** The integrand is sampled on the $(8N-7)$-point Lobatto grid of the span, nested: the
+  $(2N-1)$-point samples are reused for the $(4N-3)$-point rule, and those for the $(8N-7)$-point rule,
+  as the variant does by `grid[::2]`. A span on which the grids do not nest is resampled and counted
+  (the variant's `num_a2_resampled`, 0 in all of Part A′'s replays). **Cost:** $8N-7$ evaluations a
+  solve, against $2N-1$ at the tree.
+- **The value** is ${\rm CC}_{4N-3}$.
+- **The noise term** is $\kappa\,s_{\rm own}$, with $s_{\rm own} = \sigma_{\rm own}\sqrt{(n-1)/2}\,
+  \sqrt{\sum_j w_j^2}$, $n = 4N-3$ and $w$ the ${\rm CC}_{4N-3}$ weights. $\sigma_{\rm own}$ is the rms
+  of the $(4N-3)$-point interpolant's Chebyshev coefficients from the cut that Chebfun's `standardChop`
+  finds at tolerance $2^{-52}$, or of its last 8 coefficients if it finds none. It is the variant's
+  `_a2_s_own`, `_a2_coeffs` and `_a2_standard_chop`, transcribed from 07d Part A's.
+- **The estimate** is $|{\rm CC}_{8N-7} - {\rm CC}_{4N-3}|$ (pair93). `abserr_direct` is the estimate
+  plus the noise term.
+- **The floors.** `round_off_err` and `round_off_err_less_node` are `_cc_roundoff_floor` on the
+  $(4N-3)$-point grid, each plus the noise term. Adding it to the estimate alone understates on 4 of
+  Part A's scored leaves (Part A's deviation 9), so it goes on both.
+- **On the $(4N-3)$-point grid as well:** the node term ($E$ and the node bound),
+  `_declared_endpoint_phase_err`'s term and `resasc`.
+- So the leaf declares $\max(|{\rm CC}_{8N-7} - {\rm CC}_{4N-3}|,\ \text{floor}_{4N-3}) +
+  \kappa s_{\rm own}$, with the declared phase term as before. ${\rm CC}_N$ and ${\rm CC}_{2N-1}$
+  enter no value and no error.
+- **Through every caller:** gate leaves, window pieces and guarded leaves at the cap (`force_direct`,
+  through `_oriented_cc`, whose reversal of the span is unchanged), and every Clenshaw–Curtis
+  sub-solve of a trust check.
+
+**The code reproduces V93T10's outputs bit for bit** (§9.4.5, Z8). A change that would alter any
+output relative to V93T10's replays is a stop.
+
+### 1.2 The threshold and the constants
+
+Each is a module constant with a comment stating its basis, its margin and where the basis does not
+reach (§9.4.3).
+- **`SIX_PI` becomes `CC_GATE_PHASE_VARIATION = 10.0 * np.pi`.** Its one reader in code is the gate in
+  `_adaptive_levin_subregion_impl`. Rule A reads no threshold since 07a (§9.1 item 7).
+  - **The comments that name it** are at lines 161, 271, 287–296, 542, 2622, 3033, 3368, 3667,
+    3806–3808, 4327, 6264 and 6435 of the tree (`d141a80b…`). One that says what 6π did at the time
+    (07's Rule A, the 07a variation estimate, the order-sweep measurement at 271) keeps "6π" as the
+    number then in force. One that describes the gate now names the new constant.
+  - **The tests that name it:** `test_levin_phase_variation.py` lines 169, 171, 202 and 203, and the
+    comments of `test_levin_quadrature.py` at lines 111, 305, 314 and 747. The agent reads each and
+    says whether it tests the gate (it then reads the new constant) or 07a's variation estimate at
+    the number 6π (it then keeps $6\pi$ as a literal, with a comment saying why). Each is listed.
+- **`_CC_OWN_NOISE_KAPPA = 4.0`**, the variant's `_A2_KAPPA`.
+- **`_CC_STANDARD_CHOP_TOL = 2.0 ** -52`** and **`_CC_OWN_NOISE_TAIL_FALLBACK = 8`**, the variant's
+  literals.
+- **`_CC_GATE_FORMER_PHASE_VARIATION = 6.0 * np.pi`**, read only by §1.4's route-change count. It is
+  commented as such.
+
+### 1.3 What it does to `converged` and to the declarations
+
+The tree's rule stands: a call is converged only if its budget is met, no returned leaf is untrusted,
+and no guarded leaf is at the depth cap. The Levin route's declarations, the trust test, the rate
+rules, the chase stop and its constants, the windows and their stop rule, and
+`_LEVIN_DIRECT_SOLVE_PHASE_SPAN` are unchanged (§0.6). What moves, on Part A′'s 4,220 replays
+(`out/tables/t7_scores.md`):
+- **The round-off exit** compares a leaf's residual with its new floor, which carries the noise term.
+- **The window's count:** `_cc_leaf_unresolved` reads the new `abserr` and the $(4N-3)$-point
+  `resasc`. 208 calls have different phase-limited window leaves under every V93 variant, V93 at $6\pi$
+  included.
+- **The chase stop's stopped leaves** declare as 07c §1.1 says, from the new Clenshaw–Curtis
+  declarations:
+  - stops fall from 1,644 to 1,546;
+  - stopped leaves from 22,822 to 21,192;
+  - the sum of their declarations from $4.16\times10^{-19}$ to $9.75\times10^{-21}$.
+
+  The stopped leaf's declaration is `[07c-stopped-leaf-declaration-overstates]`'s, and 08's.
+- **Floor-limited leaves** are limited by the new floor.
+- **`converged`:** none lost and 7 gained, so 9 calls unconverged become 2.
+
+### 1.4 Diagnostics
+
+The result dict gains three counts over the whole run of the call:
+- **`num_cc_solves`:** every Clenshaw–Curtis solve, by any caller (§1.1). This is the variant's
+  `num_a2_cc93`.
+- **`num_cc_gate_route_changes`:** solves sent to Clenshaw–Curtis by the gate with
+  $6\pi \le V <$ `CC_GATE_PHASE_VARIATION`, which the tree would have sent to the Levin solve. This is
+  the variant's `num_a2_route_changed`.
+- **`num_cc_noise_set`:** Clenshaw–Curtis solves whose $\kappa s_{\rm own}$ exceeds
+  $\max(|{\rm CC}_{8N-7} - {\rm CC}_{4N-3}|, \text{floor}_{4N-3})$. It is not in the variant, and it
+  changes no value.
+
+**The fix acts in a call iff `num_cc_solves` is positive.** On Part A′'s 4,220 replays, exactly the
+3,625 calls with a Clenshaw–Curtis solve differ from the tree. The 595 without one are bit-identical.
+
+### 1.5 Docstrings and comments
+
+Rewritten to say what is now done and why, each listed by the agent with its line:
+- `SIX_PI`'s comment block, as `CC_GATE_PHASE_VARIATION`'s, with §9.4.3's basis;
+- the gate's comment in `_adaptive_levin_subregion_impl` (line 3033: "SIX_PI is unchanged, and
+  unmeasured");
+- `_adaptive_levin_subregion_cc`'s docstring and its node-reuse comment;
+- `_oriented_cc`'s docstring where it says "the nested Clenshaw-Curtis pair";
+- the region record's comment at line 1554 ("the nested-pair estimate $|{\rm CC}_{2N-1}-{\rm CC}_N|$");
+- `_DQK21_SATURATION_FACTOR`'s comment (line 742) and the comments at lines 1628 and 3543, on what
+  `_cc_leaf_unresolved` reads;
+- `_adaptive_levin`'s and `adaptive_levin_sincos`'s docstrings, on the three new counts;
+- the module docstring's account of the fallback.
 
 ## 2. The measurement — Part A, on the Mac Studio, a planned stop
 
@@ -512,6 +629,56 @@ Written with §1 at §2's stop (§9). Whatever the fix, they include:
 
 **If an acceptance test cannot pass without a change outside §1 as amended,** the agent stops and asks
 (§8).
+
+**As amended for V93T10 (§9.4).** In `AdaptiveLevin/tests/`, in a module the agent names. Item 2's
+noise term reads no declared quantity: it is read from the leaf's own samples, so (b) replaces it.
+- **(a) The estimate, directly (item 1),** on `_adaptive_levin_subregion_cc`, on constructed
+  integrands with a closed-form or independently computed integral, at production's $N = 24$ and at one
+  other order:
+  - smooth;
+  - with a derivative jump inside the span;
+  - with a deterministic pseudo-noise of stated size $\sigma$ added to the samples, the answer's error
+    from it bounded and stated.
+
+  On each, the value equals ${\rm CC}_{4N-3}$ computed independently in the test, and the declaration
+  $\max(\text{abserr\_direct},\ \text{round\_off\_err})$ is at or above the true error.
+- **(b) The noise term.**
+  - On a polynomial integrand that ${\rm CC}_{4N-3}$ integrates exactly, $\kappa s_{\rm own}$ is at
+    the rounding level and moves no declaration by more than that.
+  - With the pseudo-noise of (a), $s_{\rm own}/(\sigma\sqrt{\sum w_j^2})$ lies in a band the agent
+    states with its basis. Part A′'s $\sigma_{\rm own,93}/\hat\sigma$ has 5th percentile 0.838 and median
+    1.01 on group leaves.
+  - The noise term is in `abserr_direct`, `round_off_err` and `round_off_err_less_node`, each by
+    exactly $\kappa s_{\rm own}$.
+- **(c) The threshold (item 3).** Regions with $V$ just below and just above
+  `CC_GATE_PHASE_VARIATION` go to Clenshaw–Curtis and to the Levin solve. One with
+  $6\pi \le V < 10\pi$ is counted in `num_cc_gate_route_changes`; one below $6\pi$ is not.
+- **(d) A call the fix must not touch (item 4):** no Clenshaw–Curtis solve anywhere, including every
+  trust check's quarters (so every checked leaf has $V \ge 40\pi$), no window and no guard.
+  Bit-identical at the parent and the commit, with `num_cc_solves` 0.
+- **(e) The window's count.** For a window piece, `_cc_leaf_unresolved` reads the `abserr` and the
+  $(4N-3)$-point `resasc` that the solve returned.
+- **(f) The counts.** On a call with Clenshaw–Curtis solves, `num_cc_solves` equals the number of
+  calls to `_adaptive_levin_subregion_cc`, counted by the test through a wrapper. `num_cc_noise_set`
+  counts as §1.4 defines it.
+
+**Breakages,** each recorded with the test that catches it, then reverted:
+- **(i)** the noise term removed ($\kappa = 0$): (a)'s pseudo-noise case or (b) must fail;
+- **(ii)** the noise term added to `abserr_direct` only, not to the floors: (b) must fail;
+- **(iii)** the pair restored as the estimate, $|{\rm CC}_{4N-3} - {\rm CC}_{2N-1}|$: (a)'s jump case
+  must fail;
+- **(iv)** ${\rm CC}_{2N-1}$ returned in place of ${\rm CC}_{4N-3}$: (a) must fail;
+- **(v)** the threshold set back to $6\pi$: (c) must fail;
+- **(vi)** the window's count fed the old estimate and the $(2N-1)$-point `resasc`: (e) must fail.
+
+**Existing assertions.** The fix acts on every Clenshaw–Curtis solve, so many existing tests' numbers
+move. Each changed assertion is listed with why. A test that goes from converged to unconverged, or
+back, is listed with its honesty at both codes against the test's own expected answer; it is
+reported, not a stop.
+
+**The LiouvilleGreen draws (item 7)** are 07c's harness, copied to
+`docs/levin-phase-floor/07d/code/lg_draws_07d.py`, which records the three counts. Every call with
+`num_cc_solves` 0 is bit-identical at the parent and the commit.
 
 ## 4. Records of the code (Part B)
 
@@ -845,3 +1012,229 @@ orchestrator writes §1, §3 and §9.4.
 **Stop conditions,** beside §8's:
 - the reproduction of `_check_leaf` failing its check against the tree;
 - more than a tenth of a stratum's leaves left unsettled by v4.
+
+### 9.4 At Part A′'s stop, 2026-11-24: the fix is V93T10
+
+*Written by the orchestrator on 2026-11-24, at Part A′'s stop and after its addendum, from the user's
+words, quoted.* Part A′'s records, with the addendum's, are in
+`docs/levin-phase-floor/07d/measurement-a2/`. The tables of record are `out/tables/` (t1–t7,
+`kappa93.md`, `understate_ref2.md`) and the addendum's `out/tables_add.md`, `tables_add_supp.md`,
+`dissect_b.md` and `edge_vp_add.json`. What stays on the Mac Studio is listed by SHA-256: every
+variant's replays in `docs/levin-phase-floor/07d/measurement-a2/KEPT_REPLAYS_ON_MAC_STUDIO/`, and the
+files over 2 MB in its `KEPT_ON_MAC_STUDIO.txt`. The four review calls' V93T10 replay records are copied
+(§9.4.5). The orchestrator's checks are in its `orchestrator_check/`.
+
+#### 9.4.1 The rulings
+
+- **At Part A′'s stop (2026-11-23).** V93T8 and V93T10 qualify under §9.3; V93, V93tail, V93T12, K,
+  KT and G do not. The user: *"I can't see a reason to believe that the `8pi`, `10pi` and `12pi`
+  windows will be always safe, while `6pi`, `16pi` and `20pi` have understated errors. I think probably
+  this is just an artefact of which references we are looking at. Unless you can propose a reason to
+  think otherwise, my guess is that we have to accept a small number of understated errors, but
+  hopefully these don't impact the science outputs too significantly. Can you propose a rationale for
+  `V93T8` vs `V93T10`? It seems unnecessary to include both. My guess is `V93T10` is everything is
+  otherwise equal, since there seems some merit in sending slightly larger regions to CC. For now I'm
+  happy to do a short run to settle the near-edge leaves."* Part A′'s agent ran the addendum: (A) the
+  near-edge leaves against a 48-point Gauss–Legendre reference and a smooth-phase reference, and (B)
+  the dissection of V93T12's new dishonest call.
+- **After the addendum.** Asked *"does that now mean `12pi` is an even better choice than `10pi`?"*,
+  the orchestrator answered no (§9.4.3). The user: *"Go with V93T10, and put the blind spot in 08"*.
+
+#### 9.4.2 What Part A′ measured
+
+**Checks.** The orchestrator's §A′.3 checks (`orchestrator_check/`) agree with the agent:
+- on four leaves, its own 32-point Gauss–Legendre reference against v4 and the agent's 48-point one;
+- the D-T reproduction at $8\pi$ against table 4;
+- the ${\rm CC}_{93}$ candidates' understatement counts;
+- the knot counts and (K)'s bisection points;
+- table 7, re-scored by its own reader.
+
+Every Part A′ run exited 0.
+
+**The references.** v4 understates its own error where $\hat\sigma$ is large: it settles one doubling
+early. On the four leaves that made table 4 fail at $4\pi$, $6\pi$, $16\pi$ and $20\pi$, v4 and the
+48-point reference disagree by 1.17–1.28 $\epsilon_{\rm v4}$. Against the 48-point reference all four
+are bounded or undecided at every $T$.
+
+**The estimate.** pair93 understates on no settled leaf. Under its own 93-point floor it is bounded on
+3,636 of 3,642 and undecided on 6. Its median $D/\text{true}$ is 5.85 on the Clenshaw–Curtis strata's
+group leaves and 34.8 on the band's. The tree's ${\rm CC}_{47}$ declaration understates on 74 of 899
+leaves: 55 by knots, 19 by an error common to ${\rm CC}_{24}$ and ${\rm CC}_{47}$.
+
+**The threshold (table 4, under the ${\rm CC}_{93}$ fallback and pair93, at $10\pi$):**
+
+| side | leaves scored | understate |
+|---|---|---|
+| group, Levin | 474 | 0 |
+| group, Clenshaw–Curtis | 1,040 | 0 |
+| analytic, Levin | 118 | 0 |
+| analytic, Clenshaw–Curtis | 575 | 0 |
+
+**The variants (table 7; 417 referenced and scored calls; 4,220 replayed):**
+
+| variant | honest / dishonest / unconverged | qualifies | regions / tree | wall / tree |
+|---|---|---|---|---|
+| tree | 410 / 4 / 3 | — | 1 | 1 |
+| V93T8 | 412 / 4 / 1 | yes | 0.921 | 2.23 |
+| **V93T10** | **412 / 4 / 1** | **yes** | **0.907** | **2.32** |
+| V93, V93tail | 412 / 4 / 1 | no: (c) at $6\pi$, on v4's error | 0.912, 0.992 | 2.03, 1.52 |
+| V93T12 | 411 / 5 / 1 | no: (a), `R:a:W2-0-12977-5` at 2.79 | 0.888 | 2.27 |
+| K, KT | 413 / 3 / 1 | no: (a), three calls | 0.789, 0.791 | 1.57, 1.68 |
+| G | 416 / 0 / 1 | no: (c) at $6\pi$ | 4.519 | 10.35 |
+
+The four dishonest calls under the tree and the V93 family are R2-28's, at 1.14 under the tree and
+1.10 under V93T10. Under V93T10, 37,574 regions in 3,158 calls change route.
+
+**The addendum.**
+- **(A) The near-edge leaves.** Under the ${\rm CC}_{93}$ fallback, the returned leaves are bounded,
+  undecided or understating as follows:
+
+  | $T$ | bounded | undecided | understate |
+  |---|---|---|---|
+  | $6\pi$ | 53 | 14 | 0 |
+  | $8\pi$ | 41 | 2 | 0 |
+  | $10\pi$ | 42 | 3 | 0 |
+  | $12\pi$ | 21 | 1 | 0 |
+
+  Under the ${\rm CC}_{47}$ fallback, `band_8_10|group|1e-8#23` understates at 0.51.
+
+  **On 49 trusted near-edge checks** with $D/\text{true}$ in $[0.95, 1.05]$:
+  - the returned $Q$ carries the halves' error, and $D \approx \delta_1$ follows it by construction;
+  - $V_P$ is about 35× more accurate than $Q$.
+- **(B) `R:a:W2-0-12977-5` under V93T12.** A region with $V = 59.4\pi$ at depth 4 is trusted once one
+  of its quarters ($V = 10.26\pi$) goes to ${\rm CC}_{93}$. It declares $4.46\times10^{-32}$ against a
+  true error of $3.62\times10^{-31}$.
+  - $V_P$, the halves and the three Levin quarters share an error of $-3.6$ to
+    $-4.0\times10^{-31}$.
+  - At $6$–$10\pi$, that quarter's own Levin error ($+2.13\times10^{-31}$) made the check refuse the
+    region.
+  - Three Levin regions at $662$–$1{,}530\pi$ in the same call understate under every code, about
+    $10^5$ below the call's budget.
+
+#### 9.4.3 The basis, and where it does not reach
+
+- **`CC_GATE_PHASE_VARIATION` $= 10\pi$.** It is bounded on both sides of table 4 for both call kinds,
+  as the table above shows, and it qualifies on table 7.
+  - **Between the two that qualify,** $10\pi$ sends larger regions to Clenshaw–Curtis, which the user
+    preferred all else equal. The measured costs are within 4% of each other (wall 2.32 against
+    2.23).
+  - **Against $12\pi$, which is not better:** raising the gate changes which sub-solves of a large
+    region's trust check go to Clenshaw–Curtis. That can remove the dissent that made the check refuse
+    a region whose Levin solves share an error. It happened twice at $12\pi$:
+    - the W2 call (§9.4.2 (B));
+    - `band_20_32v|group|1e-7#43` ($V = 21.7\pi$, visited), refused at $6$–$10\pi$ with $r = 3.83$,
+      trusted at $12\pi$ with $r = 0.135$ once its halves go to ${\rm CC}_{93}$, and 0.76 of its true
+      error.
+
+    Neither happens at $10\pi$. This is two events, so the evidence is weak, but it is against
+    $12\pi$.
+- **`_CC_OWN_NOISE_KAPPA` $= 4$.** It is the smallest of $\{3, 4, 5, 6, 8\}$ with $\kappa$ times the
+  5th percentile of $\sigma_{\rm own,93}/\hat\sigma$ on chopped group leaves at least 2.8, Part A's rule
+  (`kappa93.md`). That percentile is 0.838 over 1,089 group leaves, with median 1.01. On 909 analytic
+  leaves it is 1.05, with median 1.81.
+- **The estimate.** pair93 has no understatement on any settled leaf, at a median overstatement of 5.85
+  on the Clenshaw–Curtis strata's group leaves. It costs $4N-4$ evaluations a solve beyond
+  ${\rm CC}_{4N-3}$.
+- **Where the basis does not reach,** on the user's reading (*"we have to accept a small number of
+  understated errors"*):
+  - **The trust check's blind spot.** When $V_P$, the halves and the quarters share an error, the check
+    passes and the leaf declares about $\delta_1$, below its error. $Q$ is then returned where $V_P$ is
+    the better value. The fix does not change the Levin route's declarations (§0.6). The blind spot is
+    08's (§9.4.6), and R2-28 stays dishonest under V93T10 (§9.4.5).
+  - **The near-edge leaves.** There, $D \approx$ the true error by construction, and whether
+    $D \ge$ the true error rests on the $(1-r)$ factor. 3 of the 45 returned at $10\pi$ are
+    undecided.
+  - **`band_20_32v|group|1e-7#79`,** visited, not returned, understates at $8\pi$ under the
+    ${\rm CC}_{47}$ fallback only, at 0.91. Under ${\rm CC}_{93}$ it is untrusted ($r = 7.3$).
+  - **High-$V$ Levin leaves** ($662$–$1{,}530\pi$) on one call understate under every code, about $10^5$
+    below budget.
+  - **The knots.** No production code knows them, and V93T10 reads none. Its estimate bounds
+    ${\rm CC}_{93}$'s error on knotted leaves as measured. The knot readers miss the sine component of
+    three-Bessel calls (706 leaves).
+
+#### 9.4.4 The census's cost
+
+07c's census took 43,080 s (12.0 h). On Part A′'s 4,220 calls V93T10 takes 0.907 of the tree's
+regions and 2.32 of its wall, since each Clenshaw–Curtis solve evaluates $8N-7$ points against
+$2N-1$. If the census scales as the sample does, it takes about 28 h. **§6's harness projects it** from
+Z0's K0 run at the new code. Beyond 48 hours is a stop, as §6 says.
+
+#### 9.4.5 Additions to §5's and §6's predictions
+
+- **Z1** counts a call untouched if `num_cc_solves` is 0. It compares value, abserr, `converged`,
+  `num_regions` and the maximum depth. On Part A′'s 4,220 replays, 595 are untouched and every one is
+  bit-identical to the tree.
+- **Z4, on the user's ruling.** R2-28 is predicted converged and dishonest at 1.10 of its abserr at
+  both rtols, as its census calls `c-1e-7-0-13757-5` and `c-1e-8-0-13757-5`. Its error is the
+  blind spot's, which is 08's. **Z4 holds** if every other referenced call is honest or unconverged.
+  `R:a:W2-0-12977-5` is predicted honest at 0.0498. R2-28 is reported with its ratio against
+  `[07c-r2-28-trusted-levin-leaf-hides-a-common-error]`.
+- **Z5** is scored at `CC_GATE_PHASE_VARIATION`. **Z3** is unchanged: Rule A reads no threshold.
+- **Z6 and Z7 are predicted to hold.** No call Part A′ replayed is newly converged and dishonest under
+  V93T10. The calls not replayed rest on that.
+- **Z8 — the code is V93T10.** Every census call that Part A′ replayed under V93T10 (4,205 distinct
+  calls; 4,220 records at both rtols) equals its replay record bit for bit in value, abserr,
+  `converged`, regions and maximum depth. **Holds** if all do.
+- **§5, R33 against R32.**
+  - **Outside `QuadSourceIntegral`,** nothing moves (no provider changes).
+  - **Inside it,** every row with a call that makes a Clenshaw–Curtis solve may move.
+  - **S3** is scored as written. A row past its bound is reported with its calls' three counts.
+- **Descriptive, added:**
+  - the three counts by class, band, $k$ and rtol;
+  - route changes in each direction (only Levin → Clenshaw–Curtis is possible);
+  - `converged` changes against 07c's in each direction, with the calls listed;
+  - chase stops, stopped leaves and their declarations, against 07c's;
+  - window stops against 07c's.
+
+**Part B's review** replays these calls from copies of their captures at the code commit, each equal
+to V93T10's replay record in `float.hex`:
+
+| call | why | value | abserr | regions | depth | converged |
+|---|---|---|---|---|---|---|
+| R2-28 (`c-1e-7-0-13757-5`) | the blind spot | `-0x1.654fbbd97572cp-96` | `0x1.1c6301b316e32p-122` | 92 | 12 | yes |
+| `R:a:W2-0-12977-5` | route-changed; the call $12\pi$ broke | `-0x1.f3e1629c3c030p-80` | `0x1.d4c8e49cd7d44p-104` | 30 | 8 | yes |
+| `d:h-1e-7-0-12851\|a20` | (Ra), route-changed | `0x1.a32bb1c43505ep-39` | `0x1.9e1a8b9a9eda6p-76` | 7 | 3 | yes |
+| `d:h-1e-7-0-12661\|a11` | untouched, and equal to 07c's census | `0x1.e15ce4f5719b9p-46` | `0x1.4bd325169a900p-82` | 8 | 3 | yes |
+
+The second and third are also scored against their references.
+
+#### 9.4.6 The issues
+
+- **On the user's word** (*"put the blind spot in 08"*),
+  `[07c-r2-28-trusted-levin-leaf-hides-a-common-error]` is narrowed and **assigned to 08**. Part A′'s
+  evidence:
+  - the W2 region of §9.4.2 (B);
+  - `#43` at $12\pi$;
+  - the 49 near-edge checks on which $Q$ carries the halves' error while $V_P$ is about 35× better.
+
+  The addendum's `issues.md` items 1 and 2 are this issue's.
+- **`[07-c2-gate-threshold-was-never-measured]`, `[06d-cc-nested-estimate-measures-the-coarse-rule]`
+  and `[07c-integrand-noise-above-the-cc-floor]`** close or narrow in 07d's records commit, on the
+  user's word, as the header says.
+- **The others** were put to the user at this amendment, and opened with it. The user: *"I am happy
+  with your proposed rulings, so open them in this commit"*.
+  - **Opened, ten:**
+    - from Part A: `[07d-levin-own-declaration-understates-below-20pi]` (item 1),
+      `[07d-cc-fallback-does-not-split-at-table-knots]` (item 5),
+      `[07d-analytic-phase-steps-at-its-2pi-wraps]` (item 6) and
+      `[07d-route-a-qawo-cost-scales-with-k-and-span]` (item 7);
+    - from Part A′: `[07d-f0-steps-where-the-nearest-table-node-switches]` (item 1),
+      `[07d-knot-readers-miss-the-three-bessel-sine-component]` (item 2),
+      `[07d-leaf-reference-understates-its-own-error]` (item 3, with the addendum's item 5 and the
+      orchestrator's v4 observation), `[07d-levin-declaration-at-making-understates-on-knotted-leaves]`
+      (item 6) and `[07d-trusted-q-beats-cc93-on-knotted-group-leaves]` (item 7, **assigned to 08**
+      with the blind spot);
+    - from the addendum: `[07d-high-v-levin-leaves-understate-far-below-budget]` (item 4, with the
+      orchestrator's high-$V$ observation).
+  - **Folded into existing issues as evidence:**
+    - Part A's item 2 and Part A′'s item 4 into `[06d-cc-nested-estimate-measures-the-coarse-rule]`;
+    - Part A's items 3 and 4 into `[07c-integrand-noise-above-the-cc-floor]`;
+    - Part A′'s item 5 and the addendum's item 3 into R2-28's.
+  - **Dropped:** Part A's item 8 (a method note), Part A's item 9 (corrected in §9.1) and Part A′'s
+    item 8 (variants not chosen).
+
+#### 9.4.7 Stops added (into §8)
+
+- **In Part B:** an output of the code differing from V93T10's replay record on a call the review
+  replays.
+- **In Part C:** Z8 failing, before anything else is scored.

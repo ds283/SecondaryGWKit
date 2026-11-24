@@ -1,0 +1,172 @@
+--- tree/levin_quadrature.py
++++ variants/levin_quadrature_a2_P0.py
+@@ -293,7 +293,99 @@
+ # up to 8.43x high with |theta'| weighted to one end, 0.47x on a narrow central bump) and not
+ # monotone under bisection, so 6 pi did not mean one thing. The number 6 pi is unchanged by 07a,
+ # and has not been measured ([07-c2-gate-threshold-was-never-measured]).
+-SIX_PI = 6.0 * np.pi
++SIX_PI = 6.0 * np.pi  # Part A' variant P0: the gate at 6.0 pi (the tree: 6 pi)
++
++# levin-phase-floor 07d Part A' variant P0 (scripts/make_variants_a2.py; not production code)
++_VARIANT_A2 = 'P0'
++_A2_EST = None  # the declaration of CC_{4N-3}'s error (out/tables/t3_cc93.md)
++_A2_KAPPA = 4.0
++_A2_KNOTS_ON = False  # (K) bisect at a supplied knot in a leaf's middle half
++_A2_GATE_KNOTS = None  # (G) None, or the minimum knot count that sends a region to Clenshaw-Curtis
++_A2_KNOTS = None  # set by the harness per call: a sorted numpy array of knots, or None (bisect as the tree)
++_A2_C = {}
++
++
++def _a2_count(key):
++    _A2_C[key] = _A2_C.get(key, 0) + 1
++
++
++def _a2_break(a, b):
++    # Part A' (K): the knot nearest the midpoint if one lies in the span's middle half; else the tree's midpoint
++    if _A2_KNOTS_ON and _A2_KNOTS is not None:
++        lo, hi = min(a, b), max(a, b)
++        q = 0.25 * (hi - lo)
++        i0 = int(np.searchsorted(_A2_KNOTS, lo + q, side="left"))
++        i1 = int(np.searchsorted(_A2_KNOTS, hi - q, side="right"))
++        if i1 > i0:
++            mid = 0.5 * (lo + hi)
++            ks = _A2_KNOTS[i0:i1]
++            k = float(ks[int(np.argmin(np.abs(ks - mid)))])
++            if lo < k < hi:
++                _a2_count("num_a2_knot_breaks")
++                return k
++    return (b + a) / 2.0
++
++
++def _a2_knots_in(a, b):
++    if _A2_KNOTS is None:
++        return None
++    lo, hi = min(a, b), max(a, b)
++    return int(np.searchsorted(_A2_KNOTS, hi, side="left") - np.searchsorted(_A2_KNOTS, lo, side="right"))
++
++
++def _a2_standard_chop(coeffs, tol):
++    # Chebfun's standardChop, as Part A's variants transcribed it (07d Part A's make_variants_07d.py)
++    n = len(coeffs)
++    if tol >= 1:
++        return 1
++    if n < 17:
++        return n
++    b = np.abs(np.asarray(coeffs, dtype=float))
++    m = np.maximum.accumulate(b[::-1])[::-1].copy()
++    if m[0] == 0:
++        return 1
++    env = m / m[0]
++    plateau_point = None
++    j2 = None
++    for j in range(2, n + 1):
++        j2 = int(round(1.25 * j + 5))
++        if j2 > n:
++            return n
++        e1, e2 = env[j - 1], env[j2 - 1]
++        r = 3 * (1 - np.log(e1) / np.log(tol)) if e1 > 0 else 0.0
++        if e1 == 0 or e2 / e1 > r:
++            plateau_point = j - 1
++            break
++    if env[plateau_point - 1] == 0:
++        return plateau_point
++    j3 = int(np.sum(env >= tol ** (7 / 6)))
++    if j3 < j2:
++        j2 = j3 + 1
++        env[j2 - 1] = tol ** (7 / 6)
++    cc = np.log10(env[:j2]) + np.linspace(0, (-1 / 3) * np.log10(tol), j2)
++    return max(int(np.argmin(cc)) + 1 - 1, 1)
++
++
++def _a2_coeffs(g):
++    # Chebyshev coefficients of the interpolant at the n Lobatto points (07d Part A's leafcc_07d.dct1_coeffs)
++    n = len(g)
++    j = np.arange(n)
++    wts = np.ones(n)
++    wts[0] = wts[-1] = 0.5
++    gj = np.asarray(g, dtype=float)[::-1]
++    ck = np.array([(2.0 / (n - 1)) * np.sum(wts * gj * np.cos(np.pi * j * k / (n - 1))) for k in range(n)])
++    ck[0] *= 0.5
++    ck[-1] *= 0.5
++    return ck
++
++
++def _a2_s_own(g, w):
++    # s_own as 07d Part A defined it: the plateau's rms (else the last 8 coefficients'), x sqrt((n - 1)/2) sqrt(sum w^2)
++    ck = _a2_coeffs(g)
++    n = len(ck)
++    cut = _a2_standard_chop(ck, 2.0 ** -52)
++    tail = ck[cut:] if cut < n else ck[-8:]
++    return float(np.sqrt(np.mean(tail * tail)) * np.sqrt((n - 1) / 2.0)) * float(np.sqrt(np.sum(w * w))), ck, cut
+ 
+ # Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every Levin region's
+ # estimate (a Clenshaw-Curtis fallback region carries its own floor, _cc_roundoff_floor(), since
+@@ -2094,7 +2186,7 @@
+ 
+     @property
+     def break_point(self) -> float:
+-        return (self.end + self.start) / 2.0
++        return _a2_break(self.start, self.end)  # Part A' (K); the tree: (self.end + self.start) / 2.0
+ 
+     @property
+     def error(self) -> float:
+@@ -3052,7 +3144,15 @@
+             vectorize_cache=vectorize_cache,
+         )
+ 
+-    if phase_span < SIX_PI:
++    if 6.0 * np.pi <= phase_span < SIX_PI:  # Part A': a route the tree would not take
++        _a2_count("num_a2_route_changed")
++    _a2_cc = phase_span < SIX_PI
++    if not _a2_cc and _A2_GATE_KNOTS is not None:  # Part A' (G): a region holding enough knots goes to CC
++        _kn = _a2_knots_in(x_span[0], x_span[1])
++        if _kn is not None and _kn >= _A2_GATE_KNOTS:
++            _a2_count("num_a2_gate_knots")
++            _a2_cc = True
++    if _a2_cc:  # Part A' (the tree: phase_span < SIX_PI)
+         return _adaptive_levin_subregion_cc(
+             x_span,
+             f,
+@@ -4747,7 +4847,7 @@
+             if halves is not None:
+                 dataL, dataR = halves
+             else:
+-                c = (b + a) / 2.0
++                c = _a2_break(a, b)  # Part A' (K); the tree: (b + a) / 2.0
+                 dataL = _solve((a, c), "Levin left-comparison region")
+                 dataR = _solve((c, b), "Levin right-comparison region")
+ 
+@@ -5012,8 +5112,8 @@
+         a = leaf.start
+         b = leaf.end
+         c = leaf.break_point
+-        cL = (c + a) / 2.0
+-        cR = (b + c) / 2.0
++        cL = _a2_break(a, c)  # Part A' (K); the tree: (c + a) / 2.0
++        cR = _a2_break(c, b)  # Part A' (K); the tree: (b + c) / 2.0
+         forced = leaf.forced_direct
+         LL = _solve((a, cL), "trust check: left half of left half", force_direct=forced)
+         LR = _solve(
+@@ -6179,7 +6279,7 @@
+         json.dump(payload, handle, indent=4, sort_keys=True)
+ 
+ 
+-def adaptive_levin_sincos(
++def _adaptive_levin_sincos_tree_a2(
+     x_span: Tuple[float, float],
+     f,
+     theta: dict,
+@@ -6457,3 +6557,13 @@
+         emit_diagnostics=emit_diagnostics,
+         diagnostics_path=diagnostics_path,
+     )
++
++
++
++def adaptive_levin_sincos(*args, **kwargs):
++    # Part A' variant: the tree's function, with this variant's counts (num_a2_*) added to its result
++    _A2_C.clear()
++    result = _adaptive_levin_sincos_tree_a2(*args, **kwargs)
++    for k, v in _A2_C.items():
++        result[k] = v
++    return result

@@ -1,0 +1,1 @@
+levin-phase-floor 07d Part A' (prompt section 9.2 item 6) on the Mac Studio (mps026298; Python 3.13.16): seven variants (V93, V93tail, V93T8, V93T10, V93T12, K, G; state/variants_a2.json) each replay Part A's 4,220 calls, six workers in all; each call compared with Part A's tree replay. Projected 1-2 h.

@@ -1,0 +1,279 @@
+{
+ "header": [
+  "# levin-phase-floor 07d Part A': K's and KT's changed calls by (Rt) stratum",
+  "# written 2026-11-23T04:59:48Z on mps026298.phys.susx.ac.uk",
+  "# script strata_k_a2.py sha256 669f70c053d90c598427d3c0d926c2b79ddb39960edb905b5559e5c7eef18a1e",
+  "# tree: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3 HEAD c2c57a36cbad3780986baceb807dcb447975b498 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/out/tables/scores_07d.json sha256 e3e332d1f7bff669841e15b1e2b53f99cd6c1555f911df5c11e2ee1c2016d421",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/state/census_index_07d.pkl sha256 da8a7a6504151131558754d5bacc542fa90ff7e5829218043081de20dba3f481"
+ ],
+ "K": {
+  "base": "V93",
+  "strata": {
+   "layout changed, routes unchanged|group|k0|1e-7": {
+    "changed": 40,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-7-0-12975|g0",
+     "d:h-1e-7-0-1940|g5",
+     "d:h-1e-7-0-34045|g3",
+     "d:h-1e-7-0-36825|g2"
+    ],
+    "empty": false
+   },
+   "layout changed, routes unchanged|group|k0|1e-8": {
+    "changed": 40,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-8-0-12975|g0",
+     "d:h-1e-8-0-1940|g5",
+     "d:h-1e-8-0-34045|g3",
+     "d:h-1e-8-0-36825|g2"
+    ],
+    "empty": false
+   },
+   "layout changed, routes unchanged|group|k1|1e-7": {
+    "changed": 39,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-7-1-10781|g4",
+     "d:h-1e-7-1-10922|g3",
+     "d:h-1e-7-1-2266|g3",
+     "d:h-1e-7-1-38744|g3"
+    ],
+    "empty": false
+   },
+   "layout changed, routes unchanged|group|k1|1e-8": {
+    "changed": 40,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-8-1-10781|g4",
+     "d:h-1e-8-1-10922|g3",
+     "d:h-1e-8-1-2266|g3",
+     "d:h-1e-8-1-38744|g3"
+    ],
+    "empty": false
+   },
+   "layout changed, routes unchanged|group|k2|1e-7": {
+    "changed": 40,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-7-2-1501|g3",
+     "d:h-1e-7-2-21782|g4",
+     "d:h-1e-7-2-21919|g1",
+     "d:h-1e-7-2-34839|g3"
+    ],
+    "empty": false
+   },
+   "layout changed, routes unchanged|group|k2|1e-8": {
+    "changed": 40,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-8-2-1501|g3",
+     "d:h-1e-8-2-21782|g4",
+     "d:h-1e-8-2-21919|g1",
+     "d:h-1e-8-2-34839|g3"
+    ],
+    "empty": false
+   },
+   "layout changed, routes unchanged|group|k3|1e-7": {
+    "changed": 38,
+    "referenced": {
+     "Rt": 2
+    },
+    "referenced_sids": [
+     "d:h-1e-7-3-34972|g4",
+     "d:h-1e-7-3-38473|g1"
+    ],
+    "empty": false
+   },
+   "layout changed, routes unchanged|group|k3|1e-8": {
+    "changed": 38,
+    "referenced": {
+     "Rt": 2
+    },
+    "referenced_sids": [
+     "d:h-1e-8-3-34972|g4",
+     "d:h-1e-8-3-38473|g1"
+    ],
+    "empty": false
+   }
+  },
+  "regression_set": {
+   "changed": 401,
+   "referenced regression": 249,
+   "referenced regression R2-28": 4
+  }
+ },
+ "KT": {
+  "base": "V93T8",
+  "strata": {
+   "Levin->CC|group|k0|1e-7": {
+    "changed": 31,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-7-0-12975|g0",
+     "d:h-1e-7-0-1940|g5",
+     "d:h-1e-7-0-34045|g3",
+     "d:h-1e-7-0-36825|g2"
+    ],
+    "empty": false
+   },
+   "Levin->CC|group|k0|1e-8": {
+    "changed": 31,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-8-0-12975|g0",
+     "d:h-1e-8-0-1940|g5",
+     "d:h-1e-8-0-34045|g3",
+     "d:h-1e-8-0-36825|g2"
+    ],
+    "empty": false
+   },
+   "Levin->CC|group|k1|1e-7": {
+    "changed": 38,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-7-1-10781|g4",
+     "d:h-1e-7-1-10922|g3",
+     "d:h-1e-7-1-2266|g3",
+     "d:h-1e-7-1-38744|g3"
+    ],
+    "empty": false
+   },
+   "Levin->CC|group|k1|1e-8": {
+    "changed": 38,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-8-1-10781|g4",
+     "d:h-1e-8-1-10922|g3",
+     "d:h-1e-8-1-2266|g3",
+     "d:h-1e-8-1-38744|g3"
+    ],
+    "empty": false
+   },
+   "Levin->CC|group|k2|1e-7": {
+    "changed": 37,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-7-2-1501|g3",
+     "d:h-1e-7-2-21782|g4",
+     "d:h-1e-7-2-21919|g1",
+     "d:h-1e-7-2-34839|g3"
+    ],
+    "empty": false
+   },
+   "Levin->CC|group|k2|1e-8": {
+    "changed": 37,
+    "referenced": {
+     "Rt": 4
+    },
+    "referenced_sids": [
+     "d:h-1e-8-2-1501|g3",
+     "d:h-1e-8-2-21782|g4",
+     "d:h-1e-8-2-21919|g1",
+     "d:h-1e-8-2-34839|g3"
+    ],
+    "empty": false
+   },
+   "Levin->CC|group|k3|1e-7": {
+    "changed": 29,
+    "referenced": {
+     "Rt": 2
+    },
+    "referenced_sids": [
+     "d:h-1e-7-3-34972|g4",
+     "d:h-1e-7-3-38473|g1"
+    ],
+    "empty": false
+   },
+   "Levin->CC|group|k3|1e-8": {
+    "changed": 29,
+    "referenced": {
+     "Rt": 2
+    },
+    "referenced_sids": [
+     "d:h-1e-8-3-34972|g4",
+     "d:h-1e-8-3-38473|g1"
+    ],
+    "empty": false
+   },
+   "layout changed, routes unchanged|group|k0|1e-7": {
+    "changed": 9,
+    "referenced": {},
+    "referenced_sids": [],
+    "empty": true
+   },
+   "layout changed, routes unchanged|group|k0|1e-8": {
+    "changed": 9,
+    "referenced": {},
+    "referenced_sids": [],
+    "empty": true
+   },
+   "layout changed, routes unchanged|group|k1|1e-7": {
+    "changed": 1,
+    "referenced": {},
+    "referenced_sids": [],
+    "empty": true
+   },
+   "layout changed, routes unchanged|group|k1|1e-8": {
+    "changed": 2,
+    "referenced": {},
+    "referenced_sids": [],
+    "empty": true
+   },
+   "layout changed, routes unchanged|group|k2|1e-7": {
+    "changed": 2,
+    "referenced": {},
+    "referenced_sids": [],
+    "empty": true
+   },
+   "layout changed, routes unchanged|group|k2|1e-8": {
+    "changed": 2,
+    "referenced": {},
+    "referenced_sids": [],
+    "empty": true
+   },
+   "layout changed, routes unchanged|group|k3|1e-7": {
+    "changed": 8,
+    "referenced": {},
+    "referenced_sids": [],
+    "empty": true
+   },
+   "layout changed, routes unchanged|group|k3|1e-8": {
+    "changed": 8,
+    "referenced": {},
+    "referenced_sids": [],
+    "empty": true
+   }
+  },
+  "regression_set": {
+   "changed": 401,
+   "referenced regression": 249,
+   "referenced regression R2-28": 4
+  }
+ }
+}

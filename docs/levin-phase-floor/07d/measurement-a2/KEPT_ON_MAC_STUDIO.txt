@@ -1,0 +1,13 @@
+# levin-phase-floor 07d Part A': files kept on the Mac Studio (mps026298), not copied back.
+# Every pickle and every file over 2 MB (2,097,152 bytes) under var/levin-phase-floor-07d/measurement-a2/ and the
+# registered run directories var/runs/levin-phase-floor-07d-a2-*/, as SHA-256, size in bytes and path relative to the
+# main checkout. Written last, 2026-11-23T05:32:47Z, after every other record, by scripts/kept_a2.py.
+# 7 files, 23685577 bytes.
+
+212b0c0a811a5afc87a37724d6f7184d5f552573cd7a4edbbac169c424f1aaaf  2457638  var/levin-phase-floor-07d/measurement-a2/out/leaves_a2/new_band_population.json
+65e09a48dc821316cfda824bd1fe0d1a65f14d323b7560dd67edd707c01a9d48  2455931  var/levin-phase-floor-07d/measurement-a2/out/leaves_a2/superseded/new_band_population_v1_mixed.json
+87c7f0c19f533a65ccce230eebfef41d7894988b6e64c7b6ca6c6f11c832a8e5  2234510  var/levin-phase-floor-07d/measurement-a2/out/replays/V93tail/R_c-1e-8-3-13490-2.json
+8a0c2ef04fc721391d71d060f84e56267acdf667a7f4bb34ad9a98ee5991cdb9  2234516  var/levin-phase-floor-07d/measurement-a2/out/replays/V93tail/R_c-1e-8-3-13490-3.json
+7e2f1a8f50bdd26274e85ebf320dc48e9371c5fd4436a41cd95d452a9d51e229  7900139  var/levin-phase-floor-07d/measurement-a2/out/tables/t4_dt.json
+6766eca4e2951b14949166803d2ae70d93fe9b62e886c3379edb5f47a1e1f859  3202561  var/levin-phase-floor-07d/measurement-a2/state/selection_new_band_a2.json
+0db4dfa6b0b7c67244d32940f0b105b5fc5b5db25745c216022dcbb3430d7972  3200282  var/levin-phase-floor-07d/measurement-a2/state/superseded/selection_new_band_a2_v1_mixed.json

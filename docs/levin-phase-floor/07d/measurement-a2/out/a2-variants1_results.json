@@ -1,0 +1,12 @@
+{
+ "label": "a2-variants1",
+ "results": [
+  {
+   "name": "replay_batch1",
+   "exit": 0,
+   "wall_s": 6401.513879060745
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-23T04:49:17Z"
+}

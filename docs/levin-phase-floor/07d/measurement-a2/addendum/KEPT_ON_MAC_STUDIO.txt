@@ -1,0 +1,6 @@
+# levin-phase-floor 07d Part A' addendum: files kept on the Mac Studio (mps026298), not copied back.
+# Every pickle and every file over 2 MB (2,097,152 bytes) under var/levin-phase-floor-07d/measurement-a2/addendum/ and the
+# registered run directories var/runs/levin-phase-floor-07d-add-*/, as SHA-256, size in bytes and path relative to the
+# main checkout. Written last, 2026-11-24T11:15:01Z, after every other record, by addendum/scripts/kept_add.py.
+# 0 files, 0 bytes.
+

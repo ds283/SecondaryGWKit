@@ -1,0 +1,1 @@
+Ray-free, no lock, no store opened; reads Part A's captures and tree replays read only; writes only var/levin-phase-floor-07d/measurement-a2/out/replays/<variant>/ and this run directory; nothing written in a tree.

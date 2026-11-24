@@ -1,0 +1,31 @@
+{
+ "label": "add-quarter-b",
+ "stages": [
+  {
+   "name": "quarters",
+   "max_parallel": 2,
+   "jobs": [
+    {
+     "name": "quarter_tree",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/quarter_b.py",
+      "tree"
+     ]
+    },
+    {
+     "name": "quarter_variant",
+     "pythonpath": "/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts",
+     "argv": [
+      "/Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python",
+      "-B",
+      "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/quarter_b.py",
+      "variant"
+     ]
+    }
+   ]
+  }
+ ]
+}

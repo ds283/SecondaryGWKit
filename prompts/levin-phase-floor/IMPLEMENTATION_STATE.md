@@ -211,6 +211,7 @@ records in `docs/levin-phase-floor/NN/` ·
 | **Closures 2026-11-20** | **Three issues close and one narrows, on the user's word** (2026-11-20). After 07c's records commit the orchestrator listed four issues marked for the user's close, and the user: *"Yes, close the four issues."* On re-reading, one of the four holds more than its part marked for the user, so it narrows rather than closes. `[07-roundoff-exit-assumes-bisection-cannot-help]` closes: 06b's W2, which kept it open, closed with `[06b-moved-calls-declare-less-than-their-error]` by 07b. `[06e-trusted-leaf-returns-its-coarsest-value]` closes on 06g's V4. `[06e-node-errors-add-in-absolute-value]` closes on 06g's signed sum, the slow leaves left at its V6 having closed with 06m. `[06c-budget-can-stop-on-a-pre-asymptotic-residual]` narrows: its part assigned to 06g closes, and the near-singular `test_YJJ_log_singularity` class and the noise question stay open |
 | **07d** | **07d written: the threshold chosen after the integrand's noise and the Clenshaw–Curtis estimate are measured; the analytic calls' references in its sample; the overstating stopped leaf to 08** (2026-11-21). After `handover`'s record of B2's $10^8$ cell (`74ebb54f`) the user asked what is on the critical path before 08. The orchestrator answered 07d, and proposed its scope: the estimate (`[06d-cc-nested-estimate-measures-the-coarse-rule]`, which 07c measured and did not fix) and the noise floor (`[07c-integrand-noise-above-the-cc-floor]`) in it, because the threshold is chosen against the estimate on both sides of it and 07c's D2 shows the estimate understating in every stratum; `[07c-chase-stop-acts-on-unreferenced-analytic-calls]`'s references in its sample; `[07c-stopped-leaf-declaration-overstates]` left to 08, since it costs accuracy claims and `converged`, not honesty. The user: *"Yes, write 07d on that scope"*. The prompt measures in that order (noise, estimate, threshold), fills each leaf stratum to 40 scored leaves so that a zero count of understatements bounds the rate at about 3/40, and asks why the pair understates before any candidate is scored. Dispatch waits for the user's word that the Mac Studio is free |
 | **07d Part A stop** | **Part A's stop: no choice yet; a second measurement, Part A′, on the user's word** (2026-11-22). On the user's word that the Mac Studio was free (*"The Mac Studio is free now; dispatch 07d's Part A"*), Part A ran there on 2026-11-22 in the worktree `SecondaryGWKit-lpf07d-49ce964` at `49ce9642` (code `67b5af74`), Ray-free, with no lock, and stopped at §2.8 with 19 deviations (1, 4, 6, 11 and 19 unintended drift). Every replay reproduced 07c's census. **D-N:** the group integrands' scatter is `theta_mod_2pi`'s, node-independent ($\sigma/|g|$ median $2.75\times10^{-12}$; analytic $5.6\times10^{-15}$), and undeclared. **D-E:** the tree's pair understates on 114 of 928 scored leaves (68 knots, 46 noise, 32 of them window pieces); nest3N4, $|{\rm CC}_{93} - {\rm CC}_{47}| + 4 s_{\rm own}$ with $\sigma_{\rm own}$ from the leaf's own coefficient plateau, understates on none. **D-T:** the Levin route understated in every band, so no $T < 20\pi$ was bounded on both sides; only ET20 qualified, vacuously. The orchestrator's §A.3 checks agreed with every re-drawn selection, replay and score, and found three things: the v3 leaf reference understates its error on knotted leaves (its own composite Gauss–Legendre reference, 8 to 256 panels a piece, disagrees beyond $\epsilon_{\rm ref}$); D-T's Levin halves and quarters ran without the gate, as §2.4's wording said, though the tree sends them through it; and table 3's `levin_tc` leaves out the floor. Under those, the 14 trusted Levin understatements that survive re-referencing are accounted for: six analytic leaves bounded by their floor, three group leaves in a configuration the tree does not run. Asked to explain, then: *"if we are going to estimate the CC quadrature on the CC93 rule, we should check whether it is better to return that value rather than CC47"*, whether to bisect at the knots, and whether *"the 6pi gate is in fact somewhat too small"*. From Part A's leaf records the orchestrator found ${\rm CC}_{93}$ closer than ${\rm CC}_{47}$ on most leaves, nest3N4 bounding it loosely, and the knots deciding between the routes on group leaves ($V_P$ worse than ${\rm CC}_{93}$ on 332 of 335 with 5+ knots, better on 6 of 20 with none). It proposed five items: the threshold re-measured with the Levin route as the tree runs it, ${\rm CC}_{93}$ as the value with declarations of its own error, the routes by call kind and knots, the knots by type with a bisection at a knot, and the cost of each route. The user: *"I'd like all 5 in the amendment, unless there is a reason not to."* So prompt §9.1–§9.3 add **Part A′**, and the orchestrator note §A′; §2.4's Rule A sentence and §A.0's are corrected (Rule A reads no threshold since 07a). Part A's records are in `docs/levin-phase-floor/07d/measurement/` (8,072 files, each checked by SHA-256), with the orchestrator's checks in `orchestrator_check/`; the agent's 246 kept files and all seven variant-replay folders (29,459 files, 0.73 GB) stay on the Mac Studio, listed in `KEPT_ON_MAC_STUDIO.txt` and `KEPT_REPLAYS_ON_MAC_STUDIO/`. No issue moves until 07d's records commit. On the user's word (*"Yes, copy back, commit and push; the Mac Studio is free, so you are safe to dispatch"*) this is committed and Part A′ dispatched |
+| **07d Part A′ stop** | **Part A′'s stop: the fix is V93T10, ${\rm CC}_{93}$ with a noise term and the gate at $10\pi$; the trust check's blind spot goes to 08; ten issues open** (2026-11-24). Part A′ ran on the Mac Studio on 2026-11-23 in the worktree `SecondaryGWKit-lpf07d-c2c57a3` at `c2c57a36` (code `67b5af74`), Ray-free, with no lock, and stopped at its planned stop with 18 deviations (8 unintended drift). Its reproduction of `_check_leaf` matched the tree on 488 of 488 leaves. **The references:** v4 understates its own error where $\hat\sigma$ is large, settling one doubling early; the four leaves that made table 4 fail at $4\pi$, $6\pi$, $16\pi$ and $20\pi$ are bounded or undecided on a 48-point Gauss–Legendre reference. **The estimate:** pair93, $\max(|{\rm CC}_{185}-{\rm CC}_{93}|, \text{floor}_{93}) + 4 s_{\rm own,93}$, understates on no settled leaf; the tree's ${\rm CC}_{47}$ declaration on 74 of 899. **Table 4 at $10\pi$:** no understating leaf on either side, for either call kind. **Table 7** (417 scored; honest / dishonest / unconverged): tree 410/4/3; V93T8 and V93T10 412/4/1 and qualify, the four dishonest being R2-28's; V93, V93tail and G fail (c) at $6\pi$; V93T12 makes `R:a:W2-0-12977-5` dishonest at 2.79; K and KT make three calls dishonest. The orchestrator's §A′.3 checks agreed with the agent. The user: *"I can't see a reason to believe that the `8pi`, `10pi` and `12pi` windows will be always safe, while `6pi`, `16pi` and `20pi` have understated errors. [...] my guess is that we have to accept a small number of understated errors [...] My guess is `V93T10` is everything is otherwise equal, since there seems some merit in sending slightly larger regions to CC. For now I'm happy to do a short run to settle the near-edge leaves."* The addendum ran on 2026-11-24 (6 deviations, 2 unintended drift). It found no understating near-edge leaf under the ${\rm CC}_{93}$ fallback at $6$–$12\pi$, and dissected the W2 call: a region whose $V_P$, halves and quarters share an error is trusted once one quarter goes to ${\rm CC}_{93}$. Asked whether $12\pi$ is then better than $10\pi$, the orchestrator answered no: raising the gate can remove the dissent that refuses such a region, which happened twice at $12\pi$ and never at $10\pi$. The user: *"Go with V93T10, and put the blind spot in 08"*. So §1, §3 and §9.4 specify V93T10: `CC_GATE_PHASE_VARIATION` $= 10\pi$, $\kappa = 4$, 0.907× the tree's regions and 2.32× its wall on 4,220 replayed calls, the census projected at about 28 h. Z1 counts a call untouched by `num_cc_solves`, R2-28 is predicted dishonest at 1.10, and Z8 checks the census against the replays. `[07c-r2-28-trusted-levin-leaf-hides-a-common-error]` is narrowed and assigned to 08. On the orchestrator's proposed rulings on Part A's, Part A′'s and the addendum's issues, the user: *"I am happy with your proposed rulings, so open them in this commit"*. So ten issues open, one of them assigned to 08 with the blind spot. Six other items are folded into existing issues as evidence: Part A's items 2–4 and Part A′'s item 4 into the Clenshaw–Curtis estimate and noise issues, which close or narrow at 07d's records commit, and Part A′'s item 5 and the addendum's item 3 into R2-28's. Three are dropped: Part A's items 8 (a method note) and 9 (corrected in §9.1), and Part A′'s item 8 (variants not chosen). Part A′'s and the addendum's records are in `docs/levin-phase-floor/07d/measurement-a2/`: 4,866 files, each checked by SHA-256, with the orchestrator's checks rebuilt into `orchestrator_check/` and re-run equal. The replays (38,088 files, 1.15 GB) stay on the Mac Studio, listed in `KEPT_REPLAYS_ON_MAC_STUDIO/`. This commit is Part B's dispatch SHA |
 | **06b close** | **06b's records land; its header issue stays open** (2026-10-28). The Mac Studio review stopped on check 10 alone (the census log has no What shipped section, and its deviation 19, no over-budget pass, is unclassified): *"If the only issue is that the agent didn't say whether anything went over budget, then I don't care. Just accept it."* `[07-roundoff-exit-assumes-bisection-cannot-help]`: *"seems that we should keep it open until we've fixed W2 at least."* W2's failure is opened as `[06b-moved-calls-declare-less-than-their-error]`. W4's three depth-20 calls narrow `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]`: *"If we already have this on the board, there's no need to duplicate."* Not opened: C3 (06a's stationary-point calls moving, *"07 will presumably validate with its reference values"*), C4 (the analytic blocks as where the exit fired, *"more a downstream consequence of another issue"*), N1 (the exit now dead on the rehearsal scope, *"not actually a problem"*) and N2 (the analytic blocks' flags not stored, *"not a problem unless we need them later"*). The analytic-block reading of W1 and W4 had been accepted before the launch: *"For 06b, that reading is reasonable."* |
 | **06c stall rule** | **Three failed splits in a row, and an infinite parent never counts as failed** (2026-10-28), after 06c's Part A stopped before committing: two in a row at $\rho = \tfrac12$ stalled `test_levin_quadrature`'s SincIntegral at depth 2, unconverged and dishonest (true error $6.55\times10^{-6}$, declared $4.85\times10^{-6}$), and stalled the stationary-phase oracle, whose $x = 0.5$ is a node with an infinite floor. Of the measured forms the user chose (b): *"Can we try (b)"*; then, on (b2): *"Then it sounds that b2 would likely work effectively in prouction when the stationary phase point is cut out. Would you agree?"* and *"Yes, please do that"*: adopt (b2), add census prediction X6 (no call 06b reported converged has a stalled leaf), and allow 06b test 3's `num_phase_limited_regions == 0` to change. A tuned $\rho$ (0.75) was not taken. The margin is thin: three-in-a-row stalls SincIntegral at $\rho \le 0.30$. 06c §8 |
 | **06c stall withdrawn** | **The stall rule leaves 06c; re-measure after 07** (2026-10-28). Part A stopped a second time: (b2) stalls on lines through a stationary point, where Levin leaves' error estimates rise under bisection until the fallback takes over (about depth 5–6), giving true errors $6.5\times10^3$–$9\times10^{11}$ × the request where the parent's were 0.02–315 ×, and one dishonest result ($c = 10^5$, $x_s = 0.382$: true $4.3\times10^{-3}$, declared $4.1\times10^{-3}$), reproduced by the orchestrator. The global budget without a stall rule reproduces the parent on the converged cases. The user: *"(A). Let's remeasure the stall question after 07"*. A residual flat in $h$, or a request that cannot be met, is chased to `depth_max`: a cost in work, not in honesty. 06c §8; `[06b-premise-check-can-chase-a-flat-residual-to-depth-max]` |
@@ -279,8 +280,8 @@ Q1–Q4, are in README §6.3.
 | 07a | [The window's early stop and the phase variation](07a-window-stop-and-phase-variation.md) | `[07-iroff1-window-stop-can-leave-a-call-dishonest]`: a window stopped by §1.3's `iroff1` while its leaves still fall, the fix chosen at a planned stop after replays of V4's 25 captures, the cross-check's two pairs and the 396 class-(c) captures at variants of the stop; and O9 of `[07-c2-gate-threshold-was-never-measured]`: a phase located unless its rate is identically zero, the C2 gate and the LU choice on $|\theta(b) - \theta(a)|$ where $\theta$ is monotone, the node-partition sum where not (Decisions, **07 results**, **07a**). R30 against R29; 07's census re-run, scored W0–W6, which becomes 08's "before" | measurement on the Mac Studio; code on the laptop; R30 and the census on the Mac Studio | Opus | ✍️ 2026-11-10, with its orchestrator note; §9 amended 2026-11-12 at Part A's stop; §10 amended 2026-11-12 at Part B's stop | ✅ 2026-11-13. **Part C** on the Mac Studio, 2026-11-12, through an orchestrator session there, from the worktree `SecondaryGWKit-lpf07a-4bf50d3` at `4bf50d34` (code `1ec734d7`), with planned stops 1, 2 and 3 and a fourth at scoring on W5's wording (Decisions, **07a Part C**). **R30** `levin-phase-floor-07a-r30-07a-20261112T113806`, `1b332ffa…`: S0′, S1 (12 of 12, worst 0.218), S2 (0.020, 0.263), S3 (0 violations) and S4 (R29's four guarded blocks each locate and guard nothing, honest at 4.4e-5 to 6.2e-4) hold; outside `QuadSourceIntegral` 360,462 rows identical; 380 of 864 QSI rows moved, the largest 0.047 of R29's abserr, no `total_converged` change; 49 records moved in abserr alone, each through one auxiliary trust-check solve's route or LU change. **The census** `levin-phase-floor-07a-census-20261112T132744` (checkpoint `461df2ec…`, 18,560 of 18,560, 23,284 s against 07's 22,708 s, none over budget), the "before" of 08: **W0–W3 hold**; W1 on the user's readings (258,824 untouched calls equal 07's in their outputs); **W5 holds** on gated solves (18,236 forced solves take the node-partition sum, descriptive); **W4 and W6 fail as predicted** (v08 3.16, v09 2.21, v12 3.08, v17 2.38, v22 2.53; `3-14501` 1.385, `3-35006` 1.084); **W7 fails, not predicted**: 25 lone-`G` minima-window calls at `1e-8`, whose window stopped at 07 and no longer stops, move by 0.0066–0.145 of abserr, `converged` unchanged. No `converged` flag changes anywhere; 10,014 C2 decisions change, all to Clenshaw–Curtis, and 14,545 LU decisions, all to least squares. References on the user's word: `1-34599`, dishonest at 07 (4.03×), honest at 07a (0.020, 0.015) after an own route change; `3-678` honest at 0.491 of an abserr 11× smaller. The Mac Studio review passed every §C.2 check; on the laptop the copy (781 + 15 files) was checked by SHA-256 and W4, S1 and two rehearsal rows re-checked exactly. Deviations 21 (rehearsal) and 29 (census), all classified and accepted. Narrowed `[07-iroff1-window-stop-can-leave-a-call-dishonest]` (to W7's 25) and `[07-c2-gate-threshold-was-never-measured]` (O9 removed); opened `[07a-trust-check-auxiliary-route-moves-the-declared-error]`. Before: Part A done 2026-11-12 (Decisions, **07a Part A**). **Part B, the code, committed 2026-11-12 on the laptop as `1ec734d7`, reviewed by the orchestrator in §B.3's eight checks and pushed on the user's word (Decisions, **07a Part B lands**): dispatched at `a9f6abc3` (07's code), stopped before its commit on LiouvilleGreen's `test_the_raw_phase_is_never_evaluated` and resumed on §10 at `dadd63a0` (Decisions, **07a Part B stop**). §1.1: a phase located unless its rate is zero at every finite scan sample (`location_skipped_phases` entry `{"phase", "reason": "zero_rate"}`); $V$ from the raw phase ($|\theta(b)-\theta(a)|$ where $\theta'$ has no strict sign change on the nodes, the node-partition sum where it has) for the gate, the LU choice and `phase_span`. §1.2: Part A's variant (d), `dqage`'s count (the skip on dqk21's resasc, raw estimates, the value test at $\min(10^{-5},{\rm rtol})$), bit-identical to Part A's reference on eight window problems. §10: the LiouvilleGreen test rewritten as `test_the_raw_phase_enters_no_value_or_error` ($\theta + C$, $C = 10^6 + 0.5$: value, abserr and every region's route and LU choice unchanged), two LiouvilleGreen docstrings corrected (AST unchanged). Tests: `test_levin_phase_variation.py` (tests 1–4, 7, 8), test 13 rewritten (test 5 its (b)), test 14 (a), (b), (d) and 14 (c) in 10 (b); three existing assertions changed (13 (a), (b), (d)); breakages (i)–(x) caught. AdaptiveLevin 107 → 116, the other six roots equal (LiouvilleGreen 156, one test renamed). LiouvilleGreen draws: no new failure; 2,973 of 2,973 calls with no window and no changed region bit-identical; 434 regions change route, all to Clenshaw–Curtis, 771 their LU choice; 3 calls converged → unconverged at $6\pi$ (on `[07-c2-gate-threshold-was-never-measured]`). Part C was dispatched from the orchestrator note's §C.5 | code `1ec734d7`; records in the records commit | [log](logs/07a-window-stop-and-phase-variation.md) |
 | 07b | [The Levin leaf beside a window, and how honest the census is](07b-levin-leaf-beside-a-window.md) | `[07a-levin-leaf-beside-a-window-understates-its-error]`: why a trusted Levin leaf touching a window understates (a common error, a pre-asymptotic ratio, or the inputs), measured on V4's five and controls with references on each leaf, its halves and quarters; candidate fixes scored as variants; the fix chosen at a planned stop. With it, `[06b-moved-calls-declare-less-than-their-error]` re-scored and tested for the same mechanism, and references taken once (R1: 30 class-(c) rows; R2: 30 calls at random from the whole census; R3: targeted calls for W7, auxiliary routes, own route changes and the two pairs). R31 against R30; 07a's census re-run, scored U0–U7, which becomes 08's "before" (Decisions, **07b**) | measurement on the Mac Studio; code on the laptop; R31 and the census on the Mac Studio | Opus | ✍️ 2026-11-13, with its orchestrator note; §2.7 (the extension of Part A) 2026-11-15; §1, §3 and §9 (the fix, variant (h)) 2026-11-16; §10 2026-11-16 at Part B's stop | ✅ 2026-11-18. **Part C** on the Mac Studio, 2026-11-16 to 2026-11-18, through an orchestrator session there, from the worktree `SecondaryGWKit-lpf07b-0a103b5` at `0a103b5a` (code `5e19c4b6`), with planned stops 1, 2 and 3 (Decisions, **07b Part C**). **R31** `levin-phase-floor-07b-r31-07b-20261116T191849`, `1b332ffa…`: S0′, S1 (12 of 12, worst 0.067), S2 (0.0202, 0.111), S3 (0 violations, largest 0.128) and S4 hold; outside `QuadSourceIntegral` 360,462 rows identical; 569 of 864 QSI rows moved, the largest 0.278 of R30's abserr; one record unconverged (2 → 143 regions); the seven group records past both errors referenced, R30 understating in all seven (2.91–59.3), R31 honest (0.0014–0.298). **The census** `levin-phase-floor-07b-census-20261117T010200` (checkpoint `396784bc…`, 18,560 of 18,560, 45,016 s against 07a's 23,284 s, none over budget), 08's "before": **U0–U8 hold**; U1 on 60,160 untouched calls (20.8 %); U4 on 190 referenced calls, none converged and dishonest (V4's five at 0.0011–0.044; R2-28 unconverged at 1.107, as predicted); U6 24 of 24 honest; U7 $r_g \le 1$ on all 2,484 pairs; U8 187 of 187. The rules act in 229,322 calls (range 782,001 refusals, edge 868 in 674 `G+q+r` calls); 198 group calls newly unconverged and 5 newly converged; regions 2.08×. The Mac Studio review passed every §C.2 check; on the laptop the copy (763 + 20 files) was checked by SHA-256 and U4, U6 and two rehearsal rows re-checked. Deviations 26 (rehearsal) and 23 (census), all classified and accepted. Closed `[07a-levin-leaf-beside-a-window-understates-its-error]`, `[06b-moved-calls-declare-less-than-their-error]`, `[07-iroff1-window-stop-can-leave-a-call-dishonest]` and `[07a-trust-check-auxiliary-route-moves-the-declared-error]`; narrowed the chase and assigned it to 07c; opened `[07b-large-raw-phase-calls-can-be-marginally-dishonest]`. Before: ⏸ **Part A** stopped at §2.6 on 2026-11-14 on the Mac Studio, in `SecondaryGWKit-lpf07b-436ed5d` at `436ed5d4`; only (f) qualifies; the extension §2.7 chosen (Decisions, **07b Part A stop**). **The extension** stopped on 2026-11-16; the fix is variant (h), §1, §3 and §9 written, Part A's records in `docs/levin-phase-floor/07b/measurement/` (Decisions, **07b extension stop**). **Part B** dispatched at `c768c4ad`, stopped before its commit on a LiouvilleGreen test's premise; §10 written (Decisions, **07b Part B stop**). **Part B, the code, committed 2026-11-16 on the laptop as `5e19c4b6`, reviewed by the orchestrator and pushed on the user's word (Decisions, **07b Part B lands**)**, resumed on §10 at `7b82a0cd`: §1.1–§1.5 in `AdaptiveLevin/levin_quadrature.py` (`_leaf_rate_rule`, `_LEVIN_EDGE_RATE_RATIO_MAX = 2.0`, `_LEVIN_LEAF_RATE_RANGE_MAX = 10.0`, `converged` unchanged, `num_edge_rule_refusals` and `num_range_rule_refusals`), equal to (h) bit for bit on 22 test calls and 4,320 LiouvilleGreen draw calls. Tests: `test_levin_rate_rules.py`, 13 ((a) eight; (b) the edge mechanism and (c) the range mechanism, converged and dishonest at the parent at 7.62 and 102.8 times their abserr, honest and converged at the commit; (d); (e) two); breakages (i)–(vi) caught, (ii) also by the LiouvilleGreen test. Existing assertions changed where the range rule acts: `test_levin_trust_yardstick` test 2 and `test_levin_leaf_values` test 1 (si_1000_exp, 6 refusals), `test_levin_roundoff_exit` test 1 (9 refusals, 9 floor-limited leaves); under §10, `test_three_bessel`'s tenfold improvement restated as a stall (spread 1.04); none converged → unconverged. AdaptiveLevin 116 → 129, the other six roots equal to their baselines. LiouvilleGreen draws: no new failure; 509 of 509 untouched calls bit-identical; the range rule acts in 3,811 calls (no edge refusal), no `converged` change, regions 1.92×. Part C was dispatched from the orchestrator note's §C.5 | code `5e19c4b6`; records in the records commit | [log](logs/07b-levin-leaf-beside-a-window.md) |
 | 07c | [The chase below a refused leaf, and the Clenshaw–Curtis estimate](07c-chase-below-a-refused-leaf.md) | `[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]`: below a leaf 07b's rate rules refuse, noise-level trust checks bisect to the depth cap (198 census calls newly unconverged, 103 integrands); the chase measured at census scale and a stop that reaches the leaves made after it scored as variants; with it `[06d-cc-nested-estimate-measures-the-coarse-rule]`, a sharper Clenshaw–Curtis estimate measured on a stratified sample of the census's leaves and scored as a candidate fix; references for about 30 chase integrands (R4) and about 30 of the 306 unreferenced calls past both errors (R5, item 6); the fix chosen at a planned stop. R32 against R31; 07b's census re-run, which becomes 07d's "before" (Decisions, **07b Part C**, **07c**) | measurement on the Mac Studio; code on the laptop; R32 and the census on the Mac Studio | Opus | ✍️ 2026-11-18, with its orchestrator note; §1, §3 and §9 (the fix, variant (S)) 2026-11-19 | ✅ 2026-11-20. **Part C** on the Mac Studio, 2026-11-19 to 2026-11-20, through an orchestrator session there, from the worktree `SecondaryGWKit-lpf07c-cc3368c` at `cc3368ce` (code `67b5af74`), with planned stops 1, 2 and 3 (Decisions, **07c Part C**). **R32** `levin-phase-floor-07c-r32-07c-20261119T140417`, `1b332ffa…`: S0′, S1 (12 of 12, worst 0.067), S2 (0.0202, 0.111), S3 (0 violations, largest 5.25e-6) and S4 hold; outside `QuadSourceIntegral` 360,462 rows identical; 305 of 864 QSI rows moved, the largest 1.05e-5 of R31's abserr; `total_converged` 1 up, 0 down; R31's unconverged record converged at 86 regions, honest at 0.053. **The census** `levin-phase-floor-07c-census-20261119T201419` (checkpoint `33d94ce2…`, 18,560 of 18,560, 43,080 s, 0.957 of 07b's, none over budget), 07d's "before": **Y0–Y9 hold** (Y9 on the user's reading of a call with no depth-20 leaf); Y1 on 207,310 untouched calls; Y4 on 312 scorings, converged and dishonest only R2-28 at 1.1434, as predicted, R4 58 of 60 converged (07b 2), R5 60 of 60 honest; Y6 24 of 24 honest; Y7 $r_g \le 1$ on all 2,484 pairs; Y8 453 of 453; Y9 none of 178 unconverged calls with a depth-20 leaf below a refused leaf, of 07b's 198 only §9.5's five unconverged. The stop acts in 82,172 calls (57,659 analytic), 977,289 stopped leaves; 193 group calls newly converged, none newly unconverged; regions 0.917×. The Mac Studio review passed every §C.2 check; on the laptop the copy (688 + 15 files) was checked by SHA-256 and Y4, Y6 and two rehearsal rows re-checked. Deviations 28 (rehearsal) and 23 (census), all classified and accepted. Closed `[07b-rate-range-rule-chases-noise-leaves-beyond-the-window-stop]`; narrowed `[06d-cc-nested-estimate-measures-the-coarse-rule]` and `[07-c2-gate-threshold-was-never-measured]`; opened `[07c-chase-stop-acts-on-unreferenced-analytic-calls]`, `[07c-stopped-leaf-declaration-overstates]` and `[07c-integrand-noise-above-the-cc-floor]`. Before: ⏸ **Part A** ran on the Mac Studio from 2026-11-18 in `SecondaryGWKit-lpf07c-2fd979f` at `2fd979fd` and stopped at §2.7 on 2026-11-19; extended on R2-28; the fix is variant (S), §1, §3 and §9 written, Part A's records in `docs/levin-phase-floor/07c/measurement/` (Decisions, **07c Part A stop**). **Part B, the code, committed 2026-11-19 on the laptop on `cff4237f` as `67b5af74`, reviewed by the orchestrator and pushed on the user's word (Decisions, **07c Part B lands**):** §1.1–§1.5 in `AdaptiveLevin/levin_quadrature.py` (the stop below a refused leaf: `_chase_at_noise_level`, `_LEVIN_CHASE_NOISE_FACTOR = 4.0`, `_LEVIN_CHASE_STOP_LIMIT = 6`, `converged` unchanged, `num_chase_stops`, `num_chase_stopped_leaves` and `num_chase_noise_bisections`), equal to (S) bit for bit, counts included, on 29 test calls and 4,320 LiouvilleGreen draw calls. Tests: `test_levin_chase_stop.py`, 12 ((a) four; (b) a chase on a noisy synthetic integrand, unconverged at the parent with its 6 depth-20 leaves below the refused leaf, converged and honest at the commit (2.3e-5 of its abserr); (c) three; (d); (e); (f) two); breakages (i)–(vii) each caught by the test §3 names. Existing assertions changed where the stop acts: `test_levin_trust_yardstick` test 2 (the three counts admitted; si_1000_exp one stop) and `test_levin_roundoff_exit` test 1 (phase-limited leaves 9 → 11). AdaptiveLevin 129 → 141, the other six roots equal to their baselines. LiouvilleGreen draws: no new failure; 1,269 of 1,269 untouched calls bit-identical; the stop acts in 3,051 calls; **26 calls converged → unconverged** (on their budget, no leaf untrusted; the log's Observations 5). Part C was dispatched from the orchestrator note's §C.5 | code `67b5af74`; records in the records commit | [log](logs/07c-chase-below-a-refused-leaf.md) |
-| 07d | [The $6\pi$ gate, the Clenshaw–Curtis estimate and the integrand's noise](07d-six-pi-gate-and-cc-estimate.md) | `[07-c2-gate-threshold-was-never-measured]`, with `[06d-cc-nested-estimate-measures-the-coarse-rule]` and `[07c-integrand-noise-above-the-cc-floor]` (the threshold is chosen against the estimate on both sides of it), and `[07c-chase-stop-acts-on-unreferenced-analytic-calls]`'s references. Part A measures the integrand's noise, the Clenshaw–Curtis estimate against the true error on leaves filled to 40 scored a stratum, and both routes on leaves in bands of $V$ to $20\pi$, solved both ways; scores estimates and thresholds as variants; references (Rt) and (Ra); a planned stop where the user chooses. R33 against R32; 07c's census re-run, which becomes 08's "before". After 07c, before 08 (Decisions, **07b Part C**, **07d**) | Mac Studio (measurement), laptop (code), Mac Studio (R33, census) | Opus | ✍️ 2026-11-21, with [its orchestrator note](orchestrator/prompt-07d.md); §9.1–§9.3, Part A′, 2026-11-22 | ⏸ **Part A** ran on the Mac Studio on 2026-11-22 at `49ce9642` (code `67b5af74`) and stopped at §2.8; its records are in `docs/levin-phase-floor/07d/measurement/`. No estimate or threshold chosen: on the user's word a second measurement, **Part A′** (§9.2), runs first (Decisions, **07d Part A stop**) | — | — |
-| 08 | Fact-finding for layer 3 and `rtol` | G2's Q4 (iii)–(v) and Q5, measured with 07's guard in place: the depth cap, with the depth-cap experiment and G2's L2 reopened (whether any call should reach the cap; Decisions, **G2 L2, reopened**), the dead `local_atol` branch, what `total_converged` means (with `[06m-calls-flagged-unconverged-within-their-request]`), and `rtol` | Mac Studio | Opus | ⬜ not written | ⬜ | — | — |
+| 07d | [The $6\pi$ gate, the Clenshaw–Curtis estimate and the integrand's noise](07d-six-pi-gate-and-cc-estimate.md) | `[07-c2-gate-threshold-was-never-measured]`, with `[06d-cc-nested-estimate-measures-the-coarse-rule]` and `[07c-integrand-noise-above-the-cc-floor]` (the threshold is chosen against the estimate on both sides of it), and `[07c-chase-stop-acts-on-unreferenced-analytic-calls]`'s references. Part A measures the integrand's noise, the Clenshaw–Curtis estimate against the true error on leaves filled to 40 scored a stratum, and both routes on leaves in bands of $V$ to $20\pi$, solved both ways; scores estimates and thresholds as variants; references (Rt) and (Ra); a planned stop where the user chooses. R33 against R32; 07c's census re-run, which becomes 08's "before". After 07c, before 08 (Decisions, **07b Part C**, **07d**) | Mac Studio (measurement), laptop (code), Mac Studio (R33, census) | Opus | ✍️ 2026-11-21, with [its orchestrator note](orchestrator/prompt-07d.md); §9.1–§9.3, Part A′, 2026-11-22; §9.4 with §1 and §3, V93T10, 2026-11-24 | ⏸ **Part A** ran on the Mac Studio on 2026-11-22 at `49ce9642` (code `67b5af74`) and stopped at §2.8; its records are in `docs/levin-phase-floor/07d/measurement/` (Decisions, **07d Part A stop**). **Part A′** ran there on 2026-11-23 at `c2c57a36`, with an addendum on 2026-11-24; its records are in `docs/levin-phase-floor/07d/measurement-a2/`. The fix is variant V93T10 (Decisions, **07d Part A′ stop**). Part B next | — | — |
+| 08 | Fact-finding for layer 3 and `rtol` | G2's Q4 (iii)–(v) and Q5, measured with 07's guard in place: the depth cap, with the depth-cap experiment and G2's L2 reopened (whether any call should reach the cap; Decisions, **G2 L2, reopened**), the dead `local_atol` branch, what `total_converged` means (with `[06m-calls-flagged-unconverged-within-their-request]`), and `rtol`; the trust check's blind spot, `[07c-r2-28-trusted-levin-leaf-hides-a-common-error]` with `[07d-trusted-q-beats-cc93-on-knotted-group-leaves]` (Decisions, **07d Part A′ stop**) | Mac Studio | Opus | ⬜ not written | ⬜ | — | — |
 
 **Legend.** ✍️ written · ⏸ held, with what it waits on · ⬜ not yet · 🟡 partly landed, with what is pending · ✅ landed · ⛔ stopped and superseded.
 
@@ -883,6 +884,19 @@ regions harder.
   threshold it bears on and the noise term. The threshold is chosen against this estimate on both sides
   of it, so the estimate is fixed first. The user: *"Yes, write 07d on that scope"*.
 
+  **Evidence added (2026-11-24), from 07d's Part A and Part A′** (Part A `issues.md` item 2, Part A′
+  `issues.md` item 4; the user: *"I am happy with your proposed rulings, so open them in this
+  commit"*). The tree's declaration $\max(|{\rm CC}_{47}-{\rm CC}_{24}|, \text{floor})$ understates,
+  all on group leaves:
+  - on Part A's v3 reference, on 114 of 928 scored leaves: 68 by table knots and 46 by noise, 32 of
+    those window pieces (`docs/levin-phase-floor/07d/measurement/out/tables/d_e.md`);
+  - on Part A′'s v4, on 74 of 899: 55 by knots and 19 by an error common to ${\rm CC}_{24}$ and
+    ${\rm CC}_{47}$, every one still understating on the 48-point reference
+    (`docs/levin-phase-floor/07d/measurement-a2/out/tables/t2_de_v4.md`).
+
+  07d's fix, V93T10, replaces the declaration with pair93 on ${\rm CC}_{93}$. This issue closes or
+  narrows in 07d's records commit, as 07d's header says.
+
 - **[06c-census-budget-is-not-enforced-inside-a-levin-call]** *(opened 2026-10-30 from 06c's
   census, its C5)* — the census harness's per-unit budget (300 s) is checked only at the next
   `PrimitivePhase.theta_mod_2pi` entry past the deadline (04's I9), which a long Levin call never
@@ -1422,6 +1436,33 @@ regions harder.
   later; it's still a relatively small error in the big picture, and the fix is to find a way of
   surfacing the true error"*. Not assigned.
 
+  **Narrowed (2026-11-24), from 07d's Part A′ and its addendum** (Part A′ `issues.md` item 5, the
+  addendum's `issues_add.md` items 1–3; `docs/levin-phase-floor/07d/measurement-a2/`; prompt 07d
+  §9.4.2–§9.4.3). The mechanism is the trust check's blind spot: when $V_P$, the halves and the
+  quarters share an error, the check passes and the leaf declares about $\delta_1$, below its error.
+  - **A second call.** On `R:a:W2-0-12977-5` a region with $V = 59.4\pi$ at depth 4 has $V_P$, its
+    halves and three Levin quarters sharing an error of $-3.6$ to $-4.0\times10^{-31}$. At $6$–$10\pi$
+    the fourth quarter's own Levin error, $+2.13\times10^{-31}$, makes the check refuse the region. At
+    $12\pi$ that quarter goes to ${\rm CC}_{93}$, the check trusts the region with $D$ 0.12 of its true
+    error, and the call is converged and dishonest at 2.79
+    (`addendum/out/dissect_b.md`). `band_20_32v|group|1e-7#43` ($V = 21.7\pi$) is refused at
+    $6$–$10\pi$ ($r = 3.83$) and trusted at $12\pi$ ($r = 0.135$), at 0.76 of its true error.
+  - **Near the edge.** On 49 trusted checks with $D/\text{true}$ in $[0.95, 1.05]$, the returned $Q$
+    carries the halves' error, $D \approx \delta_1$ follows it by construction, and $V_P$ is about 35×
+    more accurate than $Q$ (`addendum/out/edge_vp_add.json`).
+  - **Under the ${\rm CC}_{47}$ fallback** two trusted checks understate:
+    `band_20_32v|group|1e-7#79` at $8\pi$ (0.91, on both references; visited, not returned) and
+    `band_8_10|group|1e-8#23` at $6\pi$ and $8\pi$ (0.51, on the smooth-phase reference). Under the
+    ${\rm CC}_{93}$ fallback both checks are untrusted.
+  - **Under V93T10,** R2-28 is predicted converged and dishonest at 1.10 (07d §9.4.5). The fix does
+    not change the Levin route's declarations, and the gate at $10\pi$ does not reproduce the two
+    $12\pi$ cases above.
+
+  **Assigned (2026-11-24): prompt 08** (Decisions, **07d Part A′ stop**): the trust check's blind spot,
+  a check that passes when $V_P$, the halves and the quarters share an error and returns $Q$ where
+  $V_P$ is the better value, with `[07d-trusted-q-beats-cc93-on-knotted-group-leaves]`. The user: *"Go
+  with V93T10, and put the blind spot in 08"*.
+
 - **[07c-chase-stop-acts-on-unreferenced-analytic-calls]** *(opened 2026-11-20 by the orchestrator on
   the user's word, from 07c's census agent's `issues.md` item 1 and the Mac Studio review's observation
   1)* — 07c's chase stop acts mostly on analytic calls and on Levin leaves, beyond the basis its
@@ -1498,6 +1539,204 @@ regions harder.
   and structure (independent or not, and against the tables' knots), and a noise term in the
   Clenshaw–Curtis declaration, estimated from the leaf's samples or declared by the caller, chosen at
   07d's stop. The user: *"Yes, write 07d on that scope"*.
+
+  **Evidence added (2026-11-24), from 07d's Part A** (`issues.md` items 3 and 4;
+  `docs/levin-phase-floor/07d/measurement/out/tables/d_n.md`; the user: *"I am happy with your
+  proposed rulings, so open them in this commit"*):
+  - **The source.** On group leaves the scatter is `theta_mod_2pi`'s: the phase-predicted scatter is
+    1.42 ≈ √2 of the measured, and the amplitude-predicted about $10^{-3}$ of it. The raw phase's own
+    rounding is not the source.
+  - **Its structure.** It is node-independent, with lag-1 autocorrelation −0.016.
+  - **Its size.** $\sigma/|g|$ has median $2.75\times10^{-12}$ on group leaves and $5.6\times10^{-15}$ on
+    analytic ones. Window pieces carry the most, at median $3.3\times10^{-10}$ (p90 $6\times10^{-8}$).
+  - **What is declared.** Group calls declare no phase error. The analytic blocks' `theta_abserr`
+    overpredicts their scatter by a median 4.1×.
+
+  07d's fix adds a noise term, $4 s_{\rm own}$, read from the leaf's own Chebyshev coefficients. A
+  declared phase error for group calls, from the composition that forms `theta_mod_2pi`, is not in it.
+  This issue closes or narrows in 07d's records commit.
+
+- **[07d-levin-own-declaration-understates-below-20pi]** *(opened 2026-11-24 by the orchestrator on
+  the user's word, from 07d's Part A `issues.md` item 1)* — the Levin route's own declaration, before
+  its trust check, understates on about a fifth of the band leaves in every band up to $20\pi$, all of
+  them group leaves.
+  - **Where seen** (Part A's table 3, `docs/levin-phase-floor/07d/measurement/out/tables/d_t.md`). 408
+    band leaves understate, 348 of them with knots inside the leaf. The true error over the declaration
+    has median 1.22, p90 72 and p99 326. After the trust check, 5 to 40 leaves a band still
+    understate. Analytic band leaves understate on neither.
+  - **Since.** Part A's v3 reference understates its own error on knotted leaves. On Part A′'s v4 and
+    48-point references, under the trust check as the tree runs it with the ${\rm CC}_{93}$ fallback,
+    no returned band leaf understates at $8$–$12\pi$ (07d §9.4.2). On v4 the declaration before the
+    check is re-measured only on the visited band
+    (`[07d-levin-declaration-at-making-understates-on-knotted-leaves]`).
+
+  **Impact:** none seen on a returned leaf at $10\pi$ once the check acts. The declaration a Levin
+  leaf carries into its check is not a bound.
+
+  **Next step:** whichever campaign takes the Levin solve's error model. Not assigned. The user: *"I am
+  happy with your proposed rulings, so open them in this commit"*.
+
+- **[07d-cc-fallback-does-not-split-at-table-knots]** *(opened 2026-11-24 by the orchestrator on the
+  user's word, from 07d's Part A `issues.md` item 5)* — on heavily knotted group leaves the integrand
+  has structure at the tables' knots. The Clenshaw–Curtis fallback samples across the knots and does
+  not split at them.
+  - **Where seen** (Part A). At the finest sampling, leaves labelled `G` (59) and group leaves with 5+
+    knots (162) show structure, not noise: plateau185/LS is $6.2\times10^5$ and $8.6\times10^4$, and
+    the shift test's spread is $2.1\times10^5$ and $1.1\times10^4$ times $s_{\rm CC}$. No coefficient
+    plateau is found at 47 nodes, and the pieces between knots are each smooth. The candidates nest3N4
+    and pairDecl bound them. The five other candidates understate on 5–7 leaves, all with 59–82 knots.
+  - **Part A′** (tables 4b and 5, `docs/levin-phase-floor/07d/measurement-a2/out/tables/`). Splitting
+    at the knots lowers ${\rm CC}_{47}$'s true error on about 76% of group leaves. ${\rm CC}_{93}$ is
+    closer than $V_P$ on 515 of 516 group leaves with 5+ knots.
+
+  **Impact:** accuracy and cost, not honesty. V93T10's estimate bounds these leaves as measured (07d
+  §9.4.3).
+
+  **Next step:** measure a fallback that splits at the known knots (the production edges) before it
+  estimates, against V93T10, once `[07d-knot-readers-miss-the-three-bessel-sine-component]` is fixed.
+  Not assigned.
+
+- **[07d-analytic-phase-steps-at-its-2pi-wraps]** *(opened 2026-11-24 by the orchestrator on the user's
+  word, from 07d's Part A `issues.md` item 6)* — on analytic leaves `theta_mod_2pi` shows step
+  structure at its $2\pi$ wraps.
+  - **Where seen** (Part A's table 1, `docs/levin-phase-floor/07d/measurement/out/tables/d_n.md`).
+    Plateau47/LS is 1.7 and plateau185/LS 3.5, where white noise gives 1. The lag-1 autocorrelation of
+    $\theta$ is 0.18. On analytic leaves with 1–4 knots the phase-predicted scatter exceeds
+    $\sigma_g$ (1.9 and 1.3).
+  - **Not measured:** the step's size against an analytic call's abserr.
+
+  **Impact:** not measured. Analytic leaves understate under no estimate in Part A or Part A′.
+
+  **Next step:** check `BesselPhaseGroup`'s reduction at the wrap, and measure the step against an
+  analytic call's abserr. Not assigned.
+
+- **[07d-route-a-qawo-cost-scales-with-k-and-span]** *(opened 2026-11-24 by the orchestrator on the
+  user's word, from 07d's Part A `issues.md` item 7)* — Route A's QAWO cannot read analytic blocks at
+  large $|K|$.
+  - **Where seen** (Part A, `docs/levin-phase-floor/07d/measurement/out/refs/refs_projection_07d.json`).
+    At $|K| \sim 10^7$ to $3\times10^8$, QAWO's panels of phase span at most $2^{12}$ rad (r1) and
+    $2^9$ rad (r2), so they number $10^5$ to $8\times10^9$ per integrand. QAWO was dropped on 43 of the
+    46 (Ra) and (Rt) Route A integrands' readings, and their references rest on FCC r1 and r2 alone.
+
+  **Impact:** those references have one independent rule fewer. None was found wrong.
+
+  **Next step:** for `tools/filon_reference.py`'s owner, a Route A rule whose cost does not scale with
+  $|K|$ times the span. Not assigned.
+
+- **[07d-f0-steps-where-the-nearest-table-node-switches]** *(opened 2026-11-24 by the orchestrator on
+  the user's word, from 07d's Part A′ `issues.md` item 1)* — $f_0$ steps in value at each midpoint
+  between table nodes, where the nearest node changes. This is a defect of the integrand, apart from
+  the quadrature.
+  - **Where seen** (Part A′, `docs/levin-phase-floor/07d/measurement-a2/out/repro/midjump_a2.json`;
+    16 group leaves, 82 midpoints).
+    - **The step.** $|f_0(x+u) - f_0(x-u)|$ has median $2.9\times10^{-15}$ of $|f_0|$ and max
+      $1.6\times10^{-14}$, about 13 ulps at the median.
+    - **A step, not a slope.** It is the same at 1, 4 and 64 ulps.
+    - **Controls.** At knot-free points on the same leaves it is $9.5\times10^{-16}$ and
+      $6.3\times10^{-16}$.
+    - **Agreement.** A fit-based jump agrees: median $1.9\times10^{-15}$, max $5.2\times10^{-15}$.
+    - **$f_1$:** no step is resolved.
+  - **Effect** (table 5). The step is above 10× the control at 26–33% of the midpoints. Splitting at
+    the knots, midpoints among them, lowers ${\rm CC}_{47}$'s true error on about 76% of group leaves.
+
+  **Impact:** part of the knot structure the fallback sees. V93T10's estimate bounds it as measured.
+
+  **Next step:** whichever campaign owns the tables' interpolation (the nearest-node evaluation). Not
+  assigned.
+
+- **[07d-knot-readers-miss-the-three-bessel-sine-component]** *(opened 2026-11-24 by the orchestrator
+  on the user's word, from 07d's Part A′ `issues.md` item 2)* — the knot readers do not see knots in
+  the sine component of a three-Bessel J call.
+  - **Where.** `tools/filon_reference.production_edges` and Part A's analytic reader walk `f[0]`'s
+    closure. On the sine component, `f = [lambda x: 0.0, lambda x: -Levin_f(x)]`
+    (`ComputeTargets/QuadSourceIntegral.py`, `_three_bessel_Levin`), `f[0]` has no closure. Both
+    readers raise `TypeError`, and the knots in `f[1]` are never read.
+  - **Size.** 706 of 1,464 analytic leaves, in every analytic stratum, on calls Y1–Y4
+    (`docs/levin-phase-floor/07d/measurement-a2/out/repro/unknown_knots_a2.json`).
+  - **Effect here.** v4 takes these leaves whole: 12 are unsettled (1.7%, against 0.6% for the others),
+    and no verdict changes. V93T10 reads no knots.
+
+  **Impact:** any tool that splits at knots inherits the gap.
+
+  **Next step:** for `tools/filon_reference.py`'s owner. Not assigned.
+
+- **[07d-leaf-reference-understates-its-own-error]** *(opened 2026-11-24 by the orchestrator on the
+  user's word, from 07d's Part A′ `issues.md` item 3, the addendum's `issues_add.md` item 5 and the
+  orchestrator's check of v4)* — the leaf references 07d measured against can understate their own
+  error.
+  - **v4** (Part A′, `docs/levin-phase-floor/07d/measurement-a2/out/repro/second_ref_a2.json`). Of 84
+    leaves where a declaration understates, 7 disagree with a 48-point Gauss–Legendre reference at 256
+    and 512 panels a piece. They disagree by 1.11–2.29 $\epsilon_{\rm v4}$, so $\epsilon_{\rm v4}$ is
+    0.44–0.90 of v4's own error there. Each has a large $\epsilon_{\rm v4}$ relative to the error it
+    judges, or 68+ knots.
+    - **Four of them are all of table 4's returned-leaf Levin understatements.** Every value agrees
+      with the 48-point reference far better than with v4 (`out/tables/understate_ref2.md`).
+    - **The cause.** The orchestrator's own 32-point reference (`orchestrator_check/myv4.out`) finds v4
+      settling one doubling early where $\hat\sigma$ is large.
+    - **Verdicts it decides.** It decides verdicts on (c) at $6\pi$, among them V93's, V93tail's and
+      G's.
+  - **The smooth-phase reference** (the addendum, `addendum/out/tables_add_supp.md`). On some
+    band_20_32 group leaves at $6\pi$ its scatter exceeds the true error. For example,
+    `band_20_32|group|1e-7#94` has scatter $3.3\times10^{-47}$, with $\epsilon_s$ $1.3\times10^{-46}$
+    against a true error of $7.8\times10^{-47}$. Neither reference decides those leaves.
+  - **Part A's v3** understated on knotted leaves (Decisions, **07d Part A stop**).
+
+  **Impact:** a verdict on one reference can be a reference failure. 07d's choice of V93T10 rests on
+  both references (07d §9.4.3).
+
+  **Next step:** this campaign, for the reference rule any re-run uses: settle on a stricter rule where
+  $\hat\sigma$ is large, and cross-check with a second rule. Not assigned.
+
+- **[07d-levin-declaration-at-making-understates-on-knotted-leaves]** *(opened 2026-11-24 by the
+  orchestrator on the user's word, from 07d's Part A′ `issues.md` item 6)* — on the visited band, the
+  tree's own Levin declaration at making understates widely on knotted group leaves.
+  - **Where seen** (Part A′'s table 4, the "Levin own decl" column, `band_20_32v` rows). On group
+    leaves with 5+ knots, 36–44 of about 100 understate at each $T$. These regions were untrusted and
+    bisected, so nothing returned carries the declaration.
+  - **Related:** `[07d-levin-own-declaration-understates-below-20pi]`, Part A's measurement on v3
+    across the bands.
+
+  **Impact:** none on a returned value. It bears on any change that would return a region without its
+  check.
+
+  **Next step:** with the Levin solve's error model. Not assigned.
+
+- **[07d-trusted-q-beats-cc93-on-knotted-group-leaves]** *(opened 2026-11-24 by the orchestrator on
+  the user's word, from 07d's Part A′ `issues.md` item 7)* — on knotted group leaves a trusted Levin
+  $Q$ is usually more accurate than ${\rm CC}_{93}$, which is more accurate than $V_P$.
+  - **Where seen** (Part A′'s table 4b,
+    `docs/levin-phase-floor/07d/measurement-a2/out/tables/t4b_routes_by_kind_knots.md`). On group
+    leaves with 5+ knots, ${\rm CC}_{93}$ is closer than $V_P$ on 515 of 516. $Q$ is closer than
+    ${\rm CC}_{93}$ on 310, against 37.
+  - **Under V93T10,** regions below $10\pi$ that the tree solved by Levin, with a trusted $Q$, return
+    ${\rm CC}_{93}$. pair93 bounds its error, so this is accuracy, not honesty.
+  - **With the blind spot.** Where $V_P$, the halves and the quarters share an error, $Q$ carries the
+    halves' error and $V_P$ is the better value
+    (`[07c-r2-28-trusted-levin-leaf-hides-a-common-error]`).
+
+  **Impact:** on knotted group leaves between $6\pi$ and $10\pi$, a returned value less accurate than a
+  trusted $Q$ could be, within its declaration.
+
+  **Next step:** which value a region returns, with the trust check's blind spot.
+
+  **Assigned (2026-11-24): prompt 08** (Decisions, **07d Part A′ stop**), with
+  `[07c-r2-28-trusted-levin-leaf-hides-a-common-error]`. The user: *"I am happy with your proposed
+  rulings, so open them in this commit"*.
+
+- **[07d-high-v-levin-leaves-understate-far-below-budget]** *(opened 2026-11-24 by the orchestrator on
+  the user's word, from 07d's Part A′ addendum `issues_add.md` item 4 and the orchestrator's
+  observation)* — Levin leaves at very large phase variation understate on their own, far below the
+  call's budget.
+  - **Where seen** (the addendum,
+    `docs/levin-phase-floor/07d/measurement-a2/addendum/out/dissect_b.md`). On `R:a:W2-0-12977-5`,
+    three regions with $V = 662\pi$–$1{,}530\pi$ have declaration over true error 0.0096–0.51 under
+    the tree and every variant. Their errors are about $10^5$ below the call's budget.
+  - **One call measured.** The frequency elsewhere is not measured.
+
+  **Impact:** none on that call's honesty. The Levin route's declaration at large $V$ is not a bound.
+
+  **Next step:** measure the class across the census's high-$V$ leaves, with the Levin solve's error
+  model. Not assigned.
 
 - **[06-time-integrals-must-reach-late-resonances]** *(opened 2026-10-27 by the orchestrator,
   from the user's decision on 06's P1, Decisions **06 P1** and **07 scope**)* — the time integrals

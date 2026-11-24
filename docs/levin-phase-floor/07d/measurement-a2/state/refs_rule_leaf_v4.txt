@@ -1,0 +1,42 @@
+levin-phase-floor 07d Part A' (prompt section 9.2 item 0): the leaf reference v4 and its stated error.
+Fixed 2026-11-23, before any v4 reading of any leaf. Part A's v3 (Part A's state/refs_rule_leaf_07d.txt) is kept beside it,
+not replaced. The implementation is scripts/leafref_v4.py; its SHA-256 is in every output that uses it.
+
+The integrand g = sum_i f_i b_i(theta) exactly as Part A's v3 evaluates it (f by _sample_vectorized, b by
+_Basis_SinCos.eval_basis_and_arguments, so theta_mod_2pi where the phase dict supplies it), at the tree's module.
+
+1. The pieces. The leaf [a, b] is split at its interior knots:
+   - a group call: tools.filon_reference.production_edges(capture) (its own 1e-9 merge), the edges strictly inside (a, b);
+   - an analytic block (production_edges raises): Part A's v3 analytic reader, unchanged (leafcc_07d.py: the breakpoints
+     of every near-region interpolant its arguments reach, and every x_star crossing), the edges strictly inside;
+   - one piece where neither reads any knot (the prompt's "the whole leaf where none are known").
+   The analytic reader is used because its knots are known; splitting a Gauss-Legendre rule at an extra point cannot
+   make it worse (log, deviation on the knots of analytic leaves).
+2. The rule on a piece [p0, p1] at level k (k = 0, 1, ..., 6): n_k = 8 * 2^k uniform panels (n_k = 8, 16, ..., 512),
+   panel j = [p0 + j h, p0 + (j+1) h], h = (p1 - p0)/n_k, the last panel's right end p1 exactly; 24-point Gauss-Legendre
+   (numpy.polynomial.legendre.leggauss(24)) on each panel; I_k = math.fsum of every weighted sample.
+   Its noise: s_k = sigma_hat sqrt(sum of the squared weights of the n_k-panel rule).
+3. sigma_hat, the per-sample scatter: Part A's v3 least squares, re-run by the same code on the same pieces (v3's step 2:
+   the pooled residual RMS of the d_hi fits, with v3's starting degrees and convergence rule). It is checked equal to
+   Part A's recorded sigma_hat on every Part A leaf (a reproduction check; a difference is reported).
+4. Settling, piece by piece. The doubling from level k-1 to level k changes the piece's value by D_k = |I_k - I_{k-1}|,
+   against its combined noise c_k = sqrt(s_k^2 + s_{k-1}^2). A piece settles at the first level k >= 2 at which two
+   successive doublings agree within 3 times their combined noise:
+       D_k <= 3 c_k   and   D_{k-1} <= 3 c_{k-1}.
+   It then takes I_p = I_k, its change D_p = D_k and its noise s_p = s_k. A piece that has not settled at k = 6 (512
+   panels) is unsettled.
+   ("Two successive doublings" is read as both of the last two doublings, not one: a single agreement can be accidental,
+   as on band_10_12|group|1e-7 #3, where Part A's records show the value moving between 16 and 64 panels and settling by
+   256 (prompt section 9.1 item 2). Log, deviation on the reading of the settling rule.)
+5. The leaf: settled iff every piece settled. ref = math.fsum over pieces of I_p.
+   eps_ref = sum over pieces of D_p  +  2 sqrt(sum over pieces of s_p^2)
+   (the last doubling's change, plus twice the noise term). An unsettled leaf is reported, with its pieces' last D and c,
+   and not scored.
+6. Verdicts (prompt section 2.3, unchanged): a declaration D of a rule whose value is v is "bounded" if
+   D >= |v - ref| + eps_ref, "understates" if D < |v - ref| - eps_ref, "undecided" otherwise. A leaf is scored in a table
+   if the verdict of that table's tree declaration is not undecided (Part A's rule: the tree's Clenshaw-Curtis declaration
+   for a Clenshaw-Curtis stratum, the Levin solve's own declaration for a band, each route on its own in section 2.4).
+   "Which is closer" between two values v1, v2 is decided only where | |v1 - ref| - |v2 - ref| | > 2 eps_ref.
+7. The rule reads only the integrand and its knots. It never reads CC_N, CC_{2N-1}, CC_{4N-3}, CC_{8N-7}, any Levin value or
+   any declaration being scored.
+8. Stop (prompt section 9.3): more than a tenth of a stratum's drawn leaves unsettled.

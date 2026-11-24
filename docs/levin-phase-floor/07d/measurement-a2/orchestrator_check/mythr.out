@@ -1,0 +1,10 @@
+== reference: v4
+ T=6pi: analytic cc pair93: 379 scored, 0 under; analytic cc tail93: 379 scored, 0 under; analytic levin: 155 scored, 0 under; group cc pair93: 800 scored, 0 under; group cc tail93: 800 scored, 0 under; group levin: 700 scored, 2 under | ['band_20_32|group|1e-8#52', 'band_20_32|group|1e-7#63']
+ T=8pi: analytic cc pair93: 471 scored, 0 under; analytic cc tail93: 471 scored, 0 under; analytic levin: 136 scored, 0 under; group cc pair93: 920 scored, 0 under; group cc tail93: 920 scored, 0 under; group levin: 587 scored, 0 under | []
+ T=10pi: analytic cc pair93: 575 scored, 0 under; analytic cc tail93: 575 scored, 0 under; analytic levin: 118 scored, 0 under; group cc pair93: 1040 scored, 0 under; group cc tail93: 1040 scored, 0 under; group levin: 474 scored, 0 under | []
+ T=12pi: analytic cc pair93: 675 scored, 0 under; analytic cc tail93: 675 scored, 0 under; analytic levin: 88 scored, 0 under; group cc pair93: 1160 scored, 0 under; group cc tail93: 1160 scored, 0 under; group levin: 380 scored, 0 under | []
+== reference: ref2 where taken
+ T=6pi: analytic cc pair93: 379 scored, 0 under; analytic cc tail93: 379 scored, 0 under; analytic levin: 155 scored, 0 under; group cc pair93: 800 scored, 0 under; group cc tail93: 800 scored, 0 under; group levin: 698 scored, 0 under | []
+ T=8pi: analytic cc pair93: 471 scored, 0 under; analytic cc tail93: 471 scored, 0 under; analytic levin: 136 scored, 0 under; group cc pair93: 920 scored, 0 under; group cc tail93: 920 scored, 0 under; group levin: 587 scored, 0 under | []
+ T=10pi: analytic cc pair93: 575 scored, 0 under; analytic cc tail93: 575 scored, 0 under; analytic levin: 118 scored, 0 under; group cc pair93: 1040 scored, 0 under; group cc tail93: 1040 scored, 0 under; group levin: 474 scored, 0 under | []
+ T=12pi: analytic cc pair93: 675 scored, 0 under; analytic cc tail93: 675 scored, 0 under; analytic levin: 88 scored, 0 under; group cc pair93: 1160 scored, 0 under; group cc tail93: 1160 scored, 0 under; group levin: 380 scored, 0 under | []

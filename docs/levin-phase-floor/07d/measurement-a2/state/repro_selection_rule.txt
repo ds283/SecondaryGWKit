@@ -1,0 +1,11 @@
+levin-phase-floor 07d Part A': the selection for the reproduction check of _check_leaf (prompt section 9.2 item 1), fixed
+2026-11-23 before the check runs. It is scripts/verify_repro_a2.py's docstring:
+from I6's records (out/replays/I6/), checks with is_direct False and forced False, ordered by (sid, seq):
+- group: the first such check of each call, in sid order, for the first 150 calls that have one;
+- analytic: likewise, 150 calls;
+- the first 100 checks whose leaf's phase_span is at least 20 pi;
+- the first 50 checks a rate rule refused;
+- the first 50 checks with a Clenshaw-Curtis solve among their six sub-solves.
+The union, each check once. Compared bit for bit: V_P, V_L + V_R, Q, delta1, delta2, r, nu_B, trusted, refused, rule,
+residual, phase_err, the six sub-routes. One difference is a stop (prompt section 9.3). It must reach 200 checks, group
+and analytic.

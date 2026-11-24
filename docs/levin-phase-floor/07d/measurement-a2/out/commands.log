@@ -1,0 +1,53 @@
+=================== a2-instrument/replay_I6 (out/cmd/a2-instrument/replay_I6.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/run_replays_a2.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/replays /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/state/sids_all_a2.txt I6
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-23T02:23:24Z
+# ----
+I6: 4220 of 4220 written; 4220 equal Part A's tree replay; exit codes {3: 0, 4: 0, 0: 0, 5: 0, 1: 0, 2: 0}
+wall 295 s
+# ----
+# end 2026-11-23T02:28:21Z
+# exit 0
+=================== a2-leaves/leaves_main (out/cmd/a2-leaves/leaves_main.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/run_leaves_a2.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/state/leaves_list_main.txt /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/leaves_a2/logs
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-23T02:33:03Z
+# ----
+1803 specs run, 0 nonzero exits {}; wall 1499 s
+# ----
+# end 2026-11-23T02:58:02Z
+# exit 0
+=================== a2-variants1/replay_batch1 (out/cmd/a2-variants1/replay_batch1.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/run_replays_a2.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/replays /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/state/sids_all_a2.txt V93 V93tail V93T8 V93T10 V93T12 K G
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-23T03:02:35Z
+# ----
+V93: 4220 of 4220 written; 823 equal Part A's tree replay; exit codes {5: 0, 2: 0, 1: 0, 3: 0, 4: 0, 0: 0}
+V93tail: 4220 of 4220 written; 823 equal Part A's tree replay; exit codes {5: 0, 2: 0, 3: 0, 4: 0, 0: 0, 1: 0}
+V93T8: 4220 of 4220 written; 707 equal Part A's tree replay; exit codes {0: 0, 1: 0, 2: 0, 3: 0, 5: 0, 4: 0}
+V93T10: 4220 of 4220 written; 595 equal Part A's tree replay; exit codes {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+V93T12: 4220 of 4220 written; 533 equal Part A's tree replay; exit codes {0: 0, 1: 0, 2: 0, 3: 0, 5: 0, 4: 0}
+K: 4220 of 4220 written; 814 equal Part A's tree replay; exit codes {1: 0, 0: 0, 2: 0, 4: 0, 3: 0, 5: 0}
+G: 4220 of 4220 written; 814 equal Part A's tree replay; exit codes {0: 0, 2: 0, 1: 0, 3: 0, 5: 0, 4: 0}
+wall 6400 s
+# ----
+# end 2026-11-23T04:49:16Z
+# exit 0
+=================== a2-variants2/replay_batch2 (out/cmd/a2-variants2/replay_batch2.txt)
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/run_replays_a2.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/replays /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/state/sids_all_a2.txt KT
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-23T04:50:49Z
+# ----
+KT: 4220 of 4220 written; 698 equal Part A's tree replay; exit codes {2: 0, 4: 0, 1: 0, 5: 0, 0: 0, 3: 0}
+wall 495 s
+# ----
+# end 2026-11-23T04:59:07Z
+# exit 0

@@ -1,0 +1,71 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07d Part A' addendum: smooth-phase reference on band_8_10|group|1e-8#58",
+  "written": "2026-11-24T11:08:54Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/smooth_add.py",
+  "script_sha256": "4bd9408322d8e892034054508af00acb2a16931fe4805c37a63c83dfd664dcba",
+  "filon_reference_sha256": "d37e633bf54a179114b2462529eaaa3836cccff8fe22e0250e6d36d61992c7be",
+  "leaf_record": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/leaves_a2/partA_round1/d_h-1e-8-3-34174_g1.json"
+ },
+ "id": "band_8_10|group|1e-8#58",
+ "route": "B",
+ "n_edges": 3,
+ "error": null,
+ "wall_s": 1.4356109999935143,
+ "value_hex": "-0x1.d7b5fce443e29p-102",
+ "value_30": "-3.63392851312139154191791457661e-31",
+ "scatter": 2.271695934328828e-43,
+ "fit_noise_1sigma": 3.3363495603600047e-43,
+ "eps_s": 8.944395055048837e-43,
+ "counts": null,
+ "readings": [
+  {
+   "impl": "qawo",
+   "res": 1,
+   "value_hex": "-0x1.d7b5fce442a0dp-102",
+   "value_30": "-3.63392851311913720838392666987e-31",
+   "imag_30": "-4.09359866557213696986097112054e-30",
+   "wall_s": 0.05337537500599865
+  },
+  {
+   "impl": "qawo",
+   "res": 2,
+   "value_hex": "-0x1.d7b5fce443e51p-102",
+   "value_30": "-3.63392851312140890431825549776e-31",
+   "imag_30": "-4.09359866557195064170262191422e-30",
+   "wall_s": 0.08543437501066364
+  },
+  {
+   "impl": "fcc",
+   "res": 1,
+   "value_hex": "-0x1.d7b5fce442b03p-102",
+   "value_30": "-3.63392851311924510255582728995e-31",
+   "imag_30": "-4.09359866557215594487229711084e-30",
+   "wall_s": 0.24740687500161584
+  },
+  {
+   "impl": "fcc",
+   "res": 2,
+   "value_hex": "-0x1.d7b5fce443e29p-102",
+   "value_30": "-3.63392851312139154191791457661e-31",
+   "imag_30": "-4.09359866557196312165921816851e-30",
+   "wall_s": 1.0493161670019617
+  }
+ ],
+ "tmap": {
+  "max_sigma": 1.6778264976508682e-13,
+  "max_branch_margin": 3.073956906738258e-11,
+  "all_monotone": true,
+  "direct_segments": 0,
+  "max_edge_jump_unconstrained": 5.4140721214054156e-14,
+  "max_eps_t": 6.857122804960842e-12,
+  "max_rel_correction": 1.7650314645219205e-15,
+  "fit_noise_1sigma": 3.3363495603600047e-43
+ },
+ "jitter": {
+  "value_jittered_30": "-3.633928513117776520854336481e-31",
+  "jittered_minus_smooth": 3.615021063578096e-43,
+  "floor_1sigma_at_these_nodes": 4.960641330240501e-43
+ }
+}

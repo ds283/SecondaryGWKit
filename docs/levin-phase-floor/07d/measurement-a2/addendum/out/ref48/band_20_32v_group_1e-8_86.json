@@ -1,0 +1,35 @@
+{
+ "header": {
+  "title": "levin-phase-floor 07d Part A' addendum: ref48 on band_20_32v|group|1e-8#86",
+  "written": "2026-11-24T10:34:13Z",
+  "host": "mps026298.phys.susx.ac.uk",
+  "script": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/ref48_add.py",
+  "script_sha256": "519493bec594b28a3f163bc150ba7bc90b10990fe611c6825f49d69ee11aabdc",
+  "leafref_v4_sha256": "f365923ca8c5665e10d25a75069556acb2c8f9d4c6f6cfe6f01963e2ebe904b1",
+  "selection_sha256": "db42a3361a1ba4c0f74e932e12d210407e951ba213c2b2c3c56dc285d0ea4cf0",
+  "leaf_record": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/leaves_a2/nb1/d_h-1e-8-2-13674_g4.json",
+  "leaf_record_sha256": "036dfc86d542b9f09dc0ff6679cd45e70070cc6c4faef0ebbd51cfebf33b56f4"
+ },
+ "id": "band_20_32v|group|1e-8#86",
+ "n_pieces": 3,
+ "sigma_hat": 7.250445077454012e-38,
+ "levels": {
+  "512": {
+   "I": "-0x1.5e06b75e998eep-98",
+   "sum_w2": 8.55947236267432e-09
+  },
+  "1024": {
+   "I": "-0x1.5e06b75e9aef5p-98",
+   "sum_w2": 4.279736181337159e-09
+  }
+ },
+ "finest": 1024,
+ "ref48": "-0x1.5e06b75e9aef5p-98",
+ "change": 3.950961020163822e-42,
+ "noise": 9.486437765221125e-42,
+ "eps48": 1.3437398785384946e-41,
+ "dominant": "noise",
+ "moving_at_2048": null,
+ "evals": 221184,
+ "wall_s": 22.22835566700087
+}

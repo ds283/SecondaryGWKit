@@ -1,0 +1,34 @@
+{
+ "header": [
+  "# levin-phase-floor 07d Part A': why the unknown-knot leaves' knots are not read",
+  "# written 2026-11-23T05:29:01Z on mps026298.phys.susx.ac.uk",
+  "# script unknown_knots_a2.py sha256 7fa1e9a8161e9d649561752baea5dce35f264a3bbfb3fe6d31405738cf38cc89",
+  "# tree: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3 HEAD c2c57a36cbad3780986baceb807dcb447975b498 (status --short: empty)",
+  "# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)",
+  "# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/leaves_a2/nb1/d_h-1e-7-0-10558_a13.json sha256 dbb3af09bb8281bf492264a1c2dcc6ad54495c794b64ff8d2a87a2b8fc77f8b0"
+ ],
+ "counts": {
+  "analytic leaves": 1464,
+  "unknown": 706
+ },
+ "shapes": {
+  "[\"function\", \"_three_bessel_Levin.<locals>.<lambda>\", false, \"method\", \"BesselPhaseGroup.theta\", true]": 706
+ },
+ "labels": {
+  "analytic Y1": 125,
+  "analytic Y2": 217,
+  "analytic Y4": 191,
+  "analytic Y3": 173
+ },
+ "examples": {
+  "[\"function\", \"_three_bessel_Levin.<locals>.<lambda>\", false, \"method\", \"BesselPhaseGroup.theta\", true]": {
+   "leaf": "band_20_32v|analytic|1e-7#90",
+   "notify_label": "analytic Y1",
+   "f0_freevars": [],
+   "errors": [
+    "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/unknown_knots_a2.py\", line 55, in main\n    production_edges(rec)\n    ~~~~~~~~~~~~~~~~^^^^^\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3/tools/filon_reference.py\", line 768, in production_edges\n    ta = call[\"f\"][0].__closure__[2].cell_contents\n         ~~~~~~~~~~~~~~~~~~~~~~~~^^^\nTypeError: 'NoneType' object is not subscriptable\n",
+    "Traceback (most recent call last):\n  File \"/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/unknown_knots_a2.py\", line 59, in main\n    list(zip(f0.__code__.co_freevars, [c_.cell_contents for c_ in f0.__closure__]))\n                                                                  ^^^^^^^^^^^^^^\nTypeError: 'NoneType' object is not iterable\n"
+   ]
+  }
+ }
+}

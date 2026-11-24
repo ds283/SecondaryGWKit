@@ -1,0 +1,15 @@
+region V/pi 59.4 ref48 -4.385089e-24 eps 1.32e-37
+  T 6pi trusted False r 4.976056309020838 sub_routes ['levin', 'levin', 'levin', 'levin', 'levin', 'levin'] D None errQ -1.4885164623228461e-31 errVP -4.025374058886373e-31 errH -3.6008704288362093e-31
+  T 8pi trusted False r 4.976056309020838 sub_routes ['levin', 'levin', 'levin', 'levin', 'levin', 'levin'] D None errQ -1.4885164623228461e-31 errVP -4.025374058886373e-31 errH -3.6008704288362093e-31
+  T 10pi trusted False r 4.976056309020838 sub_routes ['levin', 'levin', 'levin', 'levin', 'levin', 'levin'] D None errQ -1.4885164623228461e-31 errVP -4.025374058886373e-31 errH -3.6008704288362093e-31
+  T 12pi trusted True r 0.04842360148174711 sub_routes ['levin', 'levin', 'levin', 'levin', 'levin', 'cc'] D 0x1.cf433ae35b5cap-105 errQ -3.6214264234453134e-31 errVP -4.025374058886373e-31 errH -3.6008704288362093e-31
+left half V/pi 36.3 ref48 -4.385089e-24 eps 1.32e-37
+  T 6pi trusted False r 3.142534491305867 sub_routes ['levin', 'levin', 'levin', 'levin', 'levin', 'levin'] D None errQ None errVP None errH None
+  T 8pi trusted False r 3.161824149592146 sub_routes ['levin', 'levin', 'levin', 'levin', 'levin', 'cc'] D None errQ None errVP None errH None
+  T 10pi trusted False r 3.2651997107651085 sub_routes ['levin', 'levin', 'levin', 'cc', 'cc', 'cc'] D None errQ None errVP None errH None
+  T 12pi trusted False r 3.338331345010139 sub_routes ['levin', 'levin', 'cc', 'cc', 'cc', 'cc'] D None errQ None errVP None errH None
+right half V/pi 23.1 ref48 -4.385089e-24 eps 1.32e-37
+  T 6pi trusted False r 0.44693168298053554 sub_routes ['levin', 'levin', 'levin', 'levin', 'cc', 'cc'] D None errQ None errVP None errH None
+  T 8pi trusted False r 0.47114402671929495 sub_routes ['levin', 'levin', 'cc', 'cc', 'cc', 'cc'] D None errQ None errVP None errH None
+  T 10pi trusted False r 0.47114402671929495 sub_routes ['levin', 'levin', 'cc', 'cc', 'cc', 'cc'] D None errQ None errVP None errH None
+  T 12pi trusted False r 2.148415647282862 sub_routes ['levin', 'cc', 'cc', 'cc', 'cc', 'cc'] D None errQ None errVP None errH None

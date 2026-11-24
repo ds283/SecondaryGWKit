@@ -1,0 +1,156 @@
+{
+ "tree_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6",
+ "variants": {
+  "I6": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_I6.py",
+   "sha256": "a4f443956230c205f55e12bc7ee309dd5a12693e51f9e6911ae225c112f86dd7",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "ced78393ebc69eb22708c77c6c326eae01f95f4dce31b7b0ed68fec6c084b45c",
+   "description": "the tree with pass-through records of every leaf made, every trust check and every leaf removed for bisection; gate at 6 pi; a measurement instrument"
+  },
+  "V93": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_V93.py",
+   "sha256": "d7473694c7110f421467e6a34a3c72b32e9f936030db82d6829a68e98fa34b24",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "718f26d4a8fe3db84f007a223cb4011ea66c9ac36a890c06952596f61b2c18cf",
+   "description": "CC_93 returned on every Clenshaw-Curtis leaf, declaring max(|CC_185 - CC_93|, floor_93) + 4 s_own,93; gate at 6 pi",
+   "basis": "table 3: pair93 understates on no settled leaf; kappa_93 = 4 by out/tables/kappa93.md (p05 of sigma_own93/sigma_hat on chopped group leaves 0.838; 4 x 0.838 >= 2.8)",
+   "T_pi": 6,
+   "est": "pair93",
+   "kappa": 4.0,
+   "knots": false,
+   "gate_knots": null,
+   "knot_kinds": null
+  },
+  "V93tail": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_V93tail.py",
+   "sha256": "5e16416880278e284801dd798dcfffc164ca408e77f8001428a68ea3035f1c6c",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "718f26d4a8fe3db84f007a223cb4011ea66c9ac36a890c06952596f61b2c18cf",
+   "description": "CC_93 returned, declaring max(tail_sum4 of the 93 coefficients, floor_93) + 4 s_own,93, no extra evaluations; gate at 6 pi",
+   "basis": "table 3: tail93 understates on no settled leaf; the agent's choice, the zero-cost qualifying candidate",
+   "T_pi": 6,
+   "est": "tail93",
+   "kappa": 4.0,
+   "knots": false,
+   "gate_knots": null,
+   "knot_kinds": null
+  },
+  "V93T8": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_V93T8.py",
+   "sha256": "267c5a4f5a4c1f124ef70e830805d226161a1d6de07c94eb50be97e13ec7f780",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "718f26d4a8fe3db84f007a223cb4011ea66c9ac36a890c06952596f61b2c18cf",
+   "description": "V93 with the gate at 8 pi",
+   "basis": "table 4 (out/tables/t4_dt.md): under the CC_93 fallback and every qualifying CC_93 declaration, both sides are bounded, not vacuous, for group and analytic calls at T = 8, 10, 12 pi, and at no other T of the grid (6 pi and 4 pi: the Levin side understates on 2 group leaves; 16 and 20 pi: on 1 analytic leaf); at most three values (section 9.2 item 6)",
+   "T_pi": 8,
+   "est": "pair93",
+   "kappa": 4.0,
+   "knots": false,
+   "gate_knots": null,
+   "knot_kinds": null
+  },
+  "V93T10": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_V93T10.py",
+   "sha256": "f85976fc6bf6d5e00ff3d10dc7d363cd1449a9b81ab2a751685b3409d5963b9d",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "718f26d4a8fe3db84f007a223cb4011ea66c9ac36a890c06952596f61b2c18cf",
+   "description": "V93 with the gate at 10 pi",
+   "basis": "table 4 (out/tables/t4_dt.md): under the CC_93 fallback and every qualifying CC_93 declaration, both sides are bounded, not vacuous, for group and analytic calls at T = 8, 10, 12 pi, and at no other T of the grid (6 pi and 4 pi: the Levin side understates on 2 group leaves; 16 and 20 pi: on 1 analytic leaf); at most three values (section 9.2 item 6)",
+   "T_pi": 10,
+   "est": "pair93",
+   "kappa": 4.0,
+   "knots": false,
+   "gate_knots": null,
+   "knot_kinds": null
+  },
+  "V93T12": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_V93T12.py",
+   "sha256": "f941a3518ed241eb298f703070b5cd42db8a90aaf5369680371c87225d8f3563",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "718f26d4a8fe3db84f007a223cb4011ea66c9ac36a890c06952596f61b2c18cf",
+   "description": "V93 with the gate at 12 pi",
+   "basis": "table 4 (out/tables/t4_dt.md): under the CC_93 fallback and every qualifying CC_93 declaration, both sides are bounded, not vacuous, for group and analytic calls at T = 8, 10, 12 pi, and at no other T of the grid (6 pi and 4 pi: the Levin side understates on 2 group leaves; 16 and 20 pi: on 1 analytic leaf); at most three values (section 9.2 item 6)",
+   "T_pi": 12,
+   "est": "pair93",
+   "kappa": 4.0,
+   "knots": false,
+   "gate_knots": null,
+   "knot_kinds": null
+  },
+  "K": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_K.py",
+   "sha256": "c5baad7e1b97d4bf65dd319b4b90e8bbcb74a33200def950f358c2d22fa44993",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "718f26d4a8fe3db84f007a223cb4011ea66c9ac36a890c06952596f61b2c18cf",
+   "description": "V93, gate at 6 pi, bisecting a leaf at the supplied knot nearest its midpoint when one lies in its middle half (halves and quarters alike); knots of every kind production_edges reads, supplied by the harness on group calls; analytic calls bisect as the tree",
+   "basis": "table 5 (out/tables/t5_knots.md): the phase-spline, Green's-function and table-node knots coincide and carry a third-derivative jump in f_0, f_1 (median 1.3e3 and 2.2e3 times the control; above 10x on 92-95%); the nearest-node midpoints carry a jump in the value (median 3.75 and 2.97 times; above 10x on 26-33%); splitting at either kind alone lowers CC_47's true error on 76% and V_P's on 70-73% of the group leaves. Declared breaks: none inside any leaf. So every kind read is supplied",
+   "T_pi": 6,
+   "est": "pair93",
+   "kappa": 4.0,
+   "knots": true,
+   "gate_knots": null,
+   "knot_kinds": [
+    "phase",
+    "G",
+    "node",
+    "mid",
+    "break"
+   ]
+  },
+  "G": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_G.py",
+   "sha256": "c18062e81e0f4238776b4bf0db630fbfdc440200a60aa07e5dcdab6f2363be25",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "718f26d4a8fe3db84f007a223cb4011ea66c9ac36a890c06952596f61b2c18cf",
+   "description": "V93, gate at 6 pi, and a region holding 5 or more supplied knots (every kind) sent to Clenshaw-Curtis whatever its V; group calls only (the harness supplies knots where production_edges applies)",
+   "basis": "item 3 (out/tables/t4b_routes_by_kind_knots.md), returned band leaves of group calls with 5+ knots (516): CC_93 is closer than V_P on 515, V_P on 1, the rest undecided; CC_93 meets the leaf's share of the request on 516, V_P on 446; pair93 bounds CC_93's error there (table 3). The class boundary 5 is the item-3 class (none, 1-4, 5+), not tuned. Q (the tree's returned value on a trusted leaf at 6 pi, its quarters by CC_47) is closer than CC_93 on 310 and CC_93 on 37: the gate replaces V_P as the leaf's own solve, not Q. (Corrected at 03:14Z from figures first written unchecked, before any build.)",
+   "T_pi": 6,
+   "est": "pair93",
+   "kappa": 4.0,
+   "knots": false,
+   "gate_knots": 5,
+   "knot_kinds": [
+    "phase",
+    "G",
+    "node",
+    "mid",
+    "break"
+   ]
+  },
+  "P0": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_P0.py",
+   "sha256": "6be55b4814c618ac80f86c60db85e24c4a435ea8799a2e1b05973f56dcde362c",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "a0984918c3b8d5ba6308c6baf2e9b3deb8a26cc701c85854b00029cac8b4f9db",
+   "description": "a plumbing check, not one of the eight: the family's head, gate, wrapper and bisection edits without the Clenshaw-Curtis edit (est None); must equal the tree bit for bit",
+   "basis": "shows that the edits every V93-family variant shares change nothing by themselves",
+   "T_pi": 6,
+   "est": null,
+   "kappa": 4.0,
+   "knots": false,
+   "gate_knots": null,
+   "knot_kinds": null
+  },
+  "KT": {
+   "path": "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/variants/levin_quadrature_a2_KT.py",
+   "sha256": "fb0e495f63c36691c4e2a024dd19364272434f578967639484fab49e75223d6d",
+   "made_by": "make_variants_a2.py",
+   "made_by_sha256": "a0984918c3b8d5ba6308c6baf2e9b3deb8a26cc701c85854b00029cac8b4f9db",
+   "description": "K at the best (V93-T) threshold, 8 pi (state/kt_rule_a2.md): V93T8 with knot bisection; knots of every kind production_edges reads, supplied by the harness on group calls; analytic calls bisect as the tree",
+   "basis": "state/kt_rule_a2.md, its choice section (V93T8 and V93T10 pass rule 1 of table 7, tie on rule 2 at 2 unconverged, rule 3 takes 8 pi); K's basis for the knots (table 5)",
+   "T_pi": 8,
+   "est": "pair93",
+   "kappa": 4.0,
+   "knots": true,
+   "gate_knots": null,
+   "knot_kinds": [
+    "phase",
+    "G",
+    "node",
+    "mid",
+    "break"
+   ]
+  }
+ }
+}

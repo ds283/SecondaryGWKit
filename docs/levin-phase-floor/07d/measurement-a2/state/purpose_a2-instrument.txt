@@ -1,0 +1,1 @@
+levin-phase-floor 07d Part A' (prompt section 9.2) on the Mac Studio (mps026298; Python 3.13.16): the instrumented variant I6 (the tree with pass-through records of every leaf made, every trust check and every bisection; gate 6 pi) replays Part A's 4,220 calls, six workers; every call must equal Part A's tree replay. Projected about 6 min.

@@ -1,0 +1,38 @@
+band_10_12|group|1e-7#0 3 max rel_loc(1 ulp) 2.6082750854357607e-14
+band_10_12|group|1e-7#1 9 max rel_loc(1 ulp) 1.2969006501688048e-14
+band_10_12|group|1e-8#0 8 max rel_loc(1 ulp) 7.41393662470454e-15
+band_10_12|group|1e-8#1 2 max rel_loc(1 ulp) 9.847501755807257e-15
+band_12_16|group|1e-7#0 5 max rel_loc(1 ulp) 4.124588341515491e-14
+band_12_16|group|1e-7#1 12 max rel_loc(1 ulp) 1.1807095162385839e-14
+band_12_16|group|1e-8#0 12 max rel_loc(1 ulp) 1.4991956835675362e-14
+band_12_16|group|1e-8#1 2 max rel_loc(1 ulp) 9.064890931774009e-15
+band_16_20|group|1e-7#0 2 max rel_loc(1 ulp) 3.548744362357173e-15
+band_16_20|group|1e-7#1 2 max rel_loc(1 ulp) 1.0213705561235246e-14
+band_16_20|group|1e-8#0 1 max rel_loc(1 ulp) 1.1265265300863548e-14
+band_16_20|group|1e-8#1 3 max rel_loc(1 ulp) 8.559746277702834e-15
+band_20_32v|group|1e-7#0 6 max rel_loc(1 ulp) 1.3730599210109531e-14
+band_20_32v|group|1e-7#1 2 max rel_loc(1 ulp) 6.315050206574419e-15
+band_20_32v|group|1e-8#0 12 max rel_loc(1 ulp) 6.301624235136089e-15
+band_20_32v|group|1e-8#1 1 max rel_loc(1 ulp) 6.8442340275469964e-15
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/midjump_a2.py", line 133, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/midjump_a2.py", line 124, in main
+    doc = {"header": header("levin-phase-floor 07d Part A': the value jump at the nearest-node midpoints, relative to |f|",
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            __file__, [ROOT / "out" / "leaves_a2"]),
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/prov.py", line 39, in header
+    lines.append(f"# input {p} sha256 {sha256(p)}")
+                                       ~~~~~~^^^
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/prov.py", line 24, in sha256
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                          ~~~~~~~~~~~~~~~~~~^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py", line 625, in read_bytes
+    with self.open(mode='rb') as f:
+         ~~~~~~~~~^^^^^^^^^^^
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/leaves_a2'

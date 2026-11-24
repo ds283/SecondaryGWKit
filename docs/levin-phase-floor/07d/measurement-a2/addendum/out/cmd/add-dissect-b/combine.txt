@@ -1,0 +1,18 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/dissect_b.py combine
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-24T11:05:19Z
+# ----
+
+call R:a:W2-0-12977-5; ref -1.615200725239328779714563e-24; common regions 15
+
+| code | value | abserr | |v - ref| | ratio | regions | differing | sum true err (diff) | sum total_err (diff) |
+|---|---|---|---|---|---|---|---|---|
+| tree | -1.615201e-24 | 9.24e-32 | 4.48e-33 | 0.0485 | 36 | 21 | -1.13e-35 | 7.58e-32 |
+| V93T8 | -1.615201e-24 | 8.33e-32 | 4.48e-33 | 0.0538 | 32 | 17 | -1.41e-35 | 6.67e-32 |
+| V93T10 | -1.615201e-24 | 9.03e-32 | 4.49e-33 | 0.0498 | 30 | 15 | -2e-37 | 7.37e-32 |
+| V93T12 | -1.615201e-24 | 1.28e-31 | 3.58e-31 | 2.79 | 21 | 6 | -3.62e-31 | 1.11e-31 |
+# ----
+# end 2026-11-24T11:05:23Z
+# exit 0

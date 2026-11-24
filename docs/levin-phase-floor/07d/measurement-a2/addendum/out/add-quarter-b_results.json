@@ -1,0 +1,17 @@
+{
+ "label": "add-quarter-b",
+ "results": [
+  {
+   "name": "quarter_variant",
+   "exit": 0,
+   "wall_s": 4.032280206680298
+  },
+  {
+   "name": "quarter_tree",
+   "exit": 0,
+   "wall_s": 286.67959809303284
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-24T11:12:28Z"
+}

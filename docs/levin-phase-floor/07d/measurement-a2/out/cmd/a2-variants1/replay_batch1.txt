@@ -1,0 +1,17 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts/run_replays_a2.py /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/out/replays /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/state/sids_all_a2.txt V93 V93tail V93T8 V93T10 V93T12 K G
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-23T03:02:35Z
+# ----
+V93: 4220 of 4220 written; 823 equal Part A's tree replay; exit codes {5: 0, 2: 0, 1: 0, 3: 0, 4: 0, 0: 0}
+V93tail: 4220 of 4220 written; 823 equal Part A's tree replay; exit codes {5: 0, 2: 0, 3: 0, 4: 0, 0: 0, 1: 0}
+V93T8: 4220 of 4220 written; 707 equal Part A's tree replay; exit codes {0: 0, 1: 0, 2: 0, 3: 0, 5: 0, 4: 0}
+V93T10: 4220 of 4220 written; 595 equal Part A's tree replay; exit codes {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+V93T12: 4220 of 4220 written; 533 equal Part A's tree replay; exit codes {0: 0, 1: 0, 2: 0, 3: 0, 5: 0, 4: 0}
+K: 4220 of 4220 written; 814 equal Part A's tree replay; exit codes {1: 0, 0: 0, 2: 0, 4: 0, 3: 0, 5: 0}
+G: 4220 of 4220 written; 814 equal Part A's tree replay; exit codes {0: 0, 2: 0, 1: 0, 3: 0, 5: 0, 4: 0}
+wall 6400 s
+# ----
+# end 2026-11-23T04:49:16Z
+# exit 0

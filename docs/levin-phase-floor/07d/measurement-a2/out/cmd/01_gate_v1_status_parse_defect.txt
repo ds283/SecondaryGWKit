@@ -1,0 +1,16 @@
+# levin-phase-floor 07d Part A': the gate
+# written 2026-11-23T02:14:05Z on mps026298.phys.susx.ac.uk
+# script gate_a2.py sha256 1f7359456c7ba5c428a878cee30692539336c2d422ea65b8810fcb7f30cf19c9
+# tree: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3 HEAD c2c57a36cbad3780986baceb807dcb447975b498 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/KEPT_ON_MAC_STUDIO.txt sha256 16499c55459f7f614ee58f54c2662ace899224058f02ca7b7118a73ffa8f029d
+worktree HEAD c2c57a36cbad3780986baceb807dcb447975b498
+worktree status --short --ignored: empty
+git diff --stat 67b5af74 HEAD -- AdaptiveLevin ComputeTargets LiouvilleGreen tools: empty
+levin_quadrature.py sha256 d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6 (equal)
+main checkout HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff, status --short: empty
+Part A's KEPT_ON_MAC_STUDIO.txt: 246 files re-hashed, 0 differ
+runregistrykit list: 103 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 103 finished; 0 with no host recorded.; running or stale: 1
+     levin-phase-floor-07c-refs-20261118T112553                 killed        0/123   4d 14h  levin-phase-floor prompt 07c Part A section 2.5 on the Mac Studio (mps026298; Python 3.13.16): the references R4 (30 chase integrands), R5 (30 of the 306 unreferenced moved calls' integrands) and R31's record, each captured and its replays checked bit for bit at the tree, read by 07's V4 method with tools/filon_reference.py (d37e633b): split FCC at resolutions 1 and 2 (leafref_07c.py, split ratio 1.8) and QAWO at 1 and 2 (one_reading.py) where projected at 30 minutes or less; 123 readings, two at a time, two workers each; projected 17.7 h elapsed with 1.2 margin (out/refs/refs_projection.json); backstop 36 h. Ray-free, no lock, no store opened, nothing written in a tree.  · elapsed 44527 s; running ref-R5-2-14404-g1-fccsplit for 44527 s (project
+other var/levin-phase-floor-07d/* entries: none
+GATE FAILS

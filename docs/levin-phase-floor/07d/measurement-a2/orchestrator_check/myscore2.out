@@ -1,0 +1,10 @@
+referenced 425 scored (Part A's set) 417
+  tree     {'honest': 410, 'dishonest': 4, 'unconverged': 3} new converged-dishonest []
+  V93      {'honest': 412, 'dishonest': 4, 'unconverged': 1} new converged-dishonest []
+  V93tail  {'honest': 412, 'dishonest': 4, 'unconverged': 1} new converged-dishonest []
+  V93T8    {'honest': 412, 'dishonest': 4, 'unconverged': 1} new converged-dishonest []
+  V93T10   {'honest': 412, 'dishonest': 4, 'unconverged': 1} new converged-dishonest []
+  V93T12   {'honest': 411, 'dishonest': 5, 'unconverged': 1} new converged-dishonest [('R:a:W2-0-12977-5', 2.7942401210081464)]
+  K        {'honest': 413, 'dishonest': 3, 'unconverged': 1} new converged-dishonest [('R:c-1e-7-1-1759-5', 1.1909574799536629), ('R:c-1e-8-1-1759-5', 1.1910525720184137), ('R:m-1e-8-3-35006-g4', 1.5600972123207202)]
+  G        {'honest': 416, 'unconverged': 1} new converged-dishonest []
+  KT       {'honest': 413, 'dishonest': 3, 'unconverged': 1} new converged-dishonest [('R:c-1e-7-1-1759-5', 1.1909574799536629), ('R:c-1e-8-1-1759-5', 1.1910525720184137), ('R:m-1e-8-3-35006-g4', 1.2427538203818713)]

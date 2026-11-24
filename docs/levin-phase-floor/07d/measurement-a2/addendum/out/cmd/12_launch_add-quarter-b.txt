@@ -1,0 +1,6 @@
+run id      levin-phase-floor-07d-add-quarter-b-20261124T110740
+run dir     /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07d-add-quarter-b-20261124T110740
+plan        /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/state/plan_add-quarter-b.json (2 commands)
+sh pid      96570
+command     /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/run_07d.py --run-dir /Users/ds283/Documents/Code/SecondaryGWKit/var/runs/levin-phase-floor-07d-add-quarter-b-20261124T110740 --plan /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/state/plan_add-quarter-b.json; exit $?
+launcher    pid 96566, exiting without waiting

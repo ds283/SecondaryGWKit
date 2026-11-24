@@ -1,0 +1,28 @@
+band_20_32|group|1e-7#63: pieces 2 (production_edges), V/pi 24.45, panels to 1024, 9s
+   ladder: 128:9.347236042829123e-32  256:9.347236042822148e-32  512:9.347236042818349e-32  1024:9.347236042827677e-32
+   mine 9.347236042827677e-32 eps_mine 4.91e-43 | v4 9.347236042101244e-32 eps_v4 5.6e-42 | |mine-v4| 7.26e-42 = 1.19 x (eps_mine+eps_v4)
+   ref2 9.34723604281875e-32 eps2 4.67e-43 | |mine-ref2| 8.93e-44 = 0.09 x (eps_mine+eps2)
+   V_P error vs mine 4.02e-45
+   CC93 error vs mine 3.15e-42
+   CC185 error vs mine 4.65e-42
+band_6_8|group|1e-8#40: pieces 2 (production_edges), V/pi 7.96, panels to 1024, 9s
+   ladder: 128:-3.388453265245258e-32  256:-3.3884532655552657e-32  512:-3.3884532656823684e-32  1024:-3.3884532657783e-32
+   mine -3.3884532657783e-32 eps_mine 2.44e-42 | v4 -3.3884532630082295e-32 eps_v4 2.18e-41 | |mine-v4| 2.77e-41 = 1.15 x (eps_mine+eps_v4)
+   ref2 -3.3884532656808664e-32 eps2 2.9e-42 | |mine-ref2| 9.74e-43 = 0.18 x (eps_mine+eps2)
+   V_P error vs mine 9.85e-43
+   CC93 error vs mine 1.3e-42
+   CC185 error vs mine 8.59e-43
+band_20_32|analytic|1e-8#21: pieces 1 (analytic reader), V/pi 31.91, panels to 1024, 4s
+   ladder: 128:4.792921236439902e-15  256:4.792921236442474e-15  512:4.792921236442648e-15  1024:4.792921236442684e-15
+   mine 4.792921236442684e-15 eps_mine 5.19e-28 | v4 4.792921236449666e-15 eps_v4 5.63e-27 | |mine-v4| 6.98e-27 = 1.13 x (eps_mine+eps_v4)
+   ref2 4.79292123644262e-15 eps2 8.05e-28 | |mine-ref2| 6.39e-29 = 0.05 x (eps_mine+eps2)
+   V_P error vs mine 3.16e-29
+   CC93 error vs mine 1.45e-26
+   CC185 error vs mine 2.13e-28
+band_20_32v|group|1e-7#79: pieces 129 (production_edges), V/pi 24.16, panels to 256, 113s
+   ladder: 32:-2.4769097553984526e-32  64:-2.4769097553984516e-32  128:-2.4769097553984505e-32  256:-2.476909755398451e-32
+   mine -2.476909755398451e-32 eps_mine 1.15e-46 | v4 -2.476909755398456e-32 eps_v4 1.55e-45 | |mine-v4| 4.93e-47 = 0.03 x (eps_mine+eps_v4)
+   ref2 -2.476909755398451e-32 eps2 1.26e-46 | |mine-ref2| 0 = 0.00 x (eps_mine+eps2)
+   V_P error vs mine 2.35e-41
+   CC93 error vs mine 8.66e-41
+   CC185 error vs mine 3.99e-41

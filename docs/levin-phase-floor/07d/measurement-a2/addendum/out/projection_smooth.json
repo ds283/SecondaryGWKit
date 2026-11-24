@@ -1,0 +1,1 @@
+{"probe": "out/cmd/06_smooth_probe.txt, 3 leaves in 8.5 s wall (3.2, 1.5, 1.4 s)", "leaves": 27, "projection_s": 80, "limit_s": 7200, "verdict": "under two hours; run, one process"}

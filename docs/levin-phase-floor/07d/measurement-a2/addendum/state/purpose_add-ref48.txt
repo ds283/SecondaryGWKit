@@ -1,0 +1,1 @@
+levin-phase-floor 07d Part A' addendum item A.2 on the Mac Studio (mps026298; Python 3.13.16): ref48 (48-point Gauss-Legendre at 512 and 1,024 panels a piece, 2,048 where the last doubling still moves) on the 154 near-edge leaves of addendum/state/selection_add.json (320 pieces), six workers. Projected 4-10 min (addendum/out/projection_ref48.json).

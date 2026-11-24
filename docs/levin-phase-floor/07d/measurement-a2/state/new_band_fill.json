@@ -1,0 +1,29 @@
+{
+ "specified": {
+  "band_20_32v|analytic|1e-7": 100,
+  "band_20_32v|analytic|1e-8": 100,
+  "band_20_32v|group|1e-7": 100,
+  "band_20_32v|group|1e-8": 100,
+  "band_20_32|analytic|1e-7": 100,
+  "band_20_32|analytic|1e-8": 100,
+  "band_20_32|group|1e-7": 100,
+  "band_20_32|group|1e-8": 100
+ },
+ "rounds": [
+  {
+   "round": "nb1",
+   "k": 100,
+   "added": {
+    "band_20_32v|analytic|1e-7": 100,
+    "band_20_32v|analytic|1e-8": 100,
+    "band_20_32v|group|1e-7": 100,
+    "band_20_32v|group|1e-8": 100,
+    "band_20_32|analytic|1e-7": 100,
+    "band_20_32|analytic|1e-8": 100,
+    "band_20_32|group|1e-7": 100,
+    "band_20_32|group|1e-8": 100
+   },
+   "n_specs": 543
+  }
+ ]
+}

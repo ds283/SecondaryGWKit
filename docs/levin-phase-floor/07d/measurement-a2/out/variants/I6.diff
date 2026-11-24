@@ -1,0 +1,54 @@
+--- tree/levin_quadrature.py
++++ variants/levin_quadrature_a2_I6.py
+@@ -294,6 +294,11 @@
+ # monotone under bisection, so 6 pi did not mean one thing. The number 6 pi is unchanged by 07a,
+ # and has not been measured ([07-c2-gate-threshold-was-never-measured]).
+ SIX_PI = 6.0 * np.pi
++
++# levin-phase-floor 07d Part A' (variant I6): pass-through records, set by the harness to a dict of lists before a call;
++# None (the default) records nothing. Nothing here is read by the module.
++_VARIANT_A2 = "I6"
++_A2_RECORDS = None
+ 
+ # Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every Levin region's
+ # estimate (a Clenshaw-Curtis fallback region carries its own floor, _cc_roundoff_floor(), since
+@@ -4805,6 +4810,13 @@
+             # exempt from the trust check: never trusted, its errors the nested pair's own, and
+             # the call not converged while it is returned
+             leaf.checked = True
++        if _A2_RECORDS is not None:  # Part A' I6: the leaf made (pass-through)
++            _A2_RECORDS["made"].append(
++                (leaf.seq, float(a), float(b), int(depth), bool(is_direct), data.get("phase_span"),
++                 bool(window), bool(guarded), bool(guard_at_depth_max), float(region.value_own),
++                 region.abserr, region.phase_err, region.abserr_truncation, region.own_err,
++                 region.total_err)
++            )
+         return leaf
+ 
+     # The current partition: every leaf, by its sequence number. The candidates for bisection are
+@@ -4902,6 +4914,10 @@
+ 
+     def _remove_leaf(leaf: _levin_leaf) -> None:
+         nonlocal num_nonfinite_errors, num_direct_leaves
++        if _A2_RECORDS is not None:  # Part A' I6: the leaf removed for bisection (pass-through)
++            _A2_RECORDS["removed"].append(
++                (leaf.seq, leaf.region._trusted, leaf.region.total_err, int(leaf.depth))
++            )
+         del leaves[leaf.seq]
+         untrusted_refinable.discard(leaf.seq)
+         _remove_error(leaf)
+@@ -5070,6 +5086,14 @@
+         # level; and a leaf the rate rules refuse roots a subtree, unless it already belongs to one (its
+         # root is then the outermost refused leaf above it, taken at its bisection).
+         chase_check[leaf.seq] = (delta1, delta2, noise_yardstick)
++        if _A2_RECORDS is not None:  # Part A' I6: the check (pass-through)
++            _A2_RECORDS["checks"].append(
++                (leaf.seq, float(a), float(b), int(leaf.depth), bool(leaf.is_direct), bool(forced),
++                 float(own_value), float(halves_sum), float(quarters_sum), delta1, delta2, ratio,
++                 float(noise_yardstick), bool(trusted), bool(refused_by_rate_rule),
++                 (rule if refused_by_rate_rule else None), float(residual), float(region.phase_err),
++                 [bool(x.get("is_direct", False)) for x in (dataL, dataR, LL, LR, RL, RR)])
++            )
+         if refused_by_rate_rule:
+             chase_root.setdefault(leaf.seq, leaf.seq)
+         _remove_error(leaf)

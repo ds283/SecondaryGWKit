@@ -1,0 +1,35 @@
+{
+ "counts": {
+  "returned|cc|CC_93, pair93|T10": 3,
+  "returned|cc|CC_93, pair93|T12": 3,
+  "returned|cc|CC_93, pair93|T6": 3,
+  "returned|cc|CC_93, pair93|T8": 3,
+  "returned|cc|CC_93, tail93|T10": 3,
+  "returned|cc|CC_93, tail93|T12": 3,
+  "returned|cc|CC_93, tail93|T6": 3,
+  "returned|cc|CC_93, tail93|T8": 3,
+  "returned|levin|Q, fallback cc47|T10": 56,
+  "returned|levin|Q, fallback cc47|T12": 25,
+  "returned|levin|Q, fallback cc47|T6": 94,
+  "returned|levin|Q, fallback cc47|T8": 60,
+  "returned|levin|Q, fallback cc93|T10": 45,
+  "returned|levin|Q, fallback cc93|T12": 22,
+  "returned|levin|Q, fallback cc93|T6": 67,
+  "returned|levin|Q, fallback cc93|T8": 43,
+  "visited|levin|Q, fallback cc47|T10": 2,
+  "visited|levin|Q, fallback cc47|T12": 12,
+  "visited|levin|Q, fallback cc47|T8": 2,
+  "visited|levin|Q, fallback cc93|T10": 2,
+  "visited|levin|Q, fallback cc93|T12": 4,
+  "visited|levin|Q, fallback cc93|T6": 1,
+  "visited|levin|Q, fallback cc93|T8": 2
+ },
+ "n_checks": 461,
+ "n_leaves": 154,
+ "leaves_by_set_kind": {
+  "visited|group": 16,
+  "returned|group": 100,
+  "returned|analytic": 38
+ },
+ "pieces_total": 320
+}

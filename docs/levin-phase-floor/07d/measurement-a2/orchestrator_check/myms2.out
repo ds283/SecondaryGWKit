@@ -1,0 +1,9 @@
+== 4b again: exact DCT-I of the same 93 doubles (mpmath, 50 digits)
+band_10_12|group|1e-7#0: cut 93: exact s_own93 2.64245e-37, record 2.64258e-37 (ratio 1.000); |CC93| 1.04e-27; v4 eps 9.41e-40
+band_10_12|analytic|1e-7#0: cut 61: exact s_own93 4.02153e-25, record 6.24068e-25 (ratio 0.644); |CC93| 4.38e-11; v4 eps 4.8e-25
+band_12_16|analytic|1e-7#0: cut 93: exact s_own93 2.53502e-26, record 3.27883e-26 (ratio 0.773); |CC93| 1.11e-12; v4 eps 2.84e-26
+== 5c again: K's split points from production_edges' interior edges
+interior edges 1627 supplied 1627
+span 4.8909462405271835 23.53933562955308 leaf range 4.8909462405271835 23.53933562955308
+leaves 83 splits {'knot': 0, 'mid': 0} problems 1 [('split not a leaf edge', 4.8909462405271835, 23.53933562955308, 14.211370266402652, 'knot')]
+depth-0/1 leaves: [(5.636277856472305, 5.636713875978595, 0), (5.636713875978595, 5.63714993923572, 0)]

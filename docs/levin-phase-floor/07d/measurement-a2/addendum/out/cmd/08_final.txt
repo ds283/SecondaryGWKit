@@ -1,0 +1,56 @@
+# Addendum A.4: the near-edge checks on ref48 and the smooth-phase reference
+
+```
+{
+ "final": {
+  "visited|levin|bounded": 23,
+  "returned|levin|bounded": 334,
+  "returned|levin|undecided": 76,
+  "returned|cc|bounded": 24,
+  "visited|levin|undecided": 1,
+  "visited|levin|understates": 1,
+  "returned|levin|understates": 2
+ },
+ "at_noise_floor": 77,
+ "ref48": {
+  "visited|levin|bounded": 21,
+  "returned|levin|bounded": 319,
+  "returned|levin|undecided": 93,
+  "returned|cc|bounded": 24,
+  "visited|levin|undecided": 3,
+  "visited|levin|understates": 1
+ },
+ "v4_ref48_disagree_checks": 34,
+ "smooth_taken_leaves": 27
+}
+```
+
+## Counts by set, T, route and what (final verdict; and ref48's)
+
+| key | counts |
+|---|---|
+| returned|T10|cc|CC_93, pair93 | {"bounded": 3, "ref48: bounded": 3} |
+| returned|T10|cc|CC_93, tail93 | {"bounded": 3, "ref48: bounded": 3} |
+| returned|T10|levin|Q, fallback cc47 | {"bounded": 44, "ref48: bounded": 41, "undecided (noise floor)": 12, "ref48: undecided": 15} |
+| returned|T10|levin|Q, fallback cc93 | {"bounded": 42, "ref48: bounded": 41, "undecided (noise floor)": 3, "ref48: undecided": 4} |
+| returned|T12|cc|CC_93, pair93 | {"bounded": 3, "ref48: bounded": 3} |
+| returned|T12|cc|CC_93, tail93 | {"bounded": 3, "ref48: bounded": 3} |
+| returned|T12|levin|Q, fallback cc47 | {"undecided (noise floor)": 2, "ref48: undecided": 2, "bounded": 23, "ref48: bounded": 23} |
+| returned|T12|levin|Q, fallback cc93 | {"bounded": 21, "ref48: bounded": 21, "undecided (noise floor)": 1, "ref48: undecided": 1} |
+| returned|T6|cc|CC_93, pair93 | {"bounded": 3, "ref48: bounded": 3} |
+| returned|T6|cc|CC_93, tail93 | {"bounded": 3, "ref48: bounded": 3} |
+| returned|T6|levin|Q, fallback cc47 | {"bounded": 64, "ref48: bounded": 61, "undecided (noise floor)": 29, "ref48: undecided": 33, "understates": 1} |
+| returned|T6|levin|Q, fallback cc93 | {"bounded": 53, "ref48: bounded": 49, "ref48: undecided": 18, "undecided (noise floor)": 14} |
+| returned|T8|cc|CC_93, pair93 | {"bounded": 3, "ref48: bounded": 3} |
+| returned|T8|cc|CC_93, tail93 | {"bounded": 3, "ref48: bounded": 3} |
+| returned|T8|levin|Q, fallback cc47 | {"bounded": 46, "ref48: bounded": 43, "undecided (noise floor)": 13, "ref48: undecided": 17, "understates": 1} |
+| returned|T8|levin|Q, fallback cc93 | {"bounded": 41, "ref48: bounded": 40, "undecided (noise floor)": 2, "ref48: undecided": 3} |
+| visited|T10|levin|Q, fallback cc47 | {"bounded": 2, "ref48: bounded": 2} |
+| visited|T10|levin|Q, fallback cc93 | {"bounded": 2, "ref48: bounded": 2} |
+| visited|T12|levin|Q, fallback cc47 | {"bounded": 11, "ref48: bounded": 9, "ref48: undecided": 3, "undecided (noise floor)": 1} |
+| visited|T12|levin|Q, fallback cc93 | {"bounded": 3, "ref48: bounded": 3, "understates": 1, "ref48: understates": 1} |
+| visited|T6|levin|Q, fallback cc93 | {"bounded": 1, "ref48: bounded": 1} |
+| visited|T8|levin|Q, fallback cc47 | {"bounded": 2, "ref48: bounded": 2} |
+| visited|T8|levin|Q, fallback cc93 | {"bounded": 2, "ref48: bounded": 2} |
+
+## Every check

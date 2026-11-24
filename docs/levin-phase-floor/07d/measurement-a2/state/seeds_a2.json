@@ -1,0 +1,18 @@
+{
+ "title": "levin-phase-floor 07d Part A': seeds, written before any draw (prompt section 9.2)",
+ "written": "2026-11-23T02:40:00Z",
+ "seeds": {
+  "BANDS2": {
+   "seed": 707501,
+   "use": "item 3's new band [20 pi, 32 pi): each stratum (kind x rtol) is permuted by numpy.random.default_rng(BANDS2 + i), i the stratum's index in sorted order, as Part A's leaf_population_07d.py ordered its strata"
+  },
+  "RT2": {
+   "seed": 707502,
+   "use": "new call references (section 9.2 item 6, last paragraph), if any (Rt) stratum is empty: numpy.random.default_rng(RT2 + i) per stratum, as Part A's draw_rt_07d.py"
+  },
+  "BANDS2V": {
+   "seed": 707503,
+   "use": "added 2026-11-23 before its draw (log deviation on the new band): the visited-not-returned regions [20 pi, 32 pi), band_20_32v strata, numpy.random.default_rng(BANDS2V + i) per stratum. BANDS2 now orders only the returned leaves (band_20_32 strata); its first use, on a population mixing both (state/superseded/selection_new_band_a2_v1_mixed.json), was set aside before any leaf was solved."
+  }
+ }
+}

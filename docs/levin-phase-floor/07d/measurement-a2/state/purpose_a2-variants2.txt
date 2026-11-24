@@ -1,0 +1,1 @@
+levin-phase-floor 07d Part A' (prompt section 9.2 item 6) on the Mac Studio (mps026298; Python 3.13.16): variant KT ((K) at 8 pi, chosen by state/kt_rule_a2.md from batch 1's table 7) replays Part A's 4,220 calls, six workers; each call compared with Part A's tree replay. Projected 10-20 min.

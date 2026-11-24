@@ -1,0 +1,24 @@
+{
+ "pieces": 320,
+ "evals_without_2048": 23592960,
+ "evals_all_2048": 55050240,
+ "us_per_eval_max": 63.65478515609387,
+ "cpu_s_lo": 1501.8047999963164,
+ "cpu_s_hi": 3504.211199991405,
+ "wall_s_6_workers_lo": 250.30079999938607,
+ "wall_s_6_workers_hi": 584.0351999985675,
+ "probes": {
+  "visited|group": {
+   "leaf": "band_20_32v|group|1e-8#4",
+   "us_per_eval": 39.36512597609484
+  },
+  "returned|group": {
+   "leaf": "band_20_32|group|1e-8#22",
+   "us_per_eval": 56.55273437810138
+  },
+  "returned|analytic": {
+   "leaf": "band_12_16|analytic|1e-7#45",
+   "us_per_eval": 63.65478515609387
+  }
+ }
+}

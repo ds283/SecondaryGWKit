@@ -1,0 +1,235 @@
+band_10_12|group|1e-7#7: pieces 1 (production_edges), V/pi 10.17, panels to 1024, 5s
+   ladder: 128:5.3415281425599245e-31  256:5.3415281426236135e-31  512:5.341528142664656e-31  1024:5.3415281426769425e-31
+   mine 5.3415281426769425e-31 eps_mine 8.94e-42 | v4 5.341528142619253e-31 eps_v4 2.41e-41 | |mine-v4| 5.77e-42 = 0.17 x (eps_mine+eps_v4)
+   T=6pi cc93: D 6.73e-41 |Q-mine| 6.76e-41 eps_mine 8.94e-42 -> mine undecided (v4 undecided)
+   T=8pi cc93: D 6.73e-41 |Q-mine| 6.76e-41 eps_mine 8.94e-42 -> mine undecided (v4 undecided)
+   T=10pi cc93: D 6.73e-41 |Q-mine| 6.76e-41 eps_mine 8.94e-42 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.49e-42
+   CC93 error vs mine 2.99e-41
+   CC185 error vs mine 2.77e-41
+band_10_12|group|1e-8#24: pieces 1 (production_edges), V/pi 10.17, panels to 1024, 5s
+   ladder: 128:5.3415281425599245e-31  256:5.3415281426236135e-31  512:5.341528142664656e-31  1024:5.3415281426769425e-31
+   mine 5.3415281426769425e-31 eps_mine 8.94e-42 | v4 5.341528142619253e-31 eps_v4 2.41e-41 | |mine-v4| 5.77e-42 = 0.17 x (eps_mine+eps_v4)
+   T=6pi cc93: D 6.73e-41 |Q-mine| 6.76e-41 eps_mine 8.94e-42 -> mine undecided (v4 undecided)
+   T=8pi cc93: D 6.73e-41 |Q-mine| 6.76e-41 eps_mine 8.94e-42 -> mine undecided (v4 undecided)
+   T=10pi cc93: D 6.73e-41 |Q-mine| 6.76e-41 eps_mine 8.94e-42 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.49e-42
+   CC93 error vs mine 2.99e-41
+   CC185 error vs mine 2.77e-41
+band_12_16|group|1e-7#34: pieces 2 (production_edges), V/pi 14.90, panels to 1024, 7s
+   ladder: 128:-1.8739046652373942e-31  256:-1.8739046652275882e-31  512:-1.8739046652272624e-31  1024:-1.8739046652272816e-31
+   mine -1.8739046652272816e-31 eps_mine 1.86e-43 | v4 -1.8739046651969378e-31 eps_v4 2.36e-42 | |mine-v4| 3.03e-42 = 1.19 x (eps_mine+eps_v4)
+   T=6pi cc93: D 2.07e-42 |Q-mine| 3.07e-43 eps_mine 1.86e-43 -> mine bounded (v4 undecided)
+   T=8pi cc93: D 2.02e-42 |Q-mine| 3.07e-43 eps_mine 1.86e-43 -> mine bounded (v4 undecided)
+   T=10pi cc93: D 2.02e-42 |Q-mine| 3.07e-43 eps_mine 1.86e-43 -> mine bounded (v4 undecided)
+   T=12pi cc93: D 2.02e-42 |Q-mine| 3.07e-43 eps_mine 1.86e-43 -> mine bounded (v4 undecided)
+   V_P error vs mine 1.71e-42
+   CC93 error vs mine 4.13e-42
+   CC185 error vs mine 2.43e-42
+band_16_20|group|1e-8#32: pieces 2 (production_edges), V/pi 18.62, panels to 1024, 10s
+   ladder: 128:3.0383665422823062e-31  256:3.038366542280415e-31  512:3.0383665422808217e-31  1024:3.038366542280706e-31
+   mine 3.038366542280706e-31 eps_mine 2.99e-43 | v4 3.0383665422780143e-31 eps_v4 3.93e-42 | |mine-v4| 2.69e-43 = 0.06 x (eps_mine+eps_v4)
+   T=10pi cc93: D 4.03e-42 |Q-mine| 3.98e-42 eps_mine 2.99e-43 -> mine undecided (v4 undecided)
+   T=12pi cc93: D 4.03e-42 |Q-mine| 3.98e-42 eps_mine 2.99e-43 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.88e-45
+   CC93 error vs mine 3.04e-42
+   CC185 error vs mine 3.28e-42
+band_20_32|analytic|1e-7#17: pieces 1 (analytic reader), V/pi 24.94, panels to 1024, 4s
+   ladder: 128:-1.131167856435478e-11  256:-1.1311678564355035e-11  512:-1.1311678564355284e-11  1024:-1.1311678564355313e-11
+   mine -1.1311678564355313e-11 eps_mine 1.57e-25 | v4 -1.1311678564353754e-11 eps_v4 2e-24 | |mine-v4| 1.56e-24 = 0.72 x (eps_mine+eps_v4)
+   T=8pi cc93: D 1.86e-24 |Q-mine| 2.05e-25 eps_mine 1.57e-25 -> mine bounded (v4 undecided)
+   T=10pi cc93: D 1.86e-24 |Q-mine| 2.05e-25 eps_mine 1.57e-25 -> mine bounded (v4 undecided)
+   T=12pi cc93: D 1.86e-24 |Q-mine| 5.02e-25 eps_mine 1.57e-25 -> mine bounded (v4 undecided)
+   V_P error vs mine 3.55e-26
+   CC93 error vs mine 6.45e-25
+   CC185 error vs mine 5.7e-25
+band_20_32|analytic|1e-7#23: pieces 1 (analytic reader), V/pi 31.73, panels to 1024, 4s
+   ladder: 128:-9.299582304302665e-15  256:-9.299582304302185e-15  512:-9.299582304302043e-15  1024:-9.299582304302102e-15
+   mine -9.299582304302102e-15 eps_mine 2.19e-28 | v4 -9.299582304305204e-15 eps_v4 2.65e-27 | |mine-v4| 3.1e-27 = 1.08 x (eps_mine+eps_v4)
+   T=6pi cc93: D 1.21e-27 |Q-mine| 6.31e-30 eps_mine 2.19e-28 -> mine bounded (v4 undecided)
+   T=8pi cc93: D 1.21e-27 |Q-mine| 6.31e-30 eps_mine 2.19e-28 -> mine bounded (v4 undecided)
+   V_P error vs mine 2.52e-29
+   CC93 error vs mine 2.06e-26
+   CC185 error vs mine 9.47e-29
+band_20_32|analytic|1e-8#11: pieces 1 (analytic reader), V/pi 25.97, panels to 1024, 4s
+   ladder: 128:-7.47875650558282e-13  256:-7.478756505582845e-13  512:-7.478756505582927e-13  1024:-7.478756505582946e-13
+   mine -7.478756505582946e-13 eps_mine 9.53e-27 | v4 -7.478756505582394e-13 eps_v4 1.14e-25 | |mine-v4| 5.51e-26 = 0.45 x (eps_mine+eps_v4)
+   T=8pi cc93: D 7.66e-26 |Q-mine| 3.71e-26 eps_mine 9.53e-27 -> mine bounded (v4 undecided)
+   T=10pi cc93: D 7.66e-26 |Q-mine| 3.71e-26 eps_mine 9.53e-27 -> mine bounded (v4 undecided)
+   T=12pi cc93: D 1.13e-25 |Q-mine| 1.24e-26 eps_mine 9.53e-27 -> mine bounded (v4 undecided)
+   V_P error vs mine 0
+   CC93 error vs mine 1.37e-26
+   CC185 error vs mine 8.08e-28
+band_20_32|analytic|1e-8#36: pieces 1 (analytic reader), V/pi 31.73, panels to 1024, 4s
+   ladder: 128:-9.299582304302665e-15  256:-9.299582304302185e-15  512:-9.299582304302043e-15  1024:-9.299582304302102e-15
+   mine -9.299582304302102e-15 eps_mine 2.19e-28 | v4 -9.299582304305204e-15 eps_v4 2.65e-27 | |mine-v4| 3.1e-27 = 1.08 x (eps_mine+eps_v4)
+   T=6pi cc93: D 1.21e-27 |Q-mine| 6.31e-30 eps_mine 2.19e-28 -> mine bounded (v4 undecided)
+   T=8pi cc93: D 1.21e-27 |Q-mine| 6.31e-30 eps_mine 2.19e-28 -> mine bounded (v4 undecided)
+   V_P error vs mine 2.52e-29
+   CC93 error vs mine 2.06e-26
+   CC185 error vs mine 9.47e-29
+band_20_32|analytic|1e-8#38: pieces 1 (analytic reader), V/pi 24.94, panels to 1024, 4s
+   ladder: 128:-1.131167856435478e-11  256:-1.1311678564355035e-11  512:-1.1311678564355284e-11  1024:-1.1311678564355313e-11
+   mine -1.1311678564355313e-11 eps_mine 1.57e-25 | v4 -1.1311678564353754e-11 eps_v4 2e-24 | |mine-v4| 1.56e-24 = 0.72 x (eps_mine+eps_v4)
+   T=8pi cc93: D 1.86e-24 |Q-mine| 2.05e-25 eps_mine 1.57e-25 -> mine bounded (v4 undecided)
+   T=10pi cc93: D 1.86e-24 |Q-mine| 2.05e-25 eps_mine 1.57e-25 -> mine bounded (v4 undecided)
+   T=12pi cc93: D 1.86e-24 |Q-mine| 5.02e-25 eps_mine 1.57e-25 -> mine bounded (v4 undecided)
+   V_P error vs mine 3.55e-26
+   CC93 error vs mine 6.45e-25
+   CC185 error vs mine 5.7e-25
+band_20_32|group|1e-7#40: pieces 2 (production_edges), V/pi 26.43, panels to 1024, 10s
+   ladder: 128:1.7634711669060503e-30  256:1.763471166903673e-30  512:1.763471166902599e-30  1024:1.7634711669030417e-30
+   mine 1.7634711669030417e-30 eps_mine 4.47e-42 | v4 1.7634711668608084e-30 eps_v4 5e-41 | |mine-v4| 4.22e-41 = 0.78 x (eps_mine+eps_v4)
+   T=6pi cc93: D 2.71e-42 |Q-mine| 1.58e-43 eps_mine 4.47e-42 -> mine undecided (v4 undecided)
+   V_P error vs mine 2.72e-42
+   CC93 error vs mine 1.33e-41
+   CC185 error vs mine 3.04e-41
+band_20_32|group|1e-7#52: pieces 3 (production_edges), V/pi 29.08, panels to 1024, 15s
+   ladder: 128:-1.2790752806580657e-33  256:-1.2790752806606978e-33  512:-1.2790752806606552e-33  1024:-1.2790752806604982e-33
+   mine -1.2790752806604982e-33 eps_mine 6.01e-45 | v4 -1.2790752806673292e-33 eps_v4 4.66e-44 | |mine-v4| 6.83e-45 = 0.13 x (eps_mine+eps_v4)
+   T=6pi cc93: D 4.84e-46 |Q-mine| 4.78e-46 eps_mine 6.01e-45 -> mine undecided (v4 undecided)
+   V_P error vs mine 5.47e-48
+   CC93 error vs mine 3.19e-44
+   CC185 error vs mine 3.37e-44
+band_20_32|group|1e-7#7: pieces 4 (production_edges), V/pi 27.77, panels to 1024, 19s
+   ladder: 128:5.0904068390305605e-30  256:5.090406838724284e-30  512:5.090406838588397e-30  1024:5.0904068386254865e-30
+   mine 5.0904068386254865e-30 eps_mine 4e-40 | v4 5.0904068308322344e-30 eps_v4 8.64e-39 | |mine-v4| 7.79e-39 = 0.86 x (eps_mine+eps_v4)
+   T=6pi cc93: D 2.21e-39 |Q-mine| 3.97e-41 eps_mine 4e-40 -> mine bounded (v4 undecided)
+   V_P error vs mine 2.17e-39
+   CC93 error vs mine 1.81e-39
+   CC185 error vs mine 1.09e-39
+band_20_32|group|1e-7#78: pieces 2 (production_edges), V/pi 31.55, panels to 1024, 10s
+   ladder: 128:3.7783256575063665e-33  256:3.778325657590241e-33  512:3.778325657580696e-33  1024:3.778325657565172e-33
+   mine 3.778325657565172e-33 eps_mine 6.52e-44 | v4 3.7783256575076344e-33 eps_v4 5.57e-43 | |mine-v4| 5.75e-44 = 0.09 x (eps_mine+eps_v4)
+   T=6pi cc93: D 5.57e-45 |Q-mine| 5.98e-45 eps_mine 6.52e-44 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.15e-44
+   CC93 error vs mine 5.99e-44
+   CC185 error vs mine 1.12e-43
+band_20_32|group|1e-7#79: pieces 2 (production_edges), V/pi 27.28, panels to 1024, 10s
+   ladder: 128:-3.8599517828834814e-31  256:-3.8599517829095727e-31  512:-3.8599517829024234e-31  1024:-3.8599517829019776e-31
+   mine -3.8599517829019776e-31 eps_mine 1.87e-42 | v4 -3.859951782940116e-31 eps_v4 3.47e-41 | |mine-v4| 3.81e-42 = 0.10 x (eps_mine+eps_v4)
+   T=6pi cc93: D 5.22e-44 |Q-mine| 1.83e-43 eps_mine 1.87e-42 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.53e-43
+   CC93 error vs mine 3.67e-41
+   CC185 error vs mine 1.03e-41
+band_20_32|group|1e-7#94: pieces 2 (production_edges), V/pi 29.47, panels to 1024, 10s
+   ladder: 128:-1.0981858431872939e-35  256:-1.0981858432109475e-35  512:-1.098185843212929e-35  1024:-1.0981858432109746e-35
+   mine -1.0981858432109746e-35 eps_mine 1.69e-46 | v4 -1.0981858433963759e-35 eps_v4 3.34e-45 | |mine-v4| 1.85e-45 = 0.53 x (eps_mine+eps_v4)
+   T=6pi cc93: D 3.85e-48 |Q-mine| 1.53e-47 eps_mine 1.69e-46 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.72e-47
+   CC93 error vs mine 1.15e-46
+   CC185 error vs mine 1.96e-46
+band_20_32|group|1e-8#10: pieces 2 (production_edges), V/pi 31.55, panels to 1024, 10s
+   ladder: 128:3.7783256575063665e-33  256:3.778325657590241e-33  512:3.778325657580696e-33  1024:3.778325657565172e-33
+   mine 3.778325657565172e-33 eps_mine 6.52e-44 | v4 3.7783256575076344e-33 eps_v4 5.57e-43 | |mine-v4| 5.75e-44 = 0.09 x (eps_mine+eps_v4)
+   T=6pi cc93: D 5.57e-45 |Q-mine| 5.98e-45 eps_mine 6.52e-44 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.15e-44
+   CC93 error vs mine 5.99e-44
+   CC185 error vs mine 1.12e-43
+band_20_32|group|1e-8#21: pieces 2 (production_edges), V/pi 28.61, panels to 1024, 10s
+   ladder: 128:-2.7364711319840927e-32  256:-2.736471132004308e-32  512:-2.736471131993119e-32  1024:-2.736471131985793e-32
+   mine -2.736471131985793e-32 eps_mine 2.69e-43 | v4 -2.7364711319995557e-32 eps_v4 4.5e-43 | |mine-v4| 1.38e-43 = 0.19 x (eps_mine+eps_v4)
+   T=6pi cc93: D 1.98e-45 |Q-mine| 1.77e-44 eps_mine 2.69e-43 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.79e-44
+   CC93 error vs mine 4.89e-43
+   CC185 error vs mine 5.91e-43
+band_20_32|group|1e-8#27: pieces 3 (production_edges), V/pi 24.46, panels to 1024, 15s
+   ladder: 128:-3.265666506109739e-30  256:-3.265666506109649e-30  512:-3.2656665061102425e-30  1024:-3.265666506111122e-30
+   mine -3.265666506111122e-30 eps_mine 4.25e-42 | v4 -3.2656665060883955e-30 eps_v4 7.79e-41 | |mine-v4| 2.27e-41 = 0.28 x (eps_mine+eps_v4)
+   T=6pi cc93: D 2.08e-41 |Q-mine| 1.64e-43 eps_mine 4.25e-42 -> mine bounded (v4 undecided)
+   V_P error vs mine 2.02e-41
+   CC93 error vs mine 9.62e-41
+   CC185 error vs mine 7.34e-41
+band_20_32|group|1e-8#30: pieces 3 (production_edges), V/pi 30.94, panels to 1024, 14s
+   ladder: 128:3.51092461009828e-28  256:3.5109246100977285e-28  512:3.510924610098089e-28  1024:3.5109246100978447e-28
+   mine 3.5109246100978447e-28 eps_mine 4.29e-40 | v4 3.510924610109907e-28 eps_v4 5.58e-39 | |mine-v4| 1.21e-39 = 0.20 x (eps_mine+eps_v4)
+   T=6pi cc93: D 9.99e-40 |Q-mine| 2.54e-41 eps_mine 4.29e-40 -> mine bounded (v4 undecided)
+   V_P error vs mine 9.61e-40
+   CC93 error vs mine 7.35e-39
+   CC185 error vs mine 3.67e-39
+band_20_32|group|1e-8#4: pieces 2 (production_edges), V/pi 24.84, panels to 1024, 10s
+   ladder: 128:-1.0134718305626174e-30  256:-1.013471830564528e-30  512:-1.0134718305650156e-30  1024:-1.0134718305650112e-30
+   mine -1.0134718305650112e-30 eps_mine 1.31e-42 | v4 -1.0134718305704705e-30 eps_v4 1.12e-41 | |mine-v4| 5.46e-42 = 0.44 x (eps_mine+eps_v4)
+   T=6pi cc93: D 3.58e-44 |Q-mine| 1.04e-43 eps_mine 1.31e-42 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.08e-43
+   CC93 error vs mine 3.61e-41
+   CC185 error vs mine 7.89e-42
+band_20_32|group|1e-8#45: pieces 2 (production_edges), V/pi 27.01, panels to 1024, 10s
+   ladder: 128:2.4734625601743576e-29  256:2.4734625601670196e-29  512:2.47346256016844e-29  1024:2.473462560169886e-29
+   mine 2.473462560169886e-29 eps_mine 2.2e-40 | v4 2.473462560258586e-29 eps_v4 2.44e-39 | |mine-v4| 8.87e-40 = 0.33 x (eps_mine+eps_v4)
+   T=6pi cc93: D 1.66e-41 |Q-mine| 2.38e-41 eps_mine 2.2e-40 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.95e-41
+   CC93 error vs mine 1.31e-40
+   CC185 error vs mine 2.31e-40
+band_20_32|group|1e-8#48: pieces 2 (production_edges), V/pi 20.45, panels to 1024, 10s
+   ladder: 128:9.58257336276262e-31  256:9.582573362744312e-31  512:9.582573362758707e-31  1024:9.582573362756296e-31
+   mine 9.582573362756296e-31 eps_mine 1.26e-42 | v4 9.582573362795501e-31 eps_v4 6.34e-42 | |mine-v4| 3.92e-42 = 0.52 x (eps_mine+eps_v4)
+   T=6pi cc93: D 2.33e-42 |Q-mine| 3.24e-43 eps_mine 1.26e-42 -> mine bounded (v4 undecided)
+   T=8pi cc93: D 2.33e-42 |Q-mine| 3.24e-43 eps_mine 1.26e-42 -> mine bounded (v4 undecided)
+   T=10pi cc93: D 2.33e-42 |Q-mine| 3.24e-43 eps_mine 1.26e-42 -> mine bounded (v4 undecided)
+   V_P error vs mine 1.99e-42
+   CC93 error vs mine 1.67e-41
+   CC185 error vs mine 1.95e-41
+band_20_32|group|1e-8#58: pieces 2 (production_edges), V/pi 24.58, panels to 1024, 10s
+   ladder: 128:-1.0784069298591644e-31  256:-1.078406929864611e-31  512:-1.07840692985377e-31  1024:-1.0784069298569915e-31
+   mine -1.0784069298569915e-31 eps_mine 2.02e-42 | v4 -1.078406929797818e-31 eps_v4 2.52e-41 | |mine-v4| 5.92e-42 = 0.22 x (eps_mine+eps_v4)
+   T=6pi cc93: D 4.5e-44 |Q-mine| 1.1e-43 eps_mine 2.02e-42 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.27e-43
+   CC93 error vs mine 5.47e-42
+   CC185 error vs mine 6.04e-42
+band_20_32|group|1e-8#75: pieces 4 (production_edges), V/pi 28.74, panels to 1024, 20s
+   ladder: 128:-1.926794629218295e-34  256:-1.926794629225787e-34  512:-1.9267946292250428e-34  1024:-1.92679462922522e-34
+   mine -1.92679462922522e-34 eps_mine 5.08e-46 | v4 -1.926794629240088e-34 eps_v4 3.6e-45 | |mine-v4| 1.49e-45 = 0.36 x (eps_mine+eps_v4)
+   T=6pi cc93: D 2.96e-46 |Q-mine| 5.9e-48 eps_mine 5.08e-46 -> mine undecided (v4 undecided)
+   V_P error vs mine 3.02e-46
+   CC93 error vs mine 1.25e-46
+   CC185 error vs mine 8.98e-46
+band_6_8|group|1e-7#17: pieces 1 (production_edges), V/pi 6.61, panels to 1024, 5s
+   ladder: 128:8.938077264990073e-30  256:8.938077264994287e-30  512:8.938077264995645e-30  1024:8.938077264997566e-30
+   mine 8.938077264997566e-30 eps_mine 6.35e-42 | v4 8.938077264990896e-30 eps_v4 1.8e-41 | |mine-v4| 6.67e-42 = 0.27 x (eps_mine+eps_v4)
+   T=6pi cc93: D 3.65e-41 |Q-mine| 3.29e-41 eps_mine 6.35e-42 -> mine undecided (v4 undecided)
+   V_P error vs mine 1.24e-42
+   CC93 error vs mine 8.38e-41
+   CC185 error vs mine 9.08e-41
+band_6_8|group|1e-7#33: pieces 2 (production_edges), V/pi 6.36, panels to 1024, 10s
+   ladder: 128:2.601863148613833e-29  256:2.601863148608621e-29  512:2.6018631486109674e-29  1024:2.601863148611042e-29
+   mine 2.601863148611042e-29 eps_mine 5.95e-41 | v4 2.6018631486177564e-29 eps_v4 4.57e-40 | |mine-v4| 6.71e-41 = 0.13 x (eps_mine+eps_v4)
+   T=6pi cc93: D 9.19e-41 |Q-mine| 3.33e-41 eps_mine 5.95e-41 -> mine undecided (v4 undecided)
+   V_P error vs mine 4.53e-41
+   CC93 error vs mine 2.68e-40
+   CC185 error vs mine 1.64e-40
+band_6_8|group|1e-7#40: pieces 2 (production_edges), V/pi 6.30, panels to 1024, 10s
+   ladder: 128:-3.22861864049761e-34  256:-3.22861864049801e-34  512:-3.228618640498415e-34  1024:-3.2286186404985853e-34
+   mine -3.2286186404985853e-34 eps_mine 1.46e-46 | v4 -3.2286186404977155e-34 eps_v4 8.32e-46 | |mine-v4| 8.7e-47 = 0.09 x (eps_mine+eps_v4)
+   T=6pi cc93: D 3.9e-45 |Q-mine| 3.9e-45 eps_mine 1.46e-46 -> mine undecided (v4 undecided)
+   V_P error vs mine 3.55e-47
+   CC93 error vs mine 1.93e-45
+   CC185 error vs mine 1.67e-46
+band_6_8|group|1e-7#46: pieces 2 (production_edges), V/pi 7.79, panels to 1024, 10s
+   ladder: 128:1.4250990295151887e-30  256:1.4250990295138472e-30  512:1.425099029514241e-30  1024:1.4250990295142089e-30
+   mine 1.4250990295142089e-30 eps_mine 1.29e-42 | v4 1.4250990295204305e-30 eps_v4 1.62e-41 | |mine-v4| 6.22e-42 = 0.36 x (eps_mine+eps_v4)
+   T=6pi cc93: D 1.3e-41 |Q-mine| 7.55e-42 eps_mine 1.29e-42 -> mine bounded (v4 undecided)
+   V_P error vs mine 4.66e-43
+   CC93 error vs mine 1.08e-41
+   CC185 error vs mine 1.01e-41
+band_6_8|group|1e-8#44: pieces 2 (production_edges), V/pi 7.52, panels to 1024, 10s
+   ladder: 128:3.1195222540105826e-31  256:3.1195222539928444e-31  512:3.1195222539883637e-31  1024:3.119522253989128e-31
+   mine 3.119522253989128e-31 eps_mine 5.25e-43 | v4 3.119522253948835e-31 eps_v4 5.23e-42 | |mine-v4| 4.03e-42 = 0.70 x (eps_mine+eps_v4)
+   T=6pi cc93: D 2.82e-42 |Q-mine| 2.19e-42 eps_mine 5.25e-43 -> mine bounded (v4 undecided)
+   V_P error vs mine 1.82e-43
+   CC93 error vs mine 3.92e-42
+   CC185 error vs mine 4.47e-42
+band_6_8|group|1e-8#59: pieces 2 (production_edges), V/pi 6.30, panels to 1024, 10s
+   ladder: 128:-3.22861864049761e-34  256:-3.22861864049801e-34  512:-3.228618640498415e-34  1024:-3.2286186404985853e-34
+   mine -3.2286186404985853e-34 eps_mine 1.46e-46 | v4 -3.2286186404977155e-34 eps_v4 8.32e-46 | |mine-v4| 8.7e-47 = 0.09 x (eps_mine+eps_v4)
+   T=6pi cc93: D 3.9e-45 |Q-mine| 3.9e-45 eps_mine 1.46e-46 -> mine undecided (v4 undecided)
+   V_P error vs mine 3.55e-47
+   CC93 error vs mine 1.93e-45
+   CC185 error vs mine 1.67e-46
+band_6_8|group|1e-8#8: pieces 2 (production_edges), V/pi 6.20, panels to 1024, 7s
+   ladder: 128:-9.520575309000757e-32  256:-9.520575309009293e-32  512:-9.520575309007209e-32  1024:-9.520575309006535e-32
+   mine -9.520575309006535e-32 eps_mine 5.09e-44 | v4 -9.520575309003234e-32 eps_v4 5.66e-43 | |mine-v4| 3.3e-44 = 0.05 x (eps_mine+eps_v4)
+   T=6pi cc93: D 1.21e-42 |Q-mine| 1.18e-42 eps_mine 5.09e-44 -> mine undecided (v4 undecided)
+   V_P error vs mine 4.64e-45
+   CC93 error vs mine 1.23e-43
+   CC185 error vs mine 7.17e-43

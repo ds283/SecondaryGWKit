@@ -1,0 +1,22 @@
+{
+ "rule": "Supplementary pass (written 2026-11-24 after the A.4 tables were read; not part of the rule fixed before reading): the smooth-phase reference of state/rule_ref48_add.md A.3, unchanged, on every selected leaf with a check still undecided after the fixed passes and no smooth-phase reference yet. Reason: on these the last doubling's change itself exceeds |D - te48|, so the fixed rule's 'noise decides' test excludes them although ref48 cannot resolve them. Their results are reported apart from the fixed passes.",
+ "leaves": [
+  "band_10_12|group|1e-7#24",
+  "band_10_12|group|1e-7#7",
+  "band_10_12|group|1e-8#20",
+  "band_10_12|group|1e-8#24",
+  "band_10_12|group|1e-8#27",
+  "band_10_12|group|1e-8#59",
+  "band_20_32|group|1e-7#78",
+  "band_20_32|group|1e-7#79",
+  "band_20_32|group|1e-7#94",
+  "band_20_32|group|1e-8#10",
+  "band_20_32|group|1e-8#21",
+  "band_20_32|group|1e-8#4",
+  "band_20_32|group|1e-8#45",
+  "band_20_32|group|1e-8#58",
+  "band_6_8|group|1e-7#39",
+  "band_8_10|group|1e-7#41",
+  "band_8_10|group|1e-8#58"
+ ]
+}

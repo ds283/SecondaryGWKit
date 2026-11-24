@@ -1,0 +1,10 @@
+repro rows 488 equal 488 by kind Counter({('group', True): 338, ('analytic', True): 150})
+distinct leaf records 3673
+('analytic', 'cc', 'pair93 CC93') {'bounded': 471} scored 471 -> bounded
+('analytic', 'cc', 'tree CC47') {'bounded': 471} scored 471 -> bounded
+('analytic', 'levin', 'cc47') {'bounded': 158, 'untrusted': 430, 'undecided': 16} scored 158 -> bounded
+('analytic', 'levin', 'cc93') {'bounded': 136, 'untrusted': 451, 'undecided': 17} scored 136 -> bounded
+('group', 'cc', 'pair93 CC93') {'bounded': 920, 'undecided': 3} scored 920 -> bounded
+('group', 'cc', 'tree CC47') {'undecided': 564, 'bounded': 307, 'understates': 52} scored 359 -> fails
+('group', 'levin', 'cc47') {'bounded': 598, 'untrusted': 114, 'undecided': 44} scored 598 -> bounded
+('group', 'levin', 'cc93') {'untrusted': 143, 'bounded': 587, 'undecided': 26} scored 587 -> bounded

@@ -1,0 +1,15 @@
+# levin-phase-floor 07d Part A': the gate
+# written 2026-11-23T05:29:41Z on mps026298.phys.susx.ac.uk
+# script gate_a2.py sha256 d0694fcc684832724f09796c87965fb735c10729784c558d5bd707501f8c50aa
+# tree: /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3 HEAD c2c57a36cbad3780986baceb807dcb447975b498 (status --short: empty)
+# main checkout: /Users/ds283/Documents/Code/SecondaryGWKit HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff (status --short: empty)
+# input /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement/KEPT_ON_MAC_STUDIO.txt sha256 16499c55459f7f614ee58f54c2662ace899224058f02ca7b7118a73ffa8f029d
+worktree HEAD c2c57a36cbad3780986baceb807dcb447975b498
+worktree status --short --ignored: empty
+git diff --stat 67b5af74 HEAD -- AdaptiveLevin ComputeTargets LiouvilleGreen tools: empty
+levin_quadrature.py sha256 d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6 (equal)
+main checkout HEAD 28ebaf0743e0555fb2c4512ce714884005a60eff, status --short: empty
+Part A's KEPT_ON_MAC_STUDIO.txt: 246 files re-hashed, 0 differ
+runregistrykit list: 107 run(s) under /Users/ds283/Documents/Code/SecondaryGWKit/var/runs: 107 finished; 0 with no host recorded.; running or stale: 0
+other var/levin-phase-floor-07d/* entries: none
+GATE HOLDS

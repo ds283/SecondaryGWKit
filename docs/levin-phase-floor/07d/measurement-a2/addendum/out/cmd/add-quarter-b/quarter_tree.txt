@@ -1,0 +1,11 @@
+$ /Users/ds283/Documents/Code/SecondaryGWKit/venv/bin/python -B /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts/quarter_b.py tree
+# PYTHONPATH /Users/ds283/Documents/Code/SecondaryGWKit-lpf07d-c2c57a3:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/../scripts:/Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum/scripts
+# cwd /Users/ds283/Documents/Code/SecondaryGWKit/var/levin-phase-floor-07d/measurement-a2/addendum
+# host mps026298.phys.susx.ac.uk
+# start 2026-11-24T11:07:41Z
+# ----
+RR (cR, b), sixth {"start": "0x1.4218c03c9c906p+4", "end": "0x1.45b4e8df10b9ep+4", "V_over_pi": 10.25630539412343, "ref48": "0x1.5757cc096f48fp-79", "eps48": 4.1759716062185927e-38, "change": 3.6734198463196485e-39, "noise": 3.808629621586628e-38, "finest": 1024, "levin_value": "0x1.5757ce32ec671p-79", "levin_err": 2.1319610800419644e-31, "levin_decl": 3.534092615423522e-37, "cc93": "0x1.5757cc0930388p-79", "cc93_err": -9.488847539226747e-35}
+RL (c, cR), fifth {"start": "0x1.3e7c979a2866fp+4", "end": "0x1.4218c03c9c906p+4", "V_over_pi": 12.852743907021, "ref48": "-0x1.002ee0e9ff58cp-77", "eps48": 6.491251517116268e-38, "change": 1.7632415262334313e-38, "noise": 4.728009990882836e-38, "finest": 1024, "levin_value": "-0x1.002ee147b6890p-77", "levin_err": -1.4439171340140534e-31, "levin_decl": 2.8576521034813005e-37, "cc93": "-0x1.002ee0ea09b33p-77", "cc93_err": -6.231148616915093e-35}
+# ----
+# end 2026-11-24T11:12:27Z
+# exit 0

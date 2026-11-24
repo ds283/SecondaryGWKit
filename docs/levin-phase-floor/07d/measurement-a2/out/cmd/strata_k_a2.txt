@@ -1,0 +1,38 @@
+### K against V93
+
+| stratum | changed | referenced (by set) | empty |
+|---|---|---|---|
+| layout changed, routes unchanged|group|k0|1e-7 | 40 | {'Rt': 4} |  |
+| layout changed, routes unchanged|group|k0|1e-8 | 40 | {'Rt': 4} |  |
+| layout changed, routes unchanged|group|k1|1e-7 | 39 | {'Rt': 4} |  |
+| layout changed, routes unchanged|group|k1|1e-8 | 40 | {'Rt': 4} |  |
+| layout changed, routes unchanged|group|k2|1e-7 | 40 | {'Rt': 4} |  |
+| layout changed, routes unchanged|group|k2|1e-8 | 40 | {'Rt': 4} |  |
+| layout changed, routes unchanged|group|k3|1e-7 | 38 | {'Rt': 2} |  |
+| layout changed, routes unchanged|group|k3|1e-8 | 38 | {'Rt': 2} |  |
+
+regression set (R: sids): {'changed': 401, 'referenced regression': 249, 'referenced regression R2-28': 4}
+
+### KT against V93T8
+
+| stratum | changed | referenced (by set) | empty |
+|---|---|---|---|
+| Levin->CC|group|k0|1e-7 | 31 | {'Rt': 4} |  |
+| Levin->CC|group|k0|1e-8 | 31 | {'Rt': 4} |  |
+| Levin->CC|group|k1|1e-7 | 38 | {'Rt': 4} |  |
+| Levin->CC|group|k1|1e-8 | 38 | {'Rt': 4} |  |
+| Levin->CC|group|k2|1e-7 | 37 | {'Rt': 4} |  |
+| Levin->CC|group|k2|1e-8 | 37 | {'Rt': 4} |  |
+| Levin->CC|group|k3|1e-7 | 29 | {'Rt': 2} |  |
+| Levin->CC|group|k3|1e-8 | 29 | {'Rt': 2} |  |
+| layout changed, routes unchanged|group|k0|1e-7 | 9 | {} | EMPTY |
+| layout changed, routes unchanged|group|k0|1e-8 | 9 | {} | EMPTY |
+| layout changed, routes unchanged|group|k1|1e-7 | 1 | {} | EMPTY |
+| layout changed, routes unchanged|group|k1|1e-8 | 2 | {} | EMPTY |
+| layout changed, routes unchanged|group|k2|1e-7 | 2 | {} | EMPTY |
+| layout changed, routes unchanged|group|k2|1e-8 | 2 | {} | EMPTY |
+| layout changed, routes unchanged|group|k3|1e-7 | 8 | {} | EMPTY |
+| layout changed, routes unchanged|group|k3|1e-8 | 8 | {} | EMPTY |
+
+regression set (R: sids): {'changed': 401, 'referenced regression': 249, 'referenced regression R2-28': 4}
+

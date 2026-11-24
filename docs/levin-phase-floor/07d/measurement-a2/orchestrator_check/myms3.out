@@ -1,0 +1,4 @@
+== 5c: K's split points, from production_edges' interior edges, each window piece recursed from depth 0
+interior edges 1627 supplied 1627
+initial pieces 3
+leaves 83 splits re-derived {'knot': 76, 'mid': 3} problems 1 [('split not a leaf edge', 5.636277856472305, 5.63714993923572, 5.636713897854013, 'mid')] ; replay's knot-break counter {'num_a2_knot_breaks': 459, 'num_a2_cc93': 201}

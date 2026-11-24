@@ -1,0 +1,42 @@
+{
+ "label": "add-dissect-b",
+ "results": [
+  {
+   "name": "measure_2",
+   "exit": 0,
+   "wall_s": 281.310338973999
+  },
+  {
+   "name": "measure_5",
+   "exit": 0,
+   "wall_s": 316.1411020755768
+  },
+  {
+   "name": "measure_1",
+   "exit": 0,
+   "wall_s": 391.8605418205261
+  },
+  {
+   "name": "measure_0",
+   "exit": 0,
+   "wall_s": 501.41875290870667
+  },
+  {
+   "name": "measure_3",
+   "exit": 0,
+   "wall_s": 503.43188405036926
+  },
+  {
+   "name": "measure_4",
+   "exit": 0,
+   "wall_s": 850.6614007949829
+  },
+  {
+   "name": "combine",
+   "exit": 0,
+   "wall_s": 4.041365146636963
+  }
+ ],
+ "ok": true,
+ "ended": "2026-11-24T11:05:23Z"
+}

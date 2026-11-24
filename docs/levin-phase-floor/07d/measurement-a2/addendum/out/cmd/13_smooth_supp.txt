@@ -1,0 +1,17 @@
+band_10_12|group|1e-7#24 B scatter 3.99e-47 3.1 s
+band_10_12|group|1e-7#7 B scatter 3.46e-42 0.7 s
+band_10_12|group|1e-8#20 B scatter 1.29e-42 1.4 s
+band_10_12|group|1e-8#24 B scatter 3.46e-42 0.7 s
+band_10_12|group|1e-8#27 B scatter 3.99e-47 1.4 s
+band_10_12|group|1e-8#59 B scatter 1.82e-44 0.7 s
+band_20_32|group|1e-7#78 B scatter 7.85e-45 1.4 s
+band_20_32|group|1e-7#79 B scatter 3.56e-43 1.4 s
+band_20_32|group|1e-7#94 B scatter 3.28e-47 1.5 s
+band_20_32|group|1e-8#10 B scatter 7.85e-45 1.5 s
+band_20_32|group|1e-8#21 B scatter 2.33e-44 1.4 s
+band_20_32|group|1e-8#4 B scatter 5.69e-44 1.4 s
+band_20_32|group|1e-8#45 B scatter 3.32e-41 1.6 s
+band_20_32|group|1e-8#58 B scatter 2.16e-43 1.4 s
+band_6_8|group|1e-7#39 B scatter 1.21e-46 1.4 s
+band_8_10|group|1e-7#41 B scatter 2.27e-43 1.4 s
+band_8_10|group|1e-8#58 B scatter 2.27e-43 1.4 s
