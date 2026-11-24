@@ -103,8 +103,8 @@ deliberate departures are:
     global budget a leaf whose floor dominates the sum is the one chosen, so
     a floor its halves would cut is cut.
 
-  * Weakly oscillatory regions (total variation of the phase below 6*pi) are handed to a
-    nested Clenshaw-Curtis rule rather than to the Levin rule. The variation V is computed
+  * Weakly oscillatory regions (total variation of the phase below CC_GATE_PHASE_VARIATION =
+    10*pi) are handed to a Clenshaw-Curtis rule rather than to the Levin rule. The variation V is computed
     from the raw phase itself (prompts/levin-phase-floor/07a-window-stop-and-phase-
     variation.md, section 1.1): V = |theta(b) - theta(a)| on a region whose rate theta' has no
     two node samples of opposite strict sign, where theta is monotone and that is exact; else
@@ -116,13 +116,20 @@ deliberate departures are:
     root, up to 8.43 times high with |theta'| weighted to one end, 0.47 of the truth on a
     narrow bump in the middle; and it was not monotone under bisection, so a half of a region
     the gate sent to the fallback could be sent to the Levin solve. V is additive on a
-    monotone region, so a half never reads more than its parent. The threshold 6*pi itself
-    is unchanged, and has never been measured ([07-c2-gate-threshold-was-never-measured]).
-    The extremal Chebyshev grid the Levin solve already uses *is* the
-    Clenshaw-Curtis grid, and its N-point grid is exactly every other node of the
-    (2N-1)-point grid (nesting holds for every N >= 2), so the pair (CC_N, CC_{2N-1})
-    costs 2N-1 integrand and phase evaluations, always, and comes with its own error
-    estimate |CC_{2N-1} - CC_N|. That estimate enters the call's error budget on the
+    monotone region, so a half never reads more than its parent. The threshold was 6*pi,
+    chosen by hand and never measured, until prompts/levin-phase-floor/
+    07d-six-pi-gate-and-cc-estimate.md measured both routes on leaves either side of it and
+    chose 10*pi ([07-c2-gate-threshold-was-never-measured]; CC_GATE_PHASE_VARIATION's comment
+    gives the basis). The extremal Chebyshev grid the Levin solve already uses *is* the
+    Clenshaw-Curtis grid, and the grids nest: the M-point grid is exactly every other node of
+    the (2M-1)-point grid, for every M >= 2. So the rule samples the integrand on the
+    (2N-1)-, (4N-3)- and (8N-7)-point grids at the cost of the last, 8N-7 integrand and phase
+    evaluations, always; it returns CC_{4N-3}, with the error estimate |CC_{8N-7} - CC_{4N-3}|
+    plus a term for the integrand's own scatter read from its samples (since 07d; until then
+    it returned CC_{2N-1} with |CC_{2N-1} - CC_N|, which is CC_N's error, not the returned
+    value's: [06d-cc-nested-estimate-measures-the-coarse-rule],
+    [07c-integrand-noise-above-the-cc-floor]; see _adaptive_levin_subregion_cc()). That estimate
+    enters the call's error budget on the
     same terms as a Levin leaf's, so a fallback leaf holding the total back is bisected
     rather than accepted outright. The gate is the phase's *total variation*, not its
     net change across the region: the two differ whenever theta' changes sign inside
@@ -158,7 +165,8 @@ deliberate departures are:
     Clenshaw-Curtis rule, in pieces of at most 2 pi, whatever their span; the rest is left to the
     loop as before, in the same budget. The location does not depend on any estimate of the
     phase's variation (prompt 07a section 1.1, in place of prompt 07 section 10's Rule A, which
-    skipped a phase whose variation over the span, estimated on the scan, was below SIX_PI): a
+    skipped a phase whose variation over the span, estimated on the scan, was below the gate's
+    6 pi of the time): a
     phase is left unlocated only when there is nothing to locate, its rate exactly zero at every
     finite scan sample. As a safety net, a Levin region whose phase rate changes sign on its own
     Chebyshev nodes is never returned as a Levin region. Without a closed-form rate nothing is
@@ -268,7 +276,7 @@ DEFAULT_LEVIN_DIAGNOSTICS_PATH = Path("levin_diagnostics")
 # a given order, so this is a default, not a universally-best value -- see the log's order-sweep
 # table for the full evidence, including the one place raising the default has a real cost: eq.
 # (151)'s max(G1, k^2)/G0 term rises by (16/12)^2 = 1.78x wherever k^2 > G1, measured in isolation
-# at 1.68x on a region just above the SIX_PI Levin/fallback boundary.
+# at 1.68x on a region just above the Levin/fallback boundary of the time, 6 pi.
 DEFAULT_LEVIN_CHEBSHEV_ORDER = 16
 _LEVIN_MINIMUM_ALLOWED_ORDER = 8
 
@@ -284,16 +292,82 @@ DEFAULT_LEVIN_RELTOL = 1e-7
 # approximate machine epsilon for 64-bit floats
 MACHINE_EPSILON = 1e-16
 
-# The C2 gate's threshold: a region whose phase variation V is below SIX_PI goes to the nested
-# Clenshaw-Curtis rule, any other to the Levin solve (_adaptive_levin_subregion_impl()). Since
-# prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md, section 1.1, V is computed from
-# the raw phase at the region's nodes (_Basis_SinCos.build_Levin_data()), exactly where the phase is
-# monotone; until then it was estimated as mean|theta'| on the nodes times the width, which was
-# biased by an amount that depends on the region's shape (1.27-1.32x high for a near-centred root,
-# up to 8.43x high with |theta'| weighted to one end, 0.47x on a narrow central bump) and not
-# monotone under bisection, so 6 pi did not mean one thing. The number 6 pi is unchanged by 07a,
-# and has not been measured ([07-c2-gate-threshold-was-never-measured]).
-SIX_PI = 6.0 * np.pi
+# The C2 gate's threshold: a region whose phase variation V is below CC_GATE_PHASE_VARIATION goes to
+# the Clenshaw-Curtis rule (_adaptive_levin_subregion_cc()), any other to the Levin solve
+# (_adaptive_levin_subregion_impl()). Its one reader in code is that gate: since
+# prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md, section 1.1, the stationary-point
+# location reads no threshold (prompt 07 section 10's Rule A, which read this constant as SIX_PI, was
+# replaced there). Since 07a, V is computed from the raw phase at the region's nodes
+# (_Basis_SinCos.build_Levin_data()), exactly where the phase is monotone; until then it was
+# estimated as mean|theta'| on the nodes times the width, which was biased by an amount that depends
+# on the region's shape (1.27-1.32x high for a near-centred root, up to 8.43x high with |theta'|
+# weighted to one end, 0.47x on a narrow central bump) and not monotone under bisection, so the
+# threshold of the time, 6 pi, did not mean one thing.
+#
+# The threshold was 6 pi (SIX_PI) from levin-refactor prompt 03 until prompts/levin-phase-floor/
+# 07d-six-pi-gate-and-cc-estimate.md, a number chosen by hand and never measured
+# ([07-c2-gate-threshold-was-never-measured]). 07d measured it (its Part A', section 9.2 item 1,
+# docs/levin-phase-floor/07d/measurement-a2/out/tables/t4_dt.md), with the Levin route as the tree
+# runs it -- V_P, its halves and quarters each by the route a gate at T sends them, the trust check
+# and the rate rules by the tree's own functions -- and the Clenshaw-Curtis route as 07d returns it
+# (CC_{4N-3} with |CC_{8N-7} - CC_{4N-3}| and the noise term; _adaptive_levin_subregion_cc()), on
+# leaves drawn in bands of V from below 6 pi to 32 pi, each against a reference whose own error is
+# measured. The basis of 10 pi:
+#   * both routes are bounded at 10 pi on every scored leaf, for both kinds of call: the Levin side
+#     on 474 group and 118 analytic leaves, the Clenshaw-Curtis side on 1,040 group and 575 analytic
+#     leaves, no leaf understating;
+#   * on 07d's 4,220 replayed census calls (417 referenced and scored) the variant at 10 pi left no
+#     referenced call converged and dishonest that is not so at 6 pi (the four are R2-28's,
+#     [07c-r2-28-trusted-levin-leaf-hides-a-common-error]), at 0.907 of the regions and 2.32 of the
+#     wall of 07c's code;
+#   * 8 pi qualified too, at a wall within 4%; 10 pi sends larger regions to the Clenshaw-Curtis rule,
+#     which the user preferred all else equal. 12 pi did not qualify: raising the gate changes which
+#     sub-solves of a large Levin region's trust check go to the Clenshaw-Curtis rule, and at 12 pi
+#     that removed the dissent that had made the check refuse two regions whose Levin solves share
+#     an error (07d section 9.4.3; two events, so weak evidence, but against 12 pi).
+# The margin is the sample's: no understatement on n scored leaves bounds a band's rate at about
+# 3/n at 95% confidence (07d section 2.3). Where the basis does not reach (07d section 9.4.3):
+#   * the trust check's blind spot: when V_P, its halves and its quarters share an error, the check
+#     passes and the leaf declares about delta1, below its error; the gate does not change that, and
+#     it is 08's ([07c-r2-28-trusted-levin-leaf-hides-a-common-error]);
+#   * near-edge Levin leaves, where the declaration equals the true error by construction and 3 of
+#     the 45 returned at 10 pi were undecided against their references;
+#   * high-V Levin leaves (662-1,530 pi) on one call, which understate under every code, about 1e5
+#     below the call's budget ([07d-high-v-levin-leaves-understate-far-below-budget]);
+#   * the amplitude tables' knots, which no code here knows: the leaf references that scored the
+#     bands split at the knots the test tooling reads, and those readers miss the sine component of
+#     three-Bessel calls ([07d-knot-readers-miss-the-three-bessel-sine-component]).
+CC_GATE_PHASE_VARIATION = 10.0 * np.pi
+
+# The gate's threshold before 07d, read only by the count of regions whose route 07d changed
+# ("num_cc_gate_route_changes" in _adaptive_levin()'s result): a region the gate sends to the
+# Clenshaw-Curtis rule with V at or above this would have gone to the Levin solve at 6 pi. It routes
+# nothing.
+_CC_GATE_FORMER_PHASE_VARIATION = 6.0 * np.pi
+
+# The Clenshaw-Curtis rule's noise term (prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md
+# section 1.1; _cc_own_noise()). The integrand as evaluated carries a scatter from sample to sample,
+# measured at about 3-6e-12 of |g| on the chase's leaves (07c Part A), which the rule's round-off
+# floor (_cc_roundoff_floor()) does not model ([07c-integrand-noise-above-the-cc-floor]). It is read
+# from the leaf's own samples: sigma_own, the rms of the CC_{4N-3} interpolant's Chebyshev
+# coefficients from the cut Chebfun's standardChop finds (Aurentz and Trefethen, "Chopping a
+# Chebyshev series", ACM TOMS 43 (2017) 33) at tolerance _CC_STANDARD_CHOP_TOL, or of its last
+# _CC_OWN_NOISE_TAIL_FALLBACK coefficients if it finds none; then s_own = sigma_own sqrt((n - 1)/2)
+# sqrt(sum_j w_j^2), the scatter's standard deviation in the rule's sum for independent samples of
+# scatter sigma_own (the factor sqrt((n - 1)/2) takes a coefficient's rms to a sample's, n = 4N - 3).
+# The term is _CC_OWN_NOISE_KAPPA s_own, added to the estimate and to both floors.
+#
+# kappa's basis (07d Part A', docs/levin-phase-floor/07d/measurement-a2/out/tables/kappa93.md): the
+# smallest of {3, 4, 5, 6, 8} for which kappa times the 5th percentile of sigma_own / sigma_hat, on
+# the chopped group leaves of the leaf sample, is at least 2.8, Part A's rule (sigma_hat the scatter
+# measured by a least-squares fit on a dense grid). That percentile is 0.838 over 1,089 group
+# leaves, with median 1.01; on 909 analytic leaves it is 1.05, with median 1.81. Where it does not
+# reach: a scatter correlated from node to node (a spline's knots inside the leaf) is not
+# independent, and the term is not a bound there; the knots' error is the estimate's to see
+# (|CC_{8N-7} - CC_{4N-3}| bounded CC_{4N-3}'s error on every settled knotted leaf of Part A').
+_CC_OWN_NOISE_KAPPA = 4.0
+_CC_STANDARD_CHOP_TOL = 2.0**-52
+_CC_OWN_NOISE_TAIL_FALLBACK = 8
 
 # Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every Levin region's
 # estimate (a Clenshaw-Curtis fallback region carries its own floor, _cc_roundoff_floor(), since
@@ -539,7 +613,8 @@ _CC_NODE_TERM_ROUNDING_COUNT = 5
 # with a direct LU solve rather than a least-squares (SVD) solve. Below this the operator is poorly
 # conditioned and we need the minimum-norm solution; see _adaptive_levin_subregion_impl(). The
 # phase change compared is the region's variation V, computed from the raw phase as the C2 gate's is
-# (see SIX_PI; since prompt 07a section 1.1, in place of the estimate mean|theta'| * width). The
+# (see CC_GATE_PHASE_VARIATION; since prompt 07a section 1.1, in place of the estimate
+# mean|theta'| * width). The
 # number 20 pi is unchanged.
 _LEVIN_DIRECT_SOLVE_PHASE_SPAN = 20.0 * np.pi
 
@@ -680,7 +755,9 @@ _LEVIN_LEAF_RATE_RANGE_MAX = 10.0
 # On a Clenshaw-Curtis leaf the declaration rests on the nested pair, which 07c's D2 shows can understate
 # the fine rule's true error (in the chase stratum 5 of 14 resolved leaves above both the pair and the
 # floor; [06d-cc-nested-estimate-measures-the-coarse-rule]); the tree makes the same declaration wherever
-# the fallback declares, and the stop adds none it does not make.
+# the fallback declares, and the stop adds none it does not make. (Since prompts/levin-phase-floor/
+# 07d-six-pi-gate-and-cc-estimate.md a Clenshaw-Curtis leaf returns CC_{4N-3} and declares
+# |CC_{8N-7} - CC_{4N-3}| plus a noise term; see _adaptive_levin_subregion_cc().)
 #
 # On Part A's 454 calls (S) touches 328, the other 126 bit-identical to the tree; of the 201 chase calls 5
 # stay unconverged, each a budget miss with no depth-20 leaf, untouched; it takes 0.745 of the tree's
@@ -694,8 +771,10 @@ _LEVIN_CHASE_STOP_LIMIT = 6
 # user's choice of Part A's variant (d)). A bisection of a window leaf P into L and R counts against
 # its window if and only if (_window_bisection_counts())
 #   1. neither half is unresolved -- dqage's skip, its test defab1.eq.error1.or.defab2.eq.error2. A
-#      Clenshaw-Curtis leaf is unresolved when _DQK21_SATURATION_FACTOR |CC_{2N-1} - CC_N| >= resasc,
-#      both positive, where dqk21 would declare resasc itself (see that constant). A leaf with no resasc
+#      Clenshaw-Curtis leaf is unresolved when _DQK21_SATURATION_FACTOR abserr >= resasc, its solve's
+#      abserr and resasc (since 07d |CC_{8N-7} - CC_{4N-3}| plus the noise term, and the returned
+#      rule's resasc), both positive, where dqk21 would declare resasc itself (see that constant). A
+#      leaf with no resasc
 #      is never unresolved;
 #   2. |(V_L + V_R) - V_P| <= min(_LEVIN_WINDOW_IROFF1_VALUE_RTOL, rtol) |V_L + V_R|, each V a leaf's own
 #      solve's value: the halves barely change the value, measured against the request;
@@ -738,8 +817,10 @@ _LEVIN_WINDOW_IROFF1_LIMIT = 6
 # (dqk21.f), with abserr = |K - G| and resasc = int |f - mean f|, so the error it returns equals
 # resasc exactly when 200 |K - G| >= resasc: the estimate is not yet in its asymptotic regime, and
 # dqage's test defab.eq.error then skips the bisection's iroff1 count. A Clenshaw-Curtis leaf's
-# analogue (07a section 1.2 item 1, Part A's definition): |CC_{2N-1} - CC_N| for |K - G|, and resasc
-# formed on the fine rule (_adaptive_levin_subregion_cc()).
+# analogue (07a section 1.2 item 1, Part A's definition): the leaf's estimate for |K - G|, and resasc
+# formed on the rule it returns (_adaptive_levin_subregion_cc()). Since prompts/levin-phase-floor/
+# 07d-six-pi-gate-and-cc-estimate.md those are |CC_{8N-7} - CC_{4N-3}| plus the noise term, and the
+# (4N - 3)-point rule's resasc; until then |CC_{2N-1} - CC_N| and the (2N - 1)-point rule's.
 _DQK21_SATURATION_FACTOR = 200.0
 
 INTERVAL_TYPE_LEVIN = 0
@@ -1007,7 +1088,7 @@ def _cc_node_term_parts(
     The terms are summed in floating point, with relative errors of order n u of themselves, which
     no part of the bound depends on. No 1/theta' appears, as in 06d: theta' enters only as a factor.
 
-    :param weights: the fine rule's weights, shape (n,).
+    :param weights: the returned rule's weights, shape (n,) (the (4N - 3)-point rule since 07d).
     :param displacements: Delta_k for every node, shape (n,).
     :param displacement_err_abs: the absolute part of Delta's error bound.
     :param f_sample: amplitudes, shape (m, n).
@@ -1086,7 +1167,7 @@ def _cc_roundoff_floor(
         phi_CC = (n + 4) u S  +  u sum_k |w_k| sum_i |f_ik| |a_ik|  +  phi_node,
         S = sum_k |w_k| sum_i |f_ik b_ik|,
 
-    with w_k (k = 1 ... n) the fine rule's weights, f_ik = f_i(x_k) the amplitudes, b_ik the basis
+    with w_k (k = 1 ... n) the returned rule's weights, f_ik = f_i(x_k) the amplitudes, b_ik the basis
     values and a_ik the argument handed to the basis function that gives b_ik (for the (sin, cos)
     basis, one argument per node for both components), and u = _UNIT_ROUNDOFF.
 
@@ -1113,7 +1194,7 @@ def _cc_roundoff_floor(
 
     Why not eq. (151) (_roundoff_floor()). Eq. (151) bounds the conditioning of the Levin
     collocation solve p' + i theta' p = f, whose sensitivity grows like 1/theta' where theta' is
-    small. A fallback solve solves no such system: it is a weighted sum of 2N - 1 samples of
+    small. A fallback solve solves no such system: it is a weighted sum of n samples of
     sum_i f_i w_i(theta), whose rounding has no 1/theta' in it. Carried over from the Levin branch
     (prompts/levin-refactor/logs/04-roundoff-floor.md), eq. (151)'s G0 = min|theta'| made a fallback
     region's floor grow as the region shrank round a stationary point, and become +inf when one sat
@@ -1124,7 +1205,7 @@ def _cc_roundoff_floor(
     computed by rounding a large raw phase. That belongs in the caller's theta_abserr, as the
     module's contract says, and enters through _declared_endpoint_phase_err().
 
-    :param weights: the fine rule's weights, shape (n,).
+    :param weights: the returned rule's weights, shape (n,) (the (4N - 3)-point rule since 07d).
     :param f_sample: amplitudes, shape (m, n).
     :param basis_sample: basis values, shape (m, n).
     :param argument_sample: the arguments the basis values were computed from, shape (m, n).
@@ -1225,7 +1306,10 @@ def _cc_leaf_unresolved(abserr: Optional[float], resasc: Optional[float]) -> boo
     Whether a Clenshaw-Curtis leaf's error estimate is unresolved in dqk21's sense (prompts/
     levin-phase-floor/07a-window-stop-and-phase-variation.md section 1.2 item 1): True when
     _DQK21_SATURATION_FACTOR * abserr >= resasc, both finite and positive, abserr being the leaf's
-    own nested-pair estimate |CC_{2N-1} - CC_N| and resasc its fine rule's sum_j |w_j| |g_j - gbar|.
+    own solve's estimate and resasc its returned rule's sum_j |w_j| |g_j - gbar| (since prompts/
+    levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md, |CC_{8N-7} - CC_{4N-3}| plus the noise
+    term, and the (4N - 3)-point rule's resasc; until then |CC_{2N-1} - CC_N| and the
+    (2N - 1)-point rule's).
     dqk21 would declare resasc itself there. A leaf with no resasc (not a Clenshaw-Curtis leaf), or
     with either number zero or not finite, is never unresolved, as dqk21 leaves its estimate alone
     when either is zero.
@@ -1551,7 +1635,8 @@ class used_interval:
         # For a Levin region (type == INTERVAL_TYPE_LEVIN), abserr/relerr are the step-(4)
         # *resolution* residual: |val0 - valL - valR|. For a Clenshaw-Curtis fallback region
         # (type == INTERVAL_TYPE_DIRECT) there is no such comparison; abserr/relerr are instead
-        # the nested-pair estimate |CC_{2N-1} - CC_N| (see _adaptive_levin_subregion_cc()).
+        # the rule's own estimate, since prompt 07d |CC_{8N-7} - CC_{4N-3}| plus its noise term
+        # (see _adaptive_levin_subregion_cc()).
         # phase_err is the round-off floor -- Chen et al. eq. (151) (_roundoff_floor()) on a Levin
         # region, the rule's own (_cc_roundoff_floor()) on a fallback region -- plus any
         # declared-theta_abserr endpoint contribution (_declared_endpoint_phase_err()) -- an
@@ -1594,7 +1679,7 @@ class used_interval:
 
         # The value this region contributes to the call's value, and which one it is
         # (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section 0.2 (a)): "own", the
-        # region's own solve V_P (the Levin solve, or CC_{2N-1} on the fallback), or "quarters",
+        # region's own solve V_P (the Levin solve, or CC_{4N-3} on the fallback), or "quarters",
         # the quarters sum Q = (V_LL + V_LR) + (V_RL + V_RR) a trusted region returns. value_own
         # is V_P whichever is returned.
         self._value = value
@@ -1623,7 +1708,7 @@ class used_interval:
         self._guarded = guarded
         self._guard_at_depth_max = guard_at_depth_max
 
-        # dqk21's resasc on a Clenshaw-Curtis region's fine rule (prompts/levin-phase-floor/
+        # dqk21's resasc on a Clenshaw-Curtis region's returned rule (prompts/levin-phase-floor/
         # 07a-window-stop-and-phase-variation.md section 1.2), None on a Levin region. Read only by
         # the window's iroff1 count (_cc_leaf_unresolved()); it enters no value or error.
         self._resasc = resasc
@@ -1876,7 +1961,7 @@ class used_interval:
 
     @property
     def resasc(self) -> Optional[float]:
-        """dqk21's resasc on a Clenshaw-Curtis region's fine rule; None on a Levin region."""
+        """dqk21's resasc on a Clenshaw-Curtis region's returned rule; None on a Levin region."""
         return self._resasc
 
     def _combine(self, floor: Optional[float]) -> Optional[float]:
@@ -1917,7 +2002,8 @@ class used_interval:
     @property
     def abserr_fallback(self) -> Optional[float]:
         """
-        Clenshaw-Curtis nested-pair estimate |CC_{2N-1} - CC_N|. Defined only for a fallback
+        Clenshaw-Curtis estimate, since prompt 07d |CC_{8N-7} - CC_{4N-3}| plus its noise term
+        (_adaptive_levin_subregion_cc()). Defined only for a fallback
         region (type == "direct"); None for a Levin region, whose own resolution residual is
         abserr_resolution instead.
         """
@@ -1995,7 +2081,7 @@ class _levin_leaf:
     A leaf is solved and its error known from the moment it is made: "region" is the
     used_interval the call will return for it, whose total_err is the leaf's error e_i, and
     "value" is what it contributes to the call's value -- the region's own solve on the Levin
-    branch, CC_{2N-1} on the Clenshaw-Curtis fallback. "dataL"/"dataR" are its two halves'
+    branch, CC_{4N-3} on the Clenshaw-Curtis fallback. "dataL"/"dataR" are its two halves'
     solves when they are in hand: on the Levin branch always (the step-(4) residual needs them),
     on the fallback branch only once the round-off premise has been checked on it. If the leaf is
     bisected they become its children's own solves, so no half is ever solved twice.
@@ -2610,7 +2696,7 @@ class _Basis_SinCos:
             V = |theta(b) - theta(a)|, with theta at the region's two end nodes, which are its
             endpoints exactly: exact where theta is monotone, from two evaluations of the phase.
             Its rounding is about ulp(theta), 1.5e-8 rad for a raw phase near 1e8, negligible
-            against 6 pi;
+            against the gate's 10 pi;
           * otherwise theta is not monotone on the region and |theta(b) - theta(a)| can read near
             zero, so V is the variation on the node partition, sum_j |theta(x_{j+1}) - theta(x_j)|
             over the nodes in order, summed correctly rounded (math.fsum): exact where theta is
@@ -2619,7 +2705,7 @@ class _Basis_SinCos:
         The raw phase is sampled on the nodes only in the second case (or where it is sampled
         already, below), and at the two ends otherwise, through _sample_vectorized(). Until 07a
         the method returned the estimate mean|theta'| * width, biased by the nodes' crowding to
-        the ends and not monotone under bisection (see SIX_PI's comment). This basis has one
+        the ends and not monotone under bisection (see CC_GATE_PHASE_VARIATION's comment). This basis has one
         phase, so V is that phase's.
 
         :param notify_label: caller-supplied label for this run, used only (with id_label) to
@@ -2797,22 +2883,26 @@ class _Basis_SinCos:
         vectorize_cache: dict,
     ) -> Tuple[np.ndarray, float]:
         """
-        theta' at every node of the Clenshaw-Curtis fallback's fine grid, for its node term
+        theta' at every node of a Clenshaw-Curtis fine grid of 2M - 1 points, from theta' on the
+        coarse grid of M points its even nodes form, for the node term
         (_cc_node_term_parts(); prompts/levin-phase-floor/06e-exact-end-nodes.md), with a bound on
-        its relative error: (theta_prime_fine, eta_theta).
+        its relative error: (theta_prime_fine, eta_theta). _adaptive_levin_subregion_cc() calls it
+        twice (since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md): with M = N,
+        theta_prime_coarse from build_Levin_data(), and with M = 2N - 1, theta_prime_coarse the
+        first call's result, for the (4N - 3)-point rule it returns.
 
         * With "theta_deriv" supplied, the caller's theta' at each node: the even nodes are the
-          coarse grid's (fine_grid[::2] is chebyshev_matrices(x_span, N)'s grid, bit for bit), where
+          coarse grid's (fine_grid[::2] is chebyshev_matrices(x_span, M)'s grid, bit for bit), where
           theta_prime_coarse already holds it, and the odd ones are evaluated here, one evaluation
-          per node, N - 1 in all. eta_theta = _CC_THETA_PRIME_REL_ERROR_SUPPLIED.
+          per node, M - 1 in all. eta_theta = _CC_THETA_PRIME_REL_ERROR_SUPPLIED.
         * Without it, the fine grid's spectral derivative of the raw theta sampled at the fine
           nodes, as build_Levin_data() takes theta' on the coarse grid. Without "theta_mod_2pi"
           the raw theta at the fine nodes is the argument the basis was evaluated from, already in
-          hand (no evaluation); with it, theta is evaluated at each fine node, 2N - 1 in all.
+          hand (no evaluation); with it, theta is evaluated at each fine node, 2M - 1 in all.
           eta_theta = _CC_THETA_PRIME_REL_ERROR_SPECTRAL.
 
         :param theta_prime_coarse: theta' on the coarse grid fine_grid[::2], as build_Levin_data()
-            returned it.
+            returned it, or as a previous call returned it on that grid.
         :param arguments_fine: the arguments the fine-grid basis values were computed from, shape
             (2, n), as eval_basis_and_arguments() returned them.
         """
@@ -2942,7 +3032,7 @@ def _adaptive_levin_subregion_impl(
         (the default) is safe for a direct caller that does not thread one through; it just
         means each of this call's f-components is probed for vectorisation on its own rather
         than sharing a probe with sibling subregions.
-    :param force_direct: solve the region by the nested Clenshaw-Curtis pair whatever its phase
+    :param force_direct: solve the region by the Clenshaw-Curtis rule whatever its phase
         span, bypassing the C2 gate below (prompts/levin-phase-floor/07-stationary-point-guard.md
         section 1.2 item 4): for a piece of a stationary point's window, and for a guarded region
         at depth_max. The value then keeps x_span's orientation (_oriented_cc()).
@@ -2957,16 +3047,20 @@ def _adaptive_levin_subregion_impl(
         identically zero, or zero on a node, does not guard the region (_nodal_guard()). None, or
         empty, when no phase was skipped.
 
-    The C2 gate, and what it does not see. A region whose total phase variation V is below 6 pi
-    goes to the nested Clenshaw-Curtis rule. V is computed from the raw phase by the basis's
+    The C2 gate, and what it does not see. A region whose total phase variation V is below
+    CC_GATE_PHASE_VARIATION = 10 pi goes to the Clenshaw-Curtis rule (_adaptive_levin_subregion_cc()).
+    V is computed from the raw phase by the basis's
     build_Levin_data() (prompt 07a section 1.1): exactly, as |theta(b) - theta(a)|, where theta'
     has no strict sign change on the region's nodes, and as the variation on the node partition,
     a lower bound, where it has. Until 07a it was estimated as mean|theta'| on the nodes times the
     width, an estimate whose bias depended on the region's shape and which a half of a region
     could read above its parent's; V is additive where theta is monotone, so a half of a region
-    the gate sends to the fallback goes to the fallback too. The threshold 6 pi is unchanged, and
-    unmeasured ([07-c2-gate-threshold-was-never-measured]). That gate was the module's whole
-    account of a stationary
+    the gate sends to the fallback goes to the fallback too. The threshold was 6 pi, unmeasured,
+    until prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md measured both routes on
+    each side of it and chose 10 pi (see CC_GATE_PHASE_VARIATION's comment for the basis and where
+    it does not reach). A region sent to the Clenshaw-Curtis rule with V at or above the former
+    6 pi is marked ("cc_gate_route_changed") for _adaptive_levin()'s count of route changes. That
+    gate was the module's whole account of a stationary
     point, and the account was incomplete (prompt 07, after docs/levin-phase-floor/06/p1/report.md):
     it acts only on a region bisection has already produced, and nothing makes bisection reach a
     stationary point inside a region of large variation, whose step-(4) residual cannot see it
@@ -3030,12 +3124,14 @@ def _adaptive_levin_subregion_impl(
     # it equals the total variation; the node-partition sum where it has. It replaces the estimate
     # mean|theta'| * width, which read 1.27-1.32 times high for a near-centred root and up to 8.43
     # times high with |theta'| weighted to one end, and could send a half of a Clenshaw-Curtis
-    # region to the Levin solve (prompt 07a section 0.2). SIX_PI is unchanged, and unmeasured.
+    # region to the Levin solve (prompt 07a section 0.2). The threshold, CC_GATE_PHASE_VARIATION =
+    # 10 pi, was measured and chosen in prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md
+    # (6 pi, unmeasured, until then); its comment gives the basis.
     #
     # This also means the fallback is chosen *before* f is sampled at all: a region routed to the
-    # nested Clenshaw-Curtis rule below samples f on its own (2*chebyshev_order - 1)-point grid,
-    # never on this one, so there is no wasted evaluation of f for a region that turns out not to
-    # need the Levin solve.
+    # Clenshaw-Curtis rule below samples f on its own grids, of 2*chebyshev_order - 1 points and the
+    # two that nest above it, never on this one, so there is no wasted evaluation of f for a region
+    # that turns out not to need the Levin solve.
     #
     # force_direct (prompt 07) takes the same rule whatever the span: a window piece, or a guarded
     # region at depth_max. Through _oriented_cc(), so that its value keeps x_span's orientation.
@@ -3052,8 +3148,8 @@ def _adaptive_levin_subregion_impl(
             vectorize_cache=vectorize_cache,
         )
 
-    if phase_span < SIX_PI:
-        return _adaptive_levin_subregion_cc(
+    if phase_span < CC_GATE_PHASE_VARIATION:
+        data = _adaptive_levin_subregion_cc(
             x_span,
             f,
             BasisData,
@@ -3064,6 +3160,12 @@ def _adaptive_levin_subregion_impl(
             id_label,
             vectorize_cache=vectorize_cache,
         )
+        # 07d section 1.4: a region the gate at the former 6 pi would have sent to the Levin solve.
+        # Read only by _adaptive_levin()'s count; it routes nothing.
+        data["cc_gate_route_changed"] = bool(
+            phase_span >= _CC_GATE_FORMER_PHASE_VARIATION
+        )
+        return data
 
     # sample each component of f on the Chebyshev grid,
     # then assemble the result into a flattened vector in an m x k representation
@@ -3352,6 +3454,104 @@ def _adaptive_levin_subregion_impl(
     }
 
 
+@lru_cache(maxsize=8)
+def _cc_coefficient_cosines(n: int):
+    """
+    The cosine table of _cc_chebyshev_coefficients() for n Lobatto points: row k is
+    cos(pi j k / (n - 1)) over j = 0, ..., n - 1, each formed exactly as the coefficient's sum forms
+    it. Cached by n, read-only.
+    """
+    j = np.arange(n)
+    table = np.array([np.cos(np.pi * j * k / (n - 1)) for k in range(n)])
+    table.setflags(write=False)
+    return table
+
+
+def _cc_chebyshev_coefficients(g: np.ndarray) -> np.ndarray:
+    """
+    The Chebyshev coefficients c_0, ..., c_{n-1} of the polynomial interpolating g at the n
+    Lobatto points of chebyshev_matrices()'s grid (which is in descending order, so g is reversed
+    to the ascending order of x_j = cos(pi j / (n - 1))): the type-I discrete cosine transform,
+    c_k = (2 / (n - 1)) sum_j'' g_j cos(pi j k / (n - 1)), the double prime halving the end terms,
+    and c_0 and c_{n-1} halved. Read only by the noise term (_cc_own_noise()); it enters no value.
+    Transcribed from prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md Part A's
+    leafcc_07d.dct1_coeffs, as Part A' ran it, sum by sum.
+    """
+    n = len(g)
+    wts = np.ones(n)
+    wts[0] = wts[-1] = 0.5
+    gj = np.asarray(g, dtype=float)[::-1]
+    weighted = wts * gj
+    cosines = _cc_coefficient_cosines(n)
+    ck = np.array([(2.0 / (n - 1)) * np.sum(weighted * cosines[k]) for k in range(n)])
+    ck[0] *= 0.5
+    ck[-1] *= 0.5
+    return ck
+
+
+def _cc_standard_chop(coeffs: np.ndarray, tol: float) -> int:
+    """
+    Chebfun's standardChop (Aurentz and Trefethen, "Chopping a Chebyshev series", ACM TOMS 43
+    (2017) 33): the number of leading coefficients of a Chebyshev series worth keeping at relative
+    tolerance tol, or len(coeffs) if the series has not reached a plateau. The envelope
+    m_j = max_{k >= j} |c_k| / max_k |c_k| is searched for a plateau point (the first j with
+    m_{j2} / m_j above 3 (1 - log m_j / log tol), j2 = round(1.25 j + 5)), and the cut is the
+    point before it minimising log10 m_j + j (-log10 tol / 3) / (j2 - 1) along a tilted line.
+    It follows the paper's published algorithm step for step, as transcribed by
+    prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md Part A's variants
+    (make_variants_07d.py) and run by Part A'. Read only by the noise term.
+    """
+    n = len(coeffs)
+    if tol >= 1:
+        return 1
+    if n < 17:
+        return n
+    b = np.abs(np.asarray(coeffs, dtype=float))
+    m = np.maximum.accumulate(b[::-1])[::-1].copy()
+    if m[0] == 0:
+        return 1
+    env = m / m[0]
+    plateau_point = None
+    j2 = None
+    for j in range(2, n + 1):
+        j2 = int(round(1.25 * j + 5))
+        if j2 > n:
+            return n
+        e1, e2 = env[j - 1], env[j2 - 1]
+        r = 3 * (1 - np.log(e1) / np.log(tol)) if e1 > 0 else 0.0
+        if e1 == 0 or e2 / e1 > r:
+            plateau_point = j - 1
+            break
+    if env[plateau_point - 1] == 0:
+        return plateau_point
+    j3 = int(np.sum(env >= tol ** (7 / 6)))
+    if j3 < j2:
+        j2 = j3 + 1
+        env[j2 - 1] = tol ** (7 / 6)
+    cc = np.log10(env[:j2]) + np.linspace(0, (-1 / 3) * np.log10(tol), j2)
+    return max(int(np.argmin(cc)), 1)
+
+
+def _cc_own_noise(g: np.ndarray, w: np.ndarray) -> float:
+    """
+    s_own, the scatter of the integrand's samples g read from the samples themselves, as it enters
+    the Clenshaw-Curtis sum with weights w (prompts/levin-phase-floor/
+    07d-six-pi-gate-and-cc-estimate.md section 1.1; see _CC_OWN_NOISE_KAPPA's comment for the basis):
+    sigma_own sqrt((n - 1)/2) sqrt(sum_j w_j^2), sigma_own the rms of g's interpolant's Chebyshev
+    coefficients from standardChop's cut at _CC_STANDARD_CHOP_TOL, or of its last
+    _CC_OWN_NOISE_TAIL_FALLBACK coefficients if it finds no plateau. On an integrand the rule
+    resolves to rounding the coefficients past the cut are rounding, and s_own is at the rounding
+    level of the sum.
+    """
+    ck = _cc_chebyshev_coefficients(g)
+    n = len(ck)
+    cut = _cc_standard_chop(ck, _CC_STANDARD_CHOP_TOL)
+    tail = ck[cut:] if cut < n else ck[-_CC_OWN_NOISE_TAIL_FALLBACK:]
+    return float(np.sqrt(np.mean(tail * tail)) * np.sqrt((n - 1) / 2.0)) * float(
+        np.sqrt(np.sum(w * w))
+    )
+
+
 def _adaptive_levin_subregion_cc(
     x_span: Tuple[float, float],
     f,
@@ -3364,35 +3564,59 @@ def _adaptive_levin_subregion_cc(
     vectorize_cache: Optional[dict] = None,
 ):
     """
-    Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
-    SIX_PI, replacing the module's former use of scipy.integrate.quad (C2, C7; see the module
-    docstring and prompt 03's log).
+    The Clenshaw-Curtis rule, for a region whose total phase variation (phase_span) falls below
+    CC_GATE_PHASE_VARIATION, for a stationary point's window piece and a guarded region at
+    depth_max (_oriented_cc()), and for every Clenshaw-Curtis sub-solve of a trust check. It
+    replaced the module's former use of scipy.integrate.quad (C2, C7; see the module docstring and
+    levin-refactor prompt 03's log). Since prompts/levin-phase-floor/
+    07d-six-pi-gate-and-cc-estimate.md (section 1.1) it returns CC_{4N-3}, declares
+    |CC_{8N-7} - CC_{4N-3}| as its estimate, and adds a noise term read from its own samples.
 
-    The extremal Chebyshev grid the Levin solve uses at order N *is* the Clenshaw-Curtis grid,
-    and its N-point grid is exactly every other node of the (2*N - 1)-point grid (nesting holds
-    for every N >= 2 -- see _cc_weights_base()). So the integrand is sampled once, on the
-    (2*N - 1)-point grid, and both the order-N and order-(2*N - 1) Clenshaw-Curtis rules are
-    formed from that one sample: CC_{2N-1} is returned as the region's value, and
-    |CC_{2N-1} - CC_N| is returned as its error estimate -- a genuine nested-pair estimate, not a
-    resolution proxy. Cost is exactly 2*N - 1 evaluations of each f_i and of the phase, always,
-    against scipy.quad's unbounded panel count under a tight global tolerance. Its round-off floor
-    adds N - 1 evaluations of the caller's theta_deriv, at the odd fine nodes, where one is
-    supplied (with none, 2N - 1 of the raw phase if theta_mod_2pi is supplied, else none):
-    see _Basis_SinCos.theta_prime_on_fine_grid().
+    The extremal Chebyshev grid the Levin solve uses at order N *is* the Clenshaw-Curtis grid, and
+    the grids nest: the (2M - 1)-point grid's even nodes are the M-point grid, bit for bit, for
+    every M >= 2 (see _cc_weights_base()). So the integrand is sampled once on the
+    (2N - 1)-point grid, its samples are reused on the (4N - 3)-point grid, and those on the
+    (8N - 7)-point grid; each finer grid evaluates only its odd nodes. With N = chebyshev_order:
+      * the value is CC_{4N-3};
+      * the estimate is |CC_{8N-7} - CC_{4N-3}|, a nested pair one level up. Until 07d the rule
+        returned CC_{2N-1} with |CC_{2N-1} - CC_N|, which is CC_N's error, not CC_{2N-1}'s
+        ([06d-cc-nested-estimate-measures-the-coarse-rule]): 07d measured it below CC_{2N-1}'s
+        error on 74 of 899 settled leaves, 55 of them by the amplitude tables' knots inside the
+        leaf, 19 by an error CC_N and CC_{2N-1} share. On the same leaves CC_{4N-3} is the
+        better value (07d section 9.1 item 6), and |CC_{8N-7} - CC_{4N-3}| understated its error
+        on none of 3,642 (bounded on 3,636, undecided on 6), at a median overstatement of 5.85
+        on the group leaves of the Clenshaw-Curtis strata (07d section 9.4.2);
+      * the noise term is _CC_OWN_NOISE_KAPPA s_own (_cc_own_noise()), from the (4N - 3) samples,
+        for the integrand's scatter from sample to sample, which no floor modelled
+        ([07c-integrand-noise-above-the-cc-floor]). It is added to the estimate and to both
+        floors: added to the estimate alone it understated on 4 of 07d Part A's scored leaves
+        (its deviation 9), where the floor was the larger;
+      * the round-off floor ("phase_err_roundoff"), the node term's parts, the declared-phase term
+        and resasc are the (4N - 3)-point rule's, formed as before from its own samples.
+    So the leaf declares max(|CC_{8N-7} - CC_{4N-3}|, floor_{4N-3}) + kappa s_own, with the declared
+    phase term as before. CC_N and CC_{2N-1} enter no value and no error. Cost: exactly 8N - 7
+    evaluations of each f_i and of the phase, always (2N - 1 until 07d); the round-off floor adds,
+    where the caller supplies theta_deriv, 3N - 3 evaluations of it, at the odd nodes of the
+    (2N - 1)- and (4N - 3)-point grids (without it, 2N - 1 and 4N - 3 of the raw phase if
+    theta_mod_2pi is supplied, else none): see _Basis_SinCos.theta_prime_on_fine_grid(). A span on
+    which the grids do not nest, which no span has been found to be, is sampled afresh on the finer
+    grid, and counted ("cc_num_resampled").
 
     :param phase_span: total phase variation V across x_span, already computed by the caller's
         call to BasisData.build_Levin_data() -- passed in rather than recomputed, and only
         reported in the returned dict (since prompt 07a, computed from the raw phase).
     The round-off floor, "phase_err", is this rule's own (_cc_roundoff_floor(), since
     prompts/levin-phase-floor/06d-cc-roundoff-floor.md): the rounding of the weighted sum, of
-    the argument handed to sin and cos, and of the nodes, from the fine-grid samples -- plus the
-    declared-phase term. It is not Chen et al. eq. (151), which the Levin branch uses: that bound is the
-    conditioning of the Levin collocation solve, with a 1/min|theta'| this rule does not have.
+    the argument handed to sin and cos, and of the nodes, from the (4N - 3)-point samples -- plus
+    the noise term and the declared-phase term. It is not Chen et al. eq. (151), which the Levin
+    branch uses: that bound is the conditioning of the Levin collocation solve, with a
+    1/min|theta'| this rule does not have.
 
     :param theta_prime_Cheb: theta' sampled at the order-chebyshev_order collocation points,
         likewise already computed by the caller's call to build_Levin_data(). It gives theta' at
-        the even fine nodes, which are those points, in the round-off floor's node term (until 06d
-        it gave eq. (151)'s G0/G1; under 06d its maximum bounded |theta'| at every node).
+        the even nodes of the (2N - 1)-point grid, which are those points, and that grid's theta'
+        gives it at the even nodes of the (4N - 3)-point grid, where the round-off floor's node term
+        reads it.
     :return: a dict with the same "value"/"phase_span"/"phase_err"/"phase_err_roundoff"/
         "phase_err_declared"/"metadata" keys as the Levin path, "abserr_direct" in place of a
         p-based estimate, "is_direct": True, and "p_sample"/"p_ratios" both None (the Levin
@@ -3401,126 +3625,146 @@ def _adaptive_levin_subregion_cc(
         "node_error_signed" (E) and "node_error_bound" (R_g + R_2 + R_c), and "phase_err_less_node",
         the floor with |E| taken out of the node term; and, since prompts/levin-phase-floor/
         07a-window-stop-and-phase-variation.md, "resasc", dqk21's sum_j |w_j| |g_j - gbar| on the
-        fine rule, read only by the window's iroff1 count.
+        returned rule, read only by the window's iroff1 count; and, since 07d, "cc_noise_set", True
+        if the noise term exceeds max(estimate, floor), and "cc_num_resampled", the finer grids
+        sampled afresh, both read only by _adaptive_levin()'s counts.
     """
     if vectorize_cache is None:
         vectorize_cache = {}
 
-    m = len(f)
     fine_order = 2 * chebyshev_order - 1
+    value_order = 2 * fine_order - 1
+    estimate_order = 2 * value_order - 1
+    num_resampled = 0
 
-    # Node reuse: fine_grid[::2] is exactly chebyshev_matrices(x_span, chebyshev_order)[0] (see
-    # the nesting test in AdaptiveLevin/tests/test_levin_quadrature.py), so the coarse rule below
-    # is formed from a subset of these same samples rather than by evaluating f or the basis a
-    # second time.
+    def _sample_f(nodes: np.ndarray) -> np.ndarray:
+        return np.vstack(
+            [
+                _sample_vectorized(func, nodes, vectorize_cache, ("f", id(func)))
+                for func in f
+            ]
+        )
+
+    def _check_f(samples: np.ndarray) -> None:
+        if not np.isfinite(samples).all():
+            _logger.warning(
+                "!! WARNING (adaptive_levin_subregion, %s): sampled amplitude f contains "
+                "non-numeric values (np.nan, np.inf, or np.-inf)",
+                _format_label(notify_label, id_label),
+            )
+            raise ValueError(
+                "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+            )
+
+    def _check_theta_prime(samples: np.ndarray) -> None:
+        if not np.isfinite(samples).all():
+            _logger.warning(
+                "!! WARNING (adaptive_levin_subregion, %s): sampled phase derivative theta' "
+                "contains non-numeric values (np.nan, np.inf, or np.-inf)",
+                _format_label(notify_label, id_label),
+            )
+            raise ValueError(
+                "sampled phase derivative theta' contains non-numeric values (np.nan, np.inf, or np.-inf)"
+            )
+
+    # The (2N - 1)-point grid: its samples are the (4N - 3)-point grid's even nodes, and its theta'
+    # gives theta' at them (the node term below). w_i(x) = (sin theta(x), cos theta(x)) at each node:
+    # unlike the Levin path, which needs only theta' on the grid and theta at the two endpoints, the
+    # rule integrates the full integrand sum_i f_i(x) w_i(x) and therefore needs w_i sampled at every
+    # node. eval_basis_and_arguments() prefers theta_mod_2pi when the caller supplied one, as
+    # eval_basis() does, and also returns the argument it handed to sin and cos, which the round-off
+    # floor needs -- from the same single evaluation of the phase per node.
     fine_grid, D_fine = chebyshev_matrices(x_span, fine_order)
-
-    f_fine = np.vstack(
-        [
-            _sample_vectorized(func, fine_grid, vectorize_cache, ("f", id(func)))
-            for func in f
-        ]
-    )
-
-    if not np.isfinite(f_fine).all():
-        _logger.warning(
-            "!! WARNING (adaptive_levin_subregion, %s): sampled amplitude f contains "
-            "non-numeric values (np.nan, np.inf, or np.-inf)",
-            _format_label(notify_label, id_label),
-        )
-        raise ValueError(
-            "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
-        )
-
-    # w_i(x) = (sin theta(x), cos theta(x)) at each of the 2*N - 1 nodes. Unlike the Levin path,
-    # which needs only theta' on the grid and theta at the two endpoints, the CC rule integrates
-    # the full integrand sum_i f_i(x) w_i(x) and therefore needs w_i sampled at every node.
-    # eval_basis_and_arguments() prefers theta_mod_2pi when the caller supplied one, as
-    # eval_basis() does, and also returns the argument it handed to sin and cos, which the
-    # round-off floor below needs -- from the same single evaluation of the phase per node.
+    f_fine = _sample_f(fine_grid)
+    _check_f(f_fine)
     basis_and_arguments = [BasisData.eval_basis_and_arguments(x) for x in fine_grid]
     basis_fine = np.array([values for values, _ in basis_and_arguments]).T
     arguments_fine = np.array(
         [arguments for _, arguments in basis_and_arguments], dtype=float
     ).T
-
-    integrand_fine = np.sum(f_fine * basis_fine, axis=0)
-
-    w_fine = _cc_weights(x_span, fine_order)
-    w_coarse = _cc_weights(x_span, chebyshev_order)
-
-    value_fine = float(np.dot(w_fine, integrand_fine))
-    value_coarse = float(np.dot(w_coarse, integrand_fine[::2]))
-
-    abserr_direct = float(np.fabs(value_fine - value_coarse))
-
-    # Round-off floor of this rule, derived from what it computes (_cc_roundoff_floor();
-    # prompts/levin-phase-floor/06d-cc-roundoff-floor.md), from the fine-grid samples already in
-    # hand: no extra evaluation of anything. Not Chen et al. eq. (151) (_roundoff_floor()), which
-    # this branch used from levin-refactor prompt 04 until 06d: that bound models the conditioning
-    # of the Levin collocation solve, with its 1/min|theta'|, and this branch solves no such
-    # system; carried over, it made a fallback region's floor grow, or become +inf, at a
-    # stationary point of the phase.
-    #
-    # Its node term (since prompts/levin-phase-floor/06e-exact-end-nodes.md) is the first-order
-    # error of the displacement each fine node actually has, signed (_chebyshev_node_displacements()),
-    # with bounded remainders (_cc_node_term_parts()). It takes theta' at each fine node -- the
-    # caller's theta_deriv at the odd nodes, the coarse sample at the even ones, or a spectral
-    # derivative where none is supplied (_Basis_SinCos.theta_prime_on_fine_grid()) -- and f', f''
-    # and theta'' from the fine grid's own Chebyshev differentiation matrix applied to the samples
-    # in hand.
-    f_prime_fine = np.vstack([np.matmul(D_fine, f_row) for f_row in f_fine])
-    f_second_fine = np.vstack([np.matmul(D_fine, f_row) for f_row in f_prime_fine])
-    theta_prime_fine, eta_theta = BasisData.theta_prime_on_fine_grid(
+    theta_prime_fine, _ = BasisData.theta_prime_on_fine_grid(
         fine_grid, D_fine, theta_prime_Cheb, arguments_fine, vectorize_cache
     )
-    if not np.isfinite(theta_prime_fine).all():
-        _logger.warning(
-            "!! WARNING (adaptive_levin_subregion, %s): sampled phase derivative theta' "
-            "contains non-numeric values (np.nan, np.inf, or np.-inf)",
-            _format_label(notify_label, id_label),
-        )
-        raise ValueError(
-            "sampled phase derivative theta' contains non-numeric values (np.nan, np.inf, or np.-inf)"
-        )
-    theta_second_fine = np.matmul(D_fine, theta_prime_fine)
+    _check_theta_prime(theta_prime_fine)
+
+    # The (4N - 3)-point grid, whose rule is returned: its odd nodes evaluated here, its even nodes
+    # the (2N - 1)-point samples above.
+    grid, D = chebyshev_matrices(x_span, value_order)
+    if np.array_equal(grid[::2], fine_grid):
+        odd = grid[1::2]
+        f_odd = _sample_f(odd)
+        basis_and_arguments_odd = [BasisData.eval_basis_and_arguments(x) for x in odd]
+        f_samples = np.empty((f_fine.shape[0], grid.shape[0]))
+        f_samples[:, ::2] = f_fine
+        f_samples[:, 1::2] = f_odd
+        basis = np.empty((basis_fine.shape[0], grid.shape[0]))
+        basis[:, ::2] = basis_fine
+        basis[:, 1::2] = np.array([values for values, _ in basis_and_arguments_odd]).T
+        arguments = np.empty((arguments_fine.shape[0], grid.shape[0]))
+        arguments[:, ::2] = arguments_fine
+        arguments[:, 1::2] = np.array(
+            [args for _, args in basis_and_arguments_odd], dtype=float
+        ).T
+    else:
+        num_resampled += 1
+        f_samples = _sample_f(grid)
+        basis_and_arguments_all = [BasisData.eval_basis_and_arguments(x) for x in grid]
+        basis = np.array([values for values, _ in basis_and_arguments_all]).T
+        arguments = np.array(
+            [args for _, args in basis_and_arguments_all], dtype=float
+        ).T
+    _check_f(f_samples)
+
+    integrand = np.sum(f_samples * basis, axis=0)
+    w = _cc_weights(x_span, value_order)
+    value = float(np.dot(w, integrand))
+
+    # Round-off floor of the returned rule (_cc_roundoff_floor(); prompts/levin-phase-floor/
+    # 06d-cc-roundoff-floor.md), from its samples: no extra evaluation of f. Not Chen et al. eq.
+    # (151) (_roundoff_floor()), which this branch used from levin-refactor prompt 04 until 06d:
+    # that bound models the conditioning of the Levin collocation solve, with its 1/min|theta'|,
+    # and this branch solves no such system; carried over, it made a fallback region's floor grow,
+    # or become +inf, at a stationary point of the phase.
+    #
+    # Its node term (since prompts/levin-phase-floor/06e-exact-end-nodes.md) is the first-order
+    # error of the displacement each node actually has, signed (_chebyshev_node_displacements()),
+    # with bounded remainders (_cc_node_term_parts()). It takes theta' at each node -- the caller's
+    # theta_deriv at the odd nodes, the (2N - 1)-point grid's theta' at the even ones, or a
+    # spectral derivative where none is supplied (_Basis_SinCos.theta_prime_on_fine_grid()) -- and
+    # f', f'' and theta'' from the grid's own Chebyshev differentiation matrix applied to the
+    # samples in hand.
+    f_prime = np.vstack([np.matmul(D, f_row) for f_row in f_samples])
+    f_second = np.vstack([np.matmul(D, f_row) for f_row in f_prime])
+    theta_prime, eta_theta = BasisData.theta_prime_on_fine_grid(
+        grid, D, theta_prime_fine, arguments, vectorize_cache
+    )
+    _check_theta_prime(theta_prime)
+    theta_second = np.matmul(D, theta_prime)
     displacements, displacement_err_abs = _chebyshev_node_displacements(
-        x_span, fine_order
+        x_span, value_order
     )
     E, R_g, R_2, R_c = _cc_node_term_parts(
-        w_fine,
+        w,
         displacements,
         displacement_err_abs,
-        f_fine,
-        f_prime_fine,
-        f_second_fine,
-        basis_fine,
-        BasisData.basis_derivative(basis_fine),
-        arguments_fine,
-        theta_prime_fine,
-        theta_second_fine,
+        f_samples,
+        f_prime,
+        f_second,
+        basis,
+        BasisData.basis_derivative(basis),
+        arguments,
+        theta_prime,
+        theta_second,
         eta_theta,
     )
-    round_off_err = _cc_roundoff_floor(
-        w_fine,
-        f_fine,
-        basis_fine,
-        arguments_fine,
-        abs(E) + R_g + R_2 + R_c,
-    )
+    node_bound = R_g + R_2 + R_c
+    floor = _cc_roundoff_floor(w, f_samples, basis, arguments, abs(E) + node_bound)
     # The same floor with |E| taken out of its node term (prompts/levin-phase-floor/
     # 06g-leaf-values-and-node-sum.md, section 0.2 (c)): E's sign varies from leaf to leaf, so
     # _adaptive_levin() carries sum E signed over the call's fallback leaves, and each leaf enters
     # the call's error with this floor in place of round_off_err. Formed as its own sum, not by
-    # subtracting |E| from round_off_err, so that it carries no cancellation.
-    node_bound = R_g + R_2 + R_c
-    round_off_err_less_node = _cc_roundoff_floor(
-        w_fine,
-        f_fine,
-        basis_fine,
-        arguments_fine,
-        node_bound,
-    )
+    # subtracting |E| from the floor, so that it carries no cancellation.
+    floor_less_node = _cc_roundoff_floor(w, f_samples, basis, arguments, node_bound)
 
     # Optional declared-theta_abserr endpoint term (recommendation 5.2), 0.0 unless the phase dict
     # supplied "theta_abserr". This fallback has no Levin antiderivative p to weight by, so it
@@ -3528,25 +3772,58 @@ def _adaptive_levin_subregion_cc(
     # for the whole interval (a crude sup-norm bound, not a per-endpoint quantity) -- see prompt
     # 04's log for why this, rather than the Levin branch's true per-endpoint p_endpoint_l1, was
     # judged an acceptable approximation here. With f_scale = max_grid sqrt(sum_i f_i^2) over the
-    # fine-grid samples, it bounds sum_k |w_k| |f_k| delta(theta) from above per endpoint, since
-    # the weights are positive and sum to the width.
+    # returned rule's samples, it bounds sum_k |w_k| |f_k| delta(theta) from above per endpoint,
+    # since the weights are positive and sum to the width.
     width = np.fabs(x_span[1] - x_span[0])
-    f_scale = float(np.max(np.sqrt(np.sum(f_fine * f_fine, axis=0))))
+    f_scale = float(np.max(np.sqrt(np.sum(f_samples * f_samples, axis=0))))
     endpoint_proxy = 0.5 * f_scale * width
     declared_err = _declared_endpoint_phase_err(
         BasisData, x_span[0], x_span[1], endpoint_proxy, endpoint_proxy
     )
 
-    # dqk21's resasc on the fine rule (prompts/levin-phase-floor/07a-window-stop-and-phase-
-    # variation.md section 1.2 item 1): sum_j |w_j| |g_j - gbar|, gbar = CC_{2N-1} / sum_j w_j, the
+    # dqk21's resasc on the returned rule (prompts/levin-phase-floor/07a-window-stop-and-phase-
+    # variation.md section 1.2 item 1): sum_j |w_j| |g_j - gbar|, gbar = CC_{4N-3} / sum_j w_j, the
     # rule's integral of |g - mean g|. It decides whether the leaf's error estimate is unresolved
     # (_cc_leaf_unresolved()), which the window's iroff1 count reads; it enters no value or error.
-    weight_sum = float(np.sum(w_fine))
-    integrand_mean = value_fine / weight_sum if weight_sum != 0.0 else 0.0
-    resasc = float(np.sum(np.fabs(w_fine) * np.fabs(integrand_fine - integrand_mean)))
+    weight_sum = float(np.sum(w))
+    integrand_mean = value / weight_sum if weight_sum != 0.0 else 0.0
+    resasc = float(np.sum(np.fabs(w) * np.fabs(integrand - integrand_mean)))
+
+    # The noise term (07d section 1.1; _cc_own_noise(), _CC_OWN_NOISE_KAPPA).
+    noise = _CC_OWN_NOISE_KAPPA * _cc_own_noise(integrand, w)
+
+    # The estimate, |CC_{8N-7} - CC_{4N-3}| (07d section 1.1): the (8N - 7)-point grid's odd nodes
+    # evaluated here, its even nodes the returned rule's samples. Only the basis values are needed.
+    estimate_grid, _ = chebyshev_matrices(x_span, estimate_order)
+    if np.array_equal(estimate_grid[::2], grid):
+        odd = estimate_grid[1::2]
+        f_odd = _sample_f(odd)
+        _check_f(f_odd)
+        basis_odd = np.array([BasisData.eval_basis_and_arguments(x)[0] for x in odd]).T
+        integrand_estimate = np.empty(estimate_grid.shape[0])
+        integrand_estimate[::2] = integrand
+        integrand_estimate[1::2] = np.sum(f_odd * basis_odd, axis=0)
+    else:
+        num_resampled += 1
+        f_all = _sample_f(estimate_grid)
+        _check_f(f_all)
+        basis_all = np.array(
+            [BasisData.eval_basis_and_arguments(x)[0] for x in estimate_grid]
+        ).T
+        integrand_estimate = np.sum(f_all * basis_all, axis=0)
+    estimate = float(
+        np.fabs(
+            float(np.dot(_cc_weights(x_span, estimate_order), integrand_estimate))
+            - value
+        )
+    )
+
+    abserr_direct = estimate + noise
+    round_off_err = floor + noise
+    round_off_err_less_node = floor_less_node + noise
 
     return {
-        "value": value_fine,
+        "value": value,
         "abserr_direct": abserr_direct,
         "resasc": resasc,
         "p_sample": None,
@@ -3554,9 +3831,10 @@ def _adaptive_levin_subregion_cc(
         "phase_span": phase_span,
         "phase_err": round_off_err + declared_err,
         # phase_err's parts (prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md, section
-        # 0.2 (c) and (d)): the rule's floor, with its node term, and the declared endpoint term,
-        # each as it was added; the node term's signed first-order error E and the rest of the
-        # node term, R_g + R_2 + R_c; and phase_err with |E| taken out of the node term
+        # 0.2 (c) and (d)): the rule's floor, with its node term and (since 07d) the noise term,
+        # and the declared endpoint term, each as it was added; the node term's signed first-order
+        # error E and the rest of the node term, R_g + R_2 + R_c; and phase_err with |E| taken out
+        # of the node term
         "phase_err_roundoff": round_off_err,
         "phase_err_declared": declared_err,
         "node_error_signed": E,
@@ -3567,6 +3845,11 @@ def _adaptive_levin_subregion_cc(
         "abserr_truncation": None,
         "metadata": {},
         "is_direct": True,
+        # 07d section 1.4, read only by _adaptive_levin()'s counts: whether the noise term exceeds
+        # max(estimate, floor), so that it sets the declaration; and the finer grids sampled afresh
+        # because they did not nest (0 on every span measured)
+        "cc_noise_set": bool(noise > max(estimate, floor)),
+        "cc_num_resampled": int(num_resampled),
     }
 
 
@@ -3664,7 +3947,8 @@ def _nodal_guard(
     A phase of guard_rates whose index is in guard_sign_change_phases -- one the location left
     unlocated, its rate exactly zero at every finite scan sample (prompts/levin-phase-floor/
     07a-window-stop-and-phase-variation.md section 1.1; until 07a, prompt 07 section 10's Rule A,
-    whose phases had a variation over the call's span below SIX_PI) -- is tested instead for a
+    whose phases had a variation over the call's span below the gate's 6 pi of the time) -- is
+    tested instead for a
     sign change: True only if its samples hold both strict signs. A zero or a non-finite sample of
     it does not count, so that a rate identically zero does not guard every Levin region of the
     call and drive it to depth_max, while a root such a rate holds between nodes of both signs is
@@ -3697,12 +3981,13 @@ def _oriented_cc(
     vectorize_cache: Optional[dict] = None,
 ):
     """
-    The nested Clenshaw-Curtis pair, _adaptive_levin_subregion_cc(), for the stationary-point
+    The Clenshaw-Curtis rule, _adaptive_levin_subregion_cc() (since prompt 07d CC_{4N-3}, with
+    |CC_{8N-7} - CC_{4N-3}| and its noise term as its estimate), for the stationary-point
     guard's forced solves (prompt 07 section 1.2 item 4: a window piece, or a guarded region at
     depth_max), keeping x_span's orientation. _adaptive_levin_subregion_cc() weights by |b - a|
     (_cc_weights()), so on a reversed span (a > b) its value has the wrong sign; prompt 07 records
     that defect of the existing fallback and does not change it, and keeps it out of its own paths:
-    on a reversed span the pair is solved on the ascending span, with theta' sampled afresh on that
+    on a reversed span the rule is solved on the ascending span, with theta' sampled afresh on that
     span's nodes, and its value and its signed node error E are negated. On an ascending span this
     is _adaptive_levin_subregion_cc() itself.
     """
@@ -3803,9 +4088,10 @@ def _locate_stationary_points(
          whatever its variation: its roots, its exact zeros and its minima of |theta_i'|, steps
          2-4. This replaces prompt 07 section 10's Rule A, which skipped a phase whose variation
          over x_span, estimated on the scan by the trapezoidal rule, was below the C2 gate's
-         SIX_PI, on the reasoning that the gate would send every region of it to the
-         Clenshaw-Curtis rule. That held only where the gate agreed with the scan's estimate, and
-         the gate's own estimate, from a region's nodes, could read above SIX_PI where the scan's
+         6 pi of the time (then SIX_PI), on the reasoning that the gate would send every region of
+         it to the Clenshaw-Curtis rule. That held only where the gate agreed with the scan's
+         estimate, and the gate's own estimate, from a region's nodes, could read above 6 pi where
+         the scan's
          did not, sending a region holding an unlocated root to the Levin solve, where only the
          nodal guard stood between it and a wrong value (07a section 0.2). A phase of one strict
          sign is still located: it can hold a nearly coalescing pair, a minimum of |theta_i'|
@@ -4286,6 +4572,21 @@ def _adaptive_levin(
     limit is the one the tree without the stop computes, bit for bit. The comment on
     _LEVIN_CHASE_NOISE_FACTOR gives the basis of both constants and where it does not reach.
 
+    The Clenshaw-Curtis rule (prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md; see
+    _adaptive_levin_subregion_cc() and CC_GATE_PHASE_VARIATION). Every Clenshaw-Curtis solve -- a
+    leaf the gate sends there (V below 10 pi, 6 pi until 07d), a window piece, a guarded leaf at
+    depth_max, and every Clenshaw-Curtis half or quarter of a trust check -- returns CC_{4N-3} and
+    declares max(|CC_{8N-7} - CC_{4N-3}|, floor) + kappa s_own, the last a term for the integrand's
+    scatter read from its own samples, added to its estimate and to both its floors. So a fallback
+    leaf's residual, the round-off exit's floor, the window's count (_cc_leaf_unresolved()) and
+    the chase stop's stopped leaves all read the new declarations, and "converged" keeps its rule.
+    "num_cc_solves" counts the Clenshaw-Curtis solves; "num_cc_gate_route_changes" those the gate
+    sent there with 6 pi <= V < CC_GATE_PHASE_VARIATION, which 07c's code sent to the Levin solve;
+    "num_cc_noise_set" those whose noise term exceeds max(estimate, floor); "num_cc_resampled" the
+    finer grids sampled afresh because they did not nest (none has been found). The change acts in
+    a call iff "num_cc_solves" is positive: a call without a Clenshaw-Curtis solve is the one 07c's
+    code computes, bit for bit.
+
     So the loop stops on exactly the quantity the call reports as "abserr", and "converged" keeps
     its formula, abserr <= max(atol, rtol*|value|), with no untrusted leaf returned. This
     replaces the earlier scheme, which
@@ -4324,7 +4625,8 @@ def _adaptive_levin(
          points located and cut out, whatever its variation, save a pair the scan missed between
          two of its samples, which the guard (item 4) is for. This replaces prompt 07 section
          10's Rule A, which skipped a phase whose variation over x_span, estimated on the scan,
-         was below SIX_PI, relying on the C2 gate to send its regions to the fallback; the gate,
+         was below the C2 gate's 6 pi of the time, relying on the gate to send its regions to the
+         fallback; the gate,
          deciding on its own estimate from a region's nodes, could disagree, and a region holding
          an unlocated root then went to the Levin solve with only the guard to catch it.
       2. Windows. Round each point, the interval on which its phase stays within
@@ -4363,8 +4665,8 @@ def _adaptive_levin(
          _adaptive_levin_subregion_impl()) is guarded (used_interval.guarded): never returned as a
          Levin leaf. Below depth_max its error is read as +inf (_levin_leaf.error), as for a leaf
          whose G0 is at noise, so it is chosen first, the budget cannot be met while it is in the
-         partition, it is never trusted and never floor-limited, and it is bisected; below 6 pi
-         the C2 gate sends its halves to the fallback. At depth_max it is re-solved by the nested
+         partition, it is never trusted and never floor-limited, and it is bisected; below
+         CC_GATE_PHASE_VARIATION the C2 gate sends its halves to the fallback. At depth_max it is re-solved by the nested
          pair whatever its span, its errors are that solve's, it is flagged guard_at_depth_max and
          exempt from the trust check, and the call is not converged while one is returned. For a
          basis of several phases, a phase the location skipped (its rate exactly zero at every
@@ -4571,8 +4873,19 @@ def _adaptive_levin(
     num_chase_stopped_leaves = 0
     num_chase_noise_bisections = 0
 
+    # The Clenshaw-Curtis rule's counts (prompt 07d section 1.4), over the whole run of the call, from
+    # every solve _solve() makes: the Clenshaw-Curtis solves, by any caller; those the gate sent there
+    # with V at or above the former 6 pi, which 07c's code sent to the Levin solve; those whose noise
+    # term exceeds max(estimate, floor); and the finer grids sampled afresh because they did not nest.
+    num_cc_solves = 0
+    num_cc_gate_route_changes = 0
+    num_cc_noise_set = 0
+    num_cc_resampled = 0
+
     def _solve(span, description, force_direct=False):
         nonlocal num_evaluations, num_solves_direct, num_solves_lstsq, num_solves_pinv
+        nonlocal num_cc_solves, num_cc_gate_route_changes, num_cc_noise_set
+        nonlocal num_cc_resampled
         try:
             solve_data = _adaptive_levin_subregion(
                 span,
@@ -4607,6 +4920,13 @@ def _adaptive_levin(
         num_solves_direct += solve_data["metadata"].get("direct_solve", 0)
         num_solves_lstsq += solve_data["metadata"].get("lstsq_solve", 0)
         num_solves_pinv += solve_data["metadata"].get("pinv_solve", 0)
+        if solve_data.get("is_direct", False):
+            num_cc_solves += 1
+            num_cc_gate_route_changes += int(
+                solve_data.get("cc_gate_route_changed", False)
+            )
+            num_cc_noise_set += int(solve_data.get("cc_noise_set", False))
+            num_cc_resampled += int(solve_data.get("cc_num_resampled", 0))
         return solve_data
 
     seq_counter = 0
@@ -4707,7 +5027,8 @@ def _adaptive_levin(
         is_direct = bool(data.get("is_direct", False))
         if is_direct:
             # Nested Clenshaw-Curtis fallback (C2, C7). This leaf's error estimate --
-            # |CC_{2N-1} - CC_N| -- comes from a nested pair evaluated entirely within it, not from
+            # |CC_{8N-7} - CC_{4N-3}| plus its noise term since prompt 07d -- comes from a nested
+            # pair evaluated entirely within it, not from
             # a comparison against halves, so none are solved here. They are solved when the leaf
             # is chosen: for the round-off premise, and as its children if it is bisected --
             # unless its parent's trust check has already solved them, when they are carried.
@@ -4955,7 +5276,7 @@ def _adaptive_levin(
         The trust check one level down (prompts/levin-phase-floor/06c-global-error-control.md,
         section 8, the third amendment; its trust test and the value returned since
         prompts/levin-phase-floor/06g-leaf-values-and-node-sum.md). With V each solve's own value
-        (the region's own solve on the Levin branch, CC_{2N-1} on the fallback):
+        (the region's own solve on the Levin branch, CC_{4N-3} on the fallback):
 
             delta1 = |V_P - (V_L + V_R)|,
             delta2 = |(V_L + V_R) - Q|,     Q = (V_LL + V_LR) + (V_RL + V_RR),
@@ -5825,6 +6146,15 @@ def _adaptive_levin(
         "num_chase_stops": int(num_chase_stops),
         "num_chase_stopped_leaves": int(num_chase_stopped_leaves),
         "num_chase_noise_bisections": int(num_chase_noise_bisections),
+        # the Clenshaw-Curtis rule (prompt 07d section 1.4), over the whole run of the call: its solves,
+        # by any caller; those the gate sent there with 6 pi <= V < CC_GATE_PHASE_VARIATION, which 07c's
+        # code sent to the Levin solve; those whose noise term exceeds max(estimate, floor); and the
+        # finer grids sampled afresh because they did not nest. 07d acts in a call iff num_cc_solves is
+        # positive; a call without a Clenshaw-Curtis solve is 07c's, bit for bit.
+        "num_cc_solves": int(num_cc_solves),
+        "num_cc_gate_route_changes": int(num_cc_gate_route_changes),
+        "num_cc_noise_set": int(num_cc_noise_set),
+        "num_cc_resampled": int(num_cc_resampled),
         "p_points": p_points,
         "num_regions": num_used_regions,
         "regions": used_regions,
@@ -6199,11 +6529,14 @@ def adaptive_levin_sincos(
         integral_{x_span} [ f[0](x) sin(theta(x)) + f[1](x) cos(theta(x)) ] dx
 
     using the adaptive Levin method of Bremer, Chen & Yang (arXiv:2211.13400, section 5), falling
-    back to a nested Clenshaw-Curtis rule (a pair of Chebyshev quadratures at orders N and
-    2*N - 1, sharing the same 2*N - 1 integrand samples) on subintervals whose total phase
-    variation is too small for the Levin rule to offer an advantage. The fallback's own error
-    estimate, |CC_{2N-1} - CC_N|, enters the call's error budget on the same terms as a Levin
-    region's.
+    back to a nested Clenshaw-Curtis rule on subintervals whose total phase variation is below
+    CC_GATE_PHASE_VARIATION = 10 pi, too small for the Levin rule to offer an advantage (6 pi,
+    unmeasured, until prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md measured both
+    routes and chose 10 pi). The fallback returns the Chebyshev quadrature at 4*N - 3 points and
+    declares |CC_{8N-7} - CC_{4N-3}|, from the same samples extended to 8*N - 7 points, plus a
+    term for the integrand's own scatter read from its samples (since 07d; until then CC_{2N-1}
+    with |CC_{2N-1} - CC_N|). That declaration enters the call's error budget on the same terms as
+    a Levin region's.
 
     Error control is global (prompts/levin-phase-floor/06c-global-error-control.md): the driver
     keeps every subinterval (leaf) of the current partition with its value and its error, and
@@ -6261,7 +6594,8 @@ def adaptive_levin_sincos(
             _adaptive_levin()), unless theta' is exactly zero at every finite sample of that
             scan, when there is nothing to locate (see "location_skipped_phases" below; since
             prompts/levin-phase-floor/07a-window-stop-and-phase-variation.md, in place of Rule
-            A, which skipped a phase whose variation over x_span was below SIX_PI). The raw
+            A, which skipped a phase whose variation over x_span was below the C2 gate's 6 pi of
+            the time). The raw
             phase "theta" is also what the C2 gate's variation is computed from, at each
             region's end nodes, or at all its nodes where theta' changes sign on them (see
             _Basis_SinCos.build_Levin_data()). It must be the closed form of theta's
@@ -6391,6 +6725,17 @@ def adaptive_levin_sincos(
             stopped, "num_chase_stopped_leaves" the subintervals stopped, and
             "num_chase_noise_bisections" the bisections counted. The stop acts in a call if
             "num_chase_stops" is positive; otherwise the call is exactly what it was before.
+          * "num_cc_solves", "num_cc_gate_route_changes", "num_cc_noise_set", "num_cc_resampled"
+            -- the Clenshaw-Curtis rule (as of prompts/levin-phase-floor/
+            07d-six-pi-gate-and-cc-estimate.md), over the whole run: the Clenshaw-Curtis solves
+            made, by any caller (gate, window piece, guarded subinterval at depth_max, trust
+            check); of those, the ones the gate sent there with a phase variation V of at least
+            6 pi, below the gate's 10 pi, which before 07d went to the Levin solve; the ones whose
+            noise term, read from the integrand's own samples, exceeds both the estimate
+            |CC_{8N-7} - CC_{4N-3}| and the round-off floor, and so sets the declaration; and the
+            finer grids sampled afresh because they did not nest (none has been found). 07d acts
+            in a call iff "num_cc_solves" is positive; otherwise the call is exactly what it was
+            before.
           * "num_regions" -- number of subintervals of the final partition (Levin + direct
             quadrature).
           * "num_simple_regions" -- of those, how many were handled by direct quadrature rather
@@ -6432,7 +6777,8 @@ def adaptive_levin_sincos(
             "zero_rate"). Every other phase is located whatever its variation (as of prompts/
             levin-phase-floor/07a-window-stop-and-phase-variation.md; from prompt 07 section 10
             until then, Rule A skipped a phase whose variation over x_span, estimated on the
-            scan, was below SIX_PI, and listed it with that estimate, "variation").
+            scan, was below the C2 gate's 6 pi of the time, and listed it with that estimate,
+            "variation").
     """
     if len(f) != 2:
         raise ValueError(

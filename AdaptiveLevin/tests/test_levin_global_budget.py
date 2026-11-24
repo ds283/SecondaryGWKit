@@ -35,6 +35,7 @@ from AdaptiveLevin.levin_quadrature import (
     _adaptive_levin_subregion,
     _error_for_ordering,
 )
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 from AdaptiveLevin.tests.test_levin_roundoff_exit import (
     TEST2A_SPAN,
     TEST2B_SPAN,
@@ -676,12 +677,29 @@ class TestLevinGlobalBudget(unittest.TestCase):
         Test 12b. SincIntegral, int_1^100 sin(100 x)/x, rtol 1e-10, order 12: the problem on
         which the withdrawn stall rule stopped early. Its leaves' r are recorded in 06c's log; along
         the leftmost line the check passes once the leaves are resolved. Converged and honest.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): at 07d's code the call is converged and honest (10 regions, abserr 2.091e-13,
+        true error 1.4e-15; 17 regions and 2.1e-15 at 07c's code), every region trusted with r < 1,
+        and no region floor-limited: the count of exit firings below, 1 at 07c's code, is 0, since
+        the gate at 10 pi sends the slow leaf's halves to the Clenshaw-Curtis rule and 06g's
+        floor-limited fallback leaf is not made. The count of 1 is asserted, with the rest, on 07c's
+        Clenshaw-Curtis rule (cc_rule_07c()).
         """
         f, theta, kwargs, expression = test12b_problem()
         ref, ref_err = _reference(expression)
         new = _run(TEST12B_SPAN, f, theta, **kwargs)
         self.assertTrue(new["converged"])
         self._assert_honest(new, ref, ref_err, "test 12b")
+        self.assertEqual(sum(1 for r in new["regions"] if r.phase_limited), 0)  # 07d
+        self.assertTrue(all(r.trusted for r in new["regions"]))
+        self.assertTrue(
+            all(r.convergence_ratio < 1.0 for r in new["regions"] if r.trusted)
+        )
+        with cc_rule_07c():
+            new = _run(TEST12B_SPAN, f, theta, **kwargs)
+        self.assertTrue(new["converged"])
+        self._assert_honest(new, ref, ref_err, "test 12b, 07c's rule")
         # Since prompts/levin-phase-floor 06g's trust test (r < 1/4, or r < 1 within the floor) the
         # leaf [1.38671875, 1.7734375] (r = 0.9107) is untrusted and refined, and one of the
         # fallback leaves it is refined into, [1.652587890625, 1.6767578125] (r = 2, its delta1

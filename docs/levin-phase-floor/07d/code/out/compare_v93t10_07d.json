@@ -1,0 +1,1001 @@
+{
+ "summary": "35 driver calls; identical to V93T10 with equal counts: 35; the fix acts (num_cc_solves > 0) in 22; of the 13 where it does not, identical to the parent: 13; the commit on 07c's code path identical to the parent: 35 of 35; converged changes (parent -> commit): 1. 14 single solves of tests (a) and (b): identical to V93T10's _adaptive_levin_subregion_cc() in every key: 14",
+ "rows": [
+  {
+   "call": "07d (c2) V = 8.0 pi",
+   "counts": [
+    7,
+    1,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    7,
+    1,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.8590fa332405cp-6",
+   "abserr_hex": "0x1.985b362b8999cp-47",
+   "converged": true,
+   "regions": 1,
+   "max_depth": 0,
+   "parent_value_hex": "0x1.8590fa332404fp-6",
+   "parent_abserr_hex": "0x1.c7f5a4e6b4ae8p-50",
+   "parent_converged": true,
+   "parent_regions": 1,
+   "parent_max_depth": 0
+  },
+  {
+   "call": "07d (c2) V = 9.99 pi",
+   "counts": [
+    7,
+    1,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    7,
+    1,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.33126ec8c9534p-6",
+   "abserr_hex": "0x1.9790cb8813d73p-47",
+   "converged": true,
+   "regions": 1,
+   "max_depth": 0,
+   "parent_value_hex": "0x1.33126ec8c9530p-6",
+   "parent_abserr_hex": "0x1.7540a4cd4f62cp-50",
+   "parent_converged": true,
+   "parent_regions": 1,
+   "parent_max_depth": 0
+  },
+  {
+   "call": "07d (c2) V = 5.0 pi",
+   "counts": [
+    7,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    7,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.7145fcd96c54fp-4",
+   "abserr_hex": "0x1.783ae9cf05607p-47",
+   "converged": true,
+   "regions": 1,
+   "max_depth": 0,
+   "parent_value_hex": "0x1.7145fcd96c54fp-4",
+   "parent_abserr_hex": "0x1.3a09c7f0b50d3p-37",
+   "parent_converged": true,
+   "parent_regions": 2,
+   "parent_max_depth": 1
+  },
+  {
+   "call": "07d (c3)",
+   "counts": [
+    76,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    76,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.e156a9f52e703p-3",
+   "abserr_hex": "0x1.6c79609d0d113p-47",
+   "converged": true,
+   "regions": 10,
+   "max_depth": 5,
+   "parent_value_hex": "0x1.e156a9f52e702p-3",
+   "parent_abserr_hex": "0x1.a762625831d15p-42",
+   "parent_converged": true,
+   "parent_regions": 9,
+   "parent_max_depth": 3
+  },
+  {
+   "call": "07d (d)",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.eb56afc607e00p-11",
+   "abserr_hex": "0x1.72de5e19b6d87p-39",
+   "converged": true,
+   "regions": 4,
+   "max_depth": 2,
+   "parent_value_hex": "0x1.eb56afc607e00p-11",
+   "parent_abserr_hex": "0x1.72de5e19b6d87p-39",
+   "parent_converged": true,
+   "parent_regions": 4,
+   "parent_max_depth": 2
+  },
+  {
+   "call": "07d (e), (f) eta = 0.0",
+   "counts": [
+    70,
+    6,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    70,
+    6,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.d309dd14469fep-5",
+   "abserr_hex": "0x1.ef70a0772bd13p-32",
+   "converged": true,
+   "regions": 12,
+   "max_depth": 2,
+   "parent_value_hex": "0x1.d309dd14469e4p-5",
+   "parent_abserr_hex": "0x1.f08f4e7941ba4p-32",
+   "parent_converged": true,
+   "parent_regions": 10,
+   "parent_max_depth": 1
+  },
+  {
+   "call": "07d (e), (f) eta = 1e-13",
+   "counts": [
+    142,
+    16,
+    61,
+    0
+   ],
+   "V93T10_counts": [
+    142,
+    16,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.d309dd144697ep-5",
+   "abserr_hex": "0x1.ef7bac1abf80cp-32",
+   "converged": true,
+   "regions": 21,
+   "max_depth": 4,
+   "parent_value_hex": "0x1.d309dd144693bp-5",
+   "parent_abserr_hex": "0x1.edb87acce4437p-32",
+   "parent_converged": true,
+   "parent_regions": 71,
+   "parent_max_depth": 9
+  },
+  {
+   "call": "07c (b)",
+   "counts": [
+    158,
+    18,
+    158,
+    0
+   ],
+   "V93T10_counts": [
+    158,
+    18,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "-0x1.5e0cdda29582dp-8",
+   "abserr_hex": "0x1.7e699a1481466p-41",
+   "converged": true,
+   "regions": 26,
+   "max_depth": 7,
+   "parent_value_hex": "-0x1.5e0cdda294066p-8",
+   "parent_abserr_hex": "0x1.53424873f8efcp-31",
+   "parent_converged": true,
+   "parent_regions": 26,
+   "parent_max_depth": 8
+  },
+  {
+   "call": "07c (c3)",
+   "counts": [
+    62,
+    7,
+    62,
+    0
+   ],
+   "V93T10_counts": [
+    62,
+    7,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.c08442ac2fb73p-8",
+   "abserr_hex": "0x1.29b7129333061p-41",
+   "converged": true,
+   "regions": 11,
+   "max_depth": 5,
+   "parent_value_hex": "0x1.c08442ac306bbp-8",
+   "parent_abserr_hex": "0x1.9d299a6b906c1p-33",
+   "parent_converged": true,
+   "parent_regions": 32,
+   "parent_max_depth": 10
+  },
+  {
+   "call": "07c (f1)",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.eb56afc607e00p-11",
+   "abserr_hex": "0x1.72de5e19b6d87p-39",
+   "converged": true,
+   "regions": 4,
+   "max_depth": 2,
+   "parent_value_hex": "0x1.eb56afc607e00p-11",
+   "parent_abserr_hex": "0x1.72de5e19b6d87p-39",
+   "parent_converged": true,
+   "parent_regions": 4,
+   "parent_max_depth": 2
+  },
+  {
+   "call": "07c (f2)",
+   "counts": [
+    16,
+    3,
+    1,
+    0
+   ],
+   "V93T10_counts": [
+    16,
+    3,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "-0x1.b5db4757865b2p-4",
+   "abserr_hex": "0x1.470662a12ddddp-46",
+   "converged": true,
+   "regions": 4,
+   "max_depth": 2,
+   "parent_value_hex": "-0x1.b5db4757865afp-4",
+   "parent_abserr_hex": "0x1.d9395a192f7cbp-43",
+   "parent_converged": true,
+   "parent_regions": 5,
+   "parent_max_depth": 3
+  },
+  {
+   "call": "07b (b)",
+   "counts": [
+    14,
+    0,
+    10,
+    0
+   ],
+   "V93T10_counts": [
+    14,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.9c4de6ecf4452p-14",
+   "abserr_hex": "0x1.f298b162730d6p-25",
+   "converged": true,
+   "regions": 16,
+   "max_depth": 7,
+   "parent_value_hex": "0x1.9c4de6ecf3c4fp-14",
+   "parent_abserr_hex": "0x1.f298b05539195p-25",
+   "parent_converged": true,
+   "parent_regions": 16,
+   "parent_max_depth": 7
+  },
+  {
+   "call": "07b (c)",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.f1edc86484243p-17",
+   "abserr_hex": "0x1.056c31b4cfb57p-39",
+   "converged": true,
+   "regions": 10,
+   "max_depth": 9,
+   "parent_value_hex": "0x1.f1edc86484243p-17",
+   "parent_abserr_hex": "0x1.056c31b4cfb57p-39",
+   "parent_converged": true,
+   "parent_regions": 10,
+   "parent_max_depth": 9
+  },
+  {
+   "call": "07b (d)",
+   "counts": [
+    6,
+    2,
+    1,
+    0
+   ],
+   "V93T10_counts": [
+    6,
+    2,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "-0x1.b5db47638a085p-4",
+   "abserr_hex": "0x1.8075b9a053779p-33",
+   "converged": false,
+   "regions": 2,
+   "max_depth": 1,
+   "parent_value_hex": "-0x1.b5db47638a085p-4",
+   "parent_abserr_hex": "0x1.8075aba2113acp-33",
+   "parent_converged": false,
+   "parent_regions": 2,
+   "parent_max_depth": 1
+  },
+  {
+   "call": "07b (e1)",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.eb56afc607e00p-11",
+   "abserr_hex": "0x1.72de5e19b6d87p-39",
+   "converged": true,
+   "regions": 4,
+   "max_depth": 2,
+   "parent_value_hex": "0x1.eb56afc607e00p-11",
+   "parent_abserr_hex": "0x1.72de5e19b6d87p-39",
+   "parent_converged": true,
+   "parent_regions": 4,
+   "parent_max_depth": 2
+  },
+  {
+   "call": "07b (e2)",
+   "counts": [
+    15,
+    0,
+    1,
+    0
+   ],
+   "V93T10_counts": [
+    15,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "-0x1.24a89a8b8f0cbp-1",
+   "abserr_hex": "0x1.568170599c493p-45",
+   "converged": true,
+   "regions": 2,
+   "max_depth": 1,
+   "parent_value_hex": "-0x1.24a89a8b8f0cap-1",
+   "parent_abserr_hex": "0x1.44e3e19d1ad33p-34",
+   "parent_converged": true,
+   "parent_regions": 6,
+   "parent_max_depth": 4
+  },
+  {
+   "call": "yardstick test 2 exp_sin_1e3",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.84ecdddd7508fp-11",
+   "abserr_hex": "0x1.efa9a11262364p-53",
+   "converged": true,
+   "regions": 1,
+   "max_depth": 0,
+   "parent_value_hex": "0x1.84ecdddd7508fp-11",
+   "parent_abserr_hex": "0x1.efa9a11262364p-53",
+   "parent_converged": true,
+   "parent_regions": 1,
+   "parent_max_depth": 0
+  },
+  {
+   "call": "yardstick test 2 si_1000_exp",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.27481286ec722p-11",
+   "abserr_hex": "0x1.318bbf7184fedp-46",
+   "converged": true,
+   "regions": 15,
+   "max_depth": 4,
+   "parent_value_hex": "0x1.27481286ec722p-11",
+   "parent_abserr_hex": "0x1.318bbf7184fedp-46",
+   "parent_converged": true,
+   "parent_regions": 15,
+   "parent_max_depth": 4
+  },
+  {
+   "call": "yardstick test 2 gaussian_bump",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "-0x1.171b1880002b2p-43",
+   "abserr_hex": "0x1.78a7920ef1113p-34",
+   "converged": true,
+   "regions": 10,
+   "max_depth": 5,
+   "parent_value_hex": "-0x1.171b1880002b2p-43",
+   "parent_abserr_hex": "0x1.78a7920ef1113p-34",
+   "parent_converged": true,
+   "parent_regions": 10,
+   "parent_max_depth": 5
+  },
+  {
+   "call": "yardstick test 2 sqrt_fallback",
+   "counts": [
+    31,
+    0,
+    6,
+    0
+   ],
+   "V93T10_counts": [
+    31,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.15b18d049959ap-1",
+   "abserr_hex": "0x1.3e7959ae14af4p-37",
+   "converged": true,
+   "regions": 4,
+   "max_depth": 3,
+   "parent_value_hex": "0x1.15b18d049959ap-1",
+   "parent_abserr_hex": "0x1.1d0febe92ff7dp-35",
+   "parent_converged": true,
+   "parent_regions": 5,
+   "parent_max_depth": 4
+  },
+  {
+   "call": "yardstick test 2 runge_fallback",
+   "counts": [
+    39,
+    0,
+    8,
+    0
+   ],
+   "V93T10_counts": [
+    39,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.023a0b017c9fdp-3",
+   "abserr_hex": "0x1.4afcdbec28db7p-37",
+   "converged": true,
+   "regions": 5,
+   "max_depth": 3,
+   "parent_value_hex": "0x1.023a0b017c9fdp-3",
+   "parent_abserr_hex": "0x1.3dbf8a1114a09p-35",
+   "parent_converged": true,
+   "parent_regions": 11,
+   "parent_max_depth": 5
+  },
+  {
+   "call": "yardstick test 2 sinc_12b",
+   "counts": [
+    24,
+    8,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    24,
+    8,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.1bf855dd4869ep-7",
+   "abserr_hex": "0x1.d6dda0ee6c8eap-43",
+   "converged": true,
+   "regions": 10,
+   "max_depth": 9,
+   "parent_value_hex": "0x1.1bf855dd4852dp-7",
+   "parent_abserr_hex": "0x1.d2fe7b179c76fp-43",
+   "parent_converged": true,
+   "parent_regions": 17,
+   "parent_max_depth": 12
+  },
+  {
+   "call": "yardstick test 2 noisy(A=128,k=60)",
+   "counts": [
+    47,
+    7,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    47,
+    7,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.ad305b229df4ap-8",
+   "abserr_hex": "0x1.296b2a16d8210p-41",
+   "converged": true,
+   "regions": 20,
+   "max_depth": 8,
+   "parent_value_hex": "0x1.ad305b229e5d2p-8",
+   "parent_abserr_hex": "0x1.0ed4db701ea64p-41",
+   "parent_converged": true,
+   "parent_regions": 17,
+   "parent_max_depth": 6
+  },
+  {
+   "call": "yardstick test 2 noisy(A=512,k=60)",
+   "counts": [
+    331,
+    55,
+    40,
+    0
+   ],
+   "V93T10_counts": [
+    331,
+    55,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.ad305b229f5dap-8",
+   "abserr_hex": "0x1.2f98b4452e451p-39",
+   "converged": false,
+   "regions": 81,
+   "max_depth": 8,
+   "parent_value_hex": "0x1.ad305b229daa8p-8",
+   "parent_abserr_hex": "0x1.ff5844782dc6ep-41",
+   "parent_converged": true,
+   "parent_regions": 114,
+   "parent_max_depth": 10
+  },
+  {
+   "call": "yardstick test 2 far(3e5)",
+   "counts": [
+    168,
+    32,
+    147,
+    0
+   ],
+   "V93T10_counts": [
+    168,
+    32,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.23178de6ea85dp+3",
+   "abserr_hex": "0x1.501177030d892p-19",
+   "converged": true,
+   "regions": 25,
+   "max_depth": 5,
+   "parent_value_hex": "0x1.23178e687a1eap+3",
+   "parent_abserr_hex": "0x1.2614f981a9517p-17",
+   "parent_converged": true,
+   "parent_regions": 107,
+   "parent_max_depth": 8
+  },
+  {
+   "call": "leaf values test 1 exp_sin_1e3",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.84ecdddd7508fp-11",
+   "abserr_hex": "0x1.efa9a11262364p-53",
+   "converged": true,
+   "regions": 1,
+   "max_depth": 0,
+   "parent_value_hex": "0x1.84ecdddd7508fp-11",
+   "parent_abserr_hex": "0x1.efa9a11262364p-53",
+   "parent_converged": true,
+   "parent_regions": 1,
+   "parent_max_depth": 0
+  },
+  {
+   "call": "leaf values test 1 si_1000_exp",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.27481286ec722p-11",
+   "abserr_hex": "0x1.318bbf7184fedp-46",
+   "converged": true,
+   "regions": 15,
+   "max_depth": 4,
+   "parent_value_hex": "0x1.27481286ec722p-11",
+   "parent_abserr_hex": "0x1.318bbf7184fedp-46",
+   "parent_converged": true,
+   "parent_regions": 15,
+   "parent_max_depth": 4
+  },
+  {
+   "call": "leaf values test 1 sinc_1e3",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.593418599c04bp-11",
+   "abserr_hex": "0x1.0027fd6392556p-51",
+   "converged": true,
+   "regions": 5,
+   "max_depth": 4,
+   "parent_value_hex": "0x1.593418599c04bp-11",
+   "parent_abserr_hex": "0x1.0027fd6392556p-51",
+   "parent_converged": true,
+   "parent_regions": 5,
+   "parent_max_depth": 4
+  },
+  {
+   "call": "leaf values test 1 gaussian_bump",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "-0x1.171b1880002b2p-43",
+   "abserr_hex": "0x1.78a7920ef1113p-34",
+   "converged": true,
+   "regions": 10,
+   "max_depth": 5,
+   "parent_value_hex": "-0x1.171b1880002b2p-43",
+   "parent_abserr_hex": "0x1.78a7920ef1113p-34",
+   "parent_converged": true,
+   "parent_regions": 10,
+   "parent_max_depth": 5
+  },
+  {
+   "call": "leaf values test 1 sqrt_fallback(1e-08)",
+   "counts": [
+    23,
+    0,
+    5,
+    0
+   ],
+   "V93T10_counts": [
+    23,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.15b18d049959ap-1",
+   "abserr_hex": "0x1.018e92f521e61p-31",
+   "converged": true,
+   "regions": 3,
+   "max_depth": 2,
+   "parent_value_hex": "0x1.15b18d0499494p-1",
+   "parent_abserr_hex": "0x1.a7646605bf745p-29",
+   "parent_converged": true,
+   "parent_regions": 3,
+   "parent_max_depth": 2
+  },
+  {
+   "call": "leaf values test 1 sqrt_fallback(1e-10)",
+   "counts": [
+    31,
+    0,
+    6,
+    0
+   ],
+   "V93T10_counts": [
+    31,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.15b18d049959ap-1",
+   "abserr_hex": "0x1.3e7959ae14af4p-37",
+   "converged": true,
+   "regions": 4,
+   "max_depth": 3,
+   "parent_value_hex": "0x1.15b18d049959ap-1",
+   "parent_abserr_hex": "0x1.1d0febe92ff7dp-35",
+   "parent_converged": true,
+   "parent_regions": 5,
+   "parent_max_depth": 4
+  },
+  {
+   "call": "leaf values test 1 runge_fallback",
+   "counts": [
+    39,
+    0,
+    8,
+    0
+   ],
+   "V93T10_counts": [
+    39,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.023a0b017c9fdp-3",
+   "abserr_hex": "0x1.4afcdbec28db7p-37",
+   "converged": true,
+   "regions": 5,
+   "max_depth": 3,
+   "parent_value_hex": "0x1.023a0b017c9fdp-3",
+   "parent_abserr_hex": "0x1.3dbf8a1114a09p-35",
+   "parent_converged": true,
+   "parent_regions": 11,
+   "parent_max_depth": 5
+  },
+  {
+   "call": "roundoff exit test 1",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.18d99589c1671p-7",
+   "abserr_hex": "0x1.a8cfe6c9698d7p-47",
+   "converged": true,
+   "regions": 15,
+   "max_depth": 4,
+   "parent_value_hex": "0x1.18d99589c1671p-7",
+   "parent_abserr_hex": "0x1.a8cfe6c9698d7p-47",
+   "parent_converged": true,
+   "parent_regions": 15,
+   "parent_max_depth": 4
+  },
+  {
+   "call": "global budget test 1",
+   "counts": [
+    86,
+    10,
+    4,
+    0
+   ],
+   "V93T10_counts": [
+    86,
+    10,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": false,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.e54b33c649b70p-15",
+   "abserr_hex": "0x1.6b0a718fea987p-40",
+   "converged": true,
+   "regions": 16,
+   "max_depth": 6,
+   "parent_value_hex": "0x1.e54b33c64d1f0p-15",
+   "parent_abserr_hex": "0x1.70b6a8ed18e92p-40",
+   "parent_converged": true,
+   "parent_regions": 12,
+   "parent_max_depth": 4
+  },
+  {
+   "call": "global budget test 3",
+   "counts": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "V93T10_counts": [
+    0,
+    0,
+    0
+   ],
+   "counts_equal_V93T10": true,
+   "identical_to_V93T10": true,
+   "identical_to_parent": true,
+   "path_07c_identical_to_parent": true,
+   "value_hex": "0x1.27481286ec722p-11",
+   "abserr_hex": "0x1.318bbf7184fedp-46",
+   "converged": true,
+   "regions": 15,
+   "max_depth": 4,
+   "parent_value_hex": "0x1.27481286ec722p-11",
+   "parent_abserr_hex": "0x1.318bbf7184fedp-46",
+   "parent_converged": true,
+   "parent_regions": 15,
+   "parent_max_depth": 4
+  }
+ ],
+ "solves": [
+  "solve N=24 smooth: identical to V93T10 True; value 0x1.12d66329fa9e2p-1 abserr_direct 0x1.633e6b6ecd7bfp-49 phase_err 0x1.bf101d7a287d9p-47",
+  "solve N=24 kink: identical to V93T10 True; value 0x1.2edac12db296ap-3 abserr_direct 0x1.28534507b2ac7p-13 phase_err 0x1.1b998fa7ec0e9p-13",
+  "solve N=24 tent: identical to V93T10 True; value 0x1.12d66329fa9e2p-1 abserr_direct 0x1.1769793a11a8dp-7 phase_err 0x1.bf101d7a287d9p-47",
+  "solve N=24 noise: identical to V93T10 True; value 0x1.12d66329fcd02p-1 abserr_direct 0x1.e9519b77d95cbp-33 phase_err 0x1.d18a9479e3d59p-33",
+  "solve N=24 poly: identical to V93T10 True; value 0x1.0904a7904a790p+0 abserr_direct 0x1.cc5780076a360p-49 phase_err 0x1.035043d45e87ep-46",
+  "solve N=24 scatter 1e-09: identical to V93T10 True; value 0x1.43a54e4e355efp-1 abserr_direct 0x1.2134e29ee3f46p-32 phase_err 0x1.c68becf8696afp-33",
+  "solve N=24 scatter 1e-12: identical to V93T10 True; value 0x1.43a54e4e986cep-1 abserr_direct 0x1.592cb2235acf1p-42 phase_err 0x1.215c27665fc5ap-42",
+  "solve N=16 smooth: identical to V93T10 True; value 0x1.12d66329fa9e4p-1 abserr_direct 0x1.0597355e70df3p-49 phase_err 0x1.3974296f61d30p-47",
+  "solve N=16 kink: identical to V93T10 True; value 0x1.2ea9e5073f887p-3 abserr_direct 0x1.bc25ccf2cfb0bp-11 phase_err 0x1.9a0676c39ee67p-11",
+  "solve N=16 tent: identical to V93T10 True; value 0x1.12d66329fa9e4p-1 abserr_direct 0x1.ac9259fcb6dd6p-7 phase_err 0x1.3974296f61d30p-47",
+  "solve N=16 noise: identical to V93T10 True; value 0x1.12d66328f7f43p-1 abserr_direct 0x1.4ac1de6acbb17p-32 phase_err 0x1.2d88de8783e0ep-32",
+  "solve N=16 poly: identical to V93T10 True; value 0x1.0904a7904a792p+0 abserr_direct 0x1.5b047c41634e3p-49 phase_err 0x1.5d7048db0df0cp-47",
+  "solve N=16 scatter 1e-09: identical to V93T10 True; value 0x1.43a54e4e87f98p-1 abserr_direct 0x1.30f592dae51c3p-32 phase_err 0x1.2887dcb67f697p-32",
+  "solve N=16 scatter 1e-12: identical to V93T10 True; value 0x1.43a54e4e98820p-1 abserr_direct 0x1.7f29f8ba9d03fp-42 phase_err 0x1.7b916723d3b29p-42"
+ ]
+}

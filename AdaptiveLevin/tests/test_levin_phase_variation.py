@@ -4,8 +4,9 @@ section 1.1 and section 3 tests 1-4, 7 and 8; tests 5 and 6 are test_levin_stati
 
 A basis's build_Levin_data() reports V, the phase's total variation across a region, computed from the raw
 phase: |theta(b) - theta(a)| where theta' has no two node samples of opposite strict sign, the variation on the
-node partition, sum_j |theta(x_{j+1}) - theta(x_j)|, where it has. The C2 gate (V < SIX_PI: the nested
-Clenshaw-Curtis rule) and the choice of LU over least squares (V > 20 pi) route on it. Until 07a both routed on
+node partition, sum_j |theta(x_{j+1}) - theta(x_j)|, where it has. The C2 gate (V < CC_GATE_PHASE_VARIATION:
+the Clenshaw-Curtis rule; SIX_PI = 6 pi until prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md, 10 pi
+since) and the choice of LU over least squares (V > 20 pi) route on it. Until 07a both routed on
 the estimate mean|theta'| * width from the region's Chebyshev nodes, which this module calls "the parent's
 estimate" and computes in the tests (_parent_estimate()) to show where the two disagree. The location no longer
 depends on any estimate of the variation: a phase is left unlocated only when its rate is zero at every finite
@@ -54,6 +55,12 @@ from AdaptiveLevin.tests.test_levin_stationary import (
 )
 
 N = lq.DEFAULT_LEVIN_CHEBSHEV_ORDER
+
+# The gate's threshold of 07a's time, 6 pi (the module's SIX_PI until prompts/levin-phase-floor/
+# 07d-six-pi-gate-and-cc-estimate.md, which renamed it CC_GATE_PHASE_VARIATION and set it to 10 pi). Tests 2 and 3
+# show where 07a's variation V and 07's estimate mean|theta'| * width fall on either side of the number 6 pi, which
+# is what they test; they do not test the gate's value, so they keep 6 pi as a literal.
+SIX_PI_07A = 6.0 * math.pi
 
 
 def _parent_estimate(rate, span, order=N):
@@ -162,13 +169,18 @@ class TestVariationExact(unittest.TestCase, _Honest):
         phase_span 21.940294566299677); under the commit it goes to the Clenshaw-Curtis rule. The call
         (adaptive_levin_sincos, f = (1, 0), rtol 1e-10) is honest against (Si(e^alpha) - Si(1)) / alpha; at the
         parent it returned the same value and abserr, its root leaf bisected all the same.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 1.2): the comparisons with 6 pi
+        read SIX_PI_07A, the number 6 pi as a literal, in place of the module's SIX_PI, which 07d renamed
+        CC_GATE_PHASE_VARIATION and set to 10 pi. They test where 07a's V and 07's estimate fall about 6 pi, not the
+        gate. Both are below 10 pi, so the region goes to the Clenshaw-Curtis rule under 07d too.
         """
         theta = exp_theta(T2_ALPHA)
         V, _, _ = _variation(_Basis_SinCos(theta), (0.0, 1.0))
         self.assertEqual(float(V).hex(), float(abs(math.exp(T2_ALPHA) - 1.0)).hex())
-        self.assertLess(V, lq.SIX_PI)
+        self.assertLess(V, SIX_PI_07A)
         estimate = _parent_estimate(theta["theta_deriv"], (0.0, 1.0))
-        self.assertGreater(estimate, lq.SIX_PI)
+        self.assertGreater(estimate, SIX_PI_07A)
         self.assertAlmostEqual(estimate, 21.940294566299677, delta=1e-9)
 
         solve = _adaptive_levin_subregion(
@@ -197,10 +209,18 @@ class TestMonotoneUnderBisection(unittest.TestCase):
         pairs among 159 regions visited). The parent's estimates are recomputed here; the commit routes [0, 1]
         to the Levin solve (V = 10 pi) and its halves (V = 5 pi) to the Clenshaw-Curtis rule. The other two
         shapes show no violation at either code.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 1.2): the parent's estimates
+        are compared with SIX_PI_07A, the number 6 pi as a literal, in place of the module's SIX_PI (renamed
+        CC_GATE_PHASE_VARIATION and set to 10 pi by 07d): they show 07's estimate at the threshold of its time. The
+        bump's V over [0, 1] is 10 pi exactly, not below the new gate, so the commit still routes [0, 1] to the
+        Levin solve and its halves (5 pi) to the Clenshaw-Curtis rule.
         """
         bump = bump_theta(10.0 * math.pi)
-        self.assertLess(_parent_estimate(bump["theta_deriv"], (0.0, 1.0)), lq.SIX_PI)
-        self.assertGreater(_parent_estimate(bump["theta_deriv"], (0.0, 0.5)), lq.SIX_PI)
+        self.assertLess(_parent_estimate(bump["theta_deriv"], (0.0, 1.0)), SIX_PI_07A)
+        self.assertGreater(
+            _parent_estimate(bump["theta_deriv"], (0.0, 0.5)), SIX_PI_07A
+        )
         self.assertAlmostEqual(
             _parent_estimate(bump["theta_deriv"], (0.0, 1.0)) / math.pi,
             4.730842969258386,

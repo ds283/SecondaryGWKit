@@ -31,6 +31,7 @@ checks both that the value is within its abserr of the reference and that abserr
 and no datastore.
 """
 
+import contextlib
 import math
 import unittest
 from unittest import mock
@@ -43,6 +44,7 @@ from AdaptiveLevin.levin_quadrature import (
     adaptive_levin_sincos,
     chebyshev_matrices,
 )
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 from AdaptiveLevin.tests.test_levin_stationary import F_23, _Honest
 
 EDGE_MAX = lq._LEVIN_EDGE_RATE_RATIO_MAX
@@ -285,6 +287,15 @@ class TestEdgeMechanism(unittest.TestCase, _Honest):
         At the commit the edge rule refuses that leaf, it is bisected, and the call is honest (0.0044 of its abserr),
         converged, with 16 regions. The parent's call is reproduced bit for bit by the commit with the rule refusing
         nothing.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): the
+        call makes 14 Clenshaw-Curtis solves (the window's pieces and their checks), so 07d acts in it. At 07d's code
+        the call is still converged and honest, with 16 regions and one edge refusal (0.0044 of its abserr; value
+        0x1.9c4de6ecf4452p-14 against 07c's 0x1.9c4de6ecf3c4fp-14), and is asserted as before. The parent's path
+        (the rule refusing nothing) is now run on 07c's Clenshaw-Curtis rule as well (cc_rule_07c()), since the
+        hex it reproduces is 07a's, whose window pieces are CC_{2N-1}'s: there it reproduces B_PARENT_VALUE and
+        B_PARENT_ABSERR bit for bit, as before. (At 07d's code with the rule refusing nothing the carrier is still
+        returned trusted and the call is 7.62 times its abserr from B_REF.)
         """
         data = adaptive_levin_sincos(
             (0.0, 1.0), Q_F, Q_THETA, atol=B_ATOL, rtol=B_RTOL, chebyshev_order=Q_ORDER
@@ -307,8 +318,10 @@ class TestEdgeMechanism(unittest.TestCase, _Honest):
         self.assertEqual(rule, "edge")
         self.assertGreater(q, 5.0 * EDGE_MAX)
 
-        # the parent: the rule refusing nothing
-        with mock.patch.object(lq, "_leaf_rate_rule", return_value=_REFUSE_NOTHING):
+        # the parent: the rule refusing nothing, on 07c's Clenshaw-Curtis rule (07d)
+        with mock.patch.object(
+            lq, "_leaf_rate_rule", return_value=_REFUSE_NOTHING
+        ), cc_rule_07c():
             parent = adaptive_levin_sincos(
                 (0.0, 1.0),
                 Q_F,
@@ -366,6 +379,15 @@ class TestAtTheDepthCap(unittest.TestCase):
         1.6e-5 and 8.5e-4) and is converged. At the commit the range rule refuses both (|theta'| ranges by e^3 = 20
         over each): each is returned untrusted at depth_max, keeps its own value V_P, and declares as the tree
         declares an untrusted leaf there with r < 1, max(residual, delta1) / (1 - r); the call is not converged.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): the
+        halves' checks make Clenshaw-Curtis solves (6, two of them sent there by the gate at 10 pi), so 07d acts in
+        the call. At 07d's code the call is asserted as before: unconverged, both leaves refused and untrusted at
+        the cap, each declaring as the tree declares; its abserr is now 0x1.8075b9a053779p-33 (07c's
+        0x1.8075aba2113acp-33). The parent's hex is 07b's parent's, so the parent's path is run on 07c's
+        Clenshaw-Curtis rule (cc_rule_07c()), where it reproduces it bit for bit. That the declarations are the same
+        with and without the rule is asserted at 07d's code, against the commit with the rule refusing nothing
+        (converged there, as at the parent).
         """
         data = adaptive_levin_sincos(
             D_SPAN, D_F, D_THETA, atol=D_ATOL, rtol=D_RTOL, depth_max=D_DEPTH_MAX
@@ -398,7 +420,9 @@ class TestAtTheDepthCap(unittest.TestCase):
                     RANGE_MAX,
                 )
 
-        with mock.patch.object(lq, "_leaf_rate_rule", return_value=_REFUSE_NOTHING):
+        with mock.patch.object(
+            lq, "_leaf_rate_rule", return_value=_REFUSE_NOTHING
+        ), cc_rule_07c():
             parent = adaptive_levin_sincos(
                 D_SPAN, D_F, D_THETA, atol=D_ATOL, rtol=D_RTOL, depth_max=D_DEPTH_MAX
             )
@@ -406,7 +430,13 @@ class TestAtTheDepthCap(unittest.TestCase):
         self.assertEqual(parent["abserr"].hex(), D_PARENT_ABSERR.hex())
         self.assertTrue(parent["converged"])
         # the declarations are the same; only the value returned (V_P, not the quarters sum) and the flag differ
-        self.assertEqual(data["abserr"].hex(), parent["abserr"].hex())
+        # (07d: against the commit with the rule refusing nothing, both on 07d's Clenshaw-Curtis rule)
+        with mock.patch.object(lq, "_leaf_rate_rule", return_value=_REFUSE_NOTHING):
+            unrefused = adaptive_levin_sincos(
+                D_SPAN, D_F, D_THETA, atol=D_ATOL, rtol=D_RTOL, depth_max=D_DEPTH_MAX
+            )
+        self.assertTrue(unrefused["converged"])
+        self.assertEqual(data["abserr"].hex(), unrefused["abserr"].hex())
 
 
 class TestNotTouched(unittest.TestCase):
@@ -450,32 +480,44 @@ class TestNotTouched(unittest.TestCase):
         over the span, below 6 pi, so every leaf is a Clenshaw-Curtis leaf; the leaf [0, 3] is trusted with |theta'|
         ranging by e^3 = 20.1 over its nodes. Clenshaw-Curtis leaves are not tested: the rule is never called, the
         call is bit-identical to the parent's, and both counts are 0.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): every
+        leaf is a Clenshaw-Curtis leaf, so 07d acts in the call (2 regions at 07d's code, 6 at 07b's parent; value
+        -0x1.24a89a8b8f0cbp-1, abserr 0x1.568170599c493p-45). What the test is for -- the rule never called on a
+        Clenshaw-Curtis leaf, both counts 0, a trusted leaf [0, 3] of range above RANGE_MAX -- is asserted at 07d's
+        code; the bit-identity with the parent is asserted on 07c's Clenshaw-Curtis rule (cc_rule_07c()), with the
+        same assertions besides.
         """
-        calls, spy = self._spy()
-        with mock.patch.object(lq, "_leaf_rate_rule", side_effect=spy):
-            data = adaptive_levin_sincos(
-                (0.0, 6.0), F_23, E2_THETA, atol=E_ATOL, rtol=E_RTOL
-            )
-        self.assertEqual(data["value"].hex(), E2_PARENT_VALUE.hex())
-        self.assertEqual(data["abserr"].hex(), E2_PARENT_ABSERR.hex())
-        self.assertTrue(data["converged"])
-        self.assertEqual(data["num_edge_rule_refusals"], 0)
-        self.assertEqual(data["num_range_rule_refusals"], 0)
-        self.assertEqual(calls, [])
-        self.assertTrue(all(r.type == "direct" for r in data["regions"]))
-        wide = [
-            r
-            for r in data["regions"]
-            if r.trusted is True
-            and _node_range(
-                E2_THETA["theta_deriv"],
-                r.start,
-                r.end,
-                lq.DEFAULT_LEVIN_CHEBSHEV_ORDER,
-            )
-            > RANGE_MAX
-        ]
-        self.assertEqual([(r.start, r.end) for r in wide], [(0.0, 3.0)])
+        for path in ("07d", "07c"):
+            with self.subTest(path=path):
+                calls, spy = self._spy()
+                with mock.patch.object(lq, "_leaf_rate_rule", side_effect=spy), (
+                    cc_rule_07c() if path == "07c" else contextlib.nullcontext()
+                ):
+                    data = adaptive_levin_sincos(
+                        (0.0, 6.0), F_23, E2_THETA, atol=E_ATOL, rtol=E_RTOL
+                    )
+                if path == "07c":
+                    self.assertEqual(data["value"].hex(), E2_PARENT_VALUE.hex())
+                    self.assertEqual(data["abserr"].hex(), E2_PARENT_ABSERR.hex())
+                self.assertTrue(data["converged"])
+                self.assertEqual(data["num_edge_rule_refusals"], 0)
+                self.assertEqual(data["num_range_rule_refusals"], 0)
+                self.assertEqual(calls, [])
+                self.assertTrue(all(r.type == "direct" for r in data["regions"]))
+                wide = [
+                    r
+                    for r in data["regions"]
+                    if r.trusted is True
+                    and _node_range(
+                        E2_THETA["theta_deriv"],
+                        r.start,
+                        r.end,
+                        lq.DEFAULT_LEVIN_CHEBSHEV_ORDER,
+                    )
+                    > RANGE_MAX
+                ]
+                self.assertEqual([(r.start, r.end) for r in wide], [(0.0, 3.0)])
 
 
 if __name__ == "__main__":

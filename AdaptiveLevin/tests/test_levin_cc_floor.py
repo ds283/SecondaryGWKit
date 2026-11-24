@@ -57,6 +57,7 @@ from AdaptiveLevin.levin_quadrature import (
     adaptive_levin_sincos,
     chebyshev_matrices,
 )
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 from AdaptiveLevin.tests.test_levin_global_budget import levin_quadrature_references
 from AdaptiveLevin.tests.test_levin_roundoff_exit import (
     _call_signature,
@@ -88,13 +89,19 @@ def _parent_cc(
     notify_label,
     id_label,
     vectorize_cache=None,
+    rule=_adaptive_levin_subregion_cc,
 ):
     """
     The parent's fallback solve: the working tree's, whose value and nested-pair estimate are the
     parent's bit for bit, with "phase_err" replaced by the parent's eq. (151) floor plus the
     declared-phase term, formed from the same samples and helpers as the parent formed them.
+
+    rule (since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md) is the fallback solve
+    whose "phase_err" is replaced: this module's by default, and under parent_floor() the rule in
+    force when the block is entered, so that on 07c's code path (cc_rule_07c()) it is 07c's rule,
+    as the working tree's was until 07d.
     """
-    data = _adaptive_levin_subregion_cc(
+    data = rule(
         x_span,
         f,
         BasisData,
@@ -127,8 +134,16 @@ def _parent_cc(
 
 @contextlib.contextmanager
 def parent_floor():
-    """Within the block, every fallback solve carries the parent's floor (_parent_cc())."""
-    with mock.patch.object(lq, "_adaptive_levin_subregion_cc", _parent_cc):
+    """
+    Within the block, every fallback solve carries the parent's floor (_parent_cc()), on the rule
+    in force when the block is entered.
+    """
+    rule = lq._adaptive_levin_subregion_cc
+
+    def solve(*args, **kwargs):
+        return _parent_cc(*args, rule=rule, **kwargs)
+
+    with mock.patch.object(lq, "_adaptive_levin_subregion_cc", solve):
         yield
 
 
@@ -501,6 +516,13 @@ class TestNothingElseMoves(_HonestyMixin, unittest.TestCase):
         fallback leaf, value, abserr and every region are bit-identical to the parent's (in-process,
         _parent_cc()); the rest are tabulated against the parent in parent_demo.txt, and asserted
         honest here, as every one is at the parent.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the bit-for-bit comparison certifies that 06d's floor moves nothing on a call
+        with no fallback leaf, and "no fallback leaf" was 07c's gate at 6 pi. At 07d's gate, 10 pi,
+        input_validation_order_clamp has 8 fallback leaves, so that branch runs both calls on 07c's
+        code path (test_levin_cc_estimate.cc_rule_07c()), its assertions unchanged. The honesty
+        branch, a property of the call, runs at 07d's code as before.
         """
         references = levin_quadrature_references()
         for name, span, f, theta, kwargs, basis, raises in levin_quadrature_problems():
@@ -510,8 +532,8 @@ class TestNothingElseMoves(_HonestyMixin, unittest.TestCase):
                     with self.assertRaises(raises):
                         _adaptive_levin(span, f, basis_object, **kwargs)
                     continue
-                new = _adaptive_levin(span, f, basis_object, **kwargs)
                 if name in PARENT_HAS_FALLBACK_LEAF:
+                    new = _adaptive_levin(span, f, basis_object, **kwargs)
                     if name == "mode_filter_tight":
                         # since prompts/levin-phase-floor 06e's exact end nodes, one Levin
                         # region, converged (06d: 32 fallback regions, unconverged): which rule
@@ -524,9 +546,13 @@ class TestNothingElseMoves(_HonestyMixin, unittest.TestCase):
                         new["value"], new["abserr"], ref, ref_err, f"test 6 {name}"
                     )
                 else:
-                    with parent_floor():
-                        basis_parent = _Basis_SinCos(theta) if basis is None else basis
-                        parent = _adaptive_levin(span, f, basis_parent, **kwargs)
+                    with cc_rule_07c():
+                        new = _adaptive_levin(span, f, basis_object, **kwargs)
+                        with parent_floor():
+                            basis_parent = (
+                                _Basis_SinCos(theta) if basis is None else basis
+                            )
+                            parent = _adaptive_levin(span, f, basis_parent, **kwargs)
                     self.assertEqual(parent["num_simple_regions"], 0)
                     self.assertEqual(_call_signature(new), _call_signature(parent))
 

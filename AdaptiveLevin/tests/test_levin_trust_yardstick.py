@@ -26,6 +26,15 @@ in A3 v2's census, rare on clean integrands (no firing on any of 06g's cells):
     Clenshaw-Curtis node error E (06e's node term), the census's first population.
 The numbers quoted are docs/levin-phase-floor/06m/calibration/out/cells.txt's.
 
+Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): tests 2-5 run
+the commit's calls, and the leaf solves leaf_solves() makes, on 07c's code path, cc_rule_07c()
+(AdaptiveLevin/tests/test_levin_cc_estimate.py: the parent's Clenshaw-Curtis rule, CC_{2N-1} with |CC_{2N-1} - CC_N|,
+and the gate at 6 pi), with every assertion unchanged. They certify the yardstick, which 07d does not change, by bit
+identity with 06l's variant and 06g's parent and on leaves made of 07c's rule (Clenshaw-Curtis halves whose floors and
+node errors E are the (2N - 1)-point rule's), which the new rule does not reproduce: 07d returns CC_{4N-3}, with its
+floor, node term and noise term on the (4N - 3)-point grid, so every cell with a Clenshaw-Curtis solve moves. The
+variant and the parent are run as before. Test 1 calls _trust_noise_yardstick() on dicts, and is unchanged.
+
 No Ray and no datastore.
 """
 
@@ -41,6 +50,7 @@ from unittest import mock
 import numpy as np
 
 import AdaptiveLevin.levin_quadrature as lq
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 
 DISPATCH_SHA = "5ff8a5e44be775df299af0f1754123578905b86e"
 _PARENT_NAME = "levin_quadrature_parent_5ff8a5e"
@@ -307,7 +317,8 @@ def returned(data, key):
 def leaf_solves(cell, key):
     """
     The leaf's own solve and its halves', solved afresh as the driver solves them (the break point
-    (end + start) / 2), with the commit's _adaptive_levin_subregion().
+    (end + start) / 2), with the commit's _adaptive_levin_subregion(); since 07d on 07c's code path
+    (cc_rule_07c()), as the commit's calls it is compared with are.
     """
     _, _, f, theta, kwargs = cell
     basis = lq._Basis_SinCos(theta)
@@ -321,7 +332,8 @@ def leaf_solves(cell, key):
             span, f, basis, None, chebyshev_order=order, rtol=rtol
         )
 
-    return solve((a, b)), solve((a, c)), solve((c, b))
+    with cc_rule_07c():
+        return solve((a, b)), solve((a, c)), solve((c, b))
 
 
 def nu1(phi_P, data_L, data_R):
@@ -509,6 +521,20 @@ CHASE_KEYS_07C_ORDER = (
 CHASE_KEYS_07C = frozenset(CHASE_KEYS_07C_ORDER)
 CHASE_CELLS_07C = {"si_1000_exp": (1, 6, 12)}
 
+# prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md section 1.4: the Clenshaw-Curtis rule's four counts,
+# new result keys, admitted and left out of the comparison as 07b's and 07c's are (section 3, "Existing
+# assertions"). The commit's calls run on 07c's code path (cc_rule_07c()), where no route change and no noise term
+# is counted.
+CC_KEYS_07D = frozenset(
+    (
+        "num_cc_solves",
+        "num_cc_gate_route_changes",
+        "num_cc_noise_set",
+        "num_cc_resampled",
+    )
+)
+NEW_KEYS = GUARD_KEYS_07 | RATE_RULE_KEYS_07B | CHASE_KEYS_07C | CC_KEYS_07D
+
 
 class TestCodeIsTheVariants(unittest.TestCase):
 
@@ -536,6 +562,13 @@ class TestCodeIsTheVariants(unittest.TestCase):
         stopped, twelve bisections counted: 16 regions become 15, converged under both, abserr 1.479e-14
         to 1.696e-14); the comparison there is made with the rules refusing nothing, where nothing is
         rooted and the three counts are 0, as they are on every other cell.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the commit's calls run on 07c's code path, cc_rule_07c(), so that the
+        Clenshaw-Curtis rule is the one the variant and the parent use and the test still certifies the
+        yardstick; the key set also admits 07d's four counts (CC_KEYS_07D), compared as nothing else is.
+        Every other assertion is unchanged. At the new code every cell with a Clenshaw-Curtis solve
+        moves; the log lists them.
         """
         parent = load_parent()
         variant = load_variant()
@@ -544,7 +577,10 @@ class TestCodeIsTheVariants(unittest.TestCase):
         for cell in test2_cells():
             name = cell[0]
             with self.subTest(cell=name):
-                new = sincos(lq, cell)
+                with cc_rule_07c():
+                    new = sincos(lq, cell)
+                self.assertEqual(new["num_cc_gate_route_changes"], 0, name)
+                self.assertEqual(new["num_cc_noise_set"], 0, name)
                 refusals = (
                     new["num_edge_rule_refusals"] + new["num_range_rule_refusals"]
                 )
@@ -557,7 +593,7 @@ class TestCodeIsTheVariants(unittest.TestCase):
                     )
                     with mock.patch.object(
                         lq, "_leaf_rate_rule", return_value=(False, None, 1.0)
-                    ):
+                    ), cc_rule_07c():
                         new = sincos(lq, cell)
                     self.assertEqual(
                         tuple(new[key] for key in CHASE_KEYS_07C_ORDER), (0, 0, 0), name
@@ -570,23 +606,17 @@ class TestCodeIsTheVariants(unittest.TestCase):
                 # prompts/levin-phase-floor/07-stationary-point-guard.md section 3 test 12 (its section 9
                 # point 3): the key set admits the stationary-point guard's six result keys, and nothing
                 # else; every other key is compared as before. Since 07b, also its two refusal counts; since
-                # 07c, the stop's three counts.
-                self.assertTrue(
-                    GUARD_KEYS_07 | RATE_RULE_KEYS_07B | CHASE_KEYS_07C <= set(new),
-                    name,
-                )
+                # 07c, the stop's three counts; since 07d, the Clenshaw-Curtis rule's four counts.
+                self.assertTrue(NEW_KEYS <= set(new), name)
                 self.assertEqual(
-                    set(new) - GUARD_KEYS_07 - RATE_RULE_KEYS_07B - CHASE_KEYS_07C,
+                    set(new) - NEW_KEYS,
                     set(var) - {"route_06l"},
                     name,
                 )
                 self.assertEqual(
                     result_record(
                         new,
-                        exclude=("elapsed",)
-                        + tuple(
-                            sorted(GUARD_KEYS_07 | RATE_RULE_KEYS_07B | CHASE_KEYS_07C)
-                        ),
+                        exclude=("elapsed",) + tuple(sorted(NEW_KEYS)),
                     ),
                     result_record(var, exclude=("elapsed", "route_06l")),
                     name,
@@ -600,19 +630,14 @@ class TestCodeIsTheVariants(unittest.TestCase):
                 firings["levin"] += sum(1 for rec in fired if not rec["is_direct"])
                 if not fired:
                     self.assertEqual(
-                        set(new) - GUARD_KEYS_07 - RATE_RULE_KEYS_07B - CHASE_KEYS_07C,
+                        set(new) - NEW_KEYS,
                         set(old),
                         name,
                     )
                     self.assertEqual(
                         result_record(
                             new,
-                            exclude=("elapsed",)
-                            + tuple(
-                                sorted(
-                                    GUARD_KEYS_07 | RATE_RULE_KEYS_07B | CHASE_KEYS_07C
-                                )
-                            ),
+                            exclude=("elapsed",) + tuple(sorted(NEW_KEYS)),
                         ),
                         result_record(old),
                         name,
@@ -635,9 +660,14 @@ class TestLeafCases(unittest.TestCase):
     def _leaf(self, cell, key):
         """
         The leaf under the commit and the parent, and its solves afresh; the solves are checked to be
-        the driver's: their delta1 is the commit's to the last bit.
+        the driver's: their delta1 is the commit's to the last bit. Since prompts/levin-phase-floor/
+        07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"), the commit's call and the
+        solves run on 07c's code path, cc_rule_07c(): tests 3-5 certify the yardstick on leaves made of
+        07c's Clenshaw-Curtis rule, which the new rule does not make (see the module docstring); their
+        assertions are unchanged.
         """
-        new, made_new = run_recorded(lq, cell)
+        with cc_rule_07c():
+            new, made_new = run_recorded(lq, cell)
         old, made_old = run_recorded(load_parent(), cell)
         leaf_new = checked_leaf(made_new, key)
         leaf_old = checked_leaf(made_old, key)

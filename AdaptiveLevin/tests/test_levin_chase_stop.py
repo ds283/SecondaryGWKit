@@ -43,6 +43,19 @@ solves them, for its yardstick nu_B.
 References: docs/levin-phase-floor/07c/code/test_references_07c.py (out/test_references_07c.json), mpmath's quad on
 the pieces between consecutive zeros of sin(theta), at 30 and 45 digits, agreeing to 4.5e-33 relative or better.
 No Ray and no datastore.
+
+Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): every call
+here that makes a Clenshaw-Curtis solve ((b)-(e), (c) item 3 and (f) item 2) is run on 07c's code path,
+cc_rule_07c() (AdaptiveLevin/tests/test_levin_cc_estimate.py: the parent's Clenshaw-Curtis rule, CC_{2N-1} with
+|CC_{2N-1} - CC_N|, and the gate at 6 pi), and so are the leaf solves _nu_B() makes; every assertion is unchanged.
+These tests certify the stop below a refused leaf, a mechanism 07d does not change, on constructions made of 07c's
+rule: the chase in (b) is driven by Clenshaw-Curtis leaves whose residual |CC_47 - CC_24| carries the integrand's
+noise above their floor. 07d's noise term declares that noise, and at the new code the chase does not arise: (b)'s
+call converges in 26 regions at depth at most 7, with three bisections at the noise level counted and no root
+stopped (158 Clenshaw-Curtis solves, 18 route changes, the noise term setting all 158), true error 9.1e-15 against
+abserr 6.8e-13. That is within its abserr against the reference, but below NOISE_BOUND (1.774e-12), the margin these
+assertions add, so the honesty assertions with that margin could not be made there. (f) item 1 makes no
+Clenshaw-Curtis solve and runs at the new code as before.
 """
 
 import functools
@@ -59,6 +72,7 @@ from AdaptiveLevin.levin_quadrature import (
     _trust_noise_yardstick,
     adaptive_levin_sincos,
 )
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 
 CHASE_KEYS = (
     "num_chase_stops",
@@ -175,13 +189,17 @@ F2_PARENT_ABSERR = float.fromhex("0x1.d9395a192f7cbp-43")
 # --- helpers --------------------------------------------------------------------------------------------------------
 @functools.lru_cache(maxsize=None)
 def _b_call(parent=False, depth_max=lq.DEFAULT_LEVIN_MAX_DEPTH):
-    """(b)'s call at the commit, or on the parent's code path (no root ever stops)."""
+    """
+    (b)'s call at the commit, or on the parent's code path (no root ever stops); since 07d both on 07c's
+    Clenshaw-Curtis rule (cc_rule_07c(); see the module docstring).
+    """
     f, theta = problem(B_A, B_KAPPA, ETA)
     kwargs = dict(atol=B_ATOL, rtol=B_RTOL, depth_max=depth_max)
-    if parent:
-        with mock.patch.object(lq, "_LEVIN_CHASE_STOP_LIMIT", math.inf):
-            return adaptive_levin_sincos(SPAN, f, theta, **kwargs)
-    return adaptive_levin_sincos(SPAN, f, theta, **kwargs)
+    with cc_rule_07c():
+        if parent:
+            with mock.patch.object(lq, "_LEVIN_CHASE_STOP_LIMIT", math.inf):
+                return adaptive_levin_sincos(SPAN, f, theta, **kwargs)
+        return adaptive_levin_sincos(SPAN, f, theta, **kwargs)
 
 
 def _region(data, span):
@@ -194,7 +212,8 @@ def _region(data, span):
 def _nu_B(f, theta, span, rtol):
     """
     The noise yardstick of a leaf's trust check, from its own solve and its halves' solved afresh as the driver
-    solves them (break point (end + start) / 2), with delta1 recomputed from the same solves.
+    solves them (break point (end + start) / 2), with delta1 recomputed from the same solves. Since 07d on 07c's
+    Clenshaw-Curtis rule (cc_rule_07c()), as the calls it is compared with are.
     """
     basis = lq._Basis_SinCos(theta)
     a, b = span
@@ -210,7 +229,8 @@ def _nu_B(f, theta, span, rtol):
             rtol=rtol,
         )
 
-    P, L, R = solve((a, b)), solve((a, c)), solve((c, b))
+    with cc_rule_07c():
+        P, L, R = solve((a, b)), solve((a, c)), solve((c, b))
     nu = _trust_noise_yardstick(P["phase_err"], bool(P.get("is_direct")), L, R)
     return nu, abs(P["value"] - (L["value"] + R["value"]))
 
@@ -289,6 +309,10 @@ class TestTheChase(unittest.TestCase, _Honest):
         untrusted, every one below the refused leaf [0, 1.5]. At the commit: the root stops at the sixth bisection
         at the noise level and 20 leaves are stopped; 26 regions, depth at most 8, converged, honest (true error
         1.4e-14 against abserr 6.2e-10), no leaf returned untrusted.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): run on
+        07c's code path, cc_rule_07c(), assertions unchanged (see the module docstring for why, and for this call at
+        the new code).
         """
         data = _b_call()
         self.assertTrue(data["converged"])
@@ -337,6 +361,10 @@ class TestTheStopsReach(unittest.TestCase, _Honest):
         level, are each found at the noise level by their own check: each is returned floor-limited, with its own
         value. After the stop no leaf at the noise level below the root is bisected, so the bisections counted are
         exactly the limit's.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): run on
+        07c's code path, cc_rule_07c(), assertions unchanged (see the module docstring for why, and for this call at
+        the new code).
         """
         data = _b_call()
         f, theta = problem(B_A, B_KAPPA, ETA)
@@ -362,6 +390,10 @@ class TestTheStopsReach(unittest.TestCase, _Honest):
         (c) item 2. Six Levin leaves of the stopped subtree are not at the noise level (delta1 / nu_B from 12.9 to
         183): none is stopped. Each is returned trusted, with its quarters' value, exactly as the parent returns the
         same leaf: span, depth, value, errors, differences and declaration bit for bit.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): run on
+        07c's code path, cc_rule_07c(), assertions unchanged (see the module docstring for why, and for this call at
+        the new code).
         """
         data = _b_call()
         parent = _b_call(parent=True)
@@ -406,9 +438,15 @@ class TestTheStopsReach(unittest.TestCase, _Honest):
         theta' ranges by e^1.5 = 4.5, so no leaf is refused by a rate rule. Leaves the trust test refuses are
         bisected at the noise level beneath one another (18 bisections, out/trace_07c.txt): none is counted and none
         stopped, and the call is bit-identical to the parent's: 32 regions, converged, honest.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): run on
+        07c's code path, cc_rule_07c(), assertions unchanged. At the new code this call converges in 11 regions
+        (62 Clenshaw-Curtis solves, 7 route changes, the noise term setting all 62), nothing counted or stopped, true
+        error 8.3e-15 against abserr 5.3e-13: within its abserr, but below NOISE_BOUND, this module's margin.
         """
         f, theta = problem(C3_A, C3_KAPPA, ETA)
-        data = adaptive_levin_sincos(SPAN, f, theta, atol=B_ATOL, rtol=B_RTOL)
+        with cc_rule_07c():
+            data = adaptive_levin_sincos(SPAN, f, theta, atol=B_ATOL, rtol=B_RTOL)
         self.assertEqual(data["num_range_rule_refusals"], 0)
         self.assertEqual(data["num_edge_rule_refusals"], 0)
         self.assertEqual(tuple(data[key] for key in CHASE_KEYS), (0, 0, 0))
@@ -428,6 +466,10 @@ class TestOutermostRoot(unittest.TestCase):
         stop reaches leaves on both sides of 0.75: the two leaves of [0.75, 1.5] at depth 2, below the inner refused
         leaf, and leaves in [0, 0.75], which no stop of the inner leaf's could reach. So the one stop is the outer
         root's.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): run on
+        07c's code path, cc_rule_07c(), assertions unchanged (see the module docstring for why, and for this call at
+        the new code).
         """
         data = _b_call()
         f, theta = problem(B_A, B_KAPPA, ETA)
@@ -465,6 +507,10 @@ class TestDeclarations(unittest.TestCase):
         The parent's call at depth_max 8 returns the same three leaves at the cap: each declares there exactly what
         the commit's stopped leaf declares, the untrusted ones with the same value V_P, the trusted one with its
         quarters' value.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): run on
+        07c's code path, cc_rule_07c(), assertions unchanged (see the module docstring for why, and for this call at
+        the new code).
         """
         data = _b_call()
         parent = _b_call(parent=True, depth_max=E_DEPTH_MAX)
@@ -526,9 +572,15 @@ class TestNotTouched(unittest.TestCase, _Honest):
         rule refuses two leaves; one bisection at the noise level is counted against their root, and the limit is
         never reached: no root stops, no leaf is stopped, and the call is bit-identical to the parent's, converged
         and honest.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): run on
+        07c's code path, cc_rule_07c(), assertions unchanged. At the new code no bisection at the noise level is
+        counted (the count this test needs positive): 4 regions, 16 Clenshaw-Curtis solves, 3 route changes,
+        converged and honest (true error 8.3e-17 against abserr 1.8e-14).
         """
         f, theta = problem(F2_A, F2_KAPPA, 0.0)
-        data = adaptive_levin_sincos(SPAN, f, theta, atol=F2_ATOL, rtol=F2_RTOL)
+        with cc_rule_07c():
+            data = adaptive_levin_sincos(SPAN, f, theta, atol=F2_ATOL, rtol=F2_RTOL)
         self.assertEqual(data["num_range_rule_refusals"], 2)
         self.assertEqual(data["num_chase_stops"], 0)
         self.assertEqual(data["num_chase_stopped_leaves"], 0)

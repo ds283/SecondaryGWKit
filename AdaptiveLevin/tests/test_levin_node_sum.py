@@ -12,6 +12,13 @@ keeps |E| in the floor its floor-limited test compares its residual against.
 The parent is the dispatch commit's module (test_levin_leaf_values.load_parent()). The numbers
 quoted are docs/levin-phase-floor/06g/calibration/out/cells.txt's.
 
+Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+assertions"): each test's constructions are made of 07c's Clenshaw-Curtis rule (CC_{2N-1}, its
+pair estimate and its (2N - 1)-point node terms), which 07d replaced, and they certify the signed
+node sum, not the rule. So each runs this module's call on 07c's code path
+(test_levin_cc_estimate.cc_rule_07c()), where it computes what 07c's module computes, and its
+assertions are unchanged. 07d's log records what each call does at 07d's code.
+
 No Ray and no datastore.
 """
 
@@ -21,6 +28,7 @@ import unittest
 import mpmath
 
 import AdaptiveLevin.levin_quadrature as lq
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 from AdaptiveLevin.tests.test_levin_leaf_values import load_parent, reference, run
 from AdaptiveLevin.tests.test_levin_roundoff_exit import levin_quadrature_problems
 
@@ -91,9 +99,16 @@ class TestSignedNodeSum(unittest.TestCase):
         combination on the same partition (sum of total_err) is 4.3015e-14 against abserr
         4.1724e-14 (1.031), the node term being a small part of these leaves' floors. The parent
         itself returns the same 238 leaves with abserr 4.3015e-14.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the call runs on 07c's code path (cc_rule_07c(); see the module docstring),
+        assertions unchanged. At 07d's code it is 34 leaves at depth 7, 88
+        Clenshaw-Curtis solves, unconverged as at the parent, abserr 5.28e-14, |value| 2.5e-16
+        against the integral 0.
         """
         span, f, theta, kwargs = _grz1000()
-        new = run(lq, span, f, theta, **kwargs)
+        with cc_rule_07c():
+            new = run(lq, span, f, theta, **kwargs)
         node_errors = [
             r.node_error_signed
             for r in new["regions"]
@@ -135,10 +150,17 @@ class TestSignedNodeSum(unittest.TestCase):
         chases on to depth 11 on 12 leaves, every one floor-limited (47 solves), and stops
         unconverged at abserr 4.825e-9 (true error 4.799e-9). The correction by -sum E, measured
         and not applied, would leave 7.1e-10.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the call runs on 07c's code path (cc_rule_07c(); see the module docstring),
+        assertions unchanged. At 07d's code it is one leaf at depth 0, floor-limited,
+        not node-limited, unconverged as at the parent, abserr 4.46e-9
+        against a true error of 6.19e-10.
         """
         span, f, theta, expression = _far_sine(*TEST5)
         ref, _ = reference(expression)
-        new = run(lq, span, f, theta, **TEST5_KWARGS)
+        with cc_rule_07c():
+            new = run(lq, span, f, theta, **TEST5_KWARGS)
         self.assertTrue(new["node_limited"])
         self.assertFalse(new["converged"])
         self.assertLess(new["max_depth"], lq.DEFAULT_LEVIN_MAX_DEPTH)
@@ -163,10 +185,16 @@ class TestSignedNodeSum(unittest.TestCase):
         its residual is compared with the floor that holds its own node error. Unconverged, not
         node-limited, abserr 1.966e-9 (the parent's 1.181e-9, max(residual, floor), now
         residual + |E|), true error 1.167e-9; the correction by -sum E would leave 1.2e-16.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the call runs on 07c's code path (cc_rule_07c(); see the module docstring),
+        assertions unchanged. At 07d's code it is two leaves at depth 1,
+        unconverged as at the parent, abserr 2.71e-9 against a true error of 1.44e-9.
         """
         span, f, theta, expression = _far_sine(*TEST6)
         ref, _ = reference(expression)
-        new = run(lq, span, f, theta, **TEST6_KWARGS)
+        with cc_rule_07c():
+            new = run(lq, span, f, theta, **TEST6_KWARGS)
         (region,) = new["regions"]
         self.assertEqual(region.type, "direct")
         self.assertEqual(region.depth, 0)

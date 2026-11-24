@@ -1,0 +1,384 @@
+test_f_counts (AdaptiveLevin.tests.test_levin_cc_estimate.TestCounts.test_f_counts)
+(f) The counts (07d section 1.4). On (e)'s calls: num_cc_solves equals the number of calls to ... 
+  test_f_counts (AdaptiveLevin.tests.test_levin_cc_estimate.TestCounts.test_f_counts) (eta=1e-13)
+(f) The counts (07d section 1.4). On (e)'s calls: num_cc_solves equals the number of calls to ... FAIL
+test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly)
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... 
+  test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=24, case='kink')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... FAIL
+  test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=16, case='kink')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... FAIL
+  test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=16, case='noise')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... FAIL
+test_b1_polynomial_at_rounding (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b1_polynomial_at_rounding)
+(b) item 1. theta = 0 and f = (0, p), p of degree 10, which CC_{4N-3} integrates exactly: the noise term ... 
+  test_b1_polynomial_at_rounding (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b1_polynomial_at_rounding) (order=24)
+(b) item 1. theta = 0 and f = (0, p), p of degree 10, which CC_{4N-3} integrates exactly: the noise term ... FAIL
+  test_b1_polynomial_at_rounding (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b1_polynomial_at_rounding) (order=16)
+(b) item 1. theta = 0 and f = (0, p), p of degree 10, which CC_{4N-3} integrates exactly: the noise term ... FAIL
+test_b2_scatter_in_band (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b2_scatter_in_band)
+(b) item 2. theta = 0 and f = (0, e^{-x} + eta n(x)), eta = 1e-9 and 1e-12, so the samples carry a scatter ... 
+  test_b2_scatter_in_band (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b2_scatter_in_band) (order=24, eta=1e-09)
+(b) item 2. theta = 0 and f = (0, e^{-x} + eta n(x)), eta = 1e-9 and 1e-12, so the samples carry a scatter ... FAIL
+  test_b2_scatter_in_band (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b2_scatter_in_band) (order=16, eta=1e-09)
+(b) item 2. theta = 0 and f = (0, e^{-x} + eta n(x)), eta = 1e-9 and 1e-12, so the samples carry a scatter ... FAIL
+test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors)
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... 
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='smooth')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='kink')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='tent')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='noise')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='poly')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='scatter')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='smooth')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='kink')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='tent')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='noise')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='poly')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+  test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='scatter')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... FAIL
+test_d_untouched_call_bit_identical (AdaptiveLevin.tests.test_levin_cc_estimate.TestNotTouched.test_d_untouched_call_bit_identical)
+(d) A call the fix must not touch (07d section 3 item 4): 07c's (f1), theta = 1e3 x on [0, 1]. No ... ok
+test_c1_route_either_side_of_the_gate (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c1_route_either_side_of_the_gate)
+(c) item 1. CC_GATE_PHASE_VARIATION is 10 pi. A region of V = 0.999 x 10 pi goes to the Clenshaw-Curtis ... ok
+test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by ... ok
+test_c3_rule_a_reads_no_threshold (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c3_rule_a_reads_no_threshold)
+(c) item 3. Rule A reads no threshold (since 07a; 07d section 9.1 item 7): on theta = A (x - 1/2)^2 over ... ok
+test_e_count_reads_the_returned_estimate (AdaptiveLevin.tests.test_levin_cc_estimate.TestWindowCount.test_e_count_reads_the_returned_estimate)
+(e) The window's count (07d section 3, as amended). On (e)'s calls, both noise levels, every ... ok
+
+======================================================================
+FAIL: test_f_counts (AdaptiveLevin.tests.test_levin_cc_estimate.TestCounts.test_f_counts) (eta=1e-13)
+(f) The counts (07d section 1.4). On (e)'s calls: num_cc_solves equals the number of calls to
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 648, in test_f_counts
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data["num_cc_noise_set"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+        ),
+        ^^
+    )
+    ^
+AssertionError: 0 != 101
+
+======================================================================
+FAIL: test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=24, case='kink')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 278, in test_a_estimate_directly
+    self.assertGreaterEqual(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        declaration,
+        ^^^^^^^^^^^^
+        true_error,
+        ^^^^^^^^^^^
+        f"{name} N={order}: declaration {declaration:.3e} < error {true_error:.3e}",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: 6.067954923166807e-06 not greater than or equal to 1.0572652360096857e-05 : kink N=24: declaration 6.068e-06 < error 1.057e-05
+
+======================================================================
+FAIL: test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=16, case='kink')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 278, in test_a_estimate_directly
+    self.assertGreaterEqual(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        declaration,
+        ^^^^^^^^^^^^
+        true_error,
+        ^^^^^^^^^^^
+        f"{name} N={order}: declaration {declaration:.3e} < error {true_error:.3e}",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: 6.508332980964537e-05 not greater than or equal to 8.26203287720706e-05 : kink N=16: declaration 6.508e-05 < error 8.262e-05
+
+======================================================================
+FAIL: test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=16, case='noise')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 278, in test_a_estimate_directly
+    self.assertGreaterEqual(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        declaration,
+        ^^^^^^^^^^^^
+        true_error,
+        ^^^^^^^^^^^
+        f"{name} N={order}: declaration {declaration:.3e} < error {true_error:.3e}",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: 2.6584734413859223e-11 not greater than or equal to 1.1762679719140579e-10 : noise N=16: declaration 2.658e-11 < error 1.176e-10
+
+======================================================================
+FAIL: test_b1_polynomial_at_rounding (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b1_polynomial_at_rounding) (order=24)
+(b) item 1. theta = 0 and f = (0, p), p of degree 10, which CC_{4N-3} integrates exactly: the noise term
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 299, in test_b1_polynomial_at_rounding
+    self.assertGreater(noise_term, 0.0)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0.0 not greater than 0.0
+
+======================================================================
+FAIL: test_b1_polynomial_at_rounding (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b1_polynomial_at_rounding) (order=16)
+(b) item 1. theta = 0 and f = (0, p), p of degree 10, which CC_{4N-3} integrates exactly: the noise term
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 299, in test_b1_polynomial_at_rounding
+    self.assertGreater(noise_term, 0.0)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0.0 not greater than 0.0
+
+======================================================================
+FAIL: test_b2_scatter_in_band (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b2_scatter_in_band) (order=24, eta=1e-09)
+(b) item 2. theta = 0 and f = (0, e^{-x} + eta n(x)), eta = 1e-9 and 1e-12, so the samples carry a scatter
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 322, in test_b2_scatter_in_band
+    self.assertTrue(data["cc_noise_set"])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_b2_scatter_in_band (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b2_scatter_in_band) (order=16, eta=1e-09)
+(b) item 2. theta = 0 and f = (0, e^{-x} + eta n(x)), eta = 1e-9 and 1e-12, so the samples carry a scatter
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 322, in test_b2_scatter_in_band
+    self.assertTrue(data["cc_noise_set"])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='smooth')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.0000000000000p-52' != '0x1.633e6b6ecd7bfp-49'
+- 0x1.0000000000000p-52
++ 0x1.633e6b6ecd7bfp-49
+ : smooth abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='kink')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.9736abfab8000p-18' != '0x1.28534507b2ac7p-13'
+- 0x1.9736abfab8000p-18
++ 0x1.28534507b2ac7p-13
+ : kink abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='tent')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.1769793a11580p-7' != '0x1.1769793a11a8dp-7'
+- 0x1.1769793a11580p-7
+?               ^ ^
++ 0x1.1769793a11a8dp-7
+?               ^ ^
+ : tent abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='noise')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.7ccc000000000p-37' != '0x1.e9519b77d95cbp-33'
+- 0x1.7ccc000000000p-37
++ 0x1.e9519b77d95cbp-33
+ : noise abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='poly')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x0.0p+0' != '0x1.cc5780076a360p-49'
+- 0x0.0p+0
++ 0x1.cc5780076a360p-49
+ : poly abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=24, case='scatter')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.ef86c00000000p-35' != '0x1.2134e29ee3f46p-32'
+- 0x1.ef86c00000000p-35
++ 0x1.2134e29ee3f46p-32
+ : scatter abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='smooth')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x0.0p+0' != '0x1.0597355e70df3p-49'
+- 0x0.0p+0
++ 0x1.0597355e70df3p-49
+ : smooth abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='kink')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.10fab1799b000p-14' != '0x1.bc25ccf2cfb0bp-11'
+- 0x1.10fab1799b000p-14
++ 0x1.bc25ccf2cfb0bp-11
+ : kink abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='tent')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.ac9259fcb69c0p-7' != '0x1.ac9259fcb6dd6p-7'
+- 0x1.ac9259fcb69c0p-7
+?               ^^^
++ 0x1.ac9259fcb6dd6p-7
+?               ^^^
+ : tent abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='noise')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.d3af000000000p-36' != '0x1.4ac1de6acbb17p-32'
+- 0x1.d3af000000000p-36
++ 0x1.4ac1de6acbb17p-32
+ : noise abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='poly')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.0000000000000p-52' != '0x1.5b047c41634e3p-49'
+- 0x1.0000000000000p-52
++ 0x1.5b047c41634e3p-49
+ : poly abserr_direct
+
+======================================================================
+FAIL: test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors) (order=16, case='scatter')
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 361, in test_b3_noise_in_estimate_and_both_floors
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        data[key].hex(), (bare[key] + term).hex(), f"{name} {key}"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '0x1.0de0000000000p-37' != '0x1.30f592dae51c3p-32'
+- 0x1.0de0000000000p-37
++ 0x1.30f592dae51c3p-32
+ : scatter abserr_direct
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.110s
+
+FAILED (failures=20)

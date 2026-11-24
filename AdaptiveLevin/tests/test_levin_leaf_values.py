@@ -31,6 +31,7 @@ import mpmath
 import numpy as np
 
 import AdaptiveLevin.levin_quadrature as lq
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 
 PARENT_SHA = "4f4f9ed2a31fb7437fcfca01263d260eebaff842"
 _PARENT_NAME = "levin_quadrature_parent_4f4f9ed"
@@ -594,6 +595,14 @@ class TestSlowLeaves(_HonestyMixin, unittest.TestCase):
         trusted leaf is bisected), and the 9 leaves that replace it lie inside it (17 leaves, 8 of
         them fallback, depth 12, 135 solves). Converged, abserr 2.074e-13, true error 2.1e-15:
         the call's error covers its true error.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the commit's call is run on 07c's Clenshaw-Curtis rule (cc_rule_07c()),
+        assertions unchanged, since the test certifies 06g's slow-leaf trust test on a leaf whose
+        r = 0.9107 is formed from 07c's rule: at 07d's code (gate at 10 pi) the leaf's halves go to
+        the Clenshaw-Curtis rule, its r moves (1.028 recorded), and the parent's partition is not
+        the starting point. At 07d's code the call is converged and honest: 10 regions, depth 9,
+        abserr 2.091e-13, true error 1.4e-15, 24 Clenshaw-Curtis solves, 8 of them route changes.
         """
         span, f, theta, kwargs, expression = test3_sinc_problem()
         ref, ref_err = reference(expression)
@@ -606,7 +615,7 @@ class TestSlowLeaves(_HonestyMixin, unittest.TestCase):
         self.assertGreater(slow.delta1, slow.phase_err)
         self.assertAlmostEqual(slow.convergence_ratio, 0.9107, places=4)
 
-        with recording_regions() as made:
+        with recording_regions() as made, cc_rule_07c():
             new = run(lq, span, f, theta, **kwargs)
         self.assertFalse(new["node_limited"])
         (checked,) = [r for r in made if (r.start, r.end, r.depth) == TEST3_SLOW_LEAF]
@@ -626,19 +635,28 @@ class TestSlowLeaves(_HonestyMixin, unittest.TestCase):
                 )
         self.assertTrue(new["converged"])
         self.assert_honest(new, ref, ref_err, "test 3 slow leaf")
-        # every checked leaf, returned or not, is trusted exactly when the trust test says so
-        for r in made:
-            if r.delta1 is not None and not r.phase_limited:
-                self.assertEqual(r.trusted, trust_test(r, f, theta, kwargs), r)
+        # every checked leaf, returned or not, is trusted exactly when the trust test says so (its
+        # halves solved afresh on the same Clenshaw-Curtis rule as the call)
+        with cc_rule_07c():
+            for r in made:
+                if r.delta1 is not None and not r.phase_limited:
+                    self.assertEqual(r.trusted, trust_test(r, f, theta, kwargs), r)
 
     def test_noise_leaf_trusted(self):
         """
         Test 3, the second case: on the same cell under 06g, the fallback leaf
         [1.604248046875, 1.62841796875] at depth 12 has r = 1/3 and delta1 = 1.04e-17 within its
         floor 4.04e-16 -- rounding noise -- and is trusted (cells.txt).
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): run on 07c's Clenshaw-Curtis rule (cc_rule_07c()), assertions unchanged. The
+        leaf is a fallback leaf of 07c's rule refined from the slow leaf of the first case; at 07d's
+        code that leaf is not made (the call returns 10 regions, none with 1/4 <= r < 1 and delta1
+        within its floor), so the case exists only on 07c's rule.
         """
         span, f, theta, kwargs, _ = test3_sinc_problem()
-        new = run(lq, span, f, theta, **kwargs)
+        with cc_rule_07c():
+            new = run(lq, span, f, theta, **kwargs)
         noise = [
             r
             for r in new["regions"]

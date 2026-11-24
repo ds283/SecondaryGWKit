@@ -1,0 +1,40 @@
+{
+ "label": "parent",
+ "tree": "/private/tmp/claude-35086/-Users-ds283-Documents-Code-SecondaryGWKit/cff1227b-41d0-4487-a706-efd137a71485/scratchpad/wt-parent",
+ "tree_git_sha": "ca1d8cfa86896565017e50b9e2acc61a7cb8e92e",
+ "levin_quadrature_sha256": "d141a80bf0484058a0d7f625926b2e283a4bb64114bc84ccfd81339a6f249be6",
+ "levin_quadrature_status": "",
+ "test_module_sha256": "3e7d43963ec02520b9e97a84f4a096d17e3e5748a4969340eaea9577dfffef6c",
+ "script_sha256": "84560b10ee665989eeefbbdc1494a1fe6f093d8e9f8d0da4f89c6355accaf0f7",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19
+ ],
+ "tests": [
+  "test_YJJ_log_singularity",
+  "test_JJJ",
+  "test_YJJ",
+  "test_abserr_bounds_truth"
+ ],
+ "unit_timeout": 1200.0,
+ "started": "2026-11-24T19:15:53",
+ "finished": "2026-11-24T19:19:22"
+}

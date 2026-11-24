@@ -37,6 +37,7 @@ from AdaptiveLevin.levin_quadrature import (
     adaptive_levin_sincos,
     chebyshev_matrices,
 )
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 from AdaptiveLevin.tests.test_levin_quadrature import (
     _TwoIndependentSinCosBasis,
     _phase_variation,
@@ -589,16 +590,26 @@ class TestWindowStoppingRule(unittest.TestCase, _Honest):
         1.9e-12, and the call is not converged (the log). With it the window stops, the call is converged, and
         the value is honest against the closed form for the unquantised integrand with the quantisation's
         bound, |int (q(f_cos) - f_cos) cos theta| <= 2^-40, added to the true error.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): run on
+        07c's Clenshaw-Curtis rule (cc_rule_07c()), assertions unchanged. The test certifies the window's stop at
+        the integrand's noise, and its construction is 07c's rule's: window leaves whose |CC_{2N-1} - CC_N| sits at
+        the quantisation noise. At 07d's code the noise term (kappa s_own) declares that noise, the window's leaves
+        converge and the window does not stop (count 4, not stopped; 70 regions, depth 10, converged, abserr
+        3.58e-14, against 145 regions, abserr 1.435e-12 at 07c), so the construction no longer reaches the stop.
+        There the call's abserr is below the quantisation's bound 2^-40 = 9.1e-13, which this test's honesty
+        assertion adds to the true error, so that assertion cannot be made at 07d's code (07d's log).
         """
         q = 2.0**40
         f = [lambda x: np.exp(-x), lambda x: np.floor(np.cos(3.0 * x) * q) / q]
-        data = adaptive_levin_sincos(
-            (0.0, 1.0),
-            f,
-            quadratic_theta(T10_C, X0),
-            atol=1e-14 * abs(T10B_REF),
-            rtol=1e-9,
-        )
+        with cc_rule_07c():
+            data = adaptive_levin_sincos(
+                (0.0, 1.0),
+                f,
+                quadratic_theta(T10_C, X0),
+                atol=1e-14 * abs(T10B_REF),
+                rtol=1e-9,
+            )
         (window,) = data["stationary_windows"]
         self.assertTrue(window["stopped"])
         # 07a section 9.4 test 14 (c): the window still stops with its count at the limit under dqage's count
@@ -931,13 +942,24 @@ class TestWindowCount(unittest.TestCase, _Honest):
         105 times its resasc, while |CC_{2N-1} - CC_N| alone is 0.53 of it. Each leaf's resasc
         equals, to rounding, sum_j |w_j| |g_j - gbar| evaluated here. And the test itself is inclusive at the
         factor 200, never true with either number zero or missing.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions", and
+        section 3 (e)): the leaf returns CC_{4N-3} and declares |CC_{8N-7} - CC_{4N-3}| plus the noise term, and its
+        resasc is the (4N - 3)-point rule's, so resasc is evaluated here on that grid (it was the (2N - 1)-point
+        grid's). The smooth leaf: abserr_direct 2.25e-15, positive, and 200 times it 7.0e-13 of resasc, resolved.
+        The peak is moved with the rules: width 5e-3 (1e-3), centred on an odd node of the (8N - 7)-point grid,
+        node 13 (it was node 13 of the (2N - 1)-point grid), so the returned rule misses it while the estimate's
+        does not; 200 abserr_direct is 120 times its resasc and abserr_direct alone 0.60 of it, unresolved. At the
+        old peak the noise term (which reads the peak as a plateau) makes abserr_direct exceed resasc itself (1.7
+        times), so the case would no longer show the factor 200 at work.
         """
         order = lq.DEFAULT_LEVIN_CHEBSHEV_ORDER
-        fine_order = 2 * order - 1
+        # 07d: the returned rule is the (4N - 3)-point one, its estimate's the (8N - 7)-point one
+        fine_order = 4 * order - 3
         peak_span = (0.0, 1.0)
-        fine_grid, _ = chebyshev_matrices(peak_span, fine_order)
-        x_peak = float(fine_grid[13])
-        width = 1.0e-3
+        estimate_grid, _ = chebyshev_matrices(peak_span, 8 * order - 7)
+        x_peak = float(estimate_grid[13])
+        width = 5.0e-3
         cases = (
             (
                 "smooth",
@@ -1007,6 +1029,12 @@ class TestWindowCount(unittest.TestCase, _Honest):
             honest at 0.0126 of its abserr. Asserted here: the stop, its split and its count; at least one
             bisection with a value change in (rtol, 1e-5], both halves resolved and the raw error flat, not
             counted; and the honesty.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing assertions"): every
+        window leaf is a Clenshaw-Curtis leaf, so 07d acts in the call. At 07d's code the window stops after the
+        call's 49th bisection (22 at 07c's code), with 55 regions (32), unconverged, honest at 0.0206 of its abserr
+        (2.87e-10); the stop, its count, a bisection between rtol and 1e-5 not counted and the honesty are asserted
+        as before, the split and the regions at their new values.
         Section 3 asks for a case that leaves the call converged and dishonest at the parent. None was built:
         on every case tried (this family at theta_0 1e6 and 1e8, rtol 1e-8 and 1e-9, f = (1, 0) and (0, 1)) both
         codes are honest, as Part A found on production calls -- the stopped windows' declarations at or above
@@ -1050,8 +1078,8 @@ class TestWindowCount(unittest.TestCase, _Honest):
         (window,) = data["stationary_windows"]
         self.assertTrue(window["stopped"])
         self.assertEqual(window["iroff1_count"], lq._LEVIN_WINDOW_IROFF1_LIMIT)
-        self.assertEqual(window["stopped_after_split"], 22)
-        self.assertEqual(data["num_regions"], 32)
+        self.assertEqual(window["stopped_after_split"], 49)  # 22 at 07c's code (07d)
+        self.assertEqual(data["num_regions"], 55)  # 32 at 07c's code (07d)
         self.assertFalse(data["converged"])
         between = [
             d

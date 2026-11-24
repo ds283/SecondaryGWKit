@@ -108,9 +108,11 @@ class _TwoIndependentSinCosBasis:
         # for each phase: |theta_i(b) - theta_i(a)| where its rate has no strict sign change on
         # the nodes, the node-partition sum where it has (until 07a, the estimate
         # (mean|theta1'| + mean|theta2'|) * width). This basis is only ever driven with a
-        # phase_span comfortably above SIX_PI in this test file's own use of it, so the
-        # Clenshaw-Curtis fallback path (which also calls eval_basis() below) is not separately
-        # exercised by this basis.
+        # phase_span above the C2 gate's CC_GATE_PHASE_VARIATION (10 pi since prompts/
+        # levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md, SIX_PI = 6 pi until then; the
+        # smallest span this file's use of it gives is 36.75 rad, measured at 07d) in this test
+        # file's own use of it, so the Clenshaw-Curtis fallback path (which also calls eval_basis()
+        # below) is not separately exercised by this basis.
         phase_span = _phase_variation(theta1, theta1_prime) + _phase_variation(
             theta2, theta2_prime
         )
@@ -302,7 +304,8 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             data10["num_simple_regions"],
             data10["num_regions"],
             "GRZIntegral(10.0): expected every region to take the Clenshaw-Curtis fallback "
-            "(net phase change 10*(atan(1)-atan(-1)) ~= 15.7 rad is below SIX_PI ~= 18.8 rad, "
+            "(net phase change 10*(atan(1)-atan(-1)) ~= 15.7 rad is below the C2 gate's "
+            "CC_GATE_PHASE_VARIATION = 10 pi ~= 31.4 rad, SIX_PI = 6 pi ~= 18.8 rad until 07d, "
             "so the Levin rule should never be invoked)",
         )
 
@@ -311,7 +314,8 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         # Levin rule): 24 regions, some of them Levin, at the parent 3f2a36d. Under 06c's global
         # budget that is no longer a property of the final partition: the integral is
         # (2/100) sin(25 pi) ~ 1e-17, so the budget is atol = 1e-15, and refinement continues
-        # until every leaf has dropped below the SIX_PI gate (102 leaves, all fallback, depth 7).
+        # until every leaf has dropped below the gate's 6 pi of the time (SIX_PI; 102 leaves, all
+        # fallback, depth 7; 10 leaves at 07d's code, whose gate is 10 pi).
         # The Levin rule is still exercised -- the root and its upper levels carry ~157 rad of
         # phase -- but it no longer survives into the returned regions; lambda = 1000 below
         # carries the assertion that the Levin rule is reached. This is an assertion of which rule
@@ -744,7 +748,8 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         # region's value with no matching change in abserr -- parent and children apply
         # identical gating, so the drop is common-mode in the step-(4) residual and subtracts
         # out exactly. Reproduces the audit's Sec1.5b measurement: a single region (order 16,
-        # phase span >> SIX_PI) whose second (coupled, f2 = 0) component has an endpoint ratio
+        # phase span >> CC_GATE_PHASE_VARIATION, the C2 gate's threshold; SIX_PI until prompt
+        # 07d) whose second (coupled, f2 = 0) component has an endpoint ratio
         # near 1e-6 -- discarded at rtol = 1e-2, kept at rtol <= 1e-6. See
         # prompts/levin-refactor/logs/06-mode-filter.md for the full before/after table.
         a, b = 1.0, 1.0003

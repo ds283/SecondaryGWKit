@@ -46,6 +46,9 @@ _REPO = Path(__file__).resolve().parents[2]
 
 N = lq.DEFAULT_LEVIN_CHEBSHEV_ORDER
 N_FINE = 2 * N - 1
+# Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md the Clenshaw-Curtis rule returns
+# CC_{4N-3}, and its floor and node term are formed on the (4N - 3)-point grid: the grid test 4 measures.
+N_VALUE = 2 * N_FINE - 1
 U = 2.0**-53
 
 
@@ -512,17 +515,20 @@ def node_term_06d(cell):
 
 def true_node_error(cell):
     """
-    sum_k w_k (g(x^_k) - g(x_k)) in mpmath at 40 digits: the fine rule, with its own float
-    weights, at 06e's float nodes against the exact nodes.
+    sum_k w_k (g(x^_k) - g(x_k)) in mpmath at 40 digits: the returned rule, with its own float
+    weights, at 06e's float nodes against the exact nodes. Since 07d the returned rule is the
+    (4N - 3)-point rule (N_VALUE); until then it was the (2N - 1)-point rule (N_FINE).
     """
     a, b = cell.span
-    nodes, _ = lq.chebyshev_matrices(cell.span, N_FINE)
-    weights = lq._cc_weights(cell.span, N_FINE)
+    nodes, _ = lq.chebyshev_matrices(cell.span, N_VALUE)
+    weights = lq._cc_weights(cell.span, N_VALUE)
     with mpmath.workdps(40):
         A, B = mpmath.mpf(a), mpmath.mpf(b)
         total = mpmath.mpf(0)
-        for k in range(N_FINE):
-            exact = (A + B) / 2 + (B - A) / 2 * mpmath.cos(mpmath.pi * k / (N_FINE - 1))
+        for k in range(N_VALUE):
+            exact = (A + B) / 2 + (B - A) / 2 * mpmath.cos(
+                mpmath.pi * k / (N_VALUE - 1)
+            )
             total += mpmath.mpf(weights[k]) * (
                 cell.g_mp(mpmath.mpf(nodes[k])) - cell.g_mp(exact)
             )
@@ -538,6 +544,12 @@ class TestNodeTerm(_HonestyMixin, unittest.TestCase):
         term. Over the 122 cells, true/phi_node is at most 0.997; 06d's term over phi_node is
         4.3 - 58 on T2's 20 cells (eta_theta = 1 there), 174 - 2,974 on T3's 12 and 76 - 20,660 on
         the 90 window cells, median 848 (parent_demo.txt, section C, which tables every cell).
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the rule returns CC_{4N-3} and forms its node term on the (4N - 3)-point grid,
+        so the true node error is taken there (true_node_error(), N_VALUE in place of N_FINE); the
+        assertions are unchanged. On the 122 cells at 07d's code true/phi_node is at most 0.992, and
+        06d's term (still 06d's own (2N - 1)-point solve) over phi_node is 4.25 - 9,356, median 461.
         """
         for cell in test4_cells():
             with self.subTest(cell=cell.label):
@@ -567,6 +579,11 @@ class TestNodeTerm(_HonestyMixin, unittest.TestCase):
         theta' is supplied (T3 and W), the theta' the node term is handed at each fine node is
         within a few u of theta' evaluated in mpmath at the same float node (at most 1.0 u;
         parent_demo.txt, section C), far inside eta_theta = 2^-10.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the node term is handed theta' at the (4N - 3)-point grid's nodes, so the
+        nodes compared are that grid's (N_VALUE in place of N_FINE); the assertion is unchanged. At
+        07d's code the worst is 0.998 u.
         """
         worst = 0.0
         for cell in test4_cells():
@@ -575,7 +592,7 @@ class TestNodeTerm(_HonestyMixin, unittest.TestCase):
             _, _, args = node_term_solve(cell)
             theta_prime = args[9]
             self.assertEqual(args[11], lq._CC_THETA_PRIME_REL_ERROR_SUPPLIED)
-            nodes, _ = lq.chebyshev_matrices(cell.span, N_FINE)
+            nodes, _ = lq.chebyshev_matrices(cell.span, N_VALUE)
             with mpmath.workdps(40):
                 for value, x in zip(theta_prime, nodes):
                     if value != 0.0:

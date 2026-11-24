@@ -1,0 +1,71 @@
+test_f_counts (AdaptiveLevin.tests.test_levin_cc_estimate.TestCounts.test_f_counts)
+(f) The counts (07d section 1.4). On (e)'s calls: num_cc_solves equals the number of calls to ... 
+  test_f_counts (AdaptiveLevin.tests.test_levin_cc_estimate.TestCounts.test_f_counts) (eta=1e-13)
+(f) The counts (07d section 1.4). On (e)'s calls: num_cc_solves equals the number of calls to ... FAIL
+test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly)
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... ok
+test_b1_polynomial_at_rounding (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b1_polynomial_at_rounding)
+(b) item 1. theta = 0 and f = (0, p), p of degree 10, which CC_{4N-3} integrates exactly: the noise term ... ok
+test_b2_scatter_in_band (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b2_scatter_in_band)
+(b) item 2. theta = 0 and f = (0, e^{-x} + eta n(x)), eta = 1e-9 and 1e-12, so the samples carry a scatter ... ok
+test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors)
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... ok
+test_d_untouched_call_bit_identical (AdaptiveLevin.tests.test_levin_cc_estimate.TestNotTouched.test_d_untouched_call_bit_identical)
+(d) A call the fix must not touch (07d section 3 item 4): 07c's (f1), theta = 1e3 x on [0, 1]. No ... ok
+test_c1_route_either_side_of_the_gate (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c1_route_either_side_of_the_gate)
+(c) item 1. CC_GATE_PHASE_VARIATION is 10 pi. A region of V = 0.999 x 10 pi goes to the Clenshaw-Curtis ... FAIL
+test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by ... 
+  test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted) (V_over_pi=8.0)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by ... FAIL
+  test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted) (V_over_pi=9.99)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by ... FAIL
+test_c3_rule_a_reads_no_threshold (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c3_rule_a_reads_no_threshold)
+(c) item 3. Rule A reads no threshold (since 07a; 07d section 9.1 item 7): on theta = A (x - 1/2)^2 over ... ok
+test_e_count_reads_the_returned_estimate (AdaptiveLevin.tests.test_levin_cc_estimate.TestWindowCount.test_e_count_reads_the_returned_estimate)
+(e) The window's count (07d section 3, as amended). On (e)'s calls, both noise levels, every ... ok
+
+======================================================================
+FAIL: test_f_counts (AdaptiveLevin.tests.test_levin_cc_estimate.TestCounts.test_f_counts) (eta=1e-13)
+(f) The counts (07d section 1.4). On (e)'s calls: num_cc_solves equals the number of calls to
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 659, in test_f_counts
+    self.assertGreater(data["num_cc_gate_route_changes"], 0)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 not greater than 0
+
+======================================================================
+FAIL: test_c1_route_either_side_of_the_gate (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c1_route_either_side_of_the_gate)
+(c) item 1. CC_GATE_PHASE_VARIATION is 10 pi. A region of V = 0.999 x 10 pi goes to the Clenshaw-Curtis
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 384, in test_c1_route_either_side_of_the_gate
+    self.assertEqual(lq.CC_GATE_PHASE_VARIATION, 10.0 * np.pi)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 18.84955592153876 != 31.41592653589793
+
+======================================================================
+FAIL: test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted) (V_over_pi=8.0)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 412, in test_c2_route_changes_counted
+    self.assertEqual(data["num_cc_solves"], 7)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 6 != 7
+
+======================================================================
+FAIL: test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted) (V_over_pi=9.99)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 412, in test_c2_route_changes_counted
+    self.assertEqual(data["num_cc_solves"], 7)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 6 != 7
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.090s
+
+FAILED (failures=4)

@@ -43,6 +43,7 @@ from AdaptiveLevin.levin_quadrature import (
     adaptive_levin_sincos,
     chebyshev_matrices,
 )
+from AdaptiveLevin.tests.test_levin_cc_estimate import cc_rule_07c
 from AdaptiveLevin.tests.test_levin_quadrature import _TwoIndependentSinCosBasis
 
 
@@ -704,68 +705,79 @@ class TestRoundoffExitPremise(unittest.TestCase):
         made up, so no reason to worry about it." (06e's log, test 8; over 72 problems of this
         family the premise check halves the declared error on 12 under 06d and on none under 06e,
         docs/levin-phase-floor/06e/calibration/out/exit_search.txt). Honesty is unchanged.
+
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): (a) and (b) are constructions made of 07c's Clenshaw-Curtis rule, certifying
+        the exit's premise on the fallback branch, not the rule. So the test runs on 07c's code
+        path (test_levin_cc_estimate.cc_rule_07c()), every assertion unchanged. At 07d's code each
+        call, with the bypass and without, is one fallback leaf at depth 0, phase-limited,
+        honest: (a) converged, abserr 7.73e-14, error 0; (b)
+        unconverged as at the parent, abserr 3.05e-11, error 9.7e-14.
         """
-        # (a)
-        f, theta = _test3_problem()
-        ref, ref_err = _test3_reference()
-        kwargs = dict(atol=TEST3_ATOL, rtol=TEST3_RTOL)
+        with cc_rule_07c():
+            # (a)
+            f, theta = _test3_problem()
+            ref, ref_err = _test3_reference()
+            kwargs = dict(atol=TEST3_ATOL, rtol=TEST3_RTOL)
 
-        parent = _run(TEST3_SPAN, f, theta, bypass=True, **kwargs)
-        self.assertEqual(parent["num_regions"], 2)
-        self.assertEqual(parent["num_simple_regions"], 2)
-        self.assertTrue(all(r.type == "direct" for r in parent["regions"]))
-        self.assertEqual(parent["max_depth"], 1)
-        self.assertEqual(parent["num_phase_limited_regions"], 1)
-        self._assert_honest(parent, ref, ref_err, "test 3a parent")
+            parent = _run(TEST3_SPAN, f, theta, bypass=True, **kwargs)
+            self.assertEqual(parent["num_regions"], 2)
+            self.assertEqual(parent["num_simple_regions"], 2)
+            self.assertTrue(all(r.type == "direct" for r in parent["regions"]))
+            self.assertEqual(parent["max_depth"], 1)
+            self.assertEqual(parent["num_phase_limited_regions"], 1)
+            self._assert_honest(parent, ref, ref_err, "test 3a parent")
 
-        new = _run(TEST3_SPAN, f, theta, **kwargs)
-        self.assertEqual(_call_signature(new), _call_signature(parent))
-        self._assert_honest(new, ref, ref_err, "test 3a new")
+            new = _run(TEST3_SPAN, f, theta, **kwargs)
+            self.assertEqual(_call_signature(new), _call_signature(parent))
+            self._assert_honest(new, ref, ref_err, "test 3a new")
 
-        # (b)
-        f, theta = _test3b_problem()
-        ref, ref_err = _test3b_reference()
-        kwargs = dict(atol=TEST3B_ATOL, rtol=TEST3B_RTOL)
+            # (b)
+            f, theta = _test3b_problem()
+            ref, ref_err = _test3b_reference()
+            kwargs = dict(atol=TEST3B_ATOL, rtol=TEST3B_RTOL)
 
-        parent = _run(TEST3B_SPAN, f, theta, bypass=True, **kwargs)
-        self.assertEqual(parent["num_regions"], 4)
-        self.assertEqual(parent["num_simple_regions"], 4)
-        self.assertTrue(all(r.type == "direct" for r in parent["regions"]))
-        self.assertEqual(parent["max_depth"], 3)
-        self.assertEqual(parent["num_phase_limited_regions"], 4)
-        self._assert_honest(parent, ref, ref_err, "test 3b parent")
+            parent = _run(TEST3B_SPAN, f, theta, bypass=True, **kwargs)
+            self.assertEqual(parent["num_regions"], 4)
+            self.assertEqual(parent["num_simple_regions"], 4)
+            self.assertTrue(all(r.type == "direct" for r in parent["regions"]))
+            self.assertEqual(parent["max_depth"], 3)
+            self.assertEqual(parent["num_phase_limited_regions"], 4)
+            self._assert_honest(parent, ref, ref_err, "test 3b parent")
 
-        new = _run(TEST3B_SPAN, f, theta, **kwargs)
-        # it bisects: no region is accepted at depth 0, and every region is still a fallback
-        # region; the exit fires below the root
-        self.assertGreaterEqual(new["max_depth"], 1)
-        self.assertTrue(all(r.depth >= 1 for r in new["regions"]))
-        self.assertEqual(new["num_simple_regions"], new["num_regions"])
-        self.assertGreater(new["num_phase_limited_regions"], 0)
-        # every region flagged phase-limited satisfies the premise, from its own halves
-        basis = _Basis_SinCos(theta)
-        for region in new["regions"]:
-            if region.phase_limited:
-                c = 0.5 * (region.start + region.end)
-                floor_L = _adaptive_levin_subregion(
-                    (region.start, c), f, basis, None, rtol=TEST3B_RTOL
-                )["phase_err"]
-                floor_R = _adaptive_levin_subregion(
-                    (c, region.end), f, basis, None, rtol=TEST3B_RTOL
-                )["phase_err"]
-                self.assertTrue(
-                    _roundoff_exit_premise_holds(region.phase_err, floor_L, floor_R),
-                    f"test 3b new: {region}",
-                )
-        self._assert_honest(new, ref, ref_err, "test 3b new")
-        # bit-identical across the bypass, but for the evaluation count (element 2 of the
-        # signature; see test 4): the premise check solves fallback halves the bypass skips
-        new_signature = _call_signature(new)
-        parent_signature = _call_signature(parent)
-        self.assertEqual(
-            new_signature[:2] + new_signature[3:],
-            parent_signature[:2] + parent_signature[3:],
-        )
+            new = _run(TEST3B_SPAN, f, theta, **kwargs)
+            # it bisects: no region is accepted at depth 0, and every region is still a fallback
+            # region; the exit fires below the root
+            self.assertGreaterEqual(new["max_depth"], 1)
+            self.assertTrue(all(r.depth >= 1 for r in new["regions"]))
+            self.assertEqual(new["num_simple_regions"], new["num_regions"])
+            self.assertGreater(new["num_phase_limited_regions"], 0)
+            # every region flagged phase-limited satisfies the premise, from its own halves
+            basis = _Basis_SinCos(theta)
+            for region in new["regions"]:
+                if region.phase_limited:
+                    c = 0.5 * (region.start + region.end)
+                    floor_L = _adaptive_levin_subregion(
+                        (region.start, c), f, basis, None, rtol=TEST3B_RTOL
+                    )["phase_err"]
+                    floor_R = _adaptive_levin_subregion(
+                        (c, region.end), f, basis, None, rtol=TEST3B_RTOL
+                    )["phase_err"]
+                    self.assertTrue(
+                        _roundoff_exit_premise_holds(
+                            region.phase_err, floor_L, floor_R
+                        ),
+                        f"test 3b new: {region}",
+                    )
+            self._assert_honest(new, ref, ref_err, "test 3b new")
+            # bit-identical across the bypass, but for the evaluation count (element 2 of the
+            # signature; see test 4): the premise check solves fallback halves the bypass skips
+            new_signature = _call_signature(new)
+            parent_signature = _call_signature(parent)
+            self.assertEqual(
+                new_signature[:2] + new_signature[3:],
+                parent_signature[:2] + parent_signature[3:],
+            )
 
     def test_nothing_else_moves(self):
         """
@@ -784,27 +796,46 @@ class TestRoundoffExitPremise(unittest.TestCase):
         bit-identical. Both are of the kinds 06c's section 2 test 9 allows to change (an
         evaluation count; bit-identity across the bypass). The count is asserted no smaller
         without the bypass.
-        """
-        for name, span, f, theta, kwargs, basis, raises in levin_quadrature_problems():
-            with self.subTest(problem=name):
-                if raises is not None:
-                    with self.assertRaises(raises):
-                        _run(span, f, theta, bypass=True, basis=basis, **kwargs)
-                    with self.assertRaises(raises):
-                        _run(span, f, theta, basis=basis, **kwargs)
-                    continue
 
-                parent = _run(span, f, theta, bypass=True, basis=basis, **kwargs)
-                new = _run(span, f, theta, basis=basis, **kwargs)
-                new_signature = _call_signature(new)
-                parent_signature = _call_signature(parent)
-                # element 2 is the evaluation count (see the docstring)
-                self.assertEqual(
-                    new_signature[:2] + new_signature[3:],
-                    parent_signature[:2] + parent_signature[3:],
-                    name,
-                )
-                self.assertGreaterEqual(new["evaluations"], parent["evaluations"], name)
+        Since prompts/levin-phase-floor/07d-six-pi-gate-and-cc-estimate.md (section 3, "Existing
+        assertions"): the test certifies 06b's premise against its bypass, and "every such problem
+        is bit-identical" was a property of 07c's Clenshaw-Curtis rule. At 07d's code the premise
+        moves GRZIntegral(10), (100), (1000) and input_validation_order_clamp across the bypass,
+        on fallback leaves whose floors carry the noise term. So both calls run on 07c's code path
+        (test_levin_cc_estimate.cc_rule_07c()), assertions unchanged. At 07d's code every problem
+        here keeps its parent's "converged" and is honest against its reference.
+        """
+        with cc_rule_07c():
+            for (
+                name,
+                span,
+                f,
+                theta,
+                kwargs,
+                basis,
+                raises,
+            ) in levin_quadrature_problems():
+                with self.subTest(problem=name):
+                    if raises is not None:
+                        with self.assertRaises(raises):
+                            _run(span, f, theta, bypass=True, basis=basis, **kwargs)
+                        with self.assertRaises(raises):
+                            _run(span, f, theta, basis=basis, **kwargs)
+                        continue
+
+                    parent = _run(span, f, theta, bypass=True, basis=basis, **kwargs)
+                    new = _run(span, f, theta, basis=basis, **kwargs)
+                    new_signature = _call_signature(new)
+                    parent_signature = _call_signature(parent)
+                    # element 2 is the evaluation count (see the docstring)
+                    self.assertEqual(
+                        new_signature[:2] + new_signature[3:],
+                        parent_signature[:2] + parent_signature[3:],
+                        name,
+                    )
+                    self.assertGreaterEqual(
+                        new["evaluations"], parent["evaluations"], name
+                    )
 
 
 # ---------------------------------------------------------------------------------------------

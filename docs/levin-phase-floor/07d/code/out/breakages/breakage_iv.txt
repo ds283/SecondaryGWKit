@@ -1,0 +1,97 @@
+test_f_counts (AdaptiveLevin.tests.test_levin_cc_estimate.TestCounts.test_f_counts)
+(f) The counts (07d section 1.4). On (e)'s calls: num_cc_solves equals the number of calls to ... ok
+test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly)
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... 
+  test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=24, case='kink')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... FAIL
+  test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=24, case='noise')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... FAIL
+  test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=16, case='kink')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... FAIL
+  test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=16, case='noise')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24 ... FAIL
+test_b1_polynomial_at_rounding (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b1_polynomial_at_rounding)
+(b) item 1. theta = 0 and f = (0, p), p of degree 10, which CC_{4N-3} integrates exactly: the noise term ... ok
+test_b2_scatter_in_band (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b2_scatter_in_band)
+(b) item 2. theta = 0 and f = (0, e^{-x} + eta n(x)), eta = 1e-9 and 1e-12, so the samples carry a scatter ... ok
+test_b3_noise_in_estimate_and_both_floors (AdaptiveLevin.tests.test_levin_cc_estimate.TestNoiseTerm.test_b3_noise_in_estimate_and_both_floors)
+(b) item 3. The noise term is in abserr_direct, round_off_err ("phase_err_roundoff") and ... ok
+test_d_untouched_call_bit_identical (AdaptiveLevin.tests.test_levin_cc_estimate.TestNotTouched.test_d_untouched_call_bit_identical)
+(d) A call the fix must not touch (07d section 3 item 4): 07c's (f1), theta = 1e3 x on [0, 1]. No ... ok
+test_c1_route_either_side_of_the_gate (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c1_route_either_side_of_the_gate)
+(c) item 1. CC_GATE_PHASE_VARIATION is 10 pi. A region of V = 0.999 x 10 pi goes to the Clenshaw-Curtis ... ok
+test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by ... 
+  test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted) (V_over_pi=9.99)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by ... FAIL
+test_c3_rule_a_reads_no_threshold (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c3_rule_a_reads_no_threshold)
+(c) item 3. Rule A reads no threshold (since 07a; 07d section 9.1 item 7): on theta = A (x - 1/2)^2 over ... ok
+test_e_count_reads_the_returned_estimate (AdaptiveLevin.tests.test_levin_cc_estimate.TestWindowCount.test_e_count_reads_the_returned_estimate)
+(e) The window's count (07d section 3, as amended). On (e)'s calls, both noise levels, every ... 
+  test_e_count_reads_the_returned_estimate (AdaptiveLevin.tests.test_levin_cc_estimate.TestWindowCount.test_e_count_reads_the_returned_estimate) (eta=1e-13)
+(e) The window's count (07d section 3, as amended). On (e)'s calls, both noise levels, every ... FAIL
+
+======================================================================
+FAIL: test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=24, case='kink')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 267, in test_a_estimate_directly
+    self.assertLessEqual(abs(data["value"] - cc_value), 1e-14, name)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 4.738737986209607e-05 not less than or equal to 1e-14 : kink
+
+======================================================================
+FAIL: test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=24, case='noise')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 267, in test_a_estimate_directly
+    self.assertLessEqual(abs(data["value"] - cc_value), 1e-14, name)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2.7723934259427097e-11 not less than or equal to 1e-14 : noise
+
+======================================================================
+FAIL: test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=16, case='kink')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 267, in test_a_estimate_directly
+    self.assertLessEqual(abs(data["value"] - cc_value), 1e-14, name)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.000274108858827532 not less than or equal to 1e-14 : kink
+
+======================================================================
+FAIL: test_a_estimate_directly (AdaptiveLevin.tests.test_levin_cc_estimate.TestEstimate.test_a_estimate_directly) (order=16, case='noise')
+(a) The estimate, directly (07d section 3 item 1, as amended), on _adaptive_levin_subregion_cc() at N = 24
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 267, in test_a_estimate_directly
+    self.assertLessEqual(abs(data["value"] - cc_value), 1e-14, name)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1.76504366677932e-11 not less than or equal to 1e-14 : noise
+
+======================================================================
+FAIL: test_c2_route_changes_counted (AdaptiveLevin.tests.test_levin_cc_estimate.TestThreshold.test_c2_route_changes_counted) (V_over_pi=9.99)
+(c) item 2. A region with 6 pi <= V < 10 pi (V = 8 pi, and 9.99 pi) is sent to the Clenshaw-Curtis rule by
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 411, in test_c2_route_changes_counted
+    self.assertEqual(data["num_regions"], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_e_count_reads_the_returned_estimate (AdaptiveLevin.tests.test_levin_cc_estimate.TestWindowCount.test_e_count_reads_the_returned_estimate) (eta=1e-13)
+(e) The window's count (07d section 3, as amended). On (e)'s calls, both noise levels, every
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ds283/Documents/Code/SecondaryGWKit/AdaptiveLevin/tests/test_levin_cc_estimate.py", line 578, in test_e_count_reads_the_returned_estimate
+    self.assertGreater(len(calls), 0)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: 0 not greater than 0
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.873s
+
+FAILED (failures=6)
