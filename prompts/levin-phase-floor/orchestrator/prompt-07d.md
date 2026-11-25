@@ -391,7 +391,123 @@ As 07c's note §C.4:
 
 ### C.5 Addendum: Part C's dispatch
 
-*Written at Part B's landing.*
+*Written 2026-11-25, at Part B's landing.*
+
+**Part B** is the code commit **`2e6fee05`**, whose parent is **`ca1d8cfa`**. It was reviewed under
+§B's checks, all passing, and pushed on the user's word: *"Yes, push it and write Part C's
+dispatch"*. Two orchestrator commits came between the prompt (`49ce9642`) and it, both pushed:
+- `c2c57a36` amended the prompt at Part A's stop (§9.1–§9.3: a second measurement, Part A′) and
+  committed Part A's records;
+- `ca1d8cfa` amended it at Part A′'s stop (§9.4: the fix is V93T10), committed Part A′'s records and
+  opened Part A′'s issues.
+
+**The tree.** Part C runs at **this addendum's commit**, in the worktree
+`SecondaryGWKit-lpf07d-<this commit's short SHA>`. Its code is `2e6fee05`'s.
+- **S0′ holds by inspection:** `git diff --stat 67b5af74 ca1d8cfa -- . ':!docs' ':!prompts'` lists
+  only `CLAUDE.md`. Its `black` paragraph gained 07c Part C's and 07d Part A's and Part A′'s record
+  directories. The build imports nothing that changed. R32 is the parent rehearsal. The agent still
+  runs the check as prompt §5 writes it.
+- `git diff --stat ca1d8cfa 2e6fee05 -- . ':!docs' ':!prompts'` touches only:
+  - `AdaptiveLevin/levin_quadrature.py` (SHA-256 `90e2cd3a…`). It removes one top-level name,
+    `SIX_PI`, and adds `CC_GATE_PHASE_VARIATION`, `_CC_GATE_FORMER_PHASE_VARIATION`,
+    `_CC_OWN_NOISE_KAPPA`, `_CC_OWN_NOISE_TAIL_FALLBACK`, `_CC_STANDARD_CHOP_TOL` and four helpers;
+  - `AdaptiveLevin/tests/`: `test_levin_cc_estimate.py` is new, and twelve existing modules change.
+
+  Nothing under `ComputeTargets/`, `ObjectFactories/` or `LiouvilleGreen/` moved. **So outside
+  `QuadSourceIntegral` R33 is predicted to equal R32**, as §9.4.5 says.
+
+**What Part B's review found that Part C must carry:**
+- **The review's numbers, re-run on the laptop:**
+  - the seven roots at the commit: 151 (141 and the 10 added), 781, 39, 156 (1 skipped), 280, 127
+    and 64, all OK;
+  - the AST check: only the gate, `_adaptive_levin_subregion_cc` and `_adaptive_levin`'s counts
+    changed, beside the names above. Everything §B names as unchanged is unchanged;
+  - breakages (i), (ii), (iii) and (v) re-applied, failing 20, 12, 3 and 4 tests, each caught by the
+    tests §3 names. The module's SHA-256 was restored after each;
+  - **Z8, begun:** §9.4.5's four calls replayed at the commit from hashed copies of their captures.
+    Each equals V93T10's replay record in `float.hex`, counts included. R2-28 is converged and
+    dishonest at 1.100 of its abserr, as §9.4.5 predicts. `R:a:W2-0-12977-5` is honest at 0.0498, and
+    `d:h-1e-7-0-12851|a20` at 0.0726. `d:h-1e-7-0-12661|a11`, untouched, also equals 07c's census.
+    The census scores Z8 on every call Part A′ replayed; these four do not stand in for it.
+- **The harness reads a name the module no longer has** (the log's Observations 7). 07c's census
+  `worker.py` line 2510 is `SIX_07A = float(LQ.SIX_PI)`, and it feeds 07a's route tally, which Z5
+  scores. The copy reads `LQ.CC_GATE_PHASE_VARIATION` where the module has it, and `LQ.SIX_PI` where
+  it does not, which is 07c's code for Z0's reproduction. It is marked "prompt 07d". Every other
+  $6\pi$ the copied readers hard-code for the gate (`summarise_07a.py`'s `SIX`, for one) is
+  $10\pi$ where it reads 07d's census, and $6\pi$ where it reads 07c's. A reader that fails to import
+  or raises on the new module is a fault of the copy, to be fixed and marked, not a stop.
+- **Z1 reads the counts** (§9.4.5). 07c's census worker records named result keys only. So the copied
+  harness records `num_cc_solves`, `num_cc_gate_route_changes`, `num_cc_noise_set` and
+  `num_cc_resampled` on every call, marked "prompt 07d", as the draws' harness
+  `docs/levin-phase-floor/07d/code/lg_draws_07d.py` does. A call is untouched if `num_cc_solves` is
+  0. At 07c's code the keys do not exist: they are recorded as absent there, not as 0, which would
+  read as untouched. The fourth count is the agent's deviation 2: it counts spans whose grids do not
+  nest, and was 0 on every call run.
+- **Z8's records** are Part A′'s `var/levin-phase-floor-07d/measurement-a2/out/replays/V93T10/`,
+  4,220 files on the Mac Studio, listed with SHA-256 in
+  `docs/levin-phase-floor/07d/measurement-a2/KEPT_REPLAYS_ON_MAC_STUDIO/V93T10.txt`.
+- **`converged` changes.** §6 describes them, and none is a stop. In the LiouvilleGreen draws, 108 of
+  4,320 calls change:
+  - **73 go from converged to unconverged,** all at rtol $10^{-10}$. Each is a budget miss, at
+    1.009–4.82 times its request, with no untrusted leaf and maximum depth 7;
+  - **35 go the other way:** all 26 of 07c's newly unconverged calls, and 07a's seed 17 `test_JJJ`
+    call 11.
+
+  §9.4.5 asks for the census's changes listed in each direction. An unconverged call passes Z4, Z6
+  and Z7. Report each newly unconverged call with its abserr against its request and the counts.
+- **The cost.** In the draws the regions go from 140,896 to 96,191 (0.68×). The walls are not
+  comparable: the laptop carried other work. Part A′ measured 2.32 times the tree's wall on its
+  4,220 calls, so §9.4.4's central figure is about 28 h. **The census projects its wall from Z0's K0
+  run at the new code before the full run.** A projection beyond 48 hours is a stop, reported with
+  what would be cut to fit.
+- **Not Part C's:**
+  - the log's Observations 1–6 and 8;
+  - the P2 tests: about thirty existing tests that run on 07c's rule through `cc_rule_07c()`. The
+    user was told this before landing and gave the word to push;
+  - the three-Bessel honesty drop in the draws, where converged-and-dishonest results go from 422 to
+    533 with errors unchanged. It falls under `[09-abserr-does-not-bound-phase-spline-floor]`.
+
+  They are put to the user at the records commit, with Part A's, Part A′'s and Part C's `issues.md`
+  (§C.4). The census scores Z4, Z6 and Z7 as written and attributes neither.
+
+**§C.0, re-checked read-only on the Mac Studio, 01:33 UTC, 2026-11-25:**
+- **The main checkout** is `handover-remedial` at `28ebaf07`, with `git status --short` empty.
+  `git worktree list` shows it and Part A's and Part A′'s worktree `SecondaryGWKit-lpf07d-c2c57a3`
+  (at `c2c57a36`). That worktree is removed at dispatch (§C.0).
+- **The registry:** 110 runs, all finished. Nothing is `running` or stale.
+- **The lock and Ray:** `rehearsal_lock status` reports the lock free. Neither
+  `~/.raypoolkit/rehearsal-lock` nor the old `~/ScienceData/.rehearsal-lock` exists, and
+  `ray-processes`, run alone, lists no Ray process of `/tmp/ray-sgk`.
+- **Load and disk:** the load is 2.98 / 3.16 / 3.10, all of it system services and applications
+  (`suggestd`, `trustd`, iStat Menus). No ChamPBH run shows. 112 GiB is free (88 % used); 07c's
+  census checkpoint alone is 3.5 GB.
+- **The 07d paths:**
+  - `var/levin-phase-floor-07d/` holds only Part A's `measurement/` and Part A′'s
+    `measurement-a2/`;
+  - there is no `rehearsal/` or `census/` yet, and no `var/datastores/levin-phase-floor-07d-*`;
+  - `var/runs/` holds fourteen 07d run directories, Part A's seven and Part A′'s seven. Their slugs
+    (`capture-*`, `leaves*`, `refs`, `variants`, `a2-*` and `add-*`) do not collide with `r33-07d`,
+    `k0` or `census`.
+- **The inputs, by SHA-256 against their recorded lists,** 4,379 files, all OK:
+  - R32's five store files against `docs/levin-phase-floor/07c/rehearsal/KEPT_ON_MAC_STUDIO.txt`,
+    primary `4dd39837…`;
+  - 07c's census run directory `levin-phase-floor-07c-census-20261119T201419`: all 149 files against
+    `docs/levin-phase-floor/07c/census/KEPT_ON_MAC_STUDIO.txt`, checkpoint `33d94ce2…` among them,
+    and 149 files on disk;
+  - the scratch copy's five files against `docs/levin-phase-floor/06e/review/checks/a3v2_copy_after.sha256`;
+  - V93T10's 4,220 replay records against `KEPT_REPLAYS_ON_MAC_STUDIO/V93T10.txt`.
+
+  None of the store directories holds a `-wal` or `-shm` file.
+- **The venv** is Python 3.13.16, with `datastorekit` 0.5.0, `raypoolkit` 0.3.0, `runregistrykit`
+  0.2.0, `ray` 2.59.0, `SQLAlchemy` 2.0.55, `numpy` 2.2.4, `scipy` 1.16.3 and `mpmath` 1.3.0.
+
+**The dispatch** waits for the user's word that the Mac Studio is free (§0 item 6). Then the laptop
+does three things:
+1. It fetches into the Mac Studio's main checkout, which moves no working tree.
+2. It repeats §C.0's checks, removes the worktree `SecondaryGWKit-lpf07d-c2c57a3`, and makes the one
+   worktree at this commit, detached and with no venv.
+3. It starts the Mac Studio orchestrator session in that worktree, through the saved `MacStudio`
+   connection, with this note's §C as its brief. The folder must be trusted in the app first.
 
 ## 5. Stop and ask the user
 
